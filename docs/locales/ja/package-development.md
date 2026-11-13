@@ -7,18 +7,29 @@
 
 このガイドでは、Mission Platform モノリポジトリ内で再利用可能なパッケージを作成、開発、公開する方法について説明します。
 パッケージはプラットフォームの基本的な構成要素であり、`packages/` ディレクトリに存在し、次の方法で管理されます。
-pnpm ワークスペースと Turborepo。
+pnpm workspaces and Turborepo.
 
 ## 新しいパッケージの作成
 
 パッケージを作成する推奨方法は、Mission Platform Developer MCP ツールを使用することです。
 構成、スクリプト、フォルダー構造はプラットフォームの標準に従います。
 
+### パッケージビルドをフォージする
+
+Forge コンポーネント、フック、および CMS パッケージは 1 つの `defineTsdownLibrary` 呼び出しを使用します。追加
+`tsdownForgeComponentPlugins` によって返されたネイティブ プラグイン、
+`tsdownForgeHookPlugins`、または `tsdownForgeCmsPlugins` からその `plugins` オプション。
+これらのプラグインは、tsdown ライフサイクル フックからターゲットを準備して公開します。
+構成の評価中にグラフ検出を実行します。フレームワークを維持し、
+CMS 出力プラグインは呼び出し元が所有し明示的であるため、ターゲットの選択はそのまま残ります
+構成可能かつ分離されています。
+
 ### 1. MCPを使用した足場
 
-`scaffold_package` ツールを使用してスケルトンを生成します。
+接続された Mission Platform Developer MCP サーバーを通じて `scaffold_package` ツールを使用して、スケルトンを生成します。
+以下は MCP ツール呼び出しの例であり、シェル コマンドではありません。 MCP が使用できない場合は、手動セットアップ セクションを使用してください。
 
-```bash
+```text
 # Example: Creating a new 'date-utils' package
 # The tool defaults to a dry-run; set apply=true to write files
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
@@ -27,14 +38,14 @@ scaffold_package(name="date-utils", description="Shared date manipulation utilit
 これにより、以下を含む規則に準拠した `packages/date-utils/` ディレクトリが生成されます。
 
 - ワークスペース対応スクリプトと共有構成を備えた `package.json`。
-- `tsconfig.json` はプラットフォームのデフォルトを拡張します。
+- `tsconfig.json` プラットフォームのデフォルトを拡張します。
 - 最適化されたビルドの場合は `vite.config.ts`。
 - `src/index.ts` バレル ファイル。
 - AI 支援ドキュメントの `llms.txt`。
 
 ### 2. 手動セットアップ (オプション)
 
-MCP ツールを使用していない場合は、`package.json` が次のコマンドを使用していることを確認してください。 [pnpm カタログ](https://pnpm.io/catalogs) 用
+MCP ツールを使用していない場合は、`package.json` が [pnpm カタログ](https://pnpm.io/catalogs) を使用していることを確認してください。
 依存関係を管理し、スコープ指定された命名規則に従います。
 
 ```json
@@ -61,7 +72,7 @@ MCP ツールを使用していない場合は、`package.json` が次のコマ�
 ## パッケージ構造
 
 各パッケージは厳密な内部レイアウトに従います。コードの単位 (コンポーネント、コンポーザブル、ストア、またはユーティリティ) は、次の場所に存在する必要があります。
-テストが同じ場所にある独自の名前付きサブディレクトリ。
+独自の名前付きサブディレクトリと同じ場所にテストが配置されます。
 
 ```text
 packages/<name>/
@@ -87,9 +98,9 @@ packages/<name>/
 └── README.md
 ```
 
-## スタイルを含むパッケージの Stylelint
+## Stylelint (スタイルを持つパッケージの場合)
 
-`CSS`、`SCSS`、または `Vue` のスタイルブロックを含むパッケージには、Stylelint 設定と lint スクリプトが必要です。
+CSS、SCSS、または Vue スタイル ブロックを含むパッケージは、検出可能な Stylelint 構成と lint スクリプトを保持する必要があります。
 
 ```text
 packages/<name>/
@@ -99,7 +110,7 @@ packages/<name>/
 └── package.json                    # Stylelint scripts and devDependencies
 ```
 
-共有設定と直接の構文・設定依存関係を `devDependencies` に追加します。
+共有構成とその直接の構文/構成の依存関係を `devDependencies` に追加します。
 
 ```json
 {
@@ -114,7 +125,7 @@ packages/<name>/
 }
 ```
 
-`extends` エントリを複製せず、`stylelint.config.mjs` から共有設定を使用します。
+`extends` エントリを複製する代わりに、`stylelint.config.mjs` の共有設定を使用します。
 
 ```js
 // stylelint.config.mjs
@@ -123,7 +134,7 @@ import baseConfig from "@mission-platform/stylelint-config";
 export default { ...baseConfig };
 ```
 
-ワークスペースの実際のスタイルソースを対象にスクリプトを追加し、公開前にチェックを実行します。
+ワークスペースの実際のスタイル ソースをカバーするスクリプトを追加し、公開する前にチェックを実行します。
 
 ```json
 {
@@ -150,10 +161,10 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 
 詳しいオーサリング手順については、以下を参照してください。
 
-- [アトミックコンポーネント設計](atomic-component-design.md)
-- [コンポーザブルオーサリング](composable-authoring.md)
+- [原子コンポーネント設計](atomic-component-design.md)
+- [コンポーザブル オーサリング](composable-authoring.md)
 - [ストアオーサリング](store-authoring.md)
-- [ユーティリティオーサリング](util-authoring.md)
+- [利用オーサリング](util-authoring.md)
 
 ### 建物
 
@@ -206,7 +217,7 @@ Web コンポーネント Storybook ワークベンチ。
 
 ## パッケージドキュメントの所有権
 
-パッケージ固有のインストール、使用法、制限事項、コントリビューターのワークフロー、および API リファレンス ページは、
+パッケージ固有のインストール、使用法、制限事項、寄稿者ワークフロー、および API リファレンス ページは、
 パッケージの `docs/` ディレクトリではなく、リポジトリ全体の `docs/` ツリー内にありません。ドキュメント サイトはこれらのファイルを直接取り込み、
 `/packages/integrations/barcode/index` や `/packages/tooling/configs/eslint-config/index` などの安定したパッケージ名前空間でそれらを公開します。
 プロジェクト全体の概念、アーキテクチャ、ワークスペースのワークフロー、およびパッケージ間のトラブルシューティングは、ルート `docs/` に残ります。
@@ -217,16 +228,15 @@ Web コンポーネント Storybook ワークベンチ。
 
 ## 出版
 
-ミッションプラットフォームが使用するのは、 [変更セット](https://github.com/changesets/changesets) をバージョン管理と公開に使用します。
+Mission Platform は、バージョン管理と公開に [Changesets](https://github.com/changesets/changesets) を使用します。
 
-1. **変更セットの追加**: 変更を加えた後、次のコマンドを実行します。
-
-```bash
+1. **変更セットの追加**: 変更を加えた後、以下を実行します。
+   ```bash
    pnpm changeset
-```
-
-パッケージと変更の種類 (パッチ、マイナー、メジャー) を選択します。2. **変更セットをコミット**: 生成された `.changeset/*.md` ファイルをコミットします。3. **バージョンと公開**: CI/CD が実際の公開を処理しますが、次の方法でバージョンをローカルでプレビューできます。
-
-```bash
+   ```
+   パッケージと変更の種類 (パッチ、マイナー、メジャー) を選択します。
+2. **変更セットをコミット**: 生成された `.changeset/*.md` ファイルをコミットします。
+3. **バージョンと公開**: CI/CD が実際の公開を処理しますが、次の方法でバージョンをローカルでプレビューできます。
+   ```bash
    pnpm changeset version
-```
+   ```

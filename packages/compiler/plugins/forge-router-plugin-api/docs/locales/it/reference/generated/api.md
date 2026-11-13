@@ -27,8 +27,8 @@ Creare una diagnostica locale di origine per un errore del compilatore del route
 
 #### Parametri
 
-| Nome        | Digitare                                                                                 | Descrizione |
-| ----------- | ---------------------------------------------------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------------------------------------------------------------- | ----------- |
 | diagnostico | Omit<CompilerDiagnostic, "phase" \| "fileName"> & { nomefile di sola lettura?: string; } |             |
 
 ### defineForgeRouterPlugin
@@ -43,9 +43,9 @@ Convalida i metadati del plug-in del router prima che entrino nella pipeline del
 
 #### Parametri
 
-| Nome   | Digitare | Descrizione |
-| ------ | -------- | ----------- |
-| plugin | T        |             |
+| Nome | Digitare | Descrizione |
+| ------ | ---- | ----------- |
+| plugin | T |             |
 
 ### defineForgeRouterTarget
 
@@ -67,7 +67,7 @@ router basati su file o solo server.
 
 #### Parametri
 
-| Nome    | Digitare                 | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ------------------------ | ----------- |
 | opzioni | ForgeRouterTargetOptions |             |
 
@@ -278,14 +278,14 @@ function selectForgeRouterPlugin(
 ): RouterOutputPlugin | undefined;
 ```
 
-Trova un router target diretto o selezionato tramite ID senza associarlo ai plug-in dell'interfaccia utente.
+Trova un router di destinazione diretto o selezionato tramite ID senza associarlo ai plug-in dell'interfaccia utente.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
+| Nome | Digitare | Descrizione |
 | --------- | ---------------------------------- | ----------- |
 | selezione | SelezionePluginRouter\| indefinito |             |
-| plugin    | sola lettura RouterOutputPlugin[]  |             |
+| plugin | sola lettura RouterOutputPlugin[] |             |
 
 ### capacità del router non supportate
 
@@ -302,7 +302,7 @@ Segnala le lacune di capacità prima che un target abbia la possibilità di comp
 
 #### Parametri
 
-| Nome   | Digitare                         | Descrizione |
-| ------ | -------------------------------- | ----------- |
-| io     | RouterCapabilityModule           |             |
+| Nome | Digitare | Descrizione |
+| ------ | ------------------------------- | ----------- |
+| io | RouterCapabilityModule |             |
 | plugin | RouterOutputPlugin \| indefinito |             |

@@ -5,7 +5,7 @@
 > packages/tooling/configs/stylelint-config/docs/index.md: [packages/tooling/configs/stylelint-config/docs/index.md](../../index.md)
 > 言語: 日本語 (ja)
 
-共有 Stylelint Mission Platform の CSS および SCSS のルール。
+Mission Platform の CSS および SCSS の共有 Stylelint ルール。
 
 ## インストールして使用する
 
@@ -14,7 +14,9 @@ pnpm add --save-dev @mission-platform/stylelint-config postcss-html postcss-scss
   stylelint stylelint-config-recommended-vue stylelint-config-standard-scss
 ```
 
-スタイルを含むワークスペースでは、ESM 形式のローカルファイル `stylelint.config.mjs` を使用します。`extends` エントリを複製せず、共有設定を import して spread します。
+スタイルを持つワークスペースは、ESM でワークスペース ローカルの `stylelint.config.mjs` を使用します。
+形式。共有構成を複製するのではなく、インポートして配布します。
+`extends` エントリ:
 
 ```js
 // stylelint.config.mjs
@@ -23,7 +25,16 @@ import baseConfig from '@mission-platform/stylelint-config';
 export default { ...baseConfig };
 ```
 
-共有設定は `stylelint-config-standard-scss` と `stylelint-config-recommended-vue` を拡張します。デフォルトでは `postcss-html`、`**/*.scss` には `postcss-scss`、Vue のスタイルブロックには `postcss-html` を使用します。`catalog:stylelint` バージョンの直接サポート依存関係と、`workspace:*` の共有設定パッケージを `devDependencies` に追加します。
+共有構成は `stylelint-config-standard-scss` を拡張し、
+`stylelint-config-recommended-vue`。デフォルトでは `postcss-html` を使用します。
+`**/*.scss` には `postcss-scss`、Vue には `postcss-html` を使用 SFC スタイル
+ブロック。これは、ワークスペース固有のスタイルを使用せずに、CSS、SCSS、および Vue スタイルをサポートします。
+構文構成。
+
+上記の直接サポートの依存関係をワークスペースのに追加します。
+`devDependencies` は `catalog:stylelint` バージョンを使用し、
+`workspace:*` を使用した共有構成パッケージ。をカバーするスクリプトを追加します。
+ワークスペースのスタイル ソース、例:
 
 ```json
 {
@@ -34,12 +45,11 @@ export default { ...baseConfig };
 }
 ```
 
-ワークスペースからパッケージを拡張します。 `stylelint.config.mjs`。コンポーネントを保持する
-スタイルはコンポーネントに近く、文書化されたものに対してのみローカル オーバーライドを使用します。
-ワークスペースの制約。
+コンポーネント スタイルをコンポーネントの近くに保持し、ローカル オーバーライドのみを使用します。
+文書化されたワークスペースの制約。
 
 ## 貢献する
 
-走る `pnpm --filter @mission-platform/stylelint-config lint` そして
+`pnpm --filter @mission-platform/stylelint-config lint` を実行し、
 `pnpm --filter @mission-platform/stylelint-config format`。テストルールの変更
 パッケージ SCSS とアプリケーション スタイルの両方に対して。

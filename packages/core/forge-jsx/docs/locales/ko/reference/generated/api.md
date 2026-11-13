@@ -9,896 +9,6 @@
 
 `@mission-platform/forge-jsx`의 공개 소스 선언에서 생성됩니다.
 
-## `src/adapters/react`
-
-### Html콘텐츠
-
-**종류:** 기능
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement;
-```
-
-`dangerouslySetInnerHTML`을 사용하여 신뢰할 수 있는 HTML을 React 호스트로 렌더링합니다.
-
-#### 매개변수
-
-| 이름 | 유형            | 설명 |
-| ---- | --------------- | ---- |
-| 속성 | HtmlContent속성 |      |
-
-### renderToReact
-
-**종류:** 기능
-
-```typescript
-function renderToReact(element: MpElement): ReactElement;
-```
-
-중립 {@link MpElement} 트리를 React 요소로 렌더링합니다.
-
-#### 매개변수
-
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 요소 | Mp요소 |      |
-
-### 텔레포트
-
-**종류:** 기능
-
-```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
-```
-
-중립 `<Teleport>` 프리미티브의 React 빌드 — 주변의 얇은 래퍼
-`react-dom`의 {@link createPortal}입니다. `@mission-platform/vite-plugin-forge`
-구성요소의 `import { Teleport } from '@mission-platform/forge-jsx'`을 다음으로 다시 작성합니다.
-이 구성 요소를 가져오므로 한 번만 쓸 수 있는 `<Teleport to="body">…</Teleport>`
-기본 React 포털로 컴파일됩니다.
-
-`to`가 이미 DOM **요소**인 경우(일반적인 클라이언트 사례 - 예:
-호출자가 전달한 `<dialog>` 또는 `document.body`이 해결됨) 하위는
-**렌더링 중에 동기적으로** 포탈되어 동일한 위치에 마운트됩니다.
-그것을 연 커밋. 이는 Vue의 `<Teleport>`과 일치합니다(이는
-동기적으로 대상 지정) 정확성을 위해 필요합니다.
-Popover API를 사용하여 브라우저 최상위 계층으로 승격됩니다.
-(다음 프레임의 `popover="manual"` + `showPopover()`)은 이미 있어야 합니다.
-해당 프레임이 실행될 때 마운트됩니다. 렌더링으로 포털을 연기하면 해당 프레임이 손실됩니다.
-경주, 패널 떠나기 `display:none`(표시되지 않은 경우 UA 기본값)
-팝오버) 따라서 보이지 않습니다.
-
-선택기 **문자열**에만 포스트 마운트 `document.querySelector`가 필요합니다.
-구성 요소를 SSR로부터 안전하게 유지합니다. 서버 렌더링 중에 — 그리고 첫 번째 클라이언트
-문자열 대상에 대해 렌더링 — 아무것도 렌더링하지 않습니다(또는 `disabled`인 경우
-자식 위치), `createPortal`는 DOM 대상이 존재하는 경우에만 실행됩니다.
-
-#### 매개변수
-
-| 이름                                      | 유형         | 설명 |
-| ----------------------------------------- | ------------ | ---- |
-| { to = '본체', 비활성화 = false, 어린이 } | 텔레포트속성 |      |
-
-### 텔레포트속성
-
-**종류:** 인터페이스
-
-```typescript
-export interface TeleportProperties
-```
-
-React {@link Teleport} 구성 요소에서 허용하는 속성입니다.
-
-### toReactComponent
-
-**종류:** 기능
-
-```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
-```
-
-중립 구성 요소를 일류 React 기능 구성 요소로 래핑하여
-`react-dom`에 의해 렌더링되거나 다른 React 구성 요소 내에 구성됩니다.
-
-#### 매개변수
-
-| 이름     | 유형           | 설명 |
-| -------- | -------------- | ---- |
-| 구성요소 | MpComponent<P> |      |
-| 표시이름 | 문자열         |      |
-
-### 이행
-
-**종류:** 기능
-
-```typescript
-function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
-```
-
-중립 `<Transition>` 프리미티브의 React 빌드 — 작은 CSS 클래스
-Vue의 내장 `<Transition>`을 미러링하는 드라이버입니다. 그것은 하나의 애니메이션
-`<name>-enter-*` / `<name>-leave-*`을 전환하여 조건부로 렌더링된 하위 항목
-클래스(동일한 스타일시트가 두 프레임워크를 모두 구동함) 및 하위 클래스를 유지합니다.
-떠나기 애니메이션을 통해 마운트되었습니다. `@mission-platform/vite-plugin-forge`
-구성요소의 `import { Transition } from '@mission-platform/forge-jsx'`를 다음으로 다시 작성합니다.
-React 대상에서 이 구성 요소를 가져옵니다.
-
-SSR에 안전합니다. 서버 렌더링(및 첫 번째 클라이언트 페인트)이 하위 항목을 렌더링합니다.
-Vue의 SSR 출력과 일치하며 애니메이션은 이후에만 실행됩니다.
-
-#### 매개변수
-
-| 이름                                                | 유형     | 설명 |
-| --------------------------------------------------- | -------- | ---- |
-| { 이름 = 'v', 표시 = false, 기간, 하위, ...재정의 } | 전환속성 |      |
-
-### 전환 그룹
-
-**종류:** 기능
-
-```typescript
-function TransitionGroup({
-  name = 'v',
-  tag,
-  moveClass,
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionGroupProperties): ReactNode;
-```
-
-중립 `<TransitionGroup>` 프리미티브의 React 빌드 - CSS 클래스
-Vue의 내장 `<TransitionGroup>`을 미러링하는 드라이버입니다. **키가 있는 애니메이션을 적용합니다.
-목록**: 하위 항목을 입력하면 `<name>-enter-*`를 받고 하위 항목은 마운트 상태로 유지됩니다.
-`<name>-leave-*` 애니메이션을 통해, 그리고 변화하는 살아남은 아이들
-위치는 `<name>-move`를 사용하여 FLIP 애니메이션으로 표시됩니다(동일한 스타일시트가 두 위치를 모두 구동함).
-프레임워크). `@mission-platform/vite-plugin-forge`는 구성 요소의
-`import { TransitionGroup } from '@mission-platform/forge-jsx'`을(를) 가져오려면
-React 대상입니다.
-
-SSR에 안전합니다. 서버 렌더링(및 첫 번째 클라이언트 페인트)은
-Vue의 SSR 출력과 일치하는 어린이가 제자리에 있고 애니메이션만 실행됩니다.
-그 후에. 전환 클래스는 각 하위 항목의 DOM node에 적용됩니다. 따라서 —
-단일 {@link Transition}과 같이 DOM 요소 하위 요소에 적용됩니다.
-그 자체가 (참조 전달이 아닌) 구성 요소인 하위 항목은 여전히 마운트/마운트 해제됩니다.
-정확하지만 등급을 받지 못합니다(중립 SSR 배치 기준선과 일치).
-
-#### 매개변수
-
-| 이름                                                                 | 유형         | 설명 |
-| -------------------------------------------------------------------- | ------------ | ---- |
-| { 이름 = 'v', 태그, moveClass, 표시 = false, 기간, 하위, ...재정의 } | 전환그룹속성 |      |
-
-### 전환 그룹 속성
-
-**종류:** 인터페이스
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-React {@link TransitionGroup} 구성요소에서 허용하는 속성입니다.
-
-### 전환 속성
-
-**종류:** 인터페이스
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-React {@link Transition} 구성요소에서 허용하는 속성입니다.
-
-## `src/adapters/solid`
-
-### Html콘텐츠
-
-**종류:** 기능
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element;
-```
-
-중립 `<HtmlContent>` 프리미티브의 Solid 빌드입니다. Solid의
-`innerHTML` 속성은 기본 교체 기반 원시 콘텐츠 작업입니다.
-
-#### 매개변수
-
-| 이름 | 유형            | 설명 |
-| ---- | --------------- | ---- |
-| 속성 | HtmlContent속성 |      |
-
-### 텔레포트
-
-**종류:** 기능
-
-```typescript
-function Teleport(properties: TeleportProperties): JSX.Element;
-```
-
-중립 `<Teleport>` 프리미티브의 Solid 빌드 — 주변의 얇은 래퍼
-Solid의 {@link Portal}입니다. `@mission-platform/vite-plugin-forge`은
-이를 가져오려면 구성요소의 `import { Teleport } from '@mission-platform/forge-jsx'`
-구성 요소이므로 한 번만 쓸 수 있는 `<Teleport to="body">…</Teleport>`은
-기본 Solid 포털.
-
-포털 대상은 클라이언트에서 확인되므로 구성 요소는 SSR로부터 안전합니다.
-서버 렌더링 중 - 그리고 DOM 타겟이 존재하기 전에 - 렌더링됩니다.
-아무것도(또는 `disabled`, 하위가 있는 경우) 및 {@link Portal}만
-실제 대상이 사용 가능해지면 마운트됩니다.
-
-#### 매개변수
-
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| 속성 | 텔레포트속성 |      |
-
-### 텔레포트속성
-
-**종류:** 인터페이스
-
-```typescript
-export interface TeleportProperties
-```
-
-Solid {@link Teleport} 구성 요소에서 허용하는 속성입니다.
-
-### 이행
-
-**종류:** 기능
-
-```typescript
-function Transition(properties: TransitionProperties): JSX.Element;
-```
-
-중립 `<Transition>` 프리미티브의 Solid 빌드입니다. 최소한의 정답
-자식을 **제자리**에 렌더링하는 구현 - React과 일치
-어댑터의 SSR/어댑터 패리티 경로 및 중립 런타임 기준 — 그래서
-한 번만 쓸 수 있는 구성 요소 유형 확인 및 타사를 가져오지 않고 마운트
-Solid 전환 라이브러리. 수업 시작/나가기 애니메이션은 나중에 레이어링할 수 있습니다.
-소품 표면이 이미 Vue/React과 일치합니다(`name`, `appear`, `duration` 및
-위상별 클래스가 재정의됩니다.)
-
-`@mission-platform/vite-plugin-forge`는 구성 요소의
-`import { Transition } from '@mission-platform/forge-jsx'`에서 이를 가져오려면
-Solid 대상입니다.
-
-#### 매개변수
-
-| 이름 | 유형     | 설명 |
-| ---- | -------- | ---- |
-| 속성 | 전환속성 |      |
-
-### 전환 그룹
-
-**종류:** 기능
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
-```
-
-중립 `<TransitionGroup>` 프리미티브의 Solid 빌드입니다. 좋아요
-{@link Transition}, 이는 다음을 렌더링하는 최소한의 올바른 구현입니다.
-하위 **제자리**(React 어댑터의 SSR/어댑터 패리티 기준선)
-타사 목록 전환 없이 생성된 Solid 구성 요소 유형 확인
-도서관. 소품 표면은 Vue/React(`name`, `tag`, `moveClass`,
-`appear`, `duration` 및 단계별 클래스 재정의)(한 번 쓰기용)
-패리티.
-
-`@mission-platform/vite-plugin-forge`은 구성 요소의
-`import { TransitionGroup } from '@mission-platform/forge-jsx'`을(를) 가져오려면
-Solid 대상입니다.
-
-#### 매개변수
-
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| 속성 | 전환그룹속성 |      |
-
-### 전환 그룹 속성
-
-**종류:** 인터페이스
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-Solid {@link TransitionGroup} 구성요소에서 허용하는 속성입니다.
-
-### 전환 속성
-
-**종류:** 인터페이스
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-Solid {@link Transition} 구성요소에서 허용하는 속성입니다.
-
-## `src/adapters/svelte`
-
-### Html콘텐츠
-
-**종류:** 기능
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet;
-```
-
-Svelte 어댑터의 원시 콘텐츠 구현입니다. `createRawSnippet`은
-Svelte의 `{@html}` 작업의 런타임 형식과 해당 설정 콜백은 다음을 유지합니다.
-직접 작성한 어댑터 사용을 위한 호스트 참조 및 이벤트 전달.
-
-#### 매개변수
-
-| 이름 | 유형            | 설명 |
-| ---- | --------------- | ---- |
-| 속성 | HtmlContent속성 |      |
-
-### 텔레포트
-
-**종류:** 기능
-
-```typescript
-function Teleport(properties: TeleportProperties): Snippet;
-```
-
-Svelte SSR 및 클라이언트 패리티를 위해 Forge 하위 조각을 렌더링합니다.
-
-#### 매개변수
-
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| 속성 | 텔레포트속성 |      |
-
-### 텔레포트속성
-
-**종류:** 인터페이스
-
-```typescript
-export interface TeleportProperties
-```
-
-Svelte {@link Teleport} 프리미티브가 허용하는 속성입니다.
-
-### 이행
-
-**종류:** 기능
-
-```typescript
-function Transition(properties: TransitionProperties): Snippet;
-```
-
-단일 전환 자식을 렌더링합니다. 애니메이션은 기본 Svelte 마크업으로 제공됩니다.
-
-#### 매개변수
-
-| 이름 | 유형     | 설명 |
-| ---- | -------- | ---- |
-| 속성 | 전환속성 |      |
-
-### 전환 그룹
-
-**종류:** 기능
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet;
-```
-
-기본 Svelte 키 블록에 대해 전환 그룹 하위를 렌더링합니다.
-
-#### 매개변수
-
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| 속성 | 전환그룹속성 |      |
-
-### 전환 그룹 속성
-
-**종류:** 인터페이스
-
-```typescript
-export interface TransitionGroupProperties extends TransitionProperties
-```
-
-Svelte {@link TransitionGroup} 기본 요소가 허용하는 속성입니다.
-
-### 전환 속성
-
-**종류:** 인터페이스
-
-```typescript
-export interface TransitionProperties
-```
-
-Svelte {@link Transition} 프리미티브가 허용하는 속성입니다.
-
-## `src/adapters/vue`
-
-### createContext
-
-**종류:** 기능
-
-```typescript
-function createContext(defaultValue: T): VueContext<T>;
-```
-
-중립 `createContext` 프리미티브의 Vue 빌드입니다. 핸들을 반환합니다.
-`Provider`은 `provide()`가 `value`을 기본값으로 설정하는 실제 구성 요소입니다.
-슬롯이므로 1회 쓰기 `<Ctx.Provider value={…}><Slot /></Ctx.Provider>`
-기본 Vue 제공으로 컴파일됩니다. `@mission-platform/vite-plugin-forge`는
-구성 요소의 `import { createContext, useContext } from '@mission-platform/forge-jsx'`
-Vue 대상에서 이를 가져옵니다.
-
-#### 매개변수
-
-| 이름   | 유형 | 설명 |
-| ------ | ---- | ---- |
-| 기본값 | 티   |      |
-
-### Html콘텐츠
-
-**종류:** 기능
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode;
-```
-
-렌더링 기능 `innerHTML` 바인딩을 사용하여 신뢰할 수 있는 HTML을 Vue 호스트로 렌더링합니다.
-
-#### 매개변수
-
-| 이름 | 유형            | 설명 |
-| ---- | --------------- | ---- |
-| 속성 | HtmlContent속성 |      |
-
-### renderToVue
-
-**종류:** 기능
-
-```typescript
-function renderToVue(element: MpElement): VNode;
-```
-
-중립 {@link MpElement} 트리를 Vue `VNode`으로 렌더링합니다.
-
-#### 매개변수
-
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 요소 | Mp요소 |      |
-
-### toVueComponent
-
-**종류:** 기능
-
-```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
-```
-
-중립 구성 요소를 Vue 기능 구성 요소로 래핑합니다. 들어오는 속성
-중립 소품이 되면 기본 슬롯(있는 경우)이 중립 소품으로 전달됩니다.
-`children`, 명명된 모든 슬롯은 해당 이름으로 전달됩니다(범위가 지정된 슬롯으로).
-함수), 따라서 구성 요소의 `<Slot name="…" />`이 이를 해결하고
-결과는 다른 Vue 구성요소처럼 사용될 수 있습니다.
-
-#### 매개변수
-
-| 이름     | 유형           | 설명 |
-| -------- | -------------- | ---- |
-| 구성요소 | MpComponent<P> |      |
-| 이름     | 문자열         |      |
-
-### useContext
-
-**종류:** 기능
-
-```typescript
-function useContext(context: VueContext<T>): T;
-```
-
-중립 `useContext` 프리미티브의 Vue 빌드 — 주변의 얇은 래퍼
-둘러싸지 않을 때 컨텍스트의 기본값으로 대체되는 `inject()`
-공급자가 하나를 제공했습니다.
-
-#### 매개변수
-
-| 이름 | 유형          | 설명 |
-| ---- | ------------- | ---- |
-| 맥락 | VueContext<T> |      |
-
-### VueContext
-
-**종류:** 인터페이스
-
-```typescript
-export interface VueContext<T>
-```
-
-Vue 컨텍스트 핸들: `provide()` 지원 `Provider` 및 `inject()` 키.
-
-## `src/adapters/web-components`
-
-### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
-
-**종류:** 상수
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
-```
-
-내부는 무해하게 기능에 따라 제한되어 있습니다. 양식 연결은 선택적으로 유지됩니다.
-
-### DEFAULT_WEBCOMPONENTS_SHADOW_POLICY
-
-**종류:** 상수
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
-```
-
-생성된 클래스가 정책을 재정의하지 않을 때 사용되는 호환성 기본값입니다.
-
-### 돔템플릿결과
-
-**종류:** 클래스
-
-```typescript
-export class DomTemplateResult
-```
-
-안정적인 정의 ID를 사용하여 직접 DOM에서 생성된 결과입니다.
-
-### 동적요소
-
-**종류:** 기능
-
-```typescript
-function dynamicElement(
-  tag: unknown,
-  properties: Readonly<Record<string, unknown>>,
-  ...children: readonly unknown[]
-): DynamicElementResult;
-```
-
-런타임 시 태그가 선택되는 기본 웹 구성 요소 요소를 빌드합니다.
-
-#### 매개변수
-
-| 이름   | 유형                              | 설명 |
-| ------ | --------------------------------- | ---- |
-| 태그   | 알 수 없음                        |      |
-| 속성   | 읽기전용<Record<string, unknown>> |      |
-| 어린이 | 읽기 전용 알 수 없음[]            |      |
-
-### 동적요소결과
-
-**종류:** 클래스
-
-```typescript
-export class DynamicElementResult
-```
-
-계산된 JSX 태그에 대한 런타임 선택 요소와 해당 하위 요소입니다.
-
-### ForgeElement
-
-**종류:** 클래스
-
-```typescript
-export class ForgeElement extends ForgeHTMLElement
-```
-
-생성된 사용자 정의 요소에 대한 기본 `HTMLElement` 기본 클래스 —
-`LitElement`에 대한 종속성 없는 대체 기능입니다.
-
-서브클래스는 `static properties`(미러링)를 통해 반응성 표면을 선언합니다.
-켜짐): 각 키는 설정자가 일정을 예약하는 프로토타입 접근자가 됩니다.
-마이크로태스크가 다시 렌더링되고 `state`이 아닌 각 키는 소문자를 관찰합니다.
-속성. `render()`는 렌더링된 요소의 {@link html}`…` 템플릿을 반환합니다.
-열린 그림자 루트로. 반응적 커밋은 기존 템플릿을 업데이트합니다.
-점진적: 위치 목록은 호환 가능한 항목 및 슬롯 콘센트를 재사용합니다.
-관련되지 않은 부분이 변경되는 동안 기본 투영 노드를 유지합니다.
-
-### ForgeElementConstructor
-
-**종류:** 인터페이스
-
-```typescript
-export interface ForgeElementConstructor
-```
-
-생성된 Forge 요소에 의해 구현된 정적 스타일시트 계약입니다.
-
-URL은 문서가 아닌 요소 클래스에 유지되므로 그림자가 발생합니다.
-루트는 문서 수준 스타일에 도달할 수 없는 컴파일된 사이드카를 로드할 수 있습니다.
-
-### ForgeElementHostConstructor
-
-**종류:** 유형
-
-```typescript
-export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
-```
-
-{@link ForgeElementMixin}에서 허용하는 생성 가능한 기본 요소 클래스입니다.
-
-### ForgeElementMixin
-
-**종류:** 기능
-
-```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
-```
-
-Forge의 호스트 독립적 런타임을 기본 요소 생성자에 추가합니다.
-사용자 정의 내장 기능은 `ForgeElement` 및 `HTMLDivElement`을 모두 확장할 수 없습니다.
-이 믹스인은 기본 프로토타입 체인을 유지하면서 동작을 복사합니다.
-
-#### 매개변수
-
-| 이름   | 유형     | 설명 |
-| ------ | -------- | ---- |
-| 베이스 | 티베이스 |      |
-
-### ForgeSlotMarker
-
-**종류:** 인터페이스
-
-```typescript
-export interface ForgeSlotMarker extends HTMLElement
-```
-
-모호한 슬롯에 대해 웹 구성 요소 컴파일러에서 생성된 런타임 마커입니다.
-
-### hasSlotContent
-
-**종류:** 기능
-
-```typescript
-function hasSlotContent(host: Element, name?: string): boolean;
-```
-
-`host`에 해당 슬롯 중 하나에 대한 콘텐츠가 제공되었는지 여부(기본 대상의
-중립 `hasSlot('x')` 마커를 대체합니다.
-
-`hasSlot`는 컴파일 타임 어휘입니다. Vue은 `!!slots.x`으로, React는 React로 낮춥니다.
-`properties.x != null`, 맞춤 요소에는 둘 다 없으므로 확인이 이루어집니다.
-대신 DOM에 반대합니다. 생성된 요소는 **열린 그림자로 렌더링됩니다.
-루트**는 소비자 프로젝트가 호스트의 프로젝트에 유지되는 콘텐츠를 의미합니다.
-**light** DOM을 자식으로 사용 — 명명된 슬롯은 다음을 가지고 있는 자식으로 채워집니다.
-`slot="<name>"`, 그리고 아무것도 전달하지 않는 모든 하위 항목의 기본 슬롯입니다. 만
-직계 하위 항목은 슬롯 할당 자체와 똑같이 고려됩니다.
-공백 전용 텍스트 node은 내용으로 간주되지 않습니다.
-
-`[slot="…"]`으로 쿼리하는 대신 자식을 걸어가므로 슬롯 이름이
-CSS 이스케이프가 필요하지 않으므로 베어 텍스트 하위 항목(선택기가 일치할 수 없음)
-여전히 기본 슬롯을 채웁니다.
-
-슬롯은 호스트의 하위 항목이 존재하는 경우에만 관찰 가능합니다.
-초기 HTML `connectedCallback`에 작성된 요소에 대한 파서의 업그레이드
-연결되기 전에 실행됩니다. 나중에 투영된 콘텐츠가 요소를 다시 렌더링합니다.
-일반적인 반응 경로를 통해.
-
-#### 매개변수
-
-| 이름   | 유형   | 설명 |
-| ------ | ------ | ---- |
-| 호스트 | 요소   |      |
-| 이름   | 문자열 |      |
-
-### HTML
-
-**종류:** 기능
-
-```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
-```
-
-태그된 템플릿 팩토리. 호출 사이트의 정적 문자열과 동적을 캡처합니다.
-DOM으로 구현하기 위해 {@link render}에 대한 값을 {@link TemplateResult}에 추가합니다.
-
-#### 매개변수
-
-| 이름   | 유형                   | 설명 |
-| ------ | ---------------------- | ---- |
-| 문자열 | 템플릿문자열배열       |      |
-| 가치   | 읽기 전용 알 수 없음[] |      |
-
-### Html콘텐츠
-
-**종류:** 기능
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
-```
-
-`html`을 이스케이프하지 않고 기본 웹 구성 요소 원시 콘텐츠 결과를 빌드합니다.
-
-#### 매개변수
-
-| 이름 | 유형            | 설명 |
-| ---- | --------------- | ---- |
-| 속성 | HtmlContent속성 |      |
-
-### HtmlContent속성
-
-**종류:** 인터페이스
-
-```typescript
-export interface HtmlContentProperties
-```
-
-기본 웹 구성 요소 HtmlContent 도우미가 허용하는 속성입니다.
-
-### HtmlContentResult
-
-**종류:** 클래스
-
-```typescript
-export class HtmlContentResult
-```
-
-{@link render}로 렌더링된 기본 호스트와 신뢰할 수 있는 원시 하위 마크업.
-
-### 아무것도 아님
-
-**종류:** 상수
-
-```typescript
-export const nothing: unique symbol;
-```
-
-"값 없음"으로 렌더링된 Sentinel: 하위 위치에서는 아무것도 생성하지 않습니다.
-속성 위치 속성을 제거합니다.
-lit-html의 `nothing`.
-
-### PropertyDeclaration
-
-**종류:** 인터페이스
-
-```typescript
-export interface PropertyDeclaration
-```
-
-{@link ForgeElement} 하위 클래스에 대한 반응 속성 선언입니다.
-
-### RawHtml
-
-**종류:** 클래스
-
-```typescript
-export class RawHtml
-```
-
-기본 웹 구성 요소 어댑터에서 사용하는 신뢰할 수 있는 원시 HTML 값입니다.
-
-### 세우다
-
-**종류:** 기능
-
-```typescript
-function render(
-  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
-  container: ParentNode,
-): void;
-```
-
-영구 템플릿 인스턴스를 사용하여 결과를 `container`으로 렌더링합니다. 정적
-DOM 및 기본 양식 상태는 유지되며 변경된 바인딩 범위만 유지됩니다.
-업데이트됨; 호환되지 않는 템플릿 종류는 렌더러 소유 콘텐츠를 대체합니다.
-
-#### 매개변수
-
-| 이름     | 유형                                                                 | 설명 |
-| -------- | -------------------------------------------------------------------- | ---- |
-| 결과     | 템플릿결과 \| DomTemplateResult \| 동적요소결과 \| HtmlContentResult |      |
-| 컨테이너 | 상위 노드                                                            |      |
-
-### 해결ForgeSlotMarkers
-
-**종류:** 기능
-
-```typescript
-function resolveForgeSlotMarkers(
-  root: ParentNode,
-  owner: ForgeElement,
-  sourceChildren: readonly Node[],
-  destinationRoot: ShadowRoot,
-): void;
-```
-
-렌더링 조각에서 컴파일러에서 내보낸 런타임 슬롯 마커를 확인합니다.
-
-콘텐츠 속성이 없는 마커는 기본 슬롯이 되어
-동일한 슬롯이 아닌 한 브라우저의 대체 및 할당 의미 체계
-렌더 트리에서 반복됩니다. 반복된 콘센트는 다음의 복제본을 구체화합니다.
-원래의 light-DOM 자식이므로 각 콘센트는 결정적인 콘텐츠를 받습니다.
-해당 값이 소유자의 값인 경우 콘텐츠 마커는 기본 슬롯으로 낮아집니다.
-원래의 light-DOM 하위 항목과 콘센트는 반복되지 않습니다. 그렇지 않으면 그들의
-가치는 최후의 수단으로 구체화됩니다.
-
-#### 매개변수
-
-| 이름       | 유형             | 설명 |
-| ---------- | ---------------- | ---- |
-| 루트       | 상위 노드        |      |
-| 소유자     | ForgeElement     |      |
-| 출처어린이 | 읽기 전용 Node[] |      |
-| 목적지루트 | 섀도우루트       |      |
-
-### 템플릿결과
-
-**종류:** 클래스
-
-```typescript
-export class TemplateResult
-```
-
-구문 분석된 `html\`…\`` 결과: 정적 문자열과 보간된 값.
-
-### unsafeHtml
-
-**종류:** 기능
-
-```typescript
-function unsafeHtml(value: string): RawHtml;
-```
-
-문자열을 기본 웹 구성 요소 경로에 대한 신뢰할 수 있는 하위 마크업으로 표시합니다.
-
-#### 매개변수
-
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 가치 | 문자열 |      |
-
-### 사용ID
-
-**종류:** 기능
-
-```typescript
-function useId(): string;
-```
-
-React의 `useId`을 기본 대상으로 대체합니다.
-
-중립 어휘는 컨트롤을 해당 ID에 연결하는 ID에 대해 `useId()`을 제공합니다.
-`<label for>` / `aria-describedby`; React은 이를 자체 `useId` 및 Solid에 매핑합니다.
-`createUniqueId`로 변경했지만 사용자 정의 요소에는 빌릴 수 있는 프레임워크 런타임이 없습니다.
-하나는 – 바로 이것이다.
-
-여기서는 모듈 수준 카운터로 충분하며 의도적으로 카운터보다 더 간단합니다.
-무작위/해시 생성기: ID는 **문서 내에서** 고유해야 합니다.
-컴파일러는 `render()`에서 `const x = useId()`을
-인스턴스 필드이므로 각 요소 인스턴스는 이를 정확히 한 번 호출한 다음
-평생 동안 ID를 유지합니다. 따라서 연속 호출은 절대 발생하지 않습니다.
-충돌하면 종속성(나노이드, `crypto.randomUUID`)이 필요하지 않으며
-결과는 안정적이고 디버깅이 가능합니다(`forge-1`, `forge-2`, …). 값은
-유효한 HTML `id` 및 유효한 CSS 식별자이므로 선택기에서 사용할 수 있습니다.
-이스케이프되지 않았습니다.
-
-### WebComponentsInternalsPolicy
-
-**종류:** 인터페이스
-
-```typescript
-export interface WebComponentsInternalsPolicy
-```
-
-플랫폼의 {@link ElementInternals} API에 대한 기능 요청입니다.
-
-### 웹구성요소ShadowPolicy
-
-**종류:** 인터페이스
-
-```typescript
-export interface WebComponentsShadowPolicy
-```
-
-생성된 Forge 요소에서 허용되는 입력된 섀도우 루트 옵션입니다.
-
 ## `src/runtime/class-names`
 
 ### 클래스 이름
@@ -915,9 +25,9 @@ function classNames(...values: readonly ClassValue[]): string;
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 가치 | 읽기 전용 ClassValue[] |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------------- | ----------- |
+| 가치 | 읽기 전용 ClassValue[] |             |
 
 ### 클래스값
 
@@ -939,15 +49,15 @@ export type ClassValue = | string | number | bigint | null | undefined | boolean
 function createContext(defaultValue: T): MpContext<T>;
 ```
 
-지정된 기본값을 사용하여 프레임워크 중립적 컨텍스트를 만듭니다. 다음을 반환합니다.
+지정된 기본값을 사용하여 프레임워크 중립 컨텍스트를 만듭니다. 다음을 반환합니다.
 `Provider` 요소 및 기본값 전달을 처리합니다. 현재 값을 읽어
 {@link useContext}를 사용하세요.
 
 #### 매개변수
 
-| 이름   | 유형 | 설명 |
-| ------ | ---- | ---- |
-| 기본값 | 티   |      |
+| 이름 | 유형 | 설명 |
+| ------------ | ---- | ----------- |
+| 기본값 | 티 |             |
 
 ### isContextProvider
 
@@ -961,9 +71,9 @@ function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 
 #### 매개변수
 
-| 이름 | 유형       | 설명 |
-| ---- | ---------- | ---- |
-| 가치 | 알 수 없음 |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------- | ----------- |
+| 가치 | 알 수 없음 |             |
 
 ### MP_CONTEXT
 
@@ -1019,9 +129,9 @@ function useContext(context: MpContext<T>): T;
 
 #### 매개변수
 
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| 맥락 | MpContext<T> |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------ | ----------- |
+| 맥락 | MpContext<T> |             |
 
 ## `src/runtime/dynamic`
 
@@ -1055,7 +165,7 @@ export interface MpDynamicProperties extends MpPropertyBag
 이것은 합법적으로 **열린 가방**을 유지하는 몇 안 되는 선언 중 하나입니다.
 `is` 이외의 모든 속성은 `is` 요소에 그대로 전달됩니다.
 해결되고 해당 요소는 런타임에만 알려지므로 속성은
-여기서는 수락을 열거할 수 없습니다. 구성 요소 소품 인터페이스는 *안*되어야 합니다.
+여기서는 수락을 열거할 수 없습니다. 구성 요소 소품 인터페이스는 _안_ 됩니다_
 이 패턴을 따르세요. {@link MpPropertyBag}를 참조하세요.
 
 ## `src/runtime/h`
@@ -1076,16 +186,16 @@ function h(
 
 이 런타임에 대해 작성된 모든 JSX 표현식은 다음을 호출하도록 컴파일됩니다.
 프레임워크 중립적인 {@link MpElement}를 빌드하는 `h`. 어린이가 도착할 수 있음
-후행 가변 인수(전통적인 변환) 또는 다음을 통해
+후행 가변 인수(고전적인 변환) 또는 다음을 통해
 `properties.children`; 둘 다 단일 평면 배열로 정규화됩니다.
 
 #### 매개변수
 
-| 이름   | 유형                                       | 설명 |
-| ------ | ------------------------------------------ | ---- |
-| 유형   | MpElement 유형 \| ((속성: P) => MpElement) |      |
-| 속성   | 피\| null                                  |      |
-| 어린이 | MpChild[]                                  |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------------------------- | ----------- |
+| 유형 | MpElement 유형 \| ((속성: P) => MpElement) |             |
+| 속성 | 피\| null |             |
+| 어린이 | MpChild[] |             |
 
 ## `src/runtime/hooks`
 
@@ -1104,7 +214,7 @@ export type MpDependencyList = readonly unknown[];
 **종류:** 구성요소
 
 ```typescript
-export type MpEffectCallback = () => void | MpEffectCleanup;
+export type MpEffectCallback = () => MpEffectCleanup | void;
 ```
 
 {@link useEffect}에 의해 실행되는 효과 콜백입니다.
@@ -1134,7 +244,7 @@ React의 `MutableRefObject`을 미러링하는 변경 가능한 참조 컨테이
 **종류:** 구성요소
 
 ```typescript
-export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
+export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 ```
 
 새로운 값으로 또는 업데이트 기능을 통해 상태를 업데이트합니다.
@@ -1151,10 +261,10 @@ function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 
 #### 매개변수
 
-| 이름    | 유형             | 설명 |
-| ------- | ---------------- | ---- |
-| 콜백    | 티               |      |
-| _종속성 | MpDependencyList |      |
+| 이름 | 유형 | 설명 |
+| ------------- | ---------------- | ----------- |
+| 콜백 | 티 |             |
+| _종속성 | MpDependencyList |             |
 
 ### 사용효과
 
@@ -1169,10 +279,10 @@ function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList):
 
 #### 매개변수
 
-| 이름    | 유형             | 설명 |
-| ------- | ---------------- | ---- |
-| _효과   | MpEffectCallback |      |
-| _종속성 | MpDependencyList |      |
+| 이름 | 유형 | 설명 |
+| ------------- | ---------------- | ----------- |
+| _효과 | MpEffectCallback |             |
+| _종속성 | MpDependencyList |             |
 
 ### 사용ID
 
@@ -1202,17 +312,17 @@ function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 
 #### 매개변수
 
-| 이름    | 유형             | 설명 |
-| ------- | ---------------- | ---- |
-| 공장    | () => 티         |      |
-| _종속성 | MpDependencyList |      |
+| 이름 | 유형 | 설명 |
+| ------------- | ---------------- | ----------- |
+| 공장 | () => 티 |             |
+| _종속성 | MpDependencyList |             |
 
 ### useRef
 
 **종류:** 기능
 
 ```typescript
-function useRef(initial: T): MpRef<T>;
+function useRef(initial?: T): MpRef<T>;
 ```
 
 중립 `useRef`. 단일에 대한 새로운 `{ current }` 컨테이너를 반환합니다.
@@ -1221,15 +331,15 @@ function useRef(initial: T): MpRef<T>;
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| ---- | ---- | ---- |
-| 초기 | 티   |      |
+| ------- | ---- | ----------- |
+| 초기 | 티 |             |
 
-### 사용 상태
+### 사용상태
 
 **종류:** 기능
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>];
+function useState(initial?: T | (() => T)): [T, MpSetState<T>];
 ```
 
 중립 `useState`. 기본 구현은 초기 값을 반환하고
@@ -1238,9 +348,9 @@ function useState(initial: T | (() => T)): [T, MpSetState<T>];
 
 #### 매개변수
 
-| 이름 | 유형            | 설명 |
-| ---- | --------------- | ---- |
-| 초기 | 티\| (() => 티) |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------- | ----------- |
+| 초기 | 티\| (() => 티) |             |
 
 ## `src/runtime/html-content`
 
@@ -1273,6 +383,29 @@ export interface HtmlContentProperties extends MpPropertyBag
 
 ## `src/runtime/slots`
 
+### 수집SlottedChildren
+
+**종류:** 기능
+
+```typescript
+function collectSlottedChildren(children: readonly MpChild[]): SlottedChildren;
+```
+
+`slot="…"` 마커로 상위 구성요소의 하위를 분할하여
+한 번 쓰기 구성 요소는 콘텐츠를 하위 구성 요소의 명명된 슬롯에 **전달**할 수 있습니다.
+(`<ForgeDropdown><button slot="trigger" />…</ForgeDropdown>`). 들고 다니는 아이들
+`slot` 속성은 해당 이름 아래에 그룹화되어 있습니다(마커가 제거되어 있으므로
+확인된 콘텐츠는 절대로 `slot` 속성을 방출하지 않습니다. 그 밖의 모든 것
+{@link SlottedChildren.defaultChildren}에 유지됩니다. 어댑터는 명명된
+컴파일러가 라우팅하는 방법을 정확히 반영하여 자식의 소품으로 그룹화합니다.
+Vue `<template #name>` / React `name` prop과 동일한 `slot="…"` 마커.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------------------ | ----------- |
+| 어린이 | 읽기 전용 MpChild[] |             |
+
 ### hasSlot
 
 **종류:** 기능
@@ -1282,7 +415,7 @@ function hasSlot(name?: string): boolean;
 ```
 
 둘러싸는 구성 요소에 슬롯에 대한 콘텐츠가 제공되었는지 여부 - 중립
-Vue의 `$slots.x` / React `properties.x != null` 검사에 해당합니다. 안
+Vue의 `$slots.x` / React `properties.x != null` 검사에 대응합니다. 안
 생략된(또는 `'default'`) 이름은 기본 슬롯(`children`)을 대상으로 합니다.
 
 ```tsx
@@ -1304,16 +437,16 @@ Vue의 `$slots.x` / React `properties.x != null` 검사에 해당합니다. 안
 
 #### 매개변수
 
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 이름 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 이름 | 문자열 |             |
 
 ### MpRender속성
 
 **종류:** 구성요소
 
 ```typescript
-export type MpRenderProperty<S = MpPropertyBag> = (scope: S) => MpChild | readonly MpChild[];
+export type MpRenderProperty<S = MpPropertyBag, R = MpChild | readonly MpChild[]> = (scope: S) => R;
 ```
 
 **render-prop / 범위가 지정된 슬롯** 함수: 슬롯의 범위가 주어지면 반환됩니다.
@@ -1371,9 +504,9 @@ function pushSlotScope(properties: MpPropertyBag): void;
 
 #### 매개변수
 
-| 이름 | 유형          | 설명 |
-| ---- | ------------- | ---- |
-| 속성 | MpPropertyBag |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------- | ----------- |
+| 속성 | MpPropertyBag |             |
 
 ### 해결슬롯
 
@@ -1384,16 +517,45 @@ function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[])
 ```
 
 포함된 항목에 대해 `<Slot name="…" />`의 콘텐츠를 확인합니다.
-구성 요소의 props, 아무것도 없을 때 슬롯 자체의 하위 항목으로 되돌아갑니다.
+구성요소의 props, 아무것도 없을 때 슬롯 자체의 하위 항목으로 돌아감
 제공됩니다. 범위가 지정된 슬롯(함수 값 슬롯 소품)은 다음과 같이 호출됩니다.
 슬롯 요소의 나머지(`name`이 아닌) 속성.
 
 #### 매개변수
 
-| 이름 | 유형                | 설명 |
-| ---- | ------------------- | ---- |
-| 속성 | MpSlot속성          |      |
-| 대체 | 읽기 전용 MpChild[] |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------ | ----------- |
+| 속성 | MpSlot속성 |             |
+| 대체 | 읽기 전용 MpChild[] |             |
+
+### 해결슬롯마커
+
+**종류:** 기능
+
+```typescript
+function resolveSlotMarkers(children: readonly MpChild[]): MpChild[];
+```
+
+상위 작성자 내의 모든 `<Slot name="…" />` **마커**를 심층적으로 해결합니다.
+**현재**(부모) 범위에 대한 하위 트리, 구체적인 트리 반환
+내용. 이것이 한 번 쓰기 구성 요소가 자신의 구성 요소를 **전달**할 수 있게 하는 것입니다.
+하위 구성 요소의 슬롯에 명명된 슬롯 —
+`<ForgeDrawer><div slot="header"><Slot name="startHeader" /></div></ForgeDrawer>`
+— 그리고 (전달 구성 요소에 대해) 어휘적으로 정확하게 해결되도록 합니다.
+컴파일된 출력과 같습니다(React는 `properties.startHeader`를
+부모의 렌더링; Vue은 `<template #header>`을 통해 슬롯을 전달합니다.
+
+어댑터는 구성 요소를 푸시하기 **전에** 구성 요소 요소의 하위 요소에 대해 이를 호출합니다.
+하위 범위이므로 마커는 이를 작성한 상위 범위를 볼 수 있습니다. 마커
+자식 자체 반환은 그대로 유지됩니다(나중에 해결됨).
+아이 자신의 범위). 슬롯이 아닌 요소는 재귀적으로 탐색되므로 중첩된 마커가 표시됩니다.
+(`slot="…"` 래퍼 내부)도 해결됩니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------------------ | ----------- |
+| 어린이 | 읽기 전용 MpChild[] |             |
 
 ## `src/runtime/teleport`
 
@@ -1472,15 +634,476 @@ export const TransitionGroup: MpComponent<MpTransitionGroupProperties>;
 (`<TransitionGroup name="…">{items.map(…)}</TransitionGroup>`),
 {@link Transition}의 다중 하위 대응물입니다.
 
-한 번만 쓸 수 있는 구성 요소는 키 목록(토스트 스택, 재정렬 가능)에 애니메이션을 적용합니다.
+한 번 쓰기 구성 요소는 키 목록(토스트 스택, 재정렬 가능)에 애니메이션을 적용합니다.
 목록 — `<TransitionGroup>`에 매핑된 하위 항목을 래핑하여 정확히 다음과 같이 합니다.
 Vue의 내장 `<TransitionGroup>`이 그렇습니다. {@link Transition}처럼 절대 그렇지 않습니다.
 직접 호출: 어댑터가 ID로 이를 가로채고(렌더링)
 SSR을 위한 하위 위치) 및 `@mission-platform/vite-plugin-forge`가 다시 매핑됩니다.
-각 프레임워크의 기본 그룹 전환으로 가져오기 — Vue의 내장
+각 프레임워크의 기본 그룹 전환으로 가져오기 - Vue의 내장
 `<TransitionGroup>` 및 `@mission-platform/forge-adapters/react` CSS 클래스 드라이버.
 
 ## `src/runtime/types`
+
+### 낙타투케밥
+
+**종류:** 유형
+
+```typescript
+export type CamelToKebab<S extends string> = S extends `$
+```
+
+camelCase 문자열 유형을 kebab-case로 변환합니다.
+
+### createAvatarContainerStyle
+
+**종류:** 기능
+
+```typescript
+function createAvatarContainerStyle(): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+### createAvatarImageImgStyle
+
+**종류:** 기능
+
+```typescript
+function createAvatarImageImgStyle(): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+### createAvatarInlineStyle
+
+**종류:** 기능
+
+```typescript
+function createAvatarInlineStyle(
+  size: string = 'md',
+  shape: string = 'circle',
+  src?: string,
+  variant: string = 'primary',
+  color?: string,
+): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 크기 | 문자열 |             |
+| 모양 | 문자열 |             |
+| 소스 | 문자열 |             |
+| 변형 | 문자열 |             |
+| 색상 | 문자열 |             |
+
+### createAvatarStatusInlineStyle
+
+**종류:** 기능
+
+```typescript
+function createAvatarStatusInlineStyle(size: string = 'md', status?: string): Record<string, string> | undefined;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------ | ----------- |
+| 크기 | 문자열 |             |
+| 상태 | 문자열 |             |
+
+### createBackgroundVideoInlineStyle
+
+**종류:** 기능
+
+```typescript
+function createBackgroundVideoInlineStyle(minHeight: string = '24rem'): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | ------ | ----------- |
+| 최소 높이 | 문자열 |             |
+
+### createCodeScannerStyle
+
+**종류:** 기능
+
+```typescript
+function createCodeScannerStyle(): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+### createContainerInlineStyle
+
+**종류:** 기능
+
+```typescript
+function createContainerInlineStyle(
+  variant: string = 'responsive',
+  maxWidth: string = 'lg',
+  gutter: string = 'md',
+  center: boolean = true,
+): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------- | ----------- |
+| 변형 | 문자열 |             |
+| 최대 너비 | 문자열 |             |
+| 시궁창 | 문자열 |             |
+| 센터 | 부울 |             |
+
+### createCoverObjectFitStyle
+
+**종류:** 기능
+
+```typescript
+function createCoverObjectFitStyle(): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+### createForgeComponentStyle
+
+**종류:** 기능
+
+```typescript
+function createForgeComponentStyle(
+  prefix: string,
+  properties?: T,
+  style?: Record<string, string>,
+): Record<string, string> | undefined;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------- | ----------- |
+| 접두사 | 문자열 |             |
+| 속성 | 티 |             |
+| 스타일 | 기록<string, string> |             |
+
+### createForgeStyle
+
+**종류:** 기능
+
+```typescript
+function createForgeStyle(style: T): DefinedForgeStyle<T> | undefined;
+```
+
+정의된 사용자 정의 속성 값에서 중립 `style` 맵을 빌드합니다.
+
+값이 `undefined`인 항목은 생략되므로 SCSS
+`var(--forge-*, <token fallback>)` 체인은 활성 상태로 유지됩니다. `undefined`을 반환합니다.
+재정의가 없을 때.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---- | ----------- |
+| 스타일 | 티 |             |
+
+### createGaugeInlineMath
+
+**종류:** 기능
+
+```typescript
+function createGaugeInlineMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): {
+  clampedValue: number;
+  percentage: number;
+  displayValue: string;
+  dashOffset: number;
+};
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 번호 |             |
+| 분 | 번호 |             |
+| 최대 | 번호 |             |
+
+### createGridLayoutInlineStyle
+
+**종류:** 기능
+
+```typescript
+function createGridLayoutInlineStyle(rows: number = 1, columns: number = 1, gap: string = 'md'): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 행 | 번호 |             |
+| 열 | 번호 |             |
+| 격차 | 문자열 |             |
+
+### CreateHighlightStyle
+
+**종류:** 기능
+
+```typescript
+function createHighlightStyle(left: string = '0%', width: string = '100%'): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 왼쪽 | 문자열 |             |
+| 폭 | 문자열 |             |
+
+### createLeftPositionStyle
+
+**종류:** 기능
+
+```typescript
+function createLeftPositionStyle(left: string = '0%'): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 왼쪽 | 문자열 |             |
+
+### createObjectFitStyle
+
+**종류:** 기능
+
+```typescript
+function createObjectFitStyle(fit: string = 'cover'): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 맞는 | 문자열 |             |
+
+### createPreviewTextStyle
+
+**종류:** 기능
+
+```typescript
+function createPreviewTextStyle(): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+### createProgressBarPercent
+
+**종류:** 기능
+
+```typescript
+function createProgressBarPercent(
+  value: number = 0,
+  max: number = 100,
+  indeterminate: boolean = false,
+): { percent: number; percentLabel: string };
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------- | ------- | ----------- |
+| 가치 | 번호 |             |
+| 최대 | 번호 |             |
+| 불확정 | 부울 |             |
+
+### createRangeInputMath
+
+**종류:** 기능
+
+```typescript
+function createRangeInputMath(
+  modelValue: [number, number] = [0, 100],
+  min: number = 0,
+  max: number = 100,
+): {
+  minPercent: number;
+  maxPercent: number;
+  highlightLeft: string;
+  highlightWidth: string;
+  minLeft: string;
+  maxLeft: string;
+};
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------- | ----------- |
+| 모델값 | [숫자, 숫자] |             |
+| 분 | 번호 |             |
+| 최대 | 번호 |             |
+
+### createResponsiveImageInlineStyle
+
+**종류:** 기능
+
+```typescript
+function createResponsiveImageInlineStyle(aspectRatio?: string): Record<string, string> | undefined;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ------ | ----------- |
+| 종횡비 | 문자열 |             |
+
+### createResponsiveVideoInlineStyle
+
+**종류:** 기능
+
+```typescript
+function createResponsiveVideoInlineStyle(
+  aspectRatio: string = '16 / 9',
+  fit: string = 'contain',
+): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ------ | ----------- |
+| 종횡비 | 문자열 |             |
+| 맞는 | 문자열 |             |
+
+### createSkeletonInlineStyle
+
+**종류:** 기능
+
+```typescript
+function createSkeletonInlineStyle(width?: string, height?: string): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------ | ----------- |
+| 폭 | 문자열 |             |
+| 신장 | 문자열 |             |
+
+### createSliderMath
+
+**종류:** 기능
+
+```typescript
+function createSliderMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): { percent: number; fillWidth: string; thumbLeft: string };
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 번호 |             |
+| 분 | 번호 |             |
+| 최대 | 번호 |             |
+
+### createVerticalLayoutInlineStyle
+
+**종류:** 기능
+
+```typescript
+function createVerticalLayoutInlineStyle(gap: string = 'var(--mp-spacing-4)'): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 격차 | 문자열 |             |
+
+### createWidthStyle
+
+**종류:** 기능
+
+```typescript
+function createWidthStyle(width: string = '0%'): Record<string, string>;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 폭 | 문자열 |             |
+
+### CSSStyle속성
+
+**종류:** 유형
+
+```typescript
+export type CSSStyleProperties =
+```
+
+JSX `style` 속성에서 사용되는 프레임워크 중립 CSS 스타일 객체입니다.
+
+구성요소 소유 사용자 정의 속성은 명시적으로 이 유형을 확장해야 합니다.
+`--forge-*` 키(예: `CSSStyleProperties & { '--forge-button-radius'?: string | undefined }`)
+유형이 지정되지 않은 스타일 사전이나 DOM이 아닌 `styles` 백을 도입하는 대신.
+
+### ForgeProperty가방
+
+**종류:** 유형
+
+```typescript
+export type ForgePropertyBag<T extends Record<string, string | undefined> = Record<string, string | undefined>> =
+```
+
+kebab-case 또는 camelCase 속성 키를 허용하는 허용 속성 재정의 백입니다.
 
 ### 파편
 
@@ -1515,9 +1138,19 @@ function isMpElement(value: unknown): value is MpElement;
 
 #### 매개변수
 
-| 이름 | 유형       | 설명 |
-| ---- | ---------- | ---- |
-| 가치 | 알 수 없음 |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------- | ----------- |
+| 가치 | 알 수 없음 |             |
+
+### 케밥투카멜
+
+**종류:** 유형
+
+```typescript
+export type KebabToCamel<S extends string> = S extends `$
+```
+
+케밥 케이스 문자열 유형을 camelCase로 변환합니다.
 
 ### MPChild
 
@@ -1573,11 +1206,11 @@ export type MpElementType = string | MpFragment | MpComponent;
 export type MpPropertyBag = Record<string, unknown>;
 ```
 
-{@link MpElement}가 운반하는 속성/소품의 **런타임** 백입니다.
+{@link MpElement}가 전달하는 속성/소품의 **런타임** 백입니다.
 
 이것은 의도적으로 단순하고 유형이 지정되지 않은 레코드입니다. JSX 팩토리에서 사용하는 레코드입니다.
 빌드 및 중립 트리를 탐색하는 동안 어댑터가 색인화하는 항목입니다. 그것은
-구성 요소 소품의 기본 유형이 _아닙니다_ — 구성 요소는
+_아님_ 컴포넌트 소품의 기본 유형 — 컴포넌트는 정확히 다음을 선언합니다.
 허용되는 속성(`children?: MpChild | readonly MpChild[]` 포함)
 렌더링할 때) 초과 속성 검사 및 `keyof`이 유지되도록 합니다.
 컴파일된 모든 타겟에서 의미가 있습니다. 모든 요소마다 소수의 속성
@@ -1595,7 +1228,7 @@ export interface MpReservedProperties
 이는 옵트인에 의해 `JSX.IntrinsicAttributes`으로 연결되어 자체적으로 선언됩니다.
 `@mission-platform/forge-jsx/jsx-globals` 입력.
 
-- `key`는 렌더링된 목록의 항목을 식별하므로 대상 프레임워크가
+- `key`는 대상 프레임워크가 렌더링된 목록의 항목을 식별합니다.
   업데이트 전반에 걸쳐 이를 조정합니다(React의 `key`, Vue의 `:key`).
 - `slot`는 이 요소를 상위 구성 요소의 **명명된 슬롯**으로 라우팅합니다.
   (`<ForgeIcon slot="start" />`). 컴파일러는 이를 Vue으로 변환합니다.
@@ -1604,9 +1237,837 @@ export interface MpReservedProperties
   `"default"`)은 기본 슬롯을 의미합니다.
 
 둘 다 구성 요소 자체 props 계약의 일부가 아닙니다. 둘 다
-_상위_(조정자, 슬롯 라우터), 구성 요소 자체가 아닌 —
+_parent_(조정자, 슬롯 라우터), 구성 요소 자체로는 절대 —
 따라서 각 요소에 선언되지 않고 여기의 모든 요소에 대해 허용됩니다.
 소품 인터페이스.
+
+### Mp서스펜스아이
+
+**종류:** 구성요소
+
+```typescript
+export type MpSuspenseChild = MpChild | PromiseLike<MpSuspenseChild> | readonly MpSuspenseChild[];
+```
+
+Suspense에서 허용되는 동기식 또는 재귀적 비동기식 콘텐츠입니다.
+
+### MpSuspense속성
+
+**종류:** 구성요소
+
+```typescript
+export interface MpSuspenseProperties
+```
+
+프레임워크 중립적 서스펜스 마커가 전달하는 소품입니다.
+
+### 렌더아코디언항목
+
+**종류:** 기능
+
+```typescript
+function renderAccordionItems(
+  items: readonly any[] = [],
+  _exclusive: boolean = true,
+  defaultOpen: readonly string[] = [],
+  _properties?: any,
+): any;
+```
+
+camelCase 또는 kebab-case 속성 모음에서 구성 요소 범위 CSS 사용자 정의 속성 스타일 맵을 구축합니다.
+
+camelCase 키를 kebab-case로 자동 변환하고 구성 요소 네임스페이스를 보장합니다.
+접두사 `--forge-<prefix>-`이 적용되고 정의되지 않은 항목이 생략되므로 CSS 토큰이 대체됩니다.
+체인은 활성 상태로 유지됩니다. 정의된 재정의가 없으면 `undefined`을 반환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ----------------- | ----------- |
+| 아이템 | 읽기 전용 임의[] |             |
+| _독점 | 부울 |             |
+| 기본열기 | 읽기 전용 문자열[] |             |
+| _속성 | 어떤 |             |
+
+### renderActivityFeedItems
+
+**종류:** 기능
+
+```typescript
+function renderActivityFeedItems(items: readonly any[] = [], maxItems?: number, onItemClick?: (item: any) => void): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ------------------- | ----------- |
+| 아이템 | 읽기 전용 임의[] |             |
+| 최대항목수 | 번호 |             |
+| onItemClick | (항목: 임의) => 무효 |             |
+
+### 렌더자산브라우저그리드
+
+**종류:** 기능
+
+```typescript
+function renderAssetBrowserGrid(
+  assets: readonly any[] = [],
+  selected: readonly string[] = [],
+  onSelect?: (asset: any) => void,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | -------------------- | ----------- |
+| 자산 | 읽기 전용 임의[] |             |
+| 선택됨 | 읽기 전용 문자열[] |             |
+| 선택 | (자산: 임의) => 무효 |             |
+
+### 렌더바코드Svg
+
+**종류:** 기능
+
+```typescript
+function renderBarcodeSvg(
+  value: string = '',
+  symbology: string = 'code128',
+  color: string = '#000000',
+  background: string = '#ffffff',
+  displayValue: boolean = false,
+  ariaLabel?: string,
+  onError?: (err: Error) => void,
+  showActions?: any,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------ | -------------------- | ----------- |
+| 가치 | 문자열 |             |
+| 기호 | 문자열 |             |
+| 색상 | 문자열 |             |
+| 배경 | 문자열 |             |
+| 표시값 | 부울 |             |
+| 아리아라벨 | 문자열 |             |
+| 오류 발생 | (err: 오류) => 무효 |             |
+| 쇼액션 | 어떤 |             |
+
+### 렌더 이동 경로 항목
+
+**종류:** 기능
+
+```typescript
+function renderBreadcrumbItems(items: readonly any[] = [], separator: string = '/'): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | -------------- | ----------- |
+| 아이템 | 읽기 전용 임의[] |             |
+| 구분 기호 | 문자열 |             |
+
+### renderCarouselIndicatorItems
+
+**종류:** 기능
+
+```typescript
+function renderCarouselIndicatorItems(
+  total: number = 0,
+  current: number = 0,
+  clickable: boolean = true,
+  variant: string = 'dots',
+  onSelect?: (index: number) => void,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | ----------------------- | ----------- |
+| 합계 | 번호 |             |
+| 현재 | 번호 |             |
+| 클릭 가능 | 부울 |             |
+| 변형 | 문자열 |             |
+| 선택 | (색인: 번호) => 무효 |             |
+
+### renderCarousel슬라이드
+
+**종류:** 기능
+
+```typescript
+function renderCarouselSlides(
+  slides: readonly any[] = [],
+  current: number = 0,
+  _orientation: string = 'horizontal',
+  slideWidth: number = 100,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------ | -------------- | ----------- |
+| 슬라이드 | 읽기 전용 임의[] |             |
+| 현재 | 번호 |             |
+| _방향 | 문자열 |             |
+| 슬라이드폭 | 번호 |             |
+
+### 렌더카탈로그아이콘
+
+**종류:** 기능
+
+```typescript
+function renderCatalogIcon(name: string, size: number = 20, color: string = 'currentColor'): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 이름 | 문자열 |             |
+| 크기 | 번호 |             |
+| 색상 | 문자열 |             |
+
+### renderCodeBlockLineNumbers
+
+**종류:** 기능
+
+```typescript
+function renderCodeBlockLineNumbers(code: string = ''): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 코드 | 문자열 |             |
+
+### renderCommandPaletteGroups
+
+**종류:** 기능
+
+```typescript
+function renderCommandPaletteGroups(
+  commands: readonly any[] = [],
+  _groups: readonly string[] = [],
+  activeIndex: number = 0,
+  onSelect?: (command: any) => void,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ---------------------- | ----------- |
+| 명령 | 읽기 전용 임의[] |             |
+| _그룹 | 읽기 전용 문자열[] |             |
+| 액티브인덱스 | 번호 |             |
+| 선택 | (명령어: 모두) => void |             |
+
+### 렌더링댓글트리
+
+**종류:** 기능
+
+```typescript
+function renderCommentTree(
+  comments: readonly any[] = [],
+  onReply?: (comment: any) => void,
+  onResolve?: (comment: any) => void,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | ---------------------- | ----------- |
+| 댓글 | 읽기 전용 임의[] |             |
+| 응답에 | (코멘트: 모두) => 무효 |             |
+| 해결에 | (코멘트: 모두) => 무효 |             |
+
+### renderComparisonTableBody
+
+**종류:** 기능
+
+```typescript
+function renderComparisonTableBody(items: readonly any[] = [], features: readonly any[] = []): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | -------------- | ----------- |
+| 아이템 | 읽기 전용 임의[] |             |
+| 기능 | 읽기 전용 임의[] |             |
+
+### renderComparisonTableHeaders
+
+**종류:** 기능
+
+```typescript
+function renderComparisonTableHeaders(items: readonly any[] = []): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | -------------- | ----------- |
+| 아이템 | 읽기 전용 임의[] |             |
+
+### renderCtaBannerActions
+
+**종류:** 기능
+
+```typescript
+function renderCtaBannerActions(actions: readonly any[] = []): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | -------------- | ----------- |
+| 행동 | 읽기 전용 임의[] |             |
+
+### renderDataCardMetrics
+
+**종류:** 기능
+
+```typescript
+function renderDataCardMetrics(metrics: readonly any[] = []): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | -------------- | ----------- |
+| 측정항목 | 읽기 전용 임의[] |             |
+
+### renderDropdownItems
+
+**종류:** 기능
+
+```typescript
+function renderDropdownItems(items: readonly any[] = [], onSelect?: (item: any) => void): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------------------- | ----------- |
+| 아이템 | 읽기 전용 임의[] |             |
+| 선택 | (항목: 임의) => 무효 |             |
+
+### 렌더이미지 소스
+
+**종류:** 기능
+
+```typescript
+function renderImageSources(sources?: readonly any[]): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | -------------- | ----------- |
+| 소스 | 읽기 전용 임의[] |             |
+
+### renderMarketingHeaderActions
+
+**종류:** 기능
+
+```typescript
+function renderMarketingHeaderActions(actions: readonly any[] = []): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | -------------- | ----------- |
+| 행동 | 읽기 전용 임의[] |             |
+
+### renderNavbarItems
+
+**종류:** 기능
+
+```typescript
+function renderNavbarItems(items: readonly any[] = []): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | -------------- | ----------- |
+| 아이템 | 읽기 전용 임의[] |             |
+
+### renderNotificationPanelItems
+
+**종류:** 기능
+
+```typescript
+function renderNotificationPanelItems(
+  notifications: readonly any[] = [],
+  onDismiss?: (id: string) => void,
+  _onRead?: (id: string) => void,
+  onActionClick?: (item: any) => void,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------- | -------------------- | ----------- |
+| 알림 | 읽기 전용 임의[] |             |
+| 해제시 | (id: 문자열) => void |             |
+| _onRead | (id: 문자열) => void |             |
+| onAction클릭 | (항목: 임의) => 무효 |             |
+
+### renderPaginationControls
+
+**종류:** 기능
+
+```typescript
+function renderPaginationControls(
+  currentPage: number = 1,
+  totalPages: number = 1,
+  maxVisiblePages: number = 7,
+  showEdges: boolean = false,
+  onPageChange?: (page: number) => void,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------------- | ---------------------- | ----------- |
+| 현재페이지 | 번호 |             |
+| 총 페이지 수 | 번호 |             |
+| maxVisible페이지 | 번호 |             |
+| 쇼엣지 | 부울 |             |
+| 페이지변경 | (페이지: 번호) => 무효 |             |
+
+### 렌더등급별
+
+**종류:** 기능
+
+```typescript
+function renderRatingStars(
+  max: number = 5,
+  modelValue: number = 0,
+  disabled: boolean = false,
+  isReadonly: boolean = false,
+  onUpdateModelValue?: (val: number) => void,
+  onChange?: (val: number) => void,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------------ | --------------------- | ----------- |
+| 최대 | 번호 |             |
+| 모델값 | 번호 |             |
+| 장애인 | 부울 |             |
+| 읽기 전용 | 부울 |             |
+| onUpdateModel값 | (val: 숫자) => 무효 |             |
+| 변경시 | (val: 숫자) => 무효 |             |
+
+### renderResourcePlanner행
+
+**종류:** 기능
+
+```typescript
+function renderResourcePlannerRows(
+  resources: readonly any[] = [],
+  segments: readonly any[] = [],
+  _assignments: readonly any[] = [],
+  _availability: readonly any[] = [],
+  _onEventClick?: (assignment: any) => void,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------- | ------------------------- | ----------- |
+| 자원 | 읽기 전용 임의[] |             |
+| 세그먼트 | 읽기 전용 임의[] |             |
+| _과제 | 읽기 전용 임의[] |             |
+| _가용성 | 읽기 전용 임의[] |             |
+| _onEventClick | (할당: 모두) => 무효 |             |
+
+### renderSegmentControl옵션
+
+**종류:** 기능
+
+```typescript
+function renderSegmentControlOptions(
+  options: readonly any[] = [],
+  modelValue?: string,
+  onSelect?: (value: string) => void,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------- | ----------- |
+| 옵션 | 읽기 전용 임의[] |             |
+| 모델값 | 문자열 |             |
+| 선택 | (값: 문자열) => void |             |
+
+### renderSiteFooterSections
+
+**종류:** 기능
+
+```typescript
+function renderSiteFooterSections(sections: readonly any[] = []): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | -------------- | ----------- |
+| 섹션 | 읽기 전용 임의[] |             |
+
+### renderSteps항목
+
+**종류:** 기능
+
+```typescript
+function renderStepsItems(
+  steps: readonly any[] = [],
+  currentStep: number = 0,
+  onStepClick?: (step: number) => void,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ---------------------- | ----------- |
+| 단계 | 읽기 전용 임의[] |             |
+| 현재단계 | 번호 |             |
+| 온스텝클릭 | (단계: 번호) => 무효 |             |
+
+### renderTableColumns
+
+**종류:** 기능
+
+```typescript
+function renderTableColumns(columns: readonly any[] = []): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | -------------- | ----------- |
+| 열 | 읽기 전용 임의[] |             |
+
+### renderTableRows
+
+**종류:** 기능
+
+```typescript
+function renderTableRows(data: readonly any[] = [], columns: readonly any[] = []): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | -------------- | ----------- |
+| 데이터 | 읽기 전용 임의[] |             |
+| 열 | 읽기 전용 임의[] |             |
+
+### 렌더탭목록
+
+**종류:** 기능
+
+```typescript
+function renderTabsList(
+  tabs: readonly any[] = [],
+  activeId?: string,
+  variant: string = 'line',
+  closable: boolean = false,
+  onSelect?: (id: string) => void,
+  onClose?: (id: string) => void,
+  addable: boolean = false,
+  addLabel: string = 'Add tab',
+  onAdd?: () => void,
+): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | -------------------- | ----------- |
+| 탭 | 읽기 전용 임의[] |             |
+| 활성 ID | 문자열 |             |
+| 변형 | 문자열 |             |
+| 닫을 수 있는 | 부울 |             |
+| 선택 | (id: 문자열) => void |             |
+| 닫기 | (id: 문자열) => void |             |
+| 추가 가능 | 부울 |             |
+| 라벨 추가 | 문자열 |             |
+| 추가 | () => 무효 |             |
+
+### renderTimelineItems
+
+**종류:** 기능
+
+```typescript
+function renderTimelineItems(items: readonly any[] = [], align: string = 'start'): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | -------------- | ----------- |
+| 아이템 | 읽기 전용 임의[] |             |
+| 정렬 | 문자열 |             |
+
+### renderTreeViewNodes
+
+**종류:** 기능
+
+```typescript
+function renderTreeViewNodes(nodes: readonly any[] = [], onSelect?: (node: any) => void): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------------------- | ----------- |
+| 노드 | 읽기 전용 임의[] |             |
+| 선택 | (node: 임의) => 무효 |             |
+
+### 읽지 않은 렌더링배지
+
+**종류:** 기능
+
+```typescript
+function renderUnreadBadge(unreadCount: number = 0): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ------ | ----------- |
+| 읽지 않은 개수 | 번호 |             |
+
+### renderVideoSources
+
+**종류:** 기능
+
+```typescript
+function renderVideoSources(sources?: readonly any[]): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | -------------- | ----------- |
+| 소스 | 읽기 전용 임의[] |             |
+
+### 해결카탈로그아이콘
+
+**종류:** 기능
+
+```typescript
+function resolveCatalogIcon(catalog: Record<string, any>, name: string): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------------------- | ----------- |
+| 카탈로그 | 기록<string, any> |             |
+| 이름 | 문자열 |             |
+
+### 해결이메일타이포그래피태그
+
+**종류:** 기능
+
+```typescript
+function resolveEmailTypographyTag(asTag?: string, variant?: string): string;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 태그 | 문자열 |             |
+| 변형 | 문자열 |             |
+
+### 해결아이콘픽셀크기
+
+**종류:** 기능
+
+```typescript
+function resolveIconPixelSize(size: string = 'md'): number;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 크기 | 문자열 |             |
+
+### 해결상태아이콘
+
+**종류:** 기능
+
+```typescript
+function resolveStatusIcon(catalog: Record<string, any>, status: string = 'neutral'): any;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------------------- | ----------- |
+| 카탈로그 | 기록<string, any> |             |
+| 상태 | 문자열 |             |
+
+### 해결SyncStatusLabel
+
+**종류:** 기능
+
+```typescript
+function resolveSyncStatusLabel(status: string = 'synced', label?: string): string;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------ | ----------- |
+| 상태 | 문자열 |             |
+| 라벨 | 문자열 |             |
+
+### 해결TextVariantForQuote
+
+**종류:** 기능
+
+```typescript
+function resolveTextVariantForQuote(size: string = 'md'): string;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 크기 | 문자열 |             |
+
+### 해결타이포그래피ScaleVariant
+
+**종류:** 기능
+
+```typescript
+function resolveTypographyScaleVariant(variant?: string): string;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 변형 | 문자열 |             |
+
+### 해결TypographyTag
+
+**종류:** 기능
+
+```typescript
+function resolveTypographyTag(asTag?: string, href?: string, variant?: string): string;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 태그 | 문자열 |             |
+| href | 문자열 |             |
+| 변형 | 문자열 |             |
 
 ### 슬롯
 
@@ -1620,7 +2081,17 @@ export const Slot: MpComponent;
 
 {@link Fragment}와 마찬가지로 기능 구성 요소 마커이므로 기존 `h`
 팩토리에서는 `<Slot name="…" />`을 유효한 JSX 요소 유형으로 허용합니다.
-하지만 실제로는 호출되지 않습니다. 빌드 타임 컴파일러
+그러나 실제로는 호출되지 않습니다. 빌드 타임 컴파일러
 (`@mission-platform/vite-plugin-forge`)는 모든 `<Slot>`를 대상에 다시 씁니다.
 프레임워크 자체 슬롯 메커니즘을 사용하며 런타임 어댑터는 이를 가로채서
 통화 전에 신원(`type === Slot`)을 확인하세요. 직접 호출하는 것은 버그입니다.
+
+### 미결
+
+**종류:** 상수
+
+```typescript
+export const Suspense: MpComponent<MpSuspenseProperties>;
+```
+
+각 프레임워크 컴파일러에 의해 네이티브 비동기 경계 마커가 낮아졌습니다.

@@ -43,17 +43,17 @@ function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | 
 Retourneer een ref om aan een element te koppelen (`ref={reference}`) en voer `draw` uit
 tegen de D3-selectie van dat element.
 
-Het effect wordt uitgevoerd na de mount en wordt opnieuw uitgevoerd wanneer `dependencies` verandert; wanneer
-de scheids is nog steeds leeg, de trekking wordt overgeslagen. `draw` kan een demontage retourneren
+Het effect wordt uitgevoerd na het mounten en wordt opnieuw uitgevoerd wanneer `dependencies` verandert; wanneer
+de scheids is nog steeds leeg, de trekking wordt overgeslagen. `draw` kan een demontage opleveren
 wordt uitgevoerd vóór de volgende hertekening en bij het ontkoppelen, waarbij overgangen en luisteraars behouden blijven
 netjes — identiek op React en Vue.
 
 #### Parameters
 
-| Naam             | Typ              | Beschrijving |
-| ---------------- | ---------------- | ------------ |
-| teken            | D3Draw<E>        |              |
-| afhankelijkheden | MpDependencyList |              |
+| Naam | Typ | Beschrijving |
+| ------------ | ---------------- | ----------- |
+| teken | D3Draw<E> |             |
+| afhankelijkheden | MpDependencyList |             |
 
 ## `src/utils/margins`
 
@@ -81,9 +81,9 @@ produceer nooit negatieve dimensies (wat de D3-schalen afwijzen).
 
 #### Parameters
 
-| Naam | Typ      | Beschrijving |
-| ---- | -------- | ------------ |
-| doos | ChartBox |              |
+| Naam | Typ | Beschrijving |
+| ---- | -------- | ----------- |
+| doos | ChartBox |             |
 
 ### Binnenafmetingen
 
@@ -130,6 +130,6 @@ de rest naar `0`. `undefined` levert een nulmarge op.
 
 #### Parameters
 
-| Naam   | Typ         | Beschrijving |
-| ------ | ----------- | ------------ |
-| invoer | MargeInvoer |              |
+| Naam | Typ | Beschrijving |
+| ----- | ----------- | ----------- |
+| invoer | MargeInvoer |             |

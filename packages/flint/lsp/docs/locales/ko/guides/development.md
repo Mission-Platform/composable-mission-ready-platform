@@ -1,8 +1,8 @@
-# Forge 웹 스크립트 언어 서버 개발
+# Flint 언어 서버 개발
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> packages/flint-lsp/docs/guides/development.md: [packages/flint-lsp/docs/guides/development.md](../../../guides/development.md)
+> packages/flint/lsp/docs/guides/development.md: [packages/flint/lsp/docs/guides/development.md](../../../guides/development.md)
 > 언어: 한국어 (ko)
 
 ## 설치 및 확인

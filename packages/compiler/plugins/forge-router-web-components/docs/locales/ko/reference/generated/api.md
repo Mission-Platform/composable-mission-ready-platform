@@ -33,6 +33,16 @@ export class MpRouterOutletElement extends HTMLElement
 보기에 사용자 정의 수명 주기가 필요한 경우 `viewAdapter`을 라우터에 연결합니다. 그렇지 않으면
 Node, 문자열 또는 `route.component`의 DOM 팩토리가 직접 렌더링됩니다.
 
+### MpRouterView요소
+
+**종류:** 구성요소
+
+```typescript
+export class MpRouterViewElement extends MpRouterOutletElement
+```
+
+설명이 제공되지 않았습니다.
+
 ### RegisterRouterElements
 
 **종류:** 기능
@@ -45,9 +55,9 @@ function registerRouterElements(options: RegisterRouterElementsOptions = {}): vo
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 옵션 | RouterElementsOptions 등록 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------------- | ----------- |
+| 옵션 | RouterElementsOptions 등록 |             |
 
 ## `src/runtime/history`
 
@@ -64,8 +74,8 @@ function createBrowserHistory(win?: Window): MpBrowserHistory;
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| ---- | ---- | ---- |
-| 승리 | 창   |      |
+| ---- | ------ | ----------- |
+| 승리 | 창 |             |
 
 ### 메모리 히스토리 생성
 
@@ -79,9 +89,9 @@ function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 
 #### 매개변수
 
-| 이름     | 유형 | 설명 |
-| -------- | ---- | ---- |
-| 초기 URL |      |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---- | ----------- |
+| 초기 URL |      |             |
 
 ### 웹히스토리 생성
 
@@ -189,9 +199,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 에   | MpRouteLocationRaw |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------------------ | ----------- |
+| 에 | MpRouteLocationRaw |             |
 
 ### setForgeRouter
 
@@ -205,9 +215,9 @@ function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 
 #### 매개변수
 
-| 이름   | 유형                        | 설명 |
-| ------ | --------------------------- | ---- |
-| 라우터 | MpWebComponentsRouter<View> |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------------------- | ----------- |
+| 라우터 | MpWebComponentsRouter<View> |             |
 
 ### useForgeNavigation
 
@@ -297,9 +307,19 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 
 #### 매개변수
 
-| 이름 | 유형                               | 설명 |
-| ---- | ---------------------------------- | ---- |
-| 옵션 | MpWebComponentsRouterOptions<View> |      |
+| 이름 | 유형 | 설명 |
+| ------- | ---------------------------------- | ----------- |
+| 옵션 | MpWebComponentsRouterOptions<View> |             |
+
+### getActiveRouter
+
+**종류:** 기능
+
+```typescript
+function getActiveRouter(): MpWebComponentsRouter<unknown> | undefined;
+```
+
+설명이 제공되지 않았습니다.
 
 ### MpRouterLoading대체
 
@@ -343,10 +363,26 @@ function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 
 #### 매개변수
 
-| 이름   | 유형               | 설명 |
-| ------ | ------------------ | ---- |
-| 라우터 | MPRouterAdapter    |      |
-| 에     | MpRouteLocationRaw |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------ | ----------- |
+| 라우터 | MPRouterAdapter |             |
+| 에 | MpRouteLocationRaw |             |
+
+### setActiveRouter
+
+**종류:** 기능
+
+```typescript
+function setActiveRouter(router: MpWebComponentsRouter<View> | undefined): void;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---------------------------------------- | ----------- |
+| 라우터 | MpWebComponentsRouter<View> \| 정의되지 않음 |             |
 
 ## `src/utils/forge-router-web-components`
 

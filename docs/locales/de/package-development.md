@@ -14,11 +14,22 @@ pnpm Arbeitsbereiche und Turborepo.
 Die empfohlene Methode zum Erstellen eines Pakets ist die Verwendung des Mission Platform Developer MCP-Tools, das alles gewährleistet
 Konfigurationen, Skripte und Ordnerstrukturen folgen den Standards der Plattform.
 
+### Forge-Paket-Builds
+
+Forge-Komponenten-, Hook- und CMS-Pakete verwenden einen `defineTsdownLibrary`-Aufruf. Hinzufügen
+die von `tsdownForgeComponentPlugins` zurückgegebenen nativen Plugins,
+`tsdownForgeHookPlugins` oder `tsdownForgeCmsPlugins` zu seiner Option `plugins`;
+Diese Plugins bereiten Ziele über Tsdown-Lebenszyklus-Hooks vor und veröffentlichen sie nicht
+Durchführen einer Diagrammerkennung, während die Konfiguration ausgewertet wird. Halten Sie Rahmen und
+CMS-Ausgabe-Plugins sind anrufereigene und explizite Plugins, sodass die Zielauswahl erhalten bleibt
+zusammensetzbar und isoliert.
+
 ### 1. Gerüst mit MCP
 
-Verwenden Sie das Tool `scaffold_package`, um das Skelett zu generieren.
+Verwenden Sie das `scaffold_package`-Tool über einen verbundenen Mission Platform Developer MCP-Server, um das Skelett zu generieren.
+Das Folgende ist ein Beispiel für einen MCP-Tool-Aufruf, kein Shell-Befehl; Verwenden Sie den Abschnitt zur manuellen Einrichtung, wenn MCP nicht verfügbar ist.
 
-```bash
+```text
 # Example: Creating a new 'date-utils' package
 # The tool defaults to a dry-run; set apply=true to write files
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
@@ -34,7 +45,7 @@ Dadurch wird ein konventionskonformes `packages/date-utils/`-Verzeichnis generie
 
 ### 2. Manuelle Einrichtung (optional)
 
-Wenn Sie das MCP-Tool nicht verwenden, stellen Sie sicher, dass Ihr `package.json` verwendet wird [pnpm Kataloge](https://pnpm.io/catalogs) für
+Wenn Sie das MCP-Tool nicht verwenden, stellen Sie sicher, dass Ihr `package.json` [pnpm-Kataloge](https://pnpm.io/catalogs) verwendet
 Abhängigkeitsmanagement und folgt der bereichsbezogenen Namenskonvention:
 
 ```json
@@ -87,9 +98,9 @@ packages/<name>/
 └── README.md
 ```
 
-## Stylelint für Pakete mit Stilen
+## Stylelint für stiltragende Pakete
 
-Pakete mit `CSS`, `SCSS` oder `Vue`-Styleblöcken müssen eine auffindbare Stylelint-Konfiguration und Lint-Skripte enthalten:
+Pakete, die CSS-, SCSS- oder Vue-Stilblöcke enthalten, müssen eine erkennbare Stylelint-Konfiguration und Lint-Skripte beibehalten:
 
 ```text
 packages/<name>/
@@ -99,7 +110,7 @@ packages/<name>/
 └── package.json                    # Stylelint scripts and devDependencies
 ```
 
-Fügen Sie die gemeinsame Konfiguration sowie die direkten Syntax- und Konfigurationsabhängigkeiten zu `devDependencies` hinzu:
+Fügen Sie die gemeinsam genutzte Konfiguration und ihre direkten Syntax-/Konfigurationsabhängigkeiten zu `devDependencies` hinzu:
 
 ```json
 {
@@ -114,7 +125,7 @@ Fügen Sie die gemeinsame Konfiguration sowie die direkten Syntax- und Konfigura
 }
 ```
 
-Verwenden Sie die gemeinsame Konfiguration aus `stylelint.config.mjs`, statt `extends`-Einträge zu duplizieren:
+Verwenden Sie die gemeinsame Konfiguration von `stylelint.config.mjs`, anstatt die `extends`-Einträge zu duplizieren:
 
 ```js
 // stylelint.config.mjs
@@ -123,7 +134,7 @@ import baseConfig from "@mission-platform/stylelint-config";
 export default { ...baseConfig };
 ```
 
-Fügen Sie Skripte für die tatsächlichen Style-Quellen des Arbeitsbereichs hinzu und führen Sie die Prüfung vor der Veröffentlichung aus:
+Fügen Sie Skripte hinzu, die die tatsächlichen Stilquellen des Arbeitsbereichs abdecken, und führen Sie dann die Prüfung vor der Veröffentlichung durch:
 
 ```json
 {
@@ -150,7 +161,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 
 Ausführliche Anweisungen zum Verfassen finden Sie unter:
 
-- [Atomares Komponentendesign](atomic-component-design.md)
+- [Atomkomponentendesign](atomic-component-design.md)
 - [Composable Authoring](composable-authoring.md)
 - [Store-Authoring](store-authoring.md)
 - [Util Authoring](util-authoring.md)
@@ -207,26 +218,25 @@ APIs, Komponenten und Verhalten des Pakets, sodass KI-Assistenten das Paket bess
 ## Besitz der Paketdokumentation
 
 Paketspezifische Installation, Nutzung, Einschränkungen, Mitwirkende-Workflows und API-Referenzseiten gehören dazu
-Das `docs/`-Verzeichnis des Pakets, nicht im Repository-weiten `docs/`-Baum. Die Docs-Site nimmt diese Dateien direkt auf und
+Das `docs/`-Verzeichnis des Pakets befindet sich nicht im Repository-weiten `docs/`-Baum. Die Docs-Site nimmt diese Dateien direkt auf und
 veröffentlicht sie unter einem stabilen Paketnamensraum wie `/packages/integrations/barcode/index` oder `/packages/tooling/configs/eslint-config/index`.
 Projektweite Konzepte, Architektur, Workspace-Workflows und paketübergreifende Fehlerbehebung bleiben im Stammverzeichnis `docs/`.
 
-Generierte API-Seiten befinden sich unter `docs/reference/generated/` und werden durch den Paket-Hook `prebuild` aktualisiert. nicht bearbeiten
+Generierte API-Seiten laufen unter `docs/reference/generated/` und werden durch den Paket-`prebuild`-Hook aktualisiert. nicht bearbeiten
 diese Dateien manuell. Um eine Vorschau der Paketdokumentation über die Site anzuzeigen, führen Sie den Docs-App-Build aus oder verwenden Sie den All-Workspace
 Extraktor, der in der README-Datei der Dokumenten-App beschrieben ist.
 
 ## Veröffentlichung
 
-Die Missionsplattform nutzt [Änderungssätze](https://github.com/changesets/changesets) zur Versionierung und Veröffentlichung.
+Die Mission Platform verwendet [Changesets](https://github.com/changesets/changesets) für die Versionierung und Veröffentlichung.
 
 1. **Änderungssatz hinzufügen**: Nachdem Sie Änderungen vorgenommen haben, führen Sie Folgendes aus:
-
-```bash
+   ```bash
    pnpm changeset
-```
-
-Wählen Sie das Paket und die Art der Änderung (Patch, Minor, Major) aus. 2. **Änderungssatz festschreiben**: Übertragen Sie die generierte `.changeset/*.md`-Datei. 3. **Version und Veröffentlichung**: CI/CD übernimmt die eigentliche Veröffentlichung, Sie können Versionen jedoch lokal in der Vorschau anzeigen mit:
-
-```bash
+   ```
+   Wählen Sie das Paket und die Art der Änderung (Patch, Minor, Major) aus.
+2. **Änderungssatz festschreiben**: Übertragen Sie die generierte `.changeset/*.md`-Datei.
+3. **Version und Veröffentlichung**: CI/CD übernimmt die eigentliche Veröffentlichung, Sie können Versionen jedoch lokal in der Vorschau anzeigen mit:
+   ```bash
    pnpm changeset version
-```
+   ```

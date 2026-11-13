@@ -29,4 +29,4 @@ proxy inverso generico. Aggiungi una configurazione di distribuzione esplicita e
 rivedere le modifiche relative all'autenticazione, all'upstream e alla memorizzazione nella cache prima di esporle.
 
 - [Guida allo sviluppo](guides/development.md)
-- [`README.md`](../../../README.md)
+-[`README.md`](../../../README.md)

@@ -17,7 +17,7 @@ Die Mission Platform verwendet Vue 3 mit der Composition API und der `<script se
 Stellen Sie vor der Migration sicher, dass Ihr Paket den Abhängigkeitsregeln der Plattform entspricht:
 
 - Keine Importe aus `apps/`.
-  – Die gesamte gemeinsame Logik sollte sich in `packages/` befinden.
+– Die gesamte gemeinsame Logik sollte sich in `packages/` befinden.
 - Die Konfiguration sollte von `packages/tooling/configs/` stammen.
 
 ## Schritt 1: Build-Konfiguration aktualisieren
@@ -90,15 +90,15 @@ const increment = () => {
 
 Lifecycle-Hooks wurden umbenannt und müssen importiert werden.
 
-| Vue 2                      | Vue 3                                             |
-| :------------------------- | :------------------------------------------------ |
+| Vue 2 | Vue 3 |
+| :------------------------- | :---------------------------------------- |
 | `beforeCreate` / `created` | Verwenden Sie `setup()` / `<script setup>` direkt |
-| `beforeMount`              | `onBeforeMount`                                   |
-| `mounted`                  | `onMounted`                                       |
-| `beforeUpdate`             | `onBeforeUpdate`                                  |
-| `updated`                  | `onUpdated`                                       |
-| `beforeDestroy`            | `onBeforeUnmount`                                 |
-| `destroyed`                | `onUnmounted`                                     |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 Beispiel:
 
@@ -133,7 +133,7 @@ const increment = () => count.value++;
 
 In Vue 3 ist der Standard-Requisitenname für `v-model` `modelValue` und das Ereignis ist `update:modelValue`.
 
-### Ref-Zugriff
+### Ref access
 
 `this.$refs` wird nicht mehr verwendet. Definieren Sie eine Referenz mit demselben Namen wie das Attribut `ref` für das Element.
 

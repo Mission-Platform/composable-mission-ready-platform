@@ -16,6 +16,6 @@ Framework-Adapter in gemeinsam genutzten Komponentenpaketen.
 
 ## Beitragen
 
-Laufen `pnpm --filter @mission-platform/storybook-framework lint` und die
+Führen Sie `pnpm --filter @mission-platform/storybook-framework lint` und das aus
 Überprüfung des Storybook-Builds. Konzentrieren Sie sich in diesem Paket auf die Auswahl des Frameworks und
-gemeinsame Storybook-Standardeinstellungen; Komponentengeschichten gehören hinein `apps/storybook`.
+gemeinsame Storybook-Standardeinstellungen; Komponentengeschichten gehören in `apps/storybook`.

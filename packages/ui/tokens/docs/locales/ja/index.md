@@ -11,11 +11,11 @@ Mission Platform の CSS デザイン トークンと SCSS テーマ定義。こ
 
 ## ここから始めましょう
 
-- [コンポーネントトークンリファレンス](reference/component-tokens.md) — 在庫、
+- [コンポーネントトークンリファレンス](reference/component-tokens.md) — インベントリ、
   DTCG パス、生成された出力、および Figma ハンドオフ コントラクト。
-- [ビルドとテストのガイド](guides/development.md) — トークンのソース、生成、および
+- [ビルドおよびテスト ガイド](guides/development.md) — トークン ソース、生成、および
   スタイルシートのチェック。
-- [`README.md`](../../../README.md) — パッケージのエクスポートと基本的なセットアップ。
+- [`README.md`](../../../README.md) — パッケージのエクスポートと基本セットアップ。
 
 パッケージのパブリック `.` または SCSS サブパスを `package.json` からインポートします。しないでください
 生成されたトークン ファイルをアプリケーションにコピーします。

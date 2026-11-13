@@ -9,288 +9,65 @@
 
 נוצר מהצהרות מקור ציבורי ב-`@mission-platform/barcode`.
 
-## `src/encoder/index`
+## `src/components/molecules/forge-barcode/forge-barcode`
 
-### ברקוד
+### BarcodeActions
 
 **סוג:** ממשק
 
 ```typescript
-export interface Barcode
+export interface BarcodeActions
 ```
 
-התוצאה של {@link encodeBarcode}: סיביות מודול עם הרוחב הכולל שלהם.
+אילו לחצני פעולה מציג סרגל הכלים. `true` מאפשר את כולם.
 
-### סמל ברקוד
+### BarcodeProperties
 
-**סוג:** סוג
+**סוג:** ממשק
 
 ```typescript
-export type BarcodeSymbology =
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'ean13'
-  | 'ean8'
-  | 'upca'
-  | 'upce'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode';
+export interface BarcodeProperties
 ```
 
-סימלוגיות ברקוד ליניאריות נתמכות.
+לא סופק תיאור.
 
-### encodeBarcode
+### ForgeBarcode
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
+function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement;
 ```
 
-קידוד `data` לברקוד ליניארי באמצעות גרף Flint המקומי של החבילה.
+`ForgeBarcode` - מעבד ברקוד 1D (ליניארי) הניתן לסריקה, שנכתב פעם אחת ב-
+ניב JSX ניטרלי והורכב ישר ל-React או Vue על ידי
+`@mission-platform/vite-plugin-forge`.
+
+המטען (`value`) מקודד כולו על הלקוח על ידי ה-
+מקודד {@link encodeBarcode} מ-`@mission-platform/barcode` — א
+מקודד נטול תלות שנכתב ב-Rust והוידור ל-WebAssembly - ו
+מצויר כ-SVG חד ובלתי תלוי ברזולוציה. מודולים כהים סמוכים מתמזגים
+לריצת `<rect>` אחת, כך שהסימון נשאר קומפקטי. לסריקה אמינה
+ברירת המחדל של הסרגל / צבעי הרקע היא solid שחור על גבי לבן במקום נושא
+אסימונים, אך ניתן לעקוף את שניהם באמצעות `color` / `background`.
+
+סימבוליות נתמכות (`symbology`): קוד 128, GS1-128, קוד 39 (+ מורחב),
+קוד 93 (+ מורחב), EAN-13, EAN-8, UPC-A, UPC-E, ITF (משולב 2 מתוך 5),
+ITF-14, Codabar, MSI (Modified Plessey) ו-Pharmacode. גובה הבר, מודול
+רוחב ואזור שקט ניתנים להגדרה, והערך הניתן לקריאה אנושית יכול להיות
+מוצג מתחת לסורגים באמצעות `displayValue`.
+
+סרגל כלים אופציונלי (מופעל באמצעות `showActions` — `true` עבור כל
+לחצן, או אובייקט {@link BarcodeActions} כדי לבחור אותם בנפרד) מאפשר
+משתמשים **שומרים את הברקוד כתמונת PNG**, **העתיקו את התמונה ל-
+הלוח**, ו**העתיקו את הערך המקודד ללוח**. ה-PNG הוא
+רסטר על הלקוח על ידי ציור ה-SVG המעובד על בד. ה
+`onError` התקשרות חוזרת מופעלת כאשר לא ניתן לקודד את הערך עבור הנבחר
+סמליות. הוא הבעלים של הסגנון שלו באמצעות מודול ה-CSS המשותף
+`forge-barcode.module.scss`.
 
 #### פרמטרים
 
-| שם     | הקלד             | תיאור |
-| ------ | ---------------- | ----- |
-| סמליות | ברקוד סימבולוגיה |       |
-| נתונים | מחרוזת           |       |
-
-#### חוֹזֶה
-
-- **@throws:** כאשר המטען אינו חוקי עבור הסמליות שנבחרה.
-
-### encodeBarcodeAsync
-
-פונקציה **סוג:**
-
-```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
-```
-
-קידוד `data` באופן אסינכרוני באמצעות גרף Flint המקומי של החבילה.
-
-#### פרמטרים
-
-| שם     | הקלד             | תיאור |
-| ------ | ---------------- | ----- |
-| סמליות | ברקוד סימבולוגיה |       |
-| נתונים | מחרוזת           |       |
-
-## `src/fws/index`
-
-### פרמטרים
-
-| שם  | הקלד                       | תיאור |
-| --- | -------------------------- | ----- |
-| ערך | מחרוזת \| מערך כמו<number> |       |
-
-### פרמטרים
-
-| שם  | הקלד                       | תיאור |
-| --- | -------------------------- | ----- |
-| ערך | מחרוזת \| מערך כמו<number> |       |
-
-### פרמטרים
-
-| שם  | הקלד                       | תיאור |
-| --- | -------------------------- | ----- |
-| ערך | מחרוזת \| מערך כמו<number> |       |
-
-### פרמטרים
-
-| שם  | הקלד                       | תיאור |
-| --- | -------------------------- | ----- |
-| ערך | מחרוזת \| מערך כמו<number> |       |
-
-### encodeEan13Fws
-
-פונקציה **סוג:**
-
-```typescript
-function encodeEan13Fws(value: string): string;
-```
-
-מקודד מטען EAN-13 בן שתים עשרה ספרות ומחשב את ספרת הביקורת שלו ב-FWS.
-
-#### פרמטרים
-
-| שם  | הקלד   | תיאור |
-| --- | ------ | ----- |
-| ערך | מחרוזת |       |
-
-### encodeEan13FwsAsync
-
-פונקציה **סוג:**
-
-```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>;
-```
-
-מקודד באופן אסינכרוני מטען EAN-13 בן שתים עשרה ספרות עם מטעין FWS.
-
-#### פרמטרים
-
-| שם  | הקלד   | תיאור |
-| --- | ------ | ----- |
-| ערך | מחרוזת |       |
-
-### encodeEan8Fws
-
-פונקציה **סוג:**
-
-```typescript
-function encodeEan8Fws(value: string): string;
-```
-
-מקודד מטען EAN-8 בן שבע ספרות ומחשב את ספרת הביקורת שלו ב-FWS.
-
-#### פרמטרים
-
-| שם  | הקלד   | תיאור |
-| --- | ------ | ----- |
-| ערך | מחרוזת |       |
-
-### encodeEan8FwsAsync
-
-פונקציה **סוג:**
-
-```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>;
-```
-
-מקודד באופן אסינכרוני מטען EAN-8 בן שבע ספרות עם מטעין FWS.
-
-#### פרמטרים
-
-| שם  | הקלד   | תיאור |
-| --- | ------ | ----- |
-| ערך | מחרוזת |       |
-
-### encodeUpcaFws
-
-פונקציה **סוג:**
-
-```typescript
-function encodeUpcaFws(value: string): string;
-```
-
-מקודד מטען UPC-A דרך גרף EAN-13 Flint עם קידומת אפס.
-
-#### פרמטרים
-
-| שם  | הקלד   | תיאור |
-| --- | ------ | ----- |
-| ערך | מחרוזת |       |
-
-### encodeUpcaFwsAsync
-
-פונקציה **סוג:**
-
-```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>;
-```
-
-מקודד באופן אסינכרוני מטען UPC-A באמצעות FWS.
-
-#### פרמטרים
-
-| שם  | הקלד   | תיאור |
-| --- | ------ | ----- |
-| ערך | מחרוזת |       |
-
-### encodeVariableBarcodeFws
-
-פונקציה **סוג:**
-
-```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
-```
-
-מקודד ברקוד נתמך באורך משתנה דרך גרף ה-FWS המקורי שלו כאשר זמין.
-
-#### פרמטרים
-
-| שם     | הקלד                     | תיאור |
-| ------ | ------------------------ | ----- |
-| סמליות | VariableBarcodeSymbology |       |
-| ערך    | מחרוזת                   |       |
-
-### encodeVariableBarcodeFwsAsync
-
-פונקציה **סוג:**
-
-```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
-```
-
-מקודד באופן אסינכרוני ברקוד נתמך באורך משתנה באמצעות FWS.
-
-#### פרמטרים
-
-| שם     | הקלד                     | תיאור |
-| ------ | ------------------------ | ----- |
-| סמליות | VariableBarcodeSymbology |       |
-| ערך    | מחרוזת                   |       |
-
-### validateGs1DataBarValue
-
-פונקציה **סוג:**
-
-```typescript
-function validateGs1DataBarValue(value: string): boolean;
-```
-
-מאמת ערך GS1 DataBar/RSS-14 GTIN-14 בגרף Flint המקומי של החבילה.
-
-#### פרמטרים
-
-| שם  | הקלד   | תיאור |
-| --- | ------ | ----- |
-| ערך | מחרוזת |       |
-
-### validateGs1DataBarValueAsync
-
-פונקציה **סוג:**
-
-```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
-```
-
-מאמת באופן אסינכרוני ערך GS1 DataBar/RSS-14 GTIN-14 באמצעות FWS.
-
-#### פרמטרים
-
-| שם  | הקלד   | תיאור |
-| --- | ------ | ----- |
-| ערך | מחרוזת |       |
-
-### VariableBarcodeSymbology
-
-**סוג:** סוג
-
-```typescript
-export type VariableBarcodeSymbology = Extract<
-  BarcodeSymbology,
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode'
->;
-```
-
-סמליות באורך משתנה הנתמכות על ידי מתאם הברקוד הישיר FWS.
+| שם | הקלד | תיאור |
+| ---------- | --------------------------- | ----------- |
+| נכסים | לקריאה בלבד<BarcodeProperties> |             |

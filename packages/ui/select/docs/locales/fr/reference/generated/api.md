@@ -34,9 +34,9 @@ callback-prop `onRemove` (le substitut d'émission Vue `remove`).
 
 #### Paramètres
 
-| Nom        | Tapez                        | Descriptif |
-| ---------- | ---------------------------- | ---------- |
-| propriétés | Lecture seule<TagProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ----------------------- | ----------- |
+| propriétés | Lecture seule<TagProperties> |             |
 
 ### Propriétés des balises
 
@@ -83,9 +83,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom        | Tapez                                          | Descriptif |
-| ---------- | ---------------------------------------------- | ---------- |
-| propriétés | Lecture seule<ForgeLanguageSwitcherProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ----------------------------------------- | ----------- |
+| propriétés | Lecture seule<ForgeLanguageSwitcherProperties> |             |
 
 ### ForgeLanguageSwitcherOption
 
@@ -109,7 +109,7 @@ Aucune description fournie.
 
 ## `src/components/molecules/forge-multiselect/forge-multiselect`
 
-### ForgerMultiselect
+### ForgeMultisélectionner
 
 **Genre :** fonction
 
@@ -146,9 +146,9 @@ deviennent des accessoires de rappel.
 
 #### Paramètres
 
-| Nom        | Tapez                                | Descriptif |
-| ---------- | ------------------------------------ | ---------- |
-| propriétés | Lecture seule<MultiselectProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------- | ----------- |
+| propriétés | Lecture seule<MultiselectProperties> |             |
 
 ### Option de sélection multiple
 
@@ -182,6 +182,26 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 ## `src/components/molecules/forge-select/forge-select`
 
+### ForgeCombobox
+
+**Genre :** constante
+
+```typescript
+export const ForgeCombobox: typeof ForgeSelect;
+```
+
+Aucune description fournie.
+
+### ForgeComboboxProps
+
+**Genre :** type
+
+```typescript
+export type ForgeComboboxProps = SelectProperties;
+```
+
+Aucune description fournie.
+
 ### ForgeSélectionner
 
 **Genre :** fonction
@@ -190,40 +210,24 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
-`ForgeSelect` — une combobox/select personnalisée créée une fois dans le JSX neutre
-dialecte et compilé directement en React ou Vue par
-`@mission-platform/vite-plugin-forge`.
-
-Par défaut (`searchable`, la valeur par défaut), le déclencheur est un champ de texte qui filtre
-les options au fur et à mesure que l'utilisateur tape - en miroir {@link ForgeMultiselect} - donc une valeur
-peut être trouvé en recherchant plutôt qu’en faisant défiler ; définir `searchable={false}` pour un
-déclencheur à bouton simple. Quoi qu'il en soit, la zone de liste est soutenue par un élément visuellement masqué.
-`<select>` natif afin que le remplissage automatique du navigateur et la soumission de formulaires natifs continuent de fonctionner.
-La sélection est contrôlée avec le `modelValue` + établi
-Convention de rappel-prop `onUpdateModelValue`/`onChange`. Il possède son style
-via le module CSS colocalisé `forge-select.module.scss`.
-
-La listbox flottante est rendue via l'écriture unique **`ForgeDropdown`**
-(lui-même compilé en React/Vue), composé via le slot nommé neutre **passant**
-syntaxe : le wrapper combobox est transmis à l'emplacement `trigger` de la liste déroulante
-(`slot="trigger"`) et le `<ul role="listbox">` devient son emplacement par défaut, donc
-le panneau est portail via `<Teleport>` et ancré avec CSS Anchor
-Positionnement au lieu d'une liste sur place positionnée de manière absolue. L'interne
-L'indicateur ouvert `useState` est synchronisé avec la liste déroulante via son
-Rappel `onUpdateOpen`.
-
-Autres substitutions par rapport au SFC Vue d'origine : les mappages composables `useId` vers
-le hook `useId` natif du framework ; le chevron est l'écriture unique
-`@mission-platform/icons` `ForgeIconChevron` (tourné via son accessoire `direction`,
-lui-même compilé en React/Vue) ; les chaînes `useI18n` deviennent du texte brut ; et
-les émissions `v-model` + deviennent des accessoires de rappel. Les emplacements nommés `start`/`end` sont
-conservés sous forme d'emplacements nommés neutres.
+Composant ForgeSelect fournissant un contrôle de sélection accessible et neutre en termes de framework avec
+prise en charge du filtrage en direct, de la recherche asynchrone, de la navigation au clavier et des emplacements personnalisés.
 
 #### Paramètres
 
-| Nom        | Tapez                           | Descriptif |
-| ---------- | ------------------------------- | ---------- |
-| propriétés | Lecture seule<SelectProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | -------------------------- | ----------- |
+| propriétés | Lecture seule<SelectProperties> |             |
+
+### ForgeSelectProps
+
+**Genre :** type
+
+```typescript
+export type ForgeSelectProps = SelectProperties;
+```
+
+Aucune description fournie.
 
 ### SélectionnezOption
 

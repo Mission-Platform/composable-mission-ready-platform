@@ -27,16 +27,16 @@ function createSvelteKitRouterCapabilities(input: {
 
 #### 参数
 
-| 名称 | 类型                                                                                                                                                                      | 描述 |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| 输入 | { 页面：{ url：Pick<URL, 'pathname' \| 'search' \| 'hash'>;参数：Record<string, string> }; 转到：SvelteKitRouterSurface['转到']; 解析路径？：（路径：字符串）=>字符串； } |      |
+|名称 |类型 |描述 |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|输入 | { 页面：{ url：Pick<URL, 'pathname' \| 'search' \| 'hash'>;参数：Record<string, string> };转到：SvelteKitRouterSurface['转到'];解析路径？：（路径：字符串）=>字符串； } |             |
 
 ### 普联
 
 **种类：**组件
 
 ```typescript
-export const MpLink;
+export MpLink = 'a'
 ```
 
 SvelteKit 使用普通锚点作为链接。编译器保留这个标记
@@ -47,7 +47,7 @@ Svelte 输出可以对包作者的中性 `MpLink` 用法进行类型检查。
 **种类：**组件
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Outlet 在 SvelteKit 中是应用程序拥有的；功能诊断拒绝 `view`。
@@ -64,9 +64,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### 参数
 
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 至   | MpRouteLocation原始 |      |
+|名称 |类型 |描述 |
+| ---- | ------------------ | ----------- |
+|至 | MpRouteLocation原始|             |
 
 ### setForgeSvelteKitRouter
 
@@ -81,9 +81,9 @@ function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void;
 
 #### 参数
 
-| 名称 | 类型                   | 描述                   |
-| ---- | ---------------------- | ---------------------- |
-| 表面 | SvelteKitRouterSurface | SvelteKitRouterSurface |     |
+|名称 |类型 |描述 |
+| ------- | ---------------------- | ----------- |
+|表面| SvelteKitRouterSurface | SvelteKitRouterSurface |             |
 
 ### SvelteKitRouterSurface
 
@@ -110,9 +110,9 @@ function toMpLocationFromSvelte(page: {
 
 #### 参数
 
-| 名称 | 类型                                                                                 | 描述 |
-| ---- | ------------------------------------------------------------------------------------ | ---- |
-| 页   | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; 参数：Record<string, string>； } |      |
+|名称 |类型 |描述 |
+| ---- | ------------------------------------------------------------------------------------- | ----------- |
+|页 | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>;参数：Record<string, string>； } |             |
 
 ### toSvelteHref
 
@@ -126,10 +126,10 @@ function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => st
 
 #### 参数
 
-| 名称     | 类型                      | 描述 |
-| -------- | ------------------------- | ---- |
-| 至       | MpRouteLocation原始       |      |
-| 解析路径 | （路径：字符串）=> 字符串 |      |
+|名称 |类型 |描述 |
+| ----------- | ------------------------ | ----------- |
+|至 | MpRouteLocation原始|             |
+|解析路径 | （路径：字符串）=> 字符串 |             |
 
 ### 使用Mp导航
 

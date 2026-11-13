@@ -33,23 +33,23 @@ Accesseur pratique pour l'instance {@link PhoneNumberUtil} partagée et synchron
 
 ### Format du numéro de téléphone
 
-**Genre :** constante
+**Genre :** type
 
 ```typescript
-export const PhoneNumberFormat;
+export type PhoneNumberFormat = (typeof PhoneNumberFormat)[keyof typeof PhoneNumberFormat];
 ```
 
-Format de sortie, reflétant le `PhoneNumberFormat` de libphonenumber.
+Aucune description fournie.
 
 ### Type de numéro de téléphone
 
-**Genre :** constante
+**Genre :** type
 
 ```typescript
-export const PhoneNumberType;
+export type PhoneNumberType = (typeof PhoneNumberType)[keyof typeof PhoneNumberType];
 ```
 
-Type de ligne d'un numéro de téléphone, reflétant le `PhoneNumberType` de libphonenumber.
+Aucune description fournie.
 
 ### Numéro de téléphoneUtil
 
@@ -76,7 +76,7 @@ Un code de région ISO 3166-1 à deux lettres, par ex. `"US"`, `"GB"`.
 
 ### country_code_for_region
 
-**Type :** fws-export
+**Genre :** exportation de silex
 
 ```typescript
 export fn country_code_for_region(region: string) -> i32
@@ -86,8 +86,8 @@ Mappe un indicatif de région pris en charge à son indicatif de pays de numéro
 
 #### Paramètres
 
-| Nom    | Tapez  | Descriptif                                   |
-| ------ | ------ | -------------------------------------------- |
+| Nom | Tapez | Descriptif |
+| ------ | ------ | ------------------------------------- |
 | région | chaîne | Code de région ISO tel que « US » ou « GB ». |
 
 #### Contracter
@@ -97,18 +97,18 @@ Mappe un indicatif de région pris en charge à son indicatif de pays de numéro
 
 ### préfixe_national
 
-**Type :** fws-export
+**Genre :** exportation de silex
 
 ```typescript
 export fn national_prefix(region: string) -> string
 ```
 
-Renvoie le préfixe national utilisé lors de la numérotation dans une région.
+Renvoie le préfixe du réseau national utilisé lors de la numérotation dans une région.
 
 #### Paramètres
 
-| Nom    | Tapez  | Descriptif          |
-| ------ | ------ | ------------------- |
+| Nom | Tapez | Descriptif |
+| ------ | ------ | ---------------- |
 | région | chaîne | Code de région ISO. |
 
 #### Contracter
@@ -118,7 +118,7 @@ Renvoie le préfixe national utilisé lors de la numérotation dans une région.
 
 ### région_pour_pays_code
 
-**Type :** fws-export
+**Genre :** exportation de silex
 
 ```typescript
 export fn region_for_country_code(code: i32) -> string
@@ -128,9 +128,9 @@ Mappe un indicatif de pays à une région ISO représentative.
 
 #### Paramètres
 
-| Nom   | Tapez | Descriptif                                        |
-| ----- | ----- | ------------------------------------------------- |
-| codes | i32   | Indicatif du pays de numérotation internationale. |
+| Nom | Tapez | Descriptif |
+| ---- | ---- | ----------------------------------- |
+| codes | i32 | Indicatif du pays de numérotation internationale. |
 
 #### Contracter
 
@@ -139,7 +139,7 @@ Mappe un indicatif de pays à une région ISO représentative.
 
 ### région_is
 
-**Type :** fws-export
+**Genre :** exportation de silex
 
 ```typescript
 export fn region_is(region: string, expected: string) -> bool
@@ -149,10 +149,10 @@ Renvoie vrai lorsque le code de région est égal à la valeur attendue.
 
 #### Paramètres
 
-| Nom     | Tapez  | Descriptif                      |
-| ------- | ------ | ------------------------------- |
-| région  | chaîne | Code de région ISO du candidat. |
-| attendu | chaîne | Code de région ISO attendu.     |
+| Nom | Tapez | Descriptif |
+| -------- | ------ | -------------------------- |
+| région | chaîne | Code de région ISO du candidat. |
+| attendu | chaîne | Code de région ISO attendu.  |
 
 #### Contracter
 

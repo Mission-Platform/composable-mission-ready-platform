@@ -6,8 +6,8 @@
 > 언어: 한국어 (ko)
 
 `@mission-platform/phone-number`은 핵심을 집중적으로 재구현한 것입니다.
-구글 [libphone번호](https://github.com/google/libphonenumber), 다음으로 작성됨
-[어셈블리스크립트](https://www.assemblyscript.org/) **WebAssembly**로 컴파일되었습니다. 이는 구문 분석, 검증, 분류 및
+Google [libphonenumber](https://github.com/google/libphonenumber), 다음으로 작성됨
+[AssemblyScript](https://www.assemblyscript.org/) 및 **WebAssembly**로 컴파일됩니다. 이는 구문 분석, 검증, 분류 및
 국제 전화번호 형식을 지정하고 런타임 종속성이 없는 독립형 ES 모듈로 패키지됩니다.
 
 ## 건축학
@@ -16,7 +16,7 @@
 
 1. **AssemblyScript 소스**(`assembly/`)는 선별된 지역별 메타데이터(`metadata.ts`)를 보유하고 있으며
    구문 분석/검증/분류/형식 논리(`index.ts`).
-2. **Vite를 통한 WASM 컴파일**: `@mission-platform/vite-plugin-assemblyscript`
+2. **Vite을 통한 WASM 컴파일**: `@mission-platform/vite-plugin-assemblyscript`
    Vite `buildStart` 후크에서 AssemblyScript 컴파일러를 실행하여 생성합니다.
    `build/phone-number.wasm`와 ESM 바인딩.
 3. **단일 파일 아티팩트**: 플러그인은 wasm 바이너리를 base64로 인라인하여
@@ -63,7 +63,7 @@ util.format('4155552671', 'US', PhoneNumberFormat.RFC3966); // 'tel:+14155552671
 ```
 
 `defaultRegion` 인수(ISO 3166-1 alpha-2)는 입력이 아직 국제 버전이 **아닌** 경우에만 참조됩니다.
-형식(`+…`, `00…` 또는 NANP `011…`)
+형식(`+…`, `00…` 또는 NANP `011…`
 IDD 접두사).
 
 ## 가능성 대 타당성

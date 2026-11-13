@@ -9,188 +9,71 @@
 
 נוצר מהצהרות מקור ציבורי ב-`@mission-platform/qr-code`.
 
-## `src/encoder/index`
+## `src/components/molecules/forge-qr-code/forge-qr-code`
 
-### encodeMicroQr
-
-פונקציה **סוג:**
-
-```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-קידוד `text` לתוך מטריצת **מיקרו QR Code** (ISO/IEC 18004), תוך מופע
-מקודד WebAssembly באופן סינכרוני בשימוש הראשון.
-
-הגרסה המתאימה ביותר (M1–M4, 11×11 עד 17×17) נבחרת אוטומטית.
-Micro QR תומך רק ברמות תיקון שגיאות `L`, `M` ו-`Q`; מבקש
-`H` תמיד זורק (אף גרסת Micro QR לא מספקת את זה).
-
-#### פרמטרים
-
-| שם          | הקלד              | תיאור |
-| ----------- | ----------------- | ----- |
-| טקסט        | מחרוזת            |       |
-| תיקון שגיאה | QRErrorCorrection |       |
-
-#### חוֹזֶה
-
-- **@throws:** אם הטקסט ארוך מדי עבור כל גרסת Micro QR ב-
-  הרמה הנבחרת (כולל כל בקשה לרמה `H`).
-
-### encodeMicroQrAsync
+### ForgeQrCode
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
+function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement;
 ```
 
-קידוד `text` לתוך מטריצת **מיקרו QR קוד**, תוך מופע של WebAssembly
-מקודד באופן אסינכרוני בשימוש הראשון. ראה {@link encodeMicroQr}.
+`ForgeQrCode` - מעבד קוד QR הניתן לסריקה, שנכתב פעם אחת ב-JSX הנייטרלי
+ניב והורכב ישר ל-React או Vue על ידי
+`@mission-platform/vite-plugin-forge`.
+
+המטען (`value`) מקודד כולו על הלקוח על ידי ה-
+מקודדים `@mission-platform/qr-code` - מקודדים ללא תלות שנכתבו ב
+חלודה והידור ל-WebAssembly (בחירת גרסה אוטומטית, העונש הנמוך ביותר
+מסכת נתונים) - ומצויר כ-SVG חד ובלתי תלוי ברזולוציה. ה-`variant`
+prop בוחר את הסמליות: קוד QR מרובע סטנדרטי ({@link encodeQr},
+`'qr'`, ברירת המחדל), קוד Micro QR מרובע קומפקטי
+({@link encodeMicroQr}, `'micro'`), או קוד Micro QR / rMQR מלבני רחב
+({@link encodeRmqr}, `'rmqr'`). `<path>` יחיד נפלט עבור כל החושך
+מודולים, כך שהסימון נשאר קומפקטי גם עבור קודים גדולים. לאמין
+סריקת הצבעים הכהים / הבהירים ברירת המחדל היא solid שחור על גבי לבן במקום
+אסימוני נושא, אך ניתן לעקוף את שניהם באמצעות `color` / `background`.
+
+ניתן לצייר מודולים ודפוסי מוצא (עין) כריבועים, ריבועים מעוגלים,
+או נקודות (`moduleShape` / `finderShape`); המילוי הכהה מקבל שתי עצירות
+`gradient` ליניארי או רדיאלי; ומרכז אופציונלי `logo` מכוסה על א
+לוחית גיבוי (שימו אותה עם `errorCorrection: 'H'` כך שהקוד עדיין סורק).
+
+סרגל כלים אופציונלי (מופעל באמצעות `showActions` — `true` עבור כל
+לחצן, או אובייקט {@link QRCodeActions} כדי לבחור אותם בנפרד) מאפשר
+משתמשים **שומרים את הקוד כתמונת PNG**, **העתיקו את התמונה ללוח**,
+ו**העתיקו את הערך המקודד ללוח**. ה-PNG רסטר ב-
+לקוח על ידי ציור ה-SVG המעובד על קנבס.
+
+החלפות מה-Vue SFC המקורי: העיבוד של `computed` הופך ל-
+ניטרלי {@link useMemo}; פולט `error` הופך לאביזר `onError` התקשרות חוזרת
+(מופעל כאשר הקידוד נכשל, שיקוף את הפליטה של המקור מתוך ה
+מחושבים). הוא הבעלים של הסגנון שלו באמצעות מודול ה-CSS המשותף
+`forge-qr-code.module.scss`.
 
 #### פרמטרים
 
-| שם          | הקלד              | תיאור |
-| ----------- | ----------------- | ----- |
-| טקסט        | מחרוזת            |       |
-| תיקון שגיאה | QRErrorCorrection |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<QrCodeProperties> |             |
 
-#### חוֹזֶה
-
-- **@throws:** אם הטקסט ארוך מדי עבור כל גרסת Micro QR ב-
-  הרמה הנבחרת (כולל כל בקשה לרמה `H`).
-
-### encodeQr
-
-פונקציה **סוג:**
-
-```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
-```
-
-מקודד `text` לתוך מטריצת קוד QR ברמת תיקון השגיאה הנתונה,
-מופע סינכרוני של מקודד WebAssembly בשימוש הראשון.
-
-#### פרמטרים
-
-| שם          | הקלד              | תיאור |
-| ----------- | ----------------- | ----- |
-| טקסט        | מחרוזת            |       |
-| תיקון שגיאה | QRErrorCorrection |       |
-
-#### חוֹזֶה
-
-- **@throws:** אם הטקסט ארוך מכדי להתאים לגרסה הגדולה ביותר (גרסת
-
-40. קוד QR ברמת תיקון השגיאות שנבחרה.
-
-### encodeQrAsync
-
-פונקציה **סוג:**
-
-```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
-```
-
-מקודד `text` לתוך מטריצת קוד QR ברמת תיקון השגיאה הנתונה,
-יצירת מקודד WebAssembly באופן אסינכרוני בשימוש הראשון.
-
-#### פרמטרים
-
-| שם          | הקלד              | תיאור |
-| ----------- | ----------------- | ----- |
-| טקסט        | מחרוזת            |       |
-| תיקון שגיאה | QRErrorCorrection |       |
-
-#### חוֹזֶה
-
-- **@throws:** אם הטקסט ארוך מכדי להתאים לגרסה הגדולה ביותר (גרסת
-
-40. קוד QR ברמת תיקון השגיאות שנבחרה.
-
-### encodeRmqr
-
-פונקציה **סוג:**
-
-```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-קידוד `text` למטריצת **קוד Micro QR (rMQR) מלבנית**
-(ISO/IEC 23941), מופע של מקודד WebAssembly באופן סינכרוני בהתחלה
-להשתמש.
-
-הגרסה המתאימה ביותר (מתוך 32 הגדלים מ-R7×43 עד R17×139) נבחרה
-באופן אוטומטי. rMQR תומך רק ברמות תיקון שגיאות `M` ו-`H`, כך
-מפה `L`/`M` ל-`M` ו-`Q`/`H` מפה ל-`H`.
-
-#### פרמטרים
-
-| שם          | הקלד              | תיאור |
-| ----------- | ----------------- | ----- |
-| טקסט        | מחרוזת            |       |
-| תיקון שגיאה | QRErrorCorrection |       |
-
-#### חוֹזֶה
-
-- **@throws:** אם הטקסט ארוך מדי עבור גרסת rMQR כלשהי ב-
-  רמה נבחרת.
-
-### encodeRmqrAsync
-
-פונקציה **סוג:**
-
-```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
-```
-
-קידוד `text` למטריצת **קוד מיקרו QR (rMQR) מלבנית**,
-יצירת מקודד WebAssembly באופן אסינכרוני בשימוש הראשון. ראה
-{@link encodeRmqr}.
-
-#### פרמטרים
-
-| שם          | הקלד              | תיאור |
-| ----------- | ----------------- | ----- |
-| טקסט        | מחרוזת            |       |
-| תיקון שגיאה | QRErrorCorrection |       |
-
-#### חוֹזֶה
-
-- **@throws:** אם הטקסט ארוך מדי עבור גרסת rMQR כלשהי ב-
-  רמה נבחרת.
-
-## `src/types`
-
-### CompactQrMatrix
+### QRCodeActions
 
 **סוג:** ממשק
 
 ```typescript
-export interface CompactQrMatrix
+export interface QrCodeActions
 ```
 
-גרסת QR קומפקטית מקודדת - Micro QR או Micro QR מלבני (rMQR)
-קוד. בניגוד ל-{@link QrMatrix} אלה עשויים להיות מלבניים, כך שהרשת היא
-מתואר על ידי `width`/`height` מפורש במקום `size` יחיד.
+אילו לחצני פעולה מציג סרגל הכלים. `true` מאפשר את כולם.
 
-### QRErrorCorrection
-
-**סוג:** סוג
-
-```typescript
-export type QrErrorCorrection = 'L' | 'M' | 'Q' | 'H';
-```
-
-רמת תיקון שגיאות: רמות גבוהות יותר סובלות יותר נזק אך מחזיקות פחות נתונים.
-
-### QRMatrix
+### QRCodeProperties
 
 **סוג:** ממשק
 
 ```typescript
-export interface QrMatrix
+export interface QrCodeProperties
 ```
 
-קוד QR מפוענח/מקודד: רשת מרובעת של מודולים כהים (`true`).
+לא סופק תיאור.

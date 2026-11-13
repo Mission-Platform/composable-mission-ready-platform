@@ -27,16 +27,16 @@ Bouw neutrale mogelijkheden op basis van SvelteKit-primitieven (frameworkvrij vo
 
 #### Parameters
 
-| Naam   | Typ                                                                                                                                                                                    | Beschrijving |
-| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| invoer | { pagina: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; parameters: Record<string, string> }; ga naar: SvelteKitRouterSurface['ga naar']; solvePath?: (pad: string) => string; } |              |
+| Naam | Typ | Beschrijving |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| invoer | { pagina: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; parameters: Record<string, string> }; ga naar: SvelteKitRouterSurface['ga naar']; solvePath?: (pad: string) => string; } |             |
 
 ### MpLink
 
 **Soort:** component
 
 ```typescript
-export const MpLink;
+export MpLink = 'a'
 ```
 
 SvelteKit gebruikt normale ankers voor links. De compiler houdt deze marker zo
@@ -47,7 +47,7 @@ De uitvoer van Svelte kan het neutrale `MpLink`-gebruik van pakketauteurs typeco
 **Soort:** component
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Outlet is eigendom van de applicatie in SvelteKit; capaciteitsdiagnostiek wijst `view` af.
@@ -64,9 +64,9 @@ Een neutraal doel omzetten in een href-tekenreeks.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| naar | MpRouteLocationRaw |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
 
 ### setForgeSvelteKitRouter
 
@@ -81,9 +81,9 @@ Apps noemen dit doorgaans één keer vanuit een hoofdindeling met `$app`-modules
 
 #### Parameters
 
-| Naam      | Typ                    | Beschrijving |
-| --------- | ---------------------- | ------------ |
-| oppervlak | SvelteKitRouterSurface |              |
+| Naam | Typ | Beschrijving |
+| ------- | ---------------------- | ----------- |
+| oppervlak | SvelteKitRouterSurface |             |
 
 ### SvelteKitRouterSurface
 
@@ -110,9 +110,9 @@ Bouw een neutrale locatie op basis van een SvelteKit-paginamomentopname.
 
 #### Parameters
 
-| Naam   | Typ                                                                                       | Beschrijving |
-| ------ | ----------------------------------------------------------------------------------------- | ------------ |
-| pagina | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; parameters: Record<string, string>; } |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------------------------------------------------------------------------- | ----------- |
+| pagina | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; parameters: Record<string, string>; } |             |
 
 ### naarSvelteHref
 
@@ -126,10 +126,10 @@ Serialiseer een neutraal doel voor SvelteKit-navigatie.
 
 #### Parameters
 
-| Naam          | Typ                             | Beschrijving |
-| ------------- | ------------------------------- | ------------ |
-| naar          | MpRouteLocationRaw              |              |
-| oplossingspad | (pad: tekenreeks) => tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ----------- | ------------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
+| oplossingspad | (pad: tekenreeks) => tekenreeks |             |
 
 ### gebruik MpNavigatie
 
@@ -139,7 +139,7 @@ Serialiseer een neutraal doel voor SvelteKit-navigatie.
 function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
-Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
+Alleen noodzakelijke navigatie-/oplossingsmogelijkheden lezen.
 
 ### gebruikMpRoute
 

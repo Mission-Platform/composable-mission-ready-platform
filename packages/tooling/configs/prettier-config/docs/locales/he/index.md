@@ -13,12 +13,12 @@
 pnpm add --save-dev @mission-platform/prettier-config
 ```
 
-ייצא את התצורה המשותפת ממרחב העבודה `prettier.config.js`.
-השתמש בעקיפות מקומיות במשורה ולכן Markdown, TypeScript, Vueותצורה
+ייצא את התצורה המשותפת מ-`prettier.config.js` של סביבת העבודה.
+השתמשו בעקיפות מקומיות במשורה ולכן Markdown, TypeScript, Vue ותצורה
 הקבצים נשארים עקביים ברחבי המונורפו.
 
 ## לִתְרוֹם
 
-לָרוּץ `pnpm --filter @mission-platform/prettier-config format` לאחר שינוי ה
+הפעל את `pnpm --filter @mission-platform/prettier-config format` לאחר שינוי ה-
 תצורה. השינויים צריכים לחול באופן עקבי על כל סביבת עבודה המשתמשת
 החבילה.

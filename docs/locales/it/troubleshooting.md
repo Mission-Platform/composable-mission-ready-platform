@@ -69,11 +69,10 @@ rm -rf .turbo
 2. Assicurarsi che la versione corrisponda (si consiglia `workspace:*`).
 3. Eseguire `pnpm install` per aggiornare i collegamenti simbolici.
 4. Se i problemi persistono, prova una pulizia approfondita:
-
-```bash
+   ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-```
+   ```
 
 ### Digitare Errori in CI ma non Locale
 
@@ -133,5 +132,5 @@ try {
 ## Risorse correlate
 
 - [Migliori pratiche](best-practices.md)
-- [Configurazione dello sviluppo](development-setup.md)
+- [Impostazione sviluppo](development-setup.md)
 - [Guida al test](testing.md)

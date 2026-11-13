@@ -19,36 +19,36 @@
 function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 ```
 
-`ForgeTypography` - הפרימיטיבי בסגנון הטקסט שכתב פעם אחת ב-JSX הנייטרלי
+`ForgeTypography` - הפרימיטיבי בסגנון טקסט שכתב פעם אחת ב-JSX הנייטרלי
 ניב והורכב ישר ל-React או Vue על ידי
 `@mission-platform/vite-plugin-forge`.
 
-הוא מעבד את תוכן משבצת ברירת המחדל שלו בתג הסמנטי עבור הנבחר
+הוא מעבד את תוכן חריץ ברירת המחדל שלו בתג הסמנטי עבור הנבחר
 `variant` (ניתן לעקוף עם `as`), תוך החלת סולם הסוג של הגרסה בתוספת
 מתקנים אופציונליים של `weight`, `color`, `horizontalAlign`, `verticalAlign` ו-`truncate`.
 
 קישורים מגיעים גם מכאן, בשתי דרכים: `variant="link"` לטקסט קישור עצמאי,
 ו-`href` על **כל** וריאציה, כך שכותרת או כיתוב יכולים להיות קישור ללא
-משאיר סולם סוג משלו. כך או כך, האלמנט מוצג כ-`<a>` עם ה-
+משאיר סולם סוג משלו. כך או כך, האלמנט מעובד כ-`<a>` עם ה-
 צבע קישור, טיפול ריחוף/פעיל ו-`:visited`, טבעת פוקוס גלויה
 ומצב `underline` הנבחר (`'always'` כברירת מחדל); `target="_blank"` מקבל
 `rel="noopener noreferrer"` באופן אוטומטי. זה הבעלים שלו
 עיצוב באמצעות מודול ה-CSS המשותף `forge-typography.module.scss`
 (נישא לכל מסגרת על ידי המהדר הדו-שלבי, אז הרכיב
-שולח `@layer mp.typography` CSS משלו); שמות הכיתות הגובבים הם
+שולחת `@layer mp.typography` CSS משלה); שמות הכיתות הגובבים הם
 מורכב עם העוזר {@link classNames} הניטרלי במסגרת.
 
-ה-`@floating-ui` הקטוע של Vue SFC המקורי משוחזר כאן באמצעות
-אביזר `truncatePopup`: כאשר הוא פועל, הטקסט הקטום הופך לעוגן עבור
+הפופאפ הקטוע `@floating-ui` המקורי של Vue SFC שוחזר כאן באמצעות
+אבזר `truncatePopup`: כאשר הוא פועל, הטקסט הקטום הופך לעוגן עבור
 `role="tooltip"` צף קופץ (נחשף ברחף/מיקוד רק כאשר הטקסט
 למעשה עולה על גדותיו), ממוקם עם **מיקום עוגן CSS** במקום
 `@floating-ui`, ומונע על ידי הווים הנייטרליים `useRef`/`useState`.
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<TypographyProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<TypographyProperties> |             |
 
 ### טיפוגרפיה צבע
 
@@ -93,7 +93,7 @@ export type TypographyHorizontalAlign = 'start' | 'center' | 'end';
 export type TypographyLineHeight = 'tight' | 'snug' | 'normal' | 'relaxed' | 'loose';
 ```
 
-עקיפה של קו גובה (מוביל), ממופה לאסימוני עיצוב `--mp-line-height-*`.
+עקיפה של גובה קו (מוביל), ממופה לאסימוני עיצוב `--mp-line-height-*`.
 
 ### טיפוגרפיה מאפיינים
 
@@ -114,6 +114,26 @@ export type TypographySize = SizeScale;
 ```
 
 אסימון גודל אופציונלי - קנוני 2xs → 2xl קנה מידה (עוקף את גודל הגופן של הגרסה כשהיא מוגדרת).
+
+### טיפוגרפיה סטייל
+
+**סוג:** סוג
+
+```typescript
+export type TypographyStyle = CSSStyleProperties &
+```
+
+לא סופק תיאור.
+
+### TypographyStyleProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface TypographyStyleProperties
+```
+
+ערכי CSS בבעלות רכיב שעברו בירושה מצאצאי טיפוגרפיה ותוכן קופץ.
 
 ### טיפוגרפיה יעד
 

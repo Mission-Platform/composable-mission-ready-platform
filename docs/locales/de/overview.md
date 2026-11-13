@@ -5,7 +5,7 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > docs/overview.md: [docs/overview.md](../../overview.md)
 > Sprache: Deutsch (de)
 
-Mission Platform ist eine zusammensetzbare, paketgesteuerte, Framework-neutrale Komponentenplattform für den Bau
+Mission Platform ist eine zusammensetzbare, paketgesteuerte, Framework-neutrale Komponentenplattform, die zum Erstellen entwickelt wurde
 produktionsreife Anwendungen mit wiederverwendbaren Bausteinen. Es nutzt eine moderne Monorepo-Architektur, um eine bereitzustellen
 hocheffiziente Entwicklungsumgebung für komplexe Ökosysteme mit mehreren Anwendungen.
 
@@ -35,14 +35,14 @@ Geschwindigkeit und Codequalität.
 
 ## Hauptmerkmale
 
-| Funktion                  | Beschreibung                                                                                                                                 |
-| :------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Forge JSX Runtime**     | Ein Framework-neutraler JSX-Dialekt: Einmal erstellen und für Vue 3, React, Svelte, Solid und Webkomponenten ohne Laufzeitaufwand erstellen. |
-| **Komponentenbibliothek** | Ein umfassender Satz an Layout-, Typografie- und interaktiven Komponenten, die einmal für mehrere Frameworks erstellt wurden.                |
-| **Design-Token**          | Ein DTCG-kompatibles Token-System, das SCSS- und TypeScript-Artefakte für ein konsistentes Design generiert.                                 |
-| **Agnostisches Routing**  | Ein typsicheres Routingsystem, das unabhängig vom UI-Framework funktioniert.                                                                 |
-| **Universal I18n**        | Ein Framework-unabhängiger Internationalisierungs-Wrapper basierend auf i18next mit dedizierten Vue- und React-Adaptern.                     |
-| **Wasm-Dienstprogramme**  | Leistungsstarke Dienstprogramme zum Barcode-Scannen, zur Rechtschreibprüfung und mehr, unterstützt von WebAssembly.                          |
+| Funktion | Beschreibung |
+| :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forge JSX Runtime** | Ein Framework-neutraler JSX-Dialekt: Einmal erstellen und für Vue 3, React, Svelte, Solid und Webkomponenten ohne Laufzeitaufwand erstellen. |
+| **Komponentenbibliothek** | Ein umfassender Satz an Layout-, Typografie- und interaktiven Komponenten, die einmal für mehrere Frameworks erstellt wurden.                           |
+| **Design-Token** | Ein DTCG-kompatibles Token-System, das SCSS- und TypeScript-Artefakte für ein konsistentes Design generiert.                                     |
+| **Agnostisches Routing** | Ein typsicheres Routingsystem, das unabhängig vom UI-Framework funktioniert.                                                               |
+| **Universal I18n** | Ein Framework-unabhängiger Internationalisierungs-Wrapper basierend auf i18next mit dedizierten Vue- und React-Adaptern.                              |
+| **Wasm-Dienstprogramme** | Leistungsstarke Dienstprogramme zum Barcode-Scannen, zur Rechtschreibprüfung und mehr, unterstützt von WebAssembly.                                     |
 
 ## Technologie-Stack
 
@@ -50,8 +50,8 @@ Mission Platform basiert auf einem modernen, leistungsstarken Stack:
 
 - **Forge JSX (`@mission-platform/forge-jsx`)**: Das primäre UI-Framework – eine Framework-neutrale JSX-Laufzeit, in der alle
   Gemeinsam genutzte Komponenten (alles außer den Apps) werden erstellt.
-- **Vue 3**: Das Framework, mit dem die Anwendungen in `apps/` erstellt werden, und eines von mehreren nativen Renderzielen für
-  Schmiedekomponenten.
+- **Vue 3**: Wird von mehreren Anwendungen und einem von mehreren nativen Renderzielen für Forge-Komponenten verwendet. Die
+  Die Anwendung `service-monitor` verwendet stattdessen RedwoodSDK/React.
 - **TypeScript**: Der Standard für den gesamten Quellcode.
 - **Vite**: Das Build-Tool für schnelles HMR und optimierte Produktionspakete.
 - **pnpm Arbeitsbereiche**: Effizientes Abhängigkeitsmanagement mit gemeinsam genutzten Sperrdateien.
@@ -74,7 +74,7 @@ Das Repository ist in mehrere unterschiedliche Bereiche unterteilt:
 
 Um mit der Entwicklung auf der Mission Platform zu beginnen, lesen Sie bitte die folgenden Leitfäden:
 
-- **[Entwicklungs-Setup](development-setup.md)**: Bereiten Sie Ihre Umgebung vor und installieren Sie Abhängigkeiten.
-- **[Architektur](architecture.md)**: Tauchen Sie tief in die Designprinzipien und den Abhängigkeitsfluss der Plattform ein.
+- **[Entwicklungssetup](development-setup.md)**: Bereiten Sie Ihre Umgebung vor und installieren Sie Abhängigkeiten.
+- **[Architektur](architecture.md)**: Tiefer Einblick in die Designprinzipien und den Abhängigkeitsfluss der Plattform.
 - **[Arbeitsbereichsstruktur](workspace-structure.md)**: Verstehen Sie das Verzeichnislayout und die Paketkonventionen.
 - **[Testen](testing.md)**: Erfahren Sie mehr über unsere Teststrategien und -tools.

@@ -18,22 +18,22 @@ Plataforma de la Misión. Los componentes (`ForgeShowAt`, `ForgeHideAt`, `ForgeB
 - `@mission-platform/breakpoints/core`: tipos y utilidades independientes del marco.
 
 Elija el marco **una vez** — `resolve.conditions` vía `defineFrameworkAppConfig` /
-`frameworkResolveConditions` de `@mission-platform/vite-config` y `customConditions` a través de
-Ajustes preestablecidos de `@mission-platform/typescript-config/framework-<name>`: luego importe todo con el especificador de paquete básico.
+`frameworkResolveConditions` de `@mission-platform/vite-config` y `customConditions` a través del
+`@mission-platform/typescript-config/framework-<name>` ajustes preestablecidos: luego importe todo con el especificador de paquete básico.
 
 ## Escala de punto de interrupción
 
 La plataforma utiliza una escala de respuesta de siete pasos basada en los umbrales de ancho de la ventana gráfica:
 
-| Clave | Etiqueta            | Umbral             | Dispositivo común/caso de uso       |
-| :---- | :------------------ | :----------------- | :---------------------------------- |
-| `2xs` | Extra-extra-pequeño | $\ge 0$ px         | Todos los dispositivos              |
-| `xs`  | Extrapequeño        | $\ge 480$ px       | Teléfonos grandes                   |
-| `sm`  | Pequeño             | $\ge 768$ px       | Retrato de tableta                  |
-| `md`  | Medio               | $\ge 1024$ px      | Tableta horizontal/portátil pequeña |
-| `lg`  | Grande              | $\ge 1920$ px      | Full HD/1080p                       |
-| `xl`  | Extra grande        | $\ge 2560$ px      | QHD                                 |
-| `2xl` | Extra extra grande  | $\ge 3840$ píxeles | 4K UHD                              |
+| Clave | Etiqueta | Umbral | Dispositivo común/caso de uso |
+| :---- | :---------------- | :------------ | :------------------------------ |
+| `2xs` | Extra-extra-pequeño | $\ge 0$ px | Todos los dispositivos |
+| `xs` | Extrapequeño | $\ge 480$ px | Teléfonos grandes |
+| `sm` | Pequeño | $\ge 768$ px | Retrato de tableta |
+| `md` | Medio | $\ge 1024$ px | Tableta horizontal/portátil pequeña |
+| `lg` | Grande | $\ge 1920$ px | Full HD/1080p |
+| `xl` | Extra grande | $\ge 2560$ px | QHD |
+| `2xl` | Extra extra grande | $\ge 3840$ píxeles | 4K UHD |
 
 ## Utilidades principales (`/core`)
 
@@ -54,7 +54,7 @@ mediaQuery('lg'); // → '(min-width: 1920px)'
 ```
 
 Se eliminó el elemento componible `useBreakpoints` exclusivo de Vue. Para una lógica de ventana gráfica reactiva personalizada, utilice estos `/core`
-ayudantes con los propios ganchos de su marco (consulte, por ejemplo, el gancho React `useCompactViewport` de `apps/service-monitor`
+ayudantes con los propios ganchos de su marco (consulte, por ejemplo, el gancho `apps/service-monitor` React `useCompactViewport`
 construido en `maxMediaQuery`).
 
 ## Componentes

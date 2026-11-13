@@ -20,9 +20,10 @@ function compileFlintFile(
   fileName: string,
   options: FlintPluginOptions,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): FlintCompiledModule;
 ```
@@ -31,11 +32,11 @@ function compileFlintFile(
 
 #### 参数
 
-| 名称   | 类型                 | 描述                 |
-| ------ | -------------------- | -------------------- |
-| 文件名 | 字符串               |                      |
-| 选项   | FlintPluginOptions   | FlintPluginOptions   |     |
-| 服务   | FlintCompilerService | FlintCompilerService |     |
+|名称 |类型 |描述 |
+| -------- | -------------------- | ----------- |
+|文件名 |字符串|             |
+|选项 | FlintPluginOptions | FlintPluginOptions |             |
+|服务 | FlintCompiler服务 |             |
 
 ### 编译FlintGraph
 
@@ -47,9 +48,10 @@ function compileFlintGraph(
   options: FlintPluginOptions,
   resolver: FlintModuleResolver,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): Promise<FlintCompiledModule>;
 ```
@@ -58,12 +60,31 @@ function compileFlintGraph(
 
 #### 参数
 
-| 名称   | 类型                 | 描述                 |
-| ------ | -------------------- | -------------------- |
-| 文件名 | 字符串               |                      |
-| 选项   | FlintPluginOptions   | FlintPluginOptions   |     |
-| 解析器 | FlintModuleResolver  |                      |
-| 服务   | FlintCompilerService | FlintCompilerService |     |
+|名称 |类型 |描述 |
+| -------- | -------------------- | ----------- |
+|文件名 |字符串|             |
+|选项 | FlintPluginOptions | FlintPluginOptions |             |
+|解析器 | FlintModuleResolver |             |
+|服务 | FlintCompiler服务|             |
+
+### 创建FlintGraphCache
+
+**种类：**功能
+
+```typescript
+function createFlintGraphCache(options?: {
+  readonly compilerService?: FlintCompilerService;
+  readonly selfHostedVmMode?: FlintVmExecutionMode;
+}): FlintGraphCache;
+```
+
+创建一个图形缓存，对顺序和并发图形分辨率进行重复数据删除。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+|选项 | { 只读编译器服务？：FlintCompilerService;只读 selfHostedVmMode？：FlintVmExecutionMode； } |             |
 
 ### Flint编译模块
 
@@ -75,6 +96,16 @@ export interface FlintCompiledModule
 
 已编译的源、工件元数据、源映射和可选的图形报告。
 
+### FlintGraph缓存
+
+**种类：**接口
+
+```typescript
+export interface FlintGraphCache
+```
+
+多个 Flint 目标使用的共享内存图形结果。
+
 ### Flint插件选项
 
 **种类：**接口
@@ -85,7 +116,7 @@ export interface FlintPluginOptions
 
 没有提供描述。
 
-### 解析FlintPath
+### 解析燧石路径
 
 **种类：**功能
 
@@ -97,14 +128,30 @@ function resolveFlintPath(root: string, value: string): string;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 根   | 字符串 |      |
-| 价值 | 字符串 |      |
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|根 |字符串|             |
+|价值|字符串|             |
 
 ## `src/generate`
 
-### createFlintDeclarationsSource
+### 创建FlintArtifactSource
+
+**种类：**功能
+
+```typescript
+function createFlintArtifactSource(compiled: FlintCompiledModule): string;
+```
+
+生成一个用于构建时工件嵌入的独立模块。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------------------- | ----------- |
+|编译| FlintCompiledModule |             |
+
+### 创建FlintDeclarationsSource
 
 **种类：**功能
 
@@ -117,11 +164,11 @@ function createFlintDeclarationsSource(compiled: FlintCompiledModule): string;
 
 #### 参数
 
-| 名称 | 类型                | 描述                |
-| ---- | ------------------- | ------------------- |
-| 编译 | FlintCompiledModule | FlintCompiledModule |     |
+|名称 |类型 |描述 |
+| -------- | ------------------- | ----------- |
+|编译| FlintCompiledModule |             |
 
-### createFlintManifestSource
+### 创建FlintManifestSource
 
 **种类：**功能
 
@@ -133,9 +180,9 @@ function createFlintManifestSource(compiled: FlintCompiledModule): string;
 
 #### 参数
 
-| 名称 | 类型                | 描述                |
-| ---- | ------------------- | ------------------- |
-| 编译 | FlintCompiledModule | FlintCompiledModule |     |
+|名称 |类型 |描述 |
+| -------- | ------------------- | ----------- |
+|编译| FlintCompiledModule |             |
 
 ### 创建FlintModuleSource
 
@@ -146,15 +193,16 @@ function createFlintModuleSource(compiled: FlintCompiledModule): string;
 ```
 
 生成正常的消费者模块。生成的模块重新导出
-编译函数并通过 `abiManifest` 公开相同的 ABI 清单。
+编译的函数，通过 `abiManifest` 公开相同的 ABI 清单，以及
+提供同步库加载器作为其默认导出。
 
 #### 参数
 
-| 名称 | 类型                | 描述                |
-| ---- | ------------------- | ------------------- |
-| 编译 | FlintCompiledModule | FlintCompiledModule |     |
+|名称 |类型 |描述 |
+| -------- | ------------------- | ----------- |
+|编译| FlintCompiledModule |             |
 
-### createFlintSourceMapSource
+### 创建FlintSourceMapSource
 
 **种类：**功能
 
@@ -166,9 +214,9 @@ function createFlintSourceMapSource(compiled: FlintCompiledModule): string;
 
 #### 参数
 
-| 名称 | 类型                | 描述                |
-| ---- | ------------------- | ------------------- |
-| 编译 | FlintCompiledModule | FlintCompiledModule |     |
+|名称 |类型 |描述 |
+| -------- | ------------------- | ----------- |
+|编译| FlintCompiledModule |             |
 
 ### 创建FlintWasmSource
 
@@ -182,11 +230,11 @@ function createFlintWasmSource(compiled: FlintCompiledModule): string;
 
 #### 参数
 
-| 名称 | 类型                | 描述                |
-| ---- | ------------------- | ------------------- |
-| 编译 | FlintCompiledModule | FlintCompiledModule |     |
+|名称 |类型 |描述 |
+| -------- | ------------------- | ----------- |
+|编译| FlintCompiledModule |             |
 
-### createFlintWatSource
+### 创建FlintWat源
 
 **种类：**功能
 
@@ -199,56 +247,66 @@ function createFlintWatSource(compiled: FlintCompiledModule): string;
 
 #### 参数
 
-| 名称 | 类型                | 描述                |
-| ---- | ------------------- | ------------------- |
-| 编译 | FlintCompiledModule | FlintCompiledModule |     |
+|名称 |类型 |描述 |
+| -------- | ------------------- | ----------- |
+|编译| FlintCompiledModule |             |
 
-### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+### FLINT_ARTIFACT_QUERY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
+export const FLINT_ARTIFACT_QUERY;
+```
+
+返回来自一个图编译的所有已编译工件数据的查询。
+
+### FLINT_DECLARATIONS_QUERY
+
+**种类：**常数
+
+```typescript
+export const FLINT_DECLARATIONS_QUERY;
 ```
 
 以 ES 模块的形式返回链接声明和图形元数据的查询。
 
-### FORGE_WEB_SCRIPT_MANIFEST_QUERY
+### FLINT_MANIFEST_QUERY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
+export const FLINT_MANIFEST_QUERY;
 ```
 
 将已编译的 ABI 清单作为 ES 模块返回的查询。
 
-### FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+### FLINT_SOURCE_MAP_QUERY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
+export const FLINT_SOURCE_MAP_QUERY;
 ```
 
 返回生成的源映射作为模块默认导出的查询。
 
-### FORGE_WEB_SCRIPT_WASM_QUERY
+### FLINT_WASM_QUERY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY;
+export const FLINT_WASM_QUERY;
 ```
 
 返回已编译的 Wasm 字节作为模块默认导出的查询。
 
-### FORGE_WEB_SCRIPT_WAT_QUERY
+### FLINT_WAT_QUERY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY;
+export const FLINT_WAT_QUERY;
 ```
 
 以字符串形式返回生成的 WAT（包括分支表降低）的查询。
@@ -263,15 +321,15 @@ export const FORGE_WEB_SCRIPT_WAT_QUERY;
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-在 Vite 中安装 Forge Web 脚本编译和虚拟工件查询。
+在 Vite 中安装 Flint 编译和虚拟工件查询。
 该插件在公开清单时保留标量 Wasm 导出 ABI，
 工具和夹具的声明、Wasm、WAT 和源映射查询。
 
 #### 参数
 
-| 名称 | 类型               | 描述               |
-| ---- | ------------------ | ------------------ |
-| 选项 | FlintPluginOptions | FlintPluginOptions |     |
+|名称 |类型 |描述 |
+| ------- | ------------------ | ----------- |
+|选项 | FlintPluginOptions | FlintPluginOptions |             |
 
 ### flint插件
 
@@ -281,15 +339,15 @@ function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-在 Vite 中安装 Forge Web 脚本编译和虚拟工件查询。
+在 Vite 中安装 Flint 编译和虚拟工件查询。
 该插件在公开清单时保留标量 Wasm 导出 ABI，
 工具和夹具的声明、Wasm、WAT 和源映射查询。
 
 #### 参数
 
-| 名称 | 类型               | 描述               |
-| ---- | ------------------ | ------------------ |
-| 选项 | FlintPluginOptions | FlintPluginOptions |     |
+|名称 |类型 |描述 |
+| ------- | ------------------ | ----------- |
+|选项 | FlintPluginOptions | FlintPluginOptions |             |
 
 ### FlintVite错误
 

@@ -33,10 +33,10 @@ function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 
 #### حدود
 
-| الاسم     | اكتب                       | الوصف |
-| --------- | -------------------------- | ----- |
-| المصدر    | سلسلة                      |       |
-| التعديلات | للقراءة فقط تحرير المصدر[] |       |
+| الاسم | اكتب | الوصف |
+| ------ | --------------------- | ----------- |
+| المصدر | سلسلة |             |
+| التعديلات | للقراءة فقط تحرير المصدر[] |             |
 
 ### CLASS_NAME_ATTRIBUTE
 
@@ -60,9 +60,9 @@ function eventNameForProperty(propertyName: string): string;
 
 #### حدود
 
-| الاسم      | اكتب  | الوصف |
-| ---------- | ----- | ----- |
-| اسم العقار | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ------------ | ------ | ----------- |
+| اسم العقار | سلسلة |             |
 
 ### FrameworkAdapterModule
 
@@ -72,13 +72,13 @@ function eventNameForProperty(propertyName: string): string;
 function frameworkAdapterModule(framework: JsxFramework): string;
 ```
 
-اشتق وحدة المحول/وقت التشغيل Forge لأي إطار عمل مستهدف مدمج.
+اشتق وحدة محول/وقت التشغيل Forge لأي إطار عمل مستهدف مدمج.
 
 #### حدود
 
-| الاسم  | اكتب         | الوصف |
-| ------ | ------------ | ----- |
-| الإطار | JsxFramework |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------------ | ----------- |
+| الإطار | JsxFramework |             |
 
 ### FrameworkForDirective
 
@@ -92,9 +92,9 @@ function frameworkForDirective(directive: string): JsxFramework | undefined;
 
 #### حدود
 
-| الاسم | اكتب  | الوصف |
-| ----- | ----- | ----- |
-| توجيه | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------ | ----------- |
+| توجيه | سلسلة |             |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -148,9 +148,9 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 
 #### حدود
 
-| الاسم  | اكتب         | الوصف |
-| ------ | ------------ | ----- |
-| الإطار | JsxFramework |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------------ | ----------- |
+| الإطار | JsxFramework |             |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
@@ -274,7 +274,7 @@ export interface GenericHoistResult
 
 لم يتم تقديم أي وصف.
 
-### هويستاتيكنتري
+### هويستاتيكتري
 
 **النوع:** الواجهة
 
@@ -296,9 +296,9 @@ function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 
 #### حدود
 
-| الاسم          | اكتب             | الوصف |
-| -------------- | ---------------- | ----- |
-| الوحدة النمطية | GenericModuleAst |       |
+| الاسم | اكتب | الوصف |
+| ------ | ---------------- | ----------- |
+| الوحدة النمطية | GenericModuleAst |             |
 
 ### MP_HOIST_PREFIX
 
@@ -327,10 +327,10 @@ function applyOptimizationEdits(
 
 #### حدود
 
-| الاسم          | اكتب                       | الوصف |
-| -------------- | -------------------------- | ----- |
-| الوحدة النمطية | GenericModuleAst           |       |
-| التعديلات      | للقراءة فقط تحرير المصدر[] |       |
+| الاسم | اكتب | الوصف |
+| ------ | --------------------- | ----------- |
+| الوحدة النمطية | GenericModuleAst |             |
+| التعديلات | للقراءة فقط تحرير المصدر[] |             |
 
 ### ConstantBoolean
 
@@ -344,9 +344,9 @@ function constantBoolean(expression: ExpressionLike): boolean | undefined;
 
 #### حدود
 
-| الاسم | اكتب        | الوصف |
-| ----- | ----------- | ----- |
-| تعبير | التعبير مثل |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------- | ----------- |
+| تعبير | التعبير مثل |             |
 
 ### نتيجة التحسين العامة
 
@@ -370,9 +370,9 @@ function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| الصفات | للقراءة فقط GenericAttribute[] |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| الصفات | للقراءة فقط GenericAttribute[] |             |
 
 ### hasMpStaticMarker
 
@@ -386,9 +386,9 @@ function hasMpStaticMarker(node: GenericRenderNode): boolean;
 
 #### حدود
 
-| الاسم | اكتب              | الوصف |
-| ----- | ----------------- | ----- |
-| node  | GenericRenderNode |       |
+| الاسم | اكتب | الوصف |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ### isCompileTimeConstant
 
@@ -402,9 +402,9 @@ function isCompileTimeConstant(expression: ExpressionLike): boolean;
 
 #### حدود
 
-| الاسم | اكتب        | الوصف |
-| ----- | ----------- | ----- |
-| تعبير | التعبير مثل |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------- | ----------- |
+| تعبير | التعبير مثل |             |
 
 ### MP_STATIC_ATTR
 
@@ -431,10 +431,10 @@ function optimizeGenericModule(
 
 #### حدود
 
-| الاسم          | اكتب             | الوصف |
-| -------------- | ---------------- | ----- |
-| الوحدة النمطية | GenericModuleAst |       |
-| _خيارات        | خيارات التحسين   |       |
+| الاسم | اكتب | الوصف |
+| -------- | ---------------- | ----------- |
+| الوحدة النمطية | GenericModuleAst |             |
+| _خيارات | خيارات التحسين |             |
 
 ### خيارات التحسين
 
@@ -460,9 +460,9 @@ function stripMpStaticAttributes(
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| الصفات | للقراءة فقط GenericAttribute[] |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| الصفات | للقراءة فقط GenericAttribute[] |             |
 
 ### stripMpStaticMarker
 
@@ -476,9 +476,9 @@ function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 
 #### حدود
 
-| الاسم | اكتب              | الوصف |
-| ----- | ----------------- | ----- |
-| node  | GenericRenderNode |       |
+| الاسم | اكتب | الوصف |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ## `src/diagnostics`
 
@@ -543,9 +543,9 @@ function createCompilerDiagnostic(
 
 #### حدود
 
-| الاسم   | اكتب                                                       | الوصف |
-| ------- | ---------------------------------------------------------- | ----- |
-| التشخيص | Omit<CompilerDiagnostic, "fileName"> & {اسم الملف؟: سلسلة} |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------------------------------------ | ----------- |
+| التشخيص | Omit<CompilerDiagnostic, "fileName"> & {اسم الملف؟: سلسلة} |             |
 
 ### formatCompilerDiagnostic
 
@@ -559,9 +559,9 @@ function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 
 #### حدود
 
-| الاسم   | اكتب          | الوصف |
-| ------- | ------------- | ----- |
-| التشخيص | تشخيص المترجم |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------ | ----------- |
+| التشخيص | تشخيص المترجم |             |
 
 ### throwOnCompilerErrors
 
@@ -577,9 +577,9 @@ function throwOnCompilerErrors(
 
 #### حدود
 
-| الاسم   | اكتب                                         | الوصف |
-| ------- | -------------------------------------------- | ----- |
-| التشخيص | للقراءة فقط CompilerDiagnostic[] \| غير محدد |       |
+| الاسم | اكتب | الوصف |
+| ----------- | ------------------------------------------ | ----------- |
+| التشخيص | للقراءة فقط CompilerDiagnostic[] \| غير محدد |             |
 
 ## `src/framework`
 
@@ -622,7 +622,7 @@ export interface FrameworkOutputPlugin
 export type FrameworkOutputPluginSelection = readonly FrameworkOutputPlugin[];
 ```
 
-تحديد الهدف المملوكة للمتصل؛ التحقق من الصحة يرفض المعرفات الفارغة والمكررة.
+اختيار الهدف المملوكة للمتصل؛ التحقق من الصحة يرفض المعرفات الفارغة والمكررة.
 
 ### FrameworkSourceMetadata
 
@@ -653,6 +653,16 @@ export interface GeneratedModule
 ```
 
 تم إرجاع قطعة أثرية المصدر بواسطة البرنامج المساعد لإخراج الإطار.
+
+### GeneratedStyleArtifact
+
+**النوع:** الواجهة
+
+```typescript
+export interface GeneratedStyleArtifact
+```
+
+ورقة أنماط منبعثة بجانب وحدة مصدر تم إنشاؤها.
 
 ### GeneratorContext
 
@@ -745,7 +755,7 @@ export interface TargetLoweredModule
 ```
 
 الخطة المملوكة للهدف التي تم إنتاجها بواسطة مرحلة `lower` الخاصة بالمكون الإضافي وتم تحسينها بواسطة
-المرحلة `optimize`. يعلن كل هدف تمديده الخاص لهذا العقد و
+المرحلة `optimize`. يعلن كل هدف عن تمديده لهذا العقد و
 يميزها على {@link TargetLoweredModule.framework}، لذلك يمكن أن تكون الخطة
 ضاقت دون الإرسال بينما لا يزال كل مكون إضافي يرضي نفسه
 شكل {@link TargetIntentions}.
@@ -787,7 +797,7 @@ export interface ViteBuildContext
 **النوع:** ثابت
 
 ```typescript
-export const defineForgeFramework;
+export const defineForgeFramework: typeof defineForgeOutputPlugin;
 ```
 
 الاسم المستعار يؤكد على أن حزم إطار العمل تسجل عمليات التنفيذ المستهدفة.
@@ -804,9 +814,9 @@ function defineForgeOutputPlugin(plugin: T): T;
 
 #### حدود
 
-| الاسم            | اكتب | الوصف |
-| ---------------- | ---- | ----- |
-| البرنامج المساعد | ت    |       |
+| الاسم | اكتب | الوصف |
+| ------ | ---- | ----------- |
+| البرنامج المساعد | ت |             |
 
 ### معرف البرنامج المساعد
 
@@ -832,9 +842,9 @@ function validateForgeOutputPlugin(
 
 #### حدود
 
-| الاسم            | اكتب      | الوصف |
-| ---------------- | --------- | ----- |
-| البرنامج المساعد | غير معروف |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------- | ----------- |
+| البرنامج المساعد | غير معروف |             |
 
 ### validateForgeOutputPluginSelection
 
@@ -850,9 +860,9 @@ function validateForgeOutputPluginSelection(
 
 #### حدود
 
-| الاسم    | اكتب            | الوصف |
-| -------- | --------------- | ----- |
-| الإضافات | للقراءة فقط T[] |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------ | ----------- |
+| الإضافات | للقراءة فقط T[] |             |
 
 ## `src/ir`
 
@@ -871,10 +881,10 @@ function attributeExpressionText(
 
 #### حدود
 
-| الاسم | اكتب              | الوصف |
-| ----- | ----------------- | ----- |
-| node  | GenericRenderNode |       |
-| الاسم | سلسلة             |       |
+| الاسم | اكتب | الوصف |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| الاسم | سلسلة |             |
 
 ### attributeStringValue
 
@@ -891,10 +901,42 @@ function attributeStringValue(
 
 #### حدود
 
-| الاسم | اكتب              | الوصف |
-| ----- | ----------------- | ----- |
-| node  | GenericRenderNode |       |
-| الاسم | سلسلة             |       |
+| الاسم | اكتب | الوصف |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| الاسم | سلسلة |             |
+
+### ChildSlotName
+
+**النوع:** الوظيفة
+
+```typescript
+function childSlotName(
+  child: GenericRenderChild,
+  slotAttributeName = "slot",
+  defaultSlotName = "default",
+): string | undefined;
+```
+
+اسم `slot="…"` الذي يتم توجيه الطفل إليه، أو `undefined` لمحتوى الفتحة الافتراضية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------------- | ------------------ | ----------- |
+| طفل | GenericRenderChild |             |
+| اسم فتحة السمة |                    |             |
+| defaultSlotName |                    |             |
+
+### قيمة الإعداد المحسوبة
+
+**النوع:** الواجهة
+
+```typescript
+export interface ComputedSetupValue
+```
+
+قيمة مسماة تم إرجاعها من الإعداد ويمكن معالجتها عن طريق روابط العرض/النمط.
 
 ### DynamicNodeIntention
 
@@ -961,10 +1003,10 @@ function findAttribute(
 
 #### حدود
 
-| الاسم | اكتب              | الوصف |
-| ----- | ----------------- | ----- |
-| node  | GenericRenderNode |       |
-| الاسم | سلسلة             |       |
+| الاسم | اكتب | الوصف |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| الاسم | سلسلة |             |
 
 ### GenericAstNode
 
@@ -982,7 +1024,8 @@ export type GenericAstNode =
 **النوع:** النوع
 
 ```typescript
-export type GenericAttribute = GenericJsxAttribute | GenericJsxSpreadAttribute;
+export type GenericAttribute =
+  GenericJsxAttribute | GenericJsxSpreadAttribute | GenericSlotAttribute;
 ```
 
 لم يتم تقديم أي وصف.
@@ -1084,7 +1127,11 @@ export interface GenericParameter
 
 ```typescript
 export type GenericRenderChild =
-  GenericRenderNode | GenericTextNode | GenericExpressionNode;
+  | GenericRenderNode
+  | GenericTextNode
+  | GenericExpressionNode
+  | GenericConditionalNode
+  | GenericForNode;
 ```
 
 لم يتم تقديم أي وصف.
@@ -1130,6 +1177,56 @@ export type GenericStatementKind =
 
 تصنيف تقريبي لبيان مستوى الوحدة المحتفظ به.
 
+### GenericStyleAtRule
+
+**النوع:** الواجهة
+
+```typescript
+export interface GenericStyleAtRule
+```
+
+تم تطبيع قاعدة CSS من رفيق على طراز فلينت.
+
+### GenericStyleClassMapNode
+
+**النوع:** الواجهة
+
+```typescript
+export interface GenericStyleClassMapNode
+```
+
+فئة محلية واحدة قابلة للعنونة في خريطة فئة وحدة CSS المقيسة.
+
+### GenericStyleCompanion
+
+**النوع:** الواجهة
+
+```typescript
+export interface GenericStyleCompanion
+```
+
+قطعة أثرية ذات نمط محايد للهدف مملوكة لوحدة فلينت واحدة.
+
+### GenericStyleDeclaration
+
+**النوع:** الواجهة
+
+```typescript
+export interface GenericStyleDeclaration
+```
+
+تم تطبيع إعلان CSS من رفيق بأسلوب Flint.
+
+### GenericStyleRule
+
+**النوع:** الواجهة
+
+```typescript
+export interface GenericStyleRule
+```
+
+تم تطبيع قاعدة CSS من رفيق بأسلوب فلينت.
+
 ### GenericTagKind
 
 **النوع:** النوع
@@ -1150,6 +1247,23 @@ export interface GenericTextNode
 
 النص الحرفي بين علامات JSX.
 
+### isComponentNode
+
+**النوع:** الوظيفة
+
+```typescript
+function isComponentNode(node: GenericRenderNode): boolean;
+```
+
+ما إذا كانت علامة node تسمي أحد المكونات (معرف كبير، أو تعبير ديناميكي/عضو)
+بدلاً من عنصر HTML جوهري.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
 ### isExpressionNode
 
 **النوع:** الوظيفة
@@ -1164,9 +1278,9 @@ function isExpressionNode(
 
 #### حدود
 
-| الاسم | اكتب               | الوصف |
-| ----- | ------------------ | ----- |
-| طفل   | GenericRenderChild |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------------ | ----------- |
+| طفل | GenericRenderChild |             |
 
 ### isRenderNode
 
@@ -1180,9 +1294,26 @@ function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 
 #### حدود
 
-| الاسم | اكتب               | الوصف |
-| ----- | ------------------ | ----- |
-| طفل   | GenericRenderChild |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------------ | ----------- |
+| طفل | GenericRenderChild |             |
+
+### isRenderNodeMarker
+
+**النوع:** الوظيفة
+
+```typescript
+function isRenderNodeMarker(node: GenericRenderNode, tag: string): boolean;
+```
+
+ما إذا كان node عبارة عن علامة وقت ترجمة مسماة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| العلامة | سلسلة |             |
 
 ### isTextNode
 
@@ -1196,9 +1327,9 @@ function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 
 #### حدود
 
-| الاسم | اكتب               | الوصف |
-| ----- | ------------------ | ----- |
-| طفل   | GenericRenderChild |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------------ | ----------- |
+| طفل | GenericRenderChild |             |
 
 ### ListKeyIntention
 
@@ -1210,6 +1341,24 @@ export interface ListKeyIntention
 
 مرشح رئيسي مستقر لعارض القائمة المستهدفة.
 
+### أطفال ذو معنى
+
+**النوع:** الوظيفة
+
+```typescript
+function meaningfulChildren(
+  node: GenericRenderNode,
+): readonly GenericRenderChild[];
+```
+
+الأطفال الذين نجوا حتى الهدف (النص ذو المسافة البيضاء فقط لا يحمل شيئًا).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
 ### مذكرة نية
 
 **النوع:** الواجهة
@@ -1220,6 +1369,16 @@ export interface MemoIntention
 
 قيمة محفوظة أو مشتقة.
 
+### ModelContract
+
+**النوع:** الواجهة
+
+```typescript
+export interface ModelContract
+```
+
+قيمة يتم التحكم بها محايدة الهدف وحدث التحديث المكتوب الخاص بها.
+
 ### PropIntention
 
 **النوع:** الواجهة
@@ -1229,6 +1388,16 @@ export interface PropIntention
 ```
 
 إعلان دعائي محايد يُستنتج من توقيع المكون أو نوع الخاصيات.
+
+### ReactiveProperty
+
+**النوع:** الواجهة
+
+```typescript
+export interface ReactiveProperty
+```
+
+خاصية مكون تفاعلي يتقاسمها كل باعث مستهدف.
 
 ### RefIntention
 
@@ -1252,9 +1421,25 @@ function renderNodeTagName(node: GenericRenderNode): string | undefined;
 
 #### حدود
 
-| الاسم | اكتب              | الوصف |
-| ----- | ----------------- | ----- |
-| node  | GenericRenderNode |       |
+| الاسم | اكتب | الوصف |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
+### renderNodeTagText
+
+**النوع:** الوظيفة
+
+```typescript
+function renderNodeTagText(node: GenericRenderNode): string;
+```
+
+نص العلامة العادية للعرض node (تطبع العلامة المحسوبة تعبير المصدر الخاص بها).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ### النوايا الدلالية
 
@@ -1275,6 +1460,36 @@ export interface SemanticModule
 ```
 
 الأشعة تحت الحمراء الدلالية المكتوبة التي يستهلكها كل مكون إضافي لإخراج الإطار.
+
+### SetupContract
+
+**النوع:** الواجهة
+
+```typescript
+export interface SetupContract
+```
+
+يستهلك عقد الإعداد/الحدث/النموذج الأساسي جميع التخفيضات المستهدفة.
+
+### SetupEventEmitter
+
+**النوع:** الواجهة
+
+```typescript
+export interface SetupEventEmitter
+```
+
+تم الإعلان عن باعث الحدث خارج الإعداد وإقرانه بتكوين الحدث.
+
+### SetupEventHandler
+
+**النوع:** الواجهة
+
+```typescript
+export interface SetupEventHandler
+```
+
+أعلن معالج الحدث خارج الإعداد.
 
 ### SlotIntention
 
@@ -1302,11 +1517,11 @@ function sourceBacked(
 
 #### حدود
 
-| الاسم       | اكتب                                  | الوصف |
-| ----------- | ------------------------------------- | ----- |
-| نص          | سلسلة                                 |       |
-| بناء الجملة | SourceBackedExpression["بناء الجملة"] |       |
-| فترة        | سورس سبان                             |       |
+| الاسم | اكتب | الوصف |
+| ------ | -------------------------------- | ----------- |
+| نص | سلسلة |             |
+| بناء الجملة | SourceBackedExpression["بناء الجملة"] |             |
+| فترة | سورس سبان |             |
 
 ### SourceBackedExpression
 
@@ -1353,10 +1568,465 @@ function walkRenderNodes(
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| العقد | للقراءة فقط GenericRenderNode[]   |       |
-| زيارة | (node: GenericRenderNode) => باطل |       |
+| الاسم | اكتب | الوصف |
+| ----- | --------------------------------- | ----------- |
+| العقد | للقراءة فقط GenericRenderNode[] |             |
+| زيارة | (node: GenericRenderNode) => باطل |             |
+
+### بدونSlotAttribute
+
+**النوع:** الوظيفة
+
+```typescript
+function withoutSlotAttribute(
+  node: GenericRenderNode,
+  slotAttributeName = "slot",
+): GenericRenderNode;
+```
+
+نسخة من node بدون علامة التوجيه `slot="…"` الخاصة بها.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------------- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| اسم فتحة السمة |                   |             |
+
+## `src/lowering/dynamic`
+
+### LowerDynamicNodes
+
+**النوع:** الوظيفة
+
+```typescript
+function lowerDynamicNodes(
+  module: SemanticModule,
+): readonly NormalizedDynamicPlan[];
+```
+
+يخفض نوايا node الديناميكية ويعرض علامات شجرة `<Dynamic>`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | -------------- | ----------- |
+| الوحدة النمطية | الوحدة الدلالية |             |
+
+### LowerListKeys
+
+**النوع:** الوظيفة
+
+```typescript
+function lowerListKeys(
+  module: SemanticModule,
+): readonly NormalizedListKeyPlan[];
+```
+
+يخفض قائمة المرشحين الرئيسيين من `SemanticModule`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | -------------- | ----------- |
+| الوحدة النمطية | الوحدة الدلالية |             |
+
+### LowerStaticSubtrees
+
+**النوع:** الوظيفة
+
+```typescript
+function lowerStaticSubtrees(
+  module: SemanticModule,
+): readonly NormalizedStaticSubtreePlan[];
+```
+
+يخفض مرشحات الشجرة الفرعية الثابتة المميزة بـ `mp-static`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | -------------- | ----------- |
+| الوحدة النمطية | الوحدة الدلالية |             |
+
+### تطبيع الديناميكية
+
+**النوع:** الواجهة
+
+```typescript
+export interface NormalizedDynamicPlan
+```
+
+واصف تمت تسويته لـ node `<Dynamic is={...}>` الديناميكي.
+
+### تطبيع ListKeyPlan
+
+**النوع:** الواجهة
+
+```typescript
+export interface NormalizedListKeyPlan
+```
+
+واصف عادي لربط مفتاح القائمة.
+
+### تطبيع StaticSubtreePlan
+
+**النوع:** الواجهة
+
+```typescript
+export interface NormalizedStaticSubtreePlan
+```
+
+واصف عادي لشجرة فرعية ثابتة مرفوعة.
+
+## `src/lowering/events`
+
+### canonicalEventName
+
+**النوع:** الوظيفة
+
+```typescript
+function canonicalEventName(propName: string): string;
+```
+
+يستخرج اسم الحدث المتعارف عليه من اسم دعم `onXxx` (على سبيل المثال `onClick` -> `click`، `onKeyDown` -> `keydown`).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| اسم الدعامة | سلسلة |             |
+
+### formatTargetEventName
+
+**النوع:** الوظيفة
+
+```typescript
+function formatTargetEventName(
+  eventName: string,
+  target: "react" | "solid" | "vue" | "svelte" | "web-components",
+): string;
+```
+
+يقوم بتنسيق اسم الحدث وفقًا لاتفاقيات إطار العمل الهدف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | ----------------------------------------------------------- | ----------- |
+| اسم الحدث | سلسلة |             |
+| الهدف | "react" \| "solid" \| "vue" \| "svelte" \| "مكونات الويب" |             |
+
+### isEventHandlerProp
+
+**النوع:** الوظيفة
+
+```typescript
+function isEventHandlerProp(propName: string): boolean;
+```
+
+يحدد ما إذا كان اسم الخاصية يمثل خاصية معالج الأحداث (مثل `onClick`، `onKeyDown`).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| اسم الدعامة | سلسلة |             |
+
+### LowerEventIntentions
+
+**النوع:** الوظيفة
+
+```typescript
+function lowerEventIntentions(
+  module: SemanticModule,
+): readonly NormalizedEventPlan[];
+```
+
+استخراج كافة نوايا معالج الأحداث من `SemanticModule`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | -------------- | ----------- |
+| الوحدة النمطية | الوحدة الدلالية |             |
+
+### تطبيعEventPlan
+
+**النوع:** الواجهة
+
+```typescript
+export interface NormalizedEventPlan
+```
+
+واصف تمت تسويته لمعالج حدث مكون منخفض.
+
+## `src/lowering/pipeline`
+
+### BaseLoweredModule
+
+**النوع:** الواجهة
+
+```typescript
+export interface BaseLoweredModule extends TargetLoweredModule
+```
+
+الخطة الأساسية القياسية المنخفضة التي يمكن للمكونات الإضافية لإطار العمل تضمينها أو البناء عليها.
+
+### createBaseLoweredModule
+
+**النوع:** الوظيفة
+
+```typescript
+function createBaseLoweredModule(
+  module: SemanticModule,
+  framework: TargetFrameworkId,
+): BaseLoweredModule;
+```
+
+ينشئ وحدة نمطية منخفضة القاعدة تنفذ تطبيع الدعامة المشتركة، وتوليف الفتحات،
+خفض الحدث، واستخراج node الديناميكي، وتطبيع مفتاح القائمة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | ----------------- | ----------------------------------- |
+| الوحدة النمطية | الوحدة الدلالية | - الوحدة الدلالية من الواجهة الأمامية IR. |
+| الإطار | معرف إطار العمل المستهدف | - معرف الإطار الهدف.          |
+
+#### عقد
+
+- **@param:** - الوحدة الدلالية من الواجهة الأمامية IR.
+- **@param:** - معرف إطار العمل الهدف.
+- **@returns:** الوحدة النمطية المنخفضة ذات القاعدة القياسية.
+
+### validateLoweredInvariants
+
+**النوع:** الوظيفة
+
+```typescript
+function validateLoweredInvariants(lowered: TargetLoweredModule): void;
+```
+
+التحقق من أن الوحدة المنخفضة تتوافق مع الثوابت الهيكلية المطلوبة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------------- | ------------------------------ |
+| خفضت | TargetLoweredModule | - الوحدة خفضت للتحقق. |
+
+#### عقد
+
+- **@param:** - الوحدة التي تم تخفيضها للتحقق.
+- **@throws:** في حالة مخالفة العقود الثابتة.
+
+## `src/lowering/props`
+
+### canonicalizePropsContract
+
+**النوع:** الوظيفة
+
+```typescript
+function canonicalizePropsContract(
+  module: SemanticModule,
+  defaultParameterName = "props",
+): NormalizedPropsContract;
+```
+
+يحدد عقد الدعائم بشكل أساسي من `SemanticModule`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------------------- | -------------- | ----------------------------------------------------------------------------- |
+| الوحدة النمطية | الوحدة الدلالية | - الوحدة الدلالية للتفتيش.                                             |
+| اسم المعلمة الافتراضية |                | - اسم معلمة الدعائم الاحتياطية عندما لا يتم الإعلان عن أي منها (الافتراضي: 'props'). |
+
+#### عقد
+
+- **@param:** - الوحدة الدلالية المطلوب فحصها.
+- **@param:** - اسم معلمة الدعامات الاحتياطية عند عدم الإعلان عن أي منها (الافتراضي: 'props').
+- **@returns:** عقد الدعائم الكنسي.
+
+### تطبيع
+
+**النوع:** الواجهة
+
+```typescript
+export interface NormalizedProp
+```
+
+وصف دعامة طبيعي وحيادي الهدف.
+
+### تطبيع الدعائم العقد
+
+**النوع:** الواجهة
+
+```typescript
+export interface NormalizedPropsContract
+```
+
+عقد الدعائم المطبيع للمكون.
+
+### ResolvePropTypeText
+
+**النوع:** الوظيفة
+
+```typescript
+function resolvePropTypeText(prop: PropIntention): string;
+```
+
+يحل سلسلة النوع لنية الدعامة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------------- | ----------- |
+| الدعامة | نية الدعامة |             |
+
+### UNKNOWN_PROP_TYPE
+
+**النوع:** ثابت
+
+```typescript
+export const UNKNOWN_PROP_TYPE;
+```
+
+سلسلة النوع الاحتياطي في حالة عدم وجود نوع معلن أو مستنتج.
+
+## `src/lowering/setup`
+
+### EMPTY_SETUP_CONTRACT
+
+**النوع:** ثابت
+
+```typescript
+export const EMPTY_SETUP_CONTRACT: SetupContract;
+```
+
+عقد إعداد فارغ تستخدمه الوحدات القابلة للتركيب الخالية من التراث بدون إعداد.
+
+### تطبيعSetupContract
+
+**النوع:** الوظيفة
+
+```typescript
+function normalizeSetupContract(module: SemanticModule): SetupContract;
+```
+
+الحصول على عقد الإعداد الأساسي المرفق بالواجهة الأمامية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | -------------- | ----------- |
+| الوحدة النمطية | الوحدة الدلالية |             |
+
+### validateSetupContract
+
+**النوع:** الوظيفة
+
+```typescript
+function validateSetupContract(
+  contract: SetupContract,
+  fileName = "<unknown>",
+): readonly CompilerDiagnostic[];
+```
+
+التحقق من صحة تبعيات الإعداد والأسماء وتوافق الحمولة النافعة للنموذج قبل خفض الهدف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------------- | ----------- |
+| عقد | عقد الإعداد |             |
+| اسم الملف |               |             |
+
+## `src/lowering/slots`
+
+### DEFAULT_SLOT_NAME
+
+**النوع:** ثابت
+
+```typescript
+export const DEFAULT_SLOT_NAME;
+```
+
+اسم الفتحة الافتراضي عبر جميع الأطر المستهدفة المدعومة.
+
+### isDefaultSlotName
+
+**النوع:** الوظيفة
+
+```typescript
+function isDefaultSlotName(name: string): boolean;
+```
+
+يحدد ما إذا كان اسم الفتحة هو الفتحة الافتراضية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| الاسم | سلسلة |             |
+
+### isSlotRenderNode
+
+**النوع:** الوظيفة
+
+```typescript
+function isSlotRenderNode(node: GenericRenderNode): boolean;
+```
+
+يحدد ما إذا كان العرض node يمثل علامة العنصر النائب للفتحة (`<Slot>` أو `<slot>`).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
+### تطبيعSlotPlan
+
+**النوع:** الواجهة
+
+```typescript
+export interface NormalizedSlotPlan
+```
+
+واصف تطبيع لفتحة مكون.
+
+### عقد الفتحات الطبيعية
+
+**النوع:** الواجهة
+
+```typescript
+export interface NormalizedSlotsContract
+```
+
+مجموعة طبيعية لجميع الفتحات المركبة لمكون ما.
+
+### com.synthesizeSlotPlans
+
+**النوع:** الوظيفة
+
+```typescript
+function synthesizeSlotPlans(module: SemanticModule): NormalizedSlotsContract;
+```
+
+تجميع عقد فتحة موحد لـ `SemanticModule`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | -------------- | --------------------------------- |
+| الوحدة النمطية | الوحدة الدلالية | - الوحدة الدلالية للتحليل. |
+
+#### عقد
+
+- **@param:** - الوحدة الدلالية المراد تحليلها.
+- **@returns:** عقد خطة الفتحة الموحد.
 
 ## `src/schema`
 
@@ -1377,10 +2047,10 @@ function assertTargetIntentionsLowered(
 
 #### حدود
 
-| الاسم          | اكتب        | الوصف |
-| -------------- | ----------- | ----- |
-| نوايا          | غير معروف   |       |
-| الإطار المتوقع | معرف الإطار |       |
+| الاسم | اكتب | الوصف |
+| ----------------- | ----------- | ----------- |
+| نوايا | غير معروف |             |
+| الإطار المتوقع | معرف الإطار |             |
 
 ### DeclarativeSchema
 
@@ -1404,9 +2074,9 @@ function findActionableSpan(value: unknown): SourceSpan | undefined;
 
 #### حدود
 
-| الاسم  | اكتب      | الوصف |
-| ------ | --------- | ----- |
-| القيمة | غير معروف |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------- | ----------- |
+| القيمة | غير معروف |             |
 
 ### SchemaFieldRule
 
@@ -1479,7 +2149,7 @@ export const targetIntentionsSchema: DeclarativeSchema;
 
 مخطط التحقق من صحة نوايا الهدف.
 
-### TargetIntentionsValidationError
+### خطأ في التحقق من صحة الهدف
 
 **النوع:** فئة
 
@@ -1521,15 +2191,15 @@ function validateAgainstSchema(
 ): SchemaValidationIssue[];
 ```
 
-التحقق من صحة الكائن المستهدف مقابل المخطط التعريفي، وجمع كل المشكلات الهيكلية.
+التحقق من صحة الكائن المستهدف مقابل مخطط تعريفي، وجمع كل المشكلات الهيكلية.
 
 #### حدود
 
-| الاسم  | اكتب                        | الوصف                                      |
-| ------ | --------------------------- | ------------------------------------------ |
-| الهدف  | غير معروف                   | - الكائن المستهدف أو السجل للتحقق من صحته. |
-| المخطط | المخطط التعريفي             | - مخطط تعريفي يحدد القواعد الهيكلية.       |
-| خيارات | خيارات التحقق من صحة المخطط | - خيارات تكوين التحقق من الصحة.            |
+| الاسم | اكتب | الوصف |
+| ------- | ----------------------- | ----------------------------------------------- |
+| الهدف | غير معروف | - الكائن المستهدف أو السجل للتحقق من صحته.          |
+| المخطط | المخطط التعريفي | - مخطط تعريفي يحدد القواعد الهيكلية. |
+| خيارات | خيارات التحقق من صحة المخطط | - خيارات تكوين التحقق من الصحة.             |
 
 #### عقد
 
@@ -1554,7 +2224,552 @@ function validateTargetIntentions(
 
 #### حدود
 
-| الاسم          | اكتب        | الوصف |
-| -------------- | ----------- | ----- |
-| نوايا          | غير معروف   |       |
-| الإطار المتوقع | معرف الإطار |       |
+| الاسم | اكتب | الوصف |
+| ----------------- | ----------- | ----------- |
+| نوايا | غير معروف |             |
+| الإطار المتوقع | معرف الإطار |             |
+
+## `src/testing`
+
+### سمة منطقية
+
+**النوع:** الوظيفة
+
+```typescript
+function booleanAttribute(name: string): GenericJsxAttribute;
+```
+
+سمة اختزال منطقية لا قيمة لها (`disabled`).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| الاسم | سلسلة |             |
+
+### عنصر
+
+**النوع:** الوظيفة
+
+```typescript
+function component(parts: {
+  name: string;
+  parameter?: string;
+  parameterType?: string;
+  exported?: boolean;
+  body?: readonly GenericStatement[];
+  returnNode?: GenericRenderNode;
+  returnExpression?: string;
+  returned?: { expression: string; nodes?: readonly GenericRenderNode[] };
+}): GenericComponent;
+```
+
+قم ببناء سجل المكون الذي تم تسمية الوحدة النمطية باسمه.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| أجزاء | { الاسم: سلسلة؛ المعلمة؟: سلسلة؛ نوع المعلمة ؟: سلسلة؛ تصدير ؟: منطقي؛ body ؟: للقراءة فقط GenericStatement[]; returnNode?: GenericRenderNode; returnExpression?: string; عاد ؟: { التعبير: سلسلة؛ العقد ؟: للقراءة فقط GenericRenderNode[] }; } |             |
+
+### DynamicElement
+
+**النوع:** الوظيفة
+
+```typescript
+function dynamicElement(
+  expression: string,
+  parts: {
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+  } = {},
+): GenericRenderNode;
+```
+
+قم بإنشاء عرض علامة محسوبة node.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------------------------------------------------------------------------------- | ----------- |
+| تعبير | سلسلة |             |
+| أجزاء | { السمات؟: للقراءة فقط GenericAttribute[]; الأطفال ؟: للقراءة فقط GenericRenderChild[]; المصدر؟: سلسلة؛ } |             |
+
+### DynamicNode
+
+**النوع:** الوظيفة
+
+```typescript
+function dynamicNode(
+  expression: string,
+  span: SourceSpan = EMPTY_SPAN,
+): DynamicNodeIntention;
+```
+
+بناء نية ديناميكية node.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ---------- | ----------- |
+| تعبير | سلسلة |             |
+| فترة | سورس سبان |             |
+
+### تأثير
+
+**النوع:** الوظيفة
+
+```typescript
+function effect(
+  body: string,
+  second?:
+    | readonly string[]
+    | string
+    | { cleanup?: string; dependencies?: readonly string[] },
+  third?: string | readonly string[],
+): EffectIntention;
+```
+
+بناء نية التأثير.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---------------------------------------------------------------------------------------- | ----------- |
+| الجسم | سلسلة |             |
+| الثانية | \| سلسلة للقراءة فقط[] \| سلسلة \| {تنظيف؟: سلسلة؛ التبعيات؟: سلسلة للقراءة فقط[] } |             |
+| الثالث | سلسلة \| سلسلة للقراءة فقط[] |             |
+
+### عنصر
+
+**النوع:** الوظيفة
+
+```typescript
+function element(
+  tag: string,
+  parts: {
+    tagKind?: GenericTagKind;
+    selfClosing?: boolean;
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+    span?: SourceSpan;
+  } = {},
+): GenericRenderNode;
+```
+
+إنشاء عرض node؛ `source` هو النص الخاص بـ node، ويتم استخدامه عند ربط العلامات المتداخلة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| العلامة | سلسلة |             |
+| أجزاء | { tagKind؟: GenericTagKind؛ إغلاق ذاتي؟: منطقي؛ السمات؟: للقراءة فقط GenericAttribute[]; الأطفال ؟: للقراءة فقط GenericRenderChild[]; المصدر؟: سلسلة؛ فترة؟: SourceSpan؛ } |             |
+
+### المرجع العنصر
+
+**النوع:** ثابت
+
+```typescript
+export const elementRef: typeof reference;
+```
+
+الاسم المستعار لـ `reference` (المستخدم في مواصفات Web Components).
+
+### حدث
+
+**النوع:** الوظيفة
+
+```typescript
+function event(name: string, handler: string): EventIntention;
+```
+
+بناء نية الحدث.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| الاسم | سلسلة |             |
+| معالج | سلسلة |             |
+
+### سمة التعبير
+
+**النوع:** الوظيفة
+
+```typescript
+function expressionAttribute(
+  name: string,
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericJsxAttribute;
+```
+
+سمة `name={expression}`، تحمل علامة متداخلة بشكل اختياري.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---------------------------- | ----------- |
+| الاسم | سلسلة |             |
+| نص | سلسلة |             |
+| متداخلة | للقراءة فقط GenericRenderNode[] |             |
+
+### ExpressionChild
+
+**النوع:** الوظيفة
+
+```typescript
+function expressionChild(
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericExpressionNode;
+```
+
+استيفاء `{ … }` في موضع الطفل، ويحمل اختياريًا علامات متداخلة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---------------------------- | ----------- |
+| نص | سلسلة |             |
+| متداخلة | للقراءة فقط GenericRenderNode[] |             |
+
+### تركيبات النوايا
+
+**النوع:** النوع
+
+```typescript
+export type FixtureIntentions = SemanticModuleParts;
+```
+
+الاسم المستعار للتوافق `SemanticModuleParts` مع مواصفات Vue القديمة.
+
+### جزء
+
+**النوع:** الوظيفة
+
+```typescript
+function fragment(
+  children: readonly GenericRenderChild[] = [],
+  source = "<Fragment />",
+): GenericRenderNode;
+```
+
+قم بإنشاء عرض جزء node (`<>…</>` أو `<Fragment>…</Fragment>`).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ----------------------------- | ----------- |
+| أطفال | للقراءة فقط GenericRenderChild[] |             |
+| المصدر |                               |             |
+
+### listKey
+
+**النوع:** الوظيفة
+
+```typescript
+function listKey(
+  source: string,
+  second?: boolean | string | { key?: string; stable?: boolean },
+  third?: boolean | string,
+): ListKeyIntention;
+```
+
+بناء نية القائمة الرئيسية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------------------------------------------------------- | ----------- |
+| المصدر | سلسلة |             |
+| الثانية | منطقي \| سلسلة \| {مفتاح؟: سلسلة؛ مستقر؟: منطقي } |             |
+| الثالث | منطقي \| سلسلة |             |
+
+### مذكرة
+
+**النوع:** الوظيفة
+
+```typescript
+function memo(
+  name: string,
+  factory: string,
+  dependencies?: readonly string[],
+): MemoIntention;
+```
+
+بناء نية المذكرة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------ | ----------------- | ----------- |
+| الاسم | سلسلة |             |
+| مصنع | سلسلة |             |
+| التبعيات | سلسلة للقراءة فقط[] |             |
+
+### import org.moduleImport
+
+**النوع:** الوظيفة
+
+```typescript
+function moduleImport(
+  text: string,
+  source: string,
+  parts: Partial<Omit<GenericImport, "kind" | "text" | "source" | "span">> = {},
+): GenericImport;
+```
+
+أنشئ سجل استيراد من النص المصدر الخاص به ومحددًا تم حله.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | -------------------------------------------------------------------- | ----------- |
+| نص | سلسلة |             |
+| المصدر | سلسلة |             |
+| أجزاء | جزئي<Omit<GenericImport, "kind" \| "text" \| "source" \| "span">> |             |
+
+### محايدImport
+
+**النوع:** الوظيفة
+
+```typescript
+function neutralImport(
+  valueNames: readonly string[],
+  typeNames: readonly string[] = [],
+): GenericImport;
+```
+
+استيراد `@mission-platform/forge-jsx` المحايد، مكتوب من أسمائه.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------- | ----------- |
+| أسماء القيمة | سلسلة للقراءة فقط[] |             |
+| أسماء النوع | سلسلة للقراءة فقط[] |             |
+
+### دعم
+
+**النوع:** الوظيفة
+
+```typescript
+function prop(
+  name: string,
+  second?:
+    string | { type?: string; optional?: boolean; defaultValue?: string },
+  third?: boolean | { optional?: boolean; defaultValue?: string },
+  fourth?: string,
+): PropIntention;
+```
+
+بناء نية الدعامة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---------------------------------------------------------------------- | ----------- |
+| الاسم | سلسلة |             |
+| الثانية | سلسلة \| { النوع؟: سلسلة؛ اختياري؟: منطقي؛ القيمة الافتراضية ؟: سلسلة } |             |
+| الثالث | منطقي \| { اختياري؟: منطقي؛ القيمة الافتراضية ؟: سلسلة } |             |
+| الرابع | سلسلة |             |
+
+### مرجع
+
+**النوع:** الوظيفة
+
+```typescript
+function reference(
+  name: string,
+  elementType?: string,
+  initializer?: string,
+): RefIntention;
+```
+
+بناء نية المرجع.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ------ | ----------- |
+| الاسم | سلسلة |             |
+| نوع العنصر | سلسلة |             |
+| المُهيئ | سلسلة |             |
+
+### returnStatement
+
+**النوع:** الوظيفة
+
+```typescript
+function returnStatement(
+  expression: string,
+  renderNodes: readonly GenericRenderNode[] = [],
+): GenericStatement;
+```
+
+إنشاء عبارة `return …;` لنص مكون.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ---------------------------- | ----------- |
+| تعبير | سلسلة |             |
+| تقديم العقد | للقراءة فقط GenericRenderNode[] |             |
+
+### semanticModule
+
+**النوع:** الوظيفة
+
+```typescript
+function semanticModule(parts: SemanticModuleParts): SemanticModule;
+```
+
+قم بتجميع `SemanticModule` من أجزاء التركيب.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------------------- | ----------- |
+| أجزاء | أجزاء الوحدة الدلالية |             |
+
+### SemanticModuleParts
+
+**النوع:** الواجهة
+
+```typescript
+export interface SemanticModuleParts
+```
+
+حقائق النية التي قد تعلنها أداة الاختبار.
+
+### فتحة
+
+**النوع:** الوظيفة
+
+```typescript
+function slot(name: string, fallback?: string): SlotIntention;
+```
+
+بناء نية فتحة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| الاسم | سلسلة |             |
+| احتياطي | سلسلة |             |
+
+### SpreadAttribute
+
+**النوع:** الوظيفة
+
+```typescript
+function spreadAttribute(
+  text: string,
+  span: SourceSpan = EMPTY_SPAN,
+): GenericJsxSpreadAttribute;
+```
+
+سمة انتشار `{...expression}`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ---------- | ----------- |
+| نص | سلسلة |             |
+| فترة | سورس سبان |             |
+
+### ولاية
+
+**النوع:** الوظيفة
+
+```typescript
+function state(
+  name: string,
+  setterName?: string,
+  parts: { type?: string; inferredType?: string; initializer?: string } = {},
+): StateIntention;
+```
+
+بناء نية الدولة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------------------------------------- | ----------- |
+| الاسم | سلسلة |             |
+| اسم الواضع | سلسلة |             |
+| أجزاء | { النوع؟: سلسلة؛ inferredType ؟: string; المُهيئ ؟: سلسلة } |             |
+
+### إفادة
+
+**النوع:** الوظيفة
+
+```typescript
+function statement(
+  text: string,
+  statementKind: GenericStatementKind = "variable",
+  parts: {
+    name?: string;
+    exported?: boolean;
+    renderNodes?: readonly GenericRenderNode[];
+  } = {},
+): GenericStatement;
+```
+
+إنشاء سجل بيان من النص المصدر الخاص به.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------- | ---------------------------------------------------------------------------------- | ----------- |
+| نص | سلسلة |             |
+| بيان نوع | النوع العام من البيانات |             |
+| أجزاء | { الاسم؟: سلسلة؛ تصدير ؟: منطقي؛ renderNodes?: للقراءة فقط GenericRenderNode[]; } |             |
+
+### stringAttribute
+
+**النوع:** الوظيفة
+
+```typescript
+function stringAttribute(name: string, value: string): GenericJsxAttribute;
+```
+
+سمة `name="value"`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| الاسم | سلسلة |             |
+| القيمة | سلسلة |             |
+
+### المرجع القالب
+
+**النوع:** ثابت
+
+```typescript
+export const templateRef: typeof reference;
+```
+
+الاسم المستعار لـ `reference` (المستخدم في مواصفات Vue).
+
+### textChild
+
+**النوع:** الوظيفة
+
+```typescript
+function textChild(text: string): GenericTextNode;
+```
+
+النص الحرفي بين العلامات.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| نص | سلسلة |             |

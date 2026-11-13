@@ -70,8 +70,8 @@ import { ForgeIconAlert, ForgeIconArrow } from '@mission-platform/icons';
 
 ## スプライトの再利用
 
-すべてのラッパーは、`<use href="#icon-id">` 参照を持つアクセス可能な外部 `<svg>` をレンダリングします。 `IconSpriteProvider` マウント
-インラインサブツリーに対して正規シンボルを 1 回:
+Every wrapper renders an accessible outer `<svg>` with a `<use href="#icon-id">` reference. `IconSpriteProvider` マウント
+the canonical symbols once for an inline subtree:
 
 ```tsx
 import { ForgeIconAlert, ForgeIconArrow, IconSpriteProvider } from '@mission-platform/icons';
@@ -98,7 +98,7 @@ export function Toolbar() {
 
 `ForgeIconFlag` および `ForgeIconCountryGlobe` は、`SUPPORTED_COUNTRY_CODES` からの大文字の ISO スタイル コードを受け入れます。
 `US`、`CA`、`JP`、`GB`、および `ZA`。サポートされていないランタイム値を使用すると、説明的なエラーがスローされます。カントリーグローブ、ルート/ウェイポイント
-パターン、および将来のオーバーレイは型指定されたシンボル構成です。変換を使用して既存の ID を参照し、チェックされます。
+パターン、および将来のオーバーレイは型指定されたシンボル構成です。それらは変換を使用して既存の ID を参照し、チェックされます。
 スプライト生成前の欠落した参照とサイクルについて。
 
 ## APIリファレンス
@@ -108,21 +108,21 @@ export function Toolbar() {
 
 ### ユニバーサルプロップ
 
-| 小道具      | タイプ             | デフォルト                 | 説明                                                                                                                       |
-| :---------- | :----------------- | :------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
-| `size`      | `number \| string` | `'md'`                     | 幅と高さ。名前付きトークン (`'2xs'`、`'xs'`、`'sm'`、`'md'`、`'lg'`、`'xl'`、`'2xl'`) またはピクセル番号をサポートします。 |
-| `color`     | `string`           | `'currentColor'`           | ストロークの色 (および塗りつぶされたマーカー アイコンの塗りつぶし)。                                                       |
-| `ariaLabel` | `string`           | _アイコンごとのデフォルト_ | アクセシブルな名前。省略した場合、アイコンには `aria-hidden` というマークが付けられます。                                  |
+|小道具 |タイプ |デフォルト |説明 |
+| :---------- | :----------------- | :----------------- | :-------------------------------------------------------------------------------------------------------------------- |
+| `size` | `number \| string` | `'md'` |幅と高さ。名前付きトークン (`'2xs'`、`'xs'`、`'sm'`、`'md'`、`'lg'`、`'xl'`、`'2xl'`) またはピクセル番号をサポートします。 |
+| `color` | `string` | `'currentColor'` |ストロークの色 (および塗りつぶされたマーカー アイコンの塗りつぶし)。                                                                     |
+| `ariaLabel` | `string` | _アイコンごとのデフォルト_ |アクセシブルな名前。省略した場合、アイコンには `aria-hidden` というマークが付けられます。                                                     |
 
 ### 行動アイコン
 
 特定のアイコンには、外観を制御するための追加の小道具が含まれています。
 
-| アイコン           | 追加の小道具                                                             | 説明                                                     |
-| :----------------- | :----------------------------------------------------------------------- | :------------------------------------------------------- |
-| `ForgeIconArrow`   | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (デフォルト `'up'`)   | インライン変換を介して矢印を回転します。                 |
-| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (デフォルト `'down'`) | インライン変換を介してシェブロンを回転します。           |
-| `ForgeIconSort`    | `active`: `boolean`、`direction`: `'asc' \| 'desc' \| undefined`         | アクティブな並べ替え方向に一致する山形を強調表示します。 |
+|アイコン |追加の小道具 |説明 |
+| :----------------- | :-------------------------------------------------------------------- | :--------------------------------------------------------- |
+| `ForgeIconArrow` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (デフォルト `'up'`) |インライン変換を介して矢印を回転します。                 |
+| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (デフォルト `'down'`) |インライン変換を介してシェブロンを回転します。               |
+| `ForgeIconSort` | `active`: `boolean`、`direction`: `'asc' \| 'desc' \| undefined` |アクティブな並べ替え方向に一致する山形を強調表示します。 |
 
 ## アイコンライブラリ
 
@@ -136,9 +136,9 @@ export function Toolbar() {
 - **コンテンツのフォーマット**: `ForgeIconBold`、`ForgeIconItalic`、`ForgeIconBulletList`、`ForgeIconNumberedList`、
   `ForgeIconHeadingOne`...
   `ForgeIconHeadingSix`。
-- **特殊ツール**: `ForgeIconWrench`、`ForgeIconPalette`、`ForgeIconDebug`、`ForgeIconQrCode`。
+- **専用ツール**: `ForgeIconWrench`、`ForgeIconPalette`、`ForgeIconDebug`、`ForgeIconQrCode`。
 
-## 開発とメンテナンス
+## Development & Maintenance
 
 ### 建物のアイコン
 
@@ -154,4 +154,4 @@ pnpm exec turbo run build --filter @mission-platform/icons
 
 アイコンは `icons/<category>/<subcategory>/<icon-name>` の下にカタログされますが、`icons/overview` は完全なギャラリーのままです。
 この概要では、1 つの `IconSpriteProvider` を通じて繰り返されるアイコンも示しています。個々のストーリーは `size` を暴露します。
-該当する場合は、`color`、国コード、および `ariaLabel` 制御。
+該当する場合、`color`、国コード、および `ariaLabel` 制御。

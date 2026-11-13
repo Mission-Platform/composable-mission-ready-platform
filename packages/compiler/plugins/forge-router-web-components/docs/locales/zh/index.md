@@ -51,11 +51,11 @@ document.querySelector('forge-router-outlet')?.setRouter(router);
 
 成功、重定向、取消或成功后，出口会删除叠加层
 失败。路线视图承诺在导航和插座安装之间共享，
-所以惰性工厂不会被调用两次。过时的迟到结果
-导航无法取代较新的视图。
+so a lazy factory is not invoked twice. A late result from an obsolete
+navigation cannot replace a newer view.
 
-`forge-router-link` 是作用域 SPA 入口点。它通过更新历史记录
-默认情况下为 `push`，或设置 `replace` 特性/属性时为 `replace`，
+`forge-router-link` is the scoped SPA entry point. It updates history through
+默认情况下为 `push` 或设置 `replace` 特性/属性时为 `replace`，
 更新其 `active` 和 `exact-active` 状态，并保留修改后的点击，
 非主要点击、下载、外部 URL 以及指向本机的目标链接
 浏览器。

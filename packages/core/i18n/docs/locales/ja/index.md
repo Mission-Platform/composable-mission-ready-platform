@@ -6,7 +6,7 @@
 > 言語: 日本語 (ja)
 
 `@mission-platform/i18n` は、フレームワークに依存しない国際化 (i18n) ラッパーとして構築されています。
-に [i18next](https://www.i18next.com/)。これは、Mission プラットフォーム全体で翻訳を処理するための統一された方法を提供します。
+[i18next](https://www.i18next.com/) で。これは、Mission プラットフォーム全体で翻訳を処理するための統一された方法を提供します。
 Vue 3 と React の両方に専用アダプターが付属します。
 
 ## エントリーポイント
@@ -17,11 +17,11 @@ Vite の `resolve.conditions` (`defineFrameworkAppConfig` / `frameworkResolveCon
 `@mission-platform/vite-config`) および TypeScript の `customConditions` (
 `@mission-platform/typescript-config/framework-<name>` プリセット）。すべてのインポートは裸のままです。
 
-| アクティブな状態 |                          | に解決されます。主要な輸出                                              |
-| :--------------- | :----------------------- | :---------------------------------------------------------------------- |
-| _(なし)_         | フレームワーク中立のコア | `createForgeI18N`、`forgeNamespace`、`localeNamespaces`、`mergeLocales` |
-| `mp:vue`         | Vue 3 アダプター         | ニュートラルコアと `createForgeI18NVue`、`useI18n`                      |
-| `mp:react`       | React アダプター         | ニュートラルコアと `ForgeI18NProvider`、`useI18n`                       |
+|アクティブな状態 | | に解決されます。主要な輸出 |
+| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
+| _(なし)_ |フレームワーク中立のコア | `createForgeI18N`、`forgeNamespace`、`localeNamespaces`、`mergeLocales` |
+| `mp:vue` | Vue 3 アダプター |ニュートラルコアと `createForgeI18NVue`、`useI18n` |
+| `mp:react` | React アダプター |ニュートラルコアと `ForgeI18NProvider`、`useI18n` |
 
 ## 中心となる概念
 
@@ -44,7 +44,7 @@ Vite の `resolve.conditions` (`defineFrameworkAppConfig` / `frameworkResolveCon
 
 1. **デフォルトの名前空間**: アプリは独自の名前空間をデフォルトとして定義します。
 2. **フォールバック**: デフォルトの名前空間は他の名前空間にフォールバックし、コンポーネント コードが独自のキーを解決できるようにします。
-3. **オーバーライド**: アプリは構成内に `overrides` オブジェクトを提供して、パッケージの特定の文字列のラベルを変更できます
+3. **オーバーライド**: アプリは構成内に `overrides` オブジェクトを提供して、パッケージの特定の文字列のラベルを変更できます。
    他人に影響を与えずに。
 
 ## 使用例

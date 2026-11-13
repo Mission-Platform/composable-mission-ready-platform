@@ -2,10 +2,10 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> packages/email-components/docs/index.md: [packages/email-components/docs/index.md](../../index.md)
+> packages/content/email-components/docs/index.md: [packages/content/email-components/docs/index.md](../../index.md)
 > Idioma: Español (es)
 
-`@mission-platform/email-components` contiene componentes Forge JSX tipificados y de marco neutral para generar árboles seguros para el correo electrónico. Utilice `@mission-platform/email-renderer` para serializar esos árboles en el servidor; La ruta de correo electrónico no requiere Vue, React, Svelte, Solid, tiempo de ejecución de componentes web, DOM del navegador o JavaScript.
+`@mission-platform/email-components` contains typed, framework-neutral Forge JSX components for generating email-safe trees. Utilice `@mission-platform/email-renderer` para serializar esos árboles en el servidor; La ruta de correo electrónico no requiere Vue, React, Svelte, Solid, tiempo de ejecución de componentes web, DOM del navegador o JavaScript.
 
 ## Uso
 
@@ -48,7 +48,7 @@ agrega el contenedor completo del documento de correo electrónico.
 - Organismos: `EmailPreheader`, `EmailHeader`, `EmailFooter`.
 - Plantillas: `EmailDocument`, `EmailContainer`, `EmailSection`.
 
-`EmailTypography` es el átomo de texto único, que refleja el vocabulario web `ForgeTypography`: `as` selecciona el elemento representado (`p` por defecto, `a` cuando `href` está configurado), `variant` selecciona la escala de tipo (la escala de encabezado coincidente cuando `as` está `h1`–`h6`, de lo contrario `body-md`), y `color`, `align`, `target` y `underline` ajustan las declaraciones en línea.
+`EmailTypography` es el átomo de texto único, que refleja el vocabulario web `ForgeTypography`: `as` selecciona el elemento renderizado (`p` por defecto, `a` cuando `href` está configurado), `variant` selecciona la escala de tipo (la escala de encabezado coincidente cuando `as` está `h1`–`h6`, de lo contrario `body-md`), y `color`, `align`, `target` y `underline` ajustan las declaraciones en línea.
 
 ```ts
 EmailTypography({ as: 'h1', children: 'Welcome' });
@@ -60,6 +60,6 @@ Todo el diseño se basa en `table`, `tbody`, `tr` y `td`. Los botones son enlace
 
 ## Política de compatibilidad
 
-La línea de base sigue la [¿Puedo enviar por correo electrónico el catálogo de funciones?](https://www.caniemail.com/features), revisado en `2026-08-08`. La implementación depende de [tablas HTML](https://www.caniemail.com/features/html-tables), [estilos en línea](https://www.caniemail.com/features/css-inline-styles), [ancho máximo](https://www.caniemail.com/features/css-max-width), y opcional [consultas de medios](https://www.caniemail.com/features/css-at-media). La salida estática no depende de flexbox, grid, propiedades personalizadas de CSS, propiedades lógicas, scripts, controladores de eventos o marcadores de hidratación del marco.
+La línea de base sigue el [catálogo de funciones ¿Puedo enviar un correo electrónico?](https://www.caniemail.com/features), revisado en `2026-08-08`. La implementación se basa en [tablas HTML](https://www.caniemail.com/features/html-tables), [estilos en línea](https://www.caniemail.com/features/css-inline-styles), [ancho máximo](https://www.caniemail.com/features/css-max-width) y [consultas de medios] opcionales (https://www.caniemail.com/features/css-at-media). La salida estática no depende de flexbox, grid, propiedades personalizadas de CSS, propiedades lógicas, scripts, controladores de eventos o marcadores de hidratación del marco.
 
 El CSS responsivo es solo una mejora progresiva: el diseño de la tabla en línea sigue siendo utilizable cuando el bloque `<style>` se elimina o se ignora. Utilice `assertCompatibleEmailHtml` en pruebas de aplicaciones al agregar nodos personalizados.

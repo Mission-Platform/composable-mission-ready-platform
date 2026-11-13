@@ -34,9 +34,19 @@ Crea un predicato Rollup/Rolldown `external` che tratti ogni nome in
 
 #### Parametri
 
-| Nome | Digitare                  | Descrizione |
-| ---- | ------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ----------------- | ----------- |
 | nomi | stringa di sola lettura[] |             |
+
+### DEFAULT_CSS_CONFIG
+
+**Genere:** costante
+
+```typescript
+export const DEFAULT_CSS_CONFIG: NonNullable<UserConfig['css']>;
+```
+
+Configurazione CSS condivisa per build Vite: pipeline PostCSS + moderne opzioni del preprocessore Sass.
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
@@ -60,6 +70,17 @@ export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 Globali di output di rollup predefiniti per i consumatori UMD/IIFE. Puntiamo solo al MES ma
 Rollup avvisa comunque senza questa mappa quando vengono dichiarati gli esterni.
 
+### DEFAULT_SASS_PREPROCESSOR_OPTIONS
+
+**Genere:** costante
+
+```typescript
+export const DEFAULT_SASS_PREPROCESSOR_OPTIONS;
+```
+
+Opzioni del preprocessore Sass condiviso che abilitano la moderna API Dart Sass JS e
+silenziamento degli avvisi di deprecazione dell'API JS legacy.
+
 ### defineAppConfig
 
 **Tipo:** funzione
@@ -74,7 +95,7 @@ raggruppando le modifiche tramite {@link AppConfigOptions.overrides}.
 
 #### Parametri
 
-| Nome    | Digitare         | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ---------------- | ----------- |
 | opzioni | OpzioniConfigApp |             |
 
@@ -93,7 +114,7 @@ utilizzare questo helper può impostare direttamente lo stesso `resolve.conditio
 
 #### Parametri
 
-| Nome    | Digitare                  | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ------------------------- | ----------- |
 | opzioni | FrameworkAppConfigOptions |             |
 
@@ -116,8 +137,8 @@ scatola. I pacchetti che necessitano di un singolo artefatto in bundle possono r
 
 #### Parametri
 
-| Nome    | Digitare              | Descrizione |
-| ------- | --------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | -------------------- | ----------- |
 | opzioni | OpzioniConfigLibreria |             |
 
 ### defineWebComponentAppConfig
@@ -132,12 +153,12 @@ Crea una configurazione dell'app Vite per applicazioni Web Components prive di f
 
 A differenza di {@link defineFrameworkAppConfig}, questo helper deliberatamente non lo fa
 installa il plugin Vue (o qualsiasi altro plugin del framework). Il file `mp:web-component`
-la condizione è ancora applicata sia alla risoluzione client che a quella SSR/prerendering, quindi
+La condizione è ancora applicata sia alla risoluzione client che a quella SSR/prerendering, quindi
 Le importazioni di pacchetti bare Forge selezionano i loro artefatti con elementi personalizzati ovunque.
 
 #### Parametri
 
-| Nome    | Digitare         | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ---------------- | ----------- |
 | opzioni | OpzioniConfigApp |             |
 
@@ -166,8 +187,8 @@ Condizioni Node/Vite (`import`, `default`, `browser`, ...).
 
 #### Parametri
 
-| Nome   | Digitare                 | Descrizione |
-| ------ | ------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| --------- | ------------------------ | ----------- |
 | quadro | MissionPlatformFramework |             |
 
 ### frameworkResolveConditions
@@ -187,8 +208,8 @@ Passa il risultato a `resolve.conditions` di Vite (vedi {@link defineFrameworkAp
 
 #### Parametri
 
-| Nome   | Digitare                 | Descrizione |
-| ------ | ------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| --------- | ------------------------ | ----------- |
 | quadro | MissionPlatformFramework |             |
 
 ### ignoreVueI18nBlocksPlugin
@@ -206,10 +227,10 @@ solo gli strumenti `i18next-cli`: in fase di esecuzione le traduzioni lo sono
 caricato dai bundle `src/locales/*.yaml` generati tramite i18next. Dal momento che
 il progetto non utilizza più un compilatore di blocchi personalizzati vue-i18n, `@vitejs/plugin-vue`
 altrimenti emetterebbe il blocco YAML grezzo come modulo JS e non riuscirebbe ad analizzarlo.
-Questo plugin anticipa il caricamento con un'esportazione predefinita inerte (il file shape
+Questo plugin impedisce il caricamento con un'esportazione predefinita inerte (il file shape
 `@vitejs/plugin-vue` si aspetta di poter chiamare `block(component)` in modo innocuo).
 
-### OpzioniConfigLibreria
+### LibraryConfigOptions
 
 **Tipo:** interfaccia
 
@@ -246,9 +267,9 @@ il proprio pacchetto in modo che i consumatori possano deduplicarli e scuoterli.
 
 #### Parametri
 
-| Nome          | Digitare | Descrizione |
-| ------------- | -------- | ----------- |
-| rootDirectory | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ------------- | ------ | ----------- |
+| rootDirectory | stringa |             |
 
 ## `src/vitest`
 
@@ -261,13 +282,34 @@ function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
 Crea una configurazione Vitest per i pacchetti e le app Mission Platform. Fornisce il
-plugin Vue standard, un ambiente jsdom e un provider di copertura v8
+plugin Vue standard, un ambiente jsdom o node e un provider di copertura v8
 preconfigurato per componenti `src/**\/*.vue`.
 
 #### Parametri
 
-| Nome    | Digitare             | Descrizione |
-| ------- | -------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | ------------------- | ----------- |
+| opzioni | Opzioni VitestConfig |             |
+
+### rilevareTestEnvironment
+
+**Tipo:** funzione
+
+```typescript
+function detectTestEnvironment(
+  rootDirectory: string = process.cwd(),
+  options: VitestConfigOptions = {},
+): 'jsdom' | 'happy-dom' | 'node';
+```
+
+Rileva se un pacchetto richiede un ambiente DOM (ad esempio `jsdom` o `happy-dom`)
+oppure può essere eseguito in sicurezza in un ambiente leggero `node`.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------------- | ------------------- | ----------- |
+| rootDirectory | stringa |             |
 | opzioni | Opzioni VitestConfig |             |
 
 ### VitestConfigOptions

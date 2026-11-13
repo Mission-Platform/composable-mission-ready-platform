@@ -5,6 +5,6 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > packages/compiler/plugins/forge-router-react/docs/index.md: [packages/compiler/plugins/forge-router-react/docs/index.md](../../index.md)
 > Taal: Nederlands (nl)
 
-Forge router target voor React Router
+Forge routerdoel voor React Router
 
-See `llms.txt` voor de public API en usage examples.
+Zie `llms.txt` voor de openbare API en gebruiksvoorbeelden.

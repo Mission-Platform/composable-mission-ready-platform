@@ -10,14 +10,14 @@
 
 ## אַדְרִיכָלוּת
 
-חבילה זו מגשרת בין רינדור המבוסס על בחירת D3 הכרחי עם עצי ממשק משתמש תגובתיים הצהרתיים:
+חבילה זו מגשרת בין רינדור חיוני המבוסס על בחירת D3 עם עצי ממשק משתמש תגובתיים הצהרתיים:
 
 - **יישום ניטרלי**: בנוי על גבי ווים `@mission-platform/forge-jsx` (`useRef`, `useEffect`).
 - **יעד דו-מסגרת**: הועבר על ידי `@mission-platform/vite-plugin-forge` ל-React מקורי (`./react`) ו-Vue 3
   (`./vue`) חומרי חיבור.
 - **תלות סלקטיבית**: מייבא את `d3-selection` ישירות כדי לשמור על גדלי חבילות לקוחות מינימליים.
 
-## ממשקי API עיקריים
+## ממשקי API מרכזיים
 
 ### `useD3`
 
@@ -25,7 +25,7 @@
 function useD3<E extends Element>(draw: D3Draw<E>, dependencies?: MpDependencyList): MpRef<E | null>;
 ```
 
-מתחבר לרכיב DOM/SVG ref ומבצע את הפונקציה `draw` תוך העברת בחירה D3 (`D3Selection<E>`) כאשר
+מתחבר לרכיב DOM/SVG ref ומבצע את הפונקציה `draw` עובר בחירה D3 (`D3Selection<E>`) כאשר
 רכוב וכאשר התלות משתנות. `draw` יכול באופן אופציונלי להחזיר פונקציית ניקוי פירוק.
 
 ### Margin Utilities
@@ -36,7 +36,7 @@ function useD3<E extends Element>(draw: D3Draw<E>, dependencies?: MpDependencyLi
 
 #### `innerDimensions(outerWidth: number, outerHeight: number, marginInput?: MarginInput): InnerDimensions`
 
-מחשב `innerWidth`, `innerHeight` ופתר `margin` עבור חישובי תיבת תצוגה של SVG.
+מחשב `innerWidth`, `innerHeight` ופתר את `margin` עבור חישובי תיבת תצוגה של SVG.
 
 ```ts
 interface InnerDimensions {

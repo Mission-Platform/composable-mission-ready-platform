@@ -33,6 +33,16 @@ Prise de routeur qui monte la vue DOM neutre d'un itinéraire. Les candidatures 
 `viewAdapter` au routeur lorsque les vues nécessitent un cycle de vie personnalisé ; sinon un
 Node, chaîne ou fabrique DOM dans `route.component` est rendu directement.
 
+### MpRouterViewElement
+
+**Genre :** composant
+
+```typescript
+export class MpRouterViewElement extends MpRouterOutletElement
+```
+
+Aucune description fournie.
+
 ### registreRouterElements
 
 **Genre :** fonction
@@ -45,9 +55,9 @@ Enregistrez les primitives du routeur une fois ; appeler en toute sécurité ap
 
 #### Paramètres
 
-| Nom     | Tapez                           | Descriptif |
-| ------- | ------------------------------- | ---------- |
-| options | S'inscrireRouterElementsOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ----------------------------- | ----------- |
+| options | S'inscrireRouterElementsOptions |             |
 
 ## `src/runtime/history`
 
@@ -63,9 +73,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom    | Tapez   | Descriptif |
-| ------ | ------- | ---------- |
-| gagner | Fenêtre |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| gagner | Fenêtre |             |
 
 ### créer un historique de mémoire
 
@@ -79,9 +89,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom         | Tapez | Descriptif |
-| ----------- | ----- | ---------- |
-| URLinitiale |       |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---- | ----------- |
+| URLinitiale |      |             |
 
 ### créer un historique Web
 
@@ -189,9 +199,9 @@ Résolvez une cible neutre via le routeur de composants Web lié.
 
 #### Paramètres
 
-| Nom | Tapez              | Descriptif |
-| --- | ------------------ | ---------- |
-| à   | MpRouteLocationRaw |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
 
 ### setForgeRouter
 
@@ -205,9 +215,9 @@ Liez le routeur appartenant à l'application pour obtenir des fonctionnalités d
 
 #### Paramètres
 
-| Nom     | Tapez                       | Descriptif |
-| ------- | --------------------------- | ---------- |
-| routeur | MpWebComponentsRouter<View> |            |
+| Nom | Tapez | Descriptif |
+| ------ | --------------------------- | ----------- |
+| routeur | MpWebComponentsRouter<View> |             |
 
 ### utiliserForgeNavigation
 
@@ -297,9 +307,19 @@ historique, gardes, redirections, abonnements et comportement de défilement du 
 
 #### Paramètres
 
-| Nom     | Tapez                              | Descriptif |
-| ------- | ---------------------------------- | ---------- |
-| options | MpWebComponentsRouterOptions<View> |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---------------------------------- | ----------- |
+| options | MpWebComponentsRouterOptions<View> |             |
+
+### getActiveRouter
+
+**Genre :** fonction
+
+```typescript
+function getActiveRouter(): MpWebComponentsRouter<unknown> | undefined;
+```
+
+Aucune description fournie.
 
 ### MpRouterLoadingFallback
 
@@ -343,10 +363,26 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom     | Tapez               | Descriptif |
-| ------- | ------------------- | ---------- |
-| routeur | Adaptateur MpRouter |            |
-| à       | MpRouteLocationRaw  |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------------------ | ----------- |
+| routeur | Adaptateur MpRouter |             |
+| à | MpRouteLocationRaw |             |
+
+### setActiveRouter
+
+**Genre :** fonction
+
+```typescript
+function setActiveRouter(router: MpWebComponentsRouter<View> | undefined): void;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------ | ---------------------------------------- | ----------- |
+| routeur | MpWebComponentsRouter<View> \| indéfini |             |
 
 ## `src/utils/forge-router-web-components`
 

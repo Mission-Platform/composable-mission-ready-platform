@@ -1,4 +1,4 @@
-# @mission-platform/forge-cms-ghost Referencia API
+# Referencia de API @mission-platform/forge-cms-ghost
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
@@ -29,7 +29,7 @@ Un Fantasma amable en el campo no puede expresarse de forma nativa; se degrada a
 export const FORGE_GHOST_SETTING_LIMIT;
 ```
 
-Más `@cmsSetting` Se proyectaron campos que los de Ghost. `config.custom` lo permite.
+Se proyectaron más campos `@cmsSetting` de los que permite el `config.custom` de Ghost.
 
 ### fantasmaAdvertencia
 
@@ -47,10 +47,10 @@ Construir una advertencia de fase de generación; el objetivo Fantasma nunca emi
 
 #### Parámetros
 
-| Nombre            | Tipo   | Descripción |
-| ----------------- | ------ | ----------- |
-| código            | cadena |             |
-| mensaje           | cadena |             |
+| Nombre | Tipo | Descripción |
+| -------- | ------ | ----------- |
+| código | cadena |             |
+| mensaje | cadena |             |
 | nombre de archivo | cadena |             |
 
 ## `src/ghost`
@@ -67,8 +67,8 @@ Vincule la proyección del tema Ghost a un complemento de salida del marco propi
 
 #### Parámetros
 
-| Nombre   | Tipo                 | Descripción |
-| -------- | -------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------- | ----------- |
 | opciones | ForgeGhostCmsOptions |             |
 
 ### Opciones de ForgeGhostCms
@@ -95,7 +95,7 @@ function buildGhostThemeConfig(
 ): GhostThemeConfig;
 ```
 
-Construye el `config.custom` fragmento de cada `@cmsSetting`-campo etiquetado.
+Cree el fragmento `config.custom` a partir de cada campo etiquetado con `@cmsSetting`.
 
 Las configuraciones son para todo el sitio, por lo que están codificadas por el atributo Snake_cased del campo.
 nombre en lugar de por componente: dos componentes que etiquetan el mismo accesorio describen
@@ -103,11 +103,11 @@ el mismo mando, y Ghost sólo tiene un espacio de nombres para ellos.
 
 #### Parámetros
 
-| Nombre          | Tipo                                      | Descripción |
-| --------------- | ----------------------------------------- | ----------- |
-| componentes     | Componente de contenido de sólo lectura[] |             |
-| nombre del tema | cadena                                    |             |
-| diagnóstico     | Diagnóstico del compilador[]              |             |
+| Nombre | Tipo | Descripción |
+| ----------- | --------------------------- | ----------- |
+| componentes | Componente de contenido de sólo lectura[] |             |
+| nombre del tema | cadena |             |
+| diagnóstico | CompiladorDiagnóstico[] |             |
 
 ### DEFAULT_GHOST_THEME_NAME
 
@@ -133,8 +133,8 @@ Emita el contrato de parámetros parciales como JSON impreso.
 
 #### Parámetros
 
-| Nombre      | Tipo                                      | Descripción |
-| ----------- | ----------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------- | ----------- |
 | componentes | Componente de contenido de sólo lectura[] |             |
 
 ### emitirGhostThemeConfig
@@ -149,15 +149,15 @@ function emitGhostThemeConfig(
 ): string;
 ```
 
-Emitir el `config.custom` fragmento como JSON bonito impreso.
+Emita el fragmento `config.custom` como JSON bonito.
 
 #### Parámetros
 
-| Nombre          | Tipo                                      | Descripción |
-| --------------- | ----------------------------------------- | ----------- |
-| componentes     | Componente de contenido de sólo lectura[] |             |
-| nombre del tema | cadena                                    |             |
-| diagnóstico     | Diagnóstico del compilador[]              |             |
+| Nombre | Tipo | Descripción |
+| ----------- | --------------------------- | ----------- |
+| componentes | Componente de contenido de sólo lectura[] |             |
+| nombre del tema | cadena |             |
+| diagnóstico | CompiladorDiagnóstico[] |             |
 
 ### GHOST_COMPONENTS_MANIFEST
 
@@ -191,7 +191,7 @@ Administrador: de ahí el truncamiento y la advertencia aquí.
 export const GHOST_THEME_CONFIG_MANIFEST;
 ```
 
-el archivo el `config.custom` se escribe el fragmento.
+El archivo en el que se escribe el fragmento `config.custom`.
 
 ### Entrada de componente fantasma
 
@@ -201,7 +201,7 @@ el archivo el `config.custom` se escribe el fragmento.
 export interface GhostComponentEntry
 ```
 
-La entrada de un componente en `forge-components.json`.
+Entrada de un componente en `forge-components.json`.
 
 ### Manifiesto de componentes fantasma
 
@@ -231,7 +231,7 @@ Un parámetro hash de un parcial generado.
 export interface GhostSetting
 ```
 
-Una entrada de un tema `config.custom` bloquear.
+Una entrada del bloque `config.custom` de un tema.
 
 ### tipo de configuración fantasma
 
@@ -243,15 +243,15 @@ function ghostSettingType(field: ContentField): GhostSettingType;
 
 El tipo de configuración Fantasma se reduce a un tipo de campo neutral.
 
-`color` es parte del vocabulario de Ghost, pero ningún tipo neutral se asigna a él: un
-El color es una cadena ordinaria en TypeScript y adivinando por el nombre de un accesorio
+`color` es parte del vocabulario de Ghost, pero no se le asigna ningún tipo neutral: un
+El color es una cadena ordinaria en TypeScript y se adivina a partir del nombre de un accesorio.
 haría que la proyección no fuera determinista.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| campo  | Campo de contenido |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------ | ----------- |
+| campo | Campo de contenido |             |
 
 ### Tipo de configuración fantasma
 
@@ -262,7 +262,7 @@ export type GhostSettingType =
   "select" | "boolean" | "color" | "image" | "text";
 ```
 
-Los cinco tipos de escenarios de Ghost `config.custom` el bloque acepta.
+Los cinco tipos de configuración que acepta el bloque `config.custom` de Ghost.
 
 ### Ranura fantasma
 
@@ -282,7 +282,7 @@ Una ranura de un parcial generado.
 export interface GhostThemeConfig
 ```
 
-El `config.custom` fragmentar un tema `package.json` se fusiona.
+El `config.custom` fragmenta el `package.json` de un tema en el que se fusiona.
 
 ### a GhostComponentEntry
 
@@ -294,12 +294,12 @@ function toGhostComponentEntry(
 ): GhostComponentEntry;
 ```
 
-Proyecte un componente sobre su `forge-components.json` entrada.
+Proyecte un componente en su entrada `forge-components.json`.
 
 #### Parámetros
 
-| Nombre     | Tipo                    | Descripción |
-| ---------- | ----------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------- | ----------- |
 | componente | Componente de contenido |             |
 
 ## `src/template`
@@ -320,8 +320,8 @@ el componente cambió.
 
 #### Parámetros
 
-| Nombre     | Tipo                    | Descripción |
-| ---------- | ----------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------- | ----------- |
 | componente | Componente de contenido |             |
 
 ### fantasmaPartialFileName
@@ -336,8 +336,8 @@ La ruta relativa al tema en la que se escribe el parcial.
 
 #### Parámetros
 
-| Nombre     | Tipo                    | Descripción |
-| ---------- | ----------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------- | ----------- |
 | componente | Componente de contenido |             |
 
 ### fantasmaPartialName
@@ -352,8 +352,8 @@ El nombre parcial con el que se invoca un componente (`{{> forge/badge}}`).
 
 #### Parámetros
 
-| Nombre     | Tipo                    | Descripción |
-| ---------- | ----------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------- | ----------- |
 | componente | Componente de contenido |             |
 
 ### fantasmaPlantillaDiagnóstico
@@ -369,13 +369,13 @@ function ghostTemplateDiagnostics(
 
 El diagnóstico que emite el parcial de un componente produce.
 
-Solo `number` se informa: Ghost no tiene ningún tipo numérico en ninguna parte de su tema
+Solo se informa `number`: Ghost no tiene ningún tipo numérico en ninguna parte de su tema
 API, por lo que el valor sobrevive como texto renderizado y cualquier aritmética que desee un tema
 que ver con ello tiene que suceder antes de que se invoque el parcial.
 
 #### Parámetros
 
-| Nombre            | Tipo                    | Descripción |
-| ----------------- | ----------------------- | ----------- |
-| componente        | Componente de contenido |             |
-| nombre de archivo | cadena                  |             |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------- | ----------- |
+| componente | Componente de contenido |             |
+| nombre de archivo | cadena |             |

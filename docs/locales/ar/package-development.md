@@ -14,11 +14,22 @@
 الطريقة الموصى بها لإنشاء الحزمة هي استخدام أداة Mission Platform Developer MCP، والتي تضمن كل شيء
 تتبع التكوينات والبرامج النصية وهياكل المجلدات معايير النظام الأساسي.
 
+### إنشاء حزمة Forge
+
+تستخدم حزم تكوين المكونات والربط وأنظمة إدارة المحتوى استدعاء `defineTsdownLibrary` واحد. أضف
+المكونات الإضافية الأصلية التي تم إرجاعها بواسطة `tsdownForgeComponentPlugins`،
+`tsdownForgeHookPlugins`، أو `tsdownForgeCmsPlugins` إلى خيار `plugins` الخاص به؛
+تقوم هذه المكونات الإضافية بإعداد ونشر الأهداف من خطافات دورة حياة tsdown بدلاً من
+إجراء اكتشاف الرسم البياني أثناء تقييم التكوين. الحفاظ على الإطار و
+المكونات الإضافية لمخرجات نظام إدارة المحتوى (CMS) مملوكة للمتصل وصريحة لذلك يبقى تحديد الهدف
+مؤلفة ومعزولة.
+
 ### 1. سقالة مع MCP
 
-استخدم أداة `scaffold_package` لإنشاء الهيكل العظمي.
+استخدم أداة `scaffold_package` من خلال خادم Mission Platform Developer MCP المتصل لإنشاء الهيكل العظمي.
+ما يلي هو مثال لاستدعاء أداة MCP، وليس أمر shell؛ استخدم قسم الإعداد اليدوي إذا كان MCP غير متاح.
 
-```bash
+```text
 # Example: Creating a new 'date-utils' package
 # The tool defaults to a dry-run; set apply=true to write files
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
@@ -29,12 +40,12 @@ scaffold_package(name="date-utils", description="Shared date manipulation utilit
 - `package.json` مع البرامج النصية الجاهزة لمساحة العمل والتكوينات المشتركة.
 - `tsconfig.json` توسيع إعدادات النظام الأساسي الافتراضية.
 - `vite.config.ts` للبنيات المحسنة.
-  -ملف برميل `src/index.ts`.
+-ملف برميل `src/index.ts`.
 - `llms.txt` للتوثيق بمساعدة الذكاء الاصطناعي.
 
 ### 2. الإعداد اليدوي (اختياري)
 
-إذا كنت لا تستخدم أداة MCP، فتأكد من استخدام `package.json` [كتالوجات pnpm](https://pnpm.io/catalogs) ل
+إذا كنت لا تستخدم أداة MCP، فتأكد من أن `package.json` يستخدم [كتالوجات pnpm](https://pnpm.io/catalogs) لـ
 إدارة التبعية ويتبع اصطلاح التسمية النطاق:
 
 ```json
@@ -87,9 +98,9 @@ packages/<name>/
 └── README.md
 ```
 
-## Stylelint للحزم التي تحتوي على أنماط
+## Stylelint للحزم ذات النمط
 
-يجب أن تتضمن الحزم التي تحتوي على `CSS` أو `SCSS` أو كتل أنماط `Vue` إعداد Stylelint وبرامج الفحص التالية:
+يجب أن تحتفظ الحزم التي تحتوي على كتل أنماط CSS أو SCSS أو Vue بتكوين Stylelint وبرامج نصية للوبر قابلة للاكتشاف:
 
 ```text
 packages/<name>/
@@ -99,7 +110,7 @@ packages/<name>/
 └── package.json                    # Stylelint scripts and devDependencies
 ```
 
-أضف التكوين المشترك وتبعيات بناء الجملة والتكوين المباشرة إلى `devDependencies`:
+أضف التكوين المشترك وتبعيات بناء الجملة/التكوين المباشرة الخاصة به إلى `devDependencies`:
 
 ```json
 {
@@ -114,7 +125,7 @@ packages/<name>/
 }
 ```
 
-استخدم التكوين المشترك من `stylelint.config.mjs` بدلاً من تكرار إدخالات `extends`:
+استخدم التكوين المشترك من `stylelint.config.mjs` بدلاً من تكرار إدخالاته `extends`:
 
 ```js
 // stylelint.config.mjs
@@ -123,7 +134,7 @@ import baseConfig from "@mission-platform/stylelint-config";
 export default { ...baseConfig };
 ```
 
-أضف البرامج النصية التي تغطي مصادر الأنماط الفعلية لمساحة العمل، ثم شغّل الفحص قبل النشر:
+قم بإضافة البرامج النصية التي تغطي مصادر الأنماط الفعلية لمساحة العمل، ثم قم بإجراء الفحص قبل النشر:
 
 ```json
 {
@@ -192,7 +203,7 @@ export default {
 بالنسبة لتطبيقات Web Components، قم باستيراد وقت التشغيل من `@mission-platform/forge-router-web-components/runtime`، ثم اتصل
 `registerRouterElements()` مرة واحدة، اتصل بـ `setForgeRouter(appRouter)` بعد إنشاء جهاز التوجيه المملوك للتطبيق، وقم بالتمرير المنظم
 قيم `to` كخصائص DOM، واستخدم `MpMemoryHistory` في العرض المسبق/الاختبارات. حزمة تضيف جهاز توجيه قابل لإعادة الاستخدام
-عنصر أو تغييرات في سلوك مكونات الويب، يجب إضافة قصة محايدة ضمن `src/**/*.stories.ts` وتضمين الهدف فيها
+عنصر أو تغييرات في سلوك مكونات الويب، يجب إضافة قصة محايدة ضمن `src/**/*.stories.ts` وتضمين الهدف في
 منضدة عمل Storybook لمكونات الويب.
 
 ## التوثيق (`llms.txt`)
@@ -217,16 +228,15 @@ export default {
 
 ## نشر
 
-تستخدم منصة المهمة [مجموعات التغييرات](https://github.com/changesets/changesets) للإصدار والنشر.
+يستخدم Mission Platform [Changesets](https://github.com/changesets/changesets) لإصدار الإصدارات والنشر.
 
 1. **إضافة مجموعة التغييرات**: بعد إجراء التغييرات، قم بتشغيل:
-
-```bash
+   ```bash
    pnpm changeset
-```
-
-حدد الحزمة ونوع التغيير (تصحيح، ثانوي، رئيسي). 2. ** تنفيذ مجموعة التغييرات **: تنفيذ ملف `.changeset/*.md` الذي تم إنشاؤه. 3. **الإصدار والنشر**: يتولى CI/CD عملية النشر الفعلية، ولكن يمكنك معاينة الإصدارات محليًا باستخدام:
-
-```bash
+   ```
+   حدد الحزمة ونوع التغيير (تصحيح، ثانوي، رئيسي).
+2. ** تنفيذ مجموعة التغييرات **: تنفيذ ملف `.changeset/*.md` الذي تم إنشاؤه.
+3. **الإصدار والنشر**: يتولى CI/CD عملية النشر الفعلية، ولكن يمكنك معاينة الإصدارات محليًا باستخدام:
+   ```bash
    pnpm changeset version
-```
+   ```

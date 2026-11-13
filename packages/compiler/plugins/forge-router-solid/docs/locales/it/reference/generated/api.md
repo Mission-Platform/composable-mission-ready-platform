@@ -28,8 +28,8 @@ Crea funzionalità neutre dalle primitive del router Solid (senza framework per 
 
 #### Parametri
 
-| Nome     | Digitare                                                                                                                                                             | Descrizione |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | ingresso | { posizione: { percorso: stringa; cerca: stringa; hash: stringa }; parametri?: Record<string, string \| undefined>; navigare: SolidNavigate; sbocco?: sconosciuto; } |             |
 
 ### MpLink
@@ -37,15 +37,15 @@ Crea funzionalità neutre dalle primitive del router Solid (senza framework per 
 **Tipo:** componente
 
 ```typescript
-function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
+export function MpLink(properties:
 ```
 
 Solid proxy del componente di ancoraggio associato tramite {@link setForgeSolidRouter}.
 
 #### Parametri
 
-| Nome      | Digitare                                                                                  | Descrizione |
-| --------- | ----------------------------------------------------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------------------------------------------------------------- | ----------- |
 | proprietà | { href?: stringa; a?: MpRouteLocationRaw; bambini?: sconosciuto; sostituire?: booleano; } |             |
 
 ### MpRouterView
@@ -53,7 +53,7 @@ Solid proxy del componente di ancoraggio associato tramite {@link setForgeSolidR
 **Tipo:** componente
 
 ```typescript
-function MpRouterView(): unknown;
+export function MpRouterView(): unknown;
 ```
 
 Proxy di uscita Solid associato tramite {@link setForgeSolidRouter}.
@@ -70,9 +70,9 @@ Risolvi un obiettivo neutro in una stringa href.
 
 #### Parametri
 
-| Nome | Digitare           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---- | ------------------ | ----------- |
-| a    | MpRouteLocationRaw |             |
+| a | MpRouteLocationRaw |             |
 
 ### setForgeSolidRouter
 
@@ -87,8 +87,8 @@ forme di aggancio/chiamata (`useMpRouter().navigate`, `useMpRoute().query`, …)
 
 #### Parametri
 
-| Nome       | Digitare              | Descrizione |
-| ---------- | --------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | ------------------ | ----------- |
 | superficie | SolidRouterSuperficie |             |
 
 ### SolidRouterSurface
@@ -108,18 +108,18 @@ Solid Superficie minima del router utilizzata dallo spessore di runtime.
 ```typescript
 function toMpLocationFromSolid(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
-Crea una posizione neutra dagli snapshot della posizione/parametri del router Solid.
+Crea una posizione neutra dagli snapshot di posizione/parametri del router Solid.
 
 #### Parametri
 
-| Nome      | Digitare                                             | Descrizione |
-| --------- | ---------------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------------------------------- | ----------- |
 | posizione | { percorso: stringa; cerca: stringa; hash: stringa } |             |
-| parametri | Registra<string, string \| undefined>                |             |
+| parametri | Registra<string, string \| undefined> |             |
 
 ### toSolidHref
 
@@ -133,9 +133,9 @@ Serializza una destinazione neutra per la navigazione del router Solid.
 
 #### Parametri
 
-| Nome | Digitare           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---- | ------------------ | ----------- |
-| a    | MpRouteLocationRaw |             |
+| a | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 

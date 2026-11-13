@@ -19,25 +19,25 @@ Dialecte `@mission-platform/forge-jsx` et compilé en **Vue 3 et React** par `@m
 
 Choisissez le framework **une fois** — `resolve.conditions` via `defineFrameworkAppConfig` /
 `frameworkResolveConditions` depuis `@mission-platform/vite-config` et `customConditions` via le
-Préréglages `@mission-platform/typescript-config/framework-<name>` — puis importez le tout avec le spécificateur de package nu.
+Préréglages `@mission-platform/typescript-config/framework-<name>` - puis importez le tout avec le spécificateur de package nu.
 
 ## Échelle du point d'arrêt
 
 La plate-forme utilise une échelle réactive en sept étapes basée sur les seuils de largeur de fenêtre :
 
-| Clé   | Étiquette         | Seuil         | Appareil commun/cas d'utilisation               |
-| :---- | :---------------- | :------------ | :---------------------------------------------- |
-| `2xs` | Extra-extra-petit | $\ge 0$ px    | Tous les appareils                              |
-| `xs`  | Très petit        | $\ge 480$ px  | Grands téléphones                               |
-| `sm`  | Petit             | $\ge 768$ px  | Portrait sur tablette                           |
-| `md`  | Moyen             | $\ge 1024$ px | Paysage de tablette / petit ordinateur portable |
-| `lg`  | Grand             | $\ge 1920$ px | Pleine HD / 1080p                               |
-| `xl`  | Très grand        | $\ge 2560$ px | QHD                                             |
-| `2xl` | Extra-extra-large | $\ge 3840$ px | 4K UHD                                          |
+| Clé | Étiquette | Seuil | Appareil commun/cas d'utilisation |
+| :---- | :---------------- | :------------ | :------------------------------ |
+| `2xs` | Extra-extra-petit | $\ge 0$ px | Tous les appareils |
+| `xs` | Très petit | $\ge 480$ px | Grands téléphones |
+| `sm` | Petit | $\ge 768$ px | Portrait sur tablette |
+| `md` | Moyen | $\ge 1024$ px | Paysage de tablette / petit ordinateur portable |
+| `lg` | Grand | $\ge 1920$ px | Pleine HD / 1080p |
+| `xl` | Très grand | $\ge 2560$ px | QHD |
+| `2xl` | Extra-extra-large | $\ge 3840$ px | 4K UHD |
 
 ## Utilitaires principaux (`/core`)
 
-Assistants indépendants du framework, utilisables en toute sécurité depuis n'importe quel framework (ou aucun) :
+Aides indépendantes du framework, utilisables en toute sécurité depuis n'importe quel framework (ou aucun) :
 
 - `breakpointKeys` — le tableau ordonné de clés de point d'arrêt.
 - `breakpoints` — une carte des clés de leurs seuils de pixels de largeur minimale.
@@ -117,7 +117,7 @@ Identique à `<ForgeShowAt>`.
 
 ### `<ForgeBreakpointDebug>`
 
-Une superposition réservée au développement épinglée dans le coin inférieur droit qui affiche le point d'arrêt actif actuel et qui
+Une superposition réservée au développement uniquement épinglée dans le coin inférieur droit qui affiche le point d'arrêt actif actuel et qui
 les points d'arrêt sont actifs. Ses étiquettes sont localisées via i18next (espace de noms `mp.breakpoints`) avec les valeurs par défaut en anglais.
 
 ```tsx

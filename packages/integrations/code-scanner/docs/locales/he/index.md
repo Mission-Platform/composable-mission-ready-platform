@@ -6,22 +6,24 @@
 > שפה: עברית (he)
 
 **סורק קוד תמונה/מצלמה** נטול תלות מורכב ממערכת מקושרת סטטית
-לזייף גרף סקריפט אינטרנט ל-WebAssembly. הוא מאתר ומפענח קודי QR, נתונים
-Matrix, Aztec, 1D ברקודים, PDF417, GS1 DataBar ו-MaxiCode מקובצי תמונה
-או שידורי מצלמה חיים. פרופיל מקור-מודול דינמי זמין גם עבור
-פריסות שצריכות מודולי מפענח הניתנים למטמון באופן עצמאי.
+גרף פלינט ל-WebAssembly. החפץ המקושר מפענח כרגע נתונים
+קוראי מטריקס, Aztec קומפקטי, 1D/RSS, PDF417 ו-MaxiCode מקובצי תמונה או
+זרמי מצלמה חיים. גרף ה-QR פולט באופן עצמאי אך נשאר מחוץ ל
+חפץ משולב בעוד מגבלת פולט Forge נחקרת.
 
-## סקירה כללית של API
+## סקירת API
 
 ### סורק ליבה (`@mission-platform/code-scanner`)
 
 ```ts
-import { scanFile, scanImageData, scanImageDataAll } from '@mission-platform/code-scanner';
+import { scanFile, scanImageData, scanImageDataAll, type ScanOptions } from '@mission-platform/code-scanner';
 
 // Scan ImageData directly
-const result = scanImageData(imageData);
+const options: ScanOptions = { formats: ['DATA_MATRIX'], tryHarder: true };
+const result = scanImageData(imageData, options);
 
-// Scan all codes in frame
+// Scan the package's all-results entry point. The current linked reduced graph
+// returns at most its first validated result until multi-symbol detection lands.
 const allResults = scanImageDataAll(imageData);
 
 // Scan a File / Blob
@@ -44,7 +46,7 @@ const resultFromFile = await scanFile(file);
 </script>
 
 <template>
-  <ForgeCodeScanner @result="(res) => console.log(res.value)" />
+  <ForgeCodeScanner @result="(res) => console.log(res.text, res.format)" />
 </template>
 ```
 
@@ -54,6 +56,6 @@ const resultFromFile = await scanFile(file);
 import { ForgeCodeScanner } from '@mission-platform/code-scanner';
 
 export function CameraScanner() {
-  return <ForgeCodeScanner onResult={(result) => console.log(result.value)} />;
+  return <ForgeCodeScanner onResult={(result) => console.log(result.text, result.format)} />;
 }
 ```

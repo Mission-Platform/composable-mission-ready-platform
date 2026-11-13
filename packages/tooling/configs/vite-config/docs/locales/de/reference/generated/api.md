@@ -29,14 +29,24 @@ Keine Beschreibung angegeben.
 function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
-Erstellen Sie ein Rollup/Rolldown `external` Prädikat, das jeden Namen in behandelt
-`names` (und alle ihre Unterpfadimporte, z. B. `pkg/sub`) als äußerlich.
+Erstellen Sie ein Rollup/Rolldown-`external`-Prädikat, das jeden Namen in behandelt
+`names` (und alle ihre Unterpfadimporte, z. B. `pkg/sub`) als extern.
 
 #### Parameter
 
-| Name  | Geben Sie                   | ein Beschreibung |
-| ----- | --------------------------- | ---------------- |
-| Namen | schreibgeschützter String[] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ----------------- | ----------- |
+| Namen | schreibgeschützter String[] |             |
+
+### DEFAULT_CSS_CONFIG
+
+**Art:** konstant
+
+```typescript
+export const DEFAULT_CSS_CONFIG: NonNullable<UserConfig['css']>;
+```
+
+Gemeinsame CSS-Konfiguration für Vite-Builds: PostCSS-Pipeline + moderne Sass-Präprozessoroptionen.
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
@@ -60,6 +70,17 @@ export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 Globale Standard-Rollup-Ausgaben für UMD/IIFE-Konsumenten. Wir zielen aber nur auf ESM ab
 Rollup warnt auch ohne diese Karte, wenn Externals deklariert werden.
 
+### DEFAULT_SASS_PREPROCESSOR_OPTIONS
+
+**Art:** konstant
+
+```typescript
+export const DEFAULT_SASS_PREPROCESSOR_OPTIONS;
+```
+
+Gemeinsam genutzte Sass-Präprozessoroptionen, die die moderne Dart Sass JS API ermöglichen und
+Stummschaltung der Warnungen zur veralteten JS-API.
+
 ### defineAppConfig
 
 **Art:** Funktion
@@ -68,15 +89,15 @@ Rollup warnt auch ohne diese Karte, wenn Externals deklariert werden.
 function defineAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
-Baue ein Vite Konfiguration für Mission Platform Vue 3 Apps: die Vue Plugin und das
+Erstellen Sie eine Vite-Konfiguration für Mission Platform Vue 3 Apps: das Vue-Plugin und das
 gemeinsame PostCSS-Pipeline. Apps fügen ihr eigenes Routing, PWA, Worker usw. hinzu
 Bündelung von Optimierungen über {@link AppConfigOptions.overrides}.
 
 #### Parameter
 
-| Name     | Geben Sie        | ein Beschreibung |
-| -------- | ---------------- | ---------------- |
-| Optionen | AppConfigOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------- | ----------- |
+| Optionen | AppConfigOptions |             |
 
 ### defineFrameworkAppConfig
 
@@ -86,16 +107,16 @@ Bündelung von Optimierungen über {@link AppConfigOptions.overrides}.
 function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig;
 ```
 
-Umschließen Sie {@link defineAppConfig} mit dem `resolve.conditions` musste bloßgelegt werden
-`@mission-platform/<pkg>` Importe werden in einen einzelnen ausgewählten Framework-Build aufgelöst.
+Umschließen Sie {@link defineAppConfig} mit dem `resolve.conditions`, das zum Freigeben erforderlich ist
+`@mission-platform/<pkg>`-Importe werden in einen einzelnen ausgewählten Framework-Build aufgelöst.
 Dies ist der einzige Schalter, den Verbraucher auf App-Ebene festlegen. externe Projekte, die dies nicht tun
-Verwenden Sie diesen Helfer, um dasselbe festzulegen `resolve.conditions` direkt.
+Mit diesem Helfer können Sie `resolve.conditions` direkt festlegen.
 
 #### Parameter
 
-| Name     | Geben Sie                 | ein Beschreibung |
-| -------- | ------------------------- | ---------------- |
-| Optionen | FrameworkAppConfigOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------- | ----------- |
+| Optionen | FrameworkAppConfigOptions |             |
 
 ### defineLibraryConfig
 
@@ -105,20 +126,20 @@ Verwenden Sie diesen Helfer, um dasselbe festzulegen `resolve.conditions` direkt
 function defineLibraryConfig(options: LibraryConfigOptions): UserConfig;
 ```
 
-Baue ein Vite Konfiguration, die auf die Mission Platform zugeschnitten ist Vue Bibliothekspakete:
-die Vue Plugin, die gemeinsam genutzte PostCSS-Pipeline, reine ESM-Lib-Ausgabe, einzelnes CSS
+Erstellen Sie eine Vite-Konfiguration, die auf die Mission Platform Vue-Bibliothekspakete zugeschnitten ist:
+das Vue-Plugin, die gemeinsam genutzte PostCSS-Pipeline, nur ESM-Lib-Ausgabe, einzelnes CSS
 Bundle und vernünftige externe Peer-Abhängigkeiten.
 
-Standardmäßig behält der Build das Diagramm des Quellmoduls bei
+Standardmäßig behält der Build das Quellmoduldiagramm bei
 ({@link LibraryConfigOptions.preserveModules}), wobei eine Datei pro Modul ausgegeben wird
 Daher profitieren nachgelagerte Apps vom Tree Shaking und der Codeaufteilung aus dem
 Box. Pakete, die ein einzelnes gebündeltes Artefakt benötigen, können per Aufruf abgemeldet werden.
 
 #### Parameter
 
-| Name     | Geben Sie            | ein Beschreibung |
-| -------- | -------------------- | ---------------- |
-| Optionen | LibraryConfigOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------- | ----------- |
+| Optionen | LibraryConfigOptions |             |
 
 ### defineWebComponentAppConfig
 
@@ -128,18 +149,18 @@ Box. Pakete, die ein einzelnes gebündeltes Artefakt benötigen, können per Auf
 function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
-Baue ein Vite App-Konfiguration für Framework-freie Webkomponenten-Anwendungen.
+Erstellen Sie eine Vite-App-Konfiguration für Framework-freie Web Components-Anwendungen.
 
 Im Gegensatz zu {@link defineFrameworkAppConfig} ist dies bei diesem Helfer bewusst nicht der Fall
-Installieren Sie die Vue Plugin (oder ein anderes Framework-Plugin). Der `mp:web-component`
-Die Bedingung wird also weiterhin sowohl auf die Client- als auch auf die SSR-/Prerender-Auflösung angewendet
-Bare-Forge-Paketimporte wählen überall ihre benutzerdefinierten Elementartefakte aus.
+Installieren Sie das Vue-Plugin (oder ein anderes Framework-Plugin). Der `mp:web-component`
+Die Bedingung wird weiterhin sowohl auf die Client- als auch auf die SSR-/Prerender-Auflösung angewendet
+Bare Forge-Paketimporte wählen ihre benutzerdefinierten Elementartefakte überall aus.
 
 #### Parameter
 
-| Name     | Geben Sie        | ein Beschreibung |
-| -------- | ---------------- | ---------------- |
-| Optionen | AppConfigOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------- | ----------- |
+| Optionen | AppConfigOptions |             |
 
 ### FrameworkAppConfigOptions
 
@@ -160,15 +181,15 @@ function frameworkCondition(framework: MissionPlatformFramework): string;
 ```
 
 Ordnen Sie der benutzerdefinierten Exportbedingung ein {@link MissionPlatformFramework} zu
-`@mission-platform/*` Pakete deklarieren in ihrem `exports` Karte. Halten Sie die
-`mp:` Präfix-Namespaces der Bedingung, sodass sie niemals mit dem Standard kollidiert
-Node/Vite Bedingungen (`import`, `default`, `browser`, ...).
+`@mission-platform/*`-Pakete deklarieren in ihrer `exports`-Map. Halten Sie die
+Das Präfix `mp:` gibt der Bedingung einen Namensraum, sodass sie niemals mit dem Standard kollidiert
+Node/Vite-Bedingungen (`import`, `default`, `browser`, ...).
 
 #### Parameter
 
-| Name   | Geben Sie                | ein Beschreibung |
-| ------ | ------------------------ | ---------------- |
-| Rahmen | MissionPlatformFramework |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------------------ | ----------- |
+| Rahmen | MissionPlatformFramework |             |
 
 ### FrameworkResolveConditions
 
@@ -178,18 +199,18 @@ Node/Vite Bedingungen (`import`, `default`, `browser`, ...).
 function frameworkResolveConditions(framework: MissionPlatformFramework): string[];
 ```
 
-Bauen Sie das bestellte auf `resolve.conditions` Liste, die eine App verwenden soll, um eine auszuwählen
-Rahmenaufbau. Die Framework-spezifische Bedingung wird an erster Stelle platziert, also gewinnt sie
-über das Generikum `import`/`default` Fallback und den Standardbrowser/ESM
-Bedingungen werden angehängt, sodass alles andere normal aufgelöst wird.
+Erstellen Sie die geordnete `resolve.conditions`-Liste, die eine App zum Auswählen eines verwenden sollte
+Rahmenaufbau. Die Framework-spezifische Bedingung wird zuerst platziert, also gewinnt sie
+über den generischen Fallback `import`/`default` und den Standardbrowser/ESM
+Bedingungen werden angehängt, sodass alles andere normal abläuft.
 
-Übergeben Sie das Ergebnis an Vite's `resolve.conditions` (siehe {@link defineFrameworkAppConfig}).
+Übergeben Sie das Ergebnis an Vite von `resolve.conditions` (siehe {@link defineFrameworkAppConfig}).
 
 #### Parameter
 
-| Name   | Geben Sie                | ein Beschreibung |
-| ------ | ------------------------ | ---------------- |
-| Rahmen | MissionPlatformFramework |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------------------ | ----------- |
+| Rahmen | MissionPlatformFramework |             |
 
 ### ignorierenVueI18nBlocksPlugin
 
@@ -199,15 +220,15 @@ Bedingungen werden angehängt, sodass alles andere normal aufgelöst wird.
 function ignoreVueI18nBlocksPlugin(): Plugin;
 ```
 
-Vite Plugin, das sich dreht Vue SFC `<i18n>` benutzerdefinierte Blöcke in No-Op-Module.
+Vite-Plugin, das benutzerdefinierte Vue SFC `<i18n>`-Blöcke in No-Op-Module umwandelt.
 
-Die Plattform `<i18n>` Blöcke enthalten die von verbrauchten englischen Quellzeichenfolgen
-die `i18next-cli` Nur Tools – zur Laufzeit sind Übersetzungen möglich
-aus dem generierten geladen `src/locales/*.yaml` Bundles über i18next. Seit dem
-Projekt verwendet nicht mehr a vue-i18n benutzerdefinierter Block-Compiler, `@vitejs/plugin-vue`
+Die `<i18n>`-Blöcke der Plattform enthalten die von verbrauchten englischen Quellzeichenfolgen
+Nur das `i18next-cli`-Tool – Übersetzungen zur Laufzeit sind es
+aus den generierten `src/locales/*.yaml`-Bundles über i18next geladen. Seit dem
+Das Projekt verwendet keinen benutzerdefinierten Block-Compiler vue-i18n mehr, `@vitejs/plugin-vue`
 würde andernfalls den rohen YAML-Block als JS-Modul ausgeben und ihn nicht analysieren.
 Dieses Plugin geht dem Laden mit einem inerten Standardexport (der Form) zuvor
-`@vitejs/plugin-vue` erwartet, damit es anrufen kann `block(component)` harmlos).
+`@vitejs/plugin-vue` erwartet, sodass `block(component)` harmlos aufgerufen werden kann.
 
 ### LibraryConfigOptions
 
@@ -228,9 +249,9 @@ export type MissionPlatformFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'w
 ```
 
 Der Satz von Frameworks, auf die eine Mission Platform-App abzielen kann. Auswahl eines Laufwerks
-beides Vite Bündelung (via `resolve.conditions`) und – durch das Matching
-`customConditions` tsconfig-Voreinstellung – die TypeScript Sprachdienst so kahl
-`@mission-platform/<pkg>` Importe werden in die erstellte Ausgabe dieses Frameworks aufgelöst.
+sowohl Vite-Bündelung (über `resolve.conditions`) als auch – durch den Abgleich
+`customConditions` tsconfig-Voreinstellung – der TypeScript-Sprachdienst so einfach
+`@mission-platform/<pkg>`-Importe werden in die erstellte Ausgabe dieses Frameworks aufgelöst.
 
 ### readPackageDependencyNames
 
@@ -240,15 +261,15 @@ beides Vite Bündelung (via `resolve.conditions`) und – durch das Matching
 function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
-Lesen Sie die `dependencies` Und `peerDependencies` in der package.json deklariert
-befindet sich bei `rootDirectory`. Wird verwendet, um die Laufzeitabhängigkeiten einer Bibliothek fernzuhalten
+Lesen Sie die in package.json deklarierten `dependencies` und `peerDependencies`
+befindet sich unter `rootDirectory`. Wird verwendet, um die Laufzeitabhängigkeiten einer Bibliothek fernzuhalten
 ein eigenes Paket, sodass Verbraucher sie deduplizieren und aufschlüsseln können.
 
 #### Parameter
 
-| Name          | Geben Sie    | ein Beschreibung |
-| ------------- | ------------ | ---------------- |
-| rootDirectory | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------- | ------ | ----------- |
+| rootDirectory | Zeichenfolge |             |
 
 ## `src/vitest`
 
@@ -260,15 +281,36 @@ ein eigenes Paket, sodass Verbraucher sie deduplizieren und aufschlüsseln könn
 function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
-Baue ein Vitest config für Mission Platform-Pakete und -Apps. Bietet die
-Standard Vue Plugin, eine jsdom-Umgebung und einen v8-Abdeckungsanbieter
-vorkonfiguriert für `src/**\/*.vue` Komponenten.
+Erstellen Sie eine Vitest-Konfiguration für Mission Platform-Pakete und -Apps. Bietet die
+Standard-Vue-Plugin, eine jsdom- oder node-Umgebung und ein v8-Abdeckungsanbieter
+vorkonfiguriert für `src/**\/*.vue`-Komponenten.
 
 #### Parameter
 
-| Name     | Geben Sie           | ein Beschreibung |
-| -------- | ------------------- | ---------------- |
-| Optionen | VitestConfigOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------- | ----------- |
+| Optionen | VitestConfigOptions |             |
+
+### discoverTestEnvironment
+
+**Art:** Funktion
+
+```typescript
+function detectTestEnvironment(
+  rootDirectory: string = process.cwd(),
+  options: VitestConfigOptions = {},
+): 'jsdom' | 'happy-dom' | 'node';
+```
+
+Ermitteln Sie, ob ein Paket eine DOM-Umgebung erfordert (z. B. `jsdom` oder `happy-dom`).
+oder kann sicher in einer einfachen `node`-Umgebung ausgeführt werden.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------------- | ------------------- | ----------- |
+| rootDirectory | Zeichenfolge |             |
+| Optionen | VitestConfigOptions |             |
 
 ### VitestConfigOptions
 

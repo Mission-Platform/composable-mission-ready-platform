@@ -9,11 +9,11 @@
 任务平台。组件（`ForgeShowAt`、`ForgeHideAt`、`ForgeBreakpointDebug`）在中立环境中编写一次
 `@mission-platform/forge-jsx` 方言并由 `@mission-platform/vite-plugin-forge` 编译为 **Vue 3 和 React**。
 
-## 出口
+## Exports
 
 - `@mission-platform/breakpoints` — 单一入口点。您获得的构建由活动决定
   `mp:<framework>` 导出条件（`mp:vue`、`mp:react`、`mp:solid`、
-  `mp:web-component`);如果没有设置条件，它会解析为中性 JSX 源桶（用于一次性写入组件
+  `mp:web-component`);如果没有设置条件，它将解析为中性 JSX 源桶（用于一次性写入组件
   由 `@mission-platform/vite-plugin-forge` 编译）。
 - `@mission-platform/breakpoints/core` — 与框架无关的实用程序和类型。
 
@@ -25,15 +25,15 @@
 
 该平台使用基于视口宽度阈值的七步响应比例：
 
-| 关键  | 标签   | 门槛            | 常见设备/用例               |
-| :---- | :----- | :-------------- | :-------------------------- |
-| `2xs` | 超超小 | $\ge 0$ 像素    | 所有设备                    |
-| `xs`  | 超小   | $\ge 480$ 像素  | 大尺寸手机                  |
-| `sm`  | 小     | $\ge 768$ 像素  | 平板电脑肖像                |
-| `md`  | 中等   | $\ge 1024$ 像素 | 平板电脑风景/小型笔记本电脑 |
-| `lg`  | 大     | $\ge 1920$ 像素 | 全高清/1080p                |
-| `xl`  | 超大   | $\ge 2560$ 像素 | 秦皇岛                      |
-| `2xl` | 特大号 | $\ge 3840$ 像素 | 4K 超高清                   |
+|关键|标签|门槛|常见设备/用例|
+| :---- | :---------------- | :------------ | :------------------------------ |
+| `2xs` |超超小| $\ge 0$ 像素 | All devices                     |
+| `xs` |超小 | $\ge 480$ 像素 | Large phones                    |
+| `sm` |小| $\ge 768$ 像素 | Tablet portrait                 |
+| `md` |中等| $\ge 1024$ 像素 | Tablet landscape / small laptop |
+| `lg` |大| $\ge 1920$ 像素 | Full HD / 1080p                 |
+| `xl` |超大| $\ge 2560$ 像素 | QHD                             |
+| `2xl` |特大号| $\ge 3840$ 像素 | 4K UHD                          |
 
 ## 核心实用程序 (`/core`)
 
@@ -54,7 +54,7 @@ mediaQuery('lg'); // → '(min-width: 1920px)'
 ```
 
 仅 Vue `useBreakpoints` 可组合项已被删除。对于自定义反应式视口逻辑，请在这些 `/core` 的基础上构建
-具有框架自己的钩子的帮助器（例如，请参见 `apps/service-monitor` 的 React `useCompactViewport` 钩子
+具有框架自己的钩子的帮助程序（例如，请参见 `apps/service-monitor` 的 React `useCompactViewport` 钩子
 建立在 `maxMediaQuery` 之上）。
 
 ## 成分

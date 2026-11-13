@@ -27,11 +27,11 @@ Transformieren Sie das gesamte Modul in die Zielquelle React.
 
 #### Parameter
 
-| Name            | Geben Sie       | ein Beschreibung |
-| --------------- | --------------- | ---------------- |
-| Modul           | SemanticModule  |                  |
-| Komponentenname | Zeichenfolge    |                  |
-| planen          | ReactModulePlan |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------- | --------------- | ----------- |
+| Modul | SemanticModule |             |
+| Komponentenname | Zeichenfolge |             |
+| planen | ReactModulePlan |             |
 
 ## `src/index`
 
@@ -61,9 +61,9 @@ Schränken Sie einen Plan im Besitz des Ziels auf den Plan React ein.
 
 #### Parameter
 
-| Name      | Geben Sie                          | ein Beschreibung |
-| --------- | ---------------------------------- | ---------------- |
-| abgesenkt | TargetLoweredModule \| undefiniert |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------------------- | ----------- |
+| abgesenkt | TargetLoweredModule \| undefiniert |             |
 
 ### LowerReactModule
 
@@ -80,10 +80,10 @@ Senken Sie die neutrale IR in den React-Plan, der von {@link TargetIntentions.lo
 
 #### Parameter
 
-| Name    | Geben Sie      | ein Beschreibung |
-| ------- | -------------- | ---------------- |
-| ir      | SemanticModule |                  |
-| Kontext | Zielkontext    |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------- | ----------- |
+| ir | SemanticModule |             |
+| Kontext | Zielkontext |             |
 
 ### planReactModule
 
@@ -100,10 +100,10 @@ Erstellen Sie den React-Plan für ein Modul.
 
 #### Parameter
 
-| Name            | Geben Sie      | ein Beschreibung |
-| --------------- | -------------- | ---------------- |
-| Modul           | SemanticModule |                  |
-| Komponentenname | Zeichenfolge   |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------- | -------------- | ----------- |
+| Modul | SemanticModule |             |
+| Komponentenname | Zeichenfolge |             |
 
 ### ReactClientDirectivePlan
 
@@ -206,10 +206,10 @@ Inline und bei deaktiviertem `stableKeyInference` wird jeder abgeleitete Schlüs
 
 #### Parameter
 
-| Name      | Geben Sie             | ein Beschreibung |
-| --------- | --------------------- | ---------------- |
-| Absichten | Zielabsichten         |                  |
-| Optionen  | TargetOptimizeOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------- | ----------- |
+| Absichten | Zielabsichten |             |
+| Optionen | TargetOptimizeOptions |             |
 
 ### REACT_OPTIMIZATIONS
 

@@ -1,21 +1,21 @@
-# Outils du langage Flint
+# Outils linguistiques Flint
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> packages/flint-lsp/docs/reference/language-service.md: [packages/flint-lsp/docs/reference/language-service.md](../../../reference/language-service.md)
+> packages/flint/lsp/docs/reference/language-service.md: [packages/flint/lsp/docs/reference/language-service.md](../../../reference/language-service.md)
 > Langue: Français (fr)
 
-Flint (`.flint`) dispose d'un service de langage indépendant de l'éditeur, d'un fichier stdio
-Serveur Language Server Protocol (LSP) et un adaptateur Monaco orienté navigateur.
-Tous les trois utilisent le contrat exécutable Flint v1 de
-`@mission-platform/flint`, donc diagnostics, plages sources, symboles,
-l'achèvement et les informations de survol sont dérivées du même analyseur et
-validateur.
+Flint (`.flint`) has an editor-neutral language service, a stdio
+Language Server Protocol (LSP) server, and a browser-facing Monaco adapter.
+All three use the executable Flint v1 contract from
+`@mission-platform/flint`, so diagnostics, source ranges, symbols,
+completion, and hover information are derived from the same parser and
+validator.
 
-Le contrat de langue pris en charge est la **version 1.0** et le contrat ABI est
-**version 1.2**. L'outillage fait
-ne modifie pas la grammaire, la sortie du compilateur, l'ABI ou le Rust et
-Intégrations AssemblyScript. Voir [Forger le script Web v1](../../../../../flint/docs/locales/fr/reference/language.md)
+The supported language contract is **version 1.0** and the ABI contract is
+**version 1.2**. The tooling does
+not change the grammar, compiler output, ABI, or the existing Rust and
+Intégrations AssemblyScript. Voir [Flint v1](../../../../../flint/docs/reference/language.md)
 pour le langage et la référence ABI.
 
 ## Caractéristiques et limites
@@ -76,7 +76,7 @@ export fn caller() -> i32 {
 }
 ```
 
-Le survol de `add` lors de sa déclaration ou lors de l'appel dans `caller` renvoie le
+Survol `add` à sa déclaration ou à l'appel `caller` renvoie le
 signature suivie de la documentation rendue :
 
 ```text
@@ -91,7 +91,7 @@ Adds one to a value.
 @deprecated Prefer `increment` in new code.
 ```
 
-Le survol de `add` sur le site d'appel dans `caller` renvoie la même documentation
+Hovering `add` at the call site in `caller` returns the same documentation
 avec la signature de non-déclaration :
 
 ```text
@@ -110,9 +110,9 @@ La complétion pour `add` comporte la même chaîne de documentation à côté d
 détail/signature. Les paragraphes de description et les balises sont séparés par des lignes vides ;
 l'ordre des balises, les balises en double et les balises inconnues sont préservés. La syntaxe de base et
 règles de normalisation, y compris l'association de fonctions et le sujet pris en charge
-formulaires, sont précisés dans [la référence du langage FWS](../../../../../flint/docs/locales/fr/reference/language.md).
+formulaires, sont spécifiés dans [la référence du langage FWS](../../../../../flint/docs/reference/language.md).
 
-La documentation est constituée uniquement de métadonnées informatives. Cela ne change pas le diagnostic,
+La documentation est constituée uniquement de métadonnées informatives. Cela ne change rien au diagnostic,
 vérification de type, résolution de fonctions, déclarations générées, signatures ABI,
 manifestes, Wasm/WAT, comportement d’exécution ou hachages exécutables. Un document
 edit modifie donc le contenu du survol et de la complétion sans changer le
@@ -140,11 +140,11 @@ fournisseurs utilisés par `ForgeMonacoEditor` :
 - Le survol de Monaco `contents` contient la signature et la documentation rendue comme
   valeurs distinctes compatibles avec Markdown ;
 - le champ `documentation` d'une suggestion de fonction source contient le même
-  chaîne rendue comme complétion LSP ;
+  chaîne rendue en tant que complétion LSP ;
 - la classification lexicale des jetons `comment` reste inchangée pour les deux
   commentaires ordinaires et de blocs de documentation.
 
-L'adaptateur Monaco ne se connecte pas au serveur Node LSP et ne duplique pas le
+L'adaptateur Monaco ne se connecte pas au serveur LSP Node et ne duplique pas le
 analyseur de documentation. Il transmet le résultat du service de langage, donc le navigateur et
 Les clients stdio restent cohérents et utilisent tous deux des plages sources UTF-16.
 
@@ -162,14 +162,14 @@ pnpm --filter @mission-platform/flint-lsp build
 node packages/flint-lsp/dist/main.js
 ```
 
-Lorsque le package est installé dans un projet externe, configurez le client
+When the package is installed into an external project, configure the client
 pour appeler directement l'exécutable du package :
 
 ```sh
 flint-lsp
 ```
 
-Le serveur nécessite Node.js 24 ou plus récent. Il ne prend pas d'indicateur `--stdio` ;
+Le serveur nécessite Node.js 24 ou version ultérieure. Il ne prend pas d'indicateur `--stdio` ;
 stdio est toujours le transport. Un client doit envoyer `initialize`, utilisez le
 capacités renvoyées, puis envoyez la notification `initialized` normale.
 Le serveur prend en charge la synchronisation du texte intégral, les dossiers de l'espace de travail, les fichiers surveillés
@@ -255,8 +255,8 @@ Configurez l'extension dans les paramètres de VS Code (ou `settings.json`) :
 plus récent. Laissez `flint.serverPath` vide pour utiliser le serveur packagé ;
 définissez-le sur un chemin absolu ou un chemin relatif au premier dossier de l'espace de travail
 pour tester un `dist/main.js` construit localement ou fourni par le projet. Supplémentaire
-les arguments sont passés après le point d’entrée du serveur. Utilisez `messages` ou `verbose`
-pour le traçage LSP ; les échecs de démarrage sont écrits dans le script Web **Forge
+les arguments sont passés après le point d'entrée du serveur. Utilisez `messages` ou `verbose`
+pour le traçage LSP ; les échecs de démarrage sont écrits dans **Flint
 Canal de sortie Language Server** et affiché comme une erreur d'éditeur.
 
 Pour le développement local à partir de ce référentiel :
@@ -286,23 +286,23 @@ cd extensions/flint-ij
 JAVA_HOME=/path/to/jdk-23 ./gradlew test verifyPlugin buildPlugin --no-daemon --offline
 ```
 
-Le `build/distributions/fws-ij-0.1.0.zip` résultant contient le mince
+The resulting `build/distributions/fws-ij-0.1.0.zip` contains the thin
 Intégration LSP4IJ. Le plugin se compile avec IntelliJ IDEA Community
 2024.3.3 (build 243), conserve une plage de compatibilité ouverte à partir de la build
 243 et versions ultérieures, et est vérifié par rapport à WebStorm 2026.2.1 (branche 262, y compris
 `WS-262.9437.145`). Il épingle LSP4IJ 0.20.1 et ne regroupe pas Node.js ou le
 serveur de langue. Redémarrez l'IDE après l'installation s'il ne le fait pas immédiatement
-reconnaître les fichiers `.flint`.
+recognize `.flint` files.
 
 Le plugin mappe `*.flint` à l'identifiant de langue `fws` et démarre une stdio partagée
 serveur pour le projet. La configuration IntelliJ est fournie exclusivement par
-**Paramètres | Outils | Forger un script Web** ; il n'y a pas de script de projet ni de Flora
+**Paramètres | Outils | Silex**; there is no project-script or Flora
 chemin de configuration. Configurer :
 
-- **Exécutable Node.js** — Node 24 ou plus récent ; la valeur par défaut est `node`.
+- **Exécutable Node.js** — Node 24 ou plus récent ; defaults to `node`.
 - **Commande/chemin du serveur de langue** — par défaut `flint-lsp` et
   résout l'installation d'un projet `node_modules/.bin` (y compris l'ancêtre
-  racines de l'espace de travail) ou `PATH`. Un point d'entrée JavaScript explicite tel que
+  workspace roots) or `PATH`. An explicit JavaScript entrypoint such as
   `node_modules/@mission-platform/flint-lsp/dist/main.js` est également
   pris en charge.
 - **Arguments du serveur** — arguments facultatifs entre guillemets transmis au serveur.
@@ -363,7 +363,7 @@ non pris en charge.
   `pnpm exec turbo run build --filter=fws-vscode`, confirmer
   `extensions/flint-vscode/server/dist/main.js` existe ou est défini
   `flint.serverPath` vers un point d’entrée construit valide. Inspectez le
-  **Canal de sortie Flint Language Server** avec traçage activé.
+  Canal de sortie **Flint Language Server** avec traçage activé.
 - **Commande du serveur IntelliJ introuvable :** installation
   `@mission-platform/flint-lsp` dans le projet ouvert, assurez-vous de son
   `node_modules/.bin` est présent, ou configurez une commande/un chemin explicite. Le
@@ -377,7 +377,7 @@ non pris en charge.
   codes de diagnostic avec ce document et le package LSP partagé plutôt que
   ajout d'un comportement spécifique à l'éditeur.
 
-Le client doit envoyer les dossiers d'espace de travail sous la forme d'URI `file:` lorsqu'ils sont pris en charge. Le
+Le client doit envoyer les dossiers d'espace de travail sous forme d'URI `file:` lorsqu'ils sont pris en charge. Le
 le serveur utilise d'abord les dossiers de l'espace de travail et revient à `rootUri` ; si ni l'un ni l'autre ne l'est
 à condition que l'hôte du système de fichiers n'ait pas de racine et ne puisse servir que des fichiers déjà ouverts.
 documents.
@@ -459,12 +459,12 @@ Le serveur LSP publie `source: "flint"`. La phase et l'indice sont
 également inclus dans l'objet de diagnostic `data`. Familles de codes stables typiques
 sont :
 
-| Famille de codes | Phases       | Signification                                                                                                           |
-| ---------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `FLINT-LEX-*`    | `lex`        | Caractères/échappements non valides, terminateurs de ligne de chaîne brute ou chaînes/commentaires de bloc non terminés |
-| `FLINT-PARSE-*`  | `parse`      | Syntaxe de module, de déclaration, d'instruction ou d'expression non valide                                             |
-| `FLINT-TYPE-*`   | `type-check` | Types, noms, opérateurs, arguments ou retours non valides                                                               |
-| `FLINT-ABI-*`    | `abi`        | Noms en double, capacités refusées, exportations ou importations                                                        |
+| Famille de codes | Phases | Signification |
+| --------------- | ------------ | ----------------------------------------------------------------------------------------------- |
+| `FLINT-LEX-*` | `lex` | Caractères/échappements non valides, terminateurs de ligne de chaîne brute ou chaînes/commentaires de bloc non terminés |
+| `FLINT-PARSE-*` | `parse` | Syntaxe de module, de déclaration, d'instruction ou d'expression non valide |
+| `FLINT-TYPE-*` | `type-check` | Types, noms, opérateurs, arguments ou retours non valides |
+| `FLINT-ABI-*` | `abi` | Noms en double, capacités refusées, exportations ou importations |
 
 Les entrées mal formées sont toujours tokenisées et analysées là où la récupération de l'analyseur le permet
 ça. Par exemple, une source mal formée peut produire `FLINT-PARSE-017` tout en conservant
@@ -494,7 +494,7 @@ L'utilisation la plus simple des composants est :
 />
 ```
 
-Définissez `flint={false}` pour désactiver l’intégration automatique. Sinon,
+Définissez `flint={false}` pour désactiver l'intégration automatique. Sinon,
 le composant enregistre le langage `fws` et l'extension `.flint`, utilise le langage de Monaco
 catégories de jetons intégrées pour les thèmes (`keyword`, `type`, `string`, `comment`,
 `number`, `operator`, `delimiter` et `invalid`), synchronise les
@@ -529,14 +529,14 @@ const workspaceHost: FlintWorkspaceHost = {
 />;
 ```
 
-L'hôte est délibérément injecté : les consommateurs du navigateur doivent fournir des lectures,
-énumération des fichiers, options du projet et notifications de modifications facultatives de
+The host is deliberately injected: browser consumers must provide reads,
+file enumeration, project options, and optional change notifications from
 leur propre état de stockage ou d’application. L'adaptateur n'assume jamais les Node
-API du système de fichiers et ne se connecte pas au serveur stdio. Jetez le retour
-poignée d'adaptateur (ou démonter `ForgeMonacoEditor`) pour retirer les écouteurs de modèle,
+filesystem APIs and does not connect to the stdio server. Jetez le retour
+adapter handle (or unmount `ForgeMonacoEditor`) to remove model listeners,
 fournisseurs, marqueurs et caches de services.
 
-Pour une intégration impérative, utilisez le même adaptateur directement après que Monaco ait
+For imperative integration, use the same adapter directly after Monaco has
 été chargé :
 
 ```ts
@@ -557,10 +557,10 @@ marqueurs et son instance de service de langage possédée.
 
 ## Espaces de travail LSP et navigateur
 
-| Consommateur      | Implémentation de l'espace de travail         | Limite racine/sécurité                                                                            | Transports                       |
-| ----------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------- |
-| Node Client LSP   | `RootBoundedFlintWorkspaceHost`               | Racines du système de fichiers configurées canoniquement ; les lectures extérieures sont rejetées | standard LSP                     |
-| Monaco/navigateur | `FlintWorkspaceHost` fourni par l'application | L'hôte décide quels URI/fichiers/options exposer ; aucune hypothèse de système de fichiers        | Adaptateur en cours de processus |
+| Consommateur | Implémentation de l'espace de travail | Limite racine/sécurité | Transports |
+| --------------- | ----------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
+| Node Client LSP | `RootBoundedFlintWorkspaceHost` | Racines du système de fichiers configurées canoniquement ; les lectures extérieures sont rejetées | standard LSP |
+| Monaco/navigateur | `FlintWorkspaceHost` fourni par l'application | L'hôte décide quels URI/fichiers/options exposer ; aucune hypothèse de système de fichiers | Adaptateur en cours de processus |
 
 Les deux adaptateurs utilisent les mêmes contrats de service de langage et la même sémantique d'analyse,
 mais ils ne partagent pas de stockage de documents ni de transport. Un hébergeur de navigateur ne doit pas
@@ -572,7 +572,7 @@ hôte du système de fichiers à Monaco.
 
 Les packages de services linguistiques et LSP incluent des tests d'acceptation et de rejet
 montages d'amorçage, codes de diagnostic et plages UTF-16, entrée mal formée,
-invalidation de l'espace de travail, isolation racine, synchronisation LSP, achèvement,
+invalidation de l'espace de travail, isolation racine, synchronisation LSP, complétion,
 survol et élimination. Le package de contenu comprend un adaptateur, une mise en surbrillance,
 couverture du marqueur, du fournisseur, de l'élimination et de l'éditeur SSR/non-Forge.
 
@@ -595,8 +595,8 @@ pnpm --filter @mission-platform/content exec vitest run \
 pnpm --filter @mission-platform/content build:check
 ```
 
-Les commandes de lint et de format de contenu à l'échelle du package inspectent également les CSS/SCSS non liés.
-fichiers; un échec limité à ces fichiers existants n'est pas un script Web Forge
+Les commandes de lint et de format de contenu à l'échelle du package inspectent également les CSS/SCSS sans rapport
+fichiers; un échec limité à ces fichiers existants n'est pas un Flint
 régression des outils linguistiques. Les attentes du langage faisant autorité
 restent dans `../../../flint/src/fixtures/bootstrap.ts` et le
-[référence linguistique](../../../../../flint/docs/locales/fr/reference/language.md).
+[référence linguistique](../../../../../flint/docs/reference/language.md).

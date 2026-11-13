@@ -1,4 +1,4 @@
-# @mission-platform/postcss-config Riferimento API
+# Riferimento API @mission-platform/postcss-config
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 

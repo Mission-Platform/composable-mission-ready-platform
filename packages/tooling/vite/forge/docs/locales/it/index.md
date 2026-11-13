@@ -12,15 +12,15 @@ i pacchetti possiedono il loro abbassamento e generazione specifici del target.
 
 ## Inizia qui
 
-- [Riferimento alla pipeline del compilatore](reference/compiler.md) — contratti a tappe,
+- [Riferimento pipeline del compilatore](reference/compiler.md) — contratti a fasi,
   proprietà del target, memorizzazione nella cache, diagnostica e artefatti generati.
 - [Guida alla creazione e al test](guides/development.md) — sviluppo locale e
-  controlli di integrazione.
+  integration checks.
 - [`README.md`](../../../README.md) — configurazione e rappresentante del consumatore
   Vite/tsdown esempi.
 - [`llms.txt`](../../../llms.txt): API concisa del pacchetto e note sulla pipeline.
 
-Il driver richiede un `FrameworkOutputPlugin` esplicito; non seleziona mai a
-framework da una stringa o importare ogni pacchetto di destinazione. I moduli generati sono
+Il driver richiede un `FrameworkOutputPlugin` esplicito; it never selects a
+framework da una stringa o importare ogni pacchetto di destinazione. Generated modules are
 artefatti intermedi e devono essere compilati dal nativo del target selezionato
-adattatore.
+adapter.

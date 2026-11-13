@@ -9,899 +9,9 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 
 Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge-jsx`.
 
-## `src/adapters/react`
-
-### Contenuto Html
-
-**Tipo:** funzione
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement;
-```
-
-Eseguire il rendering di HTML attendibile in un host React utilizzando `dangerouslySetInnerHTML`.
-
-#### Parametri
-
-| Nome      | Digitare               | Descrizione |
-| --------- | ---------------------- | ----------- |
-| proprietà | ProprietàContenutoHtml |             |
-
-### renderToReact
-
-**Tipo:** funzione
-
-```typescript
-function renderToReact(element: MpElement): ReactElement;
-```
-
-Rendere un albero {@link MpElement} neutro in un elemento React.
-
-#### Parametri
-
-| Nome     | Digitare   | Descrizione |
-| -------- | ---------- | ----------- |
-| elemento | MpElemento |             |
-
-### Teletrasporto
-
-**Tipo:** funzione
-
-```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
-```
-
-La build React della primitiva neutra `<Teleport>`: un sottile involucro attorno
-{@link createPortal} di `react-dom`. `@mission-platform/vite-plugin-forge`
-riscrive `import { Teleport } from '@mission-platform/forge-jsx'` di un componente in
-importa questo componente, quindi scrivi una volta `<Teleport to="body">…</Teleport>`
-compila in un portale React nativo.
-
-Quando `to` è già un **elemento** DOM (il caso comune del client, ad es.
-risolto `<dialog>` o `document.body` consegnato da un chiamante) i bambini sono
-sono entrati in esso **in modo sincrono durante il rendering**, quindi si montano nello stesso modo
-commit che li ha aperti. Questo corrisponde a `<Teleport>` di Vue (che risolve il suo
-target in modo sincrono) ed è richiesto per correttezza: un pannello a portale that
-si promuove nel livello superiore del browser con l'API Popover
-(`popover="manual"` + `showPopover()` nel frame successivo) deve già essere
-montato quando viene eseguito il frame: rinviare il portale tramite un rendering lo perde
-race, lasciando il pannello `display:none` (il valore predefinito UA per un file non mostrato
-popover) e quindi invisibile.
-
-Solo un selettore **string** necessita di un `document.querySelector` post-montaggio, che
-mantiene il componente SSR-safe: durante il rendering del server e il primo client
-render per una destinazione stringa: non esegue il rendering di nulla (o, quando `disabled`, il file
-bambini sul posto) e `createPortal` viene eseguito solo quando esiste una destinazione DOM.
-
-#### Parametri
-
-| Nome                                           | Digitare                | Descrizione |
-| ---------------------------------------------- | ----------------------- | ----------- |
-| { a = 'corpo', disabilitato = falso, bambini } | Proprietà Teletrasporto |             |
-
-### Proprietà di teletrasporto
-
-**Tipo:** interfaccia
-
-```typescript
-export interface TeleportProperties
-```
-
-Le proprietà accettate dal componente React {@link Teleport}.
-
-### toReactComponent
-
-**Tipo:** funzione
-
-```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
-```
-
-Avvolgi un componente neutro come componente funzione React di prima classe, pronto per
-essere renderizzato da `react-dom` o composto all'interno di altri componenti React.
-
-#### Parametri
-
-| Nome        | Digitare       | Descrizione |
-| ----------- | -------------- | ----------- |
-| componente  | MpComponent<P> |             |
-| displayNome | stringa        |             |
-
-### Transizione
-
-**Tipo:** funzione
-
-```typescript
-function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
-```
-
-La build React della primitiva neutrale `<Transition>` — una piccola classe CSS
-driver che rispecchia `<Transition>` integrato in Vue. Anima un singolo
-figlio rappresentato in modo condizionale attivando `<name>-enter-*` / `<name>-leave-*`
-classi (quindi lo stesso foglio di stile guida entrambi i framework) e mantiene il file child
-montato attraverso la sua animazione di uscita. `@mission-platform/vite-plugin-forge`
-riscrive `import { Transition } from '@mission-platform/forge-jsx'` di un componente in
-importare questo componente sulla destinazione React.
-
-È sicuro per SSR: il rendering del server (e il primo paint del client) esegue il rendering del figlio
-sul posto, corrispondente all'output SSR di Vue, e l'animazione viene eseguita solo successivamente.
-
-#### Parametri
-
-| Nome                                                       | Digitare                 | Descrizione |
-| ---------------------------------------------------------- | ------------------------ | ----------- |
-| { nome = 'v', appare = false, durata, figli, ...override } | Proprietà di transizione |             |
-
-### Gruppo di transizione
-
-**Tipo:** funzione
-
-```typescript
-function TransitionGroup({
-  name = 'v',
-  tag,
-  moveClass,
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionGroupProperties): ReactNode;
-```
-
-La build React della primitiva neutrale `<TransitionGroup>`: una classe CSS
-driver che rispecchia `<TransitionGroup>` integrato in Vue. Anima un **keyed
-list**: inserendo i bambini si ottiene `<name>-enter-*`, lasciando i bambini rimangono montati
-attraverso la loro animazione `<name>-leave-*` e i bambini sopravvissuti che cambiano
-position sono animati da FLIP con `<name>-move` (lo stesso foglio di stile guida entrambi
-quadri). `@mission-platform/vite-plugin-forge` riscrive quelli di un componente
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` per importarlo nel file
-Destinazione React.
-
-È sicuro per SSR: il rendering del server (e il primo paint del client) esegue il rendering del file
-bambini sul posto, corrispondenti all'output SSR di Vue, e l'animazione viene eseguita
-successivamente. Le classi di transizione vengono applicate al DOM node di ciascun bambino, quindi —
-come il singolo {@link Transition}: hanno effetto sui figli degli elementi DOM;
-un figlio che è esso stesso un componente (non ref forwarding) continua a montare/smontare
-correttamente ma non riceve alcuna classe (corrispondente alla linea di base neutrale SSR-in-place).
-
-#### Parametri
-
-| Nome                                                                         | Digitare                 | Descrizione |
-| ---------------------------------------------------------------------------- | ------------------------ | ----------- |
-| { nome = 'v', tag, moveClass, appare = false, durata, bambini, ...override } | ProprietàTransitionGroup |             |
-
-### Proprietà del gruppo di transizione
-
-**Tipo:** interfaccia
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-Le proprietà accettate dal componente React {@link TransitionGroup}.
-
-### Proprietà di transizione
-
-**Tipo:** interfaccia
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-Le proprietà accettate dal componente React {@link Transition}.
-
-## `src/adapters/solid`
-
-### Contenuto Html
-
-**Tipo:** funzione
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element;
-```
-
-La build Solid della primitiva `<HtmlContent>` neutra. Solid
-La proprietà `innerHTML` è l'operazione di contenuto non elaborato basata sulla sostituzione nativa.
-
-#### Parametri
-
-| Nome      | Digitare               | Descrizione |
-| --------- | ---------------------- | ----------- |
-| proprietà | ProprietàContenutoHtml |             |
-
-### Teletrasporto
-
-**Tipo:** funzione
-
-```typescript
-function Teleport(properties: TeleportProperties): JSX.Element;
-```
-
-La build Solid della primitiva neutra `<Teleport>`: un sottile involucro attorno
-{@link Portal} di Solid. `@mission-platform/vite-plugin-forge` riscrive a
-`import { Teleport } from '@mission-platform/forge-jsx'` del componente per importarlo
-componente, quindi un `<Teleport to="body">…</Teleport>` write-once viene compilato in a
-portale nativo Solid.
-
-La destinazione del portale viene risolta sul client in modo che il componente sia sicuro per SSR:
-durante il rendering del server - e prima che esista una destinazione DOM - esegue il rendering
-niente (o, nel caso di `disabled`, i bambini sul posto) e solo {@link Portal}
-si monta una volta che è disponibile un bersaglio reale.
-
-#### Parametri
-
-| Nome      | Digitare                | Descrizione |
-| --------- | ----------------------- | ----------- |
-| proprietà | Proprietà Teletrasporto |             |
-
-### Proprietà di teletrasporto
-
-**Tipo:** interfaccia
-
-```typescript
-export interface TeleportProperties
-```
-
-Le proprietà accettate dal componente Solid {@link Teleport}.
-
-### Transizione
-
-**Tipo:** funzione
-
-```typescript
-function Transition(properties: TransitionProperties): JSX.Element;
-```
-
-La build Solid della primitiva `<Transition>` neutra. Una minima correzione
-implementazione che rende il bambino **sul posto** — corrispondente a React
-il percorso SSR/parità dell'adattatore e la linea di base di runtime neutra, quindi
-i componenti riscrivibili una volta, controllano e montano senza coinvolgere terze parti
-Libreria di transizione Solid. L'animazione di entrata/uscita dalla classe può essere stratificata in un secondo momento;
-la superficie del sostegno corrisponde già a Vue/React (`name`, `appear`, `duration` e
-la classe per fase ha la priorità).
-
-`@mission-platform/vite-plugin-forge` riscrive quelli di un componente
-`import { Transition } from '@mission-platform/forge-jsx'` per importarlo nel file
-destinazione Solid.
-
-#### Parametri
-
-| Nome      | Digitare                 | Descrizione |
-| --------- | ------------------------ | ----------- |
-| proprietà | Proprietà di transizione |             |
-
-### Gruppo di transizione
-
-**Tipo:** funzione
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
-```
-
-La build Solid della primitiva `<TransitionGroup>` neutra. Mi piace
-{@link Transition}, questa è un'implementazione minima corretta che esegue il rendering di
-bambini **sul posto** (SSR dell'adattatore React / linea di base di parità dell'adattatore) in modo
-controllo del tipo dei componenti Solid generati senza una transizione dell'elenco di terze parti
-biblioteca. La superficie del sostegno corrisponde a Vue/React (`name`, `tag`, `moveClass`,
-`appear`, `duration` e le sostituzioni della classe per fase) per la scrittura una sola volta
-parità.
-
-`@mission-platform/vite-plugin-forge` riscrive quelli di un componente
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` per importarlo nel file
-destinazione Solid.
-
-#### Parametri
-
-| Nome      | Digitare                 | Descrizione |
-| --------- | ------------------------ | ----------- |
-| proprietà | ProprietàTransitionGroup |             |
-
-### Proprietà del gruppo di transizione
-
-**Tipo:** interfaccia
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-Le proprietà accettate dal componente Solid {@link TransitionGroup}.
-
-### Proprietà di transizione
-
-**Tipo:** interfaccia
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-Le proprietà accettate dal componente Solid {@link Transition}.
-
-## `src/adapters/svelte`
-
-### Contenuto Html
-
-**Tipo:** funzione
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet;
-```
-
-Implementazione del contenuto non elaborato dell'adattatore Svelte. `createRawSnippet` è il
-il modulo runtime dell'operazione `{@html}` di Svelte e il relativo callback di configurazione preservano
-riferimenti host e inoltro eventi per l'utilizzo dell'adattatore scritto a mano.
-
-#### Parametri
-
-| Nome      | Digitare               | Descrizione |
-| --------- | ---------------------- | ----------- |
-| proprietà | ProprietàContenutoHtml |             |
-
-### Teletrasporto
-
-**Tipo:** funzione
-
-```typescript
-function Teleport(properties: TeleportProperties): Snippet;
-```
-
-Eseguire il rendering di uno snippet figlio Forge sul posto per Svelte SSR e parità client.
-
-#### Parametri
-
-| Nome      | Digitare                | Descrizione |
-| --------- | ----------------------- | ----------- |
-| proprietà | Proprietà Teletrasporto |             |
-
-### Proprietà di teletrasporto
-
-**Tipo:** interfaccia
-
-```typescript
-export interface TeleportProperties
-```
-
-Le proprietà accettate dalla primitiva Svelte {@link Teleport}.
-
-### Transizione
-
-**Tipo:** funzione
-
-```typescript
-function Transition(properties: TransitionProperties): Snippet;
-```
-
-Renderizzare un singolo figlio di transizione; l'animazione è fornita dal markup nativo Svelte.
-
-#### Parametri
-
-| Nome      | Digitare                 | Descrizione |
-| --------- | ------------------------ | ----------- |
-| proprietà | Proprietà di transizione |             |
-
-### Gruppo di transizione
-
-**Tipo:** funzione
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet;
-```
-
-Eseguire il rendering dei figli del gruppo di transizione sul posto per i blocchi con chiave Svelte nativi.
-
-#### Parametri
-
-| Nome      | Digitare                 | Descrizione |
-| --------- | ------------------------ | ----------- |
-| proprietà | ProprietàTransitionGroup |             |
-
-### Proprietà del gruppo di transizione
-
-**Tipo:** interfaccia
-
-```typescript
-export interface TransitionGroupProperties extends TransitionProperties
-```
-
-Le proprietà accettate dalla primitiva Svelte {@link TransitionGroup}.
-
-### Proprietà di transizione
-
-**Tipo:** interfaccia
-
-```typescript
-export interface TransitionProperties
-```
-
-Le proprietà accettate dalla primitiva Svelte {@link Transition}.
-
-## `src/adapters/vue`
-
-### createContext
-
-**Tipo:** funzione
-
-```typescript
-function createContext(defaultValue: T): VueContext<T>;
-```
-
-La build Vue della primitiva `createContext` neutra. Restituisce un handle di cui
-`Provider` è un componente reale che `provide()` riporta `value` al valore predefinito
-slot, quindi un `<Ctx.Provider value={…}><Slot /></Ctx.Provider>` riscrivibile una volta
-compila per fornire Vue nativo. `@mission-platform/vite-plugin-forge` riscrive a
-`import { createContext, useContext } from '@mission-platform/forge-jsx'` del componente
-per importarli sulla destinazione Vue.
-
-#### Parametri
-
-| Nome               | Digitare | Descrizione |
-| ------------------ | -------- | ----------- |
-| valore predefinito | T        |             |
-
-### Contenuto Html
-
-**Tipo:** funzione
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode;
-```
-
-Eseguire il rendering di HTML affidabile in un host Vue utilizzando l'associazione `innerHTML` della funzione di rendering.
-
-#### Parametri
-
-| Nome      | Digitare               | Descrizione |
-| --------- | ---------------------- | ----------- |
-| proprietà | ProprietàContenutoHtml |             |
-
-### renderToVue
-
-**Tipo:** funzione
-
-```typescript
-function renderToVue(element: MpElement): VNode;
-```
-
-Restituisci un albero {@link MpElement} neutro in un Vue `VNode`.
-
-#### Parametri
-
-| Nome     | Digitare   | Descrizione |
-| -------- | ---------- | ----------- |
-| elemento | MpElemento |             |
-
-### toVueComponent
-
-**Tipo:** funzione
-
-```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
-```
-
-Racchiudere un componente neutro come componente funzionale Vue. Attributi in entrata
-diventano oggetti di scena neutrali, lo slot predefinito (se presente) viene inoltrato come neutrale
-`children` e ogni slot con nome viene inoltrato con il proprio nome (come slot con ambito
-funzione), quindi un `<Slot name="…" />` nel componente si risolve contro di esso e
-il risultato può essere utilizzato come qualsiasi altro componente Vue.
-
-#### Parametri
-
-| Nome       | Digitare       | Descrizione |
-| ---------- | -------------- | ----------- |
-| componente | MpComponent<P> |             |
-| nome       | stringa        |             |
-
-### useContext
-
-**Tipo:** funzione
-
-```typescript
-function useContext(context: VueContext<T>): T;
-```
-
-La build Vue della primitiva neutra `useContext`: un sottile involucro attorno
-`inject()` che torna al valore predefinito del contesto senza inclusione
-Il fornitore ne ha fornito uno.
-
-#### Parametri
-
-| Nome     | Digitare      | Descrizione |
-| -------- | ------------- | ----------- |
-| contesto | VueContext<T> |             |
-
-### VueContext
-
-**Tipo:** interfaccia
-
-```typescript
-export interface VueContext<T>
-```
-
-Un handle di contesto Vue: un `Provider` supportato da `provide()` più la chiave `inject()`.
-
-## `src/adapters/web-components`
-
-### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
-
-**Genere:** costante
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
-```
-
-I componenti interni sono innocuamente controllati dalle capacità; l'associazione del modulo rimane attiva.
-
-### DEFAULT_WEBCOMPONENTS_SHADOW_POLICY
-
-**Genere:** costante
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
-```
-
-Impostazioni predefinite di compatibilità utilizzate quando una classe generata non sovrascrive la politica.
-
-### DomTemplateResult
-
-**Gentile:** lezione
-
-```typescript
-export class DomTemplateResult
-```
-
-Un risultato generato dal DOM diretto con un'identità di definizione stabile.
-
-### elemento dinamico
-
-**Tipo:** funzione
-
-```typescript
-function dynamicElement(
-  tag: unknown,
-  properties: Readonly<Record<string, unknown>>,
-  ...children: readonly unknown[]
-): DynamicElementResult;
-```
-
-Crea un elemento Web-Components nativo il cui tag è selezionato in fase di runtime.
-
-#### Parametri
-
-| Nome      | Digitare                              | Descrizione |
-| --------- | ------------------------------------- | ----------- |
-| etichetta | sconosciuto                           |             |
-| proprietà | Sola lettura<Record<string, unknown>> |             |
-| bambini   | sola lettura sconosciuta[]            |             |
-
-### RisultatoElementoDinamico
-
-**Gentile:** lezione
-
-```typescript
-export class DynamicElementResult
-```
-
-Un elemento selezionato in runtime e i relativi elementi secondari per un tag JSX calcolato.
-
-### ForgeElement
-
-**Gentile:** lezione
-
-```typescript
-export class ForgeElement extends ForgeHTMLElement
-```
-
-Classe base nativa `HTMLElement` per gli elementi personalizzati generati — a
-sostituto privo di dipendenze per `LitElement`.
-
-Una sottoclasse dichiara la propria superficie reattiva tramite `static properties` (mirroring
-Acceso): ogni chiave diventa un accessorio prototipo il cui setter pianifica a
-ri-rendering del microtask e ogni chiave non `state` osserva la sua lettera minuscola
-attributo. `render()` restituisce il modello {@link html}`…` dell'elemento, visualizzato
-in una radice d'ombra aperta. I commit reattivi aggiornano il modello esistente
-in modo incrementale: gli elenchi posizionali riutilizzano voci compatibili e prese di slot
-mantengono i loro nodi di proiezione nativi mentre le parti non correlate cambiano.
-
-### ForgeElementConstructor
-
-**Tipo:** interfaccia
-
-```typescript
-export interface ForgeElementConstructor
-```
-
-Il contratto del foglio di stile statico implementato dagli elementi Forge generati.
-
-Gli URL vengono mantenuti nella classe dell'elemento anziché nel documento, quindi un'ombra
-root può caricare i sidecar compilati che gli stili a livello di documento non possono raggiungere.
-
-### ForgeElementHostConstructor
-
-**Genere:** tipo
-
-```typescript
-export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
-```
-
-Una classe di elementi nativi costruibili accettata da {@link ForgeElementMixin}.
-
-### ForgeElementMixin
-
-**Tipo:** funzione
-
-```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
-```
-
-Aggiungi il runtime indipendente dall'host di Forge a un costruttore di elementi nativi.
-I built-in personalizzati non possono estendere sia `ForgeElement` che `HTMLDivElement`;
-questo mixin copia il comportamento preservando la catena del prototipo nativo.
-
-#### Parametri
-
-| Nome  | Digitare | Descrizione |
-| ----- | -------- | ----------- |
-| Fondo | TBase    |             |
-
-### ForgeSlotMarker
-
-**Tipo:** interfaccia
-
-```typescript
-export interface ForgeSlotMarker extends HTMLElement
-```
-
-Marker di runtime emesso dal compilatore Web-Components per slot ambigui.
-
-### hasSlotContent
-
-**Tipo:** funzione
-
-```typescript
-function hasSlotContent(host: Element, name?: string): boolean;
-```
-
-Se a `host` è stato assegnato il contenuto per uno dei suoi slot: quello di destinazione nativo
-sostituzione del marcatore neutro `hasSlot('x')`.
-
-`hasSlot` è il vocabolario in fase di compilazione: Vue lo abbassa a `!!slots.x`, React a
-`properties.x != null` e un elemento personalizzato non ha nessuno dei due, quindi viene effettuato il controllo
-contro il DOM invece. Un elemento generato viene renderizzato in un'ombra **aperta
-root**, il che significa che il contenuto proiettato da un consumatore rimane nell'host
-**light** DOM come i suoi figli: uno slot con nome è riempito da un bambino che trasporta
-`slot="<name>"` e lo slot predefinito da qualsiasi bambino che non ne porta nessuno. Solo
-vengono considerati i figli diretti, esattamente come l'assegnazione degli slot stessa, e a
-il testo con soli spazi bianchi node non conta come contenuto.
-
-I bambini vengono accompagnati anziché interrogati con `[slot="…"]`, quindi un nome di slot
-non necessita di escape CSS, quindi un figlio di semplice testo (che nessun selettore può corrispondere)
-riempie ancora lo slot predefinito.
-
-Tieni presente che uno slot è osservabile solo una volta che esistono i figli dell'host: durante il
-aggiornamento del parser di un elemento scritto nell'HTML iniziale, `connectedCallback`
-viene eseguito prima che vengano collegati. Il contenuto proiettato successivamente esegue nuovamente il rendering dell'elemento
-attraverso il consueto percorso reattivo.
-
-#### Parametri
-
-| Nome   | Digitare | Descrizione |
-| ------ | -------- | ----------- |
-| ospite | Elemento |             |
-| nome   | stringa  |             |
-
-### html
-
-**Tipo:** funzione
-
-```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
-```
-
-Factory di modelli con tag. Cattura le stringhe statiche e dinamiche del sito di chiamata
-valori in un {@link TemplateResult} per {@link render} da realizzare nel DOM.
-
-#### Parametri
-
-| Nome     | Digitare                   | Descrizione |
-| -------- | -------------------------- | ----------- |
-| stringhe | TemplateStringsArray       |             |
-| valori   | sola lettura sconosciuta[] |             |
-
-### Contenuto Html
-
-**Tipo:** funzione
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
-```
-
-Crea un risultato di contenuto non elaborato di componenti Web nativi senza eseguire l'escape di `html`.
-
-#### Parametri
-
-| Nome      | Digitare               | Descrizione |
-| --------- | ---------------------- | ----------- |
-| proprietà | ProprietàContenutoHtml |             |
-
-### HtmlContentProperties
-
-**Tipo:** interfaccia
-
-```typescript
-export interface HtmlContentProperties
-```
-
-Proprietà accettate dall'helper nativo Web-Components HtmlContent.
-
-### HtmlContentResult
-
-**Gentile:** lezione
-
-```typescript
-export class HtmlContentResult
-```
-
-Un host nativo più markup figlio non elaborato attendibile, reso da {@link render}.
-
-### Niente
-
-**Genere:** costante
-
-```typescript
-export const nothing: unique symbol;
-```
-
-Sentinella resa come "nessun valore": in posizione di bambino non produce nulla, in
-posizione dell'attributo rimuove l'attributo, l'equivalente nativo di
-`nothing` di lit-html.
-
-### PropertyDeclaration
-
-**Tipo:** interfaccia
-
-```typescript
-export interface PropertyDeclaration
-```
-
-Una dichiarazione di proprietà reattiva su una sottoclasse {@link ForgeElement}.
-
-### RawHtml
-
-**Gentile:** lezione
-
-```typescript
-export class RawHtml
-```
-
-Un valore HTML raw attendibile utilizzato dall'adattatore Web-Components nativo.
-
-### rendere
-
-**Tipo:** funzione
-
-```typescript
-function render(
-  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
-  container: ParentNode,
-): void;
-```
-
-Eseguire il rendering di un risultato in `container` utilizzando un'istanza di modello persistente. Statico
-Il DOM e lo stato del modulo nativo vengono mantenuti mentre lo sono solo gli intervalli di associazione modificati
-aggiornato; i tipi di modello incompatibili sostituiscono il contenuto di proprietà del renderer.
-
-#### Parametri
-
-| Nome        | Digitare                                                                                  | Descrizione |
-| ----------- | ----------------------------------------------------------------------------------------- | ----------- |
-| risultato   | TemplateResult \| DomTemplateResult \| RisultatoElementoDinamico\| RisultatoContenutoHtml |             |
-| contenitore | Nodo Genitore                                                                             |             |
-
-### risolvereForgeSlotMarkers
-
-**Tipo:** funzione
-
-```typescript
-function resolveForgeSlotMarkers(
-  root: ParentNode,
-  owner: ForgeElement,
-  sourceChildren: readonly Node[],
-  destinationRoot: ShadowRoot,
-): void;
-```
-
-Risolvi i marcatori di slot di runtime emessi dal compilatore in un frammento di rendering.
-
-I marcatori senza una proprietà content diventano slot nativi, mantenendo l'
-fallback del browser e semantica di assegnazione, a meno che non lo sia lo stesso slot
-ripetuto nell'albero di rendering. Punti vendita ripetuti materializzano cloni di
-bambini light-DOM originali in modo che ogni presa riceva contenuto deterministico.
-Gli indicatori di contenuto vengono abbassati agli slot nativi quando il loro valore è quello del proprietario
-originale luce-DOM bambini e la presa non si ripete; altrimenti loro
-il valore si materializza come ultima risorsa.
-
-#### Parametri
-
-| Nome             | Digitare            | Descrizione |
-| ---------------- | ------------------- | ----------- |
-| radice           | Nodo Genitore       |             |
-| proprietario     | Elemento Forge      |             |
-| fonteBambini     | sola lettura Node[] |             |
-| destinazioneRoot | RadiceOmbra         |             |
-
-### TemplateResult
-
-**Gentile:** lezione
-
-```typescript
-export class TemplateResult
-```
-
-Un risultato `html\`…\`` analizzato: le stringhe statiche più i valori interpolati.
-
-### unsafeHtml
-
-**Tipo:** funzione
-
-```typescript
-function unsafeHtml(value: string): RawHtml;
-```
-
-Contrassegnare una stringa come markup figlio attendibile per il percorso dei componenti Web nativi.
-
-#### Parametri
-
-| Nome   | Digitare | Descrizione |
-| ------ | -------- | ----------- |
-| valore | stringa  |             |
-
-### useId
-
-**Tipo:** funzione
-
-```typescript
-function useId(): string;
-```
-
-La sostituzione della destinazione nativa per `useId` di React.
-
-Il vocabolario neutro offre `useId()` per gli ID che legano un controllo al suo
-`<label for>` / `aria-describedby`; React lo associa ai propri `useId` e Solid
-a `createUniqueId`, ma un elemento personalizzato non ha runtime del framework da prendere in prestito
-uno da - quindi è questo.
-
-In questo caso è sufficiente un contatore a livello di modulo, deliberatamente più semplice di a
-generatore casuale/con hash: un ID deve essere univoco solo **all'interno di un documento**,
-e il compilatore solleva un `const x = useId()` da `render()` in un
-campo di istanza, quindi ogni istanza di elemento lo chiama esattamente una volta e poi
-mantiene il suo ID per tutta la sua vita. Le chiamate successive quindi mai
-collidono, non è necessaria alcuna dipendenza (nanoide, `crypto.randomUUID`) e il file
-il risultato è stabile e debuggabile (`forge-1`, `forge-2`, …). Il valore è a
-HTML `id` valido e un identificatore CSS valido, quindi può essere utilizzato in un selettore
-senza fuga.
-
-### WebComponentsInternalsPolicy
-
-**Tipo:** interfaccia
-
-```typescript
-export interface WebComponentsInternalsPolicy
-```
-
-Richieste di funzionalità per l'API {@link ElementInternals} della piattaforma.
-
-### WebComponentsShadowPolicy
-
-**Tipo:** interfaccia
-
-```typescript
-export interface WebComponentsShadowPolicy
-```
-
-Opzioni shadow-root digitate accettate dagli elementi Forge generati.
-
 ## `src/runtime/class-names`
 
-### classNames
+### nomiclass
 
 **Tipo:** funzione
 
@@ -915,8 +25,8 @@ vince la prima occorrenza). Restituisce una stringa vuota quando non è attivo n
 
 #### Parametri
 
-| Nome   | Digitare                  | Descrizione |
-| ------ | ------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------ | --------------------- | ----------- |
 | valori | sola lettura ClassValue[] |             |
 
 ### ValoreClasse
@@ -945,9 +55,9 @@ con {@link useContext}.
 
 #### Parametri
 
-| Nome               | Digitare | Descrizione |
-| ------------------ | -------- | ----------- |
-| valore predefinito | T        |             |
+| Nome | Digitare | Descrizione |
+| ------------ | ---- | ----------- |
+| valore predefinito | T |             |
 
 ### isContextProvider
 
@@ -961,8 +71,8 @@ Indica se un valore è una funzione di contesto {@link MpContext.Provider}.
 
 #### Parametri
 
-| Nome   | Digitare    | Descrizione |
-| ------ | ----------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ------- | ----------- |
 | valore | sconosciuto |             |
 
 ### MP_CONTEXT
@@ -1019,8 +129,8 @@ Legge il valore corrente di un contesto: l'involucro più vicino
 
 #### Parametri
 
-| Nome     | Digitare     | Descrizione |
-| -------- | ------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | ------------ | ----------- |
 | contesto | MpContext<T> |             |
 
 ## `src/runtime/dynamic`
@@ -1052,9 +162,9 @@ export interface MpDynamicProperties extends MpPropertyBag
 
 Le proprietà accettate dall'elemento {@link Dynamic}.
 
-Questa è una delle poche dichiarazioni che mantiene legittimamente la **borsa aperta**:
+Questa è una delle poche dichiarazioni che legittimamente mantiene la **borsa aperta**:
 ogni proprietà diversa da `is` viene inoltrata parola per parola all'elemento `is`
-si risolve in e quell'elemento è noto solo in fase di esecuzione, quindi lo attribuisce
+si risolve e quell'elemento è noto solo in fase di esecuzione, quindi lo attribuisce
 accetta non possono essere elencati qui. Le interfacce degli oggetti di scena dei componenti devono _non_
 segui questo schema: vedi {@link MpPropertyBag}.
 
@@ -1081,11 +191,11 @@ sia come argomenti variadici finali (la trasformazione classica) o via
 
 #### Parametri
 
-| Nome      | Digitare                                       | Descrizione |
-| --------- | ---------------------------------------------- | ----------- |
-| digitare  | MpElementType \| ((proprietà: P) => MpElement) |             |
-| proprietà | P\| nullo                                      |             |
-| bambini   | MpChild[]                                      |             |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------------------------- | ----------- |
+| digitare | MpElementType \| ((proprietà: P) => MpElement) |             |
+| proprietà | P\| nullo |             |
+| bambini | MpChild[] |             |
 
 ## `src/runtime/hooks`
 
@@ -1104,7 +214,7 @@ Un elenco di dipendenze che controlla quando un effetto/memo viene eseguito nuov
 **Tipo:** componente
 
 ```typescript
-export type MpEffectCallback = () => void | MpEffectCleanup;
+export type MpEffectCallback = () => MpEffectCleanup | void;
 ```
 
 Il callback dell'effetto eseguito da {@link useEffect}.
@@ -1134,7 +244,7 @@ Un contenitore di riferimento modificabile, che rispecchia `MutableRefObject` di
 **Tipo:** componente
 
 ```typescript
-export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
+export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 ```
 
 Aggiorna una parte di stato, con un nuovo valore o tramite una funzione di aggiornamento.
@@ -1151,9 +261,9 @@ function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 
 #### Parametri
 
-| Nome        | Digitare         | Descrizione |
-| ----------- | ---------------- | ----------- |
-| richiamata  | T                |             |
+| Nome | Digitare | Descrizione |
+| ------------- | ---------------- | ----------- |
+| richiamata | T|             |
 | _dipendenze | MpDependencyList |             |
 
 ### useEffect
@@ -1169,9 +279,9 @@ non eseguire durante un singolo rendering SSR/adattatore.
 
 #### Parametri
 
-| Nome        | Digitare         | Descrizione |
-| ----------- | ---------------- | ----------- |
-| _effetto    | MpEffectCallback |             |
+| Nome | Digitare | Descrizione |
+| ------------- | ---------------- | ----------- |
+| _effetto | MpEffectCallback |             |
 | _dipendenze | MpDependencyList |             |
 
 ### useId
@@ -1202,9 +312,9 @@ function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 
 #### Parametri
 
-| Nome        | Digitare         | Descrizione |
-| ----------- | ---------------- | ----------- |
-| fabbrica    | () => T          |             |
+| Nome | Digitare | Descrizione |
+| ------------- | ---------------- | ----------- |
+| fabbrica | () => T |             |
 | _dipendenze | MpDependencyList |             |
 
 ### usoRif
@@ -1212,7 +322,7 @@ function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 **Tipo:** funzione
 
 ```typescript
-function useRef(initial: T): MpRef<T>;
+function useRef(initial?: T): MpRef<T>;
 ```
 
 `useRef` neutro. Restituisce un nuovo contenitore `{ current }` per il singolo
@@ -1220,26 +330,26 @@ rendere; i runtime del framework lo preservano durante i rendering.
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| iniziale | T        |             |
+| Nome | Digitare | Descrizione |
+| ------- | ---- | ----------- |
+| iniziale | T |             |
 
 ### useState
 
 **Tipo:** funzione
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>];
+function useState(initial?: T | (() => T)): [T, MpSetState<T>];
 ```
 
 `useState` neutro. L'implementazione di base restituisce il valore iniziale e
-un setter no-op (lo stato non cambia mai senza un re-rendering del framework), che è
+un setter no-op (lo stato non cambia mai senza un nuovo rendering del framework), che lo è
 il comportamento corretto per un singolo rendering SSR/adattatore.
 
 #### Parametri
 
-| Nome     | Digitare      | Descrizione |
-| -------- | ------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
 | iniziale | T\| (() => T) |             |
 
 ## `src/runtime/html-content`
@@ -1273,6 +383,29 @@ bag anziché enumerare l'intera superficie degli attributi DOM.
 
 ## `src/runtime/slots`
 
+### CollectSlottedChildren
+
+**Tipo:** funzione
+
+```typescript
+function collectSlottedChildren(children: readonly MpChild[]): SlottedChildren;
+```
+
+Partizionare i figli di un componente principale in base al relativo indicatore `slot="…"` in modo da a
+il componente write-once può **passare** il contenuto nello slot denominato del componente figlio
+(`<ForgeDropdown><button slot="trigger" />…</ForgeDropdown>`). Bambini che trasportano
+una proprietà `slot` sono raggruppate sotto quel nome (con il marcatore rimosso, quindi
+il contenuto risolto non emette mai un attributo vagante `slot`); tutto il resto
+rimane in {@link SlottedChildren.defaultChildren}. Gli adattatori piegano il nome
+groups negli oggetti di scena del bambino, rispecchiando esattamente il modo in cui il compilatore instrada il file
+stessi marcatori `slot="…"` in Vue `<template #name>` / a React `name` prop.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | ------------------ | ----------- |
+| bambini | sola lettura MpChild[] |             |
+
 ### hasSlot
 
 **Tipo:** funzione
@@ -1305,15 +438,15 @@ leggendo l'ambito dello slot del componente corrente.
 #### Parametri
 
 | Nome | Digitare | Descrizione |
-| ---- | -------- | ----------- |
-| nome | stringa  |             |
+| ---- | ------ | ----------- |
+| nome | stringa |             |
 
 ### MpRenderProperty
 
 **Tipo:** componente
 
 ```typescript
-export type MpRenderProperty<S = MpPropertyBag> = (scope: S) => MpChild | readonly MpChild[];
+export type MpRenderProperty<S = MpPropertyBag, R = MpChild | readonly MpChild[]> = (scope: S) => R;
 ```
 
 Una funzione **render-prop / scoped-slot**: dato l'ambito dello slot, restituisce
@@ -1342,12 +475,12 @@ degli oggetti di scena (con ambito) dello slot che li restituiscono (uno slot co
 export interface MpSlotProperties extends MpPropertyBag
 ```
 
-The properties accepted by the {@link Slot} element.
+Le proprietà accettate dall'elemento {@link Slot}.
 
-A `<Slot>` is the one neutral element that genuinely accepts arbitrary extra
-attributes: a **scoped** slot passes its scope as attributes
-(`<Slot name="row" item={item} index={i} />`), quindi la dichiarazione mantiene un
-open bag rather than enumerating properties it cannot know.
+Un `<Slot>` è l'unico elemento neutro che accetta veramente extra arbitrari
+attributi: uno slot con **ambito** trasmette il proprio ambito come attributi
+(`<Slot name="row" item={item} index={i} />`), quindi la dichiarazione mantiene un file
+aprire la borsa invece di enumerare le proprietà che non può conoscere.
 
 ### popSlotScope
 
@@ -1356,6 +489,8 @@ open bag rather than enumerating properties it cannot know.
 ```typescript
 function popSlotScope(): void;
 ```
+
+Visualizza l'ambito dello slot corrente una volta che il sottoalbero di un componente è stato espanso.
 
 ### pushSlotScope
 
@@ -1369,8 +504,8 @@ Spingi i puntelli del componente che sta per essere espanso sul mirino dello slo
 
 #### Parametri
 
-| Nome      | Digitare      | Descrizione |
-| --------- | ------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------- | ----------- |
 | proprietà | MpPropertyBag |             |
 
 ### risolvereSlot
@@ -1388,10 +523,39 @@ le restanti proprietà dell'elemento slot (non `name`).
 
 #### Parametri
 
-| Nome      | Digitare               | Descrizione |
-| --------- | ---------------------- | ----------- |
-| proprietà | Proprietà MpSlot       |             |
-| ripiego   | sola lettura MpChild[] |             |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------ | ----------- |
+| proprietà | Proprietà MpSlot |             |
+| ripiego | sola lettura MpChild[] |             |
+
+### risolvereSlotMarkers
+
+**Tipo:** funzione
+
+```typescript
+function resolveSlotMarkers(children: readonly MpChild[]): MpChild[];
+```
+
+Risolvi in modo approfondito ogni **marker** `<Slot name="…" />` all'interno di un genitore
+albero figlio rispetto all'ambito **corrente** (genitore), restituendo un albero di cemento
+contenuto. Questo è ciò che consente a un componente write-once di **inoltrare** uno dei suoi
+slot con nome nello slot di un componente figlio —
+`<ForgeDrawer><div slot="header"><Slot name="startHeader" /></div></ForgeDrawer>`
+- e farlo risolvere lessicalmente (contro la componente di inoltro), esattamente
+come l'output compilato (React cattura `properties.startHeader` nel
+rendering dei genitori; Vue inoltra lo slot tramite `<template #header>`).
+
+Gli adattatori chiamano questo sui figli di un elemento componente **prima** di premere il file
+ambito figlio, quindi i marcatori vedono l'ambito genitore che li ha creati; marcatori
+i ritorni del bambino stesso non vengono toccati (vengono risolti in seguito, ai sensi del
+ambito proprio del bambino). Gli elementi non slot vengono percorsi ricorsivamente in modo da marcatori nidificati
+(all'interno di un wrapper `slot="…"`) si risolvono.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | ------------------ | ----------- |
+| bambini | sola lettura MpChild[] |             |
 
 ## `src/runtime/teleport`
 
@@ -1480,6 +644,467 @@ importare nella transizione del gruppo nativo di ciascun framework: Vue integrat
 
 ## `src/runtime/types`
 
+### CamelToKebab
+
+**Genere:** tipo
+
+```typescript
+export type CamelToKebab<S extends string> = S extends `$
+```
+
+Converte un tipo di stringa camelCase in kebab-case.
+
+### createAvatarContainerStyle
+
+**Tipo:** funzione
+
+```typescript
+function createAvatarContainerStyle(): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+### createAvatarImageImgStyle
+
+**Tipo:** funzione
+
+```typescript
+function createAvatarImageImgStyle(): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+### createAvatarInlineStyle
+
+**Tipo:** funzione
+
+```typescript
+function createAvatarInlineStyle(
+  size: string = 'md',
+  shape: string = 'circle',
+  src?: string,
+  variant: string = 'primary',
+  color?: string,
+): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ------ | ----------- |
+| dimensione | stringa |             |
+| forma | stringa |             |
+| src | stringa |             |
+| variante | stringa |             |
+| colore | stringa |             |
+
+### createAvatarStatusInlineStyle
+
+**Tipo:** funzione
+
+```typescript
+function createAvatarStatusInlineStyle(size: string = 'md', status?: string): Record<string, string> | undefined;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------ | ------ | ----------- |
+| dimensione | stringa |             |
+| stato | stringa |             |
+
+### createBackgroundVideoInlineStyle
+
+**Tipo:** funzione
+
+```typescript
+function createBackgroundVideoInlineStyle(minHeight: string = '24rem'): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| --------- | ------ | ----------- |
+| altezza minima | stringa |             |
+
+### createCodeScannerStyle
+
+**Tipo:** funzione
+
+```typescript
+function createCodeScannerStyle(): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+### createContainerInlineStyle
+
+**Tipo:** funzione
+
+```typescript
+function createContainerInlineStyle(
+  variant: string = 'responsive',
+  maxWidth: string = 'lg',
+  gutter: string = 'md',
+  center: boolean = true,
+): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | ------- | ----------- |
+| variante | stringa |             |
+| larghezza massima | stringa |             |
+| grondaia | stringa |             |
+| centro | booleano |             |
+
+### creareCoverObjectFitStyle
+
+**Tipo:** funzione
+
+```typescript
+function createCoverObjectFitStyle(): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+### createForgeComponentStyle
+
+**Tipo:** funzione
+
+```typescript
+function createForgeComponentStyle(
+  prefix: string,
+  properties?: T,
+  style?: Record<string, string>,
+): Record<string, string> | undefined;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------- | ----------- |
+| prefisso | stringa |             |
+| proprietà | T |             |
+| stile | Registra<string, string> |             |
+
+### createForgeStyle
+
+**Tipo:** funzione
+
+```typescript
+function createForgeStyle(style: T): DefinedForgeStyle<T> | undefined;
+```
+
+Crea una mappa `style` neutra dai valori delle proprietà personalizzate definiti.
+
+Le voci il cui valore è `undefined` vengono omesse quindi SCSS
+Le catene `var(--forge-*, <token fallback>)` rimangono attive. Restituisce `undefined`
+quando non sono presenti override.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ---- | ----------- |
+| stile | T |             |
+
+### createGaugeInlineMath
+
+**Tipo:** funzione
+
+```typescript
+function createGaugeInlineMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): {
+  clampedValue: number;
+  percentage: number;
+  displayValue: string;
+  dashOffset: number;
+};
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| valore | numero |             |
+| minimo | numero |             |
+| massimo | numero |             |
+
+### createGridLayoutInlineStyle
+
+**Tipo:** funzione
+
+```typescript
+function createGridLayoutInlineStyle(rows: number = 1, columns: number = 1, gap: string = 'md'): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ------ | ----------- |
+| righe | numero |             |
+| colonne | numero |             |
+| divario | stringa |             |
+
+### createHighlightStyle
+
+**Tipo:** funzione
+
+```typescript
+function createHighlightStyle(left: string = '0%', width: string = '100%'): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| sinistra | stringa |             |
+| larghezza | stringa |             |
+
+### createLeftPositionStyle
+
+**Tipo:** funzione
+
+```typescript
+function createLeftPositionStyle(left: string = '0%'): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| sinistra | stringa |             |
+
+### creareObjectFitStyle
+
+**Tipo:** funzione
+
+```typescript
+function createObjectFitStyle(fit: string = 'cover'): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| adatta | stringa |             |
+
+### createPreviewTextStyle
+
+**Tipo:** funzione
+
+```typescript
+function createPreviewTextStyle(): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+### createProgressBarPercent
+
+**Tipo:** funzione
+
+```typescript
+function createProgressBarPercent(
+  value: number = 0,
+  max: number = 100,
+  indeterminate: boolean = false,
+): { percent: number; percentLabel: string };
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------------- | ------- | ----------- |
+| valore | numero |             |
+| massimo | numero |             |
+| indeterminato | booleano |             |
+
+### createRangeInputMath
+
+**Tipo:** funzione
+
+```typescript
+function createRangeInputMath(
+  modelValue: [number, number] = [0, 100],
+  min: number = 0,
+  max: number = 100,
+): {
+  minPercent: number;
+  maxPercent: number;
+  highlightLeft: string;
+  highlightWidth: string;
+  minLeft: string;
+  maxLeft: string;
+};
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------- | ----------- |
+| modelloValore | [numero, numero] |             |
+| minimo | numero |             |
+| massimo | numero |             |
+
+### createResponsiveImageInlineStyle
+
+**Tipo:** funzione
+
+```typescript
+function createResponsiveImageInlineStyle(aspectRatio?: string): Record<string, string> | undefined;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ------ | ----------- |
+| rapporto d'aspetto | stringa |             |
+
+### createResponsiveVideoInlineStyle
+
+**Tipo:** funzione
+
+```typescript
+function createResponsiveVideoInlineStyle(
+  aspectRatio: string = '16 / 9',
+  fit: string = 'contain',
+): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ------ | ----------- |
+| rapporto d'aspetto | stringa |             |
+| adatta | stringa |             |
+
+### createSkeletonInlineStyle
+
+**Tipo:** funzione
+
+```typescript
+function createSkeletonInlineStyle(width?: string, height?: string): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------ | ------ | ----------- |
+| larghezza | stringa |             |
+| altezza | stringa |             |
+
+### createSliderMath
+
+**Tipo:** funzione
+
+```typescript
+function createSliderMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): { percent: number; fillWidth: string; thumbLeft: string };
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| valore | numero |             |
+| minimo | numero |             |
+| massimo | numero |             |
+
+### createVerticalLayoutInlineStyle
+
+**Tipo:** funzione
+
+```typescript
+function createVerticalLayoutInlineStyle(gap: string = 'var(--mp-spacing-4)'): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| divario | stringa |             |
+
+### createWidthStyle
+
+**Tipo:** funzione
+
+```typescript
+function createWidthStyle(width: string = '0%'): Record<string, string>;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| larghezza | stringa |             |
+
+### CSSStyleProperties
+
+**Genere:** tipo
+
+```typescript
+export type CSSStyleProperties =
+```
+
+Oggetto in stile CSS indipendente dal framework utilizzato dall'attributo JSX `style`.
+
+Le proprietà personalizzate di proprietà del componente dovrebbero estendere questo tipo con esplicitamente
+Chiavi `--forge-*` (ad esempio `CSSStyleProperties & { '--forge-button-radius'?: string | undefined }`)
+piuttosto che introdurre un dizionario di stile non digitato o un sacchetto non DOM `styles`.
+
+### ForgePropertyBag
+
+**Genere:** tipo
+
+```typescript
+export type ForgePropertyBag<T extends Record<string, string | undefined> = Record<string, string | undefined>> =
+```
+
+Bag di override della proprietà permissiva che accetta chiavi di proprietà kebab-case o camelCase.
+
 ### Frammento
 
 **Genere:** costante
@@ -1513,9 +1138,19 @@ Restringi un valore arbitrario a un {@link MpElement}.
 
 #### Parametri
 
-| Nome   | Digitare    | Descrizione |
-| ------ | ----------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ------- | ----------- |
 | valore | sconosciuto |             |
+
+### KebabToCamel
+
+**Genere:** tipo
+
+```typescript
+export type KebabToCamel<S extends string> = S extends `$
+```
+
+Converte un tipo di stringa kebab-case in camelCase.
 
 ### MpChild
 
@@ -1602,9 +1237,837 @@ si dichiara, collegato come `JSX.IntrinsicAttributes` dall'opt-in
   `"default"`) indica lo slot predefinito.
 
 Nessuno dei due fa parte del contratto degli oggetti di scena del componente: entrambi vengono letti dal file
-_genitore_ (il riconciliatore, lo slot router), mai dal componente stesso —
+_parent_ (il riconciliatore, lo slot router), mai dal componente stesso —
 quindi sono accettati per ogni elemento qui piuttosto che dichiarati su ciascuno
 interfaccia degli oggetti di scena.
+
+### MpSuspenseChild
+
+**Tipo:** componente
+
+```typescript
+export type MpSuspenseChild = MpChild | PromiseLike<MpSuspenseChild> | readonly MpSuspenseChild[];
+```
+
+Contenuti sincroni o ricorsivamente asincroni accettati da Suspense.
+
+### MpSuspenseProperties
+
+**Tipo:** componente
+
+```typescript
+export interface MpSuspenseProperties
+```
+
+Oggetti di scena trasportati dal segnalino Suspense neutrale rispetto al contesto.
+
+### renderAccordionItems
+
+**Tipo:** funzione
+
+```typescript
+function renderAccordionItems(
+  items: readonly any[] = [],
+  _exclusive: boolean = true,
+  defaultOpen: readonly string[] = [],
+  _properties?: any,
+): any;
+```
+
+Crea una mappa di stile di proprietà personalizzata CSS con ambito componente da un contenitore di proprietà camelCase o kebab-case.
+
+Converte automaticamente le chiavi camelCase in kebab-case, garantisce lo spazio dei nomi del componente
+viene applicato il prefisso `--forge-<prefix>-` e omette le voci non definite, quindi il token CSS fallback
+le catene rimangono attive. Restituisce `undefined` quando non sono presenti sostituzioni definite.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ----------------- | ----------- |
+| elementi | sola lettura qualsiasi[] |             |
+| _esclusivo | booleano |             |
+| predefinitoApri | stringa di sola lettura[] |             |
+| _proprietà | qualsiasi |             |
+
+### renderActivityFeedItems
+
+**Tipo:** funzione
+
+```typescript
+function renderActivityFeedItems(items: readonly any[] = [], maxItems?: number, onItemClick?: (item: any) => void): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ------------------- | ----------- |
+| elementi | sola lettura qualsiasi[] |             |
+| maxArticoli | numero |             |
+| suItemClick | (elemento: qualsiasi) => vuoto |             |
+
+### renderAssetBrowserGrid
+
+**Tipo:** funzione
+
+```typescript
+function renderAssetBrowserGrid(
+  assets: readonly any[] = [],
+  selected: readonly string[] = [],
+  onSelect?: (asset: any) => void,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | -------------------- | ----------- |
+| beni | sola lettura qualsiasi[] |             |
+| selezionato | stringa di sola lettura[] |             |
+| onSeleziona | (risorsa: qualsiasi) => vuoto |             |
+
+### renderBarcodeSvg
+
+**Tipo:** funzione
+
+```typescript
+function renderBarcodeSvg(
+  value: string = '',
+  symbology: string = 'code128',
+  color: string = '#000000',
+  background: string = '#ffffff',
+  displayValue: boolean = false,
+  ariaLabel?: string,
+  onError?: (err: Error) => void,
+  showActions?: any,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------------ | -------------------- | ----------- |
+| valore | stringa |             |
+| simbologia | stringa |             |
+| colore | stringa |             |
+| sfondo | stringa |             |
+| valorevisualizzato | booleano |             |
+| ariaLabel | stringa |             |
+| onErrore | (err: errore) => void |             |
+| mostraAzioni | qualsiasi |             |
+
+### renderBreadcrumbItems
+
+**Tipo:** funzione
+
+```typescript
+function renderBreadcrumbItems(items: readonly any[] = [], separator: string = '/'): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| --------- | -------------- | ----------- |
+| elementi | sola lettura qualsiasi[] |             |
+| separatore | stringa |             |
+
+### renderCarouselIndicatorItems
+
+**Tipo:** funzione
+
+```typescript
+function renderCarouselIndicatorItems(
+  total: number = 0,
+  current: number = 0,
+  clickable: boolean = true,
+  variant: string = 'dots',
+  onSelect?: (index: number) => void,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| --------- | ----------------------- | ----------- |
+| totale | numero |             |
+| corrente | numero |             |
+| cliccabile | booleano |             |
+| variante | stringa |             |
+| onSeleziona | (indice: numero) => void |             |
+
+### renderCarouselSlides
+
+**Tipo:** funzione
+
+```typescript
+function renderCarouselSlides(
+  slides: readonly any[] = [],
+  current: number = 0,
+  _orientation: string = 'horizontal',
+  slideWidth: number = 100,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------------ | -------------- | ----------- |
+| diapositive | sola lettura qualsiasi[] |             |
+| corrente | numero |             |
+| _orientamento | stringa |             |
+| larghezzadiapositiva | numero |             |
+
+### renderCatalogIcon
+
+**Tipo:** funzione
+
+```typescript
+function renderCatalogIcon(name: string, size: number = 20, color: string = 'currentColor'): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| nome | stringa |             |
+| dimensione | numero |             |
+| colore | stringa |             |
+
+### renderCodeBlockLineNumbers
+
+**Tipo:** funzione
+
+```typescript
+function renderCodeBlockLineNumbers(code: string = ''): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| codice | stringa |             |
+
+### renderCommandPaletteGroups
+
+**Tipo:** funzione
+
+```typescript
+function renderCommandPaletteGroups(
+  commands: readonly any[] = [],
+  _groups: readonly string[] = [],
+  activeIndex: number = 0,
+  onSelect?: (command: any) => void,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ---------------------- | ----------- |
+| comandi | sola lettura qualsiasi[] |             |
+| _gruppi | stringa di sola lettura[] |             |
+| indiceattivo | numero |             |
+| onSeleziona | (comando: qualsiasi) => void |             |
+
+### renderCommentTree
+
+**Tipo:** funzione
+
+```typescript
+function renderCommentTree(
+  comments: readonly any[] = [],
+  onReply?: (comment: any) => void,
+  onResolve?: (comment: any) => void,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| --------- | ---------------------- | ----------- |
+| commenti | sola lettura qualsiasi[] |             |
+| inRispondi | (commento: qualsiasi) => void |             |
+| onResolve | (commento: qualsiasi) => void |             |
+
+### renderComparisonTableBody
+
+**Tipo:** funzione
+
+```typescript
+function renderComparisonTableBody(items: readonly any[] = [], features: readonly any[] = []): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | -------------- | ----------- |
+| elementi | sola lettura qualsiasi[] |             |
+| caratteristiche | sola lettura qualsiasi[] |             |
+
+### renderComparisonTableHeaders
+
+**Tipo:** funzione
+
+```typescript
+function renderComparisonTableHeaders(items: readonly any[] = []): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | -------------- | ----------- |
+| elementi | sola lettura qualsiasi[] |             |
+
+### renderCtaBannerActions
+
+**Tipo:** funzione
+
+```typescript
+function renderCtaBannerActions(actions: readonly any[] = []): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| azioni | sola lettura qualsiasi[] |             |
+
+### renderDataCardMetrics
+
+**Tipo:** funzione
+
+```typescript
+function renderDataCardMetrics(metrics: readonly any[] = []): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| metrica | sola lettura qualsiasi[] |             |
+
+### renderDropdownItems
+
+**Tipo:** funzione
+
+```typescript
+function renderDropdownItems(items: readonly any[] = [], onSelect?: (item: any) => void): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | ------------------- | ----------- |
+| elementi | sola lettura qualsiasi[] |             |
+| onSeleziona | (elemento: qualsiasi) => vuoto |             |
+
+### renderImageSources
+
+**Tipo:** funzione
+
+```typescript
+function renderImageSources(sources?: readonly any[]): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| fonti | sola lettura qualsiasi[] |             |
+
+### renderMarketingHeaderActions
+
+**Tipo:** funzione
+
+```typescript
+function renderMarketingHeaderActions(actions: readonly any[] = []): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| azioni | sola lettura qualsiasi[] |             |
+
+### renderNavbarItems
+
+**Tipo:** funzione
+
+```typescript
+function renderNavbarItems(items: readonly any[] = []): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | -------------- | ----------- |
+| elementi | sola lettura qualsiasi[] |             |
+
+### renderNotificationPanelItems
+
+**Tipo:** funzione
+
+```typescript
+function renderNotificationPanelItems(
+  notifications: readonly any[] = [],
+  onDismiss?: (id: string) => void,
+  _onRead?: (id: string) => void,
+  onActionClick?: (item: any) => void,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------------- | -------------------- | ----------- |
+| notifiche | sola lettura qualsiasi[] |             |
+| onIgnora | (id: stringa) => void |             |
+| _onLeggi | (id: stringa) => void |             |
+| onActionClick | (elemento: qualsiasi) => vuoto |             |
+
+### renderPaginationControls
+
+**Tipo:** funzione
+
+```typescript
+function renderPaginationControls(
+  currentPage: number = 1,
+  totalPages: number = 1,
+  maxVisiblePages: number = 7,
+  showEdges: boolean = false,
+  onPageChange?: (page: number) => void,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| --------------- | ---------------------- | ----------- |
+| paginacorrente | numero |             |
+| pagine totali | numero |             |
+| maxVisiblePages | numero |             |
+| mostraBordi | booleano |             |
+| suCambiaPagina | (pagina: numero) => void |             |
+
+### renderRatingStars
+
+**Tipo:** funzione
+
+```typescript
+function renderRatingStars(
+  max: number = 5,
+  modelValue: number = 0,
+  disabled: boolean = false,
+  isReadonly: boolean = false,
+  onUpdateModelValue?: (val: number) => void,
+  onChange?: (val: number) => void,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------------------ | --------------------- | ----------- |
+| massimo | numero |             |
+| modelloValore | numero |             |
+| disabilitato | booleano |             |
+| è di sola lettura | booleano |             |
+| onUpdateModelValue | (val: numero) => void |             |
+| suCambia | (val: numero) => void |             |
+
+### renderResourcePlannerRows
+
+**Tipo:** funzione
+
+```typescript
+function renderResourcePlannerRows(
+  resources: readonly any[] = [],
+  segments: readonly any[] = [],
+  _assignments: readonly any[] = [],
+  _availability: readonly any[] = [],
+  _onEventClick?: (assignment: any) => void,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------------- | ------------------------- | ----------- |
+| risorse | sola lettura qualsiasi[] |             |
+| segmenti | sola lettura qualsiasi[] |             |
+| _incarichi | sola lettura qualsiasi[] |             |
+| _disponibilità | sola lettura qualsiasi[] |             |
+| _onEventClick | (assegnazione: qualsiasi) => void |             |
+
+### renderSegmentControlOptions
+
+**Tipo:** funzione
+
+```typescript
+function renderSegmentControlOptions(
+  options: readonly any[] = [],
+  modelValue?: string,
+  onSelect?: (value: string) => void,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------- | ----------- |
+| opzioni | sola lettura qualsiasi[] |             |
+| modelloValore | stringa |             |
+| onSeleziona | (valore: stringa) => void |             |
+
+### renderSiteFooterSections
+
+**Tipo:** funzione
+
+```typescript
+function renderSiteFooterSections(sections: readonly any[] = []): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | -------------- | ----------- |
+| sezioni | sola lettura qualsiasi[] |             |
+
+### renderStepsItems
+
+**Tipo:** funzione
+
+```typescript
+function renderStepsItems(
+  steps: readonly any[] = [],
+  currentStep: number = 0,
+  onStepClick?: (step: number) => void,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ---------------------- | ----------- |
+| passi | sola lettura qualsiasi[] |             |
+| passo corrente | numero |             |
+| onStepClick | (passo: numero) => void |             |
+
+### renderTableColumns
+
+**Tipo:** funzione
+
+```typescript
+function renderTableColumns(columns: readonly any[] = []): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| colonne | sola lettura qualsiasi[] |             |
+
+### renderTableRows
+
+**Tipo:** funzione
+
+```typescript
+function renderTableRows(data: readonly any[] = [], columns: readonly any[] = []): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| dati | sola lettura qualsiasi[] |             |
+| colonne | sola lettura qualsiasi[] |             |
+
+### renderTabsList
+
+**Tipo:** funzione
+
+```typescript
+function renderTabsList(
+  tabs: readonly any[] = [],
+  activeId?: string,
+  variant: string = 'line',
+  closable: boolean = false,
+  onSelect?: (id: string) => void,
+  onClose?: (id: string) => void,
+  addable: boolean = false,
+  addLabel: string = 'Add tab',
+  onAdd?: () => void,
+): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | -------------------- | ----------- |
+| schede | sola lettura qualsiasi[] |             |
+| IDattivo | stringa |             |
+| variante | stringa |             |
+| chiudibile | booleano |             |
+| onSeleziona | (id: stringa) => void |             |
+| suChiudi | (id: stringa) => void |             |
+| aggiungibile | booleano |             |
+| aggiungietichetta | stringa |             |
+| suAggiungi | () => vuoto |             |
+
+### renderTimelineItems
+
+**Tipo:** funzione
+
+```typescript
+function renderTimelineItems(items: readonly any[] = [], align: string = 'start'): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | -------------- | ----------- |
+| elementi | sola lettura qualsiasi[] |             |
+| allineare | stringa |             |
+
+### renderTreeViewNodes
+
+**Tipo:** funzione
+
+```typescript
+function renderTreeViewNodes(nodes: readonly any[] = [], onSelect?: (node: any) => void): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | ------------------- | ----------- |
+| nodi | sola lettura qualsiasi[] |             |
+| onSeleziona | (node: qualsiasi) => void |             |
+
+### renderUnreadBadge
+
+**Tipo:** funzione
+
+```typescript
+function renderUnreadBadge(unreadCount: number = 0): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ------ | ----------- |
+| non lettiConteggio | numero |             |
+
+### renderVideoSources
+
+**Tipo:** funzione
+
+```typescript
+function renderVideoSources(sources?: readonly any[]): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| fonti | sola lettura qualsiasi[] |             |
+
+### risolvereCatalogIcon
+
+**Tipo:** funzione
+
+```typescript
+function resolveCatalogIcon(catalog: Record<string, any>, name: string): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ------------------- | ----------- |
+| catalogo | Registra<string, any> |             |
+| nome | stringa |             |
+
+### risolvereEmailTypographyTag
+
+**Tipo:** funzione
+
+```typescript
+function resolveEmailTypographyTag(asTag?: string, variant?: string): string;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ------ | ----------- |
+| asTag | stringa |             |
+| variante | stringa |             |
+
+### risolvereIconPixelSize
+
+**Tipo:** funzione
+
+```typescript
+function resolveIconPixelSize(size: string = 'md'): number;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| dimensione | stringa |             |
+
+### risolvereStatusIcon
+
+**Tipo:** funzione
+
+```typescript
+function resolveStatusIcon(catalog: Record<string, any>, status: string = 'neutral'): any;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ------------------- | ----------- |
+| catalogo | Registra<string, any> |             |
+| stato | stringa |             |
+
+### risolvereSyncStatusLabel
+
+**Tipo:** funzione
+
+```typescript
+function resolveSyncStatusLabel(status: string = 'synced', label?: string): string;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------ | ------ | ----------- |
+| stato | stringa |             |
+| etichetta | stringa |             |
+
+### risolvereTextVariantForQuote
+
+**Tipo:** funzione
+
+```typescript
+function resolveTextVariantForQuote(size: string = 'md'): string;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| dimensione | stringa |             |
+
+### risolvereTypographyScaleVariant
+
+**Tipo:** funzione
+
+```typescript
+function resolveTypographyScaleVariant(variant?: string): string;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ------ | ----------- |
+| variante | stringa |             |
+
+### risolvereTypographyTag
+
+**Tipo:** funzione
+
+```typescript
+function resolveTypographyTag(asTag?: string, href?: string, variant?: string): string;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ------ | ----------- |
+| asTag | stringa |             |
+| href | stringa |             |
+| variante | stringa |             |
 
 ### Scanalatura
 
@@ -1622,3 +2085,13 @@ Tuttavia, non viene mai effettivamente invocato: il compilatore in fase di compi
 (`@mission-platform/vite-plugin-forge`) riscrive ogni `<Slot>` nella destinazione
 meccanismo di slot del framework e gli adattatori runtime lo intercettano
 identità (`type === Slot`) prima di qualsiasi chiamata. Chiamarlo direttamente è un bug.
+
+### Suspense
+
+**Genere:** costante
+
+```typescript
+export const Suspense: MpComponent<MpSuspenseProperties>;
+```
+
+Indicatore di confine asincrono nativo abbassato da ciascun compilatore del framework.

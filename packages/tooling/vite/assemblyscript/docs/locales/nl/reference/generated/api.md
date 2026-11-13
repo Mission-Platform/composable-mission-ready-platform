@@ -38,9 +38,9 @@ inline binair bestand in plaats van een `.wasm`-URL.
 
 #### Parameters
 
-| Naam   | Typ                          | Beschrijving |
-| ------ | ---------------------------- | ------------ |
-| opties | AssemblyScriptCompileOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ---------------------------- | ----------- |
+| opties | AssemblyScriptCompileOptions |             |
 
 ## `src/generate`
 
@@ -59,10 +59,10 @@ een base64-decoder voor meerdere omgevingen, de geëxtraheerde `instantiate`-fun
 
 #### Parameters
 
-| Naam              | Typ        | Beschrijving |
-| ----------------- | ---------- | ------------ |
-| wasmBase64        | tekenreeks |              |
-| instantiateSource | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ----------------- | ------ | ----------- |
+| wasmBase64 | tekenreeks |             |
+| instantiateSource | tekenreeks |             |
 
 ### extractInstantiëren
 
@@ -79,9 +79,9 @@ instantiatie vanuit een inline (base64) binair bestand in plaats van een URL.
 
 #### Parameters
 
-| Naam          | Typ        | Beschrijving |
-| ------------- | ---------- | ------------ |
-| bindingenBron | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| -------------- | ------ | ----------- |
+| bindingenBron | tekenreeks |             |
 
 ## `src/index`
 
@@ -103,9 +103,9 @@ De compilatie wordt uitgevoerd in de rollup-hook `buildStart`, dus de gegenereer
 
 #### Parameters
 
-| Naam   | Typ                        | Beschrijving |
-| ------ | -------------------------- | ------------ |
-| opties | AssemblyScriptPluginOpties |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------- | ----------- |
+| opties | AssemblyScriptPluginOptions |             |
 
 ### AssemblyScriptPluginOpties
 
@@ -135,6 +135,6 @@ De compilatie wordt uitgevoerd in de rollup-hook `buildStart`, dus de gegenereer
 
 #### Parameters
 
-| Naam   | Typ                        | Beschrijving |
-| ------ | -------------------------- | ------------ |
-| opties | AssemblyScriptPluginOpties |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------- | ----------- |
+| opties | AssemblyScriptPluginOpties |             |

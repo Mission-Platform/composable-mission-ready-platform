@@ -33,10 +33,10 @@ Wenden Sie nicht überlappende Quellbearbeitungen an, ohne Parser-Knoten offenzu
 
 #### Parameter
 
-| Name       | Geben Sie                     | ein Beschreibung |
-| ---------- | ----------------------------- | ---------------- |
-| Quelle     | Zeichenfolge                  |                  |
-| Änderungen | schreibgeschützt SourceEdit[] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------------------- | ----------- |
+| Quelle | Zeichenfolge |             |
+| Änderungen | schreibgeschützt SourceEdit[] |             |
 
 ### CLASS_NAME_ATTRIBUTE
 
@@ -60,9 +60,9 @@ Leiten Sie den Ereignisnamen ab, der durch eine `on<Event>`-Requisite im Vue-Sti
 
 #### Parameter
 
-| Name             | Geben Sie    | ein Beschreibung |
-| ---------------- | ------------ | ---------------- |
-| Eigenschaftsname | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | ------ | ----------- |
+| Eigenschaftsname | Zeichenfolge |             |
 
 ### FrameworkAdapterModule
 
@@ -76,9 +76,9 @@ Leiten Sie das Forge-Adapter-/Laufzeitmodul für jedes integrierte Zielframework
 
 #### Parameter
 
-| Name   | Geben Sie    | ein Beschreibung |
-| ------ | ------------ | ---------------- |
-| Rahmen | JsxFramework |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------ | ----------- |
+| Rahmen | JsxFramework |             |
 
 ### FrameworkForDirective
 
@@ -92,9 +92,9 @@ Lösen Sie eine führende `use <framework>`-Direktive für jedes integrierte Zie
 
 #### Parameter
 
-| Name       | Geben Sie    | ein Beschreibung |
-| ---------- | ------------ | ---------------- |
-| Richtlinie | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------ | ----------- |
+| Richtlinie | Zeichenfolge |             |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -148,9 +148,9 @@ Geben Sie Framework-lokale JSX-Primitivdeklarationen ohne Parser-Abhängigkeiten
 
 #### Parameter
 
-| Name   | Geben Sie    | ein Beschreibung |
-| ------ | ------------ | ---------------- |
-| Rahmen | JsxFramework |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------ | ----------- |
+| Rahmen | JsxFramework |             |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
@@ -296,9 +296,9 @@ Heben Sie markierte Renderdatensätze an und geben Sie die Einträge für den Zi
 
 #### Parameter
 
-| Name  | Geben Sie        | ein Beschreibung |
-| ----- | ---------------- | ---------------- |
-| Modul | GenericModuleAst |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---------------- | ----------- |
+| Modul | GenericModuleAst |             |
 
 ### MP_HOIST_PREFIX
 
@@ -327,10 +327,10 @@ Wenden Sie Quelländerungen auf eine Modulquelle an, ohne einen AST-Implementier
 
 #### Parameter
 
-| Name       | Geben Sie                     | ein Beschreibung |
-| ---------- | ----------------------------- | ---------------- |
-| Modul      | GenericModuleAst              |                  |
-| Änderungen | schreibgeschützt SourceEdit[] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------------------- | ----------- |
+| Modul | GenericModuleAst |             |
+| Änderungen | schreibgeschützt SourceEdit[] |             |
 
 ### konstantBoolescher Wert
 
@@ -344,9 +344,9 @@ Lösen Sie einen literalen booleschen Wert auf, ohne den verfassten Code auszuwe
 
 #### Parameter
 
-| Name     | Geben Sie      | ein Beschreibung |
-| -------- | -------------- | ---------------- |
-| Ausdruck | ExpressionLike |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------- | ----------- |
+| Ausdruck | ExpressionLike |             |
 
 ### GenericOptimizationResult
 
@@ -370,9 +370,9 @@ Ob eine generische JSX-Attributliste einen Schlüssel enthält.
 
 #### Parameter
 
-| Name      | Geben Sie                   | ein Beschreibung |
-| --------- | --------------------------- | ---------------- |
-| Attribute | readonly GenericAttribute[] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Attribute | readonly GenericAttribute[] |             |
 
 ### hasMpStaticMarker
 
@@ -386,9 +386,9 @@ Ob ein generisches JSX node über die private statische Markierung verfügt.
 
 #### Parameter
 
-| Name | Geben Sie         | ein Beschreibung |
-| ---- | ----------------- | ---------------- |
-| node | GenericRenderNode |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ### isCompileTimeConstant
 
@@ -398,13 +398,13 @@ Ob ein generisches JSX node über die private statische Markierung verfügt.
 function isCompileTimeConstant(expression: ExpressionLike): boolean;
 ```
 
-Ob der Quelltext ein reiner Literalausdruck zur Kompilierungszeit ist.
+Ob der Quelltext ein reiner Literalausdruck zur Kompilierzeit ist.
 
 #### Parameter
 
-| Name     | Geben Sie      | ein Beschreibung |
-| -------- | -------------- | ---------------- |
-| Ausdruck | ExpressionLike |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------- | ----------- |
+| Ausdruck | ExpressionLike |             |
 
 ### MP_STATIC_ATTR
 
@@ -431,10 +431,10 @@ Wenden Sie die Optimierung auf Datensatzebene an und geben Sie alle Quelländeru
 
 #### Parameter
 
-| Name      | Geben Sie        | ein Beschreibung |
-| --------- | ---------------- | ---------------- |
-| Modul     | GenericModuleAst |                  |
-| _optionen | OptimizeOptions  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ---------------- | ----------- |
+| Modul | GenericModuleAst |             |
+| _optionen | OptimizeOptions |             |
 
 ### OptimizeOptions
 
@@ -460,9 +460,9 @@ Gibt eine markerfreie generische Attributliste zurück.
 
 #### Parameter
 
-| Name      | Geben Sie                   | ein Beschreibung |
-| --------- | --------------------------- | ---------------- |
-| Attribute | readonly GenericAttribute[] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Attribute | readonly GenericAttribute[] |             |
 
 ### stripMpStaticMarker
 
@@ -476,9 +476,9 @@ Gibt ein markerfreies generisches Rendering node zurück, wobei die Quellspannen
 
 #### Parameter
 
-| Name | Geben Sie         | ein Beschreibung |
-| ---- | ----------------- | ---------------- |
-| node | GenericRenderNode |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ## `src/diagnostics`
 
@@ -543,9 +543,9 @@ Erstellen Sie eine Diagnose, ohne die Phasenverträge an TypeScript-Knoten zu ko
 
 #### Parameter
 
-| Name     | Geben Sie                                                           | ein Beschreibung |
-| -------- | ------------------------------------------------------------------- | ---------------- |
-| Diagnose | Lassen Sie <CompilerDiagnostic, "fileName"> & { fileName?: string } | weg              |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------------------------------------ | ----------- |
+| Diagnose | Lassen Sie <CompilerDiagnostic, "fileName"> & { fileName?: string } | weg             |
 
 ### formatCompilerDiagnostic
 
@@ -559,9 +559,9 @@ Formatieren Sie eine Diagnose für einen Compilerfehler, ohne den Quellspeichero
 
 #### Parameter
 
-| Name     | Geben Sie          | ein Beschreibung |
-| -------- | ------------------ | ---------------- |
-| Diagnose | CompilerDiagnostic |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------ | ----------- |
+| Diagnose | CompilerDiagnostic |             |
 
 ### throwOnCompilerErrors
 
@@ -577,9 +577,9 @@ Brechen Sie eine Compiler-Pipeline ab, wenn eine Phase einen oder mehrere Fehler
 
 #### Parameter
 
-| Name     | Geben Sie                                            | ein Beschreibung |
-| -------- | ---------------------------------------------------- | ---------------- |
-| Diagnose | schreibgeschützt CompilerDiagnostic[] \| undefiniert |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ------------------------------------------ | ----------- |
+| Diagnose | schreibgeschützt CompilerDiagnostic[] \| undefiniert |             |
 
 ## `src/framework`
 
@@ -653,6 +653,16 @@ export interface GeneratedModule
 ```
 
 Das von einem Framework-Ausgabe-Plugin zurückgegebene Quellartefakt.
+
+### GeneratedStyleArtifact
+
+**Art:** Schnittstelle
+
+```typescript
+export interface GeneratedStyleArtifact
+```
+
+Ein Stylesheet, das zusammen mit einem generierten Quellmodul ausgegeben wird.
 
 ### GeneratorContext
 
@@ -787,7 +797,7 @@ Gemeinsamer Kontext für Framework-eigene Vite-Plugin-Bundles.
 **Art:** konstant
 
 ```typescript
-export const defineForgeFramework;
+export const defineForgeFramework: typeof defineForgeOutputPlugin;
 ```
 
 Alias, der betont, dass Framework-Pakete Zielimplementierungen registrieren.
@@ -804,9 +814,9 @@ Validieren Sie ein Framework-Ausgabe-Plugin und geben Sie es zur Registrierung d
 
 #### Parameter
 
-| Name   | Geben Sie | ein Beschreibung |
-| ------ | --------- | ---------------- |
-| Plugin | T         |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---- | ----------- |
+| Plugin | T |             |
 
 ### ForgePluginId
 
@@ -832,9 +842,9 @@ Validieren Sie Zielmetadaten unabhängig von einer Framework-Registrierung.
 
 #### Parameter
 
-| Name   | Geben Sie | ein Beschreibung |
-| ------ | --------- | ---------------- |
-| Plugin | unbekannt |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------- | ----------- |
+| Plugin | unbekannt |             |
 
 ### validierenForgeOutputPluginSelection
 
@@ -850,9 +860,9 @@ Validieren Sie eine anrufereigene Zielauswahl, einschließlich leerer und doppel
 
 #### Parameter
 
-| Name    | Geben Sie            | ein Beschreibung |
-| ------- | -------------------- | ---------------- |
-| Plugins | schreibgeschützt T[] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------ | ----------- |
+| Plugins | schreibgeschützt T[] |             |
 
 ## `src/ir`
 
@@ -871,10 +881,10 @@ Liest den Ausdruckstext eines benannten Attributs, wenn es einen enthält.
 
 #### Parameter
 
-| Name | Geben Sie         | ein Beschreibung |
-| ---- | ----------------- | ---------------- |
-| node | GenericRenderNode |                  |
-| Name | Zeichenfolge      |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| Name | Zeichenfolge |             |
 
 ### attributeStringValue
 
@@ -891,10 +901,42 @@ Liest den statischen Zeichenfolgenwert eines benannten Attributs, sofern es eine
 
 #### Parameter
 
-| Name | Geben Sie         | ein Beschreibung |
-| ---- | ----------------- | ---------------- |
-| node | GenericRenderNode |                  |
-| Name | Zeichenfolge      |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| Name | Zeichenfolge |             |
+
+### childSlotName
+
+**Art:** Funktion
+
+```typescript
+function childSlotName(
+  child: GenericRenderChild,
+  slotAttributeName = "slot",
+  defaultSlotName = "default",
+): string | undefined;
+```
+
+Der `slot="…"`-Name, an den ein untergeordnetes Element weitergeleitet wird, oder `undefined` für Standard-Slot-Inhalte.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------------- | ------------------ | ----------- |
+| Kind | GenericRenderChild |             |
+| SlotAttributeName |                    |             |
+| defaultSlotName |                    |             |
+
+### BerechneterSetupWert
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ComputedSetupValue
+```
+
+Ein benannter Wert, der vom Setup zurückgegeben wird und durch Render-/Stilbindungen adressierbar ist.
 
 ### DynamicNodeIntention
 
@@ -961,10 +1003,10 @@ Suchen Sie das benannte Attribut auf einem Render node.
 
 #### Parameter
 
-| Name | Geben Sie         | ein Beschreibung |
-| ---- | ----------------- | ---------------- |
-| node | GenericRenderNode |                  |
-| Name | Zeichenfolge      |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| Name | Zeichenfolge |             |
 
 ### GenericAstNode
 
@@ -982,7 +1024,8 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type GenericAttribute = GenericJsxAttribute | GenericJsxSpreadAttribute;
+export type GenericAttribute =
+  GenericJsxAttribute | GenericJsxSpreadAttribute | GenericSlotAttribute;
 ```
 
 Keine Beschreibung angegeben.
@@ -1084,7 +1127,11 @@ Ein Komponentenparameter, seine Bindungsform und sein deklarierter Typ.
 
 ```typescript
 export type GenericRenderChild =
-  GenericRenderNode | GenericTextNode | GenericExpressionNode;
+  | GenericRenderNode
+  | GenericTextNode
+  | GenericExpressionNode
+  | GenericConditionalNode
+  | GenericForNode;
 ```
 
 Keine Beschreibung angegeben.
@@ -1130,6 +1177,56 @@ export type GenericStatementKind =
 
 Grobe Klassifizierung einer beibehaltenen Anweisung auf Modulebene.
 
+### GenericStyleAtRule
+
+**Art:** Schnittstelle
+
+```typescript
+export interface GenericStyleAtRule
+```
+
+Normalisierte CSS-Regel, die von einem Begleiter im Flint-Stil übernommen wird.
+
+### GenericStyleClassMapNode
+
+**Art:** Schnittstelle
+
+```typescript
+export interface GenericStyleClassMapNode
+```
+
+Eine adressierbare lokale Klasse in einer normalisierten CSS-Modul-Klassenzuordnung.
+
+### GenericStyleCompanion
+
+**Art:** Schnittstelle
+
+```typescript
+export interface GenericStyleCompanion
+```
+
+Zielneutrales Artefakt im Besitz eines Flint-Moduls.
+
+### GenericStyleDeclaration
+
+**Art:** Schnittstelle
+
+```typescript
+export interface GenericStyleDeclaration
+```
+
+Normalisierte CSS-Deklaration, die von einem Begleiter im Flint-Stil übernommen wird.
+
+### GenericStyleRule
+
+**Art:** Schnittstelle
+
+```typescript
+export interface GenericStyleRule
+```
+
+Normalisierte CSS-Regel, die von einem Begleiter im Flint-Stil übernommen wurde.
+
 ### GenericTagKind
 
 **Art:** Typ
@@ -1150,6 +1247,23 @@ export interface GenericTextNode
 
 Literaler Text zwischen JSX-Tags.
 
+### isComponentNode
+
+**Art:** Funktion
+
+```typescript
+function isComponentNode(node: GenericRenderNode): boolean;
+```
+
+Ob das Tag des node eine Komponente benennt (ein großgeschriebener Bezeichner oder ein dynamischer/Mitgliedsausdruck)
+und kein intrinsisches HTML-Element.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
 ### isExpressionNode
 
 **Art:** Funktion
@@ -1164,9 +1278,9 @@ Ob ein untergeordnetes Rendering eine `{ … }`-Interpolation ist.
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| Kind | GenericRenderChild |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------------ | ----------- |
+| Kind | GenericRenderChild |             |
 
 ### isRenderNode
 
@@ -1180,9 +1294,26 @@ Ob ein Render-Kind ein verschachteltes Element/Fragment ist node.
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| Kind | GenericRenderChild |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------------ | ----------- |
+| Kind | GenericRenderChild |             |
+
+### isRenderNodeMarker
+
+**Art:** Funktion
+
+```typescript
+function isRenderNodeMarker(node: GenericRenderNode, tag: string): boolean;
+```
+
+Ob node eine benannte Markierung zur Kompilierungszeit ist.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| Tag | Zeichenfolge |             |
 
 ### isTextNode
 
@@ -1196,9 +1327,9 @@ Ob ein Render-Kind literaler JSX-Text ist.
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| Kind | GenericRenderChild |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------------ | ----------- |
+| Kind | GenericRenderChild |             |
 
 ### ListKeyIntention
 
@@ -1210,6 +1341,24 @@ export interface ListKeyIntention
 
 Ein stabiler Schlüsselkandidat für einen Ziellisten-Renderer.
 
+### sinnvolle Kinder
+
+**Art:** Funktion
+
+```typescript
+function meaningfulChildren(
+  node: GenericRenderNode,
+): readonly GenericRenderChild[];
+```
+
+Untergeordnete Elemente, die bis zum Ziel überleben (Text, der nur Leerzeichen enthält, trägt nichts).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
 ### MemoIntention
 
 **Art:** Schnittstelle
@@ -1220,6 +1369,16 @@ export interface MemoIntention
 
 Ein gespeicherter oder abgeleiteter Wert.
 
+### Modellvertrag
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ModelContract
+```
+
+Ein zielneutraler kontrollierter Wert und sein typisiertes Aktualisierungsereignis.
+
 ### PropIntention
 
 **Art:** Schnittstelle
@@ -1229,6 +1388,16 @@ export interface PropIntention
 ```
 
 Eine neutrale Requisitendeklaration, die aus einer Komponentensignatur oder einem Requisitentyp abgeleitet wird.
+
+### ReactiveProperty
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ReactiveProperty
+```
+
+Eine reaktive Komponenteneigenschaft, die von jedem Zielemitter gemeinsam genutzt wird.
 
 ### RefIntention
 
@@ -1248,13 +1417,29 @@ Eine Ref-Intention unabhängig von der Ref-Darstellung des Ziels.
 function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
-Der einfache Tag-Name eines Render-node oder `undefined` für ein berechnetes Tag.
+Der einfache Tag-Name eines Rendering-Tags node oder `undefined` für ein berechnetes Tag.
 
 #### Parameter
 
-| Name | Geben Sie         | ein Beschreibung |
-| ---- | ----------------- | ---------------- |
-| node | GenericRenderNode |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
+### renderNodeTagText
+
+**Art:** Funktion
+
+```typescript
+function renderNodeTagText(node: GenericRenderNode): string;
+```
+
+Der einfache Tag-Text eines Render-node (ein berechnetes Tag gibt seinen Quellausdruck aus).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ### Semantische Absichten
 
@@ -1275,6 +1460,36 @@ export interface SemanticModule
 ```
 
 Die typisierte semantische IR, die von jedem Framework-Ausgabe-Plugin verwendet wird.
+
+### SetupVertrag
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SetupContract
+```
+
+Kanonischer Setup-/Ereignis-/Modellvertrag, der von allen Zielverringern genutzt wird.
+
+### SetupEventEmitter
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SetupEventEmitter
+```
+
+Ein Ereignisemitter, der außerhalb des Setups deklariert und mit der Ereigniskonfiguration gepaart wurde.
+
+### SetupEventHandler
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SetupEventHandler
+```
+
+Ein außerhalb des Setups deklarierter Ereignishandler.
 
 ### SlotIntention
 
@@ -1302,11 +1517,11 @@ Erstellen Sie einen quellgestützten Ausdruck aus bereits gedrucktem Text.
 
 #### Parameter
 
-| Name   | Geben Sie                        | ein Beschreibung |
-| ------ | -------------------------------- | ---------------- |
-| Text   | Zeichenfolge                     |                  |
-| Syntax | SourceBackedExpression["syntax"] |                  |
-| Spanne | SourceSpan                       |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------------------------- | ----------- |
+| Text | Zeichenfolge |             |
+| Syntax | SourceBackedExpression["syntax"] |             |
+| Spanne | SourceSpan |             |
 
 ### SourceBackedExpression
 
@@ -1353,10 +1568,465 @@ Durchlaufen Sie einen Renderbaum mit der Tiefe zuerst, einschließlich verschach
 
 #### Parameter
 
-| Name     | Geben Sie                         | ein Beschreibung |
-| -------- | --------------------------------- | ---------------- |
-| Knoten   | readonly GenericRenderNode[]      |                  |
-| besuchen | (node: GenericRenderNode) => void |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | --------------------------------- | ----------- |
+| Knoten | readonly GenericRenderNode[] |             |
+| besuchen | (node: GenericRenderNode) => void |             |
+
+### withoutSlotAttribute
+
+**Art:** Funktion
+
+```typescript
+function withoutSlotAttribute(
+  node: GenericRenderNode,
+  slotAttributeName = "slot",
+): GenericRenderNode;
+```
+
+Eine Kopie von node ohne seinen `slot="…"`-Routing-Marker.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------------- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| SlotAttributeName |                   |             |
+
+## `src/lowering/dynamic`
+
+### LowerDynamicNodes
+
+**Art:** Funktion
+
+```typescript
+function lowerDynamicNodes(
+  module: SemanticModule,
+): readonly NormalizedDynamicPlan[];
+```
+
+Verringert dynamische node-Absichten und Renderbaum-`<Dynamic>`-Tags.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------- | ----------- |
+| Modul | SemanticModule |             |
+
+### LowerListKeys
+
+**Art:** Funktion
+
+```typescript
+function lowerListKeys(
+  module: SemanticModule,
+): readonly NormalizedListKeyPlan[];
+```
+
+Senkt die Liste wichtiger Kandidaten von `SemanticModule`.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------- | ----------- |
+| Modul | SemanticModule |             |
+
+### LowerStaticSubtrees
+
+**Art:** Funktion
+
+```typescript
+function lowerStaticSubtrees(
+  module: SemanticModule,
+): readonly NormalizedStaticSubtreePlan[];
+```
+
+Senkt statische Teilbaumkandidaten, die mit `mp-static` markiert sind.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------- | ----------- |
+| Modul | SemanticModule |             |
+
+### NormalizedDynamicPlan
+
+**Art:** Schnittstelle
+
+```typescript
+export interface NormalizedDynamicPlan
+```
+
+Normalisierter Deskriptor für einen dynamischen node `<Dynamic is={...}>`.
+
+### NormalizedListKeyPlan
+
+**Art:** Schnittstelle
+
+```typescript
+export interface NormalizedListKeyPlan
+```
+
+Normalisierter Deskriptor für eine Listenschlüsselbindung.
+
+### NormalizedStaticSubtreePlan
+
+**Art:** Schnittstelle
+
+```typescript
+export interface NormalizedStaticSubtreePlan
+```
+
+Normalisierter Deskriptor für einen hochgezogenen statischen Teilbaum.
+
+## `src/lowering/events`
+
+### CanonicalEventName
+
+**Art:** Funktion
+
+```typescript
+function canonicalEventName(propName: string): string;
+```
+
+Extrahiert den kanonischen Ereignisnamen aus einem `onXxx`-Requisitennamen (z. B. `onClick` -> `click`, `onKeyDown` -> `keydown`).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------ | ----------- |
+| propName | Zeichenfolge |             |
+
+### formatTargetEventName
+
+**Art:** Funktion
+
+```typescript
+function formatTargetEventName(
+  eventName: string,
+  target: "react" | "solid" | "vue" | "svelte" | "web-components",
+): string;
+```
+
+Formatiert einen Ereignisnamen gemäß den Konventionen des Zielframeworks.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ----------------------------------------------------------- | ----------- |
+| Ereignisname | Zeichenfolge |             |
+| Ziel | „react“ \| „solid“ \| „vue“ \| „svelte“ \| „Webkomponenten“ |             |
+
+### isEventHandlerProp
+
+**Art:** Funktion
+
+```typescript
+function isEventHandlerProp(propName: string): boolean;
+```
+
+Bestimmt, ob ein Eigenschaftsname eine Event-Handler-Requisite darstellt (z. B. `onClick`, `onKeyDown`).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------ | ----------- |
+| propName | Zeichenfolge |             |
+
+### LowerEventIntentions
+
+**Art:** Funktion
+
+```typescript
+function lowerEventIntentions(
+  module: SemanticModule,
+): readonly NormalizedEventPlan[];
+```
+
+Extrahiert alle Ereignishandlerabsichten aus einem `SemanticModule`.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------- | ----------- |
+| Modul | SemanticModule |             |
+
+### Normalisierter EventPlan
+
+**Art:** Schnittstelle
+
+```typescript
+export interface NormalizedEventPlan
+```
+
+Normalisierter Deskriptor für einen reduzierten Komponenten-Ereignishandler.
+
+## `src/lowering/pipeline`
+
+### BaseLoweredModule
+
+**Art:** Schnittstelle
+
+```typescript
+export interface BaseLoweredModule extends TargetLoweredModule
+```
+
+Standardmäßiger Basisplan, in den Framework-Plugins eingebettet oder darauf aufgebaut werden können.
+
+### createBaseLoweredModule
+
+**Art:** Funktion
+
+```typescript
+function createBaseLoweredModule(
+  module: SemanticModule,
+  framework: TargetFrameworkId,
+): BaseLoweredModule;
+```
+
+Erstellt ein abgesenktes Basismodul, das eine gemeinsame Prop-Normalisierung, Slot-Synthese ausführt.
+Ereignisreduzierung, dynamische node-Extraktion und Listenschlüsselnormalisierung.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ----------------- | ----------------------------------- |
+| Modul | SemanticModule | - Semantisches Modul von Frontend IR. |
+| Rahmen | TargetFrameworkId | – Die Ziel-Framework-ID.          |
+
+#### Vertrag
+
+- **@param:** – Semantisches Modul von Frontend IR.
+- **@param:** – Die Ziel-Framework-ID.
+- **@returns:** Standard-Basis-Absenkmodul.
+
+### validierenLoweredInvariants
+
+**Art:** Funktion
+
+```typescript
+function validateLoweredInvariants(lowered: TargetLoweredModule): void;
+```
+
+Überprüft, ob ein abgesenktes Modul den erforderlichen Strukturinvarianten entspricht.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------- | ------------------------------ |
+| abgesenkt | TargetLoweredModule | - Das abgesenkte Modul muss überprüft werden. |
+
+#### Vertrag
+
+- **@param:** – Das zu überprüfende abgesenkte Modul.
+- **@throws:** Wenn invariante Verträge verletzt werden.
+
+## `src/lowering/props`
+
+### canonicalizePropsContract
+
+**Art:** Funktion
+
+```typescript
+function canonicalizePropsContract(
+  module: SemanticModule,
+  defaultParameterName = "props",
+): NormalizedPropsContract;
+```
+
+Kanonisiert den Requisitenvertrag aus einem `SemanticModule`.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------------------- | -------------- | ----------------------------------------------------------------------------- |
+| Modul | SemanticModule | – Das zu prüfende semantische Modul.                                             |
+| defaultParameterName |                | – Der Name des Fallback-Props-Parameters, wenn keiner deklariert ist (Standard: „props“). |
+
+#### Vertrag
+
+- **@param:** – Das zu prüfende semantische Modul.
+- **@param:** – Der Name des Fallback-Props-Parameters, wenn keiner deklariert ist (Standard: 'props').
+- **@returns:** Canonical Requisitenvertrag.
+
+### NormalizedProp
+
+**Art:** Schnittstelle
+
+```typescript
+export interface NormalizedProp
+```
+
+Eine normalisierte, zielunabhängige Requisitenbeschreibung.
+
+### NormalizedPropsContract
+
+**Art:** Schnittstelle
+
+```typescript
+export interface NormalizedPropsContract
+```
+
+Der normalisierte Requisitenvertrag einer Komponente.
+
+### AuflösungPropTypeText
+
+**Art:** Funktion
+
+```typescript
+function resolvePropTypeText(prop: PropIntention): string;
+```
+
+Löst die Typzeichenfolge für eine Requisitenabsicht auf.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------- | ----------- |
+| Stütze | PropIntention |             |
+
+### UNKNOWN_PROP_TYPE
+
+**Art:** konstant
+
+```typescript
+export const UNKNOWN_PROP_TYPE;
+```
+
+Die Ersatztypzeichenfolge, wenn kein deklarierter oder abgeleiteter Typ vorhanden ist.
+
+## `src/lowering/setup`
+
+### EMPTY_SETUP_CONTRACT
+
+**Art:** konstant
+
+```typescript
+export const EMPTY_SETUP_CONTRACT: SetupContract;
+```
+
+Leerer Setup-Vertrag, der von Legacy-freien zusammensetzbaren Modulen ohne Setup verwendet wird.
+
+### normalizeSetupContract
+
+**Art:** Funktion
+
+```typescript
+function normalizeSetupContract(module: SemanticModule): SetupContract;
+```
+
+Ruft den vom Frontend angehängten kanonischen Setup-Vertrag ab.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------- | ----------- |
+| Modul | SemanticModule |             |
+
+### validierenSetupContract
+
+**Art:** Funktion
+
+```typescript
+function validateSetupContract(
+  contract: SetupContract,
+  fileName = "<unknown>",
+): readonly CompilerDiagnostic[];
+```
+
+Validiert Setup-Abhängigkeiten, Namen und Modellnutzlastkompatibilität vor der Zielverringerung.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------------- | ----------- |
+| Vertrag | SetupVertrag |             |
+| Dateiname |               |             |
+
+## `src/lowering/slots`
+
+### DEFAULT_SLOT_NAME
+
+**Art:** konstant
+
+```typescript
+export const DEFAULT_SLOT_NAME;
+```
+
+Standard-Slot-Name für alle unterstützten Ziel-Frameworks.
+
+### isDefaultSlotName
+
+**Art:** Funktion
+
+```typescript
+function isDefaultSlotName(name: string): boolean;
+```
+
+Bestimmt, ob ein Slot-Name der Standard-Slot ist.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Name | Zeichenfolge |             |
+
+### isSlotRenderNode
+
+**Art:** Funktion
+
+```typescript
+function isSlotRenderNode(node: GenericRenderNode): boolean;
+```
+
+Bestimmt, ob ein Render-node ein Slot-Platzhalter-Tag darstellt (`<Slot>` oder `<slot>`).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
+### Normalisierter SlotPlan
+
+**Art:** Schnittstelle
+
+```typescript
+export interface NormalizedSlotPlan
+```
+
+Normalisierter Deskriptor für einen Komponentensteckplatz.
+
+### NormalizedSlotsContract
+
+**Art:** Schnittstelle
+
+```typescript
+export interface NormalizedSlotsContract
+```
+
+Normalisierte Sammlung aller für eine Komponente synthetisierten Slots.
+
+### synthesizeSlotPlans
+
+**Art:** Funktion
+
+```typescript
+function synthesizeSlotPlans(module: SemanticModule): NormalizedSlotsContract;
+```
+
+Synthetisiert einen einheitlichen Slot-Vertrag für einen `SemanticModule`.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------- | --------------------------------- |
+| Modul | SemanticModule | - Das zu analysierende semantische Modul. |
+
+#### Vertrag
+
+- **@param:** – Das zu analysierende semantische Modul.
+- **@returns:** Normalisierter Slot-Plan-Vertrag.
 
 ## `src/schema`
 
@@ -1377,10 +2047,10 @@ oder wenn der abgesenkte Plandiskriminator nicht mit dem erwarteten Rahmen über
 
 #### Parameter
 
-| Name                | Geben Sie   | ein Beschreibung |
-| ------------------- | ----------- | ---------------- |
-| Absichten           | unbekannt   |                  |
-| erwartetesFramework | FrameworkId |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------------- | ----------- | ----------- |
+| Absichten | unbekannt |             |
+| erwartetesFramework | FrameworkId |             |
 
 ### Deklaratives Schema
 
@@ -1400,13 +2070,13 @@ Deklarative Schemadefinition für Compiler-Zwischendarstellungen.
 function findActionableSpan(value: unknown): SourceSpan | undefined;
 ```
 
-Suchen Sie rekursiv nach einem umsetzbaren Quellenbereich innerhalb von Absichten oder ihren AST-Fakten.
+Suchen Sie rekursiv nach einem umsetzbaren Quellbereich innerhalb von Absichten oder ihren AST-Fakten.
 
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| ---- | --------- | ---------------- |
-| Wert | unbekannt |                  |
+| ----- | ------- | ----------- |
+| Wert | unbekannt |             |
 
 ### SchemaFieldRule
 
@@ -1525,11 +2195,11 @@ Validiert ein Zielobjekt anhand eines deklarativen Schemas und erfasst alle stru
 
 #### Parameter
 
-| Name     | Geben Sie               | ein Beschreibung                                     |
-| -------- | ----------------------- | ---------------------------------------------------- |
-| Ziel     | unbekannt               | - Zielobjekt oder Datensatz zur Validierung.         |
-| Schema   | Deklaratives Schema     | - Deklaratives Schema, das Strukturregeln definiert. |
-| Optionen | SchemaValidationOptions | - Validierungskonfigurationsoptionen.                |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ----------------------- | ----------------------------------------------- |
+| Ziel | unbekannt | - Zielobjekt oder Datensatz zur Validierung.          |
+| Schema | Deklaratives Schema | - Deklaratives Schema, das Strukturregeln definiert. |
+| Optionen | SchemaValidationOptions | - Validierungskonfigurationsoptionen.             |
 
 #### Vertrag
 
@@ -1554,7 +2224,552 @@ Gibt strukturierte Validierungsfehler und entsprechende CompilerDiagnostic-Objek
 
 #### Parameter
 
-| Name                | Geben Sie   | ein Beschreibung |
-| ------------------- | ----------- | ---------------- |
-| Absichten           | unbekannt   |                  |
-| erwartetesFramework | FrameworkId |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------------- | ----------- | ----------- |
+| Absichten | unbekannt |             |
+| erwartetesFramework | FrameworkId |             |
+
+## `src/testing`
+
+### booleanAttribute
+
+**Art:** Funktion
+
+```typescript
+function booleanAttribute(name: string): GenericJsxAttribute;
+```
+
+Ein wertloses boolesches Kurzschriftattribut (`disabled`).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Name | Zeichenfolge |             |
+
+### Komponente
+
+**Art:** Funktion
+
+```typescript
+function component(parts: {
+  name: string;
+  parameter?: string;
+  parameterType?: string;
+  exported?: boolean;
+  body?: readonly GenericStatement[];
+  returnNode?: GenericRenderNode;
+  returnExpression?: string;
+  returned?: { expression: string; nodes?: readonly GenericRenderNode[] };
+}): GenericComponent;
+```
+
+Erstellen Sie den Komponentendatensatz, nach dem ein Modul benannt ist.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Teile | { Name: Zeichenfolge; Parameter?: string; Parametertyp?: Zeichenfolge; exportiert?: boolean; body?: readonly GenericStatement[]; returnNode?: GenericRenderNode; returnExpression?: string; zurückgegeben?: { expression: string; Knoten?: readonly GenericRenderNode[] }; } |             |
+
+### dynamischesElement
+
+**Art:** Funktion
+
+```typescript
+function dynamicElement(
+  expression: string,
+  parts: {
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+  } = {},
+): GenericRenderNode;
+```
+
+Erstellen Sie ein berechnetes Tag-Rendering node.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------------------------------------------------------------------------------- | ----------- |
+| Ausdruck | Zeichenfolge |             |
+| Teile | { attributes?: readonly GenericAttribute[]; Kinder?: readonly GenericRenderChild[]; Quelle?: string; } |             |
+
+### dynamischer Knoten
+
+**Art:** Funktion
+
+```typescript
+function dynamicNode(
+  expression: string,
+  span: SourceSpan = EMPTY_SPAN,
+): DynamicNodeIntention;
+```
+
+Erstellen Sie eine Dynamic-node-Intention.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------- | ----------- |
+| Ausdruck | Zeichenfolge |             |
+| Spanne | SourceSpan |             |
+
+### Wirkung
+
+**Art:** Funktion
+
+```typescript
+function effect(
+  body: string,
+  second?:
+    | readonly string[]
+    | string
+    | { cleanup?: string; dependencies?: readonly string[] },
+  third?: string | readonly string[],
+): EffectIntention;
+```
+
+Bauen Sie eine Wirkungsabsicht auf.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---------------------------------------------------------------------------------------- | ----------- |
+| Körper | Zeichenfolge |             |
+| zweite | \| schreibgeschützter String[] \| Zeichenfolge \| { Aufräumen?: string; Abhängigkeiten?: readonly string[] } |             |
+| dritter | Zeichenfolge \| schreibgeschützter String[] |             |
+
+### Element
+
+**Art:** Funktion
+
+```typescript
+function element(
+  tag: string,
+  parts: {
+    tagKind?: GenericTagKind;
+    selfClosing?: boolean;
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+    span?: SourceSpan;
+  } = {},
+): GenericRenderNode;
+```
+
+Erstellen Sie ein Rendering node; `source` ist der eigene Text von node, der beim Zusammenfügen verschachtelter Markups verwendet wird.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Tag | Zeichenfolge |             |
+| Teile | { tagKind?: GenericTagKind; selfClosing?: boolean; Attribute?: readonly GenericAttribute[]; Kinder?: readonly GenericRenderChild[]; Quelle?: string; span?: SourceSpan; } |             |
+
+### elementRef
+
+**Art:** konstant
+
+```typescript
+export const elementRef: typeof reference;
+```
+
+Alias ​​für `reference` (wird in Webkomponenten-Spezifikationen verwendet).
+
+### Ereignis
+
+**Art:** Funktion
+
+```typescript
+function event(name: string, handler: string): EventIntention;
+```
+
+Erstellen Sie eine Veranstaltungsabsicht.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------ | ----------- |
+| Name | Zeichenfolge |             |
+| Handler | Zeichenfolge |             |
+
+### expressionAttribute
+
+**Art:** Funktion
+
+```typescript
+function expressionAttribute(
+  name: string,
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericJsxAttribute;
+```
+
+Ein `name={expression}`-Attribut, das optional verschachteltes Markup trägt.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---------------------------- | ----------- |
+| Name | Zeichenfolge |             |
+| Text | Zeichenfolge |             |
+| verschachtelt | readonly GenericRenderNode[] |             |
+
+### expressionChild
+
+**Art:** Funktion
+
+```typescript
+function expressionChild(
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericExpressionNode;
+```
+
+Eine `{ … }`-Interpolation in untergeordneter Position, optional mit verschachteltem Markup.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---------------------------- | ----------- |
+| Text | Zeichenfolge |             |
+| verschachtelt | readonly GenericRenderNode[] |             |
+
+### FixtureIntentions
+
+**Art:** Typ
+
+```typescript
+export type FixtureIntentions = SemanticModuleParts;
+```
+
+Alias ​​für `SemanticModuleParts`-Kompatibilität mit älteren Vue-Spezifikationen.
+
+### Fragment
+
+**Art:** Funktion
+
+```typescript
+function fragment(
+  children: readonly GenericRenderChild[] = [],
+  source = "<Fragment />",
+): GenericRenderNode;
+```
+
+Erstellen Sie ein Fragment-Rendering node (`<>…</>` oder `<Fragment>…</Fragment>`).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ----------------------------- | ----------- |
+| Kinder | readonly GenericRenderChild[] |             |
+| Quelle |                               |             |
+
+### listKey
+
+**Art:** Funktion
+
+```typescript
+function listKey(
+  source: string,
+  second?: boolean | string | { key?: string; stable?: boolean },
+  third?: boolean | string,
+): ListKeyIntention;
+```
+
+Erstellen Sie eine Listenschlüsselabsicht.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------------------------------------------- | ----------- |
+| Quelle | Zeichenfolge |             |
+| zweite | boolescher Wert \| Zeichenfolge \| { Schlüssel?: string; stabil?: boolean } |             |
+| dritter | boolescher Wert \| Zeichenfolge |             |
+
+### Memo
+
+**Art:** Funktion
+
+```typescript
+function memo(
+  name: string,
+  factory: string,
+  dependencies?: readonly string[],
+): MemoIntention;
+```
+
+Erstellen Sie eine Memo-Intention.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | ----------------- | ----------- |
+| Name | Zeichenfolge |             |
+| Fabrik | Zeichenfolge |             |
+| Abhängigkeiten | schreibgeschützter String[] |             |
+
+### moduleImport
+
+**Art:** Funktion
+
+```typescript
+function moduleImport(
+  text: string,
+  source: string,
+  parts: Partial<Omit<GenericImport, "kind" | "text" | "source" | "span">> = {},
+): GenericImport;
+```
+
+Erstellen Sie einen Importdatensatz aus seinem Quelltext und dem aufgelösten Spezifizierer.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------------------------------------------------------------- | ----------- |
+| Text | Zeichenfolge |             |
+| Quelle | Zeichenfolge |             |
+| Teile | Teilweise<Omit<GenericImport, "kind" \| "text" \| "source" \| "span">> |             |
+
+### neutralImport
+
+**Art:** Funktion
+
+```typescript
+function neutralImport(
+  valueNames: readonly string[],
+  typeNames: readonly string[] = [],
+): GenericImport;
+```
+
+Der neutrale `@mission-platform/forge-jsx`-Import, buchstabiert aus seinen Namen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------- | ----------- |
+| valueNames | schreibgeschützter String[] |             |
+| Typnamen | schreibgeschützter String[] |             |
+
+### Stütze
+
+**Art:** Funktion
+
+```typescript
+function prop(
+  name: string,
+  second?:
+    string | { type?: string; optional?: boolean; defaultValue?: string },
+  third?: boolean | { optional?: boolean; defaultValue?: string },
+  fourth?: string,
+): PropIntention;
+```
+
+Erstellen Sie eine Requisitenabsicht.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---------------------------------------------------------------------- | ----------- |
+| Name | Zeichenfolge |             |
+| zweite | Zeichenfolge \| { Typ?: string; optional?: boolean; defaultValue?: string } |             |
+| dritter | boolescher Wert \| { optional?: boolean; defaultValue?: string } |             |
+| vierte | Zeichenfolge |             |
+
+### Referenz
+
+**Art:** Funktion
+
+```typescript
+function reference(
+  name: string,
+  elementType?: string,
+  initializer?: string,
+): RefIntention;
+```
+
+Erstellen Sie eine Ref-Intention.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ------ | ----------- |
+| Name | Zeichenfolge |             |
+| elementType | Zeichenfolge |             |
+| Initialisierer | Zeichenfolge |             |
+
+### returnStatement
+
+**Art:** Funktion
+
+```typescript
+function returnStatement(
+  expression: string,
+  renderNodes: readonly GenericRenderNode[] = [],
+): GenericStatement;
+```
+
+Erstellen Sie die `return …;`-Anweisung eines Komponentenhauptteils.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ---------------------------- | ----------- |
+| Ausdruck | Zeichenfolge |             |
+| renderNodes | readonly GenericRenderNode[] |             |
+
+### semantisches Modul
+
+**Art:** Funktion
+
+```typescript
+function semanticModule(parts: SemanticModuleParts): SemanticModule;
+```
+
+Bauen Sie ein `SemanticModule` aus Vorrichtungsteilen zusammen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------------- | ----------- |
+| Teile | SemanticModuleParts |             |
+
+### SemanticModuleParts
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SemanticModuleParts
+```
+
+Die Absichtstatsachen, die ein Testgerät deklarieren kann.
+
+### Slot
+
+**Art:** Funktion
+
+```typescript
+function slot(name: string, fallback?: string): SlotIntention;
+```
+
+Erstellen Sie eine Slot-Intention.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------ | ----------- |
+| Name | Zeichenfolge |             |
+| Rückfall | Zeichenfolge |             |
+
+### spreadAttribute
+
+**Art:** Funktion
+
+```typescript
+function spreadAttribute(
+  text: string,
+  span: SourceSpan = EMPTY_SPAN,
+): GenericJsxSpreadAttribute;
+```
+
+Ein `{...expression}`-Spread-Attribut.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ---------- | ----------- |
+| Text | Zeichenfolge |             |
+| Spanne | SourceSpan |             |
+
+### Zustand
+
+**Art:** Funktion
+
+```typescript
+function state(
+  name: string,
+  setterName?: string,
+  parts: { type?: string; inferredType?: string; initializer?: string } = {},
+): StateIntention;
+```
+
+Bauen Sie eine staatliche Absicht auf.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------------------------------------- | ----------- |
+| Name | Zeichenfolge |             |
+| setterName | Zeichenfolge |             |
+| Teile | { Typ?: string; abgeleiteter Typ?: string; Initialisierer?: string } |             |
+
+### Stellungnahme
+
+**Art:** Funktion
+
+```typescript
+function statement(
+  text: string,
+  statementKind: GenericStatementKind = "variable",
+  parts: {
+    name?: string;
+    exported?: boolean;
+    renderNodes?: readonly GenericRenderNode[];
+  } = {},
+): GenericStatement;
+```
+
+Erstellen Sie einen Anweisungsdatensatz aus seinem Quelltext.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------------- | ---------------------------------------------------------------------------------- | ----------- |
+| Text | Zeichenfolge |             |
+| StatementKind | GenericStatementKind |             |
+| Teile | { Name?: string; exportiert?: boolean; renderNodes?: readonly GenericRenderNode[]; } |             |
+
+### stringAttribute
+
+**Art:** Funktion
+
+```typescript
+function stringAttribute(name: string, value: string): GenericJsxAttribute;
+```
+
+Ein `name="value"`-Attribut.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Name | Zeichenfolge |             |
+| Wert | Zeichenfolge |             |
+
+### templateRef
+
+**Art:** konstant
+
+```typescript
+export const templateRef: typeof reference;
+```
+
+Alias ​​für `reference` (verwendet in Vue-Spezifikationen).
+
+### textChild
+
+**Art:** Funktion
+
+```typescript
+function textChild(text: string): GenericTextNode;
+```
+
+Wörtlicher Text zwischen Tags.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Text | Zeichenfolge |             |

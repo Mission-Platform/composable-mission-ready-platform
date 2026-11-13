@@ -9,288 +9,65 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 
 Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/barcode`.
 
-## `src/encoder/index`
+## `src/components/molecules/forge-barcode/forge-barcode`
 
-### Barcode
+### BarcodeAktionen
 
 **Art:** Schnittstelle
 
 ```typescript
-export interface Barcode
+export interface BarcodeActions
 ```
 
-Das Ergebnis von {@link encodeBarcode}: Modulbits mit ihrer Gesamtbreite.
+Welche Aktionsschaltflächen die Symbolleiste anzeigt. `true` aktiviert sie alle.
 
-### BarcodeSymbologie
+### BarcodeProperties
 
-**Art:** Typ
+**Art:** Schnittstelle
 
 ```typescript
-export type BarcodeSymbology =
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'ean13'
-  | 'ean8'
-  | 'upca'
-  | 'upce'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode';
+export interface BarcodeProperties
 ```
 
-Unterstützte lineare Barcode-Symbologien.
+Keine Beschreibung angegeben.
 
-### encodeBarcode
+### ForgeBarcode
 
 **Art:** Funktion
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
+function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement;
 ```
 
-Kodieren Sie `data` mithilfe des paketlokalen FWS-Diagramms in einen linearen Barcode.
+`ForgeBarcode` – stellt einen scannbaren 1D-Barcode (linear) dar, der einmal im erstellt wurde
+Neutraler JSX-Dialekt und direkt nach React oder Vue kompiliert
+`@mission-platform/vite-plugin-forge`.
+
+Die Nutzlast (`value`) wird vom Client vollständig auf dem Client codiert
+{@link encodeBarcode} Encoder von `@mission-platform/barcode` – a
+Abhängigkeitsfreier Encoder, der in Rust geschrieben und in WebAssembly kompiliert wurde – und
+als gestochen scharfes, auflösungsunabhängiges SVG gezeichnet. Benachbarte dunkle Module werden zusammengeführt
+in einen einzigen `<rect>`-Lauf umwandeln, damit das Markup kompakt bleibt. Für zuverlässiges Scannen
+Die Balken-/Hintergrundfarben sind standardmäßig solid Schwarz auf Weiß und nicht das Design
+Tokens, aber beide können über `color` / `background` überschrieben werden.
+
+Unterstützte Symbologien (`symbology`): Code 128, GS1-128, Code 39 (+ erweitert),
+Code 93 (+ erweitert), EAN-13, EAN-8, UPC-A, UPC-E, ITF (Interleaved 2 von 5),
+ITF-14, Codabar, MSI (Modified Plessey) und Pharmacode. Die Balkenhöhe, Modul
+Breite und Ruhezone sind konfigurierbar, und der für Menschen lesbare Wert kann sein
+unterhalb der Balken über `displayValue` angezeigt.
+
+Eine optionale Aktionssymbolleiste (aktiviert über `showActions` – `true` für jeden
+Schaltfläche oder ein {@link BarcodeActions}-Objekt, um sie einzeln auszuwählen).
+Benutzer **speichern den Barcode als PNG-Bild**, **kopieren das Bild in das
+Zwischenablage** und **kopieren Sie den codierten Wert in die Zwischenablage**. Das PNG ist
+Auf dem Client gerastert, indem die gerenderte SVG-Datei auf eine Leinwand gezeichnet wird. Die
+Der `onError`-Rückruf wird ausgelöst, wenn der Wert für den ausgewählten Wert nicht codiert werden kann
+Symbologie. Der Stil wird durch das dort befindliche CSS-Modul bestimmt
+`forge-barcode.module.scss`.
 
 #### Parameter
 
-| Name       | Geben Sie         | ein Beschreibung |
-| ---------- | ----------------- | ---------------- |
-| Symbologie | BarcodeSymbologie |                  |
-| Daten      | Zeichenfolge      |                  |
-
-#### Vertrag
-
-- **@throws:** wenn die Nutzlast für die ausgewählte Symbologie ungültig ist.
-
-### encodeBarcodeAsync
-
-**Art:** Funktion
-
-```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
-```
-
-Codieren Sie `data` asynchron mithilfe des paketlokalen FWS-Diagramms.
-
-#### Parameter
-
-| Name       | Geben Sie         | ein Beschreibung |
-| ---------- | ----------------- | ---------------- |
-| Symbologie | BarcodeSymbologie |                  |
-| Daten      | Zeichenfolge      |                  |
-
-## `src/fws/index`
-
-### Parameter
-
-| Name | Geben Sie                         | ein Beschreibung |
-| ---- | --------------------------------- | ---------------- |
-| Wert | Zeichenfolge \| ArrayLike<number> |                  |
-
-### Parameter
-
-| Name | Geben Sie                         | ein Beschreibung |
-| ---- | --------------------------------- | ---------------- |
-| Wert | Zeichenfolge \| ArrayLike<number> |                  |
-
-### Parameter
-
-| Name | Geben Sie                         | ein Beschreibung |
-| ---- | --------------------------------- | ---------------- |
-| Wert | Zeichenfolge \| ArrayLike<number> |                  |
-
-### Parameter
-
-| Name | Geben Sie                         | ein Beschreibung |
-| ---- | --------------------------------- | ---------------- |
-| Wert | Zeichenfolge \| ArrayLike<number> |                  |
-
-### encodeEan13Fws
-
-**Art:** Funktion
-
-```typescript
-function encodeEan13Fws(value: string): string;
-```
-
-Kodiert eine zwölfstellige EAN-13-Nutzlast und berechnet ihre Prüfziffer in FWS.
-
-#### Parameter
-
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Wert | Zeichenfolge |                  |
-
-### encodeEan13FwsAsync
-
-**Art:** Funktion
-
-```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>;
-```
-
-Kodiert asynchron eine zwölfstellige EAN-13-Nutzlast mit dem FWS-Loader.
-
-#### Parameter
-
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Wert | Zeichenfolge |                  |
-
-### encodeEan8Fws
-
-**Art:** Funktion
-
-```typescript
-function encodeEan8Fws(value: string): string;
-```
-
-Kodiert eine siebenstellige EAN-8-Nutzlast und berechnet ihre Prüfziffer in FWS.
-
-#### Parameter
-
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Wert | Zeichenfolge |                  |
-
-### encodeEan8FwsAsync
-
-**Art:** Funktion
-
-```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>;
-```
-
-Kodiert asynchron eine siebenstellige EAN-8-Nutzlast mit dem FWS-Loader.
-
-#### Parameter
-
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Wert | Zeichenfolge |                  |
-
-### encodeUpcaFws
-
-**Art:** Funktion
-
-```typescript
-function encodeUpcaFws(value: string): string;
-```
-
-Kodiert eine UPC-A-Nutzlast über den Null-Präfix-EAN-13-FWS-Graphen.
-
-#### Parameter
-
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Wert | Zeichenfolge |                  |
-
-### encodeUpcaFwsAsync
-
-**Art:** Funktion
-
-```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>;
-```
-
-Codiert asynchron eine UPC-A-Nutzlast über FWS.
-
-#### Parameter
-
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Wert | Zeichenfolge |                  |
-
-### encodeVariableBarcodeFws
-
-**Art:** Funktion
-
-```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
-```
-
-Kodiert einen unterstützten Barcode variabler Länge über sein natives FWS-Diagramm, sofern verfügbar.
-
-#### Parameter
-
-| Name       | Geben Sie                 | ein Beschreibung |
-| ---------- | ------------------------- | ---------------- |
-| Symbologie | VariableBarcodeSymbologie |                  |
-| Wert       | Zeichenfolge              |                  |
-
-### encodeVariableBarcodeFwsAsync
-
-**Art:** Funktion
-
-```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
-```
-
-Kodiert asynchron einen unterstützten Barcode variabler Länge über FWS.
-
-#### Parameter
-
-| Name       | Geben Sie                 | ein Beschreibung |
-| ---------- | ------------------------- | ---------------- |
-| Symbologie | VariableBarcodeSymbologie |                  |
-| Wert       | Zeichenfolge              |                  |
-
-### validierenGs1DataBarValue
-
-**Art:** Funktion
-
-```typescript
-function validateGs1DataBarValue(value: string): boolean;
-```
-
-Validiert einen GS1 DataBar/RSS-14 GTIN-14-Wert im paketlokalen FWS-Diagramm.
-
-#### Parameter
-
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Wert | Zeichenfolge |                  |
-
-### validierenGs1DataBarValueAsync
-
-**Art:** Funktion
-
-```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
-```
-
-Validiert asynchron einen GS1 DataBar/RSS-14 GTIN-14-Wert über FWS.
-
-#### Parameter
-
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Wert | Zeichenfolge |                  |
-
-### VariableBarcodeSymbology
-
-**Art:** Typ
-
-```typescript
-export type VariableBarcodeSymbology = Extract<
-  BarcodeSymbology,
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode'
->;
-```
-
-Symbologien mit variabler Länge, die vom direkten Barcode-FWS-Adapter unterstützt werden.
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<BarcodeProperties> |             |

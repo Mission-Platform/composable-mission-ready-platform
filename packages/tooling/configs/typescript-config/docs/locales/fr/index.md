@@ -5,7 +5,7 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 > packages/tooling/configs/typescript-config/docs/index.md: [packages/tooling/configs/typescript-config/docs/index.md](../../index.md)
 > Langue: Français (fr)
 
-Commun TypeScript préréglages pour chaque espace de travail Mission Platform.
+Préréglages TypeScript partagés pour chaque espace de travail Mission Platform.
 
 ## Installer et utiliser
 
@@ -13,9 +13,9 @@ Commun TypeScript préréglages pour chaque espace de travail Mission Platform.
 pnpm add --save-dev @mission-platform/typescript-config
 ```
 
-Étendez le préréglage correspondant de `tsconfig.json`: utiliser `app` pour Vue des applications,
-`react` pour React des applications, `library` pour les déclarations de packages, `node` pour l'outillage,
-et `test` pour Vitest spécifications. Les consommateurs du framework doivent également utiliser le matching
+Étendez le préréglage correspondant de `tsconfig.json` : utilisez `app` pour les applications Vue,
+`react` pour les applications React, `library` pour les déclarations de packages, `node` pour les outils,
+et `test` pour les spécifications Vitest. Les consommateurs du framework doivent également utiliser le matching
 `framework-<name>` préréglage de conditions personnalisées. Voir le package README pour le
 tableau complet des préréglages et exemples.
 

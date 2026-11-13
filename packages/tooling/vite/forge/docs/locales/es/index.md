@@ -12,9 +12,9 @@ Los paquetes poseen su reducción y generación específicas para el objetivo.
 
 ## Empieza aquí
 
-- [Referencia de canalización del compilador](reference/compiler.md) — contratos por etapas,
+- [Referencia de canalización del compilador](reference/compiler.md): contratos de etapa,
   propiedad de destino, almacenamiento en caché, diagnóstico y artefactos generados.
-- [Guía de construcción y prueba](guides/development.md) — desarrollo local y
+- [Guía de compilación y prueba](guides/development.md) — desarrollo local y
   controles de integración.
 - [`README.md`](../../../README.md) — configuración del consumidor y representante
   Vite/tsdown ejemplos.

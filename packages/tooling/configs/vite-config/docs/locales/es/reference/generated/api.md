@@ -34,9 +34,19 @@ Cree un predicado `external` Rollup/Rolldown que trate todos los nombres en
 
 #### Parámetros
 
-| Nombre  | Tipo                     | Descripción |
-| ------- | ------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ----- | ----------------- | ----------- |
 | nombres | cadena de solo lectura[] |             |
+
+### DEFAULT_CSS_CONFIG
+
+**Tipo:** constante
+
+```typescript
+export const DEFAULT_CSS_CONFIG: NonNullable<UserConfig['css']>;
+```
+
+Configuración CSS compartida para compilaciones Vite: canalización PostCSS + opciones modernas de preprocesador Sass.
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
@@ -60,6 +70,17 @@ export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 Globales de salida acumulativos predeterminados para consumidores UMD/IIFE. Sólo apuntamos al ESM, pero
 El paquete acumulativo todavía advierte sin este mapa cuando se declaran elementos externos.
 
+### DEFAULT_SASS_PREPROCESSOR_OPTIONS
+
+**Tipo:** constante
+
+```typescript
+export const DEFAULT_SASS_PREPROCESSOR_OPTIONS;
+```
+
+Opciones de preprocesador Sass compartido que permiten la moderna API Dart Sass JS y
+silenciar las advertencias de obsolescencia de la API JS heredada.
+
 ### definirAppConfig
 
 **Tipo:** función
@@ -74,8 +95,8 @@ agrupando ajustes a través de {@link AppConfigOptions.overrides}.
 
 #### Parámetros
 
-| Nombre   | Tipo                                    | Descripción |
-| -------- | --------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ---------------- | ----------- |
 | opciones | Opciones de configuración de aplicación |             |
 
 ### definirFrameworkAppConfig
@@ -93,8 +114,8 @@ Utilice este ayudante para configurar el mismo `resolve.conditions` directamente
 
 #### Parámetros
 
-| Nombre   | Tipo                           | Descripción |
-| -------- | ------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------------- | ----------- |
 | opciones | Opciones de FrameworkAppConfig |             |
 
 ### definirLibraryConfig
@@ -116,8 +137,8 @@ caja. Los paquetes que necesitan un único artefacto incluido pueden cancelarse 
 
 #### Parámetros
 
-| Nombre   | Tipo                                    | Descripción |
-| -------- | --------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------- | ----------- |
 | opciones | Opciones de configuración de biblioteca |             |
 
 ### definirWebComponentAppConfig
@@ -132,13 +153,13 @@ Cree una configuración de aplicación Vite para aplicaciones de componentes web
 
 A diferencia de {@link defineFrameworkAppConfig}, este asistente deliberadamente no
 Instale el complemento Vue (o cualquier otro complemento del marco). El `mp:web-component`
-La condición aún se aplica tanto al cliente como a la resolución SSR/prerender, por lo que
+La condición todavía se aplica tanto al cliente como a la resolución SSR/prerender, por lo que
 Las importaciones de paquetes simples de Forge seleccionan sus artefactos de elementos personalizados en todas partes.
 
 #### Parámetros
 
-| Nombre   | Tipo                                    | Descripción |
-| -------- | --------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ---------------- | ----------- |
 | opciones | Opciones de configuración de aplicación |             |
 
 ### Opciones de FrameworkAppConfig
@@ -166,9 +187,9 @@ Condiciones Node/Vite (`import`, `default`, `browser`, ...).
 
 #### Parámetros
 
-| Nombre | Tipo                  | Descripción |
-| ------ | --------------------- | ----------- |
-| marco  | MisiónPlataformaMarco |             |
+| Nombre | Tipo | Descripción |
+| --------- | ------------------------ | ----------- |
+| marco | MisiónPlataformaMarco |             |
 
 ### marcoResolveCondiciones
 
@@ -187,9 +208,9 @@ Pase el resultado al `resolve.conditions` de Vite (consulte {@link defineFramewo
 
 #### Parámetros
 
-| Nombre | Tipo                  | Descripción |
-| ------ | --------------------- | ----------- |
-| marco  | MisiónPlataformaMarco |             |
+| Nombre | Tipo | Descripción |
+| --------- | ------------------------ | ----------- |
+| marco | MisiónPlataformaMarco |             |
 
 ### ignorarVueI18nBlocksPlugin
 
@@ -229,7 +250,7 @@ export type MissionPlatformFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'w
 
 El conjunto de marcos a los que puede apuntar una aplicación Mission Platform. Seleccionando una unidad
 tanto el paquete Vite (a través de `resolve.conditions`) como, a través de la combinación
-`customConditions` tsconfig preset: el servicio de lenguaje TypeScript tan simple
+`customConditions` tsconfig preset: el servicio de lenguaje TypeScript tan básico
 Las importaciones `@mission-platform/<pkg>` se resuelven en la salida integrada de ese marco.
 
 ### leerPackageDependencyNames
@@ -246,8 +267,8 @@ su propio paquete para que los consumidores puedan deduplicarlos y sacudirlos.
 
 #### Parámetros
 
-| Nombre         | Tipo   | Descripción |
-| -------------- | ------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------------- | ------ | ----------- |
 | directorioraíz | cadena |             |
 
 ## `src/vitest`
@@ -261,13 +282,34 @@ function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
 Cree una configuración Vitest para paquetes y aplicaciones de Mission Platform. Proporciona el
-complemento Vue estándar, un entorno jsdom y un proveedor de cobertura v8
+complemento Vue estándar, un entorno jsdom o node y un proveedor de cobertura v8
 preconfigurado para componentes `src/**\/*.vue`.
 
 #### Parámetros
 
-| Nombre   | Tipo                     | Descripción |
-| -------- | ------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------- | ----------- |
+| opciones | Opciones de VitestConfig |             |
+
+### detectarEntornodeprueba
+
+**Tipo:** función
+
+```typescript
+function detectTestEnvironment(
+  rootDirectory: string = process.cwd(),
+  options: VitestConfigOptions = {},
+): 'jsdom' | 'happy-dom' | 'node';
+```
+
+Detectar si un paquete requiere un entorno DOM (por ejemplo, `jsdom` o `happy-dom`)
+o puede ejecutarse de forma segura en un entorno `node` ligero.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------------- | ------------------- | ----------- |
+| directorioraíz | cadena |             |
 | opciones | Opciones de VitestConfig |             |
 
 ### Opciones de VitestConfig

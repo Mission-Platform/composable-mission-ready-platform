@@ -16,7 +16,7 @@
 `@mission-platform/vite-config`의 `frameworkResolveConditions`) 및 `customConditions`(
 `@mission-platform/typescript-config/framework-<name>` 사전 설정).
 
-## 핵심 구성 요소
+## 핵심 구성요소
 
 ### `ForgeSchemaForm`
 

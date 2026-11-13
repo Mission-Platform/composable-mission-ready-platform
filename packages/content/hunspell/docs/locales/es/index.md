@@ -2,7 +2,7 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> packages/hunspell/docs/index.md: [packages/hunspell/docs/index.md](../../index.md)
+> packages/content/hunspell/docs/index.md: [packages/content/hunspell/docs/index.md](../../index.md)
 > Idioma: Español (es)
 
 `@mission-platform/hunspell` proporciona un motor de revisión ortográfica de alto rendimiento basado en Hunspell, compilado para
@@ -19,7 +19,7 @@ El paquete utiliza una canalización de compilación especializada para garantiz
 
 ### Reconstrucción del artefacto WASM
 
-La reconstrucción requiere [Estibador](https://www.docker.com/). Utilice el siguiente comando desde la raíz:
+La reconstrucción requiere [Docker](https://www.docker.com/). Utilice el siguiente comando desde la raíz:
 
 ```bash
 pnpm --filter @mission-platform/hunspell build:wasm
@@ -50,7 +50,7 @@ checker.delete();
 
 ### Integración del editor de Mónaco
 
-El paquete proporciona una integración perfecta para el editor de Mónaco, manejando la generación de trabajadores y la corrección ortográfica antirrebote.
+El paquete proporciona una integración perfecta para el editor de Mónaco, manejando la generación de trabajadores y la revisión ortográfica antirrebote.
 automáticamente.
 
 #### Vue 3 (API de composición)

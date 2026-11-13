@@ -263,7 +263,7 @@ Aucune description fournie.
 
 ## `src/generated/ts/component/molecules/editor`
 
-### rédacteur
+### éditeur
 
 **Genre :** constante
 

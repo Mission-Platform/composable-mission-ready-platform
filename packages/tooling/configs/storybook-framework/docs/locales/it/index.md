@@ -10,12 +10,12 @@ Struttura del libro di fiabe selezionata dall'ambiente preimpostata per Mission 
 ## Installare e utilizzare
 
 Aggiungi il pacchetto all'area di lavoro Storybook e fai riferimento ad esso
-`.storybook/main.ts` o la corrispondente configurazione Storybook. Seleziona il
+`.storybook/main.ts` o la corrispondente configurazione di Storybook. Seleziona il
 quadro attraverso le condizioni supportate dello spazio di lavoro; non codificare a
 adattatore framework nei pacchetti di componenti condivisi.
 
 ## Contribuire
 
-Correre `pnpm --filter @mission-platform/storybook-framework lint` e il
+Esegui `pnpm --filter @mission-platform/storybook-framework lint` e il file
 Verifiche della costruzione del libro di fiabe. Mantieni questo pacchetto incentrato sulla selezione del framework e
-impostazioni predefinite condivise di Storybook; le storie componenti appartengono `apps/storybook`.
+impostazioni predefinite condivise di Storybook; le storie dei componenti appartengono a `apps/storybook`.

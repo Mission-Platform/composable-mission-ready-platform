@@ -29,8 +29,8 @@ Cree capacidades neutrales a partir de primitivas de Redwood (sin marco para pru
 
 #### Parámetros
 
-| Nombre  | Tipo                                                                                                                                                                                                              | Descripción |
-| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | entrada | { ubicación: { nombre de ruta: cadena; buscar: cadena; hash?: cadena }; parámetros?: MpRouteParameters; navegar: RedwoodRouterSurface['navegar']; ¿rutas?: RedwoodRouterSurface['rutas']; enlace?: desconocido; } |             |
 
 ### MpEnlace
@@ -38,15 +38,15 @@ Cree capacidades neutrales a partir de primitivas de Redwood (sin marco para pru
 **Tipo:** componente
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown;
+export function MpLink(properties:
 ```
 
 Proxy de componente de enlace; Las aplicaciones vinculan el `Link` nativo de Redwood a través de {@link setForgeRedwoodRouter}.
 
 #### Parámetros
 
-| Nombre      | Tipo                                                                   | Descripción |
-| ----------- | ---------------------------------------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ----------------------------------------------------------------- | ----------- |
 | propiedades | { a: MpRouteLocationRaw; ¿reemplazar?: booleano; niños?: desconocido } |             |
 
 ### MpRouterVer
@@ -54,7 +54,7 @@ Proxy de componente de enlace; Las aplicaciones vinculan el `Link` nativo de Red
 **Tipo:** componente
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Redwood no tiene enchufe portátil; el compilador informa que `view` no es compatible.
@@ -81,9 +81,9 @@ Resuelva un objetivo neutral en una cadena href.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| a      | MpRouteLocationRaw |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 
 ### setForgeRedwoodEnrutador
 
@@ -98,8 +98,8 @@ esta costura para que las formas de gancho/llamada coincidan con el contrato neu
 
 #### Parámetros
 
-| Nombre     | Tipo                    | Descripción |
-| ---------- | ----------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------- | ----------- |
 | superficie | RedwoodRouterSuperficie |             |
 
 ### aMpUbicaciónDesdeRedwood
@@ -109,7 +109,7 @@ esta costura para que las formas de gancho/llamada coincidan con el contrato neu
 ```typescript
 function toMpLocationFromRedwood(
   location: { pathname: string; search: string; hash?: string },
-  params: MpRouteParameters = {},
+  parameters: MpRouteParameters = {},
 ): MpResolvedLocation;
 ```
 
@@ -117,10 +117,10 @@ Construya una ubicación neutral a partir de una instantánea de la ubicación d
 
 #### Parámetros
 
-| Nombre     | Tipo                                                      | Descripción |
-| ---------- | --------------------------------------------------------- | ----------- |
-| ubicación  | { nombre de ruta: cadena; buscar: cadena; hash?: cadena } |             |
-| parámetros | Parámetros MpRoute                                        |             |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------------------------------- | ----------- |
+| ubicación | { nombre de ruta: cadena; buscar: cadena; hash?: cadena } |             |
+| parámetros | Parámetros MpRoute |             |
 
 ### aRedwoodHref
 
@@ -134,10 +134,10 @@ Serializar un objetivo neutral para la navegación en Redwood.
 
 #### Parámetros
 
-| Nombre | Tipo                          | Descripción |
-| ------ | ----------------------------- | ----------- |
-| a      | MpRouteLocationRaw            |             |
-| rutas  | RedwoodRouterSurface['rutas'] |             |
+| Nombre | Tipo | Descripción |
+| ------ | ------------------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
+| rutas | RedwoodRouterSurface['rutas'] |             |
 
 ### utilizarMpNavigation
 

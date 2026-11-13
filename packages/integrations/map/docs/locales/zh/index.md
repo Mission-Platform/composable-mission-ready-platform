@@ -10,7 +10,7 @@ MapLibre GL 的 Vue 3 包装器，提供全面的反应性支持并与任务平�
 
 ## 概述
 
-`@mission-platform/map` 包提供了一个可组合的反应式包装器 [地图自由 GL](https://maplibre.org/),
+`@mission-platform/map` 包提供了一个可组合的、反应性的包装器 [MapLibre GL](https://maplibre.org/)，
 使开发人员能够使用 Vue 3 的 Composition API 创建交互式地图。它抽象了复杂性
 管理 MapLibre 实例，同时保持对 MapLibre 强大功能的完全访问。
 
@@ -37,7 +37,7 @@ MapLibre GL 的 Vue 3 包装器，提供全面的反应性支持并与任务平�
 - `pitch`：初始音高（以度为单位）
 - `container`：地图容器的 CSS 选择器或 HTMLElement
 
-**例子：**
+**示例：**
 
 ```vue
 <template>
@@ -63,7 +63,7 @@ MapLibre GL 的 Vue 3 包装器，提供全面的反应性支持并与任务平�
 - `isReady`：指示地图是否完全初始化的布尔值
 - `loadingProgress`：0 到 1 之间的数字，指示加载进度
 
-**例子：**
+**示例：**
 
 ```vue
 <script setup lang="ts">
@@ -220,7 +220,7 @@ pnpm add @mission-platform/map
 
 该 API 很大程度上与 Mapbox GL JS 兼容，但需要进行一些命名空间更改：
 
-- 将 `mapboxgl` 导入替换为 `maplibre-gl`
+- 用 `maplibre-gl` 替换 `mapboxgl` 导入
 - 更新样式 URL 以使用 MapLibre 兼容源
 - 调整任何 Mapbox 特定功能以使用 MapLibre 等效项
 

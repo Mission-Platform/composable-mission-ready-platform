@@ -6,8 +6,8 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > Idioma: Español (es)
 
 `@mission-platform/phone-number` es una reimplementación enfocada del núcleo de
-google [número de teléfono libre](https://github.com/google/libphonenumber), escrito en
-[Guión de ensamblaje](https://www.assemblyscript.org/) y compilado en **WebAssembly**. Analiza, valida, clasifica y
+Google [libphonenumber](https://github.com/google/libphonenumber), escrito en
+[AssemblyScript](https://www.assemblyscript.org/) y compilado en **WebAssembly**. Analiza, valida, clasifica y
 formatea números de teléfono internacionales y está empaquetado como un módulo ES autónomo sin dependencias de tiempo de ejecución.
 
 ## Arquitectura
@@ -80,7 +80,7 @@ util.isValidNumber('05001234567', 'GB'); //    false (unassigned range)
 ## Regiones y alcance admitidos
 
 libphonenumber ascendente envía metadatos exhaustivos generados por máquinas para cada región de la UIT. Este puerto codifica un curado,
-subconjunto verificado manualmente (**US, CA, GB, FR, DE, AU, IN, JP, BR, CN, RU**) e implementa la validación sin regularidad.
+subconjunto verificado manualmente (**US, CA, GB, FR, DE, AU, IN, JP, BR, CN, RU**) e implementa validación sin regularidad
 expresiones (no disponibles en AssemblyScript), utilizando reglas de longitud y dígitos iniciales. Usos de formato por región
 agrupación de dígitos y es una aproximación plausible en lugar de una paridad byte por byte con el flujo ascendente. Se pueden agregar nuevas regiones
 ampliando `assembly/metadata.ts` y reconstruyendo el wasm.

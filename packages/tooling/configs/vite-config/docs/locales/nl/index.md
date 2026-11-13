@@ -5,7 +5,7 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > packages/tooling/configs/vite-config/docs/index.md: [packages/tooling/configs/vite-config/docs/index.md](../../index.md)
 > Taal: Nederlands (nl)
 
-Gedeeld Vite En Vitest configuratiehelpers voor Mission Platform-pakketten en
+Gedeelde Vite- en Vitest-configuratiehelpers voor Mission Platform-pakketten en
 toepassingen.
 
 ## Installeren en gebruiken
@@ -15,12 +15,12 @@ pnpm add --save-dev @mission-platform/vite-config
 ```
 
 Gebruik `defineLibraryConfig` voor pakketten, `defineAppConfig` voor toepassingen, en
-`defineVitestConfig` van de `/vitest` subpad. Framework-applicaties zouden dat moeten doen
-selecteer er een `defineFrameworkAppConfig` voorwaarde en importeer vervolgens gedeelde pakketten
+`defineVitestConfig` uit het subpad `/vitest`. Framework-applicaties zouden dat moeten doen
+selecteer één `defineFrameworkAppConfig`-voorwaarde en importeer vervolgens gedeelde pakketten
 via hun kale pakketspecificaties.
 
 ## Bijdragen
 
-Loop `pnpm --filter @mission-platform/vite-config lint` en formaatcontroles. Houd
-de standaardinstellingen van de helper zijn herbruikbaar en behouden het gedeelde Vite, PostCSS, en
+Voer `pnpm --filter @mission-platform/vite-config lint` en formaatcontroles uit. Houd
+de standaardinstellingen van de helper zijn herbruikbaar en behouden de gedeelde Vite, PostCSS en
 externalisatiegedrag beschreven in het pakket README.

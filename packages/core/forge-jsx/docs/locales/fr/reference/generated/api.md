@@ -9,896 +9,6 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 
 Généré à partir des déclarations de source publique dans `@mission-platform/forge-jsx`.
 
-## `src/adapters/react`
-
-### Contenu HTML
-
-**Genre :** fonction
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement;
-```
-
-Rendu du HTML approuvé dans un hôte React à l'aide de `dangerouslySetInnerHTML`.
-
-#### Paramètres
-
-| Nom        | Tapez                      | Descriptif |
-| ---------- | -------------------------- | ---------- |
-| propriétés | Propriétés de contenu HTML |            |
-
-### rendreVersRéagir
-
-**Genre :** fonction
-
-```typescript
-function renderToReact(element: MpElement): ReactElement;
-```
-
-Rendre une arborescence {@link MpElement} neutre dans un élément React.
-
-#### Paramètres
-
-| Nom     | Tapez     | Descriptif |
-| ------- | --------- | ---------- |
-| élément | MpÉlément |            |
-
-### Téléportation
-
-**Genre :** fonction
-
-```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
-```
-
-La version React de la primitive neutre `<Teleport>` — une fine enveloppe autour
-{@link createPortal} de `react-dom`. `@mission-platform/vite-plugin-forge`
-réécrit le `import { Teleport } from '@mission-platform/forge-jsx'` d'un composant en
-importer ce composant, donc un `<Teleport to="body">…</Teleport>` en écriture unique
-se compile sur un portail natif React.
-
-Lorsque `to` est déjà un **élément** du DOM (le cas client courant — par exemple le
-résolu `<dialog>` ou `document.body` remis par un appelant), les enfants sont
-portails dedans **de manière synchrone pendant le rendu**, afin qu'ils se montent de la même manière
-commit qui les a ouverts. Cela correspond à `<Teleport>` de Vue (qui résout son
-cible de manière synchrone) et est requis pour l'exactitude : un panneau à portique qui
-se promeut dans la couche supérieure du navigateur avec l'API Popover
-(`popover="manual"` + `showPopover()` sur la trame suivante) doit déjà être
-monté lorsque cette image s'exécute - différer le portail par un rendu perd cela
-course, en quittant le panneau `display:none` (la valeur par défaut de UA pour un
-popover) et donc invisible.
-
-Seule une **chaîne** de sélecteur nécessite un `document.querySelector` post-montage, qui
-maintient le composant SSR-safe : pendant le rendu du serveur - et le premier client
-rendu pour une cible de chaîne - il ne restitue rien (ou, lorsque `disabled`, le
-enfants en place), et `createPortal` ne s'exécute qu'une fois qu'une cible DOM existe.
-
-#### Paramètres
-
-| Nom                                        | Tapez                       | Descriptif |
-| ------------------------------------------ | --------------------------- | ---------- |
-| { à = 'corps', désactivé = faux, enfants } | Propriétés de téléportation |            |
-
-### Propriétés de téléportation
-
-**Genre :** interface
-
-```typescript
-export interface TeleportProperties
-```
-
-Propriétés acceptées par le composant React {@link Teleport}.
-
-### toReactComponent
-
-**Genre :** fonction
-
-```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
-```
-
-Enveloppez un composant neutre en tant que composant fonctionnel React de première classe, prêt à
-être rendu par `react-dom` ou composé à l'intérieur d'autres composants React.
-
-#### Paramètres
-
-| Nom         | Tapez          | Descriptif |
-| ----------- | -------------- | ---------- |
-| composant   | MpComponent<P> |            |
-| displayName | chaîne         |            |
-
-### Transition
-
-**Genre :** fonction
-
-```typescript
-function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
-```
-
-La version React de la primitive neutre `<Transition>` — une petite classe CSS
-pilote qui reflète le `<Transition>` intégré de Vue. Il anime un seul
-enfant rendu conditionnellement en basculant `<name>-enter-*` / `<name>-leave-*`
-classes (donc la même feuille de style pilote les deux frameworks) et garde l'enfant
-monté à travers son animation de congé. `@mission-platform/vite-plugin-forge`
-réécrit le `import { Transition } from '@mission-platform/forge-jsx'` d'un composant en
-importez ce composant sur la cible React.
-
-C'est SSR-safe : le rendu du serveur (et le premier rendu du client) restitue l'enfant
-en place - correspondant à la sortie SSR de Vue - et l'animation ne s'exécute qu'après.
-
-#### Paramètres
-
-| Nom                                                                 | Tapez                    | Descriptif |
-| ------------------------------------------------------------------- | ------------------------ | ---------- |
-| { nom = 'v', apparaître = faux, durée, enfants, ... remplacements } | Propriétés de transition |            |
-
-### Groupe de transition
-
-**Genre :** fonction
-
-```typescript
-function TransitionGroup({
-  name = 'v',
-  tag,
-  moveClass,
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionGroupProperties): ReactNode;
-```
-
-La version React de la primitive neutre `<TransitionGroup>` — une classe CSS
-pilote qui reflète le `<TransitionGroup>` intégré de Vue. Il anime une clé **
-liste** : les enfants entrants obtiennent `<name>-enter-*`, laissant les enfants rester montés
-à travers leur animation `<name>-leave-*`, et les enfants survivants qui changent
-position sont animées par FLIP avec `<name>-move` (la même feuille de style pilote les deux
-cadres). `@mission-platform/vite-plugin-forge` réécrit le contenu d'un composant
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` pour l'importer sur le
-Cible React.
-
-Il est sécurisé par SSR : le rendu du serveur (et le premier rendu du client) restitue le
-enfants en place - correspondant à la sortie SSR de Vue - et l'animation ne s'exécute que
-après. Les classes de transition sont appliquées au DOM node de chaque enfant, donc —
-comme le seul {@link Transition} — ils prennent effet sur les enfants des éléments DOM ;
-un enfant qui est lui-même un composant (sans transfert de référence) se monte/démonte toujours
-correctement mais ne reçoit aucune classe (correspondant à la ligne de base neutre SSR-in-place).
-
-#### Paramètres
-
-| Nom                                                                               | Tapez                              | Descriptif |
-| --------------------------------------------------------------------------------- | ---------------------------------- | ---------- |
-| { nom = 'v', tag, moveClass, apparaît = faux, durée, enfants, ... remplacements } | Propriétés du groupe de transition |            |
-
-### Propriétés du groupe de transition
-
-**Genre :** interface
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-Propriétés acceptées par le composant React {@link TransitionGroup}.
-
-### Propriétés de transition
-
-**Genre :** interface
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-Propriétés acceptées par le composant React {@link Transition}.
-
-## `src/adapters/solid`
-
-### Contenu HTML
-
-**Genre :** fonction
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element;
-```
-
-La version Solid de la primitive neutre `<HtmlContent>`. Solid
-La propriété `innerHTML` est l’opération de contenu brut basée sur le remplacement natif.
-
-#### Paramètres
-
-| Nom        | Tapez                      | Descriptif |
-| ---------- | -------------------------- | ---------- |
-| propriétés | Propriétés de contenu HTML |            |
-
-### Téléportation
-
-**Genre :** fonction
-
-```typescript
-function Teleport(properties: TeleportProperties): JSX.Element;
-```
-
-La version Solid de la primitive neutre `<Teleport>` — une fine enveloppe autour
-Le {@link Portal} de Solid. `@mission-platform/vite-plugin-forge` réécrit un
-`import { Teleport } from '@mission-platform/forge-jsx'` du composant pour l'importer
-composant, donc un `<Teleport to="body">…</Teleport>` à écriture unique est compilé en un
-portail natif Solid.
-
-La cible du portail est résolue sur le client afin que le composant soit sécurisé par SSR :
-pendant le rendu du serveur - et avant qu'une cible DOM n'existe - il restitue
-rien (ou, lorsque `disabled`, les enfants en place), et {@link Portal} uniquement
-se monte une fois qu'une cible réelle est disponible.
-
-#### Paramètres
-
-| Nom        | Tapez                       | Descriptif |
-| ---------- | --------------------------- | ---------- |
-| propriétés | Propriétés de téléportation |            |
-
-### Propriétés de téléportation
-
-**Genre :** interface
-
-```typescript
-export interface TeleportProperties
-```
-
-Propriétés acceptées par le composant Solid {@link Teleport}.
-
-### Transition
-
-**Genre :** fonction
-
-```typescript
-function Transition(properties: TransitionProperties): JSX.Element;
-```
-
-La version Solid de la primitive neutre `<Transition>`. Un minimum correct
-implémentation qui rend l'enfant **en place** — correspondant au React
-le chemin SSR / parité de l'adaptateur et la ligne de base d'exécution neutre - donc
-vérification du type des composants à écriture unique et montage sans faire appel à un tiers
-Bibliothèque de transition Solid. L’animation d’entrée/sortie de classe peut être superposée ultérieurement ;
-la surface de l'hélice correspond déjà à Vue/React (`name`, `appear`, `duration` et
-la classe par phase remplace).
-
-`@mission-platform/vite-plugin-forge` réécrit le contenu d'un composant
-`import { Transition } from '@mission-platform/forge-jsx'` pour l'importer sur le
-Cible Solid.
-
-#### Paramètres
-
-| Nom        | Tapez                    | Descriptif |
-| ---------- | ------------------------ | ---------- |
-| propriétés | Propriétés de transition |            |
-
-### Groupe de transition
-
-**Genre :** fonction
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
-```
-
-La version Solid de la primitive neutre `<TransitionGroup>`. Comme
-{@link Transition}, il s'agit d'une implémentation minimale correcte qui restitue le
-enfants **en place** (ligne de base SSR/parité d'adaptateur de l'adaptateur React) donc
-vérification du type des composants Solid générée sans transition de liste tierce
-bibliothèque. La surface de l'hélice correspond à Vue/React (`name`, `tag`, `moveClass`,
-`appear`, `duration` et remplacements de classe par phase) pour l'écriture unique
-parité.
-
-`@mission-platform/vite-plugin-forge` réécrit le contenu d'un composant
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` pour l'importer sur le
-Cible Solid.
-
-#### Paramètres
-
-| Nom        | Tapez                              | Descriptif |
-| ---------- | ---------------------------------- | ---------- |
-| propriétés | Propriétés du groupe de transition |            |
-
-### Propriétés du groupe de transition
-
-**Genre :** interface
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-Propriétés acceptées par le composant Solid {@link TransitionGroup}.
-
-### Propriétés de transition
-
-**Genre :** interface
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-Propriétés acceptées par le composant Solid {@link Transition}.
-
-## `src/adapters/svelte`
-
-### Contenu HTML
-
-**Genre :** fonction
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet;
-```
-
-Implémentation du contenu brut de l'adaptateur Svelte. `createRawSnippet` est le
-forme d'exécution de l'opération `{@html}` de Svelte et son rappel de configuration préserve
-références d'hôte et transfert d'événements pour une utilisation manuscrite de l'adaptateur.
-
-#### Paramètres
-
-| Nom        | Tapez                      | Descriptif |
-| ---------- | -------------------------- | ---------- |
-| propriétés | Propriétés de contenu HTML |            |
-
-### Téléportation
-
-**Genre :** fonction
-
-```typescript
-function Teleport(properties: TeleportProperties): Snippet;
-```
-
-Mettez en place un extrait enfant Forge pour Svelte SSR et la parité client.
-
-#### Paramètres
-
-| Nom        | Tapez                       | Descriptif |
-| ---------- | --------------------------- | ---------- |
-| propriétés | Propriétés de téléportation |            |
-
-### Propriétés de téléportation
-
-**Genre :** interface
-
-```typescript
-export interface TeleportProperties
-```
-
-Les propriétés acceptées par la primitive Svelte {@link Teleport}.
-
-### Transition
-
-**Genre :** fonction
-
-```typescript
-function Transition(properties: TransitionProperties): Snippet;
-```
-
-Rendre un seul enfant de transition ; l'animation est fournie par le balisage natif Svelte.
-
-#### Paramètres
-
-| Nom        | Tapez                    | Descriptif |
-| ---------- | ------------------------ | ---------- |
-| propriétés | Propriétés de transition |            |
-
-### Groupe de transition
-
-**Genre :** fonction
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet;
-```
-
-Rendre les enfants du groupe de transition en place pour les blocs à clé Svelte natifs.
-
-#### Paramètres
-
-| Nom        | Tapez                              | Descriptif |
-| ---------- | ---------------------------------- | ---------- |
-| propriétés | Propriétés du groupe de transition |            |
-
-### Propriétés du groupe de transition
-
-**Genre :** interface
-
-```typescript
-export interface TransitionGroupProperties extends TransitionProperties
-```
-
-Propriétés acceptées par la primitive Svelte {@link TransitionGroup}.
-
-### Propriétés de transition
-
-**Genre :** interface
-
-```typescript
-export interface TransitionProperties
-```
-
-Propriétés acceptées par la primitive Svelte {@link Transition}.
-
-## `src/adapters/vue`
-
-### créerContext
-
-**Genre :** fonction
-
-```typescript
-function createContext(defaultValue: T): VueContext<T>;
-```
-
-La version Vue de la primitive neutre `createContext`. Renvoie un handle dont
-`Provider` est un composant réel qui `provide()` remplace son `value` par défaut
-emplacement, donc un `<Ctx.Provider value={…}><Slot /></Ctx.Provider>` en écriture unique
-compile en Vue natif. `@mission-platform/vite-plugin-forge` réécrit un
-`import { createContext, useContext } from '@mission-platform/forge-jsx'` du composant
-pour les importer sur la cible Vue.
-
-#### Paramètres
-
-| Nom               | Tapez | Descriptif |
-| ----------------- | ----- | ---------- |
-| valeur par défaut | T     |            |
-
-### Contenu HTML
-
-**Genre :** fonction
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode;
-```
-
-Rendu du HTML approuvé dans un hôte Vue à l'aide de sa liaison de fonction de rendu `innerHTML`.
-
-#### Paramètres
-
-| Nom        | Tapez                      | Descriptif |
-| ---------- | -------------------------- | ---------- |
-| propriétés | Propriétés de contenu HTML |            |
-
-### renduVersVue
-
-**Genre :** fonction
-
-```typescript
-function renderToVue(element: MpElement): VNode;
-```
-
-Rendre une arborescence {@link MpElement} neutre dans un Vue `VNode`.
-
-#### Paramètres
-
-| Nom     | Tapez     | Descriptif |
-| ------- | --------- | ---------- |
-| élément | MpÉlément |            |
-
-### versVueComponent
-
-**Genre :** fonction
-
-```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
-```
-
-Enveloppez un composant neutre en tant que composant fonctionnel Vue. Attributs entrants
-deviennent des accessoires neutres, l'emplacement par défaut (le cas échéant) est transmis en tant qu'accessoire neutre.
-`children`, et chaque emplacement nommé est transmis sous son nom (en tant qu'emplacement de portée
-fonction), donc un `<Slot name="…" />` dans le composant se résout et
-le résultat peut être utilisé comme n'importe quel autre composant Vue.
-
-#### Paramètres
-
-| Nom       | Tapez          | Descriptif |
-| --------- | -------------- | ---------- |
-| composant | MpComponent<P> |            |
-| nom       | chaîne         |            |
-
-### utiliserContext
-
-**Genre :** fonction
-
-```typescript
-function useContext(context: VueContext<T>): T;
-```
-
-La version Vue de la primitive neutre `useContext` — une fine enveloppe autour
-`inject()` qui revient à la valeur par défaut du contexte en l'absence de
-Le fournisseur en a fourni un.
-
-#### Paramètres
-
-| Nom      | Tapez         | Descriptif |
-| -------- | ------------- | ---------- |
-| contexte | VueContext<T> |            |
-
-### VueContext
-
-**Genre :** interface
-
-```typescript
-export interface VueContext<T>
-```
-
-Un handle de contexte Vue : un `Provider` soutenu par `provide()` plus la clé `inject()`.
-
-## `src/adapters/web-components`
-
-### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
-
-**Genre :** constante
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
-```
-
-Les composants internes sont inoffensifs et dépendent de leurs capacités ; l'association sous forme d'adhésion reste facultative.
-
-### DEFAULT_WEBCOMPONENTS_SHADOW_POLICY
-
-**Genre :** constante
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
-```
-
-Valeurs de compatibilité par défaut utilisées lorsqu'une classe générée ne remplace pas la stratégie.
-
-### DomTemplateResult
-
-**Genre :** classe
-
-```typescript
-export class DomTemplateResult
-```
-
-Un résultat généré directement par DOM avec une identité de définition stable.
-
-### élément dynamique
-
-**Genre :** fonction
-
-```typescript
-function dynamicElement(
-  tag: unknown,
-  properties: Readonly<Record<string, unknown>>,
-  ...children: readonly unknown[]
-): DynamicElementResult;
-```
-
-Créez un élément Web-Components natif dont la balise est sélectionnée au moment de l'exécution.
-
-#### Paramètres
-
-| Nom        | Tapez                                  | Descriptif |
-| ---------- | -------------------------------------- | ---------- |
-| étiquette  | inconnu                                |            |
-| propriétés | Lecture seule<Record<string, unknown>> |            |
-| enfants    | lecture seule inconnu[]                |            |
-
-### DynamicElementResult
-
-**Genre :** classe
-
-```typescript
-export class DynamicElementResult
-```
-
-Un élément sélectionné au moment de l'exécution et ses enfants pour une balise JSX calculée.
-
-### ForgeÉlément
-
-**Genre :** classe
-
-```typescript
-export class ForgeElement extends ForgeHTMLElement
-```
-
-Classe de base native `HTMLElement` pour les éléments personnalisés générés — un
-remplaçant sans dépendance pour `LitElement`.
-
-Une sous-classe déclare sa surface réactive via `static properties` (en miroir
-Lit) : chaque clé devient un prototype d'accesseur dont le setter programme un
-re-rendu de la microtâche, et chaque clé non-`state` observe sa minuscule
-attribut. `render()` renvoie le modèle {@link html}`…` de l'élément, rendu
-dans une racine fantôme ouverte. Les commits réactifs mettent à jour le modèle existant
-progressivement : les listes de position réutilisent les entrées compatibles et les sorties de slot
-conservent leurs nœuds de projection natifs tandis que les pièces non liées changent.
-
-### ForgeElementConstructor
-
-**Genre :** interface
-
-```typescript
-export interface ForgeElementConstructor
-```
-
-Le contrat de feuille de style statique implémenté par les éléments Forge générés.
-
-Les URL sont conservées sur la classe d'éléments plutôt que dans le document, donc une ombre
-root peut charger les side-cars compilés que les styles au niveau du document ne peuvent pas atteindre.
-
-### ForgeElementHostConstructor
-
-**Genre :** type
-
-```typescript
-export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
-```
-
-Une classe d'éléments natifs constructibles acceptée par {@link ForgeElementMixin}.
-
-### ForgeElementMixin
-
-**Genre :** fonction
-
-```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
-```
-
-Ajoutez le runtime indépendant de l'hôte de Forge à un constructeur d'éléments natif.
-Les éléments intégrés personnalisés ne peuvent pas étendre à la fois `ForgeElement` et `HTMLDivElement` ;
-ce mixin copie le comportement tout en préservant la chaîne de prototypes native.
-
-#### Paramètres
-
-| Nom   | Tapez | Descriptif |
-| ----- | ----- | ---------- |
-| Socle | Base  |            |
-
-### ForgeSlotMarker
-
-**Genre :** interface
-
-```typescript
-export interface ForgeSlotMarker extends HTMLElement
-```
-
-Marqueur d'exécution émis par le compilateur Web-Components pour les slots ambigus.
-
-### hasSlotContent
-
-**Genre :** fonction
-
-```typescript
-function hasSlotContent(host: Element, name?: string): boolean;
-```
-
-Si `host` a reçu du contenu pour l'un de ses emplacements - la cible native
-remplacement du marqueur neutre `hasSlot('x')`.
-
-`hasSlot` est un vocabulaire au moment de la compilation : Vue le réduit à `!!slots.x`, React à
-`properties.x != null`, et un élément personnalisé n'en a aucun, donc la vérification est effectuée
-contre le DOM à la place. Un élément généré se transforme en une **ombre ouverte
-root**, ce qui signifie que le contenu projeté par un consommateur reste dans le répertoire de l'hôte.
-**light** DOM comme ses enfants — un emplacement nommé est rempli par un enfant portant
-`slot="<name>"`, et l'emplacement par défaut de tout enfant qui n'en porte pas. Seulement
-les enfants directs sont pris en compte, exactement comme l'attribution des emplacements elle-même, et un
-Le texte contenant uniquement des espaces node ne compte pas comme contenu.
-
-Les enfants sont parcourus plutôt que interrogés avec `[slot="…"]` donc un nom d'emplacement
-n'a pas besoin d'échappement CSS, et donc d'un enfant texte nu (auquel aucun sélecteur ne peut correspondre)
-remplit toujours l'emplacement par défaut.
-
-Notez qu'un slot n'est observable qu'une fois que les enfants de l'hôte existent : pendant le
-mise à jour par l'analyseur d'un élément écrit dans le HTML initial, `connectedCallback`
-s'exécute avant d'être attaché. Le contenu projeté ultérieurement restitue l'élément
-par le chemin réactif habituel.
-
-#### Paramètres
-
-| Nom  | Tapez   | Descriptif |
-| ---- | ------- | ---------- |
-| hôte | Élément |            |
-| nom  | chaîne  |            |
-
-### HTML
-
-**Genre :** fonction
-
-```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
-```
-
-Fabrique de modèles balisés. Capture les chaînes statiques et dynamiques du site d'appel
-valeurs dans un {@link TemplateResult} pour que {@link render} soit réalisé dans DOM.
-
-#### Paramètres
-
-| Nom     | Tapez                   | Descriptif |
-| ------- | ----------------------- | ---------- |
-| cordes  | ModèleStringsArray      |            |
-| valeurs | lecture seule inconnu[] |            |
-
-### Contenu HTML
-
-**Genre :** fonction
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
-```
-
-Créez un résultat de contenu brut Web-Components natif sans échapper à `html`.
-
-#### Paramètres
-
-| Nom        | Tapez                      | Descriptif |
-| ---------- | -------------------------- | ---------- |
-| propriétés | Propriétés de contenu HTML |            |
-
-### Propriétés de contenu HTML
-
-**Genre :** interface
-
-```typescript
-export interface HtmlContentProperties
-```
-
-Propriétés acceptées par l'assistant natif Web-Components HtmlContent.
-
-### RésultatHtmlContent
-
-**Genre :** classe
-
-```typescript
-export class HtmlContentResult
-```
-
-Un hôte natif et un balisage enfant brut de confiance, rendu par {@link render}.
-
-### rien
-
-**Genre :** constante
-
-```typescript
-export const nothing: unique symbol;
-```
-
-Sentinel rendu comme "aucune valeur" : en position enfant, il ne produit rien, en position enfant
-position de l'attribut, il supprime l'attribut - l'équivalent natif de
-`nothing` de lit-html.
-
-### PropriétéDéclaration
-
-**Genre :** interface
-
-```typescript
-export interface PropertyDeclaration
-```
-
-Une déclaration de propriété réactive sur une sous-classe {@link ForgeElement}.
-
-### BrutHtml
-
-**Genre :** classe
-
-```typescript
-export class RawHtml
-```
-
-Une valeur HTML brute approuvée utilisée par l'adaptateur Web-Components natif.
-
-### rendre
-
-**Genre :** fonction
-
-```typescript
-function render(
-  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
-  container: ParentNode,
-): void;
-```
-
-Rendu un résultat dans `container` à l'aide d'une instance de modèle persistante. Statique
-Le DOM et l'état du formulaire natif sont conservés tandis que seules les plages de liaison modifiées sont
-mis à jour ; les types de modèles incompatibles remplacent le contenu appartenant au moteur de rendu.
-
-#### Paramètres
-
-| Nom       | Tapez                                                                            | Descriptif |
-| --------- | -------------------------------------------------------------------------------- | ---------- |
-| résultat  | ModèleRésultat \| DomTemplateResult\| DynamicElementResult\| HtmlContentRésultat |            |
-| conteneur | Nœud Parent                                                                      |            |
-
-### résoudreForgeSlotMarkers
-
-**Genre :** fonction
-
-```typescript
-function resolveForgeSlotMarkers(
-  root: ParentNode,
-  owner: ForgeElement,
-  sourceChildren: readonly Node[],
-  destinationRoot: ShadowRoot,
-): void;
-```
-
-Résolvez les marqueurs d’emplacement d’exécution émis par le compilateur dans un fragment de rendu.
-
-Les marqueurs sans propriété de contenu deviennent des emplacements natifs, conservant le
-la sémantique de secours et d'affectation du navigateur, à moins que le même emplacement ne soit
-répété dans l'arbre de rendu. Les exutoires répétés matérialisent des clones du
-enfants light-DOM originaux afin que chaque point de vente reçoive un contenu déterministe.
-Les marqueurs de contenu sont abaissés aux emplacements natifs lorsque leur valeur est celle du propriétaire
-Les enfants light-DOM d'origine et la prise ne sont pas répétés ; sinon leur
-la valeur est matérialisée en dernier recours.
-
-#### Paramètres
-
-| Nom             | Tapez                | Descriptif |
-| --------------- | -------------------- | ---------- |
-| racine          | Nœud Parent          |            |
-| propriétaire    | ForgeElement         |            |
-| sourceEnfants   | lecture seule Node[] |            |
-| destinationRoot | RacineOmbre          |            |
-
-### Résultat du modèle
-
-**Genre :** classe
-
-```typescript
-export class TemplateResult
-```
-
-Un résultat `html\`…\`` analysé : les chaînes statiques plus les valeurs interpolées.
-
-### dangereuxHtml
-
-**Genre :** fonction
-
-```typescript
-function unsafeHtml(value: string): RawHtml;
-```
-
-Marquez une chaîne comme balisage enfant approuvé pour le chemin natif des composants Web.
-
-#### Paramètres
-
-| Nom    | Tapez  | Descriptif |
-| ------ | ------ | ---------- |
-| valeur | chaîne |            |
-
-### ID d'utilisation
-
-**Genre :** fonction
-
-```typescript
-function useId(): string;
-```
-
-Remplacement de la cible native par `useId` de React.
-
-Le vocabulaire neutre propose `useId()` pour les identifiants qui lient un contrôle à son
-`<label for>` / `aria-describedby` ; React le mappe à ses propres `useId` et Solid
-à `createUniqueId`, mais un élément personnalisé n'a pas de framework d'exécution à emprunter
-un de - alors ça y est.
-
-Un compteur au niveau du module est ici suffisant, et volontairement plus simple qu'un
-générateur aléatoire/haché : un identifiant doit seulement être unique **au sein d'un document**,
-et le compilateur extrait un `const x = useId()` de `render()` dans un
-champ d'instance, donc chaque instance d'élément l'appelle exactement une fois, puis
-conserve son identité toute sa vie. Appels successifs donc jamais
-entrent en collision, aucune dépendance (nanoïde, `crypto.randomUUID`) n'est nécessaire et le
-le résultat est stable et déboguable (`forge-1`, `forge-2`, …). La valeur est une
-HTML `id` valide et un identifiant CSS valide, afin qu'il puisse être utilisé dans un sélecteur
-sans évasion.
-
-### WebComponentsInternalsPolicy
-
-**Genre :** interface
-
-```typescript
-export interface WebComponentsInternalsPolicy
-```
-
-Demandes de fonctionnalités pour l'API {@link ElementInternals} de la plateforme.
-
-### WebComponentsShadowPolicy
-
-**Genre :** interface
-
-```typescript
-export interface WebComponentsShadowPolicy
-```
-
-Options typées shadow-root acceptées par les éléments Forge générés.
-
 ## `src/runtime/class-names`
 
 ### Noms de classe
@@ -915,9 +25,9 @@ la première occurrence gagne). Renvoie une chaîne vide lorsque rien n'est acti
 
 #### Paramètres
 
-| Nom     | Tapez                      | Descriptif |
-| ------- | -------------------------- | ---------- |
-| valeurs | lecture seule ClassValue[] |            |
+| Nom | Tapez | Descriptif |
+| ------ | --------------------- | ----------- |
+| valeurs | lecture seule ClassValue[] |             |
 
 ### Valeur de classe
 
@@ -939,15 +49,15 @@ Une valeur unique acceptée par {@link classNames}.
 function createContext(defaultValue: T): MpContext<T>;
 ```
 
-Créez un contexte indépendant du framework avec la valeur par défaut donnée. Renvoie un
+Créez un contexte neutre en termes de framework avec la valeur par défaut donnée. Renvoie un
 handle portant un élément `Provider` et la valeur par défaut ; lire la valeur actuelle
 avec {@link useContext}.
 
 #### Paramètres
 
-| Nom               | Tapez | Descriptif |
-| ----------------- | ----- | ---------- |
-| valeur par défaut | T     |            |
+| Nom | Tapez | Descriptif |
+| ------------ | ---- | ----------- |
+| valeur par défaut | T |             |
 
 ### isContextProvider
 
@@ -961,9 +71,9 @@ Indique si une valeur est une fonction contextuelle {@link MpContext.Provider}.
 
 #### Paramètres
 
-| Nom    | Tapez   | Descriptif |
-| ------ | ------- | ---------- |
-| valeur | inconnu |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------- | ----------- |
+| valeur | inconnu |             |
 
 ### MP_CONTEXT
 
@@ -1019,9 +129,9 @@ Lire la valeur actuelle d'un contexte : l'englobant le plus proche
 
 #### Paramètres
 
-| Nom      | Tapez        | Descriptif |
-| -------- | ------------ | ---------- |
-| contexte | MpContext<T> |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------ | ----------- |
+| contexte | MpContext<T> |             |
 
 ## `src/runtime/dynamic`
 
@@ -1081,11 +191,11 @@ soit sous forme d'arguments variadiques de fin (la transformation classique), so
 
 #### Paramètres
 
-| Nom        | Tapez                                            | Descriptif |
-| ---------- | ------------------------------------------------ | ---------- |
-| taper      | MpElementType \| ((propriétés : P) => MpElement) |            |
-| propriétés | P\| nul                                          |            |
-| enfants    | MpEnfant[]                                       |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ----------------------------------------------- | ----------- |
+| tapez | MpElementType \| ((propriétés : P) => MpElement) |             |
+| propriétés | P\| nul |             |
+| enfants | MpEnfant[] |             |
 
 ## `src/runtime/hooks`
 
@@ -1104,7 +214,7 @@ Une liste de dépendances contrôlant quand un effet/mémo est réexécuté.
 **Genre :** composant
 
 ```typescript
-export type MpEffectCallback = () => void | MpEffectCleanup;
+export type MpEffectCallback = () => MpEffectCleanup | void;
 ```
 
 Le rappel d'effet exécuté par {@link useEffect}.
@@ -1134,7 +244,7 @@ Un conteneur de référence mutable, reflétant le `MutableRefObject` de React.
 **Genre :** composant
 
 ```typescript
-export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
+export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 ```
 
 Mettez à jour un élément d'état, soit vers une nouvelle valeur, soit via une fonction de mise à jour.
@@ -1151,10 +261,10 @@ Neutre `useCallback`. Renvoie le rappel inchangé pour le rendu.
 
 #### Paramètres
 
-| Nom          | Tapez            | Descriptif |
-| ------------ | ---------------- | ---------- |
-| rappel       | T                |            |
-| _dépendances | MpDependencyList |            |
+| Nom | Tapez | Descriptif |
+| ------------- | ---------------- | ----------- |
+| rappel | T |             |
+| _dépendances | MpDependencyList |             |
 
 ### utiliserEffet
 
@@ -1169,10 +279,10 @@ ne pas s'exécuter pendant un seul rendu SSR/adaptateur.
 
 #### Paramètres
 
-| Nom          | Tapez            | Descriptif |
-| ------------ | ---------------- | ---------- |
-| _effet       | MpEffectCallback |            |
-| _dépendances | MpDependencyList |            |
+| Nom | Tapez | Descriptif |
+| ------------- | ---------------- | ----------- |
+| _effet | MpEffectCallback |             |
+| _dépendances | MpDependencyList |             |
 
 ### ID d'utilisation
 
@@ -1202,17 +312,17 @@ Neutre `useMemo`. Calcule la valeur une fois pour le rendu.
 
 #### Paramètres
 
-| Nom          | Tapez            | Descriptif |
-| ------------ | ---------------- | ---------- |
-| usine        | () => T          |            |
-| _dépendances | MpDependencyList |            |
+| Nom | Tapez | Descriptif |
+| ------------- | ---------------- | ----------- |
+| usine | () => T |             |
+| _dépendances | MpDependencyList |             |
 
 ### utiliserRef
 
 **Genre :** fonction
 
 ```typescript
-function useRef(initial: T): MpRef<T>;
+function useRef(initial?: T): MpRef<T>;
 ```
 
 Neutre `useRef`. Renvoie un nouveau conteneur `{ current }` pour le single
@@ -1220,16 +330,16 @@ rendre; les environnements d'exécution du framework le préservent à travers l
 
 #### Paramètres
 
-| Nom      | Tapez | Descriptif |
-| -------- | ----- | ---------- |
-| initiale | T     |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---- | ----------- |
+| initiale | T |             |
 
 ### utiliserÉtat
 
 **Genre :** fonction
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>];
+function useState(initial?: T | (() => T)): [T, MpSetState<T>];
 ```
 
 Neutre `useState`. L'implémentation de base renvoie la valeur initiale et
@@ -1238,9 +348,9 @@ le comportement correct pour un seul rendu SSR/adaptateur.
 
 #### Paramètres
 
-| Nom      | Tapez         | Descriptif |
-| -------- | ------------- | ---------- |
-| initiale | T\| (() => T) |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| initiale | T\| (() => T) |             |
 
 ## `src/runtime/html-content`
 
@@ -1273,6 +383,29 @@ sac plutôt que d’énumérer toute la surface des attributs DOM.
 
 ## `src/runtime/slots`
 
+### collectSlottedChildren
+
+**Genre :** fonction
+
+```typescript
+function collectSlottedChildren(children: readonly MpChild[]): SlottedChildren;
+```
+
+Partitionnez les enfants d'un composant parent par leur marqueur `slot="…"` afin qu'un
+le composant à écriture unique peut **transmettre** le contenu dans l'emplacement nommé d'un composant enfant
+(`<ForgeDropdown><button slot="trigger" />…</ForgeDropdown>`). Enfants portant
+une propriété `slot` sont regroupées sous ce nom (avec le marqueur supprimé, donc
+le contenu résolu n'émet jamais d'attribut `slot` parasite) ; tout le reste
+reste dans {@link SlottedChildren.defaultChildren}. Les adaptateurs plient le nom
+groupes dans les accessoires de l'enfant, reflétant exactement la façon dont le compilateur achemine le
+mêmes marqueurs `slot="…"` à Vue `<template #name>` / un accessoire React `name`.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | ------------------ | ----------- |
+| enfants | lecture seule MpChild[] |             |
+
 ### aSlot
 
 **Genre :** fonction
@@ -1304,16 +437,16 @@ lire la portée de l'emplacement du composant actuel.
 
 #### Paramètres
 
-| Nom | Tapez  | Descriptif |
-| --- | ------ | ---------- |
-| nom | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| nom | chaîne |             |
 
 ### MpRenderPropriété
 
 **Genre :** composant
 
 ```typescript
-export type MpRenderProperty<S = MpPropertyBag> = (scope: S) => MpChild | readonly MpChild[];
+export type MpRenderProperty<S = MpPropertyBag, R = MpChild | readonly MpChild[]> = (scope: S) => R;
 ```
 
 Une fonction **render-prop / scoped-slot** : étant donné la portée du slot, elle renvoie
@@ -1371,9 +504,9 @@ Poussez les accessoires du composant sur le point d'être étendu sur la portée
 
 #### Paramètres
 
-| Nom        | Tapez         | Descriptif |
-| ---------- | ------------- | ---------- |
-| propriétés | MpPropertyBag |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------- | ----------- |
+| propriétés | MpPropertyBag |             |
 
 ### résoudreSlot
 
@@ -1390,10 +523,39 @@ propriétés restantes (non-`name`) de l'élément slot.
 
 #### Paramètres
 
-| Nom        | Tapez                   | Descriptif |
-| ---------- | ----------------------- | ---------- |
-| propriétés | Propriétés MpSlot       |            |
-| repli      | lecture seule MpChild[] |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------ | ----------- |
+| propriétés | Propriétés MpSlot |             |
+| repli | lecture seule MpChild[] |             |
+
+### résoudreSlotMarkers
+
+**Genre :** fonction
+
+```typescript
+function resolveSlotMarkers(children: readonly MpChild[]): MpChild[];
+```
+
+Résolvez en profondeur chaque **marqueur** `<Slot name="…" />` dans un fichier écrit par le parent
+arbre enfant par rapport à la portée **actuelle** (parent), renvoyant un arbre de béton
+contenu. C'est ce qui permet à un composant à écriture unique de **transférer** l'un des siens
+emplacements nommés dans l'emplacement d'un composant enfant -
+`<ForgeDrawer><div slot="header"><Slot name="startHeader" /></div></ForgeDrawer>`
+- et faites-le résoudre lexicalement (par rapport au composant de transfert), exactement
+comme la sortie compilée (React capture `properties.startHeader` dans le
+le rendu du parent ; Vue transmet le slot via `<template #header>`).
+
+Les adaptateurs appellent cela sur les enfants d'un élément de composant **avant** de pousser le
+la portée de l'enfant, afin que les marqueurs voient la portée parent qui les a créés ; marqueurs
+les retours de l'enfant lui-même sont intacts (ils sont résolus plus tard, sous le
+propre portée de l'enfant). Les éléments sans emplacement sont parcourus de manière récursive, donc les marqueurs imbriqués
+(à l'intérieur d'un wrapper `slot="…"`) résolu également.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | ------------------ | ----------- |
+| enfants | lecture seule MpChild[] |             |
 
 ## `src/runtime/teleport`
 
@@ -1482,6 +644,467 @@ importer dans la transition de groupe natif de chaque framework - intégré à V
 
 ## `src/runtime/types`
 
+### CamelToKebab
+
+**Genre :** type
+
+```typescript
+export type CamelToKebab<S extends string> = S extends `$
+```
+
+Convertit un type de chaîne camelCase en kebab-case.
+
+### createAvatarContainerStyle
+
+**Genre :** fonction
+
+```typescript
+function createAvatarContainerStyle(): Record<string, string>;
+```
+
+Aucune description fournie.
+
+### createAvatarImageImgStyle
+
+**Genre :** fonction
+
+```typescript
+function createAvatarImageImgStyle(): Record<string, string>;
+```
+
+Aucune description fournie.
+
+### createAvatarInlineStyle
+
+**Genre :** fonction
+
+```typescript
+function createAvatarInlineStyle(
+  size: string = 'md',
+  shape: string = 'circle',
+  src?: string,
+  variant: string = 'primary',
+  color?: string,
+): Record<string, string>;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | ------ | ----------- |
+| taille | chaîne |             |
+| forme | chaîne |             |
+| src | chaîne |             |
+| variante | chaîne |             |
+| couleur | chaîne |             |
+
+### createAvatarStatusInlineStyle
+
+**Genre :** fonction
+
+```typescript
+function createAvatarStatusInlineStyle(size: string = 'md', status?: string): Record<string, string> | undefined;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------ | ------ | ----------- |
+| taille | chaîne |             |
+| statut | chaîne |             |
+
+### createBackgroundVideoInlineStyle
+
+**Genre :** fonction
+
+```typescript
+function createBackgroundVideoInlineStyle(minHeight: string = '24rem'): Record<string, string>;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| --------- | ------ | ----------- |
+| minHauteur | chaîne |             |
+
+### créerCodeScannerStyle
+
+**Genre :** fonction
+
+```typescript
+function createCodeScannerStyle(): Record<string, string>;
+```
+
+Aucune description fournie.
+
+### createContainerInlineStyle
+
+**Genre :** fonction
+
+```typescript
+function createContainerInlineStyle(
+  variant: string = 'responsive',
+  maxWidth: string = 'lg',
+  gutter: string = 'md',
+  center: boolean = true,
+): Record<string, string>;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | ------- | ----------- |
+| variante | chaîne |             |
+| largeurmax | chaîne |             |
+| gouttière | chaîne |             |
+| centre | booléen |             |
+
+### createCoverObjectFitStyle
+
+**Genre :** fonction
+
+```typescript
+function createCoverObjectFitStyle(): Record<string, string>;
+```
+
+Aucune description fournie.
+
+### createForgeComponentStyle
+
+**Genre :** fonction
+
+```typescript
+function createForgeComponentStyle(
+  prefix: string,
+  properties?: T,
+  style?: Record<string, string>,
+): Record<string, string> | undefined;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------- | ----------- |
+| préfixe | chaîne |             |
+| propriétés | T |             |
+| style | Enregistrement<string, string> |             |
+
+### créerForgeStyle
+
+**Genre :** fonction
+
+```typescript
+function createForgeStyle(style: T): DefinedForgeStyle<T> | undefined;
+```
+
+Créez une carte `style` neutre à partir de valeurs de propriétés personnalisées définies.
+
+Les entrées dont la valeur est `undefined` sont omises donc SCSS
+Les chaînes `var(--forge-*, <token fallback>)` restent actives. Retourne `undefined`
+lorsqu'aucun remplacement n'est présent.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ---- | ----------- |
+| style | T |             |
+
+### createGaugeInlineMath
+
+**Genre :** fonction
+
+```typescript
+function createGaugeInlineMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): {
+  clampedValue: number;
+  percentage: number;
+  displayValue: string;
+  dashOffset: number;
+};
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| valeur | numéro |             |
+| min | numéro |             |
+| maximum | numéro |             |
+
+### createGridLayoutInlineStyle
+
+**Genre :** fonction
+
+```typescript
+function createGridLayoutInlineStyle(rows: number = 1, columns: number = 1, gap: string = 'md'): Record<string, string>;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | ------ | ----------- |
+| lignes | numéro |             |
+| colonnes | numéro |             |
+| écart | chaîne |             |
+
+### créerHighlightStyle
+
+**Genre :** fonction
+
+```typescript
+function createHighlightStyle(left: string = '0%', width: string = '100%'): Record<string, string>;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| gauche | chaîne |             |
+| largeur | chaîne |             |
+
+### créerLeftPositionStyle
+
+**Genre :** fonction
+
+```typescript
+function createLeftPositionStyle(left: string = '0%'): Record<string, string>;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| gauche | chaîne |             |
+
+### créerObjectFitStyle
+
+**Genre :** fonction
+
+```typescript
+function createObjectFitStyle(fit: string = 'cover'): Record<string, string>;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| en forme | chaîne |             |
+
+### createPreviewTextStyle
+
+**Genre :** fonction
+
+```typescript
+function createPreviewTextStyle(): Record<string, string>;
+```
+
+Aucune description fournie.
+
+### createProgressBarPercent
+
+**Genre :** fonction
+
+```typescript
+function createProgressBarPercent(
+  value: number = 0,
+  max: number = 100,
+  indeterminate: boolean = false,
+): { percent: number; percentLabel: string };
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------------- | ------- | ----------- |
+| valeur | numéro |             |
+| maximum | numéro |             |
+| indéterminé | booléen |             |
+
+### createRangeInputMath
+
+**Genre :** fonction
+
+```typescript
+function createRangeInputMath(
+  modelValue: [number, number] = [0, 100],
+  min: number = 0,
+  max: number = 100,
+): {
+  minPercent: number;
+  maxPercent: number;
+  highlightLeft: string;
+  highlightWidth: string;
+  minLeft: string;
+  maxLeft: string;
+};
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------- | ----------- |
+| valeur du modèle | [numéro, numéro] |             |
+| min | numéro |             |
+| maximum | numéro |             |
+
+### createResponsiveImageInlineStyle
+
+**Genre :** fonction
+
+```typescript
+function createResponsiveImageInlineStyle(aspectRatio?: string): Record<string, string> | undefined;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----------- | ------ | ----------- |
+| rapport d'aspect | chaîne |             |
+
+### createResponsiveVideoInlineStyle
+
+**Genre :** fonction
+
+```typescript
+function createResponsiveVideoInlineStyle(
+  aspectRatio: string = '16 / 9',
+  fit: string = 'contain',
+): Record<string, string>;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----------- | ------ | ----------- |
+| rapport d'aspect | chaîne |             |
+| ajustement | chaîne |             |
+
+### createSkeletonInlineStyle
+
+**Genre :** fonction
+
+```typescript
+function createSkeletonInlineStyle(width?: string, height?: string): Record<string, string>;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------ | ------ | ----------- |
+| largeur | chaîne |             |
+| hauteur | chaîne |             |
+
+### créerSliderMath
+
+**Genre :** fonction
+
+```typescript
+function createSliderMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): { percent: number; fillWidth: string; thumbLeft: string };
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| valeur | numéro |             |
+| min | numéro |             |
+| maximum | numéro |             |
+
+### createVerticalLayoutInlineStyle
+
+**Genre :** fonction
+
+```typescript
+function createVerticalLayoutInlineStyle(gap: string = 'var(--mp-spacing-4)'): Record<string, string>;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| écart | chaîne |             |
+
+### créerWidthStyle
+
+**Genre :** fonction
+
+```typescript
+function createWidthStyle(width: string = '0%'): Record<string, string>;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| largeur | chaîne |             |
+
+### Propriétés de style CSS
+
+**Genre :** type
+
+```typescript
+export type CSSStyleProperties =
+```
+
+Objet de style CSS indépendant du framework utilisé par l'attribut JSX `style`.
+
+Les propriétés personnalisées appartenant aux composants doivent étendre ce type avec des
+Clés `--forge-*` (par exemple `CSSStyleProperties & { '--forge-button-radius'?: string | undefined }`)
+plutôt que d'introduire un dictionnaire de style non typé ou un sac `styles` non-DOM.
+
+### ForgePropertyBag
+
+**Genre :** type
+
+```typescript
+export type ForgePropertyBag<T extends Record<string, string | undefined> = Record<string, string | undefined>> =
+```
+
+Sac de remplacement de propriété permissif acceptant les clés de propriété kebab-case ou camelCase.
+
 ### Fragment
 
 **Genre :** constante
@@ -1515,9 +1138,19 @@ Limitez une valeur arbitraire à un {@link MpElement}.
 
 #### Paramètres
 
-| Nom    | Tapez   | Descriptif |
-| ------ | ------- | ---------- |
-| valeur | inconnu |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------- | ----------- |
+| valeur | inconnu |             |
+
+### KebabÀCamel
+
+**Genre :** type
+
+```typescript
+export type KebabToCamel<S extends string> = S extends `$
+```
+
+Convertissez un type de chaîne kebab-case en camelCase.
 
 ### MpEnfant
 
@@ -1603,10 +1236,838 @@ Saisies `@mission-platform/forge-jsx/jsx-globals`.
   pliez-le dans les accessoires du parent (voir `collectSlottedChildren`). Omis (ou
   `"default"`) signifie l'emplacement par défaut.
 
-Ni l'un ni l'autre ne fait partie du contrat d'accessoires d'un composant - les deux sont lus par le
-_parent_ (le réconciliateur, le routeur de slot), jamais par le composant lui-même —
+Aucun des deux ne fait partie du contrat d'accessoires d'un composant - les deux sont lus par le
+_parent_ (le réconciliateur, le routeur slot), jamais par le composant lui-même —
 ils sont donc acceptés pour chaque élément ici plutôt que déclarés sur chaque
 interface d'accessoires.
+
+### MpSuspenseEnfant
+
+**Genre :** composant
+
+```typescript
+export type MpSuspenseChild = MpChild | PromiseLike<MpSuspenseChild> | readonly MpSuspenseChild[];
+```
+
+Contenu synchrone ou récursivement asynchrone accepté par Suspense.
+
+### Propriétés MpSuspense
+
+**Genre :** composant
+
+```typescript
+export interface MpSuspenseProperties
+```
+
+Accessoires portés par le marqueur Suspense neutre en termes de cadre.
+
+### renderAccordionItems
+
+**Genre :** fonction
+
+```typescript
+function renderAccordionItems(
+  items: readonly any[] = [],
+  _exclusive: boolean = true,
+  defaultOpen: readonly string[] = [],
+  _properties?: any,
+): any;
+```
+
+Créez une carte de style de propriété personnalisée CSS à l'échelle des composants à partir d'un sac de propriétés camelCase ou kebab-case.
+
+Convertit automatiquement les clés camelCase en kebab-case, garantit l'espace de noms du composant
+le préfixe `--forge-<prefix>-` est appliqué et omet les entrées non définies afin de recourir au jeton CSS
+Les chaînes restent actives. Renvoie `undefined` lorsqu'aucun remplacement défini n'est présent.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----------- | ----------------- | ----------- |
+| articles | lecture seule any[] |             |
+| _exclusif | booléen |             |
+| par défautOuvrir | chaîne en lecture seule[] |             |
+| _propriétés | n'importe quel |             |
+
+### renderActivityFeedItems
+
+**Genre :** fonction
+
+```typescript
+function renderActivityFeedItems(items: readonly any[] = [], maxItems?: number, onItemClick?: (item: any) => void): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----------- | ------------------- | ----------- |
+| articles | lecture seule any[] |             |
+| maxItems | numéro |             |
+| surItemClick | (élément : n'importe lequel) => void |             |
+
+### renderAssetBrowserGrid
+
+**Genre :** fonction
+
+```typescript
+function renderAssetBrowserGrid(
+  assets: readonly any[] = [],
+  selected: readonly string[] = [],
+  onSelect?: (asset: any) => void,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | -------------------- | ----------- |
+| actifs | lecture seule any[] |             |
+| sélectionné | chaîne en lecture seule[] |             |
+| surSélectionner | (actif : n'importe lequel) => void |             |
+
+### renduBarcodeSvg
+
+**Genre :** fonction
+
+```typescript
+function renderBarcodeSvg(
+  value: string = '',
+  symbology: string = 'code128',
+  color: string = '#000000',
+  background: string = '#ffffff',
+  displayValue: boolean = false,
+  ariaLabel?: string,
+  onError?: (err: Error) => void,
+  showActions?: any,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------------ | -------------------- | ----------- |
+| valeur | chaîne |             |
+| symbologie | chaîne |             |
+| couleur | chaîne |             |
+| contexte | chaîne |             |
+| valeur d'affichage | booléen |             |
+| ariaLabel | chaîne |             |
+| surErreur | (erreur : erreur) => void |             |
+| showActions | n'importe quel |             |
+
+### renderBreadcrumbItems
+
+**Genre :** fonction
+
+```typescript
+function renderBreadcrumbItems(items: readonly any[] = [], separator: string = '/'): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| --------- | -------------- | ----------- |
+| articles | lecture seule any[] |             |
+| séparateur | chaîne |             |
+
+### renderCarouselIndicatorItems
+
+**Genre :** fonction
+
+```typescript
+function renderCarouselIndicatorItems(
+  total: number = 0,
+  current: number = 0,
+  clickable: boolean = true,
+  variant: string = 'dots',
+  onSelect?: (index: number) => void,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| --------- | ----------------------- | ----------- |
+| total | numéro |             |
+| actuel | numéro |             |
+| cliquable | booléen |             |
+| variante | chaîne |             |
+| surSélectionner | (index : nombre) => void |             |
+
+### renderCarouselSlides
+
+**Genre :** fonction
+
+```typescript
+function renderCarouselSlides(
+  slides: readonly any[] = [],
+  current: number = 0,
+  _orientation: string = 'horizontal',
+  slideWidth: number = 100,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------------ | -------------- | ----------- |
+| diapositives | lecture seule any[] |             |
+| actuel | numéro |             |
+| _orientation | chaîne |             |
+| largeur de la diapositive | numéro |             |
+
+### renderCatalogIcône
+
+**Genre :** fonction
+
+```typescript
+function renderCatalogIcon(name: string, size: number = 20, color: string = 'currentColor'): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| nom | chaîne |             |
+| taille | numéro |             |
+| couleur | chaîne |             |
+
+### renderCodeBlockLineNumbers
+
+**Genre :** fonction
+
+```typescript
+function renderCodeBlockLineNumbers(code: string = ''): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| codes | chaîne |             |
+
+### renderCommandPaletteGroups
+
+**Genre :** fonction
+
+```typescript
+function renderCommandPaletteGroups(
+  commands: readonly any[] = [],
+  _groups: readonly string[] = [],
+  activeIndex: number = 0,
+  onSelect?: (command: any) => void,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----------- | ---------------------- | ----------- |
+| commandes | lecture seule any[] |             |
+| _groupes | chaîne en lecture seule[] |             |
+| actifIndex | numéro |             |
+| surSélectionner | (commande : any) => void |             |
+
+### renduCommentTree
+
+**Genre :** fonction
+
+```typescript
+function renderCommentTree(
+  comments: readonly any[] = [],
+  onReply?: (comment: any) => void,
+  onResolve?: (comment: any) => void,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| --------- | ---------------------- | ----------- |
+| commentaires | lecture seule any[] |             |
+| en réponse | (commentaire : n'importe lequel) => void |             |
+| surRésoudre | (commentaire : n'importe lequel) => void |             |
+
+### renderComparisonTableBody
+
+**Genre :** fonction
+
+```typescript
+function renderComparisonTableBody(items: readonly any[] = [], features: readonly any[] = []): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | -------------- | ----------- |
+| articles | lecture seule any[] |             |
+| fonctionnalités | lecture seule any[] |             |
+
+### renderComparisonTableHeaders
+
+**Genre :** fonction
+
+```typescript
+function renderComparisonTableHeaders(items: readonly any[] = []): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | -------------- | ----------- |
+| articles | lecture seule any[] |             |
+
+### renderCtaBannerActions
+
+**Genre :** fonction
+
+```typescript
+function renderCtaBannerActions(actions: readonly any[] = []): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| actions | lecture seule any[] |             |
+
+### renderDataCardMetrics
+
+**Genre :** fonction
+
+```typescript
+function renderDataCardMetrics(metrics: readonly any[] = []): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| métriques | lecture seule any[] |             |
+
+### renderDropdownItems
+
+**Genre :** fonction
+
+```typescript
+function renderDropdownItems(items: readonly any[] = [], onSelect?: (item: any) => void): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | ------------------- | ----------- |
+| articles | lecture seule any[] |             |
+| surSélectionner | (élément : n'importe lequel) => void |             |
+
+### renderImageSources
+
+**Genre :** fonction
+
+```typescript
+function renderImageSources(sources?: readonly any[]): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| sources | lecture seule any[] |             |
+
+### renderMarketingHeaderActions
+
+**Genre :** fonction
+
+```typescript
+function renderMarketingHeaderActions(actions: readonly any[] = []): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| actions | lecture seule any[] |             |
+
+### renderNavbarItems
+
+**Genre :** fonction
+
+```typescript
+function renderNavbarItems(items: readonly any[] = []): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | -------------- | ----------- |
+| articles | lecture seule any[] |             |
+
+### renderNotificationPanelItems
+
+**Genre :** fonction
+
+```typescript
+function renderNotificationPanelItems(
+  notifications: readonly any[] = [],
+  onDismiss?: (id: string) => void,
+  _onRead?: (id: string) => void,
+  onActionClick?: (item: any) => void,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------------- | -------------------- | ----------- |
+| notifications | lecture seule any[] |             |
+| onRejeter | (id : chaîne) => void |             |
+| _onRead | (id : chaîne) => void |             |
+| surActionClic | (élément : n'importe lequel) => void |             |
+
+### renderPaginationControls
+
+**Genre :** fonction
+
+```typescript
+function renderPaginationControls(
+  currentPage: number = 1,
+  totalPages: number = 1,
+  maxVisiblePages: number = 7,
+  showEdges: boolean = false,
+  onPageChange?: (page: number) => void,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| --------------- | ---------------------- | ----------- |
+| Page actuelle | numéro |             |
+| totalPages | numéro |             |
+| maxVisiblePages | numéro |             |
+| afficherBords | booléen |             |
+| surChangement de Page | (page : numéro) => vide |             |
+
+### renderRatingStars
+
+**Genre :** fonction
+
+```typescript
+function renderRatingStars(
+  max: number = 5,
+  modelValue: number = 0,
+  disabled: boolean = false,
+  isReadonly: boolean = false,
+  onUpdateModelValue?: (val: number) => void,
+  onChange?: (val: number) => void,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------------------ | --------------------- | ----------- |
+| maximum | numéro |             |
+| valeur du modèle | numéro |             |
+| handicapé | booléen |             |
+| estLecture seule | booléen |             |
+| onUpdateModelValue | (val: nombre) => void |             |
+| surChange | (val: nombre) => void |             |
+
+### renderResourcePlannerRows
+
+**Genre :** fonction
+
+```typescript
+function renderResourcePlannerRows(
+  resources: readonly any[] = [],
+  segments: readonly any[] = [],
+  _assignments: readonly any[] = [],
+  _availability: readonly any[] = [],
+  _onEventClick?: (assignment: any) => void,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------------- | ------------------------- | ----------- |
+| ressources | lecture seule any[] |             |
+| segments | lecture seule any[] |             |
+| _affectations | lecture seule any[] |             |
+| _disponibilité | lecture seule any[] |             |
+| _onEventClick | (affectation : n'importe laquelle) => void |             |
+
+### options de contrôle de segment de rendu
+
+**Genre :** fonction
+
+```typescript
+function renderSegmentControlOptions(
+  options: readonly any[] = [],
+  modelValue?: string,
+  onSelect?: (value: string) => void,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---------- | ----------------------- | ----------- |
+| options | lecture seule any[] |             |
+| valeur du modèle | chaîne |             |
+| surSélectionner | (valeur : chaîne) => void |             |
+
+### renderSiteFooterSections
+
+**Genre :** fonction
+
+```typescript
+function renderSiteFooterSections(sections: readonly any[] = []): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | -------------- | ----------- |
+| tronçons | lecture seule any[] |             |
+
+### renderStepsItems
+
+**Genre :** fonction
+
+```typescript
+function renderStepsItems(
+  steps: readonly any[] = [],
+  currentStep: number = 0,
+  onStepClick?: (step: number) => void,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----------- | ---------------------- | ----------- |
+| étapes | lecture seule any[] |             |
+| Étape actuelle | numéro |             |
+| surStepClick | (étape : nombre) => void |             |
+
+### renderTableColumns
+
+**Genre :** fonction
+
+```typescript
+function renderTableColumns(columns: readonly any[] = []): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| colonnes | lecture seule any[] |             |
+
+### renderTableRows
+
+**Genre :** fonction
+
+```typescript
+function renderTableRows(data: readonly any[] = [], columns: readonly any[] = []): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| données | lecture seule any[] |             |
+| colonnes | lecture seule any[] |             |
+
+### renderTabsList
+
+**Genre :** fonction
+
+```typescript
+function renderTabsList(
+  tabs: readonly any[] = [],
+  activeId?: string,
+  variant: string = 'line',
+  closable: boolean = false,
+  onSelect?: (id: string) => void,
+  onClose?: (id: string) => void,
+  addable: boolean = false,
+  addLabel: string = 'Add tab',
+  onAdd?: () => void,
+): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | -------------------- | ----------- |
+| onglets | lecture seule any[] |             |
+| ID actif | chaîne |             |
+| variante | chaîne |             |
+| fermable | booléen |             |
+| surSélectionner | (id : chaîne) => void |             |
+| onFermer | (id : chaîne) => void |             |
+| ajoutable | booléen |             |
+| ajouterLabel | chaîne |             |
+| surAjouter | () => vide |             |
+
+### renderTimelineItems
+
+**Genre :** fonction
+
+```typescript
+function renderTimelineItems(items: readonly any[] = [], align: string = 'start'): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | -------------- | ----------- |
+| articles | lecture seule any[] |             |
+| aligner | chaîne |             |
+
+### renderTreeViewNodes
+
+**Genre :** fonction
+
+```typescript
+function renderTreeViewNodes(nodes: readonly any[] = [], onSelect?: (node: any) => void): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | ------------------- | ----------- |
+| nœuds | lecture seule any[] |             |
+| surSélectionner | (node : n'importe lequel) => void |             |
+
+### renderUnreadBadge
+
+**Genre :** fonction
+
+```typescript
+function renderUnreadBadge(unreadCount: number = 0): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----------- | ------ | ----------- |
+| nombre non lu | numéro |             |
+
+### renderVideoSources
+
+**Genre :** fonction
+
+```typescript
+function renderVideoSources(sources?: readonly any[]): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| sources | lecture seule any[] |             |
+
+### résoudreCatalogueIcône
+
+**Genre :** fonction
+
+```typescript
+function resolveCatalogIcon(catalog: Record<string, any>, name: string): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | ------------------- | ----------- |
+| catalogue | Enregistrement<string, any> |             |
+| nom | chaîne |             |
+
+### solveEmailTypographyTag
+
+**Genre :** fonction
+
+```typescript
+function resolveEmailTypographyTag(asTag?: string, variant?: string): string;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | ------ | ----------- |
+| asTag | chaîne |             |
+| variante | chaîne |             |
+
+### résoudreIconPixelSize
+
+**Genre :** fonction
+
+```typescript
+function resolveIconPixelSize(size: string = 'md'): number;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| taille | chaîne |             |
+
+### solveStatusIcon
+
+**Genre :** fonction
+
+```typescript
+function resolveStatusIcon(catalog: Record<string, any>, status: string = 'neutral'): any;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | ------------------- | ----------- |
+| catalogue | Enregistrement<string, any> |             |
+| statut | chaîne |             |
+
+### solveSyncStatusLabel
+
+**Genre :** fonction
+
+```typescript
+function resolveSyncStatusLabel(status: string = 'synced', label?: string): string;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------ | ------ | ----------- |
+| statut | chaîne |             |
+| étiquette | chaîne |             |
+
+### résoudreTextVariantForQuote
+
+**Genre :** fonction
+
+```typescript
+function resolveTextVariantForQuote(size: string = 'md'): string;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| taille | chaîne |             |
+
+### solveTypographyScaleVariant
+
+**Genre :** fonction
+
+```typescript
+function resolveTypographyScaleVariant(variant?: string): string;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | ------ | ----------- |
+| variante | chaîne |             |
+
+### résoudreTypographyTag
+
+**Genre :** fonction
+
+```typescript
+function resolveTypographyTag(asTag?: string, href?: string, variant?: string): string;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | ------ | ----------- |
+| asTag | chaîne |             |
+| href | chaîne |             |
+| variante | chaîne |             |
 
 ### Fente
 
@@ -1624,3 +2085,13 @@ Cependant, il n'est jamais réellement invoqué : le compilateur au moment de l
 (`@mission-platform/vite-plugin-forge`) réécrit chaque `<Slot>` sur la cible
 le propre mécanisme de slot du framework, et les adaptateurs d'exécution l'interceptent en
 identité (`type === Slot`) avant tout appel. L'appeler directement est un bug.
+
+### Attente
+
+**Genre :** constante
+
+```typescript
+export const Suspense: MpComponent<MpSuspenseProperties>;
+```
+
+Marqueur de limite asynchrone natif abaissé par chaque compilateur de framework.

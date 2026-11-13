@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> packages/flint-lsp/docs/guides/development.md: [packages/flint-lsp/docs/guides/development.md](../../../guides/development.md)
+> packages/flint/lsp/docs/guides/development.md: [packages/flint/lsp/docs/guides/development.md](../../../guides/development.md)
 > Taal: Nederlands (nl)
 
 ## Installeer en verifieer
@@ -21,10 +21,10 @@ resultaat wordt verzonden naar `dist/`; lokale uitvoer is geen bronartefact.
 ## Protocolwijzigingen
 
 Behoud diagnostiek, UTF-16-bereiken, symbolen, voltooiing, hover en semantische token
-gedrag afgestemd op het taalservicepakket. Voeg een protocolregressie toe
+gedrag afgestemd op het taalservicepakket. Add a protocol regression
 armatuur voor elk nieuw verzoek of vermogen. Het LSP biedt momenteel geen mogelijkheden
 go-to-definition, referenties, hernoemen, opmaak, codeacties, cross-file
 taalimport of een door een browser gehost transport.
 
-De server is stdio-gebaseerd en alleen Node. Browser-editor-integratie hoort erbij
+De server is stdio-gebaseerd en alleen Node. Integratie van browsereditor hoort bij
 de lokale adapter van het taalservicepakket in plaats van deze server.

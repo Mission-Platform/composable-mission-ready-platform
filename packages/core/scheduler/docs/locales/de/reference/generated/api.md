@@ -23,9 +23,9 @@ function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement;
 Dialekt und direkt zu React oder Vue kompiliert
 `@mission-platform/vite-plugin-forge`.
 
-In voller Übereinstimmung mit dem Vue-Original: eine Symbolleiste (Heute / Vorheriger-Weiterer / Titel /
+In voller Übereinstimmung mit dem Vue-Original: eine Symbolleiste (Heute / Vorheriges-Weiteres / Titel /
 new-event / five-view switcher) befindet sich über der aktiven Ansicht – ein **Zeitraster**
-(Tag / 3 Tage / Woche) mit Stundenzeilen und Spalten-Kollisionsereignisplatzierung, a
+(Tag / 3 Tage / Woche) mit Stundenzeilen und Spaltenkollisionsereignisplatzierung, a
 **Monatsraster** (6×7) oder ein **Jahresraster** (12 Minimonate). Ereignisse unterliegen RFC 5545
 {@link VEvent}s; Die ganze schwere Logik (Wiederholungserweiterung, Ansichtsbereiche usw.)
 Kollisionslayout, Dauerformatierung) stammt aus dem Scheduler-Paketkern,
@@ -41,9 +41,9 @@ Requisiten.
 
 #### Parameter
 
-| Name          | Geben Sie                             | ein Beschreibung |
-| ------------- | ------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<SchedulerProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<SchedulerProperties> |             |
 
 ### SchedulerProperties
 
@@ -80,10 +80,10 @@ RFC 5545-Revisionssemantik). `uid` bleibt erhalten.
 
 #### Parameter
 
-| Name     | Geben Sie                      | ein Beschreibung |
-| -------- | ------------------------------ | ---------------- |
-| Ereignis | VEvent                         |                  |
-| Patch    | Teilweise<Omit<VEvent, 'uid'>> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------------------------- | ----------- |
+| Ereignis | VEvent |             |
+| Patch | Teilweise<Omit<VEvent, 'uid'>> |             |
 
 ### createEvent
 
@@ -98,9 +98,9 @@ Generieren einer UID und der Zeitstempel für die Erstellung/Änderung.
 
 #### Parameter
 
-| Name      | Geben Sie                              | ein Beschreibung |
-| --------- | -------------------------------------- | ---------------- |
-| teilweise | <VEvent, 'uid' \| 'dtstamp'> weglassen |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------------------- | ----------- |
+| teilweise | <VEvent, 'uid' \| 'dtstamp'> weglassen |             |
 
 ### eventsForDay
 
@@ -114,10 +114,10 @@ Gibt Ereignisse zurück, die auf den angegebenen Kalendertag fallen.
 
 #### Parameter
 
-| Name            | Geben Sie | ein Beschreibung |
-| --------------- | --------- | ---------------- |
-| Veranstaltungen | VEvent[]  |                  |
-| Tag             | Datum     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------- | ----------- |
+| Veranstaltungen | VEvent[] |             |
+| Tag | Datum |             |
 
 ### eventsForRange
 
@@ -134,11 +134,11 @@ geehrt.
 
 #### Parameter
 
-| Name            | Geben Sie | ein Beschreibung |
-| --------------- | --------- | ---------------- |
-| Veranstaltungen | VEvent[]  |                  |
-| Start           | Datum     |                  |
-| Ende            | Datum     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------- | ----------- |
+| Veranstaltungen | VEvent[] |             |
+| Start | Datum |             |
+| Ende | Datum |             |
 
 ### FormatDauer
 
@@ -152,9 +152,9 @@ Gibt eine für Menschen lesbare Zeichenfolge für die Dauer eines Ereignisses zu
 
 #### Parameter
 
-| Name     | Geben Sie | ein Beschreibung |
-| -------- | --------- | ---------------- |
-| Ereignis | VEvent    |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Ereignis | VEvent |             |
 
 ### LayoutDay
 
@@ -170,9 +170,9 @@ und jeder belegt `column` von `totalColumns` parallelen Spuren.
 
 #### Parameter
 
-| Name            | Geben Sie | ein Beschreibung |
-| --------------- | --------- | ---------------- |
-| Veranstaltungen | VEvent[]  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------- | ----------- |
+| Veranstaltungen | VEvent[] |             |
 
 ### moveEventPatch
 
@@ -187,10 +187,10 @@ Beibehaltung der ganztägigen/zeitgesteuerten ISO-Darstellung.
 
 #### Parameter
 
-| Name     | Geben Sie | ein Beschreibung |
-| -------- | --------- | ---------------- |
-| Ereignis | VEvent    |                  |
-| deltaMs  | Zahl      |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------ | ----------- |
+| Ereignis | VEvent |             |
+| deltaMs | Nummer |             |
 
 ### resizeEventPatch
 
@@ -205,10 +205,10 @@ Die Dauer der Veranstaltung beträgt mindestens 15 Minuten (bzw. einen Tag bei g
 
 #### Parameter
 
-| Name     | Geben Sie | ein Beschreibung |
-| -------- | --------- | ---------------- |
-| Ereignis | VEvent    |                  |
-| deltaMs  | Zahl      |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------ | ----------- |
+| Ereignis | VEvent |             |
+| deltaMs | Nummer |             |
 
 ## `src/core/range`
 
@@ -221,15 +221,15 @@ function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date;
 ```
 
 Schritten Sie die Ansichtseinheiten `anchor` um `direction` (-1 = vorherige, +1 = nächste) weiter.
-Tages-/Dreitages-/Wochenschritt in Tagen; Monats-/Jahresschritt in ihrer Periode.
+Tages-/Drei-Tage-/Wochenschritt in Tagen; Monats-/Jahresschritt in ihrer Periode.
 
 #### Parameter
 
-| Name     | Geben Sie     | ein Beschreibung |
-| -------- | ------------- | ---------------- |
-| ansehen  | SchedulerView |                  |
-| Anker    | Datum         |                  |
-| Richtung | -1 \| 1       |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------- | ----------- |
+| ansehen | SchedulerView |             |
+| Anker | Datum |             |
+| Richtung | -1 \| 1 |             |
 
 ### sichtbarRangeFor
 
@@ -244,11 +244,11 @@ Das sichtbare halboffene `[start, end)`-Fenster für das angegebene `view`, das 
 
 #### Parameter
 
-| Name          | Geben Sie     | ein Beschreibung |
-| ------------- | ------------- | ---------------- |
-| ansehen       | SchedulerView |                  |
-| Anker         | Datum         |                  |
-| WocheStartsAm | Wochenstart   |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | ------------- | ----------- |
+| ansehen | SchedulerView |             |
+| Anker | Datum |             |
+| WocheStartsAm | Wochenstart |             |
 
 ## `src/core/recurrence`
 
@@ -266,16 +266,16 @@ Auftreten – mit angepasstem dtstart / dtend.
 
 Behandelt auch RDATE (zusätzliche Daten) und EXDATE (ausgeschlossene Daten).
 
-Sicherheitsobergrenze: stoppt nach 3.650 Ereignissen (ca. 10 Jahre täglicher Ereignisse) bis
+Sicherheitsobergrenze: stoppt nach 3.650 Ereignissen (ca. 10 Jahre tägliche Ereignisse) bis
 Verhindern Sie Endlosschleifen bei unbegrenzten Regeln.
 
 #### Parameter
 
-| Name       | Geben Sie | ein Beschreibung |
-| ---------- | --------- | ---------------- |
-| Ereignis   | VEvent    |                  |
-| rangeStart | Datum     |                  |
-| rangeEnd   | Datum     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------ | ----------- |
+| Ereignis | VEvent |             |
+| rangeStart | Datum |             |
+| rangeEnd | Datum |             |
 
 ## `src/core/types`
 

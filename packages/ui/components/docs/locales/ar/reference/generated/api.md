@@ -71,9 +71,9 @@ function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                          | الوصف |
-| ----- | ----------------------------- | ----- |
-| خصائص | للقراءة فقط<AvatarProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| خصائص | للقراءة فقط<AvatarProperties> |             |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -119,7 +119,7 @@ function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): 
 بلهجة JSX المحايدة وتم تجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`.
 
-يعرض `<video>` الذي يتم تشغيله تلقائيًا، وكتم صوته، ويتكرر ويغطي الحاوية الخاصة به،
+فهو يعرض `<video>` الذي يتم تشغيله تلقائيًا، وكتم صوته، ويتكرر ويغطي الحاوية الخاصة به،
 مع محتوى أمامي اختياري (الفتحة الافتراضية) موضوع في الأعلى و
 سكريم اختياري `overlay` للحفاظ على التباين. يتم التعامل مع الفيديو على أنه
 زخرفي (`aria-hidden`) ولا يعرض أي عناصر تحكم.
@@ -133,9 +133,9 @@ function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): 
 
 #### حدود
 
-| الاسم | اكتب                                   | الوصف |
-| ----- | -------------------------------------- | ----- |
-| خصائص | للقراءة فقط<BackgroundVideoProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------------- | ----------- |
+| خصائص | للقراءة فقط<BackgroundVideoProperties> |             |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -197,9 +197,9 @@ function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                         | الوصف |
-| ----- | ---------------------------- | ----- |
-| خصائص | للقراءة فقط<BadgeProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------- | ----------- |
+| خصائص | للقراءة فقط<BadgeProperties> |             |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -251,9 +251,53 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                          | الوصف |
-| ----- | ----------------------------- | ----- |
-| خصائص | للقراءة فقط<ButtonProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| خصائص | للقراءة فقط<ButtonProperties> |             |
+
+## `src/components/atoms/forge-divider/forge-divider`
+
+### DividerOrientation
+
+**النوع:** النوع
+
+```typescript
+export type DividerOrientation = 'horizontal' | 'vertical';
+```
+
+اتجاه تخطيط المقسم.
+
+### خصائص المقسم
+
+**النوع:** الواجهة
+
+```typescript
+export interface DividerProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### ForgeDivider
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeDivider(properties: Readonly<DividerProperties>): MpElement;
+```
+
+`ForgeDivider` — مقسم حدود رفيع تم تأليفه مرة واحدة في JSX المحايدة
+لهجة وتجميعها مباشرة إلى React أو Vue بواسطة
+`@mission-platform/vite-plugin-forge`.
+
+يملأ العرض أو الارتفاع المتوفر وفقًا لـ `orientation` واستخداماته
+العنصر الدلالي `<hr>` بشكل افتراضي. اضبط `decorative` على `false` لاستخدام ملف
+الحاملة للدور `<div>` بدلاً من ذلك.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| خصائص | للقراءة فقط<DividerProperties> |             |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -278,9 +322,9 @@ function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<IconButtonProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<IconButtonProperties> |             |
 
 ### IconButtonProperties
 
@@ -300,7 +344,7 @@ export interface IconButtonProperties
 export type IconButtonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-رمز الحجم الذي يتحكم في الحشوة المربعة - مقياس 2xs → 2xl الأساسي.
+رمز الحجم الذي يتحكم في المساحة المربعة - مقياس 2xs → 2xl الأساسي.
 
 ### IconButtonVariant
 
@@ -312,6 +356,94 @@ export type IconButtonVariant =
 ```
 
 المعالجة المرئية لزر الرمز - مجموعة الألوان الأساسية بالإضافة إلى `ghost` الشفاف.
+
+## `src/components/atoms/forge-icon/forge-icon`
+
+### ForgeIcon
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeIcon(properties: Readonly<IconProperties>): MpElement;
+```
+
+واجهة أيقونة محايدة للإطار مدعومة بـ `@mission-platform/icons` الذي تمت مراجعته
+كتالوج. يعتمد الحل على البيانات والأسماء غير المعروفة لا تجعلها غير صالحة أبدًا
+مكون؛ يمتلك المجمّع الاسم الذي يمكن الوصول إليه، لذا تظل ملفات SVG للكتالوج صامتة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------ | ----------- |
+| خصائص | للقراءة فقط<IconProperties> |             |
+
+### اسم الرمز
+
+**النوع:** النوع
+
+```typescript
+export type IconName = string;
+```
+
+اسم كتالوج مثل `forge-icon-check`؛ تستخدم الأسماء غير المعروفة أيقونة الرجوع.
+
+### خصائص الأيقونات
+
+**النوع:** الواجهة
+
+```typescript
+export interface IconProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### IconSize
+
+**النوع:** النوع
+
+```typescript
+export type IconSize = 'sm' | 'md' | 'lg' | 'xl';
+```
+
+تم تعيين حجم الرمز لأبعاد البكسل الخاصة بالكتالوج.
+
+## `src/components/atoms/forge-kbd/forge-kbd`
+
+### ForgeKbd
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeKbd(properties: Readonly<KbdProperties>): MpElement;
+```
+
+تسمية مفتاح/وتر للوحة المفاتيح الدلالية يتم تقديمها بلهجة JSX المحايدة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------- | ----------- |
+| خصائص | للقراءة فقط<KbdProperties> |             |
+
+### KbdProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface KbdProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### KbdSize
+
+**النوع:** النوع
+
+```typescript
+export type KbdSize = 'sm' | 'md' | 'lg';
+```
+
+حجم مفتاح لوحة المفاتيح.
 
 ## `src/components/atoms/forge-progress-bar/forge-progress-bar`
 
@@ -335,9 +467,9 @@ function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب                               | الوصف |
-| ----- | ---------------------------------- | ----- |
-| خصائص | للقراءة فقط<ProgressBarProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------- | ----------- |
+| خصائص | للقراءة فقط<ProgressBarProperties> |             |
 
 ### ProgressBarProperties
 
@@ -397,9 +529,9 @@ function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                         | الوصف |
-| ----- | ---------------------------- | ----- |
-| خصائص | للقراءة فقط<QuoteProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------- | ----------- |
+| خصائص | للقراءة فقط<QuoteProperties> |             |
 
 ### QuoteProperties
 
@@ -459,9 +591,9 @@ Vue بواسطة `@mission-platform/vite-plugin-forge`.
 
 #### حدود
 
-| الاسم | اكتب                                   | الوصف |
-| ----- | -------------------------------------- | ----- |
-| خصائص | للقراءة فقط<ResponsiveImageProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------------- | ----------- |
+| خصائص | للقراءة فقط<ResponsiveImageProperties> |             |
 
 ### ResponsiveImageFit
 
@@ -507,7 +639,7 @@ function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): 
 لهجة JSX المحايدة وتم تجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`.
 
-فهو يعرض `<video>` الذي يتناسب مع الحاوية الخاصة به مع الحفاظ على ملف ثابت
+إنه يعرض `<video>` الذي يتناسب مع الحاوية الخاصة به مع الحفاظ على ملف ثابت
 `aspectRatio` (تجنب تغيير التخطيط)، ودعم إدخالات `<source>` المتعددة
 للتفاوض على التنسيق، وصورة الملصق، وعناصر التحكم الأصلية، والمعتاد
 أعلام التشغيل. بالنسبة للخلفيات المزخرفة الخالية من المحتوى، تفضل
@@ -523,9 +655,9 @@ function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): 
 
 #### حدود
 
-| الاسم | اكتب                                   | الوصف |
-| ----- | -------------------------------------- | ----- |
-| خصائص | للقراءة فقط<ResponsiveVideoProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------------- | ----------- |
+| خصائص | للقراءة فقط<ResponsiveVideoProperties> |             |
 
 ### استجابةVideoFit
 
@@ -585,9 +717,9 @@ function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                             | الوصف |
-| ----- | -------------------------------- | ----- |
-| خصائص | للقراءة فقط<SeparatorProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------- | ----------- |
+| خصائص | للقراءة فقط<SeparatorProperties> |             |
 
 ### اتجاه الفاصل
 
@@ -651,9 +783,9 @@ function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<SkeletonProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<SkeletonProperties> |             |
 
 ### SkeletonProperties
 
@@ -673,7 +805,7 @@ export interface SkeletonProperties
 export type SkeletonShape = 'line' | 'circle' | 'block';
 ```
 
-الشكل الذي يتم عرض العنصر النائب الهيكلي عليه.
+الشكل الذي يظهر به العنصر النائب الهيكلي.
 
 ## `src/components/atoms/forge-spinner/forge-spinner`
 
@@ -699,9 +831,9 @@ function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                           | الوصف |
-| ----- | ------------------------------ | ----- |
-| خصائص | للقراءة فقط<SpinnerProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| خصائص | للقراءة فقط<SpinnerProperties> |             |
 
 ### SpinnerProperties
 
@@ -756,9 +888,9 @@ function ForgeStack(properties: Readonly<StackProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                         | الوصف |
-| ----- | ---------------------------- | ----- |
-| خصائص | للقراءة فقط<StackProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------- | ----------- |
+| خصائص | للقراءة فقط<StackProperties> |             |
 
 ### StackAlign
 
@@ -798,7 +930,7 @@ export type StackGap = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type StackJustify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
 ```
 
-الكلمات الأساسية لتوزيع المحور الرئيسي (`justify` → `justify-content`).
+الكلمات الرئيسية لتوزيع المحور الرئيسي (`justify` → `justify-content`).
 
 ### StackProperties
 
@@ -824,9 +956,9 @@ function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<StatusIconProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<StatusIconProperties> |             |
 
 ### StatusIconLevel
 
@@ -858,6 +990,102 @@ export type StatusIconSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
 مقياس الحجم Canonical 2xs → 2xl.
+
+## `src/components/atoms/forge-surface/forge-surface`
+
+### فورجسورفيس
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeSurface(properties: Readonly<SurfaceProperties>): MpElement;
+```
+
+سطح دلالي قابل للموضوع مع فتحة افتراضية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| خصائص | للقراءة فقط<SurfaceProperties> |             |
+
+### SurfaceElevation
+
+**النوع:** النوع
+
+```typescript
+export type SurfaceElevation = 0 | 1 | 2 | 3;
+```
+
+مستوى الارتفاع السطحي.
+
+### حشو السطح
+
+**النوع:** النوع
+
+```typescript
+export type SurfacePadding = 'none' | 'sm' | 'md' | 'lg';
+```
+
+مقياس الحشو السطحي.
+
+### خصائص السطح
+
+**النوع:** الواجهة
+
+```typescript
+export interface SurfaceProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### سطح مدور
+
+**النوع:** النوع
+
+```typescript
+export type SurfaceRounded = 'none' | 'sm' | 'md' | 'lg' | 'xl';
+```
+
+معالجة نصف قطر الزاوية السطحية.
+
+## `src/components/atoms/forge-sync-status-indicator/forge-sync-status-indicator`
+
+### ForgeSyncStatusIndicator
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeSyncStatusIndicator(properties: Readonly<SyncStatusIndicatorProperties>): MpElement;
+```
+
+مؤشر حالة تزامن مدمج ويمكن الوصول إليه.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------------------- | ----------- |
+| خصائص | للقراءة فقط<SyncStatusIndicatorProperties> |             |
+
+### حالة المزامنة
+
+**النوع:** النوع
+
+```typescript
+export type SyncStatus = 'synced' | 'syncing' | 'pending' | 'error' | 'offline';
+```
+
+حالة التزامن التي يمثلها المؤشر.
+
+### SyncStatusIndicatorProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface SyncStatusIndicatorProperties
+```
+
+لم يتم تقديم أي وصف.
 
 ## `src/components/molecules/forge-accordion/forge-accordion`
 
@@ -914,14 +1142,62 @@ function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement;
 البدائل من SFCs الأصلية: `provide`/`inject` تصبح داخلية
 `useState`; الشيفرون هو `@mission-platform/icons` للكتابة مرة واحدة
 `ForgeIconChevron` (تم تدويره عبر دعامة `direction` الخاصة به، والتي تم تجميعها بنفسها إلى
-React/Vue)؛ وتصبح الفتحات `summary`/الافتراضية لكل عنصر فتحتين محددتين
-التي تعود إلى نص العنصر `title`/`content`.
+React/Vue); وتصبح الفتحات `summary`/الافتراضية لكل عنصر فتحتين محددتين
+التي تعود إلى نص `title`/`content` الخاص بالعنصر.
 
 #### حدود
 
-| الاسم | اكتب                             | الوصف |
-| ----- | -------------------------------- | ----- |
-| خصائص | للقراءة فقط<AccordionProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------- | ----------- |
+| خصائص | للقراءة فقط<AccordionProperties> |             |
+
+## `src/components/molecules/forge-alert/forge-alert`
+
+### خصائص التنبيه
+
+**النوع:** الواجهة
+
+```typescript
+export interface AlertProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### حجم التنبيه
+
+**النوع:** النوع
+
+```typescript
+export type AlertSize = 'sm' | 'md' | 'lg';
+```
+
+لم يتم تقديم أي وصف.
+
+### تنبيهVariant
+
+**النوع:** النوع
+
+```typescript
+export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+لم يتم تقديم أي وصف.
+
+### تنبيه فورجي
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeAlert(properties: Readonly<AlertProperties>): MpElement;
+```
+
+رسالة حالة يمكن الوصول إليها ورفضها مع رسالة قابلة للتأليف وفتحة إجراء.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------- | ----------- |
+| خصائص | للقراءة فقط<AlertProperties> |             |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -970,9 +1246,9 @@ function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<BreadcrumbProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<BreadcrumbProperties> |             |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1014,7 +1290,7 @@ export interface ButtonGroupProperties
 function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement;
 ```
 
-`ForgeButtonGroup` — يقوم بتجميع الأزرار ذات الصلة في وحدة مرئية واحدة. تأليف
+`ForgeButtonGroup` - يقوم بتجميع الأزرار ذات الصلة في وحدة مرئية واحدة. تأليف
 مرة واحدة بلهجة JSX المحايدة ويتم تجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`.
 
@@ -1030,9 +1306,57 @@ function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب                               | الوصف |
-| ----- | ---------------------------------- | ----- |
-| خصائص | للقراءة فقط<ButtonGroupProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------- | ----------- |
+| خصائص | للقراءة فقط<ButtonGroupProperties> |             |
+
+## `src/components/molecules/forge-callout-block/forge-callout-block`
+
+### CalloutBlockProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface CalloutBlockProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### CalloutBlockSize
+
+**النوع:** النوع
+
+```typescript
+export type CalloutBlockSize = 'sm' | 'md';
+```
+
+لم يتم تقديم أي وصف.
+
+### CalloutBlockVariant
+
+**النوع:** النوع
+
+```typescript
+export type CalloutBlockVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+لم يتم تقديم أي وصف.
+
+### ForgeCalloutBlock
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeCalloutBlock(properties: Readonly<CalloutBlockProperties>): MpElement;
+```
+
+كتلة معلوماتية بارزة تحتوي على العنوان والوصف والمحتوى وفتحات الإجراء.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------- | ----------- |
+| خصائص | للقراءة فقط<CalloutBlockProperties> |             |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1064,7 +1388,7 @@ export interface CardProperties
 function ForgeCard(properties: Readonly<CardProperties>): MpElement;
 ```
 
-`ForgeCard` — حاوية سطحية تحتوي على مناطق رأس/تذييل اختيارية، مؤلفة
+`ForgeCard` - حاوية سطحية تحتوي على مناطق رأس/تذييل اختيارية، مؤلفة
 مرة واحدة بلهجة JSX المحايدة وتم تجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`.
 
@@ -1081,9 +1405,57 @@ function ForgeCard(properties: Readonly<CardProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                        | الوصف |
-| ----- | --------------------------- | ----- |
-| خصائص | للقراءة فقط<CardProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------ | ----------- |
+| خصائص | للقراءة فقط<CardProperties> |             |
+
+## `src/components/molecules/forge-carousel-indicator/forge-carousel-indicator`
+
+### CarouselIndicatorOrientation
+
+**النوع:** النوع
+
+```typescript
+export type CarouselIndicatorOrientation = 'horizontal' | 'vertical';
+```
+
+لم يتم تقديم أي وصف.
+
+### CarouselIndicatorProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface CarouselIndicatorProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### CarouselIndicatorSize
+
+**النوع:** النوع
+
+```typescript
+export type CarouselIndicatorSize = 'sm' | 'md' | 'lg';
+```
+
+لم يتم تقديم أي وصف.
+
+### ForgeCarouselIndicator
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeCarouselIndicator(properties: Readonly<CarouselIndicatorProperties>): MpElement;
+```
+
+نقاط ترقيم صفحات يمكن الوصول إليها وقابلة للتشغيل بواسطة لوحة المفاتيح للعرض الدائري.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------------- | ----------- |
+| خصائص | للقراءة فقط<CarouselIndicatorProperties> |             |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1125,7 +1497,7 @@ export type ChatBubbleVariant = 'default' | 'primary';
 function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
 ```
 
-`ForgeChatBubble` — فقاعة رسالة واحدة تم تأليفها مرة واحدة في JSX المحايدة
+`ForgeChatBubble` — فقاعة رسالة واحدة يتم تأليفها مرة واحدة في JSX المحايدة
 لهجة وتجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`.
 
@@ -1143,9 +1515,9 @@ function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<ChatBubbleProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<ChatBubbleProperties> |             |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1187,9 +1559,9 @@ function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<CollapseProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<CollapseProperties> |             |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1213,7 +1585,7 @@ export interface DeviceMockProperties
 
 لم يتم تقديم أي وصف.
 
-### DeviceMockSize
+### حجم الجهاز
 
 **النوع:** النوع
 
@@ -1255,9 +1627,125 @@ chrome، تم تأليفه مرة واحدة بلهجة JSX المحايدة (`@
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<DeviceMockProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<DeviceMockProperties> |             |
+
+## `src/components/molecules/forge-drop-zone/forge-drop-zone`
+
+### DropZoneProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface DropZoneProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### DropZoneReject
+
+**النوع:** الواجهة
+
+```typescript
+export interface DropZoneReject
+```
+
+لم يتم تقديم أي وصف.
+
+### DropZoneScope
+
+**النوع:** الواجهة
+
+```typescript
+export interface DropZoneScope
+```
+
+لم يتم تقديم أي وصف.
+
+### DropZoneSize
+
+**النوع:** النوع
+
+```typescript
+export type DropZoneSize = 'sm' | 'md' | 'lg';
+```
+
+لم يتم تقديم أي وصف.
+
+### DropZoneValue
+
+**النوع:** النوع
+
+```typescript
+export type DropZoneValue = File | File[];
+```
+
+لم يتم تقديم أي وصف.
+
+### ForgeDropZone
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeDropZone(properties: Readonly<DropZoneProperties>): MpElement;
+```
+
+هدف ملف سحب وإفلات يمكن الوصول إليه من خلال لوحة المفاتيح مع التحقق من جانب العميل.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<DropZoneProperties> |             |
+
+## `src/components/molecules/forge-empty-state/forge-empty-state`
+
+### خصائص الحالة الفارغة
+
+**النوع:** الواجهة
+
+```typescript
+export interface EmptyStateProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### حجم الحالة الفارغة
+
+**النوع:** النوع
+
+```typescript
+export type EmptyStateSize = 'sm' | 'md' | 'lg';
+```
+
+لم يتم تقديم أي وصف.
+
+### EmptyStateVariant
+
+**النوع:** النوع
+
+```typescript
+export type EmptyStateVariant = 'neutral' | 'info';
+```
+
+لم يتم تقديم أي وصف.
+
+### فورجيEmptyState
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeEmptyState(properties: Readonly<EmptyStateProperties>): MpElement;
+```
+
+رسالة مركزية لا تحتوي على محتوى مع رمز اختياري ونسخة داعمة وإجراء.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<EmptyStateProperties> |             |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1281,14 +1769,14 @@ function ForgeGrid(properties: Readonly<GridProperties>): MpElement;
 اللهجة المحايدة لا نموذجية.
 
 إنها تصدر فئة BEM بالإضافة إلى النمط السطري للشبكة المحسوبة؛ التصميم التجريبي
-يعيش في موقع مشترك `forge-grid.module.scss` (تم استيراده بواسطة
+يعيش في `forge-grid.module.scss` (المستورد بواسطة
 `forge-grid.stories.tsx`).
 
 #### حدود
 
-| الاسم | اكتب                        | الوصف |
-| ----- | --------------------------- | ----- |
-| خصائص | للقراءة فقط<GridProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------ | ----------- |
+| خصائص | للقراءة فقط<GridProperties> |             |
 
 ### محاذاة الشبكة
 
@@ -1342,9 +1830,9 @@ function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                          | الوصف |
-| ----- | ----------------------------- | ----- |
-| خصائص | للقراءة فقط<InViewProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| خصائص | للقراءة فقط<InViewProperties> |             |
 
 ### InViewAnimation
 
@@ -1362,6 +1850,64 @@ export type InViewAnimation = 'fade' | 'slide-up' | 'slide-left' | 'slide-right'
 
 ```typescript
 export interface InViewProperties
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/components/molecules/forge-inline-edit/forge-inline-edit`
+
+### تحرير ForgeInline
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeInlineEdit(properties: Readonly<InlineEditProperties>): MpElement;
+```
+
+عنصر تحكم مدمج في القراءة/التحرير باستخدام لوحة المفاتيح للإرسال والإلغاء والتحقق من الصحة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<InlineEditProperties> |             |
+
+### InlineEditInputType
+
+**النوع:** النوع
+
+```typescript
+export type InlineEditInputType = 'text' | 'email' | 'url' | 'number';
+```
+
+لم يتم تقديم أي وصف.
+
+### InlineEditProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface InlineEditProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### InlineEditSize
+
+**النوع:** النوع
+
+```typescript
+export type InlineEditSize = 'sm' | 'md' | 'lg';
+```
+
+لم يتم تقديم أي وصف.
+
+### InlineEditValidator
+
+**النوع:** النوع
+
+```typescript
+export type InlineEditValidator = (value: string) => string | undefined;
 ```
 
 لم يتم تقديم أي وصف.
@@ -1387,16 +1933,16 @@ function ForgeList(properties: Readonly<ListProperties>): MpElement;
 `forge-list.module.scss`، مُجمَّع بإطار محايد
 مساعد {@link classNames}.
 
-كشف Vue SFC الأصلي أيضًا عن فتحة `item` محددة لكل صف (مع
+كشف Vue SFC الأصلي أيضًا عن فتحة `item` ذات نطاق محدد لكل صف (مع
 روابط `item`/`index`) تتجاوز الصف الذي تم إنشاؤه؛ النسخة المحايدة
-قطرات تلك الفتحة ذات النطاق - يتم تشغيل الصفوف بواسطة `items` - بما يتوافق مع كيفية عمل
+يسقط تلك الفتحة ذات النطاق - يتم تشغيل الصفوف بواسطة `items` - بما يتوافق مع كيفية عمل
 أسقطت المكونات التي تم ترحيلها فتحات محددة النطاق.
 
 #### حدود
 
-| الاسم | اكتب                        | الوصف |
-| ----- | --------------------------- | ----- |
-| خصائص | للقراءة فقط<ListProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------ | ----------- |
+| خصائص | للقراءة فقط<ListProperties> |             |
 
 ### ListItem
 
@@ -1468,9 +2014,9 @@ CSS)؛ يتم تطبيق الخصائص الديناميكية متعددة ال
 
 #### حدود
 
-| الاسم | اكتب                           | الوصف |
-| ----- | ------------------------------ | ----- |
-| خصائص | للقراءة فقط<MasonryProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| خصائص | للقراءة فقط<MasonryProperties> |             |
 
 ### MasonryGap
 
@@ -1488,6 +2034,54 @@ export type MasonryGap = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 ```typescript
 export interface MasonryProperties
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/components/molecules/forge-mention-input/forge-mention-input`
+
+### ForgeMentionInput
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeMentionInput(properties: Readonly<MentionInputProperties>): MpElement;
+```
+
+منطقة نصية تحتوي على اقتراحات إشارات يمكن الوصول إليها والتنقل عبر لوحة المفاتيح.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------- | ----------- |
+| خصائص | للقراءة فقط<MentionInputProperties> |             |
+
+### MentionInputProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface MentionInputProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### MentionItem
+
+**النوع:** الواجهة
+
+```typescript
+export interface MentionItem
+```
+
+لم يتم تقديم أي وصف.
+
+### MentionSuggestionScope
+
+**النوع:** الواجهة
+
+```typescript
+export interface MentionSuggestionScope
 ```
 
 لم يتم تقديم أي وصف.
@@ -1519,9 +2113,9 @@ function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<MenuItemProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<MenuItemProperties> |             |
 
 ### MenuItemProperties
 
@@ -1573,13 +2167,13 @@ function ForgeMenu(properties: Readonly<MenuProperties>): MpElement;
 `useState` (على سبيل المثال، `'1.0.2'`)، مع الاحتفاظ بنفس دلالات الفتح الواحد لكل مستوى. ذلك
 يعرض `@mission-platform/icons` `ForgeIconChevron` للكتابة مرة واحدة (يتم تدويره عبر
 دعامة `direction` الخاصة بها) و`<a href>` العادي (`vue-router` الثابت
-الاستبدال)، وإلا فسيتم مطابقة الأدوار/ARIA الخاصة بترميز Vue.
+استبدال)، وإلا فسيتم مطابقة الأدوار/ARIA الخاصة بترميز Vue.
 
 #### حدود
 
-| الاسم | اكتب                        | الوصف |
-| ----- | --------------------------- | ----- |
-| خصائص | للقراءة فقط<MenuProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------ | ----------- |
+| خصائص | للقراءة فقط<MenuProperties> |             |
 
 ### عقدة القائمة
 
@@ -1611,6 +2205,76 @@ export interface MenuProperties
 
 لم يتم تقديم أي وصف.
 
+## `src/components/molecules/forge-metric-card/forge-metric-card`
+
+### ForgeMetricCard
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeMetricCard(properties: Readonly<MetricCardProperties>): MpElement;
+```
+
+`ForgeMetricCard` — ملخص متري مضغوط تم تأليفه مرة واحدة في JSX المحايدة.
+فهو يحافظ على القيمة والاتجاه وحالة التحميل والمحتوى الداعم في آن واحد
+مقالة يمكن الوصول إليها مع ترك المعالجات المرئية لوحدة CSS الخاصة بها.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<MetricCardProperties> |             |
+
+### MetricCardProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface MetricCardProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### MetricCardSize
+
+**النوع:** النوع
+
+```typescript
+export type MetricCardSize = 'sm' | 'md' | 'lg';
+```
+
+رمز الحجم الذي يتحكم في مقياس البطاقة المترية.
+
+### MetricCardTrend
+
+**النوع:** الواجهة
+
+```typescript
+export interface MetricCardTrend
+```
+
+يتم عرض مؤشر التغيير الاختياري أسفل قيمة المقياس.
+
+### MetricCardTrendDirection
+
+**النوع:** النوع
+
+```typescript
+export type MetricCardTrendDirection = 'up' | 'down' | 'flat';
+```
+
+اتجاه التغيير يمثله اتجاه متري.
+
+### MetricCardVariant
+
+**النوع:** النوع
+
+```typescript
+export type MetricCardVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+النغمة السطحية للبطاقة المترية.
+
 ## `src/components/molecules/forge-navbar-item/forge-navbar-item`
 
 ### ForgeNavbarItem
@@ -1635,20 +2299,20 @@ function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement;
 استخدم Vue SFC الأصلي قائمة منسدلة عائمة
 (تحديد موضع فوري + `@floating-ui`)، علامة `<component :is>` ديناميكية،
 `vue-router` `RouterLink`، و`@mission-platform/icons` `ForgeIconChevron`، و
-`click` تنبعث. النسخة المحايدة تحافظ على **العلامة الديناميكية** — بدون أطفال
+`click` ينبعث. النسخة المحايدة تحافظ على **العلامة الديناميكية** — بدون أطفال
 يتم عرض العنصر من خلال `<Dynamic is={tag}>` البدائي المحايد (المترجم إلى
 نوع عنصر React / Vue's `<component :is>`)، مع حل `tag` إلى `'a'`
 (ممكّن + `href`) أو `'button'` - ويستبدل السطر،
 القائمة المنسدلة ذات الموضع المطلق (الحالة المفتوحة في `useState`، مغلقة عبر
-مستمعي المستندات `useEffect`)، الهدف `RouterLink` باستخدام `<a>` العادي،
+مستمعي المستندات `useEffect`)، الهدف `RouterLink` مع `<a>` العادي،
 الكتابة مرة واحدة `@mission-platform/icons` `ForgeIconChevron` (تم تدويرها عبر
 الخاص بدعم `direction`)، ودعامة رد الاتصال `onClick`.
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<NavbarItemProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<NavbarItemProperties> |             |
 
 ### NavbarItemChild
 
@@ -1708,9 +2372,9 @@ function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<PaginationProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<PaginationProperties> |             |
 
 ### PaginationItem
 
@@ -1766,7 +2430,7 @@ function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
 يتكون Vue SFC الأصلي من `ForgeTabList`/`ForgeTab`/`ForgeTabPanel`
 المكونات الفرعية، المستخدمة `@mission-platform/icons` للحروف الرسومية للإضافة/الإغلاق، قادت
 محتوى اللوحة من خلال فتحات مسماة لكل علامة تبويب، واستخدام `v-model` + ينبعث. ال
-يتضمن الإصدار المحايد شريط علامات التبويب (متوافقًا مع كيفية استخدام `ForgeTable`/
+يتضمن الإصدار المحايد شريط علامات التبويب (يتوافق مع كيفية استخدام `ForgeTable`/
 يقوم `ForgeVirtualTable` بتضمين مكوناتها الفرعية) ويعرض الكتابة مرة واحدة
 `@mission-platform/icons` `ForgeIconPlus`/`ForgeIconClose` للإضافة/الإغلاق
 الإمكانات. مثل Vue الأصلي، فإنه يعرض `role="tabpanel"`
@@ -1783,9 +2447,9 @@ function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                        | الوصف |
-| ----- | --------------------------- | ----- |
-| خصائص | للقراءة فقط<TabsProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------ | ----------- |
+| خصائص | للقراءة فقط<TabsProperties> |             |
 
 ### TabItem
 
@@ -1827,6 +2491,57 @@ export type TabsVariant = 'line' | 'pill';
 
 المعالجة البصرية لقائمة علامات التبويب.
 
+## `src/components/molecules/forge-tag-input/forge-tag-input`
+
+### ForgeTagInput
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeTagInput(properties: Readonly<TagInputProperties>): MpElement;
+```
+
+`ForgeTagInput` — محرر علامات يمكن التحكم فيه ويمكن الوصول إليه ومؤلف بطريقة محايدة
+JSX. يؤدي إدخال أو فاصلة إلى تنفيذ مسودة مقتطعة، بينما تزيل مسافة للخلف العلامة الأخيرة
+عندما تكون المسودة فارغة، ويتم تطبيق قواعد العلامة المكررة/الحد الأقصى قبل
+يتم تشغيل رد اتصال التحديث الذي يتم التحكم فيه.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<TagInputProperties> |             |
+
+### خصائص TagInput
+
+**النوع:** الواجهة
+
+```typescript
+export interface TagInputProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### TagInputSize
+
+**النوع:** النوع
+
+```typescript
+export type TagInputSize = 'sm' | 'md' | 'lg';
+```
+
+رمز الحجم يتحكم في مقياس إدخال العلامة.
+
+### TagInputVariant
+
+**النوع:** النوع
+
+```typescript
+export type TagInputVariant = 'neutral' | 'primary' | 'error';
+```
+
+النغمة السطحية لإدخال العلامة.
+
 ## `src/components/molecules/forge-timeline/forge-timeline`
 
 ### ForgeTimeline
@@ -1845,7 +2560,7 @@ function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 الاتجاه/الإيقاع المتناوب من خلال سياق `provide`/`inject`. ال
 النسخة المحايدة **تسطح** تلك التركيبة في مكون واحد مدفوع
 بواسطة مصفوفة `items` - وهو نفس الأسلوب الذي اتبعه {@link ForgeTabs} الذي تم ترحيله -
-لذلك تتدفق حالة التخطيط ببساطة من الدعائم إلى كل `<li>` (بدون سياق
+وبالتالي فإن حالة التخطيط تتدفق ببساطة من الدعائم إلى كل `<li>` (بدون سياق
 مطلوب). إنها تمتلك تصميمها من خلال وحدة CSS الموجودة في نفس الموقع
 `forge-timeline.module.scss`، الذي يدمج الحاوية الأصلية والعنصر
 الأنماط.
@@ -1855,11 +2570,11 @@ function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<TimelineProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<TimelineProperties> |             |
 
-### TimelineAlign
+### محاذاة الجدول الزمني
 
 **النوع:** النوع
 
@@ -1867,7 +2582,7 @@ function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 export type TimelineAlign = 'start' | 'alternate';
 ```
 
-كيفية وضع عناصر المخطط الزمني الرأسي بالنسبة للخط.
+كيفية وضع عناصر المخطط الزمني العمودي بالنسبة للخط.
 
 ### TimelineItem
 
@@ -1898,9 +2613,9 @@ export type TimelineItemVariant =
   'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 ```
 
-يتم تطبيق مجموعة الألوان على نقطة التحديد.
+يتم تطبيق مجموعة الألوان على نقطة علامة.
 
-### TimelineOrientation
+### اتجاه الجدول الزمني
 
 **النوع:** النوع
 
@@ -1910,7 +2625,7 @@ export type TimelineOrientation = 'vertical' | 'horizontal';
 
 اتجاه خط الاتصال للخط الزمني.
 
-### TimelineProperties
+### خصائص الجدول الزمني
 
 **النوع:** الواجهة
 
@@ -1942,7 +2657,7 @@ function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElem
 وإلغاء تحميل التنظيف) على كلا الإطارين.
 
 إنها تمتلك تصميمها من خلال موقع `forge-window-popout.module.scss` المشترك.
-بالنسبة إلى Vue SFC الأصلي، فإن اللهجة المحايدة ليست كذلك
+بالنسبة إلى Vue SFC الأصلي، فإن نماذج اللهجة المحايدة ليست كذلك
 `<Teleport>`، فتحات النطاق، تنبعث، `useI18n`، ولا `@mission-platform/icons`، لذلك
 تتلقى النافذة المنبثقة **لقطة HTML ثابتة** للمضمنة
 المحتوى (ليست بوابة إطارية مباشرة)، وفتحة `controls` ذات النطاق، و
@@ -1952,9 +2667,9 @@ function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElem
 
 #### حدود
 
-| الاسم | اكتب                                | الوصف |
-| ----- | ----------------------------------- | ----- |
-| خصائص | للقراءة فقط<WindowPopoutProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------- | ----------- |
+| خصائص | للقراءة فقط<WindowPopoutProperties> |             |
 
 ### WindowPopoutProperties
 
@@ -1965,6 +2680,164 @@ export interface WindowPopoutProperties
 ```
 
 لم يتم تقديم أي وصف.
+
+## `src/components/organisms/forge-activity-feed/forge-activity-feed`
+
+### ActivityFeedItem
+
+**النوع:** النوع
+
+```typescript
+export type ActivityFeedItem = ActivityItem;
+```
+
+لم يتم تقديم أي وصف.
+
+#### عقد
+
+- **@مهمل:** استخدم `ActivityItem`.
+
+### خصائص تغذية النشاط
+
+**النوع:** الواجهة
+
+```typescript
+export interface ActivityFeedProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### حجم تغذية النشاط
+
+**النوع:** النوع
+
+```typescript
+export type ActivityFeedSize = 'sm' | 'md' | 'lg';
+```
+
+لم يتم تقديم أي وصف.
+
+### ActivityFeedVariant
+
+**النوع:** النوع
+
+```typescript
+export type ActivityFeedVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+لم يتم تقديم أي وصف.
+
+### تغذية النشاط
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeActivityFeed(properties: Readonly<ActivityFeedProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------- | ----------- |
+| خصائص | للقراءة فقط<ActivityFeedProperties> |             |
+
+## `src/components/organisms/forge-announcement-bar/forge-announcement-bar`
+
+### إعلانبارخصائص
+
+**النوع:** الواجهة
+
+```typescript
+export interface AnnouncementBarProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### إعلانBarVariant
+
+**النوع:** النوع
+
+```typescript
+export type AnnouncementBarVariant = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+لم يتم تقديم أي وصف.
+
+### ForgeAnnouncementBar
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeAnnouncementBar(properties: Readonly<AnnouncementBarProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------------- | ----------- |
+| خصائص | للقراءة فقط<AnnouncementBarProperties> |             |
+
+## `src/components/organisms/forge-asset-browser/forge-asset-browser`
+
+### AssetBrowserItem
+
+**النوع:** الواجهة
+
+```typescript
+export interface AssetBrowserItem
+```
+
+لم يتم تقديم أي وصف.
+
+### AssetBrowserProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface AssetBrowserProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### AssetBrowserSize
+
+**النوع:** النوع
+
+```typescript
+export type AssetBrowserSize = 'sm' | 'md' | 'lg';
+```
+
+لم يتم تقديم أي وصف.
+
+### AssetBrowserValue
+
+**النوع:** النوع
+
+```typescript
+export type AssetBrowserValue = string | string[];
+```
+
+لم يتم تقديم أي وصف.
+
+### ForgeAssetBrowser
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeAssetBrowser(properties: Readonly<AssetBrowserProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------- | ----------- |
+| خصائص | للقراءة فقط<AssetBrowserProperties> |             |
 
 ## `src/components/organisms/forge-carousel/forge-carousel`
 
@@ -2020,7 +2893,7 @@ function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement;
 اللهجة لا تستطيع فعل ذلك - لذلك يتم تشغيل الشرائح بواسطة مصفوفة `slides` (مع ملحق
 فتحة `slide` المحددة للمحتوى المخصص)، وهو نفس تسوية العناصر التي تم ترحيلها
 تم استخدام {@link ForgeTabs}. التركيب-API `ref`/`watch`/`onBeforeUnmount`
-تصبح السباكة ذات التشغيل التلقائي `useState` + فاصل زمني `useEffect` (مع الضغط على المفتاح
+تصبح السباكة التي يتم تشغيلها تلقائيًا `useState` + فاصل زمني `useEffect` (يتم الضغط عليه على
 مؤشر نشط بحيث يتقدم دون إغلاق قديم)؛ `useReducedMotion`
 يصبح composable علامة اختيار `matchMedia` مضمّنة داخل التأثير؛ المؤشر
 إحداثيات البداية تصبح `useRef`؛ تم إسقاط `defineExpose`؛ و
@@ -2028,9 +2901,9 @@ function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<CarouselProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<CarouselProperties> |             |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2074,9 +2947,425 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<ChatAreaProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<ChatAreaProperties> |             |
+
+## `src/components/organisms/forge-command-palette/forge-command-palette`
+
+### CommandPaletteCommand
+
+**النوع:** النوع
+
+```typescript
+export type CommandPaletteCommand = CommandItem;
+```
+
+لم يتم تقديم أي وصف.
+
+#### عقد
+
+- **@مهمل:** استخدم `CommandItem`.
+
+### CommandPaletteProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface CommandPaletteProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### حجم لوحة الأوامر
+
+**النوع:** النوع
+
+```typescript
+export type CommandPaletteSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+رمز الحجم يتحكم في مقياس لوحة الأوامر.
+
+### ForgeCommandPalette
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeCommandPalette(properties: Readonly<CommandPaletteProperties>): MpElement;
+```
+
+لوحة أوامر قابلة للبحث، تعتمد على لوحة المفاتيح أولاً مع تراكب مشروط. المحايد
+يحافظ التنفيذ على إطار التصفية والاختيار المستقل بينما
+حراسة مستمعي المستندات العالمية من أجل SSR.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------------- | ----------- |
+| خصائص | للقراءة فقط<CommandPaletteProperties> |             |
+
+## `src/components/organisms/forge-comment-thread/forge-comment-thread`
+
+### تعليق موضوع التعليق
+
+**النوع:** الواجهة
+
+```typescript
+export interface CommentThreadComment
+```
+
+لم يتم تقديم أي وصف.
+
+### خصائص الموضوع التعليق
+
+**النوع:** الواجهة
+
+```typescript
+export interface CommentThreadProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### تعليق حجم الموضوع
+
+**النوع:** النوع
+
+```typescript
+export type CommentThreadSize = 'sm' | 'md' | 'lg';
+```
+
+لم يتم تقديم أي وصف.
+
+### ForgeCommentThread
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeCommentThread(properties: Readonly<CommentThreadProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------------- | ----------- |
+| خصائص | للقراءة فقط<CommentThreadProperties> |             |
+
+## `src/components/organisms/forge-comparison-table/forge-comparison-table`
+
+### ميزة جدول المقارنة
+
+**النوع:** النوع
+
+```typescript
+export type ComparisonTableFeature = FeatureRow;
+```
+
+لم يتم تقديم أي وصف.
+
+#### عقد
+
+- **@مهمل:** استخدم `FeatureRow`.
+
+### ComparisonTablePlan
+
+**النوع:** النوع
+
+```typescript
+export type ComparisonTablePlan = ComparisonItem;
+```
+
+لم يتم تقديم أي وصف.
+
+#### عقد
+
+- **@مهمل:** استخدم `ComparisonItem`.
+
+### ComparisonTableProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface ComparisonTableProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### ComparisonTableSize
+
+**النوع:** النوع
+
+```typescript
+export type ComparisonTableSize = 'sm' | 'md' | 'lg';
+```
+
+لم يتم تقديم أي وصف.
+
+### ComparisonTableValue
+
+**النوع:** النوع
+
+```typescript
+export type ComparisonTableValue = string | number | boolean;
+```
+
+لم يتم تقديم أي وصف.
+
+### ForgeComparisonTable
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeComparisonTable(properties: Readonly<ComparisonTableProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------------- | ----------- |
+| خصائص | للقراءة فقط<ComparisonTableProperties> |             |
+
+## `src/components/organisms/forge-cookie-consent/forge-cookie-consent`
+
+### CookieCategory
+
+**النوع:** الواجهة
+
+```typescript
+export interface CookieCategory
+```
+
+فئة ملفات تعريف الارتباط القابلة للتكوين من قبل المستخدم.
+
+### خصائص موافقة ملفات تعريف الارتباط
+
+**النوع:** الواجهة
+
+```typescript
+export interface CookieConsentProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### حجم ملف تعريف الارتباط
+
+**النوع:** النوع
+
+```typescript
+export type CookieConsentSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+رمز الحجم الذي يتحكم في مقياس سطح الموافقة.
+
+### حالة موافقة ملف تعريف الارتباط
+
+**النوع:** الواجهة
+
+```typescript
+export interface CookieConsentState
+```
+
+تم إرسال حمولة الموافقة إلى التطبيق المضيف واستمرت في التخزين.
+
+### ForgeCookieConsent
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeCookieConsent(properties: Readonly<CookieConsentProperties>): MpElement;
+```
+
+شعار الموافقة ومربع حوار التفضيلات الذي يمكن الوصول إليه مع الفئة المطلوبة
+الإنفاذ واستمرارية التخزين المحلي/الجلسة الخاضعة للحراسة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------------- | ----------- |
+| خصائص | للقراءة فقط<CookieConsentProperties> |             |
+
+## `src/components/organisms/forge-cta-banner/forge-cta-banner`
+
+### CtaBannerAction
+
+**النوع:** الواجهة
+
+```typescript
+export interface CtaBannerAction
+```
+
+لم يتم تقديم أي وصف.
+
+### CtaBannerProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface CtaBannerProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### CtaBannerVariant
+
+**النوع:** النوع
+
+```typescript
+export type CtaBannerVariant = 'neutral' | 'primary' | 'secondary' | 'success' | 'warning';
+```
+
+لم يتم تقديم أي وصف.
+
+### com.ForgeCtaBanner
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeCtaBanner(properties: Readonly<CtaBannerProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------- | ----------- |
+| خصائص | للقراءة فقط<CtaBannerProperties> |             |
+
+## `src/components/organisms/forge-data-card/forge-data-card`
+
+### DataCardData
+
+**النوع:** النوع
+
+```typescript
+export type DataCardData = VCardData | ICalendarData;
+```
+
+بيانات الاتصال أو التقويم المكتوبة المعروضة بواسطة `ForgeDataCard`.
+
+### خصائص بطاقة البيانات
+
+**النوع:** الواجهة
+
+```typescript
+export interface DataCardProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### حجم بطاقة البيانات
+
+**النوع:** النوع
+
+```typescript
+export type DataCardSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+رمز الحجم يتحكم في مقياس بطاقة البيانات.
+
+### DataCardTrend
+
+**النوع:** الواجهة
+
+```typescript
+export interface DataCardTrend
+```
+
+لم يتم تقديم أي وصف.
+
+#### عقد
+
+- **@مهمل:** تستخدم بطاقات البيانات الآن `VCardData` أو `ICalendarData`.
+
+### DataCardVariant
+
+**النوع:** النوع
+
+```typescript
+export type DataCardVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+```
+
+درجة لون سطح البطاقة.
+
+### ForgeDataCard
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeDataCard(properties: Readonly<DataCardProperties>): MpElement;
+```
+
+جهة اتصال دلالية أو بطاقة تقويم مع تنزيلات متوافقة مع المعايير.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<DataCardProperties> |             |
+
+## `src/components/organisms/forge-diff-viewer/forge-diff-viewer`
+
+### DiffLineType
+
+**النوع:** النوع
+
+```typescript
+export type DiffLineType = 'context' | 'addition' | 'deletion';
+```
+
+لم يتم تقديم أي وصف.
+
+### DiffViewerLine
+
+**النوع:** الواجهة
+
+```typescript
+export interface DiffViewerLine
+```
+
+لم يتم تقديم أي وصف.
+
+### DiffViewerMode
+
+**النوع:** النوع
+
+```typescript
+export type DiffViewerMode = 'unified' | 'split';
+```
+
+لم يتم تقديم أي وصف.
+
+### DiffViewerProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface DiffViewerProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### com.ForgeDiffViewer
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeDiffViewer(properties: Readonly<DiffViewerProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<DiffViewerProperties> |             |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2103,7 +3392,7 @@ export type DrawerDraggable = boolean | DrawerSize | number;
 المحور ذي الصلة)، {@link DrawerSize} (يمكن تغيير حجمه حتى الحد الأقصى لهذا الحجم)، أو
 `number` (يمكن تغيير حجمه إلى هذا العدد من `rem`).
 
-### DrawerPlacement
+### وضع الدرج
 
 **النوع:** النوع
 
@@ -2113,7 +3402,7 @@ export type DrawerPlacement = 'start' | 'end' | 'top' | 'bottom';
 
 حافة إطار العرض التي تم تثبيت الدرج عليها.
 
-### DrawerProperties
+### خصائص الدرج
 
 **النوع:** الواجهة
 
@@ -2141,7 +3430,7 @@ export type DrawerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type DrawerVariant = 'overlay' | 'inline';
 ```
 
-سلوك العرض — لوحة `overlay` العائمة (افتراضي) أو لوحة `inline` سريعة الاستجابة.
+سلوك العرض - لوحة `overlay` العائمة (افتراضي) أو لوحة `inline` سريعة الاستجابة.
 
 ### ForgeDrawer
 
@@ -2162,7 +3451,7 @@ function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement;
 ويعود إلى سلوك التراكب الموجود أسفله - والذي تستخدمه عناصر التخطيط الأولية
 مثل `ForgeVerticalLayout`.
 
-عندما يتم تعيين `draggable`، تنمو الحافة الداخلية لمقبض تغيير الحجم: سحبه
+عندما يتم تعيين `draggable`، تنمو الحافة الداخلية بمقبض تغيير الحجم: سحبه
 (تتبع سحب المؤشر على `window` عبر مساعد `pointer-drag` المشترك)
 يقوم بتغيير حجم اللوحة بين `MIN_SIZE_REM` والحد الأقصى والتقارير التي تم حلها
 الحجم الجديد في `rem` حتى `onResize` (ينبعث Vue `resize`).
@@ -2178,13 +3467,203 @@ helper) ودعامة `closeLabel` بدلاً من i18n.
 
 #### حدود
 
-| الاسم | اكتب                          | الوصف |
-| ----- | ----------------------------- | ----- |
-| خصائص | للقراءة فقط<DrawerProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| خصائص | للقراءة فقط<DrawerProperties> |             |
+
+## `src/components/organisms/forge-error-page/forge-error-page`
+
+### ErrorPageAction
+
+**النوع:** الواجهة
+
+```typescript
+export interface ErrorPageAction
+```
+
+يتم عرض الإجراء أسفل رسالة الخطأ.
+
+### ErrorPageData
+
+**النوع:** الواجهة
+
+```typescript
+export interface ErrorPageData
+```
+
+معلومات الخطأ المنظمة التي يمكن تمريرها ككائن بيانات عام واحد.
+
+### ErrorPageProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface ErrorPageProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### ErrorPageSize
+
+**النوع:** النوع
+
+```typescript
+export type ErrorPageSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+رمز الحجم يتحكم في مقياس صفحة الخطأ.
+
+### صفحة ForgeError
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeErrorPage(properties: Readonly<ErrorPageProperties>): MpElement;
+```
+
+صفحة حالة خطأ دلالية وسهلة الفتح مع واصفات الإجراء المكتوبة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------- | ----------- |
+| خصائص | للقراءة فقط<ErrorPageProperties> |             |
+
+## `src/components/organisms/forge-kanban-board/forge-kanban-board`
+
+### ForgeKanbanBoard
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeKanbanBoard(properties: Readonly<KanbanBoardProperties>): MpElement;
+```
+
+لوحة سريعة الاستجابة لنقل العناصر بين الأعمدة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------- | ----------- |
+| خصائص | للقراءة فقط<KanbanBoardProperties> |             |
+
+### KanbanBoardProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface KanbanBoardProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### بطاقة كانبان
+
+**النوع:** النوع
+
+```typescript
+export type KanbanCard = KanbanItem;
+```
+
+لم يتم تقديم أي وصف.
+
+#### عقد
+
+- **@مهمل:** استخدم `KanbanItem`.
+
+### عمود كانبان
+
+**النوع:** الواجهة
+
+```typescript
+export interface KanbanColumn
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/components/organisms/forge-logo-cloud/forge-logo-cloud`
+
+### com.ForgeLogoCloud
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeLogoCloud(properties: Readonly<LogoCloudProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------- | ----------- |
+| خصائص | للقراءة فقط<LogoCloudProperties> |             |
+
+### LogoCloudItem
+
+**النوع:** النوع
+
+```typescript
+export type LogoCloudItem = Logo;
+```
+
+لم يتم تقديم أي وصف.
+
+#### عقد
+
+- **@مهمل:** استخدم `Logo`.
+
+### LogoCloudProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface LogoCloudProperties
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/components/organisms/forge-marketing-header/forge-marketing-header`
+
+### ForgeMarketingHeader
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeMarketingHeader(properties: Readonly<MarketingHeaderProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------------- | ----------- |
+| خصائص | للقراءة فقط<MarketingHeaderProperties> |             |
+
+### MarketingHeaderAction
+
+**النوع:** الواجهة
+
+```typescript
+export interface MarketingHeaderAction
+```
+
+لم يتم تقديم أي وصف.
+
+### خصائص رأس التسويق
+
+**النوع:** الواجهة
+
+```typescript
+export interface MarketingHeaderProperties
+```
+
+لم يتم تقديم أي وصف.
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
-### ForgeMenubar
+### com.ForgeMenubar
 
 **النوع:** الوظيفة
 
@@ -2216,9 +3695,9 @@ function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                           | الوصف |
-| ----- | ------------------------------ | ----- |
-| خصائص | للقراءة فقط<MenubarProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| خصائص | للقراءة فقط<MenubarProperties> |             |
 
 ### خصائص شريط القوائم
 
@@ -2248,7 +3727,7 @@ function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement;
 فتحة `end`، تنهار على الهاتف المحمول (تحت `mobileBreakpoint` القابلة للتكوين،
 `'sm'` بشكل افتراضي) إلى زر الهامبرغر الذي يقوم بتبديل {@link ForgeDrawer}
 يعكس فتحات + `end` الافتراضية. الانهيار مدفوع برد الفعل
-استعلام `matchMedia`، ويتم الاحتفاظ بحالة الدرج المفتوحة محليًا باستخدام التابع
+استعلام `matchMedia`، ويتم الاحتفاظ بحالة الدرج المفتوحة محليًا باستخدام ملف
 خطاف `useState` محايد.
 
 وهو يتألف من الكتابة مرة واحدة {@link ForgeDrawer} و{@link ForgeTypography}، ويمتلكها
@@ -2258,9 +3737,9 @@ function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                          | الوصف |
-| ----- | ----------------------------- | ----- |
-| خصائص | للقراءة فقط<NavbarProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| خصائص | للقراءة فقط<NavbarProperties> |             |
 
 ### NavbarAlign
 
@@ -2294,6 +3773,306 @@ export interface NavbarProperties
 
 لم يتم تقديم أي وصف.
 
+## `src/components/organisms/forge-notification-panel/forge-notification-panel`
+
+### ForgeNotificationPanel
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeNotificationPanel(properties: Readonly<NotificationPanelProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------------- | ----------- |
+| خصائص | للقراءة فقط<NotificationPanelProperties> |             |
+
+### NotificationItem
+
+**النوع:** الواجهة
+
+```typescript
+export interface NotificationItem
+```
+
+لم يتم تقديم أي وصف.
+
+### NotificationPanelProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface NotificationPanelProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### نوع الإشعارات
+
+**النوع:** النوع
+
+```typescript
+export type NotificationType = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/components/organisms/forge-onboarding-tour/forge-onboarding-tour`
+
+### جولة ForgeOnboarding
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeOnboardingTour(properties: Readonly<OnboardingTourProperties>): MpElement;
+```
+
+جولة مميزة يمكن الوصول إليها باستخدام التنقل باستخدام لوحة المفاتيح واستمرارية الإكمال الاختيارية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------------- | ----------- |
+| خصائص | للقراءة فقط<OnboardingTourProperties> |             |
+
+### خطوة الصعود
+
+**النوع:** النوع
+
+```typescript
+export type OnboardingStep = TourStep;
+```
+
+لم يتم تقديم أي وصف.
+
+#### عقد
+
+- **@مهمل:** استخدم `TourStep`.
+
+### OnboardingTourPlacement
+
+**النوع:** النوع
+
+```typescript
+export type OnboardingTourPlacement = 'top' | 'right' | 'bottom' | 'left' | 'center';
+```
+
+تفضيل الموضع لمربع حوار الجولة المرتبط بهدف.
+
+### OnboardingTourProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface OnboardingTourProperties
+```
+
+لم يتم تقديم أي وصف.
+
+### OnboardingTourSize
+
+**النوع:** النوع
+
+```typescript
+export type OnboardingTourSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+رمز الحجم يتحكم في مقياس حوار الجولة.
+
+## `src/components/organisms/forge-pricing-table/forge-pricing-table`
+
+### ForgePricingTable
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgePricingTable(properties: Readonly<PricingTableProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------- | ----------- |
+| خصائص | للقراءة فقط<PricingTableProperties> |             |
+
+### ميزة التسعير
+
+**النوع:** الواجهة
+
+```typescript
+export interface PricingFeature
+```
+
+لم يتم تقديم أي وصف.
+
+### خطة التسعير
+
+**النوع:** الواجهة
+
+```typescript
+export interface PricingPlan
+```
+
+لم يتم تقديم أي وصف.
+
+### PricingTableProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface PricingTableProperties
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/components/organisms/forge-profile-card/forge-profile-card`
+
+### ForgeProfileCard
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeProfileCard(properties: Readonly<ProfileCardProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------- | ----------- |
+| خصائص | للقراءة فقط<ProfileCardProperties> |             |
+
+### خصائص بطاقة الملف الشخصي
+
+**النوع:** الواجهة
+
+```typescript
+export interface ProfileCardProperties
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/components/organisms/forge-site-footer/forge-site-footer`
+
+### ForgeSiteFooter
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeSiteFooter(properties: Readonly<SiteFooterProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<SiteFooterProperties> |             |
+
+### SiteFooterColumn
+
+**النوع:** الواجهة
+
+```typescript
+export interface SiteFooterColumn
+```
+
+لم يتم تقديم أي وصف.
+
+### رابط تذييل الموقع
+
+**النوع:** الواجهة
+
+```typescript
+export interface SiteFooterLink
+```
+
+لم يتم تقديم أي وصف.
+
+### خصائص تذييل الموقع
+
+**النوع:** الواجهة
+
+```typescript
+export interface SiteFooterProperties
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/components/organisms/forge-split-pane/forge-split-pane`
+
+### com.ForgeSplitPane
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------- | ----------- |
+| خصائص | للقراءة فقط<SplitPaneProperties> |             |
+
+### SplitPaneProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface SplitPaneProperties
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/components/organisms/forge-stats-section/forge-stats-section`
+
+### قسم ForgeStats
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeStatsSection(properties: Readonly<StatsSectionProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------- | ----------- |
+| خصائص | للقراءة فقط<StatsSectionProperties> |             |
+
+### StatItem
+
+**النوع:** الواجهة
+
+```typescript
+export interface StatItem
+```
+
+لم يتم تقديم أي وصف.
+
+### StatsSectionProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface StatsSectionProperties
+```
+
+لم يتم تقديم أي وصف.
+
 ## `src/components/organisms/forge-table/forge-table`
 
 ### ForgeTable
@@ -2304,29 +4083,13 @@ export interface NavbarProperties
 function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
-`ForgeTable` — جدول بيانات قابل للفرز تم تأليفه مرة واحدة بلهجة JSX المحايدة
-وتجميعها مباشرة إلى React أو Vue بواسطة `@mission-platform/vite-plugin-forge`.
-
-فهو يعرض `columns`/`rows` باعتباره `<table>` دلاليًا، مع النقر للفرز
-الرؤوس (تصاعدي ← تنازلي ← غير مصنف) التي تطلق رد الاتصال `onSort`،
-تسمية توضيحية اختيارية، وتراكب تحميل، وحالة فارغة. يتم تقديم نص الخلية
-من خلال {@link ForgeTypography} المحايد المؤلف؛ يتم عقد حالة الفرز مع
-الخطافات المحايدة {@link useState}/{@link useMemo}. إنها تمتلك أسلوبها
-من خلال وحدة CSS الموجودة في نفس الموقع `forge-table.module.scss`.
-
-كان Vue SFC الأصلي عامًا على نوع الصف، المكون
-`ForgeTableHead`/`ForgeTableBody` المكونات الفرعية، تستخدم انبعاث `sort`، ومكشوفة
-فتحات `cell-<key>` محددة لكل عمود. يستخدم الإصدار المحايد
-صفوف `Record<string, unknown>`، تضمّن الرأس/الجسم، وتستخدم `onSort`
-رد الاتصال، ويدفع العرض لكل خلية من خلال الاختياري لكل عمود
-المنسق `render` (يتم إسقاط فتحات الخلايا المحددة) - بما يتوافق مع الطريقة
-أسقطت المكونات الأخرى التي تم ترحيلها فتحات محددة النطاق.
+لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب                         | الوصف |
-| ----- | ---------------------------- | ----- |
-| خصائص | للقراءة فقط<TableProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------- | ----------- |
+| خصائص | للقراءة فقط<TableProperties> |             |
 
 ### اتجاه الفرز
 
@@ -2358,42 +4121,83 @@ export interface TableProperties
 
 لم يتم تقديم أي وصف.
 
-## `src/components/organisms/forge-tree-view/forge-tree-view`
+## `src/components/organisms/forge-testimonials-section/forge-testimonials-section`
 
-### فورج تري فيو
+### قسم الشهادات
 
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
+function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectionProperties>): MpElement;
 ```
 
-`ForgeTreeView` — شجرة متكررة ويمكن الوصول إليها وتم تأليفها مرة واحدة في JSX المحايدة
-لهجة وتجميعها مباشرة إلى React أو Vue بواسطة
-`@mission-platform/vite-plugin-forge`. يمكن توسيع/طي كل node و
-تم النقر عليه؛ يتم الاحتفاظ بالحالة المفتوحة باستخدام الخطاف {@link useState} المحايد، و
-يمكن تخصيص كل ملصق من خلال فتحة `label` ذات النطاق
-(`{ node, depth }`) والذي يعود إلى نص node. دعم لوحة المفاتيح
-يعكس النسخة الأصلية (تحديد Enter/Space، توسيع/طي السهم لليمين/لليسار).
-إنها تمتلك تصميمها من خلال وحدة CSS الموجودة في نفس الموقع `forge-tree-view.module.scss`.
-
-يعكس ملف Vue SFC الأصلي (الذي يتكون من ملفات متكررة
-`ForgeTreeNode`/`ForgeTreeNodeLabel` المكونات الفرعية)، يعرض إصدار JSX
-**العلامات المتداخلة الحقيقية**: كل جذر node هو تكراري {@link ForgeTreeViewItem}
-(المستخرج في المكون الشقيق الخاص به) الذي يحول أطفاله إلى أ
-متداخلة `<ul role="group">` بدلاً من تسطيح الشجرة المرئية في شجرة واحدة
-قائمة. مستوى جذر واحد `openMap` (مفتاح بواسطة `node.id`، تمامًا مثل Vue
-حالة الجذر) تقود كل حالة موسعة لـ node وتتم مشاركتها مع كل عنصر
-من خلال الدعائم `resolveOpen`/`selectNode`/`toggleNode`/`keyDownNode`؛ ال
-تتم إعادة توجيه فتحة `label` ذات النطاق إلى الأسفل دون تغيير، ويتم إعادة توجيه ملف
-دلالات `aria-selected`/`aria-expanded` و`onSelect`/`onToggle`
-تتطابق دعائم رد الاتصال بطريقة أخرى.
+لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<TreeViewProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------------------- | ----------- |
+| خصائص | للقراءة فقط<TestimonialsSectionProperties> |             |
+
+### شهادة
+
+**النوع:** الواجهة
+
+```typescript
+export interface Testimonial
+```
+
+لم يتم تقديم أي وصف.
+
+### قسم الشهاداتالخصائص
+
+**النوع:** الواجهة
+
+```typescript
+export interface TestimonialsSectionProperties
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/components/organisms/forge-transfer-list/forge-transfer-list`
+
+### قائمة فورج ترانسفير
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeTransferList(properties: Readonly<TransferListProperties>): MpElement;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------- | ----------- |
+| خصائص | للقراءة فقط<TransferListProperties> |             |
+
+### TransferItem
+
+**النوع:** الواجهة
+
+```typescript
+export interface TransferItem
+```
+
+لم يتم تقديم أي وصف.
+
+### TransferListProperties
+
+**النوع:** الواجهة
+
+```typescript
+export interface TransferListProperties
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/components/organisms/forge-tree-view/forge-tree-view-item`
 
 ### TreeViewLabelScope
 
@@ -2415,6 +4219,43 @@ export interface TreeViewNode
 
 node في الشجرة المقدمة بواسطة {@link ForgeTreeView}.
 
+## `src/components/organisms/forge-tree-view/forge-tree-view`
+
+### فورج تري فيو
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
+```
+
+`ForgeTreeView` — شجرة متكررة ويمكن الوصول إليها وتم تأليفها مرة واحدة في JSX المحايدة
+لهجة وتجميعها مباشرة إلى React أو Vue بواسطة
+`@mission-platform/vite-plugin-forge`. يمكن توسيع/طي كل node و
+تم النقر عليه؛ يتم الاحتفاظ بالحالة المفتوحة باستخدام الخطاف {@link useState} المحايد، و
+يمكن تخصيص كل ملصق من خلال فتحة `label` ذات النطاق
+(`{ node, depth }`) الذي يعود إلى نص node. دعم لوحة المفاتيح
+يعكس النسخة الأصلية (تحديد Enter/Space، توسيع/طي السهم لليمين/لليسار).
+إنها تمتلك تصميمها من خلال وحدة CSS الموجودة في نفس الموقع `forge-tree-view.module.scss`.
+
+يعكس ملف Vue SFC الأصلي (الذي يتكون من ملفات متكررة
+`ForgeTreeNode`/`ForgeTreeNodeLabel` المكونات الفرعية)، يعرض إصدار JSX
+**العلامات المتداخلة الحقيقية**: كل جذر node هو تكراري {@link ForgeTreeViewItem}
+(المستخرج في المكون الشقيق الخاص به) الذي يحول أطفاله إلى أ
+متداخلة `<ul role="group">` بدلاً من تسطيح الشجرة المرئية في شجرة واحدة
+قائمة. مستوى جذر واحد `openMap` (مفتاح بواسطة `node.id`، تمامًا مثل Vue
+حالة الجذر) تقود كل حالة موسعة لـ node وتتم مشاركتها مع كل عنصر
+من خلال الدعائم `resolveOpen`/`selectNode`/`toggleNode`/`keyDownNode`؛ ال
+تتم إعادة توجيه فتحة `label` ذات النطاق للأسفل دون تغيير، ويتم إعادة توجيه ملف
+دلالات `aria-selected`/`aria-expanded` و`onSelect`/`onToggle`
+تتطابق دعائم رد الاتصال بطريقة أخرى.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<TreeViewProperties> |             |
+
 ### TreeViewProperties
 
 **النوع:** الواجهة
@@ -2435,7 +4276,7 @@ export interface TreeViewProperties
 function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement;
 ```
 
-`ForgeVirtualList` — يجعل الصفوف مرئية فقط داخل حاوية التمرير،
+`ForgeVirtualList` - يجعل الصفوف مرئية فقط داخل حاوية التمرير،
 لذلك تظل مصفوفة `items` الطويلة بشكل تعسفي رخيصة الثمن في العرض. تم تأليفه مرة واحدة
 لهجة JSX المحايدة وتم تجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`; يتم الاحتفاظ بموضع التمرير باستخدام الزر
@@ -2453,9 +4294,9 @@ function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب                               | الوصف |
-| ----- | ---------------------------------- | ----- |
-| خصائص | للقراءة فقط<VirtualListProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------- | ----------- |
+| خصائص | للقراءة فقط<VirtualListProperties> |             |
 
 ### VirtualListItemScope
 
@@ -2504,9 +4345,9 @@ Vue بواسطة `@mission-platform/vite-plugin-forge`؛ فهو يعرض الص�
 
 #### حدود
 
-| الاسم | اكتب                                    | الوصف |
-| ----- | --------------------------------------- | ----- |
-| خصائص | للقراءة فقط<VirtualLogViewerProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------------ | ----------- |
+| خصائص | للقراءة فقط<VirtualLogViewerProperties> |             |
 
 ### دخول السجل
 
@@ -2548,14 +4389,14 @@ export interface VirtualLogViewerProperties
 function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement;
 ```
 
-`ForgeVirtualTable` - جدول بيانات قابل للتمرير الظاهري والفرز يتم عرضه
+`ForgeVirtualTable` — جدول بيانات افتراضي قابل للتمرير والفرز يتم عرضه
 فقط الصفوف الموجودة داخل إطار العرض، لذلك تبقى مجموعة `rows` الطويلة بشكل تعسفي
 رخيصة لتقديم. تم تأليفه مرة واحدة بلهجة JSX المحايدة وتم تجميعه
 مباشرة إلى React أو Vue بواسطة `@mission-platform/vite-plugin-forge`؛ النوع و
 حالة التمرير تستخدم {@link useState}/{@link useMemo}/{@link useRef}/ المحايد
 خطافات {@link useEffect}.
 
-يوفر الرأس الثابت أعمدة انقر للفرز (تدوير تصاعدي → تنازلي →
+يوفر الرأس الثابت أعمدة انقر للفرز (التنقل تصاعديًا → تنازليًا →
 غير مصنف) الذي يطلق رد الاتصال `onSort`؛ صفوف الجسم النار `onRowClick`، و
 تعود الفتحة المسماة `footer` إلى ملخص عدد الصفوف + الفرز. مثل
 الأصلي يستخدم `div` + ARIA `role="table|rowgroup|row|columnheader|gridcell"`
@@ -2569,15 +4410,15 @@ function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElem
 يضمّن الرأس/الصف/التذييل، ويعرض `@mission-platform/icons` للكتابة مرة واحدة
 `ForgeIconSort` (الذي يملأ شيفرون الاتجاه النشط)، و
 يستخدم دعائم رد الاتصال `onSort`/`onRowClick`. يتم تشغيل محتوى كل خلية بواسطة
-منسق `render` الاختياري لكل عمود، مع فتحة `cell` ذات نطاق واحد
+المنسق الاختياري `render` لكل عمود، مع فتحة `cell` ذات نطاق واحد
 (`{ column, row, value }`) لاستبدال `cell-<key>` الأصلي لكل عمود
 فتحات لمحتوى الخلية المخصص بالكامل (التفاعلي).
 
 #### حدود
 
-| الاسم | اكتب                                | الوصف |
-| ----- | ----------------------------------- | ----- |
-| خصائص | للقراءة فقط<VirtualTableProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------- | ----------- |
+| خصائص | للقراءة فقط<VirtualTableProperties> |             |
 
 ### VirtualTableCellScope
 
@@ -2624,7 +4465,7 @@ function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElemen
 تم تجميعها مباشرة إلى React أو Vue بواسطة `@mission-platform/vite-plugin-forge`.
 
 إنه يتصرف مثل {@link ForgeTabs} (ARIA `tablist`/`tab`/`tabpanel`، المتجول
-`tabindex`، التنقل بلوحة المفاتيح سهم/الصفحة الرئيسية/النهاية، إمكانيات قابلة للإغلاق/قابلة للإضافة،
+`tabindex`، التنقل باستخدام لوحة المفاتيح سهم/الصفحة الرئيسية/النهاية، إمكانيات قابلة للإغلاق/قابلة للإضافة،
 `panel` **render-prop**)، ولكن لا يقوم مطلقًا بتثبيت اللوحات غير النشطة —
 مناسبة لمحتوى اللوحة الثقيلة. إنها تمتلك تصميمها من خلال CSS الموجود في نفس الموقع
 الوحدة النمطية `forge-virtual-tabs.module.scss`.
@@ -2641,9 +4482,9 @@ function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب                               | الوصف |
-| ----- | ---------------------------------- | ----- |
-| خصائص | للقراءة فقط<VirtualTabsProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------- | ----------- |
+| خصائص | للقراءة فقط<VirtualTabsProperties> |             |
 
 ### VirtualTabPanelScope
 
@@ -2693,9 +4534,9 @@ function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): 
 
 #### حدود
 
-| الاسم | اكتب                                   | الوصف |
-| ----- | -------------------------------------- | ----- |
-| خصائص | للقراءة فقط<VirtualTreeViewProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------------- | ----------- |
+| خصائص | للقراءة فقط<VirtualTreeViewProperties> |             |
 
 ### TreeNode
 
@@ -2715,7 +4556,7 @@ node في الشجرة المقدمة بواسطة {@link ForgeVirtualTreeView}.
 export interface TreeRowScope
 ```
 
-تم تمرير النطاق إلى فتحة `row` (محددة النطاق) الخاصة بـ {@link ForgeVirtualTreeView} لكل node مرئي.
+تم تمرير النطاق إلى فتحة `row` (ذات النطاق) الخاصة بـ {@link ForgeVirtualTreeView} لكل node مرئي.
 
 ### VirtualTreeViewProperties
 
@@ -2747,18 +4588,18 @@ function ForgeHero(properties: Readonly<HeroProperties>): MpElement;
 scrim اختياري `overlay` للحفاظ على تباين النص (فوق الوسائط الحاجب /
 العنوان / العنوان الفرعي التبديل إلى لون النص العكسي).
 
-وهو يؤلف الكتابة الشقيقة مرة واحدة {@link ForgeTypography} للحاجب،
+وهو يؤلف الكتابة الشقيقة {@link ForgeTypography} مرة واحدة للحاجب،
 العنوان والعنوان الفرعي، ويمتلك تصميمه من خلال وحدة CSS الموجودة في نفس الموقع
-`forge-hero.module.scss` (يتم نقله إلى كل إطار عمل على مرحلتين
+`forge-hero.module.scss` (يتم نقله إلى كل إطار من خلال المرحلتين
 مترجم). يتم تأليف المناطق `media`/`actions` كفتحات مسماة
 (`<Slot>`، تم اكتشاف التواجد باستخدام إطار العمل المحايد {@link hasSlot}
 helper) و`eyebrow`/`title`/`subtitle` عبارة عن دعائم سلسلة.
 
 #### حدود
 
-| الاسم | اكتب                        | الوصف |
-| ----- | --------------------------- | ----- |
-| خصائص | للقراءة فقط<HeroProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------ | ----------- |
+| خصائص | للقراءة فقط<HeroProperties> |             |
 
 ### HeroAlign
 
@@ -2790,6 +4631,281 @@ export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 مقياس الحشو العمودي - مقياس 2xs → 2xl الأساسي.
 
+## `src/utils/date-time/date-time`
+
+### browserTimezoneLabel
+
+**النوع:** الوظيفة
+
+```typescript
+function browserTimezoneLabel(): string;
+```
+
+اسم IANA الخاص بالمنطقة الزمنية للمتصفح، أو `'Local'` عندما لا يكون متاحًا.
+
+### المشبك
+
+**النوع:** الوظيفة
+
+```typescript
+function clamp(value: number, min: number, max: number): number;
+```
+
+قم بتثبيت رقم في نطاق `[min, max]` الشامل.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | رقم |             |
+| دقيقة | رقم |             |
+| ماكس | رقم |             |
+
+### نطاق التاريخ
+
+**النوع:** الواجهة
+
+```typescript
+export interface DateRange
+```
+
+نطاق تاريخ ISO `{ start, end }` (`YYYY-MM-DD`).
+
+### DateTimeRange
+
+**النوع:** الواجهة
+
+```typescript
+export interface DateTimeRange
+```
+
+نطاق التاريخ والوقت `{ start, end, timezone }` (`YYYY-MM-DD HH:MM[:SS]`).
+
+### وقت العرض
+
+**النوع:** الوظيفة
+
+```typescript
+function displayTime(value: string, withSeconds: boolean): string;
+```
+
+قم بتطبيع سلسلة زمنية مخزنة إلى الدقة التي تم تكوينها (يظل الفارغ فارغًا).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ------- | ----------- |
+| القيمة | سلسلة |             |
+| بالثواني | منطقية |             |
+
+### formatDateRange
+
+**النوع:** الوظيفة
+
+```typescript
+function formatDateRange(value: DateRange | undefined): string;
+```
+
+قم بتنسيق نطاق تاريخ ISO في ملخص `start → end` (طي الأجزاء الفارغة).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---------------------- | ----------- |
+| القيمة | نطاق التاريخ \| غير محدد |             |
+
+### formatDateTime
+
+**النوع:** الوظيفة
+
+```typescript
+function formatDateTime(date: string, parts: TimeParts, withSeconds: boolean): string;
+```
+
+انضم إلى أجزاء التاريخ والوقت `YYYY-MM-DD` في سلسلة `YYYY-MM-DD HH:MM[:SS]`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | --------- | ----------- |
+| التاريخ | سلسلة |             |
+| أجزاء | أجزاء زمنية |             |
+| بالثواني | منطقية |             |
+
+### com.formatTime
+
+**النوع:** الوظيفة
+
+```typescript
+function formatTime(parts: TimeParts, withSeconds: boolean): string;
+```
+
+قم بتنسيق مكونات الساعة/الدقيقة(/الثانية) إلى `HH:MM` أو `HH:MM:SS`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | --------- | ----------- |
+| أجزاء | أجزاء زمنية |             |
+| بالثواني | منطقية |             |
+
+### com.formatTimeRange
+
+**النوع:** الوظيفة
+
+```typescript
+function formatTimeRange(value: TimeRange | undefined, withSeconds: boolean): string;
+```
+
+قم بتنسيق نطاق زمني في ملخص `start → end` بالدقة التي تم تكوينها.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ---------------------- | ----------- |
+| القيمة | النطاق الزمني \| غير محدد |             |
+| بالثواني | منطقية |             |
+
+### ساعات
+
+**النوع:** ثابت
+
+```typescript
+export const HOURS: readonly number[];
+```
+
+قوائم الساعة القابلة للتحديد (0–23)، والدقيقة (0–59)، والثانية (0–59).
+
+### دقائق
+
+**النوع:** ثابت
+
+```typescript
+export const MINUTES: readonly number[];
+```
+
+لم يتم تقديم أي وصف.
+
+### وسادة
+
+**النوع:** الوظيفة
+
+```typescript
+function pad(value: number): string;
+```
+
+لوحة الصفر رقم مكون من رقمين.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | رقم |             |
+
+### تاريخ
+
+**النوع:** الوظيفة
+
+```typescript
+function parseDate(value: string): Date | undefined;
+```
+
+قم بتحليل سلسلة تاريخ `YYYY-MM-DD` ISO إلى `Date` (منتصف الليل المحلي) أو `undefined`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | سلسلة |             |
+
+### this.parseDateTime
+
+**النوع:** الوظيفة
+
+```typescript
+function parseDateTime(value: string): { date: string } & TimeParts;
+```
+
+قم بتقسيم سلسلة `YYYY-MM-DD HH:MM[:SS]` (أو ISO `T`/`Z`) إلى أجزاء التاريخ والوقت.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | سلسلة |             |
+
+### parseTime
+
+**النوع:** الوظيفة
+
+```typescript
+function parseTime(value: string): TimeParts;
+```
+
+تحليل سلسلة `HH:MM[:SS]` إلى مكونات الساعة/الدقيقة/الثانية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | سلسلة |             |
+
+### يتراوح
+
+**النوع:** الوظيفة
+
+```typescript
+function range(length: number): number[];
+```
+
+`[0, 1, …, length - 1]`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------ | ----------- |
+| الطول | رقم |             |
+
+### ثواني
+
+**النوع:** ثابت
+
+```typescript
+export const SECONDS: readonly number[];
+```
+
+لم يتم تقديم أي وصف.
+
+### أجزاء زمنية
+
+**النوع:** الواجهة
+
+```typescript
+export interface TimeParts
+```
+
+مكونات الساعة/الدقيقة/الثانية للوقت الذي تم تحليله.
+
+### النطاق الزمني
+
+**النوع:** الواجهة
+
+```typescript
+export interface TimeRange
+```
+
+النطاق الزمني `{ start, end }` (`HH:MM` أو `HH:MM:SS`).
+
+### وضع المنطقة الزمنية
+
+**النوع:** النوع
+
+```typescript
+export type TimezoneMode = 'browser' | 'utc';
+```
+
+ما إذا كان يتم تفسير نطاق التاريخ والوقت في منطقة المتصفح أو التوقيت العالمي المنسق (UTC).
+
 ## `src/utils/pointer-drag/pointer-drag`
 
 ### beginPointerDrag
@@ -2808,9 +4924,9 @@ function beginPointerDrag(handlers: PointerDragHandlers): () => void;
 
 #### حدود
 
-| الاسم   | اكتب         | الوصف |
-| ------- | ------------ | ----- |
-| معالجات | مؤشرات السحب |       |
+| الاسم | اكتب | الوصف |
+| -------- | ------------------- | ----------- |
+| معالجات | مؤشرات السحب |             |
 
 ### PointerDragHandlers
 
@@ -2820,4 +4936,4 @@ function beginPointerDrag(handlers: PointerDragHandlers): () => void;
 export interface PointerDragHandlers
 ```
 
-عمليات الاسترجاعات التي تم استدعاؤها طوال فترة سحب المؤشر بدأت بـ {@link beginPointerDrag}.
+عمليات الاسترجاعات التي تم استدعاؤها طوال مدة سحب المؤشر بدأت بـ {@link beginPointerDrag}.

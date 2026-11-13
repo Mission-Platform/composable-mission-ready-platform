@@ -6,20 +6,20 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 > Lingua: Italiano (it)
 
 Mission Platform utilizza un sistema di **Atomic Design** per organizzare i componenti in livelli gerarchici di complessità. Ogni
-Il componente è un'unità "write-once" creata nel dialetto neutro Forge JSX (`@mission-platform/forge-jsx`), assicurando
+Il componente è un'unità "write-once" creata nel dialetto Forge JSX neutro (`@mission-platform/forge-jsx`), garantendo
 coerenza tra più framework.
 
 ## Livelli di progettazione
 
 I componenti sono classificati in cinque livelli in base al loro ambito e responsabilità.
 
-| Livello       | Cartella                    | Descrizione                                                                                                                                                                                                     |
-| :------------ | :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Atomi**     | `src/components/atoms/`     | Primitive dell'interfaccia utente più piccole (ad es. `ForgeButton`, `ForgeInput`, `ForgeBadge`). Sono tipicamente unità funzionali che non possono essere ulteriormente scomposte senza perdere il loro scopo. |
-| **Molecole**  | `src/components/molecules/` | Composizioni semplici di atomi (ad es. `ForgeSearchInput`, `ForgeFieldSet`). Funzionano insieme come un'unità.                                                                                                  |
-| **Organismi** | `src/components/organisms/` | Sezioni dell'interfaccia utente complesse composte da atomi, molecole e altri organismi (ad es. `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                                     |
-| **Modelli**   | `src/components/templates/` | Layout a livello di pagina che definiscono la struttura del contenuto (ad es. `ForgeHero`, `ForgeAppLayout`). Spesso utilizzano gli slot per definire dove posizionare il contenuto.                            |
-| **Pagine**    | `src/components/pages/`     | Istanze specifiche di modelli popolati con contenuti e dati concreti (ad es. `AccountSettingsPage`).                                                                                                            |
+| Livello | Cartella | Descrizione |
+| :------------ | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Atomi** | `src/components/atoms/` | Primitive dell'interfaccia utente più piccole (ad esempio, `ForgeButton`, `ForgeInput`, `ForgeBadge`). Sono tipicamente unità funzionali che non possono essere ulteriormente scomposte senza perdere il loro scopo. |
+| **Molecole** | `src/components/molecules/` | Composizioni semplici di atomi (ad esempio, `ForgeSearchInput`, `ForgeFieldSet`). Funzionano insieme come un'unità.                                                                    |
+| **Organismi** | `src/components/organisms/` | Sezioni dell'interfaccia utente complesse composte da atomi, molecole e altri organismi (ad esempio, `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
+| **Modelli** | `src/components/templates/` | Layout a livello di pagina che definiscono la struttura del contenuto (ad esempio, `ForgeHero`, `ForgeAppLayout`). Spesso utilizzano gli slot per definire dove posizionare il contenuto.                     |
+| **Pagine** | `src/components/pages/` | Istanze specifiche di modelli popolati con contenuti e dati concreti (ad esempio `AccountSettingsPage`).                                                                        |
 
 ## Layout della cartella dei componenti
 
@@ -49,19 +49,19 @@ struttura della barra laterale.
 
 ### Nome file
 
-Le storie devono utilizzare il file `.stories.tsx` estensione.
+Le storie devono utilizzare l'estensione `.stories.tsx`.
 
 ### Convenzione sul titolo
 
-IL `title` campo nel libro di fiabe `meta` l'oggetto deve seguire questo schema:
+Il campo `title` nell'oggetto Storybook `meta` deve seguire questo schema:
 
 ```text
 <Level>/<Category>/<Component>
 ```
 
 - **Livello**: plurale in maiuscolo (ad es. `Atoms`, `Molecules`).
-- **Categoria**: raggruppamento funzionale (ad es. `Forms`, `Navigation`, `Display`, `Feedback`).
-- **Componente**: nome del componente PascalCase (es. `ForgeButton`).
+- **Categoria**: Raggruppamento funzionale (ad esempio, `Forms`, `Navigation`, `Display`, `Feedback`).
+- **Componente**: nome del componente PascalCase (ad es. `ForgeButton`).
 
 **Esempio (`forge-button.stories.tsx`):**
 
@@ -75,20 +75,21 @@ const meta = {
 
 ## Standard di creazione
 
-1. **Neutralità del framework**: non separare mai gli autori Vue E React versioni. Utilizzo `@mission-platform/forge-jsx`.
-2. **Denominazione**: i componenti dovrebbero utilizzare l'estensione `Base` prefisso (ad esempio, `ForgeCard`) a meno che non si tratti di implementazioni specifiche.
-3. **Sicurezza del tipo**: Esporta a `*Properties` interfaccia per gli oggetti di scena del componente.
-4. **Test**: un test co-localizzato `.spec.ts` è richiesto per ogni componente.
-5. **Impalcature**: utilizzare il `scaffold_component` Strumento MCP per garantire la struttura di directory e il boilerplate corretti.
+1. **Neutralità del framework**: non creare mai versioni separate di Vue e React. Utilizzare `@mission-platform/forge-jsx`.
+2. **Denominazione**: i componenti devono utilizzare il prefisso `Base` (ad esempio, `ForgeCard`) a meno che non siano implementazioni specifiche.
+3. **Type Safety**: esporta un'interfaccia `*Properties` per i prop del componente.
+4. **Test**: per ogni componente è richiesto un `.spec.ts` co-localizzato.
+5. **Impalcature**: utilizzare lo strumento MCP `scaffold_component` tramite un server MCP Mission Platform Developer connesso per
+   garantire la struttura di directory e il boilerplate corretti.
 
-```bash
+```text
 # Example: Creating a new 'forge-chip' atom in the 'components' package
 scaffold_component(name="forge-chip", level="atom", area="Display", package="components", apply=true)
 ```
 
 ## Guide correlate
 
-- [Sviluppo di pacchetti](package-development.md)
-- [Authoring componibile](composable-authoring.md)
-- [Creazione di archivi](store-authoring.md)
+- [Sviluppo pacchetto](package-development.md)
+- [Creazione componibile](composable-authoring.md)
+- [Creazione archivio](store-authoring.md)
 - [Creazione utile](util-authoring.md)

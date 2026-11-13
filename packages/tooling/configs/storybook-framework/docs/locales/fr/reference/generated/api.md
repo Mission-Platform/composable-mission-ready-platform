@@ -94,7 +94,7 @@ le même inventaire d’histoire à écriture unique doit s’afficher dans chaq
 **Genre :** fonction
 
 ```typescript
-function sharedPreviewDecorators();
+function sharedPreviewDecorators(): Array<ReturnType<typeof withThemeByDataAttribute<TRenderer>>>;
 ```
 
 Décorateurs Storybook partagés pour tous les frameworks.
@@ -104,7 +104,17 @@ Décorateurs Storybook partagés pour tous les frameworks.
 **Genre :** constante
 
 ```typescript
-export const sharedPreviewParameters;
+export const sharedPreviewParameters: {
+  readonly controls: {
+    readonly matchers: {
+      readonly color: RegExp;
+      readonly date: RegExp;
+    };
+  };
+  readonly a11y: {
+    readonly test: 'error';
+  };
+};
 ```
 
 Paramètres Storybook partagés pour tous les frameworks.
@@ -114,7 +124,15 @@ Paramètres Storybook partagés pour tous les frameworks.
 **Genre :** fonction
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework);
+function sharedPreviewParametersFor(framework?: PreviewFramework):
+  | typeof sharedPreviewParameters
+  | (typeof sharedPreviewParameters & {
+      readonly docs: {
+        readonly source: {
+          readonly type: 'code';
+        };
+      };
+    });
 ```
 
 Paramètres Storybook compatibles avec le framework.

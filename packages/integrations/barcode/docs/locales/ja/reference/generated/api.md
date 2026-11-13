@@ -9,288 +9,65 @@
 
 `@mission-platform/barcode` のパブリック ソース宣言から生成されます。
 
-## `src/encoder/index`
+## `src/components/molecules/forge-barcode/forge-barcode`
 
-### バーコード
+### バーコードアクション
 
 **種類:** インターフェース
 
 ```typescript
-export interface Barcode
+export interface BarcodeActions
 ```
 
-{@link encodeBarcode} の結果: モジュール ビットとその合計幅。
+ツールバーに表示されるアクション ボタン。 `true` はそれらをすべて有効にします。
 
-### バーコード記号
+### バーコードのプロパティ
 
-**種類：**タイプ
+**種類:** インターフェース
 
 ```typescript
-export type BarcodeSymbology =
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'ean13'
-  | 'ean8'
-  | 'upca'
-  | 'upce'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode';
+export interface BarcodeProperties
 ```
 
-線形バーコード シンボルをサポートしました。
+説明はありません。
 
-### エンコードバーコード
+### バーコードを鍛造する
 
 **種類:** 関数
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
+function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement;
 ```
 
-パッケージローカル Flint グラフを使用して、`data` を線形バーコードにエンコードします。
+`ForgeBarcode` — スキャン可能な 1D (線形) バーコードをレンダリングします。
+中立的な JSX 方言であり、直接 React または Vue にコンパイルされます。
+`@mission-platform/vite-plugin-forge`。
+
+ペイロード (`value`) は、クライアント上で完全にエンコードされます。
+`@mission-platform/barcode` の {@link encodeBarcode} エンコーダ -
+Rust で書かれ、WebAssembly にコンパイルされた依存関係のないエンコーダ — そして
+解像度に依存しない鮮明な SVG として描画されます。隣接するダークモジュールが結合される
+単一の `<rect>` 実行にまとめられるため、マークアップはコンパクトなままになります。確実なスキャンのために
+バー/背景色はデフォルトでテーマではなく solid 白地に黒になります
+トークンですが、どちらも `color` / `background` によってオーバーライドできます。
+
+サポートされているシンボル (`symbology`): Code 128、GS1-128、Code 39 (+ 拡張)、
+Code 93 (+ 拡張)、EAN-13、EAN-8、UPC-A、UPC-E、ITF (Interleaved 2 of 5)、
+ITF-14、Codabar、MSI (Modified Plessey)、および Pharmacode。バーの高さ、モジュール
+幅とクワイエット ゾーンは構成可能で、人間が判読できる値は次のように指定できます。
+`displayValue` 経由でバーの下に表示されます。
+
+オプションのアクション ツールバー (`showActions` ～ `true` 経由で有効化)
+ボタン、または個別に選択するための {@link BarcodeActions} オブジェクト）
+ユーザーは **バーコードを PNG 画像として保存**し、**画像を
+クリップボード**、**エンコードされた値をクリップボードにコピー**します。 PNG は
+レンダリングされた SVG をキャンバス上に描画することで、クライアント上でラスタライズされます。の
+`onError` コールバックは、選択した値をエンコードできない場合に起動されます。
+象徴性。同じ場所に配置された CSS モジュールを通じてスタイルを所有します。
+`forge-barcode.module.scss`。
 
 #### パラメータ
 
-| 名前   | タイプ             | 説明 |
-| ------ | ------------------ | ---- |
-| 記号論 | バーコードシンボル |      |
-| データ | 文字列             |      |
-
-#### 契約
-
-- **@throws:** 選択したシンボルに対してペイロードが無効な場合。
-
-### encodeBarcodeAsync
-
-**種類:** 関数
-
-```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
-```
-
-パッケージローカル Flint グラフを使用して、`data` を非同期的にエンコードします。
-
-#### パラメータ
-
-| 名前   | タイプ             | 説明 |
-| ------ | ------------------ | ---- |
-| 記号論 | バーコードシンボル |      |
-| データ | 文字列             |      |
-
-## `src/fws/index`
-
-### パラメータ
-
-| 名前 | タイプ                      | 説明 |
-| ---- | --------------------------- | ---- |
-| 値   | 文字列 \| ArrayLike<number> |      |
-
-### パラメータ
-
-| 名前 | タイプ                      | 説明 |
-| ---- | --------------------------- | ---- |
-| 値   | 文字列 \| ArrayLike<number> |      |
-
-### パラメータ
-
-| 名前 | タイプ                      | 説明 |
-| ---- | --------------------------- | ---- |
-| 値   | 文字列 \| ArrayLike<number> |      |
-
-### パラメータ
-
-| 名前 | タイプ                      | 説明 |
-| ---- | --------------------------- | ---- |
-| 値   | 文字列 \| ArrayLike<number> |      |
-
-### エンコードEan13Fws
-
-**種類:** 関数
-
-```typescript
-function encodeEan13Fws(value: string): string;
-```
-
-12 桁の EAN-13 ペイロードをエンコードし、FWS でそのチェック ディジットを計算します。
-
-#### パラメータ
-
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 文字列 |      |
-
-### encodeEan13FwsAsync
-
-**種類:** 関数
-
-```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>;
-```
-
-FWS ローダーを使用して 12 桁の EAN-13 ペイロードを非同期的にエンコードします。
-
-#### パラメータ
-
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 文字列 |      |
-
-### エンコードEan8Fws
-
-**種類:** 関数
-
-```typescript
-function encodeEan8Fws(value: string): string;
-```
-
-7 桁の EAN-8 ペイロードをエンコードし、FWS でそのチェック ディジットを計算します。
-
-#### パラメータ
-
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 文字列 |      |
-
-### encodeEan8FwsAsync
-
-**種類:** 関数
-
-```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>;
-```
-
-FWS ローダーを使用して 7 桁の EAN-8 ペイロードを非同期的にエンコードします。
-
-#### パラメータ
-
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 文字列 |      |
-
-### エンコードUpcaFws
-
-**種類:** 関数
-
-```typescript
-function encodeUpcaFws(value: string): string;
-```
-
-ゼロ接頭辞の EAN-13 Flint グラフを通じて UPC-A ペイロードをエンコードします。
-
-#### パラメータ
-
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 文字列 |      |
-
-### encodeUpcaFwsAsync
-
-**種類:** 関数
-
-```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>;
-```
-
-FWS を通じて UPC-A ペイロードを非同期的にエンコードします。
-
-#### パラメータ
-
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 文字列 |      |
-
-### encodeVariableBarcodeFws
-
-**種類:** 関数
-
-```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
-```
-
-サポートされている可変長バーコードを、利用可能な場合はネイティブ Flint グラフを通じてエンコードします。
-
-#### パラメータ
-
-| 名前   | タイプ                 | 説明 |
-| ------ | ---------------------- | ---- |
-| 記号論 | 変数バーコードシンボル |      |
-| 値     | 文字列                 |      |
-
-### encodeVariableBarcodeFwsAsync
-
-**種類:** 関数
-
-```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
-```
-
-FWS を介して、サポートされている可変長バーコードを非同期的にエンコードします。
-
-#### パラメータ
-
-| 名前   | タイプ                 | 説明 |
-| ------ | ---------------------- | ---- |
-| 記号論 | 変数バーコードシンボル |      |
-| 値     | 文字列                 |      |
-
-### validateGs1DataBarValue
-
-**種類:** 関数
-
-```typescript
-function validateGs1DataBarValue(value: string): boolean;
-```
-
-パッケージローカル Flint グラフ内の GS1 DataBar/RSS-14 GTIN-14 値を検証します。
-
-#### パラメータ
-
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 文字列 |      |
-
-### validateGs1DataBarValueAsync
-
-**種類:** 関数
-
-```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
-```
-
-FWS を通じて GS1 DataBar/RSS-14 GTIN-14 値を非同期的に検証します。
-
-#### パラメータ
-
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 文字列 |      |
-
-### 変数バーコードシンボル
-
-**種類：**タイプ
-
-```typescript
-export type VariableBarcodeSymbology = Extract<
-  BarcodeSymbology,
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode'
->;
-```
-
-可変長シンボルは、ダイレクト バーコード Flint アダプターによってサポートされます。
+|名前 |タイプ |説明 |
+| ---------- | --------------------------- | ----------- |
+|プロパティ |読み取り専用<BarcodeProperties> |             |

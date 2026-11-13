@@ -28,12 +28,12 @@ Representa el contenido del espacio predeterminado en la etiqueta semántica del
 Modificadores opcionales `weight`, `color`, `horizontalAlign`, `verticalAlign` y `truncate`.
 
 Los enlaces también provienen de aquí, de dos maneras: `variant="link"` para texto de enlace independiente,
-y `href` en **cualquier** variante, por lo que un título o título puede ser un enlace sin
+y `href` en **cualquier** variante para que un encabezado o título pueda ser un enlace sin
 dejando su propia escala tipográfica. De cualquier manera, el elemento se representa como `<a>` con el
 color del enlace, su tratamiento flotante/activo y `:visited`, un anillo de enfoque visible
 y el modo `underline` elegido (`'always'` por defecto); `target="_blank"` obtiene
 `rel="noopener noreferrer"` automáticamente. es dueño de su
-diseñar a través del módulo CSS `forge-typography.module.scss` ubicado conjuntamente
+aplicar estilo a través del módulo CSS `forge-typography.module.scss` ubicado en el mismo lugar
 (llevado a cada marco por el compilador de dos etapas, por lo que el componente
 envía su propio CSS `@layer mp.typography`); los nombres de las clases hash son
 ensamblado con el asistente {@link classNames} neutral en el marco de trabajo.
@@ -46,8 +46,8 @@ en realidad se desborda), posicionado con **Posicionamiento de anclaje CSS** en 
 
 #### Parámetros
 
-| Nombre      | Tipo                               | Descripción |
-| ----------- | ---------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------ | ----------- |
 | propiedades | Sólo lectura<TypographyProperties> |             |
 
 ### TipografíaColor
@@ -114,6 +114,26 @@ export type TypographySize = SizeScale;
 ```
 
 Token de tamaño opcional: escala canónica 2xs → 2xl (anula el tamaño de fuente de la variante cuando se establece).
+
+### TipografíaEstilo
+
+**Tipo:** tipo
+
+```typescript
+export type TypographyStyle = CSSStyleProperties &
+```
+
+No se proporciona descripción.
+
+### TipografíaEstiloPropiedades
+
+**Tipo:** interfaz
+
+```typescript
+export interface TypographyStyleProperties
+```
+
+Valores CSS propiedad de los componentes heredados por los descendientes de tipografía y el contenido emergente.
 
 ### TipografíaTarget
 

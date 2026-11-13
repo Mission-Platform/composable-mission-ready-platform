@@ -158,9 +158,8 @@ export function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>):
     size = 'md',
   } = properties;
 
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
   const [sortKey, setSortKey] = useState<string | undefined>(undefined);
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
+
   const [sortDirection, setSortDirection] = useState<SortDirection | undefined>(undefined);
   const [scrollTop, setScrollTop] = useState(0);
   const bodyReference = useRef<HTMLElement | null>(null);

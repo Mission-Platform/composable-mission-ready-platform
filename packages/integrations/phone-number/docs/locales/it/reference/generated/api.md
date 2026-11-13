@@ -33,23 +33,23 @@ Comoda funzione di accesso per l'istanza {@link PhoneNumberUtil} condivisa e sin
 
 ### PhoneNumberFormat
 
-**Genere:** costante
+**Genere:** tipo
 
 ```typescript
-export const PhoneNumberFormat;
+export type PhoneNumberFormat = (typeof PhoneNumberFormat)[keyof typeof PhoneNumberFormat];
 ```
 
-Formato di output, mirroring di `PhoneNumberFormat` di libphonenumber.
+Nessuna descrizione fornita.
 
 ### Tipo numero telefono
 
-**Genere:** costante
+**Genere:** tipo
 
 ```typescript
-export const PhoneNumberType;
+export type PhoneNumberType = (typeof PhoneNumberType)[keyof typeof PhoneNumberType];
 ```
 
-Tipo di linea di un numero di telefono, che rispecchia `PhoneNumberType` di libphonenumber.
+Nessuna descrizione fornita.
 
 ### PhoneNumberUtil
 
@@ -76,7 +76,7 @@ Un codice regionale ISO 3166-1 di due lettere, ad es. `"US"`, `"GB"`.
 
 ### country_code_for_region
 
-**Tipo:** fws-export
+**Tipo:** esportazione di selce
 
 ```typescript
 export fn country_code_for_region(region: string) -> i32
@@ -86,9 +86,9 @@ Associa un prefisso regionale supportato al relativo prefisso internazionale per
 
 #### Parametri
 
-| Nome    | Digitare | Descrizione                            |
-| ------- | -------- | -------------------------------------- |
-| regione | stringa  | Codice regionale ISO come "US" o "GB". |
+| Nome | Digitare | Descrizione |
+| ------ | ------ | ------------------------------------- |
+| regione | stringa | Codice regionale ISO come "US" o "GB". |
 
 #### Contrarre
 
@@ -97,7 +97,7 @@ Associa un prefisso regionale supportato al relativo prefisso internazionale per
 
 ### prefisso_nazionale
 
-**Tipo:** fws-export
+**Tipo:** esportazione di selce
 
 ```typescript
 export fn national_prefix(region: string) -> string
@@ -107,9 +107,9 @@ Restituisce il prefisso della linea nazionale utilizzato quando si effettua la c
 
 #### Parametri
 
-| Nome    | Digitare | Descrizione           |
-| ------- | -------- | --------------------- |
-| regione | stringa  | Codice regionale ISO. |
+| Nome | Digitare | Descrizione |
+| ------ | ------ | ---------------- |
+| regione | stringa | Codice regionale ISO. |
 
 #### Contrarre
 
@@ -118,7 +118,7 @@ Restituisce il prefisso della linea nazionale utilizzato quando si effettua la c
 
 ### regione_per_codice_paese
 
-**Tipo:** fws-export
+**Tipo:** esportazione di selce
 
 ```typescript
 export fn region_for_country_code(code: i32) -> string
@@ -128,9 +128,9 @@ Mappa un prefisso nazionale su una regione ISO rappresentativa.
 
 #### Parametri
 
-| Nome   | Digitare | Descrizione                                             |
-| ------ | -------- | ------------------------------------------------------- |
-| codice | i32      | Prefisso internazionale per le chiamate internazionali. |
+| Nome | Digitare | Descrizione |
+| ---- | ---- | ----------------------------------- |
+| codice | i32 | Prefisso internazionale per le chiamate internazionali. |
 
 #### Contrarre
 
@@ -139,7 +139,7 @@ Mappa un prefisso nazionale su una regione ISO rappresentativa.
 
 ### regione_è
 
-**Tipo:** fws-export
+**Tipo:** esportazione di selce
 
 ```typescript
 export fn region_is(region: string, expected: string) -> bool
@@ -149,10 +149,10 @@ Restituisce vero quando il codice regionale è uguale al valore previsto.
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione                   |
-| -------- | -------- | ----------------------------- |
-| regione  | stringa  | Codice regione ISO candidato. |
-| previsto | stringa  | Codice regione ISO previsto.  |
+| Nome | Digitare | Descrizione |
+| -------- | ------ | -------------------------- |
+| regione | stringa | Codice regione ISO candidato. |
+| previsto | stringa | Codice regione ISO previsto.  |
 
 #### Contrarre
 

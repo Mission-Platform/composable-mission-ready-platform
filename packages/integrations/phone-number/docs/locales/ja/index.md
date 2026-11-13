@@ -6,13 +6,13 @@
 > 言語: 日本語 (ja)
 
 `@mission-platform/phone-number` は、次のコアを重点的に再実装したものです。
-Google [lib電話番号](https://github.com/google/libphonenumber)、で書かれています
-[アセンブリスクリプト](https://www.assemblyscript.org/) に変換され、**WebAssembly** にコンパイルされます。解析、検証、分類、および
+Google [libphonenumber](https://github.com/google/libphonenumber)、で書かれています
+[AssemblyScript](https://www.assemblyscript.org/) を **WebAssembly** にコンパイルしました。解析、検証、分類、および
 国際電話番号をフォーマットし、実行時の依存関係のない自己完結型の ES モジュールとしてパッケージ化されています。
 
 ## 建築
 
-このパッケージは、** によって完全に駆動される AssemblyScript → WebAssembly ビルド パイプラインを使用します。Vite**:
+このパッケージは、**Vite** によって完全に駆動される AssemblyScript → WebAssembly ビルド パイプラインを使用します。
 
 1. **AssemblyScript ソース** (`assembly/`) には、厳選されたリージョンごとのメタデータ (`metadata.ts`) が保持されます。
    解析/検証/分類/フォーマット ロジック (`index.ts`)。
@@ -68,7 +68,7 @@ IDD プレフィックス)。
 
 ## 可能性と妥当性
 
-- **`isPossibleNumber`** は、国内有効数字がその地域にとって妥当な長さであるかどうかのみをチェックします。
+- **`isPossibleNumber`** は、国内有効数字がその地域に対して妥当な長さであることのみをチェックします。
 - **`isValidNumber`** では、割り当てられた固定回線または携帯電話の範囲に番号が含まれることも必要です (同等の
   `getNumberType(...) !== UNKNOWN` に)。
 
@@ -80,7 +80,7 @@ util.isValidNumber('05001234567', 'GB'); //    false (unassigned range)
 ## サポートされている地域と範囲
 
 アップストリームの libphonenumber は、すべての ITU 地域に対して機械生成された網羅的なメタデータを提供します。このポートは厳選された、
-手作業で検証されたサブセット — **US、CA、GB、FR、DE、AU、IN、JP、BR、CN、RU** – であり、定期的な検証を行わずに検証を実装します。
+手作業で検証されたサブセット — **US、CA、GB、FR、DE、AU、IN、JP、BR、CN、RU** — 定期的な検証を行わずに検証を実装
 長さと先頭の桁の規則を使用した式 (AssemblyScript では使用できません)。フォーマットはリージョンごとに使用されます
-これは、アップストリームとのバイトごとのパリティではなく、妥当な近似値です。 New regions can be added
+これは、アップストリームとのバイトごとのパリティではなく、妥当な近似値です。新しいリージョンを追加できます
 `assembly/metadata.ts` を拡張し、wasm を再構築します。

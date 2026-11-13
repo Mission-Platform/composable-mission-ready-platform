@@ -3524,7 +3524,7 @@ Codes de pays avec symboles de drapeau canoniques dans le sprite publié.
 **Genre :** constante
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS;
+export const COUNTRY_FLAG_SYMBOL_IDS: string[];
 ```
 
 Aucune description fournie.
@@ -3574,7 +3574,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const IconSpriteContext;
+export const IconSpriteContext: MpContext<IconSpriteContextValue>;
 ```
 
 Aucune description fournie.

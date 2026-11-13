@@ -21,12 +21,12 @@ und Deklarationen werden an `dist/` ausgegeben; Übernehmen Sie keine lokale Bui
 ## Ändern Sie den Compiler
 
 Halten Sie Parsing, Normalisierung, semantische IR, Caching und Diagnose neutral.
-Zielsenkung und Quellgenerierung gehören in die Auswahl
+Zielsenkung und Quellengenerierung gehören in die Auswahl
 `@mission-platform/forge-plugin-*`-Paket. Fügen Sie eine Regressionsabdeckung für den Cache hinzu
 Identität, Ungültigmachung, Diagnose, generierte Artefakte und Aufrufer-Plugin
 Erhaltung beim Fahrerwechsel.
 
 Das Paket muss sowohl von Vite als auch von tsdown aus verwendbar bleiben. Fügen Sie kein Ziel hinzu
 Wechseln Sie die Tabellen- oder Framework-Laufzeitabhängigkeit zum neutralen Treiber. Aktualisieren Sie die
-[Compiler-Pipeline-Referenz](../reference/compiler.md), wenn eine öffentliche Bühne oder
+[Compiler-Pipeline-Referenz](../reference/compiler.md), wenn eine öffentliche Phase oder
 Artefaktvertragsänderungen.

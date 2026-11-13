@@ -6,22 +6,24 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 > Lingua: Italiano (it)
 
 Uno **scanner di codici di immagini/fotocamere** privo di dipendenze compilato da un collegamento statico
-Forgia il grafico dello script Web in WebAssembly. Individua e decodifica codici QR, dati
-Matrix, Aztec, codici a barre 1D, PDF417, GS1 DataBar e MaxiCode da file immagine
-o streaming live della telecamera. È disponibile anche un profilo dinamico del modulo sorgente
-distribuzioni che necessitano di moduli decodificatori memorizzabili nella cache in modo indipendente.
+Grafico Flint in WebAssembly. L'artefatto collegato attualmente decodifica i dati
+Matrix, Aztec compatto, lettori 1D/RSS, PDF417 e MaxiCode da file di immagine o
+streaming delle telecamere in diretta. Il grafico QR emette in modo indipendente ma rimane al di fuori
+artefatto combinato mentre viene indagata la limitazione dell'emettitore della Forgia.
 
 ## Panoramica dell'API
 
 ### Scanner principale (`@mission-platform/code-scanner`)
 
 ```ts
-import { scanFile, scanImageData, scanImageDataAll } from '@mission-platform/code-scanner';
+import { scanFile, scanImageData, scanImageDataAll, type ScanOptions } from '@mission-platform/code-scanner';
 
 // Scan ImageData directly
-const result = scanImageData(imageData);
+const options: ScanOptions = { formats: ['DATA_MATRIX'], tryHarder: true };
+const result = scanImageData(imageData, options);
 
-// Scan all codes in frame
+// Scan the package's all-results entry point. The current linked reduced graph
+// returns at most its first validated result until multi-symbol detection lands.
 const allResults = scanImageDataAll(imageData);
 
 // Scan a File / Blob
@@ -44,7 +46,7 @@ preimpostazioni `@mission-platform/typescript-config/framework-<name>`).
 </script>
 
 <template>
-  <ForgeCodeScanner @result="(res) => console.log(res.value)" />
+  <ForgeCodeScanner @result="(res) => console.log(res.text, res.format)" />
 </template>
 ```
 
@@ -54,6 +56,6 @@ preimpostazioni `@mission-platform/typescript-config/framework-<name>`).
 import { ForgeCodeScanner } from '@mission-platform/code-scanner';
 
 export function CameraScanner() {
-  return <ForgeCodeScanner onResult={(result) => console.log(result.value)} />;
+  return <ForgeCodeScanner onResult={(result) => console.log(result.text, result.format)} />;
 }
 ```

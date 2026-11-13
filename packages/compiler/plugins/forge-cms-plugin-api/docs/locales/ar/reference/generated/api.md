@@ -1,4 +1,4 @@
-# @mission-platform/forge-cms-plugin-api مرجع واجهة برمجة التطبيقات
+# مرجع @mission-platform/forge-cms-plugin-api API
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
@@ -16,10 +16,10 @@
 **النوع:** ثابت
 
 ```typescript
-export const BADGE;
+export const BADGE: readonly string[];
 ```
 
-خيارات الاتحاد الحرفي، وأوصاف JSDoc، و `?? literal` الإعدادات الافتراضية.
+خيارات الاتحاد الحرفي، وأوصاف JSDoc، والإعدادات الافتراضية لـ `?? literal`.
 
 ### أسماء الشارات
 
@@ -36,7 +36,7 @@ export const badgeNames: ContentComponentNamesInput;
 **النوع:** ثابت
 
 ```typescript
-export const BUTTON;
+export const BUTTON: readonly string[];
 ```
 
 اتحاد مهين للنص بالإضافة إلى دعم رد الاتصال المسقط.
@@ -56,7 +56,7 @@ export const buttonNames: ContentComponentNamesInput;
 **النوع:** ثابت
 
 ```typescript
-export const COUNTER;
+export const COUNTER: readonly string[];
 ```
 
 مكون تفاعلي: الحالة ومعالج الحدث يفرضان جزيرة رطبة.
@@ -76,7 +76,7 @@ export const counterNames: ContentComponentNamesInput;
 **النوع:** ثابت
 
 ```typescript
-export const EMPTY;
+export const EMPTY: readonly string[];
 ```
 
 مكون بدون دعائم على الإطلاق.
@@ -96,7 +96,7 @@ export const emptyNames: ContentComponentNamesInput;
 **النوع:** ثابت
 
 ```typescript
-export const GRID;
+export const GRID: readonly string[];
 ```
 
 دعامة رقمية ذات قيمة رقمية افتراضية.
@@ -116,7 +116,7 @@ export const gridNames: ContentComponentNamesInput;
 **النوع:** ثابت
 
 ```typescript
-export const LAYOUT;
+export const LAYOUT: readonly string[];
 ```
 
 فتحة مسماة بجانب الفتحة الافتراضية.
@@ -136,7 +136,7 @@ export const layoutNames: ContentComponentNamesInput;
 **النوع:** ثابت
 
 ```typescript
-export const REQUIRED;
+export const REQUIRED: readonly string[];
 ```
 
 دعامة مطلوبة (غير اختيارية) إلى جانب دعامة اختيارية.
@@ -156,7 +156,7 @@ export const requiredNames: ContentComponentNamesInput;
 **النوع:** ثابت
 
 ```typescript
-export const SITE_HEADER;
+export const SITE_HEADER: readonly string[];
 ```
 
 مكون ذو دعامة إعداد على مستوى الموقع.
@@ -186,8 +186,98 @@ function stubFramework(id = "react"): FrameworkOutputPlugin;
 #### حدود
 
 | الاسم | اكتب | الوصف |
-| ----- | ---- | ----- |
-| معرف  |      |       |
+| ---- | ---- | ----------- |
+| معرف |      |             |
+
+## `src/__fixtures__/workspace`
+
+### BADGE_COMPONENT
+
+**النوع:** ثابت
+
+```typescript
+export const BADGE_COMPONENT: WorkspaceComponentDefinition;
+```
+
+لم يتم تقديم أي وصف.
+
+### CmsWorkspace
+
+**النوع:** الواجهة
+
+```typescript
+export interface CmsWorkspace
+```
+
+لم يتم تقديم أي وصف.
+
+### COUNTER_COMPONENT
+
+**النوع:** ثابت
+
+```typescript
+export const COUNTER_COMPONENT: WorkspaceComponentDefinition;
+```
+
+لم يتم تقديم أي وصف.
+
+### createCmsWorkspace
+
+**النوع:** الوظيفة
+
+```typescript
+function createCmsWorkspace(
+  components: readonly WorkspaceComponentDefinition[],
+): CmsWorkspace;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------------------- | ----------- |
+| مكونات | للقراءة فقط WorkspaceComponentDefinition[] |             |
+
+### GRID_COMPONENT
+
+**النوع:** ثابت
+
+```typescript
+export const GRID_COMPONENT: WorkspaceComponentDefinition;
+```
+
+لم يتم تقديم أي وصف.
+
+### LAYOUT_COMPONENT
+
+**النوع:** ثابت
+
+```typescript
+export const LAYOUT_COMPONENT: WorkspaceComponentDefinition;
+```
+
+لم يتم تقديم أي وصف.
+
+### NESTED_BADGE_COMPONENT
+
+**النوع:** ثابت
+
+```typescript
+export const NESTED_BADGE_COMPONENT: WorkspaceComponentDefinition;
+```
+
+لم يتم تقديم أي وصف.
+
+### تعريف مكون مساحة العمل
+
+**النوع:** الواجهة
+
+```typescript
+export interface WorkspaceComponentDefinition
+```
+
+لم يتم تقديم أي وصف.
 
 ## `src/analyze`
 
@@ -197,7 +287,7 @@ function stubFramework(id = "react"): FrameworkOutputPlugin;
 
 ```typescript
 function analyzeContentComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: ContentComponentNamesInput,
   semantic?: SemanticModule,
 ): ContentComponent;
@@ -209,11 +299,11 @@ function analyzeContentComponent(
 
 #### حدود
 
-| الاسم      | اكتب                       | الوصف |
-| ---------- | -------------------------- | ----- |
-| ملف المصدر | ts.SourceFile              |       |
-| أسماء      | ContentComponentNamesInput |       |
-| الدلالية   | الوحدة الدلالية            |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| ملف المصدر | OxcParsedModule |             |
+| أسماء | ContentComponentNamesInput |             |
+| الدلالية | الوحدة الدلالية |             |
 
 ### CMS_COLOR_TAG
 
@@ -273,7 +363,7 @@ export const CMS_TAB_TAG;
 export const DEFAULT_SLOT_FIELD;
 ```
 
-مفتاح الحقل هو الفتحة الافتراضية (مكون `children`) يتعرض تحت.
+مفتاح الحقل الذي يتم عرض الفتحة الافتراضية (`children` الخاصة بالمكون) أسفله.
 
 ### deriveContentComponentNames
 
@@ -289,9 +379,9 @@ function deriveContentComponentNames(
 
 #### حدود
 
-| الاسم | اكتب                       | الوصف |
-| ----- | -------------------------- | ----- |
-| أسماء | ContentComponentNamesInput |       |
+| الاسم | اكتب | الوصف |
+| ----- | -------------------------- | ----------- |
+| أسماء | ContentComponentNamesInput |             |
 
 ### isInteractiveModule
 
@@ -301,13 +391,73 @@ function deriveContentComponentNames(
 function isInteractiveModule(semantic: SemanticModule | undefined): boolean;
 ```
 
-صحيح عندما يحمل IR المحايد سلوكًا لا يمكن أن يوفره إلا وقت التشغيل الحقيقي.
+يكون ذلك صحيحًا عندما يحمل IR المحايد سلوكًا لا يمكن أن يوفره إلا وقت التشغيل الحقيقي.
 
 #### حدود
 
-| الاسم    | اكتب                        | الوصف |
-| -------- | --------------------------- | ----- |
-| الدلالية | الوحدة الدلالية \| غير محدد |       |
+| الاسم | اكتب | الوصف |
+| -------- | --------------------------- | ----------- |
+| الدلالية | الوحدة الدلالية \| غير محدد |             |
+
+## `src/assets`
+
+### CopyAndPruneAssets
+
+**النوع:** الوظيفة
+
+```typescript
+function copyAndPruneAssets(
+  safeCacheDirectory: string,
+  destinationRoot: string,
+  assets: readonly CmsArtifact[],
+  preservedDirectories: ReadonlySet<string> = new Set(),
+): void;
+```
+
+مزامنة الأصول من `safeCacheDirectory` إلى `destinationRoot`،
+تشذيب الأصول القديمة أو التي تمت إزالتها من الإصدارات السابقة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------------------- | ---------------------- | ----------- |
+| دليل SafeCache | سلسلة |             |
+| الوجهة الجذر | سلسلة |             |
+| الأصول | للقراءة فقط CmsArtifact[] |             |
+| الدلائل المحفوظة | ReadonlySet<string>    |             |
+
+### KNOWN_FRAMEWORKS
+
+**النوع:** ثابت
+
+```typescript
+export const KNOWN_FRAMEWORKS: ReadonlySet<string>;
+```
+
+لم يتم تقديم أي وصف.
+
+### pruneStaleAssets
+
+**النوع:** الوظيفة
+
+```typescript
+function pruneStaleAssets(
+  destinationRoot: string,
+  activeAssetNames: ReadonlySet<string>,
+  preservedDirectories: ReadonlySet<string> = new Set(),
+): void;
+```
+
+تقليم الملفات التي لا معنى لها والأدلة الفارغة في `destinationRoot` التي لا تفعل ذلك
+تتوافق مع الأصول النشطة، مع الحفاظ على أدلة الإطار والأشجار غير الأصول.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------------------- | ------------------- | ----------- |
+| الوجهة الجذر | سلسلة |             |
+| أسماء الأصول النشطة | ReadonlySet<string> |             |
+| الدلائل المحفوظة | ReadonlySet<string> |             |
 
 ## `src/classify`
 
@@ -337,21 +487,21 @@ export type ClassifiedFieldKind = ContentFieldKind | undefined;
 
 ```typescript
 function classifyType(
-  node: ts.TypeNode,
-  aliases: Map<string, ts.TypeNode>,
+  node: CmsTypeNode,
+  aliases: Map<string, CmsTypeNode>,
   seen: Set<string> = new Set(),
 ): ClassifiedFieldKind;
 ```
 
-تصنيف نوع الدعامة node إلى نوع محتوى محايد، وحل الأسماء المستعارة/النقابات المحلية.
+قم بتصنيف نوع الدعامة node إلى نوع محتوى محايد، وحل الأسماء المستعارة/الاتحادات المحلية.
 
 #### حدود
 
-| الاسم             | اكتب                           | الوصف |
-| ----------------- | ------------------------------ | ----- |
-| node              | ts.TypeNode                    |       |
-| الأسماء المستعارة | رسم خريطة<string, ts.TypeNode> |       |
-| رأيت              | تعيين<string>                  |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------ | ----------- |
+| node | كمستيبينود |             |
+| الأسماء المستعارة | خريطة<string, CmsTypeNode> |             |
+| رأيت | سيت<string> |             |
 
 ### CollectTypeAliases
 
@@ -359,17 +509,17 @@ function classifyType(
 
 ```typescript
 function collectTypeAliases(
-  sourceFile: ts.SourceFile,
-): Map<string, ts.TypeNode>;
+  sourceFile: OxcParsedModule,
+): Map<string, CmsTypeNode>;
 ```
 
-خريطة كل المستوى الأعلى `type X = …` الاسم المستعار لنوعه node، من أجل حل الاتحاد.
+قم بتعيين كل اسم مستعار `type X = …` عالي المستوى إلى نوعه node، من أجل حل الاتحاد.
 
 #### حدود
 
-| الاسم      | اكتب          | الوصف |
-| ---------- | ------------- | ----- |
-| ملف المصدر | ts.SourceFile |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------- | ----------- |
+| ملف المصدر | OxcParsedModule |             |
 
 ### LINK_TYPE_REFERENCES
 
@@ -399,7 +549,7 @@ export const RICHTEXT_TYPE_REFERENCES: ReadonlySet<string>;
 export const SLOT_TYPE_REFERENCES: ReadonlySet<string>;
 ```
 
-اكتب المراجع التي يتم التعامل مع عناصرها كمحتوى متداخل (`children`).
+اكتب المراجع التي يتم التعامل مع خصائصها كمحتوى متداخل (`children`).
 
 ## `src/cms`
 
@@ -466,9 +616,9 @@ function cmsTargetDirectory(plugin: CmsOutputPlugin): string;
 
 #### حدود
 
-| الاسم            | اكتب           | الوصف |
-| ---------------- | -------------- | ----- |
-| البرنامج المساعد | كمسوتبوتبلوجين |       |
+| الاسم | اكتب | الوصف |
+| ------ | --------------- | ----------- |
+| البرنامج المساعد | كمسوتبوتبلوجين |             |
 
 ### CmsTargetId
 
@@ -495,11 +645,47 @@ function defineForgeCmsPlugin(plugin: T): T;
 
 #### حدود
 
-| الاسم            | اكتب | الوصف |
-| ---------------- | ---- | ----- |
-| البرنامج المساعد | ت    |       |
+| الاسم | اكتب | الوصف |
+| ------ | ---- | ----------- |
+| البرنامج المساعد | ت |             |
 
 ## `src/config`
+
+### cmsAssetsPlugin
+
+**النوع:** الوظيفة
+
+```typescript
+function cmsAssetsPlugin(
+  rootDir: string,
+  cacheDirectory: string,
+  targetOrTargetId: string | CmsOutputPlugin,
+  getAssets: () => readonly CmsArtifact[],
+  options?: CmsAssetsPluginOptions,
+): Plugin;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------------- | ---------------------------- | ----------- |
+| الجذر | سلسلة |             |
+| دليل ذاكرة التخزين المؤقت | سلسلة |             |
+| targetOrTargetId | سلسلة \| كمسوتبوتبلوجين |             |
+| الحصول على الأصول | () => للقراءة فقط CmsArtifact[] |             |
+| خيارات | كمساسيتسبلوجينوبتيونس |             |
+
+### CmsAssetsPluginOptions
+
+**النوع:** الواجهة
+
+```typescript
+export interface CmsAssetsPluginOptions
+```
+
+لم يتم تقديم أي وصف.
 
 ### تعريفViteForgeCmsLibrary
 
@@ -511,13 +697,13 @@ function defineViteForgeCmsLibrary(
 ): UserConfig;
 ```
 
-إنشاء أ Vite تكوين المكتبة لهدف CMS واحد.
+قم بإنشاء تكوين مكتبة Vite لهدف CMS واحد.
 
 #### حدود
 
-| الاسم  | اكتب                       | الوصف |
-| ------ | -------------------------- | ----- |
-| خيارات | ViteForgeCmsLibraryOptions |       |
+| الاسم | اكتب | الوصف |
+| ------- | -------------------------- | ----------- |
+| خيارات | ViteForgeCmsLibraryOptions |             |
 
 ### ViteForgeCmsLibraryOptions
 
@@ -539,7 +725,7 @@ export interface ViteForgeCmsLibraryOptions
 export interface ContentComponent
 ```
 
-أحد المكونات المسقطة على نموذج المحتوى المحايد.
+مكون معروض على نموذج المحتوى المحايد.
 
 ### ContentComponentMetadata
 
@@ -605,11 +791,11 @@ export interface ContentField
 export type ContentFieldKind = |
 ```
 
-المحتوى يشكل دعامة TypeScript اكتب الخرائط ل.
+يتم تعيين نوع المحتوى TypeScript الخاص بالدعامة إليه.
 
-`undefined` لم يتم تصميمه هنا مطلقًا - دعامة لا يمكن عرضها على ملف
+لم يتم تصميم `undefined` هنا مطلقًا — وهي دعامة لا يمكن عرضها على ملف
 يتم ببساطة إسقاط حقل المحتوى (رد اتصال، كائن غير شفاف) بواسطة ملف
-المصنف الذي يعود `undefined` بدلا من نوع.
+المصنف الذي يُرجع `undefined` بدلاً من النوع.
 
 ### ContentFieldKindName
 
@@ -629,13 +815,13 @@ export type ContentFieldKindName = ContentFieldKind["kind"];
 function contentFields(component: ContentComponent): readonly ContentField[];
 ```
 
-حقول المكون التي ليست فتحات (محتوى عددي وقابل للتأليف).
+حقول المكون التي ليست فتحات (المحتوى العددي والقابل للتأليف).
 
 #### حدود
 
-| الاسم  | اكتب         | الوصف |
-| ------ | ------------ | ----- |
-| المكون | مكون المحتوى |       |
+| الاسم | اكتب | الوصف |
+| --------- | ---------------- | ----------- |
+| المكون | مكون المحتوى |             |
 
 ### SlotFields
 
@@ -649,9 +835,9 @@ function slotFields(component: ContentComponent): readonly ContentField[];
 
 #### حدود
 
-| الاسم  | اكتب         | الوصف |
-| ------ | ------------ | ----- |
-| المكون | مكون المحتوى |       |
+| الاسم | اكتب | الوصف |
+| --------- | ---------------- | ----------- |
+| المكون | مكون المحتوى |             |
 
 ## `src/driver`
 
@@ -670,9 +856,9 @@ function generateCmsArtifacts(
 
 #### حدود
 
-| الاسم  | اكتب                      | الوصف |
-| ------ | ------------------------- | ----- |
-| خيارات | إنشاء CmsArtifactsOptions |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------------- | ----------- |
+| خيارات | إنشاء CmsArtifactsOptions |             |
 
 ### إنشاء CmsArtifactsOptions
 
@@ -704,7 +890,7 @@ export interface GeneratedCmsTree
 export interface GeneratedIsland
 ```
 
-شجرة الجزيرة المولدة، أو `undefined` عندما لا يستخدم الهدف الجزر.
+شجرة الجزيرة التي تم إنشاؤها، أو `undefined` عندما لا يستخدم الهدف الجزر.
 
 ### createIsland
 
@@ -717,13 +903,14 @@ function generateIsland(
 ```
 
 شارك في إنشاء شجرة جزيرة إطار العمل لهدف ما، مع إرجاع المحدد
-يجب أن يستورد القالب المنبعث بواسطة.
+يجب أن يستورد القالب المنبعث بواسطة. هذه مرحلة الجيل فقط - ال
+يمتلك برنامج تشغيل/جلسة CMS عند تشغيله.
 
 #### حدود
 
-| الاسم  | اكتب                 | الوصف |
-| ------ | -------------------- | ----- |
-| خيارات | إنشاء خيارات الجزيرة |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------- | ----------- |
+| خيارات | إنشاء خيارات الجزيرة |             |
 
 ### إنشاء خيارات الجزيرة
 
@@ -759,9 +946,9 @@ function toDisplayName(publicName: string): string;
 
 #### حدود
 
-| الاسم       | اكتب  | الوصف |
-| ----------- | ----- | ----- |
-| الاسم العام | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------ | ----------- |
+| الاسم العام | سلسلة |             |
 
 ### toKebabName
 
@@ -771,13 +958,13 @@ function toDisplayName(publicName: string): string;
 function toKebabName(publicName: string): string;
 ```
 
-تحويل اسم عام إلى اسم مغلف بالكباب (`InView` → `in-view`).
+تحويل اسم عام إلى اسم الكباب (`InView` → `in-view`).
 
 #### حدود
 
-| الاسم       | اكتب  | الوصف |
-| ----------- | ----- | ----- |
-| الاسم العام | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------ | ----------- |
+| الاسم العام | سلسلة |             |
 
 ### إلىالاسم الفني
 
@@ -791,113 +978,68 @@ function toTechnicalName(publicName: string): string;
 
 #### حدود
 
-| الاسم       | اكتب  | الوصف |
-| ----------- | ----- | ----- |
-| الاسم العام | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------ | ----------- |
+| الاسم العام | سلسلة |             |
 
 ## `src/tsdown`
 
-### cmsCacheDirectory
+### تعريفTsdownForgeCmsTargetConfigs
 
 **النوع:** الوظيفة
 
 ```typescript
-function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string;
-```
-
-دليل ذاكرة التخزين المؤقت الذي تتم كتابة الشجرة التي تم إنشاؤها للهدف إليه.
-
-#### حدود
-
-| الاسم | اكتب           | الوصف |
-| ----- | -------------- | ----- |
-| الجذر | سلسلة          |       |
-| الهدف | كمسوتبوتبلوجين |       |
-
-### cmsOutputDirectory
-
-**النوع:** الوظيفة
-
-```typescript
-function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string;
-```
-
-دليل التوزيع الذي يتم إرسال الوحدات النمطية لكل إطار عمل إليه.
-
-#### حدود
-
-| الاسم | اكتب           | الوصف |
-| ----- | -------------- | ----- |
-| الجذر | سلسلة          |       |
-| الهدف | كمسوتبوتبلوجين |       |
-
-### تعريفTsdownForgeCms
-
-**النوع:** الوظيفة
-
-```typescript
-function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig;
-```
-
-قم بإنشاء تكوين tsdown لهدف CMS واحد.
-
-#### حدود
-
-| الاسم  | اكتب                 | الوصف |
-| ------ | -------------------- | ----- |
-| خيارات | تسداونفورجكمسوبتيونس |       |
-
-### تعريفTsdownForgeCmsAll
-
-**النوع:** الوظيفة
-
-```typescript
-function defineTsdownForgeCmsAll(
-  options: TsdownForgeCmsAllOptions,
+function defineTsdownForgeCmsTargetConfigs(
+  options: TsdownForgeCmsPluginsOptions,
 ): UserConfig[];
 ```
 
-قم بإنشاء تكوينات tsdown لكل هدف CMS مطلوب.
+قم بإرجاع تكوينات tsdown `UserConfig[]` الأصلية لأهداف CMS المحددة.
+يقوم كل تكوين بتجميع هدف CMS الخاص به وإسقاطاته مباشرةً،
+السماح لـ tsdown / Rolldown بتشغيل الأهداف بشكل متزامن دون إدخالات قرص وهمية
+أو حلقات التنفيذ المتداخلة.
 
 #### حدود
 
-| الاسم  | اكتب                   | الوصف |
-| ------ | ---------------------- | ----- |
-| خيارات | تسداونفورجكمسالوبتيونس |       |
+| الاسم | اكتب | الوصف |
+| ------- | ---------------------------- | ----------- |
+| خيارات | تسداونفورجيكمسبلوجينسأوبتيونس |             |
 
-### ResolveComponentsModule
+### ForgeCmsTsdownPlugin
+
+**النوع:** النوع
+
+```typescript
+export type ForgeCmsTsdownPlugin = TsdownPlugin &
+```
+
+تم إرجاع المكون الإضافي بواسطة {@link tsdownForgeCmsPlugins}، بما في ذلك التكوينات المستهدفة للاختبارات.
+
+### tsdownForgeCmsPlugins
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveComponentsModule(rootDir: string, explicit?: string): string;
+function tsdownForgeCmsPlugins(
+  options: TsdownForgeCmsPluginsOptions,
+): TsdownPlugin[];
 ```
 
-حدد موقع برميل المكونات المحايدة للحزمة.
+نموذج البرنامج المساعد tsdown الأصلي لمحول CMS للاستخدام لهدف واحد.
+لإنشاء أهداف متعددة، تفضل {@link DefineTsdownForgeCmsTargetConfigs}.
 
 #### حدود
 
-| الاسم | اكتب  | الوصف |
-| ----- | ----- | ----- |
-| الجذر | سلسلة |       |
-| صريح  | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ------- | ---------------------------- | ----------- |
+| خيارات | تسداونفورجيكمسبلوجينسأوبتيونس |             |
 
-### TsdownForgeCmsAllOptions
-
-**النوع:** الواجهة
-
-```typescript
-export interface TsdownForgeCmsAllOptions
-```
-
-خيارات {@link DefineTsdownForgeCmsAll}.
-
-### TsdownForgeCmsOptions
+### TsdownForgeCmsPluginsOptions
 
 **النوع:** الواجهة
 
 ```typescript
-export interface TsdownForgeCmsOptions
+export interface TsdownForgeCmsPluginsOptions
 ```
 
-خيارات {@link DefineTsdownForgeCms}.
+الخيارات المقبولة بواسطة {@link tsdownForgeCmsPlugins}.

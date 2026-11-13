@@ -2,10 +2,10 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> packages/harper/docs/index.md: [packages/harper/docs/index.md](../../index.md)
+> packages/content/harper/docs/index.md: [packages/content/harper/docs/index.md](../../index.md)
 > 语言: 简体中文 (zh)
 
-`@mission-platform/harper` 提供了 [哈珀](https://writewithharper.com) 语法检查器和
+`@mission-platform/harper` 提供了 [Harper](https://writewithharper.com) 语法检查器和
 摩纳哥编辑。 Harper 是一款快速、离线、隐私优先的英语语法检查器，由 WebAssembly 提供支持，运行
 完全在浏览器中。
 

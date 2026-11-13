@@ -44,16 +44,16 @@ function emitVueModule(
 ): EmittedVueModule;
 ```
 
-Trasformare un modulo componente neutro in un SFC Vue (più eventuali SFC ausiliari).
+Trasforma un modulo componente neutro in un SFC Vue (più eventuali SFC ausiliari).
 
 #### Parametri
 
-| Nome               | Digitare                | Descrizione |
-| ------------------ | ----------------------- | ----------- |
-| modulo             | Modulo Semantico        |             |
-| nomecomponente     | stringa                 |             |
+| Nome | Digitare | Descrizione |
+| ---------------- | ------------------- | ----------- |
+| modulo | Modulo Semantico |             |
+| nomecomponente | stringa |             |
 | componenteCartelle | Sola letturaSet<string> |             |
-| piano              | VueLoweredModule        |             |
+| piano | VueLoweredModule |             |
 
 ## `src/emitters/hook-module`
 
@@ -69,8 +69,8 @@ Compilare un modulo hook neutro sulla relativa origine componibile Vue (`.ts`).
 
 #### Parametri
 
-| Nome   | Digitare         | Descrizione |
-| ------ | ---------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------ | -------------- | ----------- |
 | modulo | Modulo Semantico |             |
 
 ## `src/index`
@@ -101,8 +101,8 @@ Restringi un piano di destinazione al piano Vue senza eseguire il cast.
 
 #### Parametri
 
-| Nome      | Digitare                          | Descrizione |
-| --------- | --------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | -------------------------------- | ----------- |
 | abbassato | TargetLoweredModule \| indefinito |             |
 
 ### lowerVueModule
@@ -121,9 +121,9 @@ intatto, quindi le fasi successive mantengono l'accesso completo all'IR.
 
 #### Parametri
 
-| Nome     | Digitare                 | Descrizione |
-| -------- | ------------------------ | ----------- |
-| io       | Modulo Semantico         |             |
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| io | Modulo Semantico |             |
 | contesto | Contesto di destinazione |             |
 
 ### VueComputedPlan
@@ -314,10 +314,10 @@ restituito intatto, quindi l'ottimizzatore può essere eseguito in sicurezza in 
 
 #### Parametri
 
-| Nome       | Digitare              | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---------- | --------------------- | ----------- |
-| intenzioni | Intenzioni target     |             |
-| opzioni    | TargetOptimizeOptions |             |
+| intenzioni | Intenzioni target |             |
+| opzioni | TargetOptimizeOptions |             |
 
 ### STABLE_LIST_KEYS
 
@@ -337,4 +337,4 @@ Mantieni solo le chiavi degli elenchi dimostrate stabili, registrando gli elench
 export const VUE_OPTIMIZATIONS: readonly string[];
 ```
 
-Ogni identificatore di ottimizzazione the Vue il target può registrare, nell'ordine dell'applicazione.
+Ogni identificatore di ottimizzazione che la destinazione Vue può registrare, nell'ordine dell'applicazione.

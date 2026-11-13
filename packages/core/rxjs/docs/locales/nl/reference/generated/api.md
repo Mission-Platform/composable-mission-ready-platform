@@ -16,17 +16,17 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/rxjs`.
 **Soort:** functie
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined;
+function useObservable(source: Observable<T>, initialValue?: T): T | undefined;
 ```
 
-Abonneer u op `source` en retourneer de laatste emissie als staat. Retouren
-`undefined` totdat de eerste emissie arriveert.
+Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ             | Beschrijving |
-| ---- | --------------- | ------------ |
-| bron | Waarneembaar<T> |              |
+| Naam | Typ | Beschrijving |
+| ------------ | ------------- | ----------- |
+| bron | Waarneembaar<T> |             |
+| beginwaarde | T |             |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -58,11 +58,11 @@ levensduur van de component, opnieuw abonneren wanneer `source` (of een extra
 
 #### Parameters
 
-| Naam                | Typ                                                    | Beschrijving |
-| ------------------- | ------------------------------------------------------ | ------------ |
-| bron                | Waarneembaar<T>                                        |              |
-| waarnemerOfVolgende | Gedeeltelijk<Observer<T>> \| ((waarde: T) => ongeldig) |              |
-| afhankelijkheden    | MpDependencyList                                       |              |
+| Naam | Typ | Beschrijving |
+| -------------- | -------------------------------------------- | ----------- |
+| bron | Waarneembaar<T> |             |
+| waarnemerOfVolgende | Gedeeltelijk<Observer<T>> \| ((waarde: T) => ongeldig) |             |
+| afhankelijkheden | MpDependencyList |             |
 
 ### gebruikAbonnement
 
@@ -72,13 +72,13 @@ levensduur van de component, opnieuw abonneren wanneer `source` (of een extra
 function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDependencyList = []): void;
 ```
 
-Voer `subscribe` uit na het aankoppelen en meld u af voor het resultaat bij ontkoppelen (en
+Voer `subscribe` uit na het koppelen en meld u af voor het resultaat bij het ontkoppelen (en
 wanneer `dependencies` verandert). `subscribe` retourneert elke `Unsubscribable`, dus
 het kan een kale `source.subscribe(...)`-oproep of een hele pijplijn inpakken.
 
 #### Parameters
 
-| Naam             | Typ              | Beschrijving |
-| ---------------- | ---------------- | ------------ |
-| abonneer         | () => Afmelden   |              |
-| afhankelijkheden | MpDependencyList |              |
+| Naam | Typ | Beschrijving |
+| ------------ | -------------------- | ----------- |
+| abonneer | () => Afmelden |             |
+| afhankelijkheden | MpDependencyList |             |

@@ -10,8 +10,8 @@ Ein Vue 3-Wrapper für MapLibre GL, der vollständige Reaktivitätsunterstützun
 
 ## Überblick
 
-Das `@mission-platform/map`-Paket bietet einen zusammensetzbaren, reaktiven Wrapper [MapLibre GL](https://maplibre.org/),
-Ermöglicht Entwicklern die Erstellung interaktiver Karten mit der Composition API von Vue 3. Es abstrahiert die Komplexität von
+Das `@mission-platform/map`-Paket bietet einen zusammensetzbaren, reaktiven Wrapper um [MapLibre GL](https://maplibre.org/),
+Ermöglicht Entwicklern die Erstellung interaktiver Karten mit der Composition API von Vue 3. It abstracts away the complexity of
 Verwaltung von MapLibre-Instanzen unter Beibehaltung des vollen Zugriffs auf die leistungsstarken Funktionen von MapLibre.
 
 ## Hauptmerkmale
@@ -60,7 +60,7 @@ Bietet Zugriff auf die MapLibre-Instanz und den Kartenstatus.
 **Rückgabe:**
 
 - `map`: Die MapLibre GL-Instanz
-  – `isReady`: Boolescher Wert, der angibt, ob die Karte vollständig initialisiert ist
+– `isReady`: Boolescher Wert, der angibt, ob die Karte vollständig initialisiert ist
 - `loadingProgress`: Zahl zwischen 0 und 1, die den Ladefortschritt anzeigt
 
 **Beispiel:**
@@ -230,4 +230,4 @@ Beachten Sie bei der Migration von OpenLayers die folgenden Unterschiede:
 
 - Unterschiedliche Koordinatensystemkonventionen (MapLibre verwendet [Längengrad, Breitengrad])
 - Unterschiedliches Layer- und Quellkonfigurationsformat
-- Unterschiedliche Namenskonventionen für Ereignisse
+- Unterschiedliche Konventionen zur Benennung von Ereignissen

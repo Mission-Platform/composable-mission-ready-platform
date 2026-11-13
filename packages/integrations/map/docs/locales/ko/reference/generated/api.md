@@ -497,7 +497,7 @@ export interface UseSourceOptions
 **종류:** 상수
 
 ```typescript
-export const MapContext;
+export const MapContext: MpContext<Map | undefined>;
 ```
 
 가장 가까운 `<MapLibre>` 조상의 MapLibre `Map` 인스턴스를 전달하는 컨텍스트입니다.

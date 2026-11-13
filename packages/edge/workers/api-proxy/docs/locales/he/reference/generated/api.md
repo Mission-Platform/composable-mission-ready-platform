@@ -16,7 +16,7 @@
 **סוג:** קבוע
 
 ```typescript
-export const ALLOWED_METHODS;
+export const ALLOWED_METHODS: Set<string>;
 ```
 
 שמור את ה-proxy לקריאה בלבד ומוגבל למסלולי ה-API המתועדים.
@@ -26,7 +26,17 @@ export const ALLOWED_METHODS;
 **סוג:** קבוע
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES;
+export const ALLOWED_ROUTE_PREFIXES: string[];
+```
+
+לא סופק תיאור.
+
+### בְּרִירַת מֶחדָל
+
+**סוג:** קבוע
+
+```typescript
+export const handler: ExportedHandler;
 ```
 
 לא סופק תיאור.
@@ -39,10 +49,15 @@ export const ALLOWED_ROUTE_PREFIXES;
 function isAllowedProxyRequest(request: Request): boolean;
 ```
 
-לא סופק תיאור.
+קובע אם בקשת לקוח נכנסת מותרת על פי מדיניות proxy.
 
 #### פרמטרים
 
-| שם   | הקלד | תיאור |
-| ---- | ---- | ----- |
-| בקשה | בקשה |       |
+| שם | הקלד | תיאור |
+| ------- | ------- | ------------------------ |
+| בקשה | בקשה | - בקשת HTTP נכנסת. |
+
+#### חוֹזֶה
+
+- **@param:** - בקשת HTTP נכנסת.
+- **@returns:** נכון אם השיטה והנתיב נמצאים ברשימת ההיתרים של ה-proxy.

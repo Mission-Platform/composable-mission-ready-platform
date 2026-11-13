@@ -1,6 +1,6 @@
-import { ForgePricingTable } from './forge-pricing-table';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgePricingTable } from './forge-pricing-table';
 
 const meta = {
   title: 'Organisms/Marketing/ForgePricingTable',

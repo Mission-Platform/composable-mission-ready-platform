@@ -26,7 +26,7 @@ di `@mission-platform/vite-plugin-forge`.
 È supportato dal negozio di temi osservabili condivisi (`../theme-store`): fare clic
 guida lo stesso singleton configurato da `ForgeThemeProvider`, quindi
 persiste la preferenza, blocca `data-theme`/`color-scheme` sulla root del documento
-(e `<meta name="color-scheme">` sincronizzato) e rimane sincronizzato con
+(e `<meta name="color-scheme">` sincronizzato) e rimane sincronizzato con il file
 tema del sistema. Il componente si iscrive allo store con il neutro
 Hook {@link useState}/{@link useEffect}, quindi un'unica fonte rimane reattiva
 entrambi i quadri.
@@ -39,8 +39,8 @@ attraverso lo slot predefinito.
 
 #### Parametri
 
-| Nome      | Digitare                            | Descrizione |
-| --------- | ----------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------- | ----------- |
 | proprietà | Sola lettura<ThemeToggleProperties> |             |
 
 ### ThemeToggleProperties
@@ -90,14 +90,14 @@ modifica tramite la prop di callback `onUpdateModelValue` (il sostituto di
 styleString, setConfig, setAttribute, setToken, rimuoviToken, reset }`.
 
 L'archivio condiviso (`provide`/`inject`), la persistenza `localStorage` e
-i tag wrapper configurabili (`as`) sono intenzionalmente ridotti: i
+tag wrapper configurabile (`as`) sono intenzionalmente ridotti: i
 La coppia `modelValue`/`onUpdateModelValue` è l'unica fonte di verità e
 il wrapper è un `<div>` fisso.
 
 #### Parametri
 
-| Nome      | Digitare                              | Descrizione |
-| --------- | ------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------------- | ----------- |
 | proprietà | Sola lettura<ThemeComposerProperties> |             |
 
 ### ThemeComposerProperties
@@ -151,8 +151,8 @@ archivio a livello di documento con un wrapper `<div>` fisso.
 
 #### Parametri
 
-| Nome      | Digitare                              | Descrizione |
-| --------- | ------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------------- | ----------- |
 | proprietà | Sola lettura<ThemeProviderProperties> |             |
 
 ### ThemeProviderProperties
@@ -201,8 +201,8 @@ proprietà (`--mp-*` → valore). Gli attributi hanno la precedenza, poi i dati 
 
 #### Parametri
 
-| Nome           | Digitare            | Descrizione |
-| -------------- | ------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------ | ------------------- | ----------- |
 | configurazione | ThemeComposerConfig |             |
 
 ### configToStyleString
@@ -217,8 +217,8 @@ Risolvi una configurazione nella stringa `style` in linea completa (proprietà p
 
 #### Parametri
 
-| Nome           | Digitare            | Descrizione |
-| -------------- | ------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------ | ------------------- | ----------- |
 | configurazione | ThemeComposerConfig |             |
 
 ### cssVariablesToString
@@ -233,8 +233,8 @@ Serializza una mappa di proprietà personalizzate CSS in una stringa `style` in 
 
 #### Parametri
 
-| Nome      | Digitare                 | Descrizione |
-| --------- | ------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| --------- | ---------------------- | ----------- |
 | variabili | Registra<string, string> |             |
 
 ### mergeConfig
@@ -249,10 +249,10 @@ Unisci superficialmente una configurazione parziale in quella corrente (cancella
 
 #### Parametri
 
-| Nome           | Digitare            | Descrizione |
-| -------------- | ------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | ------------------- | ----------- |
 | configurazione | ThemeComposerConfig |             |
-| parziale       | ThemeComposerConfig |             |
+| parziale | ThemeComposerConfig |             |
 
 ### rimuoviConfigToken
 
@@ -266,10 +266,10 @@ Rimuovere un singolo override del token non elaborato.
 
 #### Parametri
 
-| Nome           | Digitare            | Descrizione |
-| -------------- | ------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------ | ------------------- | ----------- |
 | configurazione | ThemeComposerConfig |             |
-| chiave         | stringa             |             |
+| chiave | stringa |             |
 
 ### setConfigAttribute
 
@@ -287,11 +287,11 @@ Imposta un singolo attributo amichevole (passa `undefined` per cancellarlo).
 
 #### Parametri
 
-| Nome           | Digitare               | Descrizione |
-| -------------- | ---------------------- | ----------- |
-| configurazione | ThemeComposerConfig    |             |
-| attributo      | K                      |             |
-| valore         | ThemeComposerConfig[K] |             |
+| Nome | Digitare | Descrizione |
+| --------- | ---------------------- | ----------- |
+| configurazione | ThemeComposerConfig |             |
+| attributo | K |             |
+| valore | ThemeComposerConfig[K] |             |
 
 ### setConfigToken
 
@@ -305,11 +305,33 @@ Imposta un singolo override del token non elaborato. La chiave può omettere il 
 
 #### Parametri
 
-| Nome           | Digitare            | Descrizione |
-| -------------- | ------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------ | ------------------- | ----------- |
 | configurazione | ThemeComposerConfig |             |
-| chiave         | stringa             |             |
-| valore         | stringa             |             |
+| chiave | stringa |             |
+| valore | stringa |             |
+
+### ThemeComposerAttribute
+
+**Genere:** tipo
+
+```typescript
+export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens' | 'colorScheme'>;
+```
+
+Le chiavi degli attributi descrittivi mappate a una proprietà personalizzata `--mp-*`.
+
+### ThemeComposerConfig
+
+**Tipo:** interfaccia
+
+```typescript
+export interface ThemeComposerConfig
+```
+
+Una descrizione digitata di alto livello degli attributi del tema che un consumatore può comporre
+in fase di esecuzione. Ogni attributo è mappato a uno degli `--mp-*` della piattaforma
+proprietà personalizzate CSS design-token (vedi {@link ATTRIBUTE_TO_CSS_VAR}).
 
 ## `src/stores/theme-store/theme-store`
 
@@ -327,8 +349,8 @@ adottare l'`defaultTheme` del provider. Riapplica e invia una notifica agli abbo
 
 #### Parametri
 
-| Nome           | Digitare            | Descrizione |
-| -------------- | ------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------ | ----------- | ----------- |
 | configurazione | Configurazione temi |             |
 
 ### cicloTema
@@ -373,9 +395,9 @@ Imposta la preferenza del tema in modo esplicito.
 
 #### Parametri
 
-| Nome       | Digitare | Descrizione |
-| ---------- | -------- | ----------- |
-| successivo | Tema     |             |
+| Nome | Digitare | Descrizione |
+| ---- | ----- | ----------- |
+| successivo | Tema |             |
 
 ### iscrivitiTema
 
@@ -389,8 +411,8 @@ Iscriviti per memorizzare le modifiche; restituisce una funzione di annullamento
 
 #### Parametri
 
-| Nome        | Digitare    | Descrizione |
-| ----------- | ----------- | ----------- |
+| Nome | Digitare | Descrizione |
+| -------- | ---------- | ----------- |
 | ascoltatore | () => vuoto |             |
 
 ### Tema

@@ -1,4 +1,4 @@
-# Externe consumentenconfiguratie
+# Externe consumenteninstellingen
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
@@ -9,17 +9,18 @@ In deze handleiding wordt uitgelegd hoe u Mission Platform-pakketten kunt gebrui
 
 ## Kaderselectie via voorwaarden
 
-Mission Platform-componenten worden één keer geschreven met behulp van `@mission-platform/forge-jsx` en gedistribueerd als meerdere raamwerkspecifieke bundels (Vue 3, React, Solid en Web Components) binnen één pakket.
+Mission Platform-componenten worden één keer geschreven met behulp van `@mission-platform/forge-jsx` en gedistribueerd als meerdere raamwerkspecifieke bundels (Vue 3, React, Solid, Svelte en Web Components) binnen één pakket.
 
 Om de juiste bundel te selecteren, moet u uw buildtool en TypeScript configureren om **Aangepaste exportvoorwaarden** te gebruiken.
 
 ### Ondersteunde raamvoorwaarden
 
-| Kader              | Exportvoorwaarde   |
+| Kader | Exportvoorwaarde |
 | :----------------- | :----------------- |
-| **Vue 3**          | `mp:vue`           |
-| **React**          | `mp:react`         |
-| **Solid**          | `mp:solid`         |
+| **Vue 3** | `mp:vue` |
+| **React** | `mp:react` |
+| **Solid** | `mp:solid` |
+| **Svelte** | `mp:svelte` |
 | **Webcomponenten** | `mp:web-component` |
 
 ## Projectconfiguratie
@@ -159,7 +160,7 @@ bekijken totdat de bestemming is opgelost. Het maakt de overlay leeg voor succes
 omgeleid, geannuleerd en mislukte navigatie. Gewijzigde klikken, downloads,
 externe URL's en links met een ander doel behouden het oorspronkelijke browsergedrag.
 
-Wanneer u een gedeelde Forge-bron schrijft, gebruik dan direct de neutrale grens en laat
+Gebruik bij het schrijven van een gedeelde Forge-bron de neutrale grens direct en laat
 elke compiler selecteert zijn eigen implementatie:
 
 ```tsx
@@ -183,4 +184,4 @@ Mission Platform gebruikt CSS Custom Properties (variabelen) voor ontwerptokens.
 }
 ```
 
-Alle Mission Platform-componenten gebruiken deze variabelen, dus wijzigingen op het `:root`-niveau zullen zich door de gehele gebruikersinterface verspreiden.
+Alle Mission Platform-componenten gebruiken deze variabelen, dus wijzigingen op het `:root`-niveau zullen zich door de hele gebruikersinterface verspreiden.

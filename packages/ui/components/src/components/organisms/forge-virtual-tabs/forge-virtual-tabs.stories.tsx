@@ -1,9 +1,9 @@
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeVirtualTabs } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { TabItem } from '@/components/molecules/forge-tabs';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const tabs: TabItem[] = [
   { id: 'inbox', label: 'Inbox' },

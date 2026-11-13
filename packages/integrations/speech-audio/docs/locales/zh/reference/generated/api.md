@@ -30,7 +30,7 @@ function useMidi(): MidiControls;
 ```
 
 框架中立的 Web MIDI 挂钩。请求 MIDI 访问，跟踪可用的
-输入/输出端口，可以在输出设备上播放音符。
+输入/输出端口，并可以在输出设备上播放音符。
 
 SSR 安全：`isSupported` 是 `false`，并且当 API 时每个控件都是无操作
 或者 DOM 不可用。
@@ -66,9 +66,9 @@ SSR 安全：`isSupported` 是 `false`，并且当
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 来源 | 字符串 |      |
+|名称 |类型 |描述 |
+| ------ | ------ | ----------- |
+|来源 |字符串|             |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 

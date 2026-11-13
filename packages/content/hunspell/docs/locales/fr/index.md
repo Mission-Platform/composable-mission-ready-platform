@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> packages/hunspell/docs/index.md: [packages/hunspell/docs/index.md](../../index.md)
+> packages/content/hunspell/docs/index.md: [packages/content/hunspell/docs/index.md](../../index.md)
 > Langue: Français (fr)
 
 `@mission-platform/hunspell` fournit un moteur de vérification orthographique hautes performances basé sur Hunspell, compilé pour

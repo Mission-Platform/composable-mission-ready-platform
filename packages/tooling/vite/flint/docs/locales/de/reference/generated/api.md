@@ -11,7 +11,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/vite-plugin
 
 ## `src/compile`
 
-### compileFlintFile
+### compilierenFlintFile
 
 **Art:** Funktion
 
@@ -20,24 +20,25 @@ function compileFlintFile(
   fileName: string,
   options: FlintPluginOptions,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): FlintCompiledModule;
 ```
 
-Kompilieren Sie eine FLINT-Datei und geben Sie deren Artefakt sowie Quellzuordnungsmetadaten zurück.
+Kompilieren Sie eine FWS-Datei und geben Sie deren Artefakt sowie Quellzuordnungsmetadaten zurück.
 
 #### Parameter
 
-| Name      | Geben Sie            | ein Beschreibung |
-| --------- | -------------------- | ---------------- |
-| Dateiname | Zeichenfolge         |                  |
-| Optionen  | FlintPluginOptions   |                  |
-| Dienst    | FlintCompilerService |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | -------------------- | ----------- |
+| Dateiname | Zeichenfolge |             |
+| Optionen | FlintPluginOptions |             |
+| Dienst | FlintCompilerService |             |
 
-### compileFlintGraph
+### compilierenFlintGraph
 
 **Art:** Funktion
 
@@ -47,23 +48,43 @@ function compileFlintGraph(
   options: FlintPluginOptions,
   resolver: FlintModuleResolver,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): Promise<FlintCompiledModule>;
 ```
 
-Lösen, verknüpfen und kompilieren Sie ein importiertes FLINT-Moduldiagramm.
+Lösen, verknüpfen und kompilieren Sie ein importiertes FWS-Moduldiagramm.
 
 #### Parameter
 
-| Name      | Geben Sie            | ein Beschreibung |
-| --------- | -------------------- | ---------------- |
-| Dateiname | Zeichenfolge         |                  |
-| Optionen  | FlintPluginOptions   |                  |
-| Resolver  | FlintModuleResolver  |                  |
-| Dienst    | FlintCompilerService |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | -------------------- | ----------- |
+| Dateiname | Zeichenfolge |             |
+| Optionen | FlintPluginOptions |             |
+| Resolver | FlintModuleResolver |             |
+| Dienst | FlintCompilerService |             |
+
+### createFlintGraphCache
+
+**Art:** Funktion
+
+```typescript
+function createFlintGraphCache(options?: {
+  readonly compilerService?: FlintCompilerService;
+  readonly selfHostedVmMode?: FlintVmExecutionMode;
+}): FlintGraphCache;
+```
+
+Erstellen Sie einen Diagramm-Cache, der sowohl die sequentielle als auch die gleichzeitige Diagrammauflösung dedupliziert.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+| Optionen | { readonly CompilerService?: FlintCompilerService; readonly selfHostedVmMode?: FlintVmExecutionMode; } |             |
 
 ### FlintCompiledModule
 
@@ -75,6 +96,16 @@ export interface FlintCompiledModule
 
 Kompilierte Quelle, Artefaktmetadaten, Quellkarte und optionale Diagrammberichte.
 
+### FlintGraphCache
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintGraphCache
+```
+
+Gemeinsam genutzte In-Memory-Graph-Ergebnisse, die von mehreren Flint-Zielen verwendet werden.
+
 ### FlintPluginOptions
 
 **Art:** Schnittstelle
@@ -85,7 +116,7 @@ export interface FlintPluginOptions
 
 Keine Beschreibung angegeben.
 
-### „resolveFlintPath“.
+### auflösenFlintPath
 
 **Art:** Funktion
 
@@ -97,12 +128,28 @@ Lösen Sie einen Plugin-Pfad relativ zum Stammverzeichnis auf, es sei denn, der 
 
 #### Parameter
 
-| Name   | Geben Sie    | ein Beschreibung |
-| ------ | ------------ | ---------------- |
-| Wurzel | Zeichenfolge |                  |
-| Wert   | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wurzel | Zeichenfolge |             |
+| Wert | Zeichenfolge |             |
 
 ## `src/generate`
+
+### createFlintArtifactSource
+
+**Art:** Funktion
+
+```typescript
+function createFlintArtifactSource(compiled: FlintCompiledModule): string;
+```
+
+Generieren Sie ein eigenständiges Modul für die Einbettung von Artefakten zur Buildzeit.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------------------- | ----------- |
+| zusammengestellt | FlintCompiledModule |             |
 
 ### createFlintDeclarationsSource
 
@@ -117,9 +164,9 @@ Selbstgehostete Compiler-Metadaten für Verbraucher von Vorrichtungen und Werkze
 
 #### Parameter
 
-| Name             | Geben Sie           | ein Beschreibung |
-| ---------------- | ------------------- | ---------------- |
-| zusammengestellt | FlintCompiledModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------------------- | ----------- |
+| zusammengestellt | FlintCompiledModule |             |
 
 ### createFlintManifestSource
 
@@ -133,9 +180,9 @@ Generieren Sie ein Modul, das das JSON-serialisierbare ABI-Manifest enthält.
 
 #### Parameter
 
-| Name             | Geben Sie           | ein Beschreibung |
-| ---------------- | ------------------- | ---------------- |
-| zusammengestellt | FlintCompiledModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------------------- | ----------- |
+| zusammengestellt | FlintCompiledModule |             |
 
 ### createFlintModuleSource
 
@@ -146,13 +193,14 @@ function createFlintModuleSource(compiled: FlintCompiledModule): string;
 ```
 
 Generieren Sie das normale Verbrauchermodul. Das generierte Modul exportiert die erneut
-kompilierte Funktionen und stellt das gleiche ABI-Manifest über `abiManifest` bereit.
+kompilierte Funktionen, macht das gleiche ABI-Manifest über `abiManifest` verfügbar und
+stellt als Standardexport einen synchronen Bibliothekslader bereit.
 
 #### Parameter
 
-| Name             | Geben Sie           | ein Beschreibung |
-| ---------------- | ------------------- | ---------------- |
-| zusammengestellt | FlintCompiledModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------------------- | ----------- |
+| zusammengestellt | FlintCompiledModule |             |
 
 ### createFlintSourceMapSource
 
@@ -166,9 +214,9 @@ Generieren Sie ein Modul, dessen Standardexport das generierte Quellzuordnungsob
 
 #### Parameter
 
-| Name             | Geben Sie           | ein Beschreibung |
-| ---------------- | ------------------- | ---------------- |
-| zusammengestellt | FlintCompiledModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------------------- | ----------- |
+| zusammengestellt | FlintCompiledModule |             |
 
 ### createFlintWasmSource
 
@@ -182,9 +230,9 @@ Generieren Sie ein Modul, dessen Standardexport das kompilierte Wasm-Byte-Array 
 
 #### Parameter
 
-| Name             | Geben Sie           | ein Beschreibung |
-| ---------------- | ------------------- | ---------------- |
-| zusammengestellt | FlintCompiledModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------------------- | ----------- |
+| zusammengestellt | FlintCompiledModule |             |
 
 ### createFlintWatSource
 
@@ -199,56 +247,66 @@ ist für Inspektions- und Konformitätsbehauptungen gedacht, nicht für die Wasm
 
 #### Parameter
 
-| Name             | Geben Sie           | ein Beschreibung |
-| ---------------- | ------------------- | ---------------- |
-| zusammengestellt | FlintCompiledModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------------------- | ----------- |
+| zusammengestellt | FlintCompiledModule |             |
 
-### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+### FLINT_ARTIFACT_QUERY
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
+export const FLINT_ARTIFACT_QUERY;
+```
+
+Abfrage, die alle kompilierten Artefaktdaten aus einer Diagrammkompilierung zurückgibt.
+
+### FLINT_DECLARATIONS_QUERY
+
+**Art:** konstant
+
+```typescript
+export const FLINT_DECLARATIONS_QUERY;
 ```
 
 Abfrage, die verknüpfte Deklarationen und Diagrammmetadaten als ES-Modul zurückgibt.
 
-### FORGE_WEB_SCRIPT_MANIFEST_QUERY
+### FLINT_MANIFEST_QUERY
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
+export const FLINT_MANIFEST_QUERY;
 ```
 
 Abfrage, die das kompilierte ABI-Manifest als ES-Modul zurückgibt.
 
-### FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+### FLINT_SOURCE_MAP_QUERY
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
+export const FLINT_SOURCE_MAP_QUERY;
 ```
 
 Abfrage, die die generierte Quellkarte als Standardexport des Moduls zurückgibt.
 
-### FORGE_WEB_SCRIPT_WASM_QUERY
+### FLINT_WASM_QUERY
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY;
+export const FLINT_WASM_QUERY;
 ```
 
 Abfrage, die die kompilierten Wasm-Bytes als Standardexport des Moduls zurückgibt.
 
-### FORGE_WEB_SCRIPT_WAT_QUERY
+### FLINT_WAT_QUERY
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY;
+export const FLINT_WAT_QUERY;
 ```
 
 Abfrage, die den generierten WAT, einschließlich der Verzweigungstabellenabsenkung, als Zeichenfolge zurückgibt.
@@ -263,15 +321,15 @@ Abfrage, die den generierten WAT, einschließlich der Verzweigungstabellenabsenk
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-Installieren Sie die Kompilierung von Forge-Webskripten und Abfragen virtueller Artefakte in Vite.
+Installieren Sie Flint-Kompilierung und virtuelle Artefaktabfragen in Vite.
 Das Plugin behält die skalare Wasm-Export-ABI bei, während das Manifest verfügbar gemacht wird.
 Deklarationen, Wasm, WAT und Quellkartenabfragen für Werkzeuge und Vorrichtungen.
 
 #### Parameter
 
-| Name     | Geben Sie          | ein Beschreibung |
-| -------- | ------------------ | ---------------- |
-| Optionen | FlintPluginOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------ | ----------- |
+| Optionen | FlintPluginOptions |             |
 
 ### flintPlugin
 
@@ -281,15 +339,15 @@ Deklarationen, Wasm, WAT und Quellkartenabfragen für Werkzeuge und Vorrichtunge
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-Installieren Sie die Kompilierung von Forge-Webskripten und Abfragen virtueller Artefakte in Vite.
+Installieren Sie Flint-Kompilierung und virtuelle Artefaktabfragen in Vite.
 Das Plugin behält die skalare Wasm-Export-ABI bei, während das Manifest verfügbar gemacht wird.
 Deklarationen, Wasm, WAT und Quellkartenabfragen für Werkzeuge und Vorrichtungen.
 
 #### Parameter
 
-| Name     | Geben Sie          | ein Beschreibung |
-| -------- | ------------------ | ---------------- |
-| Optionen | FlintPluginOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------ | ----------- |
+| Optionen | FlintPluginOptions |             |
 
 ### FlintViteError
 

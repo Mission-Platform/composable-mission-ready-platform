@@ -16,6 +16,6 @@ adaptateur de framework dans les packages de composants partagés.
 
 ## Contribuer
 
-Courir `pnpm --filter @mission-platform/storybook-framework lint` et le
+Exécutez `pnpm --filter @mission-platform/storybook-framework lint` et le
 Vérifications de la construction du livre d'histoires. Gardez ce package concentré sur la sélection du cadre et
 valeurs par défaut partagées du livre d'histoires ; les histoires de composants appartiennent à `apps/storybook`.

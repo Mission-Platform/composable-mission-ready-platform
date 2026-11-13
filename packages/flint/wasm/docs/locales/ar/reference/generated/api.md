@@ -9,6 +9,206 @@
 
 تم إنشاؤها من إعلانات المصدر العام في `@mission-platform/flint-wasm`.
 
+## `src/codegen/abi`
+
+### AggregateFieldDescriptor
+
+**النوع:** الواجهة
+
+```typescript
+export interface AggregateFieldDescriptor
+```
+
+واصف تخطيط الحقل الإجمالي.
+
+### AggregateLayoutDescriptor
+
+**النوع:** الواجهة
+
+```typescript
+export interface AggregateLayoutDescriptor
+```
+
+تجميع واصف تخطيط الهيكل.
+
+### canonicalizeSliceCallingConvention
+
+**النوع:** الوظيفة
+
+```typescript
+function canonicalizeSliceCallingConvention(type: FlintWasmPrimitiveType): readonly FlintWasmPrimitiveType[];
+```
+
+يخفض نوع الشريحة أو البايتات إلى أنواع تسجيل WebAssembly غير المعبأة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ---------------------- | ----------- |
+| اكتب | فلينتواسمPrimitiveType |             |
+
+### computeArrayAlllocationSize
+
+**النوع:** الوظيفة
+
+```typescript
+function computeArrayAllocationSize(
+  count: number,
+  elementSize: number,
+  maxBytes: number = MAX_ARRAY_ALLOCATION_BYTES,
+): number;
+```
+
+يحسب إجمالي حجم البايت المطلوب لتخصيص صفيف لعدد * elementSize.
+يفرض عملية الضرب المحددة ويلقي خطأ RangeError على تجاوز عدد صحيح أو انتهاك الحدود.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ------ | ----------- |
+| العد | رقم |             |
+| حجم العنصر | رقم |             |
+| ماكس بايتس | رقم |             |
+
+### computeSliceCapacity
+
+**النوع:** الوظيفة
+
+```typescript
+function computeSliceCapacity(bufferBytes: number, elementSize: number): number;
+```
+
+يحسب سعة واصف الشريحة بالنظر إلى إجمالي حجم بايت المخزن المؤقت وحجم بايت العنصر.
+يتعامل بأمان مع الأنواع ذات الحجم الصفري (elementSize === 0) عن طريق إرجاع السعة اللانهائية/غير المحدودة دون القسمة على صفر.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ------ | ----------- |
+| المخزن المؤقت | رقم |             |
+| حجم العنصر | رقم |             |
+
+### decodeSliceRegisterTriplet
+
+**النوع:** الوظيفة
+
+```typescript
+function decodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+يقوم بفك تشفير والتحقق من صحة تسجيل `(ptr: i32, len: i32, cap: i32)` الثلاثي المستلم عبر الحدود.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| المؤشر | رقم |             |
+| الطول | رقم |             |
+| القدرة | رقم |             |
+
+### encodeSliceRegisterTriplet
+
+**النوع:** الوظيفة
+
+```typescript
+function encodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+يقوم بحزم البيانات الوصفية في ملف `(ptr: i32, len: i32, cap: i32)` المسجل الثلاثي.
+يفرض الحدود غير الموقعة والثوابت غير الفائضة لمنع عمليات الاستغلال الملتفة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| المؤشر | رقم |             |
+| الطول | رقم |             |
+| القدرة | رقم |             |
+
+### MAX_ARRAY_ALLOCATION_BYTES
+
+**النوع:** ثابت
+
+```typescript
+export const MAX_ARRAY_ALLOCATION_BYTES;
+```
+
+لم يتم تقديم أي وصف.
+
+### MAX_SLICE_ADDRESS
+
+**النوع:** ثابت
+
+```typescript
+export const MAX_SLICE_ADDRESS;
+```
+
+لم يتم تقديم أي وصف.
+
+### sanitizeAggregatePadding
+
+**النوع:** الوظيفة
+
+```typescript
+function sanitizeAggregatePadding(buffer: Uint8Array, layout: AggregateLayoutDescriptor, baseOffset = 0): Uint8Array;
+```
+
+تهيئة الصفر لجميع بايتات الحشو داخل المخزن المؤقت للبنية المجمعة قبل إرسال ABI.
+يمنع الذاكرة غير المهيأة وتسرب البيانات السرية عبر حدود الثقة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------- | ---------------------------------------------------- |
+| المخزن المؤقت | Uint8Array | - مخزن مؤقت خام يحتوي على مجموع متسلسل.        |
+| تخطيط | AggregateLayoutDescriptor | - واصف التخطيط الكلي.                       |
+| الإزاحة الأساسية |                           | - بدء الإزاحة داخل المخزن المؤقت (الافتراضيات هي 0). |
+
+#### عقد
+
+- **@param:** - مخزن مؤقت أولي يحتوي على تجميع متسلسل.
+- **@param:** - واصف التخطيط الإجمالي.
+- **@param:** - بدء الإزاحة داخل المخزن المؤقت (القيمة الافتراضية هي 0).
+- **@returns:** تم تنظيف المخزن المؤقت بحشوة صفرية.
+
+### SliceRegisterTriplet
+
+**النوع:** الواجهة
+
+```typescript
+export interface SliceRegisterTriplet
+```
+
+تسجيل تمثيل لشريحة غير مجمعة تم تمريرها مباشرة عبر حدود WebAssembly.
+
+### validateSliceBounds
+
+**النوع:** الوظيفة
+
+```typescript
+function validateSliceBounds(pointer: number, length: number, capacity: number): boolean;
+```
+
+التحقق من صحة تسجيل الشرائح الثلاثية التي تلبي الحدود المكانية والثوابت الحسابية غير الملتفة غير الموقعة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| المؤشر | رقم |             |
+| الطول | رقم |             |
+| القدرة | رقم |             |
+
+### ZERO_SIZED_TYPE_SENTINEL_POINTER
+
+**النوع:** ثابت
+
+```typescript
+export const ZERO_SIZED_TYPE_SENTINEL_POINTER;
+```
+
+لم يتم تقديم أي وصف.
+
 ## `src/collection-runtime`
 
 ### buildFlintWasmCollectionRuntimeBodies
@@ -19,7 +219,11 @@
 function buildFlintWasmCollectionRuntimeBodies(): readonly FlintWasmRuntimeBody[];
 ```
 
-لم يتم تقديم أي وصف.
+إرجاع واصفات البيانات التعريفية لوظائف مساعد وقت التشغيل غير المتزامنة والتجميع.
+
+#### عقد
+
+- **@returns:** مجموعة من واصفات وظائف وقت التشغيل.
 
 ### buildFlintWasmCollectionRuntimeWasmBodies
 
@@ -36,9 +240,9 @@ function buildFlintWasmCollectionRuntimeWasmBodies(allocatorIndex: number): read
 
 #### حدود
 
-| الاسم        | اكتب | الوصف |
-| ------------ | ---- | ----- |
-| مؤشر التخصيص | رقم  |       |
+| الاسم | اكتب | الوصف |
+| -------------- | ------ | ----------- |
+| مؤشر التخصيص | رقم |             |
 
 ### FlintWasmRuntimeBody
 
@@ -48,11 +252,11 @@ function buildFlintWasmCollectionRuntimeWasmBodies(allocatorIndex: number): read
 export interface FlintWasmRuntimeBody
 ```
 
-لم يتم تقديم أي وصف.
+واصف العقد للوظائف المساعدة لوقت تشغيل المكتبة القياسية المضمنة في WebAssembly.
 
 ## `src/contracts`
 
-### ميزات FlintTarget
+### ميزات فلينتتارجيت
 
 **النوع:** الواجهة
 
@@ -60,7 +264,17 @@ export interface FlintWasmRuntimeBody
 export interface FlintTargetFeatures
 ```
 
-لم يتم تقديم أي وصف.
+تم تمكين ميزات اقتراح WebAssembly المستهدفة أثناء إصدار التعليمات البرمجية.
+
+### FlintWasmAggregateLayout
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintWasmAggregateLayout
+```
+
+واصف تخطيط الذاكرة للهياكل المجمعة الموضوعة في الذاكرة الخطية.
 
 ### FlintWasmArtifactMetadata
 
@@ -70,7 +284,7 @@ export interface FlintTargetFeatures
 export interface FlintWasmArtifactMetadata
 ```
 
-لم يتم تقديم أي وصف.
+البيانات التعريفية التي تصف تخطيط الذاكرة ومتطلبات الميزات والتوقيعات الوظيفية لأداة WebAssembly المنبعثة.
 
 ### FlintWasmAsyncCapability
 
@@ -80,7 +294,7 @@ export interface FlintWasmArtifactMetadata
 export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-لم يتم تقديم أي وصف.
+إمكانات وقت التشغيل غير المتزامنة التي تطلبها وحدات WebAssembly.
 
 ### FlintWasmAsyncContract
 
@@ -90,7 +304,7 @@ export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker
 export interface FlintWasmAsyncContract
 ```
 
-لم يتم تقديم أي وصف.
+مواصفات العقد التي تحكم التنفيذ غير المتزامن والمراسلة في WebAssembly.
 
 ### FlintWasmBackendInput
 
@@ -100,7 +314,7 @@ export interface FlintWasmAsyncContract
 export interface FlintWasmBackendInput
 ```
 
-لم يتم تقديم أي وصف.
+تم تمرير حمولة الإدخال الكاملة إلى مسار تجميع الواجهة الخلفية لـ WebAssembly.
 
 ### FlintWasmBackendResult
 
@@ -110,7 +324,7 @@ export interface FlintWasmBackendInput
 export interface FlintWasmBackendResult
 ```
 
-لم يتم تقديم أي وصف.
+النتيجة التي تم إرجاعها بواسطة باعث الواجهة الخلفية لـ WebAssembly والتي تحتوي على عناصر وتقارير ثنائية.
 
 ### FlintWasmBinaryOperator
 
@@ -120,7 +334,7 @@ export interface FlintWasmBackendResult
 export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
-لم يتم تقديم أي وصف.
+دعم العمليات الحسابية والمنطقية والمقارنة الثنائية في WebAssembly.
 
 ### FlintWasmCapabilityImport
 
@@ -130,7 +344,7 @@ export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' 
 export interface FlintWasmCapabilityImport
 ```
 
-لم يتم تقديم أي وصف.
+يتطلب استيراد قدرة المضيف وحدة WebAssembly.
 
 ### FlintWasmCollectionLayout
 
@@ -140,7 +354,7 @@ export interface FlintWasmCapabilityImport
 export interface FlintWasmCollectionLayout
 ```
 
-لم يتم تقديم أي وصف.
+تكوين التخطيط والاستراتيجية لأنواع المجموعات في الذاكرة الخطية.
 
 ### FlintWasmCompilerHints
 
@@ -150,9 +364,9 @@ export interface FlintWasmCollectionLayout
 export interface FlintWasmCompilerHints
 ```
 
-لم يتم تقديم أي وصف.
+تلميحات التحسين المقدمة إلى الواجهة الخلفية لبرنامج التحويل البرمجي WebAssembly.
 
-### FlintWasmDiagnostic
+### فلينت واسم دياجنوستيك
 
 **النوع:** الواجهة
 
@@ -160,7 +374,7 @@ export interface FlintWasmCompilerHints
 export interface FlintWasmDiagnostic
 ```
 
-لم يتم تقديم أي وصف.
+يتم إصدار تشخيص برنامج التحويل البرمجي أثناء خفض WebAssembly أو التحقق من صحته أو التحقق منه.
 
 ### FlintWasmEnumDeclaration
 
@@ -170,7 +384,7 @@ export interface FlintWasmDiagnostic
 export interface FlintWasmEnumDeclaration
 ```
 
-لم يتم تقديم أي وصف.
+يتم تمثيل إعلان التعداد الاتحادي ذو العلامات في تخطيطات ذاكرة WebAssembly.
 
 ### FlintWasmExpression
 
@@ -180,7 +394,7 @@ export interface FlintWasmEnumDeclaration
 export type FlintWasmExpression = |
 ```
 
-لم يتم تقديم أي وصف.
+تم تخفيض تعبير التمثيل المتوسط ​​إلى تعليمات WebAssembly.
 
 ### متطلبات ميزة FlintWasm
 
@@ -190,9 +404,29 @@ export type FlintWasmExpression = |
 export interface FlintWasmFeatureRequirements
 ```
 
-لم يتم تقديم أي وصف.
+تم اكتشاف متطلبات ميزة WebAssembly أثناء إنشاء التعليمات البرمجية.
 
-### FlintWasmFunction
+### فلينت واسمفورين كابابيليتي
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintWasmForeignCapability
+```
+
+تم تخفيض عقد استيراد وحدة قدرة C الأجنبية لإصدار WebAssembly.
+
+### FlintWasmForeignFunction
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintWasmForeignFunction
+```
+
+تم تخفيض عقد استيراد وظيفة C الأجنبية لانبعاث WebAssembly.
+
+### وظيفة فلينت واسم
 
 **النوع:** الواجهة
 
@@ -200,9 +434,9 @@ export interface FlintWasmFeatureRequirements
 export interface FlintWasmFunction
 ```
 
-لم يتم تقديم أي وصف.
+تم تخفيض التمثيل الوسيط للوظيفة إلى تعريف وظيفة WebAssembly.
 
-### FlintWasmGenericSpecialization
+### فلينتواسمعامالتخصص
 
 **النوع:** الواجهة
 
@@ -210,7 +444,7 @@ export interface FlintWasmFunction
 export interface FlintWasmGenericSpecialization
 ```
 
-لم يتم تقديم أي وصف.
+تخصص الوظيفة العامة أحادي الشكل المنبعث إلى WebAssembly.
 
 ### FlintWasmIteratorBoundaryDescriptor
 
@@ -220,7 +454,7 @@ export interface FlintWasmGenericSpecialization
 export interface FlintWasmIteratorBoundaryDescriptor
 ```
 
-لم يتم تقديم أي وصف.
+واصف الحدود الذي يحدد انتقالات وصادرات آلة حالة التكرار.
 
 ### FlintWasmIteratorCapability
 
@@ -230,7 +464,7 @@ export interface FlintWasmIteratorBoundaryDescriptor
 export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 ```
 
-لم يتم تقديم أي وصف.
+فئة قدرة التكرار التي تدعمها مكررات وقت التشغيل.
 
 ### FlintWasmIteratorCapabilityDescriptor
 
@@ -240,7 +474,7 @@ export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 export interface FlintWasmIteratorCapabilityDescriptor
 ```
 
-لم يتم تقديم أي وصف.
+واصف يحدد استراتيجية التكرار وحدود العناصر.
 
 ### FlintWasmIteratorExport
 
@@ -250,7 +484,7 @@ export interface FlintWasmIteratorCapabilityDescriptor
 export interface FlintWasmIteratorExport
 ```
 
-لم يتم تقديم أي وصف.
+تم تصدير رموز حالة آلة التكرار التي يمكن الوصول إليها في أوقات التشغيل المضيفة.
 
 ### FlintWasmLogger
 
@@ -260,7 +494,7 @@ export interface FlintWasmIteratorExport
 export interface FlintWasmLogger
 ```
 
-لم يتم تقديم أي وصف.
+واجهة مسجل منظمة لأحداث تجميع WebAssembly.
 
 ### FlintWasmModule
 
@@ -270,7 +504,7 @@ export interface FlintWasmLogger
 export interface FlintWasmModule
 ```
 
-لم يتم تقديم أي وصف.
+تمثيل وسيط للوحدة يحتوي على وظائف وتخطيطات وعمليات استيراد لإصدار WebAssembly.
 
 ### FlintWasmParameter
 
@@ -280,7 +514,7 @@ export interface FlintWasmModule
 export interface FlintWasmParameter
 ```
 
-لم يتم تقديم أي وصف.
+تعريف معلمة الوظيفة المستخدمة في توقيعات وظيفة WebAssembly.
 
 ### FlintWasmPrimitiveType
 
@@ -288,10 +522,10 @@ export interface FlintWasmParameter
 
 ```typescript
 export type FlintWasmPrimitiveType =
-  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | 'v128';
 ```
 
-لم يتم تقديم أي وصف.
+أنواع البيانات البدائية التي يدعمها ممر خفض الواجهة الخلفية لـ WebAssembly.
 
 ### FlintWasmSourceImport
 
@@ -301,7 +535,7 @@ export type FlintWasmPrimitiveType =
 export interface FlintWasmSourceImport
 ```
 
-لم يتم تقديم أي وصف.
+تم استيراد تبعية وحدة المصدر المرتبطة إلى وحدة WebAssembly.
 
 ### FlintWasmSourceSpan
 
@@ -311,7 +545,7 @@ export interface FlintWasmSourceImport
 export interface FlintWasmSourceSpan
 ```
 
-لم يتم تقديم أي وصف.
+تم تعيين نطاق موقع المصدر لتعليمات WebAssembly لإنشاء رمز تصحيح الأخطاء.
 
 ### FlintWasmStandardLibraryOperation
 
@@ -344,6 +578,8 @@ export type FlintWasmStandardLibraryOperation =
   | 'memory-realloc'
   | 'memory-load-u32'
   | 'memory-store-u32'
+  | 'memory-load-u8'
+  | 'memory-store-u8'
   | 'memory-load-f64'
   | 'memory-store-f64'
   | 'f64-from-u32'
@@ -366,10 +602,21 @@ export type FlintWasmStandardLibraryOperation =
   | 'signal-schedule'
   | 'async-schedule-microtask'
   | 'async-worker-post'
-  | 'async-worker-receive';
+  | 'async-worker-receive'
+  | 'memory-copy'
+  | 'memory-fill'
+  | 'simd-binarize'
+  | 'simd-i8x16-splat'
+  | 'simd-i8x16-eq'
+  | 'simd-i8x16-lt-u'
+  | 'simd-i8x16-bitmask'
+  | 'simd-i32x4-splat'
+  | 'simd-i32x4-add'
+  | 'simd-v128-load'
+  | 'simd-v128-store';
 ```
 
-لم يتم تقديم أي وصف.
+تم تخفيض العمليات الجوهرية لمكتبة WebAssembly القياسية بواسطة مترجم الواجهة الخلفية.
 
 ### FlintWasmStatement
 
@@ -379,7 +626,7 @@ export type FlintWasmStandardLibraryOperation =
 export type FlintWasmStatement = |
 ```
 
-لم يتم تقديم أي وصف.
+تم تخفيض بيان التمثيل المتوسط ​​إلى تدفق التحكم المنظم لـ WebAssembly.
 
 ### FlintWasmTypeName
 
@@ -389,7 +636,7 @@ export type FlintWasmStatement = |
 export interface FlintWasmTypeName
 ```
 
-لم يتم تقديم أي وصف.
+يتم استخدام تمثيل اسم النوع الملخص أثناء خفض WebAssembly.
 
 ## `src/emitter`
 
@@ -401,14 +648,305 @@ export interface FlintWasmTypeName
 function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<input>'): FlintWasmBackendResult;
 ```
 
-لم يتم تقديم أي وصف.
+نقطة الدخول الرئيسية تقوم بتجميع وحدة Flint IR إلى تنسيقات WebAssembly الثنائية والنصية.
 
 #### حدود
 
-| الاسم     | اكتب                  | الوصف |
-| --------- | --------------------- | ----- |
-| الإدخال   | FlintWasmBackendInput |       |
-| اسم الملف |                       |       |
+| الاسم | اكتب | الوصف |
+| -------- | --------------------- | ----------- |
+| الإدخال | فلينتواسمباكيندإنبوت |             |
+| اسم الملف |                       |             |
+
+## `src/emitter/section-builder`
+
+### SECTION_IDS
+
+**النوع:** ثابت
+
+```typescript
+export const SECTION_IDS;
+```
+
+لم يتم تقديم أي وصف.
+
+### قسم
+
+**النوع:** الوظيفة
+
+```typescript
+function section(id: number, contents: readonly number[]): number[];
+```
+
+حزم بايتات الحمولة في قسم WebAssembly بمعرف القسم وبادئة الطول.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ----------------- | ----------- |
+| معرف | رقم |             |
+| المحتويات | رقم للقراءة فقط[] |             |
+
+### WasmSectionBuilder
+
+**النوع:** فئة
+
+```typescript
+export class WasmSectionBuilder
+```
+
+يقوم بإنشاء منشئ قسم WebAssembly المكتوب.
+
+## `src/encoding/bytes`
+
+### إلحاقF32
+
+**النوع:** الوظيفة
+
+```typescript
+function appendF32(value: number): number[];
+```
+
+يُلحق رقم الفاصلة العائمة 32 بت بتنسيق ثنائي ذو نهاية صغيرة، مما يؤدي إلى تحديد NaNs بشكل أساسي.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | رقم |             |
+
+### إلحاقF64
+
+**النوع:** الوظيفة
+
+```typescript
+function appendF64(value: number): number[];
+```
+
+يُلحق رقم الفاصلة العائمة 64 بت بتنسيق ثنائي ذو نهاية صغيرة، مما يؤدي إلى تحديد NaNs بشكل أساسي.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | رقم |             |
+
+### CANONICAL_F32_NAN_BYTES
+
+**النوع:** ثابت
+
+```typescript
+export const CANONICAL_F32_NAN_BYTES;
+```
+
+نمط بت NaN الهادئ الكنسي لعوامات 32 بت (0x7fc00000 في النهاية الصغيرة).
+
+### CANONICAL_F64_NAN_BYTES
+
+**النوع:** ثابت
+
+```typescript
+export const CANONICAL_F64_NAN_BYTES;
+```
+
+نمط بت NaN الهادئ الكنسي لعوامات 64 بت (0x7ff8000000000000 في النهاية الصغيرة).
+
+### ناقلات
+
+**النوع:** الوظيفة
+
+```typescript
+function vector(values: readonly number[]): number[];
+```
+
+بادئات مجموعة من عناصر البايت كود مع عددها بتشفير LEB128.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ----------------- | ----------- |
+| القيم | رقم للقراءة فقط[] |             |
+
+### WasmString
+
+**النوع:** الوظيفة
+
+```typescript
+function wasmString(value: string): number[];
+```
+
+يشفر سلسلة UTF-8 مسبوقة بطول البايت الخاص بها بتنسيق WebAssembly.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | سلسلة |             |
+
+## `src/encoding/leb128`
+
+### وقعLeb
+
+**النوع:** الوظيفة
+
+```typescript
+function signedLeb(value: number | bigint): number[];
+```
+
+يقوم بتشفير عدد صحيح 32 بت أو 64 بت موقّع في مصفوفة بايت WebAssembly LEB128.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---------------- | ----------- |
+| القيمة | الرقم \| كبير |             |
+
+### وقعتLeb128
+
+**النوع:** الوظيفة
+
+```typescript
+function signedLeb128(value: number | bigint): number[];
+```
+
+الاسم المستعار للموقعةLeb.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---------------- | ----------- |
+| القيمة | الرقم \| كبير |             |
+
+### unsignedLeb
+
+**النوع:** الوظيفة
+
+```typescript
+function unsignedLeb(value: number): number[];
+```
+
+يقوم بترميز عدد صحيح 32 بت غير موقّع في مصفوفة بايت WebAssembly LEB128.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | رقم |             |
+
+### غير موقعةLeb128
+
+**النوع:** الوظيفة
+
+```typescript
+function unsignedLeb128(value: number): number[];
+```
+
+الاسم المستعار لـ unsignedLeb.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | رقم |             |
+
+## `src/optimizer`
+
+### فلينت واسموبتيميزيشن دياجنوستيك
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintWasmOptimizationDiagnostic
+```
+
+يمر التشخيص المنبعث من تحسين WebAssembly.
+
+### FlintWasmOptimizationPass
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintWasmOptimizationPass
+```
+
+البيانات الوصفية التي تصف تمريرة التحسين الفردية ومقاييسها.
+
+### تقرير تحسين فلينت واسم
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintWasmOptimizationReport
+```
+
+تقرير ملخص يتتبع جميع عمليات تحسين WebAssembly وتشخيصاتها المطبقة.
+
+### فلينتWasmStageIr
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintWasmStageIr
+```
+
+لقطة تمثيلية وسيطة لحالة الوحدة في مرحلة التحسين.
+
+### استراتيجية فلينت واسم سويتش
+
+**النوع:** النوع
+
+```typescript
+export type FlintWasmSwitchStrategy = 'br-table' | 'sparse' | 'constant';
+```
+
+استراتيجية توليد التعليمات البرمجية لخفض بيانات التبديل.
+
+### الأمثلFlintWasmModule
+
+**النوع:** الوظيفة
+
+```typescript
+function optimizeFlintWasmModule(
+  module: FlintWasmModule,
+  optimization: 'debug' | 'release' = 'release',
+): FlintWasmStageIr;
+```
+
+تنفيذ المجموعة الكاملة من تحسينات WebAssembly على وحدة IR.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------ | -------------------- | ----------- |
+| الوحدة النمطية | فلينت واسمودول |             |
+| التحسين | 'تصحيح' \| "الإفراج" |             |
+
+## `src/sections/custom`
+
+### encodeFlintAbiCustomSection
+
+**النوع:** الوظيفة
+
+```typescript
+function encodeFlintAbiCustomSection(manifest: FlintCAbiManifest | object): number[];
+```
+
+يصدر قسمًا ثنائيًا مخصصًا لـ WebAssembly يحتوي على بيان CBOR ABI مضغوط (`flint.abi.v2`).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | --------------------------- | ----------- |
+| بيان | FlintCAbiManifest \| كائن |             |
+
+### FLINT_ABI_V2_CUSTOM_SECTION
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_ABI_V2_CUSTOM_SECTION;
+```
+
+اسم القسم المخصص القياسي لـ WebAssembly لبيانات CBOR ABI الثنائية المضمنة.
 
 ## `src/verifier`
 
@@ -430,7 +968,7 @@ export interface FlintWasmArtifactManifest
 export interface FlintWasmArtifactVerificationDiagnostic
 ```
 
-لم يتم تقديم أي وصف.
+اكتشاف تشخيصي ينبعث أثناء التحقق الثنائي من WebAssembly.
 
 ### FlintWasmArtifactVerificationInput
 
@@ -440,7 +978,7 @@ export interface FlintWasmArtifactVerificationDiagnostic
 export interface FlintWasmArtifactVerificationInput
 ```
 
-لم يتم تقديم أي وصف.
+تم تمرير معلمات الإدخال والتوقعات للتحقق من العناصر.
 
 ### FlintWasmArtifactVerificationPolicy
 
@@ -450,7 +988,7 @@ export interface FlintWasmArtifactVerificationInput
 export interface FlintWasmArtifactVerificationPolicy
 ```
 
-لم يتم تقديم أي وصف.
+قواعد السياسة التي تحكم إنفاذ التحقق من العناصر.
 
 ### FlintWasmArtifactVerificationResult
 
@@ -460,7 +998,7 @@ export interface FlintWasmArtifactVerificationPolicy
 export interface FlintWasmArtifactVerificationResult
 ```
 
-لم يتم تقديم أي وصف.
+تقرير نتائج التحقق الشامل الذي يشير إلى حالة التحقق.
 
 ### FlintWasmArtifactVerificationSeverity
 
@@ -470,7 +1008,7 @@ export interface FlintWasmArtifactVerificationResult
 export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info';
 ```
 
-لم يتم تقديم أي وصف.
+مستويات الخطورة التشخيصية المنبعثة أثناء التحقق من القطع الأثرية.
 
 ### FlintWasmManifestFunction
 
@@ -480,7 +1018,7 @@ export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info'
 export interface FlintWasmManifestFunction
 ```
 
-لم يتم تقديم أي وصف.
+البيانات الوصفية للوظيفة المستخرجة من بيان ABI للتحقق منها.
 
 ### FlintWasmManifestImport
 
@@ -490,7 +1028,7 @@ export interface FlintWasmManifestFunction
 export interface FlintWasmManifestImport
 ```
 
-لم يتم تقديم أي وصف.
+بيانات تعريف إعلان الاستيراد المستخرجة من بيان ABI.
 
 ### FlintWasmManifestParameter
 
@@ -500,7 +1038,7 @@ export interface FlintWasmManifestImport
 export interface FlintWasmManifestParameter
 ```
 
-لم يتم تقديم أي وصف.
+البيانات التعريفية لنوع المعلمة في تعريف الوظيفة الواضحة.
 
 ### FlintWasmMemoryLayout
 
@@ -510,9 +1048,9 @@ export interface FlintWasmManifestParameter
 export interface FlintWasmMemoryLayout
 ```
 
-لم يتم تقديم أي وصف.
+تم التحقق من توقعات تخطيط الذاكرة مقابل WebAssembly الثنائي.
 
-### VerifyFlintWasmArtifact
+### checkFlintWasmArtifact
 
 **النوع:** الوظيفة
 
@@ -520,13 +1058,13 @@ export interface FlintWasmMemoryLayout
 function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): FlintWasmArtifactVerificationResult;
 ```
 
-لم يتم تقديم أي وصف.
+أكمل نقطة إدخال التحقق من صحة عناصر WebAssembly الثنائية والمحولات.
 
 #### حدود
 
-| الاسم   | اكتب                               | الوصف |
-| ------- | ---------------------------------- | ----- |
-| الإدخال | FlintWasmArtifactVerificationInput |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------------------------------- | ----------- |
+| الإدخال | فلينتواسمارتيفاكتVerificationInput |             |
 
 ## `src/wat`
 
@@ -538,7 +1076,7 @@ function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): Fli
 export interface FlintWasmWatMetadata
 ```
 
-لم يتم تقديم أي وصف.
+البيانات التعريفية المنبعثة في تعليقات ورؤوس تنسيق نص WebAssembly (WAT).
 
 ### renderFlintWasmWat
 
@@ -548,11 +1086,37 @@ export interface FlintWasmWatMetadata
 function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmWatMetadata = {}): string;
 ```
 
-لم يتم تقديم أي وصف.
+يخفض التمثيل الوسيط الكامل لوحدة Flint WebAssembly إلى تنسيق WAT النصي.
 
 #### حدود
 
-| الاسم            | اكتب                 | الوصف |
-| ---------------- | -------------------- | ----- |
-| الوحدة النمطية   | FlintWasmModule      |       |
-| البيانات الوصفية | FlintWasmWatMetadata |       |
+| الاسم | اكتب | الوصف |
+| -------- | -------------------- | -------------------------------------------------------- |
+| الوحدة النمطية | فلينت واسمودول | - تمثيل الوحدة الوسيطة المترجمة.           |
+| البيانات الوصفية | فلينتواسمواتميتاداتا | - تجميع البيانات الوصفية وتكوين الميزة المستهدفة. |
+
+#### عقد
+
+- **@param:** - التمثيل الوسيط للوحدة المجمعة.
+- **@param:** - تجميع البيانات الوصفية وتكوين ميزة الهدف.
+- **@returns:** سلسلة تمثيل نص WebAssembly.
+
+### toWatType
+
+**النوع:** الوظيفة
+
+```typescript
+function toWatType(
+  type: string | { readonly name?: string; readonly reference?: string } | undefined,
+  memory64 = false,
+): string;
+```
+
+يقوم بتعيين سلسلة تمثيل من النوع Flint أو C إلى نوع قيمة WebAssembly WAT.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------------------------------------------------------------------------------ | ----------- |
+| اكتب | سلسلة \| { اسم للقراءة فقط؟: سلسلة؛ مرجع للقراءة فقط ؟: سلسلة } \| غير محدد |             |
+| الذاكرة64 |                                                                                |             |

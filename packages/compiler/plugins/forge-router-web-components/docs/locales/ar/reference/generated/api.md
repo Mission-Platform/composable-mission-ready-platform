@@ -33,6 +33,16 @@ export class MpRouterOutletElement extends HTMLElement
 `viewAdapter` إلى جهاز التوجيه عندما تحتاج العروض إلى دورة حياة مخصصة؛ وإلا أ
 يتم عرض Node أو مصنع DOM في `route.component` مباشرة.
 
+### MpRouterViewElement
+
+**النوع:** مكون
+
+```typescript
+export class MpRouterViewElement extends MpRouterOutletElement
+```
+
+لم يتم تقديم أي وصف.
+
 ### import org.registerRouterElements
 
 **النوع:** الوظيفة
@@ -45,9 +55,9 @@ function registerRouterElements(options: RegisterRouterElementsOptions = {}): vo
 
 #### حدود
 
-| الاسم  | اكتب                        | الوصف |
-| ------ | --------------------------- | ----- |
-| خيارات | تسجيل خيارات RouterElements |       |
+| الاسم | اكتب | الوصف |
+| ------- | ----------------------------- | ----------- |
+| خيارات | تسجيل خيارات RouterElements |             |
 
 ## `src/runtime/history`
 
@@ -63,9 +73,9 @@ function createBrowserHistory(win?: Window): MpBrowserHistory;
 
 #### حدود
 
-| الاسم | اكتب  | الوصف |
-| ----- | ----- | ----- |
-| فوز   | نافذة |       |
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| فوز | نافذة |             |
 
 ### createMemoryHistory
 
@@ -79,9 +89,9 @@ function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 
 #### حدود
 
-| الاسم            | اكتب | الوصف |
-| ---------------- | ---- | ----- |
-| عنوان URL الأولي |      |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---- | ----------- |
+| عنوان URL الأولي |      |             |
 
 ### createWebHistory
 
@@ -189,9 +199,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### حدود
 
-| الاسم | اكتب             | الوصف |
-| ----- | ---------------- | ----- |
-| إلى   | مبرووتلوكيشن راو |       |
+| الاسم | اكتب | الوصف |
+| ---- | ------------------ | ----------- |
+| إلى | مبرووتلوكيشن راو |             |
 
 ### setForgeRouter
 
@@ -205,9 +215,9 @@ function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 
 #### حدود
 
-| الاسم | اكتب                        | الوصف |
-| ----- | --------------------------- | ----- |
-| راوتر | MpWebComponentsRouter<View> |       |
+| الاسم | اكتب | الوصف |
+| ------ | --------------------------- | ----------- |
+| راوتر | MpWebComponentsRouter<View> |             |
 
 ### useForgeNavigation
 
@@ -297,9 +307,19 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 
 #### حدود
 
-| الاسم  | اكتب                               | الوصف |
-| ------ | ---------------------------------- | ----- |
-| خيارات | MpWebComponentsRouterOptions<View> |       |
+| الاسم | اكتب | الوصف |
+| ------- | ---------------------------------- | ----------- |
+| خيارات | MpWebComponentsRouterOptions<View> |             |
+
+### com.getActiveRouter
+
+**النوع:** الوظيفة
+
+```typescript
+function getActiveRouter(): MpWebComponentsRouter<unknown> | undefined;
+```
+
+لم يتم تقديم أي وصف.
 
 ### MpRouterLoadingFallback
 
@@ -343,10 +363,26 @@ function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 
 #### حدود
 
-| الاسم | اكتب             | الوصف |
-| ----- | ---------------- | ----- |
-| راوتر | م راوتر أدابتر   |       |
-| إلى   | مبرووتلوكيشن راو |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------ | ----------- |
+| راوتر | م راوتر أدابتر |             |
+| إلى | مبرووتلوكيشن راو |             |
+
+### setActiveRouter
+
+**النوع:** الوظيفة
+
+```typescript
+function setActiveRouter(router: MpWebComponentsRouter<View> | undefined): void;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---------------------------------------- | ----------- |
+| راوتر | MpWebComponentsRouter<View> \| غير محدد |             |
 
 ## `src/utils/forge-router-web-components`
 

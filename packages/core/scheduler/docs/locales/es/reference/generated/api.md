@@ -41,8 +41,8 @@ accesorios.
 
 #### Parámetros
 
-| Nombre      | Tipo                              | Descripción |
-| ----------- | --------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ----------------------------- | ----------- |
 | propiedades | Sólo lectura<SchedulerProperties> |             |
 
 ### Propiedades del programador
@@ -80,9 +80,9 @@ Semántica de revisión RFC 5545). `uid` se conserva.
 
 #### Parámetros
 
-| Nombre | Tipo                         | Descripción |
-| ------ | ---------------------------- | ----------- |
-| evento | VEvento                      |             |
+| Nombre | Tipo | Descripción |
+| ----- | ---------------------------- | ----------- |
+| evento | VEvento |             |
 | parche | Parcial<Omit<VEvent, 'uid'>> |             |
 
 ### crearEvento
@@ -98,8 +98,8 @@ generando un UID y las marcas de tiempo de creación/modificación.
 
 #### Parámetros
 
-| Nombre  | Tipo                               | Descripción |
-| ------- | ---------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------------------- | ----------- |
 | parcial | Omitir<VEvent, 'uid' \| 'dtstamp'> |             |
 
 ### eventosParaDia
@@ -114,10 +114,10 @@ Devuelve eventos que caen en el día calendario indicado.
 
 #### Parámetros
 
-| Nombre  | Tipo      | Descripción |
-| ------- | --------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | -------- | ----------- |
 | eventos | VEvento[] |             |
-| día     | Fecha     |             |
+| día | Fecha |             |
 
 ### eventosParaRango
 
@@ -134,11 +134,11 @@ honrado.
 
 #### Parámetros
 
-| Nombre  | Tipo      | Descripción |
-| ------- | --------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | -------- | ----------- |
 | eventos | VEvento[] |             |
-| inicio  | Fecha     |             |
-| fin     | Fecha     |             |
+| inicio | Fecha |             |
+| fin | Fecha |             |
 
 ### formatoDuración
 
@@ -152,8 +152,8 @@ Devuelve una cadena de duración legible por humanos para un evento, p. "1h 30m"
 
 #### Parámetros
 
-| Nombre | Tipo    | Descripción |
-| ------ | ------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
 | evento | VEvento |             |
 
 ### diseñoDía
@@ -170,8 +170,8 @@ y cada uno ocupa `column` de `totalColumns` pistas paralelas.
 
 #### Parámetros
 
-| Nombre  | Tipo      | Descripción |
-| ------- | --------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | -------- | ----------- |
 | eventos | VEvento[] |             |
 
 ### moverEventPatch
@@ -187,10 +187,10 @@ preservando su representación ISO de todo el día/cronometrada.
 
 #### Parámetros
 
-| Nombre  | Tipo    | Descripción |
-| ------- | ------- | ----------- |
-| evento  | VEvento |             |
-| deltaMs | número  |             |
+| Nombre | Tipo | Descripción |
+| ------- | ------ | ----------- |
+| evento | VEvento |             |
+| deltaMs | número |             |
 
 ### cambiar el tamaño del parche de evento
 
@@ -205,10 +205,10 @@ El evento dura al menos 15 minutos (o un día, para eventos de todo el día).
 
 #### Parámetros
 
-| Nombre  | Tipo    | Descripción |
-| ------- | ------- | ----------- |
-| evento  | VEvento |             |
-| deltaMs | número  |             |
+| Nombre | Tipo | Descripción |
+| ------- | ------ | ----------- |
+| evento | VEvento |             |
+| deltaMs | número |             |
 
 ## `src/core/range`
 
@@ -225,11 +225,11 @@ Paso de día/tres días/semana en días; paso mes/año en su período.
 
 #### Parámetros
 
-| Nombre    | Tipo                  | Descripción |
-| --------- | --------------------- | ----------- |
-| ver       | Vista del programador |             |
-| ancla     | Fecha                 |             |
-| dirección | -1 \| 1               |             |
+| Nombre | Tipo | Descripción |
+| --------- | ------------- | ----------- |
+| ver | Vista del programador |             |
+| ancla | Fecha |             |
+| dirección | -1 \| 1 |             |
 
 ### rango visible para
 
@@ -244,11 +244,11 @@ La ventana `[start, end)` visible entreabierta para el `view` dado anclado en
 
 #### Parámetros
 
-| Nombre                | Tipo                  | Descripción |
-| --------------------- | --------------------- | ----------- |
-| ver                   | Vista del programador |             |
-| ancla                 | Fecha                 |             |
-| la semana comienza el | Inicio de semana      |             |
+| Nombre | Tipo | Descripción |
+| ------------ | ------------- | ----------- |
+| ver | Vista del programador |             |
+| ancla | Fecha |             |
+| la semana comienza el | Inicio de semana |             |
 
 ## `src/core/recurrence`
 
@@ -260,7 +260,7 @@ La ventana `[start, end)` visible entreabierta para el `view` dado anclado en
 function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEvent[];
 ```
 
-Expandir un único VEvent con una RRULE a todas las ocurrencias que se superponen
+Expanda un único VEvent con una RRULE a todas las ocurrencias que se superponen
 con [rangeStart, rangeEnd). Devuelve clones virtuales de VEvent, uno por
 ocurrencia - con dtstart / dtend ajustado.
 
@@ -271,11 +271,11 @@ evitar bucles infinitos en reglas ilimitadas.
 
 #### Parámetros
 
-| Nombre        | Tipo    | Descripción |
-| ------------- | ------- | ----------- |
-| evento        | VEvento |             |
-| rangoInicio   | Fecha   |             |
-| fin del rango | Fecha   |             |
+| Nombre | Tipo | Descripción |
+| ---------- | ------ | ----------- |
+| evento | VEvento |             |
+| rangoInicio | Fecha |             |
+| fin del rango | Fecha |             |
 
 ## `src/core/types`
 
@@ -317,4 +317,4 @@ Modos de vista de calendario disponibles en ForgeScheduler.
 export type WeekStart = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 ```
 
-El primer día que comienza una vista semanal (0 = domingo… 6 = sábado).
+El primer día en que comienza una vista semanal (0 = domingo… 6 = sábado).

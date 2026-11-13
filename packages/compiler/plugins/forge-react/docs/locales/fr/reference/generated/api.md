@@ -27,11 +27,11 @@ Transformez l'ensemble du module en source cible React.
 
 #### Paramètres
 
-| Nom              | Tapez             | Descriptif |
-| ---------------- | ----------------- | ---------- |
-| modules          | Module Sémantique |            |
-| Nom du composant | chaîne            |            |
-| planifier        | ReactModulePlan   |            |
+| Nom | Tapez | Descriptif |
+| ------------- | --------------- | ----------- |
+| modules | Module Sémantique |             |
+| Nom du composant | chaîne |             |
+| planifier | ReactModulePlan |             |
 
 ## `src/index`
 
@@ -61,11 +61,11 @@ Limitez un plan appartenant à la cible à celui React.
 
 #### Paramètres
 
-| Nom     | Tapez                          | Descriptif |
-| ------- | ------------------------------ | ---------- |
-| abaissé | CibleLoweredModule \| indéfini |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------------------- | ----------- |
+| abaissé | CibleLoweredModule \| indéfini |             |
 
-### module de réaction inférieur
+### LowerReactModule
 
 **Genre :** fonction
 
@@ -80,10 +80,10 @@ Abaissez l'IR neutre dans le plan React porté par {@link TargetIntentions.lower
 
 #### Paramètres
 
-| Nom      | Tapez             | Descriptif |
-| -------- | ----------------- | ---------- |
-| ir       | Module Sémantique |            |
-| contexte | Contexte cible    |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| ir | Module Sémantique |             |
+| contexte | Contexte cible |             |
 
 ### planReactModule
 
@@ -100,10 +100,10 @@ Créez le plan React pour un module.
 
 #### Paramètres
 
-| Nom              | Tapez             | Descriptif |
-| ---------------- | ----------------- | ---------- |
-| modules          | Module Sémantique |            |
-| Nom du composant | chaîne            |            |
+| Nom | Tapez | Descriptif |
+| ------------- | -------------- | ----------- |
+| modules | Module Sémantique |             |
+| Nom du composant | chaîne |             |
 
 ### ReactClientDirectivePlan
 
@@ -206,10 +206,10 @@ en ligne, et avec `stableKeyInference` désactivé, chaque clé déduite est con
 
 #### Paramètres
 
-| Nom        | Tapez                        | Descriptif |
-| ---------- | ---------------------------- | ---------- |
-| intentions | Intentions cibles            |            |
-| options    | Options d'optimisation cible |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------- | ----------- |
+| intentions | Intentions cibles |             |
+| options | Options d'optimisation cible |             |
 
 ### RÉACT_OPTIMISATIONS
 

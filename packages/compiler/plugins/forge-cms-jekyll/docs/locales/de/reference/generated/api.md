@@ -43,9 +43,9 @@ Binden Sie die Jekyll-Projektion (Liquid) an ein Framework-Ausgabe-Plugin im Bes
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Optionen | ForgeJekyllCmsOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------- | ----------- |
+| Optionen | ForgeJekyllCmsOptions |             |
 
 ### ForgeJekyllCmsOptions
 
@@ -72,16 +72,16 @@ function emitComponentsData(
 
 `_data/forge-components.yml` ausgeben: das Schema jedes ausgegebenen Include.
 
-Anstelle einer Zuordnung wird eine Sequenz der obersten Ebene verwendet, also `site.data`-Iteration
+Anstelle einer Zuordnung wird eine Sequenz der obersten Ebene verwendet, daher `site.data`-Iteration
 Behält die Komponentenreihenfolge des Compilers bei, d. h. die Reihenfolge einer Galerie oder eines
 Die generierte Dokumentationsseite sollte sie auflisten.
 
 #### Parameter
 
-| Name        | Geben Sie                   | ein Beschreibung |
-| ----------- | --------------------------- | ---------------- |
-| Komponenten | readonly ContentComponent[] |                  |
-| Namensraum  | Zeichenfolge                |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Komponenten | readonly ContentComponent[] |             |
+| Namensraum | Zeichenfolge |             |
 
 ### emitJekyllConfig
 
@@ -105,10 +105,10 @@ Filter verwenden und andernfalls leere Werte sehen würden.
 
 #### Parameter
 
-| Name        | Geben Sie                   | ein Beschreibung |
-| ----------- | --------------------------- | ---------------- |
-| Komponenten | readonly ContentComponent[] |                  |
-| Namensraum  | Zeichenfolge                |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Komponenten | readonly ContentComponent[] |             |
+| Namensraum | Zeichenfolge |             |
 
 ### fieldToJekyllType
 
@@ -122,9 +122,9 @@ Der Jekyll-Datentyp, als der ein neutrales Feld veröffentlicht wird.
 
 #### Parameter
 
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Feld | ContentField |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------ | ----------- |
+| Feld | ContentField |             |
 
 ### JekyllFieldType
 
@@ -148,9 +148,9 @@ Ein YAML-Skalar für einen neutralen Standardwert.
 
 #### Parameter
 
-| Name | Geben Sie           | ein Beschreibung |
-| ---- | ------------------- | ---------------- |
-| Wert | ContentDefaultValue |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------------- | ----------- |
+| Wert | ContentDefaultValue |             |
 
 ## `src/template`
 
@@ -179,10 +179,10 @@ Emittieren Sie die Flüssigkeit für eine Komponente.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| Komponente | ContentComponent |                  |
-| Namensraum | Zeichenfolge     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------- | ----------- |
+| Komponente | ContentComponent |             |
+| Namensraum | Zeichenfolge |             |
 
 ### includeFileName
 
@@ -199,10 +199,10 @@ Der Artefaktdateiname des Include einer Komponente.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| Komponente | ContentComponent |                  |
-| Namensraum | Zeichenfolge     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------- | ----------- |
+| Komponente | ContentComponent |             |
+| Namensraum | Zeichenfolge |             |
 
 ### includePath
 
@@ -219,10 +219,10 @@ Der Include-Pfad, über den eine Komponente adressiert wird, relativ zu `_includ
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| Komponente | ContentComponent |                  |
-| Namensraum | Zeichenfolge     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------- | ----------- |
+| Komponente | ContentComponent |             |
+| Namensraum | Zeichenfolge |             |
 
 ### jekyllDiagnostics
 
@@ -245,10 +245,10 @@ dort gerendert, wo das Markup erwartet wurde.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| ir         | SemanticModule   |                  |
-| Komponente | ContentComponent |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------- | ----------- |
+| ir | SemanticModule |             |
+| Komponente | ContentComponent |             |
 
 ### liquidLiteral
 
@@ -266,6 +266,6 @@ als die Standardeinstellung auf eine Zeichenfolge zu erzwingen.
 
 #### Parameter
 
-| Name | Geben Sie           | ein Beschreibung |
-| ---- | ------------------- | ---------------- |
-| Wert | ContentDefaultValue |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------------- | ----------- |
+| Wert | ContentDefaultValue |             |

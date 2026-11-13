@@ -14,11 +14,22 @@ pnpm 工作区和 Turborepo。
 创建包的推荐方法是使用 Mission Platform Developer MCP 工具，这可确保所有
 配置、脚本和文件夹结构遵循平台的标准。
 
+### Forge 包构建
+
+Forge 组件、挂钩和 CMS 包使用一个 `defineTsdownLibrary` 调用。添加
+`tsdownForgeComponentPlugins` 返回的本机插件，
+`tsdownForgeHookPlugins` 或 `tsdownForgeCmsPlugins` 到其 `plugins` 选项；
+这些插件从 tsdown 生命周期挂钩准备和发布目标，而不是
+在评估配置时执行图形发现。保持框架和
+CMS 输出插件由调用者拥有且明确，因此目标选择仍然存在
+可组合且隔离。
+
 ### 1. MCP支架
 
-使用 `scaffold_package` 工具生成骨架。
+通过连接的 Mission Platform Developer MCP 服务器使用 `scaffold_package` 工具来生成骨架。
+以下是 MCP 工具调用示例，不是 shell 命令；如果 MCP 不可用，请使用手动设置部分。
 
-```bash
+```text
 # Example: Creating a new 'date-utils' package
 # The tool defaults to a dry-run; set apply=true to write files
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
@@ -34,7 +45,7 @@ scaffold_package(name="date-utils", description="Shared date manipulation utilit
 
 ### 2. 手动设置（可选）
 
-如果您不使用 MCP 工具，请确保您的 `package.json` 使用 [pnpm 目录](https://pnpm.io/catalogs) 为
+如果您不使用 MCP 工具，请确保您的 `package.json` 使用 [pnpm 目录](https://pnpm.io/catalogs)
 依赖管理并遵循范围命名约定：
 
 ```json
@@ -87,9 +98,9 @@ packages/<name>/
 └── README.md
 ```
 
-## 面向包含样式的包的 Stylelint
+## Stylelint 用于样式轴承包
 
-包含 `CSS`、`SCSS` 或 `Vue` 样式块的包必须提供可发现的 Stylelint 配置和 lint 脚本：
+包含 CSS、SCSS 或 Vue 样式块的包必须保留可发现的 Stylelint 配置和 lint 脚本：
 
 ```text
 packages/<name>/
@@ -99,7 +110,7 @@ packages/<name>/
 └── package.json                    # Stylelint scripts and devDependencies
 ```
 
-将共享配置以及直接的语法和配置依赖添加到 `devDependencies`：
+将共享配置及其直接语法/配置依赖项添加到 `devDependencies`：
 
 ```json
 {
@@ -114,7 +125,7 @@ packages/<name>/
 }
 ```
 
-从 `stylelint.config.mjs` 使用共享配置，而不是重复 `extends` 条目：
+使用 `stylelint.config.mjs` 中的共享配置，而不是复制其 `extends` 条目：
 
 ```js
 // stylelint.config.mjs
@@ -123,7 +134,7 @@ import baseConfig from "@mission-platform/stylelint-config";
 export default { ...baseConfig };
 ```
 
-添加覆盖工作区实际样式源的脚本，并在发布前运行检查：
+添加涵盖工作区实际样式源的脚本，然后在发布前运行检查：
 
 ```json
 {
@@ -217,16 +228,15 @@ Web Components Storybook 工作台。
 
 ## 出版
 
-任务平台使用 [变更集](https://github.com/changesets/changesets) 用于版本控制和发布。
+Mission Platform 使用 [Changesets](https://github.com/changesets/changesets) 进行版本控制和发布。
 
 1. **添加变更集**：进行更改后，运行：
-
-```bash
+   ```bash
    pnpm changeset
-```
-
-选择软件包和更改类型（补丁、次要、主要）。2. **提交变更集**：提交生成的 `.changeset/*.md` 文件。3. **版本和发布**：CI/CD 处理实际的发布，但您可以通过以下方式在本地预览版本：
-
-```bash
+   ```
+   选择软件包和更改类型（补丁、次要、主要）。
+2. **提交变更集**：提交生成的 `.changeset/*.md` 文件。
+3. **版本和发布**：CI/CD 处理实际的发布，但您可以通过以下方式在本地预览版本：
+   ```bash
    pnpm changeset version
-```
+   ```

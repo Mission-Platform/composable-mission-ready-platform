@@ -46,7 +46,7 @@ SSR בטוח: `isSupported` הוא `false` וכל פקד הוא ללא הפעל�
 export interface SoundControls
 ```
 
-מצב תגובתי ופקדים שהוחזרו על ידי {@link useSound}.
+מצב תגובתי ובקרות שהוחזרו על ידי {@link useSound}.
 
 ### השתמש בסאונד
 
@@ -66,9 +66,9 @@ API או DOM רלוונטיים לדפדפן אינם זמינים.
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור |
-| ---- | ------ | ----- |
-| מקור | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------ | ------ | ----------- |
+| מקור | מחרוזת |             |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -100,8 +100,8 @@ export interface SpeechRecognitionOptions
 function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
-הוק של דיבור לטקסט ניטראלי במסגרת נבנה על המקור של הדפדפן
-SpeechRecognition API (בחלקם הקידומת `webkitSpeechRecognition`
+הוק של דיבור לטקסט ניטרלי מסגרת שנבנה על המקור של הדפדפן
+SpeechRecognition API (בחלק הקידומת `webkitSpeechRecognition`
 דפדפנים).
 
 SSR בטוח: `isSupported` הוא `false` וכל פקד הוא ללא הפעלה כאשר ה-API

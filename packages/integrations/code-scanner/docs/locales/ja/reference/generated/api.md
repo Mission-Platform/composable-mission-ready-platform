@@ -9,317 +9,44 @@
 
 `@mission-platform/code-scanner` のパブリック ソース宣言から生成されます。
 
-## `src/capture`
+## `src/components/organisms/forge-code-scanner/forge-code-scanner`
 
-### blobから画像データへ
-
-**種類:** 関数
-
-```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
-```
-
-イメージ `Blob`/`File` を {@link ImageLike} (RGBA ピクセル) にデコードします。用途
-`createImageBitmap` なので、サポートされている場合はメインスレッドから動作します。
-
-#### パラメータ
-
-| 名前   | タイプ | 説明 |
-| ------ | ------ | ---- |
-| ブロブ | ブロブ |      |
-| ロイ   |        |      |
-
-### スキャンファイル
-
-**種類:** 関数
-
-```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>;
-```
-
-`file` をデコードしてコードをスキャンし、WebAssembly を同期的に実行します。
-スキャナー (実稼働ビルドでインライン化されたバイナリから自己初期化されます)。
-
-#### パラメータ
-
-| 名前     | タイプ | 説明 |
-| -------- | ------ | ---- |
-| ファイル | ブロブ |      |
-
-### scanFileAsync
-
-**種類:** 関数
-
-```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>;
-```
-
-`file` をデコードしてコードをスキャンし、スキャナーとデコーダーを初期化します。
-非同期 — どのような環境でも安全です (インラインバイナリは必要ありません)。
-
-#### パラメータ
-
-| 名前     | タイプ | 説明 |
-| -------- | ------ | ---- |
-| ファイル | ブロブ |      |
-
-### ビデオフレームから画像データへ
-
-**種類:** 関数
-
-```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
-```
-
-再生中の `<video>` 要素の現在のフレームをキャプチャします。
-{@link ImageLike}、オプションで中央の `roi` 部分までトリミングします (「
-{@link DEFAULT_ROI})。ここではトリミングが特に重要です。ライブ フレームは
-インク境界ボックス ロケーターが許容できない乱雑な状態なので、
-ユーザーが UI に表示するレティクルのサイズにより、命中率が大幅に向上します。
-
-#### パラメータ
-
-| 名前   | タイプ         | 説明 |
-| ------ | -------------- | ---- |
-| ビデオ | HTMLビデオ要素 |      |
-| ロイ   |                |      |
-
-## `src/debug`
-
-### isCodeScannerDebugEnabled
-
-**種類:** 関数
-
-```typescript
-function isCodeScannerDebugEnabled(): boolean;
-```
-
-スキャナ診断ログが現在有効かどうか。
-
-### setCodeScannerデバッグ
-
-**種類:** 関数
-
-```typescript
-function setCodeScannerDebug(value: boolean): void;
-```
-
-実行時にスキャナーの JS 側診断ログを有効または無効にします。
-
-#### パラメータ
-
-| 名前 | タイプ   | 説明 |
-| ---- | -------- | ---- |
-| 値   | ブール値 |      |
-
-#### 契約
-
-- **@param:** - 各スキャン ステージをコンソールに記録するには `true`、沈黙するには `false` を使用します。
-
-## `src/image`
-
-### コントラストストレッチ輝度
-
-**種類:** 関数
-
-```typescript
-function contrastStretchLuma(
-  luma: LumaImage,
-  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
-  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
-): LumaImage;
-```
-
-{@link LumaImage} をコントラスト ストレッチし、`lowPercentile`..`highPercentile` をマッピングします。
-`0..255` スパン全体にわたる強度範囲 (範囲外の値は
-クランプされています）。 **新しい**画像を返します。入力はそのまま残ります。
-
-wasm バイナライザーは、単一のグローバルな Otsu しきい値を選択します。
-クリーンで二峰性のヒストグラムが最適です。アップロードされる画像は通常次のとおりです。ライブカメラ
-フレームは多くの場合そうではありません。まぶしさ、不均一な照明、低コントラストによりフレームが潰れてしまいます。
-ヒストグラムを作成すると、暗いモジュールと明るい背景が一緒ににじみます。ストレッチ
-ダイナミックレンジは、まず閾値に触れずにそれらを再分離します。
-これは、まさに 1D バーコードとデータ マトリックス ロケーター (つまり
-インク境界ボックスに依存します) が必要です。
-
-縮退 (フラット) フレーム — 2 つのパーセンタイルが同じ値に折りたたまれます。
-value — 引き伸ばすものが何もないため、変更されずに返されます。
-
-#### パラメータ
-
-| 名前               | タイプ       | 説明 |
-| ------------------ | ------------ | ---- |
-| ルマ               | ルマイメージ |      |
-| 低いパーセンタイル | 番号         |      |
-| 高いパーセンタイル | 番号         |      |
-
-### imageDataToLuma
-
-**種類:** 関数
-
-```typescript
-function imageDataToLuma(image: ImageLike): LumaImage;
-```
-
-RGBA {@link ImageLike} (例: キャンバス `ImageData`) を
-Rec を使用したシングルチャネル {@link LumaImage} 601ルマウェイト
-(`0.299 R + 0.587 G + 0.114 B`)。アルファチャンネルは無視されます。
-
-#### パラメータ
-
-| 名前 | タイプ       | 説明 |
-| ---- | ------------ | ---- |
-| 画像 | 画像のような |      |
-
-### ルマイメージ
+### コードスキャナーのプロパティ
 
 **種類:** インターフェース
 
 ```typescript
-export interface LumaImage
+export interface CodeScannerProperties
 ```
 
-シングルチャネル グレースケール イメージ: `width * height` ルマ バイト。
+説明はありません。
 
-## `src/scanner/index`
-
-### スキャン画像データ
+### フォージコードスキャナー
 
 **種類:** 関数
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
+function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): MpElement;
 ```
 
-`image` で最初にサポートされているコードを見つけてデコードし、
-最初の使用時にスキャナ グラフを同期的に実行します。
+`ForgeCodeScanner` — QR コード、データ マトリックス、または 1D バーコードを見つけてデコードします
+**アップロードされた画像**または**ライブカメラ ストリーム**のいずれかから、一度作成されたもの
+中立的な JSX 方言で、直接 React または Vue にコンパイルされます。
+`@mission-platform/vite-plugin-forge`。
+
+検出は依存関係のない Rust/WebAssembly のクライアント上で完全に実行されます。
+`@mission-platform/code-scanner` からのスキャナー (バイナリ化 → ファインダーの位置を特定)
+パターン → モジュールグリッドをサンプリングします);配置された各シンボルは、
+一致するデコーダ (`@mission-platform/qr-code` / `-/matrix-code` / `-/barcode`)。
+
+アップロードは `createImageBitmap` + キャンバスを介してデコードされます。ライブストリームは
+`getUserMedia` で開かれ、そのフレームは一定の間隔でポーリングされます。両方
+パスは、{@link CodeScannerProperties.onResult} を通じて結果を明らかにします。
+コールバック (および小さなインライン結果読み出し)。スタイルを確立するのは、
+CSS モジュール `forge-code-scanner.module.scss` が同じ場所にあります。
 
 #### パラメータ
 
-| 名前 | タイプ       | 説明 |
-| ---- | ------------ | ---- |
-| 画像 | 画像のような |      |
-| ロイ | ロイ         |      |
-
-#### 契約
-
-- **@param:** スキャンを制限するオプションの関心領域 (画像ピクセル)
-  — 二値化前にトリミングされるため、周囲の乱雑なものは無視されます。
-- **@returns:** {@link ScanResult}、またはコードが見つからない場合は `null`。コードのとき
-  は見つかりましたが、そのペイロードをデコードできません。`result.value` は `null` です。
-
-### スキャン画像データすべて
-
-**種類:** 関数
-
-```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[];
-```
-
-`image` 内の _すべての_ 個別のコード (最初のコードだけでなく) を見つけてデコードします。
-最初の使用時にスキャナ グラフを同期的にインスタンス化します。
-
-#### パラメータ
-
-| 名前 | タイプ       | 説明 |
-| ---- | ------------ | ---- |
-| 画像 | 画像のような |      |
-
-#### 契約
-
-- **@returns:** 検出順にデコードされた {@link ScanResult} を重複排除します。
-  何もデコードされていない場合は空です。
-
-### scanImageDataAllAsync
-
-**種類:** 関数
-
-```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
-```
-
-`image` 内の「すべて」の個別のコードを見つけてデコードし、スキャナー グラフをロードします。
-最初の使用時に非同期的に。初期化とスキャンの失敗は、
-Promise の拒否として返されます。
-
-#### パラメータ
-
-| 名前 | タイプ       | 説明 |
-| ---- | ------------ | ---- |
-| 画像 | 画像のような |      |
-
-#### 契約
-
-- **@returns:** デコードされた {@link ScanResult} を検出順に重複排除します。
-
-### scanImageDataAsync
-
-**種類:** 関数
-
-```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
-```
-
-`image` で最初にサポートされているコードを見つけてデコードし、スキャナーをロードします。
-最初の使用時に非同期でグラフを作成します。初期化とスキャン
-失敗は Promise の拒否として返されます。
-
-#### パラメータ
-
-| 名前 | タイプ       | 説明 |
-| ---- | ------------ | ---- |
-| 画像 | 画像のような |      |
-| ロイ | ロイ         |      |
-
-#### 契約
-
-- **@param:** オプションの関心領域 — {@link scanImageData} を参照してください。
-- **@returns:** {@link ScanResult}、またはコードが見つからない場合は `null`。
-
-## `src/types`
-
-### 画像のような
-
-**種類:** インターフェース
-
-```typescript
-export interface ImageLike
-```
-
-このパッケージに必要な `ImageData` の最小形状: 生の行優先 RGBA
-ピクセルバッファとそのサイズ。 DOM `ImageData` はこれを満たします。
-手動で構築された `{ width, height, data }` オブジェクト (テスト/SSR に便利)。
-
-### ロイ
-
-**種類:** インターフェース
-
-```typescript
-export interface Roi
-```
-
-スキャンを制限するための、画像ピクセル単位の長方形の関心領域 (例:
-ライブ カメラ UI がフレーム上に描画するレチクル)。収穫は wasm で行われます
-二値化*前*のため、周囲の雑然としたものがロケーターに到達することはありません。あ
-エッジからはみ出す領域はクランプされます。フレームの完全に外側にあるものを見つけます
-何もない。
-
-### スキャンフォーマット
-
-**種類：**タイプ
-
-```typescript
-export type ScanFormat = 'qr' | 'datamatrix' | 'barcode' | 'aztec' | 'pdf417' | 'databar' | 'maxicode';
-```
-
-スキャナーが見つけてデコードできるコード ファミリ。
-
-### スキャン結果
-
-**種類:** インターフェース
-
-```typescript
-export interface ScanResult
-```
-
-成功した*検出*の結果。
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------- | ----------- |
+|プロパティ |読み取り専用<CodeScannerProperties> |             |

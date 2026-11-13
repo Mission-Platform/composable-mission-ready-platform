@@ -16,7 +16,7 @@ pnpm --filter @mission-platform/tokens lint:style
 pnpm --filter @mission-platform/tokens build
 ```
 
-ينتج عن البناء إخراج JavaScript والإعلان في `dist/`. تم إنشاؤها
+يُنتج البناء JavaScript ومخرجات الإعلان في `dist/`. تم إنشاؤها
 مصادر SCSS وTypeScript ضمن `src/generated/` هي عناصر مشتقة و
 يجب أن تظل حتمية.
 

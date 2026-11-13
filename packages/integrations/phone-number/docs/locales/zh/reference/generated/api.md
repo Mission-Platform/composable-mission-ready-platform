@@ -33,23 +33,23 @@ function getPhoneNumberUtilSync(): PhoneNumberUtil;
 
 ### 电话号码格式
 
-**种类：**常数
+**种类：**类型
 
 ```typescript
-export const PhoneNumberFormat;
+export type PhoneNumberFormat = (typeof PhoneNumberFormat)[keyof typeof PhoneNumberFormat];
 ```
 
-输出格式，镜像libphonenumber的`PhoneNumberFormat`。
+没有提供描述。
 
 ### 电话号码类型
 
-**种类：**常数
+**种类：**类型
 
 ```typescript
-export const PhoneNumberType;
+export type PhoneNumberType = (typeof PhoneNumberType)[keyof typeof PhoneNumberType];
 ```
 
-电话号码的线路类型，镜像 libphonenumber 的 `PhoneNumberType`。
+没有提供描述。
 
 ### 电话号码实用程序
 
@@ -76,7 +76,7 @@ export type RegionCode = string;
 
 ### 地区国家/地区代码
 
-**种类：** fws-export
+**种类：** 火石出口
 
 ```typescript
 export fn country_code_for_region(region: string) -> i32
@@ -86,9 +86,9 @@ export fn country_code_for_region(region: string) -> i32
 
 #### 参数
 
-| 名称 | 类型   | 描述                           |
-| ---- | ------ | ------------------------------ |
-| 地区 | 字符串 | ISO 区域代码，例如“US”或“GB”。 |
+|名称 |类型 |描述 |
+| ------ | ------ | ------------------------------------- |
+|地区 |字符串| ISO 区域代码，例如“US”或“GB”。 |
 
 #### 合同
 
@@ -97,7 +97,7 @@ export fn country_code_for_region(region: string) -> i32
 
 ### 国家前缀
 
-**种类：** fws-export
+**种类：** 火石出口
 
 ```typescript
 export fn national_prefix(region: string) -> string
@@ -107,9 +107,9 @@ export fn national_prefix(region: string) -> string
 
 #### 参数
 
-| 名称 | 类型   | 描述           |
-| ---- | ------ | -------------- |
-| 地区 | 字符串 | ISO 区域代码。 |
+|名称 |类型 |描述 |
+| ------ | ------ | ---------------- |
+|地区 |字符串| ISO 区域代码。 |
 
 #### 合同
 
@@ -118,7 +118,7 @@ export fn national_prefix(region: string) -> string
 
 ### 国家/地区代码的地区
 
-**种类：** fws-export
+**种类：** 火石出口
 
 ```typescript
 export fn region_for_country_code(code: i32) -> string
@@ -128,9 +128,9 @@ export fn region_for_country_code(code: i32) -> string
 
 #### 参数
 
-| 名称 | 类型 | 描述               |
-| ---- | ---- | ------------------ |
-| 代码 | i32  | 国际拨号国家代码。 |
+|名称 |类型 |描述 |
+| ---- | ---- | ----------------------------------- |
+|代码| i32 |国际拨号国家代码。 |
 
 #### 合同
 
@@ -139,7 +139,7 @@ export fn region_for_country_code(code: i32) -> string
 
 ### 区域_is
 
-**种类：** fws-export
+**种类：** 火石出口
 
 ```typescript
 export fn region_is(region: string, expected: string) -> bool
@@ -149,10 +149,10 @@ export fn region_is(region: string, expected: string) -> bool
 
 #### 参数
 
-| 名称 | 类型   | 描述                  |
-| ---- | ------ | --------------------- |
-| 地区 | 字符串 | 候选 ISO 区域代码。   |
-| 预计 | 字符串 | 预期的 ISO 区域代码。 |
+|名称 |类型 |描述 |
+| -------- | ------ | -------------------------- |
+|地区 |字符串|候选 ISO 区域代码。 |
+|预计|字符串|预期的 ISO 区域代码。  |
 
 #### 合同
 

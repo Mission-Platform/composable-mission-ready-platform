@@ -13,12 +13,12 @@ Pipeline PostCSS condivisa utilizzata dai fogli di stile di Mission Platform.
 pnpm add --save-dev @mission-platform/postcss-config
 ```
 
-Fare riferimento al pacchetto dall'area di lavoro `postcss.config.mjs` piuttosto che
+Fare riferimento al pacchetto da `postcss.config.mjs` dell'area di lavoro anziché da
 duplicando la pipeline del plugin condiviso. Gli override locali rientrano in questo
 configurazione dello spazio di lavoro.
 
 ## Contribuire
 
-Correre `pnpm --filter @mission-platform/postcss-config lint` E
+Esegui `pnpm --filter @mission-platform/postcss-config lint` e
 `pnpm --filter @mission-platform/postcss-config format`. Mantieni il browser
 comportamento di compatibilità in questo pacchetto ed evitare plugin specifici dell'applicazione.

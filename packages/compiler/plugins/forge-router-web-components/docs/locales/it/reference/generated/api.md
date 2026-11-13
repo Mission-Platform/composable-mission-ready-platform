@@ -33,6 +33,16 @@ Presa del router che monta la vista DOM neutra di un percorso. Le domande posson
 `viewAdapter` al router quando le visualizzazioni necessitano di un ciclo di vita personalizzato; altrimenti a
 Node, stringa o factory DOM in `route.component` viene visualizzato direttamente.
 
+### MpRouterViewElement
+
+**Tipo:** componente
+
+```typescript
+export class MpRouterViewElement extends MpRouterOutletElement
+```
+
+Nessuna descrizione fornita.
+
 ### registroRouterElements
 
 **Tipo:** funzione
@@ -45,7 +55,7 @@ Registrare le primitive del router una volta; sicuro da chiamare per idratazione
 
 #### Parametri
 
-| Nome    | Digitare                      | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ----------------------------- | ----------- |
 | opzioni | RegisterRouterElementsOptions |             |
 
@@ -63,8 +73,8 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome    | Digitare | Descrizione |
-| ------- | -------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
 | vincere | Finestra |             |
 
 ### creareMemoryHistory
@@ -79,9 +89,9 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome        | Digitare | Descrizione |
-| ----------- | -------- | ----------- |
-| URLiniziale |          |             |
+| Nome | Digitare | Descrizione |
+| ---------- | ---- | ----------- |
+| URLiniziale |      |             |
 
 ### creareWebHistory
 
@@ -189,9 +199,9 @@ Risolvere una destinazione neutrale tramite il router Web Components associato.
 
 #### Parametri
 
-| Nome | Digitare           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---- | ------------------ | ----------- |
-| a    | MpRouteLocationRaw |             |
+| a | MpRouteLocationRaw |             |
 
 ### setForgeRouter
 
@@ -205,7 +215,7 @@ Associa il router di proprietà dell'app per funzionalità del pacchetto compila
 
 #### Parametri
 
-| Nome   | Digitare                    | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------ | --------------------------- | ----------- |
 | router | MpWebComponentsRouter<View> |             |
 
@@ -251,7 +261,7 @@ Nessuna descrizione fornita.
 
 - **@deprecato:** Preferisco {@link useMpRouter}.
 
-### useMpNavigazione
+### useMpNavigation
 
 **Tipo:** funzione
 
@@ -297,9 +307,19 @@ cronologia, protezioni, reindirizzamenti, abbonamenti e comportamento di scorrim
 
 #### Parametri
 
-| Nome    | Digitare                           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ---------------------------------- | ----------- |
 | opzioni | MpWebComponentsRouterOptions<View> |             |
+
+### getActiveRouter
+
+**Tipo:** funzione
+
+```typescript
+function getActiveRouter(): MpWebComponentsRouter<unknown> | undefined;
+```
+
+Nessuna descrizione fornita.
 
 ### MpRouterLoadingFalback
 
@@ -343,10 +363,26 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome   | Digitare            | Descrizione |
-| ------ | ------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------ | ------------------ | ----------- |
 | router | Adattatore MpRouter |             |
-| a      | MpRouteLocationRaw  |             |
+| a | MpRouteLocationRaw |             |
+
+### setActiveRouter
+
+**Tipo:** funzione
+
+```typescript
+function setActiveRouter(router: MpWebComponentsRouter<View> | undefined): void;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------ | ---------------------------------------- | ----------- |
+| router | MpWebComponentsRouter<View> \| indefinito |             |
 
 ## `src/utils/forge-router-web-components`
 

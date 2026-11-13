@@ -16,17 +16,17 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/rxjs`.
 **Tipo:** funzione
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined;
+function useObservable(source: Observable<T>, initialValue?: T): T | undefined;
 ```
 
-Sottoscrivere `source` e restituire la sua ultima emissione come stato. Ritorni
-`undefined` fino all'arrivo della prima emissione.
+Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome  | Digitare       | Descrizione |
-| ----- | -------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------------ | ------------- | ----------- |
 | fonte | Osservabile<T> |             |
+| Valoreiniziale | T |             |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -58,11 +58,11 @@ durata del componente, sottoscrivendosi nuovamente quando `source` (o qualsiasi 
 
 #### Parametri
 
-| Nome              | Digitare                                        | Descrizione |
-| ----------------- | ----------------------------------------------- | ----------- |
-| fonte             | Osservabile<T>                                  |             |
+| Nome | Digitare | Descrizione |
+| -------------- | -------------------------------------------- | ----------- |
+| fonte | Osservabile<T> |             |
 | osservatoreOrNext | Parziale<Observer<T>> \| ((valore: T) => vuoto) |             |
-| dipendenze        | MpDependencyList                                |             |
+| dipendenze | MpDependencyList |             |
 
 ### utilizzareSubscription
 
@@ -78,7 +78,7 @@ può racchiudere una semplice chiamata `source.subscribe(...)` o un'intera pipel
 
 #### Parametri
 
-| Nome       | Digitare              | Descrizione |
-| ---------- | --------------------- | ----------- |
-| iscriviti  | () => Non iscrivibile |             |
-| dipendenze | MpDependencyList      |             |
+| Nome | Digitare | Descrizione |
+| ------------ | -------------------- | ----------- |
+| iscriviti | () => Non iscrivibile |             |
+| dipendenze | MpDependencyList |             |

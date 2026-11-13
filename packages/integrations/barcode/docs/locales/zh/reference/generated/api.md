@@ -9,288 +9,65 @@
 
 根据 `@mission-platform/barcode` 中的公共源声明生成。
 
-## `src/encoder/index`
+## `src/components/molecules/forge-barcode/forge-barcode`
 
-### 条码
+### 条码操作
 
 **种类：**接口
 
 ```typescript
-export interface Barcode
+export interface BarcodeActions
 ```
 
-{@linkencodeBarcode}的结果：模块位及其总宽度。
+工具栏显示哪些操作按钮。 `true` 启用所有这些功能。
 
-### 条码符号学
+### 条码属性
 
-**种类：**类型
+**种类：**接口
 
 ```typescript
-export type BarcodeSymbology =
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'ean13'
-  | 'ean8'
-  | 'upca'
-  | 'upce'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode';
+export interface BarcodeProperties
 ```
 
-支持的线性条形码符号体系。
+没有提供描述。
 
-### 编码条形码
+### 锻造条形码
 
 **种类：**功能
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
+function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement;
 ```
 
-使用包本地 Flint 图将 `data` 编码为线性条形码。
+`ForgeBarcode` — 呈现可扫描的一维（线性）条形码，在
+中性 JSX 方言并直接编译为 React 或 Vue
+`@mission-platform/vite-plugin-forge`。
+
+有效负载 (`value`) 完全由客户端在客户端上编码
+来自 `@mission-platform/barcode` 的 {@linkencodeBarcode} 编码器 — a
+用 Rust 编写并编译为 WebAssembly 的无依赖编码器 — 以及
+绘制为清晰、与分辨率无关的 SVG。相邻的暗模块被合并
+到单个 `<rect>` 运行中，因此标记保持紧凑。为了可靠的扫描
+栏/背景颜色默认为 solid 黑底白字而不是主题
+令牌，但两者均可通过 `color` / `background` 覆盖。
+
+支持的符号体系 (`symbology`)：Code 128、GS1-128、Code 39（+ 扩展）、
+代码 93（+ 扩展）、EAN-13、EAN-8、UPC-A、UPC-E、ITF（交错 2 of 5）、
+ITF-14、Codabar、MSI（改良 Plessey）和 Pharmacode。杆高度、模数
+宽度和安静区域是可配置的，并且人类可读的值可以是
+通过 `displayValue` 显示在条形下方。
+
+可选操作工具栏（通过 `showActions` — `true` 启用，适用于每个
+按钮，或一个 {@link BarcodeActions} 对象来单独选择它们）让
+用户**将条形码保存为PNG图像**，**将图像复制到
+剪贴板**，以及**将编码值复制到剪贴板**。 PNG 是
+通过将渲染的 SVG 绘制到画布上，在客户端上进行光栅化。的
+当无法对所选值进行编码时，将触发 `onError` 回调
+符号学。它通过并置的 CSS 模块拥有自己的样式
+`forge-barcode.module.scss`。
 
 #### 参数
 
-| 名称   | 类型       | 描述 |
-| ------ | ---------- | ---- |
-| 符号学 | 条码符号学 |      |
-| 数据   | 字符串     |      |
-
-#### 合同
-
-- **@throws:** 当有效负载对于所选符号系统无效时。
-
-### 编码条形码异步
-
-**种类：**功能
-
-```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
-```
-
-使用包本地 Flint 图异步编码 `data`。
-
-#### 参数
-
-| 名称   | 类型       | 描述 |
-| ------ | ---------- | ---- |
-| 符号学 | 条码符号学 |      |
-| 数据   | 字符串     |      |
-
-## `src/fws/index`
-
-### 参数
-
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 价值 | 字符串\| ArrayLike<number> |      |
-
-### 参数
-
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 价值 | 字符串\| ArrayLike<number> |      |
-
-### 参数
-
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 价值 | 字符串\| ArrayLike<number> |      |
-
-### 参数
-
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 价值 | 字符串\| ArrayLike<number> |      |
-
-### 编码Ean13Fws
-
-**种类：**功能
-
-```typescript
-function encodeEan13Fws(value: string): string;
-```
-
-对 12 位 EAN-13 有效负载进行编码并在 Flint 中计算其校验位。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 价值 | 字符串 |      |
-
-### 编码Ean13FwsAsync
-
-**种类：**功能
-
-```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>;
-```
-
-使用 Flint 加载程序异步编码 12 位 EAN-13 有效负载。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 价值 | 字符串 |      |
-
-### 编码Ean8Fws
-
-**种类：**功能
-
-```typescript
-function encodeEan8Fws(value: string): string;
-```
-
-对七位 EAN-8 有效负载进行编码并在 Flint 中计算其校验位。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 价值 | 字符串 |      |
-
-### 编码Ean8FwsAsync
-
-**种类：**功能
-
-```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>;
-```
-
-使用 Flint 加载程序对七位 EAN-8 有效负载进行异步编码。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 价值 | 字符串 |      |
-
-### 编码UpcaFws
-
-**种类：**功能
-
-```typescript
-function encodeUpcaFws(value: string): string;
-```
-
-通过零前缀 EAN-13 Flint 图对 UPC-A 有效负载进行编码。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 价值 | 字符串 |      |
-
-### 编码UpcaFwsAsync
-
-**种类：**功能
-
-```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>;
-```
-
-通过 Flint 异步编码 UPC-A 有效负载。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 价值 | 字符串 |      |
-
-### 编码变量条形码Fws
-
-**种类：**功能
-
-```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
-```
-
-通过其本机 Flint 图表（如果可用）对受支持的可变长度条形码进行编码。
-
-#### 参数
-
-| 名称   | 类型           | 描述 |
-| ------ | -------------- | ---- |
-| 符号学 | 可变条形码符号 |      |
-| 价值   | 字符串         |      |
-
-### 编码变量条形码FwsAsync
-
-**种类：**功能
-
-```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
-```
-
-通过 Flint 对支持的可变长度条形码进行异步编码。
-
-#### 参数
-
-| 名称   | 类型           | 描述 |
-| ------ | -------------- | ---- |
-| 符号学 | 可变条形码符号 |      |
-| 价值   | 字符串         |      |
-
-### 验证Gs1DataBar值
-
-**种类：**功能
-
-```typescript
-function validateGs1DataBarValue(value: string): boolean;
-```
-
-验证包本地 Flint 图中的 GS1 DataBar/RSS-14 GTIN-14 值。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 价值 | 字符串 |      |
-
-### validateGs1DataBarValueAsync
-
-**种类：**功能
-
-```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
-```
-
-通过 Flint 异步验证 GS1 DataBar/RSS-14 GTIN-14 值。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 价值 | 字符串 |      |
-
-### 可变条形码符号
-
-**种类：**类型
-
-```typescript
-export type VariableBarcodeSymbology = Extract<
-  BarcodeSymbology,
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode'
->;
-```
-
-直接条形码 Flint 适配器支持的可变长度符号体系。
+|名称 |类型 |描述 |
+| ---------- | --------------------------- | ----------- |
+|属性 |只读<BarcodeProperties> |             |

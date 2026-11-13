@@ -11,12 +11,22 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/email-sende
 
 ## `src/index`
 
+### Standard
+
+**Art:** konstant
+
+```typescript
+export const handler: ExportedHandler<WorkerEnvironment>;
+```
+
+Keine Beschreibung angegeben.
+
 ### Lieferung
 
 **Art:** Typ
 
 ```typescript
-export type Delivery = (environment: Env, message: SmtpMessage) => Promise<void>;
+export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 ```
 
 Keine Beschreibung angegeben.
@@ -36,15 +46,26 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
+function handleRequest(
+  request: Request,
+  environment: WorkerEnvironment,
+  delivery: Delivery = defaultDelivery,
+): Promise<Response>;
 ```
 
-Keine Beschreibung angegeben.
+Verarbeitet eingehende E-Mail-Zustellungsanfragen, validiert Eingaben und übermittelt sie an den SMTP-Dienst.
 
 #### Parameter
 
-| Name      | Geben Sie | ein Beschreibung |
-| --------- | --------- | ---------------- |
-| Anfrage   | Anfrage   |                  |
-| Umwelt    | Env       |                  |
-| Lieferung | Lieferung |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ----------------- | -------------------------------------------------- |
+| Anfrage | Anfrage | - Eingehende HTTP-Anfrage.                           |
+| Umwelt | Arbeitsumgebung | - Worker-Umgebungsbindungen.                     |
+| Lieferung | Lieferung | - Zustellungsfunktion für die Nachrichtenübermittlung. |
+
+#### Vertrag
+
+- **@param:** – Eingehende HTTP-Anfrage.
+- **@param:** – Worker-Umgebungsbindungen.
+- **@param:** – Zustellungsfunktion, die die Nachrichtenübertragung verarbeitet.
+- **@returns:** HTTP-Antwort.

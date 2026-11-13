@@ -23,10 +23,10 @@ function createVueRouterCapabilities(router: Router, current = router.currentRou
 
 #### פרמטרים
 
-| שם    | הקלד | תיאור |
-| ----- | ---- | ----- |
-| נתב   | נתב  |       |
-| נוכחי |      |       |
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| נתב | נתב |             |
+| נוכחי |        |             |
 
 ### resolveMpLink
 
@@ -40,9 +40,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### פרמטרים
 
-| שם  | הקלד               | תיאור |
-| --- | ------------------ | ----- |
-| ל   | MpRouteLocationRaw |       |
+| שם | הקלד | תיאור |
+| ---- | ------------------ | ----------- |
+| ל | MpRouteLocationRaw |             |
 
 ### resolvePathTarget
 
@@ -56,9 +56,9 @@ function resolvePathTarget(to: MpRouteLocationRaw): string;
 
 #### פרמטרים
 
-| שם  | הקלד               | תיאור |
-| --- | ------------------ | ----- |
-| ל   | MpRouteLocationRaw |       |
+| שם | הקלד | תיאור |
+| ---- | ------------------ | ----------- |
+| ל | MpRouteLocationRaw |             |
 
 ### toMpLocation
 
@@ -76,13 +76,13 @@ function toMpLocation(route: {
 }): MpResolvedLocation;
 ```
 
-המר מצב נתיב Vue מקורי למיקום הנייטרלי שנקבע.
+המר מצב נתיב Vue מקורי למיקום הנייטרלי שנפתר.
 
 #### פרמטרים
 
-| שם    | הקלד                                                                                                                                                                    | תיאור |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| מסלול | { נתיב: מחרוזת; fullPath: מחרוזת; פרמטרים: Record<string, unknown>; query: LocationQuery; hash: מחרוזת; שם?: מחרוזת \| סמל \| בָּטֵל; meta?: Record<string, unknown>; } |       |
+| שם | הקלד | תיאור |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| מסלול | { נתיב: מחרוזת; fullPath: מחרוזת; פרמטרים: Record<string, unknown>; query: LocationQuery; hash: מחרוזת; שם?: מחרוזת \| סמל \| בָּטֵל; meta?: Record<string, unknown>; } |             |
 
 ### toVueLocation
 
@@ -96,9 +96,9 @@ function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw;
 
 #### פרמטרים
 
-| שם  | הקלד               | תיאור |
-| --- | ------------------ | ----- |
-| ל   | MpRouteLocationRaw |       |
+| שם | הקלד | תיאור |
+| ---- | ------------------ | ----------- |
+| ל | MpRouteLocationRaw |             |
 
 ### השתמש ב-MpNavigation
 

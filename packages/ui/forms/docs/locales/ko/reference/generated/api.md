@@ -48,9 +48,9 @@ SFC `watch`와 동일); 체크/불확정 마커는
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<CheckboxProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<CheckboxProperties> |             |
 
 ## `src/components/atoms/forge-input/forge-input`
 
@@ -79,9 +79,9 @@ function ForgeInput(properties: Readonly<InputProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 속성 | 읽기 전용<InputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------- | ----------- |
+| 속성 | 읽기 전용<InputProperties> |             |
 
 ### 입력자동 대문자화
 
@@ -134,7 +134,7 @@ function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 ```
 
 `ForgeRadio` — 중립 JSX 방언으로 한 번 작성된 무선 제어 및
-`@mission-platform/vite-plugin-forge`에 의해 React 또는 Vue로 직접 컴파일되었습니다.
+compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
 
 `value`가 그룹의 `modelValue`과 같을 때 단일 라디오가 선택됩니다.
 함께 배치된 CSS 모듈 `forge-radio.module.scss`를 통해 스타일을 소유합니다.
@@ -147,9 +147,9 @@ function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 속성 | 읽기 전용<RadioProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------- | ----------- |
+| 속성 | 읽기 전용<RadioProperties> |             |
 
 ### 라디오속성
 
@@ -175,8 +175,8 @@ function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement;
 중립 JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
 `@mission-platform/vite-plugin-forge`.
 
-사용자가 연속(또는 계단식) 내에서 하한과 상한을 선택할 수 있습니다.
-엄지손가락을 드래그하거나 키보드를 사용하여 범위를 지정하고 원본을 미러링
+사용자가 연속(또는 계단형) 내에서 하한과 상한을 선택할 수 있습니다.
+엄지 손가락을 끌거나 키보드를 사용하여 범위를 지정하고 원본을 미러링
 `@mission-platform/components` SFC: 선택은 다음을 통해 제어됩니다.
 `modelValue`은 `[lower, upper]` 튜플이므로 두 값은 순서대로 유지되며
 교차하지 않으며(옵션 `minDistance` 사용) 각 엄지 손가락이 노출됩니다.
@@ -186,16 +186,16 @@ function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement;
 
 포인터 드래그 - 엄지 손가락(또는 트랙을 잡는 트랙)의 `pointerdown`
 가장 가까운 엄지손가락), `pointermove`/`pointerup`가 `window`에서 추적되어 — 공유됩니다.
-공동 배치된 `pointer-drag`를 통해 다른 상호 작용 구성 요소와
+함께 배치된 `pointer-drag`를 통해 다른 상호 작용 구성 요소와
 도우미; 원래 Composition-API `ref`는 `useRef`이 되고
 `v-model` + `change`은 `onUpdateModelValue`/`onChange` 콜백이 됩니다.
 소품.
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<RangeInputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<RangeInputProperties> |             |
 
 ### 범위입력속성
 
@@ -237,12 +237,12 @@ export type RangeValue = [number, number];
 function ForgeRating(properties: Readonly<RatingProperties>): MpElement;
 ```
 
-`ForgeRating` — 중립 JSX에서 한 번 작성된 별점 입력/표시
+`ForgeRating` — 중립 JSX에서 한 번 작성된 별 등급 입력/표시
 방언을 사용하여 React 또는 Vue으로 바로 컴파일됩니다.
 `@mission-platform/vite-plugin-forge`.
 
 선택 사항을 사용하여 `0`에서 `max`까지의 값을 나타내는 별 행을 렌더링합니다.
-별 반개 정밀도, 읽기 전용 디스플레이 모드, 호버 미리보기 및 키보드
+별 반 개 정밀도, 읽기 전용 디스플레이 모드, 호버 미리보기 및 키보드
 제어합니다(대화형인 경우 `role="slider"`, 읽기 전용인 경우 `role="img"`). 그것
 함께 배치된 CSS 모듈 `forge-rating.module.scss`을 통해 스타일을 소유합니다.
 
@@ -254,9 +254,9 @@ function ForgeRating(properties: Readonly<RatingProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 속성 | 읽기 전용<RatingProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<RatingProperties> |             |
 
 ### 등급속성
 
@@ -291,7 +291,7 @@ function ForgeSlider(properties: Readonly<SliderProperties>): MpElement;
 `ForgeSlider` — 중립 JSX 언어로 한 번 작성된 범위 슬라이더 및
 `@mission-platform/vite-plugin-forge`에 의해 React 또는 Vue로 직접 컴파일되었습니다.
 
-사용자가 연속(또는 계단식) 범위에서 숫자 값을 선택할 수 있습니다.
+사용자가 연속(또는 계단형) 범위에서 숫자 값을 선택할 수 있습니다.
 트랙을 따라 엄지 손가락을 드래그하거나 키보드를 사용하여 원본 미러링
 `@mission-platform/components` SFC: 엄지 손가락으로 `role="slider"`을 노출합니다.
 `aria-valuemin`/`aria-valuemax`/`aria-valuenow`(및 선택 사항)
@@ -299,7 +299,7 @@ function ForgeSlider(properties: Readonly<SliderProperties>): MpElement;
 단계) 및 홈/끝. 함께 배치된 CSS 모듈을 통해 스타일을 소유합니다.
 `forge-slider.module.scss`.
 
-포인터 끌기 — 트랙의 `pointerdown`, 그 다음 `pointermove`/`pointerup`
+포인터 끌기 - 트랙의 `pointerdown`, 그 다음 `pointermove`/`pointerup`
 `window`에서 추적됨 — 다음을 통해 다른 상호 작용 구성 요소와 공유됩니다.
 공동 배치된 `pointer-drag` 도우미; 원래 Composition-API `ref`는 다음과 같습니다.
 `useRef`s 및 `v-model` + `change`이 방출됩니다.
@@ -307,9 +307,9 @@ function ForgeSlider(properties: Readonly<SliderProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 속성 | 읽기 전용<SliderProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<SliderProperties> |             |
 
 ### 슬라이더속성
 
@@ -356,9 +356,9 @@ CSS 모듈 `forge-switch.module.scss` 및 중립 구성
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 속성 | 읽기 전용<SwitchProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<SwitchProperties> |             |
 
 ### 스위치속성
 
@@ -408,9 +408,9 @@ function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<TextareaProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<TextareaProperties> |             |
 
 ### 텍스트 영역자동 대문자화
 
@@ -507,9 +507,9 @@ function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<CalendarProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<CalendarProperties> |             |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
 
@@ -552,15 +552,15 @@ function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement;
 
 원본 Vue SFC의 대체: `useId` 컴포저블 맵 직선
 프레임워크 네이티브 `useId` 후크에; 로컬 16진수 `ref`
-다음을 통해 외부 `modelValue` 변경 사항과 동기화된 {@link useState}가 됩니다.
+다음을 통해 외부 `modelValue` 변경 사항과 동기화된 상태로 유지되는 {@link useState}가 됩니다.
 {@link useEffect}; `v-model` + `change`이 방출됩니다.
 `onUpdateModelValue`/`onChange` 콜백 소품.
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<ColorInputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<ColorInputProperties> |             |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
 
@@ -592,7 +592,7 @@ export type DateInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 ```
 
-`ForgeDateInput` — 중립 JSX 방언으로 한 번 작성된 날짜 선택기이며
+`ForgeDateInput` — 중립 JSX 방언으로 한 번 작성된 날짜 선택기 및
 `@mission-platform/vite-plugin-forge`에 의해 React 또는 Vue로 직접 컴파일되었습니다.
 
 트리거 버튼은 선택한 ISO 날짜(또는 자리 표시자)를 표시하고
@@ -605,16 +605,16 @@ function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 인라인 월 그리드는 `ForgeCalendar`에 위임됩니다. `useId` 컴포저블
 프레임워크 네이티브 `useId` 후크에 매핑됩니다. 는
 달력 문자 모양은 한 번만 쓸 수 있는 `@mission-platform/icons` `ForgeIconCalendar`입니다.
-(자체는 React/Vue로 컴파일됨) `start`/`end` 지역은 다음과 같이 작성되었습니다.
+(자체적으로 React/Vue로 컴파일됨); `start`/`end` 지역은 다음과 같이 작성되었습니다.
 명명된 슬롯(`<Slot>`)의 존재는 다음을 통해 감지됩니다.
 프레임워크 중립적인 {@link hasSlot} 도우미; `v-model` + `change`는 다음을 방출합니다.
 `onUpdateModelValue`/`onChange` 콜백 소품이 됩니다.
 
 #### 매개변수
 
-| 이름 | 유형                           | 설명 |
-| ---- | ------------------------------ | ---- |
-| 속성 | 읽기 전용<DateInputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------- | ----------- |
+| 속성 | 읽기 전용<DateInputProperties> |             |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
 
@@ -672,9 +672,9 @@ function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): Mp
 
 #### 매개변수
 
-| 이름 | 유형                                | 설명 |
-| ---- | ----------------------------------- | ---- |
-| 속성 | 읽기 전용<DateRangeInputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------------- | ----------- |
+| 속성 | 읽기 전용<DateRangeInputProperties> |             |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
 
@@ -714,9 +714,9 @@ CSS 모듈 `forge-field-set.module.scss` 및 중립 구성
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<FieldSetProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<FieldSetProperties> |             |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
 
@@ -740,7 +740,7 @@ export type FileInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 필드 크기 토큰 — 표준 2xs → 2xl 스케일.
 
-### Forge파일입력
+### Forge파일 입력
 
 **종류:** 기능
 
@@ -759,15 +759,15 @@ function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement;
 원본 Vue SFC의 대체: `useId` 컴포저블 맵 직선
 프레임워크 네이티브 `useId` 후크에 연결합니다. 드래그/선택
 상태는 중립 `useState` 후크를 사용합니다. 업로드 아이콘은 한 번 쓰기입니다.
-`@mission-platform/icons` `ForgeIconUpload`(자체는 React/Vue로 컴파일됨) 는
+`@mission-platform/icons` `ForgeIconUpload`(자체는 React/Vue로 컴파일됨); 는
 `useI18n` 레이블은 일반 문자열 소품이 됩니다. `v-model` + `change`는 방출합니다.
 `onUpdateModelValue`/`onChange` 콜백 소품이 됩니다.
 
 #### 매개변수
 
-| 이름 | 유형                           | 설명 |
-| ---- | ------------------------------ | ---- |
-| 속성 | 읽기 전용<FileInputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------- | ----------- |
+| 속성 | 읽기 전용<FileInputProperties> |             |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
 
@@ -785,11 +785,11 @@ function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpEl
 
 세 가지 표현 중 하나로 위도/경도 지점을 캡처합니다.
 십진수 도(DD), 도 십진수 분(DM) 또는 도 분
-초(DMS) — 형식 선택기를 통해 선택됩니다. 어떤 변형이 사용되든
+초(DMS) - 형식 선택기를 통해 선택됩니다. 어떤 변형이 사용되든
 항목에서 표준 {@link LocationValue} 모델은 항상 서명된 값을 전달합니다.
-십진수 `lat`/`lng`은 센티미터 단위로 반올림되었습니다. 그것은 구성
+십진수 `lat`/`lng`은 센티미터 단위로 반올림됩니다. 그것은 구성
 이미 마이그레이션된 {@link ForgeSelect}, {@link ForgeInput} 및
-{@link ForgeTypography} 프리미티브는 같은 위치에 있는 스타일을 통해 스타일을 소유합니다.
+{@link ForgeTypography} 프리미티브는 공동 위치를 통해 스타일을 소유합니다.
 CSS 모듈 `forge-location-input.module.scss`. 변환/파싱 논리
 프레임워크에 구애받지 않고 함께 배치된 `location.ts`로 이 패키지와 함께 제공됩니다.
 
@@ -804,9 +804,9 @@ CSS 모듈 `forge-location-input.module.scss`. 변환/파싱 논리
 
 #### 매개변수
 
-| 이름 | 유형                               | 설명 |
-| ---- | ---------------------------------- | ---- |
-| 속성 | 읽기 전용<LocationInputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------------- | ----------- |
+| 속성 | 읽기 전용<LocationInputProperties> |             |
 
 ### 위치입력속성
 
@@ -867,21 +867,21 @@ function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpEl
 
 감소/증가 버튼 옆에 있는 숫자 필드로 구성 가능
 부호 있는/부호 없는 정수 또는 고정 `precision` 부동소수점. 자신만의 스타일을 소유하고 있습니다.
-함께 배치된 CSS 모듈 `forge-number-stepper.module.scss`을 통해
+같은 위치에 있는 CSS 모듈 `forge-number-stepper.module.scss`을 통해
 라벨/힌트/오류 텍스트에 대해 중립적인 {@link ForgeTypography}를 구성합니다.
 
 원본 Vue SFC의 대체: `useId` 컴포저블 맵 직선
 프레임워크 네이티브 `useId` 후크에; `ForgeStack`
 래퍼는 일반 플렉스 `<div>`이 됩니다. 감소/증가 문자는
 1회 쓰기 `@mission-platform/icons` `ForgeIconMinus`/`ForgeIconPlus`; 그리고
-`v-model` + `change` 방출이 확립된 `onUpdateModelValue`/`onChange`
+`v-model` + `change` 방출은 `onUpdateModelValue`/`onChange`로 확립되었습니다.
 콜백 소품.
 
 #### 매개변수
 
-| 이름 | 유형                               | 설명 |
-| ---- | ---------------------------------- | ---- |
-| 속성 | 읽기 전용<NumberStepperProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------------- | ----------- |
+| 속성 | 읽기 전용<NumberStepperProperties> |             |
 
 ### NumberStepper속성
 
@@ -919,7 +919,7 @@ function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 
 단일 문자열에 바인딩된 `length` 단일 문자 셀을 렌더링합니다.
 `modelValue`. 입력하면 포커스가 이동하고, `Backspace`는 뒤로 이동하고, 화살표 키는 이동합니다.
-셀 간에 붙여넣기를 하면 코드가 분산됩니다. 그것은 자신의 스타일을 통해
+셀 간에 붙여넣기를 하면 코드가 분산됩니다. 그것은 그것을 통해 자신의 스타일을 소유
 공동 배치된 CSS 모듈 `forge-otp-input.module.scss`.
 
 원본 Vue SFC의 대체: Vue 템플릿 **ref 배열**(
@@ -932,9 +932,9 @@ function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<OtpInputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<OtpInputProperties> |             |
 
 ### OtpInput속성
 
@@ -976,7 +976,7 @@ OTP 셀에서 허용되는 문자 집합입니다.
 function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement;
 ```
 
-`ForgePhoneInput` — 한 번 작성된 국제 전화 번호 필드
+`ForgePhoneInput` - 국제 전화번호 필드는 한 번만 작성됩니다.
 중립 JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
 `@mission-platform/vite-plugin-forge`.
 
@@ -993,7 +993,7 @@ E.164 형식 + 유효성은 각 렌더링마다 파생됩니다. 국가 텍스�
 
 `@mission-platform/phone-number` 통합은 같은 위치에 있는 프레임워크에 있습니다.
 불가지론적인 `phone.ts` 도우미(중립/JSX 가져오기 없음), 따라서 2단계 컴파일러
-React 및 Vue 빌드 모두에 그대로 복사하고 라이브러리는
+React 및 Vue 빌드 모두에 그대로 복사하고 라이브러리는 다음과 같습니다.
 각 프레임워크의 자체 도구 모음에 의해 번들로 제공됩니다. 일반적인 Vue의 대체
 SFC: `useId` 컴포저블은 프레임워크 기반 `useId`에 직접 매핑됩니다.
 후크; 유효성 마커는 1회 쓰기 `@mission-platform/icons`입니다.
@@ -1002,9 +1002,9 @@ SFC: `useId` 컴포저블은 프레임워크 기반 `useId`에 직접 매핑됩�
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<PhoneInputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<PhoneInputProperties> |             |
 
 ### 전화변경
 
@@ -1059,7 +1059,7 @@ function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement;
 ```
 
 `ForgeRadioGroup` — 공유된 여러 {@link ForgeRadio} 컨트롤을 그룹화합니다.
-전설은 중립 JSX 방언으로 한 번 작성되었으며 바로 컴파일되었습니다.
+범례는 중립 JSX 방언으로 한 번 작성되었으며 바로 컴파일되었습니다.
 React 또는 Vue by `@mission-platform/vite-plugin-forge`.
 
 선택은 확립된 `modelValue` +로 제어됩니다.
@@ -1067,7 +1067,7 @@ React 또는 Vue by `@mission-platform/vite-plugin-forge`.
 `options` 어레이에서 구동됩니다(SFC의 슬롯 기반 구성을 평면화하고,
 마이그레이션된 {@link ForgeTabs}에서 사용한 것과 동일한 접근 방식입니다. 그것은 구성
 {@link ForgeStack}, {@link ForgeRadio} 및 {@link ForgeTypography}를 이전했습니다.
-프리미티브는 함께 배치된 CSS 모듈을 통해 스타일을 소유합니다.
+프리미티브이며 함께 배치된 CSS 모듈을 통해 스타일을 소유합니다.
 `forge-radio-group.module.scss`.
 
 원래 Vue SFC의 대체: `useId`/random 그룹 이름 맵
@@ -1078,9 +1078,9 @@ React 또는 Vue by `@mission-platform/vite-plugin-forge`.
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<RadioGroupProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<RadioGroupProperties> |             |
 
 ### 라디오그룹방향
 
@@ -1122,7 +1122,7 @@ export interface RadioOption
 function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElement;
 ```
 
-`ForgeSearchInput` — 중립 JSX 언어로 한 번 작성된 검색 필드 및
+`ForgeSearchInput` — 중립 JSX 방언으로 한 번 작성된 검색 필드 및
 `@mission-platform/vite-plugin-forge`에 의해 React 또는 Vue로 직접 컴파일되었습니다.
 
 선행 검색 문자(또는 로드 스피너)가 있는 `type="search"` 필드 및
@@ -1133,15 +1133,15 @@ function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElemen
 원본 Vue SFC의 대체: `useId` 컴포저블 맵 직선
 프레임워크 네이티브 `useId` 후크에 연결합니다. 검색/지우기 아이콘
 1회 쓰기 `@mission-platform/icons` `ForgeIconSearch`/`ForgeIconClose`입니다.
-(그 자체는 React/Vue로 컴파일됨) `useI18n` 레이블은 일반 문자열이 됩니다.
+(자체는 React/Vue로 컴파일됨) `useI18n` 레이블은 일반 문자열이 됩니다.
 소품; `v-model` + `search`/`clear`이 방출하는 것은
 `onUpdateModelValue`/`onSearch`/`onClear` 콜백 소품.
 
 #### 매개변수
 
-| 이름 | 유형                             | 설명 |
-| ---- | -------------------------------- | ---- |
-| 속성 | 읽기 전용<SearchInputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------- | ----------- |
+| 속성 | 읽기 전용<SearchInputProperties> |             |
 
 ### 검색입력속성
 
@@ -1191,9 +1191,9 @@ function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): Mp
 
 #### 매개변수
 
-| 이름 | 유형                                | 설명 |
-| ---- | ----------------------------------- | ---- |
-| 속성 | 읽기 전용<SegmentControlProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------------- | ----------- |
+| 속성 | 읽기 전용<SegmentControlProperties> |             |
 
 ### 세그먼트제어속성
 
@@ -1249,16 +1249,16 @@ function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement;
 공동 배치된 프레임워크에 구애받지 않는 `date-time.ts`에 위임됩니다. 지역
 `ref`은 다음을 통해 `modelValue`에서 다시 동기화된 {@link useState}가 됩니다.
 {@link useEffect}; `useId` 컴포저블은 프레임워크 기반 `useId` 후크에 매핑됩니다. 인라인
-시계 SVG는 `🕒` 문자 모양이 됩니다. `start`/`end` 영역은 다음과 같이 작성되었습니다.
+시계 SVG는 `🕒` 문자 모양이 됩니다. `start`/`end` 영역은 다음과 같이 작성됩니다.
 프레임워크 중립을 통해 존재가 감지된 슬롯(`<Slot>`)
 {@link hasSlot} 도우미; `v-model` + `change`이 방출하는 것은
 `onUpdateModelValue`/`onChange` 콜백 소품.
 
 #### 매개변수
 
-| 이름 | 유형                           | 설명 |
-| ---- | ------------------------------ | ---- |
-| 속성 | 읽기 전용<TimeInputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------- | ----------- |
+| 속성 | 읽기 전용<TimeInputProperties> |             |
 
 ### 시간입력속성
 
@@ -1313,9 +1313,9 @@ function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): Mp
 
 #### 매개변수
 
-| 이름 | 유형                                | 설명 |
-| ---- | ----------------------------------- | ---- |
-| 속성 | 읽기 전용<TimeRangeInputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------------- | ----------- |
+| 속성 | 읽기 전용<TimeRangeInputProperties> |             |
 
 ### 시간범위입력속성
 
@@ -1395,9 +1395,9 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 
 #### 매개변수
 
-| 이름 | 유형                                    | 설명 |
-| ---- | --------------------------------------- | ---- |
-| 속성 | 읽기 전용<DateTimeRangeInputProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------------------- | ----------- |
+| 속성 | 읽기 전용<DateTimeRangeInputProperties> |             |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
@@ -1434,9 +1434,9 @@ HTML5 드래그 앤 드롭** 요소 이벤트 소품(`draggable`/`onDragStart`/
 
 #### 매개변수
 
-| 이름 | 유형                             | 설명 |
-| ---- | -------------------------------- | ---- |
-| 속성 | 읽기 전용<FormBuilderProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------- | ----------- |
+| 속성 | 읽기 전용<FormBuilderProperties> |             |
 
 ### FormBuilder속성
 
@@ -1483,9 +1483,9 @@ function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<FormWizardProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<FormWizardProperties> |             |
 
 ### 양식 마법사 속성
 
@@ -1506,6 +1506,85 @@ export interface WizardStep
 ```
 
 단일 마법사 단계.
+
+## `src/components/organisms/forge-form/forge-form`
+
+### defaultFormContext
+
+**종류:** 상수
+
+```typescript
+export const defaultFormContext: FormContextValue;
+```
+
+useFormContext가 ForgeForm 외부에서 호출될 때 제공되는 기본 기본 양식 컨텍스트입니다.
+
+### ForgeForm
+
+**종류:** 기능
+
+```typescript
+function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement;
+```
+
+제어된 상태와 제어되지 않은 상태를 지원하는 컨텍스트 기반 양식 구성 요소,
+표준 스키마/Zod/Yup 유효성 검사, 액세스 가능한 오류 요약 및 프레임워크 어댑터.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------ | ----------- |
+| 속성 | 읽기 전용<ForgeFormProps> |             |
+
+### ForgeForm속성
+
+**종류:** 유형
+
+```typescript
+export type ForgeFormProperties = ForgeFormProps;
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeFormProps
+
+**종류:** 인터페이스
+
+```typescript
+export interface ForgeFormProps
+```
+
+설명이 제공되지 않았습니다.
+
+### FormContext
+
+**종류:** 상수
+
+```typescript
+export const FormContext: MpContext<FormContextValue | undefined>;
+```
+
+설명이 제공되지 않았습니다.
+
+### 양식컨텍스트값
+
+**종류:** 인터페이스
+
+```typescript
+export interface FormContextValue
+```
+
+설명이 제공되지 않았습니다.
+
+### useFormContext
+
+**종류:** 기능
+
+```typescript
+function useFormContext(): FormContextValue;
+```
+
+하위 필드 또는 중첩된 구성 요소의 양식 컨텍스트에 액세스하기 위한 후크입니다.
 
 ## `src/components/organisms/forge-schema-form-dialog/forge-schema-form-dialog`
 
@@ -1531,9 +1610,9 @@ JSON 스키마 기반 양식(Monaco `code` 필드 포함)을 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형                                  | 설명 |
-| ---- | ------------------------------------- | ---- |
-| 속성 | 읽기 전용<SchemaFormDialogProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------------ | ----------- |
+| 속성 | 읽기 전용<SchemaFormDialogProperties> |             |
 
 ### 스키마양식대화상자속성
 
@@ -1556,10 +1635,10 @@ function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement;
 ```
 
 `ForgeSchemaForm` — 중립 JSX에서 한 번 작성된 JSON 스키마 기반 양식
-방언을 사용하여 React 또는 Vue으로 직접 컴파일됩니다.
+방언을 사용하여 React 또는 Vue으로 바로 컴파일됩니다.
 `@mission-platform/vite-plugin-forge`.
 
-Vue 원본과 마찬가지로 완전히 JSON 스키마에 의해 구동됩니다.
+Vue 원본과 마찬가지로 이는 전적으로 JSON 스키마에 의해 구동됩니다.
 렌더링된 필드와 유효성 검사 규칙은 다음을 통해 파생됩니다.
 공유 `@mission-platform/forms-core` 패키지(따라서 두 프레임워크가 유효성을 검사함)
 동일하게 - 구성별 패리티). 단일 개체 스키마는 다음을 렌더링합니다.
@@ -1577,9 +1656,9 @@ Vue SFC의 대체: 동적 `<component :is>` 컨트롤
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<SchemaFormProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<SchemaFormProperties> |             |
 
 ### 스키마양식필드렌더러
 
@@ -1610,45 +1689,3 @@ export interface SchemaFormProperties
 ```
 
 설명이 제공되지 않았습니다.
-
-## `src/utils/date-time/date-time`
-
-### 날짜 범위
-
-**종류:** 인터페이스
-
-```typescript
-export interface DateRange
-```
-
-`{ start, end }` ISO 날짜 범위(`YYYY-MM-DD`).
-
-### 날짜시간범위
-
-**종류:** 인터페이스
-
-```typescript
-export interface DateTimeRange
-```
-
-`{ start, end, timezone }` 날짜-시간 범위(`YYYY-MM-DD HH:MM[:SS]`).
-
-### 시간 범위
-
-**종류:** 인터페이스
-
-```typescript
-export interface TimeRange
-```
-
-`{ start, end }` 시간 범위(`HH:MM` 또는 `HH:MM:SS`).
-
-### 시간대 모드
-
-**종류:** 유형
-
-```typescript
-export type TimezoneMode = 'browser' | 'utc';
-```
-
-날짜-시간 범위가 브라우저 영역 또는 UTC로 해석되는지 여부입니다.

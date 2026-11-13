@@ -1,5 +1,4 @@
 import { ForgeActivityFeed } from '@mission-platform/components';
-
 import type { ActivityFeedProperties } from '@mission-platform/components';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 

@@ -7,16 +7,15 @@
 
 このプロジェクト全体のページは、パッケージの機能と互換性のディレクトリです。
 契約。の正規インストール、使用法、制限事項、および API の詳細
-各パッケージは、`packages/**/docs/`、` `、およびそのパッケージの隣に存在します。
-そして` `。生成された API 参照は、所有者に追加する必要があります
+各パッケージは、完全な `packages/**/docs/` パスの下でそのパッケージの隣に存在します。生成された API 参照は、所有者に追加する必要があります
 このページではなくパッケージを参照してください。
 
 > **インポートは常にベアです。** フレームワーク配布の `@mission-platform/*` パッケージは単一の `.` を公開します
 > `mp:vue`、`mp:react`、`mp:svelte`、`mp:solid`、および `mp:web-component` エクスポートによって保護されたエントリ
 > 条件。 `resolve.conditions` 経由でフレームワークを **1 回**選択します (`defineFrameworkAppConfig` / を参照)
-> `frameworkResolveConditions` (`@mission-platform/vite-config` から) および `customConditions` (
+> `frameworkResolveConditions` から `@mission-platform/vite-config`) および `customConditions` (
 > `@mission-platform/typescript-config/framework-<name>` プリセット) — 次に、すべてを裸の状態でインポートします
-> パッケージ指定子。 [外部コンシューマーのセットアップ](external-consumer-setup.md) を参照してください。
+> パッケージ指定子。 [外部コンシューマのセットアップ](external-consumer-setup.md) を参照してください。
 
 ## コアフレームワーク
 
@@ -24,32 +23,48 @@
 
 「ライトワンス」アーキテクチャの基盤であり、フレームワークに依存しない JSX ランタイムとフックを提供します。
 
-| エクスポート       | タイプ     | 説明                                                                                                       |
-| :----------------- | :--------- | :--------------------------------------------------------------------------------------------------------- |
-| `h`、`Fragment`    | 機能       | コンポーネントを作成するための JSX ファクトリとフラグメント。                                              |
-| `useState`         | フック     | フレームワーク中立状態フック。                                                                             |
-| `useEffect`        | フック     | フレームワークに依存しないエフェクトフック。                                                               |
-| `useMemo`          | フック     | フレームワークに依存しないメモ化フック。                                                                   |
-| `useRef`           | フック     | フレームワークに依存しない参照フック。                                                                     |
-| `useContext`       | フック     | フレームワークに依存しないコンテキスト フック。                                                            |
-| `toVueComponent`   | アダプター | forge コンポーネントを Vue 3 コンポーネント (`@mission-platform/forge-adapters/vue` から) に変換します。   |
-| `toReactComponent` | アダプター | forge コンポーネントを React コンポーネント (`@mission-platform/forge-adapters/react` から) に変換します。 |
+|エクスポート |タイプ |説明 |
+| :-------------- | :------- | :------------------------------------------------- |
+| `h`、`Fragment` |機能 |コンポーネントを作成するための JSX ファクトリとフラグメント。 |
+| `useState` |フック |フレームワーク中立状態フック。                      |
+| `useEffect` |フック |フレームワークに依存しないエフェクトフック。                     |
+| `useMemo` |フック |フレームワークに依存しないメモ化フック。                |
+| `useRef` |フック |フレームワークに依存しない参照フック。                  |
+| `useContext` |フック |フレームワークに依存しないコンテキスト フック。                    |
+
+### @mission-platform/forge-adapters
+
+ニュートラルな Forge JSX コンポーネントをレンダリングするためのフレームワーク固有のアダプター。それぞれ
+フレームワークは独立したサブパスとして公開されるため、アプリケーションは
+彼らが使用するランタイム。
+
+|エクスポート |タイプ |説明 |
+| :----------------- | :------ | :------------------------------------------------------------------------------------------------- |
+| `toVueComponent` |アダプター | Forge コンポーネントを `@mission-platform/forge-adapters/vue` から Vue 3 コンポーネントに変換します。       |
+| `toReactComponent` |アダプター | Forge コンポーネントを `@mission-platform/forge-adapters/react` コンポーネントから React コンポーネントに変換します。     |
+| SolidJS プリミティブ |アダプター | `@mission-platform/forge-adapters/solid` からの `Teleport`、`Transition`、および `TransitionGroup`。     |
+| Svelte プリミティブ |アダプター | `@mission-platform/forge-adapters/svelte` の生の HTML およびトランジション ヘルパー。                    |
+| Web コンポーネント |ランタイム | `@mission-platform/forge-adapters/web-components` のネイティブ カスタム要素レンダリング プリミティブ。 |
 
 ### @mission-platform/vite-plugin-forge
 
 コンパイラ ドライバは、明示的な `FrameworkOutputPlugin` インスタンスを受け入れます。それはあります
-フレームワークレジストリは提供しません。 `defineViteForgeComponents` および
-`defineTsdownForgeComponents` (およびフックと CMS ヘルパー) はインプロセスを共有します
-1 つのビルドまたは監視セッションの場合は `ForgeCompilerService`。
+フレームワークレジストリは提供しません。 Vite アダプターと tsdown アダプターはインプロセスを共有します
+1 つのビルドまたは監視セッションの場合は `ForgeCompilerService`。 Tsdown 消費者が追加
+`tsdownForgeComponentPlugins` または `tsdownForgeHookPlugins` を 1 つに
+`defineTsdownLibrary` 呼び出し。 CMS コンシューマは、次の `tsdownForgeCmsPlugins` を使用します。
+`@mission-platform/forge-cms-plugin-api`。
 
-| 能力                         | 説明                                                                                                                                                                                                     |
-| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| サービスのライフサイクル     | ソース、グラフ、解析されたソース、セマンティック IR、およびターゲット アーティファクトの状態をビルド間で再利用します。完了後にワンショット サービスを破棄し、終了時にウォッチャー サービスを破棄します。 |
-| キーをキャッシュする         | ソース/依存関係/構成フィンガープリント、コンパイラーおよびルーターのオプション、`tsconfig` `baseUrl`/`paths`、ターゲット ID、プラグイン ID/バージョン、および関連条件。                                  |
-| ウォッチの無効化             | 変更されたファイルは、推移コンポーネントやフック エントリなどの逆グラフ依存関係を無効にします。無関係なターゲット スナップショットは引き続き再利用可能です。                                             |
-| 診断/レポート                | フェーズのタイミング、キャッシュのヒット/ミス数、影響を受けるファイル、警告、エラー、生成されたアーティファクトの数をレポートします。エラーによりプロモーションがブロックされます。                      |
-| アーティファクトマニフェスト | アトミック プロモーションの前に、ターゲット スコープのエントリ、モジュール、宣言、ソース マップ、アセット、およびチェックサムをリストします。                                                            |
-| 拡張ポイント                 | 呼び出し元が所有する `forge-plugin-*` パッケージから `FrameworkOutputPlugin` を実装して渡します。ターゲット ブランチをニュートラル ドライバーに追加しないでください。                                    |
+|能力 |説明 |
+| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|サービスのライフサイクル |ソース、グラフ、解析されたソース、セマンティック IR、およびターゲット アーティファクトの状態をビルド間で再利用します。完了後にワンショット サービスを破棄し、終了時にウォッチャー サービスを破棄します。 |
+|キーをキャッシュする |ソース/依存関係/構成フィンガープリント、コンパイラーおよびルーターのオプション、`tsconfig` `baseUrl`/`paths`、ターゲット ID、プラグイン ID/バージョン、および関連条件。      |
+|ウォッチの無効化 |変更されたファイルは、推移コンポーネントやフック エントリなどの逆グラフ依存関係を無効にします。無関係なターゲット スナップショットは引き続き再利用可能です。                     |
+|診断/レポート |フェーズのタイミング、キャッシュのヒット/ミス数、影響を受けるファイル、警告、エラー、生成されたアーティファクトの数をレポートします。エラーによりプロモーションがブロックされます。                                 |
+|アーティファクトマニフェスト |アトミック プロモーションの前に、ターゲット スコープのエントリ、モジュール、宣言、ソース マップ、アセット、およびチェックサムをリストします。                                                     |
+|拡張ポイント | `FrameworkOutputPlugin` を実装し、オープン `FrameworkId` (`JsxFramework \| (string & {})`) とともに渡します。ターゲットのブランチやレジストリをドライバーに追加しないでください。  |
+|ターゲットパイプライン |厳格な `lower → optimize → generate` を強制します。ターゲット ジェネレーターは、`assertTargetIntentionsLowered` によって検証された、低めの意図のみを受け入れます。                       |
+|コンパイラ AST パス | Oxc は唯一のコンパイラ AST パスです。従来の TypeScript AST 互換性レイヤーとシムは削除されました。                                                          |
 
 プロジェクト `tsconfig.json` (`baseUrl` および
 `paths`); Vite および tsdown グラフの準備では、同じエイリアス ファクトが使用されます。ルーター
@@ -63,13 +78,13 @@
 共有パッケージ。アプリケーションはルート レコードとネイティブ ルーター インスタンスを所有します。の
 アプリケーションによって選択された Forge ルーター ターゲットは、ランタイム機能を提供します。
 
-| エクスポート / パッケージ                                                | タイプ               | 説明                                                                                                                                                 |
-| :----------------------------------------------------------------------- | :------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `MpRoute`、`MpRouteLocationRaw`、`MpResolvedLocation`                    | 種類                 | ルート レコード、パラメータ、クエリ/ハッシュ状態、メタデータ、およびナビゲーション ターゲット。                                                      |
-| `defineRoutes`、`matchRoutes`、`resolveLocation`                         | 機能                 | DOM やフレームワーク ランタイムを使用せずにルート ツリーを定義し、パスを解決します。                                                                 |
-| `MpNavigationResult`、`MpRouteGuard`、`MpHistory`、`MpRouterAdapter`     | 種類                 | ナビゲーションの結果/イベント、ガード、プラグイン可能な履歴、アダプター コントラクト。                                                               |
-| `MpLink`、`useMpRoute`、`useMpRouter`、`useMpNavigation`、`MpRouterView` | コンパイラマーカー   | 共有パッケージによって消費されるニュートラル リンク、ルート状態、ナビゲーション、解決、およびアウトレット機能。                                      |
-| `@mission-platform/forge-router-*`                                       | ターゲットを鍛造する | Vue ルーター、React ルーター、SolidJS ルーター、SvelteKit、RedwoodSDK、および Web コンポーネント用に個別に選択されたネイティブ ルーター ターゲット。 |
+|エクスポート / パッケージ |タイプ |説明 |
+| :----------------------------------------------------------------------- | :--------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+| `MpRoute`、`MpRouteLocationRaw`、`MpResolvedLocation` |種類 |ルート レコード、パラメータ、クエリ/ハッシュ状態、メタデータ、およびナビゲーション ターゲット。                                                            |
+| `defineRoutes`、`matchRoutes`、`resolveLocation` |機能 | DOM やフレームワーク ランタイムを使用せずにルート ツリーを定義し、パスを解決します。                                                              |
+| `MpNavigationResult`、`MpRouteGuard`、`MpHistory`、`MpRouterAdapter` |種類 |ナビゲーションの結果/イベント、ガード、プラグイン可能な履歴、アダプター コントラクト。                                                         |
+| `MpLink`、`useMpRoute`、`useMpRouter`、`useMpNavigation`、`MpRouterView` |コンパイラマーカー |共有パッケージによって消費されるニュートラル リンク、ルート状態、ナビゲーション、解決、およびアウトレット機能。                               |
+| `@mission-platform/forge-router-*` |ターゲットを鍛造する | Vue ルーター、React ルーター、SolidJS ルーター、SvelteKit、RedwoodSDK、および Web コンポーネント用に個別に選択されたネイティブ ルーター ターゲット。 |
 
 ランタイム パッケージには独自の履歴と反応状態が含まれます。中立パッケージは UI フレームワークをインポートしません。 Web コンポーネントの場合、
 要素を一度登録し、シリアル化された属性ではなく DOM プロパティを通じて複雑なターゲットを渡します。
@@ -132,22 +147,22 @@ const router = createWebComponentsRouter({
 
 ### @mission-platform/tokens
 
-色、タイポグラフィ、間隔のデザイントークンを一元化。
+色、タイポグラフィー、間隔のデザイントークンを一元化。
 
-| エクスポート  | 説明                                                                               |
-| :------------ | :--------------------------------------------------------------------------------- |
-| `tokens`      | すべてのデザイン トークンを含む JS/TS オブジェクト (`tokens.color.primary` など)。 |
-| `tokens.scss` | スタイルシートで使用する SCSS 変数。                                               |
+|エクスポート |説明 |
+| :------------ | :------------------------------------------------------------------------ |
+| `tokens` | JS/TS object containing all design tokens (e.g., `tokens.color.primary`). |
+| `tokens.scss` |スタイルシートで使用する SCSS 変数。                                    |
 
 ### @mission-platform/breakpoints
 
 応答性の高いユーティリティと可視性コンポーネント。
 
-| エクスポート     | タイプ         | 説明                                                             |
-| :--------------- | :------------- | :--------------------------------------------------------------- |
-| `useBreakpoints` | フック         | リアクティブ ブレークポイントのステータスを返します。            |
-| `ShowIf`         | コンポーネント | ブレークポイント条件が一致した場合にのみ子をレンダリングします。 |
-| `HideIf`         | コンポーネント | ブレークポイント条件が一致した場合に子を非表示にします。         |
+|エクスポート |タイプ |説明 |
+| :--------------- | :-------- | :--------------------------------------------------------- |
+| `useBreakpoints` |フック |リアクティブ ブレークポイントのステータスを返します。                        |
+| `ShowIf` |コンポーネント |ブレークポイント条件が一致する場合にのみ子をレンダリングします。 |
+| `HideIf` |コンポーネント |ブレークポイント条件が一致した場合に子を非表示にします。        |
 
 ### @mission-platform/components
 
@@ -166,35 +181,35 @@ const router = createWebComponentsRouter({
 
 i18next に基づく国際化システム。
 
-| エクスポート      | 説明                                                            |
-| :---------------- | :-------------------------------------------------------------- |
-| `createForgeI18N` | i18n インスタンスをプラットフォームのデフォルトで初期化します。 |
-| `useI18n`         | コンポーネント内の翻訳とロケール切り替え用のフック。            |
+|エクスポート |説明 |
+| :---------------- | :-------------------------------------------------------- |
+| `createForgeI18N` | i18n インスタンスをプラットフォームのデフォルトで初期化します。     |
+| `useI18n` |コンポーネント内の翻訳とロケール切り替え用のフック。 |
 
 ### @mission-platform/seo
 
 メタタグとSEO管理。
 
-| エクスポート | 説明                                                                        |
-| :----------- | :-------------------------------------------------------------------------- |
-| `useSeo`     | ページタイトル、メタタグ、Open Graph データを宣言的に設定するためのフック。 |
+|エクスポート |説明 |
+| :------- | :-------------------------------------------------------------------- |
+| `useSeo` |ページタイトル、メタタグ、Open Graph データを宣言的に設定するためのフック。 |
 
 ### @mission-platform/map
 
 MapLibre GL のリアクティブ ラッパー。
 
-| コンポーネント  | 説明                                             |
-| :-------------- | :----------------------------------------------- |
-| `<MpMap>`       | メインのマップコンテナコンポーネント。           |
-| `<MpMapMarker>` | 地図上にマーカーを配置するためのコンポーネント。 |
+| Component       |説明 |
+| :-------------- | :---------------------------------------- |
+| `<MpMap>` |メインのマップコンテナコンポーネント。             |
+| `<MpMapMarker>` |地図上にマーカーを配置するためのコンポーネント。 |
 
 ### @mission-platform/code-scanner
 
 カメラベースのバーコードと QR コードのスキャン。
 
-| コンポーネント    | 説明                                                               |
-| :---------------- | :----------------------------------------------------------------- |
-| `<MpCodeScanner>` | カメラストリームを初期化し、スキャン結果を出力するコンポーネント。 |
+|コンポーネント |説明 |
+| :---------------- | :--------------------------------------------------------------- |
+| `<MpCodeScanner>` |カメラストリームを初期化し、スキャン結果を出力するコンポーネント。 |
 
 ## 統合
 
@@ -202,27 +217,27 @@ MapLibre GL のリアクティブ ラッパー。
 
 RxJS Observable をコンポーネントの状態にブリッジします。
 
-| フック          | 説明                                                                             |
-| :-------------- | :------------------------------------------------------------------------------- |
-| `useObservable` | オブザーバブルをサブスクライブし、その最新の値をリアクティブ状態として返します。 |
+|フック |説明 |
+| :-------------- | :-------------------------------------------------------------------------- |
+| `useObservable` |オブザーバブルをサブスクライブし、その最新の値をリアクティブ状態として返します。 |
 
 ### @mission-platform/d3
 
-フレームワークに依存しない D3.js 統合。
+Framework-neutral D3.js integration.
 
-| フック  | 説明                                                                        |
-| :------ | :-------------------------------------------------------------------------- |
-| `useD3` | ライフサイクル管理を使用して、D3 選択をコンポーネント参照にバインドします。 |
+|フック |説明 |
+| :------ | :----------------------------------------------------------------- |
+| `useD3` |ライフサイクル管理を使用して、D3 選択をコンポーネント参照にバインドします。 |
 
 ### @mission-platform/hunspell
 
 WebAssembly を利用したスペルチェック。
 
-| エクスポート   | 説明                                                              |
-| :------------- | :---------------------------------------------------------------- |
+|エクスポート |説明 |
+| :------------- | :------------------------------------------------------ |
 | `initHunspell` | Hunspell WebAssembly モジュールをロードしてインスタンス化します。 |
-| `spell`        | 単語のスペルが正しいかどうかをチェックします。                    |
-| `suggest`      | 単語のスペルの提案を提供します。                                  |
+| `spell` |単語のスペルが正しいかどうかをチェックします。                  |
+| `suggest` |単語のスペルの提案を提供します。               |
 
 ## サービス監視
 
@@ -273,7 +288,7 @@ Service-monitor は、プローブの動作に厳密な制限を適用します�
 
 #### 検証のリクエスト
 
-すべての電子メール リクエストは次のとおりである必要があります。
+すべての電子メール リクエストは次のことを行う必要があります。
 
 - `Content-Type: application/json` を使用します。
 - 有効な受信者の電子メール アドレスを含めます (`to` フィールド、最大 254 文字)。
@@ -285,11 +300,11 @@ Service-monitor は、プローブの動作に厳密な制限を適用します�
 
 明示的な構成を行わない非ローカル展開では、すべてのリクエストが拒否されます。開発の便宜上、ローカル デプロイメントには制限がありません。
 
-## Forge Web スクリプト アーティファクトの検証
+## フリントアーティファクトの検証
 
 ### アーティファクトコンテンツのアイデンティティ
 
-Forge Web Script アーティファクトは、`sha256-v1:<hex>` 形式のバージョン管理された SHA-256 コンテンツ ID を使用します。このダイジェストは、完全なアーティファクト バイナリに対して計算され、アーティファクト マニフェストの `contentHash` フィールドに保存されます。
+Flint アーティファクトは、`sha256-v1:<hex>` 形式のバージョン管理された SHA-256 コンテンツ ID を使用します。このダイジェストは、完全なアーティファクト バイナリに対して計算され、アーティファクト マニフェストの `contentHash` フィールドに保存されます。
 
 #### 誠実さと信頼性
 
@@ -303,7 +318,7 @@ Forge Web Script アーティファクトは、`sha256-v1:<hex>` 形式のバー
 
 1. **期待されるハッシュを**信頼できるソース (署名されたマニフェスト、CI ビルド ログ、安全な構成など) から取得します。
 2. **検証ツールを使用してアーティファクト ハッシュを計算します**。`flint_verify_artifact(artifact)` は `contentHash` を返します。
-3. **ハッシュを比較**: 一致する場合、アーティファクトは、期待値が記録されて以来、誤ってまたは悪意を持って変更されていません。
+3. **ハッシュを比較**: 一致する場合、アーティファクトは期待値が記録されて以来、誤ってまたは悪意を持って変更されていません。
 4. **マニフェストを確認します**: `flint_inspect_manifest` を使用して、機能のインポート、エクスポート、メタデータ、およびポリシーへの準拠を個別に確認します。
 
 #### バージョン管理
@@ -313,6 +328,7 @@ Forge Web Script アーティファクトは、`sha256-v1:<hex>` 形式のバー
 ## さらに読む
 
 - [Vue 2 から Vue 3 への移行ガイド](migration-guides/vue2-to-vue3.md)
+- [Forge コンパイラ パイプラインと移行ノート](../../../packages/tooling/vite/forge/docs/locales/ja/reference/compiler.md#migration-guidance)
 - [プロジェクト構成の概要](configs/index.md)
 - [ワークスペース構造](workspace-structure.md)
 
@@ -323,77 +339,107 @@ Forge Web Script アーティファクトは、`sha256-v1:<hex>` 形式のバー
 
 ### コアとUI
 
-| パッケージ                     | 目的                                                                        |
-| :----------------------------- | :-------------------------------------------------------------------------- |
-| `@mission-platform/forge-jsx`  | フレームワークに依存しない JSX ランタイムとアダプター。                     |
-| `@mission-platform/components` | ライトワンス UI コンポーネント。                                            |
-| `@mission-platform/icons`      | ライトワンス SVG アイコン コンポーネント。                                  |
-| `@mission-platform/layouts`    | アプリケーション、コンテナ、およびレスポンシブ レイアウトのコンポーネント。 |
-| `@mission-platform/forms`      | スキーマ フォームとビジュアル フォーム ビルダー コンポーネント。            |
-| `@mission-platform/forms-core` | スキーマ導出、検証、およびフォームビルダードメインロジック。                |
-| `@mission-platform/tokens`     | CSS カスタム プロパティと SCSS デザイン トークン。                          |
+|パッケージ |目的 |
+| :----------------------------- | :------------------------------------------------------------ |
+| `@mission-platform/forge-jsx` |フレームワークに依存しない JSX ランタイムとアダプター。                   |
+| `@mission-platform/components` |ライトワンス UI コンポーネント。                                     |
+| `@mission-platform/icons` |ライトワンス SVG アイコン コンポーネント。                               |
+| `@mission-platform/layouts` |アプリケーション、コンテナ、およびレスポンシブ レイアウトのコンポーネント。     |
+| `@mission-platform/forms` |スキーマ フォームとビジュアル フォーム ビルダー コンポーネント。              |
+| `@mission-platform/forms-core` |スキーマ導出、検証、およびフォームビルダードメインロジック。 |
+| `@mission-platform/tokens` | CSS カスタム プロパティと SCSS デザイン トークン。                 |
 
 ### コンポーザブルと統合
 
-| パッケージ                                      | 目的                                                                        |
-| :---------------------------------------------- | :-------------------------------------------------------------------------- |
-| `@mission-platform/breakpoints`                 | 応答性のブレークポイントの状態と可視性ヘルパー。                            |
-| `@mission-platform/d3`                          | D3 選択ライフサイクル コンポーザブルおよびマージン ユーティリティ。         |
-| `@mission-platform/i18n`                        | i18next 状態およびフレームワーク統合ヘルパー。                              |
-| `@mission-platform/map`                         | MapLibre マップ コンポーネントとコンポーザブル。                            |
-| `@mission-platform/observers`                   | 交差、突然変異、およびパフォーマンス オブザーバー コンポーザブル。          |
-| `@mission-platform/phone-number`                | 入力された WebAssembly 電話番号の解析と書式設定。                           |
-| `@mission-platform/router`                      | フレームワークに依存しないルート コントラクトとコンパイラ機能。             |
-| `@mission-platform/forge-router-web-components` | Web コンポーネント ルーター ターゲットとフレームワークフリーのランタイム。  |
-| `@mission-platform/rxjs`                        | RxJS オブザーバブルおよびサブスクリプション コンポーザブル。                |
-| `@mission-platform/scheduler`                   | スケジューラ UI、繰り返し、およびカレンダー レイアウトのドメイン ロジック。 |
-| `@mission-platform/vcard`                       | RFC 6350 vCard および RFC 5545 iCalendar データとコンポーネント。           |
-| `@mission-platform/content`                     | コンテンツ AST、ビルダー、Monaco、Markdown、および WYSIWYG コンポーネント。 |
-| `@mission-platform/seo`                         | メタデータ、オープン グラフ、構造化データ コンポーザブル。                  |
-| `@mission-platform/speech-audio`                | 音声、オーディオ、Web MIDI コンポーザブル。                                 |
-| `@mission-platform/three`                       | Three.js キャンバスとライフサイクル コンポーザブル。                        |
+|パッケージ |目的 |
+| :---------------------------------------------- | :--------------------------------------------------------------- |
+| `@mission-platform/breakpoints` |応答性のブレークポイントの状態と可視性ヘルパー。              |
+| `@mission-platform/d3` | D3 選択ライフサイクル コンポーザブルおよびマージン ユーティリティ。          |
+| `@mission-platform/i18n` | i18next 状態およびフレームワーク統合ヘルパー。                 |
+| `@mission-platform/map` | MapLibre マップ コンポーネントとコンポーザブル。                         |
+| `@mission-platform/observers` |交差、突然変異、およびパフォーマンス オブザーバー コンポーザブル。    |
+| `@mission-platform/phone-number` |入力された WebAssembly 電話番号の解析と書式設定。           |
+| `@mission-platform/router` |フレームワークに依存しないルート コントラクトとコンパイラ機能。     |
+| `@mission-platform/forge-router-web-components` | Web コンポーネント ルーター ターゲットとフレームワークフリーのランタイム。         |
+| `@mission-platform/rxjs` | RxJS オブザーバブルおよびサブスクリプション コンポーザブル。                    |
+| `@mission-platform/scheduler` |スケジューラ UI、繰り返し、およびカレンダー レイアウトのドメイン ロジック。      |
+| `@mission-platform/vcard` | RFC 6350 vCard および RFC 5545 iCalendar データとコンポーネント。       |
+| `@mission-platform/content` |コンテンツ AST、ビルダー、Monaco、Markdown、および WYSIWYG コンポーネント。 |
+| `@mission-platform/seo` |メタデータ、オープン グラフ、構造化データ コンポーザブル。           |
+| `@mission-platform/speech-audio` |音声、オーディオ、Web MIDI コンポーザブル。                         |
+| `@mission-platform/three` | Three.js キャンバスとライフサイクル コンポーザブル。                       |
 
 ### コードと WebAssembly パッケージ
 
-| パッケージ                       | 目的                                                                     |
-| :------------------------------- | :----------------------------------------------------------------------- |
-| `@mission-platform/barcode`      | 1D バーコードは、ファサードとコンポーネントをエンコード/デコードします。 |
-| `@mission-platform/code-scanner` | カメラおよび画像コードスキャンコンポーネント。                           |
-| `@mission-platform/matrix-code`  | Data Matrix と Aztec はファサードをエンコード/デコードします。           |
-| `@mission-platform/qr-code`      | ファサードとコンポーネントを QR エンコード/デコードします。              |
-| `@mission-platform/harper`       | Harper の文法とスタイルをモナコに統合。                                  |
-| `@mission-platform/hunspell`     | Emscripten Hunspell スペルチェック ラッパー。                            |
+|パッケージ |目的 |
+| :------------------------------- | :----------------------------------------------- |
+| `@mission-platform/barcode` | 1D バーコードは、ファサードとコンポーネントをエンコード/デコードします。   |
+| `@mission-platform/code-scanner` |カメラおよび画像コードスキャンコンポーネント。        |
+| `@mission-platform/matrix-code` | Data Matrix と Aztec はファサードをエンコード/デコードします。      |
+| `@mission-platform/qr-code` |ファサードとコンポーネントを QR エンコード/デコードします。           |
+| `@mission-platform/harper` | Harper の文法とスタイルをモナコに統合。 |
+| `@mission-platform/hunspell` | Emscripten Hunspell スペルチェック ラッパー。      |
+
+### Flint システム言語ツールチェーン
+
+これらは `packages/flint/` および `packages/tooling/vite/flint` に存在します。
+
+|パッケージ |目的 |
+| :----------------------------------------- | :------------------------------------------------------- |
+| `@mission-platform/flint` |コア AST、TypeChecker、SonIR、およびコンパイラ パイプライン。     |
+| `@mission-platform/flint-cli` |スタンドアロン `flint` 実行可能コンパイラおよびチェッカー CLI。  |
+| `@mission-platform/flint-wasm` | WebAssembly バイナリ エミッターおよびバイトコード ベリファイアー。        |
+| `@mission-platform/flint-runtime` |メモリサンドボックスと実行ランタイム。                    |
+| `@mission-platform/flint-stdlib` |標準ライブラリ コレクションと組み込み。               |
+| `@mission-platform/flint-regex` |線形時間 PikeVM 正規表現エンジン。            |
+| `@mission-platform/flint-lsp` | Stdio 言語サーバー プロトコル サーバー (`flint-lsp`)。     |
+| `@mission-platform/flint-language-service` |高レベルのコード インテリジェンスと分析サービス。       |
+| `@mission-platform/flint-dap` |アダプター プロトコル サーバーをデバッグします。                           |
+| `@mission-platform/flint-vitest` | Vitest コンパイラ、アーティファクト、および Wasm テスト用のハーネス。 |
+| `@mission-platform/vite-plugin-flint` | `.flint` ソースをコンパイルするための Vite プラグイン。              |
 
 ### Forge コンパイラ ターゲット
 
-これらは、`packages/` ではなく `packages/compiler/plugins/` に存在します。 **フレームワーク** プラグインは、どのランタイムを中立コンポーネントにするかを決定します
+これらは `packages/compiler/plugins/` にあります。 **フレームワーク** プラグインは、どのランタイムを中立コンポーネントにするかを決定します
 に引き下げられます。 **CMS** ターゲットは、どのコンテンツ プラットフォームに投影されるかを決定します。 2 つの軸が構成されるため、どの CMS でも
 target は任意のフレームワーク プラグインにバインドできます。 [Forge コンパイラ パイプライン](../../../packages/tooling/vite/forge/docs/locales/ja/reference/compiler.md) を参照してください。
 
-| パッケージ                                      | 目的                                                                                                    |
-| :---------------------------------------------- | :------------------------------------------------------------------------------------------------------ |
-| `@mission-platform/forge-plugin-api`            | `FrameworkOutputPlugin` コントラクト、セマンティック IR タイプ、およびビルド アダプター タイプ。        |
-| `@mission-platform/forge-plugin-react`          | React 出力ターゲット。                                                                                  |
-| `@mission-platform/forge-plugin-vue`            | Vue 3 出力ターゲット。                                                                                  |
-| `@mission-platform/forge-plugin-solid`          | Solid 出力ターゲット。                                                                                  |
-| `@mission-platform/forge-plugin-svelte`         | Svelte 5 出力ターゲット。                                                                               |
-| `@mission-platform/forge-plugin-web-components` | Web コンポーネントの出力ターゲット。                                                                    |
-| `@mission-platform/forge-cms-plugin-api`        | `CmsOutputPlugin` コントラクト、ニュートラル コンテンツ モデル、CMS ドライバー、およびビルド ヘルパー。 |
-| `@mission-platform/forge-cms-storyblok`         | Storyblok コンポーネント オブジェクト、ブロック ラッパー、`components.json`。                           |
-| `@mission-platform/forge-cms-astro`             | 静的 `.astro` テンプレートと `client:load` フレームワーク アイランド。                                  |
-| `@mission-platform/forge-cms-ghost`             | Ghost Handlebars のパーシャルと `config.custom` テーマのフラグメント。                                  |
-| `@mission-platform/forge-cms-jekyll`            | Jekyll Liquid には、`_data` スキーマと `_config.yml` フラグメントが含まれています。                     |
-| `@mission-platform/forge-cms-webflow`           | Webflow `declareComponent` コード コンポーネントと `webflow.json` ライブラリ フラグメント。             |
+|パッケージ |目的 |
+| :---------------------------------------------- | :-------------------------------------------------------------------------------- |
+| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin` コントラクト、セマンティック IR タイプ、およびビルド アダプター タイプ。     |
+| `@mission-platform/forge-plugin-react` | React 出力ターゲット。                                                              |
+| `@mission-platform/forge-plugin-vue` | Vue 3 出力ターゲット。                                                              |
+| `@mission-platform/forge-plugin-solid` | Solid 出力ターゲット。                                                              |
+| `@mission-platform/forge-plugin-svelte` | Svelte 5 出力ターゲット。                                                           |
+| `@mission-platform/forge-plugin-web-components` | Web コンポーネントの出力ターゲット。                                                     |
+| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin` コントラクト、ニュートラル コンテンツ モデル、CMS ドライバー、およびビルド ヘルパー。 |
+| `@mission-platform/forge-cms-storyblok` | Storyblok コンポーネント オブジェクト、ブロック ラッパー、および `components.json`。                |
+| `@mission-platform/forge-cms-astro` |静的 `.astro` テンプレートと `client:load` フレームワーク アイランド。                    |
+| `@mission-platform/forge-cms-ghost` | Ghost Handlebars のパーシャルと `config.custom` テーマのフラグメント。                   |
+| `@mission-platform/forge-cms-jekyll` | Jekyll Liquid には、`_data` スキーマと `_config.yml` フラグメントが含まれています。             |
+| `@mission-platform/forge-cms-webflow` | Webflow `declareComponent` コード コンポーネントと `webflow.json` ライブラリ フラグメント。 |
+
+#### @mission-platform/forge-plugin-api
+
+|エクスポート |タイプ |説明 |
+| :------------------------------ | :------- | :------------------------------------------------------------------------------------------------------ |
+| `FrameworkId` |タイプ |任意のカスタム プラグイン ターゲットをサポートするオープン フレームワーク識別子 (`JsxFramework \| (string & {})`)。 |
+| `TargetFrameworkId` |タイプ | `FrameworkId` のエイリアス。                                                                                |
+| `JsxFramework` |タイプ |組み込みフレームワークのクローズドユニオン (`"react" \| "vue" \| "svelte" \| "solid" \| "web-components"`)。    |
+| `assertTargetIntentionsLowered` |機能 |ターゲットのインテンションに、ターゲット フレームワーク ID に一致する null 以外の引き下げられたプランが含まれていることをアサートします。        |
+| `TargetIntentions<TLowered>` |タイプ | **必須** `lowered: TLowered` ターゲット プランを含むターゲット インテントのコンテナー。                    |
+| `TargetLoweredModule` |タイプ | `framework: FrameworkId` で識別される、下位プランの基本インターフェイス。                            |
+| `FrameworkOutputPlugin` |タイプ | `id: FrameworkId`、`lower`、`optimize`、`generate`、および `build` とのコンポーザブル ターゲット出力コントラクト。 |
+| `defineForgeOutputPlugin` |機能 | `FrameworkOutputPlugin` インスタンスを検証して返します。                                               |
 
 #### @mission-platform/forge-cms-plugin-api
 
-| エクスポート              | タイプ | 説明                                                                                        |
-| :------------------------ | :----- | :------------------------------------------------------------------------------------------ |
-| `analyzeContentComponent` | 機能   | 中立的なコンポーネントのプロパティをプラットフォーム中立的なコンテンツ モデルに投影します。 |
-| `ContentComponent`        | タイプ | `ContentField`、スロット、および `interactive` フラグを注文しました。                       |
-| `ContentFieldKind`        | タイプ | `text`、`richtext`、`number`、`boolean`、`option`、`asset`、`link`、`children`。            |
-| `CmsOutputPlugin`         | タイプ | ターゲット コントラクト: バインドされたフレームワーク プラグインと 4 つのエミッター。       |
-| `defineForgeCmsPlugin`    | 機能   | 構成時に CMS ターゲットを検証します。                                                       |
-| `generateCmsArtifacts`    | 機能   | 一般的な検出→IR→コンテンツモデル→出力→ドライバーの書き込み。                                |
-| `defineTsdownForgeCms`    | 機能   | 1 つの CMS ターゲットの tsdown 構成で、`dist/cms/<cms>/<framework>/**` が発行されます。     |
-| `defineTsdownForgeCmsAll` | 機能   | CMS ターゲットのリストの tsdown config。                                                    |
+|エクスポート |タイプ |説明 |
+| :------------------------ | :------- | :------------------------------------------------------------------------------ |
+| `analyzeContentComponent` |機能 |中立的なコンポーネントのプロパティをプラットフォーム中立的なコンテンツ モデルに投影します。   |
+| `ContentComponent` |タイプ | `ContentField`、スロット、および `interactive` フラグを注文しました。                     |
+| `ContentFieldKind` |タイプ | `text`、`richtext`、`number`、`boolean`、`option`、`asset`、`link`、`children`。 |
+| `CmsOutputPlugin` |タイプ |ターゲット コントラクト: バインドされたフレームワーク プラグインと 4 つのエミッター。           |
+| `defineForgeCmsPlugin` |機能 |構成時に CMS ターゲットを検証します。                                   |
+| `generateCmsArtifacts` |機能 |一般的な検出→IR→コンテンツモデル→出力→ドライバーの書き込み。                |
+| `tsdownForgeCmsPlugins` |機能 | CMS ターゲット用のネイティブ tsdown プラグイン。1 つの `defineTsdownLibrary` 呼び出しに追加されました。 |

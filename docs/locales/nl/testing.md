@@ -31,11 +31,31 @@ pnpm test
 
 ### Voer tests uit voor een specifieke werkruimte
 
-Tests uitvoeren voor één pakket of applicatie:
+Tests uitvoeren voor een enkel pakket of applicatie terwijl de upstream-afhankelijkheden automatisch worden voorbereid:
+
+```bash
+pnpm test:package @mission-platform/<name>
+```
+
+U kunt ook direct Turborepo aanroepen:
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
+
+### Stroomopwaartse afhankelijkheidspriming
+
+Pakketten in de monorepo gebruiken vaak gecompileerde artefacten (`dist/`) van upstream-afhankelijkheden van de werkruimte. In nieuw ingerichte werkbomen of schone omgevingen bestaan ​​deze artefacten mogelijk nog niet.
+
+Om dit naadloos op te lossen:
+
+- **Automatische Turborepo-resolutie:** De taakgrafieken `test` en `build:check` in `turbo.json` dwingen `"dependsOn": ["^build"]` af. Turborepo bouwt automatisch alle upstream-afhankelijkheden voordat tests in het doelpakket worden uitgevoerd.
+- **Speciale pakkethelper:** Door `pnpm test:package <package-name>` uit te voeren, worden upstream-builds (`build --filter <package-name>^...`) expliciet voorbereid voordat pakkettests worden uitgevoerd. Deze opwarming is opzettelijk, ook al declareert de `test`-taak ook `^build`: het houdt het voorbereidingsgedrag van de helper expliciet en consistent, en is een no-op in de cache wanneer Turbo deze afhankelijkheden al heeft opgelost.
+- **Package Build Helper:** Het uitvoeren van `pnpm build:package <package-name>` gebruikt dezelfde expliciete upstream-opwarming voordat het doelpakket wordt gebouwd.
+- **Handmatige upstream-build:** Als u een testrunner rechtstreeks uitvoert (bijvoorbeeld `vitest` in een enkele pakketmap), prime dan eerst de afhankelijkheden ervan:
+  ```bash
+  pnpm exec turbo run build --filter @mission-platform/<name>^...
+  ```
 
 ### Betrokken tests uitvoeren (CI-stijl)
 
@@ -68,7 +88,7 @@ Een dekkingsrapport genereren met de `v8`-provider:
 pnpm --filter @mission-platform/components test:coverage
 ```
 
-Rapporten worden in elke werkruimte uitgevoerd naar de map `coverage/`.
+Rapporten worden binnen elke werkruimte uitgevoerd naar de map `coverage/`.
 
 ## How-to: Tests schrijven
 
@@ -107,13 +127,13 @@ verificatie.
 2. Zorg ervoor dat het pakket `vitest.config.ts` de browsermodus inschakelt (zie onderstaande referentie).
 3. Voer uit met `pnpm test`.
 
-### Smeed webscripttests
+### Vuursteentesten
 
 Gebruik `@mission-platform/flint-vitest` voor deterministische compiler, artefact, Wasm en zelf-hostende pariteit
 cheques. Het delegeert de compilatie aan dezelfde compilerservice en Vite-plug-in die door de productie wordt gebruikt; het creëert geen
 tweede modulesysteem.
 
-Installeer het pakket in een werkruimte die `.fws`-modules test en stel vervolgens de adapter samen met de standaard Vitest-configuratie:
+Installeer het pakket in een werkruimte die `.flint`-modules test en stel vervolgens de adapter samen met de standaard Vitest-configuratie:
 
 ```typescript
 // vitest.config.ts
@@ -143,7 +163,7 @@ import {
   createFlintTestHarness,
 } from "@mission-platform/flint-vitest";
 
-describe("FWS fixture", () => {
+describe("Flint fixture", () => {
   const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
@@ -201,7 +221,7 @@ expect((await load<{ answer: () => number }>()).answer()).toBe(42);
 expect(loadSync<{ answer: () => number }>().answer()).toBe(42);
 ```
 
-Voor FWS-waarden test u beide lagen expliciet. Ruwe WASM-tests zouden het moeten bevestigen
+Voor Flint-waarden test u beide lagen expliciet. Ruwe WASM-tests zouden het moeten bevestigen
 pointer-length ABI en eigendomsoproepen; gegenereerde ESM-tests moeten het bewijs leveren
 JavaScript-projectie:
 
@@ -228,34 +248,34 @@ sluit de oorspronkelijke allocator en de deallocator af.
 
 De gegenereerde adapter verpakt alle stringargumenten voor één aanroep in één
 toewijzing van gasten. Houd een bewering voor het aantal toewijzingen bij voor functies met
-meerdere tekenreeksparameters en bewaar een test die alleen scalair is om dat nee te verifiëren
+meerdere tekenreeksparameters en bewaar een uitsluitend scalaire test om dat nee te verifiëren
 Er wordt tekenreeksmarshallingwerk gegenereerd voor functies die alleen numeriek zijn. Een bytestest
 moet doorgaan met het doorgeven van een `[pointer, length]`-tupel in plaats van een te verwachten
 automatische `Uint8Array`-conversie.
 
 De benchmarkwerkruimte vergelijkt de onbewerkte pointerlengte-adapter met de
-gegenereerde ESM-adapter als afzonderlijke FWS-modi:
+gegenereerde ESM-adapter als afzonderlijke Flint-modi:
 
 ```bash
 pnpm --filter @mission-platform/benchmark run bench -- \
   --node-only --warmup 3 --samples 10 \
-  --output benchmark/results/fws-generated-boundary
+  --output benchmark/results/flint-generated-boundary
 ```
 
 Rapporten omvatten de build-, initialisatie- en steady-state uitvoeringsfasen. De
-FWS onbewerkte `wasm`-rij maakt gebruik van nieuwe exemplaren en invoertoewijzingen van drie tekenreeksen voor
+De onbewerkte `wasm`-rij van Flint maakt gebruik van nieuwe exemplaren en invoertoewijzingen van drie tekenreeksen voor
 de benchmarkkernel; `wasm-generated` gebruikt het gegenereerde `loadSync`-contract
 en één verpakte stringinvoertoewijzing. Omdat de huidige gastdeallocator
 valideert bereiken zonder de bump-allocatorruimte en gegenereerde tekenreeksen/bytes te recyclen
 monsters gebruiken per aanroep een nieuwe loader-instantie; scalaire monsters hergebruiken de geladen
-voorbeeld. Dit isoleert elk allocatie-zwaar monster en is opzettelijk
+voorbeeld. Dit isoleert opzettelijk elk monster met veel toewijzing
 gerapporteerd als overhead van de ladergrens in plaats van een claim van een persistent exemplaar.
 Elk artefact rapporteert onbewerkte Wasm-bytes, gegenereerde ESM-bronbytes, inhoudhash,
 en de statische toewijzingstellingen die bij de vergelijking worden gebruikt. Alleen rijen vergelijken
 wanneer de corpushash, hostruntime en benchmarkschema overeenkomen.
 
 De Node-run hierboven leverde bijvoorbeeld 336 gemeten faseresultaten op
-nul fouten en corpus-hash `ad092f7c552cc914`. Beide FWS-rijen hadden rauwe Wasm
+nul fouten en corpus-hash `ad092f7c552cc914`. Beide Flint-rijen hadden rauwe Wasm
 hash `0ac58f11`, onbewerkte Wasm-grootte 1.625 bytes en gegenereerde ESM-brongrootte 18.490
 bytes; Het aantal ruwe en gegenereerde stringinvoertoewijzingen was 3 en 1. Op de
 Unicode-kleine tekenreeks, gemiddelde initialisatie was 0,00024 ms onbewerkt versus
@@ -287,11 +307,11 @@ Gebruik gedeelde armaturen in `packages/flint/vitest/fixtures/` voor taaloversch
 een compiler-, runtime- of plug-inspecificatie wanneer deze een privé-implementatiedetail omvat; gebruik inline bron voor kleine parser of
 VM-eenheidsgevallen. Hierdoor blijven de namen van de apparaten en het opruimen deterministisch zonder dat er tests op laag niveau door het harnas worden geforceerd.
 
-`checkVmParity(file, mode)` ondersteunt `interpret`, `jit` en `aot`, maar het rapport is het bestaande begrensde, zelf-hostende
+`checkVmParity(file, mode)` ondersteunt `interpret`, `jit` en `aot`, maar het rapport is de bestaande begrensde, zelf-hostende
 pariteitscontract in de lex-fase. Beweer `parity`, vingerafdrukken, stappen en metagegevens over de reproduceerbaarheid van AOT; behandel het rapport niet
-als willekeurig gecompileerde FWS VM-uitvoering of als vervanging voor Wasm-gedragstests.
+als willekeurig gecompileerde Flint VM-uitvoering of als vervanging voor Wasm-gedragstests.
 
-Voer de gerichte FWS-matrix uit met de normale werkruimtetaken:
+Voer de gerichte Flint-matrix uit met de normale werkruimtetaken:
 
 ```bash
 pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
@@ -332,12 +352,12 @@ export default defineVitestConfig({
 
 ### Samenvatting van scripts
 
-| Script          | Commando                                                   | Doel                                          |
-| :-------------- | :--------------------------------------------------------- | :-------------------------------------------- |
-| `test`          | `pnpm exec turbo run test`                                 | Voer alle werkruimtetesttaken uit.            |
-| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | Voer componententests uit in de horlogemodus. |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Genereer een componentendekkingsrapport.      |
-| Roest/WASM      | `cargo test --workspace`                                   | Voer native Rust-krattests uit.               |
+| Script | Commando | Doel |
+| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
+| `test` | `pnpm exec turbo run test` | Voer alle werkruimtetesttaken uit.          |
+| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | Voer componententests uit in de horlogemodus.    |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Genereer een componentendekkingsrapport. |
+| Roest/WASM | `cargo test --workspace` | Voer native Rust-krattests uit.           |
 
 Wasm-wrapperpakketten worden getest via hun eigen pakkettaken. Voer bijvoorbeeld het scannerpakket en de bijbehorende
 samenvouwen bij het wijzigen van het scannergedrag:
@@ -348,6 +368,6 @@ pnpm exec turbo run test --filter @mission-platform/code-scanner...
 
 ## Gerelateerde documentatie
 
-- [Ontwikkeling instellen](development-setup.md)
+- [Ontwikkelingsinstellingen](development-setup.md)
 - [Beste praktijken](best-practices.md)
 - [Pakketontwikkeling](package-development.md)

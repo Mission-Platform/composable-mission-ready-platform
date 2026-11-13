@@ -53,7 +53,7 @@ con l'helper {@link classNames} indipendente dal framework.
 L'SFC Vue originale utilizzava `v-model` + un'emissione `dismiss` e `icon`/`actions`
 slot denominati con rilevamento presenza `$slots`; la versione neutra è a
 componente **controllato** (`modelValue` + `onUpdateModelValue`), utilizza il file
-prop callback cross-framework `onDismiss`, espone `iconContent`/`actions`
+multi-framework callback-prop `onDismiss`, espone `iconContent`/`actions`
 slot denominati (presenza rilevata con il {@link hasSlot} indipendente dal framework
 helper) e disegna l'icona di stato con il messaggio write-once
 `@mission-platform/icons` impostato (`ForgeIconCheck`/`ForgeIconError`/`ForgeIconWarning`/
@@ -63,8 +63,8 @@ non ha la radice condizionale).
 
 #### Parametri
 
-| Nome      | Digitare                            | Descrizione |
-| --------- | ----------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------- | ----------- |
 | proprietà | Sola lettura<AlertBannerProperties> |             |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
@@ -120,27 +120,27 @@ lo strato superiore), quindi il pannello sceglie lo stesso strato superiore per 
 per i browser senza supporto API Popover (lì è presente l'attributo `popover`
 ignorato e il pannello esegue il rendering in flusso normale).
 
-Quando il trigger si trova all'interno di un `<dialog>` modale aperto, il pannello viene portale
+Quando il trigger si trova all'interno di un `<dialog>` modale aperto, il pannello viene attivato tramite portale
 **in quella finestra di dialogo** (tramite {@link risolverePortalTarget}) anziché `body`: a
 la finestra di dialogo modale rende tutto al di fuori della sua sottostruttura `inert`, quindi un pannello inviato a
-`body` sarebbe inerte (invisibile/non selezionabile) e erroneamente impilato, a maggior ragione
+`body` sarebbe inerte (invisibile/non cliccabile) e erroneamente impilato, a maggior ragione
 quando i modali sono nidificati. Mantenendolo all'interno della finestra di dialogo più vicina consente al Popover
 L'API lo impila sopra quella finestra di dialogo (possibilmente impilata).
 
 Sostituzioni dall'SFC Vue originale: `@floating-ui/vue` → Ancoraggio CSS
 posizionamento (incl. `anchor-size` per la corrispondenza della larghezza); `<Teleport>` → il
 neutro `<Teleport>` primitiva del portale; `<Transition>` → una dissolvenza CSS;
-`useZIndex('dropdown')` → il livello superiore del browser (API Popover) con un file statico
+`useZIndex('dropdown')` → il livello superiore del browser (API Popover) con un file static
 `dropdown` Livello z-index nei CSS come fallback; il
 Lo slot `trigger` viene mantenuto come slot con nome neutro; e il
-`update:open`/`close` emette diventano la richiamata `onUpdateOpen`/`onClose`
+Gli emessi `update:open`/`close` diventano il callback `onUpdateOpen`/`onClose`
 oggetti di scena. Possiede il suo stile attraverso il modulo CSS co-localizzato
 `forge-dropdown.module.scss`.
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<DropdownProperties> |             |
 
 ## `src/components/molecules/forge-popover/forge-popover`
@@ -195,8 +195,8 @@ oggetti di scena di richiamata. Possiede il suo stile attraverso il modulo CSS c
 
 #### Parametri
 
-| Nome      | Digitare                        | Descrizione |
-| --------- | ------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------- | ----------- |
 | proprietà | Sola lettura<PopoverProperties> |             |
 
 ### Posizionamento popover
@@ -260,8 +260,8 @@ impostato (`ForgeIconCheck`/`ForgeIconError`/`ForgeIconWarning`/`ForgeIconInfo`)
 
 #### Parametri
 
-| Nome      | Digitare                      | Descrizione |
-| --------- | ----------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------- | ----------- |
 | proprietà | Sola lettura<ToastProperties> |             |
 
 ### Proprietà del toast
@@ -334,7 +334,7 @@ la finestra di dialogo modale rende tutto al di fuori della sua sottostruttura `
 sono nidificati. Mantenendolo all'interno della finestra di dialogo più vicina consente all'API Popover di impilarlo
 sopra quella finestra di dialogo (possibilmente in pila).
 
-Sostituzioni dall'SFC Vue originale: `@floating-ui/vue` → Ancoraggio CSS
+Sostituzioni dall'originale Vue SFC: `@floating-ui/vue` → Ancoraggio CSS
 posizionamento; `<Teleport>` → la primitiva del portale neutrale `<Teleport>`;
 `<Transition>` → una dissolvenza CSS (`@starting-style`); il middleware della freccia lo è
 eliminato (un triangolo CSS potrebbe essere aggiunto nuovamente in seguito); `useId` → l'hook `useId` nativo del framework; e
@@ -344,8 +344,8 @@ possiede il suo stile attraverso il modulo CSS co-localizzato `forge-tooltip.mod
 
 #### Parametri
 
-| Nome      | Digitare                        | Descrizione |
-| --------- | ------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------- | ----------- |
 | proprietà | Sola lettura<TooltipProperties> |             |
 
 ### Descrizione comandoPosizionamento
@@ -433,8 +433,8 @@ oggetti di scena. Possiede il suo stile attraverso il modulo CSS co-localizzato
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------- | ----------- |
 | proprietà | Sola lettura<DialogProperties> |             |
 
 ## `src/components/organisms/forge-modal/forge-modal`
@@ -452,7 +452,7 @@ compilato direttamente in React o Vue da `@mission-platform/vite-plugin-forge`.
 
 Come `ForgeDialog`, rende un **`<dialog>` nativo** guidato con
 `showModal()`/`close()` (strato superiore, tela `::backdrop`, trappola di messa a fuoco), ma aggiunge
-una scala `size` (un foglio inferiore a larghezza quasi intera su dispositivo mobile, una finestra di dialogo centrata di
+una scala `size` (un foglio inferiore a larghezza quasi intera su dispositivi mobili, una finestra di dialogo centrata di
 la larghezza scelta su `sm`+), un blocco dello scorrimento del corpo mentre è aperto e la disattivazione
 `Escape`-to-close (`closeOnEsc`, applicato annullando il `cancel` nativo
 evento). Lo stato aperto è controllato (`open` + `onUpdateOpen`/`onClose`).
@@ -470,8 +470,8 @@ Modulo CSS co-localizzato `forge-modal.module.scss`.
 
 #### Parametri
 
-| Nome      | Digitare                      | Descrizione |
-| --------- | ----------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------- | ----------- |
 | proprietà | Sola lettura<ModalProperties> |             |
 
 ### Proprietà modali
@@ -493,6 +493,16 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 ```
 
 Incremento della larghezza della modale su tablet/desktop (`sm`+); il cellulare è sempre a larghezza intera.
+
+### Variante modale
+
+**Genere:** tipo
+
+```typescript
+export type ModalVariant = 'modal' | 'dialog' | 'alert';
+```
+
+Variante visiva e semantica della primitiva modale sovrapposta.
 
 ## `src/components/organisms/forge-toast-container/forge-toast-container`
 
@@ -541,8 +551,8 @@ componibile → il livello z-index statico `notification` applicato nei CSS.
 
 #### Parametri
 
-| Nome      | Digitare                               | Descrizione |
-| --------- | -------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------------- | ----------- |
 | proprietà | Sola lettura<ToastContainerProperties> |             |
 
 ### ProprietàContenitoreToast
@@ -590,15 +600,15 @@ Ignora un brindisi tramite ID.
 #### Parametri
 
 | Nome | Digitare | Descrizione |
-| ---- | -------- | ----------- |
-| id   | numero   |             |
+| ---- | ------ | ----------- |
+| id | numero |             |
 
 ### erroreToast
 
 **Genere:** costante
 
 ```typescript
-export const errorToast;
+export const errorToast: ReturnType<typeof withVariant>;
 ```
 
 Convenienza: mostra un brindisi `error`.
@@ -618,7 +628,7 @@ Leggi un'istantanea immutabile dei toast attivi.
 **Genere:** costante
 
 ```typescript
-export const infoToast;
+export const infoToast: ReturnType<typeof withVariant>;
 ```
 
 Convenienza: mostra un brindisi `info`.
@@ -635,8 +645,8 @@ Mostra un brindisi e restituisce il suo ID.
 
 #### Parametri
 
-| Nome    | Digitare                | Descrizione |
-| ------- | ----------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | ---------------------- | ----------- |
 | opzioni | Opzioni toast\| stringa |             |
 
 ### iscrivitiToast
@@ -651,8 +661,8 @@ Iscriviti per memorizzare le modifiche; restituisce una funzione di annullamento
 
 #### Parametri
 
-| Nome        | Digitare    | Descrizione |
-| ----------- | ----------- | ----------- |
+| Nome | Digitare | Descrizione |
+| -------- | ---------- | ----------- |
 | ascoltatore | () => vuoto |             |
 
 ### successoToast
@@ -660,7 +670,7 @@ Iscriviti per memorizzare le modifiche; restituisce una funzione di annullamento
 **Genere:** costante
 
 ```typescript
-export const successToast;
+export const successToast: ReturnType<typeof withVariant>;
 ```
 
 Convenienza: mostra un brindisi `success`.
@@ -722,7 +732,119 @@ L'API pubblica restituita da {@link useToast}.
 **Genere:** costante
 
 ```typescript
-export const warningToast;
+export const warningToast: ReturnType<typeof withVariant>;
 ```
 
 Convenienza: mostra un brindisi `warning`.
+
+## `src/utils/fallback-position`
+
+### applicaPosizioneFallback
+
+**Tipo:** funzione
+
+```typescript
+function applyFallbackPosition(
+  triggerElement: HTMLElement,
+  panelElement: HTMLElement,
+  placement: FallbackPlacement = 'bottom-start',
+  options?: FallbackPositionOptions | number,
+): void;
+```
+
+Applica le coordinate e gli stili di fallback a `panelElement` rispetto a `triggerElement`.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------------- | --------------------------------- | ----------- |
+| elementotrigger | Elemento HTML |             |
+| elementopannello | Elemento HTML |             |
+| posizionamento | Posizionamento di riserva |             |
+| opzioni | OpzioniPosizioneFalback\| numero |             |
+
+### calcolare la posizione di fallback
+
+**Tipo:** funzione
+
+```typescript
+function calculateFallbackPosition(
+  triggerRect: TriggerBoundingRect,
+  placement: FallbackPlacement = 'bottom-start',
+  offset = 0,
+): FallbackPositionResult;
+```
+
+Calcola le proprietà CSS superiore, sinistra e trasforma per un elemento mobile
+in base al rettangolo di delimitazione dell'elemento trigger, al posizionamento desiderato e all'offset.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ------------------- | ----------- |
+| triggerRect | TriggerBoundingRect |             |
+| posizionamento | Posizionamento di riserva |             |
+| compensare |                     |             |
+
+### Posizionamento di fallback
+
+**Genere:** tipo
+
+```typescript
+export type FallbackPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
+```
+
+Opzioni di posizionamento supportate per il fallback del posizionamento dell'ancora.
+
+### OpzioniPosizione di Fallback
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FallbackPositionOptions
+```
+
+Nessuna descrizione fornita.
+
+### FallbackPositionResult
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FallbackPositionResult
+```
+
+Nessuna descrizione fornita.
+
+### èAnchorPositioningSupported
+
+**Tipo:** funzione
+
+```typescript
+function isAnchorPositioningSupported(): boolean;
+```
+
+Controlla dinamicamente se il posizionamento dell'ancora CSS è supportato.
+Valutato come una funzione in modo che i test unitari possano simulare o attivare `CSS.supports`.
+
+### supportaAnchorPositioning
+
+**Genere:** costante
+
+```typescript
+export const supportsAnchorPositioning: boolean;
+```
+
+Controlla se il posizionamento dell'ancora CSS è supportato nell'ambiente corrente.

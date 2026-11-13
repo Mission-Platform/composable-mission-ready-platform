@@ -17,7 +17,7 @@
   `@mission-platform/vite-plugin-forge`에 의해 컴파일됨).
 - `@mission-platform/breakpoints/core` — 프레임워크에 구애받지 않는 유틸리티 및 유형.
 
-프레임워크 **한 번** 선택 — `defineFrameworkAppConfig`을 통해 `resolve.conditions` /
+프레임워크 **한 번** 선택 - `defineFrameworkAppConfig`를 통해 `resolve.conditions` /
 `@mission-platform/vite-config`의 `frameworkResolveConditions` 및 `customConditions`를 통해
 `@mission-platform/typescript-config/framework-<name>` 사전 설정 — 그런 다음 베어 패키지 지정자를 사용하여 모든 것을 가져옵니다.
 
@@ -25,19 +25,19 @@
 
 플랫폼은 뷰포트 너비 임계값을 기반으로 7단계 반응 배율을 사용합니다.
 
-| 열쇠  | 라벨     | 임계값        | 일반 장치/사용 사례     |
-| :---- | :------- | :------------ | :---------------------- |
-| `2xs` | 초초소형 | $\ge 0$ px    | 모든 장치               |
-| `xs`  | 초소형   | $\ge480$ px   | 대형 전화기             |
-| `sm`  | 작은     | $\ge 768$ px  | 태블릿 초상화           |
-| `md`  | 중간     | $\ge 1024$ px | 태블릿 가로/소형 노트북 |
-| `lg`  | 대형     | $\ge 1920$ px | 풀 HD/1080p             |
-| `xl`  | 특대형   | $\ge 2560$ px | QHD                     |
-| `2xl` | 특대형   | $\ge 3840$ px | 4K UHD                  |
+| 열쇠 | 라벨 | 임계값 | 일반 장치/사용 사례 |
+| :---- | :---------------- | :------------ | :------------------------------ |
+| `2xs` | 초초소형 | $\ge 0$ px | 모든 장치 |
+| `xs` | 초소형 | $\ge480$ px | 대형 전화기 |
+| `sm` | 작은 | $\ge 768$ px | 태블릿 초상화 |
+| `md` | 중간 | $\ge 1024$ px | 태블릿 가로/소형 노트북 |
+| `lg` | 대형 | $\ge 1920$ px | 풀 HD/1080p |
+| `xl` | 특대형 | $\ge 2560$ px | QHD |
+| `2xl` | 특대형 | $\ge 3840$ px | 4K UHD |
 
 ## 핵심 유틸리티(`/core`)
 
-프레임워크에 구애받지 않는 도우미, 모든 프레임워크에서 사용하기에 안전합니다(또는 프레임워크 없음):
+프레임워크에 구애받지 않는 도우미, 모든 프레임워크(또는 프레임워크 없음)에서 안전하게 사용할 수 있습니다.
 
 - `breakpointKeys` — 중단점 키의 정렬된 배열입니다.
 - `breakpoints` — 최소 너비 픽셀 임계값에 대한 키 맵입니다.
@@ -118,7 +118,7 @@ import { ForgeShowAt } from '@mission-platform/breakpoints';
 ### `<ForgeBreakpointDebug>`
 
 현재 활성 중단점을 표시하고 오른쪽 하단에 고정된 개발 전용 오버레이입니다.
-중단점이 활성화되어 있습니다. 해당 레이블은 i18next(`mp.breakpoints` 네임스페이스)를 통해 영어 기본값으로 지역화됩니다.
+중단점이 활성화되어 있습니다. 해당 레이블은 i18next(`mp.breakpoints` 네임스페이스)를 통해 영어 기본값으로 현지화됩니다.
 
 ```tsx
 // React

@@ -1,8 +1,7 @@
 import { ForgeMasonry } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import styles from './forge-masonry.module.scss';
-
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * `ForgeMasonry` is the write-once `ForgeMasonry` component of `@mission-platform/components` — it flows its default-slot children into

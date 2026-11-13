@@ -81,7 +81,7 @@ Een visuele ontwerptool waarmee niet-ontwikkelaars formulierschema's kunnen make
 
 De builder is gestructureerd als een lay-out met drie kolommen met behulp van `ForgeVerticalLayout`:
 
-1. **Veldpalet**: een lijst met beschikbare widgets (invoer, selecties, datums, etc.) om aan het formulier toe te voegen.
+1. **Veldpalet**: een lijst met beschikbare widgets (invoer, selecties, datums, enz.) om aan het formulier toe te voegen.
 2. **Editor Canvas**: het centrale gebied waar velden worden geconfigureerd en georganiseerd.
 3. **Inspector**: gedetailleerde eigenschappeneditor voor het momenteel geselecteerde veld.
 
@@ -96,7 +96,7 @@ Om afhankelijkheidscycli te vermijden en tegelijkertijd de raamwerkpariteit te b
 
 ## Stijlen
 
-Het pakket biedt gedeelde toegankelijkheidshelpers via:
+Het pakket biedt gedeelde toegankelijkheidshulpmiddelen via:
 
 ```ts
 import '@mission-platform/forms/styles';

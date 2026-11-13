@@ -26,5 +26,5 @@ consumidores.
 El trabajador no posee rutas de aplicación, activos, dominios o entorno.
 secretos. Estos permanecen en el paquete de aplicaciones de consumo.
 
-- [guía de desarrollo](guides/development.md)
+- [Guía de desarrollo](guides/development.md)
 - [`README.md`](../../../README.md)

@@ -20,7 +20,7 @@ export type D3Draw<E extends Element> = (selection: D3Selection<E>) => void | ((
 ```
 
 رد اتصال رسم يتلقى الرابط {@link D3Selection}. يجوز اختياريا
-قم بإرجاع وظيفة التفكيك التي تم استدعاؤها قبل إعادة الرسم التالية وعند إلغاء التحميل.
+إرجاع وظيفة التفكيك التي تم استدعاؤها قبل إعادة الرسم التالية وعند إلغاء التحميل.
 
 ### اختيار D3
 
@@ -50,10 +50,10 @@ function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | 
 
 #### حدود
 
-| الاسم    | اكتب           | الوصف |
-| -------- | -------------- | ----- |
-| رسم      | D3Draw<E>      |       |
-| التبعيات | قائمة التبعيات |       |
+| الاسم | اكتب | الوصف |
+| ------------ | ---------------- | ----------- |
+| رسم | D3Draw<E> |             |
+| التبعيات | قائمة التبعيات |             |
 
 ## `src/utils/margins`
 
@@ -81,9 +81,9 @@ function innerDimensions(box: ChartBox): InnerDimensions;
 
 #### حدود
 
-| الاسم | اكتب                | الوصف |
-| ----- | ------------------- | ----- |
-| صندوق | صندوق الرسم البياني |       |
+| الاسم | اكتب | الوصف |
+| ---- | -------- | ----------- |
+| صندوق | صندوق الرسم البياني |             |
 
 ### الأبعاد الداخلية
 
@@ -124,12 +124,12 @@ export type MarginInput = number | Partial<Margin>;
 function resolveMargin(input?: MarginInput): Margin;
 ```
 
-قم بتطبيع {@link MarginInput} في {@link MarginInput} كامل. رقم هو
-تطبق على كل جانب. يحتفظ الكائن الجزئي بجوانبه وافتراضياته المقدمة
-الباقي إلى `0`. `undefined` يعطي هامش صفر.
+Normalise a {@link MarginInput} into a full {@link Margin}. رقم هو
+تطبق على كل جانب. a partial object keeps its provided sides and defaults
+the rest to `0`. `undefined` yields a zero margin.
 
 #### حدود
 
-| الاسم   | اكتب         | الوصف |
-| ------- | ------------ | ----- |
-| الإدخال | إدخال الهامش |       |
+| الاسم | اكتب | الوصف |
+| ----- | ----------- | ----------- |
+| الإدخال | إدخال الهامش |             |

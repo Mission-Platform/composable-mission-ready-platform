@@ -21,6 +21,16 @@ export interface CompiledRegex
 
 ייצוג דטרמיניסטי מוטבע על ידי Forge backend.
 
+### FLINT_REGEX_BYTECODE_VERSION
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_REGEX_BYTECODE_VERSION;
+```
+
+גרסה יציבה של חוזה הבתים המשותף של Flint regex.
+
 ### FORGE_REGEX_BYTECODE_VERSION
 
 **סוג:** קבוע
@@ -29,7 +39,7 @@ export interface CompiledRegex
 export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
-גרסה יציבה של חוזה קוד בתים משותף של Forge regex.
+לא סופק תיאור.
 
 ### INSTR_WIDTH
 
@@ -59,7 +69,7 @@ export const Op;
 export type Opcode = (typeof Op)[keyof typeof Op];
 ```
 
-לא סופק תיאור.
+מזהה אופקוד של פקודה בינארית לביצוע קוד בתים רגיל.
 
 ## `src/compiler`
 
@@ -71,13 +81,33 @@ export type Opcode = (typeof Op)[keyof typeof Op];
 function compileRegex(pattern: string): CompiledRegex;
 ```
 
-קומפל את תת-ערכת ה-Regex הדטרמיניסטית הנתמכת לתוך Forge bytecode.
+קומפל את תת-קבוצת ה-Regex הדטרמיניסטית הנתמכת לתוך Forge bytecode.
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור |
-| ---- | ------ | ----- |
-| דפוס | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| דפוס | מחרוזת |             |
+
+### MAX_REGEX_PATTERN_LENGTH
+
+**סוג:** קבוע
+
+```typescript
+export const MAX_REGEX_PATTERN_LENGTH;
+```
+
+לא סופק תיאור.
+
+### MAX_REGEX_REPEAT_BOUND
+
+**סוג:** קבוע
+
+```typescript
+export const MAX_REGEX_REPEAT_BOUND;
+```
+
+לא סופק תיאור.
 
 ### RegexSyntaxError
 
@@ -88,6 +118,46 @@ export class RegexSyntaxError extends Error
 ```
 
 שגיאת תחביר בבעלות מהדר עם הודעות דטרמיניסטיות הקשורות למקור.
+
+## `src/index`
+
+### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
+
+**סוג:** קבוע
+
+```typescript
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+```
+
+לא סופק תיאור.
+
+### FlintStandardLibraryIdentity
+
+פונקציה **סוג:**
+
+```typescript
+function flintStandardLibraryIdentity(
+  identity?: FlintStandardLibraryIdentity,
+): FlintStandardLibraryIdentity;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ---------------------------- | ----------- |
+| זהות | FlintStandardLibraryIdentity |             |
+
+### FlintStandardLibraryIdentity
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintStandardLibraryIdentity
+```
+
+לא סופק תיאור.
 
 ## `src/reference-vm`
 
@@ -103,10 +173,10 @@ function captureEnd(captures: Captures | null, group: number): number;
 
 #### פרמטרים
 
-| שם    | הקלד         | תיאור |
-| ----- | ------------ | ----- |
-| לוכדת | לוכד \| null |       |
-| קבוצה | מספר         |       |
+| שם | הקלד | תיאור |
+| -------- | ---------------- | ----------- |
+| לוכדת | לוכד \| null |             |
+| קבוצה | מספר |             |
 
 ### לוכדים
 
@@ -130,10 +200,10 @@ function captureStart(captures: Captures | null, group: number): number;
 
 #### פרמטרים
 
-| שם    | הקלד         | תיאור |
-| ----- | ------------ | ----- |
-| לוכדת | לוכד \| null |       |
-| קבוצה | מספר         |       |
+| שם | הקלד | תיאור |
+| -------- | ---------------- | ----------- |
+| לוכדת | לוכד \| null |             |
+| קבוצה | מספר |             |
 
 ### fullMatch
 
@@ -143,14 +213,64 @@ function captureStart(captures: Captures | null, group: number): number;
 function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-משחק מיתרים שלמים, מעוגן בעמדה אפס.
+התאמת מחרוזת שלמה, מעוגנת בעמדה אפס (משתמשת ב-PikeVM בזמן ליניארי כברירת מחדל).
 
 #### פרמטרים
 
-| שם   | הקלד          | תיאור |
-| ---- | ------------- | ----- |
-| מחדש | CompiledRegex |       |
-| קלט  | מחרוזת        |       |
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מחדש | CompiledRegex |             |
+| קלט | מחרוזת |             |
+
+### fullMatchBacktracking
+
+פונקציה **סוג:**
+
+```typescript
+function fullMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Oracle הפניה לאחור של התאמה של מחרוזת שלמה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מחדש | CompiledRegex |             |
+| קלט | מחרוזת |             |
+
+### fullMatchLinear
+
+פונקציה **סוג:**
+
+```typescript
+function fullMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+התאמת מחרוזת שלמה באמצעות מנוע PikeVM בזמן ליניארי.
+מבטיח ביצוע O(M * N) וחסינות ל-ReDoS backtracking.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מחדש | CompiledRegex |             |
+| קלט | מחרוזת |             |
+
+### פייק ראנר
+
+**סוג:** כיתה
+
+```typescript
+export class PikeRunner extends BaseRunner
+```
+
+מנוע ביצוע PikeVM ללא מעקב בזמן ליניארי.
+מבטיח מורכבות זמן של O(M *N) כאשר M הוא ספירת הוראות ו-N הוא אורך קלט,
+חסין לחלוטין בפני ReDoS (מניעת שירות של ביטוי רגיל).
 
 ### prefixMatch
 
@@ -160,14 +280,62 @@ function fullMatch(re: CompiledRegex, input: string): Captures | null;
 function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-התאמת קידומת, מעוגנת בעמדה אפס אבל לא בסוף.
+התאמת קידומת, מעוגנת במיקום אפס אך לא בסוף (משתמשת ב-PikeVM בזמן ליניארי כברירת מחדל).
 
 #### פרמטרים
 
-| שם   | הקלד          | תיאור |
-| ---- | ------------- | ----- |
-| מחדש | CompiledRegex |       |
-| קלט  | מחרוזת        |       |
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מחדש | CompiledRegex |             |
+| קלט | מחרוזת |             |
+
+### prefixMatchBacktracking
+
+פונקציה **סוג:**
+
+```typescript
+function prefixMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Oracle הפניה לקידומת מעקב לאחור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מחדש | CompiledRegex |             |
+| קלט | מחרוזת |             |
+
+### prefixMatchLinear
+
+פונקציה **סוג:**
+
+```typescript
+function prefixMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+התאמת קידומת באמצעות מנוע PikeVM בזמן ליניארי.
+מבטיח ביצוע O(M * N) וחסינות ל-ReDoS backtracking.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מחדש | CompiledRegex |             |
+| קלט | מחרוזת |             |
+
+### רָץ
+
+**סוג:** כיתה
+
+```typescript
+export class Runner extends BaseRunner
+```
+
+רץ ביצוע הפניה במסלול לאחור לאימות הוראות קוד בייט.
 
 ### לְחַפֵּשׂ
 
@@ -177,15 +345,60 @@ function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
-ההתאמה השמאלית ביותר ב-`start` או אחריו.
+ההתאמה השמאלית ביותר ב-`start` או אחריה (משתמש ב-PikeVM בזמן ליניארי כברירת מחדל).
 
 #### פרמטרים
 
-| שם     | הקלד          | תיאור |
-| ------ | ------------- | ----- |
-| מחדש   | CompiledRegex |       |
-| קלט    | מחרוזת        |       |
-| להתחיל |               |       |
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מחדש | CompiledRegex |             |
+| קלט | מחרוזת |             |
+| להתחיל |               |             |
+
+### חיפוש לאחור
+
+פונקציה **סוג:**
+
+```typescript
+function searchBacktracking(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+אורקל הפניה לחיפוש חוזר.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מחדש | CompiledRegex |             |
+| קלט | מחרוזת |             |
+| להתחיל |               |             |
+
+### חיפוש לינארי
+
+פונקציה **סוג:**
+
+```typescript
+function searchLinear(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+ההתאמה השמאלית ביותר ב-`start` או אחריה באמצעות מנוע PikeVM בזמן ליניארי.
+חסין מפני נסיגה קטסטרופלית על דפוסי חיפוש לא מעוגנים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מחדש | CompiledRegex |             |
+| קלט | מחרוזת |             |
+| להתחיל |               |             |
 
 ### מִבְחָן
 
@@ -195,11 +408,46 @@ function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 function test(re: CompiledRegex, input: string): boolean;
 ```
 
-התאמה בוליאנית של מיתרים.
+התאמה בוליאנית של מחרוזת שלמה (משתמשת ב-PikeVM בזמן ליניארי כברירת מחדל).
 
 #### פרמטרים
 
-| שם   | הקלד          | תיאור |
-| ---- | ------------- | ----- |
-| מחדש | CompiledRegex |       |
-| קלט  | מחרוזת        |       |
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מחדש | CompiledRegex |             |
+| קלט | מחרוזת |             |
+
+### testbacktracking
+
+פונקציה **סוג:**
+
+```typescript
+function testBacktracking(re: CompiledRegex, input: string): boolean;
+```
+
+Oracle הפניה להתאמה בוליאנית במסלול לאחור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מחדש | CompiledRegex |             |
+| קלט | מחרוזת |             |
+
+### testLinear
+
+פונקציה **סוג:**
+
+```typescript
+function testLinear(re: CompiledRegex, input: string): boolean;
+```
+
+התאמה בוליאנית של כל המיתרים באמצעות מנוע PikeVM בזמן ליניארי.
+חסין מפני נסיגה קטסטרופלית על ביטויים רגולריים פתולוגיים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מחדש | CompiledRegex |             |
+| קלט | מחרוזת |             |

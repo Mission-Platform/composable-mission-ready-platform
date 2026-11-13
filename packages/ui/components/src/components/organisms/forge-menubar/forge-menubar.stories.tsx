@@ -1,7 +1,7 @@
 import { ForgeMenubar } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { MenuNode } from '@/components/molecules/forge-menu';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const items: MenuNode[] = [
   {

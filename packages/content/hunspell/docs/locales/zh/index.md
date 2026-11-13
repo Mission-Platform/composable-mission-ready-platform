@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> packages/hunspell/docs/index.md: [packages/hunspell/docs/index.md](../../index.md)
+> packages/content/hunspell/docs/index.md: [packages/content/hunspell/docs/index.md](../../index.md)
 > 语言: 简体中文 (zh)
 
 `@mission-platform/hunspell` 提供基于 Hunspell 的高性能拼写检查引擎，编译为
@@ -19,7 +19,7 @@
 
 ### 重建 WASM 工件
 
-重建需要 [码头工人](https://www.docker.com/）。从根目录使用以下命令：
+重建需要 [Docker](https://www.docker.com/)。从根目录使用以下命令：
 
 ```bash
 pnpm --filter @mission-platform/hunspell build:wasm
@@ -88,4 +88,4 @@ handle.dispose();
 该软件包**不附带内置字典**，以保持捆绑包的大小较小。您必须提供自己的
 `.aff`（词缀）和 `.dic`（字典）对。
 
-推荐来源： [LibreOffice 词典](https://github.com/LibreOffice/dictionaries）。
+推荐来源：[LibreOffice 词典](https://github.com/LibreOffice/dictionaries)。

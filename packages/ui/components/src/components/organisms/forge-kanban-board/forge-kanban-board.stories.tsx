@@ -1,6 +1,6 @@
-import { ForgeKanbanBoard } from './forge-kanban-board';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeKanbanBoard } from './forge-kanban-board';
 
 const meta = {
   title: 'Organisms/Project/ForgeKanbanBoard',

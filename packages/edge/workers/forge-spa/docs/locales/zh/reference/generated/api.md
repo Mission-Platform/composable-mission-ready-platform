@@ -11,6 +11,16 @@
 
 ## `src/index`
 
+### 默认
+
+**种类：**常数
+
+```typescript
+export const handler: ExportedHandler<Env>;
+```
+
+没有提供描述。
+
 ### 环境
 
 **种类：**接口

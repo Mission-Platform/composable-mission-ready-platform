@@ -19,12 +19,12 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/vite-plugin-to
 function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Vite plugin che genera automaticamente il foglio di stile _override_ del token di progettazione di un'app.
+Vite plug-in che genera automaticamente il foglio di stile _override_ del token di progettazione di un'app.
 
 Legge un documento di override in stile DTCG (`options.source`), lo trasforma con
 {@link buildTokenOverrideScss} e scrive il risultato `:root { --<prefix>-*: … }`
 SCSS parziale su `options.outFile`. Importa il file generato dal tuo
-foglio di stile _dopo_ `@mission-platform/tokens` in modo che le sostituzioni vincano la cascata.
+foglio di stile _after_ `@mission-platform/tokens` in modo che le sostituzioni vincano la cascata.
 
 La generazione viene eseguita nell'hook rollup `buildStart` (quindi copre `vite build`,
 `vite build --watch` e dev-server si avviano allo stesso modo) e vengono rieseguiti quando il file sorgente
@@ -33,7 +33,7 @@ artefatto: aggiungilo a `.gitignore`/`.prettierignore` anziché salvarlo.
 
 #### Parametri
 
-| Nome    | Digitare                    | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | --------------------------- | ----------- |
 | opzioni | TokenOverridesPluginOptions |             |
 
@@ -42,10 +42,9 @@ artefatto: aggiungilo a `.gitignore`/`.prettierignore` anziché salvarlo.
 - **@esempio:** ```ts
   // vite.config.ts
   import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
-plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
+  export default defineConfig({
+  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+  });
 
 ````
 ```scss
@@ -62,21 +61,21 @@ plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' }
 function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Vite plugin che genera automaticamente il foglio di stile _override_ del token di progettazione di un'app.
+Vite plug-in che genera automaticamente il foglio di stile _override_ del token di progettazione di un'app.
 
 Legge un documento di override in stile DTCG (`options.source`), lo trasforma con
 {@link buildTokenOverrideScss} e scrive il risultato `:root { --<prefix>-*: … }`
 SCSS parziale su `options.outFile`. Importa il file generato dal tuo
-foglio di stile _dopo_ `@mission-platform/tokens` in modo che le sostituzioni vincano la cascata.
+foglio di stile _after_ `@mission-platform/tokens` in modo che le sostituzioni vincano la cascata.
 
 La generazione viene eseguita nell'hook rollup `buildStart` (quindi copre `vite build`,
-`vite build --watch` e dev-server si avviano allo stesso modo) e vengono rieseguiti quando il file sorgente
+`vite build --watch` e dev-server si avviano allo stesso modo) e vengono rieseguiti quando il file source
 il documento cambia mentre il server di sviluppo è in esecuzione. Il file generato è un build
 artefatto: aggiungilo a `.gitignore`/`.prettierignore` anziché salvarlo.
 
 #### Parametri
 
-| Nome    | Digitare                    | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | --------------------------- | ----------- |
 | opzioni | TokenOverridesPluginOptions |             |
 
@@ -85,10 +84,9 @@ artefatto: aggiungilo a `.gitignore`/`.prettierignore` anziché salvarlo.
 - **@esempio:** ```ts
   // vite.config.ts
   import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
-plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
+  export default defineConfig({
+  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+  });
 
 ````
 ```scss
@@ -123,10 +121,10 @@ la base `@mission-platform/tokens` quindi le dichiarazioni vincono la cascata.
 
 #### Parametri
 
-| Nome       | Digitare                 | Descrizione |
-| ---------- | ------------------------ | ----------- |
-| documento_ | Sostituisci gruppo       |             |
-| opzioni    | TokenOverrideScssOptions |             |
+| Nome | Digitare | Descrizione |
+| --------- | ------------------------ | ----------- |
+| documento_ | Sostituisci gruppo |             |
+| opzioni | TokenOverrideScssOptions |             |
 
 ### FlatOverride
 
@@ -149,17 +147,16 @@ function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride
 Appiattisci ricorsivamente un documento di sostituzione in {@link FlatOverride}. Chiavi quello
 iniziano con `Appiattisci ricorsivamente un documento di sostituzione in {@link FlatOverride}. Chiavi quello
 iniziano con  (metadati DTCG) vengono saltati; ogni foglia rimanente diventa a
-`--<prefix>-<path-joined-by-dashes>`proprietà personalizzata. Sostituzione del componente
-i percorsi mantengono il wrapper`component._` DTCG, ma il CSS generato lo omette
-wrapper (`component.button._`diventa`--<prefix>-button-*`).
+`--<prefix>-<path-joined-by-dashes>` proprietà personalizzata. Sostituzione del componente
+i percorsi mantengono il wrapper `component.*` DTCG, ma il CSS generato lo omette
+wrapper (`component.button.*` diventa `--<prefix>-button-*`).
  `$`
-
 #### Parametri
 
-| Nome       | Digitare           | Descrizione |
-| ---------- | ------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| --------- | ------------- | ----------- |
 | documento_ | Sostituisci gruppo |             |
-| prefisso   |                    |             |
+| prefisso |               |             |
 
 ### LightDarkValue
 
@@ -179,9 +176,8 @@ Un colore (o qualsiasi valore) che differisce tra gli schemi di colori chiari e 
 export type OverrideGroup = Record<string, unknown>;
 ```
 
-Un gruppo di override in stile DTCG node (gruppi/token annidati più metadati `Un gruppo di override in stile DTCG node (gruppi/token annidati più metadati  opzionali).
+Un gruppo di override in stile DTCG node (gruppi/token nidificati più metadati `Un gruppo di override in stile DTCG node (gruppi/token nidificati più metadati  opzionali).
  `$`
-
 ### OverrideToken
 
 **Tipo:** interfaccia

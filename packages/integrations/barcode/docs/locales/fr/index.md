@@ -5,41 +5,40 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 > packages/integrations/barcode/docs/index.md: [packages/integrations/barcode/docs/index.md](../../index.md)
 > Langue: Français (fr)
 
-Un encodeur et décodeur de codes-barres **1D (linéaire) sans dépendance écrit en Rust et compilé sur **WebAssembly**, exposé
+Un encodeur de codes-barres **1D (linéaire) sans dépendance écrit en Rust et compilé dans **WebAssembly**, exposé
 via un petit wrapper de module ES entièrement typé et un composant d'interface utilisateur `ForgeBarcode` à écriture unique.
 
 ## Aperçu
 
-`@mission-platform/barcode` offre un encodage et un décodage hautes performances pour les codes-barres linéaires 1D :
+`@mission-platform/barcode` fournit un encodage hautes performances pour les codes-barres linéaires 1D :
 
 - **Encodeur** : restitue la symbologie + la charge utile dans une série plate de bits de module (`1` = barre, `0` = espace).
-- **Décodeur** : lit une exécution propre du module de toute symbologie prise en charge dans sa charge utile.
 - **Composant UI (`ForgeBarcode`)** : composant à écriture unique compilé pour Vue 3, React, Solid et composants Web, tous
   servi à partir du simple spécificateur `@mission-platform/barcode` via les conditions d'exportation `mp:<framework>`.
 
 ## Symbologies prises en charge
 
-| Symbologie   | Remarques                                                                             |
-| ------------ | ------------------------------------------------------------------------------------- |
-| `code128`    | Haute densité. Code B pour ASCII imprimable ; Chemin rapide Code C pour les chiffres. |
-| `gs1-128`    | Code 128 avec FNC1 en tête pour les identifiants d'application GS1.                   |
-| `code39`     | Alphanumérique, autocontrôle ; encadré automatiquement avec `*` start/stop.           |
-| `code39ext`  | Code 39 ASCII complet via des caractères de décalage.                                 |
-| `code93`     | Compact, autovérifiant (deux caractères de contrôle).                                 |
-| `code93ext`  | Code 93 ASCII complet via des caractères de décalage.                                 |
-| `ean13`      | 12 chiffres (chèque annexé) ou 13 (chèque vérifié).                                   |
-| `ean8`       | 7 chiffres (chèque annexé) ou 8 (chèque vérifié).                                     |
-| `upca`       | 11 chiffres (chèque annexé) ou 12 (chèque vérifié).                                   |
-| `upce`       | UPC supprimé par zéro ; Forme à 6 chiffres ou à 7/8 chiffres.                         |
-| `itf`        | Entrelacé 2 sur 5 ; nombre pair de chiffres requis.                                   |
-| `itf14`      | GTIN-14 à 14 chiffres corrigé.                                                        |
-| `codabar`    | Chiffres plus `-$:/.+` ; encadré automatiquement avec le démarrage/arrêt `A`.         |
-| `msi`        | MSI / Plessey modifié avec vérification mod-10.                                       |
-| `pharmacode` | Code binaire pharmaceutique Laetus (`3` – `131070`).                                  |
+| Symbologie | Remarques |
+| ------------ | ---------------------------------------------------------------------- |
+| `code128` | Haute densité. Code B pour ASCII imprimable ; Chemin rapide Code C pour les chiffres. |
+| `gs1-128` | Code 128 avec FNC1 en tête pour les identifiants d'application GS1.            |
+| `code39` | Alphanumérique, autocontrôle ; encadré automatiquement avec le démarrage/arrêt `*`.          |
+| `code39ext` | Code 39 ASCII complet via des caractères de décalage.                               |
+| `code93` | Compact, autovérifiant (deux caractères de contrôle).                         |
+| `code93ext` | Code 93 ASCII complet via des caractères de décalage.                               |
+| `ean13` | 12 chiffres (chèque annexé) ou 13 (chèque vérifié).                     |
+| `ean8` | 7 chiffres (chèque annexé) ou 8 (chèque vérifié).                       |
+| `upca` | 11 chiffres (chèque annexé) ou 12 (chèque vérifié).                     |
+| `upce` | UPC supprimé par zéro ; Forme à 6 chiffres ou à 7/8 chiffres.                       |
+| `itf` | Entrelacé 2 sur 5 ; nombre pair de chiffres requis.                         |
+| `itf14` | GTIN-14 à 14 chiffres corrigé.                                                |
+| `codabar` | Chiffres plus `-$:/.+` ; encadré automatiquement avec le démarrage/arrêt `A`.                 |
+| `msi` | MSI / Plessey modifié avec vérification mod-10.                              |
+| `pharmacode` | Code binaire pharmaceutique Laetus (`3` – `131070`).                      |
 
 ## API et utilisation
 
-### Encodeur et décodeur de base (`@mission-platform/barcode`)
+### Encodeur principal (`@mission-platform/barcode`)
 
 ```ts
 import { encodeBarcode } from '@mission-platform/barcode';
@@ -49,6 +48,9 @@ const barcode = encodeBarcode('code128', 'MISSION-128');
 // barcode.width -> number
 // barcode.modules -> number[] (1 = bar, 0 = space)
 ```
+
+Pour décoder les images capturées ou les images de caméra, utilisez les API du scanner de
+`@mission-platform/code-scanner`.
 
 ### Composants de l'interface utilisateur du cadre
 

@@ -13,12 +13,12 @@
 pnpm add --save-dev @mission-platform/prettier-config
 ```
 
-작업공간에서 공유 구성을 내보냅니다. `prettier.config.js`.
-Markdown이 가능하도록 로컬 재정의를 자제해서 사용하세요. TypeScript, Vue및 구성
+작업공간의 `prettier.config.js`에서 공유 구성을 내보냅니다.
+Markdown, TypeScript, Vue 및 구성을 위해 로컬 재정의를 드물게 사용하십시오.
 파일은 모노레포 전체에서 일관성을 유지합니다.
 
 ## 기여하다
 
-달리다 `pnpm --filter @mission-platform/prettier-config format` 변경한 후
+변경 후 `pnpm --filter @mission-platform/prettier-config format`을 실행합니다.
 구성. 변경 사항은 다음을 사용하는 모든 작업 공간에 일관되게 적용되어야 합니다.
 패키지.

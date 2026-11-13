@@ -5,7 +5,7 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > packages/ui/breakpoints/docs/index.md: [packages/ui/breakpoints/docs/index.md](../../index.md)
 > Taal: Nederlands (nl)
 
-`@mission-platform/breakpoints` biedt responsieve breekpunthulpprogramma's en **eenmalig te schrijven** viewportcomponenten voor de
+`@mission-platform/breakpoints` biedt responsieve breekpunthulpprogramma's en **eenmalig schrijven** viewportcomponenten voor de
 Missieplatform. De componenten (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDebug`) zijn één keer geschreven in de neutrale
 `@mission-platform/forge-jsx`-dialect en gecompileerd naar **zowel Vue 3 als React** door `@mission-platform/vite-plugin-forge`.
 
@@ -18,22 +18,22 @@ Missieplatform. De componenten (`ForgeShowAt`, `ForgeHideAt`, `ForgeBreakpointDe
 - `@mission-platform/breakpoints/core` — raamwerk-agnostische hulpprogramma's en typen.
 
 Kies het raamwerk **eenmaal** — `resolve.conditions` via `defineFrameworkAppConfig` /
-`frameworkResolveConditions` van `@mission-platform/vite-config`, en `customConditions` via de
+`frameworkResolveConditions` van `@mission-platform/vite-config` en `customConditions` via de
 `@mission-platform/typescript-config/framework-<name>`-voorinstellingen - importeer vervolgens alles met de kale pakketspecificatie.
 
 ## Breekpuntschaal
 
 Het platform maakt gebruik van een responsieve schaal in zeven stappen, gebaseerd op drempelwaarden voor de breedte van de viewport:
 
-| Sleutel | Etiket            | Drempel       | Algemeen apparaat/gebruiksscenario |
-| :------ | :---------------- | :------------ | :--------------------------------- |
-| `2xs`   | Extra-extra-klein | $\ge 0$ px    | Alle apparaten                     |
-| `xs`    | Extra klein       | $\ge 480$ px  | Grote telefoons                    |
-| `sm`    | Klein             | $\ge 768$ px  | Tabletportret                      |
-| `md`    | Middel            | $\ge 1024$ px | Tablet liggend / kleine laptop     |
-| `lg`    | Groot             | $\ge 1920$ px | FullHD / 1080p                     |
-| `xl`    | Extra groot       | $\ge 2560$ px | QHD                                |
-| `2xl`   | Extra extra groot | $\ge 3840$ px | 4K UHD                             |
+| Sleutel | Etiket | Drempel | Algemeen apparaat/gebruiksscenario |
+| :---- | :---------------- | :------------ | :------------------------------ |
+| `2xs` | Extra-extra-klein | $\ge 0$ px | Alle apparaten |
+| `xs` | Extra klein | $\ge 480$ px | Grote telefoons |
+| `sm` | Klein | $\ge 768$ px | Tabletportret |
+| `md` | Middel | $\ge 1024$ px | Tablet liggend / kleine laptop |
+| `lg` | Groot | $\ge 1920$ px | FullHD / 1080p |
+| `xl` | Extra groot | $\ge 2560$ px | QHD |
+| `2xl` | Extra extra groot | $\ge 3840$ px | 4K UHD |
 
 ## Kernhulpprogramma's (`/core`)
 
@@ -42,7 +42,7 @@ Framework-agnostische helpers, veilig te gebruiken vanuit elk raamwerk (of geen)
 - `breakpointKeys` — de geordende reeks breekpuntsleutels.
 - `breakpoints` — een kaart met sleutels voor hun pixeldrempels met minimale breedte.
 - `getBreakpointValue(key)` — de pixeldrempel voor een breekpunt.
-- `mediaQuery(key)` — een `min-width` mediaqueryreeks (`'(min-width: 1920px)'`), of `'all'` voor `2xs`.
+- `mediaQuery(key)`: een `min-width`-mediaqueryreeks (`'(min-width: 1920px)'`), of `'all'` voor `2xs`.
 - `maxMediaQuery(key)`: een `max-width`-mediaqueryreeks met een bovengrens, of `'not all'` voor `2xs`.
 - `resolveBreakpoint(width)` — gegeven een pixelbreedte, de actieve breekpuntsleutel.
 

@@ -63,9 +63,9 @@ function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElemen
 
 #### פרמטרים
 
-| שם    | הקלד                               | תיאור |
-| ----- | ---------------------------------- | ----- |
-| נכסים | לקריאה בלבד<AlertBannerProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<AlertBannerProperties> |             |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -77,7 +77,7 @@ function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElemen
 export type DropdownPlacement = 'bottom-start' | 'bottom-end' | 'bottom' | 'top-start' | 'top-end' | 'top';
 ```
 
-מיקום מועדף של החלונית הנפתחת ביחס להדק שלה.
+מיקום מועדף של החלונית הנפתחת ביחס לטריגר שלו.
 
 ### DropdownProperties
 
@@ -139,9 +139,9 @@ Popover API מקורי (`popover="manual"` + `showPopover()`): `z-index` רגי�
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<DropdownProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<DropdownProperties> |             |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -161,7 +161,7 @@ function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 (הולקט ל-`createPortal` של React / Vue המובנה של `<Teleport>` על ידי
 `@mission-platform/vite-plugin-forge`), כך שהוא הופך ל-`document.body` ו
 בורח מכל הקשר `overflow`/ערימה; הפורטל מותקן רק תוך כדי
-`open`. הוא נשאר מעוגן לטריגר שלו עם ממשק ה-API של CSS Anchor Positioning
+`open`. הוא נשאר מעוגן לטריגר שלו עם ה-API של CSS Anchor Positioning
 במקום `@floating-ui`: הטריגר מכריז על `anchor-name` מוטבע ייחודי,
 והפאנל הטלפורטי קשור אליו עם `position-anchor` + `position-area`
 (נגזר מ-`placement`), מתהפך כדי להישאר על המסך באמצעות
@@ -171,7 +171,7 @@ function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 חוטים לחיצה בחוץ + `Escape` ביטול בזמן פתוח.
 
 הפאנל הטלפורטי מקודם גם לדפדפן **השכבה העליונה** באמצעות ה
-API מקורי של Popover (`popover="manual"` + `showPopover()`): `z-index` רגיל
+API מקורי של Popover (`popover="manual"` + `showPopover()`): `z-index` פשוט
 לעולם לא יכול להתעלות מעל מודאל/דיאלוג `<dialog>` מקורי פתוח (שחי ב
 השכבה העליונה), כך שהפאנל יבחר לאותה שכבה עליונה כדי להישאר מעל
 `ForgeModal`/`ForgeDialog`. ה-`z-index` הסטטי ב-CSS נשאר ה-fallback
@@ -179,7 +179,7 @@ API מקורי של Popover (`popover="manual"` + `showPopover()`): `z-index` ר
 
 כאשר הטריגר נמצא בתוך `<dialog>` מודאלי פתוח, הפאנל עובר פורטל
 **לתוך הדו-שיח** (דרך {@link resolvePortalTarget}) במקום `body`: a
-דיאלוג מודאלי הופך את הכל מחוץ לעץ המשנה שלו ל-`inert`, אז פאנל נשלח אל
+דיאלוג מודאלי הופך את הכל מחוץ לעץ המשנה שלו ל-`inert`, אז פאנל שנשלח אל
 `body` יהיה אינרטי (בלתי נראה/בלתי ניתן ללחיצה) ומוערם בצורה לא נכונה - אפילו יותר
 כאשר מודלים מקוננים. שמירתו בתוך תיבת הדו-שיח הקרובה מאפשרת את ה-Popover
 ממשק ה-API מעל אותה תיבת דו-שיח (אולי מוערמת).
@@ -195,9 +195,9 @@ API מקורי של Popover (`popover="manual"` + `showPopover()`): `z-index` ר
 
 #### פרמטרים
 
-| שם    | הקלד                           | תיאור |
-| ----- | ------------------------------ | ----- |
-| נכסים | לקריאה בלבד<PopoverProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------- | ----------- |
+| נכסים | לקריאה בלבד<PopoverProperties> |             |
 
 ### PopoverPlacement
 
@@ -260,9 +260,9 @@ function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                         | תיאור |
-| ----- | ---------------------------- | ----- |
-| נכסים | לקריאה בלבד<ToastProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ToastProperties> |             |
 
 ### ToastProperties
 
@@ -317,11 +317,11 @@ function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 מכריז על CSS `anchor-name` ייחודי (מוגדר בשורה כך שכל מופע יהיה שונה),
 והפאנל הטלפורטי קשור אליו עם `position-anchor` +
 `position-area` ומתהפך כדי להישאר על המסך באמצעות `position-try-fallbacks`
-(`flip-block`, `flip-inline`, והאפשרות המותאמת אישית `@position-try` ב-
+(`flip-block`, `flip-inline` והאפשרות המותאמת אישית `@position-try` ב-
 גיליון סגנונות משותף).
 
 הפאנל הטלפורטי מקודם גם לדפדפן **השכבה העליונה** באמצעות ה
-Popover API מקורי (`popover="manual"` + `showPopover()`): `z-index` רגיל
+Popover API מקורי (`popover="manual"` + `showPopover()`): `z-index` פשוט
 לעולם לא יכול להתעלות מעל מודאל/דיאלוג `<dialog>` מקורי פתוח (שחי ב
 השכבה העליונה), כך שהרמז יבחר לאותה שכבה עליונה כדי להישאר מעל
 `ForgeModal`/`ForgeDialog`. ה-`z-index` הסטטי ב-CSS נשאר ה-fallback
@@ -344,9 +344,9 @@ Popover API מקורי (`popover="manual"` + `showPopover()`): `z-index` רגי�
 
 #### פרמטרים
 
-| שם    | הקלד                           | תיאור |
-| ----- | ------------------------------ | ----- |
-| נכסים | לקריאה בלבד<TooltipProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------- | ----------- |
+| נכסים | לקריאה בלבד<TooltipProperties> |             |
 
 ### TooltipPlacement
 
@@ -412,7 +412,7 @@ function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 הידור ישר ל-React או Vue על ידי `@mission-platform/vite-plugin-forge`.
 
 הוא מעבד **`<dialog>`** מקורי המונע עם `showModal()`/`close()`, כך שה
-הדפדפן מטפל ב**השכבה העליונה**, ב-`::backdrop` scrim, בלכידת פוקוס וב
+הדפדפן מטפל ב-**השכבה העליונה**, ב-`::backdrop` scrim, בלכידת פוקוס וב
 `Escape` לסגירה - אין צורך ב-`<Teleport>`, מלכודת פוקוס או `useZIndex`. פתוח
 המצב נשלט (`open` + `onUpdateOpen`/`onClose`): `useEffect` אחד
 משקף את `open` אל האלמנט, אירוע `close` המקורי ממפה בחזרה ל-
@@ -420,22 +420,22 @@ callbacks, ולחיצה ברקע סוגרת אותו כאשר `closeOnBackdrop` 
 ה-enter/exit fade lives ב-CSS (`@starting-style` + `transition-behavior` ב-
 מאפייני `display`/`overlay`), מחליפים את Vue `<Transition>` המקורי.
 
-תחליפים מה-Vue SFC המקורי: ה-`ForgeDialogHeader`/`Body`/`Footer`
+תחליפים מ-Vue SFC המקורי: ה-`ForgeDialogHeader`/`Body`/`Footer`
 רכיבי המשנה מוטבעים והאזורים `header`/`footer` נכתבו כ
-משבצות בשם (`<Slot>`), כאשר נוכחותם מזוהה דרך
+משבצות בשם (`<Slot>`), כאשר נוכחותם מזוהה דרך ה-
 עוזר {@link hasSlot} ניטרלי למסגרת; תוויות `useI18n` הופכות ל-
 `closeLabel` אבזר;
 `useZIndex('modal')` → השכבה העליונה המקורית של תיבת הדו-שיח; `useRouterClose`
 (`closeOnRouteChange`) נשמט (אין נתב בניב הנייטרלי); ואת
-`update:open`/`close` פולטים הופכים להתקשרות חוזרת של `onUpdateOpen`/`onClose`
+`update:open`/`close` פולטות הופכים להתקשרות חוזרת של `onUpdateOpen`/`onClose`
 אביזרים. הוא הבעלים של הסגנון שלו באמצעות מודול ה-CSS המשותף
 `forge-dialog.module.scss`.
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| נכסים | לקריאה בלבד<DialogProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<DialogProperties> |             |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -452,7 +452,7 @@ function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 
 כמו `ForgeDialog` הוא מעבד **`<dialog>` יליד** המונע עם
 `showModal()`/`close()` (שכבה עליונה, `::backdrop` scrim, מלכודת פוקוס), אבל מוסיף
-סולם `size` (גיליון ברוחב תחתון כמעט מלא בנייד, דו-שיח ממורכז של
+סולם `size` (גיליון ברוחב תחתון כמעט מלא בנייד, דיאלוג ממורכז של
 הרוחב הנבחר ב-`sm`+), מנעול גלילה לגוף בזמן פתוח, וביטול הסכמה ל
 `Escape` לסגירה (`closeOnEsc`, נאכף על ידי ביטול ה-`cancel` המקורי
 אירוע). מצב פתוח נשלט (`open` + `onUpdateOpen`/`onClose`).
@@ -470,9 +470,9 @@ function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                         | תיאור |
-| ----- | ---------------------------- | ----- |
-| נכסים | לקריאה בלבד<ModalProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ModalProperties> |             |
 
 ### ModalProperties
 
@@ -494,6 +494,16 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 
 שלב הרוחב של המודאל בטאבלט/שולחן עבודה (`sm`+); הנייד הוא תמיד ברוחב מלא.
 
+### Modal Variant
+
+**סוג:** סוג
+
+```typescript
+export type ModalVariant = 'modal' | 'dialog' | 'alert';
+```
+
+גרסה חזותית וסמנטית של פרימיטיבי השכבה המודאלית.
+
 ## `src/components/organisms/forge-toast-container/forge-toast-container`
 
 ### ForgeToastContainer
@@ -511,7 +521,7 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 התקן מופע בודד ליד שורש היישום שלך. זה טלפורט א
 מחסנית במיקום קבוע ל-`<body>` (דרך ה-framework-neutral
 **`<Teleport>`** פורטל), מעגן אותו לאחד משישה עמדות מסך, ו
-דוחה כוסית כוסית לפי בקשת המשתמש. הרכיב נרשם למשותף
+דוחה טוסטים לפי בקשת המשתמש. הרכיב נרשם למשותף
 חנות ניתנת לצפייה עם הווים הנייטרליים של {@link useState}/{@link useEffect}
 (התחליף לחנות הריאקטיבית Vue `useToast`), אז מחבר יחיד
 המקור נשאר תגובתי בשתי המסגרות.
@@ -524,14 +534,14 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 אנימציית Enter/Leave תואמת את Vue SFC דרך הנייטרלי
 **`<TransitionGroup>`** פרימיטיבי, שמתחבר ל-Vue המובנה
 `<TransitionGroup>` וקבוצת `@mission-platform/forge-adapters/react` CSS-class
-נהג. ארבעת כיתות שלב הכניסה/יציאה המעוצבות מועברות כ-**hash
+נהג. ארבעת שיעורי שלב הכניסה/יציאה המעוצבים מועברים כ-**hash
 כיתות CSS-Module** (באמצעות אביזרי המחלקה `<TransitionGroup>`), אז
 סגנון האנימציה נשאר בהיקף של רכיבים במקום להסתמך על גלובלי
 חוקי `:global(.forge-toast-*)` - תואמים את `scoped` `<style>` של
 Vue SFC מקורי. ב-Vue שורש הטוסט מקבל את השיעורים הללו באופן טבעי; על
 React הדרייבר מתזמר הפעלה/ביטול של שלב העזיבה (ה
 כיתות מיושמות על ילדי רכיב DOM - `ForgeToast` הוא רכיב,
-המבנה React מתדרדר לקו הבסיס של SSR-in-place עבור חילופי הכיתה,
+המבנה של React מתדרדר לקו הבסיס של SSR-in-place עבור חילופי המחלקות,
 כמו הסינגל `<Transition>`).
 
 תחליפים מ-Vue SFC המקורי: חנות `useToast` התגובה →
@@ -541,9 +551,9 @@ React הדרייבר מתזמר הפעלה/ביטול של שלב העזיבה (
 
 #### פרמטרים
 
-| שם    | הקלד                                  | תיאור |
-| ----- | ------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<ToastContainerProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ToastContainerProperties> |             |
 
 ### ToastContainerProperties
 
@@ -589,16 +599,16 @@ function dismissToast(id: number): void;
 
 #### פרמטרים
 
-| שם   | הקלד | תיאור |
-| ---- | ---- | ----- |
-| מזהה | מספר |       |
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| id | מספר |             |
 
 ### errorToast
 
 **סוג:** קבוע
 
 ```typescript
-export const errorToast;
+export const errorToast: ReturnType<typeof withVariant>;
 ```
 
 נוחות: הצג טוסט `error`.
@@ -618,7 +628,7 @@ function getToastsSnapshot(): readonly ToastRecord[];
 **סוג:** קבוע
 
 ```typescript
-export const infoToast;
+export const infoToast: ReturnType<typeof withVariant>;
 ```
 
 נוחות: הצג טוסט `info`.
@@ -635,9 +645,9 @@ function showToast(options: ToastOptions | string): number;
 
 #### פרמטרים
 
-| שם       | הקלד                   | תיאור |
-| -------- | ---------------------- | ----- |
-| אפשרויות | ToastOptions \| מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------- | ---------------------- | ----------- |
+| אפשרויות | ToastOptions \| מחרוזת |             |
 
 ### הירשם לטוסטים
 
@@ -651,16 +661,16 @@ function subscribeToasts(listener: () => void): () => void;
 
 #### פרמטרים
 
-| שם    | הקלד      | תיאור |
-| ----- | --------- | ----- |
-| מאזין | () => ריק |       |
+| שם | הקלד | תיאור |
+| -------- | ---------- | ----------- |
+| מאזין | () => ריק |             |
 
 ### הצלחה טוסט
 
 **סוג:** קבוע
 
 ```typescript
-export const successToast;
+export const successToast: ReturnType<typeof withVariant>;
 ```
 
 נוחות: הצג טוסט `success`.
@@ -722,7 +732,119 @@ export interface UseToastReturn
 **סוג:** קבוע
 
 ```typescript
-export const warningToast;
+export const warningToast: ReturnType<typeof withVariant>;
 ```
 
 נוחות: הצג טוסט `warning`.
+
+## `src/utils/fallback-position`
+
+### ליישם מיקום נפילה
+
+פונקציה **סוג:**
+
+```typescript
+function applyFallbackPosition(
+  triggerElement: HTMLElement,
+  panelElement: HTMLElement,
+  placement: FallbackPlacement = 'bottom-start',
+  options?: FallbackPositionOptions | number,
+): void;
+```
+
+מחיל קואורדינטות וסגנונות חלופיים על `panelElement` ביחס ל-`triggerElement`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------------- | --------------------------------- | ----------- |
+| triggerElement | HTMLElement |             |
+| panelElement | HTMLElement |             |
+| מיקום | FallbackPlacement |             |
+| אפשרויות | FallbackPositionOptions \| מספר |             |
+
+### calculateFallbackPosition
+
+פונקציה **סוג:**
+
+```typescript
+function calculateFallbackPosition(
+  triggerRect: TriggerBoundingRect,
+  placement: FallbackPlacement = 'bottom-start',
+  offset = 0,
+): FallbackPositionResult;
+```
+
+מחשב מאפייני CSS עליון, שמאל ושינוי עבור רכיב צף
+בהתבסס על הישר התוחם של רכיב ההדק, המיקום הרצוי והיסט.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ------------------- | ----------- |
+| triggerRect | TriggerBoundingRect |             |
+| מיקום | FallbackPlacement |             |
+| קיזוז |                     |             |
+
+### FallbackPlacement
+
+**סוג:** סוג
+
+```typescript
+export type FallbackPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
+```
+
+אפשרויות מיקום נתמכות להחזרה של מיקום עוגן.
+
+### FallbackPositionOptions
+
+**סוג:** ממשק
+
+```typescript
+export interface FallbackPositionOptions
+```
+
+לא סופק תיאור.
+
+### FallbackPositionResult
+
+**סוג:** ממשק
+
+```typescript
+export interface FallbackPositionResult
+```
+
+לא סופק תיאור.
+
+### נתמך ב-AnchorPositioning
+
+פונקציה **סוג:**
+
+```typescript
+function isAnchorPositioningSupported(): boolean;
+```
+
+בדוק באופן דינמי אם מיקום עוגן CSS נתמך.
+מוערך כפונקציה כך שבדיקות יחידה יכולות ללעוג או להחליק `CSS.supports`.
+
+### תומך ב-AnchorPositioning
+
+**סוג:** קבוע
+
+```typescript
+export const supportsAnchorPositioning: boolean;
+```
+
+בדוק אם מיקום עוגן CSS נתמך בסביבה הנוכחית.

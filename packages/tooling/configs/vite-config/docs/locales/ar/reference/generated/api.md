@@ -1,4 +1,4 @@
-# @mission-platform/vite-config مرجع واجهة برمجة التطبيقات
+# مرجع @mission-platform/vite-config API
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
@@ -29,14 +29,24 @@ export interface AppConfigOptions
 function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
-بناء التراكمي/التدحرج `external` المسند الذي يعالج كل اسم فيه
-`names` (وأي من واردات المسار الفرعي الخاصة بهم، على سبيل المثال `pkg/sub`) كخارجية.
+قم بإنشاء مسند التراكمي/التدحرج `external` الذي يتعامل مع كل اسم فيه
+`names` (وأي من عمليات استيراد المسار الفرعي الخاصة بها، على سبيل المثال `pkg/sub`) باعتبارها خارجية.
 
 #### حدود
 
-| الاسم | اكتب                | الوصف |
-| ----- | ------------------- | ----- |
-| أسماء | سلسلة للقراءة فقط[] |       |
+| الاسم | اكتب | الوصف |
+| ----- | ----------------- | ----------- |
+| أسماء | سلسلة للقراءة فقط[] |             |
+
+### DEFAULT_CSS_CONFIG
+
+**النوع:** ثابت
+
+```typescript
+export const DEFAULT_CSS_CONFIG: NonNullable<UserConfig['css']>;
+```
+
+تكوين CSS مشترك لإصدارات Vite: خط أنابيب PostCSS + خيارات معالج Sass المسبق الحديث.
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
@@ -60,6 +70,17 @@ export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 إجماليات الإخراج التراكمية الافتراضية لعملاء UMD/IIFE. نحن نستهدف الإدارة السليمة بيئيا فقط ولكن
 لا يزال التحديث المتراكم يحذر بدون هذه الخريطة عندما يتم الإعلان عن العوامل الخارجية.
 
+### DEFAULT_SASS_PREPROCESSOR_OPTIONS
+
+**النوع:** ثابت
+
+```typescript
+export const DEFAULT_SASS_PREPROCESSOR_OPTIONS;
+```
+
+خيارات المعالج المسبق لـ Sass المشتركة التي تتيح واجهة برمجة تطبيقات Dart Sass JS الحديثة و
+إسكات تحذيرات إهمال JS API القديمة.
+
 ### تعريفAppConfig
 
 **النوع:** الوظيفة
@@ -68,15 +89,15 @@ export const DEFAULT_LIBRARY_GLOBALS: Readonly<Record<string, string>>;
 function defineAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
-بناء أ Vite التكوين لمنصة المهمة Vue 3 تطبيقات: Vue البرنامج المساعد و
+قم بإنشاء تكوين Vite لتطبيقات Mission Platform Vue 3: البرنامج الإضافي Vue و
 خط أنابيب PostCSS المشترك. تضيف التطبيقات التوجيه الخاص بها، وPWA، والعامل، و
 تجميع التعديلات عبر {@link AppConfigOptions.overrides}.
 
 #### حدود
 
-| الاسم  | اكتب                 | الوصف |
-| ------ | -------------------- | ----- |
-| خيارات | خيارات تكوين التطبيق |       |
+| الاسم | اكتب | الوصف |
+| ------- | ---------------- | ----------- |
+| خيارات | خيارات تكوين التطبيق |             |
 
 ### تعريفFrameworkAppConfig
 
@@ -86,16 +107,16 @@ function defineAppConfig(options: AppConfigOptions = {}): UserConfig;
 function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfig;
 ```
 
-قم بلف {@link DefineAppConfig} مع ملف `resolve.conditions` اللازمة لجعل العارية
-`@mission-platform/<pkg>` تتحلل الواردات إلى بناء إطار عمل واحد مختار.
+قم بلف {@link DefineAppConfig} باستخدام `resolve.conditions` المطلوب لجعله مكشوفًا
+تستورد `@mission-platform/<pkg>` تصميم إطار عمل واحد مختار.
 هذه هي مجموعة التبديل الوحيدة التي يقوم المستهلكون بتعيينها على مستوى التطبيق؛ المشاريع الخارجية التي لا
-استخدام هذا المساعد يمكن أن يحدد نفسه `resolve.conditions` مباشرة.
+استخدام هذا المساعد يمكن ضبط نفس `resolve.conditions` مباشرة.
 
 #### حدود
 
-| الاسم  | اكتب                             | الوصف |
-| ------ | -------------------------------- | ----- |
-| خيارات | خيارات FrameworkAppConfigOptions |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------- | ----------- |
+| خيارات | خيارات FrameworkAppConfigOptions |             |
 
 ### تعريفLibraryConfig
 
@@ -105,8 +126,8 @@ function defineFrameworkAppConfig(options: FrameworkAppConfigOptions): UserConfi
 function defineLibraryConfig(options: LibraryConfigOptions): UserConfig;
 ```
 
-بناء أ Vite التكوين مصمم خصيصًا لمنصة المهمة Vue حزم المكتبة:
-ال Vue البرنامج المساعد، خط أنابيب PostCSS المشترك، إخراج ESM-only lib، CSS واحد
+أنشئ تكوين Vite مصممًا خصيصًا لحزم مكتبة Mission Platform Vue:
+البرنامج المساعد Vue، خط أنابيب PostCSS المشترك، إخراج ESM-only lib، CSS واحد
 حزمة، والاعتماد على الأقران المعقولة الخارجية.
 
 بشكل افتراضي، يحافظ البناء على الرسم البياني للوحدة المصدر
@@ -116,9 +137,9 @@ function defineLibraryConfig(options: LibraryConfigOptions): UserConfig;
 
 #### حدود
 
-| الاسم  | اكتب                 | الوصف |
-| ------ | -------------------- | ----- |
-| خيارات | خيارات تكوين المكتبة |       |
+| الاسم | اكتب | الوصف |
+| ------- | -------------------- | ----------- |
+| خيارات | خيارات تكوين المكتبة |             |
 
 ### تعريفWebComponentAppConfig
 
@@ -128,18 +149,18 @@ function defineLibraryConfig(options: LibraryConfigOptions): UserConfig;
 function defineWebComponentAppConfig(options: AppConfigOptions = {}): UserConfig;
 ```
 
-بناء أ Vite تكوين التطبيق لتطبيقات مكونات الويب الخالية من إطار العمل.
+أنشئ تكوين تطبيق Vite لتطبيقات مكونات الويب الخالية من إطار العمل.
 
 على عكس {@linkdeframeworkAppConfig}، فإن هذا المساعد لا يفعل ذلك عمدًا
-تثبيت Vue البرنامج المساعد (أو أي برنامج إضافي آخر للإطار). ال `mp:web-component`
+قم بتثبيت البرنامج الإضافي Vue (أو أي مكون إضافي آخر لإطار العمل). `mp:web-component`
 لا يزال الشرط مطبقًا على كل من دقة العميل وSSR/العرض المسبق
 تحدد واردات حزمة Forge العارية عناصرها الأثرية في كل مكان.
 
 #### حدود
 
-| الاسم  | اكتب                 | الوصف |
-| ------ | -------------------- | ----- |
-| خيارات | خيارات تكوين التطبيق |       |
+| الاسم | اكتب | الوصف |
+| ------- | ---------------- | ----------- |
+| خيارات | خيارات تكوين التطبيق |             |
 
 ### خيارات FrameworkAppConfig
 
@@ -160,15 +181,15 @@ function frameworkCondition(framework: MissionPlatformFramework): string;
 ```
 
 قم بتعيين {@link MissionPlatformFramework} إلى حالة التصدير المخصصة
-`@mission-platform/*` تعلن الحزم في `exports` رسم خريطة. الحفاظ على
-`mp:` مساحات الأسماء البادئة هي الشرط بحيث لا يتعارض أبدًا مع المعيار
-Node/Vite شروط (`import`, `default`, `browser`, ...).
+يتم الإعلان عن حزم `@mission-platform/*` في خريطة `exports` الخاصة بها. الحفاظ على
+تقوم البادئة `mp:` بمساحات الأسماء الشرطية بحيث لا تتعارض أبدًا مع المعيار
+الشروط Node/Vite (`import`، `default`، `browser`، ...).
 
 #### حدود
 
-| الاسم  | اكتب             | الوصف |
-| ------ | ---------------- | ----- |
-| الإطار | مهمة منصة الإطار |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------------------------ | ----------- |
+| الإطار | مهمة منصة الإطار |             |
 
 ### FrameworkResolveConditions
 
@@ -178,18 +199,18 @@ Node/Vite شروط (`import`, `default`, `browser`, ...).
 function frameworkResolveConditions(framework: MissionPlatformFramework): string[];
 ```
 
-بناء أمر `resolve.conditions` قائمة يجب أن يستخدمها التطبيق لتحديد أ
+أنشئ قائمة `resolve.conditions` المطلوبة التي يجب أن يستخدمها التطبيق لتحديد ملف
 بناء الإطار. يتم وضع الشرط الخاص بالإطار أولاً حتى يفوز
-فوق العام `import`/`default` الاحتياطي والمتصفح القياسي/ESM
+عبر البديل `import`/`default` العام والمتصفح القياسي/ESM
 يتم إلحاق الشروط بحيث يتم حل كل شيء آخر بشكل طبيعي.
 
-تمرير النتيجة إلى Vite's `resolve.conditions` (راجع {@linkdeframeworkAppConfig}).
+قم بتمرير النتيجة إلى Vite الخاص بـ `resolve.conditions` (راجع {@link DefinitionFrameworkAppConfig}).
 
 #### حدود
 
-| الاسم  | اكتب             | الوصف |
-| ------ | ---------------- | ----- |
-| الإطار | مهمة منصة الإطار |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------------------------ | ----------- |
+| الإطار | مهمة منصة الإطار |             |
 
 ### تجاهلVueI18nBlocksPlugin
 
@@ -199,15 +220,15 @@ function frameworkResolveConditions(framework: MissionPlatformFramework): string
 function ignoreVueI18nBlocksPlugin(): Plugin;
 ```
 
-Vite البرنامج المساعد الذي يتحول Vue SFC `<i18n>` كتل مخصصة في وحدات no-op.
+البرنامج المساعد Vite الذي يحول الكتل المخصصة Vue SFC `<i18n>` إلى وحدات غير قابلة للتشغيل.
 
-المنصة `<i18n>` تحتوي الكتل على سلاسل المصدر الإنجليزية التي يستهلكها
-ال `i18next-cli` الأدوات فقط - في وقت التشغيل تكون الترجمات
-تحميلها من ولدت `src/locales/*.yaml` حزم عبر i18next. منذ
-المشروع لم يعد يستخدم أ vue-i18n مترجم كتلة مخصصة، `@vitejs/plugin-vue`
-بخلاف ذلك، قد يُصدر كتلة YAML الأولية كوحدة نمطية JS ويفشل في تحليلها.
-يمنع هذا البرنامج المساعد التحميل باستخدام تصدير افتراضي خامل (الشكل
-`@vitejs/plugin-vue` يتوقع حتى يتمكن من الاتصال `block(component)` بلا ضرر).
+تحتوي كتل `<i18n>` الخاصة بالنظام الأساسي على سلاسل المصدر الإنجليزية التي يستهلكها
+أدوات `i18next-cli` فقط - في وقت التشغيل تكون الترجمات
+تم تحميلها من حزم `src/locales/*.yaml` التي تم إنشاؤها عبر i18next. منذ
+لم يعد المشروع يستخدم برنامج التحويل البرمجي للكتلة المخصصة vue-i18n، `@vitejs/plugin-vue`
+بخلاف ذلك، قد يُصدر كتلة YAML الخام كوحدة JS ويفشل في تحليلها.
+يمنع هذا البرنامج الإضافي التحميل باستخدام تصدير افتراضي خامل (الشكل
+يتوقع `@vitejs/plugin-vue` حتى يتمكن من الاتصال بـ `block(component)` دون ضرر).
 
 ### خيارات تكوين المكتبة
 
@@ -228,9 +249,9 @@ export type MissionPlatformFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'w
 ```
 
 مجموعة الأطر التي يمكن لتطبيق Mission Platform استهدافها. اختيار واحد يدفع
-على حد سواء Vite التجميع (عبر `resolve.conditions`) و- من خلال المطابقة
-`customConditions` الإعداد المسبق tsconfig — TypeScript خدمة اللغة عارية جدا
-`@mission-platform/<pkg>` تتحلل الواردات إلى المخرجات المبنية لهذا الإطار.
+كل من تجميع Vite (عبر `resolve.conditions`) و- من خلال المطابقة
+الإعداد المسبق `customConditions` tsconfig - خدمة اللغة TypeScript عارية جدًا
+تتحلل واردات `@mission-platform/<pkg>` إلى المخرجات المضمنة لهذا الإطار.
 
 ### readPackageDependencyNames
 
@@ -240,15 +261,15 @@ export type MissionPlatformFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'w
 function readPackageDependencyNames(rootDirectory: string): string[];
 ```
 
-اقرأ `dependencies` و `peerDependencies` أعلن في package.json
-تقع في `rootDirectory`. يستخدم لإبعاد تبعيات وقت تشغيل المكتبة
+اقرأ `dependencies` و`peerDependencies` المعلنين في package.json
+يقع في `rootDirectory`. يستخدم لإبعاد تبعيات وقت تشغيل المكتبة
 حزمتها الخاصة حتى يتمكن المستهلكون من استخلاصها وهزها.
 
 #### حدود
 
-| الاسم        | اكتب  | الوصف |
-| ------------ | ----- | ----- |
-| الدليل الجذر | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ------------- | ------ | ----------- |
+| الدليل الجذر | سلسلة |             |
 
 ## `src/vitest`
 
@@ -260,15 +281,36 @@ function readPackageDependencyNames(rootDirectory: string): string[];
 function defineVitestConfig(options: VitestConfigOptions = {}): ViteUserConfig;
 ```
 
-بناء أ Vitest التكوين لحزم وتطبيقات Mission Platform. يوفر
-قياسي Vue البرنامج المساعد وبيئة jsdom وموفر تغطية v8
-تم تكوينه مسبقًا لـ `src/**\/*.vue` عناصر.
+أنشئ تكوين Vitest لحزم وتطبيقات Mission Platform. يوفر
+البرنامج المساعد القياسي Vue وبيئة jsdom أو node وموفر تغطية v8
+تم تكوينها مسبقًا لمكونات `src/**\/*.vue`.
 
 #### حدود
 
-| الاسم  | اكتب                 | الوصف |
-| ------ | -------------------- | ----- |
-| خيارات | فيتيست كونفيجوبتيونس |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------- | ----------- |
+| خيارات | فيتيست كونفيجوبتيونس |             |
+
+### DetectorTestEnvironment
+
+**النوع:** الوظيفة
+
+```typescript
+function detectTestEnvironment(
+  rootDirectory: string = process.cwd(),
+  options: VitestConfigOptions = {},
+): 'jsdom' | 'happy-dom' | 'node';
+```
+
+اكتشاف ما إذا كانت الحزمة تتطلب بيئة DOM (مثل `jsdom` أو `happy-dom`)
+أو يمكن تشغيله بأمان في بيئة `node` خفيفة الوزن.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------- | ------------------- | ----------- |
+| الدليل الجذر | سلسلة |             |
+| خيارات | فيتيست كونفيجوبتيونس |             |
 
 ### VitestConfigOptions
 

@@ -1,7 +1,7 @@
 import { ForgeTreeView } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { TreeViewNode } from './forge-tree-view';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const nodes: TreeViewNode[] = [
   {

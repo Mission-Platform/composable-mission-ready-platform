@@ -2,7 +2,7 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> packages/email-components/docs/index.md: [packages/email-components/docs/index.md](../../index.md)
+> packages/content/email-components/docs/index.md: [packages/content/email-components/docs/index.md](../../index.md)
 > 言語: 日本語 (ja)
 
 `@mission-platform/email-components` には、電子メールで安全なツリーを生成するための、型付きのフレームワーク中立の Forge JSX コンポーネントが含まれています。 `@mission-platform/email-renderer` を使用して、サーバー上でこれらのツリーをシリアル化します。電子メール パスには、Vue、React、Svelte、Solid、Web コンポーネント ランタイム、ブラウザ DOM、または JavaScript は必要ありません。
@@ -25,7 +25,7 @@ const html = renderEmail(email, { title: 'Welcome', responsive: true });
 
 ## ブラウザのプレビュー
 
-コンポーネントは、フレームワークに依存しない Forge ツリーを返します。
+コンポーネントは、
 標準ブラウザパイプライン。プレビューするには、そのツリーをオプションの
 ホスト フレームワークに必要なアダプター エントリ ポイント:
 
@@ -48,7 +48,7 @@ React、Svelte、Solid、および Web コンポーネントは、対応する�
 - 生物: `EmailPreheader`、`EmailHeader`、`EmailFooter`。
 - テンプレート: `EmailDocument`、`EmailContainer`、`EmailSection`。
 
-`EmailTypography` は、Web `ForgeTypography` ボキャブラリをミラーリングする単一のテキスト アトムです。`as` はレンダリングされた要素を選択します (デフォルトでは `p`、`href` が設定されている場合は `a`)、`variant` はタイプ スケール (`as` が設定されている場合は一致する見出しスケール) を選択します。 `h1` ～ `h6`、それ以外の場合は `body-md`)、`color`、`align`、`target`、および `underline` はインライン宣言を調整します。
+`EmailTypography` は、Web `ForgeTypography` 語彙をミラーリングする単一のテキスト アトムです。`as` はレンダリングされた要素を選択します (デフォルトでは `p`、`href` が設定されている場合は `a`)、`variant` はタイプ スケール (`as` が設定されている場合は一致する見出しスケール) を選択します。 `h1` ～ `h6`、それ以外の場合は `body-md`)、`color`、`align`、`target`、および `underline` はインライン宣言を調整します。
 
 ```ts
 EmailTypography({ as: 'h1', children: 'Welcome' });
@@ -60,6 +60,6 @@ EmailTypography({ href: 'https://example.com', target: '_blank', children: 'Read
 
 ## 互換性ポリシー
 
-ベースラインは次のとおりです [機能カタログを電子メールで送信できますか](https://www.caniemail.com/features)、`2026-08-08` でレビュー済み。実装は以下に依存します [HTML テーブル](https://www.caniemail.com/features/html-tables)、 [インラインスタイル](https://www.caniemail.com/features/css-inline-styles)、 [最大幅](https://www.caniemail.com/features/css-max-width)、およびオプション [メディアクエリ](https://www.caniemail.com/features/css-at-media)。静的出力は、フレックスボックス、グリッド、CSS カスタム プロパティ、論理プロパティ、スクリプト、イベント ハンドラー、またはフレームワーク ハイドレーション マーカーに依存しません。
+ベースラインは、`2026-08-08` でレビューされた [Can I Email 機能カタログ](https://www.caniemail.com/features) に従っています。この実装は、[HTML テーブル](https://www.caniemail.com/features/html-tables)、[インライン スタイル](https://www.caniemail.com/features/css-inline-styles)、[最大幅](https://www.caniemail.com/features/css-max-width)、およびオプションの [メディア クエリ](https://www.caniemail.com/features/css-at-media) に依存します。静的出力は、フレックスボックス、グリッド、CSS カスタム プロパティ、論理プロパティ、スクリプト、イベント ハンドラー、またはフレームワーク ハイドレーション マーカーに依存しません。
 
-レスポンシブ CSS はプログレッシブ拡張のみです。`<style>` ブロックが削除または無視されても、インライン テーブル レイアウトは引き続き使用できます。カスタム ノードを追加するときは、アプリケーション テストで `assertCompatibleEmailHtml` を使用します。
+レスポンシブ CSS はプログレッシブ拡張のみです。`<style>` ブロックが削除または無視されても、インライン テーブル レイアウトは引き続き使用できます。カスタム ノードを追加する場合は、アプリケーション テストで `assertCompatibleEmailHtml` を使用します。

@@ -11,6 +11,16 @@
 
 ## `src/index`
 
+### デフォルト
+
+**種類:** 定数
+
+```typescript
+export const handler: ExportedHandler<Env>;
+```
+
+説明はありません。
+
 ### 環境
 
 **種類:** インターフェース

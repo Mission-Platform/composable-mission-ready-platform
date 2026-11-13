@@ -11,7 +11,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/vite-pl
 
 ## `src/compile`
 
-### compileFlintFile
+### compileerFlintFile
 
 **Soort:** functie
 
@@ -20,24 +20,25 @@ function compileFlintFile(
   fileName: string,
   options: FlintPluginOptions,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): FlintCompiledModule;
 ```
 
-Compileer één FLINT-bestand en retourneer het bijbehorende artefact plus metagegevens van de bronkaart.
+Compileer één FWS-bestand en retourneer het bijbehorende artefact plus metagegevens van de bronkaart.
 
 #### Parameters
 
-| Naam         | Typ                  | Beschrijving |
-| ------------ | -------------------- | ------------ |
-| bestandsnaam | tekenreeks           |              |
-| opties       | FlintPluginOptions   |              |
-| dienst       | FlintCompilerService |              |
+| Naam | Typ | Beschrijving |
+| -------- | -------------------- | ----------- |
+| bestandsnaam | tekenreeks |             |
+| opties | FlintPluginOpties |             |
+| dienst | FlintCompilerService |             |
 
-### compileFlintGraph
+### compileerFlintGraph
 
 **Soort:** functie
 
@@ -47,23 +48,43 @@ function compileFlintGraph(
   options: FlintPluginOptions,
   resolver: FlintModuleResolver,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): Promise<FlintCompiledModule>;
 ```
 
-Een geïmporteerde FLINT-modulegrafiek oplossen, koppelen en compileren.
+Een geïmporteerde FWS-modulegrafiek oplossen, koppelen en compileren.
 
 #### Parameters
 
-| Naam         | Typ                  | Beschrijving |
-| ------------ | -------------------- | ------------ |
-| bestandsnaam | tekenreeks           |              |
-| opties       | FlintPluginOptions   |              |
-| oplosser     | FlintModuleResolver  |              |
-| dienst       | FlintCompilerService |              |
+| Naam | Typ | Beschrijving |
+| -------- | -------------------- | ----------- |
+| bestandsnaam | tekenreeks |             |
+| opties | FlintPluginOpties |             |
+| oplosser | FlintModuleResolver |             |
+| dienst | FlintCompilerService |             |
+
+### maakFlintGraphCache
+
+**Soort:** functie
+
+```typescript
+function createFlintGraphCache(options?: {
+  readonly compilerService?: FlintCompilerService;
+  readonly selfHostedVmMode?: FlintVmExecutionMode;
+}): FlintGraphCache;
+```
+
+Maak een grafiekcache die zowel sequentiële als gelijktijdige grafiekresolutie dedupliceert.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+| opties | { alleen-lezen compilerService?: FlintCompilerService; alleen-lezen selfHostedVmMode?: FlintVmExecutionMode; } |             |
 
 ### FlintCompiledModule
 
@@ -75,7 +96,17 @@ export interface FlintCompiledModule
 
 Gecompileerde bron, metadata van artefacten, bronkaart en optionele grafiekrapporten.
 
-### FlintPluginOptions
+### FlintGraphCache
+
+**Soort:** interface
+
+```typescript
+export interface FlintGraphCache
+```
+
+Gedeelde, in-memory grafiekresultaten gebruikt door meerdere Flint-doelen.
+
+### FlintPluginOpties
 
 **Soort:** interface
 
@@ -85,7 +116,7 @@ export interface FlintPluginOptions
 
 Geen beschrijving opgegeven.
 
-### solveFlintPath
+### oplossingFlintPath
 
 **Soort:** functie
 
@@ -97,12 +128,28 @@ Los het pad van een plug-in op ten opzichte van de root, tenzij de waarde al abs
 
 #### Parameters
 
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| wortel | tekenreeks |              |
-| waarde | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| wortel | tekenreeks |             |
+| waarde | tekenreeks |             |
 
 ## `src/generate`
+
+### createFlintArtifactSource
+
+**Soort:** functie
+
+```typescript
+function createFlintArtifactSource(compiled: FlintCompiledModule): string;
+```
+
+Genereer één op zichzelf staande module voor het inbedden van artefacten tijdens het bouwen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------------------- | ----------- |
+| samengesteld | FlintCompiledModule |             |
 
 ### createFlintDeclarationsSource
 
@@ -117,9 +164,9 @@ zelfgehoste metadata van de compiler voor consumenten van armatuur en tooling.
 
 #### Parameters
 
-| Naam         | Typ                 | Beschrijving |
-| ------------ | ------------------- | ------------ |
-| samengesteld | FlintCompiledModule |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------------------- | ----------- |
+| samengesteld | FlintCompiledModule |             |
 
 ### createFlintManifestSource
 
@@ -133,9 +180,9 @@ Genereer een module met het JSON-serialiseerbare ABI-manifest.
 
 #### Parameters
 
-| Naam         | Typ                 | Beschrijving |
-| ------------ | ------------------- | ------------ |
-| samengesteld | FlintCompiledModule |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------------------- | ----------- |
+| samengesteld | FlintCompiledModule |             |
 
 ### createFlintModuleSource
 
@@ -146,13 +193,14 @@ function createFlintModuleSource(compiled: FlintCompiledModule): string;
 ```
 
 Genereer de normale consumentenmodule. De gegenereerde module exporteert het
-gecompileerde functies en geeft hetzelfde ABI-manifest weer via `abiManifest`.
+gecompileerde functies, geeft hetzelfde ABI-manifest weer via `abiManifest`, en
+biedt een synchrone bibliotheeklader als standaardexport.
 
 #### Parameters
 
-| Naam         | Typ                 | Beschrijving |
-| ------------ | ------------------- | ------------ |
-| samengesteld | FlintCompiledModule |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------------------- | ----------- |
+| samengesteld | FlintCompiledModule |             |
 
 ### createFlintSourceMapSource
 
@@ -166,9 +214,9 @@ Genereer een module waarvan de standaardexport het gegenereerde bronkaartobject 
 
 #### Parameters
 
-| Naam         | Typ                 | Beschrijving |
-| ------------ | ------------------- | ------------ |
-| samengesteld | FlintCompiledModule |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------------------- | ----------- |
+| samengesteld | FlintCompiledModule |             |
 
 ### createFlintWasmSource
 
@@ -182,9 +230,9 @@ Genereer een module waarvan de standaardexport de gecompileerde Wasm-bytearray i
 
 #### Parameters
 
-| Naam         | Typ                 | Beschrijving |
-| ------------ | ------------------- | ------------ |
-| samengesteld | FlintCompiledModule |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------------------- | ----------- |
+| samengesteld | FlintCompiledModule |             |
 
 ### createFlintWatSource
 
@@ -195,60 +243,70 @@ function createFlintWatSource(compiled: FlintCompiledModule): string;
 ```
 
 Genereer een module waarvan de standaardexport de gecompileerde WAT-tekst is. Dit is
-bedoeld voor inspectie en conformiteitsverklaringen, niet voor Wasm-uitvoering.
+bedoeld voor inspectie en conformiteitsbeweringen, niet voor Wasm-uitvoering.
 
 #### Parameters
 
-| Naam         | Typ                 | Beschrijving |
-| ------------ | ------------------- | ------------ |
-| samengesteld | FlintCompiledModule |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------------------- | ----------- |
+| samengesteld | FlintCompiledModule |             |
 
-### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+### FLINT_ARTIFACT_QUERY
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
+export const FLINT_ARTIFACT_QUERY;
+```
+
+Query die alle gecompileerde artefactgegevens uit één grafiekcompilatie retourneert.
+
+### FLINT_DECLARATIONS_QUERY
+
+**Soort:** constant
+
+```typescript
+export const FLINT_DECLARATIONS_QUERY;
 ```
 
 Query die gekoppelde declaraties en grafiekmetagegevens retourneert als een ES-module.
 
-### FORGE_WEB_SCRIPT_MANIFEST_QUERY
+### FLINT_MANIFEST_QUERY
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
+export const FLINT_MANIFEST_QUERY;
 ```
 
 Query die het gecompileerde ABI-manifest retourneert als een ES-module.
 
-### FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+### FLINT_SOURCE_MAP_QUERY
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
+export const FLINT_SOURCE_MAP_QUERY;
 ```
 
 Query die de gegenereerde bronkaart retourneert als de standaardexport van de module.
 
-### FORGE_WEB_SCRIPT_WASM_QUERY
+### FLINT_WASM_QUERY
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY;
+export const FLINT_WASM_QUERY;
 ```
 
 Query die de gecompileerde Wasm-bytes retourneert als de standaardexport van de module.
 
-### FORGE_WEB_SCRIPT_WAT_QUERY
+### FLINT_WAT_QUERY
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY;
+export const FLINT_WAT_QUERY;
 ```
 
 Query die de gegenereerde WAT retourneert, inclusief het verlagen van de vertakkingstabel, als een tekenreeks.
@@ -263,15 +321,15 @@ Query die de gegenereerde WAT retourneert, inclusief het verlagen van de vertakk
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-Installeer Forge Web Script-compilatie en virtuele artefactquery's in Vite.
+Installeer Flint-compilatie en virtuele artefactquery's in Vite.
 De plug-in behoudt de scalaire Wasm-export-ABI terwijl het manifest zichtbaar wordt,
 declaraties, Wasm-, WAT- en bronkaartquery's voor gereedschappen en armaturen.
 
 #### Parameters
 
-| Naam   | Typ                | Beschrijving |
-| ------ | ------------------ | ------------ |
-| opties | FlintPluginOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------ | ----------- |
+| opties | FlintPluginOpties |             |
 
 ### flintPlugin
 
@@ -281,17 +339,17 @@ declaraties, Wasm-, WAT- en bronkaartquery's voor gereedschappen en armaturen.
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-Installeer Forge Web Script-compilatie en virtuele artefactquery's in Vite.
+Installeer Flint-compilatie en virtuele artefactquery's in Vite.
 De plug-in behoudt de scalaire Wasm-export-ABI terwijl het manifest zichtbaar wordt,
 declaraties, Wasm-, WAT- en bronkaartquery's voor gereedschappen en armaturen.
 
 #### Parameters
 
-| Naam   | Typ                | Beschrijving |
-| ------ | ------------------ | ------------ |
-| opties | FlintPluginOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------ | ----------- |
+| opties | FlintPluginOpties |             |
 
-### FlintViteError
+### FlintViteFout
 
 **Soort:** klasse
 

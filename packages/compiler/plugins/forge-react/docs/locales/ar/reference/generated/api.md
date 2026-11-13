@@ -1,4 +1,4 @@
-# @mission-platform/forge-plugin-react مرجع واجهة برمجة التطبيقات
+# مرجع @mission-platform/forge-plugin-react API
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
@@ -23,15 +23,15 @@ function emitReactModule(
 ): string;
 ```
 
-تحويل الوحدة بأكملها إلى React مصدر الهدف.
+قم بتحويل الوحدة بأكملها إلى مصدر الهدف React.
 
 #### حدود
 
-| الاسم          | اكتب            | الوصف |
-| -------------- | --------------- | ----- |
-| الوحدة النمطية | الوحدة الدلالية |       |
-| اسم المكون     | سلسلة           |       |
-| خطة            | ReactModulePlan |       |
+| الاسم | اكتب | الوصف |
+| ------------- | --------------- | ----------- |
+| الوحدة النمطية | الوحدة الدلالية |             |
+| اسم المكون | سلسلة |             |
+| خطة | ReactModulePlan |             |
 
 ## `src/index`
 
@@ -43,7 +43,7 @@ function emitReactModule(
 function forgeReactFramework(): FrameworkOutputPlugin;
 ```
 
-إنشاء React البرنامج المساعد للإخراج ومحولات بناء JSX الأصلية الخاصة به.
+أنشئ ملحق الإخراج React ومحولات إنشاء JSX الأصلية الخاصة به.
 
 ## `src/lower`
 
@@ -57,13 +57,13 @@ function isReactLowered(
 ): lowered is ReactLoweredModule;
 ```
 
-تضييق نطاق الخطة المملوكة للهدف إلى React واحد.
+قم بتضييق نطاق الخطة المملوكة للهدف إلى الخطة React.
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خفضت  | TargetLoweredModule \| غير محدد |       |
+| الاسم | اكتب | الوصف |
+| ------- | -------------------------------- | ----------- |
+| خفضت | TargetLoweredModule \| غير محدد |             |
 
 ### LowerReactModule
 
@@ -76,14 +76,14 @@ function lowerReactModule(
 ): TargetIntentions;
 ```
 
-قم بخفض الأشعة تحت الحمراء المحايدة إلى React الخطة التي تنفذها {@link TargetIntentions.lowered}.
+قم بخفض IR المحايد في خطة React التي يحملها {@link TargetIntentions.lowered}.
 
 #### حدود
 
-| الاسم              | اكتب            | الوصف |
-| ------------------ | --------------- | ----- |
-| الأشعة تحت الحمراء | الوحدة الدلالية |       |
-| السياق             | سياق الهدف      |       |
+| الاسم | اكتب | الوصف |
+| ------- | -------------- | ----------- |
+| الأشعة تحت الحمراء | الوحدة الدلالية |             |
+| السياق | سياق الهدف |             |
 
 ### PlanReactModule
 
@@ -96,14 +96,14 @@ function planReactModule(
 ): ReactModulePlan;
 ```
 
-بناء React خطة لوحدة واحدة.
+قم ببناء خطة React لوحدة واحدة.
 
 #### حدود
 
-| الاسم          | اكتب            | الوصف |
-| -------------- | --------------- | ----- |
-| الوحدة النمطية | الوحدة الدلالية |       |
-| اسم المكون     | سلسلة           |       |
+| الاسم | اكتب | الوصف |
+| ------------- | -------------- | ----------- |
+| الوحدة النمطية | الوحدة الدلالية |             |
+| اسم المكون | سلسلة |             |
 
 ### ReactClientDirectivePlan
 
@@ -113,7 +113,7 @@ function planReactModule(
 export interface ReactClientDirectivePlan
 ```
 
-ما إذا كان يجب الاشتراك في الوحدة أم لا Reactوقت تشغيل العميل.
+ما إذا كان يجب على الوحدة الاشتراك في وقت تشغيل عميل React.
 
 ### ReactHookPlan
 
@@ -133,7 +133,7 @@ export interface ReactHookPlan
 export interface ReactI18nPlan
 ```
 
-كيف محايدة `i18next` خرائط الاستخدام على Reactربط الترجمة.
+كيف يتم ربط استخدام `i18next` المحايد بخطاف الترجمة الخاص بـ React.
 
 ### ReactImportPlan
 
@@ -153,7 +153,7 @@ export interface ReactImportPlan
 export interface ReactLoweredModule extends TargetLoweredModule
 ```
 
-ال React الهدف `lowered` العقد، يتم التمييز فيه على {@link REACT_FRAMEWORK}.
+عقد `lowered` الخاص بالهدف React، يتم التمييز عليه على {@link REACT_FRAMEWORK}.
 
 ### ReactModulePlan
 
@@ -163,7 +163,7 @@ export interface ReactLoweredModule extends TargetLoweredModule
 export interface ReactModulePlan
 ```
 
-كل React القرار المتخذ لوحدة واحدة.
+يتم اتخاذ كل قرار React لوحدة واحدة.
 
 ### ReactPropPlan
 
@@ -173,7 +173,7 @@ export interface ReactModulePlan
 export interface ReactPropPlan
 ```
 
-A React prop، مع نوعه الذي تم حله والاختيارية.
+دعامة React، بنوعها الذي تم حله واختياريتها.
 
 ### ReactPropsParameter
 
@@ -198,18 +198,18 @@ function optimizeReactModule(
 ): TargetIntentions;
 ```
 
-صقل React يخطط.
+قم بتحسين خطة React.
 
 الرفع الثابت واختيار المفتاح المستقر مملوكان للأعلام المحايدة التي
-أنتجت مدخلاتها: مع `staticMarking` تعطيل بقاء الأشجار الفرعية المحددة
-مضمنة، ومع `stableKeyInference` يتم الاحتفاظ بتعطيل كل مفتاح مستنتج.
+أنتجوا مدخلاتهم: مع تعطيل `staticMarking`، تبقى الأشجار الفرعية المميزة
+مضمّن، ومع تعطيل `stableKeyInference`، يتم الاحتفاظ بكل مفتاح مستنتج.
 
 #### حدود
 
-| الاسم  | اكتب                 | الوصف |
-| ------ | -------------------- | ----- |
-| نوايا  | النوايا المستهدفة    |       |
-| خيارات | تارجتوبتيميزيوبتيونس |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------- | ----------- |
+| نوايا | النوايا المستهدفة |             |
+| خيارات | تارجتوبتيميزيوبتيونس |             |
 
 ### رد الفعل_التحسينات
 
@@ -219,4 +219,4 @@ function optimizeReactModule(
 export const REACT_OPTIMIZATIONS;
 ```
 
-المعرفات المسجلة على خطة React تم تحسين المحسن.
+المعرفات المسجلة في الخطة التي قام مُحسِّن React بتحسينها.

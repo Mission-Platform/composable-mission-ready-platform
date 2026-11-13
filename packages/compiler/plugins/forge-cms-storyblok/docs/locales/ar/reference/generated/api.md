@@ -1,4 +1,4 @@
-# @mission-platform/forge-cms-storyblok مرجع واجهة برمجة التطبيقات
+# مرجع @mission-platform/forge-cms-storyblok API
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
@@ -17,7 +17,7 @@
 
 ```typescript
 function analyzeStoryblokComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: StoryblokComponentNames,
   options: StoryblokProjectionOptions = {},
 ): AnalyzedStoryblokComponent;
@@ -27,11 +27,11 @@ function analyzeStoryblokComponent(
 
 #### حدود
 
-| الاسم      | اكتب                       | الوصف |
-| ---------- | -------------------------- | ----- |
-| ملف المصدر | ts.SourceFile              |       |
-| أسماء      | StoryblokComponentNames    |       |
-| خيارات     | StoryblokProjectionOptions |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| ملف المصدر | OxcParsedModule |             |
+| أسماء | StoryblokComponentNames |             |
+| خيارات | StoryblokProjectionOptions |             |
 
 ### contentFieldToStoryblokField
 
@@ -46,17 +46,17 @@ function contentFieldToStoryblokField(
 
 قم بتعيين حقل محايد واحد على حقل مخطط Storyblok.
 
-أمر إدخال المفتاح مهم: المنبعث `<folder>.json` تتم مقارنة
+يعد ترتيب إدخال المفتاح مهمًا: تتم مقارنة `<folder>.json` المنبعثة
 مقابل ما أنتجه CLI الخاص بـ Storyblok قبل تعميم هذا الإسقاط،
-هكذا `type`/`pos`/`description`/`translatable`/`options`/`default_value`/
-`required` يجب أن يحافظوا على نظامهم التاريخي.
+لذلك `type`/`pos`/`description`/`translatable`/`options`/`default_value`/
+يجب أن يحافظ `required` على ترتيبه التاريخي.
 
 #### حدود
 
-| الاسم  | اكتب                       | الوصف |
-| ------ | -------------------------- | ----- |
-| المجال | حقل المحتوى                |       |
-| خيارات | StoryblokProjectionOptions |       |
+| الاسم | اكتب | الوصف |
+| ------- | -------------------------- | ----------- |
+| المجال | حقل المحتوى |             |
+| خيارات | StoryblokProjectionOptions |             |
 
 ### contentKindToStoryblokFieldType
 
@@ -72,9 +72,9 @@ function contentKindToStoryblokFieldType(
 
 #### حدود
 
-| الاسم | اكتب                | الوصف |
-| ----- | ------------------- | ----- |
-| نوع   | ContentField["نوع"] |       |
+| الاسم | اكتب | الوصف |
+| ---- | -------------------- | ----------- |
+| نوع | ContentField["نوع"] |             |
 
 ### emitStoryblokComponent
 
@@ -82,7 +82,7 @@ function contentKindToStoryblokFieldType(
 
 ```typescript
 function emitStoryblokComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: StoryblokComponentNames,
   options: StoryblokProjectionOptions = {},
 ): StoryblokComponent;
@@ -92,11 +92,11 @@ function emitStoryblokComponent(
 
 #### حدود
 
-| الاسم      | اكتب                       | الوصف |
-| ---------- | -------------------------- | ----- |
-| ملف المصدر | ts.SourceFile              |       |
-| أسماء      | StoryblokComponentNames    |       |
-| خيارات     | StoryblokProjectionOptions |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| ملف المصدر | OxcParsedModule |             |
+| أسماء | StoryblokComponentNames |             |
+| خيارات | StoryblokProjectionOptions |             |
 
 ### ResolveStoryblokMetadata
 
@@ -113,14 +113,14 @@ function resolveStoryblokMetadata(
 
 يفوز التعليق التوضيحي الصريح للمكون على الإعدادات الافتراضية المستهدفة. عندما لا يكون كذلك
 المزود، فإن الاسم الفني يمنح الأيقونة معرفًا ثابتًا و
-يمنحها تجزئة الاسم لون Storyblok القابل للتكرار.
+تجزئة الاسم تمنحه لون Storyblok القابل للتكرار.
 
 #### حدود
 
-| الاسم  | اكتب                       | الوصف |
-| ------ | -------------------------- | ----- |
-| المكون | مكون المحتوى               |       |
-| خيارات | StoryblokProjectionOptions |       |
+| الاسم | اكتب | الوصف |
+| --------- | -------------------------- | ----------- |
+| المكون | مكون المحتوى |             |
+| خيارات | StoryblokProjectionOptions |             |
 
 ### toStoryblokComponent
 
@@ -133,14 +133,14 @@ function toStoryblokComponent(
 ): AnalyzedStoryblokComponent;
 ```
 
-قم بإسقاط مكون محتوى محايد على كائن وحقول مكون Storyblok الخاص به.
+قم بعرض مكون محتوى محايد على كائن وحقول مكون Storyblok الخاص به.
 
 #### حدود
 
-| الاسم  | اكتب                       | الوصف |
-| ------ | -------------------------- | ----- |
-| المكون | مكون المحتوى               |       |
-| خيارات | StoryblokProjectionOptions |       |
+| الاسم | اكتب | الوصف |
+| --------- | -------------------------- | ----------- |
+| المكون | مكون المحتوى |             |
+| خيارات | StoryblokProjectionOptions |             |
 
 ## `src/runtime/solid`
 
@@ -158,9 +158,9 @@ function StoryblokComponent(
 
 #### حدود
 
-| الاسم | اكتب                         | الوصف |
-| ----- | ---------------------------- | ----- |
-| خصائص | StoryblokComponentProperties |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | StoryblokComponentProperties |             |
 
 ### StoryblokComponentProperties
 
@@ -208,9 +208,9 @@ function StoryblokProvider(
 
 #### حدود
 
-| الاسم | اكتب                        | الوصف |
-| ----- | --------------------------- | ----- |
-| خصائص | StoryblokProviderProperties |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| خصائص | StoryblokProviderProperties |             |
 
 ### StoryblokProviderProperties
 
@@ -224,6 +224,36 @@ export interface StoryblokProviderProperties
 
 ## `src/storyblok`
 
+### defaultStoryblokFrameworks
+
+**النوع:** الوظيفة
+
+```typescript
+function defaultStoryblokFrameworks(): FrameworkOutputPlugin[];
+```
+
+الافتراضي 5 المكونات الإضافية لإطار العمل التي تستهدف React وVue وSvelte وSolid وWeb Components.
+
+### تعريفStoryblokCmsConfig
+
+**النوع:** الوظيفة
+
+```typescript
+function defineStoryblokCmsConfig(
+  options: StoryblokCmsConfigOptions,
+): UserConfig[];
+```
+
+قم بإرجاع تكوينات tsdown `UserConfig[]` الأصلية لأهداف Storyblok CMS.
+يحل `packageName` تلقائيًا من package.json إذا تم حذفه وكان افتراضيًا
+`componentsModule` والمكونات الإضافية الخمسة لإطار العمل القياسي.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------- | ----------- |
+| خيارات | StoryblokCmsConfigOptions |             |
+
 ### forgeStoryblokCms
 
 **النوع:** الوظيفة
@@ -236,9 +266,9 @@ function forgeStoryblokCms(options: ForgeStoryblokCmsOptions): CmsOutputPlugin;
 
 #### حدود
 
-| الاسم  | اكتب                    | الوصف |
-| ------ | ----------------------- | ----- |
-| خيارات | فورجستوريبلوككمسوبتيونس |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------ | ----------- |
+| خيارات | فورجستوريبلوككمسوبتيونس |             |
 
 ### ForgeStoryblokCmsOptions
 
@@ -264,9 +294,9 @@ function forgeStoryblokCmsTargets(
 
 #### حدود
 
-| الاسم  | اكتب                               | الوصف |
-| ------ | ---------------------------------- | ----- |
-| خيارات | فورجي ستوري بلوك كم تارجيتسوبتيونس |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------------- | ----------- |
+| خيارات | فورجي ستوري بلوك كم تارجيتسوبتيونس |             |
 
 ### ForgeStoryblokCmsTargetsOptions
 
@@ -274,6 +304,16 @@ function forgeStoryblokCmsTargets(
 
 ```typescript
 export interface ForgeStoryblokCmsTargetsOptions
+```
+
+لم يتم تقديم أي وصف.
+
+### StoryblokCmsConfigOptions
+
+**النوع:** الواجهة
+
+```typescript
+export interface StoryblokCmsConfigOptions
 ```
 
 لم يتم تقديم أي وصف.
@@ -288,7 +328,7 @@ export interface ForgeStoryblokCmsTargetsOptions
 export interface AnalyzedField
 ```
 
-تم تحليل إحدى الدعامات، وتحمل كلاً من حقل المخطط الخاص بها والبيانات اللازمة لتوصيل غلاف.
+تم تحليل إحدى الدعامات، وحملت حقل المخطط الخاص بها والبيانات اللازمة لتوصيل غلاف.
 
 ### تم تحليل StoryblokComponent
 
@@ -300,7 +340,17 @@ export interface AnalyzedStoryblokComponent
 
 النتيجة الكاملة لتحليل مكون محايد واحد لـ Storyblok.
 
-### أسماء مكونات Storyblok
+### StoryblokComponent
+
+**النوع:** الواجهة
+
+```typescript
+export interface StoryblokComponent
+```
+
+كائن Storyblok _component_ (المجموعة الفرعية القابلة للكتابة التي يتم استهلاكها عند دفع المكونات).
+
+### StoryblokComponentNames
 
 **النوع:** النوع
 
@@ -371,7 +421,7 @@ export interface StoryblokProjectionOptions
 export interface StoryblokSchemaField
 ```
 
-حقل مخطط Storyblok (قيمة إدخال واحد في مكون `schema`).
+حقل مخطط Storyblok (قيمة إدخال واحد في `schema` للمكون).
 
 ## `src/wrappers`
 
@@ -383,17 +433,17 @@ export interface StoryblokSchemaField
 function emitBlokDataType(analyzed: AnalyzedStoryblokComponent): string;
 ```
 
-بناء كتبته `blok` نوع الدعامة للمجمع - `SbBlokData & { … }` مع واحد
-عضو لكل حقل مخطط تم تحليله (literal-union `option`s, `SbBlokData[]` ل
-قابل للتعشيش `bloks`)، بحيث يحصل المستهلكون على واجهة دقيقة بدلاً من الواجهة المفتوحة
+أنشئ نوع الدعامة `blok` المكتوب للمجمّع - `SbBlokData & { … }` بواحد
+عضو لكل حقل مخطط تم تحليله (الاتحاد الحرفي `option`s، `SbBlokData[]` لـ
+`bloks` المتداخلة)، بحيث يحصل المستهلكون على واجهة دقيقة بدلاً من واجهة مفتوحة
 `SbBlokData & Record<string, unknown>`. يتحلل المكون الذي لا يحتوي على حقل إلى
-عارية `SbBlokData`.
+`SbBlokData` العارية.
 
 #### حدود
 
-| الاسم | اكتب                     | الوصف |
-| ----- | ------------------------ | ----- |
-| تحليل | تحليل StoryblokComponent |       |
+| الاسم | اكتب | الوصف |
+| -------- | -------------------------- | ----------- |
+| تحليل | تحليل StoryblokComponent |             |
 
 ### emitStoryblokBlokWrapper
 
@@ -407,17 +457,17 @@ function emitStoryblokBlokWrapper(
 ): string;
 ```
 
-قم بإصدار مصدر غلاف إطار العمل الذي يربط Storyblok `blok` دعم على
-مكون الإطار المبني: أ React/Solid `.tsx` الوحدة النمطية، أ Vue/Svelte سفك,
-أو مكون ويب أصلي (`.ts`) عنصر مخصص.
+قم بإصدار مصدر غلاف كتلة إطار العمل الذي يربط دعامة `blok` الخاصة بـ Storyblok
+مكون الإطار المدمج: وحدة React/Solid `.tsx`، وVue/Svelte SFC،
+أو عنصر مخصص مكون ويب أصلي (`.ts`).
 
 #### حدود
 
-| الاسم       | اكتب                        | الوصف |
-| ----------- | --------------------------- | ----- |
-| تحليل       | تحليل StoryblokComponent    |       |
-| الاسم العام | سلسلة                       |       |
-| خيارات      | StoryblokBlokWrapperOptions |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| تحليل | تحليل StoryblokComponent |             |
+| الاسم العام | سلسلة |             |
+| خيارات | StoryblokBlokWrapperOptions |             |
 
 ### StoryblokBlokWrapperOptions
 

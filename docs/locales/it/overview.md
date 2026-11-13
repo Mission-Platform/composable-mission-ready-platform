@@ -35,14 +35,14 @@ velocità e qualità del codice.
 
 ## Caratteristiche principali
 
-| Caratteristica          | Descrizione                                                                                                                                          |
-| :---------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Forgia JSX Runtime**  | Un dialetto JSX indipendente dal framework: crea una volta e crea per Vue 3, React, Svelte, Solid e componenti Web con zero sovraccarico di runtime. |
-| **Libreria componenti** | Un set completo di layout, tipografia e componenti interattivi creati una volta per più framework.                                                   |
-| **Gettoni di design**   | Un sistema di token conforme a DTCG che genera artefatti SCSS e TypeScript per temi coerenti.                                                        |
-| **Routing agnostico**   | Un sistema di routing indipendente dai tipi che funziona indipendentemente dal framework dell'interfaccia utente.                                    |
-| **I18n universale**     | Un wrapper di internazionalizzazione indipendente dal framework basato su i18next con adattatori Vue e React dedicati.                               |
-| **Utilità Wasm**        | Utilità ad alte prestazioni per la scansione di codici a barre, il controllo ortografico e altro ancora, basate su WebAssembly.                      |
+| Caratteristica | Descrizione |
+| :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forgia JSX Runtime** | Un dialetto JSX indipendente dal framework: crea una volta e crea per Vue 3, React, Svelte, Solid e componenti Web con zero sovraccarico di runtime. |
+| **Libreria componenti** | Un set completo di layout, tipografia e componenti interattivi creati una volta per più framework.                           |
+| **Gettoni di design** | Un sistema di token conforme a DTCG che genera artefatti SCSS e TypeScript per temi coerenti.                                     |
+| **Routing agnostico** | Un sistema di routing indipendente dai tipi che funziona indipendentemente dal framework dell'interfaccia utente.                                                               |
+| **I18n universale** | Un wrapper di internazionalizzazione indipendente dal framework basato su i18next con adattatori Vue e React dedicati.                              |
+| **Utilità Wasm** | Utilità ad alte prestazioni per la scansione di codici a barre, il controllo ortografico e altro ancora, basate su WebAssembly.                                     |
 
 ## Pila tecnologica
 
@@ -50,13 +50,13 @@ Mission Platform è costruita su uno stack moderno e ad alte prestazioni:
 
 - **Forge JSX (`@mission-platform/forge-jsx`)**: il framework dell'interfaccia utente principale: un runtime JSX indipendente dal framework in cui tutti
   vengono creati i componenti condivisi (tutto tranne le app).
-- **Vue 3**: il framework con cui sono create le applicazioni in `apps/` e uno dei numerosi target di rendering nativi per
-  Forgiare componenti.
+- **Vue 3**: utilizzato da diverse applicazioni e uno dei numerosi target di rendering nativi per i componenti Forge. Il
+  L'applicazione `service-monitor` utilizza invece RedwoodSDK/React.
 - **TypeScript**: lo standard per tutto il codice sorgente.
 - **Vite**: lo strumento di creazione che supporta un HMR veloce e pacchetti di produzione ottimizzati.
 - **pnpm Aree di lavoro**: gestione efficiente delle dipendenze con file di blocco condivisi.
 - **Turborepo**: orchestrazione e memorizzazione nella cache delle attività ad alte prestazioni.
-- **Worker/Pagine Cloudflare**: il target di distribuzione principale per applicazioni e API.
+- **Cloudflare Workers/Pages**: il target di distribuzione principale per applicazioni e API.
 - **Storybook**: l'ambiente di lavoro per lo sviluppo dei componenti e i test visivi.
 
 ## Struttura dell'ecosistema
@@ -74,7 +74,7 @@ Il repository è organizzato in diverse aree distinte:
 
 Per iniziare a sviluppare sulla Mission Platform, fai riferimento alle seguenti guide:
 
-- **[Configurazione dello sviluppo](development-setup.md)**: prepara il tuo ambiente e installa le dipendenze.
+- **[Configurazione sviluppo](development-setup.md)**: prepara il tuo ambiente e installa le dipendenze.
 - **[Architettura](architecture.md)**: approfondimento sui principi di progettazione della piattaforma e sul flusso delle dipendenze.
 - **[Struttura dell'area di lavoro](workspace-structure.md)**: comprendere il layout della directory e le convenzioni dei pacchetti.
 - **[Test](testing.md)**: informazioni sulle nostre strategie e strumenti di test.

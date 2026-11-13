@@ -32,11 +32,11 @@ Automatische Bereinigung: Trennt den Beobachter beim Aufheben der Bereitstellung
 
 #### Parameter
 
-| Name     | Geben Sie                    | ein Beschreibung |
-| -------- | ---------------------------- | ---------------- |
-| Ziel     | MpRef<Element \| null>       |                  |
-| Rückruf  | IntersectionObserverCallback |                  |
-| Optionen | IntersectionObserverInit     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ---------------------------- | ----------- |
+| Ziel | MpRef<Element \| null> |             |
+| Rückruf | IntersectionObserverCallback |             |
+| Optionen | IntersectionObserverInit |             |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -60,11 +60,11 @@ Automatische Bereinigung: Trennt den Beobachter beim Aufheben der Bereitstellung
 
 #### Parameter
 
-| Name     | Geben Sie            | ein Beschreibung |
-| -------- | -------------------- | ---------------- |
-| Ziel     | MpRef<Node \| null>  |                  |
-| Rückruf  | MutationCallback     |                  |
-| Optionen | MutationObserverInit |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | -------------------- | ----------- |
+| Ziel | MpRef<Node \| null> |             |
+| Rückruf | MutationCallback |             |
+| Optionen | MutationObserverInit |             |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -85,7 +85,7 @@ Automatische Bereinigung: Trennt den Beobachter beim Aufheben der Bereitstellung
 
 #### Parameter
 
-| Name     | Geben Sie                   | ein Beschreibung |
-| -------- | --------------------------- | ---------------- |
-| Rückruf  | PerformanceObserverCallback |                  |
-| Optionen | PerformanceObserverInit     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------------------------- | ----------- |
+| Rückruf | PerformanceObserverCallback |             |
+| Optionen | PerformanceObserverInit |             |

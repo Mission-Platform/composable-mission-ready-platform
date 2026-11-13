@@ -38,9 +38,9 @@ binaire en ligne plutôt qu'une URL `.wasm`.
 
 #### Paramètres
 
-| Nom     | Tapez                        | Descriptif |
-| ------- | ---------------------------- | ---------- |
-| options | AssemblyScriptCompileOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---------------------------- | ----------- |
+| options | AssemblyScriptCompileOptions |             |
 
 ## `src/generate`
 
@@ -59,10 +59,10 @@ un décodeur base64 multi-environnements, la fonction `instantiate` extraite
 
 #### Paramètres
 
-| Nom              | Tapez  | Descriptif |
-| ---------------- | ------ | ---------- |
-| wasmBase64       | chaîne |            |
-| instancierSource | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ----------------- | ------ | ----------- |
+| wasmBase64 | chaîne |             |
+| instancierSource | chaîne |             |
 
 ### extraireInstancier
 
@@ -79,9 +79,9 @@ instanciation à partir d'un binaire en ligne (base64) au lieu d'une URL.
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| liaisonsSource | chaîne |            |
+| Nom | Tapez | Descriptif |
+| -------------- | ------ | ----------- |
+| liaisonsSource | chaîne |             |
 
 ## `src/index`
 
@@ -103,9 +103,9 @@ La compilation s'exécute dans le hook de rollup `buildStart`, le module génér
 
 #### Paramètres
 
-| Nom     | Tapez                       | Descriptif |
-| ------- | --------------------------- | ---------- |
-| options | AssemblyScriptPluginOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | --------------------------- | ----------- |
+| options | AssemblyScriptPluginOptions |             |
 
 ### Options du plugin AssemblyScript
 
@@ -135,6 +135,6 @@ La compilation s'exécute dans le hook de rollup `buildStart`, le module génér
 
 #### Paramètres
 
-| Nom     | Tapez                       | Descriptif |
-| ------- | --------------------------- | ---------- |
-| options | AssemblyScriptPluginOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | --------------------------- | ----------- |
+| options | AssemblyScriptPluginOptions |             |

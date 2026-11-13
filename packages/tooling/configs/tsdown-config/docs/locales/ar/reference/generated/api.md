@@ -1,4 +1,4 @@
-# @mission-platform/tsdown-config مرجع واجهة برمجة التطبيقات
+# مرجع @mission-platform/tsdown-config API
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
@@ -19,14 +19,44 @@
 function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
-بناء التدحرج `external` / `deps.neverBundle` المسند الذي يعالج كل
-اسم في `names` (وأي من واردات المسار الفرعي الخاصة بهم، على سبيل المثال `pkg/sub`) كخارجية.
+قم بإنشاء مسند Rolldown `external` / `deps.neverBundle` الذي يعالج كل
+الاسم في `names` (وأي من عمليات استيراد المسار الفرعي الخاصة بها، على سبيل المثال `pkg/sub`) باعتبارها خارجية.
 
 #### حدود
 
-| الاسم | اكتب                | الوصف |
-| ----- | ------------------- | ----- |
-| أسماء | سلسلة للقراءة فقط[] |       |
+| الاسم | اكتب | الوصف |
+| ----- | ----------------- | ----------- |
+| أسماء | سلسلة للقراءة فقط[] |             |
+
+### cssBundlePlugin
+
+**النوع:** الوظيفة
+
+```typescript
+function cssBundlePlugin(): TsdownPlugin;
+```
+
+أعد ربط كل أصول CSS المستخرجة بوحدة JS التي تمتلكها.
+
+مقتطفات tsdown/Rolldown تستورد `*.module.scss` / `*.scss` إلى
+أصول `.css` المستقلة - مع تجزئة اسم الفئة المطبقة بالفعل و
+تم حل الأسماء المخبوزة في خرائط فئة الأخوة - ولكن على عكس Vite، فهي كذلك
+_not_* أعد إدخال `import './x.css'` المطابق في مقطع JS (يترك
+عنصر نائب `/* empty css *\/` بدلاً من ذلك) ويكتب تلك الأصول مباشرة إليه
+القرص بدلاً من خلال الحزمة التراكمية. مستهلك يستورد أحد المكونات
+وبالتالي يحصل على ترميزه بدون أنماطه، ولا يعرض Rolldown أي شيء
+`viteMetadata.importedCss` لإعادة بناء الرسم البياني CSS لكل قطعة.
+
+لذلك، في `writeBundle` (بعد وجود كل أصل على القرص)، يقوم هذا البرنامج الإضافي بإضافة
+التأثير الجانبي `import './x.css'` على الوحدة النمطية الخاصة بكل ورقة أنماط (انظر
+{@link ResolveCssOwner}) — خريطة فئة CSS-Module (أو المكون بالنسبة إلى Vue)
+قطعة) التي يستوردها المستهلكون بالفعل. نظرًا لأن ورقة الأنماط مترابطة في ملف
+الوحدة النمطية المستخدمة فعليًا (ليست برميل إعادة تصدير خالصًا يُسمى import
+سوف تهتز الشجرة بعيدًا)، فإن استيراد مكون واحد يسحب بشكل موثوق تمامًا
+أنماط هذا المكون، وأنماط المكتبة بأكملها عندما يكون البرميل
+مستورد - يطابق التكوين التلقائي لكل مكون في مكتبة Vite التاريخية
+تحميل CSS. تمت تجزئة أوراق الأنماط مرة واحدة بالفعل، لذلك يتم تجزئة حزم البيانات النهائية
+شحنها حرفيا.
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
@@ -37,7 +67,24 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 أسماء الحزم الافتراضية التي يجب على كل مكتبة مشتركة التعامل معها على أنها مقدمة من نظير.
-مرايا `@mission-platform/vite-config`'s {@link DEFAULT_LIBRARY_EXTERNALS}.
+يعكس `@mission-platform/vite-config` {@link DEFAULT_LIBRARY_EXTERNALS}.
+
+### تعريفTsdownForgeTarget
+
+**النوع:** الوظيفة
+
+```typescript
+function defineTsdownForgeTarget(options: TsdownForgeTargetOptions): UserConfig;
+```
+
+أنشئ تكوين tsdown لهدف مكون Forge المحايد (`dist/components/**`).
+الإعداد الافتراضي `outDir` هو `'dist/components'` مع الحفاظ على كافة ميزات {@link DefineTsdownLibrary}.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------ | ----------- |
+| خيارات | تسداونفورجتارجيتوبشنز |             |
 
 ### تعريفTsdownLibrary
 
@@ -47,15 +94,15 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
-قم ببناء تكوين tsdown لملف عادي TypeScript مكتبة (أو حزمة واحدة) -
+أنشئ تكوين tsdown لمكتبة TypeScript (أو حزمة واحدة) عادية -
 النموذج الأصلي أ/ب. مرايا `defineLibraryConfig` دلالات التخريج من
 `@mission-platform/vite-config`.
 
 #### حدود
 
-| الاسم  | اكتب              | الوصف |
-| ------ | ----------------- | ----- |
-| خيارات | تسداونليبراريوبشن |       |
+| الاسم | اكتب | الوصف |
+| ------- | -------------------- | ----------- |
+| خيارات | تسداونليبراريوبشن |             |
 
 ### تعريفTsdownVueLibrary
 
@@ -65,32 +112,61 @@ function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
-مثل {@link DefineTsdownLibrary}، ولكن الأسلاك `unplugin-vue` و Vue-علم DTS
-للطرود التي يتم شحنها `.vue` مركبات الكربون الكلورية فلورية (`i18n`, `router`, …).
+مثل {@link DefineTsdownLibrary}، ولكن يتم توصيل أسلاك `unplugin-vue` وVue بنظام dts
+للحزم التي تشحن ملفات SFC `.vue` (`i18n`، `router`، ...).
 
 #### حدود
 
-| الاسم  | اكتب              | الوصف |
-| ------ | ----------------- | ----- |
-| خيارات | تسداونليبراريوبشن |       |
+| الاسم | اكتب | الوصف |
+| ------- | -------------------- | ----------- |
+| خيارات | تسداونليبراريوبشن |             |
 
 ### readPackageDependencyNames
 
 **النوع:** الوظيفة
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[];
+function readPackageDependencyNames(rootDirectory: string, options?: { includeDevDependencies?: boolean }): string[];
 ```
 
-اقرأ `dependencies` و `peerDependencies` أعلن في package.json
-تقع في `rootDirectory`. يستخدم للحفاظ على تبعيات وقت تشغيل المكتبة
+اقرأ `dependencies` و`peerDependencies` المعلنين في package.json
+يقع في `rootDirectory`. يستخدم للحفاظ على تبعيات وقت تشغيل المكتبة
 من حزمتها الخاصة حتى يتمكن المستهلكون من استخلاصها وهزها.
 
 #### حدود
 
-| الاسم        | اكتب  | الوصف |
-| ------------ | ----- | ----- |
-| الدليل الجذر | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ------------- | ------------------------------------ | ----------- |
+| الدليل الجذر | سلسلة |             |
+| خيارات | { includeDevDependeency?: منطقية } |             |
+
+### ResolveCssOwner
+
+**النوع:** الوظيفة
+
+```typescript
+function resolveCssOwner(outputDirectory: string, cssRelative: string): string | undefined;
+```
+
+قم بحل وحدة JS التي "تمتلك" ورقة الأنماط المستخرجة `cssRelative`، لذلك
+يمكن ربط استيراد الآثار الجانبية مرة أخرى إلى وحدة نمطية يستخدمها المستهلكون بالفعل
+سحب في.
+
+يصدر كل إصدار إطار عمل (react/محايد/solid/svelte/web-components)
+خريطة فئة CSS-Module `X.module.js` بجوار `X.css` المستخرجة، وكل منها
+يقوم المكون الذي يستخدم هذه الفئات باستيراد خريطة الفصل - لذا فإن خريطة الفصل هي
+المالك الطبيعي (`forge-accordion.css` → `forge-accordion.module.js`، مشترك
+`size.css` → `size.module.js`). يقوم Vue بدلاً من ذلك بإصدار أوراق أنماط ذات نطاق SFC مسماة
+`X.vue_vue_type_style_index_*.css` جنبًا إلى جنب مع قطعة مكون `X.js` البسيطة، لذلك
+تلك القطعة هي المالك. إرجاع مسار المالك بالنسبة لدير الإخراج،
+أو `undefined` في حالة عدم وجود قطعة مالكة على القرص.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------------- | ------ | ----------- |
+| دليل الإخراج | سلسلة |             |
+| CssRelative | سلسلة |             |
 
 ### ResolveTsdownOutputDirectory
 
@@ -106,11 +182,21 @@ function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: st
 
 #### حدود
 
-| الاسم        | اكتب  | الوصف |
-| ------------ | ----- | ----- |
-| الدليل الجذر | سلسلة |       |
-| دليل الإخراج | سلسلة |       |
-| جذر الإخراج  | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| --------------- | ------ | ----------- |
+| الدليل الجذر | سلسلة |             |
+| دليل الإخراج | سلسلة |             |
+| جذر الإخراج | سلسلة |             |
+
+### TsdownForgeTargetOptions
+
+**النوع:** الواجهة
+
+```typescript
+export interface TsdownForgeTargetOptions extends TsdownLibraryOptions
+```
+
+لم يتم تقديم أي وصف.
 
 ### TsdownLibraryOptions
 

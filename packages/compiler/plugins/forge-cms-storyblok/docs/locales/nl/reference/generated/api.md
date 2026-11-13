@@ -17,7 +17,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-c
 
 ```typescript
 function analyzeStoryblokComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: StoryblokComponentNames,
   options: StoryblokProjectionOptions = {},
 ): AnalyzedStoryblokComponent;
@@ -27,11 +27,11 @@ Analyseer een neutrale componentenmodule voor Storyblok.
 
 #### Parameters
 
-| Naam        | Typ                      | Beschrijving |
-| ----------- | ------------------------ | ------------ |
-| bronbestand | ts.Bronbestand           |              |
-| namen       | StoryblokComponentNamen  |              |
-| opties      | StoryblokProjectieOpties |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------- | ----------- |
+| bronbestand | OxcParsedModule |             |
+| namen | StoryblokComponentNamen |             |
+| opties | StoryblokProjectieOpties |             |
 
 ### contentFieldToStoryblokField
 
@@ -53,10 +53,10 @@ dus `type`/`pos`/`description`/`translatable`/`options`/`default_value`/
 
 #### Parameters
 
-| Naam   | Typ                      | Beschrijving |
-| ------ | ------------------------ | ------------ |
-| veld   | InhoudVeld               |              |
-| opties | StoryblokProjectieOpties |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------- | ----------- |
+| veld | InhoudVeld |             |
+| opties | StoryblokProjectieOpties |             |
 
 ### contentKindToStoryblokFieldType
 
@@ -72,9 +72,9 @@ Het Storyblok-veldtype heeft een neutrale inhoudssoort.
 
 #### Parameters
 
-| Naam  | Typ                   | Beschrijving |
-| ----- | --------------------- | ------------ |
-| soort | ContentField["soort"] |              |
+| Naam | Typ | Beschrijving |
+| ---- | -------------------- | ----------- |
+| soort | ContentField["soort"] |             |
 
 ### emitStoryblokComponent
 
@@ -82,7 +82,7 @@ Het Storyblok-veldtype heeft een neutrale inhoudssoort.
 
 ```typescript
 function emitStoryblokComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: StoryblokComponentNames,
   options: StoryblokProjectionOptions = {},
 ): StoryblokComponent;
@@ -92,11 +92,11 @@ Zend alleen het Storyblok-componentobject (de blokconfiguratie) voor een compone
 
 #### Parameters
 
-| Naam        | Typ                      | Beschrijving |
-| ----------- | ------------------------ | ------------ |
-| bronbestand | ts.Bronbestand           |              |
-| namen       | StoryblokComponentNamen  |              |
-| opties      | StoryblokProjectieOpties |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------- | ----------- |
+| bronbestand | OxcParsedModule |             |
+| namen | StoryblokComponentNamen |             |
+| opties | StoryblokProjectieOpties |             |
 
 ### solveStoryblokMetadata
 
@@ -117,10 +117,10 @@ naamhash geeft het een herhaalbare Storyblok-kleur.
 
 #### Parameters
 
-| Naam        | Typ                      | Beschrijving |
-| ----------- | ------------------------ | ------------ |
-| bestanddeel | InhoudComponent          |              |
-| opties      | StoryblokProjectieOpties |              |
+| Naam | Typ | Beschrijving |
+| --------- | -------------------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
+| opties | StoryblokProjectieOpties |             |
 
 ### naarStoryblokComponent
 
@@ -137,10 +137,10 @@ Projecteer een neutrale inhoudscomponent op het Storyblok-componentobject en de 
 
 #### Parameters
 
-| Naam        | Typ                      | Beschrijving |
-| ----------- | ------------------------ | ------------ |
-| bestanddeel | InhoudComponent          |              |
-| opties      | StoryblokProjectieOpties |              |
+| Naam | Typ | Beschrijving |
+| --------- | -------------------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
+| opties | StoryblokProjectieOpties |             |
 
 ## `src/runtime/solid`
 
@@ -158,9 +158,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam          | Typ                             | Beschrijving |
-| ------------- | ------------------------------- | ------------ |
-| eigenschappen | StoryblokComponentEigenschappen |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------------- | ----------- |
+| eigenschappen | StoryblokComponentEigenschappen |             |
 
 ### StoryblokComponentEigenschappen
 
@@ -208,9 +208,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam          | Typ                            | Beschrijving |
-| ------------- | ------------------------------ | ------------ |
-| eigenschappen | StoryblokProviderEigenschappen |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------- | ----------- |
+| eigenschappen | StoryblokProviderEigenschappen |             |
 
 ### StoryblokProviderEigenschappen
 
@@ -224,6 +224,36 @@ Geen beschrijving opgegeven.
 
 ## `src/storyblok`
 
+### standaardStoryblokFrameworks
+
+**Soort:** functie
+
+```typescript
+function defaultStoryblokFrameworks(): FrameworkOutputPlugin[];
+```
+
+Standaard 5 Forge-framework-plug-ins gericht op React, Vue, Svelte, Solid en webcomponenten.
+
+### definieerStoryblokCmsConfig
+
+**Soort:** functie
+
+```typescript
+function defineStoryblokCmsConfig(
+  options: StoryblokCmsConfigOptions,
+): UserConfig[];
+```
+
+Retourneer native tsdown `UserConfig[]`-configuraties voor Storyblok CMS-doelen.
+Zet `packageName` automatisch om uit package.json indien weggelaten en standaardwaarden
+`componentsModule` en de 5 standaard framework-uitvoerplug-ins.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------- | ----------- |
+| opties | StoryblokCmsConfigOptions |             |
+
 ### forgeStoryblokCms
 
 **Soort:** functie
@@ -236,9 +266,9 @@ Bind Storyblok-projectie aan een framework-uitvoerplug-in die eigendom is van de
 
 #### Parameters
 
-| Naam   | Typ                      | Beschrijving |
-| ------ | ------------------------ | ------------ |
-| opties | ForgeStoryblokCmsOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------ | ----------- |
+| opties | ForgeStoryblokCmsOptions |             |
 
 ### ForgeStoryblokCmsOptions
 
@@ -264,9 +294,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam   | Typ                             | Beschrijving |
-| ------ | ------------------------------- | ------------ |
-| opties | ForgeStoryblokCmsTargetsOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------------- | ----------- |
+| opties | ForgeStoryblokCmsTargetsOptions |             |
 
 ### ForgeStoryblokCmsTargetsOptions
 
@@ -274,6 +304,16 @@ Geen beschrijving opgegeven.
 
 ```typescript
 export interface ForgeStoryblokCmsTargetsOptions
+```
+
+Geen beschrijving opgegeven.
+
+### StoryblokCmsConfigOptions
+
+**Soort:** interface
+
+```typescript
+export interface StoryblokCmsConfigOptions
 ```
 
 Geen beschrijving opgegeven.
@@ -299,6 +339,16 @@ export interface AnalyzedStoryblokComponent
 ```
 
 Het volledige resultaat van het analyseren van één neutraal onderdeel voor Storyblok.
+
+### StoryblokComponent
+
+**Soort:** interface
+
+```typescript
+export interface StoryblokComponent
+```
+
+Een Storyblok _component object_ (de beschrijfbare subset die wordt verbruikt bij het pushen van componenten).
 
 ### StoryblokComponentNamen
 
@@ -331,7 +381,7 @@ export type StoryblokFieldType =
   | "plugin";
 ```
 
-In het Storyblok-veld worden de neutrale inhoudstypen weergegeven.
+In het Storyblok-veld worden de neutrale inhoudstypen in kaart gebracht.
 
 ### StoryblokMetadataOptions
 
@@ -391,9 +441,9 @@ kale `SbBlokData`.
 
 #### Parameters
 
-| Naam         | Typ                           | Beschrijving |
-| ------------ | ----------------------------- | ------------ |
-| geanalyseerd | AnalyseerdeStoryblokComponent |              |
+| Naam | Typ | Beschrijving |
+| -------- | -------------------------- | ----------- |
+| geanalyseerd | AnalyseerdeStoryblokComponent |             |
 
 ### emitStoryblokBlokWrapper
 
@@ -407,17 +457,17 @@ function emitStoryblokBlokWrapper(
 ): string;
 ```
 
-Zend de framework-blok-wrapperbron uit die de `blok`-prop van Storyblok verbindt
+Zend de framework-blok-wrapper-bron uit die de `blok`-prop van Storyblok verbindt
 de ingebouwde raamwerkcomponent: een React/Solid `.tsx`-module, een Vue/Svelte SFC,
 of een eigen webcomponent (`.ts`) aangepast element.
 
 #### Parameters
 
-| Naam         | Typ                           | Beschrijving |
-| ------------ | ----------------------------- | ------------ |
-| geanalyseerd | AnalyseerdeStoryblokComponent |              |
-| publiekeNaam | tekenreeks                    |              |
-| opties       | StoryblokBlokWrapperOpties    |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------- | ----------- |
+| geanalyseerd | AnalyseerdeStoryblokComponent |             |
+| publiekeNaam | tekenreeks |             |
+| opties | StoryblokBlokWrapperOpties |             |
 
 ### StoryblokBlokWrapperOpties
 

@@ -6,20 +6,20 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > Idioma: Español (es)
 
 Mission Platform utiliza un sistema de **Diseño Atómico** para organizar los componentes en niveles jerárquicos de complejidad. cada
-El componente es una unidad de "escritura única" creada en el dialecto neutral Forge JSX (`@mission-platform/forge-jsx`), asegurando
+El componente es una unidad de "escritura única" creada en el dialecto neutral Forge JSX (`@mission-platform/forge-jsx`), lo que garantiza
 coherencia entre múltiples marcos.
 
 ## Niveles de diseño
 
 Los componentes se clasifican en cinco niveles según su alcance y responsabilidad.
 
-| Nivel          | Carpeta                     | Descripción                                                                                                                                                                                               |
-| :------------- | :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Átomos**     | `src/components/atoms/`     | Las primitivas de interfaz de usuario más pequeñas (p. ej., `ForgeButton`, `ForgeInput`, `ForgeBadge`). Por lo general, son unidades funcionales que no pueden descomponerse más sin perder su propósito. |
-| **Moléculas**  | `src/components/molecules/` | Composiciones simples de átomos (por ejemplo, `ForgeSearchInput`, `ForgeFieldSet`). Funcionan juntos como una unidad.                                                                                     |
-| **Organismos** | `src/components/organisms/` | Secciones complejas de la interfaz de usuario compuestas de átomos, moléculas y otros organismos (p. ej., `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                     |
-| **Plantillas** | `src/components/templates/` | Diseños a nivel de página que definen la estructura del contenido (por ejemplo, `ForgeHero`, `ForgeAppLayout`). A menudo utilizan espacios para definir dónde se debe colocar el contenido.               |
-| **Páginas**    | `src/components/pages/`     | Instancias específicas de plantillas llenas de contenido y datos concretos (p. ej., `AccountSettingsPage`).                                                                                               |
+| Nivel | Carpeta | Descripción |
+| :------------ | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Átomos** | `src/components/atoms/` | Primitivas de interfaz de usuario más pequeñas (por ejemplo, `ForgeButton`, `ForgeInput`, `ForgeBadge`). Por lo general, son unidades funcionales que no pueden descomponerse más sin perder su propósito. |
+| **Moléculas** | `src/components/molecules/` | Composiciones simples de átomos (por ejemplo, `ForgeSearchInput`, `ForgeFieldSet`). Funcionan juntos como una unidad.                                                                    |
+| **Organismos** | `src/components/organisms/` | Secciones de interfaz de usuario complejas compuestas de átomos, moléculas y otros organismos (p. ej., `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
+| **Plantillas** | `src/components/templates/` | Diseños a nivel de página que definen la estructura del contenido (por ejemplo, `ForgeHero`, `ForgeAppLayout`). A menudo utilizan espacios para definir dónde se debe colocar el contenido.                     |
+| **Páginas** | `src/components/pages/` | Instancias específicas de plantillas llenas de contenido y datos concretos (por ejemplo, `AccountSettingsPage`).                                                                        |
 
 ## Diseño de carpeta de componentes
 
@@ -49,11 +49,11 @@ estructura de la barra lateral.
 
 ### Nombre del archivo
 
-Las historias deben utilizar el `.stories.tsx` extensión.
+Las historias deben utilizar la extensión `.stories.tsx`.
 
 ### Convención de título
 
-El `title` campo en el libro de cuentos `meta` El objeto debe seguir este patrón:
+El campo `title` en el objeto Storybook `meta` debe seguir este patrón:
 
 ```text
 <Level>/<Category>/<Component>
@@ -75,13 +75,14 @@ const meta = {
 
 ## Estándares de creación
 
-1. **Neutralidad del marco**: nunca separe el autor Vue y React versiones. Usar `@mission-platform/forge-jsx`.
-2. **Nombre**: Los componentes deben usar el `Base` prefijo (por ejemplo, `ForgeCard`) a menos que sean implementaciones específicas.
-3. **Seguridad de tipos**: Exportar un `*Properties` interfaz para los accesorios del componente.
-4. **Pruebas**: una ubicación compartida `.spec.ts` Se requiere para cada componente.
-5. **Andamios**: Utilice el `scaffold_component` Herramienta MCP para garantizar la estructura de directorios y el texto estándar correctos.
+1. **Neutralidad del marco**: nunca cree versiones separadas de Vue y React. Utilice `@mission-platform/forge-jsx`.
+2. **Nombres**: los componentes deben usar el prefijo `Base` (por ejemplo, `ForgeCard`) a menos que sean implementaciones específicas.
+3. **Seguridad de tipos**: exporte una interfaz `*Properties` para los accesorios del componente.
+4. **Pruebas**: Se requiere un `.spec.ts` ubicado en el mismo lugar para cada componente.
+5. **Andamiaje**: Utilice la herramienta MCP `scaffold_component` a través de un servidor MCP de Mission Platform Developer conectado para
+   Asegúrese de que la estructura de directorios y el texto estándar sean correctos.
 
-```bash
+```text
 # Example: Creating a new 'forge-chip' atom in the 'components' package
 scaffold_component(name="forge-chip", level="atom", area="Display", package="components", apply=true)
 ```
@@ -90,5 +91,5 @@ scaffold_component(name="forge-chip", level="atom", area="Display", package="com
 
 - [Desarrollo de paquetes](package-development.md)
 - [Autoría componible](composable-authoring.md)
-- [Creación de tiendas](store-authoring.md)
+- [Autoría de tienda](store-authoring.md)
 - [Autoría de utilidades](util-authoring.md)

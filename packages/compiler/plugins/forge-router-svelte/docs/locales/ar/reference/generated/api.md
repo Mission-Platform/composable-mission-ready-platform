@@ -27,16 +27,16 @@ function createSvelteKitRouterCapabilities(input: {
 
 #### حدود
 
-| الاسم   | اكتب                                                                                                                                                                               | الوصف |
-| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| الإدخال | { الصفحة: { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>؛ المعلمات: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; ResolvePath ؟: (path: string) => string; } |       |
+| الاسم | اكتب | الوصف |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| الإدخال | { الصفحة: { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>؛ المعلمات: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; ResolvePath ؟: (path: string) => string; } |             |
 
 ### مبلينك
 
 **النوع:** مكون
 
 ```typescript
-export const MpLink;
+export MpLink = 'a'
 ```
 
 يستخدم SvelteKit نقاط ارتساء عادية للروابط. المترجم يحافظ على هذه العلامة هكذا
@@ -47,7 +47,7 @@ export const MpLink;
 **النوع:** مكون
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Outlet مملوك للتطبيق في SvelteKit؛ ترفض تشخيصات القدرة `view`.
@@ -64,9 +64,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### حدود
 
-| الاسم | اكتب             | الوصف |
-| ----- | ---------------- | ----- |
-| إلى   | مبرووتلوكيشن راو |       |
+| الاسم | اكتب | الوصف |
+| ---- | ------------------ | ----------- |
+| إلى | مبرووتلوكيشن راو |             |
 
 ### setForgeSvelteKitRouter
 
@@ -81,9 +81,9 @@ function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void;
 
 #### حدود
 
-| الاسم | اكتب                   | الوصف |
-| ----- | ---------------------- | ----- |
-| سطح   | SvelteKitRouterSurface |       |
+| الاسم | اكتب | الوصف |
+| ------- | ---------------------- | ----------- |
+| سطح | SvelteKitRouterSurface |             |
 
 ### SvelteKitRouterSurface
 
@@ -110,9 +110,9 @@ function toMpLocationFromSvelte(page: {
 
 #### حدود
 
-| الاسم | اكتب                                                                                     | الوصف |
-| ----- | ---------------------------------------------------------------------------------------- | ----- |
-| صفحة  | { رابط: Pick<URL, 'pathname' \| 'search' \| 'hash'>؛ المعلمات: Record<string, string>; } |       |
+| الاسم | اكتب | الوصف |
+| ---- | ------------------------------------------------------------------------------------- | ----------- |
+| صفحة | { رابط: Pick<URL, 'pathname' \| 'search' \| 'hash'>؛ المعلمات: Record<string, string>; } |             |
 
 ### إلىSvelteHref
 
@@ -126,10 +126,10 @@ function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => st
 
 #### حدود
 
-| الاسم      | اكتب                     | الوصف |
-| ---------- | ------------------------ | ----- |
-| إلى        | مبرووتلوكيشن راو         |       |
-| مسار العزم | (المسار: سلسلة) => سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ----------- | ------------------------ | ----------- |
+| إلى | مبرووتلوكيشن راو |             |
+| مسار العزم | (المسار: سلسلة) => سلسلة |             |
 
 ### useMpNavigation
 
@@ -139,7 +139,7 @@ function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => st
 function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
-اقرأ فقط إمكانيات التنقل/الحل الضرورية.
+اقرأ فقط قدرات التنقل/الحل الضرورية.
 
 ### useMpRoute
 

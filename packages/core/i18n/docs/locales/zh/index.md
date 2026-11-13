@@ -6,7 +6,7 @@
 > 语言: 简体中文 (zh)
 
 `@mission-platform/i18n` 是一个与框架无关的国际化 (i18n) 包装器
-上 [i18下一个](https://www.i18next.com/）。它提供了一种统一的方式来处理整个任务平台的翻译，
+在 [i18next](https://www.i18next.com/) 上。它提供了一种统一的方式来处理整个任务平台的翻译，
 带有适用于 Vue 3 和 React 的专用适配器。
 
 ## 切入点
@@ -17,11 +17,11 @@ Vite 中的 `resolve.conditions`（请参阅 `defineFrameworkAppConfig` / `frame
 `@mission-platform/vite-config`）和 TypeScript 中的 `customConditions`（通过
 `@mission-platform/typescript-config/framework-<name>` 预设）。每个进口都保持裸露。
 
-| 活跃状态   | 决定         | 主要出口产品                                                            |
-| :--------- | :----------- | :---------------------------------------------------------------------- |
-| _（无）_   | 框架中立核心 | `createForgeI18N`、`forgeNamespace`、`localeNamespaces`、`mergeLocales` |
-| `mp:vue`   | Vue 3 适配器 | 中性核心加`createForgeI18NVue`、`useI18n`                               |
-| `mp:react` | React 适配器 | 中性核心加`ForgeI18NProvider`、`useI18n`                                |
+|活跃状态 |决定|主要出口产品|
+| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
+| _（无）_ |框架中立核心 | `createForgeI18N`、`forgeNamespace`、`localeNamespaces`、`mergeLocales` |
+| `mp:vue` | Vue 3 适配器 |中性核心加`createForgeI18NVue`、`useI18n` |
+| `mp:react` | React 适配器 |中性核心加`ForgeI18NProvider`、`useI18n` |
 
 ## 核心概念
 
@@ -29,7 +29,7 @@ Vite 中的 `resolve.conditions`（请参阅 `defineFrameworkAppConfig` / `frame
 
 内核提供`createForgeI18N(options)`，它返回同步初始化的i18next实例。
 
-- **插值**：使用单括号分隔符（例如 `{name}`）。
+- **插值**：使用单大括号分隔符（例如 `{name}`）。
 - **HTML 转义**：默认禁用 (`escapeValue: false`) 以允许框架根据
   他们自己的安全模型。
 

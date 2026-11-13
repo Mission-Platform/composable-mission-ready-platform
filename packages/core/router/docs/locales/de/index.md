@@ -12,7 +12,7 @@ andere Frameworks.
 
 Das `@mission-platform/router`-Paket implementiert ein **Framework-neutrales Routing-System**, das die Route trennt
 Definition und Matching-Logik aus Framework-spezifischen Implementierungsdetails. Dadurch können Sie Ihre Routen einmalig definieren
-und verwenden Sie sie über verschiedene Frameworks hinweg unter Wahrung der Konsistenz.
+und verwenden Sie sie über verschiedene Frameworks hinweg unter Beibehaltung der Konsistenz.
 
 ## Hauptmerkmale
 
@@ -140,8 +140,7 @@ Der React-Adapter ermöglicht die Integration mit dem React-Router.
 
 **Hauptexporte:**
 
-– **`withMpRouter`**: HOC zur Bereitstellung des Router-Kontexts
-
+- **`withMpRouter`**: HOC zur Bereitstellung des Router-Kontexts
 - **`useMpRoute`**: Hook zum Zugriff auf aktuelle Routeninformationen
 - **`MpLink`**: Framework-neutrale Linkkomponente für React
 
@@ -191,7 +190,7 @@ export default defineApp([renderRoutes(Document, routes)]);
 
 **Vue-Adapter:**
 
-- **vue-router**: Offizielle Vue Router-Bibliothek
+- **vue-router**: Offizielle Vue-Router-Bibliothek
 - **vue**: Vue 3 Kern
 
 **React-Adapter:**

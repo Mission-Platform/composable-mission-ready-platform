@@ -6,22 +6,24 @@
 > 言語: 日本語 (ja)
 
 静的にリンクされたコードからコンパイルされた、依存関係のない **画像 / カメラ コード スキャナー**
-Web Script グラフを WebAssembly に鍛造します。 QRコードやデータを見つけてデコードします
-画像ファイルからの Matrix、Aztec、1D バーコード、PDF417、GS1 DataBar、および MaxiCode
-またはライブカメラストリーム。動的なソースモジュールプロファイルも利用できます。
-独立してキャッシュ可能なデコーダ モジュールを必要とする展開。
+WebAssembly へのフリント グラフ。リンクされたアーティファクトは現在データをデコードしています
+マトリックス、コンパクト アステカ、1D/RSS リーダー、PDF417、画像ファイルからの MaxiCode または
+ライブカメラストリーム。 QR グラフは独立して発光しますが、QR グラフの外側に残ります。
+Forge エミッターの制限を調査する際に結合されたアーティファクト。
 
 ## APIの概要
 
 ### コアスキャナー (`@mission-platform/code-scanner`)
 
 ```ts
-import { scanFile, scanImageData, scanImageDataAll } from '@mission-platform/code-scanner';
+import { scanFile, scanImageData, scanImageDataAll, type ScanOptions } from '@mission-platform/code-scanner';
 
 // Scan ImageData directly
-const result = scanImageData(imageData);
+const options: ScanOptions = { formats: ['DATA_MATRIX'], tryHarder: true };
+const result = scanImageData(imageData, options);
 
-// Scan all codes in frame
+// Scan the package's all-results entry point. The current linked reduced graph
+// returns at most its first validated result until multi-symbol detection lands.
 const allResults = scanImageDataAll(imageData);
 
 // Scan a File / Blob
@@ -44,7 +46,7 @@ const resultFromFile = await scanFile(file);
 </script>
 
 <template>
-  <ForgeCodeScanner @result="(res) => console.log(res.value)" />
+  <ForgeCodeScanner @result="(res) => console.log(res.text, res.format)" />
 </template>
 ```
 
@@ -54,6 +56,6 @@ const resultFromFile = await scanFile(file);
 import { ForgeCodeScanner } from '@mission-platform/code-scanner';
 
 export function CameraScanner() {
-  return <ForgeCodeScanner onResult={(result) => console.log(result.value)} />;
+  return <ForgeCodeScanner onResult={(result) => console.log(result.text, result.format)} />;
 }
 ```

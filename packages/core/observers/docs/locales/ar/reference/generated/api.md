@@ -32,11 +32,11 @@ function useIntersectionObserver(
 
 #### حدود
 
-| الاسم      | اكتب                         | الوصف |
-| ---------- | ---------------------------- | ----- |
-| الهدف      | MpRef<Element \| null>       |       |
-| رد الاتصال | IntersectionObserverCallback |       |
-| خيارات     | IntersectionObserverInit     |       |
+| الاسم | اكتب | الوصف |
+| -------- | ---------------------------- | ----------- |
+| الهدف | MpRef<Element \| null> |             |
+| رد الاتصال | IntersectionObserverCallback |             |
+| خيارات | IntersectionObserverInit |             |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -60,11 +60,11 @@ function useMutationObserver(
 
 #### حدود
 
-| الاسم      | اكتب                 | الوصف |
-| ---------- | -------------------- | ----- |
-| الهدف      | MpRef<Node \| null>  |       |
-| رد الاتصال | رد الطفرة            |       |
-| خيارات     | MutationObserverInit |       |
+| الاسم | اكتب | الوصف |
+| -------- | -------------------- | ----------- |
+| الهدف | MpRef<Node \| null> |             |
+| رد الاتصال | رد الطفرة |             |
+| خيارات | MutationObserverInit |             |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -77,7 +77,7 @@ function usePerformanceObserver(callback: PerformanceObserverCallback, options?:
 ```
 
 خطاف PerformanceObserver المحايد للإطار.
-يراقب إدخالات الأداء الجديدة حيث يتم تسجيلها في المتصفح
+يراقب إدخالات الأداء الجديدة كما يتم تسجيلها في المتصفح
 سجل الأداء.
 
 آمن SSR: لا يمكن تشغيله عندما تكون واجهة برمجة تطبيقات المتصفح غير متاحة.
@@ -85,7 +85,7 @@ function usePerformanceObserver(callback: PerformanceObserverCallback, options?:
 
 #### حدود
 
-| الاسم      | اكتب                     | الوصف |
-| ---------- | ------------------------ | ----- |
-| رد الاتصال | رد اتصال مراقب الأداء    |       |
-| خيارات     | بيرفورمانس أوبسيرفيرينيت |       |
+| الاسم | اكتب | الوصف |
+| -------- | --------------------------- | ----------- |
+| رد الاتصال | رد اتصال مراقب الأداء |             |
+| خيارات | بيرفورمانس أوبسيرفيرينيت |             |

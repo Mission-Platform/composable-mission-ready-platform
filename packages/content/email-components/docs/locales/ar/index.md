@@ -2,7 +2,7 @@
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> packages/email-components/docs/index.md: [packages/email-components/docs/index.md](../../index.md)
+> packages/content/email-components/docs/index.md: [packages/content/email-components/docs/index.md](../../index.md)
 > اللغة: العربية (ar)
 
 يحتوي `@mission-platform/email-components` على مكونات Forge JSX مكتوبة ومحايدة للإطار لإنشاء أشجار آمنة للبريد الإلكتروني. استخدم `@mission-platform/email-renderer` لإجراء تسلسل لتلك الأشجار على الخادم؛ لا يتطلب مسار البريد الإلكتروني Vue، أو React، أو Svelte، أو Solid، أو وقت تشغيل Web Components، أو DOM للمتصفح، أو JavaScript.
@@ -48,7 +48,7 @@ const previewNode = renderToEmailVue(email);
 - الكائنات الحية: `EmailPreheader`، `EmailHeader`، `EmailFooter`.
 - القوالب: `EmailDocument`، `EmailContainer`، `EmailSection`.
 
-`EmailTypography` هي ذرة نص واحدة، تعكس مفردات `ForgeTypography` على الويب: يحدد `as` العنصر المقدم (`p` بشكل افتراضي، `a` عند تعيين `href`)، يحدد `variant` مقياس النوع (مقياس العنوان المطابق عندما يتم تعيين `as`) `h1`–`h6`، وإلا `body-md`)، و`color`، و`align`، و`target`، و`underline` يضبطون الإعلانات المضمنة.
+`EmailTypography` هي ذرة نص واحدة، تعكس مفردات الويب `ForgeTypography`: يحدد `as` العنصر المقدم (`p` بشكل افتراضي، `a` عند تعيين `href`)، يحدد `variant` مقياس النوع (مقياس العنوان المطابق عندما يتم تعيين `as`) `h1`–`h6`، وإلا `body-md`)، و`color`، و`align`، و`target`، و`underline` يضبطون الإعلانات المضمنة.
 
 ```ts
 EmailTypography({ as: 'h1', children: 'Welcome' });
@@ -60,6 +60,6 @@ EmailTypography({ href: 'https://example.com', target: '_blank', children: 'Read
 
 ## سياسة التوافق
 
-خط الأساس يتبع [هل يمكنني إرسال كتالوج الميزات بالبريد الإلكتروني](https://www.caniemail.com/features)، تمت مراجعته على `2026-08-08`. التنفيذ يعتمد على [جداول HTML](https://www.caniemail.com/features/html-tables)، [الأنماط المضمنة](https://www.caniemail.com/features/css-inline-styles)، [أقصى عرض](https://www.caniemail.com/features/css-max-width)، واختياري [استفسارات وسائل الإعلام](https://www.caniemail.com/features/css-at-media). لا يعتمد الإخراج الثابت على flexbox أو الشبكة أو خصائص CSS المخصصة أو الخصائص المنطقية أو البرامج النصية أو معالجات الأحداث أو علامات ترطيب إطار العمل.
+يتبع خط الأساس [كتالوج ميزات هل يمكنني إرسال بريد إلكتروني](https://www.caniemail.com/features)، الذي تمت مراجعته على `2026-08-08`. يعتمد التنفيذ على [جداول HTML](https://www.caniemail.com/features/html-tables)، و[الأنماط المضمنة](https://www.caniemail.com/features/css-inline-styles)، و[أقصى عرض](https://www.caniemail.com/features/css-max-width)، و[استعلامات الوسائط] الاختيارية (https://www.caniemail.com/features/css-at-media). لا يعتمد الإخراج الثابت على flexbox أو الشبكة أو خصائص CSS المخصصة أو الخصائص المنطقية أو البرامج النصية أو معالجات الأحداث أو علامات ترطيب إطار العمل.
 
-يعد CSS المستجيب بمثابة تحسين تقدمي فقط: يظل تخطيط الجدول المضمّن قابلاً للاستخدام عند إزالة كتلة `<style>` أو تجاهلها. استخدم `assertCompatibleEmailHtml` في اختبارات التطبيق عند إضافة العقد المخصصة.
+يعد CSS المستجيب بمثابة تحسين تقدمي فقط: يظل تخطيط الجدول المضمّن قابلاً للاستخدام عند إزالة الكتلة `<style>` أو تجاهلها. استخدم `assertCompatibleEmailHtml` في اختبارات التطبيق عند إضافة العقد المخصصة.

@@ -5,13 +5,13 @@
 > docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > שפה: עברית (he)
 
-פלטפורמת המשימה משתמשת בחבילות תצורה מרכזיות ב- `packages/tooling/configs/` ספרייה כדי להבטיח עקביות על פני
+פלטפורמת המשימה משתמשת בחבילות תצורה מרכזיות בספריית `packages/tooling/configs/` כדי להבטיח עקביות בכל
 המונורפו.
 
 ## סקירה כללית
 
 ריכוז תצורות מאפשר מקור יחיד של אמת עבור כללי כלי עבודה, תהליכי בנייה וסגנון קוד.
-חבילות ויישומים צורכים תצורות אלה על ידי הרחבתן בקבצי התצורה המקומיים שלהם.
+חבילות ויישומים צורכים את התצורות הללו על ידי הרחבתן בקבצי התצורה המקומיים שלהם.
 
 ## סיכום חבילה
 
@@ -19,18 +19,18 @@
 הם קישורי קבצי מאגר כיום והופכים למסלולים עם רווחי שמות ב-
 אתר תיעוד:
 
-| חבילה                                                                                                                        | מטרה                                         | משטח תצורה ראשי        |
-| :--------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------- | :--------------------- |
-| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/he/index.md)             | שָׁטוּחַ ESLint כללים עבור JS/TS ו Vue.      | `eslint.config.js`     |
-| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/he/index.md)         | ברירת המחדל של עיצוב מאגר.                   | `prettier.config.js`   |
-| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/he/index.md)     | TypeScript הגדרות מראש של מהדר.              | `tsconfig.json`        |
-| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/he/index.md)       | מוך CSS ו-SCSS.                              | `stylelint.config.mjs` |
-| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/he/index.md)                 | Vite ו Vitest עוזרי תצורה.                   | `vite.config.ts`       |
-| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/he/index.md)             | עוזרי צרור ספרייה.                           | `tsdown.config.ts`     |
-| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/he/index.md)           | צינור PostCSS משותף.                         | `postcss.config.mjs`   |
-| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/he/index.md)                 | הגדרות מקומיות וחילוץ משותפות.               | `i18next.config.ts`    |
-| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/he/index.md) | מסגרת של ספר סיפורים שנבחרה בסביבה.          | `.storybook/main.ts`   |
-| [תצורת עובדים](workers-config.md)                                                                                            | מוסכמות Cloudflare Worker חוצה סביבות עבודה. | `wrangler.jsonc`       |
+| חבילה | מטרה | משטח תצורה ראשי |
+| :---------------------------------------------------------------------------------------------------------- | :----------------------------------------------- | :---------------------------- |
+| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/he/index.md) | כללי ESLint שטוחים עבור JS/TS ו-Vue.             | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/he/index.md) | ברירת המחדל של עיצוב מאגר.                  | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/he/index.md) | TypeScript הגדרות מראש של מהדר.                     | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/he/index.md) | מוך CSS ו- SCSS.                            | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/he/index.md) | עוזרי תצורה Vite ו-Vitest.           | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/he/index.md) | עוזרי צרור ספריות.                        | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/he/index.md) | צינור PostCSS משותף.                         | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/he/index.md) | הגדרות מיקום וחילוץ משותפות.           | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/he/index.md) | מסגרת של Storybook שנבחרה בסביבה. | `.storybook/main.ts` |
+| [תצורת עובדים](workers-config.md) | מוסכמות Cloudflare Worker חוצה סביבות עבודה.   | `wrangler.jsonc` |
 
 ## כלי ליבה
 
@@ -45,18 +45,18 @@ TypeScript, Vue 3, ונגישות.
 
 ### TypeScript (`@mission-platform/typescript-config`)
 
-מספק בסיס `tsconfig` הגדרות קבועות מראש עבור יעדים שונים:
+מספק הגדרות בסיס `tsconfig` עבור יעדים שונים:
 
 - `base`: ברירות מחדל כלליות.
 - `vue`: מותאם עבור Vue 3 SFCs.
-- `node`: מותאם עבור Nodeסביבות .js.
-- `framework-<name>`: מוסיף את ההתאמה `mp:<framework>` תנאי יצוא לצרכנים חיצוניים.
+- `node`: מותאם לסביבות Node.js.
+- `framework-<name>`: מוסיף את תנאי הייצוא התואם `mp:<framework>` עבור צרכנים חיצוניים.
 
 ## בניית מערכת
 
 ### Vite (`@mission-platform/vite-config`)
 
-מספק פונקציות מפעל ליצירה Vite תצורות הן עבור יישומים והן עבור ספריות.
+מספק פונקציות מפעל ליצירת תצורות Vite הן עבור יישומים והן עבור ספריות.
 
 ```ts
 import {
@@ -65,7 +65,7 @@ import {
 } from "@mission-platform/vite-config";
 ```
 
-- `defineAppConfig`: ליישומים ברמה העליונה (SPA, עובדים).
+- `defineAppConfig`: ליישומים ברמה העליונה (ספא, עובדים).
 - `defineLibraryConfig`: לאריזות משותפות עם צרור אופטימלי וניעור עצים.
 
 ### PostCSS (`@mission-platform/postcss-config`)
@@ -77,9 +77,9 @@ import {
 
 כדי להשתמש בתצורה בסביבת עבודה:
 
-1. הוסף את חבילת התצורה בתור א `devDependency` ב `package.json`.
-2. צור קובץ תצורה מקומי (לדוגמה, `eslint.config.js`).
-3. ייבא וייצא/הרחיב את תצורת הבסיס.
+1. הוסף את חבילת התצורה בתור `devDependency` ב-`package.json`.
+2. צור קובץ תצורה מקומי (עבור Stylelint, `stylelint.config.mjs`).
+3. ייבא וייצא/הרחב את תצורת הבסיס.
 
 ```js
 // Example: eslint.config.js
@@ -91,7 +91,7 @@ export default [
 ];
 ```
 
-עבור Stylelint, השתמשו באותו דפוס ייבוא והפצת ESM בתוך `stylelint.config.mjs`:
+עבור Stylelint, השתמש באותה דפוס ייבוא/פיזור ESM ב-`stylelint.config.mjs`:
 
 ```js
 // stylelint.config.mjs
@@ -103,7 +103,7 @@ export default { ...baseConfig };
 ## בחירת תצורה
 
 השתמש בחבילה שבבעלותה הדאגה במקום להעתיק כללים לסביבת עבודה. קבצי בניית יישומים וספריות
-עשוי להוסיף עקיפות מקומיות, אך ברירות מחדל משותפות צריכות להישאר `packages/tooling/configs/`. לחבילה חדשה, התחל עם החבילה
+עשוי להוסיף עקיפות מקומיות, אך ברירות מחדל משותפות צריכות להישאר ב-`packages/tooling/configs/`. לחבילה חדשה, התחל עם החבילה
 פיגום ולאחר מכן הפעל את בדיקות סביבת העבודה:
 
 ```bash

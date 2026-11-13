@@ -5,6 +5,6 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > packages/core/scheduler/docs/index.md: [packages/core/scheduler/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
-Framework-neutral scheduler UI component für Mission Platform
+Frameworkneutrale Scheduler-UI-Komponente für Mission Platform
 
-See `llms.txt` für die public API und usage examples.
+Die öffentliche API und Anwendungsbeispiele finden Sie unter `llms.txt`.

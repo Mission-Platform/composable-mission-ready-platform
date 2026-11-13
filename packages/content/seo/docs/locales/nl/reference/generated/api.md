@@ -96,7 +96,23 @@ Schema.org `ImageObject`.
 **Soort:** constant
 
 ```typescript
-export const jsonLd;
+export const jsonLd: {
+  readonly webSite: typeof webSite;
+  readonly organization: typeof organization;
+  readonly localBusiness: typeof localBusiness;
+  readonly person: typeof person;
+  readonly webPage: typeof webPage;
+  readonly breadcrumbList: typeof breadcrumbList;
+  readonly article: typeof article;
+  readonly product: typeof product;
+  readonly faqPage: typeof faqPage;
+  readonly event: typeof event;
+  readonly videoObject: typeof videoObject;
+  readonly imageObject: typeof imageObject;
+  readonly softwareApplication: typeof softwareApplication;
+  readonly recipe: typeof recipe;
+  readonly review: typeof review;
+};
 ```
 
 Naamruimte opnieuw exporteren, zodat consumenten `import { jsonLd } kunnen doen
@@ -524,7 +540,7 @@ kan zowel met reactieve status als met statische metadata worden gebruikt.
 **Soort:** component
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 Renderloze `<Seo>`-component — een declaratieve verpakking rond {@link useSeo}.
@@ -546,7 +562,7 @@ synchroniseer ze met de documentkop. Geeft zelf geen DOM weer.
 **Soort:** component
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 Renderloze `<Seo>`-component — een declaratieve verpakking rond {@link useSeo}.

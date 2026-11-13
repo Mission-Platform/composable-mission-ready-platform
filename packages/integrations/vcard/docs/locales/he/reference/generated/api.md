@@ -32,7 +32,7 @@ function createVCard(options: VCardOptions): VCard;
 **סוג:** קבוע
 
 ```typescript
-export const parseVCard;
+export const parseVCard: typeof readVCard;
 ```
 
 כינוי למתקשרים המעדיפים את הטרמינולוגיה של המנתח.
@@ -616,7 +616,7 @@ export interface ICalendarProperty
 **סוג:** קבוע
 
 ```typescript
-export const parseICalendar;
+export const parseICalendar: typeof readICalendar;
 ```
 
 לא סופק תיאור.
@@ -642,7 +642,7 @@ function readICalendar(source: string): ICalendar;
 **סוג:** קבוע
 
 ```typescript
-export const serializeICalendar;
+export const serializeICalendar: typeof writeICalendar;
 ```
 
 לא סופק תיאור.

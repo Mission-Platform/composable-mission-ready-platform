@@ -60,16 +60,17 @@ Mission Platform 通过 Forge 适配器为其他框架提供不同级别的支�
 
 ## 性能和反应模型
 
-| 框架         | 反应模型   | 更新策略                   |
-| :----------- | :--------- | :------------------------- |
-| **Vue 3**    | 基于代理   | 具有编译器优化的虚拟 DOM。 |
-| **React**    | 不可变状态 | 虚拟 DOM 协调。            |
-| **SolidJS**  | 细粒度信号 | 直接 DOM 更新（无 VDOM）。 |
-| **Svelte 5** | 符文/信号  | 通过编译器直接更新 DOM。   |
-| **点亮**     | 反应性质   | 异步 Shadow DOM 更新。     |
+|框架|反应模型|更新策略 |
+| :----------- | :------------------- | :--------------------------------------- |
+| **Vue 3** |基于代理 |具有编译器优化的虚拟 DOM。 |
+| **React** |不可变状态 |虚拟 DOM 协调。              |
+| **SolidJS** |细粒度信号 |直接 DOM 更新（无 VDOM）。            |
+| **Svelte 5** |符文/信号|通过编译器直接更新 DOM。         |
+| **点亮** |反应性质|异步 Shadow DOM 更新。         |
 
 ## 相关资源
 
 - [最佳实践](best-practices.md)
 - [测试指南](testing.md)
 - [@mission-platform/forge-jsx 自述文件](../../../packages/core/forge-jsx/README.md)
+- [@mission-platform/forge-adapters 自述文件](../../../packages/core/forge-adapters/README.md)

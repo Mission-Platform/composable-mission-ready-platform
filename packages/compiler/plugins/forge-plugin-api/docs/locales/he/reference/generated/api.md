@@ -33,10 +33,10 @@ function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 
 #### פרמטרים
 
-| שם     | הקלד                     | תיאור |
-| ------ | ------------------------ | ----- |
-| מקור   | מחרוזת                   |       |
-| עריכות | עריכת מקור לקריאה בלבד[] |       |
+| שם | הקלד | תיאור |
+| ------ | --------------------- | ----------- |
+| מקור | מחרוזת |             |
+| עריכות | עריכת מקור לקריאה בלבד[] |             |
 
 ### CLASS_NAME_ATTRIBUTE
 
@@ -60,9 +60,9 @@ function eventNameForProperty(propertyName: string): string;
 
 #### פרמטרים
 
-| שם     | הקלד   | תיאור |
-| ------ | ------ | ----- |
-| שם נכס | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------------ | ------ | ----------- |
+| שם נכס | מחרוזת |             |
 
 ### frameworkAdapterModule
 
@@ -76,9 +76,9 @@ function frameworkAdapterModule(framework: JsxFramework): string;
 
 #### פרמטרים
 
-| שם    | הקלד         | תיאור |
-| ----- | ------------ | ----- |
-| מסגרת | JsxFramework |       |
+| שם | הקלד | תיאור |
+| --------- | ------------ | ----------- |
+| מסגרת | JsxFramework |             |
 
 ### frameworkForDirective
 
@@ -88,13 +88,13 @@ function frameworkAdapterModule(framework: JsxFramework): string;
 function frameworkForDirective(directive: string): JsxFramework | undefined;
 ```
 
-פתרו הנחיית `use <framework>` מובילה עבור כל יעד מובנה.
+פתרון הנחיית `use <framework>` מובילה עבור כל יעד מובנה.
 
 #### פרמטרים
 
-| שם    | הקלד   | תיאור |
-| ----- | ------ | ----- |
-| הנחיה | מחרוזת |       |
+| שם | הקלד | תיאור |
+| --------- | ------ | ----------- |
+| הנחיה | מחרוזת |             |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -148,9 +148,9 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 
 #### פרמטרים
 
-| שם    | הקלד         | תיאור |
-| ----- | ------------ | ----- |
-| מסגרת | JsxFramework |       |
+| שם | הקלד | תיאור |
+| --------- | ------------ | ----------- |
+| מסגרת | JsxFramework |             |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
@@ -296,9 +296,9 @@ function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 
 #### פרמטרים
 
-| שם    | הקלד             | תיאור |
-| ----- | ---------------- | ----- |
-| מודול | GenericModuleAst |       |
+| שם | הקלד | תיאור |
+| ------ | ---------------- | ----------- |
+| מודול | GenericModuleAst |             |
 
 ### MP_HOIST_PREFIX
 
@@ -327,10 +327,10 @@ function applyOptimizationEdits(
 
 #### פרמטרים
 
-| שם     | הקלד                     | תיאור |
-| ------ | ------------------------ | ----- |
-| מודול  | GenericModuleAst         |       |
-| עריכות | עריכת מקור לקריאה בלבד[] |       |
+| שם | הקלד | תיאור |
+| ------ | --------------------- | ----------- |
+| מודול | GenericModuleAst |             |
+| עריכות | עריכת מקור לקריאה בלבד[] |             |
 
 ### קבוע בוליאני
 
@@ -344,9 +344,9 @@ function constantBoolean(expression: ExpressionLike): boolean | undefined;
 
 #### פרמטרים
 
-| שם    | הקלד           | תיאור |
-| ----- | -------------- | ----- |
-| ביטוי | ExpressionLike |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------- | ----------- |
+| ביטוי | ExpressionLike |             |
 
 ### תוצאה כללית אופטימיזציה
 
@@ -370,9 +370,9 @@ function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 
 #### פרמטרים
 
-| שם     | הקלד                          | תיאור |
-| ------ | ----------------------------- | ----- |
-| תכונות | קריאה בלבד GenericAttribute[] |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------- | ----------- |
+| תכונות | קריאה בלבד GenericAttribute[] |             |
 
 ### hasMpStaticMarker
 
@@ -386,9 +386,9 @@ function hasMpStaticMarker(node: GenericRenderNode): boolean;
 
 #### פרמטרים
 
-| שם   | הקלד              | תיאור |
-| ---- | ----------------- | ----- |
-| node | GenericRenderNode |       |
+| שם | הקלד | תיאור |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ### isCompileTimeConstant
 
@@ -402,9 +402,9 @@ function isCompileTimeConstant(expression: ExpressionLike): boolean;
 
 #### פרמטרים
 
-| שם    | הקלד           | תיאור |
-| ----- | -------------- | ----- |
-| ביטוי | ExpressionLike |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------- | ----------- |
+| ביטוי | ExpressionLike |             |
 
 ### MP_STATIC_ATTR
 
@@ -431,10 +431,10 @@ function optimizeGenericModule(
 
 #### פרמטרים
 
-| שם        | הקלד                 | תיאור |
-| --------- | -------------------- | ----- |
-| מודול     | GenericModuleAst     |       |
-| _אפשרויות | אופטימיזציה אפשרויות |       |
+| שם | הקלד | תיאור |
+| -------- | ---------------- | ----------- |
+| מודול | GenericModuleAst |             |
+| _אפשרויות | אופטימיזציה אפשרויות |             |
 
 ### OptimizeOptions
 
@@ -456,13 +456,13 @@ function stripMpStaticAttributes(
 ): readonly GenericAttribute[];
 ```
 
-החזר רשימת תכונות גנרית נטולת סמנים.
+החזר רשימת תכונות גנרית ללא סמנים.
 
 #### פרמטרים
 
-| שם     | הקלד                          | תיאור |
-| ------ | ----------------------------- | ----- |
-| תכונות | קריאה בלבד GenericAttribute[] |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------- | ----------- |
+| תכונות | קריאה בלבד GenericAttribute[] |             |
 
 ### stripMpStaticMarker
 
@@ -476,9 +476,9 @@ function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 
 #### פרמטרים
 
-| שם   | הקלד              | תיאור |
-| ---- | ----------------- | ----- |
-| node | GenericRenderNode |       |
+| שם | הקלד | תיאור |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ## `src/diagnostics`
 
@@ -543,9 +543,9 @@ function createCompilerDiagnostic(
 
 #### פרמטרים
 
-| שם    | הקלד                                                         | תיאור |
-| ----- | ------------------------------------------------------------ | ----- |
-| אבחון | השמט<CompilerDiagnostic, "fileName"> & { fileName?: string } |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------------------------------------ | ----------- |
+| אבחון | השמט<CompilerDiagnostic, "fileName"> & { fileName?: string } |             |
 
 ### formatCompilerDiagnostic
 
@@ -559,9 +559,9 @@ function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 
 #### פרמטרים
 
-| שם    | הקלד               | תיאור |
-| ----- | ------------------ | ----- |
-| אבחון | CompilerDiagnostic |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------ | ----------- |
+| אבחון | CompilerDiagnostic |             |
 
 ### throwOnCompilerErrors
 
@@ -577,9 +577,9 @@ function throwOnCompilerErrors(
 
 #### פרמטרים
 
-| שם    | הקלד                                         | תיאור |
-| ----- | -------------------------------------------- | ----- |
-| אבחון | לקריאה בלבד CompilerDiagnostic[] \| לא מוגדר |       |
+| שם | הקלד | תיאור |
+| ----------- | ------------------------------------------ | ----------- |
+| אבחון | לקריאה בלבד CompilerDiagnostic[] \| לא מוגדר |             |
 
 ## `src/framework`
 
@@ -601,7 +601,7 @@ export interface ForgeBuildAdapters
 export type FrameworkId = JsxFramework | (string &
 ```
 
-מזהה מסגרת פתוחה עבור תוספי יעד וצינורות מהדר.
+מזהה מסגרת פתוח עבור תוספי יעד וצינורות מהדר.
 שומר על השלמה אוטומטית עבור מסגרות מובנות ידועות תוך קבלת יעדי פלאגין מותאמים אישית שרירותיים.
 
 ### Plugin FrameworkOutput
@@ -632,7 +632,7 @@ export type FrameworkOutputPluginSelection = readonly FrameworkOutputPlugin[];
 export interface FrameworkSourceMetadata
 ```
 
-מוסכמות עץ מקור הנדרשות על ידי מנהל התקן הבנייה ניטרלי במסגרת.
+מוסכמות עץ-מקור הנדרשות על-ידי מנהל ההתקן של ה-framework נייטרלי.
 
 ### GeneratedExtraModule
 
@@ -654,6 +654,16 @@ export interface GeneratedModule
 
 חפץ המקור שהוחזר על ידי תוסף פלט מסגרת.
 
+### GeneratedStyleArtifact
+
+**סוג:** ממשק
+
+```typescript
+export interface GeneratedStyleArtifact
+```
+
+גיליון סגנונות הנפלט לצד מודול מקור שנוצר.
+
 ### GeneratorContext
 
 **סוג:** סוג
@@ -662,7 +672,7 @@ export interface GeneratedModule
 export type GeneratorContext = TargetContext;
 ```
 
-ההקשר הועבר למחוללי מקור לאחר הורדת יעד ואופטימיזציה.
+ההקשר הועבר למחוללי המקור לאחר הורדת יעד ואופטימיזציה.
 
 ### JsxFramework
 
@@ -724,7 +734,7 @@ export type TargetFrameworkId = FrameworkId;
 ```
 
 פתח כינוי מזהה מסגרת עבור תוספי יעד.
-מקביל ל-{@link FrameworkId}.
+שווה ערך ל-{@link FrameworkId}.
 
 ### כוונות יעד
 
@@ -744,7 +754,7 @@ export interface TargetIntentions< TLowered extends TargetLoweredModule = Target
 export interface TargetLoweredModule
 ```
 
-התוכנית בבעלות היעד שהופקה על ידי שלב `lower` של תוסף ושוכללה על ידי
+התוכנית בבעלות היעד שהופקה על ידי שלב `lower` של תוסף ומעודנת על ידי
 שלב `optimize`. כל יעד מצהיר על הארכה משלו של חוזה זה ו
 מפלה אותו ב-{@link TargetLoweredModule.framework}, כך שתוכנית יכולה להיות
 הצטמצם ללא ליהוק בזמן שכל תוסף עדיין עונה על אותו הדבר
@@ -768,7 +778,7 @@ export interface TargetOptimizeOptions
 export interface TsdownBuildContext
 ```
 
-הקשר משותף עבור חבילות תוספי tsdown/Rolldown בבעלות המסגרת.
+הקשר משותף עבור חבילות תוספים של tsdown/Rolldown בבעלות המסגרת.
 
 ### ViteBuildContext
 
@@ -787,7 +797,7 @@ export interface ViteBuildContext
 **סוג:** קבוע
 
 ```typescript
-export const defineForgeFramework;
+export const defineForgeFramework: typeof defineForgeOutputPlugin;
 ```
 
 כינוי המדגיש שחבילות מסגרת רושמות יישומי יעד.
@@ -804,9 +814,9 @@ function defineForgeOutputPlugin(plugin: T): T;
 
 #### פרמטרים
 
-| שם   | הקלד | תיאור |
-| ---- | ---- | ----- |
-| תוסף | ט    |       |
+| שם | הקלד | תיאור |
+| ------ | ---- | ----------- |
+| תוסף | T |             |
 
 ### ForgePluginId
 
@@ -832,9 +842,9 @@ function validateForgeOutputPlugin(
 
 #### פרמטרים
 
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| תוסף | לא ידוע |       |
+| שם | הקלד | תיאור |
+| ------ | ------- | ----------- |
+| תוסף | לא ידוע |             |
 
 ### validateForgeOutputPluginSelection
 
@@ -850,9 +860,9 @@ function validateForgeOutputPluginSelection(
 
 #### פרמטרים
 
-| שם     | הקלד           | תיאור |
-| ------ | -------------- | ----- |
-| תוספים | קריאה בלבד T[] |       |
+| שם | הקלד | תיאור |
+| ------- | ------------ | ----------- |
+| תוספים | קריאה בלבד T[] |             |
 
 ## `src/ir`
 
@@ -871,10 +881,10 @@ function attributeExpressionText(
 
 #### פרמטרים
 
-| שם   | הקלד              | תיאור |
-| ---- | ----------------- | ----- |
-| node | GenericRenderNode |       |
-| שם   | מחרוזת            |       |
+| שם | הקלד | תיאור |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| שם | מחרוזת |             |
 
 ### attributeStringValue
 
@@ -891,10 +901,42 @@ function attributeStringValue(
 
 #### פרמטרים
 
-| שם   | הקלד              | תיאור |
-| ---- | ----------------- | ----- |
-| node | GenericRenderNode |       |
-| שם   | מחרוזת            |       |
+| שם | הקלד | תיאור |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| שם | מחרוזת |             |
+
+### childSlotName
+
+פונקציה **סוג:**
+
+```typescript
+function childSlotName(
+  child: GenericRenderChild,
+  slotAttributeName = "slot",
+  defaultSlotName = "default",
+): string | undefined;
+```
+
+השם `slot="…"` שאליו ילד מנותב, או `undefined` עבור תוכן משבצת ברירת מחדל.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------------- | ------------------ | ----------- |
+| ילד | GenericRenderChild |             |
+| slotAttributeName |                    |             |
+| defaultSlotName |                    |             |
+
+### ComputedSetupValue
+
+**סוג:** ממשק
+
+```typescript
+export interface ComputedSetupValue
+```
+
+ערך בעל שם שהוחזר מההגדרה וניתן להתייחסות באמצעות כריכות עיבוד/סגנון.
 
 ### DynamicNodeIntention
 
@@ -924,7 +966,7 @@ export interface EffectIntention
 export const EMPTY_SEMANTIC_INTENTIONS: SemanticIntentions;
 ```
 
-עובדות כוונות ריקות המשמשות מתקנים ומודולים שאין להם מה להסיק.
+עובדות כוונות ריקות המשמשות מתקנים ומודולים ללא מה להסיק.
 
 ### EMPTY_SPAN
 
@@ -961,10 +1003,10 @@ function findAttribute(
 
 #### פרמטרים
 
-| שם   | הקלד              | תיאור |
-| ---- | ----------------- | ----- |
-| node | GenericRenderNode |       |
-| שם   | מחרוזת            |       |
+| שם | הקלד | תיאור |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| שם | מחרוזת |             |
 
 ### GenericAstNode
 
@@ -982,7 +1024,8 @@ export type GenericAstNode =
 **סוג:** סוג
 
 ```typescript
-export type GenericAttribute = GenericJsxAttribute | GenericJsxSpreadAttribute;
+export type GenericAttribute =
+  GenericJsxAttribute | GenericJsxSpreadAttribute | GenericSlotAttribute;
 ```
 
 לא סופק תיאור.
@@ -1066,7 +1109,7 @@ export interface GenericJsxSpreadAttribute
 export interface GenericModuleAst
 ```
 
-ייצוג מקור שניתן לסידרה המשותף לכל שלבי המהדר.
+ייצוג מקור שניתן לסידרה משותף לכל שלבי המהדר.
 
 ### פרמטר כללי
 
@@ -1084,7 +1127,11 @@ export interface GenericParameter
 
 ```typescript
 export type GenericRenderChild =
-  GenericRenderNode | GenericTextNode | GenericExpressionNode;
+  | GenericRenderNode
+  | GenericTextNode
+  | GenericExpressionNode
+  | GenericConditionalNode
+  | GenericForNode;
 ```
 
 לא סופק תיאור.
@@ -1130,6 +1177,56 @@ export type GenericStatementKind =
 
 סיווג גס של משפט שנשמר ברמת המודול.
 
+### GenericStyleAtRule
+
+**סוג:** ממשק
+
+```typescript
+export interface GenericStyleAtRule
+```
+
+CSS מנורמל מתנהל משותף בסגנון פלינט.
+
+### GenericStyleClassMapNode
+
+**סוג:** ממשק
+
+```typescript
+export interface GenericStyleClassMapNode
+```
+
+מחלקה מקומית אחת ניתנת להתייחסות במפת מחלקות מנורמלת של מודול CSS.
+
+### GenericStyleCompanion
+
+**סוג:** ממשק
+
+```typescript
+export interface GenericStyleCompanion
+```
+
+חפץ בסגנון נייטרלי מטרה בבעלות מודול פלינט אחד.
+
+### GenericStyleDeclaration
+
+**סוג:** ממשק
+
+```typescript
+export interface GenericStyleDeclaration
+```
+
+הצהרת CSS מנורמלת נישאת משותף בסגנון פלינט.
+
+### GenericStyleRule
+
+**סוג:** ממשק
+
+```typescript
+export interface GenericStyleRule
+```
+
+כלל CSS מנורמל נישא משותף בסגנון Flint.
+
 ### GenericTagKind
 
 **סוג:** סוג
@@ -1150,6 +1247,23 @@ export interface GenericTextNode
 
 טקסט מילולי בין תגי JSX.
 
+### isComponentNode
+
+פונקציה **סוג:**
+
+```typescript
+function isComponentNode(node: GenericRenderNode): boolean;
+```
+
+האם התג של node נותן שם לרכיב (מזהה באותיות רישיות, או ביטוי דינמי/איבר)
+במקום אלמנט HTML מהותי.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
 ### isExpressionNode
 
 פונקציה **סוג:**
@@ -1160,13 +1274,13 @@ function isExpressionNode(
 ): child is GenericExpressionNode;
 ```
 
-האם עיבוד ילד הוא אינטרפולציה `{ … }`.
+האם עיבוד צאצא הוא אינטרפולציה `{ … }`.
 
 #### פרמטרים
 
-| שם  | הקלד               | תיאור |
-| --- | ------------------ | ----- |
-| ילד | GenericRenderChild |       |
+| שם | הקלד | תיאור |
+| ----- | ------------------ | ----------- |
+| ילד | GenericRenderChild |             |
 
 ### isRenderNode
 
@@ -1176,13 +1290,30 @@ function isExpressionNode(
 function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 ```
 
-האם עיבוד צאצא הוא אלמנט/פרגמנט מקונן node.
+האם צאצא לעיבוד הוא אלמנט/פרגמנט מקונן node.
 
 #### פרמטרים
 
-| שם  | הקלד               | תיאור |
-| --- | ------------------ | ----- |
-| ילד | GenericRenderChild |       |
+| שם | הקלד | תיאור |
+| ----- | ------------------ | ----------- |
+| ילד | GenericRenderChild |             |
+
+### isRenderNodeMarker
+
+פונקציה **סוג:**
+
+```typescript
+function isRenderNodeMarker(node: GenericRenderNode, tag: string): boolean;
+```
+
+האם node הוא סמן זמן קומפילציה בשם.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| תג | מחרוזת |             |
 
 ### isTextNode
 
@@ -1196,9 +1327,9 @@ function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 
 #### פרמטרים
 
-| שם  | הקלד               | תיאור |
-| --- | ------------------ | ----- |
-| ילד | GenericRenderChild |       |
+| שם | הקלד | תיאור |
+| ----- | ------------------ | ----------- |
+| ילד | GenericRenderChild |             |
 
 ### ListKeyIntention
 
@@ -1210,6 +1341,24 @@ export interface ListKeyIntention
 
 מועמד מפתח יציב למעבד רשימת יעדים.
 
+### ילדים משמעותיים
+
+פונקציה **סוג:**
+
+```typescript
+function meaningfulChildren(
+  node: GenericRenderNode,
+): readonly GenericRenderChild[];
+```
+
+ילדים ששורדים למטרה (טקסט ברווח לבן בלבד אינו נושא דבר).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
 ### MemoIntention
 
 **סוג:** ממשק
@@ -1219,6 +1368,16 @@ export interface MemoIntention
 ```
 
 ערך ממוזכר או נגזר.
+
+### חוזה דגם
+
+**סוג:** ממשק
+
+```typescript
+export interface ModelContract
+```
+
+ערך מבוקר נייטרלי יעד ואירוע העדכון שהוקלד שלו.
 
 ### PropIntention
 
@@ -1230,6 +1389,16 @@ export interface PropIntention
 
 הצהרת אבזר נייטרלית הנגזרת מחתימת רכיב או סוג אביזרים.
 
+### ReactiveProperty
+
+**סוג:** ממשק
+
+```typescript
+export interface ReactiveProperty
+```
+
+תכונה של רכיב תגובתי המשותף לכל פולט מטרה.
+
 ### RefIntention
 
 **סוג:** ממשק
@@ -1238,7 +1407,7 @@ export interface PropIntention
 export interface RefIntention
 ```
 
-כוונת ר"פ שאינה תלויה בייצוג הר"ן של המטרה.
+כוונת ר"פ שאינה תלויה בייצוג הר"פ של המטרה.
 
 ### renderNodeTagName
 
@@ -1248,13 +1417,29 @@ export interface RefIntention
 function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
-שם התג הפשוט של עיבוד node, או `undefined` עבור תג מחושב.
+שם התג הרגיל של עיבוד node, או `undefined` עבור תג מחושב.
 
 #### פרמטרים
 
-| שם   | הקלד              | תיאור |
-| ---- | ----------------- | ----- |
-| node | GenericRenderNode |       |
+| שם | הקלד | תיאור |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
+### renderNodeTagText
+
+פונקציה **סוג:**
+
+```typescript
+function renderNodeTagText(node: GenericRenderNode): string;
+```
+
+טקסט התג הרגיל של עיבוד node (תג מחושב מדפיס את ביטוי המקור שלו).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ### כוונות סמנטיות
 
@@ -1264,7 +1449,7 @@ function renderNodeTagName(node: GenericRenderNode): string | undefined;
 export interface SemanticIntentions
 ```
 
-עובדות סמנטיות משותפות הושקו פעם אחת לפני הורדת יעד.
+עובדות סמנטיות משותפות הושקו פעם אחת לפני הורדת היעד.
 
 ### מודול סמנטי
 
@@ -1274,7 +1459,37 @@ export interface SemanticIntentions
 export interface SemanticModule
 ```
 
-ה-IR הסמנטי המוקלד שנצרך על ידי כל תוסף פלט מסגרת.
+ה-IR הסמנטי המוקלד הנצרך על ידי כל תוסף פלט מסגרת.
+
+### חוזה התקנה
+
+**סוג:** ממשק
+
+```typescript
+export interface SetupContract
+```
+
+חוזה הגדרה/אירוע/דגם קנוני הנצרך על ידי כל מורידי היעד.
+
+### SetupEventEmitter
+
+**סוג:** ממשק
+
+```typescript
+export interface SetupEventEmitter
+```
+
+פולט אירוע הוכרז מחוץ להגדרה והצמד לתצורת אירוע.
+
+### SetupEventHandler
+
+**סוג:** ממשק
+
+```typescript
+export interface SetupEventHandler
+```
+
+מטפל באירועים הוכרז מחוץ להגדרה.
 
 ### SlotIntention
 
@@ -1302,11 +1517,11 @@ function sourceBacked(
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| טקסט  | מחרוזת                          |       |
-| תחביר | SourceBackedExpression["תחביר"] |       |
-| span  | SourceSpan                      |       |
+| שם | הקלד | תיאור |
+| ------ | -------------------------------- | ----------- |
+| טקסט | מחרוזת |             |
+| תחביר | SourceBackedExpression["תחביר"] |             |
+| span | SourceSpan |             |
 
 ### SourceBackedExpression
 
@@ -1353,14 +1568,469 @@ function walkRenderNodes(
 
 #### פרמטרים
 
-| שם    | הקלד                             | תיאור |
-| ----- | -------------------------------- | ----- |
-| צמתים | לקריאה בלבד GenericRenderNode[]  |       |
-| בקר   | (node: GenericRenderNode) => ריק |       |
+| שם | הקלד | תיאור |
+| ----- | --------------------------------- | ----------- |
+| צמתים | לקריאה בלבד GenericRenderNode[] |             |
+| בקר | (node: GenericRenderNode) => ריק |             |
+
+### ללאSlotAttribute
+
+פונקציה **סוג:**
+
+```typescript
+function withoutSlotAttribute(
+  node: GenericRenderNode,
+  slotAttributeName = "slot",
+): GenericRenderNode;
+```
+
+עותק של node ללא סמן הניתוב `slot="…"` שלו.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------------- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| slotAttributeName |                   |             |
+
+## `src/lowering/dynamic`
+
+### LowDynamicNodes
+
+פונקציה **סוג:**
+
+```typescript
+function lowerDynamicNodes(
+  module: SemanticModule,
+): readonly NormalizedDynamicPlan[];
+```
+
+מוריד את כוונות node הדינמיות ועיבוד תגי `<Dynamic>` עץ.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | -------------- | ----------- |
+| מודול | מודול סמנטי |             |
+
+### מקשי תחתית רשימה
+
+פונקציה **סוג:**
+
+```typescript
+function lowerListKeys(
+  module: SemanticModule,
+): readonly NormalizedListKeyPlan[];
+```
+
+מוריד רשימה של מועמדי מפתח מ-`SemanticModule`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | -------------- | ----------- |
+| מודול | מודול סמנטי |             |
+
+### lowerStaticSubtrees
+
+פונקציה **סוג:**
+
+```typescript
+function lowerStaticSubtrees(
+  module: SemanticModule,
+): readonly NormalizedStaticSubtreePlan[];
+```
+
+מוריד מועמדים סטטיים של תת-עץ המסומנים ב-`mp-static`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | -------------- | ----------- |
+| מודול | מודול סמנטי |             |
+
+### NormalizedDynamicPlan
+
+**סוג:** ממשק
+
+```typescript
+export interface NormalizedDynamicPlan
+```
+
+מתאר מנורמל עבור node `<Dynamic is={...}>` דינמי.
+
+### NormalizedListKeyPlan
+
+**סוג:** ממשק
+
+```typescript
+export interface NormalizedListKeyPlan
+```
+
+מתאר מנורמל עבור כריכת מפתח רשימה.
+
+### NormalizedStaticSubtreePlan
+
+**סוג:** ממשק
+
+```typescript
+export interface NormalizedStaticSubtreePlan
+```
+
+מתאר מנורמל עבור תת-עץ סטטי מונף.
+
+## `src/lowering/events`
+
+### canonicalEventName
+
+פונקציה **סוג:**
+
+```typescript
+function canonicalEventName(propName: string): string;
+```
+
+מחלץ את שם האירוע הקנוני משם אביזר `onXxx` (למשל `onClick` -> `click`, `onKeyDown` -> `keydown`).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| propName | מחרוזת |             |
+
+### formatTargetEventName
+
+פונקציה **סוג:**
+
+```typescript
+function formatTargetEventName(
+  eventName: string,
+  target: "react" | "solid" | "vue" | "svelte" | "web-components",
+): string;
+```
+
+מעצב שם אירוע בהתאם למוסכמות של מסגרת היעד.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | ----------------------------------------------------------- | ----------- |
+| שם האירוע | מחרוזת |             |
+| יעד | "react" \| "solid" \| "vue" \| "svelte" \| "רכיבי אינטרנט" |             |
+
+### isEventHandlerProp
+
+פונקציה **סוג:**
+
+```typescript
+function isEventHandlerProp(propName: string): boolean;
+```
+
+קובע אם שם מאפיין מייצג אבזר של מטפל באירועים (למשל `onClick`, `onKeyDown`).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| propName | מחרוזת |             |
+
+### lowerEventIntentions
+
+פונקציה **סוג:**
+
+```typescript
+function lowerEventIntentions(
+  module: SemanticModule,
+): readonly NormalizedEventPlan[];
+```
+
+מחלץ את כל כוונות המטפל באירועים מ-`SemanticModule`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | -------------- | ----------- |
+| מודול | מודול סמנטי |             |
+
+### NormalizedEventPlan
+
+**סוג:** ממשק
+
+```typescript
+export interface NormalizedEventPlan
+```
+
+מתאר מנורמל עבור מטפל באירועים של רכיבים עם הורדה.
+
+## `src/lowering/pipeline`
+
+### BaseLoweredModule
+
+**סוג:** ממשק
+
+```typescript
+export interface BaseLoweredModule extends TargetLoweredModule
+```
+
+תוכנית סטנדרטית עם הורדת קו הבסיס שיוספי מסגרת יכולים להטביע או לבנות עליה.
+
+### createBaseLoweredModule
+
+פונקציה **סוג:**
+
+```typescript
+function createBaseLoweredModule(
+  module: SemanticModule,
+  framework: TargetFrameworkId,
+): BaseLoweredModule;
+```
+
+יוצר מודול מונמך בבסיס המבצע נורמליזציה של אבזר משותף, סינתזת חריצים,
+הפחתת אירועים, חילוץ node דינמי ונורמליזציה של מפתח רשימה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | ----------------- | ----------------------------------- |
+| מודול | מודול סמנטי | - מודול סמנטי מ-IR frontend. |
+| מסגרת | TargetFrameworkId | - מזהה מסגרת היעד.          |
+
+#### חוֹזֶה
+
+- **@param:** - מודול סמנטי מ-IR frontend.
+- **@param:** - מזהה מסגרת היעד.
+- **@returns:** מודול בסיס סטנדרטי מונמך.
+
+### validateLoweredInvariants
+
+פונקציה **סוג:**
+
+```typescript
+function validateLoweredInvariants(lowered: TargetLoweredModule): void;
+```
+
+מאמת שמודול מונמך תואם את השינויים המבניים הנדרשים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------------------- | ------------------------------ |
+| הוריד | TargetLoweredModule | - המודול המונמך לבדיקה. |
+
+#### חוֹזֶה
+
+- **@param:** - המודול המונמך לבדיקה.
+- **@throws:** אם חוזים בלתי משתנה מופרים.
+
+## `src/lowering/props`
+
+### canonicalizePropsContract
+
+פונקציה **סוג:**
+
+```typescript
+function canonicalizePropsContract(
+  module: SemanticModule,
+  defaultParameterName = "props",
+): NormalizedPropsContract;
+```
+
+מקנוניזציה של חוזה האביזרים מ-`SemanticModule`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------------------- | -------------- | ----------------------------------------------------------------------------- |
+| מודול | מודול סמנטי | - המודול הסמנטי לבדיקה.                                             |
+| defaultParameterName |                | - שם פרמטר ה-fallback props כאשר אף אחד אינו מוכרז (ברירת מחדל: 'props'). |
+
+#### חוֹזֶה
+
+- **@param:** - המודול הסמנטי לבדיקה.
+- **@param:** - שם פרמטר האביזרים הנלווים כאשר אף אחד אינו מוכרז (ברירת מחדל: 'אביזרים').
+- **@returns:** חוזה אבזרים קנוניים.
+
+### NormalizedProp
+
+**סוג:** ממשק
+
+```typescript
+export interface NormalizedProp
+```
+
+תיאור אבזר מנורמל, אגנוסטי למטרה.
+
+### NormalizedProps Contract
+
+**סוג:** ממשק
+
+```typescript
+export interface NormalizedPropsContract
+```
+
+חוזה האביזרים המנורמל של רכיב.
+
+### resolvePropTypeText
+
+פונקציה **סוג:**
+
+```typescript
+function resolvePropTypeText(prop: PropIntention): string;
+```
+
+פותר את מחרוזת הסוג עבור כוונת אבזר.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------------- | ----------- |
+| אביזר | PropIntention |             |
+
+### UNKNOWN_PROP_TYPE
+
+**סוג:** קבוע
+
+```typescript
+export const UNKNOWN_PROP_TYPE;
+```
+
+מחרוזת סוג החלפה כאשר אין סוג מוצהר או משוער.
+
+## `src/lowering/setup`
+
+### EMPTY_SETUP_CONTRACT
+
+**סוג:** קבוע
+
+```typescript
+export const EMPTY_SETUP_CONTRACT: SetupContract;
+```
+
+חוזה הגדרה ריק בשימוש על ידי מודולים הניתנים לחיבור מדור קודם ללא הגדרה.
+
+### normalizeSetupContract
+
+פונקציה **סוג:**
+
+```typescript
+function normalizeSetupContract(module: SemanticModule): SetupContract;
+```
+
+מקבל את חוזה ההתקנה הקנוני המצורף על ידי ה-frontend.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | -------------- | ----------- |
+| מודול | מודול סמנטי |             |
+
+### validateSetupContract
+
+פונקציה **סוג:**
+
+```typescript
+function validateSetupContract(
+  contract: SetupContract,
+  fileName = "<unknown>",
+): readonly CompilerDiagnostic[];
+```
+
+מאמת את התלות בהגדרות, שמות ותאימות מטען מודל לפני הורדת יעד.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------------- | ----------- |
+| חוזה | חוזה התקנה |             |
+| שם קובץ |               |             |
+
+## `src/lowering/slots`
+
+### DEFAULT_SLOT_NAME
+
+**סוג:** קבוע
+
+```typescript
+export const DEFAULT_SLOT_NAME;
+```
+
+שם משבצת ברירת מחדל בכל מסגרות היעד הנתמכות.
+
+### isDefaultSlotName
+
+פונקציה **סוג:**
+
+```typescript
+function isDefaultSlotName(name: string): boolean;
+```
+
+קובע אם שם משבצת הוא חריץ ברירת המחדל.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| שם | מחרוזת |             |
+
+### isSlotRenderNode
+
+פונקציה **סוג:**
+
+```typescript
+function isSlotRenderNode(node: GenericRenderNode): boolean;
+```
+
+קובע אם עיבוד node מייצג תג מציין מיקום של משבצת (`<Slot>` או `<slot>`).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
+### NormalizedSlotPlan
+
+**סוג:** ממשק
+
+```typescript
+export interface NormalizedSlotPlan
+```
+
+מתאר מנורמל עבור חריץ רכיב.
+
+### NormalizedSlots Contract
+
+**סוג:** ממשק
+
+```typescript
+export interface NormalizedSlotsContract
+```
+
+אוסף מנורמל של כל החריצים המסונתזים עבור רכיב.
+
+### synthesizeSlotPlans
+
+פונקציה **סוג:**
+
+```typescript
+function synthesizeSlotPlans(module: SemanticModule): NormalizedSlotsContract;
+```
+
+מסנתז חוזה משבצת מאוחד עבור `SemanticModule`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | -------------- | --------------------------------- |
+| מודול | מודול סמנטי | - The semantic module to analyze. |
+
+#### חוֹזֶה
+
+- **@param:** - המודול הסמנטי לניתוח.
+- **@returns:** חוזה תוכנית משבצות מנורמל.
 
 ## `src/schema`
 
-### assertTargetIntentions הורידו
+### assertTargetIntentions הורדו
 
 פונקציה **סוג:**
 
@@ -1377,10 +2047,10 @@ function assertTargetIntentionsLowered(
 
 #### פרמטרים
 
-| שם            | הקלד        | תיאור |
-| ------------- | ----------- | ----- |
-| כוונות        | לא ידוע     |       |
-| צפויFramework | FrameworkId |       |
+| שם | הקלד | תיאור |
+| ----------------- | ----------- | ----------- |
+| כוונות | לא ידוע |             |
+| צפויFramework | FrameworkId |             |
 
 ### DeclarativeSchema
 
@@ -1404,9 +2074,9 @@ function findActionableSpan(value: unknown): SourceSpan | undefined;
 
 #### פרמטרים
 
-| שם  | הקלד    | תיאור |
-| --- | ------- | ----- |
-| ערך | לא ידוע |       |
+| שם | הקלד | תיאור |
+| ----- | ------- | ----------- |
+| ערך | לא ידוע |             |
 
 ### SchemaFieldRule
 
@@ -1497,7 +2167,7 @@ export class TargetIntentionsValidationError extends TypeError
 export interface TargetIntentionsValidationResult
 ```
 
-תוצאה מובנית של אימות כוונת מטרה.
+תוצאה מובנית של אימות כוונות יעד.
 
 ### targetLoweredModuleSchema
 
@@ -1521,15 +2191,15 @@ function validateAgainstSchema(
 ): SchemaValidationIssue[];
 ```
 
-מאמת אובייקט יעד כנגד סכימה הצהרתית, אוסף את כל הבעיות המבניות.
+מאמת אובייקט יעד מול סכימה הצהרתית, אוסף את כל הבעיות המבניות.
 
 #### פרמטרים
 
-| שם       | הקלד                     | תיאור                                |
-| -------- | ------------------------ | ------------------------------------ |
-| יעד      | לא ידוע                  | - כוון אובייקט או רשומה לאימות.      |
-| סכימה    | DeclarativeSchema        | - סכמה הצהרתית המגדירה כללים מבניים. |
-| אפשרויות | Schema ValidationOptions | - אפשרויות תצורת אימות.              |
+| שם | הקלד | תיאור |
+| ------- | ----------------------- | ----------------------------------------------- |
+| יעד | לא ידוע | - כוון אובייקט או רשומה לאימות.          |
+| סכימה | DeclarativeSchema | - סכמה הצהרתית המגדירה כללים מבניים. |
+| אפשרויות | Schema ValidationOptions | - אפשרויות תצורת אימות.             |
 
 #### חוֹזֶה
 
@@ -1554,7 +2224,552 @@ function validateTargetIntentions(
 
 #### פרמטרים
 
-| שם            | הקלד        | תיאור |
-| ------------- | ----------- | ----- |
-| כוונות        | לא ידוע     |       |
-| צפויFramework | FrameworkId |       |
+| שם | הקלד | תיאור |
+| ----------------- | ----------- | ----------- |
+| כוונות | לא ידוע |             |
+| צפויFramework | FrameworkId |             |
+
+## `src/testing`
+
+### BooleanAttribute
+
+פונקציה **סוג:**
+
+```typescript
+function booleanAttribute(name: string): GenericJsxAttribute;
+```
+
+מאפיין קיצור בוליאני חסר ערך (`disabled`).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| שם | מחרוזת |             |
+
+### רְכִיב
+
+פונקציה **סוג:**
+
+```typescript
+function component(parts: {
+  name: string;
+  parameter?: string;
+  parameterType?: string;
+  exported?: boolean;
+  body?: readonly GenericStatement[];
+  returnNode?: GenericRenderNode;
+  returnExpression?: string;
+  returned?: { expression: string; nodes?: readonly GenericRenderNode[] };
+}): GenericComponent;
+```
+
+בנה את רשומת הרכיב שמודול נקרא על שמו.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| חלקים | { שם: מחרוזת; פרמטר?: מחרוזת; parameterType?: מחרוזת; מיוצא?: בוליאני; body?: קריאה בלבד GenericStatement[]; returnNode?: GenericRenderNode; returnExpression?: מחרוזת; החזירו?: { ביטוי: מחרוזת; צמתים?: readonly GenericRenderNode[] }; } |             |
+
+### dynamicElement
+
+פונקציה **סוג:**
+
+```typescript
+function dynamicElement(
+  expression: string,
+  parts: {
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+  } = {},
+): GenericRenderNode;
+```
+
+בנה עיבוד תג מחושב node.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------------------------------------------------------------------------------- | ----------- |
+| ביטוי | מחרוזת |             |
+| חלקים | { attributes?: readonly GenericAttribute[]; children?: readonly GenericRenderChild[]; מקור?: מחרוזת; } |             |
+
+### dynamicNode
+
+פונקציה **סוג:**
+
+```typescript
+function dynamicNode(
+  expression: string,
+  span: SourceSpan = EMPTY_SPAN,
+): DynamicNodeIntention;
+```
+
+בנה כוונה דינמית-node.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ---------- | ----------- |
+| ביטוי | מחרוזת |             |
+| span | SourceSpan |             |
+
+### אֵפֶקְט
+
+פונקציה **סוג:**
+
+```typescript
+function effect(
+  body: string,
+  second?:
+    | readonly string[]
+    | string
+    | { cleanup?: string; dependencies?: readonly string[] },
+  third?: string | readonly string[],
+): EffectIntention;
+```
+
+בנה כוונה להשפעה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---------------------------------------------------------------------------------------- | ----------- |
+| גוף | מחרוזת |             |
+| שני | \| מחרוזת לקריאה בלבד[] \| מחרוזת \| { ניקוי?: מחרוזת; תלות?: מחרוזת לקריאה בלבד[] } |             |
+| שלישי | מחרוזת \| מחרוזת לקריאה בלבד[] |             |
+
+### אֵלֵמֶנט
+
+פונקציה **סוג:**
+
+```typescript
+function element(
+  tag: string,
+  parts: {
+    tagKind?: GenericTagKind;
+    selfClosing?: boolean;
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+    span?: SourceSpan;
+  } = {},
+): GenericRenderNode;
+```
+
+בניית עיבוד node; `source` הוא הטקסט של node עצמו, המשמש בעת חיבור סימון מקונן.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| תג | מחרוזת |             |
+| חלקים | { tagKind?: GenericTagKind; selfclosing?: boolean; attributes?: קריאה בלבד GenericAttribute[]; children?: readonly GenericRenderChild[]; מקור?: מחרוזת; span?: SourceSpan; } |             |
+
+### elementRef
+
+**סוג:** קבוע
+
+```typescript
+export const elementRef: typeof reference;
+```
+
+כינוי עבור `reference` (בשימוש במפרטי Web Components).
+
+### מִקרֶה
+
+פונקציה **סוג:**
+
+```typescript
+function event(name: string, handler: string): EventIntention;
+```
+
+בנה כוונה לאירוע.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| שם | מחרוזת |             |
+| מטפל | מחרוזת |             |
+
+### expressionAttribute
+
+פונקציה **סוג:**
+
+```typescript
+function expressionAttribute(
+  name: string,
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericJsxAttribute;
+```
+
+תכונה `name={expression}`, נושאת אופציונלית סימון מקונן.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---------------------------- | ----------- |
+| שם | מחרוזת |             |
+| טקסט | מחרוזת |             |
+| מקונן | Readonly GenericRenderNode[] |             |
+
+### expressionChild
+
+פונקציה **סוג:**
+
+```typescript
+function expressionChild(
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericExpressionNode;
+```
+
+אינטרפולציה `{ … }` במיקום צאצא, נושאת אופציונלי סימון מקונן.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---------------------------- | ----------- |
+| טקסט | מחרוזת |             |
+| מקונן | לקריאה בלבד GenericRenderNode[] |             |
+
+### FixtureIntentions
+
+**סוג:** סוג
+
+```typescript
+export type FixtureIntentions = SemanticModuleParts;
+```
+
+כינוי לתאימות `SemanticModuleParts` עם מפרט Vue מדור קודם.
+
+### קֶטַע
+
+פונקציה **סוג:**
+
+```typescript
+function fragment(
+  children: readonly GenericRenderChild[] = [],
+  source = "<Fragment />",
+): GenericRenderNode;
+```
+
+בנה מקטע עיבוד node (`<>…</>` או `<Fragment>…</Fragment>`).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ----------------------------- | ----------- |
+| ילדים | לקריאה בלבד GenericRenderChild[] |             |
+| מקור |                               |             |
+
+### listKey
+
+פונקציה **סוג:**
+
+```typescript
+function listKey(
+  source: string,
+  second?: boolean | string | { key?: string; stable?: boolean },
+  third?: boolean | string,
+): ListKeyIntention;
+```
+
+בנה כוונה מפתח רשימה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------------------------------------------------------- | ----------- |
+| מקור | מחרוזת |             |
+| שני | בוליאני \| מחרוזת \| { key?: מחרוזת; יציב?: בוליאני } |             |
+| שלישי | בוליאני \| מחרוזת |             |
+
+### תַזכִּיר
+
+פונקציה **סוג:**
+
+```typescript
+function memo(
+  name: string,
+  factory: string,
+  dependencies?: readonly string[],
+): MemoIntention;
+```
+
+בנה כוונה לתזכיר.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------ | ----------------- | ----------- |
+| שם | מחרוזת |             |
+| מפעל | מחרוזת |             |
+| תלות | מחרוזת לקריאה בלבד[] |             |
+
+### מודול ייבוא
+
+פונקציה **סוג:**
+
+```typescript
+function moduleImport(
+  text: string,
+  source: string,
+  parts: Partial<Omit<GenericImport, "kind" | "text" | "source" | "span">> = {},
+): GenericImport;
+```
+
+בנה רשומת ייבוא ​​מטקסט המקור שלה ומפרט פתורה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | -------------------------------------------------------------------- | ----------- |
+| טקסט | מחרוזת |             |
+| מקור | מחרוזת |             |
+| חלקים | חלקי<Omit<GenericImport, "kind" \| "text" \| "source" \| "span">> |             |
+
+### ניטרלי ייבוא
+
+פונקציה **סוג:**
+
+```typescript
+function neutralImport(
+  valueNames: readonly string[],
+  typeNames: readonly string[] = [],
+): GenericImport;
+```
+
+היבוא הנייטרלי `@mission-platform/forge-jsx`, מאוית משמותיו.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ----------------- | ----------- |
+| valueNames | מחרוזת לקריאה בלבד[] |             |
+| שמות סוג | מחרוזת לקריאה בלבד[] |             |
+
+### לִתְמוֹך
+
+פונקציה **סוג:**
+
+```typescript
+function prop(
+  name: string,
+  second?:
+    string | { type?: string; optional?: boolean; defaultValue?: string },
+  third?: boolean | { optional?: boolean; defaultValue?: string },
+  fourth?: string,
+): PropIntention;
+```
+
+בנה כוונת אביזר.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---------------------------------------------------------------------- | ----------- |
+| שם | מחרוזת |             |
+| שני | מחרוזת \| { סוג?: מחרוזת; אופציונלי?: בוליאני; defaultValue?: string } |             |
+| שלישי | בוליאני \| { אופציונלי?: boolean; defaultValue?: string } |             |
+| רביעי | מחרוזת |             |
+
+### הַפנָיָה
+
+פונקציה **סוג:**
+
+```typescript
+function reference(
+  name: string,
+  elementType?: string,
+  initializer?: string,
+): RefIntention;
+```
+
+בנה כוונת רפ.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ------ | ----------- |
+| שם | מחרוזת |             |
+| elementType | מחרוזת |             |
+| אתחול | מחרוזת |             |
+
+### returnStatement
+
+פונקציה **סוג:**
+
+```typescript
+function returnStatement(
+  expression: string,
+  renderNodes: readonly GenericRenderNode[] = [],
+): GenericStatement;
+```
+
+בנו את הצהרת `return …;` של גוף רכיב.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ---------------------------- | ----------- |
+| ביטוי | מחרוזת |             |
+| renderNodes | לקריאה בלבד GenericRenderNode[] |             |
+
+### סמנטי מודול
+
+פונקציה **סוג:**
+
+```typescript
+function semanticModule(parts: SemanticModuleParts): SemanticModule;
+```
+
+הרכיבו `SemanticModule` מחלקי מתקן.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------------------- | ----------- |
+| חלקים | SemanticModuleParts |             |
+
+### SemanticModuleParts
+
+**סוג:** ממשק
+
+```typescript
+export interface SemanticModuleParts
+```
+
+עובדות הכוונה שהרכב מבחן עשוי להצהיר.
+
+### חָרִיץ
+
+פונקציה **סוג:**
+
+```typescript
+function slot(name: string, fallback?: string): SlotIntention;
+```
+
+בנה כוונת משבצת.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| שם | מחרוזת |             |
+| חזרה | מחרוזת |             |
+
+### spreadAttribute
+
+פונקציה **סוג:**
+
+```typescript
+function spreadAttribute(
+  text: string,
+  span: SourceSpan = EMPTY_SPAN,
+): GenericJsxSpreadAttribute;
+```
+
+תכונת התפשטות `{...expression}`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ---------- | ----------- |
+| טקסט | מחרוזת |             |
+| span | SourceSpan |             |
+
+### מְדִינָה
+
+פונקציה **סוג:**
+
+```typescript
+function state(
+  name: string,
+  setterName?: string,
+  parts: { type?: string; inferredType?: string; initializer?: string } = {},
+): StateIntention;
+```
+
+בנה כוונה של המדינה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------------------------------------- | ----------- |
+| שם | מחרוזת |             |
+| שם שם | מחרוזת |             |
+| חלקים | { סוג?: מחרוזת; inferredType?: מחרוזת; אתחול?: מחרוזת } |             |
+
+### הַצהָרָה
+
+פונקציה **סוג:**
+
+```typescript
+function statement(
+  text: string,
+  statementKind: GenericStatementKind = "variable",
+  parts: {
+    name?: string;
+    exported?: boolean;
+    renderNodes?: readonly GenericRenderNode[];
+  } = {},
+): GenericStatement;
+```
+
+בנו רשומת הצהרה מטקסט המקור שלה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------- | ---------------------------------------------------------------------------------- | ----------- |
+| טקסט | מחרוזת |             |
+| statementKind | GenericStatementKind |             |
+| חלקים | { שם?: מחרוזת; מיוצא?: בוליאני; renderNodes?: Readonly GenericRenderNode[]; } |             |
+
+### stringAttribute
+
+פונקציה **סוג:**
+
+```typescript
+function stringAttribute(name: string, value: string): GenericJsxAttribute;
+```
+
+מאפיין `name="value"`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| שם | מחרוזת |             |
+| ערך | מחרוזת |             |
+
+### תבניתRef
+
+**סוג:** קבוע
+
+```typescript
+export const templateRef: typeof reference;
+```
+
+כינוי עבור `reference` (בשימוש במפרט Vue).
+
+### textChild
+
+פונקציה **סוג:**
+
+```typescript
+function textChild(text: string): GenericTextNode;
+```
+
+טקסט מילולי בין תגים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| טקסט | מחרוזת |             |

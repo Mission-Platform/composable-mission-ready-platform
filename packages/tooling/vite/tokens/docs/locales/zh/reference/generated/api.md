@@ -23,10 +23,10 @@ function aliasToCssVariable(alias: string, prefix: string): string;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 别名 | 字符串 |      |
-| 前缀 | 字符串 |      |
+|名称 |类型 |描述 |
+| ------ | ------ | ----------- |
+|别名 |字符串|             |
+|前缀 |字符串|             |
 
 ### 驼色箱
 
@@ -40,9 +40,9 @@ function camelCase(dashed: string): string;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 虚线 | 字符串 |      |
+|名称 |类型 |描述 |
+| ------ | ------ | ----------- |
+|虚线|字符串|             |
 
 ### 驼峰命名法
 
@@ -94,7 +94,6 @@ export type DtcgGroup = Record<string, unknown>;
 
 DTCG 组 node（嵌套组/标记加上 `DTCG 组 node（嵌套组/标记加上  元数据的对象）。
  `$`
-
 ### DTCG令牌
 
 **种类：**接口
@@ -114,13 +113,13 @@ function flattenTokens(document_: DtcgGroup): TokenRecord[];
 ```
 
 递归地将 DTCG 文档扁平化为 {@link TokenRecord}，携带
-最近的祖先 `$type` 向下到每个叶标记。
+最近的祖先 `$type` 向下到每个叶令牌。
 
 #### 参数
 
-| 名称  | 类型      | 描述 |
-| ----- | --------- | ---- |
-| 文件_ | Dtcg 集团 |      |
+|名称 |类型 |描述 |
+| --------- | --------- | ----------- |
+|文件_ | Dtcg 集团 |             |
 
 ### 格式颜色值
 
@@ -134,9 +133,9 @@ function formatColorValue(value: DtcgColorValue): string;
 
 #### 参数
 
-| 名称 | 类型        | 描述 |
-| ---- | ----------- | ---- |
-| 价值 | DtcgColor值 |      |
+|名称 |类型 |描述 |
+| ----- | -------------- | ----------- |
+|价值| DtcgColor值 |             |
 
 ### 格式化CSS颜色
 
@@ -150,9 +149,9 @@ function formatCssColor(value: DtcgColorValue): string;
 
 #### 参数
 
-| 名称 | 类型        | 描述 |
-| ---- | ----------- | ---- |
-| 价值 | DtcgColor值 |      |
+|名称 |类型 |描述 |
+| ----- | -------------- | ----------- |
+|价值| DtcgColor值 |             |
 
 ### 格式化CSS值
 
@@ -162,13 +161,13 @@ function formatCssColor(value: DtcgColorValue): string;
 function formatCssValue(value: unknown): string;
 ```
 
-将标记 `$value` 格式化为 CSS/SCSS 文字（颜色四舍五入；其他所有内容逐字记录）。
+将标记 `$value` 设置为 CSS/SCSS 文字（颜色四舍五入；数组变为逗号分隔列表）。
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 价值 | 未知 |      |
+|名称 |类型 |描述 |
+| ----- | ------- | ----------- |
+|价值|未知 |             |
 
 ### 组标签
 
@@ -192,10 +191,10 @@ function resolveAlias(alias: string, document_: DtcgGroup): unknown;
 
 #### 参数
 
-| 名称  | 类型      | 描述 |
-| ----- | --------- | ---- |
-| 别名  | 字符串    |      |
-| 文件_ | Dtcg 集团 |      |
+|名称 |类型 |描述 |
+| --------- | --------- | ----------- |
+|别名 |字符串|             |
+|文件_ | Dtcg 集团 |             |
 
 ### 解析Ts值
 
@@ -207,13 +206,14 @@ function resolveTsValue(value: unknown): string | number;
 
 将 DTCG `$value` 解析为生成的 JavaScript 文本值
 TypeScript 模块：颜色变为 `oklab(...)` 字符串，数字保留
-数字，而其他所有内容（尺寸、字体系列堆栈……）都保留为字符串。
+数字、数组变成逗号分隔的列表，以及其他所有内容
+(尺寸，字体系列堆栈，...) 保留一个字符串。
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 价值 | 未知 |      |
+|名称 |类型 |描述 |
+| ----- | ------- | ----------- |
+|价值|未知 |             |
 
 ### 令牌记录
 
@@ -235,7 +235,7 @@ export interface TokenRecord
 function generateTokens(options: TokensPluginOptions): void;
 ```
 
-从 DTCG 源生成每个消耗性代币制品：
+从 DTCG 源生成每个可消耗的令牌工件：
 • `scss/_<file>.scss` — 每个非主题源一个独立的 SCSS 部分
 • `scss/_theme.scss` — 组合的 `light-dark()` 主题部分
 • `ts/<file>.ts` — 每个源一个嵌套的 `as const` TypeScript 模块
@@ -246,9 +246,9 @@ function generateTokens(options: TokensPluginOptions): void;
 
 #### 参数
 
-| 名称 | 类型                | 描述         |
-| ---- | ------------------- | ------------ |
-| 选项 | TokensPluginOptions | 令牌插件选项 |
+|名称 |类型 |描述 |
+| ------- | ------------------- | ----------- |
+|选项 | TokensPluginOptions | 令牌插件选项             |
 
 ### Tokens插件选项
 
@@ -290,17 +290,17 @@ function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGro
 直接导入，因此导入 `scss/tokens` 足以固定一个子树（或整个
 文档）到一种方案 - 无需单独导入 `scss/themes/{light,dark}`
 必需的，并且行为不再取决于导入顺序。因为
-上面的 `light-dark()` 颜色标记针对*使用的* `color-scheme` 进行解析，
+上面的 `light-dark()` 颜色标记针对 _used_ `color-scheme` 进行解析，
 将其设置在 `[data-theme]` 元素上会重新主题该元素及其所有内容
 后代无需重新定义单一颜色自定义属性。
 
 #### 参数
 
-| 名称     | 类型      | 描述 |
-| -------- | --------- | ---- |
-| 光文档   | Dtcg 集团 |      |
-| 黑暗文档 | Dtcg 集团 |      |
-| 前缀     |           |      |
+|名称 |类型 |描述 |
+| ------------- | --------- | ----------- |
+|光文档 | Dtcg 集团 |             |
+|黑暗文档 | Dtcg 集团 |             |
+|前缀 |           |             |
 
 ### 构建属性规则
 
@@ -316,32 +316,31 @@ function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable 
 本地 `为单个自定义属性构建 CSS `@property` 注册。
 
 当设置 `useScssVariable` 时，`initial-value` 解析为匹配的
-本地 变量 (`$<token>`) 在同一文件中发出，保留
+本地  变量 (`$<token>`) 在同一文件中发出，保留
 与 `为单个自定义属性构建 CSS `@property` 注册。
 
 当设置 `useScssVariable` 时，`initial-value` 解析为匹配的
 本地 `为单个自定义属性构建 CSS `@property` 注册。
 
 当设置 `useScssVariable` 时，`initial-value` 解析为匹配的
-本地 变量 (`$<token>`) 在同一文件中发出，保留
-与 变量真实来源同步注册；否则
+本地  变量 (`$<token>`) 在同一文件中发出，保留
+与  变量真实来源同步注册；否则
 `$value` 文字已内联。
 
 非通用 `@property` 需要计算独立的
 `initial-value`（无 `var()`、`light-dark()` 或相关单位），因此
-通用 `*` 语法省略了它。值为 `var()` 引用的所有内容
-（排版字段）或不可输入的文字（阴影、缓动曲线、
-因此，字体系列堆栈）在 `*` 下注册，而无需 `initial-value`。
-`$`
-
+通用 `*` 语法省略了它。值为 `var()` 引用的值（
+版式字段）或相对长度单位（rem、em、vw 等），因此请注册
+在 `*` 下，没有 `initial-value`。
+ `$`
 #### 参数
 
-| 名称         | 类型     | 描述 |
-| ------------ | -------- | ---- |
-| 记录         | 令牌记录 |      |
-| 前缀         | 字符串   |      |
-| 使用Scss变量 |          |      |
-| css命名空间  | 字符串   |      |
+|名称 |类型 |描述 |
+| --------------- | ----------- | ----------- |
+|记录|令牌记录|             |
+|前缀 |字符串|             |
+|使用Scss变量 |             |             |
+| css命名空间 |字符串|             |
 
 ### 构建Scss变量
 
@@ -356,16 +355,16 @@ function buildScssVariables(
 ): string;
 ```
 
-没有提供描述。
+构建按标记类别分组的标准 SCSS $ 变量声明块。
 
 #### 参数
 
-| 名称         | 类型             | 描述 |
-| ------------ | ---------------- | ---- |
-| 记录         | 令牌记录[]       |      |
-| 前缀         |                  |      |
-| css命名空间  | 字符串           |      |
-| 组件命名空间 | 只读设置<string> |      |
+|名称 |类型 |描述 |
+| ------------------- | ------------------- | ----------- |
+|记录|令牌记录[] |             |
+|前缀 |                     |             |
+| css命名空间 |字符串|             |
+|组件命名空间 |只读设置<string> |             |
 
 ### buildScss变量Scss
 
@@ -380,23 +379,22 @@ function buildScssVariablesScss(
 ): string;
 ```
 
-构建一个无 CSS 的 `构建一个无 CSS 的 -variables-only 部分（标题 + {@link buildScssVariables}
-正文，无 `:root`/`@property`CSS）。作为`scss/_<file>-vars.scss`发出，因此是内部的
-消费者（例如`scss/_mixins.scss`）可以在编译时读取令牌的 `构建一个无 CSS 的 `构建一个无 CSS 的 -variables-only 部分（标题 + {@link buildScssVariables}
-正文，无 `:root`/`@property`CSS）。作为`scss/_<file>-vars.scss`发出，因此是内部的
-消费者（例如`scss/_mixins.scss`）可以在编译时读取令牌的  值
-如果没有 `@use`-ing 完整的部分 — 这会泄漏其 `:root`/`@property`CSS
+构建一个无 CSS 的 `构建一个无 CSS 的 -variables-only 部分（标头 + {@link buildScssVariables}
+正文，无 `:root`/`@property` CSS）。作为 `scss/_<file>-vars.scss` 发出，因此是内部的
+消费者（例如 `scss/_mixins.scss`）可以在编译时读取令牌的 `构建一个无 CSS 的 `构建一个无 CSS 的 -variables-only 部分（标头 + {@link buildScssVariables}
+正文，无 `:root`/`@property` CSS）。作为 `scss/_<file>-vars.scss` 发出，因此是内部的
+消费者（例如 `scss/_mixins.scss`）可以在编译时读取令牌的  值
+如果没有 `@use`-ing 完整的部分 — 这会泄漏其 `:root`/`@property` CSS
 到每个消费样式表中。
-`$`
-
+ `$`
 #### 参数
 
-| 名称         | 类型             | 描述 |
-| ------------ | ---------------- | ---- |
-| 记录         | 令牌记录[]       |      |
-| 前缀         |                  |      |
-| css命名空间  | 字符串           |      |
-| 组件命名空间 | 只读设置<string> |      |
+|名称 |类型 |描述 |
+| ------------------- | ------------------- | ----------- |
+|记录|令牌记录[] |             |
+|前缀 |                     |             |
+| css命名空间 |字符串|             |
+|组件命名空间 |只读设置<string> |             |
 
 ### 构建结构SCSS
 
@@ -408,40 +406,46 @@ function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', c
 
 构建结构 SCSS 部分：`:root { --<prefix>-* }` 自定义属性
 以及每个令牌的匹配 `@property` 注册（使用 `initial-value`s
-解析为匹配的 `构建结构 SCSS 部分：`:root { --<prefix>-* }`自定义属性
-以及每个令牌的匹配`@property`注册（使用`initial-value`s
-解析为匹配的  变量），两者都包含在 `mp.tokens`级联中
-层。`构建结构 SCSS 部分：`:root { --<prefix>-* }` 自定义属性
+解析为匹配的 `构建结构 SCSS 部分：`:root { --<prefix>-* }` 自定义属性
 以及每个令牌的匹配 `@property` 注册（使用 `initial-value`s
-解析为匹配的 `构建结构 SCSS 部分：`:root { --<prefix>-* }`自定义属性
-以及每个令牌的匹配`@property`注册（使用`initial-value`s
-解析为匹配的  变量），两者都包含在 `mp.tokens`级联中
-层。  变量本身存在于配套的 CSS 中`_<file>-vars.scss`部分（请参阅 {@link buildScssVariablesScss}）；这部分`@use`s 它（将值插入到 `:root`/`@property`块中）并且`@forward`s 它（因此 `_<file>.scss`的下游消费者仍然看到`构建结构 SCSS 部分：`:root { --<prefix>-* }` 自定义属性
+解析为匹配的  变量），两者都包含在 `mp.tokens` 级联中
+层。 `构建结构 SCSS 部分：`:root { --<prefix>-* }` 自定义属性
 以及每个令牌的匹配 `@property` 注册（使用 `initial-value`s
-解析为匹配的 `构建结构 SCSS 部分：`:root { --<prefix>-* }`自定义属性
-以及每个令牌的匹配`@property`注册（使用`initial-value`s
-解析为匹配的  变量），两者都包含在 `mp.tokens`级联中
-层。`构建结构 SCSS 部分：`:root { --<prefix>-* }` 自定义属性
+解析为匹配的 `构建结构 SCSS 部分：`:root { --<prefix>-* }` 自定义属性
 以及每个令牌的匹配 `@property` 注册（使用 `initial-value`s
-解析为匹配的 `构建结构 SCSS 部分：`:root { --<prefix>-* }`自定义属性
-以及每个令牌的匹配`@property`注册（使用`initial-value`s
-解析为匹配的  变量），两者都包含在 `mp.tokens`级联中
-层。  变量本身存在于配套的 CSS 中`_<file>-vars.scss`部分（请参阅 {@link buildScssVariablesScss}）；这部分`@use`s 它（将值插入到 `:root`/`@property`块中）并且`@forward`s 它（因此 `_<file>.scss` 的下游消费者仍然看到
+解析为匹配的  变量），两者都包含在 `mp.tokens` 级联中
+层。  变量本身存在于配套的 CSS 中
+`_<file>-vars.scss` 部分（请参阅 {@link buildScssVariablesScss}）；这部分
+`@use`s 它（将值插入到 `:root`/`@property` 块中）并且
+`@forward`s 它（因此 `_<file>.scss` 的下游消费者仍然看到
+`构建结构 SCSS 部分：`:root { --<prefix>-* }` 自定义属性
+以及每个令牌的匹配 `@property` 注册（使用 `initial-value`s
+解析为匹配的 `构建结构 SCSS 部分：`:root { --<prefix>-* }` 自定义属性
+以及每个令牌的匹配 `@property` 注册（使用 `initial-value`s
+解析为匹配的  变量），两者都包含在 `mp.tokens` 级联中
+层。 `构建结构 SCSS 部分：`:root { --<prefix>-* }` 自定义属性
+以及每个令牌的匹配 `@property` 注册（使用 `initial-value`s
+解析为匹配的 `构建结构 SCSS 部分：`:root { --<prefix>-* }` 自定义属性
+以及每个令牌的匹配 `@property` 注册（使用 `initial-value`s
+解析为匹配的  变量），两者都包含在 `mp.tokens` 级联中
+层。  变量本身存在于配套的 CSS 中
+`_<file>-vars.scss` 部分（请参阅 {@link buildScssVariablesScss}）；这部分
+`@use`s 它（将值插入到 `:root`/`@property` 块中）并且
+`@forward`s 它（因此 `_<file>.scss` 的下游消费者仍然看到
 -变量）。调色板和复合版式都被发出
 通过这条路。
 
 `file` 是源/输出基本名称（例如 `'radius'`），用于引用
 同伴 `'<file>-vars'` 部分。
-`$`
-
+ `$`
 #### 参数
 
-| 名称        | 类型       | 描述 |
-| ----------- | ---------- | ---- |
-| 记录        | 令牌记录[] |      |
-| 前缀        |            |      |
-| 文件        |            |      |
-| css命名空间 | 字符串     |      |
+|名称 |类型 |描述 |
+| ------------ | ------------- | ----------- |
+|记录|令牌记录[] |             |
+|前缀 |               |             |
+|文件 |               |             |
+| css命名空间 |字符串|             |
 
 ### 建立版式记录
 
@@ -461,10 +465,33 @@ function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): Toke
 
 #### 参数
 
-| 名称   | 类型      | 描述 |
-| ------ | --------- | ---- |
-| 排版组 | Dtcg 集团 |      |
-| 前缀   |           |      |
+|名称 |类型 |描述 |
+| --------------- | --------- | ----------- |
+|排版组 | Dtcg 集团 |             |
+|前缀 |           |             |
+
+### 计算独立
+
+**种类：**功能
+
+```typescript
+function isComputationallyIndependent(record: TokenRecord): boolean;
+```
+
+检查令牌值是否在计算上独立且有效
+`initial-value` 用于类型化 CSS `@property` 在 W3C CSS 下注册
+属性和值 API 级别 1 规范。
+
+引用 `var()`、`light-dark()`、`env()` 的值、字体相对单位
+（`rem`、`em` 等）、视口/容器相关单位（`vw`、`vh`、`cqw` 等）、
+或 `<length>` 的无单位 `0` 不是计算独立的，必须
+通过回退到通用 `'*'` 语法来省略 `initial-value` 描述符。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ----------- | ----------- |
+|记录|令牌记录|             |
 
 ### 版式条目
 
@@ -478,9 +505,9 @@ function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>;
 
 #### 参数
 
-| 名称 | 类型      | 描述 |
-| ---- | --------- | ---- |
-| 组   | Dtcg 集团 |      |
+|名称 |类型 |描述 |
+| ----- | --------- | ----------- |
+|组 | Dtcg 集团 |             |
 
 ## `src/generators/typescript`
 
@@ -496,9 +523,9 @@ function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): stri
 
 #### 参数
 
-| 名称 | 类型                                  | 描述 |
-| ---- | ------------------------------------- | ---- |
-| 来源 | 数组<string \| TokenModuleDescriptor> |      |
+|名称 |类型 |描述 |
+| ------- | -------------------------------------- | ----------- |
+|来源 |数组<string \| TokenModuleDescriptor> |             |
 
 ### 构建Token模块
 
@@ -509,7 +536,7 @@ function buildTokenModule(
   basename: string,
   document_: DtcgGroup,
   aliasDocument?: DtcgGroup,
-  exportName = camelCase(basename),
+  exportName: string = camelCase(basename),
 ): string;
 ```
 
@@ -524,12 +551,12 @@ function buildTokenModule(
 
 #### 参数
 
-| 名称     | 类型      | 描述 |
-| -------- | --------- | ---- |
-| 基本名称 | 字符串    |      |
-| 文件_    | Dtcg 集团 |      |
-| 别名文档 | Dtcg 集团 |      |
-| 导出名称 |           |      |
+|名称 |类型 |描述 |
+| ------------- | --------- | ----------- |
+|基本名称 |字符串|             |
+|文件_ | Dtcg 集团 |             |
+|别名文档 | Dtcg 集团 |             |
+|导出名称 |字符串|             |
 
 ## `src/index`
 
@@ -541,25 +568,25 @@ function buildTokenModule(
 function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
-Vite 插件，可从任务平台生成设计令牌工件
+Vite 插件，用于生成任务平台设计令牌工件
 使用独立自定义的 DTCG (https://www.designtokens.org/) 源
 生成器 — 不涉及外部 CLI。每个 `*.tokens.json` 源都会产生一个
-匹配 `generated/scss/<file>.scss`（自包含 `Vite 插件，可从任务平台生成设计令牌工件
+匹配 `generated/scss/<file>.scss`（自包含 `Vite 插件，用于生成任务平台设计令牌工件
 使用独立自定义的 DTCG (https://www.designtokens.org/) 源
-生成器 — 不涉及外部 CLI。每个 `_.tokens.json`源都会产生一个
-匹配`generated/scss/<file>.scss`（自包含  变量、`--mp-_`自定义属性及其`@property`注册）和嵌套的`as const`
-`generated/ts/<file>.ts`模块以及`generated/_tokens.scss`(SCSS
-桶）和`generated/tokens.ts`（TypeScript 桶）聚合。
+生成器 — 不涉及外部 CLI。每个 `*.tokens.json` 源都会产生一个
+匹配 `generated/scss/<file>.scss`（自包含  变量、`--mp-*`
+自定义属性及其 `@property` 注册）和嵌套的 `as const`
+`generated/ts/<file>.ts` 模块以及 `generated/_tokens.scss` (SCSS
+桶）和 `generated/tokens.ts`（TypeScript 桶）聚合。
 
 生成在汇总 `buildStart` 挂钩中运行，因此生成了工件
 对于 `vite build`、`vite build --watch` 和开发服务器等。
-`$`
-
+ `$`
 #### 参数
 
-| 名称 | 类型                | 描述         |
-| ---- | ------------------- | ------------ |
-| 选项 | TokensPluginOptions | 令牌插件选项 |
+|名称 |类型 |描述 |
+| ------- | ------------------- | ----------- |
+|选项 | TokensPluginOptions | 令牌插件选项             |
 
 ### tokens插件
 
@@ -569,25 +596,25 @@ Vite 插件，可从任务平台生成设计令牌工件
 function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
-Vite 插件，可从任务平台生成设计令牌工件
+Vite 插件，用于生成任务平台设计令牌工件
 使用独立自定义的 DTCG (https://www.designtokens.org/) 源
 生成器 — 不涉及外部 CLI。每个 `*.tokens.json` 源都会产生一个
-匹配 `generated/scss/<file>.scss`（自包含 `Vite 插件，可从任务平台生成设计令牌工件
+匹配 `generated/scss/<file>.scss`（自包含 `Vite 插件，用于生成任务平台设计令牌工件
 使用独立自定义的 DTCG (https://www.designtokens.org/) 源
-生成器 — 不涉及外部 CLI。每个 `_.tokens.json`源都会产生一个
-匹配`generated/scss/<file>.scss`（自包含  变量、`--mp-_`自定义属性及其`@property`注册）和嵌套的`as const`
-`generated/ts/<file>.ts`模块以及`generated/_tokens.scss`(SCSS
-桶）和`generated/tokens.ts`（TypeScript 桶）聚合。
+生成器 — 不涉及外部 CLI。每个 `*.tokens.json` 源都会产生一个
+匹配 `generated/scss/<file>.scss`（自包含  变量、`--mp-*`
+自定义属性及其 `@property` 注册）和嵌套的 `as const`
+`generated/ts/<file>.ts` 模块以及 `generated/_tokens.scss` (SCSS
+桶）和 `generated/tokens.ts`（TypeScript 桶）聚合。
 
 生成在汇总 `buildStart` 挂钩中运行，因此生成了工件
 对于 `vite build`、`vite build --watch` 和开发服务器等。
-`$`
-
+ `$`
 #### 参数
 
-| 名称 | 类型                | 描述         |
-| ---- | ------------------- | ------------ |
-| 选项 | TokensPluginOptions | 令牌插件选项 |
+|名称 |类型 |描述 |
+| ------- | ------------------- | ----------- |
+|选项 | TokensPluginOptions | 令牌插件选项             |
 
 ## `src/reachability`
 
@@ -603,9 +630,9 @@ function collectTokenReachability(options: TokenReachabilityOptions): TokenReach
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 选项 | 令牌可达性选项 |      |
+|名称 |类型 |描述 |
+| ------- | ------------------------ | ----------- |
+|选项 |令牌可达性选项 |             |
 
 ### TokenAliasEdge
 
@@ -679,7 +706,7 @@ function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath:
 
 #### 参数
 
-| 名称     | 类型           | 描述 |
-| -------- | -------------- | ---- |
-| 报告     | 代币可达性报告 |      |
-| 文件路径 | 字符串         |      |
+|名称 |类型 |描述 |
+| -------- | ----------------------- | ----------- |
+|报告|代币可达性报告 |             |
+|文件路径 |字符串|             |

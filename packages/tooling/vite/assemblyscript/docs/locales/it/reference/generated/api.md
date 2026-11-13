@@ -38,7 +38,7 @@ binario incorporato anziché un URL `.wasm`.
 
 #### Parametri
 
-| Nome    | Digitare                     | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ---------------------------- | ----------- |
 | opzioni | AssemblyScriptCompileOptions |             |
 
@@ -59,10 +59,10 @@ un decodificatore base64 cross-environment, la funzione `instantiate` estratta
 
 #### Parametri
 
-| Nome              | Digitare | Descrizione |
-| ----------------- | -------- | ----------- |
-| wasmBase64        | stringa  |             |
-| instantiateSource | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ----------------- | ------ | ----------- |
+| wasmBase64 | stringa |             |
+| instantiateSource | stringa |             |
 
 ### extractInstantiate
 
@@ -79,9 +79,9 @@ istanziazione da un binario inline (base64) anziché da un URL.
 
 #### Parametri
 
-| Nome          | Digitare | Descrizione |
-| ------------- | -------- | ----------- |
-| attacchiFonte | stringa  |             |
+| Nome | Digitare | Descrizione |
+| -------------- | ------ | ----------- |
+| attacchiFonte | stringa |             |
 
 ## `src/index`
 
@@ -103,7 +103,7 @@ La compilazione viene eseguita nell'hook rollup `buildStart`, quindi il modulo g
 
 #### Parametri
 
-| Nome    | Digitare                    | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | --------------------------- | ----------- |
 | opzioni | AssemblyScriptPluginOptions |             |
 
@@ -135,6 +135,6 @@ La compilazione viene eseguita nell'hook rollup `buildStart`, quindi il modulo g
 
 #### Parametri
 
-| Nome    | Digitare                    | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | --------------------------- | ----------- |
 | opzioni | AssemblyScriptPluginOptions |             |

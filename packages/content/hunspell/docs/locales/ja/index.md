@@ -2,11 +2,11 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> packages/hunspell/docs/index.md: [packages/hunspell/docs/index.md](../../index.md)
+> packages/content/hunspell/docs/index.md: [packages/content/hunspell/docs/index.md](../../index.md)
 > 言語: 日本語 (ja)
 
 `@mission-platform/hunspell` は、Hunspell に基づいてコンパイルされた高性能スペルチェック エンジンを提供します。
-Emscripten 経由の **WebAssembly**。これは、完全にブラウザ内または Web Workers 内で実行される ES モジュールとしてパッケージ化されています。
+Emscripten 経由の **WebAssembly**。これは、ブラウザ内または Web Workers 内で完全に実行される ES モジュールとしてパッケージ化されています。
 
 ## 建築
 
@@ -19,7 +19,7 @@ Emscripten 経由の **WebAssembly**。これは、完全にブラウザ内ま�
 
 ### WASM アーティファクトの再構築
 
-再構築には必要なもの [ドッカー](https://www.docker.com/)。ルートから次のコマンドを使用します。
+再構築には[Docker](https://www.docker.com/)が必要です。ルートから次のコマンドを使用します。
 
 ```bash
 pnpm --filter @mission-platform/hunspell build:wasm
@@ -88,4 +88,4 @@ handle.dispose();
 このパッケージには、バンドルのサイズを小さくするため、**組み込み辞書は同梱されていません**。自分で用意する必要があります
 `.aff` (接辞) と `.dic` (辞書) のペア。
 
-推奨ソース: [LibreOffice 辞書](https://github.com/LibreOffice/dictionaries)。
+推奨されるソース: [LibreOffice Dictionaries](https://github.com/LibreOffice/dictionaries)。

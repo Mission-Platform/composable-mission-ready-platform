@@ -19,14 +19,14 @@
 function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement;
 ```
 
-ForgeThreeCanvas - <canvas>을 렌더링하는 프레임워크 중립 구성 요소
+ForgeThreeCanvas — <canvas>을 렌더링하는 프레임워크 중립 구성 요소
 `useThree`을 통해 Three.js WebGL 컨텍스트를 관리합니다.
 
 #### 매개변수
 
-| 이름 | 유형                                  | 설명 |
-| ---- | ------------------------------------- | ---- |
-| 속성 | 읽기 전용<ForgeThreeCanvasProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------------ | ----------- |
+| 속성 | 읽기 전용<ForgeThreeCanvasProperties> |             |
 
 ### ForgeThreeCanvas속성
 
@@ -69,7 +69,7 @@ SSR 안전: 브라우저 API 또는 캔버스를 사용할 수 없는 경우 작
 
 #### 매개변수
 
-| 이름       | 유형                                             | 설명 |
-| ---------- | ------------------------------------------------ | ---- |
-| 캔버스참조 | 참조좋아요<HTMLCanvasElement \| null>            |      |
-| 준비 완료  | (컨텍스트: ThreeContext) => void \| (() => 무효) |      |
+| 이름 | 유형 | 설명 |
+| --------------- | ----------------------------------------------- | ----------- |
+| 캔버스참조 | 참조좋아요<HTMLCanvasElement \| null> |             |
+| 준비 완료 | (컨텍스트: ThreeContext) => void \| (() => 무효) |             |

@@ -30,12 +30,12 @@ de doelfasen passeren de verfijnde `plan`; een directe beller krijgt een vers
 
 #### Parameters
 
-| Naam            | Typ                     | Beschrijving |
-| --------------- | ----------------------- | ------------ |
-| module          | SemantischeModule       |              |
-| componentnaam   | tekenreeks              |              |
-| componentMappen | Alleen-lezenSet<string> |              |
-| plannen         | SvelteLoweredModule     |              |
+| Naam | Typ | Beschrijving |
+| ---------------- | ------------------- | ----------- |
+| module | SemantischeModule |             |
+| componentnaam | tekenreeks |             |
+| componentMappen | Alleen-lezenSet<string> |             |
+| plannen | SvelteLoweredModule |             |
 
 ### SvelteModule-uitvoer
 
@@ -61,9 +61,9 @@ Druk een neutrale hook/composable-module af als de Svelte-target `.ts`-bron.
 
 #### Parameters
 
-| Naam   | Typ               | Beschrijving |
-| ------ | ----------------- | ------------ |
-| module | SemantischeModule |              |
+| Naam | Typ | Beschrijving |
+| ------ | -------------- | ----------- |
+| module | SemantischeModule |             |
 
 ## `src/index`
 
@@ -93,9 +93,9 @@ Of een doelplan nu het Svelte-plan is: de discriminator waar elke consument zich
 
 #### Parameters
 
-| Naam     | Typ                                   | Beschrijving |
-| -------- | ------------------------------------- | ------------ |
-| verlaagd | TargetLoweredModule \| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------------- | ----------- |
+| verlaagd | TargetLoweredModule \| ongedefinieerd |             |
 
 ### lagereSvelteModule
 
@@ -112,10 +112,10 @@ Bouw het Svelte-plan voor een neutrale module.
 
 #### Parameters
 
-| Naam    | Typ               | Beschrijving |
-| ------- | ----------------- | ------------ |
-| ir      | SemantischeModule |              |
-| context | DoelContext       |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| ir | SemantischeModule |             |
+| context | DoelContext |             |
 
 ### SvelteBindingPlan
 
@@ -302,10 +302,10 @@ doel, of een beller die `lower` heeft overgeslagen) worden onaangeroerd geretour
 
 #### Parameters
 
-| Naam        | Typ                   | Beschrijving |
-| ----------- | --------------------- | ------------ |
-| bedoelingen | DoelIntenties         |              |
-| opties      | TargetOptimizeOptions |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------- | ----------- |
+| bedoelingen | DoelIntenties |             |
+| opties | TargetOptimizeOptions |             |
 
 ### SVELTE_OPTIMIZATIES
 

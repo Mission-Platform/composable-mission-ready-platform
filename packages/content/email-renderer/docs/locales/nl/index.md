@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> packages/email-renderer/docs/index.md: [packages/email-renderer/docs/index.md](../../index.md)
+> packages/content/email-renderer/docs/index.md: [packages/content/email-renderer/docs/index.md](../../index.md)
 > Taal: Nederlands (nl)
 
 `@mission-platform/email-renderer` is eigenaar van de raamwerkneutrale weergavegrens voor e-mailbomen van Mission Platform. De root-invoer is veilig voor het genereren van e-mail op de server; browseradapters worden geïsoleerd achter expliciete subpaden.
@@ -30,6 +30,6 @@ Gebruik alleen het adapter-subpad dat vereist is voor een browservoorbeeld of to
 
 Voor een enkele optionele import waarbij alle vijf browseradapters zichtbaar zijn, gebruikt u
 `@mission-platform/email-renderer/adapters`. Deze vermelding staat los van de
-root-invoer, zodat het genereren van alleen e-mail op de server nooit een framework-runtime laadt.
+root-invoer, zodat het genereren van e-mail op de server nooit een framework-runtime laadt.
 
-Deze optionele toegangspunten gebruiken dezelfde Forge-boom. Ze worden niet geïmporteerd door de root-e-mailserializer en zijn niet nodig bij e-mailimplementaties op alleen servers.
+Deze optionele toegangspunten gebruiken dezelfde Forge-boom. Ze worden niet geïmporteerd door de root-e-mailserializer en zijn niet nodig bij e-mailimplementaties op de server.

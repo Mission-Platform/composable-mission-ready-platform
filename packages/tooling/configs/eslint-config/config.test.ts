@@ -20,6 +20,26 @@ describe('missionTypeScriptPlugin rules via ESLint flat config', () => {
     assert.match(preferSatisfies.message, /Prefer "satisfies"/);
   });
 
+  it('prefer-satisfies flags assertions nested in declaration object literals', async () => {
+    const code = 'const config = { nested: { value: 1 } as NestedConfig } as Config;\n';
+    const [result] = await eslint.lintText(code, { filePath: 'test.ts' });
+    assert.ok(result);
+    const warnings = result.messages.filter((m) => m.ruleId === '@typescript-eslint/prefer-satisfies');
+    assert.equal(warnings.length, 2, 'Expected both declaration-site assertions to be reported');
+  });
+
+  it('prefer-satisfies allows use-site type narrowing assertions', async () => {
+    const code = `
+      function getOpenState(target: EventTarget | null): boolean {
+        return (target as HTMLDetailsElement).open;
+      }
+    `;
+    const [result] = await eslint.lintText(code, { filePath: 'test.ts' });
+    assert.ok(result);
+    const warning = result.messages.find((m) => m.ruleId === '@typescript-eslint/prefer-satisfies');
+    assert.equal(warning, undefined, 'Did not expect a warning for a use-site narrowing assertion');
+  });
+
   it('prefer-satisfies reports error on "as any"', async () => {
     const code = 'const x = val as any;\n';
     const [result] = await eslint.lintText(code, { filePath: 'test.ts' });

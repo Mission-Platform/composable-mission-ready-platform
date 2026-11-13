@@ -41,8 +41,8 @@ oggetti di scena.
 
 #### Parametri
 
-| Nome      | Digitare                          | Descrizione |
-| --------- | --------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------- | ----------- |
 | proprietà | Sola lettura<SchedulerProperties> |             |
 
 ### Proprietà di pianificazione
@@ -80,10 +80,10 @@ semantica di revisione RFC 5545). `uid` viene conservato.
 
 #### Parametri
 
-| Nome   | Digitare                      | Descrizione |
-| ------ | ----------------------------- | ----------- |
-| evento | VEvent                        |             |
-| toppa  | Parziale<Omit<VEvent, 'uid'>> |             |
+| Nome | Digitare | Descrizione |
+| ----- | ---------------------------- | ----------- |
+| evento | VEvent |             |
+| toppa | Parziale<Omit<VEvent, 'uid'>> |             |
 
 ### createEvent
 
@@ -98,8 +98,8 @@ generazione di un UID e timestamp di creazione/modifica.
 
 #### Parametri
 
-| Nome     | Digitare                           | Descrizione |
-| -------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | -------------------------------- | ----------- |
 | parziale | Ometti<VEvent, 'uid' \| 'dtstamp'> |             |
 
 ### eventiForDay
@@ -114,10 +114,10 @@ Restituisce gli eventi che cadono in un determinato giorno di calendario.
 
 #### Parametri
 
-| Nome   | Digitare | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------ | -------- | ----------- |
 | eventi | VEvent[] |             |
-| giorno | Data     |             |
+| giorno | Data |             |
 
 ### eventsForRange
 
@@ -134,11 +134,11 @@ onorato.
 
 #### Parametri
 
-| Nome   | Digitare | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------ | -------- | ----------- |
 | eventi | VEvent[] |             |
-| inizio | Data     |             |
-| fine   | Data     |             |
+| inizio | Data |             |
+| fine | Data |             |
 
 ### formatDuration
 
@@ -152,9 +152,9 @@ Restituisce una stringa di durata leggibile dall'uomo per un evento, ad es. "1 o
 
 #### Parametri
 
-| Nome   | Digitare | Descrizione |
-| ------ | -------- | ----------- |
-| evento | VEvent   |             |
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| evento | VEvent |             |
 
 ### layoutGiorno
 
@@ -170,7 +170,7 @@ e ciascuno occupa `column` dei binari paralleli `totalColumns`.
 
 #### Parametri
 
-| Nome   | Digitare | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------ | -------- | ----------- |
 | eventi | VEvent[] |             |
 
@@ -187,10 +187,10 @@ preservando la sua rappresentazione ISO per tutto il giorno/temporizzata.
 
 #### Parametri
 
-| Nome    | Digitare | Descrizione |
-| ------- | -------- | ----------- |
-| evento  | VEvent   |             |
-| deltaMs | numero   |             |
+| Nome | Digitare | Descrizione |
+| ------- | ------ | ----------- |
+| evento | VEvent |             |
+| deltaMs | numero |             |
 
 ### ridimensionaEventPatch
 
@@ -205,14 +205,14 @@ l'evento dura almeno 15 minuti (o un giorno, per eventi che durano tutto il gior
 
 #### Parametri
 
-| Nome    | Digitare | Descrizione |
-| ------- | -------- | ----------- |
-| evento  | VEvent   |             |
-| deltaMs | numero   |             |
+| Nome | Digitare | Descrizione |
+| ------- | ------ | ----------- |
+| evento | VEvent |             |
+| deltaMs | numero |             |
 
 ## `src/core/range`
 
-### passoAnchor
+### stepAnchor
 
 **Tipo:** funzione
 
@@ -225,11 +225,11 @@ Passo giorno/tre giorni/settimana in giorni; passo mese/anno nel loro periodo.
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
-| vista     | Visualizzazione pianificazione |             |
-| ancora    | Data                           |             |
-| direzione | -1\| 1                         |             |
+| Nome | Digitare | Descrizione |
+| --------- | ------------- | ----------- |
+| vista | Visualizzazione pianificazione |             |
+| ancora | Data |             |
+| direzione | -1\| 1|             |
 
 ### visibileIntervalloPer
 
@@ -239,16 +239,16 @@ Passo giorno/tre giorni/settimana in giorni; passo mese/anno nel loro periodo.
 function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekStart = 0): DateRange;
 ```
 
-La finestra visibile semiaperta `[start, end)` per il dato `view` ancorato a
+La finestra `[start, end)` semiaperta visibile per il dato `view` ancorato a
 `anchor`, onorando `weekStartsOn` per le visualizzazioni settimanali.
 
 #### Parametri
 
-| Nome                | Digitare                       | Descrizione |
-| ------------------- | ------------------------------ | ----------- |
-| vista               | Visualizzazione pianificazione |             |
-| ancora              | Data                           |             |
-| la settimana inizia | Inizio settimana               |             |
+| Nome | Digitare | Descrizione |
+| ------------ | ------------- | ----------- |
+| vista | Visualizzazione pianificazione |             |
+| ancora | Data |             |
+| la settimana inizia | Inizio settimana |             |
 
 ## `src/core/recurrence`
 
@@ -271,11 +271,11 @@ prevenire cicli infiniti su regole illimitate.
 
 #### Parametri
 
-| Nome             | Digitare | Descrizione |
-| ---------------- | -------- | ----------- |
-| evento           | VEvent   |             |
-| intervalloInizio | Data     |             |
-| intervalloFine   | Data     |             |
+| Nome | Digitare | Descrizione |
+| ---------- | ------ | ----------- |
+| evento | VEvent |             |
+| intervalloInizio | Data |             |
+| intervalloFine | Data |             |
 
 ## `src/core/types`
 

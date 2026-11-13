@@ -9,288 +9,65 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 
 Generado a partir de declaraciones de fuente pública en `@mission-platform/barcode`.
 
-## `src/encoder/index`
+## `src/components/molecules/forge-barcode/forge-barcode`
 
-### Código de barras
+### Acciones de código de barras
 
 **Tipo:** interfaz
 
 ```typescript
-export interface Barcode
+export interface BarcodeActions
 ```
 
-El resultado de {@link encodeBarcode}: bits del módulo con su ancho total.
+Qué botones de acción muestra la barra de herramientas. `true` los habilita a todos.
 
-### Código De BarrasSimbología
+### Propiedades del código de barras
 
-**Tipo:** tipo
+**Tipo:** interfaz
 
 ```typescript
-export type BarcodeSymbology =
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'ean13'
-  | 'ean8'
-  | 'upca'
-  | 'upce'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode';
+export interface BarcodeProperties
 ```
 
-Simbologías de códigos de barras lineales admitidas.
+No se proporciona descripción.
 
-### codificarcódigo de barras
+### Forjar código de barras
 
 **Tipo:** función
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
+function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement;
 ```
 
-Codifique `data` en un código de barras lineal utilizando el gráfico Flint local del paquete.
+`ForgeBarcode`: genera un código de barras 1D (lineal) escaneable, creado una vez en el
+dialecto JSX neutral y compilado directamente en React o Vue por
+`@mission-platform/vite-plugin-forge`.
+
+La carga útil (`value`) está codificada completamente en el cliente por el
+Codificador {@link encodeBarcode} de `@mission-platform/barcode`: un
+codificador libre de dependencias escrito en Rust y compilado en WebAssembly, y
+dibujado como un SVG nítido e independiente de la resolución. Los módulos oscuros adyacentes se fusionan
+en una sola ejecución `<rect>`, por lo que el marcado se mantiene compacto. Para un escaneo confiable
+los colores de la barra/fondo son predeterminados solid negro sobre blanco en lugar del tema
+tokens, pero ambos se pueden anular a través de `color`/`background`.
+
+Simbologías soportadas (`symbology`): Código 128, GS1-128, Código 39 (+ extendido),
+Código 93 (+ extendido), EAN-13, EAN-8, UPC-A, UPC-E, ITF (Intercalado 2 de 5),
+ITF-14, Codabar, MSI (Plessey modificado) y Pharmacode. La altura de la barra, módulo.
+El ancho y la zona silenciosa son configurables, y el valor legible por humanos puede ser
+se muestra debajo de las barras a través de `displayValue`.
+
+Una barra de herramientas de acción opcional (habilitada a través de `showActions` - `true` para cada
+botón, o un objeto {@link BarcodeActions} para seleccionarlos individualmente) permite
+los usuarios **guardan el código de barras como una imagen PNG**, **copian la imagen al
+portapapeles** y **copiar el valor codificado al portapapeles**. El PNG es
+rasterizado en el cliente dibujando el SVG renderizado en un lienzo. el
+La devolución de llamada `onError` se activa cuando el valor no se puede codificar para el elegido
+simbología. Posee su estilo a través del módulo CSS ubicado en el mismo lugar.
+`forge-barcode.module.scss`.
 
 #### Parámetros
 
-| Nombre     | Tipo                       | Descripción |
-| ---------- | -------------------------- | ----------- |
-| simbología | Código de barrasSimbología |             |
-| datos      | cadena                     |             |
-
-#### Contrato
-
-- **@throws:** cuando la carga útil no es válida para la simbología seleccionada.
-
-### codificarcódigo de barrasAsync
-
-**Tipo:** función
-
-```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
-```
-
-Codifique `data` de forma asincrónica utilizando el gráfico Flint local del paquete.
-
-#### Parámetros
-
-| Nombre     | Tipo                       | Descripción |
-| ---------- | -------------------------- | ----------- |
-| simbología | Código de barrasSimbología |             |
-| datos      | cadena                     |             |
-
-## `src/fws/index`
-
-### Parámetros
-
-| Nombre | Tipo                        | Descripción |
-| ------ | --------------------------- | ----------- |
-| valor  | cadena \| ArrayLike<number> |             |
-
-### Parámetros
-
-| Nombre | Tipo                        | Descripción |
-| ------ | --------------------------- | ----------- |
-| valor  | cadena \| ArrayLike<number> |             |
-
-### Parámetros
-
-| Nombre | Tipo                        | Descripción |
-| ------ | --------------------------- | ----------- |
-| valor  | cadena \| ArrayLike<number> |             |
-
-### Parámetros
-
-| Nombre | Tipo                        | Descripción |
-| ------ | --------------------------- | ----------- |
-| valor  | cadena \| ArrayLike<number> |             |
-
-### codificarEan13Fws
-
-**Tipo:** función
-
-```typescript
-function encodeEan13Fws(value: string): string;
-```
-
-Codifica una carga útil EAN-13 de doce dígitos y calcula su dígito de control en FWS.
-
-#### Parámetros
-
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| valor  | cadena |             |
-
-### codificarEan13FwsAsync
-
-**Tipo:** función
-
-```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>;
-```
-
-Codifica asincrónicamente una carga útil EAN-13 de doce dígitos con el cargador FWS.
-
-#### Parámetros
-
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| valor  | cadena |             |
-
-### codificarEan8Fws
-
-**Tipo:** función
-
-```typescript
-function encodeEan8Fws(value: string): string;
-```
-
-Codifica una carga útil EAN-8 de siete dígitos y calcula su dígito de control en FWS.
-
-#### Parámetros
-
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| valor  | cadena |             |
-
-### codificarEan8FwsAsync
-
-**Tipo:** función
-
-```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>;
-```
-
-Codifica de forma asincrónica una carga útil EAN-8 de siete dígitos con el cargador FWS.
-
-#### Parámetros
-
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| valor  | cadena |             |
-
-### codificarUpcaFws
-
-**Tipo:** función
-
-```typescript
-function encodeUpcaFws(value: string): string;
-```
-
-Codifica una carga útil UPC-A a través del gráfico Flint EAN-13 con prefijo cero.
-
-#### Parámetros
-
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| valor  | cadena |             |
-
-### codificarUpcaFwsAsync
-
-**Tipo:** función
-
-```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>;
-```
-
-Codifica asincrónicamente una carga útil UPC-A a través de FWS.
-
-#### Parámetros
-
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| valor  | cadena |             |
-
-### codificarVariableCódigo de barrasFws
-
-**Tipo:** función
-
-```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
-```
-
-Codifica un código de barras de longitud variable compatible a través de su gráfico Flint nativo cuando esté disponible.
-
-#### Parámetros
-
-| Nombre     | Tipo                                    | Descripción |
-| ---------- | --------------------------------------- | ----------- |
-| simbología | Simbología de código de barras variable |             |
-| valor      | cadena                                  |             |
-
-### codificarVariableBarcodeFwsAsync
-
-**Tipo:** función
-
-```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
-```
-
-Codifica de forma asincrónica un código de barras de longitud variable compatible a través de FWS.
-
-#### Parámetros
-
-| Nombre     | Tipo                                    | Descripción |
-| ---------- | --------------------------------------- | ----------- |
-| simbología | Simbología de código de barras variable |             |
-| valor      | cadena                                  |             |
-
-### validarGs1DataBarValue
-
-**Tipo:** función
-
-```typescript
-function validateGs1DataBarValue(value: string): boolean;
-```
-
-Valida un valor GS1 DataBar/RSS-14 GTIN-14 en el gráfico Flint local del paquete.
-
-#### Parámetros
-
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| valor  | cadena |             |
-
-### validarGs1DataBarValueAsync
-
-**Tipo:** función
-
-```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
-```
-
-Valida asincrónicamente un valor GS1 DataBar/RSS-14 GTIN-14 a través de FWS.
-
-#### Parámetros
-
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| valor  | cadena |             |
-
-### VariableCódigo De BarrasSimbología
-
-**Tipo:** tipo
-
-```typescript
-export type VariableBarcodeSymbology = Extract<
-  BarcodeSymbology,
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode'
->;
-```
-
-Simbologías de longitud variable compatibles con el adaptador Flint de código de barras directo.
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------- | ----------- |
+| propiedades | Sólo lectura<BarcodeProperties> |             |

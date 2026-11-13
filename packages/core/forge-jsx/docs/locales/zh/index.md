@@ -5,31 +5,29 @@
 > packages/core/forge-jsx/docs/index.md: [packages/core/forge-jsx/docs/index.md](../../index.md)
 > 语言: 简体中文 (zh)
 
-用于 Mission Platform 的小型、无依赖性“编写一次，在 Vue 3 和 React 上运行”层。组件的创作一次于
-JSX 并通过小型适配器在任一框架上呈现 - 没有构建时代码生成，没有外部编译器（这是一个
-有丝分裂等工具的手卷替代品）。
+用于 Mission Platform 的小型、无依赖性、框架中立的 JSX 运行时。
+组件在 JSX 中编写一次并通过单独的渲染
+`@mission-platform/forge-adapters` 包。
 
 ## 它是如何运作的
 
 ```
-author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ toReactComponent ──▶ React
-                                                          └──▶ toVueComponent  ──▶ Vue 3
+author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ framework adapter ──▶ target framework
 ```
 
-1. 组件是用 JSX 编写的，由**经典** JSX 转换（`jsxFactory: 'h'`、
+1. 组件是用 JSX 编写的，通过**经典** JSX 转换（`jsxFactory: 'h'`、
    `jsxFragmentFactory: 'Fragment'`）。
 2. `h(...)` 构建框架中立、可序列化的 `MpElement` 树，而不是 React/Vue 元素。
-3. 每框架适配器遍历该树并在渲染时将每个 node 映射到 `React.createElement` 或 Vue 的 `h`。
+3. 框架适配器遍历该树并将每个 node 映射到目标
+   框架的本机渲染原语。
 
 ## 特征
 
 - **框架中性 JSX 运行时**：一个小型、无依赖的运行时，可构建可序列化的 `MpElement` 树
-- **Vue 3 适配器**：将中性组件转换为具有适当反应性的本机 Vue 3 SFC
-- **React 适配器**：将中性组件转换为本机 React 组件
 - **挂钩支持**：框架中立的 React 样式挂钩（`useState`、`useRef`、`useEffect`、`useMemo`、`useCallback`）
   编译为其等效框架
 - **无构建时代码生成**：与 Mitosis 或类似工具不同，此方法使用运行时适配器而不是构建时
-  转变
+  转型
 - **TypeScript 第一**：完整的 TypeScript 支持以及正确的类型推断
 
 ## 安装
@@ -136,7 +134,7 @@ function App() {
 
 #### `useEffect(effect, dependencies?)`
 
-框架中立的副作用钩子。
+Framework-neutral side effect hook.
 
 **参数：**
 
@@ -164,28 +162,6 @@ function App() {
 - `dependencies`：依赖项数组
 
 **返回：** 记忆函数
-
-### 适配器
-
-#### `toVueComponent(component)`
-
-将框架中立组件转换为 Vue 3 组件。
-
-**参数：**
-
-- `component`：框架中立的组件函数
-
-**返回：** Vue 组件定义
-
-#### `toReactComponent(component)`
-
-将框架中立组件转换为 React 组件。
-
-**参数：**
-
-- `component`：框架中立的组件函数
-
-**返回：** React 组件函数
 
 ## TypeScript 支持
 
@@ -227,7 +203,7 @@ export default defineConfig({
 });
 ```
 
-### 全局 JSX 配置
+### Global JSX Configuration
 
 对于 TypeScript 项目，您可以配置全局 JSX 设置：
 

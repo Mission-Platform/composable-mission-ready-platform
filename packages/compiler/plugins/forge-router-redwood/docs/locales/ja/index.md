@@ -5,6 +5,6 @@
 > packages/compiler/plugins/forge-router-redwood/docs/index.md: [packages/compiler/plugins/forge-router-redwood/docs/index.md](../../index.md)
 > 言語: 日本語 (ja)
 
-RedwoodSDK のルーター ターゲットをフォージする
+RedwoodSDK のルーターターゲットをフォージする
 
-見る `llms.txt`
+パブリック API と使用例については、`llms.txt` を参照してください。

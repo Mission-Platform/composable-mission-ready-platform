@@ -107,12 +107,12 @@ rastergebieden. Regiowrappers hebben voorspelbare klassen in BEM-stijl en worden
 
 ### Regio contracten
 
-| Onderdeel             | Genoemde regio's                                           | Compositiebron                                                      |
-| --------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------- |
-| `ForgeBentoLayout`    | `hero`, `feature`, `supporting`                            | Websitemarketingheld en functiesecties                              |
-| `ForgeGridLayout`     | `cell1` tot en met `cell12`                                | Servicemonitordashboardkaarten en statussamenvattingen              |
-| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer`        | Navigatiebalk/context, artikel, zijbalk en voettekst van Documenten |
-| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Afwisselende inhoud en acties op de landingspagina                  |
+| Onderdeel | Genoemde regio's | Compositiebron |
+| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
+| `ForgeBentoLayout` | `hero`, `feature`, `supporting` | Websitemarketingheld en functiesecties |
+| `ForgeGridLayout` | `cell1` tot en met `cell12` | Servicemonitordashboardkaarten en statussamenvattingen |
+| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer` | Navigatiebalk/context, artikel, zijbalk en voettekst van Documenten |
+| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Afwisselende inhoud en acties op de landingspagina |
 
 `ForgeGridLayout` accepteert `rows` en `columns`, klemt beide op één of meer, beperkt het renderbare gebied tot 12 genoemde
 cellen, en gebruikt een terugval met één kolom onder het breekpunt. Benoemde cellen worden altijd in bronvolgorde weergegeven.
@@ -121,7 +121,7 @@ cellen, en gebruikt een terugval met één kolom onder het breekpunt. Benoemde c
 
 De sjablonen extraheren de structuur, niet het applicatiegedrag. Websitepakketkaarten en veelgestelde vragen, navigatie in documenten en
 routering, servicemonitor polling, formulieren en incidentstatus blijven eigendom van hun applicaties. Die toepassingen
-kunnen hun bestaande inhoud doorgeven aan de genoemde regio's zonder invoer van `apps/` in `packages/layout` te introduceren.
+kunnen hun bestaande inhoud doorgeven aan de genoemde regio's zonder import van `apps/` in `packages/layout` te introduceren.
 
 Voor toegankelijkheid moet u de geleverde inhoud in semantische leesvolgorde houden en CSS-rastergebieden alleen als visuele plaatsing behandelen.
 Lange inhoud wordt beschermd door `min-width: 0` en `overflow-wrap: anywhere`; SSR vereist geen `window` of

@@ -40,7 +40,7 @@ D3 选择包含单个元素 `E`，没有绑定数据。
 function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
-返回附加到元素 (`ref={reference}`) 的引用并运行 `draw`
+返回附加到元素的引用 (`ref={reference}`) 并运行 `draw`
 针对该元素的 D3 选择。
 
 该效果在挂载后运行，并在 `dependencies` 更改时重新运行；当
@@ -50,10 +50,10 @@ ref 仍然为空，抽签被跳过。 `draw` 可能会返回一个拆解
 
 #### 参数
 
-| 名称     | 类型             | 描述             |
-| -------- | ---------------- | ---------------- |
-| 画       | D3Draw<E>        |                  |
-| 依赖关系 | MpDependencyList | MpDependencyList |     |
+|名称 |类型 |描述 |
+| ------------ | ---------------- | ----------- |
+|画| D3Draw<E> |             |
+|依赖关系 | MpDependencyList | MpDependencyList |             |
 
 ## `src/utils/margins`
 
@@ -81,9 +81,9 @@ function innerDimensions(box: ChartBox): InnerDimensions;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 盒子 | 图表框 |      |
+|名称 |类型 |描述 |
+| ---- | -------- | ----------- |
+|盒子|图表框|             |
 
 ### 内部尺寸
 
@@ -130,6 +130,6 @@ function resolveMargin(input?: MarginInput): Margin;
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 输入 | 保证金输入 |      |
+|名称 |类型 |描述 |
+| ----- | ----------- | ----------- |
+|输入 |保证金输入|             |

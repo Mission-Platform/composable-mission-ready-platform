@@ -2,7 +2,7 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> packages/email-renderer/docs/index.md: [packages/email-renderer/docs/index.md](../../index.md)
+> packages/content/email-renderer/docs/index.md: [packages/content/email-renderer/docs/index.md](../../index.md)
 > Idioma: Español (es)
 
 `@mission-platform/email-renderer` posee el límite de representación neutral del marco para los árboles de correo electrónico de Mission Platform. Su entrada raíz es segura para la generación de correo electrónico del lado del servidor; Los adaptadores de navegador están aislados detrás de subrutas explícitas.
@@ -16,7 +16,7 @@ const document = renderMarkdown('# Welcome\n\nRead **more** at [Mission Platform
 const html = renderEmail(document.node, { title: 'Welcome', previewText: 'A short preview' });
 ```
 
-Markdown se convierte en el árbol compartido de Forge, por lo que los enlaces, imágenes, texto y HTML se escapan o se validan antes de la serialización. La salida tiene un orden determinista de atributos/estilos y rechaza URL de script, atributos de eventos, variables CSS, valores flexibles/cuadrícula y marcadores de marco.
+Markdown se convierte en el árbol compartido de Forge, por lo que los enlaces, imágenes, texto y HTML se escapan o se validan antes de la serialización. La salida tiene un orden determinista de atributos/estilos y rechaza URL de script, atributos de eventos, variables CSS, valores flexibles/de cuadrícula y marcadores de marco.
 
 ## Adaptadores de navegador
 

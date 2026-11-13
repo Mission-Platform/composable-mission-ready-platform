@@ -5,23 +5,23 @@
 > packages/tooling/vite/forge/docs/reference/compiler.md: [packages/tooling/vite/forge/docs/reference/compiler.md](../../../reference/compiler.md)
 > 言語: 日本語 (ja)
 
-これは、フレームワークに依存しないミッション プラットフォームのメンテナンス方法を理解する必要があるミッション プラットフォームのメンテナー向けのアーキテクチャの説明です。
+これは、フレームワークに依存しないミッション プラットフォームの管理者を対象としたアーキテクチャの説明です。
 Forge モジュールはネイティブ フレームワーク パッケージになります。重要な境界は、内部の「フレームワークごとに 1 つのソース エミッター」ではありません。
 Vite プラグイン。 Forge には中立的なコンパイラ ドライバー、明示的なターゲット プラグイン コントラクト、およびフレームワーク所有のネイティブがあります。
 アダプターを構築します。
 
 ## 責任分担
 
-Forge のコンパイルは複数のパッケージにまたがっており、それぞれのパッケージの責任は意図的に限定されています。
+Forge のコンパイルはいくつかのパッケージにまたがっており、それぞれのパッケージの責任は意図的に限定されています。
 
-| レイヤー                                                 | 所有                                                                                                                                                      | 所有していない                                                              |
-| :------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------- |
-| `@mission-platform/vite-plugin-forge`                    | 解析、正規化、中立分析、セマンティック IR、共有最適化、キャッシュ/検出、ディスパッチ、および汎用 Vite/tsdown オーケストレーション                         | React、Vue、Solid、Svelte、Web コンポーネント、または CMS ソース エミッター |
-| `@mission-platform/forge-plugin-api`                     | `FrameworkOutputPlugin`、セマンティック ターゲット コントラクト、生成されたモジュール タイプ、ターゲット メタデータ、および Vite/tsdown アダプター タイプ | フレームワーク実装またはターゲット選択レジストリ                            |
-| 組み込みの `@mission-platform/forge-plugin-*` パッケージ | ターゲットの引き下げ、ターゲットの最適化、ソース生成、ターゲット診断、ランタイム メタデータ、ネイティブ ビルド アダプター                                 | 中立的な解析とターゲット間のオーケストレーション                            |
-| `@mission-platform/forge-cms-plugin-api`                 | `CmsOutputPlugin`、ニュートラル コンテンツ モデル、discover→analyse→emit→write ドライバー、アイランド コジェネレーション、および CMS ビルド ヘルパー      | プラットフォーム固有のスキーマ、テンプレート、またはマニフェスト形状        |
-| `@mission-platform/forge-cms-*` パッケージ               | それぞれ 1 つのコンテンツ プラットフォーム: フィールド マッピング、テンプレートダイアレクト、マニフェスト形状、プラットフォーム診断                       | 中立的なプロップ分類またはターゲット間のオーケストレーション                |
-| `tsdown.config.ts` ファイルをパッケージ化する            | ターゲットのプラグイン インスタンスとパッケージ固有のオーバーライドの選択                                                                                 | コンパイラ ステージまたはフレームワーク スイッチ テーブルの再実装           |
+|レイヤー |所有 |所有していない |
+| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------- |
+| `@mission-platform/vite-plugin-forge` |解析、正規化、中立分析、セマンティック IR、共有最適化、キャッシュ/検出、ディスパッチ、および汎用 Vite/tsdown オーケストレーション | React、Vue、Solid、Svelte、Web コンポーネント、または CMS ソース エミッター |
+| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin`、セマンティック ターゲット コントラクト、生成されたモジュール タイプ、ターゲット メタデータ、および Vite/tsdown アダプター タイプ |フレームワーク実装またはターゲット選択レジストリ |
+|組み込みの `@mission-platform/forge-plugin-*` パッケージ |ターゲットの引き下げ、ターゲットの最適化、ソース生成、ターゲット診断、ランタイム メタデータ、およびネイティブ ビルド アダプター |中立的な解析とターゲット間のオーケストレーション |
+| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin`、ニュートラル コンテンツ モデル、discover→analyse→emit→write ドライバー、アイランド コジェネレーション、および CMS ビルド ヘルパー |プラットフォーム固有のスキーマ、テンプレート、またはマニフェスト形状 |
+| `@mission-platform/forge-cms-*` パッケージ |それぞれ 1 つのコンテンツ プラットフォーム: フィールド マッピング、テンプレートダイアレクト、マニフェスト形状、プラットフォーム診断 |中立的なプロップ分類またはターゲット間のオーケストレーション |
+| `tsdown.config.ts` ファイルをパッケージ化する |ターゲットのプラグイン インスタンスとパッケージ固有のオーバーライドの選択 |コンパイラ ステージまたはフレームワーク スイッチ テーブルの再実装 |
 
 依存関係の方向は明示的です。パッケージは必要なターゲット プラグインをインポートし、そのインスタンスをニュートラル プラグインに渡します。
 ドライバーを取得し、ターゲット固有のビルド構成を受け取ります。ドライバーは文字列からターゲットを構築したり、インポートしたりすることはありません。
@@ -57,35 +57,41 @@ flowchart LR
 コンパイラ ディレクティブ、安定したキーの推論、中立的なデッド ブランチのプルーニング、および再利用可能な分析のキャッシュ。結果は、
 `SemanticModule`: モジュールのコンポーネントまたはコンポーザブルの動作とその中立的な事実の明示的な表現。
 
-セマンティック IR は、汎用コンパイラーとターゲット プラグインの間の契約です。フロントエンドもオリジナルを維持します
-TypeScript `SourceFile` をセマンティック モジュールの列挙不可能なランタイム詳細として解析しました。ターゲットエミッターは消費する可能性があります
-ソースにバックアップされたリーフの解析済みツリーを共有しますが、モジュール ソースで `parseTsx` を再度呼び出すことはできません。これ
-ソースが 1 回だけ解析されるようにしながら、キャッシュをシリアル化可能に保ちます。
+セマンティック IR は、汎用コンパイラーとターゲット プラグインの間の契約です。フロントエンドはニュートラルソースを解析します
+TypeScript を生成または変換せずに、Oxc を汎用 AST 構造およびソースベースの式/スパンに使用する
+AST ノード。ターゲットの下位者とエミッターは、`SemanticModule` レコード、診断、およびソース編集を直接使用せずに消費します。
+パーサー AST ノードと結合し、ソースが 1 回だけ解析されるようにしながら、キャッシュをシリアル化可能に保ちます。
 
 ### 目標の引き下げと最適化
 
 呼び出し元は `FrameworkOutputPlugin` インスタンスを提供します。ドライバーは、セマンティック モジュールを使用して `lower` 関数を呼び出します。
-`TargetContext` から `TargetIntentions` が生成されます。下げると、ニュートラルな概念がターゲットの概念にマップされます。たとえば、次のようになります。
-ニュートラルなフックとスロットはターゲットの状態/ライフサイクルとスロットの表現になり、ニュートラルな要素はターゲットの状態/ライフサイクルとスロットの表現になります。
-ターゲットの要素またはコンポーネント モデル。
+`TargetContext` は、必要な `lowered` プランを含む `TargetIntentions` を生成します。下げると、中立的な概念が次のようにマッピングされます。
+ターゲットの概念: たとえば、ニュートラルなフックとスロットはターゲットの状態/ライフサイクルとスロットの表現になります。
+中立要素はターゲットの要素またはコンポーネント モデルになります。
 
-次に、プラグインの `optimize` 関数は、ターゲット固有の単純化を実行します。共有中立オプションを受け取ります
-ターゲット オプションの拡張ポイントと並んで。これにより、フレームワーク ルールが中立的なオプティマイザーから除外される一方で、
-ターゲットは、ソース生成前に独自に生成された表現を最適化します。
+次に、プラグインの `optimize` 関数は、引き下げられたプランに対してターゲット固有の単純化を実行します。共有を受け取ります
+ターゲット オプションの拡張ポイントと並んでニュートラル オプション。これにより、フレームワーク ルールが中立的なオプティマイザーから除外されます。
+一方、ソース生成前にターゲットが独自に生成した表現を最適化できるようになります。
+
+コンパイラは、生成前に下げることを厳密に要求します。`service.ts` とコンパイラ パイプラインは、次のようにアサートします。
+`intentions.lowered` が存在し、そのフレームワーク識別子がターゲット ID と一致することを示します。
+`assertTargetIntentionsLowered`。低下を伴わない直接生成は拒否されます。ターゲットプラグインがサイレントに下降しなくなりました
+オンデマンドで。
 
 ### ソース生成とネイティブコンパイル
 
-プラグインの `generate` 関数は `GeneratedModule` を返します。これには、一次ソース、補助モジュール、および
-ターゲット診断。生成されたソースは、ターゲット パッケージが所有する中間アーティファクトとして意図的に作成されています: React、
-Vue、Solid、Svelte、および Web コンポーネントはそれぞれ、ネイティブ ツールチェーンが予期するソース形状を選択できます。
+プラグインの `generate` 関数は、引き下げられ最適化された `TargetIntentions` を受け取り、`GeneratedModule` を返します。
+これには、プライマリ ソース、補助モジュール、ターゲット診断が含まれる場合があります。生成されたソースは意図的に
+ターゲット パッケージが所有する中間アーティファクト: React、Vue、Solid、Svelte、および Web コンポーネントはそれぞれ、
+ネイティブ ツールチェーンが期待するソース形状。
 
-最終ステージは別の Forge エミッターではありません。プラグインの `build.vite` または `build.tsdown` アダプターは、ネイティブ
+最終ステージは別の Forge エミッタではありません。プラグインの `build.vite` または `build.tsdown` アダプターは、ネイティブ
 フレームワーク プラグインと、生成されたツリーのビルド設定。ネイティブ Vite/ロールダウン コンパイル、宣言生成、
-外部化と出力のパッケージ化は、そのターゲットの通常のツールチェーンを使用して行われます。
+外部化と出力パッケージ化は、そのターゲットの通常のツールチェーンを使用して行われます。
 
 ### 診断とキャッシュ
 
-診断には、コンパイラのフェーズ、ターゲット、ソース範囲、および実行可能な理由が含まれます。ターゲットはサポートされていないことを報告する必要があります
+診断には、コンパイラのフェーズ、ターゲット、ソース スパン、および実行可能な理由が含まれます。ターゲットはサポートされていないことを報告する必要があります
 一般的なランタイム クロージャまたは無効なネイティブ ソースをサイレントに発行する代わりに、セマンティック node を使用します。中立的なセマンティックモジュール
 ソースコンテンツ、モジュールの種類、セマンティックに影響するオプションによってキャッシュされます。ターゲットステージはキャッシュされたものと同じものを受け取ります
 ターゲットの引き下げと最適化を独立した状態に保ちながら、選択したフレームワークごとにモジュールを追加します。
@@ -105,7 +111,7 @@ Vite および tsdown ヘルパーは、ビルド セッションの存続期間
 カスタム監視統合から `invalidate(changedFiles)` を呼び出し、サービスが必要なくなったら `dispose()` を呼び出します。
 
 サービス レポートは、フェーズのタイミング、キャッシュのヒット/ミス、無効化されたファイル、警告、エラー、生成されたアーティファクトを明らかにします。
-カウントします。ファイルの欠落、サポートされていない拡張子、未解決のエイリアス、不正な形式のエクスポート、およびターゲット設定エラーが発生します。
+カウントします。ファイルの欠落、サポートされていない拡張子、未解決のエイリアス、不正な形式のエクスポート、およびターゲット構成エラーが発生します。
 構造化された診断。警告はビルド レポーターに届きます。エラーがあると、生成と昇格が妨げられます。
 
 すべてのターゲット スナップショットには、生成されたモジュール、追加モジュール、宣言、ソース マップ、アセット、
@@ -121,9 +127,14 @@ Vite および tsdown ヘルパーは、ビルド セッションの存続期間
 
 中央コントラクトは `packages/compiler/plugins/forge-plugin-api/src/framework.ts` にあります。
 
-- `FrameworkOutputPlugin` はターゲットを識別し、`lower`、`optimize`、`generate`、および `build` を所有します。
-- `TargetContext` には、モジュールの種類、コンポーネント名、検出されたコンポーネント フォルダーなどの一般的なビルド コンテキストが含まれます。
-- `TargetIntentions` は、診断を保持しながらターゲットを下げた後にセマンティック モジュールをラップします。
+- `FrameworkOutputPlugin` は、`id: FrameworkId` を介してターゲットを識別し、`lower`、`optimize`、`generate`、および `build` を所有します。
+- `FrameworkId` (`JsxFramework | (string & {})`) は、ターゲット プラグインにオープン フレームワーク識別子のエイリアスを提供し、
+  既知の組み込みターゲットの IDE オートコンプリートを維持しながら、一意の文字列 ID を定義する任意のカスタム ターゲット。
+- `JsxFramework` は、組み込みフレームワーク (`react`、`vue`、`solid`、`svelte`、`web-components`) の閉じた結合を表します。
+  組み込みの利便性とディレクティブ (`use react`、`use vue` など) が明示的に意図されている場合に使用されます。
+- `TargetContext` は、モジュールの種類、コンポーネント名、検出されたコンポーネント フォルダーなどの一般的なビルド コンテキストを保持します。
+- `TargetLoweredModule` は、`framework: FrameworkId` で識別された、ターゲット所有の引き下げられたプランを表します。
+- `TargetIntentions<TLowered>` は、必要な `lowered: TLowered` プランでセマンティック モジュールをラップし、診断を保持します。
 - `GeneratedModule` は、生成されたソース、その出力言語、補助モジュール、および診断について説明します。
 - `ForgeBuildAdapters` は、独立して型指定された Vite および tsdown アダプターを提供します。
 - `FrameworkSourceMetadata`、ランタイム外部、および表示名のメタデータにより、汎用オーケストレーションが出力の詳細を導き出すことができます
@@ -134,24 +145,29 @@ Vite および tsdown ヘルパーは、ビルド セッションの存続期間
 公開するターゲット:
 
 ```ts
-import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { tsdownForgeComponentPlugins } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
 import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
-export default defineTsdownForgeComponents({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  frameworks: [
-    forgeVueFramework(),
-    forgeReactFramework(),
-    forgeSvelteFramework(),
-    forgeSolidFramework(),
-    forgeWebComponentsFramework(),
-  ],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: 'MissionPlatformComponents',
+  entry: 'src/index.ts',
+  plugins: tsdownForgeComponentPlugins({
+    rootDir: import.meta.dirname,
+    frameworks: [
+      forgeVueFramework(),
+      forgeReactFramework(),
+      forgeSvelteFramework(),
+      forgeSolidFramework(),
+      forgeWebComponentsFramework(),
+    ],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+    name: 'MissionPlatformComponents',
+  }),
 });
 ```
 
@@ -176,7 +192,7 @@ export default defineConfig({
 レンダリング パス中にメモリ履歴とレジスタ要素を提供する必要があります。ルーターのアウトレットおよびリンク要素は受け入れます
 複雑なルート ターゲットはプロパティとして使用され、Forge コンパイラーのコンポーネント オーサリング モデルから独立しています。
 
-インスタンスは呼び出し元が所有します。新しいインスタンスは、ターゲット固有のオプションとメタデータ、および空のプラグイン リストを保持できます。
+インスタンスは呼び出し元が所有します。新しいインスタンスには、ターゲット固有のオプションとメタデータ、および空のプラグイン リストを含めることができます
 これは、非表示のデフォルト レジストリを使用する要求ではなく、構成エラーです。これにより、新しいターゲットを追加できるようになります。
 追加のパッケージ変更: 出力プラグイン コントラクトを実装し、そのビルド アダプターを公開して、コンシューマーで選択します。
 
@@ -199,7 +215,8 @@ flowchart LR
 ## コンポーネントのビルド
 
 コンポーネント パッケージは、通常はニュートラル コンポーネント バレルを通じて、`@mission-platform/forge-jsx` に対してニュートラル モジュールを作成します。
-`defineTsdownForgeComponents` は、提供されたプラグインごとに 1 つのターゲット ビルドを作成します。ターゲットごとに次のことを行います。
+`tsdownForgeComponentPlugins` は、指定された各ターゲットのネイティブ tsdown プラグインを返します。消費者はそれらのプラグインを 1 つに追加します
+`defineTsdownLibrary` 呼び出し。 tsdown がライフサイクル フックを呼び出すまで、生成は遅延状態のままです。ターゲットごとに次のことを行います。
 
 1. ニュートラルコンポーネントモジュールを解析、正規化、分析します。
 2. ニュートラルパスを実行し、セマンティックモジュールを作成します。
@@ -216,7 +233,8 @@ SFC および Vue 宣言ツールですが、React ビルドでは React JSX お
 ## フックとコンポーザブルビルド
 
 フックは UI コンポーネントではなく中立的なコンポーザブルですが、同じ明示的なターゲット所有権境界を使用します。フック
-コンシューマは 1 つの `FrameworkOutputPlugin` を `defineTsdownForgeHooks` に渡します。汎用ドライバーはニュートラル エントリを解析し、
+コンシューマーは 1 つの `FrameworkOutputPlugin` を `tsdownForgeHookPlugins` に渡し、返されたプラグインを
+`defineTsdownLibrary`。汎用ドライバーはニュートラル エントリを解析し、
 可能な場合はフレームワークに依存しないモジュールを保持し、プラグインの厳密な機能を介してターゲット依存のモジュールを送信します。
 パスを低く/最適化/生成します。
 
@@ -227,7 +245,7 @@ React 互換のインポートと Vue フック ビルドを使用して、Vue `
 
 ## CMS プロジェクション
 
-コンポーネントを _コンテンツ プラットフォーム_ に投影することは、フレームワークの降下に直交する軸であり、フレームワークではありません
+コンポーネントを_コンテンツプラットフォーム_に投影することは、フレームワークを下降させるのに直交する軸であり、フレームワークではありません
 メインドライバー内に隠された実装。コンポーネントは、Storyblok ブロック、Astro アイランド、Ghost パーシャル、
 Jekyll には、Webflow コード コンポーネントが含まれており、これらのそれぞれは、**任意** のフレームワーク出力プラグインと組み合わせることができます。
 したがって、`storyblok × vue`、`astro × solid`、および `ghost × web-components` は、新しいコードではなく構成です。
@@ -236,42 +254,47 @@ Jekyll には、Webflow コード コンポーネントが含まれており、�
 
 1. **中立的なコンテンツ モデル。** `analyzeContentComponent` は、コンポーネントの props インターフェイスを順序付けされたものにマップします。
    `ContentField` と種類 (`text`、`richtext`、`number`、`boolean`、`option`、`asset`、`link`、`children`)、JSDoc
-   説明、必須フラグ、リテラルデフォルト、スロットメタデータ、および `@cmsSetting` フラグ。コールバックプロパティは削除されます
+   説明、必須フラグ、リテラルデフォルト、スロットメタデータ、`@cmsSetting` フラグ。コールバックプロパティは削除されます
    文字列リテラルと `string`/`number` を混合する共用体は `text` に劣化します。一度決定されるため、すべてのプラットフォームで使用されます。
    同意します。セマンティック IR が提供されると、`ContentComponent.interactive` はコンポーネントが状態を伝達するかどうかを報告します。
    参照、エフェクト、またはイベント。
-2. **ターゲット コントラクト** `CmsOutputPlugin` は、`FrameworkOutputPlugin` を 1 つではなく *構成*し、
+2. **ターゲット コントラクト。** `CmsOutputPlugin` は、`FrameworkOutputPlugin` を 1 つではなく _構成し_、宣言します。
    エミッター `emitSchema`、`emitTemplate`、`emitManifest`、および `emitEntry`。 `defineForgeCmsPlugin` は次の場所で検証します。
    ターゲットの `supportedFrameworks` 制限を含む構成時間。
 3. **汎用ドライバーとビルド ヘルパー。** `generateCmsArtifacts` はニュートラル バレルを検出し、各コンポーネントの
    IR は `analyzeForgeModule` を通じて、コンテンツ モデルを分析し、ターゲットのエミッタを呼び出し、返されたすべてのメッセージを書き込みます
-   `CmsArtifact`。 `defineTsdownForgeCms(All)` はそれをターゲットごとのキャッシュに実行し、出力します
+   `CmsArtifact`。 `tsdownForgeCmsPlugins` は、それを 1 つの呼び出し元所有の tsdown 構成に挿入し、出力します
    `dist/cms/<cms>/<framework>/**`、`asset: true` アーティファクトを `dist/cms/<cms>/` にミラーリングします。
 
 ドライバーは文字列 ID をターゲットにマップすることはありません。コンシューマーはインスタンスを構築して渡します。これは、ドライバーに対して行うのとまったく同じです。
 フレームワークプラグイン:
 
 ```ts
-import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { tsdownForgeCmsPlugins } from '@mission-platform/forge-cms-plugin-api';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
-export default defineTsdownForgeCmsAll({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  targets: [
-    forgeStoryblokCms({
-      packageName: '@mission-platform/components',
-      plugin: forgeReactFramework(),
-      storyblokRuntime: '@storyblok/react',
-    }),
-    forgeStoryblokCms({
-      packageName: '@mission-platform/components',
-      plugin: forgeVueFramework(),
-      storyblokRuntime: '@storyblok/vue',
-    }),
-  ],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  entry: 'src/index.ts',
+  plugins: tsdownForgeCmsPlugins({
+    rootDir: import.meta.dirname,
+    targets: [
+      forgeStoryblokCms({
+        packageName: '@mission-platform/components',
+        plugin: forgeReactFramework(),
+        storyblokRuntime: '@storyblok/react',
+      }),
+      forgeStoryblokCms({
+        packageName: '@mission-platform/components',
+        plugin: forgeVueFramework(),
+        storyblokRuntime: '@storyblok/vue',
+      }),
+    ],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  }),
 });
 ```
 
@@ -290,13 +313,13 @@ flowchart TD
 
 ### ターゲット
 
-| パッケージ                              | 工場                | 排出                                                                                                                 |
-| :-------------------------------------- | :------------------ | :------------------------------------------------------------------------------------------------------------------- |
-| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | コンポーネントごとのコンポーネント オブジェクト、フレームワーク ブロック ラッパー、`components.json`、型付きエントリ |
-| `@mission-platform/forge-cms-astro`     | `forgeAstroCms`     | static `.astro` または `client:load` アイランド、および zod `content.config.ts`                                      |
-| `@mission-platform/forge-cms-ghost`     | `forgeGhostCms`     | ハンドルバーの部分と `config.custom` テーマのフラグメント                                                            |
-| `@mission-platform/forge-cms-jekyll`    | `forgeJekyllCms`    | 液体には、`_data/forge-components.yml` および `_config.yml` フラグメントが含まれています。                           |
-| `@mission-platform/forge-cms-webflow`   | `forgeWebflowCms`   | `declareComponent` コードコンポーネント宣言と `webflow.json` ライブラリ フラグメント                                 |
+|パッケージ |工場 |排出 |
+| :-------------------------------------- | :------------------ | :------------------------------------------------------------------------------------------- |
+| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` |コンポーネントごとのコンポーネント オブジェクト、フレームワーク ブロック ラッパー、`components.json`、型付きエントリ |
+| `@mission-platform/forge-cms-astro` | `forgeAstroCms` | static `.astro` または `client:load` アイランド、および zod `content.config.ts` |
+| `@mission-platform/forge-cms-ghost` | `forgeGhostCms` |ハンドルバーの部分と `config.custom` テーマのフラグメント |
+| `@mission-platform/forge-cms-jekyll` | `forgeJekyllCms` |液体には、`_data/forge-components.yml` および `_config.yml` フラグメントが含まれています。
+| `@mission-platform/forge-cms-webflow` | `forgeWebflowCms` | `declareComponent` コードコンポーネント宣言と `webflow.json` ライブラリ フラグメント |
 
 サポートされていないマッピングはすべて、フェーズ、コード、および実用的な理由を含む `CompilerDiagnostic` を生成します。
 サイレント省略 — Ghost は数値フィールドと最大 20 設定の上限を超えると警告し、Webflow は数値が入力された場合に警告します。
@@ -307,7 +330,7 @@ flowchart TD
 
 `island: 'framework'` (Astro、Webflow) を宣言するターゲットには、ハイドレートするための実際のランタイム コンポーネントが必要です。むしろ
 ホスト パッケージの既に構築されている `./vue` または `./react` サブパスをインポートします。これにより、CMS 出力が別のサブパスに依存するようになります。
-ビルドが最初に実行されている - ドライバーは、**バインドされたフレームワーク プラグイン**を同じニュートラル バレル上で兄弟として実行します。
+ビルドが最初に実行されている - ドライバーは、同じニュートラル バレル上で **バインドされたフレームワーク プラグイン**を兄弟に実行します。
 `island/` ディレクトリにあり、発行されたテンプレートは、それが所有するファイルをインポートします。アイランドはそのプラグイン独自の tsdown によってコンパイルされます
 まったく同じビルド内のステージプラグイン。
 
@@ -324,7 +347,7 @@ IR からの状態、参照、効果、イベントを再実装するランタ�
 2. **ターゲット動作:** 選択した `forge-plugin-*` パッケージとその `lower`、`optimize`、`generate` を検査し、ビルドします
    アダプターの実装。
 3. **一般的なビルド形状:** キャッシュの `packages/tooling/vite/forge/src/generate.ts`、`generate-hooks.ts`、および `tsdown.ts` を検査します。
-   出力、宣言、および呼び出し元オーバーライドの動作。
+   出力、宣言、呼び出し元オーバーライドの動作。
 4. **CMS 出力:** `packages/compiler/plugins/forge-cms-plugin-api/` のコンテンツ モデル、ドライバー、ビルドを検査します。
    ヘルパー、次にそのエミッターとプラットフォーム マッピングの特定の `packages/compiler/plugins/forge-cms-*` ターゲット。
 5. **パッケージの選択:** 使用するパッケージの `tsdown.config.ts` 依存関係と直接 `forge-plugin-*` 依存関係を検査します。
@@ -358,7 +381,7 @@ IR からの状態、参照、効果、イベントを再実装するランタ�
 コンテンツ プラットフォームの追加は、1 層上の同じ追加形式に従います。
 
 1. `@mission-platform/forge-cms-plugin-api` に応じて `forge-cms-*` パッケージを作成します。
-2. フレームワーク プラグインを使用して、`defineForgeCmsPlugin({ id, framework, packageName, … })` を返すファクトリをエクスポートします。
+2. フレームワークプラグインを使用して、`defineForgeCmsPlugin({ id, framework, packageName, … })` を返すファクトリをエクスポートします。
    どちらかを選択するのではなく、発信者から。
 3. `emitTemplate` と、プラットフォームに必要な `emitSchema`、`emitManifest`、`emitEntry` のいずれかを実装します。
    Ghost や Jekyll などのテンプレートのみのプラットフォームは最初の 2 つだけを実装し、ドライバーはプレースホルダーを書き込みます
@@ -370,10 +393,38 @@ IR からの状態、参照、効果、イベントを再実装するランタ�
 6. `@mission-platform/forge-cms-plugin-api/fixtures` からエクスポートされた共有フィクスチャにスペックを追加します。
    target は、他のすべての入力とまったく同じ入力に対して実行されます。
 7. ターゲットを公開する各コンシューマーの直接の依存関係としてパッケージを追加し、新しいインスタンスを
-   `defineTsdownForgeCms`。
+   `tsdownForgeCmsPlugins`。
 
 プロパティ分類ロジックをターゲットに追加しないでください。ユニオン、JSDoc、デフォルト、またはスロット処理への修正は、
 共有コンテンツ モデルなので、すべてのプラットフォームが同時にメリットを享受できます。
 
-ビルドシステムの概要とプラットフォーム全体の依存関係の方向については、を参照してください。 [ビルドシステム](../../../../../../docs/locales/ja/build-system.md) および
-[ミッションプラットフォームのアーキテクチャ](../../../../../../docs/locales/ja/architecture.md)。
+## 移行ガイダンス
+
+### 従来の TypeScript AST エクスポートからの移行
+
+`packages/tooling/vite/forge/src/compiler/ast.ts` の従来の TypeScript AST 互換性レイヤーは削除されました。
+Oxc は現在、Forge ドライバー全体にわたる唯一のコンパイラー AST パスです。
+
+- レガシー AST ファクトリ、ビジター、変圧器、`@ts-nocheck` 互換性シムは提供されなくなりました。
+- コードが `compiler/ast.ts` のヘルパーを使用している場合は、焦点を当てた兄弟モジュールに移行します。
+  - `compiler/components.js`: コンポーネントの境界と宣言の事実。
+  - `compiler/constants.js`: ニュートラル モジュールおよびランタイム マーカー定数。
+  - `compiler/directives.js`: 指令の検査とフレームワークの解決。
+  - `compiler/facts.js`: AST ファクト、スパン、および検査ユーティリティ。
+  - `compiler/imports.js`: インポート宣言と指定子の検査。
+
+### 直接ターゲット生成の呼び出し元の移行
+
+すべての組み込みプラグイン (`forge-vue`、`forge-web-components`、`forge-react`、`forge-solid`、`forge-svelte`) が削除されました。
+直接生成フォールバックの低下:
+
+- 低下していない意図 (または `lowered` が欠落している意図) で `plugin.generate(intentions)` を呼び出すと、
+  `TypeError`。
+- 直接呼び出し元とテスト スイートは、`plugin.lower(module, context)` および `plugin.optimize(loweredIntentions, options)` を呼び出す必要があります。
+  `generate()` を呼び出す前に、または標準のコンパイラ サービスを通じてコンパイルを実行します。
+  `createForgeCompilerService().compile(request, plugin)`。
+- カスタム プラグインの作成者は、`lower()` が空ではない `lowered` プランと一致する `framework` を設定することを確認する必要があります。
+  返された `TargetIntentions` の識別子。
+
+ビルド システムの概要とプラットフォーム全体の依存関係の方向については、[ビルド システム](../../../../../../docs/build-system.md) と
+[ミッション プラットフォーム アーキテクチャ](../../../../../../docs/architecture.md)。

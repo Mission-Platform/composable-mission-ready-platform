@@ -262,7 +262,7 @@ export function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement {
   const [matchesBreakpoint, setMatchesBreakpoint] = useState(false);
   const [matchesSm, setMatchesSm] = useState(false);
   // The current dragged size in `rem`, or `undefined` before the first resize.
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
+
   const [resizedSizeRem, setResizedSizeRem] = useState<number | undefined>(undefined);
   const rootReference = useRef<HTMLElement | null>(null);
 

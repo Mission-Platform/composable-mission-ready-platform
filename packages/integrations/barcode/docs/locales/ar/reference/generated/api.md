@@ -9,288 +9,65 @@
 
 تم إنشاؤها من إعلانات المصدر العام في `@mission-platform/barcode`.
 
-## `src/encoder/index`
+## `src/components/molecules/forge-barcode/forge-barcode`
 
-### الباركود
+### إجراءات الباركود
 
 **النوع:** الواجهة
 
 ```typescript
-export interface Barcode
+export interface BarcodeActions
 ```
 
-نتيجة {@link encodeBarcode}: بتات الوحدة بعرضها الإجمالي.
+أزرار الإجراءات التي يعرضها شريط الأدوات. `true` يمكّنهم جميعًا.
 
-### BarcodeSymbology
+### خصائص الباركود
 
-**النوع:** النوع
+**النوع:** الواجهة
 
 ```typescript
-export type BarcodeSymbology =
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'ean13'
-  | 'ean8'
-  | 'upca'
-  | 'upce'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode';
+export interface BarcodeProperties
 ```
 
-رموز الباركود الخطية المدعومة.
+لم يتم تقديم أي وصف.
 
-### com.encodeBarcode
+### فورجباركود
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
+function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement;
 ```
 
-قم بتشفير `data` إلى رمز شريطي خطي باستخدام الرسم البياني Flint للحزمة المحلية.
+`ForgeBarcode` - يعرض رمزًا شريطيًا (خطيًا) أحادي الأبعاد قابلاً للمسح الضوئي، وتم تأليفه مرة واحدة في
+لهجة JSX المحايدة وتم تجميعها مباشرة إلى React أو Vue بواسطة
+`@mission-platform/vite-plugin-forge`.
+
+يتم تشفير الحمولة (`value`) بالكامل على العميل بواسطة ملف
+برنامج التشفير {@link encodeBarcode} من `@mission-platform/barcode` - أ
+برنامج تشفير خالي من التبعية مكتوب بلغة Rust ويتم تجميعه إلى WebAssembly - و
+تم رسمها على أنها SVG واضحة ومستقلة عن الدقة. يتم دمج الوحدات المظلمة المجاورة
+في تشغيل `<rect>` واحد، لذلك تظل العلامات مضغوطة. للحصول على مسح موثوق
+تكون ألوان الشريط / الخلفية الافتراضية هي solid أسود على أبيض بدلاً من السمة
+الرموز المميزة، ولكن يمكن تجاوز كليهما عبر `color` / `background`.
+
+الرموز المدعومة (`symbology`): الكود 128، GS1-128، الكود 39 (+ ممتد)،
+الرمز 93 (+ ممتد)، EAN-13، EAN-8، UPC-A، UPC-E، ITF (معشق 2 من 5)،
+ITF-14، Codabar، MSI (بليسي المعدل) و Pharmacode. ارتفاع الشريط، الوحدة
+العرض والمنطقة الهادئة قابلان للتكوين، ويمكن أن تكون القيمة التي يمكن للإنسان قراءتها
+يظهر أسفل القضبان عبر `displayValue`.
+
+شريط أدوات إجراء اختياري (ممكّن عبر `showActions` — `true` لكل
+زر، أو كائن {@link BarcodeActions} لاختيارها بشكل فردي).
+يقوم المستخدمون **بحفظ الرمز الشريطي كصورة PNG**، **نسخ الصورة إلى ملف
+الحافظة**، و **انسخ القيمة المشفرة إلى الحافظة**. PNG هو
+يتم تنقيطه على العميل عن طريق رسم SVG المعروض على لوحة قماشية. ال
+يتم تشغيل رد الاتصال `onError` عندما لا يمكن ترميز القيمة للقيمة المختارة
+الرموز. إنها تمتلك تصميمها من خلال وحدة CSS الموجودة في نفس الموقع
+`forge-barcode.module.scss`.
 
 #### حدود
 
-| الاسم    | اكتب          | الوصف |
-| -------- | ------------- | ----- |
-| الرموز   | رموز الباركود |       |
-| البيانات | سلسلة         |       |
-
-#### عقد
-
-- **@throws:** عندما تكون الحمولة غير صالحة للرموز المحددة.
-
-### encodeBarcodeAsync
-
-**النوع:** الوظيفة
-
-```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
-```
-
-قم بتشفير `data` بشكل غير متزامن باستخدام الرسم البياني Flint للحزمة المحلية.
-
-#### حدود
-
-| الاسم    | اكتب          | الوصف |
-| -------- | ------------- | ----- |
-| الرموز   | رموز الباركود |       |
-| البيانات | سلسلة         |       |
-
-## `src/fws/index`
-
-### حدود
-
-| الاسم  | اكتب                      | الوصف |
-| ------ | ------------------------- | ----- |
-| القيمة | سلسلة \| صفيف مثل<number> |       |
-
-### حدود
-
-| الاسم  | اكتب                      | الوصف |
-| ------ | ------------------------- | ----- |
-| القيمة | سلسلة \| صفيف مثل<number> |       |
-
-### حدود
-
-| الاسم  | اكتب                      | الوصف |
-| ------ | ------------------------- | ----- |
-| القيمة | سلسلة \| صفيف مثل<number> |       |
-
-### حدود
-
-| الاسم  | اكتب                      | الوصف |
-| ------ | ------------------------- | ----- |
-| القيمة | سلسلة \| صفيف مثل<number> |       |
-
-### encodeEan13Fws
-
-**النوع:** الوظيفة
-
-```typescript
-function encodeEan13Fws(value: string): string;
-```
-
-يقوم بتشفير حمولة EAN-13 مكونة من اثني عشر رقمًا ويحسب رقم التحقق الخاص بها في FWS.
-
-#### حدود
-
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| القيمة | سلسلة |       |
-
-### encodeEan13FwsAsync
-
-**النوع:** الوظيفة
-
-```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>;
-```
-
-يقوم بشكل غير متزامن بتشفير حمولة EAN-13 المكونة من اثني عشر رقمًا باستخدام محمل FWS.
-
-#### حدود
-
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| القيمة | سلسلة |       |
-
-### encodeEan8Fws
-
-**النوع:** الوظيفة
-
-```typescript
-function encodeEan8Fws(value: string): string;
-```
-
-يقوم بتشفير حمولة EAN-8 المكونة من سبعة أرقام ويحسب رقم التحقق الخاص بها في FWS.
-
-#### حدود
-
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| القيمة | سلسلة |       |
-
-### encodeEan8FwsAsync
-
-**النوع:** الوظيفة
-
-```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>;
-```
-
-يقوم بشكل غير متزامن بتشفير حمولة EAN-8 المكونة من سبعة أرقام باستخدام محمل FWS.
-
-#### حدود
-
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| القيمة | سلسلة |       |
-
-### com.encodeUpcaFws
-
-**النوع:** الوظيفة
-
-```typescript
-function encodeUpcaFws(value: string): string;
-```
-
-يقوم بتشفير حمولة UPC-A من خلال الرسم البياني EAN-13 Flint ذي البادئة الصفرية.
-
-#### حدود
-
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| القيمة | سلسلة |       |
-
-### encodeUpcaFwsAsync
-
-**النوع:** الوظيفة
-
-```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>;
-```
-
-يقوم بشكل غير متزامن بتشفير حمولة UPC-A من خلال FWS.
-
-#### حدود
-
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| القيمة | سلسلة |       |
-
-### encodeVariableBarcodeFws
-
-**النوع:** الوظيفة
-
-```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
-```
-
-يقوم بتشفير باركود متغير الطول مدعوم من خلال الرسم البياني الأصلي لـ Flint عندما يكون متاحًا.
-
-#### حدود
-
-| الاسم  | اكتب                 | الوصف |
-| ------ | -------------------- | ----- |
-| الرموز | رمز الباركود المتغير |       |
-| القيمة | سلسلة                |       |
-
-### encodeVariableBarcodeFwsAsync
-
-**النوع:** الوظيفة
-
-```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
-```
-
-يقوم بتشفير باركود متغير الطول مدعوم بشكل غير متزامن من خلال FWS.
-
-#### حدود
-
-| الاسم  | اكتب                 | الوصف |
-| ------ | -------------------- | ----- |
-| الرموز | رمز الباركود المتغير |       |
-| القيمة | سلسلة                |       |
-
-### validateGs1DataBarValue
-
-**النوع:** الوظيفة
-
-```typescript
-function validateGs1DataBarValue(value: string): boolean;
-```
-
-التحقق من صحة قيمة GS1 DataBar/RSS-14 GTIN-14 في الرسم البياني Flint للحزمة المحلية.
-
-#### حدود
-
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| القيمة | سلسلة |       |
-
-### validateGs1DataBarValueAsync
-
-**النوع:** الوظيفة
-
-```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
-```
-
-يتحقق بشكل غير متزامن من صحة قيمة GS1 DataBar/RSS-14 GTIN-14 من خلال FWS.
-
-#### حدود
-
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| القيمة | سلسلة |       |
-
-### رمز الباركود المتغير
-
-**النوع:** النوع
-
-```typescript
-export type VariableBarcodeSymbology = Extract<
-  BarcodeSymbology,
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode'
->;
-```
-
-رموز متغيرة الطول مدعومة بمحول Flint المباشر للرمز الشريطي.
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| خصائص | للقراءة فقط<BarcodeProperties> |             |

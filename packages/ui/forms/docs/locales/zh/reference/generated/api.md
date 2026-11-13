@@ -48,9 +48,9 @@ DOM 属性通过 `useRef` + `useEffect` 对（中性
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<CheckboxProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<CheckboxProperties> |             |
 
 ## `src/components/atoms/forge-input/forge-input`
 
@@ -79,9 +79,9 @@ function ForgeInput(properties: Readonly<InputProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 属性 | 只读<InputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------- | ----------- |
+|属性 |只读<InputProperties> |             |
 
 ### 输入自动大写
 
@@ -147,9 +147,9 @@ function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 属性 | 只读<RadioProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------- | ----------- |
+|属性 |只读<RadioProperties> |             |
 
 ### 无线电属性
 
@@ -193,9 +193,9 @@ function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<RangeInputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<RangeInputProperties> |             |
 
 ### 范围输入属性
 
@@ -254,9 +254,9 @@ function ForgeRating(properties: Readonly<RatingProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | 只读<RatingProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<RatingProperties> |             |
 
 ### 评级属性
 
@@ -307,9 +307,9 @@ function ForgeSlider(properties: Readonly<SliderProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | 只读<SliderProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<SliderProperties> |             |
 
 ### 滑块属性
 
@@ -356,9 +356,9 @@ CSS 模块 `forge-switch.module.scss` 并组成中性
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | 只读<SwitchProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<SwitchProperties> |             |
 
 ### 开关属性
 
@@ -408,9 +408,9 @@ function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<TextareaProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<TextareaProperties> |             |
 
 ### 文本区域自动大写
 
@@ -507,9 +507,9 @@ external-sync `watch` 成为 {@link useEffect}；的
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<CalendarProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<CalendarProperties> |             |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
 
@@ -558,9 +558,9 @@ function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<ColorInputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<ColorInputProperties> |             |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
 
@@ -612,9 +612,9 @@ function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                      | 描述 |
-| ---- | ------------------------- | ---- |
-| 属性 | 只读<DateInputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------- | ----------- |
+|属性 |只读<DateInputProperties> |             |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
 
@@ -672,9 +672,9 @@ function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): Mp
 
 #### 参数
 
-| 名称 | 类型                           | 描述 |
-| ---- | ------------------------------ | ---- |
-| 属性 | 只读<DateRangeInputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------------- | ----------- |
+|属性 |只读<DateRangeInputProperties> |             |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
 
@@ -714,9 +714,9 @@ CSS 模块 `forge-field-set.module.scss` 并组成中性
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<FieldSetProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<FieldSetProperties> |             |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
 
@@ -765,9 +765,9 @@ function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                      | 描述 |
-| ---- | ------------------------- | ---- |
-| 属性 | 只读<FileInputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------- | ----------- |
+|属性 |只读<FileInputProperties> |             |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
 
@@ -804,9 +804,9 @@ CSS 模块 `forge-location-input.module.scss`。转换/解析逻辑
 
 #### 参数
 
-| 名称 | 类型                          | 描述 |
-| ---- | ----------------------------- | ---- |
-| 属性 | 只读<LocationInputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------------- | ----------- |
+|属性 |只读<LocationInputProperties> |             |
 
 ### 位置输入属性
 
@@ -879,9 +879,9 @@ function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpEl
 
 #### 参数
 
-| 名称 | 类型                          | 描述 |
-| ---- | ----------------------------- | ---- |
-| 属性 | 只读<NumberStepperProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------------- | ----------- |
+|属性 |只读<NumberStepperProperties> |             |
 
 ### NumberStepper 属性
 
@@ -932,9 +932,9 @@ function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<OtpInputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<OtpInputProperties> |             |
 
 ### Otp 输入属性
 
@@ -954,7 +954,7 @@ export interface OtpInputProperties
 export type OtpInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-细胞尺寸尺度 — 规范 2xs → 2xl 尺度。
+细胞大小尺度 — 规范 2xs → 2xl 尺度。
 
 ### Otp输入类型
 
@@ -1002,9 +1002,9 @@ SFC：`useId` 可组合项直接映射到框架本机 `useId`
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<PhoneInputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<PhoneInputProperties> |             |
 
 ### 电话变更
 
@@ -1065,9 +1065,9 @@ React 或 Vue 由 `@mission-platform/vite-plugin-forge`。
 使用已建立的 `modelValue` + 控制选择
 `onUpdateModelValue`/`onChange` 回调属性约定；收音机是
 由 `options` 数组驱动（扁平化 SFC 的基于插槽的组合，
-迁移后的 {@link ForgeTabs} 采取的方法相同）。它组成了
+迁移后的 {@link ForgeTabs} 采取了相同的方法）。它组成了
 迁移了 {@link ForgeStack}、{@link ForgeRadio} 和 {@link ForgeTypography}
-基元并通过位于同一位置的 CSS 模块拥有其样式
+基元并通过同位 CSS 模块拥有其样式
 `forge-radio-group.module.scss`。
 
 原始 Vue SFC 的替换：`useId`/随机组名称映射
@@ -1078,9 +1078,9 @@ React 或 Vue 由 `@mission-platform/vite-plugin-forge`。
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<RadioGroupProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<RadioGroupProperties> |             |
 
 ### 无线电组方向
 
@@ -1139,9 +1139,9 @@ function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElemen
 
 #### 参数
 
-| 名称 | 类型                        | 描述 |
-| ---- | --------------------------- | ---- |
-| 属性 | 只读<SearchInputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------- | ----------- |
+|属性 |只读<SearchInputProperties> |             |
 
 ### 搜索输入属性
 
@@ -1191,9 +1191,9 @@ function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): Mp
 
 #### 参数
 
-| 名称 | 类型                           | 描述 |
-| ---- | ------------------------------ | ---- |
-| 属性 | 只读<SegmentControlProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------------- | ----------- |
+|属性 |只读<SegmentControlProperties> |             |
 
 ### 段控制属性
 
@@ -1256,9 +1256,9 @@ function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                      | 描述 |
-| ---- | ------------------------- | ---- |
-| 属性 | 只读<TimeInputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------- | ----------- |
+|属性 |只读<TimeInputProperties> |             |
 
 ### 时间输入属性
 
@@ -1313,9 +1313,9 @@ function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): Mp
 
 #### 参数
 
-| 名称 | 类型                           | 描述 |
-| ---- | ------------------------------ | ---- |
-| 属性 | 只读<TimeRangeInputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------------- | ----------- |
+|属性 |只读<TimeRangeInputProperties> |             |
 
 ### 时间范围输入属性
 
@@ -1395,9 +1395,9 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 
 #### 参数
 
-| 名称 | 类型                               | 描述 |
-| ---- | ---------------------------------- | ---- |
-| 属性 | 只读<DateTimeRangeInputProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------------------- | ----------- |
+|属性 |只读<DateTimeRangeInputProperties> |             |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
@@ -1434,9 +1434,9 @@ HTML5 拖放**元素事件道具 (`draggable`/`onDragStart`/
 
 #### 参数
 
-| 名称 | 类型                        | 描述 |
-| ---- | --------------------------- | ---- |
-| 属性 | 只读<FormBuilderProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------- | ----------- |
+|属性 |只读<FormBuilderProperties> |             |
 
 ### 表单生成器属性
 
@@ -1467,8 +1467,8 @@ function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement;
 `forge-form-wizard.module.scss`。
 
 步骤可以是**有条件的**（`step.when === false` 从
-序列）和**每一步验证**（`step.valid === false` 块接下来，
-最终完成，向前指示器跳跃，并禁用主按钮）。
+序列）和**每步验证**（`step.valid === false` 块接下来，
+最终完成，前进指示器跳转，并禁用主按钮）。
 因为完成是从最后一个可见步骤触发的，所以该步骤是 `valid`
 兼作**最后一步验证**门。有效性由提供
 父级，以便组件保持受控且与框架无关。
@@ -1483,9 +1483,9 @@ function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<FormWizardProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<FormWizardProperties> |             |
 
 ### 表单向导属性
 
@@ -1507,6 +1507,85 @@ export interface WizardStep
 
 一个向导步骤。
 
+## `src/components/organisms/forge-form/forge-form`
+
+### 默认表单上下文
+
+**种类：**常数
+
+```typescript
+export const defaultFormContext: FormContextValue;
+```
+
+在 ForgeForm 外部调用 useFormContext 时提供的基线默认表单上下文。
+
+### 锻造表格
+
+**种类：**功能
+
+```typescript
+function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement;
+```
+
+上下文驱动的表单组件支持受控和非受控状态，
+标准架构/Zod/Yup 验证、可访问的错误摘要和框架适配器。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------ | ----------- |
+|属性 |只读<ForgeFormProps> |             |
+
+### ForgeForm属性
+
+**种类：**类型
+
+```typescript
+export type ForgeFormProperties = ForgeFormProps;
+```
+
+没有提供描述。
+
+### ForgeForm道具
+
+**种类：**接口
+
+```typescript
+export interface ForgeFormProps
+```
+
+没有提供描述。
+
+### 表单上下文
+
+**种类：**常数
+
+```typescript
+export const FormContext: MpContext<FormContextValue | undefined>;
+```
+
+没有提供描述。
+
+### 表单上下文值
+
+**种类：**接口
+
+```typescript
+export interface FormContextValue
+```
+
+没有提供描述。
+
+### 使用表单上下文
+
+**种类：**功能
+
+```typescript
+function useFormContext(): FormContextValue;
+```
+
+用于访问子字段或嵌套组件中的表单上下文的钩子。
+
 ## `src/components/organisms/forge-schema-form-dialog/forge-schema-form-dialog`
 
 ### ForgeSchemaFormDialog
@@ -1518,11 +1597,11 @@ function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>)
 ```
 
 `ForgeSchemaFormDialog` — 托管在
-{@link ForgeModal}，用中立的 JSX 方言编写一次并编译
+{@link ForgeModal}，用中立的 JSX 方言编写并编译
 由 `@mission-platform/vite-plugin-forge` 直接转至 React 或 Vue。
 
-它呈现任何 JSON 模式驱动的表单（包括 Monaco `code` 字段）
-居中、受控模式，带有取消/提交操作，连接到表单自己的操作
+它在 a 中呈现任何 JSON 模式驱动的表单（包括 Monaco `code` 字段）
+居中、受控模式，取消/提交操作连接到表单自己的操作
 验证：主按钮是表单的 `type="submit"`，因此提交
 通过共享 `@mission-platform/forms-core` 引擎进行验证并触发
 {@link SchemaFormDialogProperties.onSubmit} 以及值和有效性。打开
@@ -1531,9 +1610,9 @@ function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>)
 
 #### 参数
 
-| 名称 | 类型                             | 描述 |
-| ---- | -------------------------------- | ---- |
-| 属性 | 只读<SchemaFormDialogProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------------ | ----------- |
+|属性 |只读<SchemaFormDialogProperties> |             |
 
 ### 架构表单对话框属性
 
@@ -1577,9 +1656,9 @@ Vue SFC 的替代：动态 `<component :is>` 控件
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<SchemaFormProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<SchemaFormProperties> |             |
 
 ### 模式表单字段渲染器
 
@@ -1610,45 +1689,3 @@ export interface SchemaFormProperties
 ```
 
 没有提供描述。
-
-## `src/utils/date-time/date-time`
-
-### 日期范围
-
-**种类：**接口
-
-```typescript
-export interface DateRange
-```
-
-`{ start, end }` ISO 日期范围 (`YYYY-MM-DD`)。
-
-### 日期时间范围
-
-**种类：**接口
-
-```typescript
-export interface DateTimeRange
-```
-
-`{ start, end, timezone }` 日期时间范围 (`YYYY-MM-DD HH:MM[:SS]`)。
-
-### 时间范围
-
-**种类：**接口
-
-```typescript
-export interface TimeRange
-```
-
-`{ start, end }` 时间范围（`HH:MM` 或 `HH:MM:SS`）。
-
-### 时区模式
-
-**种类：**类型
-
-```typescript
-export type TimezoneMode = 'browser' | 'utc';
-```
-
-日期时间范围是在浏览器区域还是 UTC 中解释。

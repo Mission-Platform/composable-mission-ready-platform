@@ -1,5 +1,4 @@
 import { ForgeChatBubble } from '@mission-platform/components';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**

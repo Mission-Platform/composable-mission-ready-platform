@@ -16,6 +16,6 @@ adaptador de marco en paquetes de componentes compartidos.
 
 ## Contribuir
 
-Correr `pnpm --filter @mission-platform/storybook-framework lint` y el
+Ejecute `pnpm --filter @mission-platform/storybook-framework lint` y el
 Comprobaciones de construcción de libros de cuentos. Mantenga este paquete centrado en la selección del marco y
 valores predeterminados compartidos del libro de cuentos; Las historias componentes pertenecen a `apps/storybook`.

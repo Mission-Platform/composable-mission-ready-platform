@@ -5,7 +5,7 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > packages/ui/forms/docs/index.md: [packages/ui/forms/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
-`@mission-platform/forms` stellt hochrangige Formularorchestrierungskomponenten bereit, die das Rendern der Mission Platform ermöglichen
+`@mission-platform/forms` bietet Formularorchestrierungskomponenten auf hoher Ebene, die das Rendern der Mission Platform ermöglichen
 komplexe Formulare und Assistenten vollständig aus JSON-Schemadefinitionen.
 
 Wie andere gemeinsam genutzte Pakete folgt es einem „Einmal schreiben“-Ansatz, bei dem Komponenten in neutralem JSX erstellt und kompiliert werden
@@ -20,12 +20,9 @@ die Exportbedingung `mp:<framework>` – `resolve.conditions` (siehe `defineFram
 
 ### `ForgeSchemaForm`
 
-Die Hauptkomponente zum Rendern datengesteuerter Formulare. Es nimmt eine JSON-Schemadefinition und generiert automatisch die
-entsprechende UI-Widgets und Validierungslogik.
-
 #### Hauptmerkmale:
 
-- **Schemagesteuert**: Vollständig über JSON-Schema konfiguriert. Ein einzelnes Objekt rendert ein einstufiges Formular; ein Array von Objekten
+- **Schemagesteuert**: Vollständig über JSON-Schema konfiguriert. Ein einzelnes Objekt rendert ein einstufiges Formular. eine Reihe von Objekten
   erstellt einen mehrstufigen Assistenten.
 - **Konsistente Validierung**: Verwendet `@mission-platform/forms-core` (Ajv), um sicherzustellen, dass die Apps Vue und React validieren
   gleiche Daten identisch.

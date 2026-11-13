@@ -497,7 +497,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const MapContext;
+export const MapContext: MpContext<Map | undefined>;
 ```
 
 Contexto que transporta la instancia MapLibre `Map` del ancestro `<MapLibre>` más cercano.

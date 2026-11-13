@@ -34,7 +34,7 @@ Define el contrato estructural para formas:
 
 Proporciona el motor para evaluar si un campo debe ser visible según los valores actuales:
 
-- `evaluateCondition(condition, values)`: Evalúa un `FieldCondition` usando combinadores tipo esquema JSON:
+- `evaluateCondition(condition, values)`: Evalúa un `FieldCondition` utilizando combinadores tipo esquema JSON:
   - `allOf`: Lógica AND (todas las condiciones deben ser verdaderas).
   - `anyOf`: Lógica OR (al menos una condición debe ser verdadera).
   - `oneOf`: Lógica XOR (exactamente una condición debe ser verdadera).
@@ -54,7 +54,7 @@ Maneja la traducción entre esquemas JSON sin formato y campos de formulario ren
 
 Admite la herramienta visual Form Builder:
 
-- **Conversión**: Funciones como `fieldsToSchema` y `schemaToFields` permiten al constructor moverse entre sus funciones
+- **Conversión**: funciones como `fieldsToSchema` y `schemaToFields` permiten al constructor moverse entre sus funciones
   representación (un árbol de campos) y el `SchemaFormDefinition` final.
 - **Paleta de campo**: proporciona `DEFAULT_FIELD_TYPES` que define los widgets disponibles en la paleta del constructor.
 
@@ -71,5 +71,5 @@ Este paquete es intencionalmente sencillo e independiente del marco:
 
 El consumidor principal es `@mission-platform/forms`, que utiliza este núcleo para alimentar:
 
-- **ForgeSchemaForm**: procesa campos y valida datos utilizando estas utilidades.
+- **ForgeSchemaForm**: representa campos y valida datos utilizando estas utilidades.
 - **ForgeFormBuilder**: utiliza la lógica de conversión para permitir a los usuarios crear esquemas visualmente.

@@ -27,16 +27,16 @@ Erstellen Sie neutrale Funktionen aus SvelteKit-Primitiven (Framework-frei für 
 
 #### Parameter
 
-| Name    | Geben Sie                                                                                                                                                                                    | ein Beschreibung |
-| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| Eingabe | { page: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; Auflösungspfad?: (Pfad: Zeichenfolge) => Zeichenfolge; } |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Eingabe | { page: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; auflösenPath?: (Pfad: Zeichenfolge) => Zeichenfolge; } |             |
 
 ### MpLink
 
 **Art:** Komponente
 
 ```typescript
-export const MpLink;
+export MpLink = 'a'
 ```
 
 SvelteKit verwendet normale Anker für Links. Der Compiler behält diese Markierung bei
@@ -47,7 +47,7 @@ Mit der Ausgabe von Svelte kann die neutrale Verwendung von `MpLink` durch Paket
 **Art:** Komponente
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Outlet ist in SvelteKit Eigentum der Anwendung; Fähigkeitsdiagnose lehnt `view` ab.
@@ -64,9 +64,9 @@ Ein neutrales Ziel in eine href-Zeichenfolge auflösen.
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| zu   | MpRouteLocationRaw |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
 
 ### setForgeSvelteKitRouter
 
@@ -81,9 +81,9 @@ Apps rufen dies normalerweise einmal von einem Root-Layout mit `$app`-Modulen au
 
 #### Parameter
 
-| Name       | Geben Sie              | ein Beschreibung |
-| ---------- | ---------------------- | ---------------- |
-| Oberfläche | SvelteKitRouterSurface |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------------- | ----------- |
+| Oberfläche | SvelteKitRouterSurface |             |
 
 ### SvelteKitRouterSurface
 
@@ -110,9 +110,9 @@ Erstellen Sie einen neutralen Standort aus einem SvelteKit-Seiten-Snapshot.
 
 #### Parameter
 
-| Name  | Geben Sie                                                                                | ein Beschreibung |
-| ----- | ---------------------------------------------------------------------------------------- | ---------------- |
-| Seite | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; Parameter: Record<string, string>; } |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------------------------------------------------------------------------- | ----------- |
+| Seite | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; Parameter: Record<string, string>; } |             |
 
 ### toSvelteHref
 
@@ -126,10 +126,10 @@ Serialisieren Sie ein neutrales Ziel für die SvelteKit-Navigation.
 
 #### Parameter
 
-| Name           | Geben Sie                            | ein Beschreibung |
-| -------------- | ------------------------------------ | ---------------- |
-| zu             | MpRouteLocationRaw                   |                  |
-| Auflösungspfad | (Pfad: Zeichenfolge) => Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ------------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
+| Auflösungspfad | (Pfad: Zeichenfolge) => Zeichenfolge |             |
 
 ### useMpNavigation
 

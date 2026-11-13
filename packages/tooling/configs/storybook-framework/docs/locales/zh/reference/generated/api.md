@@ -94,7 +94,7 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 **种类：**功能
 
 ```typescript
-function sharedPreviewDecorators();
+function sharedPreviewDecorators(): Array<ReturnType<typeof withThemeByDataAttribute<TRenderer>>>;
 ```
 
 所有框架的共享 Storybook 装饰器。
@@ -104,7 +104,17 @@ function sharedPreviewDecorators();
 **种类：**常数
 
 ```typescript
-export const sharedPreviewParameters;
+export const sharedPreviewParameters: {
+  readonly controls: {
+    readonly matchers: {
+      readonly color: RegExp;
+      readonly date: RegExp;
+    };
+  };
+  readonly a11y: {
+    readonly test: 'error';
+  };
+};
 ```
 
 所有框架共享 Storybook 参数。
@@ -114,7 +124,15 @@ export const sharedPreviewParameters;
 **种类：**功能
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework);
+function sharedPreviewParametersFor(framework?: PreviewFramework):
+  | typeof sharedPreviewParameters
+  | (typeof sharedPreviewParameters & {
+      readonly docs: {
+        readonly source: {
+          readonly type: 'code';
+        };
+      };
+    });
 ```
 
 框架感知的 Storybook 参数。

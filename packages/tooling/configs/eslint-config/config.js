@@ -83,6 +83,30 @@ function isConstAssertion(typeAnnotation) {
   return typeAnnotation?.type === 'TSTypeReference' && typeAnnotation.typeName?.name === 'const';
 }
 
+/**
+ * Check whether an assertion is part of a variable declaration initializer.
+ */
+function isDeclarationAssertion(node) {
+  let current = node;
+  while (current.parent) {
+    const parent = current.parent;
+    if (
+      parent.type === 'TSAsExpression' ||
+      parent.type === 'TSTypeAssertion' ||
+      parent.type === 'TSNonNullExpression' ||
+      parent.type === 'ParenthesizedExpression' ||
+      (parent.type === 'Property' && parent.value === current) ||
+      (parent.type === 'ObjectExpression' && parent.properties.includes(current)) ||
+      (parent.type === 'ArrayExpression' && parent.elements.includes(current))
+    ) {
+      current = parent;
+      continue;
+    }
+    return parent.type === 'VariableDeclarator' && parent.init === current;
+  }
+  return false;
+}
+
 const BOUNDARY_NODE_TYPES = new Set([
   'FunctionDeclaration',
   'ArrowFunctionExpression',
@@ -278,7 +302,7 @@ const missionTypeScriptPlugin = {
             context.report({ node, messageId: 'noAsAny' });
             return;
           }
-          if (!isConstAssertion(node.typeAnnotation)) {
+          if (!isConstAssertion(node.typeAnnotation) && isDeclarationAssertion(node)) {
             context.report({ node, messageId: 'preferSatisfies' });
           }
         }

@@ -9,11 +9,11 @@
 複雑なフォームとウィザードは完全に JSON スキーマ定義から作成されます。
 
 他の共有パッケージと同様に、「一度だけ書き込む」アプローチに従い、中立的な JSX でコンポーネントを作成してコンパイルします。
-ネイティブ Vue 3 および React コンポーネントに変換されます。
+ネイティブ Vue 3 および React コンポーネントに変換します。
 
 すべてのインポートでは、裸の `@mission-platform/forms` 指定子が使用されます。フレームワークはアプリ全体に対して 1 回選択されます。
 `mp:<framework>` エクスポート条件 — `resolve.conditions` (`defineFrameworkAppConfig` / を参照)
-`frameworkResolveConditions` (`@mission-platform/vite-config` から) および `customConditions` (
+`frameworkResolveConditions` から `@mission-platform/vite-config`) および `customConditions` (
 `@mission-platform/typescript-config/framework-<name>` プリセット）。
 
 ## コアコンポーネント
@@ -23,7 +23,7 @@
 データ駆動型フォームをレンダリングするための主要なコンポーネント。 JSON スキーマ定義を受け取り、自動的に
 対応する UI ウィジェットと検証ロジック。
 
-#### 主な特徴:
+#### Key Features:
 
 - **スキーマ駆動**: JSON スキーマを介して完全に構成されます。単一のオブジェクトが 1 ステップのフォームをレンダリングします。オブジェクトの配列
   複数ステップのウィザードを作成します。
@@ -69,7 +69,7 @@ const MyComponent = () => (
 
 開発者以外でも、JSON を手動で記述せずにフォーム スキーマを作成できるビジュアル オーサリング ツール。
 
-#### 主な特徴:
+#### Key Features:
 
 - **Visual Canvas**: フィールドを配置し、そのプロパティを定義するためのドラッグ アンド ドロップ スタイル エディター。
 - **ウィザード構成**: ウィザードの複数ステップのフローを管理するための専用の「ステップ」タブ。

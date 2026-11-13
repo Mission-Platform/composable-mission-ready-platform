@@ -17,7 +17,7 @@ pnpm add --save-dev @mission-platform/i18n-config
 ```
 
 Mantenga las fuentes locales junto al espacio de trabajo al que pertenecen. Escritura de extracción
-paquetes de espacios de nombres bajo el espacio de trabajo propietario `locales/<locale>/` directorio;
+paquetes de espacios de nombres en el directorio `locales/<locale>/` del espacio de trabajo propietario;
 el comando a nivel de repositorio organiza todos los espacios de trabajo configurados.
 
 ## Contribuir

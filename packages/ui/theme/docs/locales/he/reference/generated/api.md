@@ -23,25 +23,25 @@ function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElemen
 נכתב פעם אחת בניב JSX הנייטרלי והורכב ישר ל-React או Vue
 מאת `@mission-platform/vite-plugin-forge`.
 
-הוא מגובה בחנות הנושאים המשותפת הניתנת לצפייה (`../theme-store`): לחיצה
-הוא מניע את אותו סינגלטון ש-`ForgeThemeProvider` מגדיר, אז זה
+הוא מגובה על ידי חנות הנושאים המשותפת הניתנת לצפייה (`../theme-store`): לחיצה
+הוא מניע את אותו יחיד ש-`ForgeThemeProvider` מגדיר, אז זה
 ממשיך את ההעדפה, מצמיד את `data-theme`/`color-scheme` בשורש המסמך
 (וה-`<meta name="color-scheme">` המסונכרן), ונשאר מסונכרן עם
 נושא המערכת. הרכיב מנוי לחנות עם הנייטרלי
 {@link useState}/{@link useEffect}, כך שמקור יחיד נשאר תגובתי ב
 שתי המסגרות.
 
-Vue SFC המקורי שיתף חנות תגובתית דרך `provide`/`inject` ו
+Vue SFC המקורי שיתף חנות תגובתית באמצעות `provide`/`inject` ו
 סמלי SVG מוטבעים שניתנו; הגרסה הנייטרלית משתמשת בחנות הסינגלטון המשותפת
-(התחליף לספק/הזרקה) וגליפים טקסט (`☀`/`☾`/`◐`), ופולט
-`change` דרך משענת `onChange` callback. התווית ניתנת לביטול
+(התחליף לספק/הזרק) וגליפים טקסט (`☀`/`☾`/`◐`), ופולט
+`change` באמצעות אבזר התקשרות חוזר `onChange`. התווית ניתנת לביטול
 דרך חריץ ברירת המחדל.
 
 #### פרמטרים
 
-| שם    | הקלד                               | תיאור |
-| ----- | ---------------------------------- | ----- |
-| נכסים | לקריאה בלבד<ThemeToggleProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ThemeToggleProperties> |             |
 
 ### ThemeToggleProperties
 
@@ -73,14 +73,14 @@ export type ThemeToggleSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement;
 ```
 
-`ForgeThemeComposer` - מרכיב זמן ריצה `--mp-*` עקיפת אסימון עיצוב (מותג
+`ForgeThemeComposer` - מרכיב זמן ריצה `--mp-*` עקיפות אסימון עיצוב (מותג
 צבעים, צבעי טקסט/משטח/גבול, גופנים, גודל בסיס/רדיוס, בתוספת גולמי
 token escape hatch) ומחיל אותם על היקפו. נכתב פעם אחת ב
 ניב JSX ניטרלי והורכב ישר ל-React או Vue על ידי
 `@mission-platform/vite-plugin-forge`.
 
 ה-Vue SFC המקורי שיתף חנות תגובתית דרך `provide`/`inject` ו-`v-model`.
-לניב הנייטרלי אין אף אחד מהם, אז גרסה זו היא רכיב **נשלט**:
+לניב הנייטרלי אין אף אחת מהן, אז גרסה זו היא רכיב **נשלט**:
 הוא מחזיק את התצורה בהוק {@link useState} ניטרלי (שמקורו ב-
 `modelValue`), פותר את זה למאפייני CSS מותאמים אישית עם העוזרים הטהורים בפנים
 `../theme-composer-store`, מיישם אותם על עטיפת `display: contents` שלו
@@ -89,16 +89,16 @@ token escape hatch) ומחיל אותם על היקפו. נכתב פעם אחת 
 `v-model`). משבצת ברירת המחדל שלו מקבלת `{ config, cssVariables,
 styleString, setConfig, setAttribute, setToken, removeToken, reset }`.
 
-החנות המשותפת (`provide`/`inject`), התמדה `localStorage`, וה
+החנות המשותפת (`provide`/`inject`), התמדה `localStorage` וה-
 תג עטיפה הניתן להגדרה (`as`) מופחתים בכוונה: ה
 צמד `modelValue`/`onUpdateModelValue` הוא המקור היחיד של האמת וה
 עטיפה היא `<div>` קבועה.
 
 #### פרמטרים
 
-| שם    | הקלד                                 | תיאור |
-| ----- | ------------------------------------ | ----- |
-| נכסים | לקריאה בלבד<ThemeComposerProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ThemeComposerProperties> |             |
 
 ### ThemeComposerProperties
 
@@ -151,9 +151,9 @@ toggleTheme, cycleTheme }` כהיקף.
 
 #### פרמטרים
 
-| שם    | הקלד                                 | תיאור |
-| ----- | ------------------------------------ | ----- |
-| נכסים | לקריאה בלבד<ThemeProviderProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ThemeProviderProperties> |             |
 
 ### ThemeProviderProperties
 
@@ -201,9 +201,9 @@ function configToCssVariables(config: ThemeComposerConfig): Record<string, strin
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| תצורה | ThemeComposerConfig |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------- | ----------- |
+| תצורה | ThemeComposerConfig |             |
 
 ### configToStyleString
 
@@ -213,13 +213,13 @@ function configToCssVariables(config: ThemeComposerConfig): Record<string, strin
 function configToStyleString(config: ThemeComposerConfig): string;
 ```
 
-פתרו תצורה למחרוזת המוטבעת המלאה של `style` (מאפיינים מותאמים אישית + ​​`color-scheme`).
+פתור תצורה למחרוזת המוטבעת המלאה `style` (מאפיינים מותאמים אישית + ​​`color-scheme`).
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| תצורה | ThemeComposerConfig |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------- | ----------- |
+| תצורה | ThemeComposerConfig |             |
 
 ### cssVariablesToString
 
@@ -233,9 +233,9 @@ function cssVariablesToString(variables: Record<string, string>): string;
 
 #### פרמטרים
 
-| שם     | הקלד                | תיאור |
-| ------ | ------------------- | ----- |
-| משתנים | שיא<string, string> |       |
+| שם | הקלד | תיאור |
+| --------- | ---------------------- | ----------- |
+| משתנים | שיא<string, string> |             |
 
 ### mergeConfig
 
@@ -249,10 +249,10 @@ function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig):
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| תצורה | ThemeComposerConfig |       |
-| חלקי  | ThemeComposerConfig |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------- | ----------- |
+| תצורה | ThemeComposerConfig |             |
+| חלקי | ThemeComposerConfig |             |
 
 ### removeConfigToken
 
@@ -266,10 +266,10 @@ function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeCompo
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| תצורה | ThemeComposerConfig |       |
-| מפתח  | מחרוזת              |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------- | ----------- |
+| תצורה | ThemeComposerConfig |             |
+| מפתח | מחרוזת |             |
 
 ### setConfigAttribute
 
@@ -287,11 +287,11 @@ function setConfigAttribute(
 
 #### פרמטרים
 
-| שם    | הקלד                   | תיאור |
-| ----- | ---------------------- | ----- |
-| תצורה | ThemeComposerConfig    |       |
-| תכונה | ק                      |       |
-| ערך   | ThemeComposerConfig[K] |       |
+| שם | הקלד | תיאור |
+| --------- | ---------------------- | ----------- |
+| תצורה | ThemeComposerConfig |             |
+| תכונה | ק |             |
+| ערך | ThemeComposerConfig[K] |             |
 
 ### setConfigToken
 
@@ -305,11 +305,33 @@ function setConfigToken(config: ThemeComposerConfig, key: string, value: string)
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| תצורה | ThemeComposerConfig |       |
-| מפתח  | מחרוזת              |       |
-| ערך   | מחרוזת              |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------- | ----------- |
+| תצורה | ThemeComposerConfig |             |
+| מפתח | מחרוזת |             |
+| ערך | מחרוזת |             |
+
+### ThemeComposerAttribute
+
+**סוג:** סוג
+
+```typescript
+export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens' | 'colorScheme'>;
+```
+
+מפתחות התכונה הידידותית שממפים למאפיין מותאם אישית `--mp-*`.
+
+### ThemeComposerConfig
+
+**סוג:** ממשק
+
+```typescript
+export interface ThemeComposerConfig
+```
+
+תיאור מודפס ברמה גבוהה של תכונות הנושא שצרכן יכול לחבר
+בזמן ריצה. כל תכונה ממפה לאחד מ-`--mp-*` של הפלטפורמה
+מאפייני CSS מותאמים אישית של design-token (ראה {@link ATTRIBUTE_TO_CSS_VAR}).
 
 ## `src/stores/theme-store/theme-store`
 
@@ -327,9 +349,9 @@ function configureTheme(config: ThemeConfig): void;
 
 #### פרמטרים
 
-| שם    | הקלד        | תיאור |
-| ----- | ----------- | ----- |
-| תצורה | ThemeConfig |       |
+| שם | הקלד | תיאור |
+| ------ | ----------- | ----------- |
+| תצורה | ThemeConfig |             |
 
 ### מחזור נושא
 
@@ -359,7 +381,7 @@ function getThemeSnapshot(): ThemeSnapshot;
 export type ResolvedTheme = 'light' | 'dark';
 ```
 
-הנושא הקונקרטי חל למעשה על ממשק המשתמש (אף פעם לא `'auto'`).
+הנושא הקונקרטי חל על ממשק המשתמש (אף פעם לא `'auto'`).
 
 ### setTheme
 
@@ -373,9 +395,9 @@ function setTheme(next: Theme): void;
 
 #### פרמטרים
 
-| שם  | הקלד | תיאור |
-| --- | ---- | ----- |
-| הבא | נושא |       |
+| שם | הקלד | תיאור |
+| ---- | ----- | ----------- |
+| הבא | נושא |             |
 
 ### SubscribeTheme
 
@@ -389,9 +411,9 @@ function subscribeTheme(listener: () => void): () => void;
 
 #### פרמטרים
 
-| שם    | הקלד      | תיאור |
-| ----- | --------- | ----- |
-| מאזין | () => ריק |       |
+| שם | הקלד | תיאור |
+| -------- | ---------- | ----------- |
+| מאזין | () => ריק |             |
 
 ### נוֹשֵׂא
 

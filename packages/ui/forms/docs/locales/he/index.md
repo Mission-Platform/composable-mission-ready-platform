@@ -12,7 +12,7 @@
 לתוך רכיבי Vue 3 ו-React מקוריים.
 
 כל הייבוא ​​משתמש במפרט `@mission-platform/forms` החשוף. המסגרת נבחרת פעם אחת עבור כל האפליקציה דרך
-מצב הייצוא `mp:<framework>` - `resolve.conditions` (ראה `defineFrameworkAppConfig` /
+מצב הייצוא `mp:<framework>` — `resolve.conditions` (ראה `defineFrameworkAppConfig` /
 `frameworkResolveConditions` מ-`@mission-platform/vite-config`) ו-`customConditions` (באמצעות
 `@mission-platform/typescript-config/framework-<name>` הגדרות קבועות מראש).
 
@@ -27,7 +27,7 @@
 
 - **מונע סכימה**: מוגדר לחלוטין באמצעות סכמת JSON. אובייקט בודד יוצר צורה חד-שלבית; מערך של חפצים
   יוצר אשף רב-שלבי.
-- **אימות עקבי**: משתמש ב-`@mission-platform/forms-core` (Ajv) כדי להבטיח שאפליקציות Vue ו-React מאמתות את
+- **אימות עקבי**: משתמש ב-`@mission-platform/forms-core` (Ajv) כדי להבטיח שהאפליקציות Vue ו-React מאמתות את
   אותם נתונים זהים.
 - **נראות מותנית**: תומך ב-`ui.visibleWhen` כדי להציג או להסתיר שדות באופן דינמי בהתבסס על ערכי קלט אחרים.
 - **מבנים מקוננים**: מטפל בערכות שדות מקוננות עבור מודלים מורכבים של נתונים.
@@ -67,14 +67,14 @@ const MyComponent = () => (
 
 ### `ForgeFormBuilder`
 
-כלי כתיבה ויזואלי המאפשר ללא מפתחים ליצור סכימות טפסים מבלי לכתוב JSON באופן ידני.
+כלי כתיבה ויזואלי המאפשר ללא מפתחים ליצור סכימות טופס מבלי לכתוב JSON באופן ידני.
 
 #### תכונות עיקריות:
 
 - **קנבס חזותי**: עורך בסגנון גרור ושחרר לסידור שדות והגדרת המאפיינים שלהם.
 - **תצורת אשף**: לשונית "צעדים" ייעודית לניהול זרימה מרובה שלבים באשפים.
 - **תצוגה מקדימה חיה**: עיבוד בזמן אמת של הטופס בזמן שהוא נבנה.
-- **ייצוא סכימה**: פולט `SchemaFormDefinition` שניתן לשמור במסד נתונים או להשתמש בו ישירות על ידי
+- **ייצוא סכימה**: פולט א `SchemaFormDefinition`
   `ForgeSchemaForm`.
 
 #### מַעֲרָך:
@@ -89,14 +89,12 @@ const MyComponent = () => (
 
 כדי להימנע ממחזורי תלות תוך שמירה על שוויון מסגרת:
 
-- `@mission-platform/forms` תלוי ב-`@mission-platform/components` (עבור ווידג'טים קלט בודדים כמו `ForgeInput`,
+- `@mission-platform/forms` תלוי ב-`@mission-platform/components` (עבור ווידג'טים של קלט בודדים כמו `ForgeInput`,
   `ForgeCheckbox`) ו-`@mission-platform/layouts`.
 - הוא מאציל את כל המשימות הכבדות - תיקוף, ניתוח סכימה והיגיון מותנה - לאגנוסטיקן המסגרת
   `@mission-platform/forms-core`.
 
 ## סגנונות
-
-החבילה מספקת עוזרי נגישות משותפת באמצעות:
 
 ```ts
 import '@mission-platform/forms/styles';

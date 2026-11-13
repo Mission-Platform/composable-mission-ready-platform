@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-cms-p
 **Art:** konstant
 
 ```typescript
-export const BADGE;
+export const BADGE: readonly string[];
 ```
 
 Literal-Union-Optionen, JSDoc-Beschreibungen und `?? literal`-Standardwerte.
@@ -36,7 +36,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const BUTTON;
+export const BUTTON: readonly string[];
 ```
 
 Eine Union, die zu Text degradiert wird, plus eine gelöschte Callback-Requisite.
@@ -56,7 +56,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const COUNTER;
+export const COUNTER: readonly string[];
 ```
 
 Eine interaktive Komponente: Zustand und ein Ereignishandler erzwingen eine hydratisierte Insel.
@@ -76,7 +76,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const EMPTY;
+export const EMPTY: readonly string[];
 ```
 
 Eine Komponente ohne jegliche Requisiten.
@@ -96,7 +96,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const GRID;
+export const GRID: readonly string[];
 ```
 
 Eine numerische Requisite mit einem numerischen Standardwert.
@@ -116,7 +116,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const LAYOUT;
+export const LAYOUT: readonly string[];
 ```
 
 Ein benannter Slot neben dem Standard-Slot.
@@ -136,7 +136,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const REQUIRED;
+export const REQUIRED: readonly string[];
 ```
 
 Eine erforderliche (nicht optionale) Requisite neben einer optionalen.
@@ -156,7 +156,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const SITE_HEADER;
+export const SITE_HEADER: readonly string[];
 ```
 
 Eine Komponente mit einer Website-weiten Einstellungsstütze.
@@ -186,8 +186,98 @@ Erstellen Sie ein Stub-Framework-Plugin mit einer überschreibbaren ID.
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| ---- | --------- | ---------------- |
-| id   |           |                  |
+| ---- | ---- | ----------- |
+| id |      |             |
+
+## `src/__fixtures__/workspace`
+
+### BADGE_COMPONENT
+
+**Art:** konstant
+
+```typescript
+export const BADGE_COMPONENT: WorkspaceComponentDefinition;
+```
+
+Keine Beschreibung angegeben.
+
+### CmsWorkspace
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CmsWorkspace
+```
+
+Keine Beschreibung angegeben.
+
+### COUNTER_COMPONENT
+
+**Art:** konstant
+
+```typescript
+export const COUNTER_COMPONENT: WorkspaceComponentDefinition;
+```
+
+Keine Beschreibung angegeben.
+
+### createCmsWorkspace
+
+**Art:** Funktion
+
+```typescript
+function createCmsWorkspace(
+  components: readonly WorkspaceComponentDefinition[],
+): CmsWorkspace;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------------------- | ----------- |
+| Komponenten | readonly WorkspaceComponentDefinition[] |             |
+
+### GRID_COMPONENT
+
+**Art:** konstant
+
+```typescript
+export const GRID_COMPONENT: WorkspaceComponentDefinition;
+```
+
+Keine Beschreibung angegeben.
+
+### LAYOUT_COMPONENT
+
+**Art:** konstant
+
+```typescript
+export const LAYOUT_COMPONENT: WorkspaceComponentDefinition;
+```
+
+Keine Beschreibung angegeben.
+
+### NESTED_BADGE_COMPONENT
+
+**Art:** konstant
+
+```typescript
+export const NESTED_BADGE_COMPONENT: WorkspaceComponentDefinition;
+```
+
+Keine Beschreibung angegeben.
+
+### WorkspaceComponentDefinition
+
+**Art:** Schnittstelle
+
+```typescript
+export interface WorkspaceComponentDefinition
+```
+
+Keine Beschreibung angegeben.
 
 ## `src/analyze`
 
@@ -197,7 +287,7 @@ Erstellen Sie ein Stub-Framework-Plugin mit einer überschreibbaren ID.
 
 ```typescript
 function analyzeContentComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: ContentComponentNamesInput,
   semantic?: SemanticModule,
 ): ContentComponent;
@@ -209,11 +299,11 @@ eine hydratisierte Laufzeit.
 
 #### Parameter
 
-| Name       | Geben Sie                  | ein Beschreibung |
-| ---------- | -------------------------- | ---------------- |
-| Quelldatei | ts.SourceFile              |                  |
-| Namen      | ContentComponentNamesInput |                  |
-| semantisch | SemanticModule             |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------- | ----------- |
+| Quelldatei | OxcParsedModule |             |
+| Namen | ContentComponentNamesInput |             |
+| semantisch | SemanticModule |             |
 
 ### CMS_COLOR_TAG
 
@@ -289,9 +379,9 @@ Leiten Sie den vollständigen Namenssatz aus dem vom Aufrufer bereitgestellten T
 
 #### Parameter
 
-| Name  | Geben Sie                  | ein Beschreibung |
-| ----- | -------------------------- | ---------------- |
-| Namen | ContentComponentNamesInput |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | -------------------------- | ----------- |
+| Namen | ContentComponentNamesInput |             |
 
 ### isInteractiveModule
 
@@ -305,9 +395,69 @@ True, wenn die neutrale IR ein Verhalten aufweist, das nur eine echte Laufzeit b
 
 #### Parameter
 
-| Name       | Geben Sie                     | ein Beschreibung |
-| ---------- | ----------------------------- | ---------------- |
-| semantisch | SemanticModule \| undefiniert |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------------------------- | ----------- |
+| semantisch | SemanticModule \| undefiniert |             |
+
+## `src/assets`
+
+### copyAndPruneAssets
+
+**Art:** Funktion
+
+```typescript
+function copyAndPruneAssets(
+  safeCacheDirectory: string,
+  destinationRoot: string,
+  assets: readonly CmsArtifact[],
+  preservedDirectories: ReadonlySet<string> = new Set(),
+): void;
+```
+
+Assets von `safeCacheDirectory` in `destinationRoot` synchronisieren,
+Beschneiden veralteter oder entfernter Assets aus früheren Builds.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------------------- | ---------------------- | ----------- |
+| safeCacheDirectory | Zeichenfolge |             |
+| ZielRoot | Zeichenfolge |             |
+| Vermögenswerte | schreibgeschütztes CmsArtifact[] |             |
+| bewahrte Verzeichnisse | ReadonlySet<string> |             |
+
+### BEKANNTE_FRAMEWORKS
+
+**Art:** konstant
+
+```typescript
+export const KNOWN_FRAMEWORKS: ReadonlySet<string>;
+```
+
+Keine Beschreibung angegeben.
+
+### pruneStaleAssets
+
+**Art:** Funktion
+
+```typescript
+function pruneStaleAssets(
+  destinationRoot: string,
+  activeAssetNames: ReadonlySet<string>,
+  preservedDirectories: ReadonlySet<string> = new Set(),
+): void;
+```
+
+Bereinigen Sie veraltete Dateien und leere Verzeichnisse in `destinationRoot`, die dies nicht tun
+entsprechen aktiven Assets, wobei Framework-Verzeichnisse und Nicht-Asset-Bäume erhalten bleiben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------------------- | ------------------- | ----------- |
+| ZielRoot | Zeichenfolge |             |
+| activeAssetNames | ReadonlySet<string> |             |
+| bewahrte Verzeichnisse | ReadonlySet<string> |             |
 
 ## `src/classify`
 
@@ -337,8 +487,8 @@ Das Ergebnis der Klassifizierung einer Requisite (`undefined` → Requisite fall
 
 ```typescript
 function classifyType(
-  node: ts.TypeNode,
-  aliases: Map<string, ts.TypeNode>,
+  node: CmsTypeNode,
+  aliases: Map<string, CmsTypeNode>,
   seen: Set<string> = new Set(),
 ): ClassifiedFieldKind;
 ```
@@ -347,11 +497,11 @@ Klassifizieren Sie den Typ node einer Requisite in einen neutralen Inhaltstyp un
 
 #### Parameter
 
-| Name    | Geben Sie                | ein Beschreibung |
-| ------- | ------------------------ | ---------------- |
-| node    | ts.TypeNode              |                  |
-| Aliase  | Map<string, ts.TypeNode> |                  |
-| gesehen | Set<string>              |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------ | ----------- |
+| node | CmsTypeNode |             |
+| Aliase | Map<string, CmsTypeNode> |             |
+| gesehen | Set<string> |             |
 
 ### CollectTypeAliases
 
@@ -359,17 +509,17 @@ Klassifizieren Sie den Typ node einer Requisite in einen neutralen Inhaltstyp un
 
 ```typescript
 function collectTypeAliases(
-  sourceFile: ts.SourceFile,
-): Map<string, ts.TypeNode>;
+  sourceFile: OxcParsedModule,
+): Map<string, CmsTypeNode>;
 ```
 
 Ordnen Sie jeden `type X = …`-Alias ​​der obersten Ebene zur Unionsauflösung seinem Typ node zu.
 
 #### Parameter
 
-| Name       | Geben Sie     | ein Beschreibung |
-| ---------- | ------------- | ---------------- |
-| Quelldatei | ts.SourceFile |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------- | ----------- |
+| Quelldatei | OxcParsedModule |             |
 
 ### LINK_TYPE_REFERENCES
 
@@ -466,9 +616,9 @@ Das Verzeichnissegment, in das die Framework-Ausgabe eines Ziels geschrieben wir
 
 #### Parameter
 
-| Name   | Geben Sie       | ein Beschreibung |
-| ------ | --------------- | ---------------- |
-| Plugin | CmsOutputPlugin |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------------- | ----------- |
+| Plugin | CmsOutputPlugin |             |
 
 ### CmsTargetId
 
@@ -495,11 +645,47 @@ Erreichen Sie den Fahrer und senden Sie lautlos einen Teilbaum aus.
 
 #### Parameter
 
-| Name   | Geben Sie | ein Beschreibung |
-| ------ | --------- | ---------------- |
-| Plugin | T         |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---- | ----------- |
+| Plugin | T |             |
 
 ## `src/config`
+
+### cmsAssetsPlugin
+
+**Art:** Funktion
+
+```typescript
+function cmsAssetsPlugin(
+  rootDir: string,
+  cacheDirectory: string,
+  targetOrTargetId: string | CmsOutputPlugin,
+  getAssets: () => readonly CmsArtifact[],
+  options?: CmsAssetsPluginOptions,
+): Plugin;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------------- | ---------------------------- | ----------- |
+| rootDir | Zeichenfolge |             |
+| Cache-Verzeichnis | Zeichenfolge |             |
+| targetOrTargetId | Zeichenfolge \| CmsOutputPlugin |             |
+| getAssets | () => schreibgeschützt CmsArtifact[] |             |
+| Optionen | CmsAssetsPluginOptions |             |
+
+### CmsAssetsPluginOptions
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CmsAssetsPluginOptions
+```
+
+Keine Beschreibung angegeben.
 
 ### defineViteForgeCmsLibrary
 
@@ -515,9 +701,9 @@ Erstellen Sie eine Vite-Bibliothekskonfiguration für ein CMS-Ziel.
 
 #### Parameter
 
-| Name     | Geben Sie                  | ein Beschreibung |
-| -------- | -------------------------- | ---------------- |
-| Optionen | ViteForgeCmsLibraryOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------------- | ----------- |
+| Optionen | ViteForgeCmsLibraryOptions |             |
 
 ### ViteForgeCmsLibraryOptions
 
@@ -539,7 +725,7 @@ Optionen für {@link defineViteForgeCmsLibrary}.
 export interface ContentComponent
 ```
 
-Eine Komponente, die auf das neutrale Inhaltsmodell projiziert wird.
+Eine auf das neutrale Inhaltsmodell projizierte Komponente.
 
 ### ContentComponentMetadata
 
@@ -633,9 +819,9 @@ Die Felder einer Komponente, die keine Slots sind (skalarer, verfassbarer Inhalt
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| Komponente | ContentComponent |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------- | ----------- |
+| Komponente | ContentComponent |             |
 
 ### SlotFields
 
@@ -649,9 +835,9 @@ Die Felder einer Komponente, die verschachtelten Inhalt enthalten.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| Komponente | ContentComponent |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------- | ----------- |
+| Komponente | ContentComponent |             |
 
 ## `src/driver`
 
@@ -670,9 +856,9 @@ target und gibt den Pfad des Einstiegsmoduls und alles, was geschrieben wurde, z
 
 #### Parameter
 
-| Name     | Geben Sie                   | ein Beschreibung |
-| -------- | --------------------------- | ---------------- |
-| Optionen | GenerateCmsArtifactsOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------------- | ----------- |
+| Optionen | GenerateCmsArtifactsOptions |             |
 
 ### GenerateCmsArtifactsOptions
 
@@ -684,7 +870,7 @@ export interface GenerateCmsArtifactsOptions
 
 Optionen für {@link genericCmsArtifacts}.
 
-### Generierter CmsTree
+### GenerierterCmsTree
 
 **Art:** Schnittstelle
 
@@ -717,13 +903,14 @@ function generateIsland(
 ```
 
 Generieren Sie gemeinsam den Framework-Inselbaum für ein Ziel und geben Sie den Spezifizierer zurück
-Eine ausgegebene Vorlage sollte sie importieren.
+Eine ausgegebene Vorlage sollte sie importieren. Dies ist nur die Generationsphase – die
+CMS-Treiber/-Sitzung besitzt, wenn es ausgeführt wird.
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Optionen | GenerateIslandOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------- | ----------- |
+| Optionen | GenerateIslandOptions |             |
 
 ### GenerateIslandOptions
 
@@ -759,9 +946,9 @@ Konvertieren Sie einen öffentlichen Namen in seinen Anzeigenamen (`InView` → 
 
 #### Parameter
 
-| Name             | Geben Sie    | ein Beschreibung |
-| ---------------- | ------------ | ---------------- |
-| öffentlicherName | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------ | ----------- |
+| öffentlicherName | Zeichenfolge |             |
 
 ### toKebabName
 
@@ -775,9 +962,9 @@ Konvertieren Sie einen öffentlichen Namen in einen Namen mit Kebab-Schreibweise
 
 #### Parameter
 
-| Name             | Geben Sie    | ein Beschreibung |
-| ---------------- | ------------ | ---------------- |
-| öffentlicherName | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------ | ----------- |
+| öffentlicherName | Zeichenfolge |             |
 
 ### toTechnicalName
 
@@ -791,113 +978,68 @@ Konvertieren Sie einen öffentlichen Namen in seinen technischen Namen (`InView`
 
 #### Parameter
 
-| Name             | Geben Sie    | ein Beschreibung |
-| ---------------- | ------------ | ---------------- |
-| öffentlicherName | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------ | ----------- |
+| öffentlicherName | Zeichenfolge |             |
 
 ## `src/tsdown`
 
-### cmsCacheDirectory
+### defineTsdownForgeCmsTargetConfigs
 
 **Art:** Funktion
 
 ```typescript
-function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string;
-```
-
-Das Cache-Verzeichnis, in das der generierte Baum eines Ziels geschrieben wird.
-
-#### Parameter
-
-| Name    | Geben Sie       | ein Beschreibung |
-| ------- | --------------- | ---------------- |
-| rootDir | Zeichenfolge    |                  |
-| Ziel    | CmsOutputPlugin |                  |
-
-### cmsOutputDirectory
-
-**Art:** Funktion
-
-```typescript
-function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string;
-```
-
-Das Verteilungsverzeichnis, in das die Framework-Module eines Ziels ausgegeben werden.
-
-#### Parameter
-
-| Name    | Geben Sie       | ein Beschreibung |
-| ------- | --------------- | ---------------- |
-| rootDir | Zeichenfolge    |                  |
-| Ziel    | CmsOutputPlugin |                  |
-
-### defineTsdownForgeCms
-
-**Art:** Funktion
-
-```typescript
-function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig;
-```
-
-Erstellen Sie eine tsdown-Konfiguration für ein CMS-Ziel.
-
-#### Parameter
-
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Optionen | TsdownForgeCmsOptions |                  |
-
-### defineTsdownForgeCmsAll
-
-**Art:** Funktion
-
-```typescript
-function defineTsdownForgeCmsAll(
-  options: TsdownForgeCmsAllOptions,
+function defineTsdownForgeCmsTargetConfigs(
+  options: TsdownForgeCmsPluginsOptions,
 ): UserConfig[];
 ```
 
-Erstellen Sie Tsdown-Konfigurationen für jedes angeforderte CMS-Ziel.
+Gibt native tsdown `UserConfig[]`-Konfigurationen für die ausgewählten CMS-Ziele zurück.
+Jede Konfiguration kompiliert direkt ihr eigenes CMS-Ziel und ihre eigenen Projektionen.
+Erlaubt tsdown/Rolldown, Ziele gleichzeitig ohne Dummy-Festplatteneinträge auszuführen
+oder verschachtelte Ausführungsschleifen.
 
 #### Parameter
 
-| Name     | Geben Sie                | ein Beschreibung |
-| -------- | ------------------------ | ---------------- |
-| Optionen | TsdownForgeCmsAllOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------------------- | ----------- |
+| Optionen | TsdownForgeCmsPluginsOptions |             |
 
-### „resolveComponentsModule“.
+### ForgeCmsTsdownPlugin
+
+**Art:** Typ
+
+```typescript
+export type ForgeCmsTsdownPlugin = TsdownPlugin &
+```
+
+Von {@link tsdownForgeCmsPlugins} zurückgegebenes Plugin, einschließlich Zielkonfigurationen für Tests.
+
+### tsdownForgeCmsPlugins
 
 **Art:** Funktion
 
 ```typescript
-function resolveComponentsModule(rootDir: string, explicit?: string): string;
+function tsdownForgeCmsPlugins(
+  options: TsdownForgeCmsPluginsOptions,
+): TsdownPlugin[];
 ```
 
-Suchen Sie den Zylinder mit den neutralen Komponenten eines Pakets.
+Native tsdown-plugin-Form des CMS-Adapters für die Verwendung auf einem einzelnen Ziel.
+Für die Generierung mehrerer Ziele bevorzugen Sie {@link defineTsdownForgeCmsTargetConfigs}.
 
 #### Parameter
 
-| Name     | Geben Sie    | ein Beschreibung |
-| -------- | ------------ | ---------------- |
-| rootDir  | Zeichenfolge |                  |
-| explizit | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------------------- | ----------- |
+| Optionen | TsdownForgeCmsPluginsOptions |             |
 
-### TsdownForgeCmsAllOptions
-
-**Art:** Schnittstelle
-
-```typescript
-export interface TsdownForgeCmsAllOptions
-```
-
-Optionen für {@link defineTsdownForgeCmsAll}.
-
-### TsdownForgeCmsOptions
+### TsdownForgeCmsPluginsOptions
 
 **Art:** Schnittstelle
 
 ```typescript
-export interface TsdownForgeCmsOptions
+export interface TsdownForgeCmsPluginsOptions
 ```
 
-Optionen für {@link defineTsdownForgeCms}.
+Von {@link tsdownForgeCmsPlugins} akzeptierte Optionen.

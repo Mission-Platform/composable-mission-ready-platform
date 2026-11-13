@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> packages/hunspell/docs/index.md: [packages/hunspell/docs/index.md](../../index.md)
+> packages/content/hunspell/docs/index.md: [packages/content/hunspell/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
 `@mission-platform/hunspell` bietet eine leistungsstarke Rechtschreibprüfungs-Engine auf Basis von Hunspell, kompiliert nach
@@ -19,7 +19,7 @@ Das Paket nutzt eine spezielle Build-Pipeline, um sicherzustellen, dass keine Ab
 
 ### Wiederaufbau des WASM-Artefakts
 
-Der Wiederaufbau erfordert [Docker](https://www.docker.com/). Verwenden Sie den folgenden Befehl im Stammverzeichnis:
+Für den Neuaufbau ist [Docker](https://www.docker.com/) erforderlich. Verwenden Sie den folgenden Befehl im Stammverzeichnis:
 
 ```bash
 pnpm --filter @mission-platform/hunspell build:wasm

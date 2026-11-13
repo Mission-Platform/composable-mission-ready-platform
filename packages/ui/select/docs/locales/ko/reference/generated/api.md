@@ -23,7 +23,7 @@ function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 `@mission-platform/vite-plugin-forge`에 의해 React 또는 Vue로 바로 컴파일됩니다.
 
 `label`(구성된 중립 {@link ForgeTypography}를 통해)를 다음과 같이 렌더링합니다.
-톤/크기 및 — `removable`이고 `disabled`가 아닌 경우 — 제거 버튼
+톤/크기 및 - `removable`이고 `disabled`가 아닌 경우 - 제거 버튼
 `onRemove` 콜백을 실행합니다. 같은 위치에 있는 CSS를 통해 스타일을 소유합니다.
 프레임워크 중립으로 조립된 모듈 `forge-tag.module.scss`
 {@link classNames} 도우미.
@@ -34,9 +34,9 @@ callback-prop `onRemove`(Vue `remove` 대체 방출)
 
 #### 매개변수
 
-| 이름 | 유형                     | 설명 |
-| ---- | ------------------------ | ---- |
-| 속성 | 읽기 전용<TagProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------- | ----------- |
+| 속성 | 읽기 전용<TagProperties> |             |
 
 ### 태그속성
 
@@ -83,9 +83,9 @@ function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherPropert
 
 #### 매개변수
 
-| 이름 | 유형                                       | 설명 |
-| ---- | ------------------------------------------ | ---- |
-| 속성 | 읽기 전용<ForgeLanguageSwitcherProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------------------- | ----------- |
+| 속성 | 읽기 전용<ForgeLanguageSwitcherProperties> |             |
 
 ### ForgeLanguageSwitcher옵션
 
@@ -146,9 +146,9 @@ React/Vue); `useI18n` 문자열은 일반 텍스트가 됩니다. `v-model` +는
 
 #### 매개변수
 
-| 이름 | 유형                             | 설명 |
-| ---- | -------------------------------- | ---- |
-| 속성 | 읽기 전용<MultiselectProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------- | ----------- |
+| 속성 | 읽기 전용<MultiselectProperties> |             |
 
 ### 다중 선택 옵션
 
@@ -182,6 +182,26 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 ## `src/components/molecules/forge-select/forge-select`
 
+### ForgeCombobox
+
+**종류:** 상수
+
+```typescript
+export const ForgeCombobox: typeof ForgeSelect;
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeComboboxProps
+
+**종류:** 유형
+
+```typescript
+export type ForgeComboboxProps = SelectProperties;
+```
+
+설명이 제공되지 않았습니다.
+
 ### 포지셀렉트
 
 **종류:** 기능
@@ -190,40 +210,24 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
-`ForgeSelect` — 중립 JSX에서 한 번 작성된 사용자 정의 콤보 상자/선택
-방언을 사용하여 React 또는 Vue으로 바로 컴파일됩니다.
-`@mission-platform/vite-plugin-forge`.
-
-기본적으로(`searchable`, 기본값) 트리거는 필터링하는 텍스트 필드입니다.
-사용자 유형에 따른 옵션 — {@link ForgeMultiselect} 미러링 — 따라서 값
-스크롤이 아닌 검색으로 찾을 수 있습니다. `searchable={false}`을 설정합니다.
-일반 버튼 트리거. 어느 쪽이든 목록 상자는 시각적으로 숨겨진 요소로 뒷받침됩니다.
-기본 `<select>`이므로 브라우저 자동 완성 및 기본 양식 제출이 계속 작동합니다.
-선택은 확립된 `modelValue` +로 제어됩니다.
-`onUpdateModelValue`/`onChange` 콜백-prop 규칙입니다. 자신만의 스타일을 소유하고 있습니다.
-공동 배치된 CSS 모듈 `forge-select.module.scss`을 통해.
-
-부동 목록 상자는 한 번 쓰기 **`ForgeDropdown`**를 통해 렌더링됩니다.
-(자체는 React/Vue로 컴파일됨), 중립 명명된 슬롯 **통과**를 통해 구성됨
-구문: 콤보박스 래퍼가 드롭다운의 `trigger` 슬롯에 전달됩니다.
-(`slot="trigger"`) 및 `<ul role="listbox">`가 기본 슬롯이 되므로
-패널은 `<Teleport>`을 통해 포털링되고 CSS Anchor로 고정됩니다.
-제자리 절대 위치 목록 대신 위치 지정. 내부
-`useState` 공개 플래그는 해당 드롭다운을 통해 동기화된 상태로 유지됩니다.
-`onUpdateOpen` 콜백.
-
-원본 Vue SFC의 다른 대체 항목: `useId` 컴포저블은 다음으로 매핑됩니다.
-프레임워크 네이티브 `useId` 후크; 쉐브론은 한 번만 쓸 수 있는 문자입니다.
-`@mission-platform/icons` `ForgeIconChevron`(`direction` 소품을 통해 회전됨,
-자체적으로 React/Vue로 컴파일됨) `useI18n` 문자열은 일반 텍스트가 됩니다. 그리고
-`v-model` +는 콜백 소품이 됩니다. `start`/`end` 명명된 슬롯은 다음과 같습니다.
-중립 명명된 슬롯으로 보존됩니다.
+ForgeSelect 구성요소는 액세스 가능하고 프레임워크 중립적인 선택 제어를 제공합니다.
+실시간 필터링, 비동기 검색, 키보드 탐색 및 사용자 정의 슬롯을 지원합니다.
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 속성 | 읽기 전용<SelectProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<SelectProperties> |             |
+
+### ForgeSelectProps
+
+**종류:** 유형
+
+```typescript
+export type ForgeSelectProps = SelectProperties;
+```
+
+설명이 제공되지 않았습니다.
 
 ### 선택옵션
 

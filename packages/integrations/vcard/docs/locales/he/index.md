@@ -5,7 +5,7 @@
 > packages/integrations/vcard/docs/index.md: [packages/integrations/vcard/docs/index.md](../../index.md)
 > שפה: עברית (he)
 
-ממשקי API משותפים של RFC 6350 vCard ו-RFC 5545 iCalendar עבור Mission Platform.
+ממשקי API משותפים לנתוני RFC 6350 vCard ו-RFC 5545 iCalendar עבור Mission Platform.
 
 החבילה מספקת ניתוח וכתיבה של רכיבים/נכסים ללא הפסדים
 `readICalendar`/`writeICalendar` ו-`readVCard`/`writeVCard`, בתוספת Forge

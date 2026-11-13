@@ -7,4 +7,4 @@
 
 SolidJS Router 的 Forge 路由器目标
 
-看 `llms.txt` 了解公共 API 和使用示例。
+有关公共 API 和用法示例，请参阅 `llms.txt`。

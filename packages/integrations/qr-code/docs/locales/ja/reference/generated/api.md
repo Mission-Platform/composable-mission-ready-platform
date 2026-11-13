@@ -9,188 +9,71 @@
 
 `@mission-platform/qr-code` のパブリック ソース宣言から生成されます。
 
-## `src/encoder/index`
+## `src/components/molecules/forge-qr-code/forge-qr-code`
 
-### エンコードMicroQr
-
-**種類:** 関数
-
-```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-`text` を **Micro QR Code** マトリックス (ISO/IEC 18004) にエンコードし、インスタンス化します
-WebAssembly エンコーダは、最初の使用時に同期的に実行されます。
-
-最小のフィッティング バージョン (M1 ～ M4、11×11 ～ 17×17) が自動的に選択されます。
-Micro QR は、エラー修正レベル `L`、`M`、および `Q` のみをサポートします。要求している
-`H` は常にスローされます (これを提供する Micro QR バージョンはありません)。
-
-#### パラメータ
-
-| 名前       | タイプ       | 説明 |
-| ---------- | ------------ | ---- |
-| テキスト   | 文字列       |      |
-| エラー修正 | Qrエラー訂正 |      |
-
-#### 契約
-
-- **@throws:** テキストがどの Micro QR バージョンにも長すぎる場合
-  選択したレベル (`H` レベルのリクエストを含む)。
-
-### encodeMicroQrAsync
+### Qrコードを鍛造する
 
 **種類:** 関数
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
+function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement;
 ```
 
-`text` を **マイクロ QR コード** マトリックスにエンコードし、WebAssembly をインスタンス化します。
-最初の使用時にエンコーダを非同期的に実行します。 {@link encodeMicroQr} を参照してください。
+`ForgeQrCode` — ニュートラル JSX で一度作成された、スキャン可能な QR コードをレンダリングします。
+方言を使用し、React または Vue に直接コンパイルされます。
+`@mission-platform/vite-plugin-forge`。
+
+ペイロード (`value`) は、クライアント上で完全にエンコードされます。
+`@mission-platform/qr-code` エンコーダ — で書かれた依存関係のないエンコーダ
+Rust と WebAssembly にコンパイル (バージョンの自動選択、ペナルティが最も低い)
+データ マスク) — 鮮明で解像度に依存しない SVG として描画されます。 `variant`
+prop はシンボルを選択します: 標準の正方形の QR コード ({@link encodeQr}、
+`'qr'`、デフォルト）、コンパクトな正方形のマイクロ QR コード
+({@link encodeMicroQr}、`'micro'`)、または幅の広い長方形のマイクロ QR / rMQR コード
+({@link encodeRmqr}、`'rmqr'`)。単一の `<path>` がすべての暗闇に対して発行されます。
+モジュールなので、大きなコードでもマークアップはコンパクトなままです。信頼性の高い
+暗い色/明るい色のスキャンでは、デフォルトで白地に黒ではなく solid が使用されます。
+テーマ トークンですが、どちらも `color` / `background` によってオーバーライドできます。
+
+モジュールとファインダー（目）のパターンは、正方形、角丸正方形、
+またはドット (`moduleShape` / `finderShape`);ダークフィルは2ストップを受け入れます
+線形または放射状 `gradient`;オプションの中央の `logo` が上にオーバーレイされます。
+バッキング プレート (`errorCorrection: 'H'` とペアリングすると、コードは引き続きスキャンされます)。
+
+オプションのアクション ツールバー (`showActions` ～ `true` によって有効化)
+ボタン、または個別に選択するための {@link QrCodeActions} オブジェクト）
+ユーザーは **コードを PNG 画像として保存**、**画像をクリップボードにコピー**、
+**エンコードされた値をクリップボードにコピー**します。 PNG は
+レンダリングされた SVG をキャンバス上に描画することで、クライアントにアクセスできます。
+
+オリジナルの Vue SFC からの置換: `computed` レンダリングは
+中立的な {@link useMemo}; `error` の出力は `onError` コールバック プロップになります
+(エンコードが失敗したときに呼び出され、オリジナルの出力を内部からミラーリングします。
+計算されます）。同じ場所に配置された CSS モジュールを通じてスタイルを所有します。
+`forge-qr-code.module.scss`。
 
 #### パラメータ
 
-| 名前       | タイプ       | 説明 |
-| ---------- | ------------ | ---- |
-| テキスト   | 文字列       |      |
-| エラー修正 | Qrエラー訂正 |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------- | ----------- |
+|プロパティ |読み取り専用<QrCodeProperties> |             |
 
-#### 契約
-
-- **@throws:** テキストがどの Micro QR バージョンにも長すぎる場合
-  選択したレベル (`H` レベルのリクエストを含む)。
-
-### エンコードQr
-
-**種類:** 関数
-
-```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
-```
-
-`text` を指定されたエラー修正レベルで QR コード マトリックスにエンコードします。
-最初の使用時に WebAssembly エンコーダーを同期的にインスタンス化します。
-
-#### パラメータ
-
-| 名前       | タイプ       | 説明 |
-| ---------- | ------------ | ---- |
-| テキスト   | 文字列       |      |
-| エラー修正 | Qrエラー訂正 |      |
-
-#### 契約
-
-- **@throws:** テキストが長すぎて最大のサイズに収まらない場合 (バージョン
-
-40. 選択したエラー修正レベルの QR コード。
-
-### encodeQrAsync
-
-**種類:** 関数
-
-```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
-```
-
-`text` を指定されたエラー修正レベルで QR コード マトリックスにエンコードします。
-最初の使用時に WebAssembly エンコーダを非同期的にインスタンス化します。
-
-#### パラメータ
-
-| 名前       | タイプ       | 説明 |
-| ---------- | ------------ | ---- |
-| テキスト   | 文字列       |      |
-| エラー修正 | Qrエラー訂正 |      |
-
-#### 契約
-
-- **@throws:** テキストが長すぎて最大のサイズに収まらない場合 (バージョン
-
-40. 選択したエラー修正レベルの QR コード。
-
-### エンコードRmqr
-
-**種類:** 関数
-
-```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-`text` を **長方形マイクロ QR (rMQR) コード** マトリックスにエンコードします
-(ISO/IEC 23941)、最初に WebAssembly エンコーダーを同期的にインスタンス化します。
-使用します。
-
-(R7×43 ～ R17×139 の 32 サイズのうち) 最小のフィッティング バージョンが選択されます。
-自動的に。 rMQR はエラー修正レベル `M` および `H` のみをサポートするため、
-`L`/`M` は `M` にマップされ、`Q`/`H` は `H` にマップされます。
-
-#### パラメータ
-
-| 名前       | タイプ       | 説明 |
-| ---------- | ------------ | ---- |
-| テキスト   | 文字列       |      |
-| エラー修正 | Qrエラー訂正 |      |
-
-#### 契約
-
-- **@throws:** テキストがどの rMQR バージョンにも長すぎる場合
-  選択したレベル。
-
-### encodeRmqrAsync
-
-**種類:** 関数
-
-```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
-```
-
-`text` を **長方形マイクロ QR (rMQR) コード** マトリックスにエンコードします。
-最初の使用時に WebAssembly エンコーダを非同期的にインスタンス化します。参照
-{@link encodeRmqr}。
-
-#### パラメータ
-
-| 名前       | タイプ       | 説明 |
-| ---------- | ------------ | ---- |
-| テキスト   | 文字列       |      |
-| エラー修正 | Qrエラー訂正 |      |
-
-#### 契約
-
-- **@throws:** テキストがどの rMQR バージョンにも長すぎる場合
-  選択したレベル。
-
-## `src/types`
-
-### コンパクトQrマトリックス
+### Qrコードアクション
 
 **種類:** インターフェース
 
 ```typescript
-export interface CompactQrMatrix
+export interface QrCodeActions
 ```
 
-エンコードされたコンパクト QR バリアント — マイクロ QR または長方形マイクロ QR (rMQR)
-コード。 {@link QrMatrix} とは異なり、これらは長方形である可能性があるため、グリッドは
-単一の `size` ではなく、明示的な `width`/`height` によって記述されます。
+ツールバーに表示されるアクション ボタン。 `true` はそれらをすべて有効にします。
 
-### Qrエラー修正
-
-**種類：**タイプ
-
-```typescript
-export type QrErrorCorrection = 'L' | 'M' | 'Q' | 'H';
-```
-
-エラー訂正レベル: レベルが高いほど、より多くのダメージを許容できますが、保持できるデータは少なくなります。
-
-### Qrマトリックス
+### QrCodeプロパティ
 
 **種類:** インターフェース
 
 ```typescript
-export interface QrMatrix
+export interface QrCodeProperties
 ```
 
-デコード/エンコードされた QR コード: ダーク (`true`) モジュールの正方形グリッド。
+説明はありません。

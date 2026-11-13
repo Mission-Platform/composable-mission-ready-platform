@@ -10,7 +10,7 @@
 
 ## 개요
 
-`@mission-platform/map` 패키지는 구성 가능한 반응형 래퍼를 제공합니다. [맵리브레 GL](https://maplibre.org/),
+`@mission-platform/map` 패키지는 [MapLibre GL](https://maplibre.org/) 주위에 구성 가능한 반응형 래퍼를 제공합니다.
 개발자가 Vue 3의 Composition API를 사용하여 대화형 지도를 만들 수 있습니다. 그것은 복잡성을 추상화합니다.
 MapLibre의 강력한 기능에 대한 전체 액세스를 유지하면서 MapLibre 인스턴스를 관리합니다.
 
@@ -24,7 +24,7 @@ MapLibre의 강력한 기능에 대한 전체 액세스를 유지하면서 MapLi
 
 ## 주요 구성요소 및 컴포저블
 
-### `<MpMap>` 구성 요소
+### `<MpMap>` 구성요소
 
 대화형 지도를 렌더링하기 위한 기본 구성요소입니다.
 
@@ -57,7 +57,7 @@ MapLibre의 강력한 기능에 대한 전체 액세스를 유지하면서 MapLi
 
 MapLibre 인스턴스 및 지도 상태에 대한 액세스를 제공합니다.
 
-**보고:**
+**반품:**
 
 - `map`: MapLibre GL 인스턴스
 - `isReady`: 지도가 완전히 초기화되었는지 여부를 나타내는 부울
@@ -132,7 +132,7 @@ MapLibre 인스턴스 및 지도 상태에 대한 액세스를 제공합니다.
 pnpm add @mission-platform/map
 ```
 
-2. Vue 구성 요소를 가져와 사용합니다.
+2. Vue 구성요소를 가져와서 사용합니다.
 
 ```vue
 <template>

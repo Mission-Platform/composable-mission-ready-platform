@@ -24,9 +24,9 @@ et gère un contexte WebGL Three.js via `useThree`.
 
 #### Paramètres
 
-| Nom        | Tapez                                     | Descriptif |
-| ---------- | ----------------------------------------- | ---------- |
-| propriétés | Lecture seule<ForgeThreeCanvasProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------------ | ----------- |
+| propriétés | Lecture seule<ForgeThreeCanvasProperties> |             |
 
 ### ForgeThreeCanvasPropriétés
 
@@ -69,7 +69,7 @@ Nettoyage automatique : supprime le moteur de rendu et annule l'image d'animati
 
 #### Paramètres
 
-| Nom            | Tapez                                             | Descriptif |
-| -------------- | ------------------------------------------------- | ---------- |
-| toileRéférence | RéférenceLike<HTMLCanvasElement \| null>          |            |
-| prêt           | (contexte : ThreeContext) => void \| (() => vide) |            |
+| Nom | Tapez | Descriptif |
+| --------------- | ----------------------------------------------- | ----------- |
+| toileRéférence | RéférenceLike<HTMLCanvasElement \| null> |             |
+| prêt | (contexte : ThreeContext) => void \| (() => vide) |             |

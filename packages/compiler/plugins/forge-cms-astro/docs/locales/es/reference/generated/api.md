@@ -1,4 +1,4 @@
-# @mission-platform/forge-cms-astro Referencia API
+# Referencia de API @mission-platform/forge-cms-astro
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
@@ -23,8 +23,8 @@ Vincule la proyección de Astro a un complemento de salida del marco propiedad d
 
 #### Parámetros
 
-| Nombre   | Tipo                 | Descripción |
-| -------- | -------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------- | ----------- |
 | opciones | ForgeAstroCmsOptions |             |
 
 ### Opciones de ForgeAstroCms
@@ -47,12 +47,12 @@ Opciones para {@link forgeAstroCms}.
 function emitContentConfig(components: readonly ContentComponent[]): string;
 ```
 
-Emitir un Astro `content.config.ts` con una colección por componente.
+Emite un Astro `content.config.ts` con una colección por componente.
 
 #### Parámetros
 
-| Nombre      | Tipo                                      | Descripción |
-| ----------- | ----------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------- | ----------- |
 | componentes | Componente de contenido de sólo lectura[] |             |
 
 ### campoToZod
@@ -63,13 +63,13 @@ Emitir un Astro `content.config.ts` con una colección por componente.
 function fieldToZod(field: ContentField): string;
 ```
 
-El zod (o `image()`) validador se asigna un tipo de campo neutral.
+El validador zod (o `image()`) se asigna a un tipo de campo neutral.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| campo  | Campo de contenido |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------ | ----------- |
+| campo | Campo de contenido |             |
 
 ## `src/template`
 
@@ -88,9 +88,9 @@ Recopile los diagnósticos que informa el descenso Astro para un módulo.
 
 #### Parámetros
 
-| Nombre     | Tipo                    | Descripción |
-| ---------- | ----------------------- | ----------- |
-| ir         | Módulo Semántico        |             |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------- | ----------- |
+| ir | Módulo Semántico |             |
 | componente | Componente de contenido |             |
 
 ### astroMarkup
@@ -105,8 +105,8 @@ Vuelva a escribir los nombres de atributos exclusivos de JSX y elimine el fragme
 
 #### Parámetros
 
-| Nombre    | Tipo   | Descripción |
-| --------- | ------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------ | ----------- |
 | expresión | cadena |             |
 
 ### emitirIslaAstroPlantilla
@@ -120,7 +120,7 @@ function emitIslandAstroTemplate(
 ): string;
 ```
 
-Emitir el respaldo de la isla `.astro` plantilla para un componente interactivo.
+Emita la plantilla `.astro` respaldada por la isla para un componente interactivo.
 
 El componente se importa del árbol de la isla cogenerado, lo mismo
 IR neutro compilado por el complemento de marco vinculado e hidratado con
@@ -128,10 +128,10 @@ IR neutro compilado por el complemento de marco vinculado e hidratado con
 
 #### Parámetros
 
-| Nombre      | Tipo                    | Descripción |
-| ----------- | ----------------------- | ----------- |
-| componente  | Componente de contenido |             |
-| islaEntrada | cadena                  |             |
+| Nombre | Tipo | Descripción |
+| ----------- | ---------------- | ----------- |
+| componente | Componente de contenido |             |
+| islaEntrada | cadena |             |
 
 ### emitirStaticAstroTemplate
 
@@ -141,10 +141,10 @@ IR neutro compilado por el complemento de marco vinculado e hidratado con
 function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
-Emitir la estática `.astro` plantilla para un componente de presentación.
+Emita la plantilla estática `.astro` para un componente de presentación.
 
 #### Parámetros
 
-| Nombre | Tipo             | Descripción |
-| ------ | ---------------- | ----------- |
-| ir     | Módulo Semántico |             |
+| Nombre | Tipo | Descripción |
+| ---- | -------------- | ----------- |
+| ir | Módulo Semántico |             |

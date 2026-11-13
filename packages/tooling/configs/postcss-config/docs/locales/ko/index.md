@@ -13,12 +13,12 @@ Mission Platform 스타일시트에서 사용되는 공유 PostCSS 파이프라�
 pnpm add --save-dev @mission-platform/postcss-config
 ```
 
-작업공간에서 패키지를 참조하세요. `postcss.config.mjs` 오히려
+대신 작업공간의 `postcss.config.mjs`에서 패키지를 참조하십시오.
 공유 플러그인 파이프라인을 복제합니다. 로컬 재정의가 해당 항목에 속합니다.
 작업공간 구성.
 
 ## 기여하다
 
-달리다 `pnpm --filter @mission-platform/postcss-config lint` 그리고
+`pnpm --filter @mission-platform/postcss-config lint`을 실행하고
 `pnpm --filter @mission-platform/postcss-config format`. 브라우저 유지
 이 패키지의 호환성 동작을 방지하고 애플리케이션별 플러그인을 피하세요.

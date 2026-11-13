@@ -19,13 +19,13 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/vite-plugin
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-Keine Beschreibung angegeben.
+Vite-Plugin zum Verwalten und Auflösen von i18n-Gebietsschemaressourcen der Anwendung.
 
 #### Parameter
 
-| Name     | Geben Sie         | ein Beschreibung |
-| -------- | ----------------- | ---------------- |
-| Optionen | I18nPluginOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ----------------- | ----------- |
+| Optionen | I18nPluginOptions |             |
 
 ### i18nPlugin
 
@@ -35,13 +35,13 @@ Keine Beschreibung angegeben.
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-Keine Beschreibung angegeben.
+Vite-Plugin zum Verwalten und Auflösen von i18n-Gebietsschemaressourcen der Anwendung.
 
 #### Parameter
 
-| Name     | Geben Sie         | ein Beschreibung |
-| -------- | ----------------- | ---------------- |
-| Optionen | I18nPluginOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ----------------- | ----------- |
+| Optionen | I18nPluginOptions |             |
 
 ### I18nPluginOptions
 
@@ -71,9 +71,9 @@ der Wahrheit, anstatt eine parallele Liste manuell zu pflegen.
 
 #### Parameter
 
-| Name     | Geben Sie                   | ein Beschreibung |
-| -------- | --------------------------- | ---------------- |
-| Optionen | ReadSupportedLocalesOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------------- | ----------- |
+| Optionen | ReadSupportedLocalesOptions |             |
 
 ### ReadSupportedLocalesOptions
 

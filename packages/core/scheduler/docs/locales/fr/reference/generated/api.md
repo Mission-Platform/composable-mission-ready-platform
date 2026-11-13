@@ -11,7 +11,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 
 ## `src/components/organisms/forge-scheduler/forge-scheduler`
 
-### ForgeScheduler
+### ForgePlanificateur
 
 **Genre :** fonction
 
@@ -41,9 +41,9 @@ accessoires.
 
 #### Paramètres
 
-| Nom        | Tapez                              | Descriptif |
-| ---------- | ---------------------------------- | ---------- |
-| propriétés | Lecture seule<SchedulerProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ----------------------------- | ----------- |
+| propriétés | Lecture seule<SchedulerProperties> |             |
 
 ### Propriétés du planificateur
 
@@ -80,10 +80,10 @@ Sémantique de révision RFC 5545). `uid` est conservé.
 
 #### Paramètres
 
-| Nom       | Tapez                          | Descriptif |
-| --------- | ------------------------------ | ---------- |
-| événement | VEvénement                     |            |
-| pièce     | Partielle<Omit<VEvent, 'uid'>> |            |
+| Nom | Tapez | Descriptif |
+| ----- | ---------------------------- | ----------- |
+| événement | VEvénement |             |
+| pièce | Partielle<Omit<VEvent, 'uid'>> |             |
 
 ### créer un événement
 
@@ -98,9 +98,9 @@ générer un UID et les horodatages de création/modification.
 
 #### Paramètres
 
-| Nom     | Tapez                               | Descriptif |
-| ------- | ----------------------------------- | ---------- |
-| partiel | Omettre<VEvent, 'uid' \| 'dtstamp'> |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------------------- | ----------- |
+| partiel | Omettre<VEvent, 'uid' \| 'dtstamp'> |             |
 
 ### événementsPourJour
 
@@ -114,10 +114,10 @@ Renvoie les événements qui tombent le jour calendaire donné.
 
 #### Paramètres
 
-| Nom        | Tapez        | Descriptif |
-| ---------- | ------------ | ---------- |
-| événements | VEvénement[] |            |
-| jour       | Dates        |            |
+| Nom | Tapez | Descriptif |
+| ------ | -------- | ----------- |
+| événements | VEvénement[] |             |
+| jour | Dates |             |
 
 ### événementsPourRange
 
@@ -134,11 +134,11 @@ honoré.
 
 #### Paramètres
 
-| Nom        | Tapez        | Descriptif |
-| ---------- | ------------ | ---------- |
-| événements | VEvénement[] |            |
-| démarrer   | Dates        |            |
-| fin        | Dates        |            |
+| Nom | Tapez | Descriptif |
+| ------ | -------- | ----------- |
+| événements | VEvénement[] |             |
+| démarrer | Dates |             |
+| fin | Dates |             |
 
 ### formatDurée
 
@@ -152,9 +152,9 @@ Renvoie une chaîne de durée lisible par l'homme pour un événement, par ex. "
 
 #### Paramètres
 
-| Nom       | Tapez      | Descriptif |
-| --------- | ---------- | ---------- |
-| événement | VEvénement |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| événement | VEvénement |             |
 
 ### mise en pageJour
 
@@ -170,9 +170,9 @@ et chacun occupe `column` des pistes parallèles `totalColumns`.
 
 #### Paramètres
 
-| Nom        | Tapez        | Descriptif |
-| ---------- | ------------ | ---------- |
-| événements | VEvénement[] |            |
+| Nom | Tapez | Descriptif |
+| ------ | -------- | ----------- |
+| événements | VEvénement[] |             |
 
 ### moveEventPatch
 
@@ -187,10 +187,10 @@ en préservant sa représentation ISO toute la journée / chronométrée.
 
 #### Paramètres
 
-| Nom       | Tapez      | Descriptif |
-| --------- | ---------- | ---------- |
-| événement | VEvénement |            |
-| deltaM    | numéro     |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------ | ----------- |
+| événement | VEvénement |             |
+| deltaM | numéro |             |
 
 ### resizeEventPatch
 
@@ -205,10 +205,10 @@ l'événement dure au moins 15 minutes (ou une journée, pour les événements d
 
 #### Paramètres
 
-| Nom       | Tapez      | Descriptif |
-| --------- | ---------- | ---------- |
-| événement | VEvénement |            |
-| deltaM    | numéro     |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------ | ----------- |
+| événement | VEvénement |             |
+| deltaM | numéro |             |
 
 ## `src/core/range`
 
@@ -225,11 +225,11 @@ Pas de jour/trois jours/semaine en jours ; pas de mois/année dans leurs règle
 
 #### Paramètres
 
-| Nom       | Tapez             | Descriptif |
-| --------- | ----------------- | ---------- |
-| voir      | PlanificateurView |            |
-| ancre     | Dates             |            |
-| direction | -1 \| 1           |            |
+| Nom | Tapez | Descriptif |
+| --------- | ------------- | ----------- |
+| voir | PlanificateurView |             |
+| ancre | Dates |             |
+| direction | -1 \| 1 |             |
 
 ### visibleRangeFor
 
@@ -244,11 +244,11 @@ La fenêtre `[start, end)` visible entrouverte pour le `view` donné ancrée à
 
 #### Paramètres
 
-| Nom          | Tapez               | Descriptif |
-| ------------ | ------------------- | ---------- |
-| voir         | PlanificateurView   |            |
-| ancre        | Dates               |            |
-| WeekStartsOn | Début de la semaine |            |
+| Nom | Tapez | Descriptif |
+| ------------ | ------------- | ----------- |
+| voir | PlanificateurView |             |
+| ancre | Dates |             |
+| WeekStartsOn | Début de la semaine |             |
 
 ## `src/core/recurrence`
 
@@ -266,16 +266,16 @@ occurrence - avec dtstart / dtend ajusté.
 
 Gère également RDATE (dates supplémentaires) et EXDATE (dates exclues).
 
-Plafond de sécurité : s'arrête après 3 650 occurrences (~10 ans d'événements quotidiens) pour
+Plafond de sécurité : s'arrête après 3 650 occurrences (~ 10 ans d'événements quotidiens) pour
 empêcher les boucles infinies sur des règles illimitées.
 
 #### Paramètres
 
-| Nom        | Tapez      | Descriptif |
-| ---------- | ---------- | ---------- |
-| événement  | VEvénement |            |
-| plageDébut | Dates      |            |
-| plageFin   | Dates      |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------ | ----------- |
+| événement | VEvénement |             |
+| plageDébut | Dates |             |
+| plageFin | Dates |             |
 
 ## `src/core/types`
 

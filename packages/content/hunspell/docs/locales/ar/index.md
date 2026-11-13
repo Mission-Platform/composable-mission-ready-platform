@@ -2,7 +2,7 @@
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> packages/hunspell/docs/index.md: [packages/hunspell/docs/index.md](../../index.md)
+> packages/content/hunspell/docs/index.md: [packages/content/hunspell/docs/index.md](../../index.md)
 > اللغة: العربية (ar)
 
 يوفر `@mission-platform/hunspell` محرك تدقيق إملائي عالي الأداء يعتمد على Hunspell، وقد تم تجميعه إلى
@@ -17,9 +17,9 @@
 3. **قطعة أثرية لملف واحد**: الإخراج النهائي هو `hunspell.js` مستقل حيث يتم تضمين ثنائي WASM كـ
    base64، مما يلغي الحاجة إلى تحميل ملف `.wasm` بشكل منفصل وحل عنوان URL.
 
-### إعادة بناء قطعة WASM الأثرية
+### إعادة بناء قطعة أثرية WASM
 
-إعادة البناء تتطلب [عامل ميناء](https://www.docker.com/). استخدم الأمر التالي من الجذر:
+تتطلب إعادة البناء [Docker](https://www.docker.com/). استخدم الأمر التالي من الجذر:
 
 ```bash
 pnpm --filter @mission-platform/hunspell build:wasm
@@ -29,7 +29,7 @@ pnpm --filter @mission-platform/hunspell build:wasm
 
 ### واجهة برمجة التطبيقات الأساسية
 
-يمكنك استخدام محرك Hunspell مباشرة في أي بيئة JavaScript/TypeScript.
+يمكنك استخدام محرك Hunspell مباشرةً في أي بيئة JavaScript/TypeScript.
 
 ```ts
 import { createHunspell } from '@mission-platform/hunspell';
@@ -88,4 +88,4 @@ handle.dispose();
 هذه الحزمة **لا تأتي مع قواميس مدمجة** للحفاظ على حجم الحزمة صغيرًا. يجب عليك تقديم بنفسك
 زوج `.aff` (اللاحقة) و`.dic` (القاموس).
 
-المصدر الموصى به: [قواميس ليبر أوفيس](https://github.com/LibreOffice/dictionaries).
+المصدر الموصى به: [قواميس LibreOffice](https://github.com/LibreOffice/dictionaries).

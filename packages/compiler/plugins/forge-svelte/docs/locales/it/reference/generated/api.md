@@ -30,12 +30,12 @@ abbassato, quindi l'emettitore è sempre pilotato dallo stesso contratto.
 
 #### Parametri
 
-| Nome               | Digitare                | Descrizione |
-| ------------------ | ----------------------- | ----------- |
-| modulo             | Modulo Semantico        |             |
-| nomecomponente     | stringa                 |             |
+| Nome | Digitare | Descrizione |
+| ---------------- | ------------------- | ----------- |
+| modulo | Modulo Semantico |             |
+| nomecomponente | stringa |             |
 | componenteCartelle | Sola letturaSet<string> |             |
-| piano              | Modulo SvelteLowered    |             |
+| piano | Modulo SvelteLowered |             |
 
 ### SvelteModuleOutput
 
@@ -61,8 +61,8 @@ Stampa un modulo hook/componibile neutro come origine `.ts` di destinazione Svel
 
 #### Parametri
 
-| Nome   | Digitare         | Descrizione |
-| ------ | ---------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------ | -------------- | ----------- |
 | modulo | Modulo Semantico |             |
 
 ## `src/index`
@@ -93,8 +93,8 @@ Se un piano target è quello Svelte: la discriminante su cui ogni consumatore si
 
 #### Parametri
 
-| Nome      | Digitare                          | Descrizione |
-| --------- | --------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | -------------------------------- | ----------- |
 | abbassato | TargetLoweredModule \| indefinito |             |
 
 ### lowerSvelteModule
@@ -112,9 +112,9 @@ Costruisci il piano Svelte per un modulo neutro.
 
 #### Parametri
 
-| Nome     | Digitare                 | Descrizione |
-| -------- | ------------------------ | ----------- |
-| io       | Modulo Semantico         |             |
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| io | Modulo Semantico |             |
 | contesto | Contesto di destinazione |             |
 
 ### SvelteBindingPlan
@@ -225,7 +225,7 @@ L'ingresso di destrutturazione `$props()` a cui si abbassa un'elica neutra.
 export interface SvelteRenderHelperPlan
 ```
 
-Un helper locale con restituzione di JSX (`const renderX = (a, b) => (<div/>)`) ridotto a
+Un helper locale con restituzione JSX (`const renderX = (a, b) => (<div/>)`) ridotto a
 a Svelte `{#snippet}`.
 
 Un helper di rendering neutro è una funzione parametrizzata, con valori di modello, che è
@@ -302,10 +302,10 @@ destinazione o un chiamante che ha saltato `lower`) vengono restituiti intatti.
 
 #### Parametri
 
-| Nome       | Digitare              | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---------- | --------------------- | ----------- |
-| intenzioni | Intenzioni target     |             |
-| opzioni    | TargetOptimizeOptions |             |
+| intenzioni | Intenzioni target |             |
+| opzioni | TargetOptimizeOptions |             |
 
 ### SVELTE_OTTIMIZZAZIONI
 

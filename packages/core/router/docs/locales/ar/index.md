@@ -72,7 +72,7 @@ matches.forEach((match) => {
 });
 ```
 
-### المرافق الموقع
+### مرافق الموقع
 
 **`resolveLocation`**: يحل موقع المسار إلى مسار URL.
 
@@ -92,7 +92,7 @@ console.log(location.path); // '/users/123'
 
 لا يتم عرض المحولات كمسارات فرعية لكل إطار عمل. يعلن `@mission-platform/router` عن
 شروط التصدير `mp:<framework>` على إدخال `.` الفردي الخاص به، لذا يمكنك تحديد إطار العمل **مرة واحدة** —
-`resolve.conditions` في Vite (انظر `defineFrameworkAppConfig` / `frameworkResolveConditions` من
+`resolve.conditions` في Vite (راجع `defineFrameworkAppConfig` / `frameworkResolveConditions` من
 `@mission-platform/vite-config`) و`customConditions` في TypeScript (عبر
 الإعدادات المسبقة `@mission-platform/typescript-config/framework-<name>`) - ثم قم باستيراد كل شيء باستخدام المحدد المجرد.
 يقوم كل بناء محول بإعادة تصدير النواة المحايدة بالكامل أيضًا.
@@ -105,7 +105,7 @@ console.log(location.path); // '/users/123'
 
 - **`createMpRouter`**: إنشاء مثيل لجهاز التوجيه Vue من مسارات محايدة
 - **`useMpRouter`**: قابل للتركيب للوصول إلى مثيل جهاز التوجيه
-- **`useMpRoute`**: قابل للتركيب للوصول إلى معلومات المسار الحالي
+- **`useMpRoute`**: قابل للتركيب للوصول إلى معلومات المسار الحالية
 - **`MpRouterLink`**: مكون ارتباط جهاز التوجيه المحايد للإطار
 
 **مثال:**
@@ -147,19 +147,19 @@ console.log(location.path); // '/users/123'
 ### محول RedwoodSDK (`./redwood`)
 
 RedwoodSDK ليس أحد أطر عمل `mp:*`، لذا فهو يحتفظ بمسار فرعي مخصص. ويوفر التكامل مع
-`rwsdk/router` — جدول توجيه الطلب/الاستجابة المسطح الذي تستخدمه RedwoodSDK (React على Cloudflare Workers).
+`rwsdk/router` — جدول توجيه الطلب/الاستجابة المسطح الذي تستخدمه RedwoodSDK (React on Cloudflare Workers).
 
 **الصادرات الرئيسية:**
 
 - **`toRedwoodRoutes`**: يترجم شجرة `MpRoute` المحايدة إلى قائمة مسطحة من تعريفات مسار `rwsdk` (متداخلة
   يتم تسوية المسارات إلى مسارات مطلقة).
-- **`renderRoutes`**: يلتف حول المسارات المترجمة في المستند، ويعكسها
+- **`renderRoutes`**: يلتف المسارات المترجمة في المستند، ويعكس
   `rwsdk`'s `render(Document, routes, options)`.
-- **`toRedwoodPath`**: تحويل نمط المسار المحايد إلى القواعد النحوية لـ Redwood (`:param` و`*` أحرف البدل فقط؛
+- **`toRedwoodPath`**: يحول نمط المسار المحايد إلى القواعد النحوية لـ Redwood (`:param` و`*` أحرف البدل فقط؛
   `:param?` → `:param`، `:param*` / `:param+`
   → `*`).
 - **`redwoodHref`** / **`createRedwoodLinks`**: إنشاء hrefs المتعلقة بالتطبيقات من مواقع محايدة، منذ RedwoodSDK
-  يتنقل باستخدام المراسي العادية.
+  يتنقل باستخدام المراسي البسيطة.
 
 **مثال:**
 
@@ -188,7 +188,7 @@ export default defineApp([renderRoutes(Document, routes)]);
 - **TypeScript**: تعريفات النوع وأمان النوع
 - **لا توجد تبعيات لإطار العمل**: Pure JavaScript/TypeScript
 
-** محول Vue: **
+**محول Vue:**
 
 - **vue-router**: مكتبة جهاز التوجيه Vue الرسمية
 - **vue**: Vue 3 نواة

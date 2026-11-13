@@ -23,10 +23,10 @@ Cree capacidades neutrales a partir de una instancia de enrutador Vue propiedad 
 
 #### Parámetros
 
-| Nombre    | Tipo      | Descripción |
-| --------- | --------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------ | ----------- |
 | enrutador | Enrutador |             |
-| actual    |           |             |
+| actual |        |             |
 
 ### resolverMpLink
 
@@ -40,9 +40,9 @@ Resuelva un objetivo neutral a través del enrutador Vue propiedad de la aplicac
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| a      | MpRouteLocationRaw |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 
 ### resolverPathTarget
 
@@ -56,9 +56,9 @@ Se utiliza un respaldo de solo ruta cuando una instancia de enrutador Vue no est
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| a      | MpRouteLocationRaw |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 
 ### toMpUbicación
 
@@ -80,9 +80,9 @@ Convierta el estado de ruta nativo Vue en la ubicación neutral resuelta.
 
 #### Parámetros
 
-| Nombre | Tipo                                                                                                                                                                                                | Descripción |
-| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| ruta   | { ruta: cadena; ruta completa: cadena; parámetros: Record<string, unknown>; consulta: Consulta de ubicación; hash: cadena; ¿nombre?: cadena \| símbolo \| nulo; meta?: Registro<string, unknown>; } |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| ruta | { ruta: cadena; ruta completa: cadena; parámetros: Record<string, unknown>; consulta: Consulta de ubicación; hash: cadena; ¿nombre?: cadena \| símbolo \| nulo; meta?: Registro<string, unknown>; } |             |
 
 ### aVueUbicación
 
@@ -96,9 +96,9 @@ Traduzca un objetivo neutral a una ubicación de enrutador Vue.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| a      | MpRouteLocationRaw |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 
 ### utilizarMpNavigation
 

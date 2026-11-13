@@ -96,7 +96,23 @@ Schema.org `ImageObject`.
 **Art:** konstant
 
 ```typescript
-export const jsonLd;
+export const jsonLd: {
+  readonly webSite: typeof webSite;
+  readonly organization: typeof organization;
+  readonly localBusiness: typeof localBusiness;
+  readonly person: typeof person;
+  readonly webPage: typeof webPage;
+  readonly breadcrumbList: typeof breadcrumbList;
+  readonly article: typeof article;
+  readonly product: typeof product;
+  readonly faqPage: typeof faqPage;
+  readonly event: typeof event;
+  readonly videoObject: typeof videoObject;
+  readonly imageObject: typeof imageObject;
+  readonly softwareApplication: typeof softwareApplication;
+  readonly recipe: typeof recipe;
+  readonly review: typeof review;
+};
 ```
 
 Namespace erneut exportieren, damit Verbraucher „import { jsonLd } from“ ausführen können
@@ -524,7 +540,7 @@ kann sowohl mit reaktivem Status als auch mit statischen Metadaten verwendet wer
 **Art:** Komponente
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 Renderlose `<Seo>`-Komponente – ein deklarativer Wrapper um {@link useSeo}.
@@ -546,7 +562,7 @@ Synchronisieren Sie sie mit dem Dokumentenkopf. Rendert kein eigenes DOM.
 **Art:** Komponente
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 Renderlose `<Seo>`-Komponente – ein deklarativer Wrapper um {@link useSeo}.

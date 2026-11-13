@@ -46,9 +46,10 @@ export function clamp(value: number, min: number, max: number): number {
 
 ## Échafaudage
 
-Utilisez l'outil MCP Mission Platform Developer pour générer un nouveau squelette d'utilitaire :
+Utilisez l'outil `scaffold_util` via un serveur MCP Mission Platform Developer connecté pour générer un nouvel utilitaire.
+squelette. Il s'agit d'un exemple d'appel d'outil MCP, pas d'une commande shell :
 
-```bash
+```text
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```

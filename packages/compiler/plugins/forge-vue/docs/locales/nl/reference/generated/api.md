@@ -48,12 +48,12 @@ Transformeer een neutrale componentmodule in een Vue SFC (plus eventuele hulp-SF
 
 #### Parameters
 
-| Naam            | Typ                     | Beschrijving |
-| --------------- | ----------------------- | ------------ |
-| module          | SemantischeModule       |              |
-| componentnaam   | tekenreeks              |              |
-| componentMappen | Alleen-lezenSet<string> |              |
-| plannen         | VueLoweredModule        |              |
+| Naam | Typ | Beschrijving |
+| ---------------- | ------------------- | ----------- |
+| module | SemantischeModule |             |
+| componentnaam | tekenreeks |             |
+| componentMappen | Alleen-lezenSet<string> |             |
+| plannen | VueLoweredModule |             |
 
 ## `src/emitters/hook-module`
 
@@ -69,9 +69,9 @@ Compileer een neutrale haakmodule met de Vue samenstelbare bron (`.ts`).
 
 #### Parameters
 
-| Naam   | Typ               | Beschrijving |
-| ------ | ----------------- | ------------ |
-| module | SemantischeModule |              |
+| Naam | Typ | Beschrijving |
+| ------ | -------------- | ----------- |
+| module | SemantischeModule |             |
 
 ## `src/index`
 
@@ -101,9 +101,9 @@ Beperk een doelplan tot het Vue-plan zonder te casten.
 
 #### Parameters
 
-| Naam     | Typ                                   | Beschrijving |
-| -------- | ------------------------------------- | ------------ |
-| verlaagd | TargetLoweredModule \| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------------- | ----------- |
+| verlaagd | TargetLoweredModule \| ongedefinieerd |             |
 
 ### lagereVueModule
 
@@ -121,10 +121,10 @@ onaangeroerd zodat latere fasen volledige toegang tot de IR behouden.
 
 #### Parameters
 
-| Naam    | Typ               | Beschrijving |
-| ------- | ----------------- | ------------ |
-| ir      | SemantischeModule |              |
-| context | DoelContext       |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| ir | SemantischeModule |             |
+| context | DoelContext |             |
 
 ### VueComputedPlan
 
@@ -314,10 +314,10 @@ onaangeroerd terug, zodat de optimizer veilig in elke pijplijn kan worden gebrui
 
 #### Parameters
 
-| Naam        | Typ                   | Beschrijving |
-| ----------- | --------------------- | ------------ |
-| bedoelingen | DoelIntenties         |              |
-| opties      | TargetOptimizeOptions |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------- | ----------- |
+| bedoelingen | DoelIntenties |             |
+| opties | TargetOptimizeOptions |             |
 
 ### STABLE_LIST_KEYS
 

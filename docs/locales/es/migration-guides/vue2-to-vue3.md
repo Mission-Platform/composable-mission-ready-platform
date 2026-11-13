@@ -90,15 +90,15 @@ const increment = () => {
 
 Se ha cambiado el nombre de los ganchos del ciclo de vida y se deben importar.
 
-| Vue 2                      | Vue 3                                             |
-| :------------------------- | :------------------------------------------------ |
+| Vue 2 | Vue 3 |
+| :------------------------- | :---------------------------------------- |
 | `beforeCreate` / `created` | Utilice `setup()` / `<script setup>` directamente |
-| `beforeMount`              | `onBeforeMount`                                   |
-| `mounted`                  | `onMounted`                                       |
-| `beforeUpdate`             | `onBeforeUpdate`                                  |
-| `updated`                  | `onUpdated`                                       |
-| `beforeDestroy`            | `onBeforeUnmount`                                 |
-| `destroyed`                | `onUnmounted`                                     |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 Ejemplo:
 

@@ -32,7 +32,7 @@ function createVCard(options: VCardOptions): VCard;
 **种类：**常数
 
 ```typescript
-export const parseVCard;
+export const parseVCard: typeof readVCard;
 ```
 
 喜欢解析器术语的调用者的别名。
@@ -616,7 +616,7 @@ export interface ICalendarProperty
 **种类：**常数
 
 ```typescript
-export const parseICalendar;
+export const parseICalendar: typeof readICalendar;
 ```
 
 没有提供描述。
@@ -642,7 +642,7 @@ function readICalendar(source: string): ICalendar;
 **种类：**常数
 
 ```typescript
-export const serializeICalendar;
+export const serializeICalendar: typeof writeICalendar;
 ```
 
 没有提供描述。

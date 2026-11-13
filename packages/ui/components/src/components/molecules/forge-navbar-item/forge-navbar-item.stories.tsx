@@ -1,7 +1,7 @@
 import { ForgeNavbarItem } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { NavbarItemChild } from './forge-navbar-item';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const dropdownItems: NavbarItemChild[] = [
   { label: 'Profile', href: '/profile', icon: '👤' },

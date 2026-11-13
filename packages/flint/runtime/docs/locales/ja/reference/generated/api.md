@@ -19,13 +19,18 @@
 function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 ```
 
-説明はありません。
+Flint ABI マニフェストがランタイム仕様ルールに従って有効であることをアサートします。
 
 #### パラメータ
 
-| 名前         | タイプ           | 説明 |
-| ------------ | ---------------- | ---- |
-| マニフェスト | FlintAbiManifest |      |
+|名前 |タイプ |説明 |
+| -------- | ---------------- | --------------------------- |
+|マニフェスト |フリントアビマニフェスト | - 検証する ABI マニフェスト。 |
+
+#### 契約
+
+- **@param:** - 検証する ABI マニフェスト。
+- **@throws:** マニフェストの検証が失敗した場合。
 
 ### 等しい関数
 
@@ -35,16 +40,22 @@ function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean;
 ```
 
-説明はありません。
+2 つの ABI 関数宣言が構造的に等価であるかどうかを比較します。
 
 #### パラメータ
 
-| 名前 | タイプ           | 説明 |
-| ---- | ---------------- | ---- |
-| 左   | FlintAbiFunction |      |
-| 右   | FlintAbiFunction |      |
+|名前 |タイプ |説明 |
+| ----- | ---------------- | ------------------------------ |
+|左 |フリントアビ関数 | - 最初の関数宣言。  |
+|右 |フリントアビ関数 | - 2 番目の関数宣言。 |
 
-### FlintAbiValidationResult
+#### 契約
+
+- **@param:** - 最初の関数宣言。
+- **@param:** - 2 番目の関数宣言。
+- **@returns:** 両方の宣言の署名、パラメータ、戻り値の型が同一の場合は True。
+
+### FlintAbi検証結果
 
 **種類:** インターフェース
 
@@ -52,9 +63,9 @@ function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean
 export interface FlintAbiValidationResult
 ```
 
-説明はありません。
+検証ステータスとエラー メッセージを含む Flint ABI マニフェストの検証結果。
 
-### validateFlintAbiManifest
+### FlintAbiManifest を検証する
 
 **種類:** 関数
 
@@ -62,13 +73,100 @@ export interface FlintAbiValidationResult
 function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidationResult;
 ```
 
-説明はありません。
+仕様要件、レイアウト、機能の制約に対して Flint ABI マニフェストを検証します。
 
 #### パラメータ
 
-| 名前         | タイプ           | 説明 |
-| ------------ | ---------------- | ---- |
-| マニフェスト | FlintAbiManifest |      |
+|名前 |タイプ |説明 |
+| -------- | ---------------- | --------------------------- |
+|マニフェスト |フリントアビマニフェスト | - 検証する ABI マニフェスト。 |
+
+#### 契約
+
+- **@param:** - 検証する ABI マニフェスト。
+- **@returns:** ブール値ステータスと収集された診断エラーを含む検証結果。
+
+## `src/allocator/slab`
+
+### フリントアトミックスピンロック
+
+**種類:** クラス
+
+```typescript
+export class FlintAtomicSpinLock
+```
+
+アトミック スピンロックは、共有 WebAssembly メモリ構造への相互排他的アクセスを提供します。
+
+### 地域バンプアリーナ
+
+**種類:** クラス
+
+```typescript
+export class RegionalBumpArena
+```
+
+$O(1)$ の割り当てと即時一括リセットを提供する地域バンプ アロケーター アリーナ。
+
+### SegregatedSlabAllocator
+
+**種類:** クラス
+
+```typescript
+export class SegregatedSlabAllocator
+```
+
+分離された $O(1)$ サイズクラスのスラブ アロケータ。
+
+### SegregatedSlabAllocatorオプション
+
+**種類:** インターフェース
+
+```typescript
+export interface SegregatedSlabAllocatorOptions
+```
+
+分離されたスラブ アロケータの構成オプション。
+
+### SLAB_CANARY_TAG
+
+**種類:** 定数
+
+```typescript
+export const SLAB_CANARY_TAG;
+```
+
+説明はありません。
+
+### SLAB_SIZE_CLASSES
+
+**種類:** 定数
+
+```typescript
+export const SLAB_SIZE_CLASSES;
+```
+
+分離された中小規模のオブジェクト スラブ割り当て用の標準の 2 のべき乗サイズ クラス。
+
+### スラブブロック
+
+**種類:** インターフェース
+
+```typescript
+export interface SlabBlock
+```
+
+特定のサイズ クラスの固定サイズ スロットを管理する割り当てスラブ。
+
+### スラブサイズクラス
+
+**種類：**タイプ
+
+```typescript
+export type SlabSizeClass = (typeof SLAB_SIZE_CLASSES)[number];
+```
+
+説明はありません。
 
 ## `src/async`
 
@@ -80,36 +178,56 @@ function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidatio
 function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}): FlintAsyncRuntime;
 ```
 
-説明はありません。
+非同期タスク キューを管理する新しい FlintAsyncRuntime インスタンスを作成します。
 
 #### パラメータ
 
-| 名前       | タイプ                   | 説明 |
-| ---------- | ------------------------ | ---- |
-| オプション | FlintAsyncRuntimeOptions |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------------ | -------------------------------- |
+|オプション | FlintAsyncRuntimeOptions | - ランタイム構成オプション。 |
 
-### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+#### 契約
+
+- **@param:** - ランタイム構成オプション。
+- **@returns:** 構成された FlintAsyncRuntime インスタンス。
+
+### createFlintJspiサスペンダー
+
+**種類:** 関数
+
+```typescript
+function createFlintJspiSuspender(options?: FlintJspiOptions): FlintJspiSuspender;
+```
+
+Flint JSPI スタック サスペンダーのインスタンスを作成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ---------------- | ----------- |
+|オプション | FlintJspiオプション |             |
+
+### FLINT_ASYNC_CAPABILITIES
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
+export const FLINT_ASYNC_CAPABILITIES;
 ```
 
 説明はありません。
 
-### FlintAsyncCapability
+### FlintAsync機能
 
 **種類：**タイプ
 
 ```typescript
-export type FlintAsyncCapability =
-  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type FlintAsyncCapability = (typeof FLINT_ASYNC_CAPABILITIES)[keyof typeof FLINT_ASYNC_CAPABILITIES];
 ```
 
-説明はありません。
+承認された非同期ランタイム機能識別子の文字列。
 
-### FlintAsyncExecution
+### FlintAsync実行
 
 **種類:** インターフェース
 
@@ -117,9 +235,9 @@ export type FlintAsyncCapability =
 export interface FlintAsyncExecution
 ```
 
-説明はありません。
+タスク出力ペイロードを含む成功した実行結果。
 
-### FlintAsyncExecutionResult
+### FlintAsync実行結果
 
 **種類：**タイプ
 
@@ -127,7 +245,7 @@ export interface FlintAsyncExecution
 export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 ```
 
-説明はありません。
+非同期タスクの実行結果 (成功または失敗)。
 
 ### FlintAsync の失敗
 
@@ -137,9 +255,9 @@ export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 export interface FlintAsyncFailure
 ```
 
-説明はありません。
+非同期スケジューリングまたは実行操作によって返される失敗レポート。
 
-### FlintAsyncFailureCode
+### FlintAsyncFailureコード
 
 **種類：**タイプ
 
@@ -148,9 +266,9 @@ export type FlintAsyncFailureCode =
   'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
-説明はありません。
+非同期実行失敗のエラー カテゴリ コード。
 
-### FlintAsyncHostAdapter
+### FlintAsyncホストアダプター
 
 **種類:** インターフェース
 
@@ -158,9 +276,9 @@ export type FlintAsyncFailureCode =
 export interface FlintAsyncHostAdapter
 ```
 
-説明はありません。
+マイクロタスクをスケジュールし、ワーカー メッセージを配信するためのホスト統合フック。
 
-### FlintAsyncRuntime
+### FlintAsyncランタイム
 
 **種類:** インターフェース
 
@@ -168,7 +286,7 @@ export interface FlintAsyncHostAdapter
 export interface FlintAsyncRuntime
 ```
 
-説明はありません。
+マイクロタスク、ワーカーキュー、イベントループドレインを管理する非同期ランタイムコーディネーター。
 
 ### FlintAsyncRuntimeOptions
 
@@ -178,7 +296,7 @@ export interface FlintAsyncRuntime
 export interface FlintAsyncRuntimeOptions
 ```
 
-説明はありません。
+非同期ランタイム エンジンの構成オプション。
 
 ### FlintAsyncScheduledTask
 
@@ -188,7 +306,7 @@ export interface FlintAsyncRuntimeOptions
 export interface FlintAsyncScheduledTask
 ```
 
-説明はありません。
+非同期タスクのスケジューリング結果が成功しました。
 
 ### FlintAsyncScheduleResult
 
@@ -198,7 +316,7 @@ export interface FlintAsyncScheduledTask
 export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailure;
 ```
 
-説明はありません。
+非同期タスクのスケジュール結果 (スケジュール済みまたは失敗)。
 
 ### FlintAsyncタスク
 
@@ -208,7 +326,7 @@ export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailu
 export interface FlintAsyncTask
 ```
 
-説明はありません。
+ランタイムでキューに入れられた非同期タスクの記述子。
 
 ### FlintAsyncTaskHandler
 
@@ -218,7 +336,7 @@ export interface FlintAsyncTask
 export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 ```
 
-説明はありません。
+入力バイト ペイロードを受け取り、出力バイト ペイロードを返すタスク実行コールバック。
 
 ### FlintAsyncTaskKind
 
@@ -228,7 +346,7 @@ export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 export type FlintAsyncTaskKind = 'microtask' | 'worker';
 ```
 
-説明はありません。
+タスクのスケジュール分類 (「マイクロタスク」または「ワーカー」)。
 
 ### FlintAsyncWorkerメッセージ
 
@@ -238,11 +356,76 @@ export type FlintAsyncTaskKind = 'microtask' | 'worker';
 export interface FlintAsyncWorkerMessage
 ```
 
-説明はありません。
+ワーカー スレッドとの間で転送されるメッセージ パケット。
+
+### FlintJspiオプション
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintJspiOptions
+```
+
+WebAssembly JavaScript Promise Integration (JSPI) サスペンダーを構成するオプション。
+
+### フリントJspiサスペンダー
+
+**種類:** クラス
+
+```typescript
+export class FlintJspiSuspender
+```
+
+WebAssembly JavaScript Promise Integration (JSPI) スタックの切り替え。
+非同期ホスト Promise 全体で WebAssembly スタックを一時停止および再開します
+コンパイラ駆動の Asyncify コード変換を必要とせずにネイティブに実行できます。
+
+## `src/async/fiber`
+
+### フリントファイバー
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintFiber<T = unknown>
+```
+
+アクティブまたはサスペンドされた協調ファイバー継続へのハンドル。
+
+### フリントファイバースケジューラ
+
+**種類:** クラス
+
+```typescript
+export class FlintFiberScheduler
+```
+
+JSPI スタイルの非同期スタック サスペンションをサポートする協調ファイバー スケジューラ、
+フレーム分離、スタック境界アサーション、および再入保護。
+
+### FlintFiberSchedulerオプション
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintFiberSchedulerOptions
+```
+
+協調型ファイバースケジューラーの構成オプション。
+
+### フリントファイバーステート
+
+**種類：**タイプ
+
+```typescript
+export type FlintFiberState = 'ready' | 'running' | 'suspended' | 'completed' | 'failed' | 'cancelled';
+```
+
+協調ファイバーの実行状態。
 
 ## `src/collections`
 
-### createFlintArray
+### フリントアレイの作成
 
 **種類:** 関数
 
@@ -257,10 +440,10 @@ function createFlintArray(
 
 #### パラメータ
 
-| 名前   | タイプ                   | 説明 |
-| ------ | ------------------------ | ---- |
-| 値     | 読み取り専用 TValue[]    |      |
-| 所有権 | FlintCollection の所有権 |      |
+|名前 |タイプ |説明 |
+| --------- | ------------------------ | ----------- |
+|値 |読み取り専用 TValue[] |             |
+|所有権 |フリントコレクションの所有権 |             |
 
 ### createFlintIterator
 
@@ -270,14 +453,14 @@ function createFlintArray(
 function createFlintIterator(values: Iterable<TValue>, descriptor: FlintIteratorDescriptor): FlintIterator<TValue>;
 ```
 
-提供された ABI 記述子を使用して反復可能を遅延反復子に適応させます。
+提供された ABI 記述子を使用して、反復可能オブジェクトを遅延イテレーターに適応させます。
 
 #### パラメータ
 
-| 名前   | タイプ              | 説明 |
-| ------ | ------------------- | ---- |
-| 値     | Iterable<TValue>    |      |
-| 記述子 | FlintIterator記述子 |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------- | ----------- |
+|値 | Iterable<TValue> |             |
+|記述子 | FlintIterator記述子 |             |
 
 ### createFlintIteratorDescriptor
 
@@ -296,14 +479,14 @@ function createFlintIteratorDescriptor(
 
 #### パラメータ
 
-| 名前       | タイプ                   | 説明 |
-| ---------- | ------------------------ | ---- |
-| ID         | 文字列                   |      |
-| 要素タイプ |                          |      |
-| 能力       | FlintIteratorCapability  |      |
-| 所有権     | FlintCollection の所有権 |      |
+|名前 |タイプ |説明 |
+| ----------- | ------------------------ | ----------- |
+| ID |文字列 |             |
+|要素タイプ |                          |             |
+|能力 | FlintIterator 機能 |             |
+|所有権 |フリントコレクションの所有権 |             |
 
-### createFlintMap
+### フリントマップの作成
 
 **種類:** 関数
 
@@ -314,16 +497,22 @@ function createFlintMap(
 ): FlintMap<TKey, TValue>;
 ```
 
-説明はありません。
+キーと値のエントリで初期化された永続的な FlintMap を作成します。
 
 #### パラメータ
 
-| 名前       | タイプ                        | 説明     |
-| ---------- | ----------------------------- | -------- |
-| エントリー | FlintMapEntry<TKey, TValue>[] | readonly |
-| 戦略       | FlintHashStrategy<TKey>       |          |
+|名前 |タイプ |説明 |
+| -------- | -------------------------------------- | --------------------------- |
+|エントリー | FlintMapEntry<TKey, TValue>[] | 読み取り専用- 初期のキーと値のタプル。 |
+|戦略 | FlintHashStrategy<TKey> |                             |
 
-### createFlintSet
+#### 契約
+
+- **@param:** - 初期のキーと値のタプル。
+- **@param:** - カスタムキーの等価性とハッシュ戦略。
+- **@returns:** 初期化された FlintMap インスタンス。
+
+### フリントセットの作成
 
 **種類:** 関数
 
@@ -334,16 +523,22 @@ function createFlintSet(
 ): FlintSet<TValue>;
 ```
 
-説明はありません。
+値で初期化された永続的な FlintSet を作成します。
 
 #### パラメータ
 
-| 名前 | タイプ                    | 説明 |
-| ---- | ------------------------- | ---- |
-| 値   | 読み取り専用 TValue[]     |      |
-| 戦略 | FlintHashStrategy<TValue> |      |
+|名前 |タイプ |説明 |
+| -------- | ------------------------- | ----------------------------- |
+|値 |読み取り専用 TValue[] | - 値の初期反復可能。 |
+|戦略 | FlintHashStrategy<TValue> |                               |
 
-### createFlintVector
+#### 契約
+
+- **@param:** - 値の初期反復可能。
+- **@param:** - カスタムの等価性とハッシュ戦略。
+- **@returns:** 初期化された FlintSet インスタンス。
+
+### フリントベクターの作成
 
 **種類:** 関数
 
@@ -358,12 +553,12 @@ function createFlintVector(
 
 #### パラメータ
 
-| 名前   | タイプ                   | 説明 |
-| ------ | ------------------------ | ---- |
-| 値     | 読み取り専用 TValue[]    |      |
-| 所有権 | FlintCollection の所有権 |      |
+|名前 |タイプ |説明 |
+| --------- | ------------------------ | ----------- |
+|値 |読み取り専用 TValue[] |             |
+|所有権 |フリントコレクションの所有権 |             |
 
-### FlintArray
+### フリントアレイ
 
 **種類:** インターフェース
 
@@ -373,7 +568,7 @@ export interface FlintArray<TValue>
 
 固定サイズの連続コレクション。更新すると、コピーされた配列値が返されます。
 
-### flintArrayGet
+### フリントArrayGet
 
 **種類:** 関数
 
@@ -385,12 +580,12 @@ function flintArrayGet(array: FlintArray<TValue>, index: number): FlintOption<TV
 
 #### パラメータ
 
-| 名前         | タイプ             | 説明 |
-| ------------ | ------------------ | ---- |
-| 配列         | FlintArray<TValue> |      |
-| インデックス | 番号               |      |
+|名前 |タイプ |説明 |
+| ----- | ------------------ | ----------- |
+|配列 | FlintArray<TValue> |             |
+|インデックス |番号 |             |
 
-### flintArrayLength
+### フリント配列の長さ
 
 **種類:** 関数
 
@@ -402,11 +597,11 @@ function flintArrayLength(array: FlintArray<TValue>): number;
 
 #### パラメータ
 
-| 名前 | タイプ             | 説明 |
-| ---- | ------------------ | ---- |
-| 配列 | FlintArray<TValue> |      |
+|名前 |タイプ |説明 |
+| ----- | ------------------ | ----------- |
+|配列 | FlintArray<TValue> |             |
 
-### flintArraySet
+### フリント配列セット
 
 **種類:** 関数
 
@@ -418,13 +613,13 @@ function flintArraySet(array: FlintArray<TValue>, index: number, value: TValue):
 
 #### パラメータ
 
-| 名前         | タイプ             | 説明 |
-| ------------ | ------------------ | ---- |
-| 配列         | FlintArray<TValue> |      |
-| インデックス | 番号               |      |
-| 値           | T値                |      |
+|名前 |タイプ |説明 |
+| ----- | ------------------ | ----------- |
+|配列 | FlintArray<TValue> |             |
+|インデックス |番号 |             |
+|値 | T値 |             |
 
-### flintArrayTrySet
+### フリント配列トライセット
 
 **種類:** 関数
 
@@ -440,13 +635,13 @@ function flintArrayTrySet(
 
 #### パラメータ
 
-| 名前         | タイプ             | 説明 |
-| ------------ | ------------------ | ---- |
-| 配列         | FlintArray<TValue> |      |
-| インデックス | 番号               |      |
-| 値           | T値                |      |
+|名前 |タイプ |説明 |
+| ----- | ------------------ | ----------- |
+|配列 | FlintArray<TValue> |             |
+|インデックス |番号 |             |
+|値 | T値 |             |
 
-### FlintCollection の所有権
+### フリントコレクションの所有権
 
 **種類：**タイプ
 
@@ -454,9 +649,9 @@ function flintArrayTrySet(
 export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 ```
 
-説明はありません。
+コレクション要素のメモリ所有権セマンティクス (「所有」、「借用」、「共有」)。
 
-### flintDefaultHashStrategy
+### フリントデフォルトハッシュ戦略
 
 **種類:** 関数
 
@@ -464,9 +659,13 @@ export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 function flintDefaultHashStrategy(): FlintHashStrategy<TValue>;
 ```
 
-説明はありません。
+決定論的シリアル化を使用してデフォルトのハッシュ戦略を返します。
 
-### flintエラー
+#### 契約
+
+- **@returns:** デフォルトの FlintHashStrategy インスタンス。
+
+### フリントエラー
 
 **種類:** 定数
 
@@ -476,7 +675,7 @@ export const flintError;
 
 スローせずにエラーの結果値を構築します。
 
-### FlintHash戦略
+### FlintHash頭脳系
 
 **種類:** インターフェース
 
@@ -484,9 +683,9 @@ export const flintError;
 export interface FlintHashStrategy<TValue>
 ```
 
-説明はありません。
+セットとマップのカスタム キー タイプの等価性とハッシュ戦略インターフェイス。
 
-### FlintIterable
+### フリントイテラブル
 
 **種類：**タイプ
 
@@ -506,7 +705,7 @@ export interface FlintIterator<TValue>
 
 記述子機能とオプションの直接インデックス作成を備えた遅延イテレーター ビュー。
 
-### flintIteratorAdd
+### フリントイテレータ追加
 
 **種類:** 関数
 
@@ -518,12 +717,12 @@ function flintIteratorAdd(source: FlintIterator<TValue>, value: TValue): FlintIt
 
 #### パラメータ
 
-| 名前   | タイプ                | 説明 |
-| ------ | --------------------- | ---- |
-| ソース | FlintIterator<TValue> |      |
-| 値     | T値                   |      |
+|名前 |タイプ |説明 |
+| ------ | --------------------- | ----------- |
+|ソース | FlintIterator<TValue> |             |
+|値 | T値 |             |
 
-### flintIteratorAt
+### フリント反復子At
 
 **種類:** 関数
 
@@ -531,16 +730,22 @@ function flintIteratorAdd(source: FlintIterator<TValue>, value: TValue): FlintIt
 function flintIteratorAt(iterator: FlintIterator<TValue>, index: number): FlintOption<TValue>;
 ```
 
-説明はありません。
+指定されたインデックスにある要素を Option でラップして返します。
 
 #### パラメータ
 
-| 名前         | タイプ                | 説明 |
-| ------------ | --------------------- | ---- |
-| イテレータ   | FlintIterator<TValue> |      |
-| インデックス | 番号                  |      |
+|名前 |タイプ |説明 |
+| -------- | --------------------- | --------------------------- |
+|イテレータ | FlintIterator<TValue> | - ソース反復子。          |
+|インデックス |番号 | - ゼロから始まる要素インデックス。 |
 
-### FlintIterator機能
+#### 契約
+
+- **@param:** - ソース反復子。
+- **@param:** - ゼロから始まる要素インデックス。
+- **@returns:** インデックスに要素を含むオプション、または要素を含まないオプション。
+
+### FlintIterator の機能
 
 **種類：**タイプ
 
@@ -550,7 +755,7 @@ export type FlintIteratorCapability = 'linear' | 'random-access';
 
 イテレータによってサポートされる線形消費または非消費ランダム アクセス。
 
-### flintIteratorCollect
+### フリントイテレータ収集
 
 **種類:** 関数
 
@@ -558,13 +763,18 @@ export type FlintIteratorCapability = 'linear' | 'random-access';
 function flintIteratorCollect(iterator: FlintIterator<TValue>): FlintVector<TValue>;
 ```
 
-説明はありません。
+イテレータを、収集された値の所有ベクトルに実体化します。
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| イテレータ | FlintIterator<TValue> |      |
+|名前 |タイプ |説明 |
+| -------- | --------------------- | --------------------------- |
+|イテレータ | FlintIterator<TValue> | - ドレインへのソース反復子。 |
+
+#### 契約
+
+- **@param:** - ドレインへのソース反復子。
+- **@returns:** 収集された値を含む FlintVector。
 
 ### flintIteratorConcat
 
@@ -578,10 +788,10 @@ function flintIteratorConcat(first: FlintIterator<TValue>, second: FlintIterable
 
 #### パラメータ
 
-| 名前  | タイプ                | 説明 |
-| ----- | --------------------- | ---- |
-| 最初  | FlintIterator<TValue> |      |
-| 2番目 | FlintIterable<TValue> |      |
+|名前 |タイプ |説明 |
+| ------ | --------------------- | ----------- |
+|最初 | FlintIterator<TValue> |             |
+| 2番目 | FlintIterable<TValue> |             |
 
 ### FlintIterator記述子
 
@@ -593,7 +803,7 @@ export interface FlintIteratorDescriptor
 
 要素の表現、所有権、およびアクセス機能を記述する ABI メタデータ。
 
-### flintIteratorフィルタ
+### フリントイテレータフィルタ
 
 **種類:** 関数
 
@@ -608,12 +818,12 @@ function flintIteratorFilter(
 
 #### パラメータ
 
-| 名前   | タイプ                   | 説明 |
-| ------ | ------------------------ | ---- |
-| ソース | FlintIterator<TValue>    |      |
-| 述語   | (値: TValue) => ブール値 |      |
+|名前 |タイプ |説明 |
+| --------- | -------------------------- | ----------- |
+|ソース | FlintIterator<TValue> |             |
+|述語 | (値: TValue) => ブール値 |             |
 
-### flintIteratorFirst
+### フリントイテレータFirst
 
 **種類:** 関数
 
@@ -621,13 +831,18 @@ function flintIteratorFilter(
 function flintIteratorFirst(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-説明はありません。
+Option でラップされたイテレータの最初の要素を返します。
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| イテレータ | FlintIterator<TValue> |      |
+|名前 |タイプ |説明 |
+| -------- | --------------------- | ------------------ |
+|イテレータ | FlintIterator<TValue> | - ソース反復子。 |
+
+#### 契約
+
+- **@param:** - ソース反復子。
+- **@returns:** 最初の要素を含むか、何も含まないオプション。
 
 ### flintIteratorFlatten
 
@@ -641,11 +856,11 @@ function flintIteratorFlatten(source: FlintIterator<FlintIterable<TValue>>): Fli
 
 #### パラメータ
 
-| 名前   | タイプ                               | 説明 |
-| ------ | ------------------------------------ | ---- |
-| ソース | FlintIterator<FlintIterable<TValue>> |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------------------------ | ----------- |
+|ソース | FlintIterator<FlintIterable<TValue>> |             |
 
-### flintIteratorFold
+### フリントイテレータフォールド
 
 **種類:** 関数
 
@@ -657,15 +872,22 @@ function flintIteratorFold(
 ): TResult;
 ```
 
-説明はありません。
+アキュムレータ コールバックを使用してイテレータを左から右に削減します。
 
 #### パラメータ
 
-| 名前       | タイプ                                                               | 説明 |
-| ---------- | -------------------------------------------------------------------- | ---- |
-| イテレータ | FlintIterator<TValue>                                                |      |
-| イニシャル | 結果                                                                 |      |
-| 減速機     | (アキュムレータ: TResult、値: TValue、インデックス: 数値) => TResult |      |
+|名前 |タイプ |説明 |
+| -------- | --------------------------------------------------------------- | ----------------------------- |
+|イテレータ | FlintIterator<TValue> | - ソース反復子。            |
+|イニシャル |結果 | - アキュムレータの初期値。  |
+|減速機 | (アキュムレータ: TResult、値: TValue、インデックス: 数値) => TResult | - コールバック関数の削減。 |
+
+#### 契約
+
+- **@param:** - ソース反復子。
+- **@param:** - アキュムレータの初期値。
+- **@param:** - コールバック関数を削減します。
+- **@returns:** 最終的な削減されたアキュムレータの結果。
 
 ### flintIteratorFromArray
 
@@ -682,10 +904,10 @@ function flintIteratorFromArray(
 
 #### パラメータ
 
-| 名前   | タイプ              | 説明 |
-| ------ | ------------------- | ---- |
-| 配列   | FlintArray<TValue>  |      |
-| 記述子 | FlintIterator記述子 |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------- | ----------- |
+|配列 | FlintArray<TValue> |             |
+|記述子 | FlintIterator記述子 |             |
 
 ### flintIteratorFromIterable
 
@@ -699,17 +921,17 @@ function flintIteratorFromIterable(
 ): FlintIterator<TValue>;
 ```
 
-任意のイテラブルを遅延線形 Forge Web Script イテレータに適応させます。
+任意のイテラブルを遅延線形 Flint イテレータに適応させます。
 
 #### パラメータ
 
-| 名前       | タイプ           | 説明 |
-| ---------- | ---------------- | ---- |
-| 値         | Iterable<TValue> |      |
-| 要素タイプ |                  |      |
-| ID         |                  |      |
+|名前 |タイプ |説明 |
+| ----------- | ---------------- | ----------- |
+|値 | Iterable<TValue> |             |
+|要素タイプ |                  |             |
+| ID |                  |             |
 
-### flintIteratorFromVector
+### フリントイテレータFromVector
 
 **種類:** 関数
 
@@ -724,12 +946,12 @@ function flintIteratorFromVector(
 
 #### パラメータ
 
-| 名前     | タイプ              | 説明 |
-| -------- | ------------------- | ---- |
-| ベクトル | FlintVector<TValue> |      |
-| 記述子   | FlintIterator記述子 |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------- | ----------- |
+|ベクトル | FlintVector<TValue> |             |
+|記述子 | FlintIterator記述子 |             |
 
-### flintIteratorLast
+### フリント反復子最後
 
 **種類:** 関数
 
@@ -737,15 +959,20 @@ function flintIteratorFromVector(
 function flintIteratorLast(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-説明はありません。
+Option でラップされたイテレータの最後の要素を返します。
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| イテレータ | FlintIterator<TValue> |      |
+|名前 |タイプ |説明 |
+| -------- | --------------------- | ------------------ |
+|イテレータ | FlintIterator<TValue> | - ソース反復子。 |
 
-### flintIteratorMap
+#### 契約
+
+- **@param:** - ソース反復子。
+- **@returns:** 最後の要素を含むか、何も含まないオプション。
+
+### フリントイテレータマップ
 
 **種類:** 関数
 
@@ -761,13 +988,13 @@ function flintIteratorMap(
 
 #### パラメータ
 
-| 名前       | タイプ                  | 説明 |
-| ---------- | ----------------------- | ---- |
-| ソース     | FlintIterator<TValue>   |      |
-| 地図       | (値: TValue) => TResult |      |
-| 要素タイプ |                         |      |
+|名前 |タイプ |説明 |
+| ----------- | -------------------------- | ----------- |
+|ソース | FlintIterator<TValue> |             |
+|地図 | (値: TValue) => TResult |             |
+|要素タイプ |                            |             |
 
-### FlintIteratorResult
+### FlintIterator結果
 
 **種類:** インターフェース
 
@@ -777,7 +1004,7 @@ export interface FlintIteratorResult<TValue>
 
 1 つのパックされた反復子のプル結果。使い果たされた後も、done は true のままです。
 
-### flintIteratorTake
+### フリントイテレータTake
 
 **種類:** 関数
 
@@ -789,10 +1016,10 @@ function flintIteratorTake(source: FlintIterator<TValue>, count: number): FlintI
 
 #### パラメータ
 
-| 名前     | タイプ                | 説明 |
-| -------- | --------------------- | ---- |
-| ソース   | FlintIterator<TValue> |      |
-| カウント | 番号                  |      |
+|名前 |タイプ |説明 |
+| ------ | --------------------- | ----------- |
+|ソース | FlintIterator<TValue> |             |
+|カウント |番号 |             |
 
 ### flintIteratorToArray
 
@@ -805,16 +1032,22 @@ function flintIteratorToArray(
 ): FlintArray<TValue>;
 ```
 
-説明はありません。
+イテレータを所有されている FlintArray に変換します。
 
 #### パラメータ
 
-| 名前       | タイプ                   | 説明 |
-| ---------- | ------------------------ | ---- |
-| イテレータ | FlintIterator<TValue>    |      |
-| 所有権     | FlintCollection の所有権 |      |
+|名前 |タイプ |説明 |
+| --------- | ------------------------ | ----------------------------- |
+|イテレータ | FlintIterator<TValue> | - ソース反復子。            |
+|所有権 |フリントコレクションの所有権 | - コレクション所有権モデル。 |
 
-### FlintMap
+#### 契約
+
+- **@param:** - ソース反復子。
+- **@param:** - コレクション所有権モデル。
+- **@returns:** 初期化された FlintArray。
+
+### フリントマップ
 
 **種類:** インターフェース
 
@@ -822,9 +1055,9 @@ function flintIteratorToArray(
 export interface FlintMap<TKey, TValue>
 ```
 
-説明はありません。
+永続的なハッシュ マップ コレクションのデータ構造。
 
-### flintMap削除
+### フリントマップ削除
 
 **種類:** 関数
 
@@ -832,16 +1065,22 @@ export interface FlintMap<TKey, TValue>
 function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, TValue>;
 ```
 
-説明はありません。
+マップからキーと値のマッピングを削除し、新しい永続マップを返します。
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 地図 | FlintMap<TKey, TValue> |      |
-| キー | Tキー                  |      |
+|名前 |タイプ |説明 |
+| ---- | ---------------------- | ---------------- |
+|地図 |フリントマップ<TKey, TValue> | - ターゲットマップ。    |
+|キー | Tキー | - 削除するキー。 |
 
-### flintMapEntries
+#### 契約
+
+- **@param:** - ターゲット マップ。
+- **@param:** - 削除するキー。
+- **@returns:** 永続マップを更新しました。
+
+### フリントマップエントリ
 
 **種類:** 関数
 
@@ -849,15 +1088,20 @@ function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, 
 function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry<TKey, TValue>>;
 ```
 
-説明はありません。
+マップに含まれるすべてのキーと値のエントリを所有ベクトルとして返します。
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 地図 | FlintMap<TKey, TValue> |      |
+|名前 |タイプ |説明 |
+| ---- | ---------------------- | ------------- |
+|地図 |フリントマップ<TKey, TValue> | - ターゲットマップ。 |
 
-### FlintMapEntry
+#### 契約
+
+- **@param:** - ターゲット マップ。
+- **@returns:** マップ内のエントリのベクトル。
+
+### フリントマップエントリー
 
 **種類:** インターフェース
 
@@ -865,9 +1109,9 @@ function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry
 export interface FlintMapEntry<TKey, TValue>
 ```
 
-説明はありません。
+永続ハッシュ マップ内のキーと値のエントリ レコード。
 
-### flintMapGet
+### フリントマップ取得
 
 **種類:** 関数
 
@@ -875,16 +1119,22 @@ export interface FlintMapEntry<TKey, TValue>
 function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue>;
 ```
 
-説明はありません。
+マップからキーに関連付けられた値を取得します。
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 地図 | FlintMap<TKey, TValue> |      |
-| キー | Tキー                  |      |
+|名前 |タイプ |説明 |
+| ---- | ---------------------- | ------------- |
+|地図 |フリントマップ<TKey, TValue> | - ターゲットマップ。 |
+|キー | Tキー | - ルックアップキー。 |
 
-### flintMapSet
+#### 契約
+
+- **@param:** - ターゲット マップ。
+- **@param:** - ルックアップキー。
+- **@returns:** 値を含むか、値を含まないオプション。
+
+### フリントマップセット
 
 **種類:** 関数
 
@@ -892,17 +1142,24 @@ function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue
 function flintMapSet(map: FlintMap<TKey, TValue>, key: TKey, value: TValue): FlintMap<TKey, TValue>;
 ```
 
-説明はありません。
+キーと値のマッピングを挿入または更新し、新しい永続マップを返します。
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 地図 | FlintMap<TKey, TValue> |      |
-| キー | Tキー                  |      |
-| 値   | T値                    |      |
+|名前 |タイプ |説明 |
+| ----- | ---------------------- | ---------------- |
+| map   |フリントマップ<TKey, TValue> | - ターゲットマップ。    |
+|キー | Tキー | - Mapping key.   |
+|値 | TValue                 | - Mapping value. |
 
-### flintなし
+#### 契約
+
+- **@param:** - ターゲット マップ。
+- **@param:** - マッピングキー。
+- **@param:** - マッピング値。
+- **@returns:** 永続マップを更新しました。
+
+### フリントなし
 
 **種類:** 定数
 
@@ -912,7 +1169,7 @@ export const flintNone;
 
 空のオプション値を作成します。
 
-### flintOk
+### フリントわかりました
 
 **種類:** 定数
 
@@ -922,7 +1179,7 @@ export const flintOk;
 
 成功した結果値を構築します。
 
-### Flintオプション
+### フリントオプション
 
 **種類:** インターフェース
 
@@ -932,7 +1189,7 @@ export interface FlintOption<TValue>
 
 安全な読み取りおよび空のイテレータ端末によって使用されるオプションのような値。
 
-### FlintResultValue
+### フリント結果値
 
 **種類:** インターフェース
 
@@ -942,7 +1199,7 @@ export interface FlintResultValue<TValue, TError = string>
 
 非トラップコレクションミューテーションヘルパーによって使用される結果のような値。
 
-### FlintSet
+### フリントセット
 
 **種類:** インターフェース
 
@@ -950,9 +1207,9 @@ export interface FlintResultValue<TValue, TError = string>
 export interface FlintSet<TValue>
 ```
 
-説明はありません。
+永続的なハッシュ セットのコレクション データ構造。
 
-### flintSetAdd
+### フリントセット追加
 
 **種類:** 関数
 
@@ -960,16 +1217,22 @@ export interface FlintSet<TValue>
 function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-説明はありません。
+要素をセットに追加し、変更された場合は新しい永続セットを返します。
 
 #### パラメータ
 
-| 名前   | タイプ           | 説明 |
-| ------ | ---------------- | ---- |
-| セット | FlintSet<TValue> |      |
-| 値     | T値              |      |
+|名前 |タイプ |説明 |
+| ----- | ---------------- | ------------------ |
+| set   | FlintSet<TValue> | - Target set.      |
+|値 | T値 | - Value to insert. |
 
-### flintSetDelete
+#### 契約
+
+- **@param:** - ターゲット セット。
+- **@param:** - 挿入する値。
+- **@returns:** 永続セットを更新しました。
+
+### フリントセット削除
 
 **種類:** 関数
 
@@ -977,16 +1240,22 @@ function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-説明はありません。
+セットから要素を削除し、変更された場合は新しい永続セットを返します。
 
 #### パラメータ
 
-| 名前   | タイプ           | 説明 |
-| ------ | ---------------- | ---- |
-| セット | FlintSet<TValue> |      |
-| 値     | T値              |      |
+|名前 |タイプ |説明 |
+| ----- | ---------------- | ------------------ |
+|セット |フリントセット<TValue> | - ターゲットセット。      |
+|値 | T値 | - 削除する値。 |
 
-### flintSet がある
+#### 契約
+
+- **@param:** - ターゲット セット。
+- **@param:** - 削除する値。
+- **@returns:** 永続セットを更新しました。
+
+### フリントセットがあります
 
 **種類:** 関数
 
@@ -994,16 +1263,22 @@ function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 ```
 
-説明はありません。
+値がセット内に存在するかどうかをテストします。
 
 #### パラメータ
 
-| 名前   | タイプ           | 説明 |
-| ------ | ---------------- | ---- |
-| セット | FlintSet<TValue> |      |
-| 値     | T値              |      |
+|名前 |タイプ |説明 |
+| ----- | ---------------- | ----------------- |
+|セット |フリントセット<TValue> | - ターゲットセット。     |
+|値 | T値 | - 確認する値。 |
 
-### flintSetValues
+#### 契約
+
+- **@param:** - ターゲット セット。
+- **@param:** - チェックする値。
+- **@returns:** 値が存在する場合は True。
+
+### フリントセット値
 
 **種類:** 関数
 
@@ -1011,15 +1286,20 @@ function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 function flintSetValues(set: FlintSet<TValue>): FlintVector<TValue>;
 ```
 
-説明はありません。
+セットに含まれるすべての値を所有ベクトルとして返します。
 
 #### パラメータ
 
-| 名前   | タイプ           | 説明 |
-| ------ | ---------------- | ---- |
-| セット | FlintSet<TValue> |      |
+|名前 |タイプ |説明 |
+| ---- | ---------------- | ------------- |
+|セット |フリントセット<TValue> | - ターゲットセット。 |
 
-### flintいくつか
+#### 契約
+
+- **@param:** - ターゲット セット。
+- **@returns:** セット内の値のベクトル。
+
+### フリントいくつか
 
 **種類:** 定数
 
@@ -1029,7 +1309,7 @@ export const flintSome;
 
 現在のオプション値を構築します。
 
-### Flintベクトル
+### フリントベクトル
 
 **種類:** インターフェース
 
@@ -1040,7 +1320,7 @@ export interface FlintVector<TValue>
 成長可能な連続コレクション。ランタイムで作成されたベクトルは所有ハンドルを保持します
 借用/共有所有権が派生値によって保持されている間、契約を締結します。
 
-### flintVectorAdd
+### フリントベクター追加
 
 **種類:** 定数
 
@@ -1050,7 +1330,7 @@ export const flintVectorAdd;
 
 stdlib イテレータ `add` 語彙に一致する、ベクトル プッシュのエイリアス。
 
-### flintVectorFilter
+### フリントベクターフィルター
 
 **種類:** 関数
 
@@ -1065,12 +1345,12 @@ function flintVectorFilter(
 
 #### パラメータ
 
-| 名前     | タイプ                                       | 説明 |
-| -------- | -------------------------------------------- | ---- |
-| ベクトル | FlintVector<TValue>                          |      |
-| 述語     | (値: TValue、インデックス: 数値) => ブール値 |      |
+|名前 |タイプ |説明 |
+| --------- | ----------------------------------------- | ----------- |
+| vector    | FlintVector<TValue> |             |
+|述語 | (値: TValue、インデックス: 数値) => ブール値 |             |
 
-### flintVectorFold
+### フリントベクトル折ります
 
 **種類:** 関数
 
@@ -1086,13 +1366,13 @@ function flintVectorFold(
 
 #### パラメータ
 
-| 名前       | タイプ                                                               | 説明 |
-| ---------- | -------------------------------------------------------------------- | ---- |
-| ベクトル   | FlintVector<TValue>                                                  |      |
-| イニシャル | 結果                                                                 |      |
-| 減速機     | (アキュムレータ: TResult、値: TValue、インデックス: 数値) => TResult |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------------------------------------------------- | ----------- |
+| vector  | FlintVector<TValue> |             |
+|イニシャル |結果 |             |
+| reducer | (アキュムレータ: TResult、値: TValue、インデックス: 数値) => TResult |             |
 
-### flintVectorGet
+### フリントベクトル取得
 
 **種類:** 関数
 
@@ -1104,12 +1384,12 @@ function flintVectorGet(vector: FlintVector<TValue>, index: number): FlintOption
 
 #### パラメータ
 
-| 名前         | タイプ              | 説明 |
-| ------------ | ------------------- | ---- |
-| ベクトル     | FlintVector<TValue> |      |
-| インデックス | 番号                |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------- | ----------- |
+|ベクトル | FlintVector<TValue> |             |
+|インデックス |番号 |             |
 
-### flintVectorLength
+### フリントベクトルの長さ
 
 **種類:** 関数
 
@@ -1121,11 +1401,11 @@ function flintVectorLength(vector: FlintVector<TValue>): number;
 
 #### パラメータ
 
-| 名前     | タイプ              | 説明 |
-| -------- | ------------------- | ---- |
-| ベクトル | FlintVector<TValue> |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------- | ----------- |
+|ベクトル | FlintVector<TValue> |             |
 
-### flintVectorMap
+### フリントベクトル地図
 
 **種類:** 関数
 
@@ -1140,12 +1420,12 @@ function flintVectorMap(
 
 #### パラメータ
 
-| 名前     | タイプ                                      | 説明 |
-| -------- | ------------------------------------------- | ---- |
-| ベクトル | FlintVector<TValue>                         |      |
-| 変換     | (値: TValue、インデックス: 数値) => TResult |      |
+|名前 |タイプ |説明 |
+| --------- | ----------------------------------------- | ----------- |
+| vector    | FlintVector<TValue>                       |             |
+| transform | (値: TValue、インデックス: 数値) => TResult |             |
 
-### flintベクターポップ
+### フリントベクトルポップ
 
 **種類:** 関数
 
@@ -1160,11 +1440,11 @@ function flintVectorPop(vector: FlintVector<TValue>): {
 
 #### パラメータ
 
-| 名前     | タイプ              | 説明 |
-| -------- | ------------------- | ---- |
-| ベクトル | FlintVector<TValue> |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------- | ----------- |
+|ベクトル | FlintVector<TValue> |             |
 
-### flintVectorPush
+### フリントベクトルプッシュ
 
 **種類:** 関数
 
@@ -1176,12 +1456,12 @@ function flintVectorPush(vector: FlintVector<TValue>, value: TValue): FlintVecto
 
 #### パラメータ
 
-| 名前     | タイプ              | 説明 |
-| -------- | ------------------- | ---- |
-| ベクトル | FlintVector<TValue> |      |
-| 値       | T値                 |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------- | ----------- |
+|ベクトル | FlintVector<TValue> |             |
+|値 | T値 |             |
 
-### flintVectorSet
+### フリントベクトルセット
 
 **種類:** 関数
 
@@ -1193,13 +1473,13 @@ function flintVectorSet(vector: FlintVector<TValue>, index: number, value: TValu
 
 #### パラメータ
 
-| 名前         | タイプ              | 説明 |
-| ------------ | ------------------- | ---- |
-| ベクトル     | FlintVector<TValue> |      |
-| インデックス | 番号                |      |
-| 値           | T値                 |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------- | ----------- |
+|ベクトル | FlintVector<TValue> |             |
+|インデックス |番号 |             |
+|値 | T値 |             |
 
-### flintVectorTrySet
+### フリントベクタートライセット
 
 **種類:** 関数
 
@@ -1215,11 +1495,11 @@ function flintVectorTrySet(
 
 #### パラメータ
 
-| 名前         | タイプ              | 説明 |
-| ------------ | ------------------- | ---- |
-| ベクトル     | FlintVector<TValue> |      |
-| インデックス | 番号                |      |
-| 値           | T値                 |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------- | ----------- |
+|ベクトル | FlintVector<TValue> |             |
+|インデックス |番号 |             |
+|値 | T値 |             |
 
 ## `src/ecs`
 
@@ -1236,16 +1516,24 @@ function addFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-説明はありません。
+コンポーネントがまだ存在していない場合は、エンティティにコンポーネントをアタッチします。
 
 #### パラメータ
 
-| 名前           | タイプ                | 説明 |
-| -------------- | --------------------- | ---- |
-| 世界           | FlintEcsWorld<TValue> |      |
-| エンティティ   | FlintEcsEntity        |      |
-| コンポーネント | 文字列                |      |
-| 値             | T値                   |      |
+|名前 |タイプ |説明 |
+| --------- | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 現在の世界のスナップショット。 |
+|エンティティ | FlintEcsエンティティ | - ターゲットエンティティ。          |
+|コンポーネント |文字列 |                           |
+|値 | T値 | - 成分値データ。   |
+
+#### 契約
+
+- **@param:** - 現在のワールドのスナップショット。
+- **@param:** - ターゲット エンティティ。
+- **@param:** - コンポーネント名。
+- **@param:** - コンポーネント値データ。
+- **@returns:** 遷移結果の結果。
 
 ### createFlintEcsScheduler
 
@@ -1260,16 +1548,21 @@ function createFlintEcsScheduler(
 ): FlintEcsScheduler<TValue>;
 ```
 
-説明はありません。
+ECS 実行パイプライン スケジューラを作成します。
 
 #### パラメータ
 
-| 名前               | タイプ                          | 説明     |
-| ------------------ | ------------------------------- | -------- |
-| システム           | FlintEcsSystem<TValue>[]        | readonly |
-| 信号               | FlintEcsSignal[]                | readonly |
-| サブスクリプション | Readonly FlintEcsSubscription[] |          |
-| 最大ステップ数     |                                 |          |
+|名前 |タイプ |説明 |
+| ------------- | --------------------------------- | -------------------------------------------------- |
+|システム | FlintEcsSystem<TValue>[] | 読み取り専用- パイプラインに登録するシステムのシーケンス。 |
+|信号 | FlintEcsSignal[] | 読み取り専用                                                    |
+|サブスクリプション |読み取り専用 FlintEcsSubscription[] |                                                    |
+|最大ステップ数 |                                   |                                                    |
+
+#### 契約
+
+- **@param:** - パイプラインに登録するシステムのシーケンス。
+- **@returns:** 構成された FlintEcsScheduler インスタンス。
 
 ### createFlintEcsWorld
 
@@ -1279,7 +1572,11 @@ function createFlintEcsScheduler(
 function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 ```
 
-説明はありません。
+空のエンティティ コンポーネント システム ワールドを初期化します。
+
+#### 契約
+
+- **@returns:** 新しく初期化された FlintEcsWorld インスタンス。
 
 ### despawnFlintEcsEntity
 
@@ -1289,16 +1586,22 @@ function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): FlintEcsResult<TValue>;
 ```
 
-説明はありません。
+エンティティをデスポーンし、その世代を増分して、接続されているすべてのコンポーネントをクリアします。
 
 #### パラメータ
 
-| 名前         | タイプ                | 説明 |
-| ------------ | --------------------- | ---- |
-| 世界         | FlintEcsWorld<TValue> |      |
-| エンティティ | FlintEcsEntity        |      |
+|名前 |タイプ |説明 |
+| ------ | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 現在の世界のスナップショット。 |
+|エンティティ | FlintEcsエンティティ | - デスポーンするエンティティ。      |
 
-### FlintEcsComponentStore
+#### 契約
+
+- **@param:** - 現在のワールドのスナップショット。
+- **@param:** - デスポーンするエンティティ。
+- **@returns:** 遷移結果の結果。
+
+### FlintEcsコンポーネントストア
 
 **種類:** インターフェース
 
@@ -1306,9 +1609,9 @@ function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEnt
 export interface FlintEcsComponentStore<TValue = Uint8Array>
 ```
 
-説明はありません。
+エンティティのインデックス番号をコンポーネント インスタンスにマッピングするコンポーネント ストレージ。
 
-### FlintEcsEntity
+### FlintEcsエンティティ
 
 **種類:** インターフェース
 
@@ -1316,7 +1619,7 @@ export interface FlintEcsComponentStore<TValue = Uint8Array>
 export interface FlintEcsEntity
 ```
 
-説明はありません。
+インデックスと世代カウンターを組み合わせた軽量の世代エンティティ ハンドル。
 
 ### FlintEcsEntityResult
 
@@ -1326,7 +1629,7 @@ export interface FlintEcsEntity
 export interface FlintEcsEntityResult<TValue = Uint8Array>
 ```
 
-説明はありません。
+変更されたワールドとエンティティ ハンドルを返すエンティティの突然変異の結果。
 
 ### FlintEcsQuery
 
@@ -1336,7 +1639,7 @@ export interface FlintEcsEntityResult<TValue = Uint8Array>
 export interface FlintEcsQuery
 ```
 
-説明はありません。
+必須および除外されるコンポーネント キーを定義するエンティティ クエリ仕様。
 
 ### FlintEcs結果
 
@@ -1346,9 +1649,9 @@ export interface FlintEcsQuery
 export type FlintEcsResult<TValue = Uint8Array> = |
 ```
 
-説明はありません。
+結果 ECS 移行の成功または失敗の結果。
 
-### FlintEcsScheduler
+### FlintEcsスケジューラ
 
 **種類:** インターフェース
 
@@ -1356,9 +1659,9 @@ export type FlintEcsResult<TValue = Uint8Array> = |
 export interface FlintEcsScheduler<TValue = Uint8Array>
 ```
 
-説明はありません。
+システムステージと信号配信を調整するパイプラインスケジューラ。
 
-### FlintEcsScheduleResult
+### FlintEcsスケジュール結果
 
 **種類:** インターフェース
 
@@ -1366,9 +1669,9 @@ export interface FlintEcsScheduler<TValue = Uint8Array>
 export interface FlintEcsScheduleResult<TValue = Uint8Array>
 ```
 
-説明はありません。
+複数のシステムステップにわたって ECS スケジュールを実行した結果。
 
-### FlintEcsSignal
+### フリントEcsシグナル
 
 **種類:** インターフェース
 
@@ -1376,7 +1679,7 @@ export interface FlintEcsScheduleResult<TValue = Uint8Array>
 export interface FlintEcsSignal
 ```
 
-説明はありません。
+ECS システムの実行中に発行されるイベントまたは状態変更信号。
 
 ### FlintEcsサブスクリプション
 
@@ -1386,7 +1689,7 @@ export interface FlintEcsSignal
 export interface FlintEcsSubscription
 ```
 
-説明はありません。
+シグナルをイベント ハンドラー コールバックにバインドするサブスクリプション。
 
 ### FlintEcsシステム
 
@@ -1396,7 +1699,7 @@ export interface FlintEcsSubscription
 export interface FlintEcsSystem<TValue = Uint8Array>
 ```
 
-説明はありません。
+クエリと更新に基づいて ECS ワールドを変換するシステム実行ユニット。
 
 ### FlintEcsTransition
 
@@ -1406,9 +1709,9 @@ export interface FlintEcsSystem<TValue = Uint8Array>
 export interface FlintEcsTransition<TValue = Uint8Array>
 ```
 
-説明はありません。
+前の世界、次の世界、発信された信号を詳細に記録した世界遷移。
 
-### FlintEcsWorld
+### フリントエコスワールド
 
 **種類:** インターフェース
 
@@ -1416,7 +1719,7 @@ export interface FlintEcsTransition<TValue = Uint8Array>
 export interface FlintEcsWorld<TValue = Uint8Array>
 ```
 
-説明はありません。
+エンティティ コンポーネント システム ワールドの不変のスナップショット。
 
 ### getFlintEcsComponent
 
@@ -1430,17 +1733,24 @@ function getFlintEcsComponent(
 ): TValue | undefined;
 ```
 
-説明はありません。
+エンティティにアタッチされたコンポーネント インスタンスを取得します。
 
 #### パラメータ
 
-| 名前           | タイプ                | 説明 |
-| -------------- | --------------------- | ---- |
-| 世界           | FlintEcsWorld<TValue> |      |
-| エンティティ   | FlintEcsEntity        |      |
-| コンポーネント | 文字列                |      |
+|名前 |タイプ |説明 |
+| --------- | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 現在の世界のスナップショット。 |
+|エンティティ | FlintEcsエンティティ | - ターゲットエンティティ。          |
+|コンポーネント |文字列 |                           |
 
-### isFlintEcsEntityAlive
+#### 契約
+
+- **@param:** - 現在のワールドのスナップショット。
+- **@param:** - ターゲット エンティティ。
+- **@param:** - コンポーネント名。
+- **@returns:** コンポーネント値、または存在しない場合は未定義。
+
+### FlintEcsEntityAlive
 
 **種類:** 関数
 
@@ -1448,16 +1758,22 @@ function getFlintEcsComponent(
 function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): boolean;
 ```
 
-説明はありません。
+エンティティ ハンドルがワールド内のアクティブな世代と一致するかどうかを判断します。
 
 #### パラメータ
 
-| 名前         | タイプ                | 説明 |
-| ------------ | --------------------- | ---- |
-| 世界         | FlintEcsWorld<TValue> |      |
-| エンティティ | FlintEcsEntity        |      |
+|名前 |タイプ |説明 |
+| ------ | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 現在の世界のスナップショット。 |
+|エンティティ | FlintEcsエンティティ | - チェックするエンティティ ハンドル。 |
 
-### queryFlintEcsEntities
+#### 契約
+
+- **@param:** - 現在のワールドのスナップショット。
+- **@param:** - チェックするエンティティ ハンドル。
+- **@returns:** 生きている場合は True。
+
+### クエリFlintEcsEntities
 
 **種類:** 関数
 
@@ -1465,16 +1781,22 @@ function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEnt
 function queryFlintEcsEntities(world: FlintEcsWorld<TValue>, query: FlintEcsQuery): readonly FlintEcsEntity[];
 ```
 
-説明はありません。
+コンポーネントフィルター基準に一致するアクティブなエンティティをクエリします。
 
 #### パラメータ
 
-| 名前   | タイプ                | 説明 |
-| ------ | --------------------- | ---- |
-| 世界   | FlintEcsWorld<TValue> |      |
-| クエリ | FlintEcsQuery         |      |
+|名前 |タイプ |説明 |
+| ----- | --------------------- | ----------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 現在の世界のスナップショット。     |
+|クエリ | FlintEcsQuery | - クエリフィルターの仕様。 |
 
-### RemoveFlintEcsComponent
+#### 契約
+
+- **@param:** - 現在のワールドのスナップショット。
+- **@param:** - クエリフィルターの仕様。
+- **@returns:** 一致するエンティティ ハンドルの配列。
+
+### RemoveFlintEcsコンポーネント
 
 **種類:** 関数
 
@@ -1486,17 +1808,24 @@ function removeFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-説明はありません。
+エンティティからコンポーネントを削除します。
 
 #### パラメータ
 
-| 名前           | タイプ                | 説明 |
-| -------------- | --------------------- | ---- |
-| 世界           | FlintEcsWorld<TValue> |      |
-| エンティティ   | FlintEcsEntity        |      |
-| コンポーネント | 文字列                |      |
+|名前 |タイプ |説明 |
+| --------- | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 現在の世界のスナップショット。 |
+|エンティティ | FlintEcsエンティティ | - ターゲットエンティティ。          |
+|コンポーネント |文字列 |                           |
 
-### runFlintEcsScheduler
+#### 契約
+
+- **@param:** - 現在のワールドのスナップショット。
+- **@param:** - ターゲット エンティティ。
+- **@param:** - 削除するコンポーネント名。
+- **@returns:** 遷移結果の結果。
+
+### runFlintEcsスケジューラ
 
 **種類:** 関数
 
@@ -1507,14 +1836,20 @@ function runFlintEcsScheduler(
 ): FlintEcsScheduleResult<TValue> | Extract<FlintEcsResult<TValue>, { readonly ok: false }>;
 ```
 
-説明はありません。
+登録されているすべてのシステムとステージにわたって ECS スケジューラ パイプラインを実行します。
 
 #### パラメータ
 
-| 名前           | タイプ                    | 説明 |
-| -------------- | ------------------------- | ---- |
-| 世界           | FlintEcsWorld<TValue>     |      |
-| スケジューラー | FlintEcsScheduler<TValue> |      |
+|名前 |タイプ |説明 |
+| --------- | ------------------------- | -------------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 初期のワールドスナップショット。        |
+|スケジューラー | FlintEcsScheduler<TValue> | - スケジューラ パイプラインを構成しました。 |
+
+#### 契約
+
+- **@param:** - 初期ワールドスナップショット。
+- **@param:** - 設定されたスケジューラ パイプライン。
+- **@returns:** スケジュール実行レポート。
 
 ### setFlintEcsComponent
 
@@ -1529,18 +1864,26 @@ function setFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-説明はありません。
+エンティティのコンポーネント値を設定または上書きします。
 
 #### パラメータ
 
-| 名前           | タイプ                | 説明 |
-| -------------- | --------------------- | ---- |
-| 世界           | FlintEcsWorld<TValue> |      |
-| エンティティ   | FlintEcsEntity        |      |
-| コンポーネント | 文字列                |      |
-| 値             | T値                   |      |
+|名前 |タイプ |説明 |
+| --------- | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 現在の世界のスナップショット。 |
+|エンティティ | FlintEcsエンティティ | - ターゲットエンティティ。          |
+|コンポーネント |文字列 |                           |
+|値 | T値 | - 成分値データ。   |
 
-### spawnFlintEcsEntity
+#### 契約
+
+- **@param:** - 現在のワールドのスナップショット。
+- **@param:** - ターゲット エンティティ。
+- **@param:** - コンポーネント名。
+- **@param:** - コンポーネント値データ。
+- **@returns:** 遷移結果の結果。
+
+### spawnFlintEcsエンティティ
 
 **種類:** 関数
 
@@ -1548,15 +1891,20 @@ function setFlintEcsComponent(
 function spawnFlintEcsEntity(world: FlintEcsWorld<TValue>): FlintEcsEntityResult<TValue>;
 ```
 
-説明はありません。
+新しいエンティティ ハンドルを割り当て、ワールドに追加します。
 
 #### パラメータ
 
-| 名前 | タイプ                | 説明 |
-| ---- | --------------------- | ---- |
-| 世界 | FlintEcsWorld<TValue> |      |
+|名前 |タイプ |説明 |
+| ----- | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 現在の世界のスナップショット。 |
 
-### validateFlintEcsSignals
+#### 契約
+
+- **@param:** - 現在のワールドのスナップショット。
+- **@returns:** 更新されたワールドと新しいエンティティを含むエンティティの結果。
+
+### FlintEcsSignals を検証する
 
 **種類:** 関数
 
@@ -1566,15 +1914,31 @@ function validateFlintEcsSignals(
 ): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
-説明はありません。
+宣言された信号定義に対して一連の信号を検証します。
 
 #### パラメータ
 
-| 名前 | タイプ           | 説明     |
-| ---- | ---------------- | -------- |
-| 信号 | FlintEcsSignal[] | readonly |
+|名前 |タイプ |説明 |
+| ------- | ------------------------- | ------------------------------- |
+|信号 | FlintEcsSignal[] | 読み取り専用- 検証する信号の配列。 |
+
+#### 契約
+
+- **@param:** - 検証する信号の配列。
+- **@returns:** 有効なステータスとエラー メッセージを含むオブジェクト。
 
 ## `src/host`
+
+### アトミックリングバッファチャネル
+
+**種類:** クラス
+
+```typescript
+export class AtomicRingBufferChannel
+```
+
+共有ホスト相互運用リング バッファ メモリ上のアトミック ヘッド/テール ポインタの更新を同期します。
+WebAssembly と互換性のあるアトミック ストア/ロード操作を使用し、競合状態を防ぐためにメモリ順序を保証します。
 
 ### createDefaultFlintCapabilities
 
@@ -1584,15 +1948,20 @@ function validateFlintEcsSignals(
 function createDefaultFlintCapabilities(options: FlintDefaultHostOptions = {}): FlintCapabilityRegistry;
 ```
 
-説明はありません。
+デフォルトの組み込み機能プロバイダー (env.now など) を作成します。
 
 #### パラメータ
 
-| 名前       | タイプ                  | 説明 |
-| ---------- | ----------------------- | ---- |
-| オプション | FlintDefaultHostOptions |      |
+|名前 |タイプ |説明 |
+| ------- | ----------------------- | ------------------------------------------------- |
+|オプション |フリントデフォルトホストオプション | - デフォルト機能の構成オプション。 |
 
-### createFlintホスト
+#### 契約
+
+- **@param:** - デフォルト機能の構成オプション。
+- **@returns:** デフォルトの機能が実装されたレジストリ。
+
+### フリントホストの作成
 
 **種類:** 関数
 
@@ -1604,15 +1973,22 @@ function createFlintHost(
 ): FlintHost;
 ```
 
-説明はありません。
+ゲストのインポートを承認された機能にバインドするランタイム ホスト環境を作成します。
 
 #### パラメータ
 
-| 名前         | タイプ                    | 説明 |
-| ------------ | ------------------------- | ---- |
-| マニフェスト | FlintAbiManifest          |      |
-| レジストリ   | FlintCapabilityレジストリ |      |
-| オプション   | FlintHostOptions          |      |
+|名前 |タイプ |説明 |
+| -------- | ----------------------- | ------------------------------------------------------------ |
+|マニフェスト |フリントアビマニフェスト | - 必要な機能とインポートを説明する ABI マニフェスト。 |
+|レジストリ | FlintCapabilityレジストリ | - 利用可能な機能実装のレジストリ。          |
+|オプション |フリントホストオプション | - ホスト初期化の構成オプション。             |
+
+#### 契約
+
+- **@param:** - 必要な機能とインポートを説明する ABI マニフェスト。
+- **@param:** - 利用可能な機能実装のレジストリ。
+- **@param:** - ホスト初期化の構成オプション。
+- **@returns:** 構成された FlintHost インスタンス。
 
 ### Flint機能の実装
 
@@ -1622,9 +1998,9 @@ function createFlintHost(
 export interface FlintCapabilityImplementation
 ```
 
-説明はありません。
+呼び出しハンドラーと ABI 署名を登録するホスト機能の実装。
 
-### FlintCapabilityRegistry
+### FlintCapabilityレジストリ
 
 **種類：**タイプ
 
@@ -1632,9 +2008,9 @@ export interface FlintCapabilityImplementation
 export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImplementation>>;
 ```
 
-説明はありません。
+機能名のホスト実装プロバイダーへのマッピング。
 
-### FlintDefaultHostOptions
+### フリントデフォルトホストオプション
 
 **種類:** インターフェース
 
@@ -1642,9 +2018,39 @@ export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImp
 export interface FlintDefaultHostOptions
 ```
 
-説明はありません。
+デフォルトの組み込み機能プロバイダーの構成オプション。
 
-### Flintホスト
+### フリント外国人コール
+
+**種類：**タイプ
+
+```typescript
+export type FlintForeignCall = (symbol: string, arguments_: readonly unknown[]) => unknown | Promise<unknown>;
+```
+
+ホスト外部機能呼び出しハンドラー。
+
+### FlintForeignCapabilityの実装
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintForeignCapabilityImplementation
+```
+
+ホスト外部機能実装記述子。
+
+### FlintForeignCapabilityレジストリ
+
+**種類：**タイプ
+
+```typescript
+export type FlintForeignCapabilityRegistry = Readonly<Record<string, FlintForeignCapabilityImplementation>>;
+```
+
+利用可能な外部機能実装のレジストリ。
+
+### フリントホスト
 
 **種類:** インターフェース
 
@@ -1652,9 +2058,9 @@ export interface FlintDefaultHostOptions
 export interface FlintHost
 ```
 
-説明はありません。
+ゲスト モジュールの機能呼び出しと有効期間管理を提供する実行ホスト。
 
-### Flintホストコール
+### フリントホストコール
 
 **種類：**タイプ
 
@@ -1662,9 +2068,9 @@ export interface FlintHost
 export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promise<unknown>;
 ```
 
-説明はありません。
+ゲスト ランタイムの実行によって呼び出される呼び出し可能なホスト関数。
 
-### FlintHostOptions
+### フリントホストオプション
 
 **種類:** インターフェース
 
@@ -1672,7 +2078,52 @@ export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promis
 export interface FlintHostOptions
 ```
 
+FlintHost インスタンスを初期化するための構成オプション。
+
+### MAX_FFI_CALL_DEPTH
+
+**種類:** 定数
+
+```typescript
+export const MAX_FFI_CALL_DEPTH;
+```
+
 説明はありません。
+
+### タイミングセーフEqualString
+
+**種類:** 関数
+
+```typescript
+function timingSafeEqualString(stringA: string, stringB: string): boolean;
+```
+
+2 つの文字列の定数比較を実行して、セキュリティ クリティカルな識別子に対するタイミング サイドチャネル攻撃を防ぎます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|文字列A |文字列 |             |
+|文字列B |文字列 |             |
+
+### ホストポインタ境界を検証する
+
+**種類:** 関数
+
+```typescript
+function validateHostPointerBounds(pointer: number, length: number, memoryLimit = 0xff_ff_ff_ff): boolean;
+```
+
+ホスト ポインターのオフセットと長さが空間境界の不変条件を満たしていることを検証します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ------ | ----------- |
+|ポインタ |番号 |             |
+|長さ |番号 |             |
+|メモリ制限 |        |             |
 
 ## `src/iterator`
 
@@ -1692,11 +2143,11 @@ function createFlintWasmIterator(
 
 #### パラメータ
 
-| 名前       | タイプ                                        | 説明 |
-| ---------- | --------------------------------------------- | ---- |
-| ハンドル   | 番号                                          |      |
-| 次へ       | (ハンドル: 数値) => FlintPackedIteratorResult |      |
-| オプション | FlintWasmIteratorOptions<TValue>              |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------------------------------- | ----------- |
+|ハンドル |番号 |             |
+|次へ | (ハンドル: 数値) => FlintPackedIteratorResult |             |
+|オプション | FlintWasmIteratorOptions<TValue> |             |
 
 ### createFlintWasmIteratorFactory
 
@@ -1714,11 +2165,11 @@ function createFlintWasmIteratorFactory(
 
 #### パラメータ
 
-| 名前       | タイプ                                        | 説明 |
-| ---------- | --------------------------------------------- | ---- |
-| 工場       | (...arguments_: TArguments) => 数値           |      |
-| 次へ       | (ハンドル: 数値) => FlintPackedIteratorResult |      |
-| オプション | FlintWasmIteratorOptions<TValue>              |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------------------------------- | ----------- |
+|工場 | (...arguments_: TArguments) => 数値 |             |
+|次へ | (ハンドル: 数値) => FlintPackedIteratorResult |             |
+|オプション | FlintWasmIteratorOptions<TValue> |             |
 
 ### FlintPackedIteratorResult
 
@@ -1728,7 +2179,7 @@ function createFlintWasmIteratorFactory(
 export type FlintPackedIteratorResult = number | bigint;
 ```
 
-説明はありません。
+WebAssembly から返されるイテレータの次の呼び出しのパックされた数値表現。
 
 ### FlintWasmIterator
 
@@ -1738,7 +2189,7 @@ export type FlintPackedIteratorResult = number | bigint;
 export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TValue>
 ```
 
-説明はありません。
+WebAssembly イテレータ状態ハンドルをラップする JavaScript イテレータとイテラブル ブリッジ。
 
 ### FlintWasmIteratorオプション
 
@@ -1748,11 +2199,11 @@ export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TV
 export interface FlintWasmIteratorOptions<TValue>
 ```
 
-説明はありません。
+WebAssembly イテレータ ラッパーを構築するための構成オプション。
 
 ## `src/logging`
 
-### createFlintLogger
+### フリントロガーの作成
 
 **種類:** 関数
 
@@ -1760,15 +2211,20 @@ export interface FlintWasmIteratorOptions<TValue>
 function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 ```
 
-説明はありません。
+カスタム重大度フィルタリングとシンクを備えたスコープ指定された FlintLogger インスタンスを作成します。
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| オプション | FlintLoggerオプション |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------ | -------------------------------------------------- |
+|オプション | FlintLoggerオプション | - ロガー初期化の構成オプション。 |
 
-### FlintLogEvent
+#### 契約
+
+- **@param:** - ロガー初期化の構成オプション。
+- **@returns:** 構成された FlintLogger インスタンス。
+
+### フリントログイベント
 
 **種類:** インターフェース
 
@@ -1776,9 +2232,9 @@ function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 export interface FlintLogEvent
 ```
 
-説明はありません。
+ロガーによって発行される構造化されたランタイム ログ イベント。
 
-### FlintLogger
+### フリントロガー
 
 **種類:** インターフェース
 
@@ -1786,7 +2242,7 @@ export interface FlintLogEvent
 export interface FlintLogger
 ```
 
-説明はありません。
+ランタイム イベント トレース用のスコープ付き診断ログ インターフェイス。
 
 ### FlintLoggerオプション
 
@@ -1796,9 +2252,9 @@ export interface FlintLogger
 export interface FlintLoggerOptions
 ```
 
-説明はありません。
+ランタイム ロガー インスタンスを初期化するための構成オプション。
 
-### Flintログレベル
+### フリントログレベル
 
 **種類：**タイプ
 
@@ -1806,9 +2262,9 @@ export interface FlintLoggerOptions
 export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 ```
 
-説明はありません。
+ランタイムイベント記録のログ重大度レベルをサポートしました。
 
-### FlintLogSink
+### フリントログシンク
 
 **種類：**タイプ
 
@@ -1816,37 +2272,4199 @@ export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 export type FlintLogSink = (event: FlintLogEvent) => void;
 ```
 
-説明はありません。
+構造化されたランタイム ログ イベントを受け取るコンシューマー コールバック関数。
 
-## `src/memory`
+## `src/math/bignum`
 
-### createFlintMemory
+### createFlintDMatrix
 
 **種類:** 関数
 
 ```typescript
-function createFlintMemory(options?: FlintMemoryOptions): FlintMemory;
+function createFlintDMatrix(rows: number, cols: number, data?: readonly number[]): FlintDMatrix;
 ```
 
-説明はありません。
+フリント d マトリックスの作成操作を実行します。
 
 #### パラメータ
 
-| 名前       | タイプ             | 説明 |
-| ---------- | ------------------ | ---- |
-| オプション | FlintMemoryOptions |      |
+|名前 |タイプ |説明 |
+| ---- | ----------------- | ----------- |
+|行 |番号 |             |
+|列 |番号 |             |
+|データ |読み取り専用番号[] |             |
 
-### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+### FlintTensor を作成する
+
+**種類:** 関数
+
+```typescript
+function createFlintTensor(shape: FlintTensorShape, data: readonly TValue[]): FlintTensor<TValue>;
+```
+
+フリント テンソルの作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ----------------- | ----------- |
+|形状 |フリントテンソルシェイプ |             |
+|データ |読み取り専用 TValue[] |             |
+
+### createFlintTensorShape
+
+**種類:** 関数
+
+```typescript
+function createFlintTensorShape(dimensions: readonly number[]): FlintTensorShape;
+```
+
+フリント テンソル形状の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ----------------- | ----------- |
+|寸法 |読み取り専用番号[] |             |
+
+### createFlintTensorView
+
+**種類:** 関数
+
+```typescript
+function createFlintTensorView(shape: FlintTensorShape, data: readonly TValue[], offset = 0): FlintTensorView<TValue>;
+```
+
+フリント テンソル ビューの作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ----------------- | ----------- |
+|形状 |フリントテンソルシェイプ |             |
+|データ |読み取り専用 TValue[] |             |
+|オフセット |                   |             |
+
+### フリントコレスキー分解
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintCholeskyDecomposition
+```
+
+コレスキー分解表現。
+
+### フリントDマトリックス
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintDMatrix
+```
+
+D マトリックス表現。
+
+### フリントDMatrixAddInplace
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixAddInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+d 行列のインプレース加算演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------------ | ----------- |
+|行列A |フリントDマトリックス |             |
+|行列B |フリントDマトリックス |             |
+
+### フリントDマトリックスコレスキー
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixCholesky(matrix: FlintDMatrix): FlintOption<FlintCholeskyDecomposition>;
+```
+
+d行列コレスキー演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------------ | ----------- |
+|マトリックス |フリントDマトリックス |             |
+
+### フリントDMatrixCholeskySolve
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixCholeskySolve(
+  chol: FlintCholeskyDecomposition,
+  rhsVector: FlintDMatrix,
+): FlintOption<FlintDMatrix>;
+```
+
+d 行列コレスキーソルブ演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | -------------------------- | ----------- |
+|チョル |フリントコレスキー分解 |             |
+|ベクトルフリントDマトリックス |             |
+
+### フリントDMatrix決定因子
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixDeterminant(matrix: FlintDMatrix): FlintOption<number>;
+```
+
+d 行列行列演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------------ | ----------- |
+|マトリックス |フリントDマトリックス |             |
+
+### フリントDマトリックス固有対称対称
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixEigenSymmetric(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintEigenDecomposition>;
+```
+
+d 行列固有対称演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------- | ------------ | ----------- |
+|マトリックス |フリントDマトリックス |             |
+|最大反復回数 |              |             |
+|イプシロン |              |             |
+
+### フリントDMatrixGet
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixGet(matrix: FlintDMatrix, row: number, col: number): FlintOption<number>;
+```
+
+d行列取得操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------------ | ----------- |
+|マトリックス |フリントDマトリックス |             |
+|行 |番号 |             |
+|列 |番号 |             |
+
+### フリントDMatrixIdentity
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixIdentity(size: number): FlintDMatrix;
+```
+
+d 行列恒等演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|サイズ |番号 |             |
+
+### フリントDMatrixInverse
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixInverse(matrix: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+d 行列の逆演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------------ | ----------- |
+|マトリックス |フリントDマトリックス |             |
+
+### フリントDMatrixLU
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixLU(matrix: FlintDMatrix): FlintOption<FlintLUDecomposition>;
+```
+
+d 行列 l u 演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------------ | ----------- |
+|マトリックス |フリントDマトリックス |             |
+
+### フリントDMatrixMul
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixMul(matrixA: FlintDMatrix, matrixB: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+d 行列乗算演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------------ | ----------- |
+|行列A |フリントDマトリックス |             |
+|行列B |フリントDマトリックス |             |
+
+### フリントDMatrixMulAccumulate
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixMulAccumulate(
+  outMatrix: FlintDMatrix,
+  matrixA: FlintDMatrix,
+  matrixB: FlintDMatrix,
+  alpha = 1,
+): boolean;
+```
+
+d 行列乗算演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | ------------ | ----------- |
+|アウトマトリックス |フリントDマトリックス |             |
+|行列A |フリントDマトリックス |             |
+|行列B |フリントDマトリックス |             |
+|アルファ |              |             |
+
+### フリントDMatrix擬似逆
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixPseudoinverse(matrix: FlintDMatrix, epsilon = FLINT_MATH_EPSILON): FlintOption<FlintDMatrix>;
+```
+
+d 行列の擬似逆演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------------ | ----------- |
+|マトリックス |フリントDマトリックス |             |
+|イプシロン |              |             |
+
+### フリントDMatrixQR
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixQR(matrix: FlintDMatrix): FlintOption<FlintQRDecomposition>;
+```
+
+d 行列 q r 演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------------ | ----------- |
+|マトリックス |フリントDマトリックス |             |
+
+### フリントDMatrixScaleInplace
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixScaleInplace(matrix: FlintDMatrix, factor: number): void;
+```
+
+d マトリックス スケール インプレース演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------------ | ----------- |
+|マトリックス |フリントDマトリックス |             |
+|係数 |番号 |             |
+
+### フリントDMatrixSet
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixSet(matrix: FlintDMatrix, row: number, col: number, value: number): boolean;
+```
+
+d行列集合演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------------ | ----------- |
+|マトリックス |フリントDマトリックス |             |
+|行 |番号 |             |
+|列 |番号 |             |
+|値 |番号 |             |
+
+### フリントDMatrixSolve
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixSolve(matrixA: FlintDMatrix, rhsVector: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+d 行列の解決操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | ------------ | ----------- |
+|行列A |フリントDマトリックス |             |
+|ベクトルフリントDマトリックス |             |
+
+### フリントDMatrixSubInplace
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixSubInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+d 行列サブインプレース演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------------ | ----------- |
+|行列A |フリントDマトリックス |             |
+|行列B |フリントDマトリックス |             |
+
+### フリントDMatrixSVD
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixSVD(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintSVDDecomposition>;
+```
+
+d 行列 s v d 演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------- | ------------ | ----------- |
+|マトリックス |フリントDマトリックス |             |
+|最大反復回数 |              |             |
+|イプシロン |              |             |
+
+### フリントDMatrixTranspose
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixTranspose(matrix: FlintDMatrix): FlintDMatrix;
+```
+
+d 行列の転置演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------------ | ----------- |
+|マトリックス |フリントDマトリックス |             |
+
+### フリントDMatrixZeros
+
+**種類:** 関数
+
+```typescript
+function flintDMatrixZeros(rows: number, cols: number): FlintDMatrix;
+```
+
+d 行列ゼロ演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|行 |番号 |             |
+|列 |番号 |             |
+
+### フリントアイゲン分解
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintEigenDecomposition
+```
+
+固有分解表現。
+
+### フリントLU分解
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintLUDecomposition
+```
+
+L U 分解表現。
+
+### フリントQR分解
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintQRDecomposition
+```
+
+Q R 分解表現。
+
+### フリントSVD分解
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintSVDDecomposition
+```
+
+S V D 分解表現。
+
+### フリントテンサー
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintTensor<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+テンソル表現。
+
+### フリントTensorFill
+
+**種類:** 関数
+
+```typescript
+function flintTensorFill(shape: FlintTensorShape, value: TValue): FlintTensor<TValue>;
+```
+
+テンソルフィル操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---------------- | ----------- |
+|形状 |フリントテンソルシェイプ |             |
+|値 | T値 |             |
+
+### フリントTensorMatmul
+
+**種類:** 関数
+
+```typescript
+function flintTensorMatmul(
+  tensorA: FlintTensor<number>,
+  tensorB: FlintTensor<number>,
+): FlintOption<FlintTensor<number>>;
+```
+
+テンソル matmul 演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------------------- | ----------- |
+|テンソルA | FlintTensor<number> |             |
+|テンソルB | FlintTensor<number> |             |
+
+### フリントTensorReshape
+
+**種類:** 関数
+
+```typescript
+function flintTensorReshape(tensor: FlintTensor<TValue>, newShape: FlintTensorShape): FlintOption<FlintTensor<TValue>>;
+```
+
+テンソルの再形成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------------------- | ----------- |
+|テンソル | FlintTensor<TValue> |             |
+|新しい形 |フリントテンソルシェイプ |             |
+
+### フリントテンソル形状
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintTensorShape
+```
+
+テンソル形状表現。
+
+### フリントテンソル形状サイズ
+
+**種類:** 関数
+
+```typescript
+function flintTensorShapeSize(shape: FlintTensorShape): number;
+```
+
+テンソル形状のサイズ操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---------------- | ----------- |
+|形状 |フリントテンソルシェイプ |             |
+
+### フリントテンサースライス
+
+**種類:** 関数
+
+```typescript
+function flintTensorSlice(
+  view: FlintTensorView<TValue>,
+  axis: number,
+  start: number,
+  length: number,
+): FlintOption<FlintTensorView<TValue>>;
+```
+
+テンソルスライス操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ----------------------- | ----------- |
+|見る | FlintTensorView<TValue> |             |
+|軸 |番号 |             |
+|開始 |番号 |             |
+|長さ |番号 |             |
+
+### フリントTensorView
+
+**種類:** 関数
+
+```typescript
+function flintTensorView(tensor: FlintTensor<TValue>): FlintTensorView<TValue>;
+```
+
+テンソルビュー操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------------------- | ----------- |
+|テンソル | FlintTensor<TValue> |             |
+
+### FlintTensorView
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintTensorView<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+Tensor ビュー表現。
+
+### フリントTensorViewGet
+
+**種類:** 関数
+
+```typescript
+function flintTensorViewGet(view: FlintTensorView<TValue>, indices: readonly number[]): FlintOption<TValue>;
+```
+
+tensor ビューの取得操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ----------------------- | ----------- |
+|見る | FlintTensorView<TValue> |             |
+|インデックス |読み取り専用番号[] |             |
+
+### フリントTensorViewSet
+
+**種類:** 関数
+
+```typescript
+function flintTensorViewSet(view: FlintTensorView<TValue>, indices: readonly number[], value: TValue): boolean;
+```
+
+テンソルビューセット操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ----------------------- | ----------- |
+|見る | FlintTensorView<TValue> |             |
+|インデックス |読み取り専用番号[] |             |
+|値 | T値 |             |
+
+## `src/math/ieee754`
+
+### createFlintColorRgba
+
+**種類:** 関数
+
+```typescript
+function createFlintColorRgba(red = 0, green = 0, blue = 0, alpha = 1): FlintColorRgba;
+```
+
+フリントカラーRGBAの作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---- | ----------- |
+|赤 |      |             |
+|緑 |      |             |
+|青 |      |             |
+|アルファ |      |             |
+
+### FLINT_MATH_DEG_TO_RAD
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
+export const FLINT_MATH_DEG_TO_RAD;
+```
+
+度からラジアンへの変換係数。
+
+### FLINT_MATH_E
+
+**種類:** 定数
+
+```typescript
+export const FLINT_MATH_E;
+```
+
+オイラー定数 (e)。
+
+### FLINT_MATH_EPSILON
+
+**種類:** 定数
+
+```typescript
+export const FLINT_MATH_EPSILON;
+```
+
+オイラー定数 (e)。
+
+### FLINT_MATH_F32_EPSILON
+
+**種類:** 定数
+
+```typescript
+export const FLINT_MATH_F32_EPSILON;
+```
+
+32 ビット浮動小数点演算用のマシン イプシロン。
+
+### FLINT_MATH_PI
+
+**種類:** 定数
+
+```typescript
+export const FLINT_MATH_PI;
+```
+
+Flint ランタイムの標準数学定数。
+
+### FLINT_MATH_RAD_TO_DEG
+
+**種類:** 定数
+
+```typescript
+export const FLINT_MATH_RAD_TO_DEG;
+```
+
+ラジアンから度への変換係数。
+
+### FLINT_MATH_SQRT2
+
+**種類:** 定数
+
+```typescript
+export const FLINT_MATH_SQRT2;
+```
+
+2 の平方根定数。
+
+### FLINT_MATH_TAU
+
+**種類:** 定数
+
+```typescript
+export const FLINT_MATH_TAU;
+```
+
+2 * PI (タウ) 円定数。
+
+### フリントおおよそ等しい
+
+**種類:** 関数
+
+```typescript
+function flintApproxEqual(first: number, second: number, epsilon = FLINT_MATH_EPSILON): boolean;
+```
+
+指定されたイプシロン内で近似的等価性をテストします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|最初 |番号 |             |
+| 2番目 |番号 |             |
+|イプシロン |        |             |
+
+### フリント天井
+
+**種類:** 関数
+
+```typescript
+function flintCeil(value: number): number;
+```
+
+x 以上の最小の整数を計算します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |番号 |             |
+
+### フリントクランプ
+
+**種類:** 関数
+
+```typescript
+function flintClamp(value: number, minimum: number, maximum: number): number;
+```
+
+数値を最小範囲と最大範囲の間に固定します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|値 |番号 |             |
+|最小 |番号 |             |
+|最大 |番号 |             |
+
+### フリントカラーHsv
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintColorHsv
+```
+
+カラー HSV 表現。
+
+### フリントColorHsvToRgb
+
+**種類:** 関数
+
+```typescript
+function flintColorHsvToRgb(hsv: FlintColorHsv): FlintColorRgba;
+```
+
+カラー HSV から RGB への変換操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------------- | ----------- |
+| HSV |フリントカラーHSV |             |
+
+### フリントカラーLerpOklab
+
+**種類:** 関数
+
+```typescript
+function flintColorLerpOklab(first: FlintColorRgba, second: FlintColorRgba, factor: number): FlintColorRgba;
+```
+
+color lerp oklab 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | -------------- | ----------- |
+|最初 |フリントカラーRgba |             |
+| 2番目 |フリントカラーRgba |             |
+|係数 |番号 |             |
+
+### フリントカラーリニアToSrgb
+
+**種類:** 関数
+
+```typescript
+function flintColorLinearToSrgb(color: FlintColorRgba): FlintColorRgba;
+```
+
+srgb に対してカラーリニア操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | -------------- | ----------- |
+|色 |フリントカラーRgba |             |
+
+### フリントカラーOklab
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintColorOklab
+```
+
+Oklab のカラー表現。
+
+### フリントカラーOklabToSrgb
+
+**種類:** 関数
+
+```typescript
+function flintColorOklabToSrgb(lab: FlintColorOklab): FlintColorRgba;
+```
+
+カラーoklabからsrgbへの操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | --------------- | ----------- |
+|研究室 |フリントカラーOklab |             |
+
+### フリントカラーRgba
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintColorRgba
+```
+
+カラー Rgba 表現。
+
+### フリントColorRgbToHsv
+
+**種類:** 関数
+
+```typescript
+function flintColorRgbToHsv(color: FlintColorRgba): FlintColorHsv;
+```
+
+カラーRGBからHSVへの変換操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | -------------- | ----------- |
+|色 |フリントカラーRgba |             |
+
+### フリントColorSrgbToLinear
+
+**種類:** 関数
+
+```typescript
+function flintColorSrgbToLinear(color: FlintColorRgba): FlintColorRgba;
+```
+
+カラーSRGBを線形演算します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | -------------- | ----------- |
+|色 |フリントカラーRgba |             |
+
+### フリントColorSrgbToOklab
+
+**種類:** 関数
+
+```typescript
+function flintColorSrgbToOklab(color: FlintColorRgba): FlintColorOklab;
+```
+
+カラー srgb から oklab 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | -------------- | ----------- |
+|色 |フリントカラーRgba |             |
+
+### フリント度
+
+**種類:** 関数
+
+```typescript
+function flintDegrees(radians: number): number;
+```
+
+ラジアンを度に変換します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|ラジアン |番号 |             |
+
+### フリント床
+
+**種類:** 関数
+
+```typescript
+function flintFloor(value: number): number;
+```
+
+x 以下の最大の整数を計算します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |番号 |             |
+
+### フリントフラクト
+
+**種類:** 関数
+
+```typescript
+function flintFract(value: number): number;
+```
+
+小数部分を計算します: x - フロア(x)。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |番号 |             |
+
+### フリントラープ
+
+**種類:** 関数
+
+```typescript
+function flintLerp(start: number, end: number, factor: number): number;
+```
+
+開始と終了の間を係数によって線形補間します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------ | ----------- |
+|開始 |番号 |             |
+|終わり |番号 |             |
+|係数 |番号 |             |
+
+### フリントラジアン
+
+**種類:** 関数
+
+```typescript
+function flintRadians(degrees: number): number;
+```
+
+度をラジアンに変換します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|度 |番号 |             |
+
+### フリントサイン
+
+**種類:** 関数
+
+```typescript
+function flintSign(value: number): number;
+```
+
+x の符号 (1、-1、0、または NaN) を返します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |番号 |             |
+
+### フリントスムーズステップ
+
+**種類:** 関数
+
+```typescript
+function flintSmoothstep(edge0: number, edge1: number, value: number): number;
+```
+
+edge0 とedge1 間の滑らかなエルミート補間。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|エッジ0 |番号 |             |
+|エッジ1 |番号 |             |
+|値 |番号 |             |
+
+### フリントステップ
+
+**種類:** 関数
+
+```typescript
+function flintStep(edge: number, value: number): number;
+```
+
+x < エッジの場合は 0 を返し、それ以外の場合は 1 を返すステップ関数。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|エッジ |番号 |             |
+|値 |番号 |             |
+
+## `src/math/transcendental`
+
+### フリントAABB2を作成する
+
+**種類:** 関数
+
+```typescript
+function createFlintAABB2(minPoint: FlintVec2, maxPoint: FlintVec2): FlintAABB2;
+```
+
+フリント作成 a a b b 2 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | --------- | ----------- |
+|最小ポイント |フリントベック2 |             |
+|最大ポイント |フリントベック2 |             |
+
+### フリントAABB3を作成する
+
+**種類:** 関数
+
+```typescript
+function createFlintAABB3(minPoint: FlintVec3, maxPoint: FlintVec3): FlintAABB3;
+```
+
+フリント作成 a a b b 3 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | --------- | ----------- |
+|最小ポイント |フリントベック3 |             |
+|最大ポイント |フリントベック3 |             |
+
+### createFlintBVHNode3
+
+**種類:** 関数
+
+```typescript
+function createFlintBVHNode3(
+  bounds: FlintAABB3,
+  leftChild: number,
+  rightChild: number,
+  primitiveIndex: number,
+): FlintBVHNode3;
+```
+
+create flint b v h node 3 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------------- | ---------- | ----------- |
+|境界 |フリントAABB3 |             |
+|左子 |番号 |             |
+|右子 |番号 |             |
+|プリミティブインデックス |番号 |             |
+
+### createFlintBVHTree3
+
+**種類:** 関数
+
+```typescript
+function createFlintBVHTree3(nodes: readonly FlintBVHNode3[], rootIndex = 0): FlintBVHTree3;
+```
+
+フリント b v h ツリー 3 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | ------------------------ | ----------- |
+|ノード | FlintBVHNode3[] | 読み取り専用             |
+|ルートインデックス |                          |             |
+
+### フリントサークルの作成
+
+**種類:** 関数
+
+```typescript
+function createFlintCircle(center: FlintVec2, radius: number): FlintCircle;
+```
+
+フリントサークル作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|中央 |フリントベック2 |             |
+|半径 |番号 |             |
+
+### フリントOBB2を作成する
+
+**種類:** 関数
+
+```typescript
+function createFlintOBB2(center: FlintVec2, halfExtents: FlintVec2, angleRad = 0): FlintOBB2;
+```
+
+フリント o b b 2 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | --------- | ----------- |
+|中央 |フリントベック2 |             |
+|半分の範囲 |フリントベック2 |             |
+|角度Rad |           |             |
+
+### フリントOBB3を作成する
+
+**種類:** 関数
+
+```typescript
+function createFlintOBB3(
+  center: FlintVec3,
+  halfExtents: FlintVec3,
+  orientation: FlintQuat = flintQuatIdentity(),
+): FlintOBB3;
+```
+
+フリント o b b 3 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | --------- | ----------- |
+|中央 |フリントベック3 |             |
+|半分の範囲 |フリントベック3 |             |
+|向き |フリントクワット |             |
+
+### フリントプレーン3の作成
+
+**種類:** 関数
+
+```typescript
+function createFlintPlane3(normal: FlintVec3, distance: number): FlintPlane3;
+```
+
+フリントプレーン 3 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | --------- | ----------- |
+|通常 |フリントベック3 |             |
+|距離 |番号 |             |
+
+### フリントレイ2を作成する
+
+**種類:** 関数
+
+```typescript
+function createFlintRay2(origin: FlintVec2, direction: FlintVec2): FlintRay2;
+```
+
+フリント レイ 2 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | --------- | ----------- |
+|起源 |フリントベック2 |             |
+|方向 |フリントベック2 |             |
+
+### フリントレイ3を作成する
+
+**種類:** 関数
+
+```typescript
+function createFlintRay3(origin: FlintVec3, direction: FlintVec3): FlintRay3;
+```
+
+フリント レイ 3 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | --------- | ----------- |
+|起源 |フリントベック3 |             |
+|方向 |フリントベック3 |             |
+
+### 作成FlintRayHit3
+
+**種類:** 関数
+
+```typescript
+function createFlintRayHit3(
+  hit: boolean,
+  t: number,
+  point: FlintVec3,
+  normal: FlintVec3,
+  primitiveId: number,
+): FlintRayHit3;
+```
+
+フリント レイ ヒット 3 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | --------- | ----------- |
+|ヒット |ブール値 |             |
+| t |番号 |             |
+|ポイント |フリントベック3 |             |
+|通常 |フリントベック3 |             |
+|プリミティブ ID |番号 |             |
+
+### フリントセグメント2の作成
+
+**種類:** 関数
+
+```typescript
+function createFlintSegment2(startPoint: FlintVec2, endPoint: FlintVec2): FlintSegment2;
+```
+
+フリント セグメント 2 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------- | ----------- |
+|開始点 |フリントベック2 |             |
+|エンドポイント |フリントベック2 |             |
+
+### フリントセグメント3の作成
+
+**種類:** 関数
+
+```typescript
+function createFlintSegment3(startPoint: FlintVec3, endPoint: FlintVec3): FlintSegment3;
+```
+
+フリント セグメント 3 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------- | ----------- |
+|開始点 |フリントベック3 |             |
+|エンドポイント |フリントベック3 |             |
+
+### フリントスフィアを作成する
+
+**種類:** 関数
+
+```typescript
+function createFlintSphere(center: FlintVec3, radius: number): FlintSphere;
+```
+
+フリント球の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|中央 |フリントベック3 |             |
+|半径 |番号 |             |
+
+### フリントトライアングル2の作成
+
+**種類:** 関数
+
+```typescript
+function createFlintTriangle2(pointA: FlintVec2, pointB: FlintVec2, pointC: FlintVec2): FlintTriangle2;
+```
+
+フリント トライアングル 2 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ポイントA |フリントベック2 |             |
+|ポイントB |フリントベック2 |             |
+|ポイントC |フリントベック2 |             |
+
+### フリントトライアングル3を作成する
+
+**種類:** 関数
+
+```typescript
+function createFlintTriangle3(pointA: FlintVec3, pointB: FlintVec3, pointC: FlintVec3): FlintTriangle3;
+```
+
+フリント トライアングル 3 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ポイントA |フリントベック3 |             |
+|ポイントB |フリントベック3 |             |
+|ポイントC |フリントベック3 |             |
+
+### フリントAABB2
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintAABB2
+```
+
+A A B B 2 の表現。
+
+### フリントAABB2エリア
+
+**種類:** 関数
+
+```typescript
+function flintAABB2Area(box: FlintAABB2): number;
+```
+
+a a b b 2 エリア操作を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ---------- | ----------- |
+|ボックス |フリントAABB2 |             |
+
+### フリントAABB2ContainsPoint
+
+**種類:** 関数
+
+```typescript
+function flintAABB2ContainsPoint(box: FlintAABB2, point: FlintVec2): boolean;
+```
+
+a a b b 2 には点演算が含まれています。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---------- | ----------- |
+|ボックス |フリントAABB2 |             |
+|ポイント |フリントベック2 |             |
+
+### フリントAABB2交差AABB2
+
+**種類:** 関数
+
+```typescript
+function flintAABB2IntersectsAABB2(first: FlintAABB2, second: FlintAABB2): boolean;
+```
+
+a a b b 2 と a a b b 2 の交差演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---------- | ----------- |
+|最初 |フリントAABB2 |             |
+| 2番目 |フリントAABB2 |             |
+
+### フリントAABB2ユニオン
+
+**種類:** 関数
+
+```typescript
+function flintAABB2Union(first: FlintAABB2, second: FlintAABB2): FlintAABB2;
+```
+
+a a b b 2 結合演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---------- | ----------- |
+|最初 |フリントAABB2 |             |
+| 2番目 |フリントAABB2 |             |
+
+### フリントAABB3
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintAABB3
+```
+
+A A B B 3 の表現。
+
+### フリントAABB3ContainsPoint
+
+**種類:** 関数
+
+```typescript
+function flintAABB3ContainsPoint(box: FlintAABB3, point: FlintVec3): boolean;
+```
+
+a a b b 3 には点演算が含まれています。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---------- | ----------- |
+|ボックス |フリントAABB3 |             |
+|ポイント |フリントベック3 |             |
+
+### フリントAABB3交差AABB3
+
+**種類:** 関数
+
+```typescript
+function flintAABB3IntersectsAABB3(first: FlintAABB3, second: FlintAABB3): boolean;
+```
+
+a a b b 3 と a a b b 3 の交差演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---------- | ----------- |
+|最初 |フリントAABB3 |             |
+| 2番目 |フリントAABB3 |             |
+
+### フリントAABB3ボリューム
+
+**種類:** 関数
+
+```typescript
+function flintAABB3Volume(box: FlintAABB3): number;
+```
+
+a a b b 3 ボリューム操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ---------- | ----------- |
+|ボックス |フリントAABB3 |             |
+
+### フリントベジェ 2 キュービック
+
+**種類:** 関数
+
+```typescript
+function flintBezier2Cubic(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+ベジェ 2 三次演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ポイント0 |フリントベック2 |             |
+|ポイント1 |フリントベック2 |             |
+|ポイント2 |フリントベック2 |             |
+| point3 |フリントベック2 |             |
+|係数 |番号 |             |
+
+### フリントベジェ 2 二次
+
+**種類:** 関数
+
+```typescript
+function flintBezier2Quadratic(point0: FlintVec2, point1: FlintVec2, point2: FlintVec2, factor: number): FlintVec2;
+```
+
+ベジェ 2 二次演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ポイント0 |フリントベック2 |             |
+|ポイント1 |フリントベック2 |             |
+|ポイント2 |フリントベック2 |             |
+|係数 |番号 |             |
+
+### フリントBezier3Cubic
+
+**種類:** 関数
+
+```typescript
+function flintBezier3Cubic(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+ベジェ 3 三次演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ポイント0 |フリントベック3 |             |
+|ポイント1 |フリントベック3 |             |
+|ポイント2 |フリントベック3 |             |
+| point3 |フリントベック3 |             |
+|係数 |番号 |             |
+
+### フリントBVHBuildFromAABBs
+
+**種類:** 関数
+
+```typescript
+function flintBVHBuildFromAABBs(boxes: readonly FlintAABB3[]): FlintBVHTree3;
+```
+
+a a bbs 操作から b v h ビルドを実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | --------------------- | ----------- |
+|ボックス |読み取り専用フリントAABB3[] |             |
+
+### フリントBVHNode3
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintBVHNode3
+```
+
+B V H Node 3 の表現。
+
+### フリントBVHレイインターセクト
+
+**種類:** 関数
+
+```typescript
+function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): FlintOption<FlintRayHit3>;
+```
+
+b v h 光線交差操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------------- | ----------- |
+|木 |フリントBVHTree3 |             |
+|レイ |フリントレイ3 |             |
+
+### フリントBVHツリー3
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintBVHTree3
+```
+
+B V H ツリー 3 の表現。
+
+### フリントキャットマルRom2
+
+**種類:** 関数
+
+```typescript
+function flintCatmullRom2(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+catmull rom 2 の操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ポイント0 |フリントベック2 |             |
+|ポイント1 |フリントベック2 |             |
+|ポイント2 |フリントベック2 |             |
+| point3 |フリントベック2 |             |
+|係数 |番号 |             |
+
+### フリントキャットマルRom3
+
+**種類:** 関数
+
+```typescript
+function flintCatmullRom3(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+catmull rom 3 の操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ポイント0 |フリントベック3 |             |
+|ポイント1 |フリントベック3 |             |
+|ポイント2 |フリントベック3 |             |
+| point3 |フリントベック3 |             |
+|係数 |番号 |             |
+
+### フリントサークル
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintCircle
+```
+
+円の表現。
+
+### フリントサークルContainsPoint
+
+**種類:** 関数
+
+```typescript
+function flintCircleContainsPoint(circle: FlintCircle, point: FlintVec2): boolean;
+```
+
+点を含む円の操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ----------- | ----------- |
+|サークル |フリントサークル |             |
+|ポイント |フリントベック2 |             |
+
+### フリント円交差円
+
+**種類:** 関数
+
+```typescript
+function flintCircleIntersectsCircle(first: FlintCircle, second: FlintCircle): boolean;
+```
+
+円が円と交差する操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ----------- | ----------- |
+|最初 |フリントサークル |             |
+| 2番目 |フリントサークル |             |
+
+### フリント錐台
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintFrustum
+```
+
+錐台表現。
+
+### フリントフラスタムFromViewProj
+
+**種類:** 関数
+
+```typescript
+function flintFrustumFromViewProj(viewProj: FlintMat4): FlintFrustum;
+```
+
+ビュープロジェクト操作から錐台を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | --------- | ----------- |
+|ビュープロジェクト |フリントマット4 |             |
+
+### フリント錐台交差球
+
+**種類:** 関数
+
+```typescript
+function flintFrustumIntersectsSphere(frustum: FlintFrustum, sphere: FlintSphere): boolean;
+```
+
+錐台と球の交差操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------------ | ----------- |
+|錐台 |フリントフラスタム |             |
+|球体 |フリントスフィア |             |
+
+### フリントOBB2
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintOBB2
+```
+
+O B B 2 表現。
+
+### フリントOBB3
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintOBB3
+```
+
+O B B 3 表現。
+
+### フリントプレーン3
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintPlane3
+```
+
+面 3 の表現。
+
+### フリント平面3点までの距離
+
+**種類:** 関数
+
+```typescript
+function flintPlane3DistanceToPoint(plane: FlintPlane3, point: FlintVec3): number;
+```
+
+平面 3 から点までの距離の操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ----------- | ----------- |
+|飛行機 |フリントプレーン3 |             |
+|ポイント |フリントベック3 |             |
+
+### フリントレイ2
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintRay2
+```
+
+レイ 2 の表現。
+
+### フリントレイ3
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintRay3
+```
+
+レイ 3 の表現。
+
+### フリントレイ 3 インターセクト OBB
+
+**種類:** 関数
+
+```typescript
+function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOption<number>;
+```
+
+ray 3 intersect ob b 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | --------- | ----------- |
+|レイ |フリントレイ3 |             |
+|オブ |フリントOBB3 |             |
+
+### フリントレイ 3 と交差する AABB3
+
+**種類:** 関数
+
+```typescript
+function flintRay3IntersectsAABB3(ray: FlintRay3, box: FlintAABB3): FlintOption<number>;
+```
+
+光線 3 が a a b b 3 と交差する操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ---------- | ----------- |
+|レイ |フリントレイ3 |             |
+|ボックス |フリントAABB3 |             |
+
+### フリントレイ 3 平面 3 と交差
+
+**種類:** 関数
+
+```typescript
+function flintRay3IntersectsPlane3(ray: FlintRay3, plane: FlintPlane3): FlintOption<number>;
+```
+
+光線 3 が平面 3 と交差する操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ----------- | ----------- |
+|レイ |フリントレイ3 |             |
+|飛行機 |フリントプレーン3 |             |
+
+### フリントレイ 3 交差球
+
+**種類:** 関数
+
+```typescript
+function flintRay3IntersectsSphere(ray: FlintRay3, sphere: FlintSphere): FlintOption<number>;
+```
+
+光線 3 が球と交差する操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ----------- | ----------- |
+|レイ |フリントレイ3 |             |
+|球体 |フリントスフィア |             |
+
+### フリントレイ 3 と交差する三角形 3
+
+**種類:** 関数
+
+```typescript
+function flintRay3IntersectsTriangle3(ray: FlintRay3, triangle: FlintTriangle3): FlintOption<number>;
+```
+
+線 3 が三角形 3 と交差する操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | -------------- | ----------- |
+|レイ |フリントレイ3 |             |
+|三角形 |フリントトライアングル3 |             |
+
+### フリントレイヒット3
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintRayHit3
+```
+
+レイヒット3表現。
+
+### フリントセグメント2
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintSegment2
+```
+
+セグメント 2 の表現。
+
+### フリントセグメント3
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintSegment3
+```
+
+セグメント 3 の表現。
+
+### フリントスフィア
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintSphere
+```
+
+球体の表現。
+
+### フリント球が含まれる点
+
+**種類:** 関数
+
+```typescript
+function flintSphereContainsPoint(sphere: FlintSphere, point: FlintVec3): boolean;
+```
+
+点を含む球の操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ----------- | ----------- |
+|球体 |フリントスフィア |             |
+|ポイント |フリントベック3 |             |
+
+### フリント球交差球
+
+**種類:** 関数
+
+```typescript
+function flintSphereIntersectsSphere(first: FlintSphere, second: FlintSphere): boolean;
+```
+
+球と球が交差する操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ----------- | ----------- |
+|最初 |フリントスフィア |             |
+| 2番目 |フリントスフィア |             |
+
+### フリントトライアングル2
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintTriangle2
+```
+
+三角形 2 の表現。
+
+### フリント三角形2エリア
+
+**種類:** 関数
+
+```typescript
+function flintTriangle2Area(triangle: FlintTriangle2): number;
+```
+
+三角形2の領域演算を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | -------------- | ----------- |
+|三角形 |フリントトライアングル2 |             |
+
+### フリントトライアングル3
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintTriangle3
+```
+
+三角形 3 の表現。
+
+### フリントトライアングル3ノーマル
+
+**種類:** 関数
+
+```typescript
+function flintTriangle3Normal(triangle: FlintTriangle3): FlintVec3;
+```
+
+三角 3 の通常の操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | -------------- | ----------- |
+|三角形 |フリントトライアングル3 |             |
+
+## `src/math/vector`
+
+### createFlintIVec2
+
+**種類:** 関数
+
+```typescript
+function createFlintIVec2(coordX = 0, coordY = 0): FlintIVec2;
+```
+
+フリント作成 2 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---- | ----------- |
+|座標X |      |             |
+|座標 |      |             |
+
+### createFlintIVec3
+
+**種類:** 関数
+
+```typescript
+function createFlintIVec3(coordX = 0, coordY = 0, coordZ = 0): FlintIVec3;
+```
+
+フリント作成 3 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---- | ----------- |
+|座標X |      |             |
+|座標 |      |             |
+|座標Z |      |             |
+
+### フリントマット2の作成
+
+**種類:** 関数
+
+```typescript
+function createFlintMat2(column0OrElements?: FlintVec2 | readonly number[], column1?: FlintVec2): FlintMat2;
+```
+
+フリント マット 2 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------------- | ------------------------------ | ----------- |
+|列0または要素 |フリントベック2 \|読み取り専用番号[] |             |
+|列1 |フリントベック2 |             |
+
+### フリントマット3の作成
+
+**種類:** 関数
+
+```typescript
+function createFlintMat3(
+  column0OrElements?: FlintVec3 | readonly number[],
+  column1?: FlintVec3,
+  column2?: FlintVec3,
+): FlintMat3;
+```
+
+フリント マット 3 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------------- | ------------------------------ | ----------- |
+|列0または要素 |フリントベック3 \|読み取り専用番号[] |             |
+|列1 |フリントベック3 |             |
+|列2 |フリントベック3 |             |
+
+### フリントマット4の作成
+
+**種類:** 関数
+
+```typescript
+function createFlintMat4(
+  column0OrElements?: FlintVec4 | readonly number[],
+  column1?: FlintVec4,
+  column2?: FlintVec4,
+  column3?: FlintVec4,
+): FlintMat4;
+```
+
+フリント マット 4 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------------- | ------------------------------ | ----------- |
+|列0または要素 |フリントベック4 \|読み取り専用番号[] |             |
+|列1 |フリントベック4 |             |
+|列2 |フリントベック4 |             |
+|列3 |フリントベック4 |             |
+
+### フリントクアットを作成する
+
+**種類:** 関数
+
+```typescript
+function createFlintQuat(coordX = 0, coordY = 0, coordZ = 0, coordW = 1): FlintQuat;
+```
+
+Flint Quat の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---- | ----------- |
+|座標X |      |             |
+|座標 |      |             |
+|座標Z |      |             |
+|座標W |      |             |
+
+### createFlintVec2
+
+**種類:** 関数
+
+```typescript
+function createFlintVec2(coordX = 0, coordY = 0): FlintVec2;
+```
+
+フリント vec 2 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---- | ----------- |
+|座標X |      |             |
+|座標 |      |             |
+
+### createFlintVec3
+
+**種類:** 関数
+
+```typescript
+function createFlintVec3(coordX = 0, coordY = 0, coordZ = 0): FlintVec3;
+```
+
+フリント vec 3 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---- | ----------- |
+|座標X |      |             |
+|座標 |      |             |
+|座標Z |      |             |
+
+### createFlintVec4
+
+**種類:** 関数
+
+```typescript
+function createFlintVec4(coordX = 0, coordY = 0, coordZ = 0, coordW = 0): FlintVec4;
+```
+
+フリント vec 4 の作成操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---- | ----------- |
+|座標X |      |             |
+|座標 |      |             |
+|座標Z |      |             |
+|座標W |      |             |
+
+### フリントIVec2
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintIVec2
+```
+
+2D 整数ベクトル。
+
+### フリントIVec3
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintIVec3
+```
+
+3D 整数ベクトル。
+
+### フリントマット2
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintMat2
+```
+
+マット 2 の表現。
+
+### フリントマット2追加
+
+**種類:** 関数
+
+```typescript
+function flintMat2Add(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+マット 2 の追加操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントマット2 |             |
+| 2番目 |フリントマット2 |             |
+
+### フリントマット 2 決定基
+
+**種類:** 関数
+
+```typescript
+function flintMat2Determinant(matrix: FlintMat2): number;
+```
+
+マット 2 の行列式演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット2 |             |
+
+### フリントMat2FromCols
+
+**種類:** 関数
+
+```typescript
+function flintMat2FromCols(column0: FlintVec2, column1: FlintVec2): FlintMat2;
+```
+
+列操作からマット 2 を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | --------- | ----------- |
+|列0 |フリントベック2 |             |
+|列1 |フリントベック2 |             |
+
+### フリントMat2アイデンティティ
+
+**種類:** 関数
+
+```typescript
+function flintMat2Identity(): FlintMat2;
+```
+
+マット 2 の恒等演算を実行します。
+
+### フリントマット 2 インバース
+
+**種類:** 関数
+
+```typescript
+function flintMat2Inverse(matrix: FlintMat2): FlintOption<FlintMat2>;
+```
+
+マット 2 の逆演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット2 |             |
+
+### フリントマット2マル
+
+**種類:** 関数
+
+```typescript
+function flintMat2Mul(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+マット 2 マル操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントマット2 |             |
+| 2番目 |フリントマット2 |             |
+
+### フリントマット 2 回転
+
+**種類:** 関数
+
+```typescript
+function flintMat2Rotation(angleRad: number): FlintMat2;
+```
+
+マット2の回転動作を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|角度Rad |番号 |             |
+
+### フリントマット 2 スケール
+
+**種類:** 関数
+
+```typescript
+function flintMat2Scale(matrix: FlintMat2, scalar: number): FlintMat2;
+```
+
+マット2のスケール操作を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット2 |             |
+|スカラー |番号 |             |
+
+### フリントマット 2 スケーリング
+
+**種類:** 関数
+
+```typescript
+function flintMat2Scaling(scaleVector: FlintVec2): FlintMat2;
+```
+
+マット 2 のスケーリング操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | --------- | ----------- |
+|スケールベクトル |フリントベック2 |             |
+
+### フリントMat2Sub
+
+**種類:** 関数
+
+```typescript
+function flintMat2Sub(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+マット2のサブ操作を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントマット2 |             |
+| 2番目 |フリントマット2 |             |
+
+### フリントMat2TransformVec2
+
+**種類:** 関数
+
+```typescript
+function flintMat2TransformVec2(matrix: FlintMat2, vector: FlintVec2): FlintVec2;
+```
+
+mat 2 変換 vec 2 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット2 |             |
+|ベクトル |フリントベック2 |             |
+
+### フリントマット 2 トランスポーズ
+
+**種類:** 関数
+
+```typescript
+function flintMat2Transpose(matrix: FlintMat2): FlintMat2;
+```
+
+マット2のトランスポーズ操作を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット2 |             |
+
+### フリントマット3
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintMat3
+```
+
+マット 3 の表現。
+
+### フリントマット3追加
+
+**種類:** 関数
+
+```typescript
+function flintMat3Add(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+マット 3 の追加操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントマット3 |             |
+| 2番目 |フリントマット3 |             |
+
+### フリントマット 3 決定因子
+
+**種類:** 関数
+
+```typescript
+function flintMat3Determinant(matrix: FlintMat3): number;
+```
+
+マット 3 の行列式演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット3 |             |
+
+### フリントMat3FromCols
+
+**種類:** 関数
+
+```typescript
+function flintMat3FromCols(column0: FlintVec3, column1: FlintVec3, column2: FlintVec3): FlintMat3;
+```
+
+列操作からマット 3 を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | --------- | ----------- |
+|列0 |フリントベック3 |             |
+|列1 |フリントベック3 |             |
+|列2 |フリントベック3 |             |
+
+### フリントMat3アイデンティティ
+
+**種類:** 関数
+
+```typescript
+function flintMat3Identity(): FlintMat3;
+```
+
+マット 3 の恒等演算を実行します。
+
+### フリントマット 3 インバース
+
+**種類:** 関数
+
+```typescript
+function flintMat3Inverse(matrix: FlintMat3): FlintOption<FlintMat3>;
+```
+
+マット 3 の逆演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット3 |             |
+
+### フリントマット3マル
+
+**種類:** 関数
+
+```typescript
+function flintMat3Mul(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+マット 3 マル操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントマット3 |             |
+| 2番目 |フリントマット3 |             |
+
+### フリントマット 3 回転 2D
+
+**種類:** 関数
+
+```typescript
+function flintMat3Rotate2D(angleRad: number): FlintMat3;
+```
+
+マット 3 の 2 次元回転操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|角度Rad |番号 |             |
+
+### フリントマット3スケール
+
+**種類:** 関数
+
+```typescript
+function flintMat3Scale(matrix: FlintMat3, scalar: number): FlintMat3;
+```
+
+マット3のスケール操作を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット3 |             |
+|スカラー |番号 |             |
+
+### フリントマット 3 スケール 2D
+
+**種類:** 関数
+
+```typescript
+function flintMat3Scale2D(scale: FlintVec2): FlintMat3;
+```
+
+マット 3 スケール 2 次元操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | --------- | ----------- |
+|スケール |フリントベック2 |             |
+
+### フリントMat3Sub
+
+**種類:** 関数
+
+```typescript
+function flintMat3Sub(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+マット3のサブ操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントマット3 |             |
+| 2番目 |フリントマット3 |             |
+
+### フリントMat3TransformVec2
+
+**種類:** 関数
+
+```typescript
+function flintMat3TransformVec2(matrix: FlintMat3, vector: FlintVec2): FlintVec2;
+```
+
+mat 3 変換 vec 2 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット3 |             |
+|ベクトル |フリントベック2 |             |
+
+### フリントMat3TransformVec3
+
+**種類:** 関数
+
+```typescript
+function flintMat3TransformVec3(matrix: FlintMat3, vector: FlintVec3): FlintVec3;
+```
+
+mat 3 変換 vec 3 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット3 |             |
+|ベクトル |フリントベック3 |             |
+
+### flintMat3Translate2D
+
+**種類:** 関数
+
+```typescript
+function flintMat3Translate2D(translation: FlintVec2): FlintMat3;
+```
+
+マット 3 の 2 次元変換操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | --------- | ----------- |
+|翻訳 |フリントベック2 |             |
+
+### フリントマット 3 トランスポーズ
+
+**種類:** 関数
+
+```typescript
+function flintMat3Transpose(matrix: FlintMat3): FlintMat3;
+```
+
+マット 3 のトランスポーズ操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット3 |             |
+
+### フリントマット4
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintMat4
+```
+
+マット 4 の表現。
+
+### フリントマット4追加
+
+**種類:** 関数
+
+```typescript
+function flintMat4Add(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+マット 4 の追加操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントマット4 |             |
+| 2番目 |フリントマット4 |             |
+
+### フリントマット 4 決定基
+
+**種類:** 関数
+
+```typescript
+function flintMat4Determinant(matrix: FlintMat4): number;
+```
+
+マット 4 の行列式演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット4 |             |
+
+### フリントMat4FromCols
+
+**種類:** 関数
+
+```typescript
+function flintMat4FromCols(column0: FlintVec4, column1: FlintVec4, column2: FlintVec4, column3: FlintVec4): FlintMat4;
+```
+
+列操作からマット 4 を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | --------- | ----------- |
+|列0 |フリントベック4 |             |
+|列1 |フリントベック4 |             |
+|列2 |フリントベック4 |             |
+|列3 |フリントベック4 |             |
+
+### フリントMat4アイデンティティ
+
+**種類:** 関数
+
+```typescript
+function flintMat4Identity(): FlintMat4;
+```
+
+マット 4 の恒等演算を実行します。
+
+### フリントMat4Inverse
+
+**種類:** 関数
+
+```typescript
+function flintMat4Inverse(matrix: FlintMat4): FlintOption<FlintMat4>;
+```
+
+マット 4 の逆演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット4 |             |
+
+### フリントマット 4 見て
+
+**種類:** 関数
+
+```typescript
+function flintMat4LookAt(eye: FlintVec3, target: FlintVec3, up: FlintVec3): FlintMat4;
+```
+
+マット 4 の操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|目 |フリントベック3 |             |
+|ターゲット |フリントベック3 |             |
+|アップ |フリントベック3 |             |
+
+### フリントマット4マル
+
+**種類:** 関数
+
+```typescript
+function flintMat4Mul(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+マット 4 マル操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントマット4 |             |
+| 2番目 |フリントマット4 |             |
+
+### フリントMat4正投影
+
+**種類:** 関数
+
+```typescript
+function flintMat4Orthographic(
+  left: number,
+  right: number,
+  bottom: number,
+  top: number,
+  zNear: number,
+  zFar: number,
+): FlintMat4;
+```
+
+マット 4 の正投影操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------ | ----------- |
+|左 |番号 |             |
+|右 |番号 |             |
+|一番下 |番号 |             |
+|トップ |番号 |             |
+| z近く |番号 |             |
+| zファール |番号 |             |
+
+### フリントマット 4 視点
+
+**種類:** 関数
+
+```typescript
+function flintMat4Perspective(fovYRad: number, aspect: number, zNear: number, zFar: number): FlintMat4;
+```
+
+マット4の透視操作を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+| fovYRad |番号 |             |
+|アスペクト |番号 |             |
+| z近く |番号 |             |
+| zファール |番号 |             |
+
+### フリントマット 4 回転軸角度
+
+**種類:** 関数
+
+```typescript
+function flintMat4RotationAxisAngle(axis: FlintVec3, angleRad: number): FlintMat4;
+```
+
+マット4の回転軸角度演算を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | --------- | ----------- |
+|軸 |フリントベック3 |             |
+|角度Rad |番号 |             |
+
+### フリントマット 4 回転 X
+
+**種類:** 関数
+
+```typescript
+function flintMat4RotationX(angleRad: number): FlintMat4;
+```
+
+マット4回転×操作を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|角度Rad |番号 |             |
+
+### フリントマット 4 回転 Y
+
+**種類:** 関数
+
+```typescript
+function flintMat4RotationY(angleRad: number): FlintMat4;
+```
+
+マット4の回転y操作を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|角度Rad |番号 |             |
+
+### フリントマット 4 回転 Z
+
+**種類:** 関数
+
+```typescript
+function flintMat4RotationZ(angleRad: number): FlintMat4;
+```
+
+マット4回転z動作を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|角度Rad |番号 |             |
+
+### フリントマット 4 スケール
+
+**種類:** 関数
+
+```typescript
+function flintMat4Scale(matrix: FlintMat4, scalar: number): FlintMat4;
+```
+
+マット4のスケール操作を行います。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット4 |             |
+|スカラー |番号 |             |
+
+### フリントマット 4 スケーリング
+
+**種類:** 関数
+
+```typescript
+function flintMat4Scaling(scale: FlintVec3): FlintMat4;
+```
+
+マット 4 のスケーリング操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | --------- | ----------- |
+|スケール |フリントベック3 |             |
+
+### フリントMat4Sub
+
+**種類:** 関数
+
+```typescript
+function flintMat4Sub(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+マット4のサブ操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントマット4 |             |
+| 2番目 |フリントマット4 |             |
+
+### フリントMat4TransformPoint3
+
+**種類:** 関数
+
+```typescript
+function flintMat4TransformPoint3(matrix: FlintMat4, point: FlintVec3): FlintVec3;
+```
+
+マット 4 の変換ポイント 3 の操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット4 |             |
+|ポイント |フリントベック3 |             |
+
+### フリントMat4TransformVec4
+
+**種類:** 関数
+
+```typescript
+function flintMat4TransformVec4(matrix: FlintMat4, vector: FlintVec4): FlintVec4;
+```
+
+mat 4 変換 vec 4 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット4 |             |
+|ベクトル |フリントベック4 |             |
+
+### フリントMat4TransformVector3
+
+**種類:** 関数
+
+```typescript
+function flintMat4TransformVector3(matrix: FlintMat4, vector: FlintVec3): FlintVec3;
+```
+
+マット 4 変換ベクトル 3 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット4 |             |
+|ベクトル |フリントベック3 |             |
+
+### flintMat4翻訳
+
+**種類:** 関数
+
+```typescript
+function flintMat4Translation(offset: FlintVec3): FlintMat4;
+```
+
+マット 4 の変換操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|オフセット |フリントベック3 |             |
+
+### フリントマット 4 トランスポーズ
+
+**種類:** 関数
+
+```typescript
+function flintMat4Transpose(matrix: FlintMat4): FlintMat4;
+```
+
+マット 4 のトランスポーズ操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|マトリックス |フリントマット4 |             |
+
+### フリントクアット
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintQuat
+```
+
+クワット表現。
+
+### フリントクアト共役
+
+**種類:** 関数
+
+```typescript
+function flintQuatConjugate(quaternion: FlintQuat): FlintQuat;
+```
+
+Quat 共役演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------- | ----------- |
+|四元数 |フリントクワット |             |
+
+### フリントクアットドット
+
+**種類:** 関数
+
+```typescript
+function flintQuatDot(first: FlintQuat, second: FlintQuat): number;
+```
+
+クアットドット操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントクワット |             |
+| 2番目 |フリントクワット |             |
+
+### フリントクアット軸からの角度
+
+**種類:** 関数
+
+```typescript
+function flintQuatFromAxisAngle(axis: FlintVec3, angleRad: number): FlintQuat;
+```
+
+軸角度操作からクワットを実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | --------- | ----------- |
+|軸 |フリントベック3 |             |
+|角度Rad |番号 |             |
+
+### フリントクワットオイラーから
+
+**種類:** 関数
+
+```typescript
+function flintQuatFromEuler(pitchX: number, yawY: number, rollZ: number): FlintQuat;
+```
+
+オイラー演算から quat を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------ | ----------- |
+|ピッチX |番号 |             |
+|ヨーイ |番号 |             |
+|ロールズ |番号 |             |
+
+### フリントクワットアイデンティティ
+
+**種類:** 関数
+
+```typescript
+function flintQuatIdentity(): FlintQuat;
+```
+
+quat アイデンティティ操作を実行します。
+
+### フリントクワットインバース
+
+**種類:** 関数
+
+```typescript
+function flintQuatInverse(quaternion: FlintQuat): FlintOption<FlintQuat>;
+```
+
+quat 逆演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------- | ----------- |
+|四元数 |フリントクワット |             |
+
+### フリントクアットマル
+
+**種類:** 関数
+
+```typescript
+function flintQuatMul(first: FlintQuat, second: FlintQuat): FlintQuat;
+```
+
+quat mul 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントクワット |             |
+| 2番目 |フリントクワット |             |
+
+### フリントクワットノルム
+
+**種類:** 関数
+
+```typescript
+function flintQuatNorm(quaternion: FlintQuat): number;
+```
+
+クワットノルム演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------- | ----------- |
+|四元数 |フリントクワット |             |
+
+### flintQuat正規化
+
+**種類:** 関数
+
+```typescript
+function flintQuatNormalize(quaternion: FlintQuat): FlintQuat;
+```
+
+quat 正規化操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------- | ----------- |
+|四元数 |フリントクワット |             |
+
+### フリントクワットノルムスクエア
+
+**種類:** 関数
+
+```typescript
+function flintQuatNormSq(quaternion: FlintQuat): number;
+```
+
+quat Norm sq 演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------- | ----------- |
+|四元数 |フリントクワット |             |
+
+### フリントQuatRotateVec3
+
+**種類:** 関数
+
+```typescript
+function flintQuatRotateVec3(quaternion: FlintQuat, vector: FlintVec3): FlintVec3;
+```
+
+quat 回転 vec 3 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------- | ----------- |
+|四元数 |フリントクワット |             |
+|ベクトル |フリントベック3 |             |
+
+### フリントクワットスラープ
+
+**種類:** 関数
+
+```typescript
+function flintQuatSlerp(first: FlintQuat, second: FlintQuat, factor: number): FlintQuat;
+```
+
+quat slerp 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントクワット |             |
+| 2番目 |フリントクワット |             |
+|係数 |番号 |             |
+
+### フリントQuatToMat3
+
+**種類:** 関数
+
+```typescript
+function flintQuatToMat3(quaternion: FlintQuat): FlintMat3;
+```
+
+クワットからマット 3 への操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------- | ----------- |
+|四元数 |フリントクワット |             |
+
+### フリントQuatToMat4
+
+**種類:** 関数
+
+```typescript
+function flintQuatToMat4(quaternion: FlintQuat): FlintMat4;
+```
+
+クワットからマット 4 への操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------- | ----------- |
+|四元数 |フリントクワット |             |
+
+### フリントベック2
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintVec2
+```
+
+2D 浮動小数点ベクトル。
+
+### フリントVec2Add
+
+**種類:** 関数
+
+```typescript
+function flintVec2Add(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+vec 2 add 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック2 |             |
+| 2番目 |フリントベック2 |             |
+
+### フリントVec2角度
+
+**種類:** 関数
+
+```typescript
+function flintVec2Angle(first: FlintVec2, second: FlintVec2): number;
+```
+
+vec 2 角度演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック2 |             |
+| 2番目 |フリントベック2 |             |
+
+### フリントVec2距離
+
+**種類:** 関数
+
+```typescript
+function flintVec2Distance(first: FlintVec2, second: FlintVec2): number;
+```
+
+vec 2 距離演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック2 |             |
+| 2番目 |フリントベック2 |             |
+
+### フリントVec2距離二乗
+
+**種類:** 関数
+
+```typescript
+function flintVec2DistanceSquared(first: FlintVec2, second: FlintVec2): number;
+```
+
+vec 2 距離の 2 乗演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック2 |             |
+| 2番目 |フリントベック2 |             |
+
+### フリントVec2Div
+
+**種類:** 関数
+
+```typescript
+function flintVec2Div(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+vec 2 div 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック2 |             |
+|スカラー |番号 |             |
+
+### フリントVec2Dot
+
+**種類:** 関数
+
+```typescript
+function flintVec2Dot(first: FlintVec2, second: FlintVec2): number;
+```
+
+vec 2 ドット演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック2 |             |
+| 2番目 |フリントベック2 |             |
+
+### フリントVec2長さ
+
+**種類:** 関数
+
+```typescript
+function flintVec2Length(vector: FlintVec2): number;
+```
+
+vec 2 長さの演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック2 |             |
+
+### フリントVec2LengthSq
+
+**種類:** 関数
+
+```typescript
+function flintVec2LengthSq(vector: FlintVec2): number;
+```
+
+vec 2 length sq 演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック2 |             |
+
+### フリントVec2Lerp
+
+**種類:** 関数
+
+```typescript
+function flintVec2Lerp(first: FlintVec2, second: FlintVec2, factor: number): FlintVec2;
+```
+
+vec 2 lerp 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック2 |             |
+| 2番目 |フリントベック2 |             |
+|係数 |番号 |             |
+
+### フリントVec2Mul
+
+**種類:** 関数
+
+```typescript
+function flintVec2Mul(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+vec 2 mul 演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック2 |             |
+| 2番目 |フリントベック2 |             |
+
+### フリントVec2Neg
+
+**種類:** 関数
+
+```typescript
+function flintVec2Neg(vector: FlintVec2): FlintVec2;
+```
+
+vec 2 neg 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック2 |             |
+
+### フリントVec2正規化
+
+**種類:** 関数
+
+```typescript
+function flintVec2Normalize(vector: FlintVec2): FlintVec2;
+```
+
+vec 2 正規化操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック2 |             |
+
+### フリントVec2PerpDot
+
+**種類:** 関数
+
+```typescript
+function flintVec2PerpDot(first: FlintVec2, second: FlintVec2): number;
+```
+
+vec 2 perp dot 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック2 |             |
+| 2番目 |フリントベック2 |             |
+
+### フリントVec2プロジェクト
+
+**種類:** 関数
+
+```typescript
+function flintVec2Project(vector: FlintVec2, target: FlintVec2): FlintVec2;
+```
+
+vec 2 プロジェクトの操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック2 |             |
+|ターゲット |フリントベック2 |             |
+
+### フリントVec2Reflect
+
+**種類:** 関数
+
+```typescript
+function flintVec2Reflect(vector: FlintVec2, normal: FlintVec2): FlintVec2;
+```
+
+vec 2 反映操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック2 |             |
+|通常 |フリントベック2 |             |
+
+### フリントVec2Rotate
+
+**種類:** 関数
+
+```typescript
+function flintVec2Rotate(vector: FlintVec2, angleRad: number): FlintVec2;
+```
+
+vec 2 回転操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | --------- | ----------- |
+|ベクトル |フリントベック2 |             |
+|角度Rad |番号 |             |
+
+### フリントVec2Scale
+
+**種類:** 関数
+
+```typescript
+function flintVec2Scale(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+vec 2 スケール操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック2 |             |
+|スカラー |番号 |             |
+
+### フリントVec2Sub
+
+**種類:** 関数
+
+```typescript
+function flintVec2Sub(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+vec 2 サブ操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック2 |             |
+| 2番目 |フリントベック2 |             |
+
+### フリントベック3
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintVec3
+```
+
+3D 浮動小数点ベクトル。
+
+### フリントVec3追加
+
+**種類:** 関数
+
+```typescript
+function flintVec3Add(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+vec 3 add 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック3 |             |
+| 2番目 |フリントベック3 |             |
+
+### フリントVec3角度
+
+**種類:** 関数
+
+```typescript
+function flintVec3Angle(first: FlintVec3, second: FlintVec3): number;
+```
+
+vec 3 角度演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック3 |             |
+| 2番目 |フリントベック3 |             |
+
+### フリントVec3Cross
+
+**種類:** 関数
+
+```typescript
+function flintVec3Cross(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+vec 3 クロス操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック3 |             |
+| 2番目 |フリントベック3 |             |
+
+### フリントVec3距離
+
+**種類:** 関数
+
+```typescript
+function flintVec3Distance(first: FlintVec3, second: FlintVec3): number;
+```
+
+vec 3 距離演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック3 |             |
+| 2番目 |フリントベック3 |             |
+
+### フリントVec3距離二乗
+
+**種類:** 関数
+
+```typescript
+function flintVec3DistanceSquared(first: FlintVec3, second: FlintVec3): number;
+```
+
+vec 3 距離の 2 乗演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック3 |             |
+| 2番目 |フリントベック3 |             |
+
+### フリントVec3Div
+
+**種類:** 関数
+
+```typescript
+function flintVec3Div(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+vec 3 div 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック3 |             |
+|スカラー |番号 |             |
+
+### フリントVec3Dot
+
+**種類:** 関数
+
+```typescript
+function flintVec3Dot(first: FlintVec3, second: FlintVec3): number;
+```
+
+vec 3 ドット演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック3 |             |
+| 2番目 |フリントベック3 |             |
+
+### フリントVec3長さ
+
+**種類:** 関数
+
+```typescript
+function flintVec3Length(vector: FlintVec3): number;
+```
+
+vec 3 の長さの演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック3 |             |
+
+### フリントVec3LengthSq
+
+**種類:** 関数
+
+```typescript
+function flintVec3LengthSq(vector: FlintVec3): number;
+```
+
+vec 3 length sq 演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック3 |             |
+
+### フリントVec3Lerp
+
+**種類:** 関数
+
+```typescript
+function flintVec3Lerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+vec 3 lerp 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック3 |             |
+| 2番目 |フリントベック3 |             |
+|係数 |番号 |             |
+
+### フリントVec3Mul
+
+**種類:** 関数
+
+```typescript
+function flintVec3Mul(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+vec 3 mul 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック3 |             |
+| 2番目 |フリントベック3 |             |
+
+### フリントVec3Neg
+
+**種類:** 関数
+
+```typescript
+function flintVec3Neg(vector: FlintVec3): FlintVec3;
+```
+
+vec 3 neg 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック3 |             |
+
+### フリントVec3正規化
+
+**種類:** 関数
+
+```typescript
+function flintVec3Normalize(vector: FlintVec3): FlintVec3;
+```
+
+vec 3 正規化操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック3 |             |
+
+### フリントVec3プロジェクト
+
+**種類:** 関数
+
+```typescript
+function flintVec3Project(vector: FlintVec3, target: FlintVec3): FlintVec3;
+```
+
+vec 3 プロジェクトの操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック3 |             |
+|ターゲット |フリントベック3 |             |
+
+### フリントVec3リフレクト
+
+**種類:** 関数
+
+```typescript
+function flintVec3Reflect(vector: FlintVec3, normal: FlintVec3): FlintVec3;
+```
+
+vec 3 反映操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック3 |             |
+|通常 |フリントベック3 |             |
+
+### フリントVec3屈折
+
+**種類:** 関数
+
+```typescript
+function flintVec3Refract(vector: FlintVec3, normal: FlintVec3, eta: number): FlintVec3;
+```
+
+vec 3 屈折操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック3 |             |
+|通常 |フリントベック3 |             |
+|イータ |番号 |             |
+
+### フリントVec3拒否
+
+**種類:** 関数
+
+```typescript
+function flintVec3Reject(vector: FlintVec3, from: FlintVec3): FlintVec3;
+```
+
+vec 3 リジェクト操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック3 |             |
+|から |フリントベック3 |             |
+
+### フリントVec3Scale
+
+**種類:** 関数
+
+```typescript
+function flintVec3Scale(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+vec 3 スケール操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック3 |             |
+|スカラー |番号 |             |
+
+### フリントVec3Slerp
+
+**種類:** 関数
+
+```typescript
+function flintVec3Slerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+vec 3 slerp 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック3 |             |
+| 2番目 |フリントベック3 |             |
+|係数 |番号 |             |
+
+### フリントVec3Sub
+
+**種類:** 関数
+
+```typescript
+function flintVec3Sub(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+vec 3 サブ操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック3 |             |
+| 2番目 |フリントベック3 |             |
+
+### フリントベック4
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintVec4
+```
+
+4D 浮動小数点ベクトル。
+
+### フリントVec4Add
+
+**種類:** 関数
+
+```typescript
+function flintVec4Add(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+vec 4 add 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック4 |             |
+| 2番目 |フリントベック4 |             |
+
+### フリントVec4Div
+
+**種類:** 関数
+
+```typescript
+function flintVec4Div(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+vec 4 div 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック4 |             |
+|スカラー |番号 |             |
+
+### フリントVec4Dot
+
+**種類:** 関数
+
+```typescript
+function flintVec4Dot(first: FlintVec4, second: FlintVec4): number;
+```
+
+vec 4 ドット演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック4 |             |
+| 2番目 |フリントベック4 |             |
+
+### フリントVec4長さ
+
+**種類:** 関数
+
+```typescript
+function flintVec4Length(vector: FlintVec4): number;
+```
+
+vec 4 長さの演算を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック4 |             |
+
+### フリントVec4Lerp
+
+**種類:** 関数
+
+```typescript
+function flintVec4Lerp(first: FlintVec4, second: FlintVec4, factor: number): FlintVec4;
+```
+
+vec 4 lerp 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック4 |             |
+| 2番目 |フリントベック4 |             |
+|係数 |番号 |             |
+
+### フリントVec4Neg
+
+**種類:** 関数
+
+```typescript
+function flintVec4Neg(vector: FlintVec4): FlintVec4;
+```
+
+vec 4 neg 操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック4 |             |
+
+### フリントVec4Normalize
+
+**種類:** 関数
+
+```typescript
+function flintVec4Normalize(vector: FlintVec4): FlintVec4;
+```
+
+vec 4 正規化操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック4 |             |
+
+### フリントVec4Scale
+
+**種類:** 関数
+
+```typescript
+function flintVec4Scale(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+vec 4 スケール操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|ベクトル |フリントベック4 |             |
+|スカラー |番号 |             |
+
+### フリントVec4Sub
+
+**種類:** 関数
+
+```typescript
+function flintVec4Sub(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+vec 4 サブ操作を実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | --------- | ----------- |
+|最初 |フリントベック4 |             |
+| 2番目 |フリントベック4 |             |
+
+## `src/memory`
+
+### フリントメモリの作成
+
+**種類:** 関数
+
+```typescript
+function createFlintMemory(
+  memoryOrOptions?: WebAssembly.Memory | FlintMemoryOptions,
+  options?: FlintMemoryOptions,
+): FlintMemory;
+```
+
+構成された FlintMemory インスタンスを作成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------------- | ---------------------------------------- | ----------------------------------------------------------------- |
+|メモリまたはオプション | WebAssembly.Memory \|フリントメモリオプション | - 既存の WebAssembly.Memory またはメモリ作成オプション。         |
+|オプション |フリントメモリオプション | - メモリ インスタンスが提供されている場合は、メモリの作成とサイズ変更のオプション。 |
+
+#### 契約
+
+- **@param:** - 既存の WebAssembly.Memory またはメモリ作成オプション。
+- **@param:** - メモリ インスタンスが提供されている場合は、メモリの作成とサイズ変更のオプション。
+- **@returns:** 初期化された FlintMemory インスタンス。
+
+### createFlintMultiMemory
+
+**種類:** 関数
+
+```typescript
+function createFlintMultiMemory(options?: FlintMultiMemoryOptions): FlintMultiMemory;
+```
+
+専用ゲスト ヒープ、ホスト相互運用性、および静的パーティションを備えた分離されたマルチメモリ インスタンスを作成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ----------------------- | ----------- |
+|オプション | Flintマルチメモリオプション |             |
+
+### FALLBACK_GUARD_PAGE_SIZE
+
+**種類:** 定数
+
+```typescript
+export const FALLBACK_GUARD_PAGE_SIZE;
 ```
 
 説明はありません。
 
-### FlintMemory
+### FLINT_MEMORY_CAPABILITIES
+
+**種類:** 定数
+
+```typescript
+export const FLINT_MEMORY_CAPABILITIES;
+```
+
+説明はありません。
+
+### フリントメモリ
 
 **種類:** クラス
 
@@ -1854,9 +6472,9 @@ export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
 export class FlintMemory
 ```
 
-説明はありません。
+WebAssembly の線形メモリ割り当て、境界チェック、バイナリ I/O を管理します。
 
-### Flintメモリアドレス
+### フリントメモリアドレス
 
 **種類：**タイプ
 
@@ -1864,9 +6482,9 @@ export class FlintMemory
 export type FlintMemoryAddress = number | bigint;
 ```
 
-説明はありません。
+32 ビット (数値) アドレスと 64 ビット (倍数) アドレスの両方をサポートするメモリ アドレス ポインター表現。
 
-### FlintMemoryOptions
+### フリントメモリオプション
 
 **種類:** インターフェース
 
@@ -1874,33 +6492,90 @@ export type FlintMemoryAddress = number | bigint;
 export interface FlintMemoryOptions
 ```
 
-説明はありません。
+Flint リニア メモリ インスタンスを作成およびサイズ設定するための構成オプション。
+
+### Flintメモリパーティション名
+
+**種類：**タイプ
+
+```typescript
+export type FlintMemoryPartitionName = 'guestHeap' | 'foreignHeap' | 'hostInterop' | 'staticData';
+```
+
+マルチメモリ モジュールの専用リニア メモリ パーティションの名前。
+
+### フリントマルチメモリ
+
+**種類:** クラス
+
+```typescript
+export class FlintMultiMemory
+```
+
+WebAssembly マルチメモリ分離コーディネーター。
+メモリをゲスト実行用の専用スペース (メモリ 0) に分離します。
+外部の信頼できない C/Rust ヒープ (メモリ 1)、ホスト相互運用バッファ (メモリ 2)、
+および静的定数/テーブル (メモリ 3)。
+
+ネイティブのマルチメモリ ハードウェア分離とゼロ割り当てをサポート
+マルチメモリを持たないランタイム用のパーティション化された単一メモリ フォールバック エミュレーション (Safari / WebKit など)。
+
+### Flintマルチメモリオプション
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintMultiMemoryOptions
+```
+
+複数の独立した線形メモリ パーティションを構成するオプション。
+
+### フリント地域アリーナ
+
+**種類:** クラス
+
+```typescript
+export class FlintRegionalArena
+```
+
+O(1) 割り当てを提供するスコープ付きリージョン バンプ アロケーター プール (Tier 1)
+スコープ終了時の決定的な一括割り当て解除。
+
+### マルチメモリがサポートされています
+
+**種類:** 関数
+
+```typescript
+function isMultiMemorySupported(): boolean;
+```
+
+ホスト JavaScript 環境が WebAssembly マルチメモリをネイティブにサポートしているかどうかを検出します。
 
 ## `src/parallel`
 
-### FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+### FLINT_PARALLEL_CAPABILITIES
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
+export const FLINT_PARALLEL_CAPABILITIES;
 ```
 
 ワーカー、スレッド、アトミック、および共有メモリの実行を承認するために使用される機能名。
 
-### FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS
+### FLINT_PARALLEL_OPERATION_DESCRIPTORS
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
+export const FLINT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<FlintParallelOperation, FlintParallelOperationDescriptor>
 >;
 ```
 
-すべてのシリアル フォールバック可能な並列操作に対する安定した記述子。
+すべてのシリアル フォールバック可能な並列操作の安定した記述子。
 
-### flintIteratorParAt
+### フリントイテレータParAt
 
 **種類:** 関数
 
@@ -1916,13 +6591,13 @@ function flintIteratorParAt(
 
 #### パラメータ
 
-| 名前         | タイプ                | 説明 |
-| ------------ | --------------------- | ---- |
-| ソース       | FlintIterable<TValue> |      |
-| インデックス | 番号                  |      |
-| オプション   | FlintParallelOptions  |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------- | ----------- |
+|ソース | FlintIterable<TValue> |             |
+|インデックス |番号 |             |
+|オプション |フリントパラレルオプション |             |
 
-### flintIteratorParCollect
+### フリントイテレータParCollect
 
 **種類:** 関数
 
@@ -1933,14 +6608,14 @@ function flintIteratorParCollect(
 ): Promise<FlintVector<TValue>>;
 ```
 
-順序付けされた並列結果を所有ベクトルに具体化します。
+順序付けられた並列結果を所有ベクトルに具体化します。
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| ソース     | FlintIterable<TValue> |      |
-| オプション | FlintParallelOptions  |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------- | ----------- |
+|ソース | FlintIterable<TValue> |             |
+|オプション |フリントパラレルオプション |             |
 
 ### flintIteratorParFilter
 
@@ -1959,13 +6634,13 @@ function flintIteratorParFilter(
 
 #### パラメータ
 
-| 名前       | タイプ                                                               | 説明 |
-| ---------- | -------------------------------------------------------------------- | ---- |
-| ソース     | FlintIterable<TValue>                                                |      |
-| 述語       | (値: TValue、インデックス: 数値) => ブール値 \| PromiseLike<boolean> |      |
-| オプション | FlintParallelOptions                                                 |      |
+|名前 |タイプ |説明 |
+| --------- | ----------------------------------------------------------------- | ----------- |
+|ソース | FlintIterable<TValue> |             |
+|述語 | (値: TValue、インデックス: 数値) => ブール値 \| PromiseLike<boolean> |             |
+|オプション |フリントパラレルオプション |             |
 
-### flintIteratorParFirst
+### フリントイテレータParFirst
 
 **種類:** 関数
 
@@ -1980,10 +6655,10 @@ function flintIteratorParFirst(
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| ソース     | FlintIterable<TValue> |      |
-| オプション | FlintParallelOptions  |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------- | ----------- |
+|ソース | FlintIterable<TValue> |             |
+|オプション |フリントパラレルオプション |             |
 
 ### flintIteratorParFlatten
 
@@ -2000,10 +6675,10 @@ function flintIteratorParFlatten(
 
 #### パラメータ
 
-| 名前       | タイプ                               | 説明 |
-| ---------- | ------------------------------------ | ---- |
-| ソース     | FlintIterable<FlintIterable<TValue>> |      |
-| オプション | FlintParallelOptions                 |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------------------------ | ----------- |
+|ソース | FlintIterable<FlintIterable<TValue>> |             |
+|オプション |フリントパラレルオプション |             |
 
 ### flintIteratorParFold
 
@@ -2022,14 +6697,14 @@ function flintIteratorParFold(
 
 #### パラメータ
 
-| 名前       | タイプ                                                               | 説明 |
-| ---------- | -------------------------------------------------------------------- | ---- |
-| ソース     | FlintIterable<TValue>                                                |      |
-| イニシャル | 結果                                                                 |      |
-| 減速機     | (アキュムレータ: TResult、値: TValue、インデックス: 数値) => TResult |      |
-| オプション | FlintParallelOptions                                                 |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------------------------------------------------- | ----------- |
+|ソース | FlintIterable<TValue> |             |
+|イニシャル |結果 |             |
+|減速機 | (アキュムレータ: TResult、値: TValue、インデックス: 数値) => TResult |             |
+|オプション |フリントパラレルオプション |             |
 
-### flintIteratorParLast
+### フリントイテレータParLast
 
 **種類:** 関数
 
@@ -2044,12 +6719,12 @@ function flintIteratorParLast(
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| ソース     | FlintIterable<TValue> |      |
-| オプション | FlintParallelOptions  |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------- | ----------- |
+|ソース | FlintIterable<TValue> |             |
+|オプション |フリントパラレルオプション |             |
 
-### flintIteratorParMap
+### フリントイテレータParMap
 
 **種類:** 関数
 
@@ -2061,16 +6736,16 @@ function flintIteratorParMap(
 ): Promise<FlintIterator<TResult>>;
 ```
 
-コールバックを並列に適用し、遅延互換の順序付きイテレータを返します。
+コールバックを並行して適用し、遅延互換の順序付きイテレータを返します。
 コールバック エラーは操作を拒否し、シリアル フォールバックによって隠蔽されません。
 
 #### パラメータ
 
-| 名前       | タイプ                                                              | 説明 |
-| ---------- | ------------------------------------------------------------------- | ---- |
-| ソース     | FlintIterable<TValue>                                               |      |
-| 地図       | (値: TValue、インデックス: 数値) => TResult \| PromiseLike<TResult> |      |
-| オプション | FlintParallelOptions                                                |      |
+|名前 |タイプ |説明 |
+| ------- | ----------------------------------------------------------------- | ----------- |
+|ソース | FlintIterable<TValue> |             |
+|地図 | (値: TValue、インデックス: 数値) => TResult \| PromiseLike<TResult> |             |
+|オプション |フリントパラレルオプション |             |
 
 ### flintIteratorParToArray
 
@@ -2087,12 +6762,12 @@ function flintIteratorParToArray(
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| ソース     | FlintIterable<TValue> |      |
-| オプション | FlintParallelOptions  |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------- | ----------- |
+|ソース | FlintIterable<TValue> |             |
+|オプション |フリントパラレルオプション |             |
 
-### flintParallelDescriptor
+### フリントパラレルディスクリプタ
 
 **種類:** 関数
 
@@ -2107,10 +6782,10 @@ function flintParallelDescriptor(
 
 #### パラメータ
 
-| 名前       | タイプ                 | 説明 |
-| ---------- | ---------------------- | ---- |
-| 操作       | FlintParallelOperation |      |
-| オプション | FlintParallelOptions   |      |
+|名前 |タイプ |説明 |
+| --------- | ---------------------- | ----------- |
+|操作 |フリントパラレル操作 |             |
+|オプション |フリントパラレルオプション |             |
 
 ### FlintParallelExecutor
 
@@ -2122,7 +6797,7 @@ export interface FlintParallelExecutor
 
 ホスト ワーカーまたはコンパイル済み Wasm スレッド ランナーによって使用される最小限のスケジューラ境界。
 
-### FlintParallelOperation
+### フリントパラレル操作
 
 **種類：**タイプ
 
@@ -2152,7 +6827,7 @@ export interface FlintParallelOperationDescriptor
 1 つの並列操作のランタイム メタデータ。 `ordered` は常に true です。
 ワーカーの完了タイミングではなく、ソース インデックスによって出力順序が定義されます。
 
-### FlintParallelOptions
+### フリントパラレルオプション
 
 **種類:** インターフェース
 
@@ -2163,7 +6838,7 @@ export interface FlintParallelOptions
 戦略リクエストと能力の入力。 `auto` は許可された Wasm スレッドを優先します。
 次にホストワーカー、最後にシリアル実行。危険な機能は推測されません。
 
-### FlintParallelPlan
+### フリントパラレルプラン
 
 **種類:** インターフェース
 
@@ -2173,7 +6848,7 @@ export interface FlintParallelPlan
 
 選択された戦略とそれが選択された明確な理由。
 
-### FlintParallelStrategy
+### FlintParallel頭脳系
 
 **種類：**タイプ
 
@@ -2183,7 +6858,7 @@ export type FlintParallelStrategy = 'serial' | 'host-workers' | 'wasm-threads';
 
 順序付けされた並列操作に対して選択された実行戦略。
 
-### selectFlintParallelStrategy
+### selectFlintParallel戦略
 
 **種類:** 関数
 
@@ -2195,9 +6870,138 @@ function selectFlintParallelStrategy(options: FlintParallelOptions = {}): FlintP
 
 #### パラメータ
 
-| 名前       | タイプ               | 説明 |
-| ---------- | -------------------- | ---- |
-| オプション | FlintParallelOptions |      |
+|名前 |タイプ |説明 |
+| ------- | -------------------- | ----------- |
+|オプション |フリントパラレルオプション |             |
+
+## `src/safe-heap`
+
+### フリントセーフヒープの作成
+
+**種類:** 関数
+
+```typescript
+function createFlintSafeHeap(memory: FlintMemory): FlintSafeHeap;
+```
+
+新しい FlintSafeHeap マネージャーを作成するファクトリ関数。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ----------- | ------------------------- |
+|記憶 |フリントメモリ | - リニアメモリインスタンス。 |
+
+#### 契約
+
+- **@param:** - リニア メモリ インスタンス。
+- **@returns:** 初期化された FlintSafeHeap インスタンス。
+
+### FLINT_MEMORY_MODEL
+
+**種類:** 定数
+
+```typescript
+export const FLINT_MEMORY_MODEL;
+```
+
+説明はありません。
+
+### フリントダイナミックテーブルマネージャー
+
+**種類:** クラス
+
+```typescript
+export class FlintDynamicTableManager
+```
+
+スロット割り当て、世代追跡、
+そして、古い関数のディスパッチを防ぐために、クロージャーの解放時に即座に無効化されます。
+
+### フリント地域
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintRegion
+```
+
+アクティブなメモリ領域を識別するライフタイム トークン。
+
+### フリント領域の割り当て
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintRegionAllocation
+```
+
+ライフタイム領域にバインドされたメモリ割り当てを追跡する記述子。
+
+### フリント地域アリーナ
+
+**種類:** クラス
+
+```typescript
+export class FlintRegionArena
+```
+
+一時的なタスク用の高性能スコープ指定アリーナ バンプ アロケータ。
+O(1) ポインターを瞬時にリセットして、割り当てられたすべてのメモリーを再利用します。
+
+### フリントセーフヒープ
+
+**種類:** クラス
+
+```typescript
+export class FlintSafeHeap
+```
+
+コンパイラが管理する値の確定的スコープ ヒープ。生の fws_alloc 呼び出し
+FlintMemory 上に残り、暗黙的にここに保持されることはありません。
+
+### フリント共有ハンドル
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintSharedHandle
+```
+
+参照カウントされた共有メモリ割り当てを識別するハンドル参照。
+
+### フリントテーブルスロットハンドル
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintTableSlotHandle
+```
+
+動的関数テーブル スロット ハンドル追跡テーブル インデックスと世代トークン。
+
+### FlintTlsfAllocator
+
+**種類:** クラス
+
+```typescript
+export class FlintTlsfAllocator
+```
+
+Two-Level Segregated Fit (TLSF) メモリ アロケータ。
+即時物理結合により O(1) の割り当ておよび割り当て解除時間を保証します
+組み込み/リアルタイム Wasm ワークロードの断片化を最小限に抑えます。
+
+### フリント弱いハンドル
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintWeakHandle
+```
+
+強参照カウントを増加させずに、共有メモリ割り当てを参照する弱参照ハンドル。
+循環データ構造によって引き起こされる単調なメモリ リークを軽減します。
 
 ## `src/self-hosted`
 
@@ -2209,7 +7013,7 @@ function selectFlintParallelStrategy(options: FlintParallelOptions = {}): FlintP
 export interface FlintSelfHostedRunOptions
 ```
 
-説明はありません。
+VM または AOT モードでセルフホスト型コンパイラ ステージを実行するための構成オプション。
 
 ### FlintSelfHostedVmRun
 
@@ -2219,7 +7023,7 @@ export interface FlintSelfHostedRunOptions
 export interface FlintSelfHostedVmRun
 ```
 
-説明はありません。
+字句解析および解析ステージ全体で実行されるセルフホスト型コンパイラーの完全な実行レポート。
 
 ### runFlintSelfHostedCompiler
 
@@ -2242,11 +7046,11 @@ Wasm の完全な放出はシードバックされたままであり、次の場
 
 #### パラメータ
 
-| 名前       | タイプ                    | 説明 |
-| ---------- | ------------------------- | ---- |
-| 入力       | FlintCompileInput         |      |
-| モード     | FlintVm実行モード         |      |
-| オプション | FlintSelfHostedRunOptions |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------------- | ----------- |
+|入力 |フリントコンパイル入力 |             |
+|モード | FlintVm実行モード |             |
+|オプション | FlintSelfHostedRunOptions |             |
 
 ### runFlintSelfHostedLexStage
 
@@ -2264,13 +7068,47 @@ function runFlintSelfHostedLexStage(
 
 #### パラメータ
 
-| 名前       | タイプ                                                                                          | 説明 |
-| ---------- | ----------------------------------------------------------------------------------------------- | ---- |
-| 入力       | Pick<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |      |
-| モード     | FlintVm実行モード                                                                               |      |
-| オプション | FlintSelfHostedRunOptions                                                                       |      |
+|名前 |タイプ |説明 |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+|入力 | Pick<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+|モード | FlintVm実行モード |             |
+|オプション | FlintSelfHostedRunOptions |             |
 
 ## `src/threading`
+
+### アサートフリント送信
+
+**種類:** 関数
+
+```typescript
+function assertFlintSend(value: T, context = 'value'): T;
+```
+
+値が「Send」コントラクトを満たすことをアサートし、違反した場合はトラップをスローします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ---- | ----------- |
+|値 |た |             |
+|コンテキスト |      |             |
+
+### アサートフリントシンク
+
+**種類:** 関数
+
+```typescript
+function assertFlintSync(value: T, context = 'value'): T;
+```
+
+値が「同期」コントラクトを満たすことをアサートし、違反した場合はトラップをスローします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ---- | ----------- |
+|値 |た |             |
+|コンテキスト |      |             |
 
 ### canUseFlintWasmThreads
 
@@ -2288,10 +7126,10 @@ function canUseFlintWasmThreads(
 
 #### パラメータ
 
-| 名前           | タイプ                                  | 説明 |
-| -------------- | --------------------------------------- | ---- |
-| ターゲット機能 | FlintWasmThreadTarget features \|未定義 |      |
-| 能力           | 読み取り専用文字列[] \|未定義           |      |
+|名前 |タイプ |説明 |
+| -------------- | ------------------------------------------ | ----------- |
+|ターゲット機能 | FlintWasmThreadTarget features \|未定義 |             |
+|能力 |読み取り専用文字列[] \|未定義 |             |
 
 ### createFlintAtomicI32
 
@@ -2301,14 +7139,20 @@ function canUseFlintWasmThreads(
 function createFlintAtomicI32(length = 1, options: FlintAtomicI32Options = {}): FlintAtomicI32;
 ```
 
-説明はありません。
+共有アトミック 32 ビット整数配列を割り当て、それをアトミック操作でラップします。
 
 #### パラメータ
 
-| 名前       | タイプ                   | 説明 |
-| ---------- | ------------------------ | ---- |
-| 長さ       |                          |      |
-| オプション | FlintAtomicI32オプション |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------- | ---------------------------------------------------------- |
+|長さ |                       | - 割り当てる 32 ビット整数スロットの数。              |
+|オプション | FlintAtomicI32オプション | - 既存の SharedArrayBuffer を含む割り当てオプション。 |
+
+#### 契約
+
+- **@param:** - 割り当てる 32 ビット整数スロットの数。
+- **@param:** - 既存の SharedArrayBuffer を含む割り当てオプション。
+- **@returns:** 構成された FlintAtomicI32 インスタンス。
 
 ### createFlintWasmThreadScheduler
 
@@ -2324,11 +7168,11 @@ function createFlintWasmThreadScheduler(options: FlintWasmThreadSchedulerOptions
 
 #### パラメータ
 
-| 名前       | タイプ                             | 説明 |
-| ---------- | ---------------------------------- | ---- |
-| オプション | FlintWasmThreadSchedulerオプション |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------------------- | ----------- |
+|オプション | FlintWasmThreadSchedulerオプション |             |
 
-### createFlintWorkerRuntime
+### createFlintWorkerランタイム
 
 **種類:** 関数
 
@@ -2336,21 +7180,31 @@ function createFlintWasmThreadScheduler(options: FlintWasmThreadSchedulerOptions
 function createFlintWorkerRuntime(
   createWorker: () => FlintWorkerPort,
   onMessage: (message: unknown) => void,
-  onError: (error: unknown) => void = () => {},
+  onError: (error: unknown) => void = (_error: unknown) => {
+    // Default no-op error handler.
+  },
   options: FlintWorkerRuntimeOptions = {},
 ): FlintWorkerRuntime;
 ```
 
-説明はありません。
+提供されたポート ファクトリとライフサイクル フックを使用してワーカー ランタイムをインスタンス化します。
 
 #### パラメータ
 
-| 名前         | タイプ                     | 説明 |
-| ------------ | -------------------------- | ---- |
-| 作成ワーカー | () => FlintWorkerPort      |      |
-| メッセージ   | (メッセージ: 不明) => void |      |
-| onエラー     | (エラー: 不明) => 無効     |      |
-| オプション   | FlintWorkerRuntimeOptions  |      |
+|名前 |タイプ |説明 |
+| ------------ | -------------------------- | ---------------------------------------- |
+|作成ワーカー | () => FlintWorkerポート | - ポートファクトリーコールバック。                 |
+|メッセージ | (メッセージ: 不明) => void | - メッセージ ハンドラーのコールバック。              |
+|エラー発生時 | (エラー: 不明) => 無効 | - オプションのエラー ハンドラー コールバック。       |
+|オプション | FlintWorkerRuntimeOptions | - ランタイムの構成オプション。 |
+
+#### 契約
+
+- **@param:** - ポート ファクトリ コールバック。
+- **@param:** - メッセージ ハンドラーのコールバック。
+- **@param:** - オプションのエラー ハンドラー コールバック。
+- **@param:** - ランタイムの構成オプション。
+- **@returns:** FlintWorkerRuntime を初期化しました。
 
 ### createFlintWorkerScheduler
 
@@ -2362,28 +7216,28 @@ function createFlintWorkerScheduler(options: FlintWorkerSchedulerOptions = {}): 
 
 並列イテレータ操作で使用されるホスト側のスケジューリング境界を作成します。
 
-任意の JS コールバックは表現できないため、作業は依然としてローカル コールバックによって表現されます。
+任意の JS コールバックは使用できないため、作業は依然としてローカル コールバックによって表されます。
 ワーカーに転送されます。ホスト統合により、ワーカー ランタイムが提供される場合があります。
 ライフサイクル/クリーンアップを実行し、その境界でインデックス付きプロトコルを使用します。このスケジューラー
 ワーカー サポートのないホストに対しても同じ制限付き非同期コントラクトを提供します。
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| オプション | FlintWorkerSchedulerオプション |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------------- | ----------- |
+|オプション | FlintWorkerSchedulerオプション |             |
 
-### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+### FLINT_THREADING_CAPABILITIES
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
+export const FLINT_THREADING_CAPABILITIES;
 ```
 
 説明はありません。
 
-### FlintAtomicI32
+### フリントアトミックI32
 
 **種類:** インターフェース
 
@@ -2391,7 +7245,7 @@ export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
 export interface FlintAtomicI32
 ```
 
-説明はありません。
+共有 32 ビット整数バッファ上でアトミックな読み取り、変更、書き込み操作を提供するラッパー。
 
 ### FlintAtomicI32オプション
 
@@ -2401,7 +7255,17 @@ export interface FlintAtomicI32
 export interface FlintAtomicI32Options
 ```
 
-説明はありません。
+アトミックな 32 ビット整数配列の割り当てまたは共有を構成するオプション。
+
+### フリントスレッドセーフティマーカー
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintThreadSafetyMarker
+```
+
+共有メモリの同時実行性の保証を検証するスレッド セーフティ メタデータ マーカー。
 
 ### FlintWasmThreadSchedulerオプション
 
@@ -2411,7 +7275,7 @@ export interface FlintAtomicI32Options
 export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFeatures
 ```
 
-説明はありません。
+共有メモリとワーカーを基盤とする WebAssembly スレッド スケジューラを構成するオプション。
 
 ### FlintWasmThreadTarget機能
 
@@ -2421,9 +7285,9 @@ export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFe
 export interface FlintWasmThreadTargetFeatures
 ```
 
-説明はありません。
+WebAssembly は、マルチスレッドと共有メモリに関連する機能をターゲットとしています。
 
-### FlintWorkerPort
+### フリントワーカーポート
 
 **種類:** インターフェース
 
@@ -2431,9 +7295,9 @@ export interface FlintWasmThreadTargetFeatures
 export interface FlintWorkerPort
 ```
 
-説明はありません。
+ワーカー通信用の汎用 postMessage メッセージ ポート コントラクト。
 
-### FlintWorkerRuntime
+### フリントワーカーランタイム
 
 **種類:** インターフェース
 
@@ -2441,9 +7305,9 @@ export interface FlintWorkerPort
 export interface FlintWorkerRuntime
 ```
 
-説明はありません。
+ワーカー通信ポートとそのライフサイクルのティアダウンを管理するランタイム ハンドル。
 
-### FlintWorkerRuntimeOptions
+### FlintWorkerランタイムオプション
 
 **種類:** インターフェース
 
@@ -2451,9 +7315,9 @@ export interface FlintWorkerRuntime
 export interface FlintWorkerRuntimeOptions
 ```
 
-説明はありません。
+ワーカー ランタイムの作成を構成するオプション。
 
-### Flintワーカースケジューラ
+### フリントワーカースケジューラ
 
 **種類:** インターフェース
 
@@ -2461,9 +7325,9 @@ export interface FlintWorkerRuntimeOptions
 export interface FlintWorkerScheduler
 ```
 
-ランタイム側のホスト ワーカー操作によって使用される制限された非同期スケジューラー。
+ランタイム側のホストワーカー操作によって使用される制限された非同期スケジューラー。
 
-### FlintWorkerSchedulerOptions
+### FlintWorkerSchedulerオプション
 
 **種類:** インターフェース
 
@@ -2471,7 +7335,41 @@ export interface FlintWorkerScheduler
 export interface FlintWorkerSchedulerOptions
 ```
 
-説明はありません。
+ホスト ワーカー タスク スケジューラを作成するための構成オプション。
+
+### フリントセンド
+
+**種類:** 関数
+
+```typescript
+function isFlintSend(value: unknown, visited = new Set<unknown>()): boolean;
+```
+
+値が「Send」コントラクトを満たすかどうかを検証します（スレッド境界を越えて安全に転送できるかどうか）。
+プレーン オブジェクト、配列、プリミティブ、および型付きバッファを再帰的に検証します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------- | ----------- |
+|値 |不明 |             |
+|訪問しました |         |             |
+
+### フリントシンク
+
+**種類:** 関数
+
+```typescript
+function isFlintSync(value: unknown): boolean;
+```
+
+値が「同期」コントラクト (スレッド間で同時に共有しても安全である) を満たすかどうかを検証します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------- | ----------- |
+|値 |不明 |             |
 
 ## `src/trace`
 
@@ -2483,16 +7381,22 @@ export interface FlintWorkerSchedulerOptions
 function createFlintTraceRecorder(options: FlintTraceOptions, functionName: string): FlintTraceRecorder;
 ```
 
-説明はありません。
+サイズバジェットとテレメトリキャプチャを強制する実行トレースレコーダーを作成します。
 
 #### パラメータ
 
-| 名前       | タイプ            | 説明 |
-| ---------- | ----------------- | ---- |
-| オプション | FlintTraceOptions |      |
-| 関数名     | 文字列            |      |
+|名前 |タイプ |説明 |
+| ------------ | ----------------- | ------------------------------------ |
+|オプション | FlintTraceオプション | - トレースの構成オプション。 |
+|関数名 |文字列 | - プライマリ エントリ ポイント関数名。 |
 
-### FlintTraceCaptureMode
+#### 契約
+
+- **@param:** - トレースの構成オプション。
+- **@param:** - プライマリ エントリ ポイント関数名。
+- **@returns:** 構成された FlintTraceRecorder インスタンス。
+
+### フリントレースキャプチャモード
 
 **種類：**タイプ
 
@@ -2500,9 +7404,9 @@ function createFlintTraceRecorder(options: FlintTraceOptions, functionName: stri
 export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 ```
 
-説明はありません。
+実行トレース記録のためのキャプチャ冗長モード。
 
-### FlintTraceCounters
+### フリントレースカウンター
 
 **種類:** インターフェース
 
@@ -2510,9 +7414,9 @@ export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 export interface FlintTraceCounters
 ```
 
-説明はありません。
+トレース中に記録された、集計された実行メトリクスと操作カウンター。
 
-### FlintTraceイベント
+### フリントレースイベント
 
 **種類:** インターフェース
 
@@ -2520,9 +7424,9 @@ export interface FlintTraceCounters
 export interface FlintTraceEvent
 ```
 
-説明はありません。
+実行時または VM の解釈中にキャプチャされた詳細な実行トレース イベント。
 
-### FlintTraceEventType
+### フリントレースイベントタイプ
 
 **種類：**タイプ
 
@@ -2531,9 +7435,9 @@ export type FlintTraceEventType =
   'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
-説明はありません。
+記録されたランタイム トレース イベントのカテゴリ。
 
-### FlintTraceLimits
+### フリントレースの制限
 
 **種類:** インターフェース
 
@@ -2541,9 +7445,9 @@ export type FlintTraceEventType =
 export interface FlintTraceLimits
 ```
 
-説明はありません。
+トレース イベントのボリュームとバイト サイズを制限するリソース制限。
 
-### FlintTraceOptions
+### フリントレースオプション
 
 **種類:** インターフェース
 
@@ -2551,9 +7455,9 @@ export interface FlintTraceLimits
 export interface FlintTraceOptions extends FlintTraceLimits
 ```
 
-説明はありません。
+実行トレース記録を初期化するための構成オプション。
 
-### FlintTraceRecorder
+### フリントレースレコーダー
 
 **種類:** インターフェース
 
@@ -2561,9 +7465,9 @@ export interface FlintTraceOptions extends FlintTraceLimits
 export interface FlintTraceRecorder
 ```
 
-説明はありません。
+ランタイム実行イベントを消費し、トレース レポートを構築するアクティブ レコーダー インターフェイス。
 
-### Flintトレースレポート
+### フリントレースレポート
 
 **種類:** インターフェース
 
@@ -2571,19 +7475,19 @@ export interface FlintTraceRecorder
 export interface FlintTraceReport
 ```
 
-説明はありません。
+実行完了後に要約された、構造化された完全な実行トレース レポート。
 
-### FlintTraceSourceLocation
+### フリントレースソースの場所
 
-**種類:** インターフェース
+**種類：**タイプ
 
 ```typescript
-export interface FlintTraceSourceLocation extends FlintVmDebugSpan
+export type FlintTraceSourceLocation = FlintVmDebugSpan;
 ```
 
-説明はありません。
+記録された実行トレース イベントのソース マッピング位置。
 
-### summaryFlintVmValue
+### SummaryFlintVmValue
 
 **種類:** 関数
 
@@ -2591,18 +7495,24 @@ export interface FlintTraceSourceLocation extends FlintVmDebugSpan
 function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValue) => string): string;
 ```
 
-説明はありません。
+診断トレース用の VM 値を要約し、オプションでリダクションを適用します。
 
 #### パラメータ
 
-| 名前 | タイプ                       | 説明 |
-| ---- | ---------------------------- | ---- |
-| 値   | FlintVmValue                 |      |
-| 編集 | (値: FlintVmValue) => 文字列 |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------------------- | ------------------------------ |
+|値 |フリントVm値 | - フォーマットする VM 値。          |
+|編集 | (値: FlintVmValue) => 文字列 | - オプションの編集コールバック。 |
+
+#### 契約
+
+- **@param:** - フォーマットする VM 値。
+- **@param:** - オプションの編集コールバック。
+- **@returns:** 人間が判読できる概要文字列。
 
 ## `src/traps`
 
-### AttachFlintTrace
+### アタッチフリントレース
 
 **種類:** 関数
 
@@ -2610,16 +7520,21 @@ function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValu
 function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 ```
 
-説明はありません。
+該当する場合、実行トレース レポートをフリント トラップ エラーに関連付けます。
 
 #### パラメータ
 
-| 名前     | タイプ           | 説明 |
-| -------- | ---------------- | ---- |
-| エラー   | 不明             |      |
-| トレース | FlintTraceReport |      |
+|名前 |タイプ |説明 |
+| ----- | ---------------- | ----------------------------------- |
+|エラー |不明 | - エラーオブジェクトの候補。           |
+|トレース |フリントレースレポート | - 実行追跡レポートを添付します。 |
 
-### FlintTrap
+#### 契約
+
+- **@param:** - エラー オブジェクトの候補。
+- **@param:** - 添付する実行追跡レポート。
+
+### フリントトラップ
 
 **種類:** クラス
 
@@ -2627,9 +7542,9 @@ function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 export class FlintTrap extends Error
 ```
 
-説明はありません。
+Flint の致命的なランタイムまたはゲスト実行トラップを表します。
 
-### FlintTrapCode
+### フリントトラップコード
 
 **種類：**タイプ
 
@@ -2641,12 +7556,18 @@ export type FlintTrapCode =
   | 'InvalidOwnership'
   | 'MemoryExhausted'
   | 'MemoryOutOfBounds'
-  | 'GuestTrap';
+  | 'GuestTrap'
+  | 'BorrowViolation'
+  | 'RegionExpired'
+  | 'UseAfterRelease'
+  | 'DoubleRelease'
+  | 'StackOverflow'
+  | 'CallDepthExhausted';
 ```
 
-説明はありません。
+正規のランタイム トラップ エラー カテゴリ コード。
 
-### FlintTrapオプション
+### フリントトラップオプション
 
 **種類:** インターフェース
 
@@ -2654,7 +7575,7 @@ export type FlintTrapCode =
 export interface FlintTrapOptions extends ErrorOptions
 ```
 
-説明はありません。
+ランタイム トラップ エラーのレポートとログを構成するオプション。
 
 ### toFlintHostError
 
@@ -2664,19 +7585,26 @@ export interface FlintTrapOptions extends ErrorOptions
 function toFlintHostError(error: unknown, capability: string, logger?: FlintLogger): FlintTrap;
 ```
 
-説明はありません。
+不明なホスト エラーを正規化された FlintTrap インスタンスに変換します。
 
 #### パラメータ
 
-| 名前   | タイプ      | 説明 |
-| ------ | ----------- | ---- |
-| エラー | 不明        |      |
-| 能力   | 文字列      |      |
-| ロガー | FlintLogger |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------- | --------------------------------------------------- |
+|エラー |不明 | - 生のキャッチエラー。                                 |
+|能力 |文字列 | - ターゲットホストの機能識別子。                |
+|ロガー |フリントロガー | - 診断テレメトリ用のオプションのランタイム ロガー。 |
+
+#### 契約
+
+- **@param:** - 生のエラーをキャッチしました。
+- **@param:** - ターゲット ホスト機能の識別子。
+- **@param:** - 診断テレメトリ用のオプションのランタイム ロガー。
+- **@returns:** 正規化された FlintTrap インスタンス。
 
 ## `src/vm-executor`
 
-### createFlintVmAotArtifact
+### createFlintVmAotアーティファクト
 
 **種類:** 関数
 
@@ -2684,14 +7612,20 @@ function toFlintHostError(error: unknown, capability: string, logger?: FlintLogg
 function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string): FlintVmAotArtifact;
 ```
 
-説明はありません。
+VM モジュールをコンパイルして、Ahead-of-Time (AOT) JavaScript アーティファクトを作成します。
 
 #### パラメータ
 
-| 名前                   | タイプ            | 説明 |
-| ---------------------- | ----------------- | ---- |
-| モジュール             | FlintVmモジュール |      |
-| コンパイラのバージョン | 文字列            |      |
+|名前 |タイプ |説明 |
+| --------------- | ------------- | -------------------------- |
+|モジュール | FlintVmモジュール | - コンパイルする VM モジュール。    |
+|コンパイラのバージョン |文字列 | - コンパイラのバージョン文字列。 |
+
+#### 契約
+
+- **@param:** - コンパイルする VM モジュール。
+- **@param:** - コンパイラのバージョン文字列。
+- **@returns:** 放出された AOT アーティファクト。
 
 ### createFlintVmExecutor
 
@@ -2701,15 +7635,20 @@ function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string
 function createFlintVmExecutor(executorOptions: FlintVmExecutorOptions = {}): FlintVmExecutor;
 ```
 
-説明はありません。
+JIT コンパイルをサポートするバイトコード VM エグゼキューターを作成します。
 
 #### パラメータ
 
-| 名前               | タイプ                    | 説明 |
-| ------------------ | ------------------------- | ---- |
-| executorオプション | FlintVmExecutorオプション |      |
+|名前 |タイプ |説明 |
+| --------------- | ---------------------- | ----------------------------------------- |
+| executorオプション | FlintVmExecutorオプション | - エグゼキューターの構成オプション。 |
 
-### executeFlintVm
+#### 契約
+
+- **@param:** - エグゼキューターの構成オプション。
+- **@returns:** 構成された FlintVmExecutor インスタンス。
+
+### FlintVm を実行する
 
 **種類:** 関数
 
@@ -2722,18 +7661,26 @@ function executeFlintVm(
 ): FlintVmExecutionResult;
 ```
 
-説明はありません。
+VM モジュール内の関数を実行するコンビニエンス ランナー。
 
 #### パラメータ
 
-| 名前       | タイプ                  | 説明     |
-| ---------- | ----------------------- | -------- |
-| モジュール | FlintVmモジュール       |          |
-| 関数名     | 文字列                  |          |
-| 引数_      | FlintVmValue[]          | readonly |
-| オプション | FlintVmExecutionOptions |          |
+|名前 |タイプ |説明 |
+| ------------ | ----------------------- | ---------------------- |
+|モジュール | FlintVmモジュール | - VM モジュール。           |
+|関数名 |文字列 | - エントリ関数名。 |
+|引数_ | FlintVmValue[] | 読み取り専用- 引数の配列。     |
+|オプション | FlintVm実行オプション | - 実行オプション。   |
 
-### executeFlintVmAotArtifact
+#### 契約
+
+- **@param:** - VM モジュール。
+- **@param:** - エントリ関数名。
+- **@param:** - 引数の配列。
+- **@param:** - 実行オプション。
+- **@returns:** 実行結果。
+
+### FlintVmAotArtifact を実行する
 
 **種類:** 関数
 
@@ -2746,16 +7693,24 @@ function executeFlintVmAotArtifact(
 ): FlintVmExecutionResult;
 ```
 
-説明はありません。
+コンパイルされた AOT アーティファクトを実行します。
 
 #### パラメータ
 
-| 名前             | タイプ                                | 説明     |
-| ---------------- | ------------------------------------- | -------- |
-| アーティファクト | FlintVmAotArtifact                    |          |
-| 関数名           | 文字列                                |          |
-| 引数_            | FlintVmValue[]                        | readonly |
-| オプション       | 省略<FlintVmExecutionOptions, 'mode'> |          |
+|名前 |タイプ |説明 |
+| ------------ | ------------------------------------- | ------------------------ |
+|アーティファクト |フリントVmAotアーティファクト | - コンパイルされた AOT アーティファクト。 |
+|関数名 |文字列 | - エントリ関数名。   |
+|引数_ | FlintVmValue[] | 読み取り専用- 引数の配列。       |
+|オプション |省略<FlintVmExecutionOptions, 'mode'> | - 実行オプション。     |
+
+#### 契約
+
+- **@param:** - コンパイルされた AOT アーティファクト。
+- **@param:** - エントリ関数名。
+- **@param:** - 引数の配列。
+- **@param:** - 実行オプション。
+- **@returns:** 実行結果。
 
 ### FlintVmExecutorオプション
 
@@ -2765,7 +7720,7 @@ function executeFlintVmAotArtifact(
 export interface FlintVmExecutorOptions
 ```
 
-説明はありません。
+Flint 仮想マシン エグゼキュータの構成オプション。
 
 ### runFlintVmBootstrap
 
@@ -2781,19 +7736,28 @@ function runFlintVmBootstrap(
 ): FlintVmExecutionResult;
 ```
 
-説明はありません。
+仮想マシンでブートストラップ モジュールを実行します。
 
 #### パラメータ
 
-| 名前       | タイプ                                | 説明     |
-| ---------- | ------------------------------------- | -------- |
-| モジュール | FlintVmモジュール                     |          |
-| 関数名     | 文字列                                |          |
-| 引数_      | FlintVmValue[]                        | readonly |
-| モード     | FlintVm実行モード                     |          |
-| オプション | 省略<FlintVmExecutionOptions, 'mode'> |          |
+|名前 |タイプ |説明 |
+| ------------ | ------------------------------------- | ---------------------- |
+|モジュール | FlintVmモジュール | - ブートストラップ VM モジュール。 |
+|関数名 |文字列 | - エントリ関数名。 |
+|引数_ | FlintVmValue[] | 読み取り専用- 引数の配列。     |
+|モード | FlintVm実行モード | - 実行モード。      |
+|オプション |省略<FlintVmExecutionOptions, 'mode'> | - 実行オプション。   |
 
-### validateFlintVmModule
+#### 契約
+
+- **@param:** - ブートストラップ VM モジュール。
+- **@param:** - エントリ関数名。
+- **@param:** - 引数の配列。
+- **@param:** - 実行モード。
+- **@param:** - 実行オプション。
+- **@returns:** 実行結果。
+
+### FlintVmModule の検証
 
 **種類:** 関数
 
@@ -2801,17 +7765,21 @@ function runFlintVmBootstrap(
 function validateFlintVmModule(module: FlintVmModule): void;
 ```
 
-説明はありません。
+Flint VM モジュール構造をバイトコード ルールに照らして検証します。
 
 #### パラメータ
 
-| 名前       | タイプ            | 説明 |
-| ---------- | ----------------- | ---- |
-| モジュール | FlintVmモジュール |      |
+|名前 |タイプ |説明 |
+| ------ | ------------- | ------------------------ |
+|モジュール | FlintVmモジュール | - 検証する VM モジュール。 |
+
+#### 契約
+
+- **@param:** - 検証する VM モジュール。
 
 ## `src/vm-wasm`
 
-### コンパイルフォージWebScriptVmWasm
+### コンパイルFlintVmWasm
 
 **種類:** 関数
 
@@ -2819,16 +7787,16 @@ function validateFlintVmModule(module: FlintVmModule): void;
 function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOptions = {}): FlintVmWasmArtifact;
 ```
 
-説明はありません。
+Flint VM モジュールを検証済みの WebAssembly バイトコード アーティファクトにコンパイルします。
 
 #### パラメータ
 
-| 名前       | タイプ                    | 説明 |
-| ---------- | ------------------------- | ---- |
-| モジュール | FlintVmモジュール         |      |
-| オプション | FlintVmWasmCompileOptions |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------------- | ----------- |
+|モジュール | FlintVmモジュール |             |
+|オプション | FlintVmWasmコンパイルオプション |             |
 
-### FlintVmWasmCompileOptions
+### FlintVmWasmコンパイルオプション
 
 **種類:** インターフェース
 
@@ -2836,9 +7804,9 @@ function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOp
 export interface FlintVmWasmCompileOptions
 ```
 
-説明はありません。
+Flint VM モジュールの WebAssembly へのコンパイルを構成するオプション。
 
-### prepareFlintVm
+### フリントVmを準備する
 
 **種類:** 定数
 
@@ -2848,7 +7816,7 @@ export const prepareFlintVm;
 
 説明はありません。
 
-### prepareFlintVmWasm
+### フリントの準備VmWasm
 
 **種類:** 関数
 
@@ -2859,38 +7827,48 @@ function prepareFlintVmWasm(
 ): FlintVmPreparedExecutor;
 ```
 
-説明はありません。
+高速呼び出しのためにモジュールまたはアーティファクトから WebAssembly エグゼキュータを準備します。
 
 #### パラメータ
 
-| 名前                             | タイプ                               | 説明 |
-| -------------------------------- | ------------------------------------ | ---- |
-| モジュールまたはアーティファクト | FlintVmModule \| FlintVmWasmArtifact |      |
-| オプション                       | FlintVmPreparedExecutorOptions       |      |
+|名前 |タイプ |説明 |
+| ---------------- | ------------------------------------ | ----------- |
+|モジュールまたはアーティファクト | FlintVmモジュール \|フリントVmWasmアーティファクト |             |
+|オプション | FlintVmPreparedExecutorオプション |             |
 
 ## `src/vm`
 
-### FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+### FLINT_VM_DEFAULT_MAX_MEMORY_PAGES
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
+export const FLINT_VM_DEFAULT_MAX_MEMORY_PAGES;
 ```
 
 説明はありません。
 
-### FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+### FLINT_VM_WASM_ABI_VERSION
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
+export const FLINT_VM_WASM_ABI_VERSION;
 ```
 
 説明はありません。
 
-### FlintVmAotArtifact
+### FLINT_VM_WASM_LOWERING_VERSION
+
+**種類:** 定数
+
+```typescript
+export const FLINT_VM_WASM_LOWERING_VERSION;
+```
+
+説明はありません。
+
+### フリントVmAotアーティファクト
 
 **種類:** インターフェース
 
@@ -2898,7 +7876,7 @@ export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
 export interface FlintVmAotArtifact
 ```
 
-説明はありません。
+VM モジュールから出力される、事前にコンパイルされた JavaScript アーティファクト。
 
 ### FlintVmCapabilityImport
 
@@ -2908,9 +7886,9 @@ export interface FlintVmAotArtifact
 export interface FlintVmCapabilityImport
 ```
 
-説明はありません。
+VM モジュールによって要求されたホスト機能インポート記述子。
 
-### FlintVmDebugSpan
+### フリントVmデバッグスパン
 
 **種類:** インターフェース
 
@@ -2918,7 +7896,7 @@ export interface FlintVmCapabilityImport
 export interface FlintVmDebugSpan
 ```
 
-説明はありません。
+バイトコード命令オフセットをソースコード座標にマッピングするソース スパンをデバッグします。
 
 ### FlintVm実行モード
 
@@ -2928,9 +7906,9 @@ export interface FlintVmDebugSpan
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-説明はありません。
+サポートされている VM バイトコード実行モード (「interpret」、「jit」、「aot」)。
 
-### FlintVmExecutionOptions
+### FlintVm実行オプション
 
 **種類:** インターフェース
 
@@ -2938,7 +7916,7 @@ export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 export interface FlintVmExecutionOptions
 ```
 
-説明はありません。
+VM の実行制限、メモリ バッファー、およびテレメトリを構成するオプション。
 
 ### FlintVm実行結果
 
@@ -2948,7 +7926,7 @@ export interface FlintVmExecutionOptions
 export interface FlintVmExecutionResult
 ```
 
-説明はありません。
+値とステップのメトリクスを含む、VM 実行の実行によって返された結果。
 
 ### FlintVmExecutor
 
@@ -2958,9 +7936,9 @@ export interface FlintVmExecutionResult
 export interface FlintVmExecutor
 ```
 
-説明はありません。
+コンパイルされた Flint VM モジュールを実行するためのプライマリ実行インターフェイス。
 
-### FlintVmFunction
+### FlintVm関数
 
 **種類:** インターフェース
 
@@ -2968,9 +7946,9 @@ export interface FlintVmExecutor
 export interface FlintVmFunction
 ```
 
-説明はありません。
+命令、レジスタ、メタデータを含むコンパイルされた VM 関数定義。
 
-### FlintVm命令
+### フリントVm命令
 
 **種類：**タイプ
 
@@ -2978,7 +7956,7 @@ export interface FlintVmFunction
 export type FlintVmInstruction = |
 ```
 
-説明はありません。
+Flint 仮想マシンによってサポートされるバイトコード命令操作。
 
 ### FlintVmJitCache
 
@@ -2988,7 +7966,7 @@ export type FlintVmInstruction = |
 export interface FlintVmJitCache
 ```
 
-説明はありません。
+Tier-1 JIT コンパイル済み関数のキャッシュとホット関数呼び出し数。
 
 ### FlintVmJitEntry
 
@@ -2998,7 +7976,7 @@ export interface FlintVmJitCache
 export interface FlintVmJitEntry
 ```
 
-説明はありません。
+コンパイルされた関数と呼び出し回数を保存する JIT コンパイル キャッシュ エントリ。
 
 ### FlintVmモジュール
 
@@ -3008,7 +7986,7 @@ export interface FlintVmJitEntry
 export interface FlintVmModule
 ```
 
-説明はありません。
+VM および AOT エグゼキューターによって消費される実行可能なバイトコード モジュール コンテナー。
 
 ### FlintVmPreparedExecutor
 
@@ -3018,9 +7996,9 @@ export interface FlintVmModule
 export interface FlintVmPreparedExecutor
 ```
 
-説明はありません。
+特定のモジュールにバインドされた再利用可能な、事前に割り当てられたエグゼキューター インスタンス。
 
-### FlintVmPreparedExecutorOptions
+### FlintVmPreparedExecutorオプション
 
 **種類:** インターフェース
 
@@ -3028,9 +8006,9 @@ export interface FlintVmPreparedExecutor
 export interface FlintVmPreparedExecutorOptions
 ```
 
-説明はありません。
+準備された再利用可能な VM 実行インスタンスを構成するオプション。
 
-### FlintVmValue
+### フリントVm値
 
 **種類：**タイプ
 
@@ -3038,9 +8016,9 @@ export interface FlintVmPreparedExecutorOptions
 export type FlintVmValue = |
 ```
 
-説明はありません。
+バイトコード VM によって操作されるランタイム値を表すタグ付き共用体。
 
-### FlintVmWasmArtifact
+### フリントVmWasmアーティファクト
 
 **種類:** インターフェース
 
@@ -3048,4 +8026,4 @@ export type FlintVmValue = |
 export interface FlintVmWasmArtifact
 ```
 
-説明はありません。
+VM モジュールから発行された WebAssembly バイナリとインポート メタデータ アーティファクト。

@@ -33,23 +33,23 @@ function getPhoneNumberUtilSync(): PhoneNumberUtil;
 
 ### PhoneNumberFormat
 
-**סוג:** קבוע
+**סוג:** סוג
 
 ```typescript
-export const PhoneNumberFormat;
+export type PhoneNumberFormat = (typeof PhoneNumberFormat)[keyof typeof PhoneNumberFormat];
 ```
 
-פורמט פלט, שיקוף `PhoneNumberFormat` של libphonenumber.
+לא סופק תיאור.
 
 ### PhoneNumberType
 
-**סוג:** קבוע
+**סוג:** סוג
 
 ```typescript
-export const PhoneNumberType;
+export type PhoneNumberType = (typeof PhoneNumberType)[keyof typeof PhoneNumberType];
 ```
 
-סוג קו של מספר טלפון, שיקוף `PhoneNumberType` של libphonenumber.
+לא סופק תיאור.
 
 ### PhoneNumberUtil
 
@@ -76,7 +76,7 @@ export type RegionCode = string;
 
 ### מדינה_קוד_עבור_אזור
 
-**סוג:** fws-export
+**סוג:** ייצוא צור
 
 ```typescript
 export fn country_code_for_region(region: string) -> i32
@@ -86,8 +86,8 @@ export fn country_code_for_region(region: string) -> i32
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור                           |
-| ---- | ------ | ------------------------------- |
+| שם | הקלד | תיאור |
+| ------ | ------ | ------------------------------------- |
 | אזור | מחרוזת | קוד אזור ISO כגון "US" או "GB". |
 
 #### חוֹזֶה
@@ -97,7 +97,7 @@ export fn country_code_for_region(region: string) -> i32
 
 ### קידומת_לאומית
 
-**סוג:** fws-export
+**סוג:** ייצוא צור
 
 ```typescript
 export fn national_prefix(region: string) -> string
@@ -107,8 +107,8 @@ export fn national_prefix(region: string) -> string
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור         |
-| ---- | ------ | ------------- |
+| שם | הקלד | תיאור |
+| ------ | ------ | ---------------- |
 | אזור | מחרוזת | קוד אזור ISO. |
 
 #### חוֹזֶה
@@ -118,7 +118,7 @@ export fn national_prefix(region: string) -> string
 
 ### region_for_country_code
 
-**סוג:** fws-export
+**סוג:** ייצוא צור
 
 ```typescript
 export fn region_for_country_code(code: i32) -> string
@@ -128,18 +128,18 @@ export fn region_for_country_code(code: i32) -> string
 
 #### פרמטרים
 
-| שם  | הקלד | תיאור                        |
-| --- | ---- | ---------------------------- |
-| קוד | i32  | קידומת מדינה לחיוג בינלאומי. |
+| שם | הקלד | תיאור |
+| ---- | ---- | ----------------------------------- |
+| קוד | i32 | קידומת מדינה לחיוג בינלאומי. |
 
 #### חוֹזֶה
 
 - קוד **@param:** קוד מדינה חיוג בינלאומי.
-- **@returns:** קוד אזור כגון "US", או מחרוזת ריקה כשלא ידוע.
+- **@returns:** קוד אזור כגון "ארה"ב", או מחרוזת ריקה כשלא ידוע.
 
 ### אזור_הוא
 
-**סוג:** fws-export
+**סוג:** ייצוא צור
 
 ```typescript
 export fn region_is(region: string, expected: string) -> bool
@@ -149,13 +149,13 @@ export fn region_is(region: string, expected: string) -> bool
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור               |
-| ---- | ------ | ------------------- |
+| שם | הקלד | תיאור |
+| -------- | ------ | -------------------------- |
 | אזור | מחרוזת | קוד אזור ISO מועמד. |
 | צפוי | מחרוזת | קוד אזור ISO צפוי.  |
 
 #### חוֹזֶה
 
-- **@param:** אזור קוד אזור מועמד ISO.
+- **@param:** אזור קוד אזור ISO מועמד.
 - **@param:** צפוי קוד אזור ISO צפוי.
 - **@returns:** נכון כאשר שני הקודים תואמים ולאזור יש אורך 2.

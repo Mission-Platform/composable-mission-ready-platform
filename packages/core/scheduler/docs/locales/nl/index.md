@@ -5,6 +5,6 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > packages/core/scheduler/docs/index.md: [packages/core/scheduler/docs/index.md](../../index.md)
 > Taal: Nederlands (nl)
 
-Framework-neutral scheduler UI component voor Mission Platform
+Kaderneutrale planner UI-component voor Mission Platform
 
-See `llms.txt` voor de public API en usage examples.
+Zie `llms.txt` voor de openbare API en gebruiksvoorbeelden.

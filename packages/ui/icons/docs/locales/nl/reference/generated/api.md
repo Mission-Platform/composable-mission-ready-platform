@@ -3524,7 +3524,7 @@ Landcodes met canonieke vlagsymbolen in de gepubliceerde sprite.
 **Soort:** constant
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS;
+export const COUNTRY_FLAG_SYMBOL_IDS: string[];
 ```
 
 Geen beschrijving opgegeven.
@@ -3574,7 +3574,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const IconSpriteContext;
+export const IconSpriteContext: MpContext<IconSpriteContextValue>;
 ```
 
 Geen beschrijving opgegeven.

@@ -5,7 +5,7 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > Sprache: Deutsch (de)
 
-Die Mission Platform verwendet zentralisierte Konfigurationspakete im `packages/tooling/configs/` Verzeichnis, um die Konsistenz zwischen allen zu gewährleisten
+Die Mission Platform verwendet zentralisierte Konfigurationspakete im `packages/tooling/configs/`-Verzeichnis, um die Konsistenz zwischen allen sicherzustellen
 das Monorepo.
 
 ## Überblick
@@ -16,28 +16,28 @@ Pakete und Anwendungen nutzen diese Konfigurationen, indem sie sie in ihren loka
 ## Paketzusammenfassung
 
 Die Dokumentation des Konfigurationspakets ist Eigentum jedes Pakets. Die Links unten
-sind heute Repository-Dateiverknüpfungen und werden zu Paket-Namespace-Routen im
+sind heute Repository-Dateiverknüpfungen und werden im Paket-Namespace zu Routen
 Dokumentationsseite:
 
-| Paket                                                                                                                        | Zweck                                                            | Primäre Konfigurationsoberfläche |
-| :--------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------- | :------------------------------- |
-| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/de/index.md)             | Wohnung ESLint Regeln für JS/TS und Vue.                         | `eslint.config.js`               |
-| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/de/index.md)         | Standardeinstellungen für die Repository-Formatierung.           | `prettier.config.js`             |
-| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/de/index.md)     | TypeScript Compiler-Voreinstellungen.                            | `tsconfig.json`                  |
-| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/de/index.md)       | CSS- und SCSS-Linting.                                           | `stylelint.config.mjs`           |
-| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/de/index.md)                 | Vite Und Vitest Konfigurationshelfer.                            | `vite.config.ts`                 |
-| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/de/index.md)             | Bibliotheksbündelungshelfer.                                     | `tsdown.config.ts`               |
-| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/de/index.md)           | Geteilte PostCSS-Pipeline.                                       | `postcss.config.mjs`             |
-| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/de/index.md)                 | Gemeinsame Gebietsschema- und Extraktionseinstellungen.          | `i18next.config.ts`              |
-| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/de/index.md) | Von der Umgebung ausgewählte Storybook-Framework-Voreinstellung. | `.storybook/main.ts`             |
-| [Worker-Konfiguration](workers-config.md)                                                                                    | Workspace-übergreifende Cloudflare Worker-Konventionen.          | `wrangler.jsonc`                 |
+| Paket | Zweck | Primäre Konfigurationsoberfläche |
+| :---------------------------------------------------------------------------------------------------------- | :----------------------------------------------- | :---------------------------- |
+| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/de/index.md) | Flache ESLint-Regeln für JS/TS und Vue.             | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/de/index.md) | Standardeinstellungen für die Repository-Formatierung.                  | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/de/index.md) | TypeScript Compiler-Voreinstellungen.                     | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/de/index.md) | CSS- und SCSS-Linting.                            | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/de/index.md) | Konfigurationshelfer Vite und Vitest.           | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/de/index.md) | Bibliotheksbündelungshelfer.                        | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/de/index.md) | Geteilte PostCSS-Pipeline.                         | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/de/index.md) | Gemeinsame Gebietsschema- und Extraktionseinstellungen.           | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/de/index.md) | Von der Umgebung ausgewählte Storybook-Framework-Voreinstellung. | `.storybook/main.ts` |
+| [Workers-Konfiguration](workers-config.md) | Workspace-übergreifende Cloudflare Worker-Konventionen.   | `wrangler.jsonc` |
 
 ## Kernwerkzeuge
 
 ### ESLint (`@mission-platform/eslint-config`)
 
 Standardisiert Codequalitätsregeln in allen Arbeitsbereichen. Es verwendet das Flat Config-Format und bietet Unterstützung für
-TypeScript, Vue 3 und Zugänglichkeit.
+TypeScript, Vue 3 und Barrierefreiheit.
 
 ### Prettier (`@mission-platform/prettier-config`)
 
@@ -45,18 +45,18 @@ Erzwingt einen konsistenten Codestil (Tabs, Anführungszeichen, Semikolons) im g
 
 ### TypeScript (`@mission-platform/typescript-config`)
 
-Bietet Basis `tsconfig` Voreinstellungen für verschiedene Ziele:
+Bietet Basis-`tsconfig`-Voreinstellungen für verschiedene Ziele:
 
 - `base`: Allgemeine Standardeinstellungen.
 - `vue`: Optimiert für Vue 3 SFCs.
 - `node`: Optimiert für Node.js-Umgebungen.
-- `framework-<name>`: Fügt die Übereinstimmung hinzu `mp:<framework>` Exportbedingung für externe Verbraucher.
+- `framework-<name>`: Fügt die passende Exportbedingung `mp:<framework>` für externe Verbraucher hinzu.
 
 ## Build-System
 
 ### Vite (`@mission-platform/vite-config`)
 
-Bietet Factory-Funktionen zum Erstellen Vite Konfigurationen für Anwendungen und Bibliotheken.
+Bietet Factory-Funktionen zum Erstellen von Vite-Konfigurationen für Anwendungen und Bibliotheken.
 
 ```ts
 import {
@@ -65,8 +65,8 @@ import {
 } from "@mission-platform/vite-config";
 ```
 
-- `defineAppConfig`: Für Anwendungen der obersten Ebene (SPA, Arbeiter).
-- `defineLibraryConfig`: Für gemeinsame Pakete mit optimaler Bündelung und Tree-Shaking.
+- `defineAppConfig`: Für Anwendungen der obersten Ebene (SPA, Worker).
+- `defineLibraryConfig`: Für gemeinsam genutzte Pakete mit optimaler Bündelung und Tree-Shaking.
 
 ### PostCSS (`@mission-platform/postcss-config`)
 
@@ -77,8 +77,8 @@ es ist verfasst.
 
 So verwenden Sie eine Konfiguration in einem Arbeitsbereich:
 
-1. Fügen Sie das Konfigurationspaket als hinzu `devDependency` In `package.json`.
-2. Erstellen Sie eine lokale Konfigurationsdatei (z. B. `eslint.config.js`).
+1. Fügen Sie das Konfigurationspaket als `devDependency` in `package.json` hinzu.
+2. Erstellen Sie eine lokale Konfigurationsdatei (für Stylelint, `stylelint.config.mjs`).
 3. Importieren und exportieren/erweitern Sie die Basiskonfiguration.
 
 ```js
@@ -91,7 +91,7 @@ export default [
 ];
 ```
 
-Für Stylelint verwenden Sie dasselbe ESM-Import-/Spread-Muster in `stylelint.config.mjs`:
+Verwenden Sie für Stylelint dasselbe ESM-Import-/Verbreitungsmuster in `stylelint.config.mjs`:
 
 ```js
 // stylelint.config.mjs
@@ -103,7 +103,7 @@ export default { ...baseConfig };
 ## Auswahl einer Konfiguration
 
 Verwenden Sie das Paket, dem das Anliegen gehört, anstatt Regeln in einen Arbeitsbereich zu kopieren. Build-Dateien für Anwendungen und Bibliotheken
-kann lokale Außerkraftsetzungen hinzufügen, aber gemeinsame Standardwerte sollten erhalten bleiben `packages/tooling/configs/`. Beginnen Sie bei einem neuen Paket mit dem Paket
+kann lokale Überschreibungen hinzufügen, gemeinsame Standardwerte sollten jedoch in `packages/tooling/configs/` verbleiben. Beginnen Sie bei einem neuen Paket mit dem Paket
 scaffold und führen Sie dann die Arbeitsbereichsprüfungen aus:
 
 ```bash

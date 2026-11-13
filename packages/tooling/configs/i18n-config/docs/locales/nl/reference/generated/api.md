@@ -23,10 +23,10 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam        | Typ               | Beschrijving |
-| ----------- | ----------------- | ------------ |
-| standaardNS | tekenreeks        |              |
-| opties      | I18nConfigOptions |              |
+| Naam | Typ | Beschrijving |
+| --------- | ----------------- | ----------- |
+| standaardNS | tekenreeks |             |
+| opties | I18nConfigOptions |             |
 
 ### DEFAULT_LOCALE
 

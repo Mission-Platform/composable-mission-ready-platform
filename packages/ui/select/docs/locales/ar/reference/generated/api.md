@@ -34,9 +34,9 @@ function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                       | الوصف |
-| ----- | -------------------------- | ----- |
-| خصائص | للقراءة فقط<TagProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------- | ----------- |
+| خصائص | للقراءة فقط<TagProperties> |             |
 
 ### خصائص العلامة
 
@@ -83,9 +83,9 @@ function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherPropert
 
 #### حدود
 
-| الاسم | اكتب                                         | الوصف |
-| ----- | -------------------------------------------- | ----- |
-| خصائص | للقراءة فقط<ForgeLanguageSwitcherProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------------------- | ----------- |
+| خصائص | للقراءة فقط<ForgeLanguageSwitcherProperties> |             |
 
 ### ForgeLanguageSwitcherOption
 
@@ -146,9 +146,9 @@ React/Vue); تصبح سلاسل `useI18n` نصًا عاديًا؛ وينبعث `
 
 #### حدود
 
-| الاسم | اكتب                               | الوصف |
-| ----- | ---------------------------------- | ----- |
-| خصائص | للقراءة فقط<MultiselectProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------- | ----------- |
+| خصائص | للقراءة فقط<MultiselectProperties> |             |
 
 ### خيار التحديد المتعدد
 
@@ -182,6 +182,26 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 ## `src/components/molecules/forge-select/forge-select`
 
+### com.ForgeCombobox
+
+**النوع:** ثابت
+
+```typescript
+export const ForgeCombobox: typeof ForgeSelect;
+```
+
+لم يتم تقديم أي وصف.
+
+### com.ForgeComboboxProps
+
+**النوع:** النوع
+
+```typescript
+export type ForgeComboboxProps = SelectProperties;
+```
+
+لم يتم تقديم أي وصف.
+
 ### ForgeSelect
 
 **النوع:** الوظيفة
@@ -190,40 +210,24 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
-`ForgeSelect` - مربع تحرير/تحديد مخصص تم تأليفه مرة واحدة في JSX المحايد
-لهجة وتجميعها مباشرة إلى React أو Vue بواسطة
-`@mission-platform/vite-plugin-forge`.
-
-بشكل افتراضي (`searchable`، الافتراضي) يكون المشغل عبارة عن حقل نصي يتم تصفيته
-الخيارات التي يكتبها المستخدم - النسخ المتطابق {@link ForgeMultiselect} - لذا فهي قيمة
-يمكن العثور عليها من خلال البحث بدلا من التمرير. قم بتعيين `searchable={false}` لـ a
-مشغل زر عادي. في كلتا الحالتين، يتم دعم مربع القائمة بواسطة مخفي بصريًا
-`<select>` الأصلي، لذلك يستمر عمل الملء التلقائي للمتصفح وتقديم النموذج الأصلي.
-يتم التحكم في الاختيار باستخدام `modelValue` +
-`onUpdateModelValue`/`onChange` اصطلاح دعامة رد الاتصال. إنها تمتلك أسلوبها
-من خلال وحدة CSS الموجودة في نفس الموقع `forge-select.module.scss`.
-
-يتم عرض مربع القائمة العائم من خلال الكتابة مرة واحدة **`ForgeDropdown`**
-(تم تجميعها بنفسها إلى React/Vue)، وتم تأليفها عبر الفتحة المسماة المحايدة **pass**
-بناء الجملة: يتم تسليم غلاف combobox إلى فتحة `trigger` الخاصة بالقائمة المنسدلة
-(`slot="trigger"`) وتصبح `<ul role="listbox">` هي الفتحة الافتراضية الخاصة بها، لذلك
-يتم إدخال اللوحة عبر `<Teleport>` ويتم تثبيتها باستخدام CSS Anchor
-تحديد الموضع بدلاً من القائمة ذات الموضع المطلق في المكان. الداخلية
-يتم الاحتفاظ بالعلامة المفتوحة `useState` متزامنة مع القائمة المنسدلة عبرها
-رد الاتصال `onUpdateOpen`.
-
-بدائل أخرى من Vue SFC الأصلي: خرائط `useId` القابلة للتركيب إلى
-الخطاف `useId` الأصلي للإطار؛ الشيفرون هو الكتابة مرة واحدة
-`@mission-platform/icons` `ForgeIconChevron` (تم تدويره عبر دعامة `direction`،
-تم تجميعها نفسها إلى React/Vue)؛ تصبح سلاسل `useI18n` نصًا عاديًا؛ و
-تصبح أجهزة `v-model` + بمثابة دعائم رد اتصال. الفتحات المسماة `start`/`end` هي
-يتم الاحتفاظ بها على شكل فتحات مسماة محايدة.
+يوفر مكون ForgeSelect تحكمًا محددًا يمكن الوصول إليه ومحايدًا للإطار
+دعم التصفية المباشرة والبحث غير المتزامن والتنقل باستخدام لوحة المفاتيح والفتحات المخصصة.
 
 #### حدود
 
-| الاسم | اكتب                          | الوصف |
-| ----- | ----------------------------- | ----- |
-| خصائص | للقراءة فقط<SelectProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| خصائص | للقراءة فقط<SelectProperties> |             |
+
+### ForgeSelectProps
+
+**النوع:** النوع
+
+```typescript
+export type ForgeSelectProps = SelectProperties;
+```
+
+لم يتم تقديم أي وصف.
 
 ### حدد الخيار
 
@@ -235,7 +239,7 @@ export interface SelectOption
 
 خيار واحد قابل للتحديد.
 
-### حدد خصائص
+### حدد الخصائص
 
 **النوع:** الواجهة
 

@@ -5,6 +5,6 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 > packages/compiler/plugins/forge-router-svelte/docs/index.md: [packages/compiler/plugins/forge-router-svelte/docs/index.md](../../index.md)
 > Langue: Français (fr)
 
-Forge router target pour Svelte et SvelteKit
+Cible du routeur Forge pour Svelte et SvelteKit
 
-See `llms.txt` pour le public API et usage examples.
+Voir `llms.txt` pour l'API publique et des exemples d'utilisation.

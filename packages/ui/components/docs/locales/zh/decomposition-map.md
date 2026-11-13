@@ -21,7 +21,7 @@
 
 这些组件共享键盘导航、移动焦点、菜单/选项卡状态以及
 面向导航的交互合约。他们的中立实施取决于
-在 `@mission-platform/forge-jsx` 上；菜单和类似表格的控件也使用
+关于 `@mission-platform/forge-jsx`；菜单和类似表格的控件也使用
 `@mission-platform/icons`，而面包屑/导航栏内容则构成所有权
 `@mission-platform/typography` 包。 `ForgeNavbar` 目前组成
 残留 `ForgeDrawer`，因此提取导航需要保留
@@ -39,7 +39,7 @@
 使用 `@mission-platform/forge-jsx`，并且在组成文本或字形的情况下，
 `@mission-platform/typography` 和 `@mission-platform/icons`；这些应该保留
 未来包的较低级别依赖项。虚拟组件应随移动
-他们的风格/规格/故事位于同一位置，因此他们的中性钩子行为和五个
+他们的风格/规格/故事位于同一位置，因此他们的中性挂钩行为和五个
 Forge 目标仍然一起进行测试。
 
 ### `@mission-platform/layout`
@@ -80,7 +80,7 @@ Forge 目标仍然一起进行测试。
 将此小基础/内容/模板集保留在 `@mission-platform/components` 中
 直到它有足够的 API 表面来证明另一个边界的合理性：
 
-`ForgeAvatar`、`ForgeButton`、`ForgeButtonGroup`、`ForgeIconButton`、`ForgeQuote`、
+`ForgeAvatar`、 `ForgeButton`、 `ForgeButtonGroup`、 `ForgeIconButton`、 `ForgeQuote`、
 `ForgeSkeleton`、`ForgeSpinner` 和 `ForgeHero`。
 
 `ForgeInView` 也被保留为一个小型交互实用程序。 `ForgeTypography`
@@ -103,10 +103,10 @@ Forge 目标仍然一起进行测试。
 `packages/ui/components/src` 下的 `@mission-platform/select`。中性成分
 使用 `@mission-platform/forge-jsx`，从 `@mission-platform/icons` 中选择图标，
 来自 `@mission-platform/typography` 的排版和包本地样式/实用程序。
-故事可以导入包桶来锻炼公共表面；那不是
+故事可以导入包桶来锻炼公共面；那不是
 实现依赖性或包周期。
 
-每个剩余组件都保留其共同定位的 `index.ts`、中性源、SCSS、
+每个残留组件都保留其位于同一位置的 `index.ts`、中性源、SCSS、
 规格和故事书故事。包清单发布 `dist`、组件、
 仅样式和实用程序；不再包含提取的商店树。
 

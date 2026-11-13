@@ -31,11 +31,31 @@ pnpm test
 
 ### 为特定工作区运行测试
 
-要对单个包或应用程序运行测试：
+要在自动启动上游依赖项的同时对单个包或应用程序运行测试：
+
+```bash
+pnpm test:package @mission-platform/<name>
+```
+
+或者，直接调用 Turborepo：
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
+
+### 上游依赖启动
+
+monorepo 中的包通常会消耗来自上游工作区依赖项的已编译工件 (`dist/`)。在新配置的工作树或干净的环境中，这些工件可能尚不存在。
+
+要无缝解决此问题：
+
+- **自动 Turborepo 解决方案：** `turbo.json` 中的 `test` 和 `build:check` 任务图强制执行 `"dependsOn": ["^build"]`。 Turborepo 在目标包中运行测试之前会自动构建所有上游依赖项。
+- **专用包帮助程序：** 在执行包测试之前，运行 `pnpm test:package <package-name>` 显式启动上游构建 (`build --filter <package-name>^...`)。即使 `test` 任务还声明了 `^build`，此预热也是有意的：它使帮助器的启动行为保持明确且一致，并且当 Turbo 已解决这些依赖项时，它是缓存的无操作。
+- **包构建助手：** 在构建目标包之前，运行 `pnpm build:package <package-name>` 使用相同的显式上游预热。
+- **手动上游构建：** 如果直接运行测试运行程序（例如，单个包目录中的 `vitest`），请首先准备其依赖项：
+  ```bash
+  pnpm exec turbo run build --filter @mission-platform/<name>^...
+  ```
 
 ### 运行受影响的测试（CI 风格）
 
@@ -107,13 +127,13 @@ Mission Platform 利用 Vitest 的浏览器模式进行需要真实 DOM 环境�
 2. 确保软件包 `vitest.config.ts` 启用浏览器模式（请参阅下面的参考）。
 3. 使用 `pnpm test` 运行。
 
-### 伪造 Web 脚本测试
+### 燧石测试
 
 使用 `@mission-platform/flint-vitest` 进行确定性编译器、工件、Wasm 和自托管奇偶校验
 检查。它将编译委托给生产环境使用的相同编译器服务和 Vite 插件；它不会创建一个
 第二个模块系统。
 
-在测试 `.fws` 模块的工作区中安装包，然后使用标准 Vitest 配置组成其适配器：
+在测试 `.flint` 模块的工作区中安装包，然后使用标准 Vitest 配置组成其适配器：
 
 ```typescript
 // vitest.config.ts
@@ -143,7 +163,7 @@ import {
   createFlintTestHarness,
 } from "@mission-platform/flint-vitest";
 
-describe("FWS fixture", () => {
+describe("Flint fixture", () => {
   const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
@@ -201,7 +221,7 @@ expect((await load<{ answer: () => number }>()).answer()).toBe(42);
 expect(loadSync<{ answer: () => number }>().answer()).toBe(42);
 ```
 
-对于 FWS 值，显式测试两个层。原始 WASM 测试应该断言
+对于 Flint 值，显式测试两个层。原始 WASM 测试应该断言
 指针长度 ABI 和所有权调用；生成的 ESM 测试应断言
 JavaScript 投影：
 
@@ -234,16 +254,16 @@ expect((await generated.load()).echo("")).toBe("");
 自动 `Uint8Array` 转换。
 
 基准工作区将原始指针长度适配器与
-生成 ESM 适配器作为单独的 FWS 模式：
+生成 ESM 适配器作为单独的 Flint 模式：
 
 ```bash
 pnpm --filter @mission-platform/benchmark run bench -- \
   --node-only --warmup 3 --samples 10 \
-  --output benchmark/results/fws-generated-boundary
+  --output benchmark/results/flint-generated-boundary
 ```
 
 报告包括构建、初始化和稳态执行阶段。的
-FWS 原始 `wasm` 行使用新实例和三个字符串输入分配
+Flint 原始 `wasm` 行使用新实例和三个字符串输入分配
 基准测试内核； `wasm-generated` 使用生成的 `loadSync` 合约
 和一个打包字符串输入分配。因为当前的来宾解除分配器
 验证范围而不回收凹凸分配器空间、生成的字符串/字节
@@ -255,7 +275,7 @@ FWS 原始 `wasm` 行使用新实例和三个字符串输入分配
 当语料库哈希、主机运行时和基准模式匹配时。
 
 例如，上面仅运行 Node 产生了 336 个测量相位结果
-零失败和语料库哈希 `ad092f7c552cc914`。两行 FWS 都有原始 Wasm
+零失败和语料库哈希 `ad092f7c552cc914`。弗林特的两排都有原始的 Wasm
 哈希 `0ac58f11`，原始 Wasm 大小 1,625 字节，生成的 ESM 源大小 18,490
 字节；原始和生成的字符串输入分配计数分别为 3 和 1。
 Unicode-小字符串大小写，原始平均初始化时间为 0.00024 毫秒
@@ -280,18 +300,18 @@ Unicode-小字符串大小写，原始平均初始化时间为 0.00024 毫秒
 ```
 
 或者，将 `/// <reference types="@mission-platform/flint-vitest/flint" />` 添加到仅测试
-类型项目包含的入口点。声明子路径仅是类型的，并且不添加运行时导入。
+类型项目包含的入口点。声明子路径仅是类型，不添加运行时导入。
 
-在 `packages/flint/vitest/fixtures/` 中使用共享装置来实现跨包语言和 ABI 一致性：
+在 `packages/flint/vitest/fixtures/` 中使用共享装置以实现跨包语言和 ABI 一致性：
 `valid/`、`diagnostics/`、`capabilities/`、`graphs/` 和 `self-hosted/` 特意保持稳定。在旁边放一个固定装置
 涵盖私有实现细节的编译器、运行时或插件规范；对小型解析器使用内联源或
 VM 单元案例。这可以保持夹具名称和清理的确定性，而无需强制通过线束进行低级测试。
 
 `checkVmParity(file, mode)` 支持 `interpret`、`jit` 和 `aot`，但其报告是现有的有界自托管
 lex-stage 平价合约。断言 `parity`、指纹、步骤和 AOT 再现性元数据；不处理该报告
-作为任意编译的 FWS VM 执行或作为 Wasm 行为测试的替代。
+作为任意编译的 Flint VM 执行或作为 Wasm 行为测试的替代品。
 
-使用正常工作区任务运行聚焦的 FWS 矩阵：
+使用正常工作区任务运行聚焦的 Flint 矩阵：
 
 ```bash
 pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
@@ -332,12 +352,12 @@ export default defineVitestConfig({
 
 ### 脚本摘要
 
-| 脚本            | 命令                                                       | 目的                       |
-| :-------------- | :--------------------------------------------------------- | :------------------------- |
-| `test`          | `pnpm exec turbo run test`                                 | 运行所有工作区测试任务。   |
-| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | 在监视模式下运行组件测试。 |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | 生成组件覆盖率报告。       |
-| Rust/WASM       | `cargo test --workspace`                                   | 运行本机 Rust 板条箱测试。 |
+|脚本|命令 |目的|
+| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
+| `test` | `pnpm exec turbo run test` |运行所有工作区测试任务。          |
+| `test:watch` | `pnpm --filter @mission-platform/components test:watch` |在监视模式下运行组件测试。    |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` |生成组件覆盖率报告。 |
+| Rust/WASM | `cargo test --workspace` |运行本机 Rust 板条箱测试。           |
 
 Wasm 包装器包通过其自己的包任务进行测试。例如，运行扫描程序包及其
 更改扫描仪行为时将包装器放在一起：
@@ -350,4 +370,4 @@ pnpm exec turbo run test --filter @mission-platform/code-scanner...
 
 - [开发设置](development-setup.md)
 - [最佳实践](best-practices.md)
-- [封装开发](package-development.md)
+- [软件包开发](package-development.md)

@@ -5,7 +5,7 @@
 > docs/migration-guides/vue2-to-vue3.md: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
 > اللغة: العربية (ar)
 
-يصف هذا الدليل كيفية ترحيل قواعد التعليمات البرمجية Vue 2 الحالية إلى Vue 3 داخل Mission Platform monorepo.
+يصف هذا الدليل كيفية ترحيل قواعد التعليمات البرمجية Vue 2 الموجودة إلى Vue 3 داخل Mission Platform monorepo.
 
 ## ملخص
 
@@ -22,7 +22,7 @@
 
 ## الخطوة 1: تحديث تكوين البناء
 
-تأكد من أن `package.json` و`vite.config.ts` يستهدفان Vue 3.
+تأكد من الخاص بك `package.json` و `vite.config.ts` يتم استهدافها Vue 3.
 
 ```ts
 // vite.config.ts
@@ -90,15 +90,15 @@ const increment = () => {
 
 تمت إعادة تسمية خطافات دورة الحياة ويجب استيرادها.
 
-| Vue 2                      | Vue 3                                      |
-| :------------------------- | :----------------------------------------- |
+| Vue 2 | Vue 3 |
+| :------------------------- | :---------------------------------------- |
 | `beforeCreate` / `created` | استخدم `setup()` / `<script setup>` مباشرة |
-| `beforeMount`              | `onBeforeMount`                            |
-| `mounted`                  | `onMounted`                                |
-| `beforeUpdate`             | `onBeforeUpdate`                           |
-| `updated`                  | `onUpdated`                                |
-| `beforeDestroy`            | `onBeforeUnmount`                          |
-| `destroyed`                | `onUnmounted`                              |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 مثال:
 

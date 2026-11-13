@@ -94,7 +94,7 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 **종류:** 기능
 
 ```typescript
-function sharedPreviewDecorators();
+function sharedPreviewDecorators(): Array<ReturnType<typeof withThemeByDataAttribute<TRenderer>>>;
 ```
 
 모든 프레임워크에 대한 공유 Storybook 데코레이터입니다.
@@ -104,7 +104,17 @@ function sharedPreviewDecorators();
 **종류:** 상수
 
 ```typescript
-export const sharedPreviewParameters;
+export const sharedPreviewParameters: {
+  readonly controls: {
+    readonly matchers: {
+      readonly color: RegExp;
+      readonly date: RegExp;
+    };
+  };
+  readonly a11y: {
+    readonly test: 'error';
+  };
+};
 ```
 
 모든 프레임워크에 대한 공유 Storybook 매개변수입니다.
@@ -114,7 +124,15 @@ export const sharedPreviewParameters;
 **종류:** 기능
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework);
+function sharedPreviewParametersFor(framework?: PreviewFramework):
+  | typeof sharedPreviewParameters
+  | (typeof sharedPreviewParameters & {
+      readonly docs: {
+        readonly source: {
+          readonly type: 'code';
+        };
+      };
+    });
 ```
 
 프레임워크 인식 Storybook 매개변수.

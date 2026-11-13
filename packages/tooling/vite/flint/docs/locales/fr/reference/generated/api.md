@@ -20,9 +20,10 @@ function compileFlintFile(
   fileName: string,
   options: FlintPluginOptions,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): FlintCompiledModule;
 ```
@@ -31,11 +32,11 @@ Compilez un fichier FWS et renvoyez son artefact ainsi que les métadonnées de 
 
 #### Paramètres
 
-| Nom            | Tapez                | Descriptif |
-| -------------- | -------------------- | ---------- |
-| Nom du fichier | chaîne               |            |
-| options        | FlintPluginOptions   |            |
-| prestations    | FlintCompilerService |            |
+| Nom | Tapez | Descriptif |
+| -------- | -------------------- | ----------- |
+| Nom du fichier | chaîne |             |
+| options | FlintPluginOptions |             |
+| prestations | FlintCompilerService |             |
 
 ### compileFlintGraph
 
@@ -47,9 +48,10 @@ function compileFlintGraph(
   options: FlintPluginOptions,
   resolver: FlintModuleResolver,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): Promise<FlintCompiledModule>;
 ```
@@ -58,12 +60,31 @@ Résolvez, liez et compilez un graphique de module FWS importé.
 
 #### Paramètres
 
-| Nom            | Tapez                | Descriptif |
-| -------------- | -------------------- | ---------- |
-| Nom du fichier | chaîne               |            |
-| options        | FlintPluginOptions   |            |
-| résolveur      | FlintModuleRésolveur |            |
-| prestations    | FlintCompilerService |            |
+| Nom | Tapez | Descriptif |
+| -------- | -------------------- | ----------- |
+| Nom du fichier | chaîne |             |
+| options | FlintPluginOptions |             |
+| résolveur | FlintModuleRésolveur |             |
+| prestations | FlintCompilerService |             |
+
+### créerFlintGraphCache
+
+**Genre :** fonction
+
+```typescript
+function createFlintGraphCache(options?: {
+  readonly compilerService?: FlintCompilerService;
+  readonly selfHostedVmMode?: FlintVmExecutionMode;
+}): FlintGraphCache;
+```
+
+Créez un cache de graphiques qui déduplique les résolutions de graphiques séquentielles et simultanées.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+| options | { lecture seule compilerService ? : FlintCompilerService ; lecture seule selfHostedVmMode ? : FlintVmExecutionMode ; } |             |
 
 ### FlintCompiledModule
 
@@ -75,7 +96,17 @@ export interface FlintCompiledModule
 
 Source compilée, métadonnées d'artefact, carte source et rapports graphiques facultatifs.
 
-### FlintPluginOptions
+### FlintGraphCache
+
+**Genre :** interface
+
+```typescript
+export interface FlintGraphCache
+```
+
+Résultats graphiques partagés en mémoire utilisés par plusieurs cibles Flint.
+
+### Options du plugin Flint
 
 **Genre :** interface
 
@@ -97,12 +128,28 @@ Résolvez un chemin de plugin par rapport à la racine sauf si la valeur est dé
 
 #### Paramètres
 
-| Nom    | Tapez  | Descriptif |
-| ------ | ------ | ---------- |
-| racine | chaîne |            |
-| valeur | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| racine | chaîne |             |
+| valeur | chaîne |             |
 
 ## `src/generate`
+
+### createFlintArtifactSource
+
+**Genre :** fonction
+
+```typescript
+function createFlintArtifactSource(compiled: FlintCompiledModule): string;
+```
+
+Générez un module autonome pour l'intégration d'artefacts au moment de la construction.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | ------------------- | ----------- |
+| compilé | FlintCompiledModule |             |
 
 ### createFlintDeclarationsSource
 
@@ -117,9 +164,9 @@ Métadonnées du compilateur auto-hébergées pour les consommateurs de luminair
 
 #### Paramètres
 
-| Nom     | Tapez               | Descriptif |
-| ------- | ------------------- | ---------- |
-| compilé | FlintCompiledModule |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------------------- | ----------- |
+| compilé | FlintCompiledModule |             |
 
 ### createFlintManifestSource
 
@@ -133,11 +180,11 @@ Générez un module contenant le manifeste ABI sérialisable JSON.
 
 #### Paramètres
 
-| Nom     | Tapez               | Descriptif |
-| ------- | ------------------- | ---------- |
-| compilé | FlintCompiledModule |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------------------- | ----------- |
+| compilé | FlintCompiledModule |             |
 
-### createFlintModuleSource
+### créerFlintModuleSource
 
 **Genre :** fonction
 
@@ -146,13 +193,14 @@ function createFlintModuleSource(compiled: FlintCompiledModule): string;
 ```
 
 Générez le module consommateur normal. Le module généré réexporte le
-fonctions compilées et expose le même manifeste ABI via `abiManifest`.
+fonctions compilées, expose le même manifeste ABI via `abiManifest` et
+fournit un chargeur de bibliothèque synchrone comme exportation par défaut.
 
 #### Paramètres
 
-| Nom     | Tapez               | Descriptif |
-| ------- | ------------------- | ---------- |
-| compilé | FlintCompiledModule |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------------------- | ----------- |
+| compilé | FlintCompiledModule |             |
 
 ### createFlintSourceMapSource
 
@@ -166,11 +214,11 @@ Générez un module dont l'exportation par défaut est l'objet source-map géné
 
 #### Paramètres
 
-| Nom     | Tapez               | Descriptif |
-| ------- | ------------------- | ---------- |
-| compilé | FlintCompiledModule |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------------------- | ----------- |
+| compilé | FlintCompiledModule |             |
 
-### createFlintWasmSource
+### créerFlintWasmSource
 
 **Genre :** fonction
 
@@ -182,11 +230,11 @@ Générez un module dont l'exportation par défaut est le tableau d'octets Wasm 
 
 #### Paramètres
 
-| Nom     | Tapez               | Descriptif |
-| ------- | ------------------- | ---------- |
-| compilé | FlintCompiledModule |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------------------- | ----------- |
+| compilé | FlintCompiledModule |             |
 
-### createFlintWatSource
+### créerFlintWatSource
 
 **Genre :** fonction
 
@@ -199,56 +247,66 @@ destiné à l’inspection et aux assertions de conformité, et non à l’exéc
 
 #### Paramètres
 
-| Nom     | Tapez               | Descriptif |
-| ------- | ------------------- | ---------- |
-| compilé | FlintCompiledModule |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------------------- | ----------- |
+| compilé | FlintCompiledModule |             |
 
-### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+### FLINT_ARTIFACT_QUERY
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
+export const FLINT_ARTIFACT_QUERY;
+```
+
+Requête qui renvoie toutes les données d'artefact compilées à partir d'une compilation graphique.
+
+### FLINT_DECLARATIONS_QUERY
+
+**Genre :** constante
+
+```typescript
+export const FLINT_DECLARATIONS_QUERY;
 ```
 
 Requête qui renvoie des déclarations liées et des métadonnées graphiques en tant que module ES.
 
-### FORGE_WEB_SCRIPT_MANIFEST_QUERY
+### FLINT_MANIFEST_QUERY
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
+export const FLINT_MANIFEST_QUERY;
 ```
 
 Requête qui renvoie le manifeste ABI compilé en tant que module ES.
 
-### FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+### FLINT_SOURCE_MAP_QUERY
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
+export const FLINT_SOURCE_MAP_QUERY;
 ```
 
 Requête qui renvoie la carte source générée comme exportation par défaut du module.
 
-### FORGE_WEB_SCRIPT_WASM_QUERY
+### FLINT_WASM_QUERY
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY;
+export const FLINT_WASM_QUERY;
 ```
 
 Requête qui renvoie les octets Wasm compilés comme exportation par défaut du module.
 
-### FORGE_WEB_SCRIPT_WAT_QUERY
+### FLINT_WAT_QUERY
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY;
+export const FLINT_WAT_QUERY;
 ```
 
 Requête qui renvoie le WAT généré, y compris la réduction de la table de branchement, sous forme de chaîne.
@@ -263,17 +321,17 @@ Requête qui renvoie le WAT généré, y compris la réduction de la table de br
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-Installez la compilation Forge Web Script et les requêtes d'artefacts virtuels dans Vite.
+Installez la compilation Flint et les requêtes d'artefacts virtuels dans Vite.
 Le plugin préserve l'ABI d'exportation scalaire Wasm tout en exposant le manifeste,
 déclarations, Wasm, WAT et requêtes de carte source pour les outils et les accessoires.
 
 #### Paramètres
 
-| Nom     | Tapez              | Descriptif |
-| ------- | ------------------ | ---------- |
-| options | FlintPluginOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------ | ----------- |
+| options | Options du plugin Flint |             |
 
-### flintPlugin
+### silexPlugin
 
 **Genre :** fonction
 
@@ -281,17 +339,17 @@ déclarations, Wasm, WAT et requêtes de carte source pour les outils et les acc
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-Installez la compilation Forge Web Script et les requêtes d'artefacts virtuels dans Vite.
+Installez la compilation Flint et les requêtes d'artefacts virtuels dans Vite.
 Le plugin préserve l'ABI d'exportation scalaire Wasm tout en exposant le manifeste,
 déclarations, Wasm, WAT et requêtes de carte source pour les outils et les accessoires.
 
 #### Paramètres
 
-| Nom     | Tapez              | Descriptif |
-| ------- | ------------------ | ---------- |
-| options | FlintPluginOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------ | ----------- |
+| options | Options du plugin Flint |             |
 
-### FlintViteError
+### FlintViteErreur
 
 **Genre :** classe
 

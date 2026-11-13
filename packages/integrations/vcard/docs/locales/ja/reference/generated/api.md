@@ -32,7 +32,7 @@ function createVCard(options: VCardOptions): VCard;
 **種類:** 定数
 
 ```typescript
-export const parseVCard;
+export const parseVCard: typeof readVCard;
 ```
 
 パーサー用語を好む呼び出し元のエイリアス。
@@ -616,7 +616,7 @@ export interface ICalendarProperty
 **種類:** 定数
 
 ```typescript
-export const parseICalendar;
+export const parseICalendar: typeof readICalendar;
 ```
 
 説明はありません。
@@ -642,7 +642,7 @@ RFC 5545 iCalendar ストリームを解析し、すべてのコンポーネン�
 **種類:** 定数
 
 ```typescript
-export const serializeICalendar;
+export const serializeICalendar: typeof writeICalendar;
 ```
 
 説明はありません。

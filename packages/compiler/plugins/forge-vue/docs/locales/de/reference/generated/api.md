@@ -48,12 +48,12 @@ Verwandeln Sie ein neutrales Komponentenmodul in einen Vue SFC (plus alle Hilfs-
 
 #### Parameter
 
-| Name              | Geben Sie           | ein Beschreibung |
-| ----------------- | ------------------- | ---------------- |
-| Modul             | SemanticModule      |                  |
-| Komponentenname   | Zeichenfolge        |                  |
-| Komponentenordner | ReadonlySet<string> |                  |
-| planen            | VueLoweredModule    |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------------- | ------------------- | ----------- |
+| Modul | SemanticModule |             |
+| Komponentenname | Zeichenfolge |             |
+| Komponentenordner | ReadonlySet<string> |             |
+| planen | VueLoweredModule |             |
 
 ## `src/emitters/hook-module`
 
@@ -69,9 +69,9 @@ Kompilieren Sie ein neutrales Hook-Modul mit seiner zusammensetzbaren Vue-Quelle
 
 #### Parameter
 
-| Name  | Geben Sie      | ein Beschreibung |
-| ----- | -------------- | ---------------- |
-| Modul | SemanticModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------- | ----------- |
+| Modul | SemanticModule |             |
 
 ## `src/index`
 
@@ -101,9 +101,9 @@ Grenzen Sie einen Zielplan ohne Umwandlung auf den Vue-Plan ein.
 
 #### Parameter
 
-| Name      | Geben Sie                          | ein Beschreibung |
-| --------- | ---------------------------------- | ---------------- |
-| abgesenkt | TargetLoweredModule \| undefiniert |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------------------- | ----------- |
+| abgesenkt | TargetLoweredModule \| undefiniert |             |
 
 ### LowerVueModule
 
@@ -121,10 +121,10 @@ bleibt unberührt, sodass spätere Phasen weiterhin vollen Zugriff auf die IR ha
 
 #### Parameter
 
-| Name    | Geben Sie      | ein Beschreibung |
-| ------- | -------------- | ---------------- |
-| ir      | SemanticModule |                  |
-| Kontext | Zielkontext    |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------- | ----------- |
+| ir | SemanticModule |             |
+| Kontext | Zielkontext |             |
 
 ### VueComputedPlan
 
@@ -314,10 +314,10 @@ wird unverändert zurückgegeben, sodass der Optimierer sicher in jeder Pipeline
 
 #### Parameter
 
-| Name      | Geben Sie             | ein Beschreibung |
-| --------- | --------------------- | ---------------- |
-| Absichten | Zielabsichten         |                  |
-| Optionen  | TargetOptimizeOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------- | ----------- |
+| Absichten | Zielabsichten |             |
+| Optionen | TargetOptimizeOptions |             |
 
 ### STABLE_LIST_KEYS
 

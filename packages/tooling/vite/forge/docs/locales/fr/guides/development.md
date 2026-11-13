@@ -28,5 +28,5 @@ préservation lors du changement de pilote.
 
 Le package doit rester utilisable à la fois depuis Vite et tsdown. Ne pas ajouter de cible
 basculez la dépendance d’exécution de la table ou du framework vers le pilote neutre. Mettre à jour le
-[référence du pipeline du compilateur](../reference/compiler.md) lorsqu'une scène publique ou
+[référence du pipeline du compilateur](../reference/compiler.md) lorsqu'une étape publique ou
 modifications du contrat d’artefact.

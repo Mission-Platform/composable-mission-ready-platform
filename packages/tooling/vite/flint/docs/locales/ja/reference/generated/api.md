@@ -11,7 +11,7 @@
 
 ## `src/compile`
 
-### コンパイルフォージWebScriptファイル
+### コンパイルフリントファイル
 
 **種類:** 関数
 
@@ -20,9 +20,10 @@ function compileFlintFile(
   fileName: string,
   options: FlintPluginOptions,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): FlintCompiledModule;
 ```
@@ -31,13 +32,13 @@ function compileFlintFile(
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| ファイル名 | 文字列                |      |
-| オプション | FlintPluginオプション |      |
-| サービス   | FlintCompilerService  |      |
+|名前 |タイプ |説明 |
+| -------- | -------------------- | ----------- |
+|ファイル名 |文字列 |             |
+|オプション | Flintプラグインオプション |             |
+|サービス | FlintCompilerサービス |             |
 
-### コンパイルフォージWebScriptグラフ
+### フリントグラフをコンパイルする
 
 **種類:** 関数
 
@@ -47,9 +48,10 @@ function compileFlintGraph(
   options: FlintPluginOptions,
   resolver: FlintModuleResolver,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): Promise<FlintCompiledModule>;
 ```
@@ -58,14 +60,33 @@ function compileFlintGraph(
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| ファイル名 | 文字列                |      |
-| オプション | FlintPluginオプション |      |
-| リゾルバ   | FlintModuleResolver   |      |
-| サービス   | FlintCompilerService  |      |
+|名前 |タイプ |説明 |
+| -------- | -------------------- | ----------- |
+|ファイル名 |文字列 |             |
+|オプション | Flintプラグインオプション |             |
+|リゾルバ |フリントモジュールリゾルバー |             |
+|サービス | FlintCompilerサービス |             |
 
-### FlintCompiledModule
+### createFlintGraphCache
+
+**種類:** 関数
+
+```typescript
+function createFlintGraphCache(options?: {
+  readonly compilerService?: FlintCompilerService;
+  readonly selfHostedVmMode?: FlintVmExecutionMode;
+}): FlintGraphCache;
+```
+
+逐次グラフ解決と同時グラフ解決の両方を重複排除するグラフ キャッシュを作成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+|オプション | { 読み取り専用コンパイラ サービス?: FlintCompilerService; readonly selfHostedVmMode?: FlintVmExecutionMode; } |             |
+
+### Flintコンパイル済みモジュール
 
 **種類:** インターフェース
 
@@ -74,6 +95,16 @@ export interface FlintCompiledModule
 ```
 
 コンパイルされたソース、成果物のメタデータ、ソース マップ、およびオプションのグラフ レポート。
+
+### フリントグラフキャッシュ
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintGraphCache
+```
+
+複数の Flint ターゲットで使用される共有メモリ内グラフ結果。
 
 ### Flintプラグインオプション
 
@@ -85,7 +116,7 @@ export interface FlintPluginOptions
 
 説明はありません。
 
-### 解決FlintPath
+### フリントパスを解決する
 
 **種類:** 関数
 
@@ -97,12 +128,28 @@ function resolveFlintPath(root: string, value: string): string;
 
 #### パラメータ
 
-| 名前   | タイプ | 説明 |
-| ------ | ------ | ---- |
-| ルート | 文字列 |      |
-| 値     | 文字列 |      |
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|ルート |文字列 |             |
+|値 |文字列 |             |
 
 ## `src/generate`
+
+### createFlintArtifactSource
+
+**種類:** 関数
+
+```typescript
+function createFlintArtifactSource(compiled: FlintCompiledModule): string;
+```
+
+ビルド時のアーティファクト埋め込み用に 1 つの自己完結型モジュールを生成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------------------- | ----------- |
+|コンパイル済み | Flintコンパイル済みモジュール |             |
 
 ### createFlintDeclarationsソース
 
@@ -117,9 +164,9 @@ function createFlintDeclarationsSource(compiled: FlintCompiledModule): string;
 
 #### パラメータ
 
-| 名前           | タイプ              | 説明 |
-| -------------- | ------------------- | ---- |
-| コンパイル済み | FlintCompiledModule |      |
+|名前 |タイプ |説明 |
+| -------- | ------------------- | ----------- |
+|コンパイル済み | Flintコンパイル済みモジュール |             |
 
 ### createFlintManifestSource
 
@@ -133,9 +180,9 @@ JSON シリアル化可能な ABI マニフェストを含むモジュールを�
 
 #### パラメータ
 
-| 名前           | タイプ              | 説明 |
-| -------------- | ------------------- | ---- |
-| コンパイル済み | FlintCompiledModule |      |
+|名前 |タイプ |説明 |
+| -------- | ------------------- | ----------- |
+|コンパイル済み | Flintコンパイル済みモジュール |             |
 
 ### createFlintModuleソース
 
@@ -146,13 +193,14 @@ function createFlintModuleSource(compiled: FlintCompiledModule): string;
 ```
 
 通常のコンシューマ モジュールを生成します。生成されたモジュールは、
-コンパイルされた関数を作成し、`abiManifest` を通じて同じ ABI マニフェストを公開します。
+コンパイルされた関数は、`abiManifest` を通じて同じ ABI マニフェストを公開します。
+は、デフォルトのエクスポートとして同期ライブラリ ローダーを提供します。
 
 #### パラメータ
 
-| 名前           | タイプ              | 説明 |
-| -------------- | ------------------- | ---- |
-| コンパイル済み | FlintCompiledModule |      |
+|名前 |タイプ |説明 |
+| -------- | ------------------- | ----------- |
+|コンパイル済み | Flintコンパイル済みモジュール |             |
 
 ### createFlintSourceMapSource
 
@@ -166,9 +214,9 @@ function createFlintSourceMapSource(compiled: FlintCompiledModule): string;
 
 #### パラメータ
 
-| 名前           | タイプ              | 説明 |
-| -------------- | ------------------- | ---- |
-| コンパイル済み | FlintCompiledModule |      |
+|名前 |タイプ |説明 |
+| -------- | ------------------- | ----------- |
+|コンパイル済み | Flintコンパイル済みモジュール |             |
 
 ### createFlintWasmSource
 
@@ -182,9 +230,9 @@ function createFlintWasmSource(compiled: FlintCompiledModule): string;
 
 #### パラメータ
 
-| 名前           | タイプ              | 説明 |
-| -------------- | ------------------- | ---- |
-| コンパイル済み | FlintCompiledModule |      |
+|名前 |タイプ |説明 |
+| -------- | ------------------- | ----------- |
+|コンパイル済み | Flintコンパイル済みモジュール |             |
 
 ### createFlintWatSource
 
@@ -199,56 +247,66 @@ Wasm の実行ではなく、検査と適合性の表明を目的としていま
 
 #### パラメータ
 
-| 名前           | タイプ              | 説明 |
-| -------------- | ------------------- | ---- |
-| コンパイル済み | FlintCompiledModule |      |
+|名前 |タイプ |説明 |
+| -------- | ------------------- | ----------- |
+|コンパイル済み | Flintコンパイル済みモジュール |             |
 
-### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+### FLINT_ARTIFACT_QUERY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
+export const FLINT_ARTIFACT_QUERY;
+```
+
+1 つのグラフ コンパイルからコンパイルされたすべてのアーティファクト データを返すクエリ。
+
+### FLINT_DECLARATIONS_QUERY
+
+**種類:** 定数
+
+```typescript
+export const FLINT_DECLARATIONS_QUERY;
 ```
 
 リンクされた宣言とグラフのメタデータを ES モジュールとして返すクエリ。
 
-### FORGE_WEB_SCRIPT_MANIFEST_QUERY
+### FLINT_MANIFEST_QUERY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
+export const FLINT_MANIFEST_QUERY;
 ```
 
 コンパイルされた ABI マニフェストを ES モジュールとして返すクエリ。
 
-### FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+### FLINT_SOURCE_MAP_QUERY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
+export const FLINT_SOURCE_MAP_QUERY;
 ```
 
 生成されたソース マップをモジュールのデフォルト エクスポートとして返すクエリ。
 
-### FORGE_WEB_SCRIPT_WASM_QUERY
+### FLINT_WASM_QUERY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY;
+export const FLINT_WASM_QUERY;
 ```
 
 コンパイルされた Wasm バイトをモジュールのデフォルトのエクスポートとして返すクエリ。
 
-### FORGE_WEB_SCRIPT_WAT_QUERY
+### FLINT_WAT_QUERY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY;
+export const FLINT_WAT_QUERY;
 ```
 
 生成された WAT (ブランチ テーブルの引き下げを含む) を文字列として返すクエリ。
@@ -263,17 +321,17 @@ export const FORGE_WEB_SCRIPT_WAT_QUERY;
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-Forge Web Script コンパイルと仮想アーティファクト クエリを Vite にインストールします。
+Flint コンパイルと仮想アーティファクト クエリを Vite にインストールします。
 プラグインはマニフェストを公開している間、スカラー Wasm エクスポート ABI を保持します。
 宣言、Wasm、WAT、およびツールとフィクスチャのソースマップ クエリ。
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| オプション | FlintPluginオプション |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------ | ----------- |
+|オプション | Flintプラグインオプション |             |
 
-### flintプラグイン
+### フリントプラグイン
 
 **種類:** 関数
 
@@ -281,17 +339,17 @@ Forge Web Script コンパイルと仮想アーティファクト クエリを V
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-Forge Web Script コンパイルと仮想アーティファクト クエリを Vite にインストールします。
+Flint コンパイルと仮想アーティファクト クエリを Vite にインストールします。
 プラグインはマニフェストを公開している間、スカラー Wasm エクスポート ABI を保持します。
 宣言、Wasm、WAT、およびツールとフィクスチャのソースマップ クエリ。
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| オプション | FlintPluginオプション |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------ | ----------- |
+|オプション | Flintプラグインオプション |             |
 
-### FlintViteError
+### フリントバイトエラー
 
 **種類:** クラス
 

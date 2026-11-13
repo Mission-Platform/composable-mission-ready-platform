@@ -19,9 +19,9 @@ paquets interopérables.
 
 Les applications sont assemblées à partir de packages partagés, garantissant ainsi une logique commune, des composants de l'interface utilisateur à l'internationalisation.
 et le routage – est créé une seule fois et réutilisé partout. Cette approche réduit la duplication, simplifie la maintenance et
-garantit une expérience utilisateur cohérente dans l’ensemble de la suite de produits.
+garantit une expérience utilisateur cohérente sur l’ensemble de la suite de produits.
 
-### Multi-Framework par conception
+### Multi-framework par conception
 
 Mission Platform introduit un paradigme de développement neutre en termes de cadre. En utilisant le dialecte `@mission-platform/forge-jsx` JSX,
 les développeurs peuvent créer des composants une seule fois et les compiler vers des sorties natives pour Vue 3, React, Solid, Svelte et Web.
@@ -35,14 +35,14 @@ vitesse et qualité du code.
 
 ## Principales fonctionnalités
 
-| Fonctionnalité                 | Descriptif                                                                                                                                                               |
-| :----------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Forge JSX Runtime**          | Un dialecte JSX indépendant du framework : créez une seule fois et construisez pour Vue 3, React, Svelte, Solid et les composants Web sans aucune surcharge d'exécution. |
-| **Bibliothèque de composants** | Un ensemble complet de composants de mise en page, de typographie et interactifs créés une seule fois pour plusieurs frameworks.                                         |
-| **Jetons de conception**       | Un système de jetons conforme au DTCG qui génère des artefacts SCSS et TypeScript pour une thématique cohérente.                                                         |
-| **Routage agnostique**         | Un système de routage de type sécurisé qui fonctionne indépendamment du framework d'interface utilisateur.                                                               |
-| **Universel I18n**             | Un wrapper d'internationalisation indépendant du framework basé sur i18next avec des adaptateurs Vue et React dédiés.                                                    |
-| **Utilitaires Wasm**           | Utilitaires hautes performances pour la numérisation de codes-barres, la vérification orthographique et bien plus encore, optimisés par WebAssembly.                     |
+| Fonctionnalité | Descriptif |
+| :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forge JSX Runtime** | Un dialecte JSX indépendant du framework : créez une seule fois et construisez pour Vue 3, React, Svelte, Solid et les composants Web sans aucune surcharge d'exécution. |
+| **Bibliothèque de composants** | Un ensemble complet de composants de mise en page, de typographie et interactifs créés une seule fois pour plusieurs frameworks.                           |
+| **Jetons de conception** | Un système de jetons conforme au DTCG qui génère des artefacts SCSS et TypeScript pour une thématique cohérente.                                     |
+| **Routage agnostique** | Un système de routage de type sécurisé qui fonctionne indépendamment du framework d'interface utilisateur.                                                               |
+| **Universel I18n** | Un wrapper d'internationalisation indépendant du framework basé sur i18next avec des adaptateurs Vue et React dédiés.                              |
+| **Utilitaires Wasm** | Utilitaires hautes performances pour la numérisation de codes-barres, la vérification orthographique et bien plus encore, optimisés par WebAssembly.                                     |
 
 ## Pile technologique
 
@@ -50,8 +50,8 @@ Mission Platform est construite sur une pile moderne et performante :
 
 - **Forge JSX (`@mission-platform/forge-jsx`)** : le framework d'interface utilisateur principal – un environnement d'exécution JSX indépendant du framework dans lequel tous
   les composants partagés (tout sauf les applications) sont créés.
-- **Vue 3** : le framework avec lequel les applications dans `apps/` sont construites et l'une des nombreuses cibles de rendu natives pour
-  Forger des composants.
+- **Vue 3** : utilisé par plusieurs applications et l'une des nombreuses cibles de rendu natives pour les composants Forge. Le
+  L'application `service-monitor` utilise à la place RedwoodSDK/React.
 - **TypeScript** : Le standard pour tout le code source.
 - **Vite** : L'outil de construction permettant une HMR rapide et des bundles de production optimisés.
 - **pnpm Workspaces** : gestion efficace des dépendances avec fichiers de verrouillage partagés.
@@ -74,7 +74,7 @@ Le référentiel est organisé en plusieurs zones distinctes :
 
 Pour commencer à développer sur la plateforme Mission, veuillez vous référer aux guides suivants :
 
-- **[Configuration du développement](development-setup.md)** : préparez votre environnement et installez les dépendances.
-  \-**[Architecture](architecture.md)** : plongée approfondie dans les principes de conception et le flux de dépendances de la plateforme.
-  \-**[Structure de l'espace de travail](workspace-structure.md)** : Comprendre la disposition des répertoires et les conventions des packages.
-  \-**[Essai](testing.md)** : découvrez nos stratégies et outils de test.
+- **[Configuration du développement](development-setup.md)** : Préparez votre environnement et installez les dépendances.
+- **[Architecture](architecture.md)** : plongée approfondie dans les principes de conception et le flux de dépendances de la plateforme.
+- **[Structure de l'espace de travail](workspace-structure.md)** : Comprendre la disposition des répertoires et les conventions des packages.
+- **[Test](testing.md)** : découvrez nos stratégies et outils de test.

@@ -94,7 +94,7 @@ In jeder aktiven Workbench muss das gleiche einmal beschreibbare Story-Inventar 
 **Art:** Funktion
 
 ```typescript
-function sharedPreviewDecorators();
+function sharedPreviewDecorators(): Array<ReturnType<typeof withThemeByDataAttribute<TRenderer>>>;
 ```
 
 Gemeinsame Storybook-Dekoratoren für alle Frameworks.
@@ -104,7 +104,17 @@ Gemeinsame Storybook-Dekoratoren für alle Frameworks.
 **Art:** konstant
 
 ```typescript
-export const sharedPreviewParameters;
+export const sharedPreviewParameters: {
+  readonly controls: {
+    readonly matchers: {
+      readonly color: RegExp;
+      readonly date: RegExp;
+    };
+  };
+  readonly a11y: {
+    readonly test: 'error';
+  };
+};
 ```
 
 Gemeinsame Storybook-Parameter für alle Frameworks.
@@ -114,7 +124,15 @@ Gemeinsame Storybook-Parameter für alle Frameworks.
 **Art:** Funktion
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework);
+function sharedPreviewParametersFor(framework?: PreviewFramework):
+  | typeof sharedPreviewParameters
+  | (typeof sharedPreviewParameters & {
+      readonly docs: {
+        readonly source: {
+          readonly type: 'code';
+        };
+      };
+    });
 ```
 
 Framework-fähige Storybook-Parameter.

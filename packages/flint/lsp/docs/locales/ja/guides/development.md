@@ -2,7 +2,7 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> packages/flint-lsp/docs/guides/development.md: [packages/flint-lsp/docs/guides/development.md](../../../guides/development.md)
+> packages/flint/lsp/docs/guides/development.md: [packages/flint/lsp/docs/guides/development.md](../../../guides/development.md)
 > 言語: 日本語 (ja)
 
 ## インストールして確認する
@@ -20,7 +20,7 @@ pnpm --filter @mission-platform/flint-lsp test
 
 ## プロトコルの変更
 
-診断、UTF-16 範囲、シンボル、補完、ホバー、およびセマンティック トークンを保持します
+診断、UTF-16 範囲、シンボル、補完、ホバー、およびセマンティック トークンを保持します。
 言語サービス パッケージに合わせた動作。プロトコル回帰を追加する
 あらゆる新しいリクエストや機能に対応するフィクスチャ。 LSP は現在提供していません
 定義へ移動、参照、名前変更、書式設定、コードアクション、ファイル間

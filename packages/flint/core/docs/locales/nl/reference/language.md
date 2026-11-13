@@ -1,4 +1,4 @@
-# Forge WebScript v1
+# Vuursteen v1
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
@@ -47,7 +47,7 @@ dezelfde stabiele diagnostiek die door de rest van de compiler wordt gebruikt. A
 omvat bronbestanden, optionele bronkaartvermeldingen, onbewerkte en geoptimaliseerde IR, de
 ABI-manifest, metadata van grafieken/links, het doelprofiel en genormaliseerd beleid.
 
-Analysebevindingen gebruiken stabiele `FLINT-ANALYSIS-*`-codes en omvatten een categorie,
+Analysebevindingen maken gebruik van stabiele `FLINT-ANALYSIS-*`-codes en omvatten een categorie,
 ernst, UTF-16-compatibele bronreeks, bewijsmateriaal, herstelhint en
 optionele OWASP/CWE-referenties. Hun diagnostiek voegt `phase: "analysis"` toe en
 beveiligingsmetagegevens zonder de bestaande `FLINT-LEX-*`, `FLINT-PARSE-*` te wijzigen,
@@ -61,7 +61,7 @@ maar gebruikt ze niet als vrijgavepoort. Beleid omvat een expliciete mogelijkhei
 toelatingslijst en begrensde limieten voor bevindingen, oproepdiepte, lussen, toewijzingen, async
 taken en invoer van reguliere expressies.
 
-Cachesleutels van de compilerservice omvatten het genormaliseerde analysebeleid, geregistreerd
+De cachesleutels van de compilerservice omvatten het genormaliseerde analysebeleid, geregistreerd
 regel-ID's en bronkaartinvoer. Het wijzigen van een van deze analyse-invoer
 kan daarom een artefact dat onder een ander beleid is geproduceerd, niet hergebruiken.
 
@@ -114,19 +114,83 @@ volharden in deterministische `<key>.optimized.wat`, `<key>.unoptimized.wat`,
 `<key>.optimized.wasm`- en `<key>.unoptimized.wasm`-artefacten. Cache schrijft
 zijn additief en niet beschikbaar of falende caches mislukken niet bij het compileren.
 
+## Veiligheidsstandaarden en grensprofielen
+
+Lokale waarden en parameters zijn onveranderlijk tenzij gedeclareerd met `mut`. Een lening wel
+standaard onveranderlijk; schrijftoegang vereist het expliciete `&mut`-formulier en kan dat niet
+een andere lening overlappen. POD-waarden (alleen samengestelde eenheden, scalaire waarden en aggregaten
+van POD-velden) worden standaard als waarde doorgegeven. Niet-POD-waarden worden doorgegeven
+standaard onveranderlijke referentie; `owned`, `borrowed` en `shared` blijven bestaan
+expliciete ABI-eigendomscontracten. Door de regio beheerde tijdelijke krachten mogen niet ontsnappen
+hun reikwijdte. Waarden die een reikwijdte overschrijden, maken gebruik van expliciet eigendom/promotie
+grens- en deterministische afhandeling van ARC-retentie/vrijgave.
+
+Indexering van arrays en verzamelingen wordt standaard tijdens runtime aangevinkt. De compiler
+mag een cheque alleen annoteren als `proven-safe` als de feiten over interval en lengte bewijzen
+de volledige toegang. `excluded-by-profile` is een expliciet release-only-beleid;
+het wordt vastgelegd in het analyserapport, het ABI-manifest, de metadata van de optimalisatie en
+cache-identiteit. Geef de voorkeur aan `runtime` voor niet-vertrouwde indexen en ontwikkelingsbuilds.
+
+De optimalisatiegrens is een deterministische Sea-of-Nodes-grafiek gevolgd door a
+Wasm-fase-optimalisatie. Geconfigureerde caches bevatten een schema/versioned
+`<key>.sonir.json`-artefact met canonieke node-ID's, bronreeksen, grafiekhash,
+effecten, eigendomsfeiten, grenzenbeleid en geordende pasrapporten. Het is veilig
+om dit artefact te verwijderen of te negeren: misvormd, oud, te groot of niet-overeenkomend
+cachegegevens worden nooit vertrouwd.
+
+Dichte gehele `switch`-domeinen kunnen lager zijn dan Wasm `br_table`; schaarse domeinen
+gebruik deterministische vergelijkingsverlaging. Dubbele gevallen zijn diagnostiek, en a
+standaardarm is vereist wanneer de dekking niet statisch compleet is.
+
 ## Linkprofielen voor meerdere projecten
 
 FWS ondersteunt twee primaire linkprofielen voor projectoverschrijdend afhankelijkheidsbeheer:
 
-- `linkProfile: "static"`: projectoverschrijdende modules worden tot één geheel samengevoegd
+- `linkProfile: "static"`: Projectoverschrijdende modules worden tot één geheel samengevoegd
   scannergrafiekartefact. Dit maakt agressieve statische optimalisatie mogelijk
   (`static-aggressive`-profiel) en elimineert het opzoeken van runtime-modules in het
   kosten van artefactgrootte.
 - `linkProfile: "dynamic"`: Expliciete grenzen van bronmodules blijven behouden.
   `FlintDynamicLinkCache` wordt gebruikt om decodermodules tijdens runtime op te lossen,
-  met in de cache opgeslagen functieadressen gecodeerd door artefact en manifeste identiteit. Dit
+  met in de cache opgeslagen functieadressen, gecodeerd op artefact en manifeste identiteit. Dit
   gebruikt het `dynamic-conservative`-optimalisatieprofiel, wat veiliger is
   modulaire distributies.
+
+## Buitenlandse C- en Rust-interoperabiliteit (C ABI)
+
+Flint biedt zero-copy C-interoperabiliteit en declaraties van vreemde typen om te communiceren met native bibliotheken geschreven in C, C++ of Rust (`extern "C"`, `#[repr(C)]`).
+
+### C primitieve typen en pointer-abstracties
+
+- C scalaire typen: `c_char`, `c_uchar`, `c_short`, `c_ushort`, `c_int`, `c_uint`, `c_long`, `c_ulong`, `c_longlong`, `c_ulonglong`, `c_size`, `c_ssize`, `c_float`, `c_double`, `c_void`, `u8` en `i8`.
+- Pointer-wrappers: `CPtr<T>` (onveranderlijke aanwijzerweergave), `MutCPtr<T>` (veranderlijke aanwijzerweergave) en `COpaquePtr` (ongetypeerde C-handgreep, `void*`).
+- Nullability-modellering: Nullable externe pointers worden weergegeven met `Option<CPtr<T>>`, waarbij `Option::None` de letterlijke `0` (null pointer) codeert.
+
+### Platformafhankelijke uitlijnings- en representatieattributen
+
+De structuurgeheugenindeling in Flint is doelafhankelijk voor ABI-modellen op standaardplatforms (`wasm32`, `wasm64`, `x86_64-linux`, `x86_64-windows`, `aarch64-darwin`, `i686-linux`).
+
+Richtlijnen ondersteund op structs:
+
+`#[repr(C)]`: strikte C ABI-volgorde, natuurlijke velduitlijning en staartvulling.
+- `#[repr(packed(N))]`: beperkt de velduitlijning tot maximale `N`-bytes voor compacte binaire formaten.
+- `#[repr(align(N))]`: Verhoogt de geaggregeerde uitlijning naar `N`-bytes (bijvoorbeeld 64-byte CPU-cacheregels of SIMD).
+
+> **Metaprogrammering Roadmap Opmerking:** De intrinsieke representatieattributen van de compiler (`#[repr(C)]`, `#[repr(packed(N))]`, `#[repr(align(N))]`) zijn pragmatische tussentijdse constructies voor onmiddellijke C ABI-compatibiliteit. Architectuurmigratie op lange termijn naar een hygiënisch, sandbox-getypeerd macro-metaprogrammeersysteem met introspectie en reflectie tijdens het compileren en runtime wordt formeel bijgehouden in [GitHub Issue #101](https://github.com/Mission-Platform/composable-mission-ready-platform/issues/101).
+
+### Blokken van buitenlandse capaciteiten
+
+Buitenlandse C-functies worden gedeclareerd binnen expliciete capaciteitsblokken in plaats van omgevingsexterne instructies:
+
+```flint
+opaque foreign type sqlite3;
+
+foreign "C" capability "sqlite3" {
+  fn sqlite3_libversion() -> CPtr<c_char>;
+  fn sqlite3_open(filename: CPtr<c_char>, ppDb: MutCPtr<COpaquePtr>) -> c_int;
+  fn sqlite3_close(db: MutCPtr<sqlite3>) -> c_int;
+}
+```
 
 ## Lexicale verwijzing
 
@@ -224,13 +288,13 @@ vorige label. Tagvolgorde en dubbele tags blijven behouden.
 
 De veelgebruikte tagvormen zijn:
 
-| Tagformulier                                            | Gestructureerde velden                 |
-| ------------------------------------------------------- | -------------------------------------- |
+| Tagformulier | Gestructureerde velden |
+| -------------------------------------------------------- | -------------------------------------------- |
 | `@param name text`, `@arg`, `@argument` of `@parameter` | `name` is `subject`; de rest is `text` |
-| `@typeparam name text`                                  | `name` is `subject`; de rest is `text` |
-| `@throws type text` of `@exception type text`           | `type` is `subject`; de rest is `text` |
-| `@return text` of `@returns text`                       | Alleen `text`                          |
-| `@deprecated text`                                      | Alleen `text`                          |
+| `@typeparam name text` | `name` is `subject`; de rest is `text` |
+| `@throws type text` of `@exception type text` | `type` is `subject`; de rest is `text` |
+| `@return text` of `@returns text` | Alleen `text` |
+| `@deprecated text` | Alleen `text` |
 
 Andere `@name`-formulieren worden geaccepteerd en bewaard als bestelde tags in plaats van
 gerapporteerd als diagnostiek. Ze hebben geen afgeleid onderwerp; hun resterende tekst
@@ -250,8 +314,8 @@ Adds one to a value.
 @deprecated Use `increment` in new code.
 ```
 
-Documentatie bestaat uit analyse-metagegevens, en niet uit uitvoerbare taalsemantiek. Het mag
-worden bewaard in de AST en IR voor consumenten van taaldiensten, maar dat is niet het geval
+Documentatie is analyse-metagegevens, geen uitvoerbare taalsemantiek. Het mag
+worden behouden in de AST en IR voor consumenten van taaldiensten, maar dat is niet het geval
 invloed hebben op het parseren van declaraties, typecontrole, verlaging of runtime-gedrag.
 Documentatie is uitgesloten van de gegenereerde ABI-handtekeningen en manifesten
 declaraties en loader-artefacten, Wasm/WAT, hashes van uitvoerbare inhoud, en
@@ -354,19 +418,19 @@ V1 heeft de primitieve typen `bool`, ondertekend `i32`/`i64`, niet-ondertekend `
 `f32`/`f64`, `string`, `bytes` en `unit`. Er zijn geen impliciete numerieke waarden
 conversies. Rekenkundige operanden moeten van hetzelfde numerieke type zijn; vergelijkingen
 produceren `bool`; logische operators vereisen `bool`; gelijkheid vereist gelijkheid
-typen. Een functie heeft één gedeclareerd resultaattype en de functie `unit` retourneert
+typen. Een functie heeft één gedeclareerd resultaattype en een functie `unit` retourneert
 zonder waarde.
 
 ### Reguliere expressies die eigendom zijn van de compiler
 
-Flint biedt een deterministische standaardbibliotheek met reguliere expressies.
+Flint biedt een deterministische standaardbibliotheek voor reguliere expressies.
 De oproepen `regex_full_match(pattern, value) -> bool`,
 `regex_prefix_match(pattern, value) -> bool`, en
 `regex_search(pattern, value, start: i32) -> bool` voert gehele waarde uit,
 respectievelijk positie-nul voorvoegsel en meest linkse zoekopdracht. Grenzen vastleggen
 zijn beschikbaar via de overeenkomstige `regex_*_capture_start` en
 `regex_*_capture_end`-oproepen; ze nemen een groepsindex en retourneren een UTF-16-tekenreeks
-offset of `-1` wanneer er geen overeenkomst is of de groep is uitgeschakeld. Zoek opname
+offset of `-1` als er geen overeenkomst is of als de groep is uitgeschakeld. Zoek opname
 oproepen nemen bovendien de startoffset vóór de groepsindex.
 
 Regex-aanroepen zijn standaardbibliotheekfuncties die eigendom zijn van de compiler. Ze zijn getypt door
@@ -380,13 +444,15 @@ De ondersteunde syntaxis is opzettelijk beperkt tot letterlijke tekens, `.`, tek
 klassen en bereiken (inclusief `^`-ontkenning), `\d`, `\D`, `\w`, `\W`, `\s`,
 `\S`, ontsnapte letterlijke waarden, groepen vastleggen en niet vastleggen, afwisseling,
 `*`, `+`, `?`, begrensde `{n}`, `{n,}`, `{n,m}` kwantoren, luie kwantoren,
-en `^`/`Flint biedt een deterministische standaardbibliotheek met reguliere expressies.
-De oproepen`regex_full_match(pattern, value) -> bool`,
+en `^`/`
+Flint biedt een deterministische standaardbibliotheek voor reguliere expressies.
+De oproepen `regex_full_match(pattern, value) -> bool`,
 `regex_prefix_match(pattern, value) -> bool`, en
-`regex_search(pattern, value, start: i32) -> bool`voert gehele waarde uit,
+`regex_search(pattern, value, start: i32) -> bool` voert gehele waarde uit,
 respectievelijk positie-nul voorvoegsel en meest linkse zoekopdracht. Grenzen vastleggen
-zijn beschikbaar via de overeenkomstige`regex___capture_start`en`regex___capture_end`-oproepen; ze nemen een groepsindex en retourneren een UTF-16-tekenreeks
-offset of `-1` wanneer er geen overeenkomst is of de groep is uitgeschakeld. Zoek opname
+zijn beschikbaar via de overeenkomstige `regex_*_capture_start` en
+`regex_*_capture_end`-oproepen; ze nemen een groepsindex en retourneren een UTF-16-tekenreeks
+offset of `-1` als er geen overeenkomst is of als de groep is uitgeschakeld. Zoek opname
 oproepen nemen bovendien de startoffset vóór de groepsindex.
 
 Regex-aanroepen zijn standaardbibliotheekfuncties die eigendom zijn van de compiler. Ze zijn getypt door
@@ -405,8 +471,8 @@ andere host-engine-extensies worden afgewezen. Niet-ondersteunde syntaxis heeft 
 `FWS-REGEX-001` diagnostisch; misvormde patronen gebruiken `FWS-REGEX-002`, en een
 interne compiler-invariante fout maakt gebruik van `FWS-REGEX-003`.
 
-Het gedeelde pakket `@mission-platform/flint-regex` is eigenaar van de stal `$`
-bytecode (`FORGE_REGEX_BYTECODE_VERSION`) en build-time compiler. Het is expliciet
+Het gedeelde pakket `@mission-platform/flint-regex` is eigenaar van de stal
+bytecode (`FORGE_REGEX_BYTECODE_VERSION`) en build-time compiler. Het is expliciet `$`
 `/reference`-ingangspunt stelt een TypeScript-VM alleen beschikbaar als conformiteitsorakel
 voor differentiële tests met native engine en backend; de pakketroot niet
 stel die VM bloot. Telefoonspecifieke metagegevens blijven in het telefoonnummerpakket aanwezig.
@@ -427,18 +493,18 @@ Het uitgebreide incassocontract is structureel en ontvangersgericht; dat doet he
 voeg geen willekeurige objectmethoden toe. Vaste arrays worden geschreven `[T; N]` en
 vectoren als `Vector<T>`. De ondersteunde handtekeningen zijn:
 
-| Ontvanger   | Werkwijze       | Handtekening            |
+| Ontvanger | Werkwijze | Handtekening |
 | ----------- | --------------- | ----------------------- |
-| `Array<T>`  | `length`        | `() -> u32`             |
-| `Array<T>`  | `get`           | `(u32) -> Option<T>`    |
-| `Array<T>`  | `set`           | `(u32, T) -> Array<T>`  |
-| `Array<T>`  | `iter`          | `() -> Iterator<T>`     |
-| `Vector<T>` | `length`        | `() -> u32`             |
-| `Vector<T>` | `get`           | `(u32) -> Option<T>`    |
-| `Vector<T>` | `set`           | `(u32, T) -> Vector<T>` |
-| `Vector<T>` | `push` of `add` | `(T) -> Vector<T>`      |
-| `Vector<T>` | `pop`           | `() -> Option<T>`       |
-| `Vector<T>` | `iter`          | `() -> Iterator<T>`     |
+| `Array<T>` | `length` | `() -> u32` |
+| `Array<T>` | `get` | `(u32) -> Option<T>` |
+| `Array<T>` | `set` | `(u32, T) -> Array<T>` |
+| `Array<T>` | `iter` | `() -> Iterator<T>` |
+| `Vector<T>` | `length` | `() -> u32` |
+| `Vector<T>` | `get` | `(u32) -> Option<T>` |
+| `Vector<T>` | `set` | `(u32, T) -> Vector<T>` |
+| `Vector<T>` | `push` of `add` | `(T) -> Vector<T>` |
+| `Vector<T>` | `pop` | `() -> Option<T>` |
+| `Vector<T>` | `iter` | `() -> Iterator<T>` |
 
 De spelling `add` is opzettelijk een compatibiliteitsalias voor vector
 `push`; het is geen arraymethode. Indices zijn `u32`, elementargumenten moeten
@@ -485,7 +551,7 @@ import capability "clock.now" as now() -> i64;
 
 De Vite-adapter lost bronimporten op via de modulegrafiek. Afhankelijkheden
 binnen één project zijn standaard statisch gekoppeld. Standaard voor projectoverschrijdende randen
-tot dynamisch laden en kan worden geconfigureerd als `static` of `dynamic` met expliciete
+voor dynamisch laden en kan worden geconfigureerd als `static` of `dynamic` met expliciete
 project-root linkconfiguratie. Ontbrekende modules, cycli die niet worden ondersteund door de
 geselecteerde koppelingsmodus en identiteitsbotsingen zijn grafische diagnostische gegevens.
 
@@ -520,7 +586,7 @@ manifesteren.
 
 ## Logische capaciteit ABI
 
-Flint gebruikt een WASI-geïnspireerde _logische_ grens, geen claim van volledig
+Flint gebruikt een WASI-geïnspireerde logische grens, geen claim van volledig
 WASI-compatibiliteit. Een mogelijkheid is een beperkte, expliciete hostfunctie zoals
 `clock.now`, `random.bytes` of `storage.read`. Mogelijkheidsnamen zijn eigendom van
 het platform, en elke naam heeft een handtekening met een afzonderlijke versie. DOM-objecten,
@@ -531,7 +597,7 @@ De lader voert deze controles uit vóór instantiatie:
 
 1. Het manifestformaat, de taalversie en de ABI-versie worden ondersteund.
 2. Alle vereiste mogelijkheden zijn aanwezig in het hostregister.
-3. Elke geleverde mogelijkheid heeft de exact aangegeven handtekening en geen niet-aangegeven handtekening
+3. Elke geleverde mogelijkheid heeft de exacte aangegeven handtekening en geen niet-aangegeven handtekening
    gastimport wordt geaccepteerd.
 4. Geheugen-, allocator-, export- en importaangiften zijn intern
    consistent.
@@ -547,13 +613,13 @@ stille no-op.
 De module maakt gebruik van één WebAssembly lineair geheugen met 64 KiB-pagina's en little-endian
 scalaire waarden. Scalaire waarden worden als volgt toegewezen:
 
-| Webscript smeden  | WebAssembly-vertegenwoordiging                       |
-| ----------------- | ---------------------------------------------------- |
-| `bool`            | `i32`, waarbij `0` onwaar is en `1` waar is          |
-| `i32`, `u32`      | `i32`                                                |
-| `i64`, `u64`      | `i64`                                                |
-| `f32`, `f64`      | bijpassende WebAssembly vlotter                      |
-| `unit`            | geen resultaatwaarde                                 |
+| Vuursteen | WebAssembly-vertegenwoordiging |
+| ----------------- | ------------------------------------------ |
+| `bool` | `i32`, waarbij `0` onwaar is en `1` waar is |
+| `i32`, `u32` | `i32` |
+| `i64`, `u64` | `i64` |
+| `f32`, `f64` | bijpassende WebAssembly vlotter |
+| `unit` | geen resultaatwaarde |
 | `string`, `bytes` | twee `u32`-waarden: pointer en vervolgens bytelengte |
 
 Het manifest declareert dezelfde toewijzing in `valueRepresentations`. EEN
@@ -588,7 +654,7 @@ ondoorzichtige hostfoutcode. Gastvallen worden nooit omgezet in gewoon rendement
 waarden. Hosts mogen trapdetails registreren, maar ze mogen geen geheimen of onbewerkte gegevens prijsgeven
 browseruitzonderingen op niet-vertrouwde gastcode.
 
-### Door gasten gecontroleerde geheugenbewerkingen
+### Gecontroleerde geheugenbewerkingen die eigendom zijn van gasten
 
 FWS-bronmodules die een stateful gastheap implementeren, kunnen gebruikmaken van de compiler die eigendom is van de compiler
 bewerkingen `memory_alloc(size: u32) -> u32`,
@@ -611,7 +677,7 @@ Het stateful-memory-armatuur onder
 vaste waarde voor deze handtekeningen, hergebruik van allocators, recursie, reset en grenzen
 vallen.
 
-Bytelezers die eigendom zijn van de compiler bieden ook niet-ondertekende indexvarianten voor gasten
+Bytelezers van de compiler bieden ook niet-ondertekende indexvarianten voor gasten
 frontends die bronverschuivingen vertegenwoordigen als handvatten: `bytes_length_u32(value:
 bytes) -> u32` and `bytes_byte_at_u32(waarde: bytes, index: u32) -> u32`. Zij
 gebruik dezelfde aanwijzerlengtegrenscontroles als de ondertekende `bytes_length` en
@@ -646,7 +712,7 @@ interface FlintExports {
 }
 ```
 
-Elke gegenereerde aangifte, inclusief mogelijkhedenimport en dynamisch gekoppeld
+Elke gegenereerde aangifte, inclusief import van capaciteiten en dynamisch gekoppeld
 exporteert, gebruikt `string` voor FWS `string`-waarden. De gegenereerde `load` en
 `loadSync`-wrappers coderen JavaScript-tekenreeksen als UTF-8 en geven de pointerlengte door
 koppelt aan de ongewijzigde WASM ABI en decodeert geretourneerde tekenreeksen terug naar JavaScript
@@ -665,7 +731,7 @@ De gegenereerde adapter is eigenaar van tijdelijke buffers die zijn gemaakt voor
 reeks resultaten. Het decodeert een resultaat voordat het wordt vrijgegeven, en geeft vervolgens elk resultaat vrij
 tijdelijk bereik precies één keer in een `finally`-pad voor succes, gasttraps, host
 uitzonderingen en decoderingsfouten. Een hostmogelijkheid met tekenreekswaarden ontvangt
-JavaScript-tekenreeksen en kan een JavaScript-tekenreeks retourneren; de wikkelaar voert de
+JavaScript-tekenreeksen en kan een JavaScript-tekenreeks retourneren; de wikkelaar voert het uit
 gasttoewijzing en UTF-8-kopie voor die retourwaarde. Hostcode moet nog steeds worden gekopieerd
 onbewerkte `bytes`-invoer voordat deze terugkeert, tenzij een toekomstig manifest dit expliciet aangeeft
 een geleend buffercontract. `load` en `loadSync` tonen hetzelfde gegenereerde bestand
@@ -768,8 +834,8 @@ of het gegenereerde Vite-modulecontract. De directe harnasmethoden (`compile`,
 `compileSource`, `compileGraph`, `inspect`, `load`, `loadSync` en
 `checkVmParity`) delegeren aan de openbare compiler/runtime-contracten; zijn
 `defineFlintVitestConfig`-helper installeert de productie
-`forgeWebScriptPlugin` met behoud van de Vite-plug-ins en instellingen voor consumenten.
-Zie [Testen in Mission Platform](../../../../../../docs/locales/nl/testing.md#flint-tests) voor de
+`forgeWebScriptPlugin` met behoud van Vite-plug-ins en instellingen voor consumenten.
+Zie [Testen in Mission Platform](../../../../../../docs/testing.md#flint-tests) voor de
 configuratie- en armatuurvoorbeelden.
 
 Het harnas accepteert alleen hostfuncties via expliciet ingetoetste capaciteitskaarten
@@ -781,7 +847,7 @@ const exports = await harness.load<{ current: () => bigint }>('capabilities/cloc
 });
 ```
 
-Ontbrekende aangegeven invoer en niet-aangegeven geleverde invoer zijn mislukkingen. Testen
+Ontbrekende aangegeven invoer en niet-aangegeven geleverde invoer zijn mislukkingen. Proef
 projecten die `.flint` of de virtuele artefactquery's importeren, moeten de
 subpad voor declaratie alleen van het type
 `@mission-platform/flint-vitest/flint` naar hun
@@ -793,7 +859,7 @@ geldige modules, diagnostiek, mogelijkheden, grafieken en zelf-gehoste pariteit.
 Pakket-lokale armaturen blijven geschikt voor compiler, runtime en plug-in
 tests die privégegevens gebruiken.
 
-`checkVmParity` rapporteert het begrensde, zelf-hostende pariteitscontract in de lex-fase in
+`checkVmParity` rapporteert het begrensde, zelf-hostende lex-stage pariteitscontract in
 `interpret`, `jit` of `aot`-modus. Beweer pariteit, vingerafdrukken, stappentellingen,
 en AOT-reproduceerbaarheidsmetagegevens, maar behandel dit rapport niet als willekeurig
 gecompileerde FWS VM-uitvoering; Wasm-laden blijft de runtime-gedragscontrole.
@@ -805,13 +871,13 @@ Diagnostische gegevens zijn gestructureerde records met `code`, `severity`, `pha
 De fase is een van `lex`, `parse`, `type-check` of `abi`. Stabiele v1-code
 gezinnen zijn onder meer:
 
-| Codeer familie  | Betekenis                                                                                                   |
-| --------------- | ----------------------------------------------------------------------------------------------------------- |
-| `FLINT-LEX-*`   | ongeldige tekens/escapes, onbewerkte tekenreeksregelterminators of niet-afgesloten tekenreeksen/opmerkingen |
-| `FLINT-PARSE-*` | ongeldige syntaxis van module, declaratie, instructie of expressie                                          |
-| `FLINT-TYPE-*`  | ongeldig primitief type, naam, operator, argument of return                                                 |
-| `FLINT-ABI-*`   | dubbele namen, geweigerde mogelijkheden, export of import                                                   |
-| `FWS-REGEX-*`   | niet-ondersteunde of verkeerd ingedeelde regex-patronen die eigendom zijn van de compiler                   |
+| Codeer familie | Betekenis |
+| --------------- | ----------------------------------------------------------------------------------------- |
+| `FLINT-LEX-*` | ongeldige tekens/escapes, onbewerkte tekenreeksregelbeëindigingen of niet-afgesloten tekenreeksen/opmerkingen |
+| `FLINT-PARSE-*` | ongeldige syntaxis van module, declaratie, instructie of expressie |
+| `FLINT-TYPE-*` | ongeldig primitief type, naam, operator, argument of return |
+| `FLINT-ABI-*` | dubbele namen, geweigerde mogelijkheden, export of import |
+| `FWS-REGEX-*` | niet-ondersteunde of verkeerd ingedeelde regex-patronen die eigendom zijn van de compiler |
 
 Fouten voorkomen het genereren van artefacten. Waarschuwingen en informatieve diagnostiek doen dat wel
 de semantiek niet veranderen. Diagnostische volgorde is bronvolgorde, gevolgd door fase
@@ -820,7 +886,7 @@ de stabiele code en spanwijdte bij het doorsturen van een fout naar Vite.
 
 ## Bootstrap-conformiteitscontract
 
-Het doel van de v1-compiler is opzettelijk beperkt tot het taal- en ABI-oppervlak
+Het doel van de v1-compiler is opzettelijk beperkt tot de taal en het ABI-oppervlak
 hier gedocumenteerd. Een programma bevindt zich in de bootstrap-subset als het er een gebruikt
 module, de bovenstaande lexicale regels, primitieve typen, `string`/`bytes`-waarden,
 expliciet geëxporteerde functies, import van mogelijkheden, lokale aangiften, oproepen,
@@ -849,7 +915,7 @@ conformiteitsbron totdat aggregaat Wasm-verlaging is ingeschakeld voor dat harna
 
 ## Compatibiliteitsbeleid
 
-Taal- en ABI-hoofdversies zijn standaard incompatibel. Een lader kan dit accepteren
+Taal- en hoofdversies van ABI zijn standaard incompatibel. Een lader kan dit accepteren
 dezelfde grote ABI met een hogere secundaire versie alleen wanneer de producent de
 nieuwe velden zijn optioneel en de consument negeert onbekende velden veilig. Het verwijderen van een
 exporteren, een type wijzigen, van eigenaar veranderen of een mogelijkheid wijzigen
@@ -886,7 +952,7 @@ Flint is het productiedoel voor de neutrale
 `@mission-platform/code-scanner`-artefact. De scannergrafiek is statisch gekoppeld
 de QR-, matrix- en barcodedecoderbronnen in één op zichzelf staande WebAssembly
 artefact; het dynamische profiel houdt de grenzen van de bronmodule expliciet en
-caches hebben exporten opgelost. De Rust `code-scan` krat blijft verkrijgbaar als
+caches opgeloste exporten. De Rust `code-scan` krat blijft verkrijgbaar als
 native/referentie-implementatie en is geen runtime-afhankelijkheid van het pakket.
 De openbare QR-, matrix- en barcodepakketten behouden hun eigen getypte wikkels;
 deze API's worden niet stilletjes omgeleid via de scannergrafiek.
@@ -897,7 +963,7 @@ conformiteitsarmatuur in de vorm van een codec-adapter. Het verklaart
 `codec.barcode.encode(payload: string) -> bytes`, exporteert `encode_payload`, valideert de
 ABI met pointerlengte en gebruikt een injecteerbare host om uitvoer die eigendom is van de beller te schrijven.
 Het blijft bewust een smal ABI-armatuur: de gastheer kan een deterministiek gebruiken
-nep voor conformiteitstests terwijl het armatuur het Flint bewijst
+nep voor conformiteitstests terwijl het armatuur de Flint bewijst
 grens. Voor productiecodec-pariteit zijn nog steeds overeenkomende vectoren en
 prestatiemetingen, niet alleen een overeenkomende functienaam.
 
@@ -910,19 +976,19 @@ doen alsof de twee exporten qua gedrag al uitwisselbaar zijn.
 
 ### Een implementatie selecteren
 
-| Werklast of vereiste                                                                  | Selecteer                                                     | Reden                                                                                                                                     |
-| ------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Bestaand QR- of matrixpakketgedrag                                                    | `@mission-platform/qr-code` / `@mission-platform/matrix-code` | Pakketspecifieke ESM-wrappers blijven beschikbaar voor deze openbare API's.                                                               |
-| Neutraal beeld- en camerascannergedrag                                                | `@mission-platform/code-scanner`                              | Maakt standaard gebruik van een statisch gekoppelde FWS-grafiek, of een expliciet dynamisch bronmoduleprofiel met verzending in de cache. |
-| Bestaand streepjescodegedrag                                                          | `@mission-platform/barcode`                                   | Pakket-lokale Flint-grafieken bieden de getypte barcode-façade.                                                                           |
-| Nieuw browserveilig computergebruik voor algemeen gebruik met expliciete hosteffecten | Webscript smeden plus `@mission-platform/vite-plugin-flint`   | `.flint`-bron-, manifest-, getypte lader en standaard-deny-by-default-mogelijkheden met versieversie.                                     |
-| Bestaande AssemblyScript-bron of een AssemblyScript-specifieke migratie               | `@mission-platform/vite-plugin-assemblyscript`                | Compileert `.ts` AssemblyScript-vermeldingen en behoudt het gegenereerde onbewerkte exportcontract.                                       |
-| Kaderneutrale UI/componentcompilatie                                                  | Componentcompiler smeden                                      | Flint is geen vervanging voor `FrameworkOutputPlugin` of componentdoelen.                                                                 |
+| Werklast of vereiste | Selecteer | Reden |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Bestaand QR- of matrixpakketgedrag | `@mission-platform/qr-code` / `@mission-platform/matrix-code` | Pakketspecifieke ESM-wrappers blijven beschikbaar voor deze openbare API's.                                       |
+| Neutraal beeld- en camerascannergedrag | `@mission-platform/code-scanner` | Maakt standaard gebruik van een statisch gekoppelde FWS-grafiek, of een expliciet dynamisch bronmoduleprofiel met verzending in de cache. |
+| Bestaand streepjescodegedrag | `@mission-platform/barcode` | Pakket-lokale Flint-grafieken bieden de getypte barcode-façade.                                                      |
+| Nieuw browserveilig computergebruik voor algemeen gebruik met expliciete hosteffecten | Vuursteen plus `@mission-platform/vite-plugin-flint` | `.flint`-bron-, manifest-, getypte lader en standaard-deny-by-default-mogelijkheden met versieversie.                              |
+| Bestaande AssemblyScript-bron of een AssemblyScript-specifieke migratie | `@mission-platform/vite-plugin-assemblyscript` | Compileert `.ts` AssemblyScript-vermeldingen en behoudt het gegenereerde onbewerkte exportcontract.                            |
+| Kaderneutrale UI/componentcompilatie | Componentcompiler smeden | Flint is geen vervanging voor `FrameworkOutputPlugin` of componentdoelen.                                      |
 
 Gebruik de Flint Vite-plug-in alleen voor `.flint`-vermeldingen. Gebruik de
 AssemblyScript-plug-in voor bestaande AssemblyScript-vermeldingen. Tijdens de migratie kan een
 applicatie kan beide soorten modules bundelen: elke lader bezit zijn eigen module
-initialisatie, geheugen en ABI-validatie en het importeren van mogelijkheden moeten zijn
+initialisatie, geheugen en ABI-validatie en import van mogelijkheden moeten zijn
 expliciet geleverd aan Flint-modules.
 
 ### Bewijs- en afschrijvingspoort
@@ -943,7 +1009,7 @@ bewijs. De bestaande barcodeverpakkings- en decoderpakkettests blijven de
 gedrags- en erfenisregressie-orakel; laat ze liever langs het armatuur lopen
 dan het armatuur te behandelen als een vervangende benchmark. Smeed web
 Script mag een Rust- of AssemblyScript-pad niet afschaffen totdat een werklast voorbij is
-alle vier de vergelijkingen in twee ondersteunde hostomgevingen hebben een gedocumenteerde
+alle vier vergelijkingen in twee ondersteunde hostomgevingen hebben een gedocumenteerde
 terugdraaipad en heeft geen onopgeloste ABI- of beveiligingsbevindingen. Afschrijving dan
 vereist een aangekondigd compatibiliteitsvenster en een adapter- of migratiegids;
 verwijdering vereist een volgende grote release.
@@ -954,7 +1020,7 @@ Het uitgebreide klassevrije contract voegt onveranderlijke `struct`-waarden toe,
 waarden, structurele `interface`-declaraties tijdens het compileren, generieke parameters
 met interfacegrenzen, functiewaarden, verzamelingsliterals/methoden, en
 `match` expressies/instructies. Gekwalificeerde enum-constructors gebruiken `Type::Variant`
-en wedstrijdbindingen zijn arm-lokaal; bijvoorbeeld,
+en matchbindingen zijn arm-lokaal; bijvoorbeeld,
 `Result::Ok(item) => item` bindt `item` alleen in die arm. De standaard
 Het `Result<T, E>`-contract gebruikt `Ok(T)` en `Error(E)`, niet `Err(E)`.
 Structurele updates zijn pure waardetransformaties; noch structs, noch interfaces
@@ -990,7 +1056,7 @@ De v1-implementatie is een TypeScript frontend plus deterministische WebAssembly
 backend, zichtbaar via de compatibiliteitsgevel en de zelfstandige Node CLI.
 De conformiteitsarmaturen en gegenereerde artefacten zijn het compatibiliteitsdoel.
 
-Zelf-gehoste compilatie (waarbij de compiler als een FWS-programma wordt uitgevoerd) is expliciet toegestaan
+Zelf-gehoste compilatie (waarbij de compiler wordt uitgevoerd als een FWS-programma) is expliciet toegestaan
 ondersteund door het klassevrije oppervlak en de uitvoering van VM-bytecodes van dit v1-contract
 model, maar dit is niet vereist voor de juistheid van de v1 ABI en taal
 grens. Rijkere taalfuncties, vervanging van bestaande Rust of

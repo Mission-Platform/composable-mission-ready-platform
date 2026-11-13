@@ -33,7 +33,7 @@ function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement;
 הידור ישר ל-React או Vue על ידי `@mission-platform/vite-plugin-forge`.
 
 תומך גם בקבוצה בוליאנית עצמאית וגם בקבוצת `string[]` (החלפת שלה
-`value` בתוך/מחוץ למערך). היא הבעלים של הסטיילינג שלה באמצעות ה-CSS המשותף
+`value` בתוך/מחוץ למערך). הוא הבעלים של הסטיילינג שלו באמצעות ה-CSS המשותף
 מודול `forge-checkbox.module.scss` ומרכיב את {@link ForgeTypography} הנייטרלי
 עבור טקסט התווית/רמז/שגיאה.
 
@@ -48,9 +48,9 @@ function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<CheckboxProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<CheckboxProperties> |             |
 
 ## `src/components/atoms/forge-input/forge-input`
 
@@ -79,9 +79,9 @@ function ForgeInput(properties: Readonly<InputProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                         | תיאור |
-| ----- | ---------------------------- | ----- |
-| נכסים | לקריאה בלבד<InputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------- | ----------- |
+| נכסים | לקריאה בלבד<InputProperties> |             |
 
 ### InputAutocapetalize
 
@@ -147,9 +147,9 @@ function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                         | תיאור |
-| ----- | ---------------------------- | ----- |
-| נכסים | לקריאה בלבד<RadioProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------- | ----------- |
+| נכסים | לקריאה בלבד<RadioProperties> |             |
 
 ### RadioProperties
 
@@ -193,9 +193,9 @@ function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<RangeInputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<RangeInputProperties> |             |
 
 ### RangeInputProperties
 
@@ -254,9 +254,9 @@ function ForgeRating(properties: Readonly<RatingProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| נכסים | לקריאה בלבד<RatingProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<RatingProperties> |             |
 
 ### RatingProperties
 
@@ -307,9 +307,9 @@ function ForgeSlider(properties: Readonly<SliderProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| נכסים | לקריאה בלבד<SliderProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<SliderProperties> |             |
 
 ### SliderProperties
 
@@ -329,7 +329,7 @@ export interface SliderProperties
 export type SliderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-אסימון גודל השולט בממדי המסלול / אגודל - קנוני 2xs → 2xl סולם.
+אסימון גודל השולט בממדי המסלול / האגודל - קנוני 2xs → 2xl סולם.
 
 ## `src/components/atoms/forge-switch/forge-switch`
 
@@ -344,21 +344,21 @@ function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement;
 `ForgeSwitch` — מתג חילופין שנכתב פעם אחת בניב JSX הנייטרלי ו
 הידור ישר ל-React או Vue על ידי `@mission-platform/vite-plugin-forge`.
 
-תיבת סימון `role="switch"` מעוצבת כמסלול החלקה/אגודל לרוחב
+תיבת סימון `role="switch"` מעוצבת כמסלול הזזה/אגודל לרוחב
 סולם גודל `2xs … 2xl` קנוני. הוא הבעלים של הסטיילינג שלו דרך המיקום המשותף
 מודול CSS `forge-switch.module.scss` ומרכיב את הנייטרלי
 {@link ForgeTypography} עבור טקסט התווית/רמז/שגיאה.
 
 החלפות מ-Vue SFC המקורי: מפות `useId` הניתנות לחיבור ישר
 להוק `useId` המקורי של המסגרת, וה-`v-model` +
-`change` emit להפוך ל-`onUpdateModelValue`/`onChange` התקשרות חזרה
+`change` emit הפך ל-`onUpdateModelValue`/`onChange` התקשרות חוזרת הוקמה
 אביזרים.
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| נכסים | לקריאה בלבד<SwitchProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<SwitchProperties> |             |
 
 ### SwitchProperties
 
@@ -408,9 +408,9 @@ function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<TextareaProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<TextareaProperties> |             |
 
 ### TextareaAutocapitalize
 
@@ -472,7 +472,7 @@ export interface CalendarProperties
 export type CalendarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-גודל חזותי של היומן, תואם לסולם הגודל המשותף.
+גודל חזותי של לוח השנה, תואם לסולם הגודל המשותף.
 
 ### ForgeCalendar
 
@@ -507,9 +507,9 @@ function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<CalendarProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<CalendarProperties> |             |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
 
@@ -558,9 +558,9 @@ function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<ColorInputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<ColorInputProperties> |             |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
 
@@ -612,9 +612,9 @@ function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                             | תיאור |
-| ----- | -------------------------------- | ----- |
-| נכסים | לקריאה בלבד<DateInputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------- | ----------- |
+| נכסים | לקריאה בלבד<DateInputProperties> |             |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
 
@@ -652,29 +652,29 @@ function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): Mp
 
 כפתור טריגר מציג את סיכום `start → end` ופותח טלפורטציה
 קופץ עם שתי רשתות {@link ForgeCalendar}: רשת ההתחלה מוגבלת ב-
-`end` הנוכחי (ו-`max`), רשת הקצה הממוקמת ב-`start` הנוכחי (ו
+`end` הנוכחי (ו-`max`), רשת הקצה המרופדת ב-`start` הנוכחי (ו
 `min`), כך שהטווח נשאר מסודר. פעם אחת בוחרים התחלה אבל הסוף כן
 עדיין פתוח, היום מתחת לסמן מוחזר לשני היומנים כמו
 `previewEnd` כך שהטווח הטנטטיבי מודגש כשאתה מרחף. זה הבעלים שלו
 עיצוב באמצעות מודול ה-CSS המשותף `forge-date-range-input.module.scss`.
 
 החלפות מ-Vue SFC המקורי: החלון הקופץ `@floating-ui/vue` הופך
-הכתובת פעם אחת {@link ForgeDropdown} (שהיא הבעלים של הטלפורטציה, המעוגנת ב-CSS
-חלונית בתוספת ההקלקה החיצונית/`Escape` הדחה), תוך החלפת `useZIndex`; את
+הכתובת פעם אחת {@link ForgeDropdown} (שבבעלותה הטלפורטציה, המעוגנת ב-CSS
+חלונית בתוספת ההקלקה החיצונית/`Escape` הדחה), החלפת `useZIndex`; את
 מונע ריחוף בהתאמה אישית
 רשת טווח חודשי כפול מוחלפת ב-**שני `ForgeCalendar`s מורכבים**
-עם הוראה נאכפת באמצעות `min`/`max`; מפות `useId` הניתנות לחיבור ל-
+עם הזמנה נאכפת באמצעות `min`/`max`; המפות `useId` הניתנות לחיבור ל-
 וו `useId` יליד מסגרת; הגליף של לוח השנה הוא `@mission-platform/icons` לכתוב פעם אחת
 `ForgeIconCalendar`; אזורי `start`/`end` נכתבו כחריצים בעלי שם
 (`<Slot>`) עם נוכחותם מזוהה דרך ה-framework-neutral
-עוזר {@link hasSlot}; והפולטים `v-model` + `change` הופכים ל-
+עוזר {@link hasSlot}; וה-`v-model` + `change` פולט הופכים ל-
 `onUpdateModelValue`/`onChange` אביזרי callback.
 
 #### פרמטרים
 
-| שם    | הקלד                                  | תיאור |
-| ----- | ------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<DateRangeInputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<DateRangeInputProperties> |             |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
 
@@ -714,9 +714,9 @@ function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<FieldSetProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<FieldSetProperties> |             |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
 
@@ -765,9 +765,9 @@ function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                             | תיאור |
-| ----- | -------------------------------- | ----- |
-| נכסים | לקריאה בלבד<FileInputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------- | ----------- |
+| נכסים | לקריאה בלבד<FileInputProperties> |             |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
 
@@ -788,7 +788,7 @@ function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpEl
 שניות (DMS) - נבחר באמצעות בורר הפורמטים. לאיזו גרסה משמשת
 ערך, המודל הקנוני {@link LocationValue} תמיד נושא חתום
 `lat`/`lng` בדרגה עשרונית מעוגל לפי דיוק של סנטימטר. זה מרכיב את
-כבר הועברו {@link ForgeSelect}, {@link ForgeInput} ו
+כבר הועברו {@link ForgeSelect}, {@link ForgeInput}, וכן
 {@link ForgeTypography} פרימיטיביות ובעלות על הסטיילינג שלה דרך ה-co-location
 מודול CSS `forge-location-input.module.scss`. היגיון ההמרה/ניתוח
 נשלח עם חבילה זו כ-`location.ts`, הממוקם במשותף עם המסגרת האגנוסטית.
@@ -796,18 +796,17 @@ function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpEl
 תחליפים מ-Vue SFC המקורי: `useId` מפות ישירות ל-
 וו `useId` יליד מסגרת; מאגרי הטקסט המקומיים
 (`latText`/`lngText`) הופכים ללא עצלן {@link useState} (לכן העיבוד הראשוני
-
 - כולל SSR - כבר מציג את הקואורדינטות המעוצבות) מסונכרנות מחדש מה-
-  מודל עם {@link useEffect}; וה-`v-model` + `change` פולט הופכים ל-
-  `onUpdateModelValue`/`onChange` אביזרי callback. כיתות פריסת הילד הם
-  מוחל על עטיפות `<div>`s במקום לעבור ללחן
-  רכיבים.
+מודל עם {@link useEffect}; וה-`v-model` + `change` פולט הופכים ל-
+`onUpdateModelValue`/`onChange` אביזרי callback. כיתות פריסת הילד הם
+מוחל על עטיפות `<div>`s במקום לעבור ללחן
+רכיבים.
 
 #### פרמטרים
 
-| שם    | הקלד                                 | תיאור |
-| ----- | ------------------------------------ | ----- |
-| נכסים | לקריאה בלבד<LocationInputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<LocationInputProperties> |             |
 
 ### LocationInputProperties
 
@@ -841,7 +840,7 @@ export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 
 ייצוג הקואורדינטות ש-{@link LocationValue} מוזן/מסודר בתור.
 
-### מיקום ערך
+### ערך מיקום
 
 **סוג:** ממשק
 
@@ -863,12 +862,12 @@ export interface LocationValue
 function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement;
 ```
 
-`ForgeNumberStepper` - צעד מספרי שכתב פעם אחת בניב JSX הנייטרלי
+`ForgeNumberStepper` - צעד מספרי שנכתב פעם אחת בניב JSX הנייטרלי
 והידור ישר ל-React או Vue על ידי `@mission-platform/vite-plugin-forge`.
 
 שדה מספר כשלצדו לחצני הקטנה/הגדלה, ניתן להגדרה כ-a
 מספר שלם חתום/לא חתום או צף קבוע-`precision`. הוא הבעלים של הסטיילינג שלו
-דרך מודול ה-CSS המשותף `forge-number-stepper.module.scss` ו
+באמצעות מודול ה-CSS המשותף `forge-number-stepper.module.scss` ו
 מרכיב את {@link ForgeTypography} הנייטרלי עבור טקסט התווית/רמז/שגיאה.
 
 החלפות מ-Vue SFC המקורי: מפות `useId` הניתנות לחיבור ישר
@@ -880,9 +879,9 @@ function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpEl
 
 #### פרמטרים
 
-| שם    | הקלד                                 | תיאור |
-| ----- | ------------------------------------ | ----- |
-| נכסים | לקריאה בלבד<NumberStepperProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<NumberStepperProperties> |             |
 
 ### NumberStepperProperties
 
@@ -914,7 +913,7 @@ export type NumberStepperSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 ```
 
-`ForgeOtpInput` - קלט סיסמה חד פעמי מפולח שנכתב פעם אחת ב
+`ForgeOtpInput` - קלט סיסמה חד פעמי מפולח שנכתב פעם אחת ב-
 ניב JSX ניטרלי והורכב ישר ל-React או Vue על ידי
 `@mission-platform/vite-plugin-forge`.
 
@@ -933,9 +932,9 @@ function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<OtpInputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<OtpInputProperties> |             |
 
 ### OtpInputProperties
 
@@ -988,7 +987,7 @@ function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement;
 `phone.ts` עוזר, בנוי על **`@mission-platform/phone-number`**), והקנוני
 טופס E.164 + תוקף נגזרים מכל עיבוד. הטקסט הלאומי נשלט
 דרך `modelValue`/`onUpdateModelValue` והאזור דרך `country`/
-`onUpdateCountry`; `onChange` מדווח על התוצאה המנותחת המלאה ועל תוצאה מוסתרת
+`onUpdateCountry`; `onChange` מדווח על התוצאה המנותחת המלאה והסתר
 קלט `name` מגיש את הערך E.164. הוא הבעלים של הסטיילינג שלו דרך
 מודול CSS משותף `forge-phone-input.module.scss`.
 
@@ -999,13 +998,13 @@ function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement;
 SFC: המפות הניתנות לחיבור `useId` ישירות ל-`useId` המקורית של המסגרת
 וו; סמן התוקף הוא `@mission-platform/icons` לכתוב פעם אחת
 `ForgeIconCheck`/`ForgeIconError`; ו-`v-model` + פולטים הופכים ל-
-`onUpdateModelValue`/`onUpdateCountry`/`onChange` אביזרי התקשרות.
+`onUpdateModelValue`/`onUpdateCountry`/`onChange` אביזרי callback.
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<PhoneInputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<PhoneInputProperties> |             |
 
 ### PhoneChange
 
@@ -1060,28 +1059,28 @@ function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement;
 ```
 
 `ForgeRadioGroup` - מקבץ מספר פקדים של {@link ForgeRadio} תחת פקד משותף
-אגדה, נכתבה פעם אחת בניב JSX הנייטרלי והורכבה ישר ל
+אגדה, נכתב פעם אחת בניב JSX הנייטרלי והורכב ישר ל
 React או Vue מאת `@mission-platform/vite-plugin-forge`.
 
 הבחירה נשלטת עם ה-`modelValue`+ שהוקם
 מוסכמה של `onUpdateModelValue`/`onChange`-callback-prop; מכשירי הרדיו הם
-מונע ממערך `options` (שיטוח את ההרכב מבוסס-החריץ של ה-SFC,
+מונע ממערך `options` (שיטוח את ההרכב מבוסס החריצים של ה-SFC,
 אותה גישה שבוצעה בהעברה של {@link ForgeTabs}). זה מרכיב את
 העבירו את {@link ForgeStack}, {@link ForgeRadio} ו-{@link ForgeTypography}
 פרימיטיביים ובעלת הסטיילינג שלו באמצעות מודול ה-CSS המשותף
 `forge-radio-group.module.scss`.
 
-החלפות מ-Vue SFC המקורי: מפות `useId`/שם קבוצות אקראי
+החלפות מ-Vue SFC המקורי: מפות ה-`useId`/שם קבוצות אקראיות
 להוק `useId` יליד המסגרת; את
 `useI18n` כותרת "נדרשת" הופכת למחרוזת פשוטה; וה-`v-model` + פולט
-להפוך לאביזרים להתקשרות חוזרת. כל תוכן משבצת ברירת מחדל יוצג לאחר ה-
+להפוך לאביזרים להתקשרות חוזרת. כל תוכן של משבצת ברירת מחדל יוצג לאחר ה-
 אפשרויות.
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<RadioGroupProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<RadioGroupProperties> |             |
 
 ### RadioGroupDirection
 
@@ -1111,7 +1110,7 @@ export interface RadioGroupProperties
 export interface RadioOption
 ```
 
-אפשרות יחידה לבחירה בתוך {@link ForgeRadioGroup}.
+אפשרות אחת לבחירה בתוך {@link ForgeRadioGroup}.
 
 ## `src/components/molecules/forge-search-input/forge-search-input`
 
@@ -1133,16 +1132,16 @@ function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElemen
 
 החלפות מ-Vue SFC המקורי: מפות `useId` הניתנות לחיבור ישר
 להוק `useId` יליד המסגרת; סמל החיפוש/ניקוי
-הם הכתובות של `@mission-platform/icons` `ForgeIconSearch`/`ForgeIconClose`
+הם `@mission-platform/icons` לכתיבה חד פעמית `ForgeIconSearch`/`ForgeIconClose`
 (בעצמם הידור ל-React/Vue); התוויות `useI18n` הופכות למחרוזת רגילה
 אביזרים; והפליטים `v-model` + `search`/`clear` הופכים ל-
-`onUpdateModelValue`/`onSearch`/`onClear` אביזרי callback.
+`onUpdateModelValue`/`onSearch`/`onClear` אביזרי התקשרות.
 
 #### פרמטרים
 
-| שם    | הקלד                               | תיאור |
-| ----- | ---------------------------------- | ----- |
-| נכסים | לקריאה בלבד<SearchInputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<SearchInputProperties> |             |
 
 ### SearchInputProperties
 
@@ -1175,26 +1174,26 @@ function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): Mp
 ```
 
 `ForgeSegmentControl` - בקרה מפולחת (מתג בחירה בודדת) יוצר
-פעם אחת בניב JSX הנייטרלי והורכב ישר ל-React או Vue על-ידי
+פעם אחת בניב JSX הנייטרלי והידור ישר ל-React או Vue על-ידי
 `@mission-platform/vite-plugin-forge`.
 
 הוא מציג קבוצה קטנה של אפשרויות בלעדיות הדדית כשורה מצטרפת של
 קטעים. הערך שנבחר **נשלט** באמצעות `modelValue`. זה חושף
 `role="radiogroup"`/`role="radio"`, מיישם `tabindex` פלוס נודד
-ניווט במקש חץ (שמאלה/מעלה, ימינה/למטה, בית/סוף), ובעל הסגנון שלו
+ניווט במקש חצים (שמאלה/מעלה, ימינה/למטה, בית/סוף), ובעל הסגנון שלו
 דרך מודול ה-CSS המשותף `forge-segment-control.module.scss`.
 
 התבנית המקורית של Vue SFC שנאספה לכל מקטע מפנה למערך; את
-הגרסה הנייטרלית שומרת על רישום מיכל בודד ומאתרת את כפתורי הפלחים
+הגרסה הנייטרלית שומרת על ר' מיכל בודד ומאתרת את כפתורי הפלחים
 עם `querySelectorAll` לניהול מיקוד (דגם הווים חוצי המסגרת
 refs של רכיב בודד, לא מערכי ref). פולט `v-model` + `change` הופכים להיות
 הקים אביזרי התקשרות חוזרים `onUpdateModelValue`/`onChange`.
 
 #### פרמטרים
 
-| שם    | הקלד                                  | תיאור |
-| ----- | ------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<SegmentControlProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<SegmentControlProperties> |             |
 
 ### SegmentControlProperties
 
@@ -1214,7 +1213,7 @@ export interface SegmentControlProperties
 export type SegmentControlSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-אסימון גודל שולט בממדים של פלחים - קנה מידה 2xs → 2xl קנוני.
+אסימון גודל השולט בממדים של הפלחים - קנה מידה 2xs → 2xl קנוני.
 
 ### SegmentOption
 
@@ -1240,26 +1239,26 @@ function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement;
 הידור ישר ל-React או Vue על ידי `@mission-platform/vite-plugin-forge`.
 
 לחצן הדק מציג את הזמן שנבחר `HH:MM[:SS]` ופותח חלון קופץ עם
-רשימות שעות/דקות (/שנייה) הניתנות לגלילה. הוא הבעלים של הסטיילינג שלו דרך
+רשימות שעות/דקות (/שנייה) שניתנות לגלילה. הוא הבעלים של הסטיילינג שלו דרך
 מודול CSS משותף `forge-time-input.module.scss`.
 
 החלפות מ-Vue SFC המקורי: החלון הקופץ `@floating-ui/vue` הופך
-הכתובת פעם אחת {@link ForgeDropdown} (שהיא הבעלים של הטלפורטציה, המעוגנת ב-CSS
+הכתובת פעם אחת {@link ForgeDropdown} (שבבעלותה הטלפורטציה, המעוגנת ב-CSS
 חלונית בתוספת ההקלקה החיצונית/`Escape` הדחה), החלפת `useZIndex`; את
 הלוגיקה של ניתוח/פורמט מוטבע היא
-האצלה ל-`date-time.ts` המשותף למסגרת-אגנוסטית; המקומי
+האצלה ל-`date-time.ts` המסגרת-אגנוסטית בשיתוף; המקומי
 `ref` הופכים ל-{@link useState} מסונכרנים מחדש מ-`modelValue` באמצעות
-{@link useEffect}; המפות `useId` הניתנות לחיבור להוק `useId` המקורי של המסגרת; המוטבע
+{@link useEffect}; המפות `useId` הניתנות לחיבור להוק `useId` יליד המסגרת; המוטבע
 שעון SVG הופך לגליף `🕒`; אזורי `start`/`end` נכתבו בשם
 חריצים (`<Slot>`) עם נוכחותם מזוהה דרך ה-framework-neutral
-עוזר {@link hasSlot}; והפולטים `v-model` + `change` הופכים ל-
+עוזר {@link hasSlot}; וה-`v-model` + `change` פולט הופכים ל-
 `onUpdateModelValue`/`onChange` אביזרי callback.
 
 #### פרמטרים
 
-| שם    | הקלד                             | תיאור |
-| ----- | -------------------------------- | ----- |
-| נכסים | לקריאה בלבד<TimeInputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------- | ----------- |
+| נכסים | לקריאה בלבד<TimeInputProperties> |             |
 
 ### TimeInputProperties
 
@@ -1296,27 +1295,27 @@ function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): Mp
 `@mission-platform/vite-plugin-forge`.
 
 כפתור טריגר מציג את סיכום `start → end` ופותח טלפורטציה
-קופץ עם שתי קבוצות של רשימות שעות/דקות (/שנייה) ניתנות לגלילה (אחת לכל
+קופץ עם שתי קבוצות של רשימות שעות/דקות (/שנייה) שניתנות לגלילה (אחת לכל
 נקודת קצה). הוא הבעלים של הסגנון שלו באמצעות מודול ה-CSS המשותף
 `forge-time-range-input.module.scss`.
 
 החלפות מ-Vue SFC המקורי: החלון הקופץ `@floating-ui/vue` הופך
-הכתובת פעם אחת {@link ForgeDropdown} (שהיא הבעלים של הטלפורטציה, המעוגנת ב-CSS
+הכתובת פעם אחת {@link ForgeDropdown} (שבבעלותה הטלפורטציה, המעוגנת ב-CSS
 חלונית בתוספת ההקלקה החיצונית/`Escape` הדחה), החלפת `useZIndex`; את
 הלוגיקה של ניתוח/פורמט מוטבע היא
-האצלה ל-`date-time.ts` המשותף למסגרת-אגנוסטית; המקומי
+האצלה ל-`date-time.ts` המסגרת-אגנוסטית בשיתוף; המקומי
 `ref` הופכים ל-{@link useState} מסונכרנים מחדש מ-`modelValue` באמצעות
-{@link useEffect}; המפות `useId` הניתנות לחיבור להוק `useId` המקורי של המסגרת; ה-`start`/
+{@link useEffect}; המפות `useId` הניתנות לחיבור להוק `useId` יליד המסגרת; ה-`start`/
 חריצי `end` SFC הופכים למשבצות `startContent`/`endContent` בשם (`<Slot>`,
 נוכחות זוהתה עם העוזר {@link hasSlot} הניטרלי במסגרת; את
-שמות `start`/`end` שמורים לנקודות הקצה של הטווח); וה-`v-model` +
+שמות `start`/`end` שמורים עבור נקודות הקצה של הטווח); וה-`v-model` +
 פולטות `change` הופכות לאביזרים להתקשרות חוזרת של `onUpdateModelValue`/`onChange`.
 
 #### פרמטרים
 
-| שם    | הקלד                                  | תיאור |
-| ----- | ------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<TimeRangeInputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<TimeRangeInputProperties> |             |
 
 ### TimeRangeInputProperties
 
@@ -1381,7 +1380,7 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 `forge-date-time-range-input.module.scss`.
 
 החלפות מ-Vue SFC המקורי: החלון הקופץ `@floating-ui/vue` הופך
-הכתובת פעם אחת {@link ForgeDropdown} (שהיא הבעלים של הטלפורטציה, המעוגנת ב-CSS
+הכתובת פעם אחת {@link ForgeDropdown} (שבבעלותה הטלפורטציה, המעוגנת ב-CSS
 חלונית בתוספת ההקלקה החיצונית/`Escape` הדחה), החלפת `useZIndex`; את
 מונע ריחוף בהתאמה אישית
 רשת דו-חודשית מוחלפת ב-**composed `ForgeCalendar`s** לכל נקודת קצה;
@@ -1392,13 +1391,13 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 חריצים הופכים למשבצות `startContent`/`endContent` בשם (`<Slot>`, נוכחות
 זוהה עם המסייע {@link hasSlot} הניטרלי במסגרת); וה-`v-model`
 
-- פולטות `change` הופכים לאביזרים להתקשרות חוזרת של `onUpdateModelValue`/`onChange`.
+- פולטות `change` הופכות לאביזרים להתקשרות חוזרת של `onUpdateModelValue`/`onChange`.
 
 #### פרמטרים
 
-| שם    | הקלד                                      | תיאור |
-| ----- | ----------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<DateTimeRangeInputProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<DateTimeRangeInputProperties> |             |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
@@ -1435,9 +1434,9 @@ function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElemen
 
 #### פרמטרים
 
-| שם    | הקלד                               | תיאור |
-| ----- | ---------------------------------- | ----- |
-| נכסים | לקריאה בלבד<FormBuilderProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<FormBuilderProperties> |             |
 
 ### FormBuilderProperties
 
@@ -1484,9 +1483,9 @@ function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<FormWizardProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<FormWizardProperties> |             |
 
 ### FormWizardProperties
 
@@ -1507,6 +1506,85 @@ export interface WizardStep
 ```
 
 צעד אחד של אשף.
+
+## `src/components/organisms/forge-form/forge-form`
+
+### defaultFormContext
+
+**סוג:** קבוע
+
+```typescript
+export const defaultFormContext: FormContextValue;
+```
+
+ההקשר של ברירת המחדל של טופס הבסיס מסופק כאשר useFormContext נקרא מחוץ ל-ForgeForm.
+
+### ForgeForm
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement;
+```
+
+רכיב טופס מונחה הקשר התומך במצב מבוקר ובלתי מבוקר,
+אימות סכמה סטנדרטי / Zod / Yup, סיכום שגיאות נגיש ומתאמי מסגרת.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------ | ----------- |
+| נכסים | לקריאה בלבד<ForgeFormProps> |             |
+
+### ForgeFormProperties
+
+**סוג:** סוג
+
+```typescript
+export type ForgeFormProperties = ForgeFormProps;
+```
+
+לא סופק תיאור.
+
+### ForgeFormProps
+
+**סוג:** ממשק
+
+```typescript
+export interface ForgeFormProps
+```
+
+לא סופק תיאור.
+
+### FormContext
+
+**סוג:** קבוע
+
+```typescript
+export const FormContext: MpContext<FormContextValue | undefined>;
+```
+
+לא סופק תיאור.
+
+### FormContextValue
+
+**סוג:** ממשק
+
+```typescript
+export interface FormContextValue
+```
+
+לא סופק תיאור.
+
+### useFormContext
+
+פונקציה **סוג:**
+
+```typescript
+function useFormContext(): FormContextValue;
+```
+
+Hook כדי לגשת להקשר הטופס בשדות צאצאים או רכיבים מקוננים.
 
 ## `src/components/organisms/forge-schema-form-dialog/forge-schema-form-dialog`
 
@@ -1532,9 +1610,9 @@ function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>)
 
 #### פרמטרים
 
-| שם    | הקלד                                    | תיאור |
-| ----- | --------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<SchemaFormDialogProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<SchemaFormDialogProperties> |             |
 
 ### SchemaFormDialogProperties
 
@@ -1578,9 +1656,9 @@ function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<SchemaFormProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<SchemaFormProperties> |             |
 
 ### SchemaFormFieldRenderer
 
@@ -1611,45 +1689,3 @@ export interface SchemaFormProperties
 ```
 
 לא סופק תיאור.
-
-## `src/utils/date-time/date-time`
-
-### טווח תאריכים
-
-**סוג:** ממשק
-
-```typescript
-export interface DateRange
-```
-
-טווח תאריכים של `{ start, end }` ISO (`YYYY-MM-DD`).
-
-### DateTimeRange
-
-**סוג:** ממשק
-
-```typescript
-export interface DateTimeRange
-```
-
-טווח תאריכים-זמן `{ start, end, timezone }` (`YYYY-MM-DD HH:MM[:SS]`).
-
-### טווח זמן
-
-**סוג:** ממשק
-
-```typescript
-export interface TimeRange
-```
-
-טווח זמן `{ start, end }` (`HH:MM` או `HH:MM:SS`).
-
-### מצב אזור זמן
-
-**סוג:** סוג
-
-```typescript
-export type TimezoneMode = 'browser' | 'utc';
-```
-
-האם טווח תאריכים וזמן מתפרש באזור הדפדפן או ב-UTC.

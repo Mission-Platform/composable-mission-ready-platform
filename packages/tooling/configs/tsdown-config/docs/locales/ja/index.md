@@ -13,12 +13,12 @@
 pnpm add --save-dev @mission-platform/tsdown-config
 ```
 
-ワークスペースからパッケージを使用する `tsdown.config.ts` エントリーポイントを維持し、
+ワークスペース `tsdown.config.ts` のパッケージを使用し、エントリ ポイントを保持します。
 外部依存関係、およびビルド中のパッケージにローカルな出力制約。
-生成された宣言とバンドルはそのパッケージに属します。 `dist/` ディレクトリ。
+生成された宣言とバンドルは、そのパッケージの `dist/` ディレクトリに属します。
 
 ## 貢献する
 
-走る `pnpm --filter @mission-platform/tsdown-config lint` そしてそのフォーマットチェック。
+`pnpm --filter @mission-platform/tsdown-config lint` とその形式チェックを実行します。
 確定的な出力を保持し、フレームワーク固有のターゲット ブランチを追加しない
 ニュートラルビルドヘルパーに。

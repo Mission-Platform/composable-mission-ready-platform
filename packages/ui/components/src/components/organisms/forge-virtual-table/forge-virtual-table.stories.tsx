@@ -1,11 +1,10 @@
-import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
-
 import { ForgeVirtualTable } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 
 import styles from './forge-virtual-table.module.scss';
 
 import type { VirtualTableColumn } from './forge-virtual-table';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 interface PersonRow extends Record<string, unknown> {
   id: number;

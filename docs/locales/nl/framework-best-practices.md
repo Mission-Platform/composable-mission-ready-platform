@@ -54,22 +54,23 @@ React wordt ondersteund via de Forge runtime-adapter, voornamelijk voor externe 
 
 Mission Platform biedt verschillende niveaus van ondersteuning voor andere raamwerken via Forge-adapters:
 
-- **SolidJS**: maakt gebruik van fijnmazige reactiviteit via signalen. Vermijd het destructureren van rekwisieten om de reactiviteit te behouden.
+- **SolidJS**: maakt gebruik van fijnkorrelige reactiviteit via signalen. Vermijd het destructureren van rekwisieten om de reactiviteit te behouden.
 - **Svelte 5**: maakt gebruik van runen (`$state`, `$derived`, `$effect`) voor moderne reactiviteit.
 - **Webcomponenten (Lit)**: Handig voor het bouwen van zeer draagbare componenten die moeten worden uitgevoerd in oudere omgevingen of zonder raamwerk.
 
 ## Prestatie- en reactiviteitsmodellen
 
-| Kader        | Reactiviteitsmodel      | Strategie bijwerken                      |
-| :----------- | :---------------------- | :--------------------------------------- |
-| **Vue 3**    | Op proxy gebaseerd      | Virtuele DOM met compileroptimalisaties. |
-| **React**    | Onveranderlijke staat   | Virtuele DOM-afstemming.                 |
-| **SolidJS**  | Fijnkorrelige signalen  | Directe DOM-updates (geen VDOM).         |
-| **Svelte 5** | Runen / Signalen        | Directe DOM-updates via compiler.        |
-| **Lit**      | Reactieve eigenschappen | Asynchrone Shadow DOM-updates.           |
+| Kader | Reactiviteitsmodel | Strategie bijwerken |
+| :----------- | :------------------- | :--------------------------------------- |
+| **Vue 3** | Op proxy gebaseerd | Virtuele DOM met compileroptimalisaties. |
+| **React** | Onveranderlijke staat | Virtuele DOM-afstemming.              |
+| **SolidJS** | Fijnkorrelige signalen | Directe DOM-updates (geen VDOM).            |
+| **Svelte 5** | Runen / Signalen | Directe DOM-updates via compiler.         |
+| **Lit** | Reactieve eigenschappen | Asynchrone Shadow DOM-updates.         |
 
 ## Gerelateerde bronnen
 
 - [Beste praktijken](best-practices.md)
-- [Gids voor testen](testing.md)
+- [Testgids](testing.md)
 - [@mission-platform/forge-jsx LEESMIJ](../../../packages/core/forge-jsx/README.md)
+- [@mission-platform/forge-adapters LEESMIJ](../../../packages/core/forge-adapters/README.md)

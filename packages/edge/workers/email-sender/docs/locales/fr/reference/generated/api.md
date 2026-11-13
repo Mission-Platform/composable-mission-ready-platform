@@ -11,12 +11,22 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 
 ## `src/index`
 
+### défaut
+
+**Genre :** constante
+
+```typescript
+export const handler: ExportedHandler<WorkerEnvironment>;
+```
+
+Aucune description fournie.
+
 ### Livraison
 
 **Genre :** type
 
 ```typescript
-export type Delivery = (environment: Env, message: SmtpMessage) => Promise<void>;
+export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 ```
 
 Aucune description fournie.
@@ -36,15 +46,26 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
+function handleRequest(
+  request: Request,
+  environment: WorkerEnvironment,
+  delivery: Delivery = defaultDelivery,
+): Promise<Response>;
 ```
 
-Aucune description fournie.
+Gère les demandes de livraison d'e-mails entrants, valide les entrées et les transmet au service SMTP.
 
 #### Paramètres
 
-| Nom           | Tapez     | Descriptif |
-| ------------- | --------- | ---------- |
-| demande       | Demande   |            |
-| environnement | Env       |            |
-| livraison     | Livraison |            |
+| Nom | Tapez | Descriptif |
+| ----------- | ----------------- | -------------------------------------------------- |
+| demande | Demande | - Requête HTTP entrante.                           |
+| environnement | TravailleurEnvironnement | - Liaisons de l'environnement de travail.                     |
+| livraison | Livraison | - Fonction de livraison gérant la transmission des messages. |
+
+#### Contracter
+
+- **@param:** - Requête HTTP entrante.
+- **@param:** - Liaisons de l'environnement de travail.
+- **@param:** - Fonction de livraison gérant la transmission des messages.
+- **@returns :** Réponse HTTP.

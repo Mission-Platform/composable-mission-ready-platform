@@ -24,16 +24,15 @@ function ForgeI18NProvider(properties: ForgeI18NProviderProperties): ReactElemen
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | ForgeI18NProvider 属性 |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------- | ----------- |
+|属性 | ForgeI18NProvider 属性 |             |
 
 #### 合同
 
 - **@example:** 从 '@mission-platform/i18n' 导入 { createForgeI18N, ForgeI18NProvider }
-
-const i18n = createForgeI18N({ messages: { en: { hello: '你好' } } })
-root.render(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)
+  const i18n = createForgeI18N({ messages: { en: { hello: '你好' } } })
+  root.render(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)
 
 ### ForgeI18NProvider 属性
 
@@ -52,7 +51,7 @@ export interface ForgeI18NProviderProperties
 **种类：**功能
 
 ```typescript
-function createForgeI18NVue(i18next: I18nInstance): Plugin;
+function createForgeI18NVue(i18next: ForgeI18nInstance): Plugin;
 ```
 
 将 i18next 实例包装在 Vue 插件中（委托给 `i18next-vue`），因此它
@@ -61,16 +60,15 @@ function createForgeI18NVue(i18next: I18nInstance): Plugin;
 
 #### 参数
 
-| 名称      | 类型     | 描述 |
-| --------- | -------- | ---- |
-| i18下一个 | I18n实例 |      |
+|名称 |类型 |描述 |
+| ------- | ----------------- | ----------- |
+| i18下一个 | ForgeI18n实例 |             |
 
 #### 合同
 
 - **@example:** 从 '@mission-platform/i18n' 导入 { createForgeI18N, createForgeI18NVue }
-
-const i18n = createForgeI18N({ messages: { en: { hello: '你好' } } })
-app.use(createForgeI18NVue(i18n))
+  const i18n = createForgeI18N({ messages: { en: { hello: '你好' } } })
+  app.use(createForgeI18NVue(i18n))
 
 ## `src/composables/use-i18n/use-i18n.neutral`
 
@@ -89,9 +87,9 @@ React 和 Vue 构建使用相同的 `useI18n()` 导入，无需拉取
 
 #### 参数
 
-| 名称     | 类型   | 描述 |
-| -------- | ------ | ---- |
-| 命名空间 | 字符串 |      |
+|名称 |类型 |描述 |
+| --------- | ------ | ----------- |
+|命名空间|字符串|             |
 
 ### 使用I18n返回
 
@@ -123,9 +121,9 @@ Hook 暴露翻译函数、底层 i18next 实例、
 
 #### 参数
 
-| 名称     | 类型   | 描述 |
-| -------- | ------ | ---- |
-| 命名空间 | 字符串 |      |
+|名称 |类型 |描述 |
+| --------- | ------ | ----------- |
+|命名空间|字符串|             |
 
 ### 使用I18n返回
 
@@ -158,9 +156,9 @@ function useI18n(namespace?: string): UseI18nReturn;
 
 #### 参数
 
-| 名称     | 类型   | 描述 |
-| -------- | ------ | ---- |
-| 命名空间 | 字符串 |      |
+|名称 |类型 |描述 |
+| --------- | ------ | ----------- |
+|命名空间|字符串|             |
 
 ### 使用I18n返回
 
@@ -179,7 +177,7 @@ export interface UseI18nReturn
 **种类：**功能
 
 ```typescript
-function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance;
+function createForgeI18N(options: CreateForgeI18NOptions = {}): ForgeI18nInstance;
 ```
 
 创建一个已配置的、与框架无关的 [i18next](https://www.i18next.com/)
@@ -201,31 +199,28 @@ function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance;
 
 #### 参数
 
-| 名称 | 类型              | 描述 |
-| ---- | ----------------- | ---- |
-| 选项 | 创建ForgeI18N选项 |      |
+|名称 |类型 |描述 |
+| ------- | ---------------------- | ----------- |
+|选项 |创建ForgeI18N选项|             |
 
 #### 合同
 
 - **@example:** // 框架中立的用法
   从“@mission-platform/i18n”导入{createForgeI18N}
-
-const i18n = createForgeI18N({ messages: { en: { hello: '你好 {name}' } } })
-i18n.t('hello', { name: 'World' }) // → 'Hello World'
-
+  const i18n = createForgeI18N({ messages: { en: { hello: '你好 {name}' } } })
+  i18n.t('hello', { name: 'World' }) // → 'Hello World'
 - **@example:** // 应用程序覆盖包字符串的命名空间用法
   从“@mission-platform/i18n”导入{createForgeI18N，forgeNamespace}
-
-const i18n = createForgeI18N({
-命名空间：forgeNamespace('my-care-notes'),
-命名空间：{
-[forgeNamespace('my-care-notes')]: { en: { nav: { Notes: 'Notes' } } },
-[forgeNamespace('断点')]: { en: { 断点: '断点:' } },
-},
-覆盖：{
-[forgeNamespace('断点')]: { en: { 断点: '视口:' } },
-},
-})
+  const i18n = createForgeI18N({
+  命名空间：forgeNamespace('my-care-notes'),
+  命名空间：{
+  [forgeNamespace('my-care-notes')]: { en: { nav: { Notes: 'Notes' } } },
+  [forgeNamespace('断点')]: { en: { 断点: '断点:' } },
+  },
+  覆盖：{
+  [forgeNamespace('断点')]: { en: { 断点: '视口:' } },
+  },
+  })
 
 ### CreateForgeI18N选项
 
@@ -260,10 +255,10 @@ function runWithI18n(i18n: I18nInstance, callback: () => T): T;
 
 #### 参数
 
-| 名称   | 类型     | 描述 |
-| ------ | -------- | ---- |
-| 国际化 | I18n实例 |      |
-| 回调   | () => T  |      |
+|名称 |类型 |描述 |
+| -------- | ------------ | ----------- |
+|国际化 | I18n实例 |             |
+|回调 | () => T |             |
 
 ### 设置服务器I18n
 
@@ -277,9 +272,9 @@ function setServerI18n(i18n: I18nInstance): void;
 
 #### 参数
 
-| 名称   | 类型     | 描述 |
-| ------ | -------- | ---- |
-| 国际化 | I18n实例 |      |
+|名称 |类型 |描述 |
+| ---- | ------------ | ----------- |
+|国际化 | I18n实例 |             |
 
 ## `src/utils/merge-locales`
 
@@ -297,10 +292,10 @@ function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLoca
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| 目标 | ForgeLocales |      |
-| 来源 | ForgeLocales |      |
+|名称 |类型 |描述 |
+| ------ | ------------ | ----------- |
+|目标| ForgeLocales |             |
+|来源 | ForgeLocales |             |
 
 ### 深度合并消息
 
@@ -320,10 +315,10 @@ win 和包的其余部分被保留。
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| 目标 | 锻造消息对象 |      |
-| 来源 | 锻造消息对象 |      |
+|名称 |类型 |描述 |
+| ------ | ------------------ | ----------- |
+|目标|锻造消息对象 |             |
+|来源 |锻造消息对象 |             |
 
 ### 合并语言环境
 
@@ -338,9 +333,9 @@ function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessage
 
 #### 参数
 
-| 名称 | 类型                | 描述                |
-| ---- | ------------------- | ------------------- |
-| 模块 | ForgeLocaleModule[] | ForgeLocaleModule[] |     |
+|名称 |类型 |描述 |
+| ------- | ------------------- | ----------- |
+|模块 | ForgeLocaleModule[] | ForgeLocaleModule[] |             |
 
 ## `src/utils/namespace`
 
@@ -384,9 +379,9 @@ function forgeNamespace(name: string): string;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 名称 | 字符串 |      |
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|名称 |字符串|             |
 
 ### 语言环境命名空间
 
@@ -404,10 +399,10 @@ function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageOb
 
 #### 参数
 
-| 名称     | 类型                             | 描述 |
-| -------- | -------------------------------- | ---- |
-| 语言环境 | 字符串                           |      |
-| 捆绑     | 记录<string, ForgeMessageObject> |      |
+|名称 |类型 |描述 |
+| ------- | ---------------------------------- | ----------- |
+|语言环境 |字符串|             |
+|捆绑 |记录<string, ForgeMessageObject> |             |
 
 #### 合同
 
@@ -418,6 +413,16 @@ function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageOb
   })
 
 ## `src/utils/types`
+
+### ForgeI18n实例
+
+**种类：**类型
+
+```typescript
+export type ForgeI18nInstance = Omit<I18nInstance, 't'> &
+```
+
+具有支持选择器的翻译功能的 i18next 实例类型。
 
 ### ForgeLocale模块
 
@@ -469,3 +474,23 @@ export type ForgeNamespaceLocales = Record<string, ForgeLocales>;
 
 i18next 命名空间 (`mp.<workspace>`) 到其每个区域设置消息的映射。
 由 `createForgeI18N` 的 `namespaces` 和 `overrides` 选项使用。
+
+### Forge翻译函数
+
+**种类：**类型
+
+```typescript
+export type ForgeTranslationFunction = TFunction &
+```
+
+跨包边界保持选择器功能的转换函数类型。
+
+### Forge翻译源
+
+**种类：**类型
+
+```typescript
+export type ForgeTranslationSource =
+```
+
+i18next 的选择器回调 API 使用的递归源类型。

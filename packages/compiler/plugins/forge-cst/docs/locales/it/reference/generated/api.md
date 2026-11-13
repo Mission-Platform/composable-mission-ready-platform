@@ -23,8 +23,8 @@ Estrai tutte le dichiarazioni di importazione di livello superiore da un program
 
 #### Parametri
 
-| Nome      | Digitare  | Descrizione |
-| --------- | --------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | ------- | ----------- |
 | programma | Programma |             |
 
 ### parseCst
@@ -43,9 +43,9 @@ con posizioni dei token, commenti e metadati AST completi.
 
 #### Parametri
 
-| Nome    | Digitare                   | Descrizione                           |
-| ------- | -------------------------- | ------------------------------------- |
-| fonte   | stringa                    | - Codice sorgente da analizzare.      |
+| Nome | Digitare | Descrizione |
+| ------- | ------------------------- | ----------------------------------- |
+| fonte | stringa | - Codice sorgente da analizzare.             |
 | opzioni | ParseCstOptions \| stringa | - Opzioni di analisi CST o nome file. |
 
 #### Contrarre
@@ -103,9 +103,9 @@ Preserva commenti, formattazione multilinea e integrità AST senza fragile anali
 
 #### Parametri
 
-| Nome    | Digitare               | Descrizione |
-| ------- | ---------------------- | ----------- |
-| fonte   | stringa                |             |
+| Nome | Digitare | Descrizione |
+| ------- | --------------------- | ----------- |
+| fonte | stringa |             |
 | opzioni | RiscriviImportsOptions |             |
 
 ### Riscrivi risultato
@@ -117,3 +117,426 @@ export interface RewriteResult
 ```
 
 Risultato di una trasformazione di riscrittura dell'importazione CST.
+
+## `src/text`
+
+### regioni vuote
+
+**Tipo:** funzione
+
+```typescript
+function blankRegions(text: string, regions: readonly string[]): string;
+```
+
+Cancella ogni occorrenza di ciascuna regione, preservando gli indici dei caratteri.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ----------------- | ----------- |
+| testo | stringa |             |
+| regioni | stringa di sola lettura[] |             |
+
+### collassoSpazio bianco
+
+**Tipo:** funzione
+
+```typescript
+function collapseWhitespace(text: string): string;
+```
+
+Comprimi tutte le serie di spazi bianchi in spazi singoli e ritaglia il risultato.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| testo | stringa |             |
+
+### endOfTypeArguments
+
+**Tipo:** funzione
+
+```typescript
+function endOfTypeArguments(text: string, start: number): number;
+```
+
+L'indice appena dopo `>` chiude l'elenco di argomenti di tipo aperto in `start`,
+o `-1` quando l'elenco non si chiude mai.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| testo | stringa |             |
+| inizio | numero |             |
+
+### escapeAttribute
+
+**Tipo:** funzione
+
+```typescript
+function escapeAttribute(value: string): string;
+```
+
+Escape un valore di attributo HTML racchiuso tra virgolette doppie.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| valore | stringa |             |
+
+### escapeBinding
+
+**Tipo:** funzione
+
+```typescript
+function escapeBinding(expression: string): string;
+```
+
+Escape un'espressione da utilizzare all'interno di un'associazione Vue con virgolette doppie.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------ | ----------- |
+| espressione | stringa |             |
+
+### indicedellivellosuperiore
+
+**Tipo:** funzione
+
+```typescript
+function indexOfTopLevel(text: string, token: string, from = 0): number;
+```
+
+Indice della prima occorrenza di livello superiore di `token` in `text` (esterno
+parentesi, stringhe e commenti) o `-1`.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| testo | stringa |             |
+| gettone | stringa |             |
+| da |        |             |
+
+### isIdentifierName
+
+**Tipo:** funzione
+
+```typescript
+function isIdentifierName(name: string): boolean;
+```
+
+Alias ​​per isPlainIdentifier.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| nome | stringa |             |
+
+### isIdentifierPart
+
+**Tipo:** funzione
+
+```typescript
+function isIdentifierPart(character: string | undefined): boolean;
+```
+
+Indica se il carattere può continuare un identificatore JavaScript.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| --------- | ------------------- | ----------- |
+| carattere | stringa \| indefinito |             |
+
+### isIdentifierStart
+
+**Tipo:** funzione
+
+```typescript
+function isIdentifierStart(character: string | undefined): boolean;
+```
+
+Se il carattere può iniziare un identificatore JavaScript.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| --------- | ------------------- | ----------- |
+| carattere | stringa \| indefinito |             |
+
+### isPlainIdentifier
+
+**Tipo:** funzione
+
+```typescript
+function isPlainIdentifier(name: string): boolean;
+```
+
+Indica se una stringa è un nome identificativo JavaScript semplice valido.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| nome | stringa |             |
+
+### mascheraLiterali
+
+**Tipo:** funzione
+
+```typescript
+function maskLiterals(text: string): boolean[];
+```
+
+Calcola una maschera booleana che contrassegna ogni indice in `text` che si trova all'interno di una stringa letterale,
+modello letterale o commento. Le posizioni contrassegnate con `true` hanno contenuto letterale e non devono mai
+essere riscritto strutturalmente.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| testo | stringa |             |
+
+### matchBracket
+
+**Tipo:** funzione
+
+```typescript
+function matchBracket(text: string, start: number): number;
+```
+
+Indice della parentesi corrispondente alla parentesi di apertura in `start` o `-1` quando
+il testo è sbilanciato. Le regioni letterali e di commento vengono saltate.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| testo | stringa |             |
+| inizio | numero |             |
+
+### accessomembro
+
+**Tipo:** funzione
+
+```typescript
+function memberAccess(object: string, key: string): string;
+```
+
+Restituisce `<object>.<key>` per identificatori semplici o `<object>["<key>"]` (notazione tra parentesi) altrimenti.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------ | ------ | ----------- |
+| oggetto | stringa |             |
+| chiave | stringa |             |
+
+### tampone
+
+**Tipo:** funzione
+
+```typescript
+function pad(depth: number): string;
+```
+
+Rientro per la profondità di un modello (due spazi per livello).
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| profondità | numero |             |
+
+### citazione
+
+**Tipo:** funzione
+
+```typescript
+function quote(value: string): string;
+```
+
+Alias ​​per quoteString.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| valore | stringa |             |
+
+### quoteAttributeValue
+
+**Tipo:** funzione
+
+```typescript
+function quoteAttributeValue(value: string): string;
+```
+
+Racchiude una stringa come valore di attributo JSX.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| valore | stringa |             |
+
+### quoteString
+
+**Tipo:** funzione
+
+```typescript
+function quoteString(value: string): string;
+```
+
+Stringa letterale tra virgolette doppie per il codice emesso (codificato JSON).
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| valore | stringa |             |
+
+### sostituirePrimo
+
+**Tipo:** funzione
+
+```typescript
+function replaceFirst(
+  text: string,
+  search: string,
+  replacement: string,
+): string;
+```
+
+Sostituire la prima occorrenza di `search` in `text` con `replacement`.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ------ | ----------- |
+| testo | stringa |             |
+| cerca | stringa |             |
+| sostituzione | stringa |             |
+
+### saltaAtomicToken
+
+**Tipo:** funzione
+
+```typescript
+function skipAtomicToken(text: string, index: number): number;
+```
+
+Avanza oltre il token a partire da `index` quando apre una stringa, un modello o un commento.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| testo | stringa |             |
+| indice | numero |             |
+
+### saltaTrivia
+
+**Tipo:** funzione
+
+```typescript
+function skipTrivia(text: string, index: number): number;
+```
+
+Salta spazi bianchi e commenti, restituendo l'offset del successivo carattere significativo.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| testo | stringa |             |
+| indice | numero |             |
+
+### divisoTopLevel
+
+**Tipo:** funzione
+
+```typescript
+function splitTopLevel(text: string, separator: string): string[];
+```
+
+Dividi `text` su ogni occorrenza di livello superiore di `separator` (una singola
+carattere), ignorando i separatori annidati tra parentesi, stringhe o commenti.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| --------- | ------ | ----------- |
+| testo | stringa |             |
+| separatore | stringa |             |
+
+### stripOuterParentheses
+
+**Tipo:** funzione
+
+```typescript
+function stripOuterParentheses(text: string): string;
+```
+
+Alias ​​per unwrapParentheses.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| testo | stringa |             |
+
+### stripTypeAssertion
+
+**Tipo:** funzione
+
+```typescript
+function stripTypeAssertion(text: string): string;
+```
+
+Elimina un'asserzione `as T` / `satisfies T` finale.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| testo | stringa |             |
+
+### senza virgolette
+
+**Tipo:** funzione
+
+```typescript
+function unquote(text: string): string | undefined;
+```
+
+Toglie le virgolette di una stringa letterale se racchiusa tra virgolette singole, doppie o backtick, altrimenti non è definita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| testo | stringa |             |
+
+### unwrapParentheses
+
+**Tipo:** funzione
+
+```typescript
+function unwrapParentheses(text: string): string;
+```
+
+Rimuovere ripetutamente uno strato di parentesi di ritorno a capo ridondanti (`(x)` -> `x`).
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| testo | stringa |             |

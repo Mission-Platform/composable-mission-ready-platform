@@ -32,11 +32,11 @@ SSR-safe: אין הפעלה כאשר ה-API של הדפדפן או ה-DOM אינ
 
 #### פרמטרים
 
-| שם           | הקלד                         | תיאור |
-| ------------ | ---------------------------- | ----- |
-| יעד          | MpRef<Element \| null>       |       |
-| התקשרות חזרה | IntersectionObserverCallback |       |
-| אפשרויות     | IntersectionObserverInit     |       |
+| שם | הקלד | תיאור |
+| -------- | ---------------------------- | ----------- |
+| יעד | MpRef<Element \| null> |             |
+| התקשרות חזרה | IntersectionObserverCallback |             |
+| אפשרויות | IntersectionObserverInit |             |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -53,18 +53,18 @@ function useMutationObserver(
 ```
 
 וו MutationObserver נייטרלי למסגרת.
-עוקבת אחר שינויים המתבצעים בעץ ה-DOM.
+עוקבת אחר שינויים שנערכים בעץ ה-DOM.
 
 SSR-safe: אין הפעלה כאשר ה-API של הדפדפן או ה-DOM אינם זמינים.
 ניקוי אוטומטי: מנתק את הצופה בביטול.
 
 #### פרמטרים
 
-| שם           | הקלד                 | תיאור |
-| ------------ | -------------------- | ----- |
-| יעד          | MpRef<Node \| null>  |       |
-| התקשרות חזרה | MutationCallback     |       |
-| אפשרויות     | MutationObserverInit |       |
+| שם | הקלד | תיאור |
+| -------- | -------------------- | ----------- |
+| יעד | MpRef<Node \| null> |             |
+| התקשרות חזרה | MutationCallback |             |
+| אפשרויות | MutationObserverInit |             |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -85,7 +85,7 @@ SSR-safe: ללא הפעלה כאשר ממשק ה-API של הדפדפן אינו 
 
 #### פרמטרים
 
-| שם           | הקלד                        | תיאור |
-| ------------ | --------------------------- | ----- |
-| התקשרות חזרה | PerformanceObserverCallback |       |
-| אפשרויות     | PerformanceObserverInit     |       |
+| שם | הקלד | תיאור |
+| -------- | --------------------------- | ----------- |
+| התקשרות חזרה | PerformanceObserverCallback |             |
+| אפשרויות | PerformanceObserverInit |             |

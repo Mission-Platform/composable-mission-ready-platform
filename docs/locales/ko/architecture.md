@@ -16,7 +16,7 @@ Mission Platform은 재사용성과 프레임워크 간 유연성을 극대화�
 
 ### 황금률: 종속성 방향
 
-순환 종속성을 방지하고 명확성을 유지하기 위해 엄격한 단방향 종속성 흐름이 모노레포 전체에 적용됩니다.
+순환 종속성을 방지하고 명확성을 유지하기 위해 모노레포 전체에 엄격한 단방향 종속성 흐름이 적용됩니다.
 경계:
 
 ```mermaid
@@ -32,64 +32,69 @@ graph TD
     Workers --> Configs
 ```
 
-1. **애플리케이션(`apps/`)**: 패키지 소비, Vite 플러그인 및 작업자. 그들은 절대로 코드를 다른 부분으로 내보내지 않습니다.
+1. **애플리케이션(`apps/`)**: 패키지, Vite 플러그인 및 작업자를 사용합니다. 그들은 절대로 코드를 다른 부분으로 내보내지 않습니다.
    모노레포.
 2. **패키지(`packages/`)**: 재사용 가능한 논리 및 구성 요소를 제공합니다. 그들은 서로 의지할 수 있지만 결코 의지하지 않는다
    응용 프로그램.
 3. **Forge 플러그인(`packages/compiler/plugins/`)**: 컴파일러 출력 대상 — 프레임워크 플러그인 및 CMS 대상. 그들은 다음에 따라 달라질 수 있습니다
-   `packages/tooling/vite/` 그리고 `packages/tooling/configs/`, 그리고 절대 켜지지 않음 `apps/` 또는 서로의 형제자매에 대해; CMS 어댑터는 다음에만 의존합니다.
+   `packages/tooling/vite/` 및 `packages/tooling/configs/`, `apps/` 또는 서로의 형제에는 적용되지 않습니다. CMS 어댑터는 다음에만 의존합니다.
    `forge-cms-plugin-api`.
-4. **구성(`packages/tooling/configs/`)**: 공유 도구 설정(ESLint, TypeScript, 등.). 그들은 기초이며 의존합니다
+4. **구성(`packages/tooling/configs/`)**: 공유 도구 설정(ESLint, TypeScript 등). 그들은 기초이며 의존합니다
    모노레포에는 아무것도 없습니다.
 
 ## 프레임워크 중립 엔진: Forge
 
-미션플랫폼의 핵심은 `@mission-platform/forge-jsx`, 구성 요소에 대한 프레임워크 중립적인 작성 모델 및
-컴포저블. `@mission-platform/vite-plugin-forge` 중립 컴파일러 드라이버입니다. 소스를 구문 분석하고 정규화합니다.
-의미론적 IR을 구축하고, 공유 분석 및 최적화를 실행하고, 명시적으로 제공된
+Mission Platform의 핵심은 프레임워크 중립적인 구성 요소 작성 모델인 `@mission-platform/forge-jsx`입니다.
+컴포저블. `@mission-platform/vite-plugin-forge`은 중립 컴파일러 드라이버입니다. 이는 다음을 사용하여 소스를 구문 분석하고 정규화합니다.
+Oxc는 의미론적 IR을 구축하고, 공유 분석 및 최적화를 실행하고, 명시적으로 제공된
 `FrameworkOutputPlugin`.
 
-다음과 같은 프레임워크 패키지 `@mission-platform/forge-plugin-react` 그리고 `@mission-platform/forge-plugin-vue` 자신의 목표
-낮추기, 대상 최적화, 기본 소스 생성, 진단, 런타임 메타데이터 및 Vite/tsdown 어댑터. 거기
-드라이버의 중앙 프레임워크 이미터나 문자열-프레임워크 레지스트리가 없습니다. 패키지 빌드 구성에서 다음을 선택합니다.
-게시하는 플러그인 인스턴스이므로 대상 구현 종속성은 프레임워크 경계에 유지됩니다.
+`@mission-platform/forge-plugin-react`, `@mission-platform/forge-plugin-vue`와 같은 프레임워크 패키지,
+`@mission-platform/forge-plugin-solid`, `@mission-platform/forge-plugin-svelte` 및
+`@mission-platform/forge-plugin-web-components` 자체 타겟 낮추기, 타겟 최적화, 네이티브 소스 생성,
+진단, 런타임 메타데이터 및 Vite/tsdown 어댑터. 중앙 프레임워크 이미터 또는 문자열-프레임워크가 없습니다.
+드라이버에 레지스트리를 등록합니다. 사용자 정의 대상은 개방형 `FrameworkOutputPlugin`을 구현하여 등록됩니다.
+`FrameworkId`(`JsxFramework | (string & {})`), `JsxFramework`은 기본 제공 편의를 위해 폐쇄형 통합으로 유지됩니다.
+패키지 빌드 구성은 게시하는 플러그인 인스턴스를 선택하므로 대상 구현 종속성은 그대로 유지됩니다.
+프레임워크 경계.
 
-결과 흐름은 **구문 분석/정규화 → 중립 최적화 → 의미적 IR → 목표 하강 → 목표 최적화 → 생성 →
-네이티브 빌드**. 기본 빌드는 선택한 플러그인에 의해 수행됩니다. Vite 또는 tsdown 어댑터도 제공합니다.
-대상의 선언, 외부 및 출력 규칙.
+결과 흐름은 **구문 분석/정규화(Oxc) → 중립 최적화 → 의미론적 IR → 목표 감소 → 목표 최적화 → 생성 →
+네이티브 빌드**. 생성 전에 낮추기와 목표 최적화가 엄격히 요구됩니다. 대상 생성기는 허용됩니다.
+`assertTargetIntentionsLowered`에 의해 검증된 낮은 의도. 기본 빌드는 선택한 플러그인에 의해 수행됩니다.
+대상의 선언, 외부 및 출력 규칙도 제공하는 Vite 또는 tsdown 어댑터.
 
 두 번째 직교 축은 동일한 중립 구성 요소를 **콘텐츠 플랫폼**에 투영합니다.
-`@mission-platform/forge-cms-plugin-api` 플랫폼 중립적인 콘텐츠 모델을 소유하고 있으며, `CmsOutputPlugin` 계약, 그리고
+`@mission-platform/forge-cms-plugin-api`은 플랫폼 중립적인 콘텐츠 모델인 `CmsOutputPlugin` 계약을 소유하고 있습니다.
 일반 드라이버; 어댑터 패키지 `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
-그리고 `forge-cms-webflow` 각자 하나의 플랫폼을 소유하고 있습니다. CMS 대상은 프레임워크 플러그인을 교체하는 대신 프레임워크 플러그인을 *구성*하므로
-모든 프레임워크와 모든 플랫폼이 쌍을 이루며 출력은 `dist/cms/<cms>/<framework>/**`.
+`forge-cms-webflow`은 각각 하나의 플랫폼을 소유하고 있습니다. CMS 타겟은 프레임워크 플러그인을 교체하는 대신 프레임워크 플러그인을 _구성_하므로
+모든 프레임워크와 모든 플랫폼 쌍이 결합되고 출력은 `dist/cms/<cms>/<framework>/**`에 저장됩니다.
 
 전체 파이프라인, 구성 요소 및 후크 소비자, CMS 프로젝션 및 확장 지침은 다음을 참조하세요.
 [Forge 컴파일러 파이프라인](../../../packages/tooling/vite/forge/docs/locales/ko/reference/compiler.md). 빌드 오케스트레이션 보기는 다음을 참조하세요.
-[시스템 구축](build-system.md).
+[빌드 시스템](build-system.md).
 
 ## 디자인 토큰 시스템
 
-관리되는 정교한 디자인 토큰 시스템을 통해 시각적 일관성이 유지됩니다. `@mission-platform/tokens`.
+`@mission-platform/tokens`이 관리하는 정교한 디자인 토큰 시스템을 통해 시각적 일관성이 유지됩니다.
 
 - **DTCG 표준**: 토큰은 W3C 디자인 토큰 커뮤니티 그룹 형식(v2025.10)으로 작성됩니다.
 - **OKLab 색상 공간**: 프리미티브는 지각적으로 균일한 그라데이션과 테마를 위해 OKLab 색상 공간을 사용합니다.
-- **자동화된 아티팩트**: `@mission-platform/vite-plugin-tokens` SCSS 변수, CSS 사용자 정의 자동 생성
-  속성 및 TypeScript 단일 진실 소스의 상수입니다.
+- **자동화된 아티팩트**: `@mission-platform/vite-plugin-tokens`은 자동으로 SCSS 변수, CSS 사용자 정의를 생성합니다.
+  속성 및 TypeScript 상수는 단일 진실 소스에서 제공됩니다.
 
 ## 프레임워크에 구애받지 않는 라우팅 및 I18n
 
 라우팅 및 국제화와 같은 핵심 애플리케이션 서비스는 프레임워크에 구애받지 않도록 설계되었습니다.
 
 - **`@mission-platform/router`**: 구조화된 경로 대상, 순수 URL/위치 도우미 및 컴파일러 마커를 제공합니다.
-  ~로 `MpLink`, `useMpRoute`, `useMpRouter`, 그리고 `MpRouterView`. UI 프레임워크나 라우터 라이브러리 런타임이 없습니다.
+  `MpLink`, `useMpRoute`, `useMpRouter` 및 `MpRouterView`. UI 프레임워크나 라우터 라이브러리 런타임이 없습니다.
   종속성이 있으며 애플리케이션의 경로 테이블을 소유하지 않습니다.
-- **Forge 라우터 대상**: `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`, 그리고
-  `-web-components` 해당 마커를 소비 애플리케이션에서 선택한 기본 라우터로 낮춥니다. 애플리케이션 유지
+- **포지 라우터 대상**: `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood` 및
+  `-web-components`은 해당 마커를 소비 애플리케이션이 선택한 기본 라우터로 낮춥니다. 애플리케이션 유지
   기본 경로 정의, 공급자, 가드, 로더 및 라우터 인스턴스의 소유권 대상은 공급만
   소비능력.
-- **`@mission-platform/i18n`**: 래퍼 `i18next` 보편적인 것을 제공하는 `createForgeI18N` 공장.
-  프레임워크별 어댑터는 다음을 제공합니다. `useI18n` 후크 및 구성 요소 Vue 그리고 React.
+- **`@mission-platform/i18n`**: 범용 `createForgeI18N` 팩토리를 제공하는 `i18next` 주변 래퍼입니다.
+  프레임워크별 어댑터는 Vue 및 React에 대한 `useI18n` 후크 및 구성 요소를 제공합니다.
 
 ## 구축 및 배포 전략
 
@@ -98,14 +103,14 @@ graph TD
 Turborepo는 모노레포 전반에 걸쳐 빌드, 테스트 및 Linting의 무거운 작업을 처리합니다. 글로벌 캐시를 사용하여
 입력이 변경된 경우에만 작업이 실행되도록 합니다.
 
-### Vite-Powered 빌드
+### Vite 기반 빌드
 
-각 패키지와 앱은 Vite 개발 및 프로덕션 빌드를 위해 다음의 공유 기본 구성을 활용합니다.
+각 패키지와 앱은 개발 및 프로덕션 빌드에 Vite을 사용하고 다음의 공유 기본 구성을 활용합니다.
 `@mission-platform/vite-config`.
 
 ### Cloudflare 배포
 
-애플리케이션은 주로 **Cloudflare Workers**(아래)와 함께 **Cloudflare Pages**에 배포됩니다. `packages/edge/workers/`) 제공
+애플리케이션은 주로 **Cloudflare Pages**에 배포되며 **Cloudflare Workers**(`packages/edge/workers/` 아래)는 다음을 제공합니다.
 API 프록시 및 SPA 자산 제공을 위한 특수 논리.
 
 ## 요약

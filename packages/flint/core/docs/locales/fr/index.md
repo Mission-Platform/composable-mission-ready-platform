@@ -11,9 +11,9 @@ contributeurs.
 
 ## Commencez ici
 
-- [Référence du langage et de l'ABI](reference/language.md) — grammaire, types, capacités,
+- [Référence langage et ABI](reference/language.md) — grammaire, types, capacités,
   diagnostics, manifestes et comportement du compilateur.
-- [Guide de construction et de test](guides/development.md) — contrôles locaux, luminaires et générés
+- [Guide de construction et de test](guides/development.md) — vérifications locales, accessoires et générés
   artefacts.
 - [`llms.txt`](../../../llms.txt) — API concise et notes d'utilisation pour les outils et les assistants.
 

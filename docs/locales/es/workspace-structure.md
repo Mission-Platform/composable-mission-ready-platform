@@ -5,7 +5,7 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > docs/workspace-structure.md: [docs/workspace-structure.md](../../workspace-structure.md)
 > Idioma: Español (es)
 
-Este documento proporciona una referencia técnica para el diseño del monorepo de Mission Platform, los fines del directorio y la información interna.
+Este documento proporciona una referencia técnica para el diseño del monorepo de Mission Platform, fines de directorio e información interna.
 convenciones de paquetes.
 
 ## Referencia de diseño de Monorepo
@@ -16,11 +16,13 @@ en niveles funcionales:
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── packages/tooling/configs/                # Shared tooling and base configurations
-├── packages/               # Reusable libraries and building blocks
-├── packages/tooling/vite/           # Build-time extensions and compilers
-├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
-├── crates/                 # Rust crates (including Wasm-compiled ones)
+├── packages/core/          # Framework-neutral runtime, Forge JSX/adapters, routing, i18n, and scheduling
+├── packages/ui/            # Components, forms, layouts, themes, and design tokens
+├── packages/content/       # Content, email, search, and SEO pipelines
+├── packages/integrations/  # Barcode, maps, media, 3D, and interoperability adapters
+├── packages/compiler/      # Figma bridges and Forge compiler plugins
+├── packages/tooling/       # Shared configs and Vite/build-time extensions
+├── packages/edge/          # Reusable Cloudflare Worker edge functions
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
@@ -35,6 +37,7 @@ Las aplicaciones son unidades implementables que componen la funcionalidad del d
 y nunca publicado en un registro.
 
 - **`docs/`**: El sitio de documentación Vite + Vue para el corpus Markdown.
+- **`figma-forge-plugin/`**: el complemento Figma que integra componentes creados por Forge con los flujos de trabajo de Figma.
 - **`my-care-notes/`**: La aplicación insignia de notas de atención.
 - **`service-monitor/`**: el panel de estado del servicio RedwoodSDK respaldado por un objeto duradero.
 - **`website/`**: El sitio web de productos y marketing de Mission Platform.
@@ -42,10 +45,18 @@ y nunca publicado en un registro.
 
 ### 2. `packages/` (Bloques de construcción)
 
-Bibliotecas versionadas y reutilizables consumidas por las aplicaciones. Se pretende que sean independientes del marco siempre que sea posible.
+Bibliotecas versionadas y reutilizables consumidas por las aplicaciones. Los directorios de dominio hacen explícita la propiedad sin cambiar los nombres de los paquetes ni las importaciones.
+
+- **`core/`**: tiempo de ejecución neutral en el marco, Forge JSX/adaptadores, enrutamiento, localización, observabilidad, RxJS y servicios de programación.
+- **`ui/`**: Componentes, puntos de interrupción, formularios, diseños, selección, temas, tokens y tipografía.
+- **`content/`**: Modelos de contenido, componentes/renderizado de correo electrónico, herramientas de lenguaje y SEO.
+- **`integrations/`**: Código de barras, escaneo de códigos, D3, mapas, códigos QR/matriciales, voz, Three.js y vCards.
+- **`compiler/`**: Puentes Figma y complementos del compilador framework/router/CMS.
+- **`tooling/`**: Paquetes de configuración compartidos y complementos Vite.
+- **`edge/`**: Paquetes de trabajo utilizados por aplicaciones y ejemplos locales.
 
 - **`@mission-platform/forge-jsx`**: adaptadores y tiempo de ejecución JSX neutrales en el marco.
-- **`@mission-platform/components`**: la biblioteca de componentes de múltiples marcos.
+- **`@mission-platform/components`**: la biblioteca de componentes multi-framework.
 - **`@mission-platform/forms`** y **`@mission-platform/forms-core`**: primitivas de forma basadas en esquemas.
 - **`@mission-platform/content`** y **`@mission-platform/email-renderer`**: Canalizaciones de contenido y renderizado.
 - **`@mission-platform/tokens`**: Fuente de verdad del token de diseño.
@@ -58,10 +69,10 @@ Bibliotecas versionadas y reutilizables consumidas por las aplicaciones. Se pret
 Configuraciones compartidas que garantizan la coherencia en todos los espacios de trabajo. Los paquetes en este directorio se utilizan normalmente como
 `devDependencies`.
 
-- **`eslint-config/`**, **`prettier-config/`** y **`stylelint-config/`**: reglas de formato y linting.
-- **`typescript-config/`**: archivos `tsconfig.json` base para consumidores Node, DOM, biblioteca y marco.
-- **`tsdown-config/`** y **`vite-config/`**: biblioteca común, aplicación, patrones de compilación Vite y Vitest.
-- **`i18n-config/`** y **`storybook-framework/`**: configuración de entorno de trabajo y extracción de configuración regional compartida.
+- **`eslint-config/`**, **`prettier-config/`**, y **`stylelint-config/`**: Reglas de formato y pelado.
+- **`typescript-config/`**: Base `tsconfig.json` archivos para Node, DOM, biblioteca y consumidores de marcos.
+- **`tsdown-config/`** y **`vite-config/`**: biblioteca común, aplicación, Vite, y Vitest construir patrones.
+- **`i18n-config/`** y **`storybook-framework/`**: Extracción de configuración regional compartida y configuración del marco de trabajo.
 
 ### 4. `packages/tooling/vite/` (Extensiones de compilación)
 
@@ -82,6 +93,16 @@ Cloudflare Workers para lógica del lado del servidor y entrega optimizada de ac
 Los trabajadores de aplicaciones implementables están configurados por `apps/website/wrangler.jsonc`,
 `apps/my-care-notes/wrangler.jsonc` y `apps/service-monitor/wrangler.jsonc`. el
 Los paquetes `api-proxy` y `forge-spa` son dependencias agrupadas en lugar de implementaciones Wrangler independientes.
+
+### 6. `packages/compiler/plugins/` (Complementos del compilador Forge)
+
+Complementos y adaptadores de salida específicos del marco para el compilador Forge.
+
+- **`forge-cms-plugin-api/`**: Generación de artefactos CMS e integración del adaptador Vite/tsdown.
+- **`forge-cms-astro/`**, **`forge-cms-ghost/`**, **`forge-cms-jekyll/`**, **`forge-cms-storyblok/`**, **`forge-cms-webflow/`**: adaptadores de integración específicos de CMS.
+- **`forge-plugin-api/`**: Interfaces del complemento del compilador Forge compartido.
+- **`forge-vue/`**, **`forge-react/`**, **`forge-solid/`**, **`forge-svelte/`**, **`forge-web-components/`**: generación de código específico del marco y adaptadores de tiempo de ejecución.
+- **`forge-router-plugin-api/`**, **`forge-router-vue/`**, **`forge-router-react/`**, **`forge-router-solid/`**, **`forge-router-svelte/`**, **`forge-router-web-components/`**, **`forge-router-redwood/`**: adaptadores de integración específicos del marco del enrutador.
 
 ## Convenciones de paquetes internos
 
@@ -108,12 +129,12 @@ Cada directorio dentro de `src/` debe contener un `index.ts` (archivo barril).
 
 Los archivos clave en la raíz del repositorio gobiernan el comportamiento del monorepo:
 
-| Archivo                 | Propósito                                                                                         |
-| :---------------------- | :------------------------------------------------------------------------------------------------ |
-| `pnpm-workspace.yaml`   | Define los límites del espacio de trabajo, los miembros globales y los catálogos de dependencias. |
-| `turbo.json`            | Orquesta la canalización de compilación y el almacenamiento en caché de tareas.                   |
-| `package.json`          | Scripts de nivel raíz y devDependencies en todo monorepo.                                         |
-| `commitlint.config.mjs` | Hace cumplir la especificación de compromisos convencionales.                                     |
+| Archivo | Propósito |
+| :---------------------- | :------------------------------------------------------------------- |
+| `pnpm-workspace.yaml` | Define los límites del espacio de trabajo, los grupos de miembros y los catálogos de dependencias. |
+| `turbo.json` | Orquesta la canalización de compilación y el almacenamiento en caché de tareas.                    |
+| `package.json` | Scripts de nivel raíz y devDependencies en todo monorepo.                |
+| `commitlint.config.mjs` | Hace cumplir la especificación de compromisos convencionales.                     |
 
 ## Gestión de dependencias y espacios de trabajo
 

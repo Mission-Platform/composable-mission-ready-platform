@@ -13,12 +13,12 @@ Gedeelde hulpprogramma's voor het bouwen van tsdown-bibliotheken voor publiceerb
 pnpm add --save-dev @mission-platform/tsdown-config
 ```
 
-Gebruik het pakket vanuit een werkruimte `tsdown.config.ts` en toegangspunten behouden,
+Gebruik het pakket vanuit een werkruimte `tsdown.config.ts` en behoud toegangspunten,
 externe afhankelijkheden en uitvoerbeperkingen die lokaal zijn voor het pakket dat wordt gebouwd.
-Gegenereerde declaraties en bundels horen thuis in dat pakket `dist/` map.
+Gegenereerde declaraties en bundels horen thuis in de map `dist/` van dat pakket.
 
 ## Bijdragen
 
-Loop `pnpm --filter @mission-platform/tsdown-config lint` en de formaatcontrole.
+Voer `pnpm --filter @mission-platform/tsdown-config lint` en de formaatcontrole uit.
 Behoud de deterministische uitvoer en voeg geen raamwerkspecifieke doelvertakkingen toe
 aan de neutrale bouwhulp.

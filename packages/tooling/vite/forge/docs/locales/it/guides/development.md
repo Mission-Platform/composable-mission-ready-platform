@@ -28,5 +28,5 @@ conservazione quando si cambia il driver.
 
 Il pacchetto deve rimanere utilizzabile sia da Vite che da tsdown. Non aggiungere un obiettivo
 commutare la tabella o la dipendenza del runtime del framework dal driver neutro. Aggiorna il
-[riferimento alla pipeline del compilatore](../reference/compiler.md) quando una scena pubblica o
+[riferimento pipeline del compilatore](../reference/compiler.md) quando una fase pubblica o
 modifiche al contratto dell'artefatto.

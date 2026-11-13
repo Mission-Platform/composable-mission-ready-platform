@@ -1,8 +1,7 @@
 import { ForgeVirtualList } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import styles from './forge-virtual-list.module.scss';
-
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const items = Array.from({ length: 1000 }, (_unused, index) => ({ index, label: `Row ${index}` }));
 

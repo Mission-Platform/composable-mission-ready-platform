@@ -497,7 +497,7 @@ export interface UseSourceOptions
 **סוג:** קבוע
 
 ```typescript
-export const MapContext;
+export const MapContext: MpContext<Map | undefined>;
 ```
 
 הקשר הנושא את מופע MapLibre `Map` של `<MapLibre>` הקרוב ביותר.

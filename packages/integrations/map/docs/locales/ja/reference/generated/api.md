@@ -497,7 +497,7 @@ export interface UseSourceOptions
 **種類:** 定数
 
 ```typescript
-export const MapContext;
+export const MapContext: MpContext<Map | undefined>;
 ```
 
 最も近い `<MapLibre>` 祖先の MapLibre `Map` インスタンスを保持するコンテキスト。

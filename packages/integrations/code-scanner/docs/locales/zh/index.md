@@ -5,23 +5,25 @@
 > packages/integrations/code-scanner/docs/index.md: [packages/integrations/code-scanner/docs/index.md](../../index.md)
 > 语言: 简体中文 (zh)
 
-从静态链接编译的无依赖**图像/相机代码扫描仪**
-将 Web 脚本图锻造为 WebAssembly。它定位并解码 QR 码、数据
-图像文件中的 Matrix、Aztec、一维条形码、PDF417、GS1 DataBar 和 MaxiCode
-或实时摄像机流。动态源模块配置文件也可用于
-需要独立可缓存解码器模块的部署。
+从静态链接编译的无依赖性**图像/相机代码扫描仪**
+Flint 图到 WebAssembly。链接的工件当前解码数据
+Matrix、紧凑型 Aztec、1D/RSS 阅读器、PDF417 和来自图像文件的 MaxiCode 或
+实时摄像机流。 QR 图独立发出，但仍处于外部
+研究 Forge 发射器限制时组合工件。
 
 ## API概述
 
 ### 核心扫描仪 (`@mission-platform/code-scanner`)
 
 ```ts
-import { scanFile, scanImageData, scanImageDataAll } from '@mission-platform/code-scanner';
+import { scanFile, scanImageData, scanImageDataAll, type ScanOptions } from '@mission-platform/code-scanner';
 
 // Scan ImageData directly
-const result = scanImageData(imageData);
+const options: ScanOptions = { formats: ['DATA_MATRIX'], tryHarder: true };
+const result = scanImageData(imageData, options);
 
-// Scan all codes in frame
+// Scan the package's all-results entry point. The current linked reduced graph
+// returns at most its first validated result until multi-symbol detection lands.
 const allResults = scanImageDataAll(imageData);
 
 // Scan a File / Blob
@@ -36,7 +38,7 @@ const resultFromFile = await scanFile(file);
 来自 `@mission-platform/vite-config`）和 `customConditions`（通过
 `@mission-platform/typescript-config/framework-<name>` 预设）。
 
-**Vue 3**（`mp:vue` 活动）：
+**Vue 3**（`mp:vue` 有效）：
 
 ```vue
 <script setup lang="ts">
@@ -44,7 +46,7 @@ const resultFromFile = await scanFile(file);
 </script>
 
 <template>
-  <ForgeCodeScanner @result="(res) => console.log(res.value)" />
+  <ForgeCodeScanner @result="(res) => console.log(res.text, res.format)" />
 </template>
 ```
 
@@ -54,6 +56,6 @@ const resultFromFile = await scanFile(file);
 import { ForgeCodeScanner } from '@mission-platform/code-scanner';
 
 export function CameraScanner() {
-  return <ForgeCodeScanner onResult={(result) => console.log(result.value)} />;
+  return <ForgeCodeScanner onResult={(result) => console.log(result.text, result.format)} />;
 }
 ```

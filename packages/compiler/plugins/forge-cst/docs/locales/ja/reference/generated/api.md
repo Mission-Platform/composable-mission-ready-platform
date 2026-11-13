@@ -23,9 +23,9 @@ function getImportDeclarations(program: Program): readonly ImportDeclaration[];
 
 #### パラメータ
 
-| 名前       | タイプ     | 説明 |
-| ---------- | ---------- | ---- |
-| プログラム | プログラム |      |
+|名前 |タイプ |説明 |
+| ------- | ------- | ----------- |
+|プログラム |プログラム |             |
 
 ### 解析Cst
 
@@ -43,10 +43,10 @@ TypeScript/JavaScript/TSX ソース テキストを具体的な構文ツリー (
 
 #### パラメータ
 
-| 名前       | タイプ                   | 説明                                   |
-| ---------- | ------------------------ | -------------------------------------- |
-| ソース     | 文字列                   | - 解析するソースコード。               |
-| オプション | ParseCstOptions \|文字列 | - CST 解析オプションまたはファイル名。 |
+|名前 |タイプ |説明 |
+| ------- | ------------------------- | ----------------------------------- |
+|ソース |文字列 | - 解析するソースコード。             |
+|オプション | ParseCstOptions \|文字列 | - CST 解析オプションまたはファイル名。 |
 
 #### 契約
 
@@ -103,10 +103,10 @@ function rewriteImportsWithCst(
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| ソース     | 文字列                |      |
-| オプション | RewriteImportsOptions |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------- | ----------- |
+|ソース |文字列 |             |
+|オプション | RewriteImportsOptions |             |
 
 ### リライト結果
 
@@ -117,3 +117,426 @@ export interface RewriteResult
 ```
 
 CST インポートの書き換え変換の結果。
+
+## `src/text`
+
+### 空白領域
+
+**種類:** 関数
+
+```typescript
+function blankRegions(text: string, regions: readonly string[]): string;
+```
+
+文字インデックスを維持しながら、各領域の出現箇所をすべて空白にします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ----------------- | ----------- |
+|テキスト |文字列 |             |
+|地域 |読み取り専用文字列[] |             |
+
+### 折りたたむ空白
+
+**種類:** 関数
+
+```typescript
+function collapseWhitespace(text: string): string;
+```
+
+すべての空白を単一の空白に折りたたんで、結果をトリミングします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|テキスト |文字列 |             |
+
+### endOfTypeArguments
+
+**種類:** 関数
+
+```typescript
+function endOfTypeArguments(text: string, start: number): number;
+```
+
+`>` の直後のインデックスは、`start` で開かれた型引数リストを閉じています。
+またはリストが閉じない場合は `-1`。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|テキスト |文字列 |             |
+|開始 |番号 |             |
+
+### エスケープ属性
+
+**種類:** 関数
+
+```typescript
+function escapeAttribute(value: string): string;
+```
+
+二重引用符で囲まれた HTML 属性値をエスケープします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |文字列 |             |
+
+### エスケープバインディング
+
+**種類:** 関数
+
+```typescript
+function escapeBinding(expression: string): string;
+```
+
+二重引用符で囲まれた Vue バインディング内で使用する式をエスケープします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------ | ----------- |
+|式 |文字列 |             |
+
+### 最上位のインデックス
+
+**種類:** 関数
+
+```typescript
+function indexOfTopLevel(text: string, token: string, from = 0): number;
+```
+
+`text` (外部) 内の `token` の最初のトップレベルの出現のインデックス
+括弧、文字列、コメント）、または `-1`。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|テキスト |文字列 |             |
+|トークン |文字列 |             |
+|から |        |             |
+
+### isIdentifierName
+
+**種類:** 関数
+
+```typescript
+function isIdentifierName(name: string): boolean;
+```
+
+isPlainIdentifier のエイリアス。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|名前 |文字列 |             |
+
+### isIdentifierPart
+
+**種類:** 関数
+
+```typescript
+function isIdentifierPart(character: string | undefined): boolean;
+```
+
+文字が JavaScript 識別子を継続できるかどうか。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | ------------------- | ----------- |
+|キャラクター |文字列 \|未定義 |             |
+
+### isIdentifierStart
+
+**種類:** 関数
+
+```typescript
+function isIdentifierStart(character: string | undefined): boolean;
+```
+
+文字が JavaScript 識別子を開始できるかどうか。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | ------------------- | ----------- |
+|キャラクター |文字列 \|未定義 |             |
+
+### isPlainIdentifier
+
+**種類:** 関数
+
+```typescript
+function isPlainIdentifier(name: string): boolean;
+```
+
+文字列が有効なプレーンな JavaScript 識別子名であるかどうか。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|名前 |文字列 |             |
+
+### マスクリテラル
+
+**種類:** 関数
+
+```typescript
+function maskLiterals(text: string): boolean[];
+```
+
+文字列リテラル内にある `text` 内のすべてのインデックスをマークするブール マスクを計算します。
+テンプレートのリテラルまたはコメント。 `true` とマークされた位置はリテラルコンテンツであり、決して使用してはなりません
+構造的に書き換えられる。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|テキスト |文字列 |             |
+
+### マッチブラケット
+
+**種類:** 関数
+
+```typescript
+function matchBracket(text: string, start: number): number;
+```
+
+`start`、または `-1` の開始括弧に一致する括弧のインデックス。
+文章のバランスが崩れています。リテラル領域とコメント領域はスキップされます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|テキスト |文字列 |             |
+|開始 |番号 |             |
+
+### メンバーアクセス
+
+**種類:** 関数
+
+```typescript
+function memberAccess(object: string, key: string): string;
+```
+
+プレーンな識別子の場合は `<object>.<key>` を返し、それ以外の場合は `<object>["<key>"]` (括弧表記) を返します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------ | ----------- |
+|オブジェクト |文字列 |             |
+|キー |文字列 |             |
+
+### パッド
+
+**種類:** 関数
+
+```typescript
+function pad(depth: number): string;
+```
+
+テンプレートの深さのインデント (レベルごとに 2 つのスペース)。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|深さ |番号 |             |
+
+### 引用
+
+**種類:** 関数
+
+```typescript
+function quote(value: string): string;
+```
+
+quoteString のエイリアス。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |文字列 |             |
+
+### 引用属性値
+
+**種類:** 関数
+
+```typescript
+function quoteAttributeValue(value: string): string;
+```
+
+JSX 属性値として文字列を引用符で囲みます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |文字列 |             |
+
+### 引用文字列
+
+**種類:** 関数
+
+```typescript
+function quoteString(value: string): string;
+```
+
+出力されたコード (JSON エンコード) の二重引用符で囲まれた文字列リテラル。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |文字列 |             |
+
+### 最初に置き換える
+
+**種類:** 関数
+
+```typescript
+function replaceFirst(
+  text: string,
+  search: string,
+  replacement: string,
+): string;
+```
+
+`text` 内の最初の `search` を `replacement` に置き換えます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ------ | ----------- |
+|テキスト |文字列 |             |
+|検索 |文字列 |             |
+|交換 |文字列 |             |
+
+### スキップアトミックトークン
+
+**種類:** 関数
+
+```typescript
+function skipAtomicToken(text: string, index: number): number;
+```
+
+文字列、テンプレート、またはコメントを開くときに、`index` で始まるトークンを超えて進みます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|テキスト |文字列 |             |
+|インデックス |番号 |             |
+
+### スキップトリビア
+
+**種類:** 関数
+
+```typescript
+function skipTrivia(text: string, index: number): number;
+```
+
+空白とコメントをスキップし、次に重要な文字のオフセットを返します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|テキスト |文字列 |             |
+|インデックス |番号 |             |
+
+### スプリットトップレベル
+
+**種類:** 関数
+
+```typescript
+function splitTopLevel(text: string, separator: string): string[];
+```
+
+最上位に出現する `separator` ごとに `text` を分割します (単一
+文字)、括弧、文字列、またはコメント内にネストされた区切り文字は無視されます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | ------ | ----------- |
+|テキスト |文字列 |             |
+|区切り文字 |文字列 |             |
+
+### ストリップ外側括弧
+
+**種類:** 関数
+
+```typescript
+function stripOuterParentheses(text: string): string;
+```
+
+unwrapParentses のエイリアス。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|テキスト |文字列 |             |
+
+### ストリップタイプアサーション
+
+**種類:** 関数
+
+```typescript
+function stripTypeAssertion(text: string): string;
+```
+
+後続の `as T` / `satisfies T` アサーションを削除します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|テキスト |文字列 |             |
+
+### 引用を解除する
+
+**種類:** 関数
+
+```typescript
+function unquote(text: string): string | undefined;
+```
+
+一重引用符、二重引用符、またはバックティック引用符で囲まれている場合は文字列リテラルの引用符を解除し、そうでない場合は unknown します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|テキスト |文字列 |             |
+
+### unwrap括弧
+
+**種類:** 関数
+
+```typescript
+function unwrapParentheses(text: string): string;
+```
+
+重複した括弧の 1 つの層を繰り返し削除します (`(x)` -> `x`)。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|テキスト |文字列 |             |

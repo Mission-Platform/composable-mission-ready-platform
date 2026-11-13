@@ -13,7 +13,7 @@ bijdragers.
 
 - [Taal- en ABI-referentie](reference/language.md) — grammatica, typen, mogelijkheden,
   diagnostiek, manifesten en compilergedrag.
-- [Bouw- en testhandleiding](guides/development.md) — lokale cheques, armaturen en gegenereerd
+- [Bouw- en testhandleiding](guides/development.md) — lokale controles, armaturen en gegenereerde
   artefacten.
 - [`llms.txt`](../../../llms.txt) — beknopte API- en gebruiksnotities voor tooling en assistenten.
 

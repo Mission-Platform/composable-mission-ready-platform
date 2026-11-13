@@ -5,6 +5,6 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > packages/compiler/plugins/forge-router-solid/docs/index.md: [packages/compiler/plugins/forge-router-solid/docs/index.md](../../index.md)
 > Taal: Nederlands (nl)
 
-Forge router target voor SolidJS Router
+Forge routerdoel voor SolidJS Router
 
-See `llms.txt` voor de public API en usage examples.
+Zie `llms.txt` voor de openbare API en gebruiksvoorbeelden.

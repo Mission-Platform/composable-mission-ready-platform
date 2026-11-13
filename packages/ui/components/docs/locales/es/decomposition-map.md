@@ -106,7 +106,7 @@ tipografía de `@mission-platform/typography` y estilos/utilidades locales del p
 Las historias pueden importar el paquete para ejercitar la superficie pública; eso no es
 una dependencia de implementación o un ciclo de paquete.
 
-Cada componente residual mantiene su `index.ts`, fuente neutral, SCSS, coubicado.
+Cada componente residual mantiene su `index.ts`, fuente neutra, SCSS, coubicado.
 especificaciones e historia de libro de cuentos. El manifiesto del paquete publica `dist`, componentes,
 estilos y utilidades únicamente; el árbol de tiendas extraído ya no está incluido.
 

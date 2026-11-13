@@ -71,8 +71,8 @@ Restituisce il valore in pixel per una determinata chiave del punto di interruzi
 
 #### Parametri
 
-| Nome   | Digitare                     | Descrizione |
-| ------ | ---------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---- | ------------- | ----------- |
 | chiave | Chiave punto di interruzione |             |
 
 ### maxMediaQuery
@@ -88,8 +88,8 @@ punto di interruzione, ovvero "più piccolo del passaggio successivo".
 
 #### Parametri
 
-| Nome   | Digitare                     | Descrizione |
-| ------ | ---------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---- | ------------- | ----------- |
 | chiave | Chiave punto di interruzione |             |
 
 #### Contrarre
@@ -108,8 +108,8 @@ Restituisce una stringa di media query `min-width` per il punto di interruzione 
 
 #### Parametri
 
-| Nome   | Digitare                     | Descrizione |
-| ------ | ---------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---- | ------------- | ----------- |
 | chiave | Chiave punto di interruzione |             |
 
 #### Contrarre
@@ -129,9 +129,9 @@ Data una larghezza in pixel, restituisce la chiave del punto di interruzione att
 
 #### Parametri
 
-| Nome      | Digitare | Descrizione |
-| --------- | -------- | ----------- |
-| larghezza | numero   |             |
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| larghezza | numero |             |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -145,7 +145,7 @@ function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 
 `ForgeHideAt` — l'inverso di {@link ForgeShowAt}: nasconde il suo slot predefinito quando
 il viewport è pari o superiore a `min` (e/o rigorosamente al di sotto di `max`) sulla condivisione
-scala del punto di interruzione in sette passaggi e la rende altrimenti. Scritto una volta nel
+scala del punto di interruzione in sette passaggi e la rende diversamente. Scritto una volta nel
 dialetto JSX neutro e compilato direttamente in React o Vue da
 `@mission-platform/vite-plugin-forge`.
 
@@ -155,8 +155,8 @@ Host `display: contents` in modo che la visibilità possa essere attivata/disatt
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------- | ----------- |
 | proprietà | Sola lettura<HideAtProperties> |             |
 
 ### HideAtProperties
@@ -185,15 +185,15 @@ scala dei punti di interruzione. Scritto una volta nel dialetto neutro JSX e com
 direttamente a React o Vue tramite `@mission-platform/vite-plugin-forge`.
 
 La larghezza della finestra reattiva viene tracciata tramite i ganci neutri
-(`useState`/`useEffect`), che vengono compilati negli hook React o nello spessore hook Vue.
+(`useState`/`useEffect`), che viene compilato negli hook React o nello spessore hook Vue.
 Poiché il dialetto neutro non ha la radice condizionale, lo slot lo è
 avvolto in un host `display: contents` con layout trasparente in modo che la visibilità possa
 attivare/disattivare senza introdurre una casella di layout aggiuntiva.
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------- | ----------- |
 | proprietà | Sola lettura<ShowAtProperties> |             |
 
 ### MostraAtProperties
@@ -235,13 +235,13 @@ La larghezza della finestra reattiva viene tracciata tramite i ganci neutri
 (`useState`/`useEffect`). Le sue etichette sono localizzate tramite i18next: ciascuno
 La chiamata `i18next.t(...)` trasporta un `defaultValue` (il fallback inglese) e
 `@mission-platform/vite-plugin-forge` inietta l'hook del framework `useI18n()` in questo modo
-la stessa origine si risolve rispetto allo spazio dei nomi `mp.breakpoints` del pacchetto su
+la stessa origine si risolve nello spazio dei nomi `mp.breakpoints` del pacchetto su
 sia React che Vue.
 
 #### Parametri
 
-| Nome       | Digitare                                | Descrizione |
-| ---------- | --------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----------- | ----------------------------------- | ----------- |
 | _proprietà | Sola lettura<BreakpointDebugProperties> |             |
 
 ## `src/composables/use-breakpoints/use-breakpoints`

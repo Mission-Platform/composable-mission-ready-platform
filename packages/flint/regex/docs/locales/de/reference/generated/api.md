@@ -21,6 +21,16 @@ export interface CompiledRegex
 
 Deterministische Darstellung, eingebettet in ein Forge-Backend.
 
+### FLINT_REGEX_BYTECODE_VERSION
+
+**Art:** konstant
+
+```typescript
+export const FLINT_REGEX_BYTECODE_VERSION;
+```
+
+Stabile Version des gemeinsam genutzten Flint-Regex-Bytecode-Vertrags.
+
 ### FORGE_REGEX_BYTECODE_VERSION
 
 **Art:** konstant
@@ -29,7 +39,7 @@ Deterministische Darstellung, eingebettet in ein Forge-Backend.
 export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
-Stabile Version des gemeinsam genutzten Forge-Regex-Bytecode-Vertrags.
+Keine Beschreibung angegeben.
 
 ### INSTR_WIDTH
 
@@ -59,7 +69,7 @@ Opcodes, die vom Forge-Backend verbraucht und vom Referenzorakel gespiegelt werd
 export type Opcode = (typeof Op)[keyof typeof Op];
 ```
 
-Keine Beschreibung angegeben.
+Binärbefehls-Opcode-Identifikator für die Ausführung des Regex-Bytecodes.
 
 ## `src/compiler`
 
@@ -75,9 +85,29 @@ Kompilieren Sie die unterstützte deterministische Regex-Teilmenge in Forge-Byte
 
 #### Parameter
 
-| Name   | Geben Sie    | ein Beschreibung |
-| ------ | ------------ | ---------------- |
-| Muster | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------ | ----------- |
+| Muster | Zeichenfolge |             |
+
+### MAX_REGEX_PATTERN_LENGTH
+
+**Art:** konstant
+
+```typescript
+export const MAX_REGEX_PATTERN_LENGTH;
+```
+
+Keine Beschreibung angegeben.
+
+### MAX_REGEX_REPEAT_BOUND
+
+**Art:** konstant
+
+```typescript
+export const MAX_REGEX_REPEAT_BOUND;
+```
+
+Keine Beschreibung angegeben.
 
 ### RegexSyntaxError
 
@@ -88,6 +118,46 @@ export class RegexSyntaxError extends Error
 ```
 
 Compilerbedingter Syntaxfehler mit deterministischen, quellenbezogenen Meldungen.
+
+## `src/index`
+
+### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
+
+**Art:** konstant
+
+```typescript
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+```
+
+Keine Beschreibung angegeben.
+
+### flintStandardLibraryIdentity
+
+**Art:** Funktion
+
+```typescript
+function flintStandardLibraryIdentity(
+  identity?: FlintStandardLibraryIdentity,
+): FlintStandardLibraryIdentity;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ---------------------------- | ----------- |
+| Identität | FlintStandardLibraryIdentity |             |
+
+### FlintStandardLibraryIdentity
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintStandardLibraryIdentity
+```
+
+Keine Beschreibung angegeben.
 
 ## `src/reference-vm`
 
@@ -103,10 +173,10 @@ Lesen Sie ein Capture-Ende, ohne das Bytecode-Slot-Layout den Aufrufern zugängl
 
 #### Parameter
 
-| Name    | Geben Sie       | ein Beschreibung |
-| ------- | --------------- | ---------------- |
-| erfasst | Erfasst \| null |                  |
-| Gruppe  | Zahl            |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ---------------- | ----------- |
+| erfasst | Erfasst \| null |             |
+| Gruppe | Nummer |             |
 
 ### Aufnahmen
 
@@ -130,10 +200,10 @@ Lesen Sie einen Capture-Start, ohne das Bytecode-Slot-Layout den Aufrufern zugä
 
 #### Parameter
 
-| Name    | Geben Sie       | ein Beschreibung |
-| ------- | --------------- | ---------------- |
-| erfasst | Erfasst \| null |                  |
-| Gruppe  | Zahl            |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ---------------- | ----------- |
+| erfasst | Erfasst \| null |             |
+| Gruppe | Nummer |             |
 
 ### fullMatch
 
@@ -143,14 +213,64 @@ Lesen Sie einen Capture-Start, ohne das Bytecode-Slot-Layout den Aufrufern zugä
 function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-Ganzer String-Match, verankert an Position Null.
+Ganzer String-Match, verankert an Position Null (verwendet standardmäßig PikeVM mit linearer Zeit).
 
 #### Parameter
 
-| Name    | Geben Sie     | ein Beschreibung |
-| ------- | ------------- | ---------------- |
-| re      | CompiledRegex |                  |
-| Eingabe | Zeichenfolge  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------- | ----------- |
+| re | CompiledRegex |             |
+| Eingabe | Zeichenfolge |             |
+
+### fullMatchBacktracking
+
+**Art:** Funktion
+
+```typescript
+function fullMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Zurückverfolgen des Ganzstring-Match-Referenzorakels.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------- | ----------- |
+| re | CompiledRegex |             |
+| Eingabe | Zeichenfolge |             |
+
+### fullMatchLinear
+
+**Art:** Funktion
+
+```typescript
+function fullMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+Ganzer String-Match mit der linearen PikeVM-Engine.
+Garantiert O(M * N)-Ausführung und Immunität gegenüber ReDoS-Backtracking.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------- | ----------- |
+| re | CompiledRegex |             |
+| Eingabe | Zeichenfolge |             |
+
+### PikeRunner
+
+**Art:** Klasse
+
+```typescript
+export class PikeRunner extends BaseRunner
+```
+
+PikeVM-Ausführungs-Engine ohne Rückverfolgung in linearer Zeit.
+Garantiert O(M * N) Zeitkomplexität, wobei M die Befehlsanzahl und N die Eingabelänge ist.
+völlig immun gegen ReDoS (Regular Expression Denial of Service).
 
 ### PräfixMatch
 
@@ -160,14 +280,62 @@ Ganzer String-Match, verankert an Position Null.
 function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-Präfixübereinstimmung, verankert an Position Null, aber nicht am Ende.
+Präfixübereinstimmung, verankert an Position Null, aber nicht am Ende (verwendet standardmäßig PikeVM mit linearer Zeit).
 
 #### Parameter
 
-| Name    | Geben Sie     | ein Beschreibung |
-| ------- | ------------- | ---------------- |
-| re      | CompiledRegex |                  |
-| Eingabe | Zeichenfolge  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------- | ----------- |
+| re | CompiledRegex |             |
+| Eingabe | Zeichenfolge |             |
+
+### prefixMatchBacktracking
+
+**Art:** Funktion
+
+```typescript
+function prefixMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Backtracking-Präfix-Match-Referenz-Orakel.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------- | ----------- |
+| re | CompiledRegex |             |
+| Eingabe | Zeichenfolge |             |
+
+### prefixMatchLinear
+
+**Art:** Funktion
+
+```typescript
+function prefixMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+Präfixabgleich mit der linearen PikeVM-Engine.
+Garantiert O(M * N)-Ausführung und Immunität gegenüber ReDoS-Backtracking.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------- | ----------- |
+| re | CompiledRegex |             |
+| Eingabe | Zeichenfolge |             |
+
+### Läufer
+
+**Art:** Klasse
+
+```typescript
+export class Runner extends BaseRunner
+```
+
+Backtracking-Referenzausführungsläufer zur Überprüfung von Bytecode-Anweisungen.
 
 ### suchen
 
@@ -177,15 +345,60 @@ Präfixübereinstimmung, verankert an Position Null, aber nicht am Ende.
 function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
-Übereinstimmung ganz links bei oder nach `start`.
+Übereinstimmung ganz links bei oder nach `start` (verwendet standardmäßig PikeVM mit linearer Zeit).
 
 #### Parameter
 
-| Name    | Geben Sie     | ein Beschreibung |
-| ------- | ------------- | ---------------- |
-| re      | CompiledRegex |                  |
-| Eingabe | Zeichenfolge  |                  |
-| Start   |               |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------- | ----------- |
+| re | CompiledRegex |             |
+| Eingabe | Zeichenfolge |             |
+| Start |               |             |
+
+### SucheBacktracking
+
+**Art:** Funktion
+
+```typescript
+function searchBacktracking(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+Backtracking-Suchreferenz-Orakel.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------- | ----------- |
+| re | CompiledRegex |             |
+| Eingabe | Zeichenfolge |             |
+| Start |               |             |
+
+### SucheLinear
+
+**Art:** Funktion
+
+```typescript
+function searchLinear(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+Übereinstimmung ganz links bei oder nach `start` unter Verwendung der linearen PikeVM-Engine.
+Immun gegen katastrophale Rückschläge bei unverankerten Suchmustern.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------- | ----------- |
+| re | CompiledRegex |             |
+| Eingabe | Zeichenfolge |             |
+| Start |               |             |
 
 ### prüfen
 
@@ -195,11 +408,46 @@ function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 function test(re: CompiledRegex, input: string): boolean;
 ```
 
-Boolesche Übereinstimmung mit der gesamten Zeichenfolge.
+Boolescher Match für ganze Zeichenfolgen (verwendet standardmäßig PikeVM mit linearer Zeit).
 
 #### Parameter
 
-| Name    | Geben Sie     | ein Beschreibung |
-| ------- | ------------- | ---------------- |
-| re      | CompiledRegex |                  |
-| Eingabe | Zeichenfolge  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------- | ----------- |
+| re | CompiledRegex |             |
+| Eingabe | Zeichenfolge |             |
+
+### testBacktracking
+
+**Art:** Funktion
+
+```typescript
+function testBacktracking(re: CompiledRegex, input: string): boolean;
+```
+
+Zurückverfolgendes boolesches Match-Referenz-Orakel.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------- | ----------- |
+| re | CompiledRegex |             |
+| Eingabe | Zeichenfolge |             |
+
+### testLinear
+
+**Art:** Funktion
+
+```typescript
+function testLinear(re: CompiledRegex, input: string): boolean;
+```
+
+Boolescher Match für ganze Zeichenfolgen mithilfe der linearen PikeVM-Engine.
+Immun gegen katastrophales Backtracking bei pathologischen regulären Ausdrücken.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------- | ----------- |
+| re | CompiledRegex |             |
+| Eingabe | Zeichenfolge |             |

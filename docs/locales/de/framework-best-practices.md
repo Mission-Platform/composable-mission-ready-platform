@@ -60,16 +60,17 @@ Mission Platform bietet über Forge-Adapter unterschiedliche Unterstützungsstuf
 
 ## Leistungs- und Reaktivitätsmodelle
 
-| Rahmen       | Reaktivitätsmodell     | Update-Strategie                           |
-| :----------- | :--------------------- | :----------------------------------------- |
-| **Vue 3**    | Proxy-basiert          | Virtuelles DOM mit Compiler-Optimierungen. |
-| **React**    | Unveränderlicher Staat | Virtuelle DOM-Abstimmung.                  |
-| **SolidJS**  | Feinkörnige Signale    | Direkte DOM-Updates (kein VDOM).           |
-| **Svelte 5** | Runen / Signale        | Direkte DOM-Updates über den Compiler.     |
-| **Lit**      | Reaktive Eigenschaften | Asynchrone Shadow-DOM-Updates.             |
+| Rahmen | Reaktivitätsmodell | Update-Strategie |
+| :----------- | :------------------- | :--------------------------------------- |
+| **Vue 3** | Proxy-basiert | Virtuelles DOM mit Compiler-Optimierungen. |
+| **React** | Unveränderlicher Staat | Virtuelle DOM-Abstimmung.              |
+| **SolidJS** | Feinkörnige Signale | Direkte DOM-Updates (kein VDOM).            |
+| **Svelte 5** | Runen / Signale | Direkte DOM-Updates über den Compiler.         |
+| **Lit** | Reaktive Eigenschaften | Asynchrone Shadow-DOM-Updates.         |
 
 ## Verwandte Ressourcen
 
 - [Best Practices](best-practices.md)
 - [Testleitfaden](testing.md)
 - [@mission-platform/forge-jsx README](../../../packages/core/forge-jsx/README.md)
+- [@mission-platform/forge-adapters README](../../../packages/core/forge-adapters/README.md)

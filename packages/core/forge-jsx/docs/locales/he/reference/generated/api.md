@@ -9,896 +9,6 @@
 
 נוצר מהצהרות מקור ציבורי ב-`@mission-platform/forge-jsx`.
 
-## `src/adapters/react`
-
-### HTMLContent
-
-פונקציה **סוג:**
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement;
-```
-
-עבד HTML מהימן למארח React באמצעות `dangerouslySetInnerHTML`.
-
-#### פרמטרים
-
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| נכסים | HtmlContentProperties |       |
-
-### renderToReact
-
-פונקציה **סוג:**
-
-```typescript
-function renderToReact(element: MpElement): ReactElement;
-```
-
-עיבוד עץ {@link MpElement} ניטרלי לאלמנט React.
-
-#### פרמטרים
-
-| שם    | הקלד      | תיאור |
-| ----- | --------- | ----- |
-| אלמנט | MpElement |       |
-
-### טלפורט
-
-פונקציה **סוג:**
-
-```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
-```
-
-המבנה React של הפרימיטיבי הנייטרלי `<Teleport>` - עטיפה דקה מסביב
-{@link createPortal} של `react-dom`. `@mission-platform/vite-plugin-forge`
-משכתב את `import { Teleport } from '@mission-platform/forge-jsx'` של רכיב ל
-לייבא את הרכיב הזה, אז כתוב פעם אחת `<Teleport to="body">…</Teleport>`
-קומפילציה לפורטל React מקורי.
-
-כאשר `to` הוא כבר DOM **אלמנט** (מקרה הלקוח הנפוץ - למשל
-נפתרו `<dialog>` או `document.body` שנמסרו על ידי מתקשר) הילדים הם
-פורטל לתוכו **סינכרוני במהלך העיבוד**, כך שהם עולים באותו אופן
-התחייבות שפתחה אותם. זה תואם ל-`<Teleport>` של Vue (שפותר את
-target באופן סינכרוני) ונדרש לתקינות: פאנל פורטל ש
-מקדם את עצמו לשכבה העליונה של הדפדפן עם ה-API של Popover
-(`popover="manual"` + `showPopover()` בפריים הבא) חייב להיות כבר
-מותקן כאשר המסגרת הזו פועלת - דחיית הפורטל על ידי רינדור מאבדת את זה
-מירוץ, ומשאיר את הפאנל `display:none` (ברירת המחדל של UA עבור לא מוצג
-popover) ולכן בלתי נראה.
-
-רק **מחרוזת** בורר זקוקה ל-`document.querySelector` לאחר הרכבה, אשר
-שומר על הרכיב SSR בטוח: במהלך עיבוד השרת - והלקוח הראשון
-עיבוד עבור יעד מחרוזת - הוא אינו מציג דבר (או, כאשר `disabled`,
-ילדים במקום), ו-`createPortal` פועל רק ברגע שקיים יעד DOM.
-
-#### פרמטרים
-
-| שם                                      | הקלד               | תיאור |
-| --------------------------------------- | ------------------ | ----- |
-| { to = 'גוף', disabled = false, ילדים } | TeleportProperties |       |
-
-### TeleportProperties
-
-**סוג:** ממשק
-
-```typescript
-export interface TeleportProperties
-```
-
-המאפיינים המקובלים על ידי הרכיב React {@link Teleport}.
-
-### toReactComponent
-
-פונקציה **סוג:**
-
-```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
-```
-
-לעטוף רכיב ניטרלי כרכיב פונקציה React מהשורה הראשונה, מוכן
-להיות מעובד על ידי `react-dom` או מורכב בתוך רכיבי React אחרים.
-
-#### פרמטרים
-
-| שם          | הקלד           | תיאור |
-| ----------- | -------------- | ----- |
-| רכיב        | MpComponent<P> |       |
-| displayName | מחרוזת         |       |
-
-### מַעֲבָר
-
-פונקציה **סוג:**
-
-```typescript
-function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
-```
-
-המבנה React של הפרימיטיבי הנייטרלי `<Transition>` - מחלקה קטנה של CSS
-דרייבר המשקף את Vue המובנה של `<Transition>`. זה עושה אנימציה של סינגל
-צאצא מותנה על ידי החלפת `<name>-enter-*` / `<name>-leave-*`
-כיתות (אז אותו גיליון סגנונות מניע את שתי המסגרות) ושומר על הילד
-מותקן דרך אנימציית העזיבה שלו. `@mission-platform/vite-plugin-forge`
-משכתב את `import { Transition } from '@mission-platform/forge-jsx'` של רכיב ל
-לייבא רכיב זה ביעד React.
-
-זה בטוח ב-SSR: עיבוד השרת (וצבע הלקוח הראשון) מעבד את הילד
-במקום - תואם לפלט SSR של Vue - והאנימציה פועלת רק לאחר מכן.
-
-#### פרמטרים
-
-| שם                                                               | הקלד                 | תיאור |
-| ---------------------------------------------------------------- | -------------------- | ----- |
-| { name = 'v', appear = false, duration, children, ...overrides } | TransitionProperties |       |
-
-### TransitionGroup
-
-פונקציה **סוג:**
-
-```typescript
-function TransitionGroup({
-  name = 'v',
-  tag,
-  moveClass,
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionGroupProperties): ReactNode;
-```
-
-המבנה React של הפרימיטיבי הנייטרלי `<TransitionGroup>` - מחלקה של CSS
-דרייבר המשקף את Vue המובנה של `<TransitionGroup>`. הוא מפעיל **מפתח
-רשימה**: ילדים נכנסים מקבלים `<name>-enter-*`, מה שמשאיר את הילדים להישאר רכובים
-דרך האנימציה `<name>-leave-*` שלהם, וילדים שורדים בשינוי
-המיקום מונפש עם FLIP עם `<name>-move` (אותו גיליון סגנונות מניע את שניהם
-מסגרות). `@mission-platform/vite-plugin-forge` משכתב את זה של רכיב
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` לייבא את זה ב-
-יעד React.
-
-זה בטוח ל-SSR: עיבוד השרת (וצבע הלקוח הראשון) מעבד את ה-
-ילדים במקום - תואמים לפלט SSR של Vue - והאנימציה פועלת רק
-לאחר מכן. כיתות המעבר מיושמות על DOM node של כל ילד, אז -
-כמו הסינגל {@link Transition} - הם נכנסים לתוקף על ילדי רכיב DOM;
-ילד שהוא בעצמו רכיב (שאינו מעביר רפרנס) עדיין נטען/מבוטל
-בצורה נכונה אך לא מקבל מחלקה (תואמת את קו הבסיס הנייטרלי של SSR-in-place).
-
-#### פרמטרים
-
-| שם                                                                               | הקלד                      | תיאור |
-| -------------------------------------------------------------------------------- | ------------------------- | ----- |
-| { name = 'v', tag, moveClass, appear = false, duration, children, ...overrides } | TransitionGroupProperties |       |
-
-### TransitionGroupProperties
-
-**סוג:** ממשק
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-המאפיינים המקובלים על ידי הרכיב React {@link TransitionGroup}.
-
-### TransitionProperties
-
-**סוג:** ממשק
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-המאפיינים המקובלים על ידי רכיב React {@link Transition}.
-
-## `src/adapters/solid`
-
-### HTMLContent
-
-פונקציה **סוג:**
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element;
-```
-
-המבנה Solid של הפרימיטיבי `<HtmlContent>` הנייטרלי. של Solid
-מאפיין `innerHTML` הוא פעולת התוכן הגולמי המבוססת על החלפה מקורית.
-
-#### פרמטרים
-
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| נכסים | HtmlContentProperties |       |
-
-### טלפורט
-
-פונקציה **סוג:**
-
-```typescript
-function Teleport(properties: TeleportProperties): JSX.Element;
-```
-
-המבנה Solid של הפרימיטיבי הנייטרלי `<Teleport>` - עטיפה דקה מסביב
-{@link Portal} של Solid. `@mission-platform/vite-plugin-forge` משכתב את א
-`import { Teleport } from '@mission-platform/forge-jsx'` של רכיב כדי לייבא את זה
-רכיב, כך ש-`<Teleport to="body">…</Teleport>` כתוב פעם אחת מתחבר ל-a
-פורטל Solid מקורי.
-
-יעד הפורטל נפתר בלקוח כך שהרכיב בטוח ב-SSR:
-במהלך עיבוד השרת - ולפני שקיים יעד DOM - הוא מעבד
-כלום (או, כאשר `disabled`, הילדים במקום), ו-{@link Portal} בלבד
-עולה ברגע שיש יעד אמיתי זמין.
-
-#### פרמטרים
-
-| שם    | הקלד               | תיאור |
-| ----- | ------------------ | ----- |
-| נכסים | TeleportProperties |       |
-
-### TeleportProperties
-
-**סוג:** ממשק
-
-```typescript
-export interface TeleportProperties
-```
-
-המאפיינים המקובלים על ידי הרכיב Solid {@link Teleport}.
-
-### מַעֲבָר
-
-פונקציה **סוג:**
-
-```typescript
-function Transition(properties: TransitionProperties): JSX.Element;
-```
-
-המבנה Solid של הפרימיטיבי `<Transition>` הנייטרלי. תקנה מינימלית
-יישום שהופך את הילד **למקומו** - תואם ל-React
-נתיב SSR/מתאם זוגיות של המתאם וקו הבסיס של זמן הריצה הנייטרלי - כך
-רכיבי כתיבה פעם אחת בודקים סוג ומתקנים ללא משיכה של צד שלישי
-ספריית מעבר Solid. ניתן לשלב אנימציית כניסה/יציאה מהכיתה מאוחר יותר;
-משטח האביזר כבר תואם ל-Vue/React (`name`, `appear`, `duration`, ו
-המחלקה לפי שלב עוקפת).
-
-`@mission-platform/vite-plugin-forge` משכתב את זה של רכיב
-`import { Transition } from '@mission-platform/forge-jsx'` כדי לייבא את זה ב-
-יעד Solid.
-
-#### פרמטרים
-
-| שם    | הקלד                 | תיאור |
-| ----- | -------------------- | ----- |
-| נכסים | TransitionProperties |       |
-
-### TransitionGroup
-
-פונקציה **סוג:**
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
-```
-
-המבנה Solid של הפרימיטיבי `<TransitionGroup>` הנייטרלי. כאילו
-{@link Transition}, זהו יישום נכון מינימלי שהופך את
-ילדים **במקום** (ה-SSR של מתאם React / קו הבסיס של מתאם זוגיות) כך
-בדיקת סוג רכיבי Solid שנוצרה ללא מעבר רשימה של צד שלישי
-ספריה. משטח האביזר תואם ל-Vue/React (`name`, `tag`, `moveClass`,
-`appear`, `duration` ועקיפות המחלקה לכל שלב) לכתיבה פעם אחת
-זוגיות.
-
-`@mission-platform/vite-plugin-forge` משכתב את זה של רכיב
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` לייבא את זה ב-
-יעד Solid.
-
-#### פרמטרים
-
-| שם    | הקלד                      | תיאור |
-| ----- | ------------------------- | ----- |
-| נכסים | TransitionGroupProperties |       |
-
-### TransitionGroupProperties
-
-**סוג:** ממשק
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-המאפיינים המקובלים על ידי הרכיב Solid {@link TransitionGroup}.
-
-### TransitionProperties
-
-**סוג:** ממשק
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-המאפיינים המקובלים על ידי רכיב Solid {@link Transition}.
-
-## `src/adapters/svelte`
-
-### HTMLContent
-
-פונקציה **סוג:**
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet;
-```
-
-מימוש התוכן הגולמי של מתאם Svelte. `createRawSnippet` הוא
-צורת זמן הריצה של פעולת `{@html}` של Svelte והקריאה חוזרת של ההגדרה שלה שומרת
-המלצות מארח והעברת אירועים לשימוש במתאם בכתב יד.
-
-#### פרמטרים
-
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| נכסים | HtmlContentProperties |       |
-
-### טלפורט
-
-פונקציה **סוג:**
-
-```typescript
-function Teleport(properties: TeleportProperties): Snippet;
-```
-
-עבדו במקום קטע קוד של Forge ילד עבור Svelte SSR ושוויון לקוח.
-
-#### פרמטרים
-
-| שם    | הקלד               | תיאור |
-| ----- | ------------------ | ----- |
-| נכסים | TeleportProperties |       |
-
-### TeleportProperties
-
-**סוג:** ממשק
-
-```typescript
-export interface TeleportProperties
-```
-
-המאפיינים המקובלים על ידי הפרימיטיבי Svelte {@link Teleport}.
-
-### מַעֲבָר
-
-פונקציה **סוג:**
-
-```typescript
-function Transition(properties: TransitionProperties): Snippet;
-```
-
-עיבוד ילד מעבר יחיד; אנימציה מסופקת על ידי סימון Svelte מקורי.
-
-#### פרמטרים
-
-| שם    | הקלד                 | תיאור |
-| ----- | -------------------- | ----- |
-| נכסים | TransitionProperties |       |
-
-### TransitionGroup
-
-פונקציה **סוג:**
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet;
-```
-
-עבד את הילדים של קבוצת המעבר למקומם עבור בלוקים מקוריים של Svelte.
-
-#### פרמטרים
-
-| שם    | הקלד                      | תיאור |
-| ----- | ------------------------- | ----- |
-| נכסים | TransitionGroupProperties |       |
-
-### TransitionGroupProperties
-
-**סוג:** ממשק
-
-```typescript
-export interface TransitionGroupProperties extends TransitionProperties
-```
-
-המאפיינים המקובלים על ידי הפרימיטיבי Svelte {@link TransitionGroup}.
-
-### TransitionProperties
-
-**סוג:** ממשק
-
-```typescript
-export interface TransitionProperties
-```
-
-המאפיינים המקובלים על ידי הפרימיטיבי Svelte {@link Transition}.
-
-## `src/adapters/vue`
-
-### ליצור הקשר
-
-פונקציה **סוג:**
-
-```typescript
-function createContext(defaultValue: T): VueContext<T>;
-```
-
-המבנה Vue של הפרימיטיבי `createContext` הנייטרלי. מחזיר ידית של מי
-`Provider` הוא רכיב אמיתי ש-`provide()` מעמיד את `value` שלו לברירת המחדל
-חריץ, אז `<Ctx.Provider value={…}><Slot /></Ctx.Provider>` לכתוב פעם אחת
-קומפילציה לספק Vue מקורי. `@mission-platform/vite-plugin-forge` משכתב את א
-`import { createContext, useContext } from '@mission-platform/forge-jsx'` של הרכיב
-לייבא אותם על היעד Vue.
-
-#### פרמטרים
-
-| שם           | הקלד | תיאור |
-| ------------ | ---- | ----- |
-| defaultValue | ט    |       |
-
-### HTMLContent
-
-פונקציה **סוג:**
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode;
-```
-
-עבד HTML מהימן למארח Vue באמצעות כריכת פונקציית הרינדור `innerHTML`.
-
-#### פרמטרים
-
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| נכסים | HtmlContentProperties |       |
-
-### renderToVue
-
-פונקציה **סוג:**
-
-```typescript
-function renderToVue(element: MpElement): VNode;
-```
-
-עיבוד עץ {@link MpElement} ניטרלי ל-Vue `VNode`.
-
-#### פרמטרים
-
-| שם    | הקלד      | תיאור |
-| ----- | --------- | ----- |
-| אלמנט | MpElement |       |
-
-### toVueComponent
-
-פונקציה **סוג:**
-
-```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
-```
-
-עטוף רכיב ניטרלי כרכיב פונקציונלי Vue. תכונות נכנסות
-הופכים לאביזרים ניטרליים, משבצת ברירת המחדל (אם קיימת) מועברת כנייטרלית
-`children`, וכל משבצת עם שם מועברת תחת שמו (כמשבצת בהיקף
-פונקציה), כך `<Slot name="…" />` ברכיב פותר נגדו ו
-ניתן להשתמש בתוצאה כמו כל רכיב Vue אחר.
-
-#### פרמטרים
-
-| שם   | הקלד           | תיאור |
-| ---- | -------------- | ----- |
-| רכיב | MpComponent<P> |       |
-| שם   | מחרוזת         |       |
-
-### useContext
-
-פונקציה **סוג:**
-
-```typescript
-function useContext(context: VueContext<T>): T;
-```
-
-המבנה Vue של הפרימיטיבי הנייטרלי `useContext` - עטיפה דקה מסביב
-`inject()` שנופל בחזרה לערך ברירת המחדל של ההקשר כאשר אין סגירה
-הספק סיפק אחד.
-
-#### פרמטרים
-
-| שם   | הקלד          | תיאור |
-| ---- | ------------- | ----- |
-| הקשר | VueContext<T> |       |
-
-### VueContext
-
-**סוג:** ממשק
-
-```typescript
-export interface VueContext<T>
-```
-
-ידית ההקשר של Vue: `provide()` מגובת `Provider` בתוספת מפתח `inject()`.
-
-## `src/adapters/web-components`
-
-### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
-
-**סוג:** קבוע
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
-```
-
-פנימיים מוגבלים ללא מזיק ליכולות; שיוך הטופס נשאר בהצטרפות.
-
-### DEFAULT_WEBCOMPONENTS_SHADOW_POLICY
-
-**סוג:** קבוע
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
-```
-
-ברירת מחדל של תאימות משמשת כאשר מחלקה שנוצרה אינה עוקפת מדיניות.
-
-### DomTemplateResult
-
-**סוג:** כיתה
-
-```typescript
-export class DomTemplateResult
-```
-
-תוצאה שנוצרה ישירות-DOM עם זהות הגדרה יציבה.
-
-### dynamicElement
-
-פונקציה **סוג:**
-
-```typescript
-function dynamicElement(
-  tag: unknown,
-  properties: Readonly<Record<string, unknown>>,
-  ...children: readonly unknown[]
-): DynamicElementResult;
-```
-
-בנו אלמנט Web-Components מקורי שהתג שלו נבחר בזמן הריצה.
-
-#### פרמטרים
-
-| שם    | הקלד                                 | תיאור |
-| ----- | ------------------------------------ | ----- |
-| תג    | לא ידוע                              |       |
-| נכסים | לקריאה בלבד<Record<string, unknown>> |       |
-| ילדים | לא ידוע לקריאה בלבד[]                |       |
-
-### DynamicElementResult
-
-**סוג:** כיתה
-
-```typescript
-export class DynamicElementResult
-```
-
-רכיב שנבחר בזמן ריצה והילדים שלו עבור תג JSX מחושב.
-
-### ForgeElement
-
-**סוג:** כיתה
-
-```typescript
-export class ForgeElement extends ForgeHTMLElement
-```
-
-מחלקת בסיס `HTMLElement` מקורית עבור אלמנטים מותאמים אישית שנוצרו - א
-סטנד-אין ללא תלות עבור `LitElement`.
-
-תת-מחלקה מצהירה על פני השטח התגובתיים שלה באמצעות `static properties` (שיקוף
-מואר): כל מקש הופך לאב-טיפוס שהמגדיר שלו מתזמן א
-עיבוד מחדש של מיקרו-משימה, וכל מפתח שאינו `state` צופה באותיות הקטנות שלו
-תכונה. `render()` מחזירה את {@link html}תבנית `…` של האלמנט, מעובדת
-לתוך שורש צל פתוח. התחייבויות ריאקטיביות מעדכנות את התבנית הקיימת
-בהדרגה: רשימות מיקום משתמשות מחדש בערכים תואמים וביציאות חריצים
-לשמור על צמתי ההקרנה המקוריים שלהם בזמן שחלקים לא קשורים משתנים.
-
-### ForgeElementConstructor
-
-**סוג:** ממשק
-
-```typescript
-export interface ForgeElementConstructor
-```
-
-חוזה גיליון הסגנונות הסטטי מיושם על ידי רכיבי Forge שנוצרו.
-
-כתובות אתרים נשמרות במחלקת האלמנטים ולא במסמך, כך שהם צל
-root יכול לטעון את ה-sidecars המהופפים שסגנונות ברמת המסמך אינם יכולים להגיע אליהם.
-
-### ForgeElementHostConstructor
-
-**סוג:** סוג
-
-```typescript
-export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
-```
-
-מחלקה מקורית הניתנת לבנייה המקובלת על ידי {@link ForgeElementMixin}.
-
-### ForgeElementMixin
-
-פונקציה **סוג:**
-
-```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
-```
-
-הוסף את זמן הריצה הבלתי תלוי של Forge לבונה אלמנטים מקורי.
-מובנים מותאמים אישית אינם יכולים להרחיב גם את `ForgeElement` וגם `HTMLDivElement`;
-המיקסין הזה מעתיק את ההתנהגות תוך שמירה על שרשרת האב-טיפוס המקורית.
-
-#### פרמטרים
-
-| שם   | הקלד  | תיאור |
-| ---- | ----- | ----- |
-| בסיס | TBase |       |
-
-### ForgeSlotMarker
-
-**סוג:** ממשק
-
-```typescript
-export interface ForgeSlotMarker extends HTMLElement
-```
-
-סמן זמן ריצה הנפלט על ידי מהדר Web-Components עבור משבצות מעורפלות.
-
-### hasSlotContent
-
-פונקציה **סוג:**
-
-```typescript
-function hasSlotContent(host: Element, name?: string): boolean;
-```
-
-האם `host` קיבל תוכן עבור אחד מהמשבצות שלו - היעד המקומי
-תחליף לסמן `hasSlot('x')` הנייטרלי.
-
-`hasSlot` הוא אוצר מילים בזמן הידור: Vue מוריד אותו ל-`!!slots.x`, React ל
-`properties.x != null`, ולרכיב מותאם אישית אין אף אחד מהם, אז הבדיקה מתבצעת
-נגד ה-DOM במקום זאת. אלמנט שנוצר הופך לצל **פתוח
-root**, כלומר התוכן שצרכן מקרין נשאר אצל המארח
-**קל** DOM כמו ילדיו - חריץ בשם ממלא ילד נושא
-`slot="<name>"`, וחריץ ברירת המחדל של כל ילד שאינו נושא אף אחד. רק
-ילדים ישירים נחשבים, בדיוק כמו הקצאת משבצות עצמה, ו-א
-טקסט לרווח לבן בלבד node אינו נחשב כתוכן.
-
-הילדים עוברים ברגל במקום שאילתה עם `[slot="…"]` אז שם משבצת
-לא זקוק ל-CSS בריחה, ולכן ילד טקסט חשוף (שאף בורר לא יכול להתאים)
-עדיין ממלא את משבצת ברירת המחדל.
-
-שים לב כי משבצת ניתנת לצפייה רק ברגע שילדי המארח קיימים: במהלך
-שדרוג מנתח של אלמנט שנכתב ב-HTML הראשוני, `connectedCallback`
-פועל לפני שהם מחוברים. תוכן שהוקרן מאוחר יותר מעבד מחדש את האלמנט
-דרך הנתיב התגובתי הרגיל.
-
-#### פרמטרים
-
-| שם   | הקלד   | תיאור |
-| ---- | ------ | ----- |
-| מארח | אלמנט  |       |
-| שם   | מחרוזת |       |
-
-### html
-
-פונקציה **סוג:**
-
-```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
-```
-
-מפעל תבניות מתויג. לוכד את המחרוזות הסטטיות והדינמיות של אתר השיחה
-ערכים לתוך {@link TemplateResult} עבור {@link render} למימוש ב-DOM.
-
-#### פרמטרים
-
-| שם      | הקלד                  | תיאור |
-| ------- | --------------------- | ----- |
-| מחרוזות | TemplateStringsArray  |       |
-| ערכים   | לא ידוע לקריאה בלבד[] |       |
-
-### HTMLContent
-
-פונקציה **סוג:**
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
-```
-
-בנה תוצאת תוכן גולמי מקורי של Web-Components מבלי לברוח מ-`html`.
-
-#### פרמטרים
-
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| נכסים | HtmlContentProperties |       |
-
-### HtmlContentProperties
-
-**סוג:** ממשק
-
-```typescript
-export interface HtmlContentProperties
-```
-
-מאפיינים המקובלים על ידי ה-Web-Components HtmlContent עוזר.
-
-### HTMLContentResult
-
-**סוג:** כיתה
-
-```typescript
-export class HtmlContentResult
-```
-
-מארח מקורי בתוספת סימון גולמי גולמי מהימן, מעובד על ידי {@link render}.
-
-### שׁוּם דָבָר
-
-**סוג:** קבוע
-
-```typescript
-export const nothing: unique symbol;
-```
-
-זקיף מוצג כ"אין ערך": במצב ילד הוא לא מייצר כלום, ב
-מיקום התכונה הוא מסיר את התכונה - המקבילה המקורית של
-`nothing` של lit-html.
-
-### הצהרת נכסים
-
-**סוג:** ממשק
-
-```typescript
-export interface PropertyDeclaration
-```
-
-הצהרת נכס ריאקטיבי על תת-מחלקה {@link ForgeElement}.
-
-### RawHtml
-
-**סוג:** כיתה
-
-```typescript
-export class RawHtml
-```
-
-ערך HTML גולמי מהימן המשמש את מתאם ה-Web-Components המקורי.
-
-### לְדַקלֵם
-
-פונקציה **סוג:**
-
-```typescript
-function render(
-  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
-  container: ParentNode,
-): void;
-```
-
-עבד תוצאה ל-`container` באמצעות מופע תבנית קבוע. סטטי
-DOM ומצב טופס מקורי נשמרים בעוד שרק טווחי איגוד שהשתנו
-מעודכן; סוגי תבניות לא תואמים מחליפים את התוכן בבעלות המעבד.
-
-#### פרמטרים
-
-| שם    | הקלד                                                                          | תיאור |
-| ----- | ----------------------------------------------------------------------------- | ----- |
-| תוצאה | תבנית תוצאה \| DomTemplateResult \| DynamicElementResult \| HtmlContentResult |       |
-| מיכל  | ParentNode                                                                    |       |
-
-### resolveForgeSlotMarkers
-
-פונקציה **סוג:**
-
-```typescript
-function resolveForgeSlotMarkers(
-  root: ParentNode,
-  owner: ForgeElement,
-  sourceChildren: readonly Node[],
-  destinationRoot: ShadowRoot,
-): void;
-```
-
-פתור סמני משבצת זמן ריצה הנפלטים מהדר בקטע רינדור.
-
-סמנים ללא מאפיין תוכן הופכים למשבצות מקוריות, ושומרים על
-הסמנטיקה של הדפדפן וההקצאות, אלא אם כן אותו משבצת
-חוזר על עצמו בעץ העיבוד. שקעים חוזרים ומתממשים שיבוטים של
-ילדי light-DOM מקוריים כך שכל שקע מקבל תוכן דטרמיניסטי.
-סמני תוכן יורדים למשבצות מקוריות כאשר ערכם הוא של הבעלים
-אור-DOM מקוריים ילדים והשקע אינו חוזר על עצמו; אחרת שלהם
-הערך מתממש כמוצא אחרון.
-
-#### פרמטרים
-
-| שם              | הקלד               | תיאור |
-| --------------- | ------------------ | ----- |
-| שורש            | ParentNode         |       |
-| בעלים           | ForgeElement       |       |
-| מקורילדים       | לקריאה בלבד Node[] |       |
-| destinationRoot | ShadowRoot         |       |
-
-### תבנית תוצאה
-
-**סוג:** כיתה
-
-```typescript
-export class TemplateResult
-```
-
-תוצאת `html\`...\`` מנותחת: המחרוזות הסטטיות בתוספת הערכים המשולבים.
-
-### unsafeHtml
-
-פונקציה **סוג:**
-
-```typescript
-function unsafeHtml(value: string): RawHtml;
-```
-
-סמן מחרוזת כסימון צאצא מהימן עבור הנתיב המקורי של Web-Components.
-
-#### פרמטרים
-
-| שם  | הקלד   | תיאור |
-| --- | ------ | ----- |
-| ערך | מחרוזת |       |
-
-### useId
-
-פונקציה **סוג:**
-
-```typescript
-function useId(): string;
-```
-
-התחליף של היעד המקורי ל-`useId` של React.
-
-אוצר המילים הנייטרלי מציע `useId()` עבור המזהים הקושרים שליטה
-`<label for>` / `aria-describedby`; React ממפה אותו ל-`useId` ו-Solid משלו
-ל-`createUniqueId`, אך לרכיב מותאם אישית אין זמן ריצה של מסגרת להשאלה
-אחד מ - אז זהו.
-
-מספיק כאן מונה ברמת המודול, ופשוט יותר בכוונה מ-a
-מחולל אקראי/-hashed: מזהה צריך להיות ייחודי רק **בתוך מסמך**,
-והמהדר מעלה `const x = useId()` מתוך `render()` לתוך
-שדה מופע, כך שכל מופע אלמנט קורא לזה בדיוק פעם אחת
-שומר על תעודת הזהות שלו במשך כל חייו. לכן שיחות עוקבות לעולם לא
-להתנגש, אין צורך בתלות (ננואיד, `crypto.randomUUID`), וה-
-התוצאה יציבה וניתנת לניפוי באגים (`forge-1`, `forge-2`, ...). הערך הוא א
-HTML חוקי `id` ומזהה CSS חוקי, כך שניתן להשתמש בו בבורר
-לא נמלט.
-
-### WebComponentsInternalsPolicy
-
-**סוג:** ממשק
-
-```typescript
-export interface WebComponentsInternalsPolicy
-```
-
-בקשות ליכולת עבור ה-API של {@link ElementInternals} של הפלטפורמה.
-
-### WebComponentsShadowPolicy
-
-**סוג:** ממשק
-
-```typescript
-export interface WebComponentsShadowPolicy
-```
-
-אפשרויות צל-שורש מוקלדות מקובלות על ידי רכיבי Forge שנוצרו.
-
 ## `src/runtime/class-names`
 
 ### שמות כיתה
@@ -915,9 +25,9 @@ function classNames(...values: readonly ClassValue[]): string;
 
 #### פרמטרים
 
-| שם    | הקלד                     | תיאור |
-| ----- | ------------------------ | ----- |
-| ערכים | ClassValue לקריאה בלבד[] |       |
+| שם | הקלד | תיאור |
+| ------ | --------------------- | ----------- |
+| ערכים | ClassValue לקריאה בלבד[] |             |
 
 ### ClassValue
 
@@ -945,9 +55,9 @@ function createContext(defaultValue: T): MpContext<T>;
 
 #### פרמטרים
 
-| שם           | הקלד | תיאור |
-| ------------ | ---- | ----- |
-| defaultValue | ט    |       |
+| שם | הקלד | תיאור |
+| ------------ | ---- | ----------- |
+| defaultValue | T |             |
 
 ### isContextProvider
 
@@ -961,9 +71,9 @@ function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 
 #### פרמטרים
 
-| שם  | הקלד    | תיאור |
-| --- | ------- | ----- |
-| ערך | לא ידוע |       |
+| שם | הקלד | תיאור |
+| ----- | ------- | ----------- |
+| ערך | לא ידוע |             |
 
 ### MP_CONTEXT
 
@@ -1019,9 +129,9 @@ function useContext(context: MpContext<T>): T;
 
 #### פרמטרים
 
-| שם   | הקלד         | תיאור |
-| ---- | ------------ | ----- |
-| הקשר | MpContext<T> |       |
+| שם | הקלד | תיאור |
+| ------- | ------------ | ----------- |
+| הקשר | MpContext<T> |             |
 
 ## `src/runtime/dynamic`
 
@@ -1055,7 +165,7 @@ export interface MpDynamicProperties extends MpPropertyBag
 זו אחת ההצהרות הבודדות ששומרות באופן לגיטימי **תיק פתוח**:
 כל נכס מלבד `is` מועבר מילה במילה לאלמנט `is`
 פותר ל, והאלמנט הזה ידוע רק בזמן ריצה, אז המאפיינים אותו
-לא ניתן למנות כאן מקבל. ממשקי אבזרים של רכיבים חייבים _לא_
+לא ניתן למנות כאן מקבל. ממשקי אביזרי רכיב חייבים _לא_
 עקוב אחר דפוס זה - ראה {@link MpPropertyBag}.
 
 ## `src/runtime/h`
@@ -1081,11 +191,11 @@ function h(
 
 #### פרמטרים
 
-| שם    | הקלד                                          | תיאור |
-| ----- | --------------------------------------------- | ----- |
-| הקלד  | MpElementType \| ((מאפיינים: P) => MpElement) |       |
-| נכסים | P \| null                                     |       |
-| ילדים | MpChild[]                                     |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------------------------- | ----------- |
+| הקלד | MpElementType \| ((מאפיינים: P) => MpElement) |             |
+| נכסים | P \| null |             |
+| ילדים | MpChild[] |             |
 
 ## `src/runtime/hooks`
 
@@ -1104,7 +214,7 @@ export type MpDependencyList = readonly unknown[];
 **סוג:** רכיב
 
 ```typescript
-export type MpEffectCallback = () => void | MpEffectCleanup;
+export type MpEffectCallback = () => MpEffectCleanup | void;
 ```
 
 ההתקשרות חזרה עם אפקט המנוהלת על ידי {@link useEffect}.
@@ -1134,7 +244,7 @@ export interface MpRef<T>
 **סוג:** רכיב
 
 ```typescript
-export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
+export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 ```
 
 עדכן פיסת מדינה, לערך חדש או באמצעות פונקציית עדכון.
@@ -1151,10 +261,10 @@ function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 
 #### פרמטרים
 
-| שם           | הקלד             | תיאור |
-| ------------ | ---------------- | ----- |
-| התקשרות חזרה | ט                |       |
-| _תלות        | MpDependencyList |       |
+| שם | הקלד | תיאור |
+| ------------- | ---------------- | ----------- |
+| התקשרות חזרה | T |             |
+| _תלות | MpDependencyList |             |
 
 ### useEffect
 
@@ -1164,15 +274,15 @@ function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void;
 ```
 
-`useEffect` ניטרלי. A no-op: אפקטים מודל לאחר עיבוד תופעות לוואי, אשר
+`useEffect` ניטרלי. A no-op: אפקטים מודל שלאחר עיבוד תופעות לוואי, אשר
 אל תפעל במהלך עיבוד SSR/מתאם בודד.
 
 #### פרמטרים
 
-| שם    | הקלד             | תיאור |
-| ----- | ---------------- | ----- |
-| _אפקט | MpEffectCallback |       |
-| _תלות | MpDependencyList |       |
+| שם | הקלד | תיאור |
+| ------------- | ---------------- | ----------- |
+| _אפקט | MpEffectCallback |             |
+| _תלות | MpDependencyList |             |
 
 ### useId
 
@@ -1186,9 +296,9 @@ function useId(): string;
 מחרוזת מזהה עבור מופע הרכיב, מתאים לתווית / `aria-describedby`
 עמותות ללא מונים מגולגלים ביד. היישום הבסיסי ידיים
 להוציא מזהה מגדיל תהליך (`:mp0:`, `:mp1:`, …); תוסף זמן הבנייה
-מחליף את הייבוא הזה עבור `useId` המקורי של כל מסגרת (של React / Vue), בעוד
+מחליף את הייבוא הזה עבור `useId` המקוריים של כל מסגרת (של React / Vue), בעוד
 מתאמי זמן הריצה ו-SSR חולקים את הצורה הדטרמיניסטית הזו, כך שעיבוד יחיד
-נשאר יציב (וזה בשתי המסגרות).
+נשאר יציב (וזהה בשתי המסגרות).
 
 ### השתמש ב-Memo
 
@@ -1202,17 +312,17 @@ function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 
 #### פרמטרים
 
-| שם    | הקלד             | תיאור |
-| ----- | ---------------- | ----- |
-| מפעל  | () => T          |       |
-| _תלות | MpDependencyList |       |
+| שם | הקלד | תיאור |
+| ------------- | ---------------- | ----------- |
+| מפעל | () => T |             |
+| _תלות | MpDependencyList |             |
 
 ### useRef
 
 פונקציה **סוג:**
 
 ```typescript
-function useRef(initial: T): MpRef<T>;
+function useRef(initial?: T): MpRef<T>;
 ```
 
 `useRef` ניטרלי. מחזיר מיכל `{ current }` טרי עבור הסינגל
@@ -1220,16 +330,16 @@ render; זמני הריצה של המסגרת משמרים אותו על פני 
 
 #### פרמטרים
 
-| שם   | הקלד | תיאור |
-| ---- | ---- | ----- |
-| ראשי | ט    |       |
+| שם | הקלד | תיאור |
+| ------- | ---- | ----------- |
+| ראשי | T |             |
 
 ### useState
 
 פונקציה **סוג:**
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>];
+function useState(initial?: T | (() => T)): [T, MpSetState<T>];
 ```
 
 `useState` ניטרלי. היישום הבסיסי מחזיר את הערך ההתחלתי ו
@@ -1238,9 +348,9 @@ function useState(initial: T | (() => T)): [T, MpSetState<T>];
 
 #### פרמטרים
 
-| שם   | הקלד           | תיאור |
-| ---- | -------------- | ----- |
-| ראשי | T \| (() => T) |       |
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| ראשי | T \| (() => T) |             |
 
 ## `src/runtime/html-content`
 
@@ -1252,7 +362,7 @@ function useState(initial: T | (() => T)): [T, MpSetState<T>];
 export const HtmlContent: MpComponent<HtmlContentProperties>;
 ```
 
-סמן המשמש כסוג האלמנט עבור תוכן HTML גולמי מהימן.
+סמן משמש כסוג האלמנט עבור תוכן HTML גולמי מהימן.
 
 המתאמים הנייטרליים ומהדר Forge מיירטים את הסמן הזה ומטה
 זה לפעולת התוכן הגולמי המקורי שלהם. לעולם אסור להתקשר ישירות.
@@ -1272,6 +382,29 @@ export interface HtmlContentProperties extends MpPropertyBag
 שקית במקום למנות את כל משטח תכונת ה-DOM.
 
 ## `src/runtime/slots`
+
+### collectSlottedChildren
+
+פונקציה **סוג:**
+
+```typescript
+function collectSlottedChildren(children: readonly MpChild[]): SlottedChildren;
+```
+
+חלקו את הילדים של רכיב הורה לפי הסמן `slot="…"` שלהם כך א
+רכיב כתיבה פעם אחת יכול **להעביר** תוכן למשבצת הנקראת של רכיב צאצא
+(`<ForgeDropdown><button slot="trigger" />…</ForgeDropdown>`). ילדים נושאים
+מאפיין `slot` מקובצים תחת השם הזה (עם הסמן מופשט, אז
+התוכן שנפתר לעולם לא פולט תכונה `slot` תועה); כל השאר
+נשאר ב-{@link SlottedChildren.defaultChildren}. המתאמים מקפלים את השם
+מקבץ לתוך האביזרים של הילד, משקף בדיוק את האופן שבו המהדר מנתב את
+אותם סמני `slot="…"` ל-Vue `<template #name>` / אבזר React `name`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------------------ | ----------- |
+| ילדים | MpChild לקריאה בלבד[] |             |
 
 ### hasSlot
 
@@ -1304,16 +437,16 @@ function hasSlot(name?: string): boolean;
 
 #### פרמטרים
 
-| שם  | הקלד   | תיאור |
-| --- | ------ | ----- |
-| שם  | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| שם | מחרוזת |             |
 
 ### MpRenderProperty
 
 **סוג:** רכיב
 
 ```typescript
-export type MpRenderProperty<S = MpPropertyBag> = (scope: S) => MpChild | readonly MpChild[];
+export type MpRenderProperty<S = MpPropertyBag, R = MpChild | readonly MpChild[]> = (scope: S) => R;
 ```
 
 פונקציית **render-prop / scoped-slot**: בהינתן היקף המשבצת היא מחזירה
@@ -1332,7 +465,7 @@ export type MpSlotContent = MpChild | readonly MpChild[] | MpRenderProperty;
 ```
 
 התוכן שסופק עבור משבצת - ילדים שניתנים לעיבוד, או פונקציה
-של האביזרים (בהיקף) של החריץ מחזיר אותם (חריץ בטווח).
+של האביזרים (בהיקף) של המשבצת המחזירים אותם (חריץ בהיקף).
 
 ### MpSlotProperties
 
@@ -1371,9 +504,9 @@ function pushSlotScope(properties: MpPropertyBag): void;
 
 #### פרמטרים
 
-| שם    | הקלד          | תיאור |
-| ----- | ------------- | ----- |
-| נכסים | MpPropertyBag |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------- | ----------- |
+| נכסים | MpPropertyBag |             |
 
 ### resolveSlot
 
@@ -1390,10 +523,39 @@ function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[])
 
 #### פרמטרים
 
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| נכסים | MpSlotProperties      |       |
-| חזרה  | MpChild לקריאה בלבד[] |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------ | ----------- |
+| נכסים | MpSlotProperties |             |
+| חזרה | MpChild לקריאה בלבד[] |             |
+
+### resolveSlotMarkers
+
+פונקציה **סוג:**
+
+```typescript
+function resolveSlotMarkers(children: readonly MpChild[]): MpChild[];
+```
+
+פתרון מעמיק של כל `<Slot name="…" />` **סמן** בתוך הורה
+עץ ילד כנגד היקף **הנוכחי** (הורה), מחזיר עץ בטון
+תוכן. זה מה שמאפשר לרכיב של כתיבה פעם אחת **להעביר** אחד משלו
+חריצים בעלי שם לתוך חריץ של רכיב צאצא -
+`<ForgeDrawer><div slot="header"><Slot name="startHeader" /></div></ForgeDrawer>`
+- ושזה ייפתר באופן מילוני (נגד רכיב ההעברה), בדיוק
+כמו הפלט המהודר (React לוכד את `properties.startHeader` ב-
+עיבוד של ההורים; Vue מעביר את החריץ דרך `<template #header>`).
+
+המתאמים קוראים לזה על הילדים של רכיב רכיב **לפני** דחיפה של
+היקף הילד, כך שהסמנים רואים את היקף ההורה שחיבר אותם; סמנים
+החזרות של הילד עצמו אינן נפגעות (הן נפתרות מאוחר יותר, תחת ה
+ההיקף של הילד עצמו). אלמנטים שאינם משבצות עוברים באופן רקורסיבי, כך שמקוננים סמנים
+(בתוך עטיפה `slot="…"`) לפתור גם.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------------------ | ----------- |
+| ילדים | MpChild לקריאה בלבד[] |             |
 
 ## `src/runtime/teleport`
 
@@ -1477,10 +639,471 @@ export const TransitionGroup: MpComponent<MpTransitionGroupProperties>;
 Vueמובנית `<TransitionGroup>` עושה. כמו {@link Transition} זה אף פעם לא
 מופעל ישירות: המתאמים מיירטים אותו לפי זהות (מציגים את
 ילדים במקום SSR) ו `@mission-platform/vite-plugin-forge` ממפה מחדש את זה
-ייבוא למעבר קבוצתי מקורי של כל מסגרת - Vueמובנית
+ייבוא למעבר הקבוצתי המקורי של כל מסגרת - Vueמובנית
 `<TransitionGroup>` ואת `@mission-platform/forge-adapters/react` מנהל התקן מסוג CSS.
 
 ## `src/runtime/types`
+
+### CamelToKebab
+
+**סוג:** סוג
+
+```typescript
+export type CamelToKebab<S extends string> = S extends `$
+```
+
+המר סוג מחרוזת camelCase למארז קבב.
+
+### createAvatarContainerStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createAvatarContainerStyle(): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+### createAvatarImageImgStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createAvatarImageImgStyle(): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+### createAvatarInlineStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createAvatarInlineStyle(
+  size: string = 'md',
+  shape: string = 'circle',
+  src?: string,
+  variant: string = 'primary',
+  color?: string,
+): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| גודל | מחרוזת |             |
+| צורה | מחרוזת |             |
+| src | מחרוזת |             |
+| וריאנט | מחרוזת |             |
+| צבע | מחרוזת |             |
+
+### createAvatarStatusInlineStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createAvatarStatusInlineStyle(size: string = 'md', status?: string): Record<string, string> | undefined;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------ | ----------- |
+| גודל | מחרוזת |             |
+| סטטוס | מחרוזת |             |
+
+### createBackgroundVideoInlineStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createBackgroundVideoInlineStyle(minHeight: string = '24rem'): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | ------ | ----------- |
+| minHeight | מחרוזת |             |
+
+### createCodeScannerStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createCodeScannerStyle(): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+### createContainerInlineStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createContainerInlineStyle(
+  variant: string = 'responsive',
+  maxWidth: string = 'lg',
+  gutter: string = 'md',
+  center: boolean = true,
+): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------- | ----------- |
+| וריאנט | מחרוזת |             |
+| maxWidth | מחרוזת |             |
+| מרזב | מחרוזת |             |
+| מרכז | בוליאני |             |
+
+### createCoverObjectFitStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createCoverObjectFitStyle(): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+### createForgeComponentStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createForgeComponentStyle(
+  prefix: string,
+  properties?: T,
+  style?: Record<string, string>,
+): Record<string, string> | undefined;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ---------------------- | ----------- |
+| קידומת | מחרוזת |             |
+| נכסים | ט |             |
+| סגנון | שיא<string, string> |             |
+
+### createForgeStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createForgeStyle(style: T): DefinedForgeStyle<T> | undefined;
+```
+
+בנו מפת `style` נייטרלית מערכי מאפיינים מותאמים אישית מוגדרים.
+
+ערכים שהערך שלהם הוא `undefined` מושמטים כך SCSS
+רשתות `var(--forge-*, <token fallback>)` נשארות פעילות. מחזיר `undefined`
+כאשר אין דרישות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---- | ----------- |
+| סגנון | T |             |
+
+### createGaugeInlineMath
+
+פונקציה **סוג:**
+
+```typescript
+function createGaugeInlineMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): {
+  clampedValue: number;
+  percentage: number;
+  displayValue: string;
+  dashOffset: number;
+};
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מספר |             |
+| דקות | מספר |             |
+| מקסימום | מספר |             |
+
+### createGridLayoutInlineStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createGridLayoutInlineStyle(rows: number = 1, columns: number = 1, gap: string = 'md'): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| שורות | מספר |             |
+| עמודות | מספר |             |
+| פער | מחרוזת |             |
+
+### ליצור HighlightStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createHighlightStyle(left: string = '0%', width: string = '100%'): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| שמאל | מחרוזת |             |
+| רוחב | מחרוזת |             |
+
+### createLeftPositionStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createLeftPositionStyle(left: string = '0%'): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| שמאל | מחרוזת |             |
+
+### createObjectFitStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createObjectFitStyle(fit: string = 'cover'): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| מתאים | מחרוזת |             |
+
+### createPreviewTextStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createPreviewTextStyle(): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+### createProgressBarPercent
+
+פונקציה **סוג:**
+
+```typescript
+function createProgressBarPercent(
+  value: number = 0,
+  max: number = 100,
+  indeterminate: boolean = false,
+): { percent: number; percentLabel: string };
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------- | ------- | ----------- |
+| ערך | מספר |             |
+| מקסימום | מספר |             |
+| בלתי מוגדר | בוליאני |             |
+
+### createRangeInputMath
+
+פונקציה **סוג:**
+
+```typescript
+function createRangeInputMath(
+  modelValue: [number, number] = [0, 100],
+  min: number = 0,
+  max: number = 100,
+): {
+  minPercent: number;
+  maxPercent: number;
+  highlightLeft: string;
+  highlightWidth: string;
+  minLeft: string;
+  maxLeft: string;
+};
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ---------------- | ----------- |
+| modelValue | [מספר, מספר] |             |
+| דקות | מספר |             |
+| מקסימום | מספר |             |
+
+### createResponsiveImageInlineStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createResponsiveImageInlineStyle(aspectRatio?: string): Record<string, string> | undefined;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ------ | ----------- |
+| יחס היבט | מחרוזת |             |
+
+### createResponsiveVideoInlineStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createResponsiveVideoInlineStyle(
+  aspectRatio: string = '16 / 9',
+  fit: string = 'contain',
+): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ------ | ----------- |
+| יחס היבט | מחרוזת |             |
+| מתאים | מחרוזת |             |
+
+### createSkeletonInlineStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createSkeletonInlineStyle(width?: string, height?: string): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------ | ----------- |
+| רוחב | מחרוזת |             |
+| גובה | מחרוזת |             |
+
+### createSliderMath
+
+פונקציה **סוג:**
+
+```typescript
+function createSliderMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): { percent: number; fillWidth: string; thumbLeft: string };
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מספר |             |
+| דקות | מספר |             |
+| מקסימום | מספר |             |
+
+### createVerticalLayoutInlineStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createVerticalLayoutInlineStyle(gap: string = 'var(--mp-spacing-4)'): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| פער | מחרוזת |             |
+
+### createWidthStyle
+
+פונקציה **סוג:**
+
+```typescript
+function createWidthStyle(width: string = '0%'): Record<string, string>;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| רוחב | מחרוזת |             |
+
+### CSSStyleProperties
+
+**סוג:** סוג
+
+```typescript
+export type CSSStyleProperties =
+```
+
+אובייקט בסגנון CSS נייטרלי במסגרת המשמש את התכונה JSX `style`.
+
+מאפיינים מותאמים אישית בבעלות רכיב צריכים להרחיב את הסוג הזה עם מפורש
+מפתחות `--forge-*` (לדוגמה `CSSStyleProperties & { '--forge-button-radius'?: string | undefined }`)
+במקום להציג מילון בסגנון לא מודפס או תיק ללא DOM `styles`.
+
+### ForgePropertyBag
+
+**סוג:** סוג
+
+```typescript
+export type ForgePropertyBag<T extends Record<string, string | undefined> = Record<string, string | undefined>> =
+```
+
+תיק לעקוף רכוש מתיר המקבל מפתחות רכוש קבב או camelCase.
 
 ### קֶטַע
 
@@ -1515,9 +1138,19 @@ function isMpElement(value: unknown): value is MpElement;
 
 #### פרמטרים
 
-| שם  | הקלד    | תיאור |
-| --- | ------- | ----- |
-| ערך | לא ידוע |       |
+| שם | הקלד | תיאור |
+| ----- | ------- | ----------- |
+| ערך | לא ידוע |             |
+
+### KebabToCamel
+
+**סוג:** סוג
+
+```typescript
+export type KebabToCamel<S extends string> = S extends `$
+```
+
+המר סוג מחרוזת קבב ל-camelCase.
 
 ### MpChild
 
@@ -1573,7 +1206,7 @@ export type MpElementType = string | MpFragment | MpComponent;
 export type MpPropertyBag = Record<string, unknown>;
 ```
 
-תיק **זמן הריצה** של מאפיינים/אביזרים שנושאים על ידי {@link MpElement}.
+שקית **זמן הריצה** של תכונות/אביזרים הנישאת על ידי {@link MpElement}.
 
 זה בכוונה רשומה פשוטה, לא מודפסת: זה מה שמפעל JSX
 בונה ולמה מתאמים מתאמים תוך כדי הליכה על עץ ניטרלי. זה כן
@@ -1591,22 +1224,850 @@ _לא_ סוג בסיס לאביזרים של רכיב - רכיב מצהיר בד
 export interface MpReservedProperties
 ```
 
-המאפיינים **reserved** שכל רכיב JSX מקבל על גבי המאפיינים
+המאפיינים **reserved** שכל אלמנט JSX מקבל על גבי המאפיינים
 הוא מצהיר על עצמו, מחובר כ-`JSX.IntrinsicAttributes` על ידי ההצטרפות
 הקלדות `@mission-platform/forge-jsx/jsx-globals`.
 
 - `key` מזהה ערך ברשימה מעובדת כך שמסגרת היעד יכולה
-  ליישב אותו בין עדכונים (React של `key`, `:key` של Vue).
-- `slot` מנתב אלמנט זה לתוך **משבצת בשם** של רכיב האב שלו
+  ליישב אותו בין עדכונים (React של `key`, Vue של `:key`).
+- `slot` מנתב רכיב זה לתוך **משבצת בשם** של רכיב האב שלו
   (`<ForgeIcon slot="start" />`). המהדר הופך אותו ל-Vue
   בלוק `<template #start>` / אבזר React `start`, ומתאמי זמן הריצה
   קפלו אותו לאביזרים של ההורים (ראה `collectSlottedChildren`). הושמט (או
   `"default"`) פירושו חריץ ברירת המחדל.
 
 אף אחד מהם אינו חלק מחוזה האביזרים של רכיב עצמו - שניהם נקראים על ידי ה-
-_הורה_ (המפייס, נתב החריצים), אף פעם לא על ידי הרכיב עצמו -
-אז הם מתקבלים עבור כל אלמנט כאן ולא מוצהרים על כל אחד
+_parent_ (המפייס, נתב החריצים), לעולם לא על ידי הרכיב עצמו -
+אז הם מתקבלים עבור כל רכיב כאן ולא מוצהרים על כל אחד
 ממשק אביזרים.
+
+### MpSuspenseChild
+
+**סוג:** רכיב
+
+```typescript
+export type MpSuspenseChild = MpChild | PromiseLike<MpSuspenseChild> | readonly MpSuspenseChild[];
+```
+
+תוכן סינכרוני או אסינכרוני רקורסיבי המתקבל על ידי Suspense.
+
+### MpSuspenseProperties
+
+**סוג:** רכיב
+
+```typescript
+export interface MpSuspenseProperties
+```
+
+אביזרים נישאים על ידי סמן מתח ניטרלי במסגרת.
+
+### renderAccordionItems
+
+פונקציה **סוג:**
+
+```typescript
+function renderAccordionItems(
+  items: readonly any[] = [],
+  _exclusive: boolean = true,
+  defaultOpen: readonly string[] = [],
+  _properties?: any,
+): any;
+```
+
+בנו מפת CSS עם היקף רכיבים בסגנון נכס מתיק רכוש של camelCase או קבב.
+
+ממירה אוטומטית את מפתחות camelCase למארז קבב, מבטיחה את מרחב השמות של הרכיב
+הקידומת `--forge-<prefix>-` מוחלת, ומשמיטה ערכים לא מוגדרים כך שסימוני CSS
+הרשתות נשארות פעילות. מחזירה `undefined` כאשר אין עקיפות מוגדרות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ----------------- | ----------- |
+| פריטים | קריאה בלבד כל[] |             |
+| _בלעדי | בוליאני |             |
+| defaultOpen | מחרוזת לקריאה בלבד[] |             |
+| _נכסים | כל |             |
+
+### renderActivityFeedItems
+
+פונקציה **סוג:**
+
+```typescript
+function renderActivityFeedItems(items: readonly any[] = [], maxItems?: number, onItemClick?: (item: any) => void): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ------------------- | ----------- |
+| פריטים | קריאה בלבד כל[] |             |
+| maxItems | מספר |             |
+| onItemClick | (פריט: כל) => ריק |             |
+
+### renderAssetBrowserGrid
+
+פונקציה **סוג:**
+
+```typescript
+function renderAssetBrowserGrid(
+  assets: readonly any[] = [],
+  selected: readonly string[] = [],
+  onSelect?: (asset: any) => void,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | -------------------- | ----------- |
+| נכסים | קריאה בלבד כל[] |             |
+| נבחר | מחרוזת לקריאה בלבד[] |             |
+| onSelect | (נכס: כל) => בטל |             |
+
+### renderBarcodeSvg
+
+פונקציה **סוג:**
+
+```typescript
+function renderBarcodeSvg(
+  value: string = '',
+  symbology: string = 'code128',
+  color: string = '#000000',
+  background: string = '#ffffff',
+  displayValue: boolean = false,
+  ariaLabel?: string,
+  onError?: (err: Error) => void,
+  showActions?: any,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------ | -------------------- | ----------- |
+| ערך | מחרוזת |             |
+| סמליות | מחרוזת |             |
+| צבע | מחרוזת |             |
+| רקע | מחרוזת |             |
+| displayValue | בוליאני |             |
+| ariaLabel | מחרוזת |             |
+| onError | (שגיאה: שגיאה) => ריק |             |
+| showActions | כל |             |
+
+### renderBreadcrumbItems
+
+פונקציה **סוג:**
+
+```typescript
+function renderBreadcrumbItems(items: readonly any[] = [], separator: string = '/'): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | -------------- | ----------- |
+| פריטים | קריאה בלבד כל[] |             |
+| מפריד | מחרוזת |             |
+
+### renderCarouselIndicatorItems
+
+פונקציה **סוג:**
+
+```typescript
+function renderCarouselIndicatorItems(
+  total: number = 0,
+  current: number = 0,
+  clickable: boolean = true,
+  variant: string = 'dots',
+  onSelect?: (index: number) => void,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | ----------------------- | ----------- |
+| סך הכל | מספר |             |
+| נוכחי | מספר |             |
+| ללחיצה | בוליאני |             |
+| וריאנט | מחרוזת |             |
+| onSelect | (אינדקס: מספר) => ריק |             |
+
+### renderCarouselSlides
+
+פונקציה **סוג:**
+
+```typescript
+function renderCarouselSlides(
+  slides: readonly any[] = [],
+  current: number = 0,
+  _orientation: string = 'horizontal',
+  slideWidth: number = 100,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------ | -------------- | ----------- |
+| שקופיות | קריאה בלבד כל[] |             |
+| נוכחי | מספר |             |
+| _אוריינטציה | מחרוזת |             |
+| slideWidth | מספר |             |
+
+### renderCatalogIcon
+
+פונקציה **סוג:**
+
+```typescript
+function renderCatalogIcon(name: string, size: number = 20, color: string = 'currentColor'): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| שם | מחרוזת |             |
+| גודל | מספר |             |
+| צבע | מחרוזת |             |
+
+### renderCodeBlockLineNumbers
+
+פונקציה **סוג:**
+
+```typescript
+function renderCodeBlockLineNumbers(code: string = ''): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| קוד | מחרוזת |             |
+
+### renderCommandPaletteGroups
+
+פונקציה **סוג:**
+
+```typescript
+function renderCommandPaletteGroups(
+  commands: readonly any[] = [],
+  _groups: readonly string[] = [],
+  activeIndex: number = 0,
+  onSelect?: (command: any) => void,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ---------------------- | ----------- |
+| פקודות | קריאה בלבד כל[] |             |
+| _קבוצות | מחרוזת לקריאה בלבד[] |             |
+| activeIndex | מספר |             |
+| onSelect | (פקודה: כל) => ריק |             |
+
+### renderCommentTree
+
+פונקציה **סוג:**
+
+```typescript
+function renderCommentTree(
+  comments: readonly any[] = [],
+  onReply?: (comment: any) => void,
+  onResolve?: (comment: any) => void,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | ---------------------- | ----------- |
+| הערות | קריאה בלבד כל[] |             |
+| onReply | (תגובה: כל) => ריק |             |
+| onResolve | (תגובה: כל) => בטל |             |
+
+### renderComparisonTableBody
+
+פונקציה **סוג:**
+
+```typescript
+function renderComparisonTableBody(items: readonly any[] = [], features: readonly any[] = []): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | -------------- | ----------- |
+| פריטים | קריאה בלבד כל[] |             |
+| תכונות | קריאה בלבד כל[] |             |
+
+### renderComparisonTableHeaders
+
+פונקציה **סוג:**
+
+```typescript
+function renderComparisonTableHeaders(items: readonly any[] = []): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | -------------- | ----------- |
+| פריטים | קריאה בלבד כל[] |             |
+
+### renderCtaBannerActions
+
+פונקציה **סוג:**
+
+```typescript
+function renderCtaBannerActions(actions: readonly any[] = []): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| פעולות | קריאה בלבד כל[] |             |
+
+### renderDataCardMetrics
+
+פונקציה **סוג:**
+
+```typescript
+function renderDataCardMetrics(metrics: readonly any[] = []): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| מדדים | קריאה בלבד כל[] |             |
+
+### renderDropdownItems
+
+פונקציה **סוג:**
+
+```typescript
+function renderDropdownItems(items: readonly any[] = [], onSelect?: (item: any) => void): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------------------- | ----------- |
+| פריטים | קריאה בלבד כל[] |             |
+| onSelect | (פריט: כל) => ריק |             |
+
+### renderImageSources
+
+פונקציה **סוג:**
+
+```typescript
+function renderImageSources(sources?: readonly any[]): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| מקורות | קריאה בלבד כל[] |             |
+
+### renderMarketingHeaderActions
+
+פונקציה **סוג:**
+
+```typescript
+function renderMarketingHeaderActions(actions: readonly any[] = []): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| פעולות | קריאה בלבד כל[] |             |
+
+### renderNavbarItems
+
+פונקציה **סוג:**
+
+```typescript
+function renderNavbarItems(items: readonly any[] = []): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | -------------- | ----------- |
+| פריטים | קריאה בלבד כל[] |             |
+
+### renderNotificationPanelItems
+
+פונקציה **סוג:**
+
+```typescript
+function renderNotificationPanelItems(
+  notifications: readonly any[] = [],
+  onDismiss?: (id: string) => void,
+  _onRead?: (id: string) => void,
+  onActionClick?: (item: any) => void,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------- | -------------------- | ----------- |
+| הודעות | קריאה בלבד כל[] |             |
+| onDismiss | (מזהה: מחרוזת) => ריק |             |
+| _onRead | (מזהה: מחרוזת) => ריק |             |
+| onActionClick | (פריט: כל) => ריק |             |
+
+### renderPaginationControls
+
+פונקציה **סוג:**
+
+```typescript
+function renderPaginationControls(
+  currentPage: number = 1,
+  totalPages: number = 1,
+  maxVisiblePages: number = 7,
+  showEdges: boolean = false,
+  onPageChange?: (page: number) => void,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------------- | ---------------------- | ----------- |
+| עמוד הנוכחי | מספר |             |
+| totalPages | מספר |             |
+| maxVisiblePages | מספר |             |
+| showEdges | בוליאני |             |
+| onPageChange | (עמוד: מספר) => ריק |             |
+
+### renderRatingStars
+
+פונקציה **סוג:**
+
+```typescript
+function renderRatingStars(
+  max: number = 5,
+  modelValue: number = 0,
+  disabled: boolean = false,
+  isReadonly: boolean = false,
+  onUpdateModelValue?: (val: number) => void,
+  onChange?: (val: number) => void,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------------ | --------------------- | ----------- |
+| מקסימום | מספר |             |
+| modelValue | מספר |             |
+| מושבת | בוליאני |             |
+| הוא קריאה בלבד | בוליאני |             |
+| onUpdateModelValue | (val: number) => ריק |             |
+| onChange | (val: number) => ריק |             |
+
+### renderResourcePlannerRows
+
+פונקציה **סוג:**
+
+```typescript
+function renderResourcePlannerRows(
+  resources: readonly any[] = [],
+  segments: readonly any[] = [],
+  _assignments: readonly any[] = [],
+  _availability: readonly any[] = [],
+  _onEventClick?: (assignment: any) => void,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------- | ------------------------- | ----------- |
+| משאבים | קריאה בלבד כל[] |             |
+| קטעים | קריאה בלבד כל[] |             |
+| _משימות | קריאה בלבד כל[] |             |
+| _זמינות | קריאה בלבד כל[] |             |
+| _onEventClick | (מטלה: כל) => בטל |             |
+
+### renderSegmentControlOptions
+
+פונקציה **סוג:**
+
+```typescript
+function renderSegmentControlOptions(
+  options: readonly any[] = [],
+  modelValue?: string,
+  onSelect?: (value: string) => void,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ----------------------- | ----------- |
+| אפשרויות | קריאה בלבד כל[] |             |
+| modelValue | מחרוזת |             |
+| onSelect | (ערך: מחרוזת) => ריק |             |
+
+### renderSiteFooterSections
+
+פונקציה **סוג:**
+
+```typescript
+function renderSiteFooterSections(sections: readonly any[] = []): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | -------------- | ----------- |
+| קטעים | קריאה בלבד כל[] |             |
+
+### renderStepsItems
+
+פונקציה **סוג:**
+
+```typescript
+function renderStepsItems(
+  steps: readonly any[] = [],
+  currentStep: number = 0,
+  onStepClick?: (step: number) => void,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ---------------------- | ----------- |
+| צעדים | קריאה בלבד כל[] |             |
+| currentStep | מספר |             |
+| onStepClick | (שלב: מספר) => ריק |             |
+
+### renderTableColumns
+
+פונקציה **סוג:**
+
+```typescript
+function renderTableColumns(columns: readonly any[] = []): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| עמודות | קריאה בלבד כל[] |             |
+
+### renderTableRows
+
+פונקציה **סוג:**
+
+```typescript
+function renderTableRows(data: readonly any[] = [], columns: readonly any[] = []): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| נתונים | קריאה בלבד כל[] |             |
+| עמודות | קריאה בלבד כל[] |             |
+
+### renderTabsList
+
+פונקציה **סוג:**
+
+```typescript
+function renderTabsList(
+  tabs: readonly any[] = [],
+  activeId?: string,
+  variant: string = 'line',
+  closable: boolean = false,
+  onSelect?: (id: string) => void,
+  onClose?: (id: string) => void,
+  addable: boolean = false,
+  addLabel: string = 'Add tab',
+  onAdd?: () => void,
+): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | -------------------- | ----------- |
+| כרטיסיות | קריאה בלבד כל[] |             |
+| activeId | מחרוזת |             |
+| וריאנט | מחרוזת |             |
+| סגירה | בוליאני |             |
+| onSelect | (מזהה: מחרוזת) => ריק |             |
+| על סגור | (מזהה: מחרוזת) => ריק |             |
+| ניתן להוספה | בוליאני |             |
+| addLabel | מחרוזת |             |
+| על הוסף | () => ריק |             |
+
+### renderTimelineItems
+
+פונקציה **סוג:**
+
+```typescript
+function renderTimelineItems(items: readonly any[] = [], align: string = 'start'): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | -------------- | ----------- |
+| פריטים | קריאה בלבד כל[] |             |
+| יישר | מחרוזת |             |
+
+### renderTreeViewNodes
+
+פונקציה **סוג:**
+
+```typescript
+function renderTreeViewNodes(nodes: readonly any[] = [], onSelect?: (node: any) => void): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------------------- | ----------- |
+| צמתים | קריאה בלבד כל[] |             |
+| onSelect | (node: כל) => ריק |             |
+
+### renderUnreadBadge
+
+פונקציה **סוג:**
+
+```typescript
+function renderUnreadBadge(unreadCount: number = 0): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ------ | ----------- |
+| unreadcount | מספר |             |
+
+### renderVideoSources
+
+פונקציה **סוג:**
+
+```typescript
+function renderVideoSources(sources?: readonly any[]): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| מקורות | קריאה בלבד כל[] |             |
+
+### resolveCatalogIcon
+
+פונקציה **סוג:**
+
+```typescript
+function resolveCatalogIcon(catalog: Record<string, any>, name: string): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------------------- | ----------- |
+| קטלוג | שיא<string, any> |             |
+| שם | מחרוזת |             |
+
+### resolveEmailTypographyTag
+
+פונקציה **סוג:**
+
+```typescript
+function resolveEmailTypographyTag(asTag?: string, variant?: string): string;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| asTag | מחרוזת |             |
+| וריאנט | מחרוזת |             |
+
+### resolveIconPixelSize
+
+פונקציה **סוג:**
+
+```typescript
+function resolveIconPixelSize(size: string = 'md'): number;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| גודל | מחרוזת |             |
+
+### resolveStatusIcon
+
+פונקציה **סוג:**
+
+```typescript
+function resolveStatusIcon(catalog: Record<string, any>, status: string = 'neutral'): any;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------------------- | ----------- |
+| קטלוג | שיא<string, any> |             |
+| סטטוס | מחרוזת |             |
+
+### resolveSyncStatusLabel
+
+פונקציה **סוג:**
+
+```typescript
+function resolveSyncStatusLabel(status: string = 'synced', label?: string): string;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------ | ----------- |
+| סטטוס | מחרוזת |             |
+| תווית | מחרוזת |             |
+
+### resolveTextVariantForQuote
+
+פונקציה **סוג:**
+
+```typescript
+function resolveTextVariantForQuote(size: string = 'md'): string;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| גודל | מחרוזת |             |
+
+### resolveTypographyScaleVariant
+
+פונקציה **סוג:**
+
+```typescript
+function resolveTypographyScaleVariant(variant?: string): string;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| וריאנט | מחרוזת |             |
+
+### resolveTypographyTag
+
+פונקציה **סוג:**
+
+```typescript
+function resolveTypographyTag(asTag?: string, href?: string, variant?: string): string;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| asTag | מחרוזת |             |
+| href | מחרוזת |             |
+| וריאנט | מחרוזת |             |
 
 ### חָרִיץ
 
@@ -1622,5 +2083,15 @@ export const Slot: MpComponent;
 המפעל מקבל את `<Slot name="…" />` כסוג רכיב JSX חוקי.
 עם זאת, הוא אף פעם לא מופעל בפועל: המהדר בזמן הבנייה
 (`@mission-platform/vite-plugin-forge`) משכתב כל `<Slot>` למטרה
-מנגנון החריץ של Framework עצמו, ומתאמי זמן הריצה מיירטים אותו על ידי
+מנגנון החריץ של Framework עצמו, ומתאמי זמן הריצה מיירטים אותו
 זהות (`type === Slot`) לפני כל שיחה. לקרוא לזה ישירות זה באג.
+
+### מֶתַח
+
+**סוג:** קבוע
+
+```typescript
+export const Suspense: MpComponent<MpSuspenseProperties>;
+```
+
+סמן גבולות אסינכרון מקורי מוריד על ידי כל מהדר מסגרת.

@@ -17,11 +17,11 @@ die aktive Exportbedingung `mp:<framework>`, die Sie **einmal** für das gesamte
 `@mission-platform/vite-config`) und `customConditions` in TypeScript (über die
 `@mission-platform/typescript-config/framework-<name>`-Voreinstellungen). Jeder Import bleibt leer.
 
-| Aktiver Zustand | Wird zu                  | aufgelöst Wichtige Exporte                                              |
-| :-------------- | :----------------------- | :---------------------------------------------------------------------- |
-| _(keine)_       | Framework-neutraler Kern | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
-| `mp:vue`        | Vue 3 Adapter            | der neutrale Kern plus `createForgeI18NVue`, `useI18n`                  |
-| `mp:react`      | React-Adapter            | der neutrale Kern plus `ForgeI18NProvider`, `useI18n`                   |
+| Aktiver Zustand | Wird zu | aufgelöst Wichtige Exporte |
+| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
+| _(keine)_ | Framework-neutraler Kern | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
+| `mp:vue` | Vue 3 Adapter | der neutrale Kern plus `createForgeI18NVue`, `useI18n` |
+| `mp:react` | React-Adapter | der neutrale Kern plus `ForgeI18NProvider`, `useI18n` |
 
 ## Kernkonzepte
 
@@ -44,7 +44,7 @@ Um Kollisionen in einem Monorepo zu vermeiden, werden Übersetzungen mithilfe de
 
 1. **Standard-Namespace**: Apps definieren ihren eigenen Namespace als Standard.
 2. **Fallback**: Der Standard-Namespace greift auf andere Namespaces zurück, sodass der Komponentencode seine eigenen Schlüssel auflösen kann.
-3. **Überschreibungen**: Apps können ein `overrides`-Objekt in der Konfiguration bereitstellen, um bestimmte Zeichenfolgen aus einem Paket neu zu kennzeichnen
+3. **Überschreibungen**: Apps können in der Konfiguration ein `overrides`-Objekt bereitstellen, um bestimmte Zeichenfolgen aus einem Paket neu zu kennzeichnen
    ohne andere zu beeinträchtigen.
 
 ## Anwendungsbeispiele

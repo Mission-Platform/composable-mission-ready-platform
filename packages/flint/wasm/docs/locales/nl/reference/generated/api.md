@@ -9,6 +9,206 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/flint-wasm`.
 
+## `src/codegen/abi`
+
+### AggregateFieldDescriptor
+
+**Soort:** interface
+
+```typescript
+export interface AggregateFieldDescriptor
+```
+
+Geaggregeerde veldlay-outdescriptor.
+
+### AggregateLayoutDescriptor
+
+**Soort:** interface
+
+```typescript
+export interface AggregateLayoutDescriptor
+```
+
+Geaggregeerde struct-indelingsdescriptor.
+
+### canonicalizeSliceCallingConvention
+
+**Soort:** functie
+
+```typescript
+function canonicalizeSliceCallingConvention(type: FlintWasmPrimitiveType): readonly FlintWasmPrimitiveType[];
+```
+
+Verlaagt een slice- of bytestype naar uitgepakte WebAssembly-registertypen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ---------------------- | ----------- |
+| typ | FlintWasmPrimitiveType |             |
+
+### computeArrayAllocationSize
+
+**Soort:** functie
+
+```typescript
+function computeArrayAllocationSize(
+  count: number,
+  elementSize: number,
+  maxBytes: number = MAX_ARRAY_ALLOCATION_BYTES,
+): number;
+```
+
+Berekent de totale bytegrootte die nodig is voor een arraytoewijzing van count * elementSize.
+Dwingt gecontroleerde vermenigvuldiging af en genereert een RangeError bij overflow van gehele getallen of overtreding van grenzen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ------ | ----------- |
+| tellen | nummer |             |
+| elementgrootte | nummer |             |
+| maxBytes | nummer |             |
+
+### computeSliceCapaciteit
+
+**Soort:** functie
+
+```typescript
+function computeSliceCapacity(bufferBytes: number, elementSize: number): number;
+```
+
+Berekent de capaciteit voor een slice-descriptor op basis van de totale bytegrootte van de buffer en de bytegrootte van het element.
+Verwerkt veilig typen met een nulgrootte (elementSize === 0) door oneindige/onbegrensde capaciteit te retourneren zonder deling door nul.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ------ | ----------- |
+| bufferBytes | nummer |             |
+| elementgrootte | nummer |             |
+
+### decodeSliceRegisterTriplet
+
+**Soort:** functie
+
+```typescript
+function decodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+Decodeert en valideert een uitgepakt `(ptr: i32, len: i32, cap: i32)`-registertriplet dat over de grens wordt ontvangen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| wijzer | nummer |             |
+| lengte | nummer |             |
+| capaciteit | nummer |             |
+
+### encodeSliceRegisterTriplet
+
+**Soort:** functie
+
+```typescript
+function encodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+Verpakt metagegevens in een uitgepakt `(ptr: i32, len: i32, cap: i32)`-registertriplet.
+Dwingt niet-ondertekende grenzen en niet-overloop-invarianten af ​​om omhullende exploits te voorkomen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| wijzer | nummer |             |
+| lengte | nummer |             |
+| capaciteit | nummer |             |
+
+### MAX_ARRAY_ALLOCATION_BYTES
+
+**Soort:** constant
+
+```typescript
+export const MAX_ARRAY_ALLOCATION_BYTES;
+```
+
+Geen beschrijving opgegeven.
+
+### MAX_SLICE_ADDRESS
+
+**Soort:** constant
+
+```typescript
+export const MAX_SLICE_ADDRESS;
+```
+
+Geen beschrijving opgegeven.
+
+### sanitizeAggregatePadding
+
+**Soort:** functie
+
+```typescript
+function sanitizeAggregatePadding(buffer: Uint8Array, layout: AggregateLayoutDescriptor, baseOffset = 0): Uint8Array;
+```
+
+Nul-initialiseert alle opvulbytes binnen een geaggregeerde struct-buffer vóór ABI-verzending.
+Voorkomt het lekken van niet-geïnitialiseerd geheugen en vertrouwelijke gegevens over vertrouwensgrenzen heen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------- | ---------------------------------------------------- |
+| bufferen | Uint8Array | - Ruwe buffer die geserialiseerd aggregaat bevat.        |
+| lay-out | AggregateLayoutDescriptor | - Geaggregeerde lay-outbeschrijving.                       |
+| basisOffset |                           | - Startoffset binnen de buffer (standaard ingesteld op 0). |
+
+#### Contract
+
+- **@param:** - Ruwe buffer met geserialiseerde aggregaat.
+- **@param:** - Geaggregeerde lay-outdescriptor.
+- **@param:** - Startoffset binnen de buffer (standaard ingesteld op 0).
+- **@returns:** Geschoonde buffer met op nul gebrachte opvulling.
+
+### SliceRegisterTriplet
+
+**Soort:** interface
+
+```typescript
+export interface SliceRegisterTriplet
+```
+
+Registreer de representatie van een uitgepakt segment dat rechtstreeks over de WebAssembly-grenzen heen gaat.
+
+### valideerSliceBounds
+
+**Soort:** functie
+
+```typescript
+function validateSliceBounds(pointer: number, length: number, capacity: number): boolean;
+```
+
+Valideert dat slice-registertripletten voldoen aan ruimtelijke grenzen en niet-ondertekende rekenkundige invarianten.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| wijzer | nummer |             |
+| lengte | nummer |             |
+| capaciteit | nummer |             |
+
+### ZERO_SIZED_TYPE_SENTINEL_POINTER
+
+**Soort:** constant
+
+```typescript
+export const ZERO_SIZED_TYPE_SENTINEL_POINTER;
+```
+
+Geen beschrijving opgegeven.
+
 ## `src/collection-runtime`
 
 ### buildFlintWasmCollectionRuntimeBodies
@@ -19,7 +219,11 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/flint-w
 function buildFlintWasmCollectionRuntimeBodies(): readonly FlintWasmRuntimeBody[];
 ```
 
-Geen beschrijving opgegeven.
+Retourneert metagegevensdescriptors voor verzamelings- en asynchrone runtime-helperfuncties.
+
+#### Contract
+
+- **@returns:** Array van runtime-functiedescriptors.
 
 ### buildFlintWasmCollectionRuntimeWasmBodies
 
@@ -36,9 +240,9 @@ verpakt i64 `(done << 32) | i32 value` ABI.
 
 #### Parameters
 
-| Naam           | Typ    | Beschrijving |
-| -------------- | ------ | ------------ |
-| allocatorIndex | nummer |              |
+| Naam | Typ | Beschrijving |
+| -------------- | ------ | ----------- |
+| allocatorIndex | nummer |             |
 
 ### FlintWasmRuntimeBody
 
@@ -48,11 +252,11 @@ verpakt i64 `(done << 32) | i32 value` ABI.
 export interface FlintWasmRuntimeBody
 ```
 
-Geen beschrijving opgegeven.
+Contractbeschrijving voor standaard runtime-helperfuncties van de bibliotheek ingebed in WebAssembly.
 
 ## `src/contracts`
 
-### FlintTargetFeatures
+### FlintTarget-functies
 
 **Soort:** interface
 
@@ -60,9 +264,19 @@ Geen beschrijving opgegeven.
 export interface FlintTargetFeatures
 ```
 
-Geen beschrijving opgegeven.
+Target WebAssembly-voorstelfuncties ingeschakeld tijdens code-emissie.
 
-### FlintWasmArtifactMetadata
+### FlintWasmAggregateLay-out
+
+**Soort:** interface
+
+```typescript
+export interface FlintWasmAggregateLayout
+```
+
+Geheugenlay-outdescriptor voor aggregaatstructuren die zijn vastgelegd in lineair geheugen.
+
+### FlintWasmArtefactMetadata
 
 **Soort:** interface
 
@@ -70,7 +284,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmArtifactMetadata
 ```
 
-Geen beschrijving opgegeven.
+Metagegevens die de geheugenindeling, functievereisten en functiehandtekeningen van het uitgezonden WebAssembly-artefact beschrijven.
 
 ### FlintWasmAsyncCapability
 
@@ -80,7 +294,7 @@ Geen beschrijving opgegeven.
 export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-Geen beschrijving opgegeven.
+Asynchrone runtimemogelijkheden aangevraagd door WebAssembly-modules.
 
 ### FlintWasmAsyncContract
 
@@ -90,9 +304,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmAsyncContract
 ```
 
-Geen beschrijving opgegeven.
+Contractspecificatie voor asynchrone uitvoering en berichtenuitwisseling in WebAssembly.
 
-### FlintWasmBackendInput
+### FlintWasmBackendInvoer
 
 **Soort:** interface
 
@@ -100,9 +314,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmBackendInput
 ```
 
-Geen beschrijving opgegeven.
+Volledige invoerpayload doorgegeven aan de WebAssembly-backend-compilatiepijplijn.
 
-### FlintWasmBackendResult
+### FlintWasmBackendResultaat
 
 **Soort:** interface
 
@@ -110,7 +324,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmBackendResult
 ```
 
-Geen beschrijving opgegeven.
+Resultaat geretourneerd door de WebAssembly-backend-emitter met binaire artefacten en rapporten.
 
 ### FlintWasmBinaryOperator
 
@@ -120,7 +334,7 @@ Geen beschrijving opgegeven.
 export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
-Geen beschrijving opgegeven.
+Ondersteunde binaire rekenkundige, logische en vergelijkingsoperatoren in WebAssembly.
 
 ### FlintWasmCapabilityImport
 
@@ -130,9 +344,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmCapabilityImport
 ```
 
-Geen beschrijving opgegeven.
+Importeren van hostmogelijkheden vereist door de WebAssembly-module.
 
-### FlintWasmCollectionLayout
+### FlintWasmCollectionLay-out
 
 **Soort:** interface
 
@@ -140,7 +354,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmCollectionLayout
 ```
 
-Geen beschrijving opgegeven.
+Lay-out en strategieconfiguratie voor verzamelingstypen in lineair geheugen.
 
 ### FlintWasmCompilerHints
 
@@ -150,7 +364,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmCompilerHints
 ```
 
-Geen beschrijving opgegeven.
+Optimalisatietips voor de backend van de WebAssembly-compiler.
 
 ### FlintWasmDiagnostisch
 
@@ -160,9 +374,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmDiagnostic
 ```
 
-Geen beschrijving opgegeven.
+Compilerdiagnostiek uitgezonden tijdens het verlagen, valideren of verifiëren van WebAssembly.
 
-### FlintWasmEnumDeclaration
+### FlintWasmEnumDeclaratie
 
 **Soort:** interface
 
@@ -170,7 +384,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmEnumDeclaration
 ```
 
-Geen beschrijving opgegeven.
+Tagged union enum-declaratie weergegeven in WebAssembly-geheugenlay-outs.
 
 ### FlintWasmExpressie
 
@@ -180,7 +394,7 @@ Geen beschrijving opgegeven.
 export type FlintWasmExpression = |
 ```
 
-Geen beschrijving opgegeven.
+Tussenliggende representatie-expressie verlaagd naar WebAssembly-instructies.
 
 ### FlintWasmFeatureVereisten
 
@@ -190,7 +404,27 @@ Geen beschrijving opgegeven.
 export interface FlintWasmFeatureRequirements
 ```
 
-Geen beschrijving opgegeven.
+WebAssembly-functievereisten ontdekt tijdens het genereren van code.
+
+### FlintWasmBuitenlands Vermogen
+
+**Soort:** interface
+
+```typescript
+export interface FlintWasmForeignCapability
+```
+
+Verlaagd importcontract voor buitenlandse C-modules voor WebAssembly-emissie.
+
+### FlintWasmBuitenlandse functie
+
+**Soort:** interface
+
+```typescript
+export interface FlintWasmForeignFunction
+```
+
+Verlaagd buitenlands C-functie importcontract voor WebAssembly-emissie.
 
 ### FlintWasmFunctie
 
@@ -200,7 +434,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmFunction
 ```
 
-Geen beschrijving opgegeven.
+Functie-tussenweergave verlaagd naar WebAssembly-functiedefinitie.
 
 ### FlintWasmGenericSpecialisatie
 
@@ -210,7 +444,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmGenericSpecialization
 ```
 
-Geen beschrijving opgegeven.
+Gemonomorfiseerde generieke functiespecialisatie uitgezonden naar WebAssembly.
 
 ### FlintWasmIteratorBoundaryDescriptor
 
@@ -220,9 +454,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmIteratorBoundaryDescriptor
 ```
 
-Geen beschrijving opgegeven.
+Grensdescriptor die iteratorstatusmachine-overgangen en -exports definieert.
 
-### FlintWasmIteratorCapability
+### FlintWasmIterator-capaciteit
 
 **Soort:** type
 
@@ -230,7 +464,7 @@ Geen beschrijving opgegeven.
 export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 ```
 
-Geen beschrijving opgegeven.
+Categorie iteratormogelijkheden ondersteund door runtime-iterators.
 
 ### FlintWasmIteratorCapabilityDescriptor
 
@@ -240,7 +474,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmIteratorCapabilityDescriptor
 ```
 
-Geen beschrijving opgegeven.
+Descriptor die de iterator-iteratiestrategie en elementgrenzen definieert.
 
 ### FlintWasmIteratorExport
 
@@ -250,7 +484,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmIteratorExport
 ```
 
-Geen beschrijving opgegeven.
+Geëxporteerde iterator-statusmachinesymbolen die toegankelijk zijn voor hostruntimes.
 
 ### FlintWasmLogger
 
@@ -260,7 +494,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmLogger
 ```
 
-Geen beschrijving opgegeven.
+Gestructureerde loggerinterface voor WebAssembly-compilatiegebeurtenissen.
 
 ### FlintWasmModule
 
@@ -270,7 +504,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmModule
 ```
 
-Geen beschrijving opgegeven.
+Tussenliggende moduleweergave met functies, lay-outs en invoer voor WebAssembly-emissie.
 
 ### FlintWasmParameter
 
@@ -280,7 +514,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmParameter
 ```
 
-Geen beschrijving opgegeven.
+Functieparameterdefinitie gebruikt in WebAssembly-functiehandtekeningen.
 
 ### FlintWasmPrimitiveType
 
@@ -288,12 +522,12 @@ Geen beschrijving opgegeven.
 
 ```typescript
 export type FlintWasmPrimitiveType =
-  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | 'v128';
 ```
 
-Geen beschrijving opgegeven.
+Primitieve gegevenstypen ondersteund door de WebAssembly-backend-verlagingspas.
 
-### FlintWasmSourceImport
+### FlintWasmSourceImporteren
 
 **Soort:** interface
 
@@ -301,9 +535,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmSourceImport
 ```
 
-Geen beschrijving opgegeven.
+Gekoppelde bronmodule-afhankelijkheid geïmporteerd in de WebAssembly-module.
 
-### FlintWasmSourceSpan
+### FlintWasmBronSpan
 
 **Soort:** interface
 
@@ -311,9 +545,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmSourceSpan
 ```
 
-Geen beschrijving opgegeven.
+Bronlocatiebereik toegewezen aan WebAssembly-instructies voor het genereren van foutopsporingssymbolen.
 
-### FlintWasmStandardLibraryOperation
+### FlintWasmStandaardBibliotheekOperation
 
 **Soort:** type
 
@@ -344,6 +578,8 @@ export type FlintWasmStandardLibraryOperation =
   | 'memory-realloc'
   | 'memory-load-u32'
   | 'memory-store-u32'
+  | 'memory-load-u8'
+  | 'memory-store-u8'
   | 'memory-load-f64'
   | 'memory-store-f64'
   | 'f64-from-u32'
@@ -366,12 +602,23 @@ export type FlintWasmStandardLibraryOperation =
   | 'signal-schedule'
   | 'async-schedule-microtask'
   | 'async-worker-post'
-  | 'async-worker-receive';
+  | 'async-worker-receive'
+  | 'memory-copy'
+  | 'memory-fill'
+  | 'simd-binarize'
+  | 'simd-i8x16-splat'
+  | 'simd-i8x16-eq'
+  | 'simd-i8x16-lt-u'
+  | 'simd-i8x16-bitmask'
+  | 'simd-i32x4-splat'
+  | 'simd-i32x4-add'
+  | 'simd-v128-load'
+  | 'simd-v128-store';
 ```
 
-Geen beschrijving opgegeven.
+Intrinsieke bewerkingen van de WebAssembly-standaardbibliotheek verlaagd door de backend-compiler.
 
-### FlintWasmStatement
+### FlintWasm-verklaring
 
 **Soort:** type
 
@@ -379,9 +626,9 @@ Geen beschrijving opgegeven.
 export type FlintWasmStatement = |
 ```
 
-Geen beschrijving opgegeven.
+Tussenliggende representatieverklaring verlaagd naar de gestructureerde controlestroom van WebAssembly.
 
-### FlintWasmTypeName
+### FlintWasmTypeNaam
 
 **Soort:** interface
 
@@ -389,11 +636,11 @@ Geen beschrijving opgegeven.
 export interface FlintWasmTypeName
 ```
 
-Geen beschrijving opgegeven.
+Samenvatting van de typenaam die wordt gebruikt tijdens het verlagen van WebAssembly.
 
 ## `src/emitter`
 
-### compileFlintWasm
+### compilerenFlintWasm
 
 **Soort:** functie
 
@@ -401,14 +648,305 @@ Geen beschrijving opgegeven.
 function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<input>'): FlintWasmBackendResult;
 ```
 
-Geen beschrijving opgegeven.
+Belangrijkste toegangspunt voor het compileren van een Flint IR-module naar binaire en tekstformaten van WebAssembly.
 
 #### Parameters
 
-| Naam         | Typ                   | Beschrijving |
-| ------------ | --------------------- | ------------ |
-| invoer       | FlintWasmBackendInput |              |
-| bestandsnaam |                       |              |
+| Naam | Typ | Beschrijving |
+| -------- | --------------------- | ----------- |
+| invoer | FlintWasmBackendInput |             |
+| bestandsnaam |                       |             |
+
+## `src/emitter/section-builder`
+
+### SECTION_IDS
+
+**Soort:** constant
+
+```typescript
+export const SECTION_IDS;
+```
+
+Geen beschrijving opgegeven.
+
+### sectie
+
+**Soort:** functie
+
+```typescript
+function section(id: number, contents: readonly number[]): number[];
+```
+
+Verpakt payloadbytes in een WebAssembly-sectie met sectie-ID en lengtevoorvoegsel.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ----------------- | ----------- |
+| ID | nummer |             |
+| inhoud | alleen-lezen nummer[] |             |
+
+### WasmSectionBuilder
+
+**Soort:** klasse
+
+```typescript
+export class WasmSectionBuilder
+```
+
+Creëert een getypte WebAssembly-sectiebouwer.
+
+## `src/encoding/bytes`
+
+### bijlageF32
+
+**Soort:** functie
+
+```typescript
+function appendF32(value: number): number[];
+```
+
+Voegt een 32-bits drijvende-kommagetal toe in binair Little-endian-formaat, waardoor NaN's gecanoniseerd worden.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | nummer |             |
+
+### voeg F64 toe
+
+**Soort:** functie
+
+```typescript
+function appendF64(value: number): number[];
+```
+
+Voegt een 64-bits drijvende-kommagetal toe in Little-Endian binair formaat, waardoor NaN's gecanoniseerd worden.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | nummer |             |
+
+### CANONICAL_F32_NAN_BYTES
+
+**Soort:** constant
+
+```typescript
+export const CANONICAL_F32_NAN_BYTES;
+```
+
+Canoniek stil NaN-bitpatroon voor 32-bit floats (0x7fc00000 in little-endian).
+
+### CANONICAL_F64_NAN_BYTES
+
+**Soort:** constant
+
+```typescript
+export const CANONICAL_F64_NAN_BYTES;
+```
+
+Canoniek stil NaN-bitpatroon voor 64-bit floats (0x7ff8000000000000 in little-endian).
+
+### vector
+
+**Soort:** functie
+
+```typescript
+function vector(values: readonly number[]): number[];
+```
+
+Geeft een array van bytecode-elementen vooraf met het aantal in LEB128-codering.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ----------------- | ----------- |
+| waarden | alleen-lezen nummer[] |             |
+
+### wasmString
+
+**Soort:** functie
+
+```typescript
+function wasmString(value: string): number[];
+```
+
+Codeert een UTF-8-tekenreeks voorafgegaan door de bytelengte in WebAssembly-indeling.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | tekenreeks |             |
+
+## `src/encoding/leb128`
+
+### gesigneerdLeb
+
+**Soort:** functie
+
+```typescript
+function signedLeb(value: number | bigint): number[];
+```
+
+Codeert een 32-bits of 64-bits geheel getal met teken in een WebAssembly LEB128 byte-array.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ---------------- | ----------- |
+| waarde | nummer \| grootint |             |
+
+### gesigneerdLeb128
+
+**Soort:** functie
+
+```typescript
+function signedLeb128(value: number | bigint): number[];
+```
+
+Alias ​​voor ondertekendLeb.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ---------------- | ----------- |
+| waarde | nummer \| grootint |             |
+
+### niet ondertekendLeb
+
+**Soort:** functie
+
+```typescript
+function unsignedLeb(value: number): number[];
+```
+
+Codeert een 32-bits geheel getal zonder teken in een WebAssembly LEB128 byte-array.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | nummer |             |
+
+### niet ondertekendLeb128
+
+**Soort:** functie
+
+```typescript
+function unsignedLeb128(value: number): number[];
+```
+
+Alias ​​voor niet-ondertekende Leb.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | nummer |             |
+
+## `src/optimizer`
+
+### FlintWasmOptimisatieDiagnostisch
+
+**Soort:** interface
+
+```typescript
+export interface FlintWasmOptimizationDiagnostic
+```
+
+Diagnostische gegevens verzonden door WebAssembly-optimalisatiepassen.
+
+### FlintWasmOptimizationPass
+
+**Soort:** interface
+
+```typescript
+export interface FlintWasmOptimizationPass
+```
+
+Metagegevens die een individuele optimalisatiepas en de bijbehorende statistieken beschrijven.
+
+### FlintWasmOptimizationReport
+
+**Soort:** interface
+
+```typescript
+export interface FlintWasmOptimizationReport
+```
+
+Samenvattend rapport waarin alle toegepaste WebAssembly-optimalisatiepassages en -diagnostiek worden bijgehouden.
+
+### FlintWasmStageIr
+
+**Soort:** interface
+
+```typescript
+export interface FlintWasmStageIr
+```
+
+Tussentijdse momentopname van de modulestatus in een optimalisatiefase.
+
+### FlintWasmSwitchStrategie
+
+**Soort:** type
+
+```typescript
+export type FlintWasmSwitchStrategy = 'br-table' | 'sparse' | 'constant';
+```
+
+Strategie voor het genereren van code voor het verlagen van switch-instructies.
+
+### optimaliseerFlintWasmModule
+
+**Soort:** functie
+
+```typescript
+function optimizeFlintWasmModule(
+  module: FlintWasmModule,
+  optimization: 'debug' | 'release' = 'release',
+): FlintWasmStageIr;
+```
+
+Voert het volledige pakket WebAssembly-optimalisatiepassages uit op een IR-module.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------ | -------------------- | ----------- |
+| module | FlintWasmModule |             |
+| optimalisatie | 'foutopsporing' \| 'vrijgeven' |             |
+
+## `src/sections/custom`
+
+### coderenFlintAbiCustomSection
+
+**Soort:** functie
+
+```typescript
+function encodeFlintAbiCustomSection(manifest: FlintCAbiManifest | object): number[];
+```
+
+Zendt een binaire aangepaste sectie van WebAssembly uit met een compact CBOR ABI-manifest (`flint.abi.v2`).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | --------------------------- | ----------- |
+| manifesteren | FlintCAbiManifest \| voorwerp |             |
+
+### FLINT_ABI_V2_CUSTOM_SECTION
+
+**Soort:** constant
+
+```typescript
+export const FLINT_ABI_V2_CUSTOM_SECTION;
+```
+
+Standaard aangepaste sectienaam van WebAssembly voor ingebedde binaire CBOR ABI-manifesten.
 
 ## `src/verifier`
 
@@ -422,7 +960,7 @@ export interface FlintWasmArtifactManifest
 
 De verificateur gebruikt opzettelijk een structureel manifest om een ​​pakketcyclus te voorkomen.
 
-### FlintWasmArtifactVerificationDiagnostisch
+### FlintWasmArtefactVerificatieDiagnostisch
 
 **Soort:** interface
 
@@ -430,9 +968,9 @@ De verificateur gebruikt opzettelijk een structureel manifest om een ​​pakke
 export interface FlintWasmArtifactVerificationDiagnostic
 ```
 
-Geen beschrijving opgegeven.
+Diagnostische bevindingen verzonden tijdens binaire verificatie van WebAssembly.
 
-### FlintWasmArtifactVerificationInvoer
+### FlintWasmArtefactVerificatieInvoer
 
 **Soort:** interface
 
@@ -440,7 +978,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmArtifactVerificationInput
 ```
 
-Geen beschrijving opgegeven.
+Invoerparameters en verwachtingen worden doorgegeven aan artefactverificatie.
 
 ### FlintWasmArtefactVerificatiebeleid
 
@@ -450,9 +988,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmArtifactVerificationPolicy
 ```
 
-Geen beschrijving opgegeven.
+Beleidsregels voor het afdwingen van artefactverificatie.
 
-### FlintWasmArtifactVerificationResultaat
+### FlintWasmArtefactVerificatieResultaat
 
 **Soort:** interface
 
@@ -460,9 +998,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmArtifactVerificationResult
 ```
 
-Geen beschrijving opgegeven.
+Uitgebreid verificatieresultaatrapport dat de validatiestatus aangeeft.
 
-### FlintWasmArtifactVerificatieErnst
+### FlintWasmArtefactVerificatieErnst
 
 **Soort:** type
 
@@ -470,7 +1008,7 @@ Geen beschrijving opgegeven.
 export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info';
 ```
 
-Geen beschrijving opgegeven.
+Diagnostische ernstniveaus die worden uitgezonden tijdens artefactverificatie.
 
 ### FlintWasmManifestFunctie
 
@@ -480,7 +1018,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmManifestFunction
 ```
 
-Geen beschrijving opgegeven.
+Metagegevens van de functie geëxtraheerd uit het ABI-manifest voor verificatie.
 
 ### FlintWasmManifestImport
 
@@ -490,7 +1028,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmManifestImport
 ```
 
-Geen beschrijving opgegeven.
+Metagegevens van de importaangifte geëxtraheerd uit het ABI-manifest.
 
 ### FlintWasmManifestParameter
 
@@ -500,9 +1038,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmManifestParameter
 ```
 
-Geen beschrijving opgegeven.
+Metagegevens van het parametertype in de manifestfunctiedefinitie.
 
-### FlintWasmMemoryLayout
+### FlintWasmMemoryLay-out
 
 **Soort:** interface
 
@@ -510,9 +1048,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmMemoryLayout
 ```
 
-Geen beschrijving opgegeven.
+Verwachtingen voor geheugenindeling geverifieerd aan de hand van het binaire WebAssembly-bestand.
 
-### verificatieFlintWasmArtifact
+### verifieerFlintWasmArtefact
 
 **Soort:** functie
 
@@ -520,13 +1058,13 @@ Geen beschrijving opgegeven.
 function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): FlintWasmArtifactVerificationResult;
 ```
 
-Geen beschrijving opgegeven.
+Compleet verificatie-ingangspunt dat binaire WebAssembly- en adapterartefacten valideert.
 
 #### Parameters
 
-| Naam   | Typ                                 | Beschrijving |
-| ------ | ----------------------------------- | ------------ |
-| invoer | FlintWasmArtifactVerificationInvoer |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------------------------------- | ----------- |
+| invoer | FlintWasmArtifactVerificationInvoer |             |
 
 ## `src/wat`
 
@@ -538,7 +1076,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmWatMetadata
 ```
 
-Geen beschrijving opgegeven.
+Metagegevens verzonden naar opmerkingen en headers in WebAssembly-tekstformaat (WAT).
 
 ### renderFlintWasmWat
 
@@ -548,11 +1086,37 @@ Geen beschrijving opgegeven.
 function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmWatMetadata = {}): string;
 ```
 
-Geen beschrijving opgegeven.
+Verlaagt een volledige tussenweergave van de Flint WebAssembly-module naar tekstueel WAT-formaat.
 
 #### Parameters
 
-| Naam         | Typ                  | Beschrijving |
-| ------------ | -------------------- | ------------ |
-| module       | FlintWasmModule      |              |
-| metagegevens | FlintWasmWatMetadata |              |
+| Naam | Typ | Beschrijving |
+| -------- | -------------------- | -------------------------------------------------------- |
+| module | FlintWasmModule | - Samengestelde module tussenweergave.           |
+| metagegevens | FlintWasmWatMetadata | - Compilatie-metagegevens en configuratie van doelfuncties. |
+
+#### Contract
+
+- **@param:** - Gecompileerde tussenweergave van de module.
+- **@param:** - Compilatie-metagegevens en configuratie van doelfuncties.
+- **@returns:** WebAssembly-tekstweergavereeks.
+
+### naarWatType
+
+**Soort:** functie
+
+```typescript
+function toWatType(
+  type: string | { readonly name?: string; readonly reference?: string } | undefined,
+  memory64 = false,
+): string;
+```
+
+Wijst een representatiereeks van het Flint- of C-type toe aan het WebAssembly WAT-waardetype.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------------------------------------------------------------------------------ | ----------- |
+| typ | tekenreeks \| { alleen-lezen naam?: string; alleen-lezen referentie?: string } \| ongedefinieerd |             |
+| geheugen64 |                                                                                |             |

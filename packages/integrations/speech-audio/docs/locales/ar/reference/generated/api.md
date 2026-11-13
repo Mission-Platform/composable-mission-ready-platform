@@ -60,15 +60,15 @@ function useSound(source?: string): SoundControls;
 `HTMLAudioElement` ويمكنه تجميع النغمات القصيرة عبر Web Audio API.
 
 آمن SSR: `isSupported` هو `false` وكل عنصر تحكم محظور التشغيل عندما يكون
-واجهة برمجة تطبيقات المتصفح ذات الصلة أو DOM غير متاحة.
+واجهة برمجة تطبيقات المتصفح ذات الصلة أو DOM غير متوفرة.
 التنظيف التلقائي: يتم إيقاف التشغيل وإغلاق أي سياق صوتي
 إلغاء تحميل.
 
 #### حدود
 
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| المصدر | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------ | ----------- |
+| المصدر | سلسلة |             |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -100,11 +100,11 @@ export interface SpeechRecognitionOptions
 function useSpeechRecognition(): SpeechRecognitionControls;
 ```
 
-ربط الكلام إلى النص المحايد للإطار مبني على المتصفح الأصلي
+ربط الكلام إلى نص محايد الإطار مبني على المتصفح الأصلي
 واجهة برمجة تطبيقات التعرف على الكلام (يبدأ بـ `webkitSpeechRecognition` في بعض
 المتصفحات).
 
-آمن SSR: `isSupported` هو `false` وكل عنصر تحكم محظور التشغيل عندما تكون واجهة برمجة التطبيقات (API)
+آمن SSR: `isSupported` هو `false` وكل عنصر تحكم محظور عندما تكون واجهة برمجة التطبيقات (API)
 أو DOM غير متوفر.
 التنظيف التلقائي: يتم إحباط أي جلسة نشطة عند إلغاء التحميل.
 
@@ -118,7 +118,7 @@ function useSpeechRecognition(): SpeechRecognitionControls;
 export interface SpeakOptions
 ```
 
-يتم تطبيق خيارات لكل نطق على استدعاء {@link useSpeechSynthesis} `speak`.
+يتم تطبيق خيارات لكل لفظ على استدعاء {@link useSpeechSynthesis} `speak`.
 
 ### ضوابط تركيب الكلام
 

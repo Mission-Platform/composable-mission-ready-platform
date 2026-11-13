@@ -19,12 +19,12 @@
 function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Vite プラグインは、アプリのデザイン トークン _オーバーライド_ スタイルシートを自動生成します。
+Vite アプリのデザイントークン _override_ スタイルシートを自動生成するプラグイン。
 
 DTCG スタイルのオーバーライド ドキュメント (`options.source`) を読み取り、それを次のように変換します。
 {@link buildTokenOverrideScss} を実行し、結果の `:root { --<prefix>-*: … }` を書き込みます。
 `options.outFile` の SCSS 部分。生成されたファイルを
-スタイルシート _後_ `@mission-platform/tokens` なので、オーバーライドがカスケードに優先します。
+stylesheet _after_ `@mission-platform/tokens` なので、オーバーライドがカスケードに優先されます。
 
 生成はロールアップ `buildStart` フックで実行されます (つまり、`vite build` をカバーします。
 `vite build --watch`、および dev-server は同様に開始されます)、ソースが次の場合に再実行されます。
@@ -33,19 +33,18 @@ DTCG スタイルのオーバーライド ドキュメント (`options.source`) 
 
 #### パラメータ
 
-| 名前       | タイプ                      | 説明 |
-| ---------- | --------------------------- | ---- |
-| オプション | TokenOverridesPluginOptions |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------------- | ----------- |
+|オプション | TokenOverridesPluginOptions |             |
 
 #### 契約
 
 - **@例：** ```ts
   // vite.config.ts
   import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
-plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
+  export default defineConfig({
+  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+  });
 
 ````
 ```scss
@@ -62,12 +61,12 @@ plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' }
 function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Vite プラグインは、アプリのデザイン トークン _オーバーライド_ スタイルシートを自動生成します。
+Vite アプリのデザイントークン _override_ スタイルシートを自動生成するプラグイン。
 
 DTCG スタイルのオーバーライド ドキュメント (`options.source`) を読み取り、それを次のように変換します。
 {@link buildTokenOverrideScss} を実行し、結果の `:root { --<prefix>-*: … }` を書き込みます。
 `options.outFile` の SCSS 部分。生成されたファイルを
-スタイルシート _後_ `@mission-platform/tokens` なので、オーバーライドがカスケードに優先します。
+stylesheet _after_ `@mission-platform/tokens` なので、オーバーライドがカスケードに優先されます。
 
 生成はロールアップ `buildStart` フックで実行されます (つまり、`vite build` をカバーします。
 `vite build --watch`、および dev-server は同様に開始されます)、ソースが次の場合に再実行されます。
@@ -76,19 +75,18 @@ DTCG スタイルのオーバーライド ドキュメント (`options.source`) 
 
 #### パラメータ
 
-| 名前       | タイプ                      | 説明 |
-| ---------- | --------------------------- | ---- |
-| オプション | TokenOverridesPluginOptions |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------------- | ----------- |
+|オプション | TokenOverridesPluginOptions |             |
 
 #### 契約
 
 - **@例：** ```ts
   // vite.config.ts
   import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
-plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
+  export default defineConfig({
+  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+  });
 
 ````
 ```scss
@@ -118,15 +116,15 @@ function buildTokenOverrideScss(document_: OverrideGroup, options: TokenOverride
 ```
 
 SCSS/CSS オーバーライド部分を構築します: 単一の `:root { … }` ブロック
-`--<prefix>-*` カスタム プロパティは `document_` からフラット化されました。 *後*インポートしてください
+`--<prefix>-*` カスタム プロパティは `document_` からフラット化されました。 _後で_インポートしてください
 ベース `@mission-platform/tokens` なので、宣言がカスケードに優先されます。
 
 #### パラメータ
 
-| 名前          | タイプ                   | 説明 |
-| ------------- | ------------------------ | ---- |
-| ドキュメント_ | オーバーライドグループ   |      |
-| オプション    | TokenOverrideScssOptions |      |
+|名前 |タイプ |説明 |
+| --------- | ------------------------ | ----------- |
+|ドキュメント_ |オーバーライドグループ |             |
+|オプション | TokenOverrideScssOptions |             |
 
 ### フラットオーバーライド
 
@@ -149,17 +147,16 @@ function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride
 オーバーライド ドキュメントを再帰的に {@link FlatOverride} にフラット化します。キー
 `オーバーライド ドキュメントを再帰的に {@link FlatOverride} にフラット化します。キー
  で始まる (DTCG メタデータ) はスキップされます。残った葉はすべて
-`--<prefix>-<path-joined-by-dashes>`カスタム プロパティ。コンポーネントのオーバーライド
-パスは`component._` DTCG ラッパーを保持しますが、生成された CSS はそれを省略します。
-ラッパー (`component.button._`は`--<prefix>-button-*`になります)。
-`$`
-
+`--<prefix>-<path-joined-by-dashes>` カスタム プロパティ。コンポーネントのオーバーライド
+パスは `component.*` DTCG ラッパーを保持しますが、生成された CSS はそれを省略します。
+ラッパー (`component.button.*` は `--<prefix>-button-*` になります)。
+ `$`
 #### パラメータ
 
-| 名前          | タイプ                 | 説明 |
-| ------------- | ---------------------- | ---- |
-| ドキュメント_ | オーバーライドグループ |      |
-| 接頭語        |                        |      |
+|名前 |タイプ |説明 |
+| --------- | ------------- | ----------- |
+|ドキュメント_ |オーバーライドグループ |             |
+|接頭辞 |               |             |
 
 ### ライトダーク値
 
@@ -181,7 +178,6 @@ export type OverrideGroup = Record<string, unknown>;
 
 DTCG スタイルのオーバーライド グループ node (ネストされたグループ/トークンとオプションの `DTCG スタイルのオーバーライド グループ node (ネストされたグループ/トークンとオプションの  メタデータ)。
  `$`
-
 ### オーバーライドトークン
 
 **種類:** インターフェース

@@ -20,9 +20,10 @@ function compileFlintFile(
   fileName: string,
   options: FlintPluginOptions,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): FlintCompiledModule;
 ```
@@ -31,11 +32,11 @@ Compile un archivo FWS y devuelva su artefacto más los metadatos del mapa fuent
 
 #### Parámetros
 
-| Nombre            | Tipo                           | Descripción |
-| ----------------- | ------------------------------ | ----------- |
-| nombre de archivo | cadena                         |             |
-| opciones          | Opciones del complemento Flint |             |
-| servicio          | Servicio FlintCompiler         |             |
+| Nombre | Tipo | Descripción |
+| -------- | -------------------- | ----------- |
+| nombre de archivo | cadena |             |
+| opciones | Opciones de complemento de Flint |             |
+| servicio | Servicio FlintCompiler |             |
 
 ### compilarFlintGraph
 
@@ -47,9 +48,10 @@ function compileFlintGraph(
   options: FlintPluginOptions,
   resolver: FlintModuleResolver,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): Promise<FlintCompiledModule>;
 ```
@@ -58,12 +60,31 @@ Resuelva, vincule y compile un gráfico de módulo FWS importado.
 
 #### Parámetros
 
-| Nombre            | Tipo                           | Descripción |
-| ----------------- | ------------------------------ | ----------- |
-| nombre de archivo | cadena                         |             |
-| opciones          | Opciones del complemento Flint |             |
-| resolver          | FlintModuleResolver            |             |
-| servicio          | Servicio FlintCompiler         |             |
+| Nombre | Tipo | Descripción |
+| -------- | -------------------- | ----------- |
+| nombre de archivo | cadena |             |
+| opciones | Opciones de complemento de Flint |             |
+| resolver | FlintModuleResolver |             |
+| servicio | Servicio FlintCompiler |             |
+
+### crearFlintGraphCache
+
+**Tipo:** función
+
+```typescript
+function createFlintGraphCache(options?: {
+  readonly compilerService?: FlintCompilerService;
+  readonly selfHostedVmMode?: FlintVmExecutionMode;
+}): FlintGraphCache;
+```
+
+Cree una caché de gráficos que deduplica la resolución de gráficos tanto secuencial como concurrente.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+| opciones | { ¿Servicio de compilación de solo lectura?: FlintCompilerService; ¿solo lectura selfHostedVmMode?: FlintVmExecutionMode; } |             |
 
 ### FlintMódulo compilado
 
@@ -75,7 +96,17 @@ export interface FlintCompiledModule
 
 Fuente compilada, metadatos de artefactos, mapa fuente e informes gráficos opcionales.
 
-### Opciones del complemento Flint
+### FlintGraphCache
+
+**Tipo:** interfaz
+
+```typescript
+export interface FlintGraphCache
+```
+
+Resultados de gráficos compartidos en memoria utilizados por múltiples objetivos de Flint.
+
+### Opciones de FlintPlugin
 
 **Tipo:** interfaz
 
@@ -97,14 +128,30 @@ Resuelva la ruta de un complemento relativa a la raíz a menos que el valor ya s
 
 #### Parámetros
 
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| raíz   | cadena |             |
-| valor  | cadena |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| raíz | cadena |             |
+| valor | cadena |             |
 
 ## `src/generate`
 
-### createFlintDeclarationsSource
+### crearFlintArtifactSource
+
+**Tipo:** función
+
+```typescript
+function createFlintArtifactSource(compiled: FlintCompiledModule): string;
+```
+
+Genere un módulo autónomo para la incrustación de artefactos en tiempo de compilación.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | ------------------- | ----------- |
+| compilado | Módulo compilado de Flint |             |
+
+### crearFlintDeclarationsSource
 
 **Tipo:** función
 
@@ -117,8 +164,8 @@ Metadatos del compilador autohospedado para consumidores de accesorios y herrami
 
 #### Parámetros
 
-| Nombre    | Tipo                      | Descripción |
-| --------- | ------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| -------- | ------------------- | ----------- |
 | compilado | Módulo compilado de Flint |             |
 
 ### crearFlintManifestSource
@@ -133,8 +180,8 @@ Genere un módulo que contenga el manifiesto ABI serializable en JSON.
 
 #### Parámetros
 
-| Nombre    | Tipo                      | Descripción |
-| --------- | ------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| -------- | ------------------- | ----------- |
 | compilado | Módulo compilado de Flint |             |
 
 ### crearFlintModuleSource
@@ -146,12 +193,13 @@ function createFlintModuleSource(compiled: FlintCompiledModule): string;
 ```
 
 Genere el módulo de consumidor normal. El módulo generado reexporta el
-funciones compiladas y expone el mismo manifiesto ABI a través de `abiManifest`.
+funciones compiladas, expone el mismo manifiesto ABI a través de `abiManifest`, y
+proporciona un cargador de bibliotecas sincrónico como exportación predeterminada.
 
 #### Parámetros
 
-| Nombre    | Tipo                      | Descripción |
-| --------- | ------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| -------- | ------------------- | ----------- |
 | compilado | Módulo compilado de Flint |             |
 
 ### crearFlintSourceMapSource
@@ -166,8 +214,8 @@ Genere un módulo cuya exportación predeterminada sea el objeto de mapa fuente 
 
 #### Parámetros
 
-| Nombre    | Tipo                      | Descripción |
-| --------- | ------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| -------- | ------------------- | ----------- |
 | compilado | Módulo compilado de Flint |             |
 
 ### crearFlintWasmSource
@@ -182,8 +230,8 @@ Genere un módulo cuya exportación predeterminada sea la matriz de bytes Wasm c
 
 #### Parámetros
 
-| Nombre    | Tipo                      | Descripción |
-| --------- | ------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| -------- | ------------------- | ----------- |
 | compilado | Módulo compilado de Flint |             |
 
 ### crearFlintWatSource
@@ -195,60 +243,70 @@ function createFlintWatSource(compiled: FlintCompiledModule): string;
 ```
 
 Genere un módulo cuya exportación predeterminada sea el texto WAT compilado. esto es
-destinado a la inspección y afirmaciones de conformidad, no a la ejecución de Wasm.
+destinado a inspección y afirmaciones de conformidad, no a ejecución de Wasm.
 
 #### Parámetros
 
-| Nombre    | Tipo                      | Descripción |
-| --------- | ------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| -------- | ------------------- | ----------- |
 | compilado | Módulo compilado de Flint |             |
 
-### FORGE_WEB_SCRIPT_DECLARACIONES_QUERY
+### FLINT_ARTIFACT_QUERY
 
 **Tipo:** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
+export const FLINT_ARTIFACT_QUERY;
+```
+
+Consulta que devuelve todos los datos de artefactos compilados de una compilación de gráficos.
+
+### FLINT_DECLARACIONES_QUERY
+
+**Tipo:** constante
+
+```typescript
+export const FLINT_DECLARATIONS_QUERY;
 ```
 
 Consulta que devuelve declaraciones vinculadas y metadatos de gráficos como un módulo ES.
 
-### FORGE_WEB_SCRIPT_MANIFEST_QUERY
+### FLINT_MANIFEST_QUERY
 
 **Tipo:** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
+export const FLINT_MANIFEST_QUERY;
 ```
 
 Consulta que devuelve el manifiesto ABI compilado como un módulo ES.
 
-### FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+### FLINT_SOURCE_MAP_QUERY
 
 **Tipo:** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
+export const FLINT_SOURCE_MAP_QUERY;
 ```
 
 Consulta que devuelve el mapa fuente generado como exportación predeterminada del módulo.
 
-### FORGE_WEB_SCRIPT_WASM_QUERY
+### FLINT_WASM_QUERY
 
 **Tipo:** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY;
+export const FLINT_WASM_QUERY;
 ```
 
 Consulta que devuelve los bytes Wasm compilados como exportación predeterminada del módulo.
 
-### FORGE_WEB_SCRIPT_WAT_QUERY
+### FLINT_WAT_QUERY
 
 **Tipo:** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY;
+export const FLINT_WAT_QUERY;
 ```
 
 Consulta que devuelve el WAT generado, incluida la reducción de la tabla de ramas, como una cadena.
@@ -263,17 +321,17 @@ Consulta que devuelve el WAT generado, incluida la reducción de la tabla de ram
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-Instale la compilación de Forge Web Script y las consultas de artefactos virtuales en Vite.
+Instale la compilación de Flint y las consultas de artefactos virtuales en Vite.
 El complemento conserva la ABI de exportación escalar de Wasm mientras expone el manifiesto,
 declaraciones, Wasm, WAT y consultas de mapas de origen para herramientas y accesorios.
 
 #### Parámetros
 
-| Nombre   | Tipo                           | Descripción |
-| -------- | ------------------------------ | ----------- |
-| opciones | Opciones del complemento Flint |             |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------ | ----------- |
+| opciones | Opciones de complemento de Flint |             |
 
-### flintPlugin
+### pedernalPlugin
 
 **Tipo:** función
 
@@ -281,15 +339,15 @@ declaraciones, Wasm, WAT y consultas de mapas de origen para herramientas y acce
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-Instale la compilación de Forge Web Script y las consultas de artefactos virtuales en Vite.
+Instale la compilación de Flint y las consultas de artefactos virtuales en Vite.
 El complemento conserva la ABI de exportación escalar de Wasm mientras expone el manifiesto,
 declaraciones, Wasm, WAT y consultas de mapas de origen para herramientas y accesorios.
 
 #### Parámetros
 
-| Nombre   | Tipo                           | Descripción |
-| -------- | ------------------------------ | ----------- |
-| opciones | Opciones del complemento Flint |             |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------ | ----------- |
+| opciones | Opciones de complemento de Flint |             |
 
 ### FlintViteError
 

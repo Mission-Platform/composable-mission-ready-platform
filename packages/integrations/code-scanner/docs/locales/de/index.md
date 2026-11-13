@@ -5,23 +5,25 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > packages/integrations/code-scanner/docs/index.md: [packages/integrations/code-scanner/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
-Ein abhängigkeitsfreier **Bild-/Kameracode-Scanner**, kompiliert aus einer statisch verknüpften Datei
-Web-Script-Diagramm in WebAssembly umwandeln. Es lokalisiert und dekodiert QR-Codes und Daten
-Matrix-, Aztec-, 1D-Barcodes, PDF417, GS1 DataBar und MaxiCode aus Bilddateien
-oder Live-Kamerastreams. Für ist auch ein dynamisches Quellmodulprofil verfügbar
-Bereitstellungen, die unabhängig zwischenspeicherbare Decodermodule benötigen.
+Ein abhängigkeitsfreier **Bild-/Kameracode-Scanner**, der aus einer statisch verknüpften Datei kompiliert wurde
+Flint-Graph zu WebAssembly. Das verknüpfte Artefakt dekodiert derzeit Daten
+Matrix, kompakter Aztec, 1D/RSS-Reader, PDF417 und MaxiCode aus Bilddateien oder
+Live-Kamera-Streams. Der QR-Graph sendet unabhängig, bleibt jedoch außerhalb des
+kombiniertes Artefakt, während die Emitterbeschränkung von Forge untersucht wird.
 
 ## API-Übersicht
 
 ### Kernscanner (`@mission-platform/code-scanner`)
 
 ```ts
-import { scanFile, scanImageData, scanImageDataAll } from '@mission-platform/code-scanner';
+import { scanFile, scanImageData, scanImageDataAll, type ScanOptions } from '@mission-platform/code-scanner';
 
 // Scan ImageData directly
-const result = scanImageData(imageData);
+const options: ScanOptions = { formats: ['DATA_MATRIX'], tryHarder: true };
+const result = scanImageData(imageData, options);
 
-// Scan all codes in frame
+// Scan the package's all-results entry point. The current linked reduced graph
+// returns at most its first validated result until multi-symbol detection lands.
 const allResults = scanImageDataAll(imageData);
 
 // Scan a File / Blob
@@ -32,7 +34,7 @@ const resultFromFile = await scanFile(file);
 
 Einmal beschreibbare Komponente verfügbar für Vue 3, React, Solid und Webkomponenten derselben Bare
 `@mission-platform/code-scanner`-Bezeichner – die aktive Exportbedingung `mp:<framework>` wählt den Build aus.
-Stellen Sie es **einmal** über `resolve.conditions` ein (siehe `defineFrameworkAppConfig` / `frameworkResolveConditions`
+Legen Sie es **einmal** über `resolve.conditions` fest (siehe `defineFrameworkAppConfig` / `frameworkResolveConditions`).
 von `@mission-platform/vite-config`) und `customConditions` (über die
 `@mission-platform/typescript-config/framework-<name>`-Voreinstellungen).
 
@@ -44,7 +46,7 @@ von `@mission-platform/vite-config`) und `customConditions` (über die
 </script>
 
 <template>
-  <ForgeCodeScanner @result="(res) => console.log(res.value)" />
+  <ForgeCodeScanner @result="(res) => console.log(res.text, res.format)" />
 </template>
 ```
 
@@ -54,6 +56,6 @@ von `@mission-platform/vite-config`) und `customConditions` (über die
 import { ForgeCodeScanner } from '@mission-platform/code-scanner';
 
 export function CameraScanner() {
-  return <ForgeCodeScanner onResult={(result) => console.log(result.value)} />;
+  return <ForgeCodeScanner onResult={(result) => console.log(result.text, result.format)} />;
 }
 ```

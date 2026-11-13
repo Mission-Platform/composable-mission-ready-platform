@@ -90,15 +90,15 @@ const increment = () => {
 
 Les hooks de cycle de vie ont été renommés et doivent être importés.
 
-| Vue 2                      | Vue 3                                             |
-| :------------------------- | :------------------------------------------------ |
+| Vue 2 | Vue 3 |
+| :------------------------- | :---------------------------------------- |
 | `beforeCreate` / `created` | Utiliser directement `setup()` / `<script setup>` |
-| `beforeMount`              | `onBeforeMount`                                   |
-| `mounted`                  | `onMounted`                                       |
-| `beforeUpdate`             | `onBeforeUpdate`                                  |
-| `updated`                  | `onUpdated`                                       |
-| `beforeDestroy`            | `onBeforeUnmount`                                 |
-| `destroyed`                | `onUnmounted`                                     |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 Exemple:
 

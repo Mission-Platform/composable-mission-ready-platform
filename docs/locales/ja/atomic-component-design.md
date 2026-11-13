@@ -6,20 +6,20 @@
 > 言語: 日本語 (ja)
 
 Mission Platform は **Atomic Design** システムを使用して、コンポーネントを複雑な階層レベルに編成します。毎
-コンポーネントは、中立的な Forge JSX 方言 (`@mission-platform/forge-jsx`)、確保する
+コンポーネントは、中立的な Forge JSX 方言 (`@mission-platform/forge-jsx`) で作成された「ライトワンス」ユニットであり、
 複数のフレームワークにわたる一貫性。
 
 ## 設計レベル
 
 コンポーネントは、その範囲と責任に基づいて 5 つのレベルに分類されます。
 
-| レベル           | フォルダー                  | 説明                                                                                                                                                               |
-| :--------------- | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **原子**         | `src/components/atoms/`     | 最小の UI プリミティブ (例: `ForgeButton`, `ForgeInput`, `ForgeBadge`)。これらは通常、目的を失わずにさらに分解することのできない機能単位です。                     |
-| **分子**         | `src/components/molecules/` | 原子の単純な組成 (例: `ForgeSearchInput`, `ForgeFieldSet`)。これらは 1 つのユニットとして一緒に機能します。                                                        |
-| **生物**         | `src/components/organisms/` | 原子、分子、その他の生物で構成される複雑な UI セクション (例: `ForgeNavbar`, `ForgeTable`, `ForgeModal`)。                                                         |
-| **テンプレート** | `src/components/templates/` | コンテンツ構造を定義するページレベルのレイアウト (例: `ForgeHero`, `ForgeAppLayout`)。多くの場合、コンテンツを配置する場所を定義するためにスロットが使用されます。 |
-| **ページ**       | `src/components/pages/`     | 具体的なコンテンツとデータが入力されたテンプレートの特定のインスタンス (例: `AccountSettingsPage`).                                                                |
+|レベル |フォルダー |説明 |
+| :------------ | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **原子** | `src/components/atoms/` |最小の UI プリミティブ (例: `ForgeButton`、`ForgeInput`、`ForgeBadge`)。これらは通常、目的を失わずにさらに分解することのできない機能単位です。 |
+| **分子** | `src/components/molecules/` |原子の単純な構成 (例: `ForgeSearchInput`、`ForgeFieldSet`)。これらは 1 つのユニットとして一緒に機能します。                                                                    |
+| **生物** | `src/components/organisms/` |原子、分子、その他の生物で構成される複雑な UI セクション (`ForgeNavbar`、`ForgeTable`、`ForgeModal` など)。                                                       |
+| **テンプレート** | `src/components/templates/` |コンテンツ構造を定義するページレベルのレイアウト (`ForgeHero`、`ForgeAppLayout` など)。多くの場合、コンテンツを配置する場所を定義するためにスロットが使用されます。                     |
+| **ページ** | `src/components/pages/` |具体的なコンテンツとデータが入力されたテンプレートの特定のインスタンス (`AccountSettingsPage` など)。                                                                        |
 
 ## コンポーネントフォルダーのレイアウト
 
@@ -49,21 +49,21 @@ src/components/
 
 ### ファイル名
 
-ストーリーでは、 `.stories.tsx` 拡大。
+ストーリーでは `.stories.tsx` 拡張子を使用する必要があります。
 
 ### タイトルの表記規則
 
-の `title` ストーリーブックのフィールド `meta` オブジェクトは次のパターンに従う必要があります。
+Storybook `meta` オブジェクトの `title` フィールドは、次のパターンに従う必要があります。
 
 ```text
 <Level>/<Category>/<Component>
 ```
 
-- **レベル**: 大文字の複数形 (例: `Atoms`, `Molecules`)。
-- **カテゴリ**: 機能的なグループ化 (例: `Forms`, `Navigation`, `Display`, `Feedback`)。
-- **コンポーネント**: PascalCase コンポーネント名 (例: `ForgeButton`).
+- **レベル**: 大文字の複数形 (例: `Atoms`、`Molecules`)。
+- **カテゴリ**: 機能的なグループ化 (例: `Forms`、`Navigation`、`Display`、`Feedback`)。
+- **コンポーネント**: PascalCase コンポーネント名 (例: `ForgeButton`)。
 
-**例 （`forge-button.stories.tsx`):**
+**例 (`forge-button.stories.tsx`):**
 
 ```tsx
 const meta = {
@@ -75,13 +75,14 @@ const meta = {
 
 ## オーサリング標準
 
-1. **フレームワークの中立性**: 決して別個に作成しない Vue そして React バージョン。使用 `@mission-platform/forge-jsx`。
-2. **命名**: コンポーネントは `Base` プレフィックス (例: `ForgeCard`) 特定の実装でない限り。
-3. **タイプ セーフティ**: エクスポート `*Properties` コンポーネントの小道具のインターフェース。
-4. **テスト**: 同じ場所にある `.spec.ts` すべてのコンポーネントに必要です。
-5. **足場**: `scaffold_component` MCP ツールは、正しいディレクトリ構造と定型文を確認します。
+1. **フレームワークの中立性**: Vue バージョンと React バージョンを別々に作成しないでください。 `@mission-platform/forge-jsx` を使用します。
+2. **名前付け**: コンポーネントは、特定の実装でない限り、`Base` プレフィックス (例: `ForgeCard`) を使用する必要があります。
+3. **タイプ セーフティ**: コンポーネントのプロパティの `*Properties` インターフェイスをエクスポートします。
+4. **テスト**: すべてのコンポーネントに同じ場所にある `.spec.ts` が必要です。
+5. **足場**: 接続された Mission Platform Developer MCP サーバーを通じて `scaffold_component` MCP ツールを使用して、
+   ディレクトリ構造と定型文が正しいことを確認してください。
 
-```bash
+```text
 # Example: Creating a new 'forge-chip' atom in the 'components' package
 scaffold_component(name="forge-chip", level="atom", area="Display", package="components", apply=true)
 ```
@@ -89,6 +90,6 @@ scaffold_component(name="forge-chip", level="atom", area="Display", package="com
 ## 関連ガイド
 
 - [パッケージ開発](package-development.md)
-- [コンポーザブルオーサリング](composable-authoring.md)
+- [合成可能なオーサリング](composable-authoring.md)
 - [ストアオーサリング](store-authoring.md)
-- [ユーティリティオーサリング](util-authoring.md)
+- [利用オーサリング](util-authoring.md)

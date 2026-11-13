@@ -27,4 +27,4 @@ Il lavoratore non possiede percorsi, risorse, domini o ambienti dell'applicazion
 segreti. Quelli rimangono nel pacchetto dell'applicazione di consumo.
 
 - [Guida allo sviluppo](guides/development.md)
-- [`README.md`](../../../README.md)
+-[`README.md`](../../../README.md)

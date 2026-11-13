@@ -14,7 +14,7 @@ Plateforme monorepo. Il est structuré sous la forme d'un **guide pratique** pou
 
 **Problème** : LCP est au-dessus du seuil de 2,5 s pour une note « Bon ».
 
-**Diagnostic**:
+**Diagnostic** :
 
 1. Exécutez un audit Lighthouse dans Chrome DevTools.
 2. Identifiez l'élément LCP dans le panneau "Performances".
@@ -31,7 +31,7 @@ Plateforme monorepo. Il est structuré sous la forme d'un **guide pratique** pou
 
 **Problème** : L'application consomme des quantités croissantes de mémoire au fil du temps, ce qui finit par entraîner des plantages.
 
-**Diagnostic**:
+**Diagnostic** :
 
 1. Prenez plusieurs « instantanés de tas » dans l'onglet Mémoire de Chrome DevTools.
 2. Comparez les instantanés pour identifier les objets dont le nombre ou la taille augmente.
@@ -69,11 +69,10 @@ rm -rf .turbo
 2. Assurez-vous que la version correspond (`workspace:*` est recommandé).
 3. Exécutez `pnpm install` pour actualiser les liens symboliques.
 4. Si les problèmes persistent, essayez un nettoyage en profondeur :
-
-```bash
+   ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-```
+   ```
 
 ### Tapez les erreurs dans CI mais pas local
 
@@ -93,7 +92,7 @@ Cela garantit que toutes les limites des packages sont correctement respectées 
 
 **Problème** : Votre client AI ou IDE ne peut pas se connecter au serveur Mission Platform MCP.
 
-**Diagnostic**:
+**Diagnostic** :
 
 1. Vérifiez que le serveur MCP est construit : `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
 2. Vérifiez si le serveur démarre manuellement : `node mcp/developer/dist/index.js`.

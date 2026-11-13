@@ -13,12 +13,12 @@ Supporti condivisi per la creazione di librerie tsdown per aree di lavoro pubbli
 pnpm add --save-dev @mission-platform/tsdown-config
 ```
 
-Utilizzare il pacchetto da un'area di lavoro `tsdown.config.ts` e mantenere i punti di ingresso,
+Utilizzare il pacchetto da un'area di lavoro `tsdown.config.ts` e conservare i punti di ingresso,
 dipendenze esterne e vincoli di output locali al pacchetto in fase di creazione.
-Le dichiarazioni e i bundle generati appartengono a quel pacchetto `dist/` directory.
+Le dichiarazioni e i bundle generati appartengono alla directory `dist/` del pacchetto.
 
 ## Contribuire
 
-Correre `pnpm --filter @mission-platform/tsdown-config lint` e il relativo controllo del formato.
+Esegui `pnpm --filter @mission-platform/tsdown-config lint` e il relativo controllo del formato.
 Preservare l'output deterministico e non aggiungere rami target specifici del framework
 all'aiutante di costruzione neutrale.

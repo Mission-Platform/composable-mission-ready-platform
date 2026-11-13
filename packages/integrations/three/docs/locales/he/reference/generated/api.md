@@ -20,13 +20,13 @@ function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpE
 ```
 
 ForgeThreeCanvas - רכיב ניטרלי במסגרת המעבד <canvas>
-ומנהל הקשר Three.js WebGL באמצעות `useThree`.
+ומנהל את הקשר Three.js WebGL באמצעות `useThree`.
 
 #### פרמטרים
 
-| שם    | הקלד                                    | תיאור |
-| ----- | --------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<ForgeThreeCanvasProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<ForgeThreeCanvasProperties> |             |
 
 ### ForgeThreeCanvasProperties
 
@@ -69,7 +69,7 @@ SSR-safe: ללא הפעלה כאשר ממשק ה-API או בדפדפן אינם 
 
 #### פרמטרים
 
-| שם              | הקלד                                       | תיאור |
-| --------------- | ------------------------------------------ | ----- |
-| canvasReference | הפניה כמו<HTMLCanvasElement \| null>       |       |
-| onReady         | (הקשר: ThreeContext) => ריק \| (() => ריק) |       |
+| שם | הקלד | תיאור |
+| --------------- | ----------------------------------------------- | ----------- |
+| canvasReference | הפניה כמו<HTMLCanvasElement \| null> |             |
+| onReady | (הקשר: ThreeContext) => ריק \| (() => ריק) |             |

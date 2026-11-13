@@ -32,7 +32,7 @@ function createVCard(options: VCardOptions): VCard;
 **종류:** 상수
 
 ```typescript
-export const parseVCard;
+export const parseVCard: typeof readVCard;
 ```
 
 파서 용어를 선호하는 호출자를 위한 별칭입니다.
@@ -616,7 +616,7 @@ export interface ICalendarProperty
 **종류:** 상수
 
 ```typescript
-export const parseICalendar;
+export const parseICalendar: typeof readICalendar;
 ```
 
 설명이 제공되지 않았습니다.
@@ -642,7 +642,7 @@ function readICalendar(source: string): ICalendar;
 **종류:** 상수
 
 ```typescript
-export const serializeICalendar;
+export const serializeICalendar: typeof writeICalendar;
 ```
 
 설명이 제공되지 않았습니다.

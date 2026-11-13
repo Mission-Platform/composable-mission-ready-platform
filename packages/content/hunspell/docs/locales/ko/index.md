@@ -2,11 +2,11 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> packages/hunspell/docs/index.md: [packages/hunspell/docs/index.md](../../index.md)
+> packages/content/hunspell/docs/index.md: [packages/content/hunspell/docs/index.md](../../index.md)
 > 언어: 한국어 (ko)
 
 `@mission-platform/hunspell`은 Hunspell을 기반으로 하는 고성능 맞춤법 검사 엔진을 제공합니다.
-**WebAssembly**(Emscripten을 통한). 브라우저나 Web Worker 내에서 완전히 실행되는 ES 모듈로 패키지되어 있습니다.
+**WebAssembly**(Emscripten을 통한). 브라우저나 Web Workers 내에서 완전히 실행되는 ES 모듈로 패키지되어 있습니다.
 
 ## 건축학
 
@@ -19,7 +19,7 @@
 
 ### WASM 아티팩트 재구축
 
-재건축에는 다음이 필요합니다. [도커](https://www.docker.com/). 루트에서 다음 명령을 사용하십시오.
+Rebuilding requires [Docker](https://www.docker.com/). 루트에서 다음 명령을 사용하십시오.
 
 ```bash
 pnpm --filter @mission-platform/hunspell build:wasm

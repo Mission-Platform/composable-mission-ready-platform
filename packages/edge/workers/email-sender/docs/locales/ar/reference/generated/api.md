@@ -11,12 +11,22 @@
 
 ## `src/index`
 
+### تقصير
+
+**النوع:** ثابت
+
+```typescript
+export const handler: ExportedHandler<WorkerEnvironment>;
+```
+
+لم يتم تقديم أي وصف.
+
 ### توصيل
 
 **النوع:** النوع
 
 ```typescript
-export type Delivery = (environment: Env, message: SmtpMessage) => Promise<void>;
+export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -36,15 +46,26 @@ export interface EmailRequest
 **النوع:** الوظيفة
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
+function handleRequest(
+  request: Request,
+  environment: WorkerEnvironment,
+  delivery: Delivery = defaultDelivery,
+): Promise<Response>;
 ```
 
-لم يتم تقديم أي وصف.
+يتعامل مع طلبات تسليم البريد الإلكتروني الواردة، والتحقق من صحة الإدخال وتسليمها إلى خدمة SMTP.
 
 #### حدود
 
-| الاسم | اكتب    | الوصف |
-| ----- | ------- | ----- |
-| طلب   | طلب     |       |
-| بيئة  | البيئة  |       |
-| تسليم | التسليم |       |
+| الاسم | اكتب | الوصف |
+| ----------- | ----------------- | -------------------------------------------------- |
+| طلب | طلب | - طلب HTTP الوارد.                           |
+| بيئة | بيئة العمل | - ارتباطات بيئة العمل .                     |
+| تسليم | التسليم | - وظيفة التسليم التعامل مع نقل الرسائل. |
+
+#### عقد
+
+- **@param:** - طلب HTTP وارد.
+- **@param:** - روابط بيئة العمل.
+- **@param:** - وظيفة التسليم التي تتعامل مع إرسال الرسائل.
+- **@returns:** استجابة HTTP.

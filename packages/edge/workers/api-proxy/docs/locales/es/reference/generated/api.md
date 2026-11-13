@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/api-
 **Tipo:** constante
 
 ```typescript
-export const ALLOWED_METHODS;
+export const ALLOWED_METHODS: Set<string>;
 ```
 
 Mantenga el proxy de solo lectura y limitado a las rutas API documentadas.
@@ -26,7 +26,17 @@ Mantenga el proxy de solo lectura y limitado a las rutas API documentadas.
 **Tipo:** constante
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES;
+export const ALLOWED_ROUTE_PREFIXES: string[];
+```
+
+No se proporciona descripción.
+
+### por defecto
+
+**Tipo:** constante
+
+```typescript
+export const handler: ExportedHandler;
 ```
 
 No se proporciona descripción.
@@ -39,10 +49,15 @@ No se proporciona descripción.
 function isAllowedProxyRequest(request: Request): boolean;
 ```
 
-No se proporciona descripción.
+Determina si la política de proxy permite una solicitud de cliente entrante.
 
 #### Parámetros
 
-| Nombre    | Tipo      | Descripción |
-| --------- | --------- | ----------- |
-| solicitud | Solicitar |             |
+| Nombre | Tipo | Descripción |
+| ------- | ------- | ------------------------ |
+| solicitud | Solicitar | - Solicitud HTTP entrante. |
+
+#### Contrato
+
+- **@param:** - Solicitud HTTP entrante.
+- **@returns:** Verdadero si el método y la ruta están dentro de la lista de proxy permitido.

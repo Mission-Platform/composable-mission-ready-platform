@@ -19,15 +19,15 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/theme`.
 function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement;
 ```
 
-`ForgeThemeToggle` – schaltet das aktive Thema durch `light → dark → auto`,
+`ForgeThemeToggle` – durchläuft das aktive Thema zyklisch durch `light → dark → auto`,
 Einmal im neutralen JSX-Dialekt verfasst und direkt zu React oder Vue kompiliert
 von `@mission-platform/vite-plugin-forge`.
 
 Es wird durch den Shared Observable Theme Store (`../theme-store`) unterstützt: Klicken
 Es steuert denselben Singleton, den `ForgeThemeProvider` konfiguriert
-Behält die Einstellung bei und fixiert `data-theme`/`color-scheme` im Stammverzeichnis des Dokuments
+Behält die Einstellung bei und fixiert `data-theme`/`color-scheme` im Dokumentstammverzeichnis
 (und das synchronisierte `<meta name="color-scheme">`) und bleibt synchron mit dem
-Systemthema. Die Komponente abonniert den Store mit dem Neutralwert
+Systemthema. Die Komponente abonniert den Store mit dem Neutralleiter
 {@link useState}/{@link useEffect}-Hooks, sodass eine einzelne Quelle reaktiv bleibt
 beide Frameworks.
 
@@ -39,9 +39,9 @@ durch den Standardsteckplatz.
 
 #### Parameter
 
-| Name          | Geben Sie                               | ein Beschreibung |
-| ------------- | --------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ThemeToggleProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ThemeToggleProperties> |             |
 
 ### ThemeToggleProperties
 
@@ -89,16 +89,16 @@ Es enthält die Konfiguration in einem neutralen {@link useState}-Hook (gestarte
 `v-model`). Sein Standardbereichsslot empfängt „{ config, cssVariables,
 styleString, setConfig, setAttribute, setToken, removeToken, reset }`.
 
-Der freigegebene Speicher (`provide`/`inject`), die Persistenz `localStorage` und die
+Der gemeinsame Speicher (`provide`/`inject`), die Persistenz `localStorage` und die
 konfigurierbare Wrapper-Tags (`as`) werden absichtlich reduziert: die
 Das Paar `modelValue`/`onUpdateModelValue` ist die einzige Quelle der Wahrheit und das
 Wrapper ist ein fester `<div>`.
 
 #### Parameter
 
-| Name          | Geben Sie                                 | ein Beschreibung |
-| ------------- | ----------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ThemeComposerProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ThemeComposerProperties> |             |
 
 ### ThemeComposerProperties
 
@@ -151,9 +151,9 @@ Speicher auf Dokumentebene mit einem festen `<div>`-Wrapper.
 
 #### Parameter
 
-| Name          | Geben Sie                                 | ein Beschreibung |
-| ------------- | ----------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ThemeProviderProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ThemeProviderProperties> |             |
 
 ### ThemeProviderProperties
 
@@ -196,14 +196,14 @@ function configToCssVariables(config: ThemeComposerConfig): Record<string, strin
 ```
 
 Konvertiert eine {@link ThemeComposerConfig} in eine flache, benutzerdefinierte CSS-Karte
-Eigenschaften (`--mp-*` → Wert). Attribute haben zuerst Vorrang, dann das Rohmaterial
+Eigenschaften (`--mp-*` → Wert). Zuerst haben die Attribute Vorrang, dann das Rohmaterial
 `tokens` Notluke ist oben zusammengeführt.
 
 #### Parameter
 
-| Name   | Geben Sie           | ein Beschreibung |
-| ------ | ------------------- | ---------------- |
-| config | ThemeComposerConfig |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------- | ----------- |
+| config | ThemeComposerConfig |             |
 
 ### configToStyleString
 
@@ -217,9 +217,9 @@ Lösen Sie eine Konfiguration in die vollständige Inline-Zeichenfolge `style` a
 
 #### Parameter
 
-| Name   | Geben Sie           | ein Beschreibung |
-| ------ | ------------------- | ---------------- |
-| config | ThemeComposerConfig |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------- | ----------- |
+| config | ThemeComposerConfig |             |
 
 ### cssVariablesToString
 
@@ -233,9 +233,9 @@ Serialisiert eine benutzerdefinierte CSS-Eigenschaftszuordnung in eine Inline-`s
 
 #### Parameter
 
-| Name      | Geben Sie              | ein Beschreibung |
-| --------- | ---------------------- | ---------------- |
-| Variablen | Record<string, string> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------------- | ----------- |
+| Variablen | Record<string, string> |             |
 
 ### mergeConfig
 
@@ -249,10 +249,10 @@ Führen Sie eine flache Zusammenführung einer Teilkonfiguration in die aktuelle
 
 #### Parameter
 
-| Name      | Geben Sie           | ein Beschreibung |
-| --------- | ------------------- | ---------------- |
-| config    | ThemeComposerConfig |                  |
-| teilweise | ThemeComposerConfig |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------- | ----------- |
+| config | ThemeComposerConfig |             |
+| teilweise | ThemeComposerConfig |             |
 
 ### RemoveConfigToken
 
@@ -266,10 +266,10 @@ Entfernen Sie eine einzelne Raw-Token-Überschreibung.
 
 #### Parameter
 
-| Name      | Geben Sie           | ein Beschreibung |
-| --------- | ------------------- | ---------------- |
-| config    | ThemeComposerConfig |                  |
-| Schlüssel | Zeichenfolge        |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------- | ----------- |
+| config | ThemeComposerConfig |             |
+| Schlüssel | Zeichenfolge |             |
 
 ### setConfigAttribute
 
@@ -287,11 +287,11 @@ Legen Sie ein einzelnes freundliches Attribut fest (übergeben Sie `undefined`, 
 
 #### Parameter
 
-| Name     | Geben Sie              | ein Beschreibung |
-| -------- | ---------------------- | ---------------- |
-| config   | ThemeComposerConfig    |                  |
-| Attribut | K                      |                  |
-| Wert     | ThemeComposerConfig[K] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------------- | ----------- |
+| config | ThemeComposerConfig |             |
+| Attribut | K |             |
+| Wert | ThemeComposerConfig[K] |             |
 
 ### setConfigToken
 
@@ -305,11 +305,33 @@ Legen Sie eine einzelne Raw-Token-Überschreibung fest. Im Schlüssel kann das P
 
 #### Parameter
 
-| Name      | Geben Sie           | ein Beschreibung |
-| --------- | ------------------- | ---------------- |
-| config    | ThemeComposerConfig |                  |
-| Schlüssel | Zeichenfolge        |                  |
-| Wert      | Zeichenfolge        |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------- | ----------- |
+| config | ThemeComposerConfig |             |
+| Schlüssel | Zeichenfolge |             |
+| Wert | Zeichenfolge |             |
+
+### ThemeComposerAttribute
+
+**Art:** Typ
+
+```typescript
+export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens' | 'colorScheme'>;
+```
+
+Die benutzerfreundlichen Attributschlüssel, die einer benutzerdefinierten `--mp-*`-Eigenschaft zugeordnet sind.
+
+### ThemeComposerConfig
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ThemeComposerConfig
+```
+
+Eine allgemeine, typisierte Beschreibung der Themenattribute, die ein Verbraucher verfassen kann
+zur Laufzeit. Jedes Attribut ist einem der `--mp-*` der Plattform zugeordnet
+Benutzerdefinierte Design-Token-CSS-Eigenschaften (siehe {@link ATTRIBUTE_TO_CSS_VAR}).
 
 ## `src/stores/theme-store/theme-store`
 
@@ -327,9 +349,9 @@ Speicherschlüssel / Persistenz und, wenn noch nichts explizit ausgewählt wurde
 
 #### Parameter
 
-| Name   | Geben Sie   | ein Beschreibung |
-| ------ | ----------- | ---------------- |
-| config | ThemeConfig |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ----------- | ----------- |
+| config | ThemeConfig |             |
 
 ### ZyklusTheme
 
@@ -373,9 +395,9 @@ Legen Sie die Designpräferenz explizit fest.
 
 #### Parameter
 
-| Name   | Geben Sie | ein Beschreibung |
-| ------ | --------- | ---------------- |
-| weiter | Thema     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----- | ----------- |
+| weiter | Thema |             |
 
 ### abonnierenTheme
 
@@ -389,9 +411,9 @@ Abonnieren Sie den Store-Änderungen; gibt eine Abmeldefunktion zurück.
 
 #### Parameter
 
-| Name    | Geben Sie  | ein Beschreibung |
-| ------- | ---------- | ---------------- |
-| Zuhörer | () => void |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ---------- | ----------- |
+| Zuhörer | () => void |             |
 
 ### Thema
 

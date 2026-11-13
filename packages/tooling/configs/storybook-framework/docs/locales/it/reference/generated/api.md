@@ -94,7 +94,7 @@ lo stesso inventario di storie riscrivibili deve essere visualizzato in ogni wor
 **Tipo:** funzione
 
 ```typescript
-function sharedPreviewDecorators();
+function sharedPreviewDecorators(): Array<ReturnType<typeof withThemeByDataAttribute<TRenderer>>>;
 ```
 
 Decoratori di libri di fiabe condivisi per tutti i framework.
@@ -104,7 +104,17 @@ Decoratori di libri di fiabe condivisi per tutti i framework.
 **Genere:** costante
 
 ```typescript
-export const sharedPreviewParameters;
+export const sharedPreviewParameters: {
+  readonly controls: {
+    readonly matchers: {
+      readonly color: RegExp;
+      readonly date: RegExp;
+    };
+  };
+  readonly a11y: {
+    readonly test: 'error';
+  };
+};
 ```
 
 Parametri Storybook condivisi per tutti i framework.
@@ -114,7 +124,15 @@ Parametri Storybook condivisi per tutti i framework.
 **Tipo:** funzione
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework);
+function sharedPreviewParametersFor(framework?: PreviewFramework):
+  | typeof sharedPreviewParameters
+  | (typeof sharedPreviewParameters & {
+      readonly docs: {
+        readonly source: {
+          readonly type: 'code';
+        };
+      };
+    });
 ```
 
 Parametri del libro di fiabe compatibili con il framework.

@@ -58,7 +58,7 @@ Metadati stabili consumati dai plugin del compilatore del router Forge.
 **Tipo:** componente
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor;
+export function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 Indicatore di collegamento neutro. I target nativi sostituiscono questa funzione durante la compilazione.
@@ -154,7 +154,7 @@ Un'implementazione parziale utile per adattare adattatori e cablaggi SSR/test.
 **Tipo:** componente
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
+export function MpRouterView(properties: MpRouterViewProps =
 ```
 
 Indicatore di uscita/vista neutra. I target nativi sostituiscono questa funzione durante la compilazione.
@@ -244,7 +244,11 @@ Leggere l'oggetto della funzionalità neutra fornita dall'app.
 **Genere:** costante
 
 ```typescript
-export const applicationCompatibilityFixtures;
+export const applicationCompatibilityFixtures: {
+  readonly website: ForgeCompatibilityFixture;
+  readonly myCareNotes: ForgeCompatibilityFixture;
+  readonly guardsAndLazy: ForgeCompatibilityFixture;
+};
 ```
 
 Nessuna descrizione fornita.

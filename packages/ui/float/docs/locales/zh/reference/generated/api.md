@@ -63,9 +63,9 @@ helper），并使用 write-once 绘制状态图标
 
 #### 参数
 
-| 名称 | 类型                        | 描述 |
-| ---- | --------------------------- | ---- |
-| 属性 | 只读<AlertBannerProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------- | ----------- |
+|属性 |只读<AlertBannerProperties> |             |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -139,9 +139,9 @@ API 将其堆叠在该（可能堆叠的）对话框之上。
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<DropdownProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<DropdownProperties> |             |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -158,7 +158,7 @@ function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 `@mission-platform/vite-plugin-forge`。
 
 该面板通过框架中立 **`<Teleport>`** 门户呈现
-（通过编译为 React 的 `createPortal` / Vue 的内置 `<Teleport>`
+（编译为React的`createPortal` / Vue的内置`<Teleport>`
 `@mission-platform/vite-plugin-forge`)，因此它呈现为 `document.body` 和
 转义任何 `overflow`/堆叠上下文；门户仅在以下情况下安装
 `open`。它通过 CSS Anchor Positioning API 保持锚定到其触发器
@@ -195,9 +195,9 @@ API 将其堆叠在该（可能堆叠的）对话框之上。
 
 #### 参数
 
-| 名称 | 类型                    | 描述 |
-| ---- | ----------------------- | ---- |
-| 属性 | 只读<PopoverProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------- | ----------- |
+|属性 |只读<PopoverProperties> |             |
 
 ### 弹出框放置
 
@@ -260,9 +260,9 @@ callback-prop `onDismiss`，`iconContent` 命名槽（`<Slot>`，带有
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 属性 | 只读<ToastProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------- | ----------- |
+|属性 |只读<ToastProperties> |             |
 
 ### Toast 属性
 
@@ -344,9 +344,9 @@ function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                    | 描述 |
-| ---- | ----------------------- | ---- |
-| 属性 | 只读<TooltipProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------- | ----------- |
+|属性 |只读<TooltipProperties> |             |
 
 ### 工具提示放置
 
@@ -414,7 +414,7 @@ function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 它呈现由 `showModal()`/`close()` 驱动的 **本机 `<dialog>`**，因此
 浏览器处理**顶层**、`::backdrop` 稀松布、焦点捕获和
 `Escape`-关闭 — 不需要 `<Teleport>`、焦点陷阱或 `useZIndex`。打开
-状态受控（`open` + `onUpdateOpen`/`onClose`）：1 个 `useEffect`
+状态控制（`open` + `onUpdateOpen`/`onClose`）：1 个 `useEffect`
 将 `open` 镜像到元素上，本机 `close` 事件映射回
 回调，当设置 `closeOnBackdrop` 时，背景单击可将其关闭。的
 进入/退出淡入淡出位于 CSS 中（`@starting-style` + `transition-behavior`
@@ -433,9 +433,9 @@ function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | 只读<DialogProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<DialogProperties> |             |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -470,9 +470,9 @@ function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 属性 | 只读<ModalProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------- | ----------- |
+|属性 |只读<ModalProperties> |             |
 
 ### 模态属性
 
@@ -493,6 +493,16 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 ```
 
 平板电脑/桌面上模态的宽度步长（`sm`+）；移动设备始终是全角。
+
+### 模态变量
+
+**种类：**类型
+
+```typescript
+export type ModalVariant = 'modal' | 'dialog' | 'alert';
+```
+
+模态覆盖基元的视觉和语义变体。
 
 ## `src/components/organisms/forge-toast-container/forge-toast-container`
 
@@ -541,9 +551,9 @@ React 构建降级到类切换的 SSR 就地基线，
 
 #### 参数
 
-| 名称 | 类型                           | 描述 |
-| ---- | ------------------------------ | ---- |
-| 属性 | 只读<ToastContainerProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------------- | ----------- |
+|属性 |只读<ToastContainerProperties> |             |
 
 ### ToastContainer 属性
 
@@ -589,16 +599,16 @@ function dismissToast(id: number): void;
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 编号 | 数量 |      |
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|编号 |数量 |             |
 
 ### 错误提示
 
 **种类：**常数
 
 ```typescript
-export const errorToast;
+export const errorToast: ReturnType<typeof withVariant>;
 ```
 
 方便：显示 `error` toast。
@@ -618,7 +628,7 @@ function getToastsSnapshot(): readonly ToastRecord[];
 **种类：**常数
 
 ```typescript
-export const infoToast;
+export const infoToast: ReturnType<typeof withVariant>;
 ```
 
 方便：显示 `info` toast。
@@ -635,9 +645,9 @@ function showToast(options: ToastOptions | string): number;
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 选项 | ToastOptions \|字符串 |      |
+|名称 |类型 |描述 |
+| ------- | ---------------------- | ----------- |
+|选项 | ToastOptions \|字符串|             |
 
 ### 订阅Toasts
 
@@ -651,16 +661,16 @@ function subscribeToasts(listener: () => void): () => void;
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 听众 | () => 无效 |      |
+|名称 |类型 |描述 |
+| -------- | ---------- | ----------- |
+|听众 | () => 无效 |             |
 
 ### 成功祝酒词
 
 **种类：**常数
 
 ```typescript
-export const successToast;
+export const successToast: ReturnType<typeof withVariant>;
 ```
 
 方便：显示 `success` toast。
@@ -722,7 +732,119 @@ export interface UseToastReturn
 **种类：**常数
 
 ```typescript
-export const warningToast;
+export const warningToast: ReturnType<typeof withVariant>;
 ```
 
 方便：显示 `warning` toast。
+
+## `src/utils/fallback-position`
+
+### 应用后备位置
+
+**种类：**功能
+
+```typescript
+function applyFallbackPosition(
+  triggerElement: HTMLElement,
+  panelElement: HTMLElement,
+  placement: FallbackPlacement = 'bottom-start',
+  options?: FallbackPositionOptions | number,
+): void;
+```
+
+将后备坐标和样式应用到相对于 `triggerElement` 的 `panelElement`。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------------- | --------------------------------- | ----------- |
+|触发元素 | HTML 元素 |             |
+|面板元素 | HTML 元素 |             |
+|安置 |后备放置 |             |
+|选项 | FallbackPositionOptions \|数量 |             |
+
+### 计算后备位置
+
+**种类：**功能
+
+```typescript
+function calculateFallbackPosition(
+  triggerRect: TriggerBoundingRect,
+  placement: FallbackPlacement = 'bottom-start',
+  offset = 0,
+): FallbackPositionResult;
+```
+
+计算浮动元素的顶部、左侧和变换 CSS 属性
+基于触发元素的边界矩形、所需的位置和偏移量。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ------------------- | ----------- |
+|触发矩形 |触发边界矩形 |             |
+|安置 |后备放置 |             |
+|偏移|                     |             |
+
+### 回退放置
+
+**种类：**类型
+
+```typescript
+export type FallbackPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
+```
+
+支持锚点定位回退的放置选项。
+
+### 后备位置选项
+
+**种类：**接口
+
+```typescript
+export interface FallbackPositionOptions
+```
+
+没有提供描述。
+
+### 回退位置结果
+
+**种类：**接口
+
+```typescript
+export interface FallbackPositionResult
+```
+
+没有提供描述。
+
+### 是否支持锚点定位
+
+**种类：**功能
+
+```typescript
+function isAnchorPositioningSupported(): boolean;
+```
+
+动态检查是否支持CSS Anchor Positioning。
+作为函数进行评估，以便单元测试可以模拟或切换 `CSS.supports`。
+
+### 支持锚点定位
+
+**种类：**常数
+
+```typescript
+export const supportsAnchorPositioning: boolean;
+```
+
+检查当前环境是否支持CSS Anchor Positioning。

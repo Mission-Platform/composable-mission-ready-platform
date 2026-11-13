@@ -23,9 +23,9 @@ Transformieren Sie ein neutrales Hook-Modul in seine SolidJS-Quelle.
 
 #### Parameter
 
-| Name  | Geben Sie      | ein Beschreibung |
-| ----- | -------------- | ---------------- |
-| Modul | SemanticModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------- | ----------- |
+| Modul | SemanticModule |             |
 
 ## `src/emitters/module`
 
@@ -44,10 +44,10 @@ Transformieren Sie ein neutrales Komponentenmodul in seine SolidJS-Quelle.
 
 #### Parameter
 
-| Name     | Geben Sie        | ein Beschreibung |
-| -------- | ---------------- | ---------------- |
-| Modul    | SemanticModule   |                  |
-| Optionen | SolidEmitOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------- | ----------- |
+| Modul | SemanticModule |             |
+| Optionen | SolidEmitOptions |             |
 
 ### GeneratedSolidModule
 
@@ -97,9 +97,9 @@ Einen Zielplan auf den Solid eingrenzen; `false` für den Plan eines anderen Fra
 
 #### Parameter
 
-| Name      | Geben Sie                          | ein Beschreibung |
-| --------- | ---------------------------------- | ---------------- |
-| abgesenkt | TargetLoweredModule \| undefiniert |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------------------- | ----------- |
+| abgesenkt | TargetLoweredModule \| undefiniert |             |
 
 ### LowerSolidModule
 
@@ -116,10 +116,10 @@ Senken Sie die neutrale IR in die Zielabsichtsverpackung von Solid und tragen Si
 
 #### Parameter
 
-| Name    | Geben Sie      | ein Beschreibung |
-| ------- | -------------- | ---------------- |
-| ir      | SemanticModule |                  |
-| Kontext | Zielkontext    |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------- | ----------- |
+| ir | SemanticModule |             |
+| Kontext | Zielkontext |             |
 
 ### planSolidImports
 
@@ -138,10 +138,10 @@ Eine erneute Ausführung erzeugt eine identische Liste. Das neu zu berechnen ist
 
 #### Parameter
 
-| Name    | Geben Sie         | ein Beschreibung |
-| ------- | ----------------- | ---------------- |
-| planen  | SolidLoweringPlan |                  |
-| bedingt | boolescher Wert   |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ----------------- | ----------- |
+| planen | SolidLoweringPlan |             |
+| bedingt | boolescher Wert |             |
 
 ### planSolidModule
 
@@ -155,9 +155,9 @@ Erstellen Sie den Solid-Plan für die semantischen Fakten eines Moduls.
 
 #### Parameter
 
-| Name | Geben Sie      | ein Beschreibung |
-| ---- | -------------- | ---------------- |
-| ir   | SemanticModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | -------------- | ----------- |
+| ir | SemanticModule |             |
 
 ### SOLID_FRAMEWORK
 
@@ -347,10 +347,10 @@ Verfeinern Sie einen abgesenkten Solid-Plan. Ein Absichts-Wrapper, der keinen So
 
 #### Parameter
 
-| Name      | Geben Sie             | ein Beschreibung |
-| --------- | --------------------- | ---------------- |
-| Absichten | Zielabsichten         |                  |
-| Optionen  | TargetOptimizeOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------- | ----------- |
+| Absichten | Zielabsichten |             |
+| Optionen | TargetOptimizeOptions |             |
 
 ### STABLE_LIST_KEYS
 

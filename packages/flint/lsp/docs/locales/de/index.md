@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> packages/flint-lsp/docs/index.md: [packages/flint-lsp/docs/index.md](../../index.md)
+> packages/flint/lsp/docs/index.md: [packages/flint/lsp/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
 Der stdio Language Server Protocol-Server für Flint v1. Das Paket
@@ -11,11 +11,11 @@ Eigentum von `@mission-platform/flint`.
 
 ## Beginnen Sie hier
 
-- [Referenz zu Sprachtools](reference/language-service.md) – Diagnose,
+- [Sprachtool-Referenz](reference/language-service.md) – Diagnose,
   Vervollständigung, Hover, semantische Token und unterstützte Grenzen.
 - [Build- und Testanleitung](guides/development.md) – lokale Serverprüfungen und
   Protokollvorrichtungen.
-- [`llms.txt` im Sprachpaket](../../../../flint/llms.txt) – Kern
+– [`llms.txt` im Sprachpaket](../../../../llms.txt) – Kern
   Hinweise zur Sprach-API.
 
 Der Server benötigt Node.js `>=24.0.0` und stellt `flint-lsp` bereit

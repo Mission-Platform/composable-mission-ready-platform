@@ -9,188 +9,71 @@
 
 根据 `@mission-platform/qr-code` 中的公共源声明生成。
 
-## `src/encoder/index`
+## `src/components/molecules/forge-qr-code/forge-qr-code`
 
-### 编码MicroQr
-
-**种类：**功能
-
-```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-将 `text` 编码为 **Micro QR Code** 矩阵 (ISO/IEC 18004)，实例化
-首次使用时同步 WebAssembly 编码器。
-
-自动选择最小的配合版本（M1–M4、11×11 至 17×17）。
-Micro QR 仅支持纠错级别 `L`、`M` 和 `Q`；请求
-`H` 总是抛出异常（没有 Micro QR 版本提供它）。
-
-#### 参数
-
-| 名称     | 类型              | 描述     |
-| -------- | ----------------- | -------- |
-| 文字     | 字符串            |          |
-| 错误更正 | QrErrorCorrection | 错误修正 |
-
-#### 合同
-
-- **@throws:** 如果文本对于任何 Micro QR 版本来说太长
-  选择的级别（包括对级别 `H` 的任何请求）。
-
-### 编码MicroQrAsync
+### 伪造二维码
 
 **种类：**功能
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
+function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement;
 ```
 
-将 `text` 编码为 **Micro QR Code** 矩阵，实例化 WebAssembly
-第一次使用时异步编码器。请参阅{@linkencodeMicroQr}。
+`ForgeQrCode` — 呈现可扫描的 QR 代码，在中性 JSX 中编写一次
+方言并直接编译为 React 或 Vue
+`@mission-platform/vite-plugin-forge`。
+
+有效负载 (`value`) 完全由客户端在客户端上编码
+`@mission-platform/qr-code` 编码器 — 编写的无依赖性编码器
+Rust 并编译为 WebAssembly（自动版本选择，最低惩罚
+数据掩码）——并绘制为清晰、与分辨率无关的 SVG。 `variant`
+prop 选择符号系统：标准方形 QR 码（{@linkencodeQr}，
+`'qr'`，默认），紧凑的方形微二维码
+({@linkencodeMicroQr}, `'micro'`)，或宽矩形 Micro QR / rMQR 代码
+（{@linkencodeRmqr}，`'rmqr'`）。为所有黑暗发出单个 `<path>`
+模块，因此即使对于大型代码，标记也保持紧凑。为了可靠
+扫描深色/浅色默认为 solid 白底黑字而不是
+主题标记，但两者都可以通过 `color` / `background` 覆盖。
+
+模块和取景器（眼睛）图案可以绘制为正方形、圆角正方形、
+或点（`moduleShape` / `finderShape`）；深色填充接受两站
+线性或径向 `gradient`；可选中心 `logo` 覆盖在
+背板（将其与 `errorCorrection: 'H'` 配对，以便仍然可以扫描代码）。
+
+可选操作工具栏（通过 `showActions` — `true` 为每个
+按钮，或一个 {@link QrCodeActions} 对象来单独选择它们）让
+用户 **将代码保存为 PNG 图像**，**将图像复制到剪贴板**，
+并**将编码值复制到剪贴板**。 PNG 被光栅化在
+客户端将渲染的 SVG 绘制到画布上。
+
+替换原始 Vue SFC：`computed` 渲染变为
+中立的{@link useMemo}； `error` 发出成为 `onError` 回调属性
+（当编码失败时调用，从内部镜像原始的发射
+计算）。它通过并置的 CSS 模块拥有自己的样式
+`forge-qr-code.module.scss`。
 
 #### 参数
 
-| 名称     | 类型              | 描述     |
-| -------- | ----------------- | -------- |
-| 文字     | 字符串            |          |
-| 错误更正 | QrErrorCorrection | 错误修正 |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<QrCodeProperties> |             |
 
-#### 合同
-
-- **@throws:** 如果文本对于任何 Micro QR 版本来说太长
-  选择的级别（包括对级别 `H` 的任何请求）。
-
-### 编码Qr
-
-**种类：**功能
-
-```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
-```
-
-以给定的纠错级别将 `text` 编码为 QR 码矩阵，
-首次使用时同步实例化 WebAssembly 编码器。
-
-#### 参数
-
-| 名称     | 类型              | 描述     |
-| -------- | ----------------- | -------- |
-| 文字     | 字符串            |          |
-| 错误更正 | QrErrorCorrection | 错误修正 |
-
-#### 合同
-
-- **@throws:** 如果文本太长而无法容纳最大的（版本
-
-40. 所选纠错级别的 QR 码。
-
-### 编码Qr异步
-
-**种类：**功能
-
-```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
-```
-
-以给定的纠错级别将 `text` 编码为 QR 码矩阵，
-首次使用时异步实例化 WebAssembly 编码器。
-
-#### 参数
-
-| 名称     | 类型              | 描述     |
-| -------- | ----------------- | -------- |
-| 文字     | 字符串            |          |
-| 错误更正 | QrErrorCorrection | 错误修正 |
-
-#### 合同
-
-- **@throws:** 如果文本太长而无法容纳最大的（版本
-
-40. 所选纠错级别的 QR 码。
-
-### 编码Rmqr
-
-**种类：**功能
-
-```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-将 `text` 编码为 **矩形 Micro QR (rMQR) 代码** 矩阵
-(ISO/IEC 23941)，首先同步实例化 WebAssembly 编码器
-使用。
-
-选择最小的配件版本（从 R7×43 到 R17×139 的 32 个尺寸）
-自动。 rMQR 仅支持纠错级别 `M` 和 `H`，因此
-`L`/`M` 映射到 `M`，`Q`/`H` 映射到 `H`。
-
-#### 参数
-
-| 名称     | 类型              | 描述     |
-| -------- | ----------------- | -------- |
-| 文字     | 字符串            |          |
-| 错误更正 | QrErrorCorrection | 错误修正 |
-
-#### 合同
-
-- **@throws:** 如果文本对于任何 rMQR 版本来说太长
-  选择的级别。
-
-### 编码Rmqr异步
-
-**种类：**功能
-
-```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
-```
-
-将 `text` 编码为 **矩形 Micro QR (rMQR) 代码** 矩阵，
-首次使用时异步实例化 WebAssembly 编码器。参见
-{@linkencodeRmqr}。
-
-#### 参数
-
-| 名称     | 类型              | 描述     |
-| -------- | ----------------- | -------- |
-| 文字     | 字符串            |          |
-| 错误更正 | QrErrorCorrection | 错误修正 |
-
-#### 合同
-
-- **@throws:** 如果文本对于任何 rMQR 版本来说太长
-  选择的级别。
-
-## `src/types`
-
-### 紧凑Qr矩阵
+### 二维码操作
 
 **种类：**接口
 
 ```typescript
-export interface CompactQrMatrix
+export interface QrCodeActions
 ```
 
-编码紧凑 QR 变体 — Micro QR 或矩形 Micro QR (rMQR)
-代码。与 {@link QrMatrix} 不同，它们可能是矩形，因此网格是
-由显式 `width`/`height` 描述，而不是单个 `size`。
+工具栏显示哪些操作按钮。 `true` 启用所有这些功能。
 
-### Qr纠错
-
-**种类：**类型
-
-```typescript
-export type QrErrorCorrection = 'L' | 'M' | 'Q' | 'H';
-```
-
-纠错级别：级别越高，可以容忍的损坏越多，但保存的数据越少。
-
-### Qr矩阵
+### 二维码属性
 
 **种类：**接口
 
 ```typescript
-export interface QrMatrix
+export interface QrCodeProperties
 ```
 
-解码/编码的 QR 码：深色 (`true`) 模块的方形网格。
+没有提供描述。

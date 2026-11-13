@@ -1,8 +1,6 @@
-import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
-
 import { ForgeNavbar } from '@mission-platform/components';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 
 /**
  * `ForgeNavbar` is the write-once `ForgeNavbar` component of `@mission-platform/components`. It composes the write-once `Drawer` (mobile

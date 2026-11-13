@@ -13,7 +13,7 @@ contrats consommés par les applications et les composants partagés.
 
 - [Référence du jeton de composant](reference/component-tokens.md) — l'inventaire,
   Chemins DTCG, sortie générée et contrat de transfert Figma.
-- [Guide de construction et de test](guides/development.md) — source du jeton, génération et
+- [Guide de construction et de test](guides/development.md) — source, génération et
   vérifications des feuilles de style.
 - [`README.md`](../../../README.md) — exportations de packages et configuration de base.
 

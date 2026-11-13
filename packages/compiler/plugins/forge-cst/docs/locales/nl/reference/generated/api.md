@@ -23,9 +23,9 @@ Haal alle invoeraangiften op het hoogste niveau uit een geparseerd programma AST
 
 #### Parameters
 
-| Naam      | Typ       | Beschrijving |
-| --------- | --------- | ------------ |
-| programma | Programma |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------- | ----------- |
+| programma | Programma |             |
 
 ### parseCst
 
@@ -43,9 +43,9 @@ met tokenposities, opmerkingen en volledige AST-metagegevens.
 
 #### Parameters
 
-| Naam   | Typ                           | Beschrijving                         |
-| ------ | ----------------------------- | ------------------------------------ |
-| bron   | tekenreeks                    | - Broncode om te parseren.           |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------- | ----------------------------------- |
+| bron | tekenreeks | - Broncode om te parseren.             |
 | opties | ParseCstOptions \| tekenreeks | - CST-parseeropties of bestandsnaam. |
 
 #### Contract
@@ -99,14 +99,14 @@ function rewriteImportsWithCst(
 
 Herschrijf importen in TypeScript/TSX-broncode met behulp van een nauwkeurige Concrete Syntax Tree (CST).
 
-Behoudt opmerkingen, opmaak met meerdere regels en AST-integriteit zonder kwetsbare regex-parsering.
+Behoudt opmerkingen, meerregelige opmaak en AST-integriteit zonder kwetsbare regex-parsering.
 
 #### Parameters
 
-| Naam   | Typ                     | Beschrijving |
-| ------ | ----------------------- | ------------ |
-| bron   | tekenreeks              |              |
-| opties | HerschrijfImportsOpties |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------- | ----------- |
+| bron | tekenreeks |             |
+| opties | HerschrijfImportsOpties |             |
 
 ### HerschrijfResultaat
 
@@ -117,3 +117,426 @@ export interface RewriteResult
 ```
 
 Resultaat van een CST-import-herschrijftransformatie.
+
+## `src/text`
+
+### blancoRegio's
+
+**Soort:** functie
+
+```typescript
+function blankRegions(text: string, regions: readonly string[]): string;
+```
+
+Maak elk voorkomen van elke regio leeg, waarbij de karakterindexen behouden blijven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ----------------- | ----------- |
+| tekst | tekenreeks |             |
+| regio's | alleen-lezen tekenreeks[] |             |
+
+### samenvouwenWhitespace
+
+**Soort:** functie
+
+```typescript
+function collapseWhitespace(text: string): string;
+```
+
+Vouw alle witruimtereeksen samen tot enkele spaties en trim het resultaat.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| tekst | tekenreeks |             |
+
+### endOfTypeArgumenten
+
+**Soort:** functie
+
+```typescript
+function endOfTypeArguments(text: string, start: number): number;
+```
+
+De index net voorbij de `>` en sluit de lijst met typeargumenten die is geopend op `start`,
+of `-1` wanneer de lijst nooit sluit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| tekst | tekenreeks |             |
+| begin | nummer |             |
+
+### escapeAttribuut
+
+**Soort:** functie
+
+```typescript
+function escapeAttribute(value: string): string;
+```
+
+Escape een HTML-attribuutwaarde tussen dubbele aanhalingstekens.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | tekenreeks |             |
+
+### ontsnappenBindend
+
+**Soort:** functie
+
+```typescript
+function escapeBinding(expression: string): string;
+```
+
+Escape een expressie voor gebruik binnen een Vue-binding met dubbele aanhalingstekens.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | ------ | ----------- |
+| expressie | tekenreeks |             |
+
+### indexVanTopLevel
+
+**Soort:** functie
+
+```typescript
+function indexOfTopLevel(text: string, token: string, from = 0): number;
+```
+
+Index van de eerste keer dat `token` op het hoogste niveau voorkomt in `text` (buiten
+haakjes, tekenreeksen en commentaar), of `-1`.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| tekst | tekenreeks |             |
+| teken | tekenreeks |             |
+| van |        |             |
+
+### isIdentifierNaam
+
+**Soort:** functie
+
+```typescript
+function isIdentifierName(name: string): boolean;
+```
+
+Alias ​​voor isPlainIdentifier.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| naam | tekenreeks |             |
+
+### isIdentifierPart
+
+**Soort:** functie
+
+```typescript
+function isIdentifierPart(character: string | undefined): boolean;
+```
+
+Of het personage een JavaScript-ID kan voortzetten.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | ------------------- | ----------- |
+| karakter | tekenreeks \| ongedefinieerd |             |
+
+### isIdentifierStart
+
+**Soort:** functie
+
+```typescript
+function isIdentifierStart(character: string | undefined): boolean;
+```
+
+Of het personage een JavaScript-identifier kan starten.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | ------------------- | ----------- |
+| karakter | tekenreeks \| ongedefinieerd |             |
+
+### isPlainIdentifier
+
+**Soort:** functie
+
+```typescript
+function isPlainIdentifier(name: string): boolean;
+```
+
+Of een tekenreeks een geldige, gewone JavaScript-identificatienaam is.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| naam | tekenreeks |             |
+
+### maskerLiterals
+
+**Soort:** functie
+
+```typescript
+function maskLiterals(text: string): boolean[];
+```
+
+Bereken een Booleaans masker dat elke index in `text` markeert die zich in een letterlijke tekenreeks bevindt,
+sjabloonletterlijk of commentaar. Posities gemarkeerd met `true` zijn letterlijke inhoud en mogen nooit worden weergegeven
+structureel herschreven worden.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| tekst | tekenreeks |             |
+
+### matchBracket
+
+**Soort:** functie
+
+```typescript
+function matchBracket(text: string, start: number): number;
+```
+
+Index van het haakje dat overeenkomt met het openingshaakje bij `start`, of `-1` wanneer
+tekst is onevenwichtig. Letterlijke en commentaargebieden worden overgeslagen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| tekst | tekenreeks |             |
+| begin | nummer |             |
+
+### lidToegang
+
+**Soort:** functie
+
+```typescript
+function memberAccess(object: string, key: string): string;
+```
+
+Retourneert `<object>.<key>` voor gewone ID's, of anders `<object>["<key>"]` (notatie tussen haakjes).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------ | ----------- |
+| voorwerp | tekenreeks |             |
+| sleutel | tekenreeks |             |
+
+### stootkussen
+
+**Soort:** functie
+
+```typescript
+function pad(depth: number): string;
+```
+
+Inkeping voor een sjabloondiepte (twee spaties per niveau).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| diepte | nummer |             |
+
+### citaat
+
+**Soort:** functie
+
+```typescript
+function quote(value: string): string;
+```
+
+Alias ​​voor quoteString.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | tekenreeks |             |
+
+### quoteAttribuutWaarde
+
+**Soort:** functie
+
+```typescript
+function quoteAttributeValue(value: string): string;
+```
+
+Citeer een tekenreeks als JSX-attribuutwaarde.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | tekenreeks |             |
+
+### quoteString
+
+**Soort:** functie
+
+```typescript
+function quoteString(value: string): string;
+```
+
+Letterlijke tekenreeks tussen dubbele aanhalingstekens voor uitgezonden code (JSON-gecodeerd).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | tekenreeks |             |
+
+### vervangEerste
+
+**Soort:** functie
+
+```typescript
+function replaceFirst(
+  text: string,
+  search: string,
+  replacement: string,
+): string;
+```
+
+Vervang het eerste exemplaar van `search` in `text` door `replacement`.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ------ | ----------- |
+| tekst | tekenreeks |             |
+| zoeken | tekenreeks |             |
+| vervanging | tekenreeks |             |
+
+### skipAtomicToken
+
+**Soort:** functie
+
+```typescript
+function skipAtomicToken(text: string, index: number): number;
+```
+
+Ga verder dan het token, beginnend bij `index`, wanneer een string, sjabloon of commentaar wordt geopend.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| tekst | tekenreeks |             |
+| index | nummer |             |
+
+### Trivia overslaan
+
+**Soort:** functie
+
+```typescript
+function skipTrivia(text: string, index: number): number;
+```
+
+Sla witruimte en opmerkingen over en retourneer de offset van het volgende significante teken.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| tekst | tekenreeks |             |
+| index | nummer |             |
+
+### gesplitstTopLevel
+
+**Soort:** functie
+
+```typescript
+function splitTopLevel(text: string, separator: string): string[];
+```
+
+Splits `text` op elk exemplaar van `separator` op het hoogste niveau (een enkele
+teken), waarbij scheidingstekens tussen haakjes, tekenreeksen of opmerkingen worden genegeerd.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | ------ | ----------- |
+| tekst | tekenreeks |             |
+| scheidingsteken | tekenreeks |             |
+
+### stripBuitenhaakjes
+
+**Soort:** functie
+
+```typescript
+function stripOuterParentheses(text: string): string;
+```
+
+Alias ​​voor het uitpakken van haakjes.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| tekst | tekenreeks |             |
+
+### stripTypeAssertion
+
+**Soort:** functie
+
+```typescript
+function stripTypeAssertion(text: string): string;
+```
+
+Verwijder een achterliggende `as T`/`satisfies T`-definitie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| tekst | tekenreeks |             |
+
+### citaat opheffen
+
+**Soort:** functie
+
+```typescript
+function unquote(text: string): string | undefined;
+```
+
+Verwijdert de aanhalingstekens van een letterlijke tekenreeks als deze tussen enkele, dubbele of backtick-aanhalingstekens staat, of ongedefinieerd als dat niet het geval is.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| tekst | tekenreeks |             |
+
+### haakjes uitpakken
+
+**Soort:** functie
+
+```typescript
+function unwrapParentheses(text: string): string;
+```
+
+Verwijder herhaaldelijk één laag overtollige haakjes (`(x)` -> `x`).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| tekst | tekenreeks |             |

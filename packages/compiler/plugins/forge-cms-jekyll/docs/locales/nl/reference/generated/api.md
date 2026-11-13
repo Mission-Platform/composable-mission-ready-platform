@@ -43,9 +43,9 @@ Bind Jekyll (Liquid)-projectie aan een framework-uitvoerplug-in die eigendom is 
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| opties | ForgeJekyllCmsOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------- | ----------- |
+| opties | ForgeJekyllCmsOptions |             |
 
 ### ForgeJekyllCmsOptions
 
@@ -72,16 +72,16 @@ function emitComponentsData(
 
 Emit `_data/forge-components.yml`: het schema van elke uitgezonden include.
 
-Er wordt een reeks op het hoogste niveau gebruikt in plaats van een mapping, dus `site.data`-iteratie
+Er wordt gebruik gemaakt van een reeks op het hoogste niveau in plaats van een mapping, dus `site.data`-iteratie
 behoudt de componentenvolgorde van de compiler, wat de volgorde is van een galerij of een
 gegenereerde documentatiepagina zou ze moeten vermelden.
 
 #### Parameters
 
-| Naam        | Typ                             | Beschrijving |
-| ----------- | ------------------------------- | ------------ |
-| componenten | alleen-lezen ContentComponent[] |              |
-| naamruimte  | tekenreeks                      |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------- | ----------- |
+| componenten | alleen-lezen ContentComponent[] |             |
+| naamruimte | tekenreeks |             |
 
 ### emitJekyllConfig
 
@@ -105,10 +105,10 @@ filters, en zouden anders lege waarden zien.
 
 #### Parameters
 
-| Naam        | Typ                             | Beschrijving |
-| ----------- | ------------------------------- | ------------ |
-| componenten | alleen-lezen ContentComponent[] |              |
-| naamruimte  | tekenreeks                      |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------- | ----------- |
+| componenten | alleen-lezen ContentComponent[] |             |
+| naamruimte | tekenreeks |             |
 
 ### fieldToJekyllType
 
@@ -122,9 +122,9 @@ Het Jekyll-gegevenstype waarin een neutraal veld wordt gepubliceerd.
 
 #### Parameters
 
-| Naam | Typ        | Beschrijving |
-| ---- | ---------- | ------------ |
-| veld | InhoudVeld |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------ | ----------- |
+| veld | InhoudVeld |             |
 
 ### JekyllFieldType
 
@@ -144,13 +144,13 @@ De woordenschat waaronder de neutrale veldsoorten worden gepubliceerd in `_data`
 function yamlScalar(value: ContentDefaultValue): string;
 ```
 
-Een YAML-scalair voor een neutrale standaardwaarde.
+Een YAML-scalar voor een neutrale standaardwaarde.
 
 #### Parameters
 
-| Naam   | Typ                 | Beschrijving |
-| ------ | ------------------- | ------------ |
-| waarde | ContentDefaultValue |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------------- | ----------- |
+| waarde | ContentDefaultValue |             |
 
 ## `src/template`
 
@@ -179,10 +179,10 @@ Emit the Liquid bevat voor één component.
 
 #### Parameters
 
-| Naam        | Typ             | Beschrijving |
-| ----------- | --------------- | ------------ |
-| bestanddeel | InhoudComponent |              |
-| naamruimte  | tekenreeks      |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
+| naamruimte | tekenreeks |             |
 
 ### includeBestandsnaam
 
@@ -199,10 +199,10 @@ De artefactbestandsnaam van include.
 
 #### Parameters
 
-| Naam        | Typ             | Beschrijving |
-| ----------- | --------------- | ------------ |
-| bestanddeel | InhoudComponent |              |
-| naamruimte  | tekenreeks      |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
+| naamruimte | tekenreeks |             |
 
 ### includePath
 
@@ -219,10 +219,10 @@ Het include-pad waarmee een component wordt geadresseerd, relatief ten opzichte 
 
 #### Parameters
 
-| Naam        | Typ             | Beschrijving |
-| ----------- | --------------- | ------------ |
-| bestanddeel | InhoudComponent |              |
-| naamruimte  | tekenreeks      |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
+| naamruimte | tekenreeks |             |
 
 ### jekyllDiagnostiek
 
@@ -245,10 +245,10 @@ weergegeven waar de opmaak werd verwacht.
 
 #### Parameters
 
-| Naam        | Typ               | Beschrijving |
-| ----------- | ----------------- | ------------ |
-| ir          | SemantischeModule |              |
-| bestanddeel | InhoudComponent   |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------- | ----------- |
+| ir | SemantischeModule |             |
+| bestanddeel | InhoudComponent |             |
 
 ### vloeistofLiteraal
 
@@ -266,6 +266,6 @@ dan het afdwingen van de standaardwaarde tot een string.
 
 #### Parameters
 
-| Naam   | Typ                 | Beschrijving |
-| ------ | ------------------- | ------------ |
-| waarde | ContentDefaultValue |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------------- | ----------- |
+| waarde | ContentDefaultValue |             |

@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> packages/email-renderer/docs/index.md: [packages/email-renderer/docs/index.md](../../index.md)
+> packages/content/email-renderer/docs/index.md: [packages/content/email-renderer/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
 `@mission-platform/email-renderer` besitzt die Framework-neutrale Rendering-Grenze für Mission Platform-E-Mail-Bäume. Sein Root-Eintrag ist für die serverseitige E-Mail-Generierung sicher; Browseradapter sind hinter expliziten Unterpfaden isoliert.
@@ -16,11 +16,11 @@ const document = renderMarkdown('# Welcome\n\nRead **more** at [Mission Platform
 const html = renderEmail(document.node, { title: 'Welcome', previewText: 'A short preview' });
 ```
 
-Markdown wird in den gemeinsamen Forge-Baum konvertiert, sodass Links, Bilder, Text und HTML vor der Serialisierung maskiert oder validiert werden. Die Ausgabe verfügt über eine deterministische Attribut-/Stilreihenfolge und lehnt Skript-URLs, Ereignisattribute, CSS-Variablen, Flex-/Grid-Werte und Framework-Marker ab.
+Markdown wird in den gemeinsamen Forge-Baum konvertiert, sodass Links, Bilder, Text und HTML vor der Serialisierung maskiert oder validiert werden. Die Ausgabe verfügt über eine deterministische Attribut-/Stilreihenfolge und lehnt Skript-URLs, Ereignisattribute, CSS-Variablen, Flex-/Grid-Werte und Framework-Markierungen ab.
 
 ## Browser-Adapter
 
-Verwenden Sie nur den Adapter-Unterpfad, der für eine Browservorschau oder Anwendung erforderlich ist:
+Use only the adapter subpath required by a browser preview or application:
 
 - `@mission-platform/email-renderer/vue` → `renderToEmailVue`, `toEmailVueComponent`.
 - `@mission-platform/email-renderer/react` → `renderToEmailReact`, `toEmailReactComponent`.
@@ -30,6 +30,6 @@ Verwenden Sie nur den Adapter-Unterpfad, der für eine Browservorschau oder Anwe
 
 Für einen einzelnen optionalen Import, der alle fünf Browseradapter verfügbar macht, verwenden Sie
 `@mission-platform/email-renderer/adapters`. Dieser Eintrag ist getrennt von der
-Root-Eintrag, sodass bei der E-Mail-Generierung nur auf dem Server niemals eine Framework-Laufzeit geladen wird.
+Root-Eintrag, sodass bei der E-Mail-Generierung nur auf dem Server nie eine Framework-Laufzeit geladen wird.
 
-Diese optionalen Einstiegspunkte verwenden denselben Forge-Baum wieder. Sie werden nicht vom Root-E-Mail-Serialisierer importiert und sind in reinen Server-E-Mail-Bereitstellungen nicht erforderlich.
+Diese optionalen Einstiegspunkte verwenden denselben Forge-Baum wieder. Sie werden nicht vom Root-E-Mail-Serialisierer importiert und werden in reinen Server-E-Mail-Bereitstellungen nicht benötigt.

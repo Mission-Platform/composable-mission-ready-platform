@@ -25,7 +25,7 @@ all'interno di `attemptDirectory`; quella directory non è mai la destinazione p
 
 #### Parametri
 
-| Nome    | Digitare                    | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | --------------------------- | ----------- |
 | opzioni | ForgeArtifactPublishOptions |             |
 
@@ -42,7 +42,7 @@ deliberatamente atteso dagli hook del ciclo di vita, mai durante la creazione di
 
 #### Parametri
 
-| Nome    | Digitare                   | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | -------------------------- | ----------- |
 | opzioni | ForgeBuildLifecycleOptions |             |
 
@@ -58,9 +58,9 @@ Voce virtuale stabile utilizzata finché la destinazione non è stata preparata 
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| targetId | stringa  |             |
+| Nome | Digitare | Descrizione |
+| -------- | ------ | ----------- |
+| targetId | stringa |             |
 
 ## `src/compiler/artifact-manifest`
 
@@ -80,11 +80,11 @@ Crea un manifest stabile senza introdurre timestamp nell'output generato.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
-| targetId  | stringa                            |             |
+| Nome | Digitare | Descrizione |
+| --------- | ------------------------------ | ----------- |
+| targetId | stringa |             |
 | artefatti | sola lettura ForgeArtifactRecord[] |             |
-| completo  |                                    |             |
+| completo |                                |             |
 
 ### ForgeArtifactKind
 
@@ -114,7 +114,7 @@ Completa l'inventario di output per un target esplicito.
 export interface ForgeArtifactRecord
 ```
 
-Un output deterministico registrato da un manifest dell'artefatto con ambito target.
+Un output deterministico registrato da un manifesto dell'artefatto con ambito target.
 
 ## `src/compiler/artifact-path`
 
@@ -131,9 +131,9 @@ I componenti discendenti vengono controllati dal risolutore di artefatti prima d
 
 #### Parametri
 
-| Nome   | Digitare | Descrizione |
-| ------ | -------- | ----------- |
-| radice | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| radice | stringa |             |
 
 ### garantireForgeArtifactDirectory
 
@@ -147,10 +147,10 @@ Crea una directory di output un componente alla volta senza seguire i collegamen
 
 #### Parametri
 
-| Nome    | Digitare | Descrizione |
-| ------- | -------- | ----------- |
-| radice  | stringa  |             |
-| rubrica | stringa  |             |
+| Nome | Digitare | Descrizione |
+| --------- | ------ | ----------- |
+| radice | stringa |             |
+| rubrica | stringa |             |
 
 ### risolvereForgeArtifactPath
 
@@ -164,10 +164,10 @@ Risolvi il nome di un artefatto e verifica che i componenti del percorso esisten
 
 #### Parametri
 
-| Nome         | Digitare | Descrizione |
-| ------------ | -------- | ----------- |
-| radice       | stringa  |             |
-| relativoNome | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ------------ | ------ | ----------- |
+| radice | stringa |             |
+| relativoNome | stringa |             |
 
 ### validateForgeArtifactName
 
@@ -181,9 +181,9 @@ Convalida il nome di un artefatto senza normalizzare i segmenti di percorso non 
 
 #### Parametri
 
-| Nome         | Digitare | Descrizione |
-| ------------ | -------- | ----------- |
-| relativoNome | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ------------ | ------ | ----------- |
+| relativoNome | stringa |             |
 
 ### validateForgeArtifactSegment
 
@@ -197,9 +197,9 @@ Convalida un singolo componente del percorso utilizzato per costruire una radice
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| segmento | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ------- | ------ | ----------- |
+| segmento | stringa |             |
 
 ## `src/compiler/artifact-writer`
 
@@ -215,15 +215,15 @@ function createForgeArtifactWriter(
 ): ForgeArtifactWriter;
 ```
 
-Nessuna descrizione fornita.
+Crea uno scrittore di artefatti atomici per la messa in scena e il commit di artefatti Forge.
 
 #### Parametri
 
-| Nome     | Digitare                   | Descrizione |
+| Nome | Digitare | Descrizione |
 | -------- | -------------------------- | ----------- |
-| outDir   | stringa                    |             |
-| targetId | stringa                    |             |
-| opzioni  | ForgeArtifactWriterOptions |             |
+| outDir | stringa |             |
+| targetId | stringa |             |
+| opzioni | ForgeArtifactWriterOptions |             |
 
 ### forgeArtifactAttemptDirectory
 
@@ -237,10 +237,10 @@ Allocare una directory di pari livello di proprietà per un tentativo di compila
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| outDir   | stringa  |             |
-| targetId | stringa  |             |
+| Nome | Digitare | Descrizione |
+| -------- | ------ | ----------- |
+| outDir | stringa |             |
+| targetId | stringa |             |
 
 ### ForgeArtifactWriter
 
@@ -305,7 +305,7 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 ```
 
 Compilare un modulo componente neutro (o basato su framework) nel relativo framework
-fonte (Fase 1).
+fonte (fase 1).
 
 Una direttiva `"use <framework>";` principale viene rimossa prima dell'emissione
 quindi il pennarello non fuoriesce mai nell'output; estrarre un modulo da
@@ -314,9 +314,9 @@ la compilazione del framework non corrispondente viene gestita a monte dalla fas
 
 #### Parametri
 
-| Nome    | Digitare                | Descrizione |
-| ------- | ----------------------- | ----------- |
-| fonte   | stringa                 |             |
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| fonte | stringa |             |
 | opzioni | Opzioni di compilazione |             |
 
 ### Modulo compilato
@@ -343,9 +343,9 @@ fonte per framework (Fase 1).
 
 #### Parametri
 
-| Nome    | Digitare           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ------------------ | ----------- |
-| fonte   | stringa            |             |
+| fonte | stringa |             |
 | opzioni | CompileHookOptions |             |
 
 ### CompileHookOptions
@@ -374,9 +374,9 @@ cucitura condivisa utilizzata da pacchetti target autonomi come Astro.
 
 #### Parametri
 
-| Nome    | Digitare             | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | -------------------- | ----------- |
-| fonte   | stringa              |             |
+| fonte | stringa |             |
 | opzioni | CompileModuleOptions |             |
 
 ### CompileModuleOptions
@@ -413,10 +413,10 @@ Trova una dichiarazione di funzione Oxc esportata per un componente neutro in ba
 
 #### Parametri
 
-| Nome        | Digitare        | Descrizione |
-| ----------- | --------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------- | ----------- |
 | fileorigine | OxcParsedModule |             |
-| nome        | stringa         |             |
+| nome | stringa |             |
 
 ### isSlotElement
 
@@ -431,8 +431,8 @@ Indica se un Oxc node è un elemento neutro con nome dello slot.
 #### Parametri
 
 | Nome | Digitare | Descrizione |
-| ---- | -------- | ----------- |
-| node | OxcNodo  |             |
+| ---- | ------- | ----------- |
+| node | OxcNodo |             |
 
 ### leggereNomeSlot
 
@@ -447,8 +447,8 @@ Legge l'`name="…"` statico di un elemento Oxc `<Slot>`.
 #### Parametri
 
 | Nome | Digitare | Descrizione |
-| ---- | -------- | ----------- |
-| node | OxcNodo  |             |
+| ---- | ------- | ----------- |
+| node | OxcNodo |             |
 
 ## `src/compiler/constants`
 
@@ -484,8 +484,8 @@ Generare le dichiarazioni di tipo JSX specifiche del framework co-localizzate.
 
 #### Parametri
 
-| Nome   | Digitare     | Descrizione |
-| ------ | ------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| --------- | ------------ | ----------- |
 | quadro | JsxFramework |             |
 
 ### MODULO_NEUTRO
@@ -512,11 +512,11 @@ Indica se un modulo neutro o specifico del framework appartiene a una build di d
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| nomefile | stringa  |             |
-| fonte    | stringa  |             |
-| quadro   | stringa  |             |
+| Nome | Digitare | Descrizione |
+| --------- | ------ | ----------- |
+| nomefile | stringa |             |
+| fonte | stringa |             |
+| quadro | stringa |             |
 
 ### leggereFrameworkDirective
 
@@ -530,10 +530,10 @@ Legge la direttiva principale `"use <framework>"` da un modulo Oxc.
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| nomefile | stringa  |             |
-| fonte    | stringa  |             |
+| Nome | Digitare | Descrizione |
+| -------- | ------ | ----------- |
+| nomefile | stringa |             |
+| fonte | stringa |             |
 
 ## `src/compiler/discover`
 
@@ -552,10 +552,10 @@ in (il nome base del modulo di riesportazione).
 
 #### Parametri
 
-| Nome          | Digitare | Descrizione |
-| ------------- | -------- | ----------- |
-| barileFonte   | stringa  |             |
-| stripPrefisso |          |             |
+| Nome | Digitare | Descrizione |
+| ------------ | ------ | ----------- |
+| barileFonte | stringa |             |
+| stripPrefisso |        |             |
 
 ### discoverComponentsFromGraph
 
@@ -573,11 +573,11 @@ Proietta le esportazioni dei componenti pubblici dal grafico canonico mantenendo
 
 #### Parametri
 
-| Nome          | Digitare                      | Descrizione |
-| ------------- | ----------------------------- | ----------- |
-| grafico       | ForgeFileGraph                |             |
-| stripPrefisso |                               |             |
-| diagnostica   | Diagnostica del compilatore[] |             |
+| Nome | Digitare | Descrizione |
+| ----------- | -------------------- | ----------- |
+| grafico | ForgeFileGraph |             |
+| stripPrefisso |                      |             |
+| diagnostica | Diagnostica del compilatore[] |             |
 
 ### Componente scoperto
 
@@ -618,9 +618,9 @@ i consumatori guidano lo stesso singleton per framework utilizzato dai component
 
 #### Parametri
 
-| Nome               | Digitare                | Descrizione |
-| ------------------ | ----------------------- | ----------- |
-| barileFonte        | stringa                 |             |
+| Nome | Digitare | Descrizione |
+| ---------------- | ------------------- | ----------- |
+| barileFonte | stringa |             |
 | componenteCartelle | Sola letturaSet<string> |             |
 
 ### discoverHelperExportsFromGraph
@@ -639,10 +639,10 @@ Progetto delle esportazioni pubbliche non componenti dal grafico canonico.
 
 #### Parametri
 
-| Nome                | Digitare                           | Descrizione |
-| ------------------- | ---------------------------------- | ----------- |
-| grafico             | ForgeFileGraph                     |             |
-| componenteCartelle  | Sola letturaSet<string>            |             |
+| Nome | Digitare | Descrizione |
+| -------------------- | ------------------------------ | ----------- |
+| grafico | ForgeFileGraph |             |
+| componenteCartelle | Sola letturaSet<string> |             |
 | Componenti scoperti | sola lettura DiscoveredComponent[] |             |
 
 ## `src/compiler/facts`
@@ -699,10 +699,10 @@ Estrai importazioni statiche, esportazioni, bordi di solo tipo e fatti di strutt
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| nomefile | stringa  |             |
-| fonte    | stringa  |             |
+| Nome | Digitare | Descrizione |
+| -------- | ------ | ----------- |
+| nomefile | stringa |             |
+| fonte | stringa |             |
 
 ## `src/compiler/frontends`
 
@@ -720,10 +720,10 @@ creato; il modulo restituito è la singola rappresentazione supportata dal parse
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| nomefile | stringa  |             |
-| fonte    | stringa  |             |
+| Nome | Digitare | Descrizione |
+| -------- | ------ | ----------- |
+| nomefile | stringa |             |
+| fonte | stringa |             |
 
 ### parseFrontendModule
 
@@ -742,12 +742,12 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome           | Digitare                      | Descrizione |
-| -------------- | ----------------------------- | ----------- |
-| nomefile       | stringa                       |             |
-| fonte          | stringa                       |             |
-| tipomodulo     | 'componente' \| 'componibile' |             |
-| nomecomponente | stringa                       |             |
+| Nome | Digitare | Descrizione |
+| ------------- | --------------------------- | ----------- |
+| nomefile | stringa |             |
+| fonte | stringa |             |
+| tipomodulo | 'componente' \| 'componibile' |             |
+| nomecomponente | stringa |             |
 
 ## `src/compiler/generation-context`
 
@@ -763,7 +763,7 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome    | Digitare                      | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ----------------------------- | ----------- |
 | opzioni | ForgeGenerationContextOptions |             |
 
@@ -801,7 +801,7 @@ Costruisci il grafico sorgente canonico da un modulo di ingresso configurato.
 
 #### Parametri
 
-| Nome    | Digitare              | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | --------------------- | ----------- |
 | opzioni | OpzioniForgeFileGraph |             |
 
@@ -902,11 +902,11 @@ Fase 1 passaggio di segnaletica statica seguito da sollevamento generico.
 
 #### Parametri
 
-| Nome           | Digitare                      | Descrizione |
-| -------------- | ----------------------------- | ----------- |
-| modulo         | OxcParsedModule               |             |
-| tipomodulo     | 'componente' \| 'componibile' |             |
-| nomecomponente | stringa                       |             |
+| Nome | Digitare | Descrizione |
+| ------------- | --------------------------- | ----------- |
+| modulo | OxcParsedModule |             |
+| tipomodulo | 'componente' \| 'componibile' |             |
+| nomecomponente | stringa |             |
 
 ## `src/compiler/imports`
 
@@ -920,7 +920,7 @@ export interface NeutralImports
 
 I nomi che un modulo importa dal pacchetto neutro, suddivisi per tipo di associazione.
 
-### leggiImportazioniesterne
+### leggereImportazioniesterne
 
 **Tipo:** funzione
 
@@ -932,10 +932,10 @@ Raccogli le importazioni di pacchetti semplici riportate parola per parola nelle
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| nomefile | stringa  |             |
-| fonte    | stringa  |             |
+| Nome | Digitare | Descrizione |
+| -------- | ------ | ----------- |
+| nomefile | stringa |             |
+| fonte | stringa |             |
 
 ### leggiImportazioni neutre
 
@@ -949,10 +949,10 @@ Ispeziona le importazioni di pacchetti neutri di un modulo.
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| nomefile | stringa  |             |
-| fonte    | stringa  |             |
+| Nome | Digitare | Descrizione |
+| -------- | ------ | ----------- |
+| nomefile | stringa |             |
+| fonte | stringa |             |
 
 ### leggiStyleImports
 
@@ -966,11 +966,11 @@ Raccogli le importazioni relative di fogli di stile da un modulo neutro.
 
 #### Parametri
 
-| Nome         | Digitare | Descrizione |
-| ------------ | -------- | ----------- |
-| nomefile     | stringa  |             |
-| fonte        | stringa  |             |
-| sorgenteRoot | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ---------- | ------ | ----------- |
+| nomefile | stringa |             |
+| fonte | stringa |             |
+| sorgenteRoot | stringa |             |
 
 ### risolvereWorkspaceLocalImport
 
@@ -988,11 +988,11 @@ Risolvere un'importazione `@/` locale dell'area di lavoro relativa al relativo f
 
 #### Parametri
 
-| Nome            | Digitare              | Descrizione |
-| --------------- | --------------------- | ----------- |
-| specificatore   | stringa               |             |
-| nomeFileorigine | stringa               |             |
-| sorgenteRoot    | stringa \| indefinito |             |
+| Nome | Digitare | Descrizione |
+| -------------- | ------------------- | ----------- |
+| specificatore | stringa |             |
+| nomeFileorigine | stringa |             |
+| sorgenteRoot | stringa \| indefinito |             |
 
 ### Importazione stile
 
@@ -1017,8 +1017,8 @@ Se un modulo Oxc o node chiama `i18next.t(...)`.
 #### Parametri
 
 | Nome | Digitare | Descrizione |
-| ---- | -------- | ----------- |
-| node | OxcNodo  |             |
+| ---- | ------- | ----------- |
+| node | OxcNodo |             |
 
 ## `src/compiler/optimize`
 
@@ -1039,9 +1039,9 @@ Impostazione predefinita ad ogni passaggio ON; passare `{ deadBranchPruning: fal
 
 #### Parametri
 
-| Nome    | Digitare         | Descrizione |
-| ------- | ---------------- | ----------- |
-| modulo  | OxcParsedModule  |             |
+| Nome | Digitare | Descrizione |
+| ------- | --------------- | ----------- |
+| modulo | OxcParsedModule |             |
 | opzioni | OttimizzaOpzioni |             |
 
 ### ottimizzareSourceFile
@@ -1049,7 +1049,7 @@ Impostazione predefinita ad ogni passaggio ON; passare `{ deadBranchPruning: fal
 **Genere:** costante
 
 ```typescript
-export const optimizeSourceFile;
+export const optimizeSourceFile: typeof optimizeForgeModule;
 ```
 
 Alias ​​di compatibilità mantenuto per le integrazioni del compilatore che utilizzano il vecchio nome.
@@ -1068,9 +1068,9 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome   | Digitare | Descrizione |
-| ------ | -------- | ----------- |
-| radice | OxcNodo  |             |
+| Nome | Digitare | Descrizione |
+| ---- | ------- | ----------- |
+| radice | OxcNodo |             |
 
 ### isOxcJsxRoot
 
@@ -1085,8 +1085,8 @@ Vero quando node è un elemento JSX, un elemento a chiusura automatica o un fram
 #### Parametri
 
 | Nome | Digitare | Descrizione |
-| ---- | -------- | ----------- |
-| node | OxcNodo  |             |
+| ---- | ------- | ----------- |
+| node | OxcNodo |             |
 
 ### isOxcNode
 
@@ -1100,8 +1100,8 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome   | Digitare    | Descrizione |
-| ------ | ----------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ------- | ----------- |
 | valore | sconosciuto |             |
 
 ### oxcArray
@@ -1116,10 +1116,10 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome   | Digitare | Descrizione |
-| ------ | -------- | ----------- |
-| node   | OxcNodo  |             |
-| chiave | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ---- | ------- | ----------- |
+| node | OxcNodo |             |
+| chiave | stringa |             |
 
 ### oxcBambini
 
@@ -1134,8 +1134,8 @@ Il primo figlio della profondità cammina sulle proprietà enumerabili con valor
 #### Parametri
 
 | Nome | Digitare | Descrizione |
-| ---- | -------- | ----------- |
-| node | OxcNodo  |             |
+| ---- | ------- | ----------- |
+| node | OxcNodo |             |
 
 ### OxcCommento
 
@@ -1159,8 +1159,8 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare              | Descrizione |
-| ---- | --------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---- | -------------------- | ----------- |
 | node | OxcNodo \| indefinito |             |
 
 ### oxcLiteralValue
@@ -1175,8 +1175,8 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare              | Descrizione |
-| ---- | --------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---- | -------------------- | ----------- |
 | node | OxcNodo \| indefinito |             |
 
 ### OxcNode
@@ -1201,10 +1201,10 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome  | Digitare              | Descrizione |
-| ----- | --------------------- | ----------- |
-| fonte | stringa               |             |
-| node  | OxcNodo \| indefinito |             |
+| Nome | Digitare | Descrizione |
+| ------ | -------------------- | ----------- |
+| fonte | stringa |             |
+| node | OxcNodo \| indefinito |             |
 
 ### oxcObject
 
@@ -1218,10 +1218,10 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome   | Digitare | Descrizione |
-| ------ | -------- | ----------- |
-| node   | OxcNodo  |             |
-| chiave | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ---- | ------- | ----------- |
+| node | OxcNodo |             |
+| chiave | stringa |             |
 
 ### OxcParentMap
 
@@ -1265,9 +1265,9 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome      | Digitare | Descrizione |
-| --------- | -------- | ----------- |
-| programma | OxcNodo  |             |
+| Nome | Digitare | Descrizione |
+| ------- | ------- | ----------- |
+| programma | OxcNodo |             |
 
 ### oxcSourceExpression
 
@@ -1285,10 +1285,10 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome     | Digitare                           | Descrizione |
-| -------- | ---------------------------------- | ----------- |
-| fonte    | stringa                            |             |
-| node     | OxcNodo                            |             |
+| Nome | Digitare | Descrizione |
+| ------ | -------------------------------- | ----------- |
+| fonte | stringa |             |
+| node | OxcNodo |             |
 | sintassi | SourceBackedExpression['sintassi'] |             |
 
 ### oxcSourceSpan
@@ -1303,10 +1303,10 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome  | Digitare | Descrizione |
-| ----- | -------- | ----------- |
-| fonte | stringa  |             |
-| node  | OxcNodo  |             |
+| Nome | Digitare | Descrizione |
+| ------ | ------- | ----------- |
+| fonte | stringa |             |
+| node | OxcNodo |             |
 
 ### oxcString
 
@@ -1320,9 +1320,9 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome   | Digitare                          | Descrizione |
-| ------ | --------------------------------- | ----------- |
-| node   | OxcNodo \| indefinito             |             |
+| Nome | Digitare | Descrizione |
+| ---- | -------------------------------- | ----------- |
+| node | OxcNodo \| indefinito |             |
 | chiave | 'nome' \| 'valore' \| 'direttiva' |             |
 
 ### oxcTypeNode
@@ -1337,8 +1337,8 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare              | Descrizione |
-| ---- | --------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---- | -------------------- | ----------- |
 | node | OxcNodo \| indefinito |             |
 
 ### oxcUnwrapModuleStatement
@@ -1357,9 +1357,9 @@ Scarta i wrapper `export …` in modo che i chiamanti vedano la dichiarazione so
 
 #### Parametri
 
-| Nome          | Digitare | Descrizione |
-| ------------- | -------- | ----------- |
-| dichiarazione | OxcNodo  |             |
+| Nome | Digitare | Descrizione |
+| --------- | ------- | ----------- |
+| dichiarazione | OxcNodo |             |
 
 ### parseOxcModule
 
@@ -1373,10 +1373,10 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| nomefile | stringa  |             |
-| fonte    | stringa  |             |
+| Nome | Digitare | Descrizione |
+| -------- | ------ | ----------- |
+| nomefile | stringa |             |
+| fonte | stringa |             |
 
 ### stripOxcFrameworkDirective
 
@@ -1390,7 +1390,7 @@ Elimina le direttive iniziali del prologo `"use <framework>"` da un modulo anali
 
 #### Parametri
 
-| Nome   | Digitare        | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------ | --------------- | ----------- |
 | modulo | OxcParsedModule |             |
 
@@ -1406,9 +1406,9 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome       | Digitare                             | Descrizione |
-| ---------- | ------------------------------------ | ----------- |
-| node       | OxcNodo                              |             |
+| Nome | Digitare | Descrizione |
+| ------- | ---------------------------------- | ----------- |
+| node | OxcNodo |             |
 | visitatore | (node: OxcNode) => vuoto \| booleano |             |
 
 ## `src/compiler/pipeline`
@@ -1429,14 +1429,14 @@ Analizzare, normalizzare e dedurre il modulo semantico neutrale rispetto al targ
 Questo è il punto neutrale di ogni consumatore non quadro (in particolare il CMS
 driver di proiezione) utilizza per ottenere l'IR senza scegliere un plug-in di destinazione.
 I risultati vengono condivisi tramite la stessa cache utilizzata dalla pipeline del framework, quindi a
-Il componente analizzato per diversi target in una build viene dedotto una sola volta.
+il componente analizzato per diversi target in una build viene dedotto una sola volta.
 
 #### Parametri
 
-| Nome     | Digitare                 | Descrizione |
-| -------- | ------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | -------------------- | ----------- |
 | ingresso | Ingresso del compilatore |             |
-| servizio | ForgeCompilerService     |             |
+| servizio | ForgeCompilerService |             |
 
 ### CompilerInput
 
@@ -1470,8 +1470,8 @@ Creare il dispatcher di fasi utilizzato dai punti di ingresso del compilatore.
 
 #### Parametri
 
-| Nome     | Digitare             | Descrizione |
-| -------- | -------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | -------------------- | ----------- |
 | servizio | ForgeCompilerService |             |
 
 ## `src/compiler/report`
@@ -1502,8 +1502,8 @@ Analizza le importazioni e gli utilizzi dei router neutri senza importare alcun 
 
 #### Parametri
 
-| Nome     | Digitare                                                            | Descrizione |
-| -------- | ------------------------------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ----------------------------------------------------------------- | ----------- |
 | ingresso | Scegli<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |             |
 
 ### compileRouterModule
@@ -1514,12 +1514,12 @@ Analizza le importazioni e gli utilizzi dei router neutri senza importare alcun 
 function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult;
 ```
 
-Compila l'utilizzo neutro del router tramite un adattatore di destinazione nativo selezionato.
+Compila l'utilizzo del router neutro tramite un adattatore di destinazione nativo selezionato.
 
 #### Parametri
 
-| Nome     | Digitare            | Descrizione |
-| -------- | ------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ------------------- | ----------- |
 | ingresso | RouterCompilerInput |             |
 
 ### createRouterCompilerPipeline
@@ -1527,7 +1527,7 @@ Compila l'utilizzo neutro del router tramite un adattatore di destinazione nativ
 **Tipo:** funzione
 
 ```typescript
-function createRouterCompilerPipeline();
+function createRouterCompilerPipeline(): { readonly compile: typeof compileRouterModule };
 ```
 
 Modulo dispatcher utilizzato dal compilatore Forge e dai dispositivi di destinazione autonomi.
@@ -1556,8 +1556,8 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome   | Digitare          | Descrizione |
-| ------ | ----------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------ | ---------------- | ----------- |
 | limiti | Limiti ForgeCache |             |
 
 ### ForgeCompileRequest
@@ -1636,7 +1636,7 @@ La costruzione registra solo la proprietà del servizio; la scoperta del grafico
 
 #### Parametri
 
-| Nome    | Digitare                       | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ------------------------------ | ----------- |
 | opzioni | CreateForgeBuildSessionOptions |             |
 
@@ -1734,7 +1734,7 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome    | Digitare                    | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | --------------------------- | ----------- |
 | opzioni | JsxHookLibraryConfigOptions |             |
 
@@ -1750,7 +1750,7 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome    | Digitare                | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ----------------------- | ----------- |
 | opzioni | JsxLibraryConfigOptions |             |
 
@@ -1827,12 +1827,12 @@ function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[];
 
 Plugin Stage-2 per un framework forge creato sotto **tsdown** (Rolldown).
 Preferisci questo a {@link reactJsxPlugin}/{@link solidJsxPlugin}/{@link sveltePlugin}
-quando il bundler non è Vite: i plugin Svelte/Solid solo per Vite si bloccano perché
+quando il bundler non è Vite: i plugin Svelte/Solid solo Vite si bloccano perché
 richiedono la configurazione risolta di Vite.
 
 #### Parametri
 
-| Nome   | Digitare              | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------ | --------------------- | ----------- |
 | plugin | FrameworkOutputPlugin |             |
 
@@ -1873,7 +1873,7 @@ restituendo il percorso del modulo di ingresso generato.
 
 #### Parametri
 
-| Nome    | Digitare                          | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | --------------------------------- | ----------- |
 | opzioni | GenerateHookLibrarySourcesOptions |             |
 
@@ -1901,7 +1901,7 @@ Crea un descrittore dell'albero dei sorgenti da un plugin di output esplicito.
 
 #### Parametri
 
-| Nome   | Digitare              | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------ | --------------------- | ----------- |
 | plugin | FrameworkOutputPlugin |             |
 
@@ -1928,7 +1928,7 @@ restituendo il percorso del modulo di ingresso generato.
 
 #### Parametri
 
-| Nome    | Digitare                        | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ------------------------------- | ----------- |
 | opzioni | GenerateFrameworkSourcesOptions |             |
 
@@ -1966,7 +1966,7 @@ Crea configurazioni tsdown indipendenti per ogni framework di componenti Forge r
 
 #### Parametri
 
-| Nome    | Digitare                           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ---------------------------------- | ----------- |
 | opzioni | TsdownForgeComponentPluginsOpzioni |             |
 
@@ -1985,9 +1985,26 @@ Preserva così l'albero della Forgia
 
 #### Parametri
 
-| Nome    | Digitare                          | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | --------------------------------- | ----------- |
 | opzioni | TsdownForgeEmailComponentsOpzioni |             |
+
+### defineTsdownForgeHooks
+
+**Tipo:** funzione
+
+```typescript
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
+```
+
+Crea una configurazione tsdown per una singola build di hook del framework Forge.
+Emette codice e tipi nella directory di distribuzione del framework di destinazione.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ----------------------- | ----------- |
+| opzioni | TsdownForgeHooksOpzioni |             |
 
 ### defineTsdownForgeHooksAll
 
@@ -2003,7 +2020,7 @@ Crea una serie di configurazioni tsdown per ogni framework di forge hooks richie
 
 #### Parametri
 
-| Nome    | Digitare                   | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | -------------------------- | ----------- |
 | opzioni | TsdownForgeHooksAllOptions |             |
 
@@ -2021,7 +2038,7 @@ Moduli di script virtuale da Vue a `${component}.script.js`.
 
 #### Parametri
 
-| Nome      | Digitare                | Descrizione |
+| Nome | Digitare | Descrizione |
 | --------- | ----------------------- | ----------- |
 | pezzoInfo | CanonicalChunkCandidato |             |
 
@@ -2039,7 +2056,7 @@ i moduli delegano la risoluzione dei nomi dei blocchi.
 
 #### Parametri
 
-| Nome      | Digitare                | Descrizione |
+| Nome | Digitare | Descrizione |
 | --------- | ----------------------- | ----------- |
 | pezzoInfo | CanonicalChunkCandidato |             |
 
@@ -2057,7 +2074,7 @@ emissione in `dist/<framework>/`.
 
 #### Parametri
 
-| Nome    | Digitare                           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ---------------------------------- | ----------- |
 | opzioni | TsdownForgeComponentPluginsOpzioni |             |
 
@@ -2089,13 +2106,11 @@ Nessuna descrizione fornita.
 function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
 ```
 
-Modulo nativo del plug-in tsdown dell'adattatore hook. I plugin restituiti vengono iniettati
-la loro configurazione di destinazione da `tsdownConfig`, consentendo la composizione delle build di hook
-con una configurazione `defineTsdownLibrary` di proprietà del chiamante.
+Crea plugin tsdown hook per tutte le destinazioni del framework configurate.
 
 #### Parametri
 
-| Nome    | Digitare                   | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | -------------------------- | ----------- |
 | opzioni | TsdownForgeHooksAllOptions |             |
 
@@ -2105,6 +2120,16 @@ con una configurazione `defineTsdownLibrary` di proprietà del chiamante.
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
+```
+
+Nessuna descrizione fornita.
+
+### TsdownForgeHooksOpzioni
+
+**Tipo:** interfaccia
+
+```typescript
+export interface TsdownForgeHooksOptions
 ```
 
 Nessuna descrizione fornita.

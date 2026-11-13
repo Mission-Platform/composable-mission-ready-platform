@@ -23,9 +23,9 @@ function synthesiseElementClass(plan: WebComponentsLoweredModule): string;
 
 #### פרמטרים
 
-| שם     | הקלד                       | תיאור |
-| ------ | -------------------------- | ----- |
-| תוכנית | WebComponentsLoweredModule |       |
+| שם | הקלד | תיאור |
+| ---- | -------------------------- | ----------- |
+| תוכנית | WebComponentsLoweredModule |             |
 
 ## `src/emitters/module`
 
@@ -46,12 +46,12 @@ function emitWebComponentModule(
 
 #### פרמטרים
 
-| שם               | הקלד                       | תיאור |
-| ---------------- | -------------------------- | ----- |
-| מודול            | SemanticModule             |       |
-| שם רכיב          | מחרוזת                     |       |
-| componentFolders | ReadonlySet<string>        |       |
-| הוריד            | WebComponentsLoweredModule |       |
+| שם | הקלד | תיאור |
+| ---------------- | -------------------------- | ----------- |
+| מודול | SemanticModule |             |
+| שם רכיב | מחרוזת |             |
+| componentFolders | ReadonlySet<string> |             |
+| הוריד | WebComponentsLoweredModule |             |
 
 ## `src/index`
 
@@ -66,6 +66,74 @@ function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 צור את הפלט TypeScript בלבד של רכיבי אינטרנט.
 
 ## `src/lower`
+
+### lowerWebComponentsModule
+
+פונקציה **סוג:**
+
+```typescript
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
+```
+
+הורד IR ניטרלי לתוך כוונות היעד של Web-Components.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| מודול | מודול סמנטי |             |
+| הקשר | היעד הקשר |             |
+
+### lowerWebComponentsPlan
+
+פונקציה **סוג:**
+
+```typescript
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
+```
+
+בנו את תוכנית היעד של Web-Components עבור מודול ניטרלי.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| מודול | מודול סמנטי |             |
+| הקשר | היעד הקשר |             |
+
+## `src/lower/host-plan`
+
+### inferWebComponentsHost
+
+פונקציה **סוג:**
+
+```typescript
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+  component?: GenericComponent,
+): WebComponentsHostPlan;
+```
+
+הסק מארח מובנה מותאם אישית רק משורש פנימי סטטי בודד.
+
+רשימת ההיתרים היא שמרנית בכוונה: תג מהותי תקף
+HTML אינו מבטיח שהוא בטוח או שימושי מובנה מותאם אישית
+בסיס על פני יישומי DOM הנתמכים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| returnNode | GenericRenderNode \| לא מוגדר |             |
+| רכיב | GenericComponent |             |
+
+## `src/lower/types`
 
 ### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
 
@@ -87,28 +155,6 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 
 ברירת המחדל של תאימות נשמרת עבור רכיבים שנוצרו.
 
-### inferWebComponentsHost
-
-פונקציה **סוג:**
-
-```typescript
-function inferWebComponentsHost(
-  returnNode: GenericRenderNode | undefined,
-): WebComponentsHostPlan;
-```
-
-הסק מארח מובנה מותאם אישית רק משורש פנימי סטטי בודד.
-
-רשימת ההיתרים היא שמרנית בכוונה: תג מהותי תקף
-HTML אינו מבטיח שהוא בטוח או שימושי מובנה מותאם אישית
-בסיס על פני יישומי DOM הנתמכים.
-
-#### פרמטרים
-
-| שם         | הקלד                          | תיאור |
-| ---------- | ----------------------------- | ----- |
-| returnNode | GenericRenderNode \| לא מוגדר |       |
-
 ### isWebComponentsLowered
 
 פונקציה **סוג:**
@@ -123,49 +169,9 @@ function isWebComponentsLowered(
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| הוריד | TargetLoweredModule \| לא מוגדר |       |
-
-### lowerWebComponentsModule
-
-פונקציה **סוג:**
-
-```typescript
-function lowerWebComponentsModule(
-  module: SemanticModule,
-  context: TargetContext,
-): TargetIntentions;
-```
-
-הורד IR ניטרלי לתוך כוונות היעד של Web-Components.
-
-#### פרמטרים
-
-| שם    | הקלד           | תיאור |
-| ----- | -------------- | ----- |
-| מודול | SemanticModule |       |
-| הקשר  | היעד הקשר      |       |
-
-### lowerWebComponentsPlan
-
-פונקציה **סוג:**
-
-```typescript
-function lowerWebComponentsPlan(
-  module: SemanticModule,
-  context: TargetContext,
-): WebComponentsLoweredModule;
-```
-
-בנו את תוכנית היעד של Web-Components עבור מודול ניטרלי.
-
-#### פרמטרים
-
-| שם    | הקלד           | תיאור |
-| ----- | -------------- | ----- |
-| מודול | SemanticModule |       |
-| הקשר  | היעד הקשר      |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------------------- | ----------- |
+| הוריד | TargetLoweredModule \| לא מוגדר |             |
 
 ### UNKNOWN_TYPE
 
@@ -192,7 +198,7 @@ export const WEB_COMPONENTS_FRAMEWORK;
 **סוג:** קבוע
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS;
+export const WEBCOMPONENTS_NATIVE_HOSTS: Readonly<Record<string, string>>;
 ```
 
 טבלת התאימות לשורשים שניתן להתאים באופן בטוח מובנה.
@@ -227,7 +233,7 @@ export type WebComponentsDerivedBody = |
 export interface WebComponentsDerivedValue
 ```
 
-ערך ממוזכר, ירד ל-getter שחושב מחדש בקריאה.
+ערך ממוזכר, ירד ל-getter מגובה במטמון מופע אופציונלי.
 
 ### WebComponentsElementRef
 
@@ -348,12 +354,9 @@ export interface WebComponentsPromotedLocal
 קבוע עיבוד ראש **מקודם** לחבר אלמנט.
 
 משגר תזכירים, התקשרות חוזרת למחזור החיים ומאתחל שדה כולם נפלטים
-_מחוץ_ `render()`, אז מקומי שראש העיבוד מצהיר אינו קיים עבור
+_outside_ `render()`, אז מקומי שראש העיבוד מצהיר אינו קיים עבור
 אותם. קידום ההצהרה לחבר הוא מה שגורם לקריאה כזו
 ניתן לפתרון - דרך `this.<name>` - במקום להשתלשל.
-
-רק הכרזה ללא השפעה מוכחת מקודמת (ראה
-{@link promotedHeadLocals}); כל דבר אחר נשאר ב-`render()`.
 
 ### WebComponentsPropertyDeclaration
 
@@ -373,7 +376,7 @@ export interface WebComponentsPropertyDeclaration
 export interface WebComponentsReactiveProperty
 ```
 
-**מאפיין** תגובתי: קלט הניתן להגדרה חיצונית שיקוף מתכונה.
+**מאפיין** תגובתי: קלט שניתן להגדרה חיצונית המשתקף מתכונה.
 
 ### WebComponentsRegistrationOptions
 
@@ -385,7 +388,7 @@ export interface WebComponentsRegistrationOptions
 
 אפשרויות `customElements.define` הנפלטות עבור מובנה מותאם אישית.
 
-### WebComponentsRuntimeIports
+### WebComponentsRuntimeImports
 
 **סוג:** ממשק
 
@@ -404,29 +407,6 @@ export interface WebComponentsSetupPhase
 ```
 
 שלב **ההתקנה** החד פעמי של האלמנט.
-
-זרע כגון `useState(parseTime(modelValue))` קורא תכונה תגובתית, ו
-נכס מחזיק ערך רק לאחר אימוץ התכונות של המארח -
-מה שקורה בחיבור, הרבה אחרי שהקונסטרוקטור רץ. גרוע מכך, ה
-בדרך כלל מגיעים לערך באמצעות קבוע render-head (`const initial =
-parseTime(modelValue);`) שלא ניתן היה להוכיח שהוא נטול אפקטים ולכן
-נשאר ב-`render()`, כך שזרע בנאי יפנה לשם שכן
-לא קיים שם בכלל.
-
-זרע כזה נדחה ל-`ForgeElement.setup()`, שזמן הריצה קורא לו
-לאחר אימוץ תכונות ולפני העיבוד הראשון, פעם אחת בדיוק לכל אלמנט
-
-- חיבור מחדש לא חייב לחדש ולבטל את מה שהמשתמש שינה מאז.
-  הצהרות הראש שהזרע צריך משוחזרות שם תחילה, לפי סדר ראש ו
-  סגור באופן טרנזיטיבי, ו**רק** אלה.
-
-הפעלה חוזרת במקום שמירה במטמון היא מכוונת. במקור הנייטרלי הראש
-_הוא_ גוף הרכיב, אז `const initial = parseTime(modelValue);` כבר
-פועל על כל עיבוד; הערכתו פעם נוספת במהלך ההגדרה אינה מבצעת שיחה
-הרכיב המחבר אינו פועל כבר בכל מעבר. מאחסן אותו ב-a
-במקום זאת _מקטין_ את מספר ההערכות ונותן את הערך an
-זהות שהמקור מעולם לא הבטיח. רק `const` רגיל (או פונקציה)
-ההצהרה מושמעת אי פעם מחדש - ראה {@link headReplay}.
 
 ### WebComponentsShadowPolicy
 
@@ -485,10 +465,10 @@ function optimizeWebComponentsModule(
 
 #### פרמטרים
 
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| כוונות   | כוונות יעד            |       |
-| אפשרויות | TargetOptimizeOptions |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------- | ----------- |
+| כוונות | כוונות יעד |             |
+| אפשרויות | TargetOptimizeOptions |             |
 
 ### optimizeWebComponentsPlan
 
@@ -505,10 +485,10 @@ function optimizeWebComponentsPlan(
 
 #### פרמטרים
 
-| שם       | הקלד                       | תיאור |
-| -------- | -------------------------- | ----- |
-| תוכנית   | WebComponentsLoweredModule |       |
-| אפשרויות | TargetOptimizeOptions      |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------------- | ----------- |
+| תוכנית | WebComponentsLoweredModule |             |
+| אפשרויות | TargetOptimizeOptions |             |
 
 ### WEB_COMPONENTS_OPTIMIZATIONS
 
@@ -545,9 +525,9 @@ function emitWebComponentHookModule(module: SemanticModule): string;
 
 #### פרמטרים
 
-| שם    | הקלד           | תיאור |
-| ----- | -------------- | ----- |
-| מודול | SemanticModule |       |
+| שם | הקלד | תיאור |
+| ------ | -------------- | ----------- |
+| מודול | מודול סמנטי |             |
 
 ## `src/transformers/expression`
 
@@ -559,7 +539,7 @@ function emitWebComponentHookModule(module: SemanticModule): string;
 export const HAS_SLOT_RUNTIME;
 ```
 
-עוזר זמן הריצה המקורי שהסמן מוריד אליו, נקרא עם אלמנט המארח.
+עוזר זמן הריצה המקורי שהסמן מוריד אליו, נקרא עם רכיב המארח.
 
 ### isFunctionExpressionText
 
@@ -572,15 +552,15 @@ function isFunctionExpressionText(text: string): boolean;
 בין אם הטקסט הוא ביטוי **בעל ערך פונקציה** - חץ או א
 ביטוי `function`.
 
-ליצירת סגירה אין השפעה משל עצמה, אז קבוע כזה של render-head
-ניתן לקדם לאיבר אלמנט (ראה `../lower`) אולם גופו לא טהור
+ליצירת סגירה אין השפעה משל עצמה, ולכן קבוע עיבוד ראש כזה
+ניתן לקדם לחבר אלמנט (ראה `../lower`) אולם גופו לא טהור
 הוא: הגוף עדיין פועל בדיוק כאשר הוא נקרא.
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור |
-| ---- | ------ | ----- |
-| טקסט | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| טקסט | מחרוזת |             |
 
 ### isPureExpressionText
 
@@ -593,16 +573,16 @@ function isPureExpressionText(text: string): boolean;
 האם ביטוי הוא **בהוכחה** נקי מאפקטים: ללא שיחה, ללא `new`, לא
 `await`, ללא הקצאה וללא תוספת, בכל עומק.
 
-משמש כדי להחליט אם קבוע render-head עשוי להיות מקודם למשבר.
+משמש כדי להחליט אם קבוע render-head עשוי להיות מקודם לגטר.
 המבחן הוא תחבירי ופסימי במכוון - קריאה לעזר טהור
 לא ניתן להבחין מקריאה למוטטור, כך שכל קריאה פוסלת את
 הצהרה והיא נשארת ב-`render()`.
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור |
-| ---- | ------ | ----- |
-| טקסט | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| טקסט | מחרוזת |             |
 
 ## `src/transformers/props-binding`
 
@@ -614,16 +594,16 @@ function isPureExpressionText(text: string): boolean;
 function leadingObjectPattern(text: string): string | undefined;
 ```
 
-דפוס האובייקט ש*מתחיל* `text`, מבטל את כל מה שאחריו.
+דפוס האובייקט ש_מתחיל_ `text`, מבטל את כל מה שאחריו.
 
 טקסט המקור של פרמטר נושא את ההערה שלו (`{ a, b }: Readonly<P>`),
-אז יש לחתוך את התבנית לפני שניתן לפרק אותה.
+אז יש לגזור את התבנית לפני שניתן לפרק אותה.
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור |
-| ---- | ------ | ----- |
-| טקסט | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| טקסט | מחרוזת |             |
 
 ### parsePropsBinding
 
@@ -641,9 +621,9 @@ function parsePropsBinding(patternText: string): PropsBinding | undefined;
 
 #### פרמטרים
 
-| שם         | הקלד   | תיאור |
-| ---------- | ------ | ----- |
-| תבנית טקסט | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ----------- | ------ | ----------- |
+| תבנית טקסט | מחרוזת |             |
 
 ### PropsBinding
 
@@ -653,7 +633,7 @@ function parsePropsBinding(patternText: string): PropsBinding | undefined;
 export interface PropsBinding
 ```
 
-תבנית אובייקט אביזרים, מפורקת לאברים שהוא קורא ולמקומיים שהוא קושר.
+תבנית אובייקט של אביזרים, מפורקת לאברים שהוא קורא ולמקומיים שהוא קושר.
 
 ### PropsBindingEntry
 
@@ -676,7 +656,7 @@ function propsBindingStatement(
 ): string | undefined;
 ```
 
-הפעל מחדש דפוס אביזרים כמו `const { … } = this;`, מוגבל לערכים
+הפעל מחדש דפוס אביזרים כ-`const { … } = this;`, מוגבל לערכים
 את המקומיים שלהם היקף היעד בעצם קורא.
 
 הגבלתו שומרת על היקף מורם ללא כריכות שהוא לעולם לא משתמש בהן (אשר א
@@ -685,10 +665,10 @@ function propsBindingStatement(
 
 #### פרמטרים
 
-| שם     | הקלד                    | תיאור |
-| ------ | ----------------------- | ----- |
-| מחייב  | PropsBinding            |       |
-| isRead | (שם: מחרוזת) => בוליאני |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------------- | ----------- |
+| מחייב | PropsBinding |             |
+| isRead | (שם: מחרוזת) => בוליאני |             |
 
 ## `src/transformers/props-type`
 
@@ -705,7 +685,7 @@ function indexedAccessType(
 
 ההערה עם גישה לאינדקס שחבר מסוג האביזרים נפלט בתור.
 
-האופציונליות של החבר עצמו נשמרת בדיוק: חבר נדרש _לא_
+האופציונליות של החבר עצמו נשמרת בדיוק: חבר נדרש הוא _לא_
 התרחב עם `| undefined`. השדה של האלמנט מאוכלס רק פעם אחת
 זמן הריצה מאמץ את התכונה שלו, כך שהוא באמת לא מוגדר בקונסטרוקטור -
 אבל זה מתבטא על ידי פליטת השדה כ-`declare` (זמן הריצה הוא הבעלים של
@@ -714,10 +694,10 @@ accessor), אשר פוטר אותו מ-`strictPropertyInitialization` מבלי �
 
 #### פרמטרים
 
-| שם    | הקלד               | תיאור |
-| ----- | ------------------ | ----- |
-| הפניה | PropsTypeReference |       |
-| חבר   | מחרוזת             |       |
+| שם | הקלד | תיאור |
+| --------- | ------------------ | ----------- |
+| הפניה | PropsTypeReference |             |
+| חבר | מחרוזת |             |
 
 ### PropsTypeReference
 
@@ -748,10 +728,10 @@ function resolvePropsTypeReference(
 
 #### פרמטרים
 
-| שם     | הקלד                          | תיאור |
-| ------ | ----------------------------- | ----- |
-| ביאור  | מחרוזת \| לא מוגדר            |       |
-| הצהרות | קריאה בלבד GenericStatement[] |       |
+| שם | הקלד | תיאור |
+| ------------ | --------------------------- | ----------- |
+| ביאור | מחרוזת \| לא מוגדר |             |
+| הצהרות | קריאה בלבד GenericStatement[] |             |
 
 ### typeMembers
 
@@ -766,15 +746,15 @@ function typeMembers(declarationText: string): ReadonlyMap<string, boolean>;
 
 רק חברים ברמה העליונה של הגוף הראשון `{…}` נאספים, ורק
 היכן שחבר רשאי להתחיל באופן לגיטימי (מיד אחרי סד הפתיחה, `;`
-או `,`). לכן חברים שנתרמו על ידי בסיס `extends`/`&` _לא_
+או `,`). לכן חברים שנתרמו על ידי בסיס `extends`/`&` הם _לא_
 דיווח - המתקשר מתייחס אליהם כאל לא ידוע ונופל אחורה, וזהו
 כיוון בטוח.
 
 #### פרמטרים
 
-| שם              | הקלד   | תיאור |
-| --------------- | ------ | ----- |
-| DeclarationText | מחרוזת |       |
+| שם | הקלד | תיאור |
+| --------------- | ------ | ----------- |
+| DeclarationText | מחרוזת |             |
 
 ### unwrapPropsTypeName
 
@@ -789,6 +769,6 @@ function unwrapPropsTypeName(text: string | undefined): string | undefined;
 
 #### פרמטרים
 
-| שם   | הקלד               | תיאור |
-| ---- | ------------------ | ----- |
-| טקסט | מחרוזת \| לא מוגדר |       |
+| שם | הקלד | תיאור |
+| ---- | ------------------- | ----------- |
+| טקסט | מחרוזת \| לא מוגדר |             |

@@ -23,9 +23,9 @@ function synthesiseElementClass(plan: WebComponentsLoweredModule): string;
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 계획 | WebComponentsLoweredModule |      |
+| 이름 | 유형 | 설명 |
+| ---- | -------------------------- | ----------- |
+| 계획 | WebComponentsLoweredModule |             |
 
 ## `src/emitters/module`
 
@@ -46,12 +46,12 @@ function emitWebComponentModule(
 
 #### 매개변수
 
-| 이름           | 유형                       | 설명 |
-| -------------- | -------------------------- | ---- |
-| 모듈           | 의미 모듈                  |      |
-| 구성 요소 이름 | 문자열                     |      |
-| 구성요소폴더   | 읽기전용Set<string>        |      |
-| 낮아진         | WebComponentsLoweredModule |      |
+| 이름 | 유형 | 설명 |
+| ---------------- | -------------------------- | ----------- |
+| 모듈 | 의미 모듈 |             |
+| 구성 요소 이름 | 문자열 |             |
+| 구성요소폴더 | 읽기전용Set<string> |             |
+| 낮아진 | WebComponentsLoweredModule |             |
 
 ## `src/index`
 
@@ -66,6 +66,74 @@ function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 TypeScript 전용 웹 구성 요소 출력 플러그인을 만듭니다.
 
 ## `src/lower`
+
+### lowerWebComponents모듈
+
+**종류:** 기능
+
+```typescript
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
+```
+
+중립 IR을 웹 구성 요소 대상 의도로 낮춥니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | -------------- | ----------- |
+| 모듈 | 의미 모듈 |             |
+| 맥락 | 타겟컨텍스트 |             |
+
+### lowerWebComponents계획
+
+**종류:** 기능
+
+```typescript
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
+```
+
+중립 모듈에 대한 웹 구성 요소 대상 계획을 구축합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | -------------- | ----------- |
+| 모듈 | 의미 모듈 |             |
+| 맥락 | 타겟컨텍스트 |             |
+
+## `src/lower/host-plan`
+
+### WebComponentsHost 추론
+
+**종류:** 기능
+
+```typescript
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+  component?: GenericComponent,
+): WebComponentsHostPlan;
+```
+
+단일 정적 내장 루트에서만 사용자 정의된 내장 호스트를 추론합니다.
+
+허용 목록은 의도적으로 보수적입니다. 즉, 고유 태그가 유효합니다.
+HTML은 안전하거나 유용한 맞춤형 내장 기능을 보장하지 않습니다.
+지원되는 DOM 구현을 기반으로 합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 리턴노드 | 일반 렌더 노드 \| 정의되지 않음 |             |
+| 구성요소 | 일반 구성요소 |             |
+
+## `src/lower/types`
 
 ### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
 
@@ -85,29 +153,7 @@ export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolic
 export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
-생성된 구성요소에 대해 호환성 기본값이 유지됩니다.
-
-### WebComponentsHost 추론
-
-**종류:** 기능
-
-```typescript
-function inferWebComponentsHost(
-  returnNode: GenericRenderNode | undefined,
-): WebComponentsHostPlan;
-```
-
-단일 정적 내장 루트에서만 사용자 정의된 내장 호스트를 추론합니다.
-
-허용 목록은 의도적으로 보수적입니다. 즉, 고유 태그가 유효합니다.
-HTML은 안전하거나 유용한 맞춤형 내장 기능을 보장하지 않습니다.
-지원되는 DOM 구현을 기반으로 합니다.
-
-#### 매개변수
-
-| 이름     | 유형                            | 설명 |
-| -------- | ------------------------------- | ---- |
-| 리턴노드 | 일반 렌더 노드 \| 정의되지 않음 |      |
+생성된 구성 요소에 대해 호환성 기본값이 유지됩니다.
 
 ### isWebComponents낮음
 
@@ -123,49 +169,9 @@ function isWebComponentsLowered(
 
 #### 매개변수
 
-| 이름   | 유형                               | 설명 |
-| ------ | ---------------------------------- | ---- |
-| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |      |
-
-### lowerWebComponents모듈
-
-**종류:** 기능
-
-```typescript
-function lowerWebComponentsModule(
-  module: SemanticModule,
-  context: TargetContext,
-): TargetIntentions;
-```
-
-중립 IR을 웹 구성 요소 대상 의도로 낮춥니다.
-
-#### 매개변수
-
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| 모듈 | 의미 모듈    |      |
-| 맥락 | 타겟컨텍스트 |      |
-
-### lowerWebComponents계획
-
-**종류:** 기능
-
-```typescript
-function lowerWebComponentsPlan(
-  module: SemanticModule,
-  context: TargetContext,
-): WebComponentsLoweredModule;
-```
-
-중립 모듈에 대한 웹 구성 요소 대상 계획을 구축합니다.
-
-#### 매개변수
-
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| 모듈 | 의미 모듈    |      |
-| 맥락 | 타겟컨텍스트 |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------------------------- | ----------- |
+| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |             |
 
 ### 알 수 없는_TYPE
 
@@ -192,7 +198,7 @@ export const WEB_COMPONENTS_FRAMEWORK;
 **종류:** 상수
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS;
+export const WEBCOMPONENTS_NATIVE_HOSTS: Readonly<Record<string, string>>;
 ```
 
 안전하게 사용자 정의할 수 있는 루트에 대한 호환성 표가 내장되어 있습니다.
@@ -215,7 +221,7 @@ export interface WebComponentsCleanupField
 export type WebComponentsDerivedBody = |
 ```
 
-요소-인스턴스 범위에 이미 다시 작성된 파생 getter의 본문:
+이미 요소-인스턴스 범위로 다시 작성된 파생 getter의 본문:
 간결한 메모 팩토리는 단일 표현식을 반환하고 블록 본문은 단일 표현식을 반환합니다.
 자체 명령문(getter가 반환하는 대신 실행해야 함).
 
@@ -227,7 +233,7 @@ export type WebComponentsDerivedBody = |
 export interface WebComponentsDerivedValue
 ```
 
-기억된 값은 읽기 시 다시 계산된 getter로 낮춰집니다.
+선택적 인스턴스 캐시에 의해 지원되는 getter로 낮아진 메모된 값입니다.
 
 ### 웹구성요소요소참조
 
@@ -266,7 +272,7 @@ export type WebComponentsHostFallbackReason =
 
 구성 요소가 사용자 정의된 내장 호스트를 사용할 수 없는 안정적인 이유입니다.
 
-### 웹구성요소호스트종류
+### 웹구성요소호스트 종류
 
 **종류:** 유형
 
@@ -345,15 +351,12 @@ export interface WebComponentsLoweredModule extends TargetLoweredModule
 export interface WebComponentsPromotedLocal
 ```
 
-렌더 헤드 상수가 요소 멤버로 **승격**되었습니다.
+렌더 헤드 상수가 요소 멤버로 **승격됩니다**.
 
 메모 getter, 수명 주기 콜백 및 필드 이니셜라이저가 모두 방출됩니다.
-_외부_ `render()`, 따라서 렌더 헤드가 선언한 로컬이 존재하지 않습니다.
+_outside_ `render()`, 따라서 렌더 헤드가 선언한 로컬이 존재하지 않습니다.
 그들. 선언문을 회원에게 홍보하는 것이 그러한 읽기를 만드는 것입니다.
 매달려 있는 대신 `this.<name>`을 통해 해결 가능합니다.
-
-입증된 효과 없는 선언만 장려됩니다(참조
-{@link PromotionHeadLocals}); 다른 모든 것은 `render()`에 유지됩니다.
 
 ### WebComponentsPropertyDeclaration
 
@@ -405,29 +408,7 @@ export interface WebComponentsSetupPhase
 
 요소의 일회성 **설정** 단계입니다.
 
-`useState(parseTime(modelValue))`과 같은 시드는 반응 속성을 읽고
-속성은 호스트의 속성이 채택된 후에만 값을 보유합니다.
-이는 생성자가 실행된 지 오랜 후에 연결 시 발생합니다. 더 나쁜 것은
-값은 일반적으로 렌더 헤드 상수(`const 초기 =
-파싱타임(모델값);`)은 효과가 없다는 것을 증명할 수 없으므로
-`render()`에 유지되므로 생성자 시드는 다음을 수행하는 이름을 참조합니다.
-거기에는 전혀 존재하지 않습니다.
-
-이러한 시드는 런타임이 호출하는 `ForgeElement.setup()`로 연기됩니다.
-속성 채택 후 및 첫 번째 렌더링 전, 요소당 정확히 한 번
-— 재연결은 사용자가 변경한 내용을 다시 시드하거나 삭제해서는 안 됩니다.
-시드 요구 사항에 대한 헤드 설명이 먼저 헤드 순서대로 재생되고
-전이적으로 닫혀 있으며 **만** 해당됩니다.
-
-캐싱보다는 재생이 의도적입니다. 중립 소스에서는 머리
-_is_ 구성요소 본체이므로 `const initial = parseTime(modelValue);`은 이미
-모든 렌더링에서 실행됩니다. 설정 중에 한 번 더 평가하면 호출이 수행되지 않습니다.
-제작된 구성 요소는 각 패스에서 아직 수행되지 않습니다. 캐싱
-필드는 대신 평가 횟수를 _줄이고_ 값에
-출처는 결코 약속하지 않았습니다. 일반 `const`(또는 함수)만
-선언은 항상 재생됩니다. {@link headReplay}를 참조하세요.
-
-### 웹구성요소ShadowPolicy
+### WebComponentsShadowPolicy
 
 **종류:** 인터페이스
 
@@ -455,7 +436,7 @@ export interface WebComponentsStateField
 export interface WebComponentsStaticTemplatePart
 ```
 
-모듈 수준 상수로 끌어올려진 완전 정적 템플릿 청크입니다.
+모듈 수준 상수로 끌어올려진 완전히 정적 템플릿 청크입니다.
 
 ### 웹구성요소템플릿계획
 
@@ -484,10 +465,10 @@ function optimizeWebComponentsModule(
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 의도 | 타겟의도              |      |
-| 옵션 | TargetOptimizeOptions |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------- | ----------- |
+| 의도 | 타겟의도 |             |
+| 옵션 | TargetOptimizeOptions |             |
 
 ### 최적화WebComponents계획
 
@@ -504,10 +485,10 @@ function optimizeWebComponentsPlan(
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 계획 | WebComponentsLoweredModule |      |
-| 옵션 | TargetOptimizeOptions      |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------------------- | ----------- |
+| 계획 | WebComponentsLoweredModule |             |
+| 옵션 | TargetOptimizeOptions |             |
 
 ### WEB_COMPONENTS_OPTIMIZATIONS
 
@@ -544,9 +525,9 @@ function emitWebComponentHookModule(module: SemanticModule): string;
 
 #### 매개변수
 
-| 이름 | 유형      | 설명 |
-| ---- | --------- | ---- |
-| 모듈 | 의미 모듈 |      |
+| 이름 | 유형 | 설명 |
+| ------ | -------------- | ----------- |
+| 모듈 | 의미 모듈 |             |
 
 ## `src/transformers/expression`
 
@@ -577,9 +558,9 @@ is: 본문은 호출될 때 여전히 정확하게 실행됩니다.
 
 #### 매개변수
 
-| 이름   | 유형   | 설명 |
-| ------ | ------ | ---- |
-| 텍스트 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
 
 ### isPureExpressionText
 
@@ -599,9 +580,9 @@ function isPureExpressionText(text: string): boolean;
 
 #### 매개변수
 
-| 이름   | 유형   | 설명 |
-| ------ | ------ | ---- |
-| 텍스트 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
 
 ## `src/transformers/props-binding`
 
@@ -613,16 +594,16 @@ function isPureExpressionText(text: string): boolean;
 function leadingObjectPattern(text: string): string | undefined;
 ```
 
-`text`을 *시작*하는 객체 패턴으로, 뒤에 오는 내용은 모두 삭제됩니다.
+`text`을 _시작하는_ 개체 패턴으로, 뒤따르는 모든 항목을 삭제합니다.
 
 매개변수의 소스 텍스트에는 해당 주석(`{ a, b }: Readonly<P>`)이 포함됩니다.
 따라서 패턴이 분해되기 전에 먼저 잘라야 합니다.
 
 #### 매개변수
 
-| 이름   | 유형   | 설명 |
-| ------ | ------ | ---- |
-| 텍스트 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
 
 ### ParsePropsBinding
 
@@ -640,9 +621,9 @@ function parsePropsBinding(patternText: string): PropsBinding | undefined;
 
 #### 매개변수
 
-| 이름       | 유형   | 설명 |
-| ---------- | ------ | ---- |
-| 패턴텍스트 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ----------- | ------ | ----------- |
+| 패턴텍스트 | 문자열 |             |
 
 ### 소품바인딩
 
@@ -684,10 +665,10 @@ function propsBindingStatement(
 
 #### 매개변수
 
-| 이름   | 유형                   | 설명 |
-| ------ | ---------------------- | ---- |
-| 바인딩 | 소품바인딩             |      |
-| isRead | (이름: 문자열) => 부울 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------------- | ----------- |
+| 바인딩 | 소품바인딩 |             |
+| isRead | (이름: 문자열) => 부울 |             |
 
 ## `src/transformers/props-type`
 
@@ -713,10 +694,10 @@ props 유형의 멤버가 내보내지는 indexed-access 주석입니다.
 
 #### 매개변수
 
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| 참조 | 소품유형참조 |      |
-| 회원 | 문자열       |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------------------ | ----------- |
+| 참조 | 소품유형참조 |             |
+| 회원 | 문자열 |             |
 
 ### 소품 유형 참조
 
@@ -747,10 +728,10 @@ function resolvePropsTypeReference(
 
 #### 매개변수
 
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 주석 | 문자열 \| 정의되지 않음      |      |
-| 선언 | 읽기 전용 GenericStatement[] |      |
+| 이름 | 유형 | 설명 |
+| ------------ | --------------------------- | ----------- |
+| 주석 | 문자열 \| 정의되지 않음 |             |
+| 선언 | 읽기 전용 GenericStatement[] |             |
 
 ### typeMembers
 
@@ -764,16 +745,16 @@ function typeMembers(declarationText: string): ReadonlyMap<string, boolean>;
 각각은 선택 사항입니다(`name?: T`).
 
 첫 번째 `{…}` 본문의 최상위 멤버만 수집되며,
-구성원이 합법적으로 시작할 수 있는 위치(여는 중괄호 바로 뒤, `;`
+구성원이 합법적으로 시작할 수 있는 위치(여는 중괄호 바로 뒤에 `;`
 또는 `,`). 따라서 `extends`/`&` 기반에 기여한 회원은 _아닙니다_
 보고됨 - 호출자는 이를 알 수 없는 것으로 간주하고 뒤로 물러납니다.
 안전한 방향.
 
 #### 매개변수
 
-| 이름       | 유형   | 설명 |
-| ---------- | ------ | ---- |
-| 선언텍스트 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| --------------- | ------ | ----------- |
+| 선언텍스트 | 문자열 |             |
 
 ### unwrapPropsTypeName
 
@@ -788,6 +769,6 @@ props 주석을 참조하는 일반 이름으로 줄이고
 
 #### 매개변수
 
-| 이름   | 유형                    | 설명 |
-| ------ | ----------------------- | ---- |
-| 텍스트 | 문자열 \| 정의되지 않음 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------------------- | ----------- |
+| 텍스트 | 문자열 \| 정의되지 않음 |             |

@@ -25,9 +25,9 @@ function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions): Plugi
 
 #### פרמטרים
 
-| שם       | הקלד                        | תיאור |
-| -------- | --------------------------- | ----- |
-| אפשרויות | ForgeArtifactPublishOptions |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------- | ----------- |
+| אפשרויות | ForgeArtifactPublishOptions |             |
 
 ### forgeBuildLifecyclePlugin
 
@@ -42,9 +42,9 @@ function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): Plugin;
 
 #### פרמטרים
 
-| שם       | הקלד                       | תיאור |
-| -------- | -------------------------- | ----- |
-| אפשרויות | ForgeBuildLifecycleOptions |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------------- | ----------- |
+| אפשרויות | ForgeBuildLifecycleOptions |             |
 
 ### forgeVirtualEntry
 
@@ -54,13 +54,13 @@ function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): Plugin;
 function forgeVirtualEntry(targetId: string): string;
 ```
 
-שימוש בכניסה וירטואלית יציבה עד שהיעד הוכן על ידי buildStart.
+כניסה וירטואלית יציבה בשימוש עד שהיעד הוכן על ידי buildStart.
 
 #### פרמטרים
 
-| שם       | הקלד   | תיאור |
-| -------- | ------ | ----- |
-| targetId | מחרוזת |       |
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| targetId | מחרוזת |             |
 
 ## `src/compiler/artifact-manifest`
 
@@ -80,11 +80,11 @@ function createForgeArtifactManifest(
 
 #### פרמטרים
 
-| שם       | הקלד                              | תיאור |
-| -------- | --------------------------------- | ----- |
-| targetId | מחרוזת                            |       |
-| חפצים    | לקריאה בלבד ForgeArtifactRecord[] |       |
-| להשלים   |                                   |       |
+| שם | הקלד | תיאור |
+| --------- | ------------------------------ | ----------- |
+| targetId | מחרוזת |             |
+| חפצים | לקריאה בלבד ForgeArtifactRecord[] |             |
+| להשלים |                                |             |
 
 ### ForgeArtifactKind
 
@@ -131,9 +131,9 @@ function assertForgeArtifactRoot(root: string): string;
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור |
-| ---- | ------ | ----- |
-| שורש | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| שורש | מחרוזת |             |
 
 ### secureForgeArtifactDirectory
 
@@ -147,10 +147,10 @@ function ensureForgeArtifactDirectory(root: string, directory: string): string;
 
 #### פרמטרים
 
-| שם    | הקלד   | תיאור |
-| ----- | ------ | ----- |
-| שורש  | מחרוזת |       |
-| מדריך | מחרוזת |       |
+| שם | הקלד | תיאור |
+| --------- | ------ | ----------- |
+| שורש | מחרוזת |             |
+| מדריך | מחרוזת |             |
 
 ### resolveForgeArtifactPath
 
@@ -164,10 +164,10 @@ function resolveForgeArtifactPath(root: string, relativeName: string): string;
 
 #### פרמטרים
 
-| שם       | הקלד   | תיאור |
-| -------- | ------ | ----- |
-| שורש     | מחרוזת |       |
-| שם משפחה | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------------ | ------ | ----------- |
+| שורש | מחרוזת |             |
+| שם משפחה | מחרוזת |             |
 
 ### validateForgeArtifactName
 
@@ -181,9 +181,9 @@ function validateForgeArtifactName(relativeName: string): string;
 
 #### פרמטרים
 
-| שם       | הקלד   | תיאור |
-| -------- | ------ | ----- |
-| שם משפחה | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------------ | ------ | ----------- |
+| שם משפחה | מחרוזת |             |
 
 ### validateForgeArtifactSegment
 
@@ -193,13 +193,13 @@ function validateForgeArtifactName(relativeName: string): string;
 function validateForgeArtifactSegment(segment: string): string;
 ```
 
-אמת רכיב נתיב בודד המשמש לבניית שורש חפץ.
+אמת רכיב נתיב יחיד המשמש לבניית שורש חפץ.
 
 #### פרמטרים
 
-| שם  | הקלד   | תיאור |
-| --- | ------ | ----- |
-| קטע | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| קטע | מחרוזת |             |
 
 ## `src/compiler/artifact-writer`
 
@@ -215,15 +215,15 @@ function createForgeArtifactWriter(
 ): ForgeArtifactWriter;
 ```
 
-לא סופק תיאור.
+צור כותב חפצים אטומיים לבימוי וביצוע חפצי Forge.
 
 #### פרמטרים
 
-| שם       | הקלד                       | תיאור |
-| -------- | -------------------------- | ----- |
-| outDir   | מחרוזת                     |       |
-| targetId | מחרוזת                     |       |
-| אפשרויות | ForgeArtifactWriterOptions |       |
+| שם | הקלד | תיאור |
+| -------- | -------------------------- | ----------- |
+| outDir | מחרוזת |             |
+| targetId | מחרוזת |             |
+| אפשרויות | ForgeArtifactWriterOptions |             |
 
 ### forgeArtifactAttemptDirectory
 
@@ -237,10 +237,10 @@ function forgeArtifactAttemptDirectory(outDir: string, targetId: string): string
 
 #### פרמטרים
 
-| שם       | הקלד   | תיאור |
-| -------- | ------ | ----- |
-| outDir   | מחרוזת |       |
-| targetId | מחרוזת |       |
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| outDir | מחרוזת |             |
+| targetId | מחרוזת |             |
 
 ### ForgeArtifactWriter
 
@@ -309,15 +309,15 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 
 הוראת `"use <framework>";` מובילה נמחקת לפני הפליטה
 כך שהמרקר לעולם אינו דולף לתוך הפלט; שער מודול מתוך
-בניית מסגרת שאינה תואמת מטופלת במעלה הזרם על ידי שלב הגילוי
+בניית המסגרת שאינה תואמת מטופלת במעלה הזרם על ידי שלב הגילוי
 (ראה {@link moduleTargetsFramework}).
 
 #### פרמטרים
 
-| שם       | הקלד           | תיאור |
-| -------- | -------------- | ----- |
-| מקור     | מחרוזת         |       |
-| אפשרויות | CompileOptions |       |
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| מקור | מחרוזת |             |
+| אפשרויות | CompileOptions |             |
 
 ### CompiledModule
 
@@ -337,16 +337,16 @@ export interface CompiledModule
 function compileHookModule(source: string, options: CompileHookOptions): CompiledModule;
 ```
 
-קומפלו **מודול הוק** ניטרלי אחד (ניתן לכתיבה של פעם שנכתב נגד
-הווים בסגנון React של `@mission-platform/forge-jsx`, _לא_ רכיב ממשק משתמש)
+קומפלו **מודול הוק** ניטרלי אחד (ניתן לכתיבה של פעם שנכתב כנגד
+ווים בסגנון React של `@mission-platform/forge-jsx`, _לא_ רכיב ממשק משתמש)
 מקור לכל מסגרת (שלב 1).
 
 #### פרמטרים
 
-| שם       | הקלד               | תיאור |
-| -------- | ------------------ | ----- |
-| מקור     | מחרוזת             |       |
-| אפשרויות | CompileHookOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------ | ----------- |
+| מקור | מחרוזת |             |
+| אפשרויות | CompileHookOptions |             |
 
 ### CompileHookOptions
 
@@ -374,10 +374,10 @@ function compileModule(source: string, options: CompileModuleOptions): CompiledM
 
 #### פרמטרים
 
-| שם       | הקלד                 | תיאור |
-| -------- | -------------------- | ----- |
-| מקור     | מחרוזת               |       |
-| אפשרויות | CompileModuleOptions |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------- | ----------- |
+| מקור | מחרוזת |             |
+| אפשרויות | CompileModuleOptions |             |
 
 ### CompileModuleOptions
 
@@ -413,10 +413,10 @@ function findComponentFunction(sourceFile: OxcParsedModule, name: string): OxcNo
 
 #### פרמטרים
 
-| שם         | הקלד            | תיאור |
-| ---------- | --------------- | ----- |
-| sourceFile | OxcParsedModule |       |
-| שם         | מחרוזת          |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------- | ----------- |
+| sourceFile | OxcParsedModule |             |
+| שם | מחרוזת |             |
 
 ### isSlotElement
 
@@ -426,13 +426,13 @@ function findComponentFunction(sourceFile: OxcParsedModule, name: string): OxcNo
 function isSlotElement(node: OxcNode): boolean;
 ```
 
-האם Oxc node הוא אלמנט נייטרלי בשם חריץ.
+האם Oxc node הוא אלמנט בעל שם ניטרלי.
 
 #### פרמטרים
 
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | OxcNode |       |
+| שם | הקלד | תיאור |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ### readSlotName
 
@@ -446,9 +446,9 @@ function readSlotName(node: OxcNode): string | undefined;
 
 #### פרמטרים
 
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | OxcNode |       |
+| שם | הקלד | תיאור |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ## `src/compiler/constants`
 
@@ -480,13 +480,13 @@ export const LOCAL_JSX_TYPES_MODULE;
 function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
-צור הצהרות מסוג JSX הממוקמות במשותף ספציפית למסגרת.
+צור את ההצהרות מסוג JSX הממוקמות במשותף ספציפית למסגרת.
 
 #### פרמטרים
 
-| שם    | הקלד         | תיאור |
-| ----- | ------------ | ----- |
-| מסגרת | JsxFramework |       |
+| שם | הקלד | תיאור |
+| --------- | ------------ | ----------- |
+| מסגרת | JsxFramework |             |
 
 ### NEUTRAL_MODULE
 
@@ -512,11 +512,11 @@ function moduleTargetsFramework(fileName: string, source: string, framework: str
 
 #### פרמטרים
 
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
-| מסגרת   | מחרוזת |       |
+| שם | הקלד | תיאור |
+| --------- | ------ | ----------- |
+| שם קובץ | מחרוזת |             |
+| מקור | מחרוזת |             |
+| מסגרת | מחרוזת |             |
 
 ### readFrameworkDirective
 
@@ -530,10 +530,10 @@ function readFrameworkDirective(fileName: string, source: string): JsxFramework 
 
 #### פרמטרים
 
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| שם קובץ | מחרוזת |             |
+| מקור | מחרוזת |             |
 
 ## `src/compiler/discover`
 
@@ -547,15 +547,15 @@ function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): Discov
 
 גלה את הרכיבים שחבית מייצאת וקבל את צורתם הציבורית. כל אחד
 ייצוא ערך מותאם לממשק האביזרים המיוצא מחדש מאותו
-הצהרה (על פי ועידת `<PublicName>Properties`) והתיקיה שבה היא חיה
+הצהרה (על ידי ועידת `<PublicName>Properties`) והתיקיה שהיא חיה
 in (שם בסיס המודול של הייצוא מחדש).
 
 #### פרמטרים
 
-| שם           | הקלד   | תיאור |
-| ------------ | ------ | ----- |
-| barrelSource | מחרוזת |       |
-| stripPrefix  |        |       |
+| שם | הקלד | תיאור |
+| ------------ | ------ | ----------- |
+| barrelSource | מחרוזת |             |
+| stripPrefix |        |             |
 
 ### DiscoverComponentsFromGraph
 
@@ -573,11 +573,11 @@ function discoverComponentsFromGraph(
 
 #### פרמטרים
 
-| שם          | הקלד                 | תיאור |
-| ----------- | -------------------- | ----- |
-| גרף         | ForgeFileGraph       |       |
-| stripPrefix |                      |       |
-| אבחון       | CompilerDiagnostic[] |       |
+| שם | הקלד | תיאור |
+| ----------- | -------------------- | ----------- |
+| גרף | ForgeFileGraph |             |
+| stripPrefix |                      |             |
+| אבחון | CompilerDiagnostic[] |             |
 
 ### DiscoveredComponent
 
@@ -597,7 +597,7 @@ export interface DiscoveredComponent
 export interface DiscoveredHelperExport
 ```
 
-**מודול עוזר** שאינו מורכב ממרכיבים שיוצא מחדש מהחבית (למשל
+**מודול עוזר** שאינו מורכב ממרכיבים שיוצא מחדש מהקנה (למשל
 `toast-store`), כך שה-API הציבורי שלו רוכב דרך `./react` / שנוצר
 ערך `./vue` לצד הרכיבים.
 
@@ -612,16 +612,16 @@ function discoverHelperExports(barrelSource: string, componentFolders: ReadonlyS
 גלה את **מודולי העזר** שהחבית מייצאת מחדש - כל `ייצוא { … }
 מהמשפט './…'` ששם בסיס המודול שלו הוא **לא** אחד מהשמות שהתגלו
 תיקיות רכיבים. משמש להעברה של ממשקי API משותפים למסגרת אגנוסטית (כגון
-עוזרי `useToast`/`showToast`/... ההכרחיים של `toast-store`, המקבילה
-של `useToast` composable של החבילה Vue) דרך הערך שנוצר, אז
+עוזרי `useToast`/`showToast`/… ההכרחיים של `toast-store`, המקבילה
+של `useToast` composable של החבילה Vue) דרך הערך שנוצר, כך
 צרכנים נוהגים בדיוק באותו יחיד לפי מסגרת שבו משתמשים הרכיבים.
 
 #### פרמטרים
 
-| שם               | הקלד                | תיאור |
-| ---------------- | ------------------- | ----- |
-| barrelSource     | מחרוזת              |       |
-| componentFolders | ReadonlySet<string> |       |
+| שם | הקלד | תיאור |
+| ---------------- | ------------------- | ----------- |
+| barrelSource | מחרוזת |             |
+| componentFolders | ReadonlySet<string> |             |
 
 ### discoverHelperExportsFromGraph
 
@@ -639,11 +639,11 @@ function discoverHelperExportsFromGraph(
 
 #### פרמטרים
 
-| שם                   | הקלד                           | תיאור |
-| -------------------- | ------------------------------ | ----- |
-| גרף                  | ForgeFileGraph                 |       |
-| componentFolders     | ReadonlySet<string>            |       |
-| discoveredComponents | Readonly DiscoveredComponent[] |       |
+| שם | הקלד | תיאור |
+| -------------------- | ------------------------------ | ----------- |
+| גרף | ForgeFileGraph |             |
+| componentFolders | ReadonlySet<string> |             |
+| discoveredComponents | Readonly DiscoveredComponent[] |             |
 
 ## `src/compiler/facts`
 
@@ -695,14 +695,14 @@ export interface ForgeSourceSpan
 function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
 ```
 
-חילוץ יבוא סטטי, ייצוא, קצוות מסוגים בלבד ועובדות מסגרת ממודול מנותח.
+חלץ יבוא סטטי, ייצוא, קצוות מסוגים בלבד ועובדות מסגרת ממודול מנתח.
 
 #### פרמטרים
 
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| שם קובץ | מחרוזת |             |
+| מקור | מחרוזת |             |
 
 ## `src/compiler/frontends`
 
@@ -715,15 +715,15 @@ function parseForgeSource(fileName: string, source: string): OxcParsedModule;
 ```
 
 נתח את המקור של Forge דרך Oxc למודול הניתן לסידרה הנייטרלי
-חזית קצה, אופטימיזציה והסקת מסקנות כולם צורכים. אין קובץ מקור TypeScript
+ממשק קצה, אופטימיזציה והסקת מסקנות כולם צורכים. אין קובץ מקור TypeScript
 נוצר; המודול המוחזר הוא הייצוג היחיד המגובה על מנתח.
 
 #### פרמטרים
 
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| שם קובץ | מחרוזת |             |
+| מקור | מחרוזת |             |
 
 ### parseFrontendModule
 
@@ -742,12 +742,12 @@ function parseFrontendModule(
 
 #### פרמטרים
 
-| שם         | הקלד                    | תיאור |
-| ---------- | ----------------------- | ----- |
-| שם קובץ    | מחרוזת                  |       |
-| מקור       | מחרוזת                  |       |
-| moduleKind | 'רכיב' \| 'ניתן להרכיב' |       |
-| שם רכיב    | מחרוזת                  |       |
+| שם | הקלד | תיאור |
+| ------------- | --------------------------- | ----------- |
+| שם קובץ | מחרוזת |             |
+| מקור | מחרוזת |             |
+| moduleKind | 'רכיב' \| 'ניתן להרכיב' |             |
+| שם רכיב | מחרוזת |             |
 
 ## `src/compiler/generation-context`
 
@@ -763,9 +763,9 @@ function createForgeGenerationContext(options: ForgeGenerationContextOptions): F
 
 #### פרמטרים
 
-| שם       | הקלד                          | תיאור |
-| -------- | ----------------------------- | ----- |
-| אפשרויות | ForgeGenerationContextOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ----------------------------- | ----------- |
+| אפשרויות | ForgeGenerationContextOptions |             |
 
 ### ForgeGenerationContext
 
@@ -801,9 +801,9 @@ function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph;
 
 #### פרמטרים
 
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| אפשרויות | ForgeFileGraphOptions |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------- | ----------- |
+| אפשרויות | ForgeFileGraphOptions |             |
 
 ### ForgeFileEdge
 
@@ -902,11 +902,11 @@ function hoistStaticJsx(
 
 #### פרמטרים
 
-| שם         | הקלד                    | תיאור |
-| ---------- | ----------------------- | ----- |
-| מודול      | OxcParsedModule         |       |
-| moduleKind | 'רכיב' \| 'ניתן להרכיב' |       |
-| שם רכיב    | מחרוזת                  |       |
+| שם | הקלד | תיאור |
+| ------------- | --------------------------- | ----------- |
+| מודול | OxcParsedModule |             |
+| moduleKind | 'רכיב' \| 'ניתן להרכיב' |             |
+| שם רכיב | מחרוזת |             |
 
 ## `src/compiler/imports`
 
@@ -928,14 +928,14 @@ export interface NeutralImports
 function readExternalImports(fileName: string, source: string): string[];
 ```
 
-אסוף יבוא חבילות חשוף המבוצע מילה במילה אל מקורות מסגרת שנוצרו.
+אסוף יבוא חבילות חשוף המבוצע מילה במילה למקורות מסגרת שנוצרו.
 
 #### פרמטרים
 
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| שם קובץ | מחרוזת |             |
+| מקור | מחרוזת |             |
 
 ### readNeutralImports
 
@@ -949,10 +949,10 @@ function readNeutralImports(fileName: string, source: string): NeutralImports;
 
 #### פרמטרים
 
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| שם קובץ | מחרוזת |             |
+| מקור | מחרוזת |             |
 
 ### readStyleImports
 
@@ -966,11 +966,11 @@ function readStyleImports(fileName: string, source: string, sourceRoot?: string)
 
 #### פרמטרים
 
-| שם         | הקלד   | תיאור |
-| ---------- | ------ | ----- |
-| שם קובץ    | מחרוזת |       |
-| מקור       | מחרוזת |       |
-| sourceRoot | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ---------- | ------ | ----------- |
+| שם קובץ | מחרוזת |             |
+| מקור | מחרוזת |             |
+| sourceRoot | מחרוזת |             |
 
 ### resolveWorkspaceLocalImport
 
@@ -988,11 +988,11 @@ function resolveWorkspaceLocalImport(
 
 #### פרמטרים
 
-| שם             | הקלד               | תיאור |
-| -------------- | ------------------ | ----- |
-| מפרט           | מחרוזת             |       |
-| sourceFileName | מחרוזת             |       |
-| sourceRoot     | מחרוזת \| לא מוגדר |       |
+| שם | הקלד | תיאור |
+| -------------- | ------------------- | ----------- |
+| מפרט | מחרוזת |             |
+| sourceFileName | מחרוזת |             |
+| sourceRoot | מחרוזת \| לא מוגדר |             |
 
 ### StyleIport
 
@@ -1016,9 +1016,9 @@ function usesI18nextT(node: OxcNode): boolean;
 
 #### פרמטרים
 
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | OxcNode |       |
+| שם | הקלד | תיאור |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ## `src/compiler/optimize`
 
@@ -1039,17 +1039,17 @@ function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions =
 
 #### פרמטרים
 
-| שם       | הקלד                 | תיאור |
-| -------- | -------------------- | ----- |
-| מודול    | OxcParsedModule      |       |
-| אפשרויות | אופטימיזציה אפשרויות |       |
+| שם | הקלד | תיאור |
+| ------- | --------------- | ----------- |
+| מודול | OxcParsedModule |             |
+| אפשרויות | אופטימיזציה אפשרויות |             |
 
 ### optimizeSourceFile
 
 **סוג:** קבוע
 
 ```typescript
-export const optimizeSourceFile;
+export const optimizeSourceFile: typeof optimizeForgeModule;
 ```
 
 כינוי תאימות נשמר עבור אינטגרציות מהדר באמצעות השם הישן.
@@ -1068,9 +1068,9 @@ function buildOxcParentMap(root: OxcNode): Map<OxcNode, OxcNode>;
 
 #### פרמטרים
 
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| שורש | OxcNode |       |
+| שם | הקלד | תיאור |
+| ---- | ------- | ----------- |
+| שורש | OxcNode |             |
 
 ### isOxcJsxRoot
 
@@ -1080,13 +1080,13 @@ function buildOxcParentMap(root: OxcNode): Map<OxcNode, OxcNode>;
 function isOxcJsxRoot(node: OxcNode): boolean;
 ```
 
-נכון כאשר node הוא אלמנט JSX, אלמנט סגירה עצמית או fragment.
+נכון כאשר node הוא אלמנט JSX, אלמנט סגירה עצמית או קטע.
 
 #### פרמטרים
 
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | OxcNode |       |
+| שם | הקלד | תיאור |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ### isOxcNode
 
@@ -1100,9 +1100,9 @@ function isOxcNode(value: unknown): value is OxcNode;
 
 #### פרמטרים
 
-| שם  | הקלד    | תיאור |
-| --- | ------- | ----- |
-| ערך | לא ידוע |       |
+| שם | הקלד | תיאור |
+| ----- | ------- | ----------- |
+| ערך | לא ידוע |             |
 
 ### oxcArray
 
@@ -1116,10 +1116,10 @@ function oxcArray(node: OxcNode, key: string): OxcNode[];
 
 #### פרמטרים
 
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | OxcNode |       |
-| מפתח | מחרוזת  |       |
+| שם | הקלד | תיאור |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
+| מפתח | מחרוזת |             |
 
 ### oxcילדים
 
@@ -1133,9 +1133,9 @@ function oxcChildren(node: OxcNode): OxcNode[];
 
 #### פרמטרים
 
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | OxcNode |       |
+| שם | הקלד | תיאור |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ### OxcComment
 
@@ -1159,9 +1159,9 @@ function oxcIdentifierName(node: OxcNode | undefined): string | undefined;
 
 #### פרמטרים
 
-| שם   | הקלד                | תיאור |
-| ---- | ------------------- | ----- |
-| node | OxcNode \| לא מוגדר |       |
+| שם | הקלד | תיאור |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \| לא מוגדר |             |
 
 ### oxcLiteralValue
 
@@ -1175,9 +1175,9 @@ function oxcLiteralValue(node: OxcNode | undefined): unknown;
 
 #### פרמטרים
 
-| שם   | הקלד                | תיאור |
-| ---- | ------------------- | ----- |
-| node | OxcNode \| לא מוגדר |       |
+| שם | הקלד | תיאור |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \| לא מוגדר |             |
 
 ### OxcNode
 
@@ -1201,10 +1201,10 @@ function oxcNodeText(source: string, node: OxcNode | undefined): string;
 
 #### פרמטרים
 
-| שם   | הקלד                | תיאור |
-| ---- | ------------------- | ----- |
-| מקור | מחרוזת              |       |
-| node | OxcNode \| לא מוגדר |       |
+| שם | הקלד | תיאור |
+| ------ | -------------------- | ----------- |
+| מקור | מחרוזת |             |
+| node | OxcNode \| לא מוגדר |             |
 
 ### oxcObject
 
@@ -1218,10 +1218,10 @@ function oxcObject(node: OxcNode, key: string): OxcNode | undefined;
 
 #### פרמטרים
 
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| node | OxcNode |       |
-| מפתח | מחרוזת  |       |
+| שם | הקלד | תיאור |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
+| מפתח | מחרוזת |             |
 
 ### OxcParentMap
 
@@ -1265,9 +1265,9 @@ function oxcProgramBody(program: OxcNode): OxcNode[];
 
 #### פרמטרים
 
-| שם     | הקלד    | תיאור |
-| ------ | ------- | ----- |
-| תוכנית | OxcNode |       |
+| שם | הקלד | תיאור |
+| ------- | ------- | ----------- |
+| תוכנית | OxcNode |             |
 
 ### oxcSourceExpression
 
@@ -1285,11 +1285,11 @@ function oxcSourceExpression(
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| מקור  | מחרוזת                          |       |
-| node  | OxcNode                         |       |
-| תחביר | SourceBackedExpression['תחביר'] |       |
+| שם | הקלד | תיאור |
+| ------ | -------------------------------- | ----------- |
+| מקור | מחרוזת |             |
+| node | OxcNode |             |
+| תחביר | SourceBackedExpression['תחביר'] |             |
 
 ### oxcSourceSpan
 
@@ -1303,10 +1303,10 @@ function oxcSourceSpan(source: string, node: OxcNode): SourceSpan;
 
 #### פרמטרים
 
-| שם   | הקלד    | תיאור |
-| ---- | ------- | ----- |
-| מקור | מחרוזת  |       |
-| node | OxcNode |       |
+| שם | הקלד | תיאור |
+| ------ | ------- | ----------- |
+| מקור | מחרוזת |             |
+| node | OxcNode |             |
 
 ### oxcString
 
@@ -1320,10 +1320,10 @@ function oxcString(node: OxcNode | undefined, key: 'name' | 'value' | 'directive
 
 #### פרמטרים
 
-| שם   | הקלד                     | תיאור |
-| ---- | ------------------------ | ----- |
-| node | OxcNode \| לא מוגדר      |       |
-| מפתח | 'שם' \| 'ערך' \| 'הנחיה' |       |
+| שם | הקלד | תיאור |
+| ---- | -------------------------------- | ----------- |
+| node | OxcNode \| לא מוגדר |             |
+| מפתח | 'שם' \| 'ערך' \| 'הנחיה' |             |
 
 ### oxcTypeNode
 
@@ -1337,9 +1337,9 @@ function oxcTypeNode(node: OxcNode | undefined): OxcNode | undefined;
 
 #### פרמטרים
 
-| שם   | הקלד                | תיאור |
-| ---- | ------------------- | ----- |
-| node | OxcNode \| לא מוגדר |       |
+| שם | הקלד | תיאור |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \| לא מוגדר |             |
 
 ### oxcUnwrapModuleStatement
 
@@ -1353,13 +1353,13 @@ function oxcUnwrapModuleStatement(statement: OxcNode): {
 };
 ```
 
-פתח את עטיפות `export …` כדי שהמתקשרים יראו את ההצהרה הבסיסית.
+שחרר את עטיפות `export …` כדי שהמתקשרים יראו את ההצהרה הבסיסית.
 
 #### פרמטרים
 
-| שם    | הקלד    | תיאור |
-| ----- | ------- | ----- |
-| הצהרה | OxcNode |       |
+| שם | הקלד | תיאור |
+| --------- | ------- | ----------- |
+| הצהרה | OxcNode |             |
 
 ### parseOxcModule
 
@@ -1373,10 +1373,10 @@ function parseOxcModule(fileName: string, source: string): OxcParsedModule;
 
 #### פרמטרים
 
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| מקור    | מחרוזת |       |
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| שם קובץ | מחרוזת |             |
+| מקור | מחרוזת |             |
 
 ### stripOxcFrameworkDirective
 
@@ -1386,13 +1386,13 @@ function parseOxcModule(fileName: string, source: string): OxcParsedModule;
 function stripOxcFrameworkDirective(module: OxcParsedModule): OxcParsedModule;
 ```
 
-שחרר את הנחיות הפרולוג `"use <framework>"` מובילות ממודול מנותח.
+שחרר את הנחיות הפרולוג מובילות `"use <framework>"` ממודול מנותח.
 
 #### פרמטרים
 
-| שם    | הקלד            | תיאור |
-| ----- | --------------- | ----- |
-| מודול | OxcParsedModule |       |
+| שם | הקלד | תיאור |
+| ------ | --------------- | ----------- |
+| מודול | OxcParsedModule |             |
 
 ### visitOxc
 
@@ -1406,14 +1406,14 @@ function visitOxc(node: OxcNode, visitor: (node: OxcNode) => void | boolean): vo
 
 #### פרמטרים
 
-| שם   | הקלד                              | תיאור |
-| ---- | --------------------------------- | ----- |
-| node | OxcNode                           |       |
-| מבקר | (node: OxcNode) => ריק \| בוליאני |       |
+| שם | הקלד | תיאור |
+| ------- | ---------------------------------- | ----------- |
+| node | OxcNode |             |
+| מבקר | (node: OxcNode) => ריק \| בוליאני |             |
 
 ## `src/compiler/pipeline`
 
-### analyzeForgeModule
+### analysForgeModule
 
 פונקציה **סוג:**
 
@@ -1428,15 +1428,15 @@ function analyzeForgeModule(
 
 זהו התפר הנייטרלי של כל צרכן שאינו מסגרת (בעיקר ה-CMS
 מנהל ההקרנה) משתמש כדי להשיג את ה-IR מבלי לבחור תוסף יעד.
-התוצאות משותפות דרך אותו מטמון שבו משתמש צינור המסגרת, אז א
+תוצאות משותפות דרך אותו מטמון שבו משתמש צינור המסגרת, אז א
 רכיב המנותח עבור מספר יעדים בבנייה אחת מוסק רק פעם אחת.
 
 #### פרמטרים
 
-| שם    | הקלד                 | תיאור |
-| ----- | -------------------- | ----- |
-| קלט   | קלט מהדר             |       |
-| שירות | ForgeCompilerService |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------- | ----------- |
+| קלט | קלט מהדר |             |
+| שירות | ForgeCompilerService |             |
 
 ### קלט מהדר
 
@@ -1470,9 +1470,9 @@ function createCompilerPipeline(service: ForgeCompilerService = createForgeCompi
 
 #### פרמטרים
 
-| שם    | הקלד                 | תיאור |
-| ----- | -------------------- | ----- |
-| שירות | ForgeCompilerService |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------- | ----------- |
+| שירות | ForgeCompilerService |             |
 
 ## `src/compiler/report`
 
@@ -1484,7 +1484,7 @@ function createCompilerPipeline(service: ForgeCompilerService = createForgeCompi
 export interface ForgeCompilationReport
 ```
 
-אבחון ומדדים שנאספו במהלך חיי שירות אחד.
+אבחונים ומדדים שנאספו במהלך חיי שירות אחד.
 
 ## `src/compiler/router`
 
@@ -1502,9 +1502,9 @@ function analyzeRouterCapabilities(
 
 #### פרמטרים
 
-| שם  | הקלד                                                              | תיאור |
-| --- | ----------------------------------------------------------------- | ----- |
-| קלט | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |       |
+| שם | הקלד | תיאור |
+| ----- | ----------------------------------------------------------------- | ----------- |
+| קלט | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |             |
 
 ### compileRouterModule
 
@@ -1518,16 +1518,16 @@ function compileRouterModule(input: RouterCompilerInput): RouterCompilationResul
 
 #### פרמטרים
 
-| שם  | הקלד                | תיאור |
-| --- | ------------------- | ----- |
-| קלט | RouterCompilerInput |       |
+| שם | הקלד | תיאור |
+| ----- | ------------------- | ----------- |
+| קלט | RouterCompilerInput |             |
 
 ### createRouterCompilerPipeline
 
 פונקציה **סוג:**
 
 ```typescript
-function createRouterCompilerPipeline();
+function createRouterCompilerPipeline(): { readonly compile: typeof compileRouterModule };
 ```
 
 טופס ה-Dispatcher בשימוש על ידי המהדר Forge ועל ידי גופי יעד עצמאיים.
@@ -1556,9 +1556,9 @@ function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompile
 
 #### פרמטרים
 
-| שם     | הקלד             | תיאור |
-| ------ | ---------------- | ----- |
-| גבולות | ForgeCacheLimits |       |
+| שם | הקלד | תיאור |
+| ------ | ---------------- | ----------- |
+| גבולות | ForgeCacheLimits |             |
 
 ### ForgeCompileRequest
 
@@ -1636,9 +1636,9 @@ function createForgeBuildSession(options: CreateForgeBuildSessionOptions = {}): 
 
 #### פרמטרים
 
-| שם       | הקלד                           | תיאור |
-| -------- | ------------------------------ | ----- |
-| אפשרויות | CreateForgeBuildSessionOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------------------ | ----------- |
+| אפשרויות | CreateForgeBuildSessionOptions |             |
 
 ### CreateForgeBuildSessionOptions
 
@@ -1734,9 +1734,9 @@ function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserC
 
 #### פרמטרים
 
-| שם       | הקלד                        | תיאור |
-| -------- | --------------------------- | ----- |
-| אפשרויות | JsxHookLibraryConfigOptions |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------- | ----------- |
+| אפשרויות | JsxHookLibraryConfigOptions |             |
 
 ### defineJsxLibraryConfig
 
@@ -1750,9 +1750,9 @@ function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig;
 
 #### פרמטרים
 
-| שם       | הקלד                    | תיאור |
-| -------- | ----------------------- | ----- |
-| אפשרויות | JsxLibraryConfigOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ----------------------- | ----------- |
+| אפשרויות | JsxLibraryConfigOptions |             |
 
 ### JsxHookLibraryConfigOptions
 
@@ -1832,9 +1832,9 @@ function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[];
 
 #### פרמטרים
 
-| שם   | הקלד                  | תיאור |
-| ---- | --------------------- | ----- |
-| תוסף | FrameworkOutputPlugin |       |
+| שם | הקלד | תיאור |
+| ------ | --------------------- | ----------- |
+| תוסף | FrameworkOutputPlugin |             |
 
 ### sveltePlugin
 
@@ -1855,7 +1855,7 @@ function svelteTsdownPlugin(): Plugin;
 ```
 
 תוסף מהדר Svelte תואם Rolldown/tsdown. מרכיב `.svelte` SFCs באמצעות
-`svelte/compiler` בהוק רגיל של `transform` - ללא ממשקי API של Vite עם תצורה פתורה.
+`svelte/compiler` בהוק רגיל `transform` - ללא ממשקי API של Vite עם תצורה פתורה.
 העדיפו את זה (או את {@link stagePluginsForTsdown}) כשאתם בונים עם tsdown.
 
 ## `src/generate-hooks`
@@ -1868,14 +1868,14 @@ function svelteTsdownPlugin(): Plugin;
 function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string;
 ```
 
-הרכיב ספריית הוק ניטראלית לעץ המקור שלה לכל מסגרת (שלב 1),
+הרכיב ספריית הוק נייטרלית לעץ המקור שלה לכל מסגרת (שלב 1),
 החזרת נתיב מודול הכניסה שנוצר.
 
 #### פרמטרים
 
-| שם       | הקלד                              | תיאור |
-| -------- | --------------------------------- | ----- |
-| אפשרויות | GenerateHookLibrarySourcesOptions |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------------- | ----------- |
+| אפשרויות | GenerateHookLibrarySourcesOptions |             |
 
 ### GenerateHookLibrarySourcesOptions
 
@@ -1901,9 +1901,9 @@ function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSo
 
 #### פרמטרים
 
-| שם   | הקלד                  | תיאור |
-| ---- | --------------------- | ----- |
-| תוסף | FrameworkOutputPlugin |       |
+| שם | הקלד | תיאור |
+| ------ | --------------------- | ----------- |
+| תוסף | FrameworkOutputPlugin |             |
 
 ### FrameworkSourceTarget
 
@@ -1928,9 +1928,9 @@ function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): str
 
 #### פרמטרים
 
-| שם       | הקלד                            | תיאור |
-| -------- | ------------------------------- | ----- |
-| אפשרויות | GenerateFrameworkSourcesOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------------------- | ----------- |
+| אפשרויות | GenerateFrameworkSourcesOptions |             |
 
 ### GenerateFrameworkSourcesOptions
 
@@ -1966,9 +1966,9 @@ function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOpti
 
 #### פרמטרים
 
-| שם       | הקלד                               | תיאור |
-| -------- | ---------------------------------- | ----- |
-| אפשרויות | TsdownForgeComponentPluginsOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ---------------------------------- | ----------- |
+| אפשרויות | TsdownForgeComponentPluginsOptions |             |
 
 ### defineTsdownForgeEmailComponents
 
@@ -1985,9 +1985,26 @@ function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOpt
 
 #### פרמטרים
 
-| שם       | הקלד                              | תיאור |
-| -------- | --------------------------------- | ----- |
-| אפשרויות | TsdownForgeEmailComponentsOptions |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------------- | ----------- |
+| אפשרויות | TsdownForgeEmailComponentsOptions |             |
+
+### defineTsdownForgeHooks
+
+פונקציה **סוג:**
+
+```typescript
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
+```
+
+בנה תצורת tsdown אחת עבור בניית הוקס יחיד של Forge.
+פולט קוד ומקליד בספריית ההפצה של מסגרת היעד.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ----------------------- | ----------- |
+| אפשרויות | TsdownForgeHooksOptions |             |
 
 ### defineTsdownForgeHooksAll
 
@@ -2003,9 +2020,9 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 
 #### פרמטרים
 
-| שם       | הקלד                       | תיאור |
-| -------- | -------------------------- | ----- |
-| אפשרויות | TsdownForgeHooksAllOptions |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------------- | ----------- |
+| אפשרויות | TsdownForgeHooksAllOptions |             |
 
 ### resolveCanonicalChunkName
 
@@ -2021,9 +2038,9 @@ Vue מודולי סקריפט וירטואליים ל-`${component}.script.js`.
 
 #### פרמטרים
 
-| שם        | הקלד                    | תיאור |
-| --------- | ----------------------- | ----- |
-| chunkInfo | CanonicalChunkCandidate |       |
+| שם | הקלד | תיאור |
+| --------- | ----------------------- | ----------- |
+| chunkInfo | CanonicalChunkCandidate |             |
 
 ### resolveCanonicalEntryName
 
@@ -2039,9 +2056,9 @@ function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string;
 
 #### פרמטרים
 
-| שם        | הקלד                    | תיאור |
-| --------- | ----------------------- | ----- |
-| chunkInfo | CanonicalChunkCandidate |       |
+| שם | הקלד | תיאור |
+| --------- | ----------------------- | ----------- |
+| chunkInfo | CanonicalChunkCandidate |             |
 
 ### tsdownForgeComponentPlugins
 
@@ -2052,14 +2069,14 @@ function tsdownForgeComponentPlugins(options: TsdownForgeComponentPluginsOptions
 ```
 
 שחזר מסגרת אחת של Archetype-C **component** שנבנתה תחת tsdown:
-שלב 1 (`generateFrameworkSources`) + פלאגין שלב 2 + css-import + פלאגין dts,
+שלב 1 (`generateFrameworkSources`) + פלאגין שלב 2 + css-import + תוספים dts,
 פולט לתוך `dist/<framework>/`.
 
 #### פרמטרים
 
-| שם       | הקלד                               | תיאור |
-| -------- | ---------------------------------- | ----- |
-| אפשרויות | TsdownForgeComponentPluginsOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ---------------------------------- | ----------- |
+| אפשרויות | TsdownForgeComponentPluginsOptions |             |
 
 ### TsdownForgeComponentPluginsOptions
 
@@ -2089,15 +2106,13 @@ export interface TsdownForgeEmailComponentsOptions
 function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
 ```
 
-צורת tsdown-plugin מקורית של מתאם הוו. התוספים שהוחזרו מזריקים
-תצורת היעד שלהם מ-`tsdownConfig`, המאפשרת ליצור בניית Hook
-עם תצורת `defineTsdownLibrary` בבעלות מתקשר אחד.
+יוצר תוספים של tsdown hook עבור כל יעדי המסגרת המוגדרים.
 
 #### פרמטרים
 
-| שם       | הקלד                       | תיאור |
-| -------- | -------------------------- | ----- |
-| אפשרויות | TsdownForgeHooksAllOptions |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------------- | ----------- |
+| אפשרויות | TsdownForgeHooksAllOptions |             |
 
 ### TsdownForgeHooksAllOptions
 
@@ -2105,6 +2120,16 @@ function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlug
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
+```
+
+לא סופק תיאור.
+
+### TsdownForgeHooksOptions
+
+**סוג:** ממשק
+
+```typescript
+export interface TsdownForgeHooksOptions
 ```
 
 לא סופק תיאור.

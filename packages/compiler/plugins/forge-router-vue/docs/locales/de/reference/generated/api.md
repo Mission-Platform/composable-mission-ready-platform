@@ -23,10 +23,10 @@ Erstellen Sie neutrale Funktionen aus einer anwendungseigenen Vue-Router-Instanz
 
 #### Parameter
 
-| Name    | Geben Sie | ein Beschreibung |
-| ------- | --------- | ---------------- |
-| Router  | Router    |                  |
-| aktuell |           |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------ | ----------- |
+| Router | Router |             |
+| aktuell |        |             |
 
 ### auflösenMpLink
 
@@ -40,9 +40,9 @@ Lösen Sie ein neutrales Ziel über den App-eigenen Vue-Router auf.
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| zu   | MpRouteLocationRaw |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
 
 ### „resolvePathTarget“.
 
@@ -56,9 +56,9 @@ Nur Pfad-Fallback, das verwendet wird, wenn eine Vue-Router-Instanz nicht verfü
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| zu   | MpRouteLocationRaw |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
 
 ### toMpLocation
 
@@ -80,9 +80,9 @@ Konvertieren Sie den nativen Vue-Routenstatus in den neutral aufgelösten Stando
 
 #### Parameter
 
-| Name  | Geben Sie                                                                                                                                                                                  | ein Beschreibung |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- |
-| Route | { Pfad: string; fullPath: string; Parameter: Record<string, unknown>; Abfrage: LocationQuery; Hash: Zeichenfolge; Name?: Zeichenfolge \| Symbol \| null; meta?: Record<string, unknown>; } |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Route | { Pfad: string; fullPath: string; Parameter: Record<string, unknown>; Abfrage: LocationQuery; Hash: Zeichenfolge; Name?: Zeichenfolge \| Symbol \| null; meta?: Record<string, unknown>; } |             |
 
 ### toVueLocation
 
@@ -96,9 +96,9 @@ function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw;
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| zu   | MpRouteLocationRaw |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 

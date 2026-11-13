@@ -19,13 +19,13 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/vite-pl
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-Geen beschrijving opgegeven.
+Vite-plug-in voor het beheren en oplossen van i18n-lokale bronnen van applicaties.
 
 #### Parameters
 
-| Naam   | Typ              | Beschrijving |
-| ------ | ---------------- | ------------ |
-| opties | I18nPluginOpties |              |
+| Naam | Typ | Beschrijving |
+| ------- | ----------------- | ----------- |
+| opties | I18nPluginOpties |             |
 
 ### i18nPlugin
 
@@ -35,13 +35,13 @@ Geen beschrijving opgegeven.
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-Geen beschrijving opgegeven.
+Vite-plug-in voor het beheren en oplossen van i18n-lokale bronnen van applicaties.
 
 #### Parameters
 
-| Naam   | Typ              | Beschrijving |
-| ------ | ---------------- | ------------ |
-| opties | I18nPluginOpties |              |
+| Naam | Typ | Beschrijving |
+| ------- | ----------------- | ----------- |
+| opties | I18nPluginOpties |             |
 
 ### I18nPluginopties
 
@@ -71,9 +71,9 @@ van de waarheid in plaats van met de hand een parallelle lijst bij te houden.
 
 #### Parameters
 
-| Naam   | Typ                         | Beschrijving |
-| ------ | --------------------------- | ------------ |
-| opties | ReadSupportedLocalesOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------- | ----------- |
+| opties | ReadSupportedLocalesOptions |             |
 
 ### ReadSupportedLocalesOptions
 

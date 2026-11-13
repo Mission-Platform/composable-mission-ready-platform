@@ -9,947 +9,45 @@
 
 `@mission-platform/flint` のパブリック ソース宣言から生成されます。
 
-## `src/analysis/analyze`
-
-### 分析Flint
-
-**種類:** 関数
-
-```typescript
-function analyzeFlint(frontend: FlintFrontendResult, options: FlintAnalysisOptions = {}): FlintAnalysisReport;
-```
-
-登録されたソース分析ルールを 1 つのフロントエンド結果に対して実行します。
-
-#### パラメータ
-
-| 名前           | タイプ                  | 説明 |
-| -------------- | ----------------------- | ---- |
-| フロントエンド | Flintフロントエンド結果 |      |
-| オプション     | FlintAnalysisオプション |      |
-
-## `src/analysis/context`
-
-### createFlintAnalysisContext
-
-**種類:** 関数
-
-```typescript
-function createFlintAnalysisContext(
-  frontend: FlintFrontendResult,
-  options: FlintAnalysisOptions = {},
-): FlintAnalysisContext;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前           | タイプ                  | 説明 |
-| -------------- | ----------------------- | ---- |
-| フロントエンド | Flintフロントエンド結果 |      |
-| オプション     | FlintAnalysisオプション |      |
-
-## `src/analysis/contracts`
-
-### FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
-```
-
-ソース分析診断ファミリー用に予約されている安定したプレフィックス。
-
-### FlintAnalysisCallGraphNode
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisCallGraphNode
-```
-
-説明はありません。
-
-### FlintAnaizationCapabilityFact
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisCapabilityFact
-```
-
-説明はありません。
-
-### Flint分析カテゴリ
-
-**種類：**タイプ
-
-```typescript
-export type FlintAnalysisCategory = 'type' | 'control-flow' | 'memory' | 'ownership' | 'security' | 'resource';
-```
-
-説明はありません。
-
-### Flint分析コンテキスト
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisContext
-```
-
-説明はありません。
-
-### FlintAnalysisControlFlowFact
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisControlFlowFact
-```
-
-説明はありません。
-
-### Flint分析証拠
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisEvidence
-```
-
-説明はありません。
-
-### Flint分析事実
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisFacts
-```
-
-説明はありません。
-
-### Flint分析結果
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisFinding
-```
-
-説明はありません。
-
-### Flint分析制限
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisLimits
-```
-
-説明はありません。
-
-### Flint分析オプション
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisOptions
-```
-
-説明はありません。
-
-### Flint分析所有権事実
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisOwnershipFact
-```
-
-説明はありません。
-
-### Flint分析ポリシー
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisPolicy
-```
-
-説明はありません。
-
-### Flint分析プロファイル
-
-**種類：**タイプ
-
-```typescript
-export type FlintAnalysisProfile = 'development' | 'strict';
-```
-
-説明はありません。
-
-### FlintAnalysisRangeFact
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisRangeFact
-```
-
-説明はありません。
-
-### Flint分析レポート
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisReport
-```
-
-説明はありません。
-
-### FlintAnalysisResourceFact
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisResourceFact
-```
-
-説明はありません。
-
-### Flint分析ルール
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisRule
-```
-
-説明はありません。
-
-### Flint分析重大度
-
-**種類：**タイプ
-
-```typescript
-export type FlintAnalysisSeverity = FlintDiagnosticSeverity;
-```
-
-説明はありません。
-
-### Flint分析ソースファイル
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisSourceFile
-```
-
-説明はありません。
-
-### Flint分析ソースマップ
-
-**種類：**タイプ
-
-```typescript
-export type FlintAnalysisSourceMap = readonly FlintAnalysisSourceMapEntry[];
-```
-
-説明はありません。
-
-### FlintAnalysisSourceMapEntry
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisSourceMapEntry
-```
-
-説明はありません。
-
-### FlintAnalysisTypeFact
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisTypeFact
-```
-
-説明はありません。
-
-## `src/analysis/default-rules`
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly FlintAnalysisRule[];
-```
-
-説明はありません。
-
-## `src/analysis/facts`
-
-### createFlint分析事実
-
-**種類:** 関数
-
-```typescript
-function createFlintAnalysisFacts(frontend: FlintFrontendResult): FlintAnalysisFacts;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前           | タイプ                  | 説明 |
-| -------------- | ----------------------- | ---- |
-| フロントエンド | Flintフロントエンド結果 |      |
-
-## `src/analysis/policy`
-
-### createFlint分析ポリシー
-
-**種類:** 関数
-
-```typescript
-function createFlintAnalysisPolicy(policy: FlintAnalysisOptionsLike = {}): FlintAnalysisPolicy;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前     | タイプ                     | 説明 |
-| -------- | -------------------------- | ---- |
-| ポリシー | FlintAnaizationOptionsLike |      |
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: FlintAnalysisLimits;
-```
-
-説明はありません。
-
-### FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-説明はありません。
-
-### FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-説明はありません。
-
-### Flint分析オプションのような
-
-**種類：**タイプ
-
-```typescript
-export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limits'> &
-```
-
-説明はありません。
-
-### isFlint分析検出ブロッキング
-
-**種類:** 関数
-
-```typescript
-function isFlintAnalysisFindingBlocking(finding: FlintAnalysisFinding, policy: FlintAnalysisPolicy): boolean;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前     | タイプ            | 説明 |
-| -------- | ----------------- | ---- |
-| 発見     | Flint分析結果     |      |
-| ポリシー | Flint分析ポリシー |      |
-
-## `src/analysis/registry`
-
-### createFlintAnalysisRuleRegistry
-
-**種類:** 関数
-
-```typescript
-function createFlintAnalysisRuleRegistry(
-  rules: readonly FlintAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
-): FlintAnalysisRuleRegistry;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前   | タイプ              | 説明     |
-| ------ | ------------------- | -------- |
-| ルール | FlintAnalysisRule[] | readonly |
-
-### FlintAnalysisRuleRegistry
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAnalysisRuleRegistry
-```
-
-説明はありません。
-
-## `src/analysis/report`
-
-### createFlint分析診断
-
-**種類:** 関数
-
-```typescript
-function createFlintAnalysisDiagnostic(finding: FlintAnalysisFinding): FlintDiagnostic;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前 | タイプ        | 説明 |
-| ---- | ------------- | ---- |
-| 発見 | Flint分析結果 |      |
-
-## `src/ast`
-
-### FlintArrayLiteralExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintArrayLiteralExpression
-```
-
-説明はありません。
-
-### FlintAssignmentStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAssignmentStatement
-```
-
-説明はありません。
-
-### FlintBinaryExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintBinaryExpression
-```
-
-説明はありません。
-
-### FlintBinaryOperator
-
-**種類：**タイプ
-
-```typescript
-export type FlintBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
-```
-
-説明はありません。
-
-### FlintCallExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintCallExpression
-```
-
-説明はありません。
-
-### FlintCapabilityImport
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintCapabilityImport
-```
-
-説明はありません。
-
-### Flintドキュメント
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintDocumentation
-```
-
-説明はありません。
-
-### Flintドキュメントタグ
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintDocumentationTag
-```
-
-説明はありません。
-
-### FlintDowhile ステートメント
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintDoWhileStatement
-```
-
-説明はありません。
-
-### FlintEnum宣言
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintEnumDeclaration
-```
-
-説明はありません。
-
-### FlintEnumValueExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintEnumValueExpression
-```
-
-説明はありません。
-
-### FlintEnumVariant
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintEnumVariant
-```
-
-説明はありません。
-
-### FlintExpression
-
-**種類：**タイプ
-
-```typescript
-export type FlintExpression =
-  | FlintBinaryExpression
-  | FlintCallExpression
-  | FlintIdentifierExpression
-  | FlintLiteralExpression
-  | FlintFunctionValueExpression
-  | FlintStructValueExpression
-  | FlintEnumValueExpression
-  | FlintArrayLiteralExpression
-  | FlintVectorLiteralExpression
-  | FlintIndexExpression
-  | FlintMatchExpression
-  | FlintUnaryExpression;
-```
-
-説明はありません。
-
-### FlintExpressionStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintExpressionStatement
-```
-
-説明はありません。
-
-### FlintForStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintForStatement
-```
-
-説明はありません。
-
-### Flint関数
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintFunction
-```
-
-説明はありません。
-
-### FlintFunctionValueExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintFunctionValueExpression
-```
-
-説明はありません。
-
-### FlintGenericParameter
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintGenericParameter
-```
-
-説明はありません。
-
-### FlintIdentifierExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIdentifierExpression
-```
-
-説明はありません。
-
-### FlintIfStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIfStatement
-```
-
-説明はありません。
-
-### FlintIndexExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIndexExpression
-```
-
-説明はありません。
-
-### FlintInterface宣言
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintInterfaceDeclaration
-```
-
-コンパイル時の構造契約。ランタイム表現はありません。
-
-### FlintInterface関数
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintInterfaceFunction
-```
-
-説明はありません。
-
-### FlintIteratorLoopStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIteratorLoopStatement
-```
-
-説明はありません。
-
-### FlintLetStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintLetStatement
-```
-
-説明はありません。
-
-### Flintリテラル式
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintLiteralExpression
-```
-
-説明はありません。
-
-### FlintMatchArm
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintMatchArm
-```
-
-説明はありません。
-
-### FlintMatchExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintMatchExpression
-```
-
-説明はありません。
-
-### FlintMatchStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintMatchStatement
-```
-
-説明はありません。
-
-### Flintモジュール
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintModule
-```
-
-説明はありません。
-
-### Flint の所有権
-
-**種類：**タイプ
-
-```typescript
-export type FlintOwnership = 'borrowed' | 'owned' | 'shared';
-```
-
-説明はありません。
-
-### Flintパラメータ
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintParameter
-```
-
-説明はありません。
-
-### Flintパターン
-
-**種類：**タイプ
-
-```typescript
-export type FlintPattern = |
-```
-
-説明はありません。
-
-### FlintPrimitiveType
-
-**種類：**タイプ
-
-```typescript
-export type FlintPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
-```
-
-説明はありません。
-
-### FlintReturnStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintReturnStatement
-```
-
-説明はありません。
-
-### FlintSourceModuleImport
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintSourceModuleImport
-```
-
-説明はありません。
-
-### Flintステートメント
-
-**種類：**タイプ
-
-```typescript
-export type FlintStatement =
-  | FlintExpressionStatement
-  | FlintAssignmentStatement
-  | FlintIfStatement
-  | FlintLetStatement
-  | FlintMatchStatement
-  | FlintSwitchStatement
-  | FlintReturnStatement
-  | FlintForStatement
-  | FlintDoWhileStatement
-  | FlintWhileStatement
-  | FlintYieldStatement
-  | FlintIteratorLoopStatement;
-```
-
-説明はありません。
-
-### FlintStruct宣言
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintStructDeclaration
-```
-
-説明はありません。
-
-### FlintStructField
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintStructField
-```
-
-説明はありません。
-
-### FlintStructValueExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintStructValueExpression
-```
-
-説明はありません。
-
-### FlintSwitchCase
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintSwitchCase
-```
-
-説明はありません。
-
-### FlintSwitchStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintSwitchStatement
-```
-
-説明はありません。
-
-### FlintTypeName
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintTypeName
-```
-
-説明はありません。
-
-### flintTypeNameToString
-
-**種類:** 関数
-
-```typescript
-function flintTypeNameToString(type: FlintTypeName): string;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前   | タイプ         | 説明 |
-| ------ | -------------- | ---- |
-| タイプ | Flint タイプ名 |      |
-
-### FlintUnaryExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintUnaryExpression
-```
-
-説明はありません。
-
-### FlintVectorLiteralExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintVectorLiteralExpression
-```
-
-説明はありません。
-
-### FlintwhileStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintWhileStatement
-```
-
-説明はありません。
-
-### FlintYieldStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintYieldStatement
-```
-
-説明はありません。
-
 ## `src/cache`
 
-### FlintCacheLogger
+### フリントキャッシュインデックス
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintCacheIndex
+```
+
+永続化されたキャッシュ マニフェストは、モジュール全体でアクティブなアーティファクトを追跡し、古いクリーンアップを可能にします。
+
+### FlintCacheIndexEntry
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintCacheIndexEntry
+```
+
+キャッシュされたファイルと特定のモジュール キーのタイムスタンプを追跡するインデックス エントリ。
+
+### フリントキャッシュインデックスパス
+
+**種類:** 関数
+
+```typescript
+function flintCacheIndexPath(cache: FlintWatCache): string;
+```
+
+キャッシュ インデックス ファイル `.flint-cache-index.json` へのパスを返します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|キャッシュ |フリントワットキャッシュ |             |
+
+### フリントキャッシュロガー
 
 **種類:** インターフェース
 
@@ -957,9 +55,9 @@ export interface FlintYieldStatement
 export interface FlintCacheLogger
 ```
 
-説明はありません。
+キャッシュ操作とキャッシュのヒット/ミスのための診断ロガー インターフェイス。
 
-### FlintDebugArtifactPaths
+### フリントデバッグアーティファクトパス
 
 **種類:** インターフェース
 
@@ -967,9 +65,9 @@ export interface FlintCacheLogger
 export interface FlintDebugArtifactPaths
 ```
 
-説明はありません。
+コンパイル中に生成された永続的なデバッグ アーティファクトへのファイル パス。
 
-### Flintデバッグアーティファクトバリアント
+### フリントデバッグアーティファクトバリアント
 
 **種類：**タイプ
 
@@ -977,9 +75,27 @@ export interface FlintDebugArtifactPaths
 export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 ```
 
-説明はありません。
+発行されたデバッグ アーティファクトの最適化バリアント識別子。
 
-### FlintWatCache
+### フリントSoNPath
+
+**種類:** 関数
+
+```typescript
+function flintSoNPath(cache: FlintWatCache, key: string, variant: 'optimized' | 'unoptimized' = 'optimized'): string;
+```
+
+指定されたキャッシュ キーとバリアントの SonIR JSON アーティファクトへのパスを返します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ---------------------------- | ----------- |
+|キャッシュ |フリントワットキャッシュ |             |
+|キー |文字列 |             |
+|バリアント | '最適化されました' \| '最適化されていない' |             |
+
+### フリントワットキャッシュ
 
 **種類:** インターフェース
 
@@ -987,9 +103,9 @@ export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 export interface FlintWatCache
 ```
 
-説明はありません。
+コンパイラ アーティファクトおよび WAT 出力用のファイル システムまたはメモリ内キャッシュ プロバイダ。
 
-### flintWatCacheKey
+### フリントワットキャッシュキー
 
 **種類:** 関数
 
@@ -997,15 +113,15 @@ export interface FlintWatCache
 function flintWatCacheKey(input: FlintWatCacheKeyInput): string;
 ```
 
-説明はありません。
+コンパイル要求の決定論的なキャッシュ キーを計算します。
 
 #### パラメータ
 
-| 名前 | タイプ                | 説明 |
-| ---- | --------------------- | ---- |
-| 入力 | FlintWatCacheKeyInput |      |
+|名前 |タイプ |説明 |
+| ----- | --------------------- | ----------- |
+|入力 |フリントワットキャッシュキー入力 |             |
 
-### FlintWatCacheKeyInput
+### フリントワットキャッシュキー入力
 
 **種類:** インターフェース
 
@@ -1013,9 +129,9 @@ function flintWatCacheKey(input: FlintWatCacheKeyInput): string;
 export interface FlintWatCacheKeyInput
 ```
 
-説明はありません。
+決定論的なコンパイル キャッシュ キーを計算するために使用される入力パラメーター。
 
-### flintWatPath
+### フリントワットパス
 
 **種類:** 関数
 
@@ -1023,16 +139,16 @@ export interface FlintWatCacheKeyInput
 function flintWatPath(cache: FlintWatCache, key: string): string;
 ```
 
-説明はありません。
+指定されたキャッシュ キーの WAT ファイルへのパスを返します。
 
 #### パラメータ
 
-| 名前       | タイプ        | 説明 |
-| ---------- | ------------- | ---- |
-| キャッシュ | FlintWatCache |      |
-| キー       | 文字列        |      |
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|キャッシュ |フリントワットキャッシュ |             |
+|キー |文字列 |             |
 
-### persistFlintDebugArtifacts
+### 持続フリントデバッグアーティファクト
 
 **種類:** 関数
 
@@ -1049,17 +165,41 @@ function persistFlintDebugArtifacts(
 ): FlintDebugArtifactPaths;
 ```
 
-説明はありません。
+デバッグ アーティファクト (WAT および Wasm、最適化および非最適化の両方) をディスクに保持します。
 
 #### パラメータ
 
-| 名前             | タイプ                                                                                                                                          | 説明 |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| キャッシュ       | FlintWatCache \|未定義                                                                                                                          |      |
-| キー             | 文字列                                                                                                                                          |      |
-| アーティファクト | {読み取り専用最適化Wat?:文字列; readonly unoptimizedWat?: 文字列; 読み取り専用最適化Wasm?: Uint8Array; readonly unoptimizedWasm?: Uint8Array; } |      |
+|名前 |タイプ |説明 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|キャッシュ |フリントワットキャッシュ \|未定義 |             |
+|キー |文字列 |             |
+|アーティファクト | {読み取り専用最適化Wat?:文字列; readonly unoptimizedWat?: 文字列;読み取り専用最適化Wasm?: Uint8Array; readonly unoptimizedWasm?: Uint8Array; } |             |
 
-### persistFlintWat
+### 永続フリントソーン
+
+**種類:** 関数
+
+```typescript
+function persistFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  module: FlintSoNModule,
+  variant: 'optimized' | 'unoptimized' = 'optimized',
+): string | undefined;
+```
+
+SonIR モジュールをキャッシュ ディレクトリ内のディスクに永続化します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ---------------------------- | ----------- |
+|キャッシュ |フリントワットキャッシュ \|未定義 |             |
+|キー |文字列 |             |
+|モジュール |フリントSoNモジュール |             |
+|バリアント | '最適化されました' \| '最適化されていない' |             |
+
+### 永続フリントワット
 
 **種類:** 関数
 
@@ -1067,19 +207,433 @@ function persistFlintDebugArtifacts(
 function persistFlintWat(cache: FlintWatCache | undefined, key: string, wat: string): string | undefined;
 ```
 
-説明はありません。
+WAT 文字列をディスクのキャッシュ ディレクトリに保存します。
 
 #### パラメータ
 
-| 名前       | タイプ                 | 説明 |
-| ---------- | ---------------------- | ---- |
-| キャッシュ | FlintWatCache \|未定義 |      |
-| キー       | 文字列                 |      |
-| ワット     | 文字列                 |      |
+|名前 |タイプ |説明 |
+| ----- | -------------------------- | ----------- |
+|キャッシュ |フリントワットキャッシュ \|未定義 |             |
+|キー |文字列 |             |
+|ワット |文字列 |             |
 
-## `src/compiler`
+### プルーン孤立したフリントキャッシュファイル
 
-### コンパイルフォージウェブスクリプト
+**種類:** 関数
+
+```typescript
+function pruneOrphanedFlintCacheFiles(cache: FlintWatCache | undefined): readonly string[];
+```
+
+孤立した一時キャッシュ ファイルとインデックスのないキャッシュ ファイルをキャッシュ ディレクトリから削除します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | -------------------------- | ----------- |
+|キャッシュ |フリントワットキャッシュ \|未定義 |             |
+
+### プルーン古いフリントキャッシュ
+
+**種類:** 関数
+
+```typescript
+function pruneStaleFlintCache(
+  cache: FlintWatCache | undefined,
+  moduleIdOrPath: string,
+  currentKey: string,
+  newFiles: readonly string[],
+): void;
+```
+
+キャッシュ キーが変更されたときに、指定されたモジュール ID のキャッシュされた古いアーティファクトを削除します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------------- | -------------------------- | ----------- |
+|キャッシュ |フリントワットキャッシュ \|未定義 |             |
+|モジュールIDOrPath |文字列 |             |
+|現在のキー |文字列 |             |
+|新しいファイル |読み取り専用文字列[] |             |
+
+### readFlintCacheIndex
+
+**種類:** 関数
+
+```typescript
+function readFlintCacheIndex(cache: FlintWatCache | undefined): FlintCacheIndex | undefined;
+```
+
+ディスクからキャッシュ インデックスを読み取って解析し、欠落しているか形式が不正な場合は、未定義を返します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | -------------------------- | ----------- |
+|キャッシュ |フリントワットキャッシュ \|未定義 |             |
+
+### フリントソンを読む
+
+**種類:** 関数
+
+```typescript
+function readFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  expected?: {
+    readonly compilerVersion?: string;
+    readonly languageVersion?: string;
+    readonly abiVersion?: string;
+    readonly sourceHash?: string;
+    readonly graphHash?: string;
+    readonly optimization?: 'debug' | 'release';
+    readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
+    readonly memoryModel?: 'region-arc-checked-linear';
+  },
+): FlintSoNModule | undefined;
+```
+
+SonIR モジュールをディスクから読み取り、逆シリアル化します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|キャッシュ |フリントワットキャッシュ \|未定義 |             |
+|キー |文字列 |             |
+|予想される | { 読み取り専用コンパイラバージョン?: 文字列;読み取り専用言語バージョン?: 文字列; readonly abiVersion?: 文字列;読み取り専用ソースハッシュ?: 文字列;読み取り専用グラフハッシュ?: 文字列;読み取り専用の最適化?: 'デバッグ' \| 'リリース';読み取り専用のboundsChecks?: 'ランタイム' \| 「安全性が証明されている」 \| 'プロファイルによって除外'; readonlymemoryModel?: 'region-arc-checked-linear'; } |             |
+
+## `src/compiler/backend`
+
+### アーティファクト検証診断
+
+**種類:** 関数
+
+```typescript
+function artifactVerificationDiagnostic(diagnostic: FlintWasmArtifactVerificationDiagnostic): FlintDiagnostic;
+```
+
+Wasm アーティファクト検証診断を標準コンパイラ診断に変換します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------------------------------------- | ----------- |
+|診断 | FlintWasmArtifact検証診断 |             |
+
+### ダイナミックリンクメタデータ
+
+**種類:** 関数
+
+```typescript
+function dynamicLinkMetadata(manifest: FlintAbiManifest, artifactId: string): FlintDynamicLinkMetadata | undefined;
+```
+
+マニフェストでダイナミック リンク モードとマークされたモジュールのダイナミック リンク メタデータを計算します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ---------------- | ----------- |
+|マニフェスト |フリントアビマニフェスト |             |
+|アーティファクトID |文字列 |             |
+
+### エンコーダ
+
+**種類:** 定数
+
+```typescript
+export const encoder;
+```
+
+説明はありません。
+
+### Flintバックエンドコンパイル結果
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintBackendCompilationResult
+```
+
+WebAssembly バックエンド コード生成によって返される結果構造体。
+
+### ハッシュバイト
+
+**種類:** 関数
+
+```typescript
+function hashBytes(bytes: Uint8Array): string;
+```
+
+16 進文字列として返された指定されたバイト配列の 32 ビット FNV-1a ハッシュを計算します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---------- | ----------- |
+|バイト | Uint8Array |             |
+
+### ソースハッシュフォーアーティファクト
+
+**種類:** 関数
+
+```typescript
+function sourceHashForArtifact(source: string, fileName: string): string;
+```
+
+非コメント トークン ストリームからアーティファクトの正規化されたソース ハッシュを計算します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|ソース |文字列 |             |
+|ファイル名 |文字列 |             |
+
+### verifyバックエンドアーティファクト
+
+**種類:** 関数
+
+```typescript
+function verifyBackendArtifact(input: {
+  readonly wasm: Uint8Array;
+  readonly unoptimizedWasm?: Uint8Array;
+  readonly fileName: string;
+  readonly manifest: FlintAbiManifest;
+  readonly metadata: Parameters<typeof compileFlintWasm>[0]['metadata'];
+  readonly targetFeatures?: Parameters<typeof verifyFlintWasmArtifact>[0]['targetFeatures'];
+  readonly featureRequirements?: FlintWasmFeatureRequirements;
+  readonly iteratorExports?: readonly FlintIteratorExport[];
+  readonly expectedContentHash: string;
+  readonly expectedSourceHash: string;
+  readonly esmSource: string;
+  readonly profile: 'strict' | 'development';
+  readonly allowedCapabilities?: readonly string[];
+}): {
+  readonly verificationDiagnostics: readonly FlintDiagnostic[];
+  readonly artifactVerification: FlintArtifactVerificationReport;
+};
+```
+
+バックエンド WebAssembly アーティファクトをポリシー、ターゲット機能、マニフェスト制​​約と照合して検証します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|入力 | { 読み取り専用 wasm: Uint8Array; readonly unoptimizedWasm?: Uint8Array;読み取り専用ファイル名: 文字列;読み取り専用マニフェスト: FlintAbiManifest;読み取り専用メタデータ: Parameters<typeof compileFlintWasm>[0]['metadata']; readonly targetFeature?: パラメータ<typeof verifyFlintWasmArtifact>[0]['targetFunctions'];読み取り専用機能要件?: FlintWasmFeatureRequirements; readonly iteratorExports?: readonly FlintIteratorExport[];読み取り専用の期待コンテンツハッシュ: 文字列;読み取り専用の予想されるソースハッシュ: 文字列;読み取り専用 esmSource: 文字列;読み取り専用プロファイル: 'strict' \| '発達'; readonly allowedCapabilities?: readonly string[]; } |             |
+
+## `src/compiler/declarations`
+
+### 宣言の作成
+
+**種類:** 関数
+
+```typescript
+function createDeclarations(manifest: FlintAbiManifest): string;
+```
+
+コンパイルされた Flint マニフェストの完全な TypeScript 宣言ファイルの内容を生成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ---------------- | ----------- |
+|マニフェスト |フリントアビマニフェスト |             |
+
+### 宣言関数
+
+**種類:** 関数
+
+```typescript
+function declarationFunction(
+  declaration: FlintAbiFunction,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+ABI 関数宣言の TypeScript 関数シグネチャを生成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ------------------- | ----------- |
+|宣言 |フリントアビ関数 |             |
+|列挙名 | ReadonlySet<string> |             |
+|レコード名 | ReadonlySet<string> |             |
+
+### 宣言プロパティ
+
+**種類:** 関数
+
+```typescript
+function declarationProperty(name: string): string;
+```
+
+識別子を安全なプロパティ名または JSON で囲まれた文字列としてフォーマットします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|名前 |文字列 |             |
+
+### 宣言記録
+
+**種類:** 関数
+
+```typescript
+function declarationRecord(
+  declarations: readonly FlintAbiFunction[],
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+型付き ABI エクスポート レコードの TypeScript 定義を発行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------ | --------------------------- | ----------- |
+|宣言 |読み取り専用 FlintAbiFunction[] |             |
+|列挙名 | ReadonlySet<string> |             |
+|レコード名 | ReadonlySet<string> |             |
+
+### 宣言タイプ
+
+**種類:** 関数
+
+```typescript
+function declarationType(
+  value: string | FlintAbiParameter,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+Flint ABI パラメータまたは型名を TypeScript 宣言型にマップします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | --------------------------- | ----------- |
+|値 |文字列 \| FlintAbiパラメータ |             |
+|列挙名 | ReadonlySet<string> |             |
+|レコード名 | ReadonlySet<string> |             |
+
+### raw宣言関数
+
+**種類:** 関数
+
+```typescript
+function rawDeclarationFunction(declaration: FlintAbiFunction): string;
+```
+
+文字列およびバイトのポインタ/長さ拡張を使用して、低レベルの生の関数シグネチャを生成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ---------------- | ----------- |
+|宣言 |フリントアビ関数 |             |
+
+### raw宣言記録
+
+**種類:** 関数
+
+```typescript
+function rawDeclarationRecord(declarations: readonly FlintAbiFunction[]): string;
+```
+
+生の WebAssembly エクスポート レコードの TypeScript 定義を発行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------ | --------------------------- | ----------- |
+|宣言 |読み取り専用 FlintAbiFunction[] |             |
+
+### raw宣言タイプ
+
+**種類:** 関数
+
+```typescript
+function rawDeclarationType(value: FlintPrimitiveType | FlintAbiParameter): string;
+```
+
+ABI パラメータまたはプリミティブ型を TypeScript の生の WebAssembly パラメータ型にマップします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | --------------------------------------- | ----------- |
+|値 | FlintPrimitiveType \| FlintAbiパラメータ |             |
+
+## `src/compiler/esm`
+
+### bytesToBase64
+
+**種類:** 関数
+
+```typescript
+function bytesToBase64(bytes: Uint8Array): string;
+```
+
+バイト配列を標準の Base64 文字列にエンコードします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---------- | ----------- |
+|バイト | Uint8Array |             |
+
+### 作成Esmソース
+
+**種類:** 関数
+
+```typescript
+function createEsmSource(
+  wasm: Uint8Array,
+  manifest: FlintAbiManifest,
+  iteratorExports: readonly FlintIteratorExport[] = [],
+  dynamicMetadata?: FlintDynamicLinkMetadata,
+): string;
+```
+
+埋め込み WebAssembly およびランタイム アダプターを含む ESM ローダー モジュール文字列を生成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------------- | ------------------------------ | ----------- |
+|ワズム | Uint8Array |             |
+|マニフェスト |フリントアビマニフェスト |             |
+|イテレータエクスポート | FlintIteratorExport[] | 読み取り専用             |
+|動的メタデータ | FlintDynamicLinkメタデータ |             |
+
+## `src/compiler/module`
+
+### 分析オプション
+
+**種類:** 関数
+
+```typescript
+function analysisOptions(input: FlintCompileInput): FlintAnalysisOptions;
+```
+
+コンパイル入力とポリシー設定から静的解析オプションを解決します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ----------------- | ----------- |
+|入力 |フリントコンパイル入力 |             |
+
+### コンパイルフリント
 
 **種類:** 関数
 
@@ -1087,15 +641,66 @@ function persistFlintWat(cache: FlintWatCache | undefined, key: string, wat: str
 function compileFlint(input: FlintCompileInput): FlintArtifact;
 ```
 
-説明はありません。
+Flint ソース文字列を WebAssembly およびランタイム アーティファクトにコンパイルします。
 
 #### パラメータ
 
-| 名前 | タイプ            | 説明 |
-| ---- | ----------------- | ---- |
-| 入力 | FlintCompileInput |      |
+|名前 |タイプ |説明 |
+| ----- | ----------------- | ----------- |
+|入力 |フリントコンパイル入力 |             |
 
-### コンパイルフォージWebScriptシード
+### フリントグラフをコンパイルする
+
+**種類:** 関数
+
+```typescript
+function compileFlintGraph(input: FlintGraphCompileInput): FlintArtifact;
+```
+
+マルチモジュール Flint モジュール グラフを統合された WebAssembly アーティファクトにコンパイルします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---------------------- | ----------- |
+|入力 |フリントグラフコンパイル入力 |             |
+
+### コンパイルフリントモジュール
+
+**種類:** 関数
+
+```typescript
+function compileFlintModule(
+  input: FlintCompileInput,
+  frontend: FlintFrontendResult,
+  graphMetadata: Pick<
+    FlintArtifact,
+    'graphHash' | 'linkMode' | 'linkedModules' | 'linkProfile' | 'optimizationProfile'
+  > = {},
+  sourceFiles: readonly string[] = frontend.sourceFiles,
+): FlintArtifact;
+```
+
+分析された単一の Flint モジュールを WebAssembly にコンパイルし、ESM ローダー アーティファクトを合成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+|入力 |フリントコンパイル入力 | - モジュールコンパイル入力仕様。                  |
+|フロントエンド | Flintフロントエンド結果 | - フロントエンドコンパイラの結果を準備しました。                       |
+|グラフメタデータ | Pick< FlintArtifact, 'graphHash' \| 'リンクモード' \| 'linkedModules' \| 'リンクプロファイル' \| '最適化プロファイル' > | - モジュール グラフ リンクから伝播されるオプションのメタデータ。  |
+|ソースファイル |読み取り専用文字列[] | - このコンパイル単位に寄与するソース ファイル パス。 |
+
+#### 契約
+
+- **@param:** - モジュールのコンパイル入力仕様。
+- **@param:** - 準備されたフロントエンド コンパイラの結果。
+- **@param:** - モジュール グラフ リンクから伝播されるオプションのメタデータ。
+- **@param:** - このコンパイル単位に寄与するソース ファイル パス。
+- **@returns:** バイナリ、宣言、レポートを含む完全なコンパイル済み成果物。
+
+### コンパイルフリントシード
 
 **種類:** 関数
 
@@ -1103,14 +708,13 @@ function compileFlint(input: FlintCompileInput): FlintArtifact;
 function compileFlintSeed(input: FlintCompileInput): FlintArtifact;
 ```
 
-修正されるまで自己ホスト型ブートストラップによって使用される境界付き TypeScript シード -
-ポイント パリティは、FWS コンパイラを通常のフロントエンド所有者に昇格させます。
+フロントエンド AST を準備し、結果のモジュールをコンパイルすることによって、Flint シード入力をコンパイルします。
 
 #### パラメータ
 
-| 名前 | タイプ            | 説明 |
-| ---- | ----------------- | ---- |
-| 入力 | FlintCompileInput |      |
+|名前 |タイプ |説明 |
+| ----- | ----------------- | ----------- |
+|入力 |フリントコンパイル入力 |             |
 
 ### createFlintコンパイラ
 
@@ -1120,7 +724,76 @@ function compileFlintSeed(input: FlintCompileInput): FlintArtifact;
 function createFlintCompiler(): FlintCompiler;
 ```
 
-説明はありません。
+Flint コンパイラのインスタンスを作成します。
+
+#### 契約
+
+- **@returns:** 設定されたコンパイラ インスタンス。
+
+### runSelfHostedStage
+
+**種類:** 関数
+
+```typescript
+function runSelfHostedStage(
+  input: Pick<FlintCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  options: FlintCompilerServiceOptions,
+): {
+  readonly report?: FlintSelfHostedStageReport;
+  readonly stageReports?: readonly FlintSelfHostedStageReport[];
+  readonly diagnostic?: FlintDiagnostic;
+};
+```
+
+セルフホスト型コンパイラ ステージを実行し、予期されるフィンガープリントに対してパリティ レポートを検証します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+|入力 | Pick<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+|オプション | FlintCompilerServiceOptions |             |
+
+### 自己ホスト型診断
+
+**種類:** 関数
+
+```typescript
+function selfHostedDiagnostic(
+  input: Pick<FlintCompileInput, 'fileName'>,
+  message: string,
+  stage: FlintSelfHostedStageReport['stage'] = 'lex',
+): FlintDiagnostic;
+```
+
+セルフホスト型ブートストラップまたはパリティ検証の問題の診断を作成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ----------------------------------- | ----------- |
+|入力 | Pick<FlintCompileInput, 'fileName'> |             |
+|メッセージ |文字列 |             |
+|ステージ | FlintSelfHostedStageReport['ステージ'] |             |
+
+### withSelfHostedResult
+
+**種類:** 関数
+
+```typescript
+function withSelfHostedResult(artifact: FlintArtifact, result: ReturnType<typeof runSelfHostedStage>): FlintArtifact;
+```
+
+自己ホスト型ランナー ステージの検証結果を最終的なコンパイル アーティファクトにマージします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------------------------------------- | ----------- |
+|アーティファクト |フリントアーティファクト |             |
+|結果 |戻り値の種類<typeof runSelfHostedStage> |             |
+
+## `src/compiler/service`
 
 ### createFlintCompilerService
 
@@ -1130,17 +803,22 @@ function createFlintCompiler(): FlintCompiler;
 function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): FlintCompilerService;
 ```
 
-説明はありません。
+インクリメンタル コンパイルおよびグラフ ビルド用のメモリ内キャッシュ コンパイラ サービスを作成します。
 
 #### パラメータ
 
-| 名前       | タイプ                      | 説明 |
-| ---------- | --------------------------- | ---- |
-| オプション | FlintCompilerServiceOptions |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------------- | ------------------------------------------------ |
+|オプション | FlintCompilerServiceOptions |オプションのコンパイラ サービス構成オプション。 |
+
+#### 契約
+
+- **@param:** オプションのコンパイラ サービス構成オプション。
+- **@returns:** ステートフル FlintCompilerService インスタンス。
 
 ## `src/contracts`
 
-### Flintアーティファクト
+### フリントアーティファクト
 
 **種類:** インターフェース
 
@@ -1148,9 +826,9 @@ function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): 
 export interface FlintArtifact
 ```
 
-説明はありません。
+ABI、ソース、バイナリ、診断を含むパッケージ化されたコンパイラ アーティファクト。
 
-### FlintArtifactVerificationレポート
+### フリントアーティファクト検証レポート
 
 **種類:** インターフェース
 
@@ -1158,9 +836,9 @@ export interface FlintArtifact
 export interface FlintArtifactVerificationReport
 ```
 
-説明はありません。
+発行されたアーティファクト コンテンツのハッシュとバリアントを検証した結果。
 
-### FlintAsyncCapability
+### FlintAsync機能
 
 **種類：**タイプ
 
@@ -1168,9 +846,9 @@ export interface FlintArtifactVerificationReport
 export type FlintAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-説明はありません。
+非同期コンパイル契約で必要な名前付き非同期ホスト機能。
 
-### FlintAsyncCompilationContract
+### FlintAsyncコンパイル契約
 
 **種類:** インターフェース
 
@@ -1180,7 +858,7 @@ export interface FlintAsyncCompilationContract
 
 VM、Wasm、およびホスト アダプターによって共有される明示的な非同期境界。
 
-### Flintバックエンド入力
+### フリントバックエンド入力
 
 **種類:** インターフェース
 
@@ -1190,7 +868,7 @@ export interface FlintBackendInput
 
 フロントエンド検証が成功した後、バックエンド実装によって所有される入力。
 
-### FlintBackendResult
+### フリントバックエンド結果
 
 **種類:** インターフェース
 
@@ -1200,7 +878,7 @@ export interface FlintBackendResult
 
 バックエンド出力は、互換性ファサードの ESM アーティファクトから意図的に独立しています。
 
-### FlintCompileInput
+### フリントコンパイル入力
 
 **種類:** インターフェース
 
@@ -1208,9 +886,9 @@ export interface FlintBackendResult
 export interface FlintCompileInput
 ```
 
-説明はありません。
+フロントエンドおよびコンパイラ サービスによって消費される単一モジュールのコンパイル リクエスト。
 
-### Flintコンパイラ
+### フリントコンパイラ
 
 **種類:** インターフェース
 
@@ -1218,7 +896,7 @@ export interface FlintCompileInput
 export interface FlintCompiler
 ```
 
-説明はありません。
+単一モジュールのコンパイルと破棄を公開する最小限のコンパイラ ファサード。
 
 ### Flintコンパイラのヒント
 
@@ -1228,9 +906,9 @@ export interface FlintCompiler
 export interface FlintCompilerHints
 ```
 
-説明はありません。
+特殊なバックエンド エミッションをガイドするオプションの引き下げヒント。
 
-### FlintCompilerLogger
+### フリントコンパイラロガー
 
 **種類:** インターフェース
 
@@ -1238,9 +916,9 @@ export interface FlintCompilerHints
 export interface FlintCompilerLogger
 ```
 
-説明はありません。
+コンパイラ サービス ステージで使用される構造化ロガー コントラクト。
 
-### FlintCompilerレポート
+### フリントコンパイラレポート
 
 **種類:** インターフェース
 
@@ -1248,9 +926,9 @@ export interface FlintCompilerLogger
 export interface FlintCompilerReport
 ```
 
-説明はありません。
+診断、キャッシュ統計、分析を含む集約サービス レポート。
 
-### FlintCompilerService
+### FlintCompilerサービス
 
 **種類:** インターフェース
 
@@ -1258,7 +936,7 @@ export interface FlintCompilerReport
 export interface FlintCompilerService extends FlintCompiler
 ```
 
-説明はありません。
+グラフのコンパイルと無効化をサポートするインクリメンタル コンパイラ サービス。
 
 ### FlintCompilerServiceOptions
 
@@ -1268,9 +946,9 @@ export interface FlintCompilerService extends FlintCompiler
 export interface FlintCompilerServiceOptions
 ```
 
-説明はありません。
+コンパイラ サービス ファサードを構築するときに構成バッグが受け入れられます。
 
-### Flintデバッグアーティファクト
+### フリントデバッグアーティファクト
 
 **種類:** インターフェース
 
@@ -1278,9 +956,9 @@ export interface FlintCompilerServiceOptions
 export interface FlintDebugArtifacts
 ```
 
-説明はありません。
+デバッグと検証のために保持されるオプションの WAT/Wasm スナップショット。
 
-### Flint決定論的アーティファクトメタデータ
+### フリント決定論的アーティファクトメタデータ
 
 **種類:** インターフェース
 
@@ -1288,9 +966,9 @@ export interface FlintDebugArtifacts
 export interface FlintDeterministicArtifactMetadata
 ```
 
-説明はありません。
+生成されたコンパイラ アーティファクトとともに記録される決定論的 ID フィールド。
 
-### FlintFrontendLinkMetadata
+### Flintフロントエンドリンクメタデータ
 
 **種類:** インターフェース
 
@@ -1298,7 +976,7 @@ export interface FlintDeterministicArtifactMetadata
 export interface FlintFrontendLinkMetadata
 ```
 
-説明はありません。
+バックエンド パッケージ化のフロントエンド結果に添付されるリンク時のメタデータ。
 
 ### Flintフロントエンド結果
 
@@ -1318,9 +996,9 @@ export interface FlintFrontendResult
 export interface FlintGraphCompileInput
 ```
 
-説明はありません。
+エントリの選択とリンク ポリシーを含むマルチモジュール グラフのコンパイル リクエスト。
 
-### FlintIteratorExport
+### FlintIteratorエクスポート
 
 **種類:** インターフェース
 
@@ -1328,9 +1006,9 @@ export interface FlintGraphCompileInput
 export interface FlintIteratorExport
 ```
 
-説明はありません。
+エクスポートされたイテレータ プロトコル サーフェスを記述する ABI メタデータ。
 
-### FlintLinkOptimizationProfile
+### FlintLink最適化プロファイル
 
 **種類：**タイプ
 
@@ -1340,16 +1018,6 @@ export type FlintLinkOptimizationProfile = 'standard' | 'static-aggressive' | 'd
 
 リンク時ポリシーは、通常のコンパイラの最適化とともに記録されます。
 
-### FlintLinkProfile
-
-**種類：**タイプ
-
-```typescript
-export type FlintLinkProfile = 'static' | 'dynamic';
-```
-
-グラフを認識するコンシューマーによって使用される、名前付きプロジェクト間パッケージング プロファイル。
-
 ### Flint最適化
 
 **種類：**タイプ
@@ -1358,9 +1026,9 @@ export type FlintLinkProfile = 'static' | 'dynamic';
 export type FlintOptimization = 'debug' | 'release';
 ```
 
-説明はありません。
+コンパイラの最適化レベルを選択してデバッグまたはリリースを下げる。
 
-### FlintSelfHostedStageReport
+### フリントセルフホストステージレポート
 
 **種類:** インターフェース
 
@@ -1368,9 +1036,9 @@ export type FlintOptimization = 'debug' | 'release';
 export interface FlintSelfHostedStageReport
 ```
 
-ツール アダプタによって使用される、境界付き FWS 作成コンパイラ ステージの結果。
+ツールアダプターによって使用される、境界付き FLINT 作成コンパイラーステージの結果。
 
-### FlintSelfHostedStageRunner
+### フリント自己主催ステージランナー
 
 **種類：**タイプ
 
@@ -1383,7 +1051,7 @@ export type FlintSelfHostedStageRunner = (
 
 ブラウザセーフなファサードを結合せずに、ランタイムによって提供される VM エントリ ポイント。
 
-### FlintTarget機能
+### フリントターゲットの特徴
 
 **種類:** インターフェース
 
@@ -1391,7 +1059,7 @@ export type FlintSelfHostedStageRunner = (
 export interface FlintTargetFeatures
 ```
 
-説明はありません。
+ホストによって要求されたオプションの WebAssembly ターゲット機能フラグ。
 
 ### FlintVm実行モード
 
@@ -1401,7 +1069,7 @@ export interface FlintTargetFeatures
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-説明はありません。
+セルフホスト型コンパイラ ステージでサポートされる VM 実行モード。
 
 ## `src/diagnostics`
 
@@ -1422,20 +1090,32 @@ function createDiagnostic(
 ): FlintDiagnostic;
 ```
 
-説明はありません。
+オプションのヒントとセキュリティ メタデータを使用して、構造化されたコンパイラ診断を構築します。
 
 #### パラメータ
 
-| 名前       | タイプ                                                                                        | 説明 |
-| ---------- | --------------------------------------------------------------------------------------------- | ---- |
-| ファイル名 | 文字列                                                                                        |      |
-| 位相       | FlintDiagnosticPhase                                                                          |      |
-| コード     | 文字列                                                                                        |      |
-| メッセージ | 文字列                                                                                        |      |
-| スパン     | Flintソーススパン                                                                             |      |
-| 重大度     | FlintDiagnosticSeverity                                                                       |      |
-| ヒント     | 文字列                                                                                        |      |
-| メタデータ | Pick<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |      |
+|名前 |タイプ |説明 |
+| -------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+|ファイル名 |文字列 | - ソース ファイルのパスまたは識別子。                                  |
+|位相 |フリント診断フェーズ | - 診断を発行するコンパイラ フェーズ。                                 |
+|コード |文字列 | - 診断エラーまたは警告コード。                                       |
+|メッセージ |文字列 | - 人間が読める説明的な診断メッセージ。                          |
+|スパン |フリントソーススパン | - 診断位置のソース スパン座標。                    |
+|重大度 | FlintDiagnosticSeverity | - 重大度レベル。デフォルトは「エラー」です。                                  |
+|ヒント |文字列 | - オプションの修復ヒントまたは実用的なアドバイス。                         |
+|メタデータ | Pick<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> | - オプションのルール ID、カテゴリ、証拠、またはセキュリティ分類識別子。 |
+
+#### 契約
+
+- **@param:** - ソース ファイルのパスまたは識別子。
+- **@param:** - 診断を発行するコンパイラ フェーズ。
+- **@param:** - 診断エラーまたは警告コード。
+- **@param:** - 人間が読める説明的な診断メッセージ。
+- **@param:** - 診断場所のソース スパン座標。
+- **@param:** - 重大度レベル。デフォルトは「エラー」です。
+- **@param:** - オプションの修復ヒントまたは実用的なアドバイス。
+- **@param:** - オプションのルール ID、カテゴリ、証拠、またはセキュリティ分類識別子。
+- **@returns:** 構造化された FlintDiagnostic インスタンス。
 
 ### 診断キー
 
@@ -1445,15 +1125,50 @@ function createDiagnostic(
 function diagnosticKey(diagnostic: FlintDiagnostic): string;
 ```
 
-説明はありません。
+重複排除診断のための決定論的な ID 文字列キーを計算します。
 
 #### パラメータ
 
-| 名前 | タイプ          | 説明 |
-| ---- | --------------- | ---- |
-| 診断 | FlintDiagnostic |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------- | ---------------------------------- |
+|診断 |フリント診断 | - キーを計算するための診断。 |
 
-### FlintDiagnostic
+#### 契約
+
+- **@param:** - キーを計算するための診断。
+- **@returns:** ファイル名、フェーズ、コード、スパン、メッセージをエンコードする確定的な JSON 文字列。
+
+### FLINT_PARSE_STACK_OVERFLOW
+
+**種類:** 定数
+
+```typescript
+export const FLINT_PARSE_STACK_OVERFLOW;
+```
+
+パーサーの再帰の深さが設定された制限を超えた場合の診断エラー コード。
+
+### FLINT_PARSE_UNCLOSED_DELIMITER
+
+**種類:** 定数
+
+```typescript
+export const FLINT_PARSE_UNCLOSED_DELIMITER;
+```
+
+EOF で区切り文字が閉じられていない場合の診断エラー コード。
+
+### FLINT_SECURITY_SOURCE_TOO_LARGE
+
+**種類:** 定数
+
+```typescript
+export const FLINT_SECURITY_SOURCE_TOO_LARGE;
+```
+
+ソースファイルが MAX_SOURCE_INPUT_BYTES を超えた場合の診断エラー コード。
+
+### フリント診断
 
 **種類:** インターフェース
 
@@ -1461,9 +1176,9 @@ function diagnosticKey(diagnostic: FlintDiagnostic): string;
 export interface FlintDiagnostic
 ```
 
-説明はありません。
+コンパイラ フェーズまたは静的解析パス全体で生成される構造化された診断レコード。
 
-### FlintDiagnosticEvidence
+### フリント診断証拠
 
 **種類:** インターフェース
 
@@ -1471,20 +1186,20 @@ export interface FlintDiagnostic
 export interface FlintDiagnosticEvidence
 ```
 
-説明はありません。
+診断所見に付随する二次的な証拠または関連する場所。
 
-### FlintDiagnosticPhase
+### フリント診断フェーズ
 
 **種類：**タイプ
 
 ```typescript
 export type FlintDiagnosticPhase =
-  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+  'lex' | 'parse' | 'macro' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
-説明はありません。
+診断が発行されたコンパイル フェーズ。
 
-### FlintDiagnosticSeverity
+### フリント診断重大度
 
 **種類：**タイプ
 
@@ -1492,9 +1207,9 @@ export type FlintDiagnosticPhase =
 export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 ```
 
-説明はありません。
+コンパイラ診断の重大度レベル。
 
-### Flintソーススパン
+### フリントソーススパン
 
 **種類:** インターフェース
 
@@ -1502,7 +1217,40 @@ export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 export interface FlintSourceSpan
 ```
 
-説明はありません。
+ファイル内のトークン、AST node、または診断の正確な位置を定義するソース座標スパン。
+
+### getSourceByteLength
+
+**種類:** 関数
+
+```typescript
+function getSourceByteLength(source: string): number;
+```
+
+UTF-8 でエンコードされた文字列の実際のバイト サイズを計算します。
+JavaScript 文字列は内部で UTF-16 を使用するため、`.length` はバイト数ではなくコード単位をカウントします。
+この関数は UTF-8 にエンコードし、実際のバイト数を返します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------ | --------------------------- |
+|ソース |文字列 | - 測定するソース文字列。 |
+
+#### 契約
+
+- **@param:** - 測定するソース文字列。
+- **@returns:** UTF-8 としてエンコードされた場合のバイト数。
+
+### MAX_SOURCE_INPUT_BYTES
+
+**種類:** 定数
+
+```typescript
+export const MAX_SOURCE_INPUT_BYTES;
+```
+
+許可される Flint ソース ファイルの最大サイズ (バイト単位) (16 MiB)。
 
 ## `src/documentation`
 
@@ -1514,13 +1262,18 @@ export interface FlintSourceSpan
 function parseFlintDocumentation(comment: string): FlintDocumentation;
 ```
 
-説明はありません。
+Flint のドキュメント コメントを構造化された説明とドキュメントのタグに解析します。
 
 #### パラメータ
 
-| 名前     | タイプ | 説明 |
-| -------- | ------ | ---- |
-| コメント | 文字列 |      |
+|名前 |タイプ |説明 |
+| ------- | ------ | ------------------------- |
+|コメント |文字列 | - 生のドキュメントコメント文字列。 |
+
+#### 契約
+
+- **@param:** - 生のドキュメント コメント文字列。
+- **@returns:** 正規化された説明とタグを含む構造化されたドキュメント レコード。
 
 ### renderFlintドキュメント
 
@@ -1530,27 +1283,32 @@ function parseFlintDocumentation(comment: string): FlintDocumentation;
 function renderFlintDocumentation(documentation: FlintDocumentation): string;
 ```
 
-説明はありません。
+構造化された Flint ドキュメント レコードをドキュメント コメント マークダウンにレンダリングします。
 
 #### パラメータ
 
-| 名前         | タイプ            | 説明 |
-| ------------ | ----------------- | ---- |
-| ドキュメント | Flintドキュメント |      |
+|名前 |タイプ |説明 |
+| ------------- | ------------------ | ---------------------------------- |
+|ドキュメント |フリントのドキュメント | - 構造化された文書記録。 |
+
+#### 契約
+
+- **@param:** - 構造化されたドキュメント レコード。
+- **@returns:** フォーマットされたドキュメントのマークダウン テキスト。
 
 ## `src/dynamic-links`
 
-### FlintDynamicCallable
+### フリントダイナミック呼び出し可能
 
 **種類：**タイプ
 
 ```typescript
-export type FlintDynamicCallable = (...args: readonly number[]) => unknown;
+export type FlintDynamicCallable = (...arguments_: readonly number[]) => unknown;
 ```
 
-説明はありません。
+数値ハンドル/引数を受け入れる動的モジュールエクスポート用の呼び出し可能な関数シグネチャ。
 
-### FlintDynamicLinkCache
+### フリントダイナミックリンクキャッシュ
 
 **種類:** クラス
 
@@ -1558,7 +1316,7 @@ export type FlintDynamicCallable = (...args: readonly number[]) => unknown;
 export class FlintDynamicLinkCache
 ```
 
-動的ソースモジュールのエクスポートをアーティファクトおよびマニフェストごとに 1 回解決します。
+動的なソース モジュールのエクスポートをアーティファクトおよびマニフェストごとに 1 回解決します。
 いずれかの ID コンポーネントを置き換えると、古い呼び出し可能ハンドルが無効になります。
 
 ### FlintDynamicLinkIdentity
@@ -1569,9 +1327,9 @@ export class FlintDynamicLinkCache
 export interface FlintDynamicLinkIdentity
 ```
 
-説明はありません。
+ダイナミック リンク アーティファクトとマニフェストのペアの一意の ID 記述子。
 
-### FlintDynamicモジュール
+### フリントダイナミックモジュール
 
 **種類:** インターフェース
 
@@ -1579,11 +1337,11 @@ export interface FlintDynamicLinkIdentity
 export interface FlintDynamicModule
 ```
 
-説明はありません。
+呼び出し可能なエクスポートとオプションの ABI 署名を含む、動的にリンクされたモジュール。
 
 ## `src/frontend`
 
-### prepareFlintフロントエンド
+### フリントフロントエンドの準備
 
 **種類:** 関数
 
@@ -1591,13 +1349,19 @@ export interface FlintDynamicModule
 function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 ```
 
-説明はありません。
+単一の Flint ソース ファイルのフロントエンド パイプラインを実行します。
+字句解析、解析、型チェック、IR の低減、およびノー​​ドの海最適化を実行します。
 
 #### パラメータ
 
-| 名前 | タイプ            | 説明 |
-| ---- | ----------------- | ---- |
-| 入力 | FlintCompileInput |      |
+|名前 |タイプ |説明 |
+| ----- | ----------------- | ----------------------------------------------------- |
+|入力 |フリントコンパイル入力 | - 単一ファイルのコンパイラ入力オプションとソース コード。 |
+
+#### 契約
+
+- **@param:** - 単一ファイルのコンパイラ入力オプションとソース コード。
+- **@returns:** AST、IR、および ABI マニフェストを含むフロントエンドのコンパイル結果。
 
 ### prepareFlintGraphフロントエンド
 
@@ -1607,111 +1371,490 @@ function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 function prepareFlintGraphFrontend(input: FlintGraphCompileInput): FlintFrontendResult;
 ```
 
-説明はありません。
+リンクされたマルチモジュール グラフ用にコンパイラ フロントエンドを準備します。
+静的な依存関係クロージャーを解決し、結合されたコンポーネントの型チェックを行います。
+そして、リンクされたモジュールを最適化された IR および ABI マニフェストに下げます。
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 入力 | FlintGraphCompileInput |      |
+|名前 |タイプ |説明 |
+| ----- | ---------------------- | ----------------------------------------------------------------------------- |
+|入力 |フリントグラフコンパイル入力 | - グラフのエッジとエントリ ポイントを含むマルチモジュール グラフ コンパイル入力。 |
 
-## `src/generics`
+#### 契約
 
-### createFlintGenericSpecialization
+- **@param:** - グラフのエッジとエントリ ポイントを含むマルチモジュール グラフ コンパイルの入力。
+- **@returns:** リンクされたモジュール グラフの結合されたフロントエンド コンパイル結果。
+
+## `src/graph-compiler/ast-builder`
+
+### buildGraphAst
 
 **種類:** 関数
 
 ```typescript
-function createFlintGenericSpecialization(request: FlintGenericSpecializationRequest): FlintSpecialization;
+function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult;
 ```
 
-説明はありません。
+検証された FlintNodeGraph をメモリ内の FlintModule AST および双方向ソース マップに落とし込みます。
 
 #### パラメータ
 
-| 名前       | タイプ                            | 説明 |
-| ---------- | --------------------------------- | ---- |
-| リクエスト | FlintGenericSpecializationRequest |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------- | ----------- |
+|入力グラフ |フリントノードグラフ |             |
 
-### createFlintIteratorBoundaryDescriptor
-
-**種類:** 関数
-
-```typescript
-function createFlintIteratorBoundaryDescriptor(
-  generic: string,
-  elementType: FlintTypeName,
-  nextFunction: string,
-  ownership: FlintOwnership = 'borrowed',
-): FlintIteratorBoundaryDescriptor;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前       | タイプ         | 説明 |
-| ---------- | -------------- | ---- |
-| 一般       | 文字列         |      |
-| 要素タイプ | Flint タイプ名 |      |
-| 次の関数   | 文字列         |      |
-| 所有権     | Flint の所有権 |      |
-
-### FlintGenericBoundary
-
-**種類：**タイプ
-
-```typescript
-export type FlintGenericBoundary = 'value' | 'interface' | 'iterator';
-```
-
-説明はありません。
-
-### flintGenericRepresentation
-
-**種類:** 関数
-
-```typescript
-function flintGenericRepresentation(boundary: FlintGenericBoundary = 'value'): FlintSpecialization['representation'];
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前 | タイプ               | 説明 |
-| ---- | -------------------- | ---- |
-| 境界 | FlintGenericBoundary |      |
-
-### FlintGenericSpecializationRequest
+### FlintAstBuildResult
 
 **種類:** インターフェース
 
 ```typescript
-export interface FlintGenericSpecializationRequest
+export interface FlintAstBuildResult
 ```
 
 説明はありません。
 
-### sortFlint専門分野
+## `src/graph-compiler/catalog`
+
+### createNodeFromDefinition
 
 **種類:** 関数
 
 ```typescript
-function sortFlintSpecializations(specializations: readonly FlintSpecialization[]): readonly FlintSpecialization[];
+function createNodeFromDefinition(
+  definition: FlintNodeDefinition,
+  id: string,
+  position: { readonly x: number; readonly y: number } = DEFAULT_NODE_POSITION,
+  properties?: Readonly<Record<string, unknown>>,
+): FlintGraphNode;
+```
+
+指定された ID、位置、プロパティのオーバーライドを使用して、カタログ定義から FlintGraphNode をインスタンス化します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------------------ | ----------- |
+|定義 |フリントノード定義 |             |
+| ID |文字列 |             |
+|位置 | { 読み取り専用 x: 数値;読み取り専用 y: 数値 } |             |
+|プロパティ |読み取り専用<Record<string, unknown>> |             |
+
+### フリントノード定義
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintNodeDefinition
 ```
 
 説明はありません。
 
+### getAllNodeDefinitions
+
+**種類:** 関数
+
+```typescript
+function getAllNodeDefinitions(): readonly FlintNodeDefinition[];
+```
+
+登録されているすべての標準 node 定義を返します。
+
+### getNodeDefinition
+
+**種類:** 関数
+
+```typescript
+function getNodeDefinition(operation: string): FlintNodeDefinition | undefined;
+```
+
+一意の操作識別子によって標準の node 定義を取得します。
+
 #### パラメータ
 
-| 名前     | タイプ                         | 説明 |
-| -------- | ------------------------------ | ---- |
-| 専門分野 | Readonly FlintSpecialization[] |      |
+|名前 |タイプ |説明 |
+| --------- | ------ | ----------- |
+|操作 |文字列 |             |
+
+### getNodeDefinitionsByCategory
+
+**種類:** 関数
+
+```typescript
+function getNodeDefinitionsByCategory(category: FlintNodeCategory): readonly FlintNodeDefinition[];
+```
+
+カテゴリでフィルタリングされた node 定義を返します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ----------------- | ----------- |
+|カテゴリー |フリントノードカテゴリー |             |
+
+## `src/graph-compiler/generator`
+
+### グラフをフリントにコンパイルする
+
+**種類:** 関数
+
+```typescript
+function compileGraphToFlint(graph: FlintNodeGraph): FlintGraphCompilationArtifact;
+```
+
+Flint ビジュアル node グラフ用のデュアル コンパイラ ジェネレーター。
+入力されたメモリ内 FlintModule AST と、双方向ソース マップを使用してフォーマットされた .flint ソース テキストを合成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | -------------- | ----------- |
+|グラフ |フリントノードグラフ |             |
+
+### コンパイルノードグラフ
+
+**種類:** 関数
+
+```typescript
+function compileNodeGraph(graph: FlintNodeGraph, options?: Partial<FlintCompileInput>): FlintCompiledNodeGraphArtifact;
+```
+
+ビジュアルな FlintNodeGraph をエンドツーエンドで WebAssembly バイナリ、ABI マニフェスト、およびソース アーティファクトにコンパイルします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | -------------------------- | ----------- |
+|グラフ |フリントノードグラフ |             |
+|オプション |部分<FlintCompileInput> |             |
+
+### フリントコンパイル済みノードグラフアーティファクト
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintCompiledNodeGraphArtifact extends Omit<FlintArtifact, 'sourceMap'>
+```
+
+説明はありません。
+
+### フリントグラフコンピレーションアーティファクト
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintGraphCompilationArtifact
+```
+
+説明はありません。
+
+## `src/graph-compiler/source-emitter`
+
+### エミットグラフソース
+
+**種類:** 関数
+
+```typescript
+function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmissionResult;
+```
+
+正確な双方向ソース マップを含む検証済みのグラフから、クリーンでフォーマットされた Flint ソース コードを出力します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | -------------- | ----------- |
+|入力グラフ |フリントノードグラフ |             |
+
+### フリントソース発光結果
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintSourceEmissionResult
+```
+
+説明はありません。
+
+## `src/graph-compiler/types`
+
+### createContainerType
+
+**種類:** 関数
+
+```typescript
+function createContainerType(
+  container: string,
+  typeArguments: readonly FlintTypeName[] = [],
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+ジェネリックまたは集約 FlintTypeName node を作成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------- | ------------------------ | ----------- |
+|コンテナ |文字列 |             |
+|タイプ引数 |読み取り専用 FlintTypeName[] |             |
+|スパン |フリントソーススパン |             |
+
+### createPrimitiveType
+
+**種類:** 関数
+
+```typescript
+function createPrimitiveType(
+  primitive: FlintPrimitiveType,
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+プリミティブ FlintTypeName node を作成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | ------------------ | ----------- |
+|プリミティブ |フリントプリミティブタイプ |             |
+|スパン |フリントソーススパン |             |
+
+### createSyntheticSpan
+
+**種類:** 関数
+
+```typescript
+function createSyntheticSpan(line = 1, column = 1, length = 1): FlintSourceSpan;
+```
+
+グラフ生成された AST ノードの合成ソース スパンを作成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---- | ----------- |
+|行 |      |             |
+|コラム |      |             |
+|長さ |      |             |
+
+### 平坦化グラフ
+
+**種類:** 関数
+
+```typescript
+function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph;
+```
+
+グラフ内のメタ ノードを再帰的にインライン化し、その構成要素である内部ノードとエッジに平坦化します。
+複合メタノードをシームレスにコンパイルするために、検証、AST 生成、およびソース発行中に使用されます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | -------------- | ----------- |
+|グラフ |フリントノードグラフ |             |
+
+### フリントグラフエッジ
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintGraphEdge
+```
+
+説明はありません。
+
+### フリントグラフグループ
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintGraphGroup
+```
+
+説明はありません。
+
+### フリントグラフノード
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintGraphNode
+```
+
+説明はありません。
+
+### フリントグラフポート
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintGraphPort
+```
+
+説明はありません。
+
+### FlintGraph検証問題
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintGraphValidationIssue
+```
+
+説明はありません。
+
+### FlintGraph検証結果
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintGraphValidationResult
+```
+
+説明はありません。
+
+### FlintGraph検証重大度
+
+**種類：**タイプ
+
+```typescript
+export type FlintGraphValidationSeverity = 'error' | 'warning' | 'info';
+```
+
+説明はありません。
+
+### フリントメタノード定義
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintMetaNodeDefinition
+```
+
+説明はありません。
+
+### FlintMetaNodePortMapping
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintMetaNodePortMapping
+```
+
+説明はありません。
+
+### フリントメタノードサブグラフ
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintMetaNodeSubgraph
+```
+
+説明はありません。
+
+### フリントノードカテゴリ
+
+**種類：**タイプ
+
+```typescript
+export type FlintNodeCategory = 'math' | 'logic' | 'text' | 'collection' | 'control' | 'capability' | 'custom';
+```
+
+説明はありません。
+
+### フリントノードグラフ
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintNodeGraph
+```
+
+説明はありません。
+
+### フリントノードの種類
+
+**種類：**タイプ
+
+```typescript
+export type FlintNodeKind =
+  'input' | 'output' | 'constant' | 'operation' | 'stdlib_call' | 'capability_call' | 'custom';
+```
+
+説明はありません。
+
+### フリントノードソースマップ
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintNodeSourceMap
+```
+
+説明はありません。
+
+### フリントポート方向
+
+**種類：**タイプ
+
+```typescript
+export type FlintPortDirection = 'input' | 'output';
+```
+
+説明はありません。
+
+## `src/graph-compiler/validator`
+
+### 互換性のあるタイプ
+
+**種類:** 関数
+
+```typescript
+function areTypesCompatible(source: FlintTypeName, target: FlintTypeName): boolean;
+```
+
+ソースと宛先の Flint タイプ間の構造的および意味的な互換性をチェックします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------------- | ----------- |
+|ソース |フリントタイプ名 |             |
+|ターゲット |フリントタイプ名 |             |
+
+### グラフを検証する
+
+**種類:** 関数
+
+```typescript
+function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult;
+```
+
+グラフ トポロジ、エッジ接続、ポート タイプを検証し、サイクルを検出します。
+グラフが有効な有向非巡回グラフ (DAG) の場合は、ソートされた node ID を返します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | -------------- | ----------- |
+|グラフ |フリントノードグラフ |             |
 
 ## `src/graph`
 
-### Flintグラフ結果
+### FlintForeignObjectReference
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintForeignObjectReference
+```
+
+リンカに提供される外部再配置可能オブジェクト参照。
+
+### フリントグラフ結果
 
 **種類:** インターフェース
 
@@ -1719,9 +1862,9 @@ function sortFlintSpecializations(specializations: readonly FlintSpecialization[
 export interface FlintGraphResult
 ```
 
-説明はありません。
+モジュール グラフを解決した集計結果。モジュール グラフ構造と診断を返します。
 
-### FlintLink設定
+### FlintLink構成
 
 **種類:** インターフェース
 
@@ -1729,9 +1872,9 @@ export interface FlintGraphResult
 export interface FlintLinkConfiguration
 ```
 
-説明はありません。
+プロジェクト間および同じプロジェクトのモジュール リンク ポリシーを管理する構成オプション。
 
-### FlintLinkMode
+### フリントリンクモード
 
 **種類：**タイプ
 
@@ -1739,9 +1882,20 @@ export interface FlintLinkConfiguration
 export type FlintLinkMode = 'static' | 'dynamic';
 ```
 
+依存関係を静的に解決するかどうかを指定するリンク モード (バンドルされている)
+単一コンポーネントに）または動的に（ホストレベルのランタイムインポート経由）。
+
+### FlintLinkプロフィール
+
+**種類：**タイプ
+
+```typescript
+export type FlintLinkProfile = 'standard' | 'minimal' | 'full' | 'dynamic' | 'static' | 'monolithic' | 'cross-package';
+```
+
 説明はありません。
 
-### Flintモジュールエッジ
+### フリントモジュールエッジ
 
 **種類:** インターフェース
 
@@ -1749,9 +1903,10 @@ export type FlintLinkMode = 'static' | 'dynamic';
 export interface FlintModuleEdge
 ```
 
-説明はありません。
+インポーターとインポート先をリンクするモジュール グラフ内の有向依存関係エッジ
+関連するリンク戦略とソース コードの場所範囲を使用します。
 
-### Flintモジュールグラフ
+### フリントモジュールグラフ
 
 **種類:** インターフェース
 
@@ -1759,9 +1914,10 @@ export interface FlintModuleEdge
 export interface FlintModuleGraph
 ```
 
-説明はありません。
+解決されたモジュール、依存関係エッジをキャプチャする有向モジュール依存関係グラフ
+および参加プロジェクトの境界。
 
-### FlintModuleResolver
+### フリントモジュールリゾルバー
 
 **種類:** インターフェース
 
@@ -1769,9 +1925,9 @@ export interface FlintModuleGraph
 export interface FlintModuleResolver
 ```
 
-説明はありません。
+インポート指定子を解決し、モジュールのソース テキストを非同期的にロードするためのインターフェイス。
 
-### Flintプロジェクト
+### フリントプロジェクト
 
 **種類:** インターフェース
 
@@ -1779,9 +1935,9 @@ export interface FlintModuleResolver
 export interface FlintProject
 ```
 
-説明はありません。
+ファイルルートと派生識別子を含むプロジェクト境界を表します。
 
-### FlintResolvedModule
+### FlintResolvedモジュール
 
 **種類:** インターフェース
 
@@ -1789,9 +1945,20 @@ export interface FlintProject
 export interface FlintResolvedModule
 ```
 
-説明はありません。
+解析された AST、ソース テキスト、
+プロジェクトのルートの関連付けとコンテンツのハッシュ。
 
-### hashFlintModuleGraph
+### 外部オブジェクト形式
+
+**種類：**タイプ
+
+```typescript
+export type ForeignObjectFormat = 'wasm-relocatable' | 'elf-object' | 'mach-o';
+```
+
+再配置可能な外部オブジェクト形式 (C/C++ Clang または Rust cargo からコンパイル)。
+
+### ハッシュフリントモジュールグラフ
 
 **種類:** 関数
 
@@ -1799,16 +1966,22 @@ export interface FlintResolvedModule
 function hashFlintModuleGraph(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): string;
 ```
 
-説明はありません。
+モジュール グラフとそのリンク構成の確定的な 32 ビット FNV-1a 16 進ハッシュを計算します。
 
 #### パラメータ
 
-| 名前   | タイプ            | 説明 |
-| ------ | ----------------- | ---- |
-| グラフ | FlintModuleグラフ |      |
-| 構成   | FlintLink設定     |      |
+|名前 |タイプ |説明 |
+| ------------- | ---------------------- | -------------------------------------------------- |
+|グラフ |フリントモジュールグラフ | - ハッシュするモジュール依存関係グラフ。                 |
+|構成 | FlintLink 設定 | - リンク構成はグラフの解像度に影響します。 |
 
-### solveFlintModuleGraph
+#### 契約
+
+- **@param:** - ハッシュするモジュールの依存関係グラフ。
+- **@param:** - グラフの解像度に影響を与えるリンク構成。
+- **@returns:** 8 文字の小文字 16 進数のハッシュ文字列。
+
+### フリントモジュールグラフの解決
 
 **種類:** 関数
 
@@ -1820,19 +1993,26 @@ function resolveFlintModuleGraph(
 ): Promise<FlintGraphResult>;
 ```
 
-説明はありません。
+1 つ以上のエントリ ポイントから開始してモジュール全体の依存関係グラフを非同期的に解決します。
 
 #### パラメータ
 
-| 名前       | タイプ               | 説明 |
-| ---------- | -------------------- | ---- |
-| エントリー | 読み取り専用文字列[] |      |
-| リゾルバ   | FlintModuleResolver  |      |
-| 構成       | FlintLink設定        |      |
+|名前 |タイプ |説明 |
+| ------------- | ---------------------- | ------------------------------------------------------------------- |
+|エントリー |読み取り専用文字列[] | - 解決するルート エントリ モジュールのファイル パス。                      |
+|リゾルバ |フリントモジュールリゾルバー | - パス マッピングとコンテンツのロードを担当するモジュール リゾルバー。 |
+|構成 | FlintLink 設定 | - 構成オプションのリンクとパッケージ化。                      |
+
+#### 契約
+
+- **@param:** - 解決するルート エントリ モジュールのファイル パス。
+- **@param:** - パス マッピングとコンテンツの読み込みを担当するモジュール リゾルバー。
+- **@param:** - リンクおよびパッケージ化の構成オプション。
+- **@returns:** 解決されたモジュール、依存関係エッジ、プロジェクト、および診断を含むグラフ結果。
 
 ## `src/identity`
 
-### 派生FlintModuleId
+### FlintModuleId の派生
 
 **種類:** 関数
 
@@ -1840,16 +2020,23 @@ function resolveFlintModuleGraph(
 function deriveFlintModuleId(fileName: string, root?: string): string;
 ```
 
-説明はありません。
+Flint ソース ファイルの正規モジュール識別子を導出します。
+ルート パスのプレフィックス、先頭の相対パス マーカー、および `.flint` ファイル拡張子を削除します。
 
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| ファイル名 | 文字列 |      |
-| ルート     | 文字列 |      |
+|名前 |タイプ |説明 |
+| -------- | ------ | ------------------------------------------------------------------- |
+|ファイル名 |文字列 | - Flint ソース ファイルのファイル名またはパス。                       |
+|ルート |文字列 | - モジュール識別子から削除するオプションのルート ディレクトリ パス。 |
 
-### NormalizeFlintFileId
+#### 契約
+
+- **@param:** - Flint ソース ファイルのファイル名またはパス。
+- **@param:** - モジュール識別子から削除するオプションのルート ディレクトリ パス。
+- **@returns:** 正規モジュール識別子、または結果の識別子が空の場合は `'<input>'`。
+
+### 正規化FlintFileId
 
 **種類:** 関数
 
@@ -1857,704 +2044,16 @@ function deriveFlintModuleId(fileName: string, root?: string): string;
 function normalizeFlintFileId(fileName: string): string;
 ```
 
-説明はありません。
-
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| ファイル名 | 文字列 |      |
+|名前 |タイプ |説明 |
+| -------- | ------ | ------------------------------- |
+|ファイル名 |文字列 | - RAW ファイル名またはパス文字列。 |
 
-## `src/ir`
+#### 契約
 
-### countFlintIr
-
-**種類:** 関数
-
-```typescript
-function countFlintIr(module: FlintIrModule): FlintIrCounts;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前       | タイプ        | 説明 |
-| ---------- | ------------- | ---- |
-| モジュール | FlintIrModule |      |
-
-### FlintCollection 操作
-
-**種類：**タイプ
-
-```typescript
-export type FlintCollectionOperation = 'array-iter' | 'iterator-next' | 'array-length';
-```
-
-説明はありません。
-
-### FlintIrArrayLiteralExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrArrayLiteralExpression
-```
-
-説明はありません。
-
-### FlintIrAssignmentStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrAssignmentStatement
-```
-
-説明はありません。
-
-### FlintIrBinaryExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrBinaryExpression
-```
-
-説明はありません。
-
-### FlintIrCallExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrCallExpression
-```
-
-説明はありません。
-
-### FlintIrCounts
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrCounts
-```
-
-説明はありません。
-
-### FlintIrDowhileStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrDoWhileStatement
-```
-
-説明はありません。
-
-### FlintIrEnumValueExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrEnumValueExpression
-```
-
-説明はありません。
-
-### FlintIrExpression
-
-**種類：**タイプ
-
-```typescript
-export type FlintIrExpression =
-  | FlintIrBinaryExpression
-  | FlintIrCallExpression
-  | FlintIrIdentifierExpression
-  | FlintIrLiteralExpression
-  | FlintIrFunctionValueExpression
-  | FlintIrStructValueExpression
-  | FlintIrEnumValueExpression
-  | FlintIrMatchExpression
-  | FlintIrUnaryExpression
-  | FlintIrArrayLiteralExpression
-  | FlintIrIndexExpression;
-```
-
-説明はありません。
-
-### FlintIrExpressionStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrExpressionStatement
-```
-
-説明はありません。
-
-### FlintIrFunction
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrFunction
-```
-
-説明はありません。
-
-### FlintIrFunction分析
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrFunctionAnalysis
-```
-
-説明はありません。
-
-### FlintIrFunctionValueExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrFunctionValueExpression
-```
-
-説明はありません。
-
-### FlintIrIdentifierExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrIdentifierExpression
-```
-
-説明はありません。
-
-### FlintIrIfStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrIfStatement
-```
-
-説明はありません。
-
-### FlintIrIndexExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrIndexExpression
-```
-
-説明はありません。
-
-### FlintIrIteratorLoopStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrIteratorLoopStatement
-```
-
-説明はありません。
-
-### FlintIrLetStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrLetStatement
-```
-
-説明はありません。
-
-### FlintIrLiteralExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrLiteralExpression
-```
-
-説明はありません。
-
-### FlintIrMatchArm
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrMatchArm
-```
-
-説明はありません。
-
-### FlintIrMatchExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrMatchExpression
-```
-
-説明はありません。
-
-### FlintIrMatchStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrMatchStatement
-```
-
-説明はありません。
-
-### FlintIrModule
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrModule
-```
-
-説明はありません。
-
-### FlintIrPurity
-
-**種類：**タイプ
-
-```typescript
-export type FlintIrPurity = 'pure' | 'effectful' | 'unknown';
-```
-
-説明はありません。
-
-### FlintIrReturnStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrReturnStatement
-```
-
-説明はありません。
-
-### FlintIrStatement
-
-**種類：**タイプ
-
-```typescript
-export type FlintIrStatement =
-  | FlintIrExpressionStatement
-  | FlintIrAssignmentStatement
-  | FlintIrIfStatement
-  | FlintIrWhileStatement
-  | FlintIrDoWhileStatement
-  | FlintIrLetStatement
-  | FlintIrReturnStatement
-  | FlintIrMatchStatement
-  | FlintIrSwitchStatement
-  | FlintIrYieldStatement
-  | FlintIrIteratorLoopStatement;
-```
-
-説明はありません。
-
-### FlintIrStructValueExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrStructValueExpression
-```
-
-説明はありません。
-
-### FlintIrSwitchStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrSwitchStatement
-```
-
-説明はありません。
-
-### FlintIrUnaryExpression
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrUnaryExpression
-```
-
-説明はありません。
-
-### FlintIrwhileStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrWhileStatement
-```
-
-説明はありません。
-
-### FlintIrYieldStatement
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIrYieldStatement
-```
-
-説明はありません。
-
-### lowerFlintIrToModule
-
-**種類:** 関数
-
-```typescript
-function lowerFlintIrToModule(module: FlintIrModule): FlintModule;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前       | タイプ        | 説明 |
-| ---------- | ------------- | ---- |
-| モジュール | FlintIrModule |      |
-
-### lowerFlintToIr
-
-**種類:** 関数
-
-```typescript
-function lowerFlintToIr(module: FlintModule): FlintIrModule;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前       | タイプ          | 説明 |
-| ---------- | --------------- | ---- |
-| モジュール | Flintモジュール |      |
-
-## `src/lexer`
-
-### FlintLexResult
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintLexResult
-```
-
-説明はありません。
-
-### Flintトークン
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintToken
-```
-
-説明はありません。
-
-### FlintTokenKind
-
-**種類：**タイプ
-
-```typescript
-export type FlintTokenKind =
-  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
-```
-
-説明はありません。
-
-### lexFlint
-
-**種類:** 関数
-
-```typescript
-function lexFlint(source: string, fileName = '<input>'): FlintLexResult;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| ソース     | 文字列 |      |
-| ファイル名 |        |      |
-
-## `src/linker`
-
-### FlintLinkResult
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintLinkResult
-```
-
-説明はありません。
-
-### validateFlintリンク
-
-**種類:** 関数
-
-```typescript
-function validateFlintLinks(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): FlintLinkResult;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前   | タイプ            | 説明 |
-| ------ | ----------------- | ---- |
-| グラフ | FlintModuleグラフ |      |
-| 構成   | FlintLink設定     |      |
-
-## `src/manifest`
-
-### createFlintAbiManifest
-
-**種類:** 関数
-
-```typescript
-function createFlintAbiManifest(module: FlintModule, options: FlintAbiManifestOptions = {}): FlintAbiManifest;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前       | タイプ                  | 説明 |
-| ---------- | ----------------------- | ---- |
-| モジュール | Flintモジュール         |      |
-| オプション | FlintAbiManifestOptions |      |
-
-### FORGE_WEB_SCRIPT_ABI_VERSION
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-説明はありません。
-
-### FORGE_WEB_SCRIPT_LANGUAGE_VERSION
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-説明はありません。
-
-### FlintAbiFunction
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAbiFunction
-```
-
-説明はありません。
-
-### FlintAbiManifest
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAbiManifest
-```
-
-説明はありません。
-
-### FlintAbiManifestオプション
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAbiManifestOptions
-```
-
-説明はありません。
-
-### FlintAbiParameter
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAbiParameter
-```
-
-説明はありません。
-
-### FlintAbiVersion
-
-**種類：**タイプ
-
-```typescript
-export type FlintAbiVersion = typeof FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-説明はありません。
-
-### FlintAggregateFieldLayout
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAggregateFieldLayout
-```
-
-説明はありません。
-
-### FlintAggregateLayout
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintAggregateLayout
-```
-
-説明はありません。
-
-### FlintCollectionLayout
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintCollectionLayout
-```
-
-説明はありません。
-
-### FlintDynamicLinkMetadata
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintDynamicLinkMetadata
-```
-
-ダイナミックローダーとそのディスパッチキャッシュによって消費される安定したメタデータ。
-
-### Flint動的モジュールバインディング
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintDynamicModuleBinding
-```
-
-明示的に動的モジュールのマニフェストに表示されるバインディング情報。
-
-### FlintEnumMetadata
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintEnumMetadata
-```
-
-説明はありません。
-
-### FlintHostImport
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintHostImport
-```
-
-説明はありません。
-
-### FlintIteratorBoundaryDescriptor
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintIteratorBoundaryDescriptor
-```
-
-説明はありません。
-
-### Flint言語バージョン
-
-**種類：**タイプ
-
-```typescript
-export type FlintLanguageVersion = typeof FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-説明はありません。
-
-### FlintLinkedExport
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintLinkedExport
-```
-
-説明はありません。
-
-### Flintメモリレイアウト
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintMemoryLayout
-```
-
-説明はありません。
-
-### FlintSourceImport
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintSourceImport
-```
-
-説明はありません。
-
-### Flint専門分野
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintSpecialization
-```
-
-説明はありません。
-
-### FlintValueRepresentation
-
-**種類：**タイプ
-
-```typescript
-export type FlintValueRepresentation =
-  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
-```
-
-説明はありません。
+- **@param:** - 未処理のファイル名またはパス文字列。
+- **@returns:** 正規化された POSIX スタイルのファイル パス識別子。
 
 ## `src/module-types`
 
@@ -2566,9 +2065,9 @@ export type FlintValueRepresentation =
 export interface FlintImportTypeEnvironment
 ```
 
-説明はありません。
+モジュールにインポートされた宣言を含む外部型環境。
 
-### solveFlintImportTypeEnvironment
+### 解決FlintImportTypeEnvironment
 
 **種類:** 関数
 
@@ -2579,130 +2078,160 @@ function resolveFlintImportTypeEnvironment(
 ): FlintImportTypeEnvironment;
 ```
 
-説明はありません。
+モジュール グラフ内の上流の依存関係モジュールからインポートされた関数シグネチャを解決します。
 
 #### パラメータ
 
-| 名前     | タイプ              | 説明 |
-| -------- | ------------------- | ---- |
-| 輸入業者 | FlintResolvedModule |      |
-| グラフ   | FlintModuleグラフ   |      |
+|名前 |タイプ |説明 |
+| -------- | ------------------- | ------------------------------------------------------------------------ |
+|輸入業者 |フリント解決モジュール | - インポート依存関係が検査されている解決済みモジュール。         |
+|グラフ |フリントモジュールグラフ | - リンクされたすべてのモジュールとエッジを含むマルチモジュール依存関係グラフ。 |
 
-## `src/optimizer`
+#### 契約
 
-### Flint最適化の決定
+- **@param:** - インポートの依存関係が検査されている解決済みモジュール。
+- **@param:** - リンクされたすべてのモジュールとエッジを含むマルチモジュール依存関係グラフ。
+- **@returns:** エクスポートされた外部関数 (ベア関数とエイリアス接頭辞付き関数の両方) を含むインポート タイプの環境。
 
-**種類:** インターフェース
+## `src/safety`
 
-```typescript
-export interface FlintOptimizationDecision
-```
-
-説明はありません。
-
-### Flint最適化レポート
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintOptimizationReport
-```
-
-説明はありません。
-
-### FlintOptimizationResult
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintOptimizationResult
-```
-
-説明はありません。
-
-### optimizeFlintIr
+### canLifetimeEscape
 
 **種類:** 関数
 
 ```typescript
-function optimizeFlintIr(input: FlintIrModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function canLifetimeEscape(source: RegionLifetime, target: RegionLifetime): boolean;
 ```
 
-説明はありません。
+ソース存続期間からターゲット存続期間への割り当てまたは戻りがリージョンの安全性に違反しないことを検証します。
+明示的なプロモーション/クローン作成を行わずに、有効期間の短い参照を有効期間の長いターゲットに保存することは許可されていません。
 
 #### パラメータ
 
-| 名前   | タイプ                   | 説明 |
-| ------ | ------------------------ | ---- |
-| 入力   | FlintIrModule            |      |
-| モード | 'デバッグ' \| 'リリース' |      |
+|名前 |タイプ |説明 |
+| ------ | -------------- | ----------- |
+|ソース |地域生涯 |             |
+|ターゲット |地域生涯 |             |
 
-### optimizeFlintモジュール
+### checkフリントセーフティ
 
 **種類:** 関数
 
 ```typescript
-function optimizeFlintModule(module: FlintModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function checkFlintSafety(module: FlintModule, fileName: string, diagnostics: FlintDiagnostic[]): void;
 ```
 
-説明はありません。
+従来の型の文字列では表現できないソースレベルのチェックを実行します。
 
 #### パラメータ
 
-| 名前       | タイプ                   | 説明 |
-| ---------- | ------------------------ | ---- |
-| モジュール | Flintモジュール          |      |
-| モード     | 'デバッグ' \| 'リリース' |      |
+|名前 |タイプ |説明 |
+| ----------- | ----------------- | ------------------------------------ |
+|モジュール |フリントモジュール | - 検証するモジュール AST。            |
+|ファイル名 |文字列 | - 診断に使用されるファイル名。    |
+|診断 |フリント診断[] | - エラー診断用のアキュムレータ。 |
 
-## `src/parser`
+#### 契約
 
-### FlintParseオプション
+- **@param:** - 検証するモジュール AST。
+- **@param:** - 診断に使用されるファイル名。
+- **@param:** - エラー診断用のアキュムレータ。
+
+### クロージャキャプチャ情報
 
 **種類:** インターフェース
 
 ```typescript
-export interface FlintParseOptions
+export interface ClosureCaptureInfo
 ```
 
-説明はありません。
+クロージャによってキャプチャされた変数の記述子。
 
-### FlintParseResult
+### 移動安全情報
 
 **種類:** インターフェース
 
 ```typescript
-export interface FlintParseResult
+export interface MoveSafetyInfo
 ```
 
-説明はありません。
+構造体移動の安全性情報記述子。
 
-### parseFlint
-
-**種類:** 関数
-
-```typescript
-function parseFlint(source: string, fileName = '<input>', options: FlintParseOptions = {}): FlintParseResult;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前       | タイプ               | 説明 |
-| ---------- | -------------------- | ---- |
-| ソース     | 文字列               |      |
-| ファイル名 |                      |      |
-| オプション | FlintParseオプション |      |
-
-### プリミティブタイプ
+### REGION_LIFETIME_ORDER
 
 **種類:** 定数
 
 ```typescript
-export const primitiveTypes;
+export const REGION_LIFETIME_ORDER: Readonly<Record<RegionLifetime, number>>;
 ```
 
 説明はありません。
+
+### REGION_LIFETIMES
+
+**種類:** 定数
+
+```typescript
+export const REGION_LIFETIMES;
+```
+
+説明はありません。
+
+### 地域生涯
+
+**種類：**タイプ
+
+```typescript
+export type RegionLifetime = 'local' | 'function' | 'arena' | 'global' | 'Local' | 'Function' | 'Arena' | 'GlobalHeap';
+```
+
+リージョンのライフタイム ラティス階層: Local < Function < Arena < GlobalHeap。
+
+### validateClosureCaptureSafety
+
+**種類:** 関数
+
+```typescript
+function validateClosureCaptureSafety(capture: ClosureCaptureInfo): {
+  readonly safe: boolean;
+  readonly requiresHeapPromotion: boolean;
+  readonly reason?: string;
+};
+```
+
+クロージャ キャプチャの安全性を検証し、スタック変数ヒープのプロモーションが必須かどうかを判断します。
+クロージャがキャプチャされたスタック フレームを超えた場合の Use-After-Scope メモリ破損を防ぎます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------------------ | -------------------------------------- |
+|キャプチャ |クロージャキャプチャ情報 | - クロージャ キャプチャ メタデータ記述子。 |
+
+#### 契約
+
+- **@param:** - クロージャ キャプチャ メタデータ記述子。
+- **@returns:** 検証結果、ヒープの昇格が必要かどうか、安全でない場合はエラー メッセージ。
+
+### 検証ムーブセーフティ
+
+**種類:** 関数
+
+```typescript
+function validateMoveSafety(info: MoveSafetyInfo): {
+  readonly safe: boolean;
+  readonly reason?: string;
+};
+```
+
+集計値または構造体の値を値によって安全に移動できるかどうかを検証します。
+スタック フレームの破壊や移動後の使用の危険を排除するために、固定構造または自己参照構造の移動を禁止します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | -------------- | ----------- |
+|情報 |移動安全情報 |             |
 
 ## `src/self-hosted`
 
@@ -2714,9 +2243,13 @@ export const primitiveTypes;
 function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHostedSourceModule[];
 ```
 
-説明はありません。
+セルフホスト型コンパイラ ソース モジュールの完全なマニフェストを作成します。
 
-### decodeFlintSelfHostedフィンガープリント
+#### 契約
+
+- **@returns:** 自己ホスト型ソース モジュールの配列。
+
+### デコードフリントセルフホスト型指紋
 
 **種類:** 関数
 
@@ -2724,15 +2257,20 @@ function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHosted
 function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
-説明はありません。
+UTF-8 バイト配列からセルフホスト フィンガープリントをデコードします。
 
 #### パラメータ
 
-| 名前   | タイプ     | 説明 |
-| ------ | ---------- | ---- |
-| バイト | Uint8Array |      |
+|名前 |タイプ |説明 |
+| ----- | ---------- | ------------------------------- |
+|バイト | Uint8Array | - UTF-8 でエンコードされたバイト配列。 |
 
-### encodeFlintSelfHostedフィンガープリント
+#### 契約
+
+- **@param:** - UTF-8 でエンコードされたバイト配列。
+- **@returns:** デコードされた指紋文字列。
+
+### エンコードFlintSelfHosted指紋
 
 **種類:** 関数
 
@@ -2740,15 +2278,20 @@ function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
-説明はありません。
+セルフホスト型フィンガープリント文字列を UTF-8 バイト配列にエンコードします。
 
 #### パラメータ
 
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 指紋 | 文字列 |      |
+|名前 |タイプ |説明 |
+| ----------- | ------ | ------------------------- |
+|指紋 |文字列 | - 指紋文字列。 |
 
-### FlintSelfHostedCompilation
+#### 契約
+
+- **@param:** - 指紋文字列。
+- **@returns:** UTF-8 でエンコードされたバイト配列。
+
+### フリント自己ホストコンピレーション
 
 **種類:** インターフェース
 
@@ -2756,7 +2299,8 @@ function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 export interface FlintSelfHostedCompilation
 ```
 
-説明はありません。
+TypeScript シード参照をマージした、制限された自己ホスト型コンパイル ユニットを表します。
+制限された自己ホスト型 lex/トークン正規化 VM ステージを使用した実行。
 
 ### FlintSelfHostedNormalizedOutput
 
@@ -2766,7 +2310,8 @@ export interface FlintSelfHostedCompilation
 export interface FlintSelfHostedNormalizedOutput
 ```
 
-説明はありません。
+Flint コンパイルの正規化された決定論的な出力表現を表します。
+これにより、コンパイル成果物 (AST、IR、WA、診断) を安定して比較できるようになります。
 
 ### FlintSelfHostedVmExecutionMode
 
@@ -2776,9 +2321,9 @@ export interface FlintSelfHostedNormalizedOutput
 export type FlintSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-説明はありません。
+セルフホスト型コンパイルを実行するときの Flint VM の実行モード。
 
-### prepareFlintSelfHostedCompilation
+### prepareFlintSelfHostedコンピレーション
 
 **種類:** 関数
 
@@ -2793,11 +2338,11 @@ VM モジュールは、入力ソース上で実際の lex/トークン正規化
 
 #### パラメータ
 
-| 名前 | タイプ            | 説明 |
-| ---- | ----------------- | ---- |
-| 入力 | FlintCompileInput |      |
+|名前 |タイプ |説明 |
+| ----- | ----------------- | ----------- |
+|入力 |フリントコンパイル入力 |             |
 
-### prepareFlintSelfHostedコンピレーションレガシーフィンガープリント
+### 準備フリント自己ホストコンパイルレガシー指紋
 
 **種類:** 関数
 
@@ -2809,13 +2354,13 @@ function prepareFlintSelfHostedCompilationLegacyFingerprint(input: FlintCompileI
 
 #### パラメータ
 
-| 名前 | タイプ            | 説明 |
-| ---- | ----------------- | ---- |
-| 入力 | FlintCompileInput |      |
+|名前 |タイプ |説明 |
+| ----- | ----------------- | ----------- |
+|入力 |フリントコンパイル入力 |             |
 
 #### 契約
 
-- **@非推奨:** seedFingerprint / ExpectedLexFingerprint を使用します。移行中はエイリアスとして保持されます。
+- **@非推奨:** seedFingerprint / ExpectedLexFingerprint を使用します。 kept as alias during transition.
 
 ## `src/self-hosted/artifact`
 
@@ -2832,16 +2377,24 @@ function createFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-説明はありません。
+createFlintSelfHostedStageArtifact 実装。
 
 #### パラメータ
 
-| 名前             | タイプ                               | 説明 |
-| ---------------- | ------------------------------------ | ---- |
-| ステージ         | FlintSelfHostedCompilerステージ      |      |
-| アイデンティティ | FlintSelfHostedStageArtifactIdentity |      |
-| ペイロード       | Uint8Array                           |      |
-| 診断             | Readonly FlintDiagnostic[]           |      |
+|名前 |タイプ |説明 |
+| ----------- | ------------------------------------ | ---------------------------- |
+|ステージ | FlintSelfHostedCompilerステージ | - ステージパラメータ。       |
+|アイデンティティ |フリント自己ホストステージアーティファクトアイデンティティ | - ID パラメーター。    |
+|ペイロード | Uint8Array | - ペイロードパラメータ。     |
+|診断 |読み取り専用 FlintDiagnostic[] | - 診断パラメータ。 |
+
+#### 契約
+
+- **@param:** - ステージパラメータ。
+- **@param:** - ID パラメーター。
+- **@param:** - ペイロード パラメータ。
+- **@param:** - 診断パラメータ。
+- **@returns:** FlintSelfHostedStageArtifact の結果。
 
 ### decodeFlintSelfHostedDiagnostics
 
@@ -2851,15 +2404,20 @@ function createFlintSelfHostedStageArtifact(
 function decodeFlintSelfHostedDiagnostics(bytes: Uint8Array): readonly FlintDiagnostic[];
 ```
 
-説明はありません。
+decodeFlintSelfHostedDiagnostics の実装。
 
 #### パラメータ
 
-| 名前   | タイプ     | 説明 |
-| ------ | ---------- | ---- |
-| バイト | Uint8Array |      |
+|名前 |タイプ |説明 |
+| ----- | ---------- | ---------------------- |
+|バイト | Uint8Array | - バイトパラメータ。 |
 
-### decodeFlintSelfHostedStageArtifact
+#### 契約
+
+- **@param:** - バイトパラメータ。
+- **@returns:** 読み取り専用の FlintDiagnostic[] の結果。
+
+### デコードフリント自己ホストステージアーティファクト
 
 **種類:** 関数
 
@@ -2870,14 +2428,20 @@ function decodeFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-説明はありません。
+decodeFlintSelfHostedStageArtifact 実装。
 
 #### パラメータ
 
-| 名前       | タイプ                                    | 説明 |
-| ---------- | ----------------------------------------- | ---- |
-| バイト     | Uint8Array                                |      |
-| オプション | FlintSelfHostedStageArtifactDecodeOptions |      |
+|名前 |タイプ |説明 |
+| ------- | ----------------------------------------- | ------------------------ |
+|バイト | Uint8Array | - バイトパラメータ。   |
+|オプション | FlintSelfHostedStageArtifactDecodeOptions | - オプションパラメータ。 |
+
+#### 契約
+
+- **@param:** - バイトパラメータ。
+- **@param:** - オプション パラメータ。
+- **@returns:** FlintSelfHostedStageArtifact の結果。
 
 ### encodeFlintSelfHostedDiagnostics
 
@@ -2887,13 +2451,18 @@ function decodeFlintSelfHostedStageArtifact(
 function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[]): Uint8Array;
 ```
 
-説明はありません。
+FlintSelfHostedDiagnostics の実装をエンコードします。
 
 #### パラメータ
 
-| 名前 | タイプ                     | 説明 |
-| ---- | -------------------------- | ---- |
-| 診断 | Readonly FlintDiagnostic[] |      |
+|名前 |タイプ |説明 |
+| ----------- | -------------------------- | ---------------------------- |
+|診断 |読み取り専用 FlintDiagnostic[] | - 診断パラメータ。 |
+
+#### 契約
+
+- **@param:** - 診断パラメータ。
+- **@returns:** Uint8Array の結果。
 
 ### encodeFlintSelfHostedStageArtifact
 
@@ -2903,50 +2472,55 @@ function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[
 function encodeFlintSelfHostedStageArtifact(artifact: FlintSelfHostedStageArtifact): Uint8Array;
 ```
 
-説明はありません。
+FlintSelfHostedStageArtifact の実装をエンコードします。
 
 #### パラメータ
 
-| 名前             | タイプ                       | 説明 |
-| ---------------- | ---------------------------- | ---- |
-| アーティファクト | FlintSelfHostedStageArtifact |      |
+|名前 |タイプ |説明 |
+| -------- | ---------------------------- | ------------------------- |
+|アーティファクト |フリントセルフホストステージアーティファクト | - アーティファクトパラメータ。 |
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+#### 契約
+
+- **@param:** - アーティファクト パラメータ。
+- **@returns:** Uint8Array の結果。
+
+### FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
+export const FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 説明はありません。
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 説明はありません。
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 説明はありません。
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
+### FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
+export const FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
 ```
 
 説明はありません。
@@ -2960,9 +2534,9 @@ export type FlintSelfHostedCompilerStage =
   'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
-説明はありません。
+FlintSelfHostedCompilerStage の実​​装。
 
-### FlintSelfHostedStageArtifact
+### フリント自己ホストステージアーティファクト
 
 **種類:** インターフェース
 
@@ -2970,7 +2544,7 @@ export type FlintSelfHostedCompilerStage =
 export interface FlintSelfHostedStageArtifact
 ```
 
-説明はありません。
+FlintSelfHostedStageArtifact の実装。
 
 ### FlintSelfHostedStageArtifactDecodeOptions
 
@@ -2980,9 +2554,9 @@ export interface FlintSelfHostedStageArtifact
 export interface FlintSelfHostedStageArtifactDecodeOptions
 ```
 
-説明はありません。
+FlintSelfHostedStageArtifactDecodeOptions の実装。
 
-### FlintSelfHostedStageArtifactIdentity
+### フリント自己ホストステージアーティファクトアイデンティティ
 
 **種類:** インターフェース
 
@@ -2990,9 +2564,9 @@ export interface FlintSelfHostedStageArtifactDecodeOptions
 export interface FlintSelfHostedStageArtifactIdentity
 ```
 
-説明はありません。
+FlintSelfHostedStageArtifactIdentity の実装。
 
-### hashFlintSelfHostedBytes
+### ハッシュFlintSelfHostedBytes
 
 **種類:** 関数
 
@@ -3000,15 +2574,18 @@ export interface FlintSelfHostedStageArtifactIdentity
 function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
-説明はありません。
-
 #### パラメータ
 
-| 名前   | タイプ     | 説明 |
-| ------ | ---------- | ---- |
-| バイト | Uint8Array |      |
+|名前 |タイプ |説明 |
+| ----- | ---------- | ---------------------- |
+|バイト | Uint8Array | - バイトパラメータ。 |
 
-### hashFlintSelfHostedSourceIdentity
+#### 契約
+
+- **@param:** - バイトパラメータ。
+- **@returns:** 文字列の結果。
+
+### ハッシュフリントセルフホストソースアイデンティティ
 
 **種類:** 関数
 
@@ -3016,33 +2593,38 @@ function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 function hashFlintSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
-説明はありません。
+hashFlintSelfHostedSourceIdentity の実装。
 
 #### パラメータ
 
-| 名前           | タイプ | 説明 |
-| -------------- | ------ | ---- |
-| ソース         | 文字列 |      |
-| ファイル名     | 文字列 |      |
-| グラフハッシュ | 文字列 |      |
+|名前 |タイプ |説明 |
+| --------- | ------ | -------------------------- |
+|ソース |文字列 | - ソースパラメータ。    |
+|ファイル名 |文字列 | - fileName パラメータ。  |
+|グラフハッシュ |文字列 | - グラフハッシュパラメータ。 |
 
-## `src/self-hosted/fws/lexer`
+#### 契約
+
+- **@param:** - ソースパラメータ。
+- **@param:** - fileName パラメータ。
+- **@param:** -graphHash パラメーター。
+- **@returns:** 文字列の結果。
+
+## `src/self-hosted/flint/lexer`
 
 ### is_ws
 
-**種類:** fws-export
+**種類:** フリントエクスポート
 
 ```typescript
 export fn is_ws(byte: i32) -> bool
 ```
 
-バイトが ASCII ホワイトスペースの場合は true を返します。
-
 #### パラメータ
 
-| 名前   | タイプ | 説明             |
-| ------ | ------ | ---------------- |
-| バイト | i32    | バイト値の候補。 |
+|名前 |タイプ |説明 |
+| ---- | ---- | --------------------- |
+|バイト | i32 |バイト値の候補。 |
 
 #### 契約
 
@@ -3051,7 +2633,7 @@ export fn is_ws(byte: i32) -> bool
 
 ## `src/self-hosted/lex-stage`
 
-### computeFlintLexStageフィンガープリント
+### FlintLexStage の指紋を計算する
 
 **種類:** 関数
 
@@ -3064,9 +2646,14 @@ function computeFlintLexStageFingerprint(source: string): number;
 
 #### パラメータ
 
-| 名前   | タイプ | 説明 |
-| ------ | ------ | ---- |
-| ソース | 文字列 |      |
+|名前 |タイプ |説明 |
+| ------ | ------ | -------------------- |
+|ソース |文字列 | - フリントのソーステキスト。 |
+
+#### 契約
+
+- **@param:** - フリントのソース テキスト。
+- **@returns:** 32 ビットの符号付き整数のフィンガープリント。
 
 ### createFlintLexStageVmModule
 
@@ -3081,47 +2668,47 @@ lex フィンガープリント ステージ用の手で降ろされる VM モ�
 
 #### パラメータ
 
-| 名前           | タイプ | 説明 |
-| -------------- | ------ | ---- |
-| ソースハッシュ | 文字列 |      |
+|名前 |タイプ |説明 |
+| ---------- | ------ | ----------- |
+|ソースハッシュ |文字列 |             |
 
-### encodeFlintLexStageSource
+### エンコードFlintLexStageSource
 
 **種類:** 関数
 
 ```typescript
 function encodeFlintLexStageSource(source: string): {
   readonly kind: 'aggregate';
-  readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+  readonly layout: typeof FLINT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
 };
 ```
 
-説明はありません。
+ソース コードを VM レクサー ステージで予期されるバイナリ表現にエンコードします。
 
 #### パラメータ
 
-| 名前   | タイプ | 説明 |
-| ------ | ------ | ---- |
-| ソース | 文字列 |      |
+|名前 |タイプ |説明 |
+| ------ | ------ | ----------- |
+|ソース |文字列 |             |
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+### FLINT_LEX_STAGE_ENTRY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
+export const FLINT_LEX_STAGE_ENTRY;
 ```
 
 説明はありません。
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+### FLINT_LEX_STAGE_SOURCE_LAYOUT
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+export const FLINT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 説明はありません。
@@ -3134,7 +2721,7 @@ export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
 export interface FlintSelfHostedVmFunction
 ```
 
-説明はありません。
+セルフホスト型仮想マシンによって実行される関数定義。
 
 ### FlintSelfHostedVm命令
 
@@ -3144,7 +2731,7 @@ export interface FlintSelfHostedVmFunction
 export type FlintSelfHostedVmInstruction = |
 ```
 
-説明はありません。
+セルフホスト型レクシング中に実行される仮想マシン命令タプル。
 
 ### FlintSelfHostedVmModule
 
@@ -3154,7 +2741,7 @@ export type FlintSelfHostedVmInstruction = |
 export interface FlintSelfHostedVmModule
 ```
 
-説明はありません。
+バイトコードと定数を含むセルフホスト コンパイラ VM モジュール構造。
 
 ### FlintSelfHostedVmValue
 
@@ -3164,7 +2751,7 @@ export interface FlintSelfHostedVmModule
 export type FlintSelfHostedVmValue = |
 ```
 
-説明はありません。
+セルフホスト VM 定数プールに保存される定数値。
 
 ## `src/self-hosted/parser-module-stage`
 
@@ -3191,13 +2778,13 @@ function createFlintParserModuleVmModule(
 
 #### パラメータ
 
-| 名前           | タイプ                        | 説明 |
-| -------------- | ----------------------------- | ---- |
-| ソースハッシュ | 文字列                        |      |
-| ファイル名     | 文字列                        |      |
-| オプション     | FlintParserModuleStageOptions |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------- | ----------- |
+|ソースハッシュ |文字列 |             |
+|ファイル名 |文字列 |             |
+|オプション | FlintParserModuleStageOptions |             |
 
-### decodeFlintParserModuleEnvelope
+### デコードFlintParserModuleEnvelope
 
 **種類:** 関数
 
@@ -3205,25 +2792,30 @@ function createFlintParserModuleVmModule(
 function decodeFlintParserModuleEnvelope(bytes: Uint8Array): FlintParserModuleEnvelope;
 ```
 
-説明はありません。
+decodeFlintParserModuleEnvelope 実装。
 
 #### パラメータ
 
-| 名前   | タイプ     | 説明 |
-| ------ | ---------- | ---- |
-| バイト | Uint8Array |      |
+|名前 |タイプ |説明 |
+| ----- | ---------- | ---------------------- |
+|バイト | Uint8Array | - バイトパラメータ。 |
 
-### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+#### 契約
+
+- **@param:** - バイトパラメータ。
+- **@returns:** FlintParserModuleEnvelope の結果。
+
+### FLINT_PARSER_MODULE_STAGE_ENTRY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
+export const FLINT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 説明はありません。
 
-### FlintParserModuleEnvelope
+### FlintParserモジュールエンベロープ
 
 **種類:** インターフェース
 
@@ -3231,9 +2823,9 @@ export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
 export interface FlintParserModuleEnvelope
 ```
 
-{@link FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY} によって返されたデコードされたエンベロープ。
+{@link FLINT_PARSER_MODULE_STAGE_ENTRY} によって返されたデコードされたエンベロープ。
 
-### FlintParserModuleStageOptions
+### FlintParserモジュールステージオプション
 
 **種類:** インターフェース
 
@@ -3241,11 +2833,11 @@ export interface FlintParserModuleEnvelope
 export interface FlintParserModuleStageOptions
 ```
 
-説明はありません。
+FlintParserModuleStageOptions の実装。
 
 ## `src/self-hosted/parser-stage`
 
-### computeFlintParserStageフィンガープリント
+### FlintParserStageフィンガープリントを計算する
 
 **種類:** 関数
 
@@ -3253,14 +2845,18 @@ export interface FlintParserModuleStageOptions
 function computeFlintParserStageFingerprint(source: string): number;
 ```
 
-自己ホスト型パーサー ステージのシード リファレンス。
-動作的には {@link createFlintParserStageVmModule} と同一である必要があります。
+自己ホスト型パーサー ステージの決定論的な 32 ビット FNV フィンガープリントを計算します。
 
 #### パラメータ
 
-| 名前   | タイプ | 説明 |
-| ------ | ------ | ---- |
-| ソース | 文字列 |      |
+|名前 |タイプ |説明 |
+| ------ | ------ | --------------------------- |
+|ソース |文字列 | - Flint ソース コード文字列。 |
+
+#### 契約
+
+- **@param:** - Flint ソース コード文字列。
+- **@returns:** 決定的な 32 ビット符号付き整数のフィンガープリント。
 
 ### createFlintParserStageVmModule
 
@@ -3278,22 +2874,22 @@ function createFlintParserStageVmModule(
 
 #### パラメータ
 
-| 名前           | タイプ                          | 説明 |
-| -------------- | ------------------------------- | ---- |
-| ソースハッシュ | 文字列                          |      |
-| オプション     | FlintParserStageVmModuleOptions |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------- | ----------- |
+|ソースハッシュ |文字列 |             |
+|オプション | FlintParserStageVmModuleオプション |             |
 
-### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+### FLINT_PARSER_STAGE_ENTRY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
+export const FLINT_PARSER_STAGE_ENTRY;
 ```
 
 説明はありません。
 
-### FlintParserStageVmModuleOptions
+### FlintParserStageVmModuleオプション
 
 **種類:** インターフェース
 
@@ -3319,17 +2915,26 @@ function createFlintSelfHostedParserArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-説明はありません。
+createFlintSelfHostedParserArtifact 実装。
 
 #### パラメータ
 
-| 名前           | タイプ                     | 説明 |
-| -------------- | -------------------------- | ---- |
-| ソース         | 文字列                     |      |
-| ファイル名     | 文字列                     |      |
-| モジュール     | Flintモジュール            |      |
-| 診断           | Readonly FlintDiagnostic[] |      |
-| グラフハッシュ | 文字列                     |      |
+|名前 |タイプ |説明 |
+| ----------- | -------------------------- | ---------------------------- |
+|ソース |文字列 | - ソースパラメータ。      |
+|ファイル名 |文字列 | - fileName パラメータ。    |
+|モジュール |フリントモジュール | - モジュールパラメータ。      |
+|診断 |読み取り専用 FlintDiagnostic[] | - 診断パラメータ。 |
+|グラフハッシュ |文字列 | - グラフハッシュパラメータ。   |
+
+#### 契約
+
+- **@param:** - ソースパラメータ。
+- **@param:** - fileName パラメータ。
+- **@param:** - モジュールパラメータ。
+- **@param:** - 診断パラメータ。
+- **@param:** -graphHash パラメーター。
+- **@returns:** FlintSelfHostedStageArtifact の結果。
 
 ### createFlintSelfHostedTokenArtifact
 
@@ -3345,19 +2950,28 @@ function createFlintSelfHostedTokenArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-説明はありません。
+createFlintSelfHostedTokenArtifact 実装。
 
 #### パラメータ
 
-| 名前           | タイプ                     | 説明     |
-| -------------- | -------------------------- | -------- |
-| ソース         | 文字列                     |          |
-| ファイル名     | 文字列                     |          |
-| トークン       | FlintToken[]               | readonly |
-| 診断           | Readonly FlintDiagnostic[] |          |
-| グラフハッシュ | 文字列                     |          |
+|名前 |タイプ |説明 |
+| ----------- | -------------------------- | ---------------------------- |
+|ソース |文字列 | - ソースパラメータ。      |
+|ファイル名 |文字列 | - fileName パラメータ。    |
+|トークン |読み取り専用 FlintToken[] | - トークンパラメータ。      |
+|診断 |読み取り専用 FlintDiagnostic[] | - 診断パラメータ。 |
+|グラフハッシュ |文字列 | - グラフハッシュパラメータ。   |
 
-### decodeFlintSelfHostedModule
+#### 契約
+
+- **@param:** - ソースパラメータ。
+- **@param:** - fileName パラメータ。
+- **@param:** - トークンパラメータ。
+- **@param:** - 診断パラメータ。
+- **@param:** -graphHash パラメーター。
+- **@returns:** FlintSelfHostedStageArtifact の結果。
+
+### デコードFlintSelfHostedModule
 
 **種類:** 関数
 
@@ -3365,15 +2979,20 @@ function createFlintSelfHostedTokenArtifact(
 function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 ```
 
-説明はありません。
+セルフホスト型パーサー モジュール ペイロードをデコードします。
 
 #### パラメータ
 
-| 名前   | タイプ     | 説明 |
-| ------ | ---------- | ---- |
-| バイト | Uint8Array |      |
+|名前 |タイプ |説明 |
+| ----- | ---------- | ------------------------ |
+|バイト | Uint8Array | - バイナリ モジュール ペイロード。 |
 
-### decodeFlintSelfHostedTokens
+#### 契約
+
+- **@param:** - バイナリ モジュール ペイロード。
+- **@returns:** デコードされたモジュール AST。
+
+### デコードFlintSelfHostedTokens
 
 **種類:** 関数
 
@@ -3381,13 +3000,18 @@ function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 ```
 
-説明はありません。
+セルフホスト型トークン ストリーム ペイロードをデコードします。
 
 #### パラメータ
 
-| 名前   | タイプ     | 説明 |
-| ------ | ---------- | ---- |
-| バイト | Uint8Array |      |
+|名前 |タイプ |説明 |
+| ----- | ---------- | ----------------------- |
+|バイト | Uint8Array | - バイナリ トークン ペイロード。 |
+
+#### 契約
+
+- **@param:** - バイナリ トークン ペイロード。
+- **@returns:** デコードされたトークン ストリーム。
 
 ### encodeFlintSelfHostedModule
 
@@ -3397,15 +3021,20 @@ function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 ```
 
-説明はありません。
+自己ホスト型パーサー モジュール ペイロードをエンコードします。
 
 #### パラメータ
 
-| 名前       | タイプ          | 説明 |
-| ---------- | --------------- | ---- |
-| モジュール | Flintモジュール |      |
+|名前 |タイプ |説明 |
+| ------ | ----------- | -------------------------- |
+|モジュール |フリントモジュール | - シリアル化するモジュール AST。 |
 
-### encodeFlintSelfHostedTokens
+#### 契約
+
+- **@param:** - シリアル化するモジュール AST。
+- **@returns:** バイナリ モジュール ペイロード。
+
+### FlintSelfHostedTokens をエンコードする
 
 **種類:** 関数
 
@@ -3413,15 +3042,20 @@ function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 ```
 
-説明はありません。
+セルフホスト型トークン ストリーム ペイロードをエンコードします。
 
 #### パラメータ
 
-| 名前     | タイプ       | 説明     |
-| -------- | ------------ | -------- |
-| トークン | FlintToken[] | readonly |
+|名前 |タイプ |説明 |
+| ------ | --------------------- | ---------------------------- |
+|トークン |読み取り専用 FlintToken[] | - シリアル化するトークン ストリーム。 |
 
-### hashFlintSelfHostedStageペイロード
+#### 契約
+
+- **@param:** - シリアル化するトークン ストリーム。
+- **@returns:** バイナリ トークン ペイロード。
+
+### ハッシュフリントセルフホストステージペイロード
 
 **種類:** 関数
 
@@ -3429,13 +3063,18 @@ function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 function hashFlintSelfHostedStagePayload(artifact: FlintSelfHostedStageArtifact): string;
 ```
 
-説明はありません。
+hashFlintSelfHostedStagePayloadの実装。
 
 #### パラメータ
 
-| 名前             | タイプ                       | 説明 |
-| ---------------- | ---------------------------- | ---- |
-| アーティファクト | FlintSelfHostedStageArtifact |      |
+|名前 |タイプ |説明 |
+| -------- | ---------------------------- | ------------------------- |
+|アーティファクト |フリントセルフホストステージアーティファクト | - アーティファクトパラメータ。 |
+
+#### 契約
+
+- **@param:** - アーティファクト パラメータ。
+- **@returns:** 文字列の結果。
 
 ### validateFlintSelfHostedStageArtifact
 
@@ -3451,279 +3090,30 @@ function validateFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-説明はありません。
+FlintSelfHostedStageArtifact 実装を検証します。
 
 #### パラメータ
 
-| 名前             | タイプ                          | 説明 |
-| ---------------- | ------------------------------- | ---- |
-| アーティファクト | FlintSelfHostedStageArtifact    |      |
-| ステージ         | FlintSelfHostedCompilerステージ |      |
-| ソース           | 文字列                          |      |
-| ファイル名       | 文字列                          |      |
-| グラフハッシュ   | 文字列                          |      |
-
-## `src/stdlib/memory`
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
-```
-
-説明はありません。
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly FlintMemoryFunction[];
-```
-
-説明はありません。
-
-### FlintMemoryFunction
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintMemoryFunction
-```
-
-説明はありません。
-
-### FlintMemoryOperation
-
-**種類：**タイプ
-
-```typescript
-export type FlintMemoryOperation =
-  | 'memory-alloc'
-  | 'memory-dealloc'
-  | 'memory-realloc'
-  | 'memory-load-u32'
-  | 'memory-store-u32'
-  | 'memory-load-f64'
-  | 'memory-store-f64'
-  | 'f64-from-u32';
-```
-
-コンパイラによって予約されているゲストリニアメモリ操作を確認しました。
-
-## `src/stdlib/regex`
-
-### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
-
-**種類:** 定数
-
-```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
-```
-
-説明はありません。
-
-### FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
-```
-
-説明はありません。
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
-```
-
-説明はありません。
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTIONS
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly FlintStandardLibraryFunction[];
-```
-
-コンパイラ所有の呼び出し。これらは予約されたソース名であり、ホスト インポートではありません。
-バックエンドフェーズでは Forge Web Script WASM ランタイムに引き下げられます。
-キャプチャ操作は、グループが設定されていない場合、または一致するものが存在しない場合に `-1` を返します。
-
-### FORGE_WEB_SCRIPT_REGEX_VERSION
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION;
-```
-
-説明はありません。
-
-### FlintRegex操作
-
-**種類：**タイプ
-
-```typescript
-export type FlintRegexOperation =
-  | 'full-match'
-  | 'prefix-match'
-  | 'search'
-  | 'full-capture-start'
-  | 'full-capture-end'
-  | 'prefix-capture-start'
-  | 'prefix-capture-end'
-  | 'search-capture-start'
-  | 'search-capture-end';
-```
-
-説明はありません。
-
-### Flint標準ライブラリ関数
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintStandardLibraryFunction
-```
-
-説明はありません。
-
-### flintStandardLibraryIdentity
-
-**種類:** 関数
-
-```typescript
-function flintStandardLibraryIdentity(
-  overrides: Partial<FlintStandardLibraryIdentity> = {},
-): FlintStandardLibraryIdentity;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前           | タイプ                             | 説明 |
-| -------------- | ---------------------------------- | ---- |
-| オーバーライド | 部分<FlintStandardLibraryIdentity> |      |
-
-### FlintStandardLibraryIdentity
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintStandardLibraryIdentity
-```
-
-正規表現のコンパイルと生成されたアーティファクトに影響を与える安定した ID 入力。
-
-## `src/stdlib/string`
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
-```
-
-説明はありません。
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTIONS
-
-**種類:** 定数
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly FlintStringFunction[];
-```
-
-説明はありません。
-
-### FlintStringFunction
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintStringFunction
-```
-
-説明はありません。
-
-### FlintStringOperation
-
-**種類：**タイプ
-
-```typescript
-export type FlintStringOperation =
-  | 'string-concat'
-  | 'string-length'
-  | 'string-byte-at'
-  | 'string-starts-with'
-  | 'string-slice'
-  | 'string-to-i32'
-  | 'bytes-length'
-  | 'bytes-length-u32'
-  | 'bytes-byte-at'
-  | 'bytes-byte-at-u32'
-  | 'bytes-slice';
-```
-
-コンパイラが所有する確定的な文字列およびバイト操作。
-
-## `src/type-checker`
-
-### checkFlint
-
-**種類:** 関数
-
-```typescript
-function checkFlint(
-  module: FlintModule,
-  fileName = '<input>',
-  options: FlintTypeCheckOptions = {},
-): FlintTypeCheckResult;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| モジュール | Flintモジュール       |      |
-| ファイル名 |                       |      |
-| オプション | FlintTypeCheckOptions |      |
-
-### FlintTypeCheckOptions
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintTypeCheckOptions
-```
-
-説明はありません。
-
-### FlintTypeCheckResult
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintTypeCheckResult
-```
-
-説明はありません。
+|名前 |タイプ |説明 |
+| --------- | ---------------------------- | -------------------------- |
+|アーティファクト |フリントセルフホストステージアーティファクト | - アーティファクトパラメータ。  |
+|ステージ | FlintSelfHostedCompilerステージ | - ステージパラメータ。     |
+|ソース |文字列 | - ソースパラメータ。    |
+|ファイル名 |文字列 | - fileName パラメータ。  |
+|グラフハッシュ |文字列 | - グラフハッシュパラメータ。 |
+
+#### 契約
+
+- **@param:** - アーティファクト パラメータ。
+- **@param:** - ステージパラメータ。
+- **@param:** - ソースパラメータ。
+- **@param:** - fileName パラメータ。
+- **@param:** -graphHash パラメーター。
+- **@returns:** FlintSelfHostedStageArtifact の結果。
 
 ## `src/validate`
 
-### FlintValidationResult
+### フリント検証結果
 
 **種類:** インターフェース
 
@@ -3731,9 +3121,9 @@ export interface FlintTypeCheckResult
 export interface FlintValidationResult
 ```
 
-説明はありません。
+解析と型チェックを通じて Flint ソース ファイルを検証した結果。
 
-### validateFlint
+### フリントを検証する
 
 **種類:** 関数
 
@@ -3745,41 +3135,20 @@ function validateFlint(
 ): FlintValidationResult;
 ```
 
-説明はありません。
+パーサーと型チェッカーを実行して、Flint のソース テキストを検証します。
+構文診断と意味診断を収集して重複を排除します。
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| ソース     | 文字列                |      |
-| ファイル名 |                       |      |
-| オプション | FlintTypeCheckOptions |      |
+|名前 |タイプ |説明 |
+| -------- | --------------------- | -------------------------------------------------------------------------------- |
+|ソース |文字列 | - フリントのソースコードテキスト。                                                        |
+|ファイル名 |                       | - 診断スパンで使用されるオプションのファイル パスまたは名前 (デフォルトは `'<input>'`)。 |
+|オプション | FlintTypeCheckオプション | - オプションのタイプチェッカー構成フラグと外部シンボルテーブル。          |
 
-## `src/wat`
+#### 契約
 
-### FlintWatMetadata
-
-**種類:** インターフェース
-
-```typescript
-export interface FlintWatMetadata
-```
-
-説明はありません。
-
-### renderFlintWat
-
-**種類:** 関数
-
-```typescript
-function renderFlintWat(module: FlintModule, metadata: FlintWatMetadata = {}): string;
-```
-
-説明はありません。
-
-#### パラメータ
-
-| 名前       | タイプ           | 説明 |
-| ---------- | ---------------- | ---- |
-| モジュール | Flintモジュール  |      |
-| メタデータ | FlintWatMetadata |      |
+- **@param:** - Flint ソース コード テキスト。
+- **@param:** - 診断スパンで使用されるオプションのファイル パスまたは名前 (デフォルトは `'<input>'`)。
+- **@param:** - オプションの型チェッカー構成フラグと外部シンボル テーブル。
+- **@returns:** 検証結果と解析されたモジュール (利用可能な場合)、診断、および有効なフラグを組み合わせたもの。

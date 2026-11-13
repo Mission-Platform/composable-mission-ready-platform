@@ -23,9 +23,9 @@ Binden Sie die Astro-Projektion an ein Framework-Ausgabe-Plugin im Besitz des Au
 
 #### Parameter
 
-| Name     | Geben Sie            | ein Beschreibung |
-| -------- | -------------------- | ---------------- |
-| Optionen | ForgeAstroCmsOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------- | ----------- |
+| Optionen | ForgeAstroCmsOptions |             |
 
 ### ForgeAstroCmsOptions
 
@@ -47,13 +47,13 @@ Optionen für {@link forgeAstroCms}.
 function emitContentConfig(components: readonly ContentComponent[]): string;
 ```
 
-Sende einen Astro aus `content.config.ts` mit einer Sammlung pro Komponente.
+Geben Sie einen Astro `content.config.ts` mit einer Sammlung pro Komponente aus.
 
 #### Parameter
 
-| Name        | Geben Sie                   | ein Beschreibung |
-| ----------- | --------------------------- | ---------------- |
-| Komponenten | readonly ContentComponent[] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Komponenten | readonly ContentComponent[] |             |
 
 ### fieldToZod
 
@@ -63,13 +63,13 @@ Sende einen Astro aus `content.config.ts` mit einer Sammlung pro Komponente.
 function fieldToZod(field: ContentField): string;
 ```
 
-Der Zod (oder `image()`) Validator, auf den eine neutrale Feldart abgebildet wird.
+Der Zod-Validator (oder `image()`), auf den eine neutrale Feldart abgebildet wird.
 
 #### Parameter
 
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Feld | ContentField |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------ | ----------- |
+| Feld | ContentField |             |
 
 ## `src/template`
 
@@ -88,10 +88,10 @@ Sammeln Sie die Diagnoseberichte der Astro-Absenkung für ein Modul.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| ir         | SemanticModule   |                  |
-| Komponente | ContentComponent |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------- | ----------- |
+| ir | SemanticModule |             |
+| Komponente | ContentComponent |             |
 
 ### astroMarkup
 
@@ -105,9 +105,9 @@ Schreiben Sie nur JSX-Attributnamen um und entfernen Sie das äußere Fragment.
 
 #### Parameter
 
-| Name     | Geben Sie    | ein Beschreibung |
-| -------- | ------------ | ---------------- |
-| Ausdruck | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------ | ----------- |
+| Ausdruck | Zeichenfolge |             |
 
 ### emitIslandAstroTemplate
 
@@ -120,7 +120,7 @@ function emitIslandAstroTemplate(
 ): string;
 ```
 
-Emittieren Sie die Inselunterstützung `.astro` Vorlage für eine interaktive Komponente.
+Geben Sie die von der Insel unterstützte `.astro`-Vorlage für eine interaktive Komponente aus.
 
 Die Komponente wird aus dem gemeinsam generierten Inselbaum importiert – das Gleiche
 neutrales IR, kompiliert durch das gebundene Framework-Plugin – und hydratisiert mit
@@ -128,10 +128,10 @@ neutrales IR, kompiliert durch das gebundene Framework-Plugin – und hydratisie
 
 #### Parameter
 
-| Name         | Geben Sie        | ein Beschreibung |
-| ------------ | ---------------- | ---------------- |
-| Komponente   | ContentComponent |                  |
-| InselEintrag | Zeichenfolge     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ---------------- | ----------- |
+| Komponente | ContentComponent |             |
+| InselEintrag | Zeichenfolge |             |
 
 ### emitStaticAstroTemplate
 
@@ -141,10 +141,10 @@ neutrales IR, kompiliert durch das gebundene Framework-Plugin – und hydratisie
 function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
-Geben Sie die statische Aufladung ab `.astro` Vorlage für eine Präsentationskomponente.
+Geben Sie die statische `.astro`-Vorlage für eine Präsentationskomponente aus.
 
 #### Parameter
 
-| Name | Geben Sie      | ein Beschreibung |
-| ---- | -------------- | ---------------- |
-| ir   | SemanticModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | -------------- | ----------- |
+| ir | SemanticModule |             |

@@ -6,22 +6,22 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > Taal: Nederlands (nl)
 
 `@mission-platform/i18n` is een framework-agnostische internationalisatie (i18n) wrapper gebouwd
-op [i18volgende](https://www.i18next.com/). Het biedt een uniforme manier om vertalingen binnen het Mission Platform af te handelen,
+op [i18next](https://www.i18next.com/). Het biedt een uniforme manier om vertalingen binnen het Mission Platform af te handelen,
 met speciale adapters voor zowel Vue 3 als React.
 
 ## Ingangspunt
 
 Het pakket heeft één toegangspunt, `@mission-platform/i18n`. Welke adapter het oplost, wordt bepaald door
-de actieve `mp:<framework>`-exportvoorwaarde, die u **eenmalig** selecteert voor het hele project:
+de actieve `mp:<framework>`-exportvoorwaarde, die u **eenmaal** selecteert voor het hele project:
 `resolve.conditions` in Vite (zie `defineFrameworkAppConfig` / `frameworkResolveConditions` van
 `@mission-platform/vite-config`) en `customConditions` in TypeScript (via de
 `@mission-platform/typescript-config/framework-<name>`-voorinstellingen). Elke import blijft kaal.
 
-| Actieve toestand | Oplossing voor     | Belangrijkste exporten                                                  |
-| :--------------- | :----------------- | :---------------------------------------------------------------------- |
-| _(geen)_         | Kaderneutrale kern | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
-| `mp:vue`         | Vue 3-adapter      | de neutrale kern plus `createForgeI18NVue`, `useI18n`                   |
-| `mp:react`       | React-adapter      | de neutrale kern plus `ForgeI18NProvider`, `useI18n`                    |
+| Actieve toestand | Oplossing voor | Belangrijkste exporten |
+| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
+| _(geen)_ | Kaderneutrale kern | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
+| `mp:vue` | Vue 3-adapter | de neutrale kern plus `createForgeI18NVue`, `useI18n` |
+| `mp:react` | React-adapter | de neutrale kern plus `ForgeI18NProvider`, `useI18n` |
 
 ## Kernconcepten
 

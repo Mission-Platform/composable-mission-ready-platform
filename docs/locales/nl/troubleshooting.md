@@ -39,9 +39,9 @@ Platform monorepo. Het is gestructureerd als een **handleiding** voor het diagno
 
 **Oplossingen**:
 
-- **Opschonen in Composables**: timers altijd wissen en gebeurtenislisteners verwijderen in `onUnmounted`.
+- **Opschonen in Composables**: Wis altijd timers en verwijder gebeurtenislisteners in `onUnmounted`.
 - **Winkelbeheer**: Zorg ervoor dat de reactieve status in Pinia of andere winkels wordt gewist wanneer deze niet langer nodig is.
-- **Gooi Observables weg**: Als u RxJS gebruikt, zorg er dan voor dat alle abonnementen zijn uitgeschreven.
+- **Gooi Observables weg**: als u RxJS gebruikt, zorg er dan voor dat alle abonnementen zijn uitgeschreven.
 
 ## Problemen met bouwen en werkruimte
 
@@ -69,15 +69,14 @@ rm -rf .turbo
 2. Zorg ervoor dat de versie overeenkomt (`workspace:*` wordt aanbevolen).
 3. Voer `pnpm install` uit om symlinks te vernieuwen.
 4. Als het probleem aanhoudt, probeer dan een grondige reiniging:
-
-```bash
+   ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-```
+   ```
 
 ### Type fouten in CI maar niet lokaal
 
-**Probleem**: Build mislukt in CI met TypeScript-fouten die niet verschijnen in uw IDE.
+**Probleem**: Build mislukt in CI met TypeScript-fouten die niet in uw IDE voorkomen.
 
 **Oplossing**: voer de typecontrole lokaal uit in de gehele werkruimte.
 
@@ -107,7 +106,7 @@ Dit zorgt ervoor dat alle pakketgrenzen correct worden gerespecteerd en dat type
 
 ### "Kan eigenschap van ongedefinieerd niet lezen"
 
-**Oorzaak**: toegang tot eigenschappen van een null- of ongedefinieerd object, vaak voordat de gegevens volledig zijn geladen. **Oplossing**: Gebruik
+**Oorzaak**: toegang tot eigenschappen van een nul- of ongedefinieerd object, vaak voordat de gegevens volledig zijn geladen. **Oplossing**: Gebruik
 optionele ketening (`?.`) of geef standaardwaarden op.
 
 ```typescript
@@ -133,5 +132,5 @@ try {
 ## Gerelateerde bronnen
 
 - [Beste praktijken](best-practices.md)
-- [Ontwikkeling instellen](development-setup.md)
-- [Gids voor testen](testing.md)
+- [Ontwikkelingsinstellingen](development-setup.md)
+- [Testgids](testing.md)

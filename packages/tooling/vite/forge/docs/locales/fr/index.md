@@ -18,9 +18,9 @@ les packages possèdent leur abaissement et leur génération spécifiques à la
   contrôles d'intégration.
 - [`README.md`](../../../README.md) — configuration consommateur et représentant
   Exemples Vite/tsdown.
-- [`llms.txt`](../../../llms.txt) — Notes concises sur l'API du package et le pipeline.
+- [`llms.txt`](../../../llms.txt) — notes concises sur l'API et le pipeline du package.
 
 Le pilote nécessite un `FrameworkOutputPlugin` explicite ; il ne sélectionne jamais un
 framework à partir d’une chaîne ou importez chaque package cible. Les modules générés sont
-artefacts intermédiaires et doivent être compilés par le développeur natif de la cible sélectionnée.
+artefacts intermédiaires et doivent être compilés par le natif de la cible sélectionnée
 adaptateur.

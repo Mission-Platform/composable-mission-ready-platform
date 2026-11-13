@@ -13,12 +13,12 @@ Gemeinsam genutzte tsdown-Bibliotheks-Build-Helfer für veröffentlichbare Arbei
 pnpm add --save-dev @mission-platform/tsdown-config
 ```
 
-Verwenden Sie das Paket aus einem Arbeitsbereich `tsdown.config.ts` und Einstiegspunkte behalten,
+Verwenden Sie das Paket aus einem Arbeitsbereich `tsdown.config.ts` und behalten Sie die Einstiegspunkte bei.
 externe Abhängigkeiten und lokale Ausgabebeschränkungen für das zu erstellende Paket.
-Generierte Deklarationen und Bundles gehören in diese Pakete `dist/` Verzeichnis.
+Generierte Deklarationen und Bundles gehören in das Verzeichnis `dist/` dieses Pakets.
 
 ## Beitragen
 
-Laufen `pnpm --filter @mission-platform/tsdown-config lint` und dessen Formatprüfung.
+Führen Sie `pnpm --filter @mission-platform/tsdown-config lint` und seine Formatprüfung aus.
 Behalten Sie die deterministische Ausgabe bei und fügen Sie keine Framework-spezifischen Zielzweige hinzu
 zum neutralen Build-Helfer.

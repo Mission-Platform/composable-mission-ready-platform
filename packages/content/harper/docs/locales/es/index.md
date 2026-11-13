@@ -2,11 +2,11 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> packages/harper/docs/index.md: [packages/harper/docs/index.md](../../index.md)
+> packages/content/harper/docs/index.md: [packages/content/harper/docs/index.md](../../index.md)
 > Idioma: Español (es)
 
-`@mission-platform/harper` proporciona una integración entre el [harper](https://writewithharper.com) corrector gramatical y
-el editor de Mónaco. Harper es un corrector gramatical en inglés rápido, fuera de línea y que prioriza la privacidad, impulsado por WebAssembly y que se ejecuta
+`@mission-platform/harper` provides an integration between the [Harper](https://writewithharper.com) grammar checker and
+el editor de Mónaco. Harper is a fast, offline, privacy-first English grammar checker powered by WebAssembly that runs
 íntegramente en el navegador.
 
 ## Características
@@ -127,7 +127,7 @@ interface HarperIssue {
 ### Flujo de trabajo
 
 1. **Generación de trabajadores**: el paquete utiliza la fábrica proporcionada en `window.HarperEnvironment` para generar un trabajador web de Harper.
-2. **Comprobación rechazada**: Cada cambio en el modelo del editor desencadena una solicitud rechazada para el trabajador.
+2. **Comprobación rechazada**: cada cambio en el modelo del editor desencadena una solicitud rechazada para el trabajador.
 3. **Mapeo de marcadores**: los problemas devueltos por Harper se asignan a los marcadores de Mónaco para resaltarlos visualmente.
 4. **Acciones de código**: un proveedor personalizado está registrado en Mónaco para presentar `HarperIssue.suggestions` como solución rápida.
    acciones.

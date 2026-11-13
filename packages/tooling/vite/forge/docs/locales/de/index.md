@@ -12,13 +12,13 @@ Pakete besitzen ihre zielspezifische Absenkung und Erzeugung.
 
 ## Beginnen Sie hier
 
-- [Referenz zur Compiler-Pipeline](reference/compiler.md) – Stufenverträge,
+– [Compiler-Pipeline-Referenz](reference/compiler.md) – Phasenverträge,
   Zielbesitz, Caching, Diagnose und generierte Artefakte.
 - [Build- und Testanleitung](guides/development.md) – lokale Entwicklung und
   Integrationsprüfungen.
-- [`README.md`](../../../README.md) – Verbraucherkonfiguration und Vertreter
+– [`README.md`](../../../README.md) – Verbraucherkonfiguration und Vertreter
   Vite/tsdown-Beispiele.
-- [`llms.txt`](../../../llms.txt) – prägnante Paket-API- und Pipeline-Notizen.
+– [`llms.txt`](../../../llms.txt) – prägnante Paket-API- und Pipeline-Notizen.
 
 Der Treiber erfordert ein explizites `FrameworkOutputPlugin`; Es wählt niemals a aus
 Framework aus einem String oder importieren Sie jedes Zielpaket. Generierte Module sind

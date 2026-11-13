@@ -11,6 +11,6 @@ El paquete proporciona análisis y escritura de componentes/propiedades sin pér
 `readICalendar`/`writeICalendar` y `readVCard`/`writeVCard`, además de Forge
 renderizadores llamados `ForgeVCard` y `ForgeICalendar`. `ForgeICalendar` acepta la
 resultado normalizado de `calendarEvents(readICalendar(source))` por lo que el generado
-Los componentes del marco siguen siendo independientes de los módulos de ejecución del analizador.
+Los componentes del marco permanecen independientes de los módulos de ejecución del analizador.
 
 Consulte `llms.txt` para conocer la API pública y ejemplos de uso.

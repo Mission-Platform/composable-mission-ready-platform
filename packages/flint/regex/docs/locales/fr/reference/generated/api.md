@@ -21,6 +21,16 @@ export interface CompiledRegex
 
 Représentation déterministe intégrée par un backend Forge.
 
+### FLINT_REGEX_BYTECODE_VERSION
+
+**Genre :** constante
+
+```typescript
+export const FLINT_REGEX_BYTECODE_VERSION;
+```
+
+Version stable du contrat de bytecode regex partagé Flint.
+
 ### FORGE_REGEX_BYTECODE_VERSION
 
 **Genre :** constante
@@ -29,7 +39,7 @@ Représentation déterministe intégrée par un backend Forge.
 export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
-Version stable du contrat de bytecode Forge regex partagé.
+Aucune description fournie.
 
 ### INSTR_WIDTH
 
@@ -59,7 +69,7 @@ Opcodes consommés par le backend Forge et reflétés par l'oracle de référenc
 export type Opcode = (typeof Op)[keyof typeof Op];
 ```
 
-Aucune description fournie.
+Identificateur d’opcode d’instruction binaire pour l’exécution du bytecode regex.
 
 ## `src/compiler`
 
@@ -75,9 +85,29 @@ Compilez le sous-ensemble d’expressions régulières déterministes pris en ch
 
 #### Paramètres
 
-| Nom    | Tapez  | Descriptif |
-| ------ | ------ | ---------- |
-| modèle | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------ | ----------- |
+| modèle | chaîne |             |
+
+### MAX_REGEX_PATTERN_LENGTH
+
+**Genre :** constante
+
+```typescript
+export const MAX_REGEX_PATTERN_LENGTH;
+```
+
+Aucune description fournie.
+
+### MAX_REGEX_REPEAT_BOUND
+
+**Genre :** constante
+
+```typescript
+export const MAX_REGEX_REPEAT_BOUND;
+```
+
+Aucune description fournie.
 
 ### Erreur de syntaxe Regex
 
@@ -88,6 +118,46 @@ export class RegexSyntaxError extends Error
 ```
 
 Erreur de syntaxe appartenant au compilateur avec des messages déterministes relatifs à la source.
+
+## `src/index`
+
+### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
+
+**Genre :** constante
+
+```typescript
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+```
+
+Aucune description fournie.
+
+### flintStandardLibraryIdentity
+
+**Genre :** fonction
+
+```typescript
+function flintStandardLibraryIdentity(
+  identity?: FlintStandardLibraryIdentity,
+): FlintStandardLibraryIdentity;
+```
+
+Aucune description fournie.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | ---------------------------- | ----------- |
+| identité | FlintStandardLibraryIdentity |             |
+
+### FlintStandardLibraryIdentity
+
+**Genre :** interface
+
+```typescript
+export interface FlintStandardLibraryIdentity
+```
+
+Aucune description fournie.
 
 ## `src/reference-vm`
 
@@ -103,10 +173,10 @@ Lisez une fin de capture sans exposer la disposition des emplacements de bytecod
 
 #### Paramètres
 
-| Nom     | Tapez           | Descriptif |
-| ------- | --------------- | ---------- |
-| capture | Captures \| nul |            |
-| groupe  | numéro          |            |
+| Nom | Tapez | Descriptif |
+| -------- | ---------------- | ----------- |
+| capture | Captures \| nul |             |
+| groupe | numéro |             |
 
 ### Captures
 
@@ -130,10 +200,10 @@ Lisez un démarrage de capture sans exposer la disposition des emplacements de b
 
 #### Paramètres
 
-| Nom     | Tapez           | Descriptif |
-| ------- | --------------- | ---------- |
-| capture | Captures \| nul |            |
-| groupe  | numéro          |            |
+| Nom | Tapez | Descriptif |
+| -------- | ---------------- | ----------- |
+| capture | Captures \| nul |             |
+| groupe | numéro |             |
 
 ### match complet
 
@@ -143,14 +213,64 @@ Lisez un démarrage de capture sans exposer la disposition des emplacements de b
 function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-Correspondance de chaîne entière, ancrée à la position zéro.
+Correspondance de chaîne entière, ancrée à la position zéro (utilise PikeVM en temps linéaire par défaut).
 
 #### Paramètres
 
-| Nom    | Tapez        | Descriptif |
-| ------ | ------------ | ---------- |
-| re     | CompiléRegex |            |
-| entrée | chaîne       |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------------- | ----------- |
+| re | CompiléRegex |             |
+| entrée | chaîne |             |
+
+### fullMatchBacktracking
+
+**Genre :** fonction
+
+```typescript
+function fullMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Oracle de référence de correspondance de chaîne entière de retour en arrière.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------------- | ----------- |
+| re | CompiléRegex |             |
+| entrée | chaîne |             |
+
+### fullMatchLinéaire
+
+**Genre :** fonction
+
+```typescript
+function fullMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+Correspondance de chaîne entière à l'aide du moteur PikeVM à temps linéaire.
+Garantit l’exécution O(M * N) et l’immunité contre le backtracking ReDoS.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------------- | ----------- |
+| re | CompiléRegex |             |
+| entrée | chaîne |             |
+
+### BrochetRunner
+
+**Genre :** classe
+
+```typescript
+export class PikeRunner extends BaseRunner
+```
+
+Moteur d'exécution PikeVM sans retour en temps linéaire.
+Garantit la complexité temporelle O(M * N) où M est le nombre d'instructions et N est la longueur d'entrée,
+complètement immunisé contre le ReDoS (Regular Expression Denial of Service).
 
 ### préfixeMatch
 
@@ -160,14 +280,62 @@ Correspondance de chaîne entière, ancrée à la position zéro.
 function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-Correspondance de préfixe, ancrée à la position zéro mais pas à la fin.
+Correspondance de préfixe, ancrée à la position zéro mais pas à la fin (utilise PikeVM en temps linéaire par défaut).
 
 #### Paramètres
 
-| Nom    | Tapez        | Descriptif |
-| ------ | ------------ | ---------- |
-| re     | CompiléRegex |            |
-| entrée | chaîne       |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------------- | ----------- |
+| re | CompiléRegex |             |
+| entrée | chaîne |             |
+
+### prefixMatchBacktracking
+
+**Genre :** fonction
+
+```typescript
+function prefixMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Le préfixe de retour en arrière correspond à l'oracle de référence.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------------- | ----------- |
+| re | CompiléRegex |             |
+| entrée | chaîne |             |
+
+### prefixMatchLinear
+
+**Genre :** fonction
+
+```typescript
+function prefixMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+Correspondance de préfixe à l'aide du moteur PikeVM à temps linéaire.
+Garantit l’exécution O(M * N) et l’immunité contre le backtracking ReDoS.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------------- | ----------- |
+| re | CompiléRegex |             |
+| entrée | chaîne |             |
+
+### Coureur
+
+**Genre :** classe
+
+```typescript
+export class Runner extends BaseRunner
+```
+
+Exécuteur d’exécution de référence de backtracking pour la vérification des instructions de bytecode.
 
 ### recherche
 
@@ -177,15 +345,60 @@ Correspondance de préfixe, ancrée à la position zéro mais pas à la fin.
 function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
-Correspondance la plus à gauche à ou après `start`.
+Correspondance la plus à gauche à ou après `start` (utilise PikeVM en temps linéaire par défaut).
 
 #### Paramètres
 
-| Nom      | Tapez        | Descriptif |
-| -------- | ------------ | ---------- |
-| re       | CompiléRegex |            |
-| entrée   | chaîne       |            |
-| démarrer |              |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------------- | ----------- |
+| re | CompiléRegex |             |
+| entrée | chaîne |             |
+| démarrer |               |             |
+
+### rechercheRetour en arrière
+
+**Genre :** fonction
+
+```typescript
+function searchBacktracking(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+Oracle de référence de recherche en arrière.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------------- | ----------- |
+| re | CompiléRegex |             |
+| entrée | chaîne |             |
+| démarrer |               |             |
+
+### rechercheLinéaire
+
+**Genre :** fonction
+
+```typescript
+function searchLinear(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+Correspondance la plus à gauche à ou après `start` à l'aide du moteur PikeVM à temps linéaire.
+Immunisé contre les retours en arrière catastrophiques sur des modèles de recherche non ancrés.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------------- | ----------- |
+| re | CompiléRegex |             |
+| entrée | chaîne |             |
+| démarrer |               |             |
 
 ### test
 
@@ -195,11 +408,46 @@ Correspondance la plus à gauche à ou après `start`.
 function test(re: CompiledRegex, input: string): boolean;
 ```
 
-Correspondance booléenne de chaîne entière.
+Correspondance booléenne de chaîne entière (utilise PikeVM en temps linéaire par défaut).
 
 #### Paramètres
 
-| Nom    | Tapez        | Descriptif |
-| ------ | ------------ | ---------- |
-| re     | CompiléRegex |            |
-| entrée | chaîne       |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------------- | ----------- |
+| re | CompiléRegex |             |
+| entrée | chaîne |             |
+
+### testRetour en arrière
+
+**Genre :** fonction
+
+```typescript
+function testBacktracking(re: CompiledRegex, input: string): boolean;
+```
+
+Oracle de référence de correspondance booléenne de retour en arrière.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------------- | ----------- |
+| re | CompiléRegex |             |
+| entrée | chaîne |             |
+
+### testLinéaire
+
+**Genre :** fonction
+
+```typescript
+function testLinear(re: CompiledRegex, input: string): boolean;
+```
+
+Correspondance booléenne de chaîne entière à l'aide du moteur PikeVM à temps linéaire.
+Immunisé contre les retours en arrière catastrophiques sur les expressions régulières pathologiques.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------------- | ----------- |
+| re | CompiléRegex |             |
+| entrée | chaîne |             |

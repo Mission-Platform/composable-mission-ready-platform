@@ -16,7 +16,7 @@
 **종류:** 상수
 
 ```typescript
-export const ALLOWED_METHODS;
+export const ALLOWED_METHODS: Set<string>;
 ```
 
 프록시를 읽기 전용으로 유지하고 문서화된 API 경로로 제한합니다.
@@ -26,7 +26,17 @@ export const ALLOWED_METHODS;
 **종류:** 상수
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES;
+export const ALLOWED_ROUTE_PREFIXES: string[];
+```
+
+설명이 제공되지 않았습니다.
+
+### 기본
+
+**종류:** 상수
+
+```typescript
+export const handler: ExportedHandler;
 ```
 
 설명이 제공되지 않았습니다.
@@ -39,10 +49,15 @@ export const ALLOWED_ROUTE_PREFIXES;
 function isAllowedProxyRequest(request: Request): boolean;
 ```
 
-설명이 제공되지 않았습니다.
+들어오는 클라이언트 요청이 프록시 정책에 의해 허용되는지 여부를 결정합니다.
 
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| ---- | ---- | ---- |
-| 요청 | 요청 |      |
+| ------- | ------- | ------------------------ |
+| 요청 | 요청 | - 들어오는 HTTP 요청. |
+
+#### 계약
+
+- **@param:** - 들어오는 HTTP 요청입니다.
+- **@returns:** 메서드와 경로가 프록시 허용 목록 내에 있으면 true입니다.

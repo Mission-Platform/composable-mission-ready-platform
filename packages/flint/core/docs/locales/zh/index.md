@@ -5,7 +5,7 @@
 > packages/flint/core/docs/index.md: [packages/flint/core/docs/index.md](../../index.md)
 > 语言: 简体中文 (zh)
 
-Flint v1 语言契约、引导解析器和一致性装置。
+Flint v1 语言合约、引导解析器和一致性装置。
 该软件包拥有面向消费者和消费者的语言合同和文档
 贡献者。
 
@@ -13,7 +13,7 @@ Flint v1 语言契约、引导解析器和一致性装置。
 
 - [语言和 ABI 参考](reference/language.md) — 语法、类型、功能、
   诊断、清单和编译器行为。
-- [构建和测试指南](guides/development.md) — 本地检查、固定装置和生成的
+- [构建和测试指南](guides/development.md) — 本地检查、固定装置和生成
   文物。
 - [`llms.txt`](../../../llms.txt) — 工具和助手的简洁 API 和使用说明。
 

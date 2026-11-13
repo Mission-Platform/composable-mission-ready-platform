@@ -1,11 +1,11 @@
-# Forgia WebScript v1
+# Flint v1
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
 > packages/flint/core/docs/reference/language.md: [packages/flint/core/docs/reference/language.md](../../../reference/language.md)
 > Lingua: Italiano (it)
 
-Flint (`.flint`) è un piccolo linguaggio generico per WebAssembly
+Flint (`.flint`) è un piccolo linguaggio di uso generale per WebAssembly
 carichi di lavoro. È incentrato sul web, basato sulle capacità e deliberatamente indipendente da esso
 Vue, React, il DOM e il compilatore del componente Forge. Questo documento è il
 contratto di linguaggio e modulo v1 autorevole. `@mission-platform/flint`
@@ -14,10 +14,10 @@ risoluzione, dati manifest e API del servizio compilatore utilizzato dall'adatta
 e LSP. `@mission-platform/flint-wasm` è il backend deterministico
 che abbassa l'IR controllato a WebAssembly e WAT convalidati. Solo Node
 Il pacchetto `@mission-platform/flint-cli` fornisce `flint`
-comando per controllare e compilare file o grafici sorgente. Il file TypeScript
+comando per controllare e compilare file o grafici di origine. Il file TypeScript
 Il pacchetto contiene anche le apparecchiature di conformità eseguibili.
 
-## Stato e versioni
+## Stato e versione
 
 Il contratto attuale è la **versione linguistica `1.0`** e la **versione logica ABI
 `1.2`**. La versione linguistica descrive sorgente e semantica; la versione dell'ABI
@@ -58,11 +58,11 @@ i risultati (o i risultati esplicitamente contrassegnati come `blocking`) impedi
 il report completo rimane disponibile sull'artefatto restituito. Lo sviluppo
 Il profilo è destinato ai flussi di lavoro dell'editor e dell'indagine: riporta i risultati
 ma non li usa come cancello di rilascio. La policy include una funzionalità esplicita
-lista consentita e limiti delimitati per risultati, profondità di chiamata, loop, allocazioni, asincrono
+lista consentita e limiti limitati per risultati, profondità chiamata, loop, allocazioni, asincrono
 attività e input di espressioni regolari.
 
 Le chiavi della cache del servizio del compilatore includono la politica di analisi normalizzata, registrata
-identificatori di regole e input della mappa sorgente. Modificare uno qualsiasi di questi input di analisi
+identificatori di regole e input della mappa di origine. Modificare uno qualsiasi di questi input di analisi
 pertanto non è possibile riutilizzare un artefatto prodotto con una politica diversa.
 
 ## Risultati privi di eccezioni e flusso di controllo strutturato
@@ -74,7 +74,7 @@ i moduli strutturati `for`, `while` e `do while` sono flussi di controllo esegui
 non sono costrutti di eccezioni o iteratori. `Result` ha esattamente il
 varianti `Ok(T)` e `Error(E)`.
 
-Le funzioni dell'iteratore utilizzano `iter fn`, restituiscono `Iterator<T>` e sospendono in `yield`:
+Le funzioni iteratore utilizzano `iter fn`, restituiscono `Iterator<T>` e sospendono in `yield`:
 
 ```flint
 export iter fn forward(source: Iterator<i32>) -> Iterator<i32> {
@@ -109,17 +109,45 @@ const artifact = compileFlint({
 
 `threads` e `atomics` devono essere entrambi abilitati per l'output atomico di memoria condivisa;
 le combinazioni non supportate producono la diagnostica. Un manifest memory64 utilizza `u64`
-indirizzi e valori puntatore-lunghezza-u64. In modalità debug, una cache configurata può
+indirizzi e valori puntatore-lunghezza-u64. In modalità debug, una cache configurata potrebbe
 persistere deterministico `<key>.optimized.wat`, `<key>.unoptimized.wat`,
 Artefatti `<key>.optimized.wasm` e `<key>.unoptimized.wasm`. La cache scrive
 sono additivi e non disponibili o le cache in errore non falliscono la compilazione.
+
+## Impostazioni predefinite di sicurezza e profili dei limiti
+
+Le variabili locali e i parametri sono immutabili a meno che non siano dichiarati con `mut`. Un prestito lo è
+immutabile per impostazione predefinita; l'accesso in scrittura richiede il modulo esplicito `&mut` e non può
+sovrapporre un altro prestito. Valori POD (solo unità, scalari e aggregati composti).
+di campi POD) vengono passati per valore per impostazione predefinita. Vengono passati i valori non POD
+riferimento immutabile per impostazione predefinita; `owned`, `borrowed` e `shared` rimangono
+contratti proprietari espliciti ABI. I provvisori gestiti dalla regione non possono scappare
+il loro ambito. I valori che attraversano un ambito utilizzano una proprietà/promozione esplicita
+gestione del mantenimento/rilascio dell'ARC di confine e deterministico.
+
+Per impostazione predefinita, l'indicizzazione di array e raccolte viene controllata in fase di esecuzione. Il compilatore
+può annotare un assegno come `proven-safe` solo quando i fatti relativi all'intervallo e alla lunghezza lo dimostrano
+l'accesso completo. `excluded-by-profile` è una politica esplicita di solo rilascio;
+viene registrato nel report di analisi, nel manifest ABI, nei metadati dell'ottimizzatore e
+identità della cache. Preferire `runtime` per indici e build di sviluppo non attendibili.
+
+Il confine di ottimizzazione è un grafico deterministico del Mare dei Nodi seguito da a
+Ottimizzatore dello stadio Wasm. Le cache configurate contengono uno schema/versione
+Artefatto `<key>.sonir.json` con ID node canonici, intervalli di origine, hash del grafico,
+effetti, fatti sulla proprietà, politica sui limiti e rapporti sul passaggio ordinato. È sicuro
+per eliminare o ignorare questo artefatto: formato non valido, obsoleto, sovradimensionato o non corrispondente
+i dati della cache non sono mai attendibili.
+
+I domini interi densi `switch` possono essere inferiori a Wasm `br_table`; domini sparsi
+utilizzare l'abbassamento del confronto deterministico. I casi duplicati sono diagnostici e a
+l'inserimento predefinito è richiesto quando la copertura non è staticamente completa.
 
 ## Profili di collegamento tra progetti
 
 FWS supporta due profili di collegamento primari per la gestione delle dipendenze tra progetti:
 
 - `linkProfile: "static"`: i moduli tra progetti vengono riuniti in un unico modulo
-  artefatto grafico dello scanner. Ciò consente un'ottimizzazione statica aggressiva
+  artefatto del grafico dello scanner. Ciò consente un'ottimizzazione statica aggressiva
   (profilo `static-aggressive`) ed elimina la ricerca del modulo runtime nel file
   costo della dimensione dell'artefatto.
 - `linkProfile: "dynamic"`: i limiti espliciti del modulo di origine vengono conservati.
@@ -127,6 +155,42 @@ FWS supporta due profili di collegamento primari per la gestione delle dipendenz
   con indirizzi di funzioni memorizzate nella cache codificati da artefatto e identità manifesta. Questo
   utilizza il profilo di ottimizzazione `dynamic-conservative`, che è più sicuro
   distribuzioni modulari.
+
+## Interoperabilità Foreign C e Rust (C ABI)
+
+Flint fornisce interoperabilità C a copia zero e dichiarazioni di tipo esterno per interfacciarsi con le librerie native scritte in C, C++ o Rust (`extern "C"`, `#[repr(C)]`).
+
+### Tipi primitivi del C e astrazioni dei puntatori
+
+- Tipi scalari C: `c_char`, `c_uchar`, `c_short`, `c_ushort`, `c_int`, `c_uint`, `c_long`, `c_ulong`, `c_longlong`, `c_ulonglong`, `c_size`, `c_ssize`, `c_float`, `c_double`, `c_void`, `u8` e `i8`.
+- Wrapper puntatore: `CPtr<T>` (vista puntatore immutabile), `MutCPtr<T>` (vista puntatore mutabile) e `COpaquePtr` (handle C non tipizzato, `void*`).
+- Modellazione dell'annullamento: i puntatori esterni annullabili sono rappresentati con `Option<CPtr<T>>`, dove `Option::None` codifica il letterale `0` (puntatore nullo).
+
+### Attributi di allineamento e rappresentazione dipendenti dalla piattaforma
+
+Il layout della memoria della struttura in Flint dipende dal target nei modelli ABI della piattaforma standard (`wasm32`, `wasm64`, `x86_64-linux`, `x86_64-windows`, `aarch64-darwin`, `i686-linux`).
+
+Direttive supportate sulle strutture:
+
+- `#[repr(C)]`: ordinamento C ABI rigoroso, allineamento naturale del campo e imbottitura della coda.
+- `#[repr(packed(N))]`: blocca l'allineamento del campo al massimo di byte `N` per formati binari compatti.
+- `#[repr(align(N))]`: eleva l'allineamento aggregato a `N` byte (ad esempio linee cache CPU da 64 byte o SIMD).
+
+> **Avviso sulla roadmap di metaprogrammazione:** gli attributi di rappresentazione intrinseci del compilatore (`#[repr(C)]`, `#[repr(packed(N))]`, `#[repr(align(N))]`) sono costrutti provvisori pragmatici per la compatibilità C ABI immediata. La migrazione dell'architettura a lungo termine verso un sistema di metaprogrammazione macro tipizzato sandbox igienico con introspezione e riflessione in fase di compilazione e runtime è formalmente tracciata in [GitHub Issue #101](https://github.com/Mission-Platform/composable-mission-ready-platform/issues/101).
+
+### Blocchi di capacità estera
+
+Le funzioni C esterne sono dichiarate all'interno di blocchi di capacità espliciti anziché in istruzioni ambientali esterne:
+
+```flint
+opaque foreign type sqlite3;
+
+foreign "C" capability "sqlite3" {
+  fn sqlite3_libversion() -> CPtr<c_char>;
+  fn sqlite3_open(filename: CPtr<c_char>, ppDb: MutCPtr<COpaquePtr>) -> c_int;
+  fn sqlite3_close(db: MutCPtr<sqlite3>) -> c_int;
+}
+```
 
 ## Riferimento lessicale
 
@@ -157,13 +221,13 @@ sono valori letterali booleani. La punteggiatura è
 `! % * + - / < <= == != > >= && || = -> => ::`.
 
 Ogni intervallo diagnostico è un intervallo di offset source semiaperto `[start, end)` nel file
-stringa UTF-16 originale TypeScript (gli offset contano le unità di codice UTF-16), con
+stringa UTF-16 TypeScript originale (gli offset contano le unità di codice UTF-16), con
 campi di riga e colonna a base unica. IL
 L'implementazione bootstrap riporta insieme gli offset e i dati di riga/colonna, quindi a
 L'adattatore Vite può produrre diagnostica con mappatura dell'origine senza analisi.
 
 Lo scanner conserva i commenti come token `comment`, quindi i commenti sulla documentazione possono farlo
-essere collegati alle funzioni, mentre le decisioni del parser saltano tutte le curiosità. Operatori
+essere collegato alle funzioni, mentre le decisioni del parser saltano tutte le curiosità. Operatori
 con prefissi condivisi vengono selezionati in base alla corrispondenza più lunga. Su input non valido il file
 lo scanner consuma una regione delimitata, emette la diagnostica stabile `FLINT-LEX-*` e
 continua con un singolo token EOF; questo comportamento di recupero fa parte della grammatica
@@ -224,13 +288,13 @@ etichetta precedente. L'ordine dei tag e i tag duplicati vengono conservati.
 
 I moduli di tag comunemente utilizzati sono:
 
-| Modulo tag                                             | Campi strutturati                     |
-| ------------------------------------------------------ | ------------------------------------- |
+| Modulo tag | Campi strutturati |
+| -------------------------------------------------------- | -------------------------------------------- |
 | `@param name text`, `@arg`, `@argument` o `@parameter` | `name` è `subject`; il resto è `text` |
-| `@typeparam name text`                                 | `name` è `subject`; il resto è `text` |
-| `@throws type text` o `@exception type text`           | `type` è `subject`; il resto è `text` |
-| `@return text` o `@returns text`                       | Solo `text`                           |
-| `@deprecated text`                                     | Solo `text`                           |
+| `@typeparam name text` | `name` è `subject`; il resto è `text` |
+| `@throws type text` o `@exception type text` | `type` è `subject`; il resto è `text` |
+| `@return text` o `@returns text` | Solo `text` |
+| `@deprecated text` | Solo `text` |
 
 Altri moduli `@name` vengono accettati e conservati come tag ordinati anziché
 segnalato come diagnostico. Non hanno alcun soggetto dedotto; il loro testo rimanente
@@ -304,7 +368,7 @@ accettandoli oggi.
 Questo estratto è la grammatica **bootstrap**. Copre moduli definiti da file,
 importazioni di capacità/sorgenti, firme primitive, chiamate, valori locali,
 espressioni strutturate `if`/`else`, `while`, `for` in stile C, `do while` e
-`return`. I moduli del ciclo fanno parte del contratto di bootstrap eseguibile; solo
+`return`. I moduli loop fanno parte del contratto di bootstrap eseguibile; solo
 le parole di eccezione riservate `throw`, `try` e `catch` vengono rifiutate come
 costrutti eseguibili. Le dichiarazioni aggregate e i valori riportati di seguito sono i
 Contratto **esteso** e non deve essere trattato come un'ortografia alternativa per
@@ -363,7 +427,7 @@ Flint fornisce una libreria standard deterministica di espressioni regolari.
 Le chiamate `regex_full_match(pattern, value) -> bool`,
 `regex_prefix_match(pattern, value) -> bool` e
 `regex_search(pattern, value, start: i32) -> bool` esegue valori interi,
-rispettivamente il prefisso posizione zero e la corrispondenza della ricerca più a sinistra. Cattura i limiti
+prefisso posizione zero e corrispondenza della ricerca più a sinistra rispettivamente. Cattura i limiti
 sono disponibili tramite il corrispondente `regex_*_capture_start` e
 `regex_*_capture_end` chiamate; prendono un indice di gruppo e restituiscono una stringa UTF-16
 offset o `-1` quando non c'è corrispondenza o il gruppo non è impostato. Cerca cattura
@@ -380,12 +444,15 @@ La sintassi supportata è intenzionalmente limitata ai caratteri letterali `.`
 classi e intervalli (inclusa la negazione di `^`), `\d`, `\D`, `\w`, `\W`, `\s`,
 `\S`, valori letterali con escape, gruppi catturanti e non catturanti, alternanza,
 `*`, `+`, `?`, `{n}` limitato, `{n,}`, `{n,m}` quantificatori, quantificatori pigri,
-e ancoraggi `^`/`Flint fornisce una libreria standard deterministica di espressioni regolari.
-Le chiamate`regex_full_match(pattern, value) -> bool`,
-`regex_prefix_match(pattern, value) -> bool`e`regex_search(pattern, value, start: i32) -> bool`esegue valori interi,
-rispettivamente il prefisso posizione zero e la corrispondenza della ricerca più a sinistra. Cattura i limiti
-sono disponibili tramite il corrispondente`regex___capture_start`e`regex___capture_end`chiamate; prendono un indice di gruppo e restituiscono una stringa UTF-16
-offset o`-1` quando non c'è corrispondenza o il gruppo non è impostato. Cerca cattura
+e ancoraggi `^`/`
+Flint fornisce una libreria standard deterministica di espressioni regolari.
+Le chiamate `regex_full_match(pattern, value) -> bool`,
+`regex_prefix_match(pattern, value) -> bool` e
+`regex_search(pattern, value, start: i32) -> bool` esegue valori interi,
+prefisso posizione zero e corrispondenza della ricerca più a sinistra rispettivamente. Cattura i limiti
+sono disponibili tramite il corrispondente `regex_*_capture_start` e
+`regex_*_capture_end` chiamate; prendono un indice di gruppo e restituiscono una stringa UTF-16
+offset o `-1` quando non c'è corrispondenza o il gruppo non è impostato. Cerca cattura
 le chiamate inoltre assumono l'offset iniziale prima dell'indice del gruppo.
 
 Le chiamate regex sono funzioni della libreria standard di proprietà del compilatore. Sono digitati da
@@ -404,12 +471,12 @@ altre estensioni del motore host vengono rifiutate. La sintassi non supportata h
 `FWS-REGEX-001` diagnostica; i modelli non validi utilizzano `FWS-REGEX-002` e un
 L'errore invariante del compilatore interno utilizza `FWS-REGEX-003`.
 
-Il pacchetto condiviso `@mission-platform/flint-regex` possiede la scuderia `$`
-bytecode (`FORGE_REGEX_BYTECODE_VERSION`) e compilatore in fase di compilazione. È esplicito
+Il pacchetto condiviso `@mission-platform/flint-regex` possiede la scuderia
+bytecode (`FORGE_REGEX_BYTECODE_VERSION`) e compilatore in fase di compilazione. È esplicito `$`
 Il punto di ingresso `/reference` espone una VM TypeScript solo come oracolo di conformità
 per test differenziali su motore nativo e backend; la radice del pacchetto no
 esporre quella VM. I metadati specifici del telefono rimangono nel pacchetto dei numeri di telefono.
-L'esecuzione di regex di produzione appartiene al backend Flint e al file
+L'esecuzione di espressioni regolari di produzione appartiene al backend Flint e al file
 modulo WASM generato, mai a un livello di runtime TypeScript o a una funzionalità host.
 
 `string` e `bytes` sono i valori aggregati v1. Una stringa è immutabile
@@ -426,28 +493,28 @@ Il contratto di estensione della raccolta è strutturale e basato sul ricevitore
 non aggiungere metodi oggetto arbitrari. Gli array fissi vengono scritti `[T; N]` e
 vettori come `Vector<T>`. Le firme supportate sono:
 
-| Ricevitore  | Metodo         | Firma                   |
-| ----------- | -------------- | ----------------------- |
-| `Array<T>`  | `length`       | `() -> u32`             |
-| `Array<T>`  | `get`          | `(u32) -> Option<T>`    |
-| `Array<T>`  | `set`          | `(u32, T) -> Array<T>`  |
-| `Array<T>`  | `iter`         | `() -> Iterator<T>`     |
-| `Vector<T>` | `length`       | `() -> u32`             |
-| `Vector<T>` | `get`          | `(u32) -> Option<T>`    |
-| `Vector<T>` | `set`          | `(u32, T) -> Vector<T>` |
-| `Vector<T>` | `push` o `add` | `(T) -> Vector<T>`      |
-| `Vector<T>` | `pop`          | `() -> Option<T>`       |
-| `Vector<T>` | `iter`         | `() -> Iterator<T>`     |
+| Ricevitore | Metodo | Firma |
+| ----------- | --------------- | ----------------------- |
+| `Array<T>` | `length` | `() -> u32` |
+| `Array<T>` | `get` | `(u32) -> Option<T>` |
+| `Array<T>` | `set` | `(u32, T) -> Array<T>` |
+| `Array<T>` | `iter` | `() -> Iterator<T>` |
+| `Vector<T>` | `length` | `() -> u32` |
+| `Vector<T>` | `get` | `(u32) -> Option<T>` |
+| `Vector<T>` | `set` | `(u32, T) -> Vector<T>` |
+| `Vector<T>` | `push` o `add` | `(T) -> Vector<T>` |
+| `Vector<T>` | `pop` | `() -> Option<T>` |
+| `Vector<T>` | `iter` | `() -> Iterator<T>` |
 
 L'ortografia `add` è intenzionalmente un alias di compatibilità per il vettore
 `push`; non è un metodo di array. Gli indici sono `u32`, gli argomenti degli elementi devono
-corrispondere a `T` e i valori restituiti devono corrispondere alle firme sopra. Arità sbagliata,
+corrisponde a `T` e i valori restituiti devono corrispondere alle firme sopra. Arità sbagliata,
 tipi di argomenti, tipi di ricevitori e metodi sconosciuti sono errori di controllo del tipo.
 I valori letterali vuoti richiedono il tipo di elemento contestuale, mentre l'array/vettore non vuoto
 i letterali deducono ricorsivamente il loro tipo di elemento e rifiutano elementi misti. A
 il valore letterale dell'array fisso deve contenere esattamente gli elementi `N`.
 
-Le localizzazioni hanno un ambito di funzione, vengono inizializzate esattamente una volta e non possono essere lette prima
+Le variabili locali hanno un ambito di funzione, vengono inizializzate esattamente una volta e non possono essere lette prima
 la loro dichiarazione. Una dichiarazione locale non nasconde alcun nome esistente: duplicato
 i nomi sono un errore. Le funzioni e gli alias di capacità condividono uno spazio dei nomi del modulo
 e deve essere unico. Una chiamata deve nominare una funzione dichiarata o importata
@@ -546,13 +613,13 @@ silenzioso no-op.
 Il modulo utilizza una memoria lineare WebAssembly con pagine da 64 KiB e little-endian
 valori scalari. I valori scalari vengono mappati come segue:
 
-| Forgia script Web | Rappresentazione WebAssembly                         |
-| ----------------- | ---------------------------------------------------- |
-| `bool`            | `i32`, dove `0` è falso e `1` è vero                 |
-| `i32`, `u32`      | `i32`                                                |
-| `i64`, `u64`      | `i64`                                                |
-| `f32`, `f64`      | corrispondente WebAssembly float                     |
-| `unit`            | nessun valore risultato                              |
+| Selce | Rappresentazione WebAssembly |
+| ----------------- | ------------------------------------------ |
+| `bool` | `i32`, dove `0` è falso e `1` è vero |
+| `i32`, `u32` | `i32` |
+| `i64`, `u64` | `i64` |
+| `f32`, `f64` | corrispondente WebAssembly float |
+| `unit` | nessun valore risultato |
 | `string`, `bytes` | due valori `u32`: puntatore quindi lunghezza in byte |
 
 Il manifest dichiara la stessa mappatura in `valueRepresentations`. A
@@ -584,7 +651,7 @@ allocazione e byte invariati.
 
 Le eccezioni host vengono convertite in `HostError` con il nome della funzionalità e un file
 codice di errore host opaco. Le trappole per gli ospiti non vengono mai convertite in restituzione ordinaria
-valori. Gli host possono registrare i dettagli dei trap, ma non devono esporre segreti o dati grezzi
+valori. Gli host possono registrare i dettagli delle trap, ma non devono esporre segreti o dati grezzi
 eccezioni del browser al codice ospite non attendibile.
 
 ### Operazioni di memoria controllate di proprietà dell'ospite
@@ -666,7 +733,7 @@ intervallo temporaneo esattamente una volta in un percorso `finally` in caso di 
 eccezioni ed errori di decodifica. Riceve una funzionalità host con valori stringa
 Stringhe JavaScript e possono restituire una stringa JavaScript; il wrapper esegue il
 allocazione guest e copia UTF-8 per quel valore restituito. Il codice host deve ancora essere copiato
-input `bytes` non elaborati prima di restituire, a meno che un manifest futuro non lo dichiari esplicitamente
+input `bytes` non elaborati prima di restituire a meno che un manifest futuro non lo dichiari esplicitamente
 un contratto di buffer in prestito. `load` e `loadSync` espongono lo stesso generato
 contratto; differiscono solo nella pianificazione dell'inizializzazione del modulo.
 
@@ -741,7 +808,7 @@ restituirli; gli errori sopprimono l'output eseguibile. L'adattatore Vite e l'us
 la facciata e non è necessario che dipendano dalla CLI Node.
 
 Per i flussi di lavoro del file system, installare `@mission-platform/flint-cli` e
-usa il suo binario `flint` autonomo:
+usa il suo binario autonomo `flint`:
 
 ```text
 flint check <entry.flint> [--root <directory>] [--project-root <directory>]
@@ -768,7 +835,7 @@ o il contratto del modulo Vite generato. I suoi metodi di cablaggio diretto (`co
 `checkVmParity`) delegare al pubblico i contratti compilatore/runtime; suo
 L'helper `defineFlintVitestConfig` installa la produzione
 `forgeWebScriptPlugin` preservando i plugin e le impostazioni Vite consumer.
-Vedere [Test in Mission Platform](../../../../../../docs/locales/it/testing.md#flint-tests) per
+Vedere [Test in Mission Platform](../../../../../../docs/testing.md#flint-tests) per
 esempi di configurazione ed attrezzatura.
 
 Il cablaggio accetta le funzioni host solo tramite mappe di capacità esplicite codificate
@@ -804,13 +871,13 @@ La diagnostica è un record strutturato con `code`, `severity`, `phase`, `messag
 La fase è una tra `lex`, `parse`, `type-check` o `abi`. Codice v1 stabile
 le famiglie includono:
 
-| Famiglia di codici | Significato                                                                                                       |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| `FLINT-LEX-*`      | caratteri/escape non validi, terminatori di riga di stringhe non elaborate o stringhe/commenti senza terminazione |
-| `FLINT-PARSE-*`    | sintassi di modulo, dichiarazione, istruzione o espressione non valida                                            |
-| `FLINT-TYPE-*`     | tipo primitivo, nome, operatore, argomento o ritorno non valido                                                   |
-| `FLINT-ABI-*`      | nomi duplicati, funzionalità negate, esportazioni o importazioni                                                  |
-| `FWS-REGEX-*`      | modelli regex di proprietà del compilatore non supportati o non validi                                            |
+| Famiglia di codici | Significato |
+| --------------- | ----------------------------------------------------------------------------------------- |
+| `FLINT-LEX-*` | caratteri/escape non validi, terminatori di riga di stringhe non elaborate o stringhe/commenti senza terminazione |
+| `FLINT-PARSE-*` | sintassi di modulo, dichiarazione, istruzione o espressione non valida |
+| `FLINT-TYPE-*` | tipo primitivo, nome, operatore, argomento o ritorno non valido |
+| `FLINT-ABI-*` | nomi duplicati, funzionalità negate, esportazioni o importazioni |
+| `FWS-REGEX-*` | modelli regex di proprietà del compilatore non supportati o non validi |
 
 Gli errori impediscono la generazione di artefatti. Gli avvisi e la diagnostica informativa lo fanno
 non cambiare semantica. L'ordinamento diagnostico è l'ordine di origine, seguito dalla fase
@@ -896,7 +963,7 @@ dispositivo di conformità a forma di adattatore codec. Dichiara
 `codec.barcode.encode(payload: string) -> bytes`, esporta `encode_payload`, convalida il
 ABI con lunghezza del puntatore e utilizza un host iniettabile per scrivere l'output di proprietà del chiamante.
 Rimane intenzionalmente un dispositivo ABI ristretto: l'host può utilizzare un deterministico
-falso per i test di conformità mentre il dispositivo dimostra il Flint
+falso per i test di conformità mentre l'apparecchio dimostra il Flint
 confine. La parità dei codec di produzione richiede ancora la corrispondenza dei vettori e
 misurazioni delle prestazioni, non solo il nome di una funzione corrispondente.
 
@@ -909,16 +976,16 @@ far finta che le due esportazioni siano ancora comportamentalmente intercambiabi
 
 ### Selezione di un'implementazione
 
-| Carico di lavoro o requisito                                                     | Selezionare                                                   | Motivo                                                                                                                                                               |
-| -------------------------------------------------------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Comportamento del pacchetto QR o matrice esistente                               | `@mission-platform/qr-code` / `@mission-platform/matrix-code` | I wrapper ESM tipizzati specifici del pacchetto rimangono disponibili per tali API pubbliche.                                                                        |
-| Comportamento neutro dello scanner dell'immagine e della fotocamera              | `@mission-platform/code-scanner`                              | Utilizza un grafico FWS collegato staticamente per impostazione predefinita o un profilo del modulo di origine dinamico esplicito con invio memorizzato nella cache. |
-| Comportamento del codice a barre esistente                                       | `@mission-platform/barcode`                                   | I grafici Flint locali del pacchetto forniscono la facciata del codice a barre digitato.                                                                             |
-| Nuovo calcolo sicuro per i browser per scopi generici con effetti host espliciti | Forgia script Web più `@mission-platform/vite-plugin-flint`   | Funzionalità di origine `.flint` con versione, manifest, caricatore tipizzato e negazione per impostazione predefinita.                                              |
-| Origine AssemblyScript esistente o migrazione specifica di AssemblyScript        | `@mission-platform/vite-plugin-assemblyscript`                | Compila `.ts` voci AssemblyScript e conserva il contratto di esportazione raw generato.                                                                              |
-| Compilazione dell'interfaccia utente/componente indipendente dal framework       | Compilatore di componenti Forge                               | Flint non sostituisce `FrameworkOutputPlugin` o le destinazioni dei componenti.                                                                                      |
+| Carico di lavoro o requisito | Selezionare | Motivo |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Comportamento del pacchetto QR o matrice esistente | `@mission-platform/qr-code` / `@mission-platform/matrix-code` | I wrapper ESM tipizzati specifici del pacchetto rimangono disponibili per tali API pubbliche.                                       |
+| Comportamento neutro dello scanner dell'immagine e della fotocamera | `@mission-platform/code-scanner` | Utilizza un grafico FWS collegato staticamente per impostazione predefinita o un profilo del modulo di origine dinamico esplicito con invio memorizzato nella cache. |
+| Comportamento del codice a barre esistente | `@mission-platform/barcode` | I grafici Flint locali del pacchetto forniscono la facciata del codice a barre digitato.                                                      |
+| Nuovo calcolo sicuro per i browser per scopi generici con effetti host espliciti | Flint plus `@mission-platform/vite-plugin-flint` | Funzionalità di origine `.flint` con versione, manifest, caricatore tipizzato e negazione per impostazione predefinita.                              |
+| Origine AssemblyScript esistente o migrazione specifica di AssemblyScript | `@mission-platform/vite-plugin-assemblyscript` | Compila `.ts` voci AssemblyScript e conserva il contratto di esportazione raw generato.                            |
+| Compilazione dell'interfaccia utente/componente indipendente dal framework | Compilatore di componenti Forge | Flint non sostituisce `FrameworkOutputPlugin` o target dei componenti.                                      |
 
-Utilizzare il plug-in Flint Vite solo per le voci `.flint`. Usa il
+Utilizzare il plugin Flint Vite solo per le voci `.flint`. Usa il
 Plug-in AssemblyScript per voci AssemblyScript esistenti. Durante la migrazione, an
 l'applicazione può raggruppare entrambi i tipi di moduli: ogni caricatore possiede il proprio
 l'inizializzazione, la memoria, la convalida ABI e le importazioni di capacità devono essere
@@ -933,13 +1000,13 @@ Il lavoro di migrazione dovrebbe registrare quattro confronti indipendenti per c
 2. Sicurezza ABI, inclusi controlli manifest/versione, rifiuto di importazione, controlli dei limiti,
    conversione trap e proprietà del buffer;
 3. stabilità degli artefatti generati, inclusi hash riproducibili, dichiarazioni,
-   mappe di origine e caricamento nel browser/Node; e
+   source maps, and browser/Node loading; e
 4. una misurazione rappresentativa delle prestazioni di rilascio-build che copre la compilazione
    tempo, dimensione dell'artefatto, inizializzazione e chiamate allo stato stazionario.
 
 Il dispositivo di migrazione attualmente fornisce le parti ABI e artefatto di questo
 prove. I test esistenti sul wrapper di codici a barre e sul pacchetto di decodifica rimangono gli stessi
-oracolo di regressione comportamentale e legacy; eseguirli piuttosto lungo il dispositivo
+oracolo di regressione del comportamento e dell'eredità; eseguirli piuttosto lungo il dispositivo
 piuttosto che trattare l'apparecchio come un punto di riferimento sostitutivo. Forgiare la Rete
 Lo script non deve deprecare un percorso Rust o AssemblyScript finché non viene superato il carico di lavoro
 tutti e quattro i confronti nei due ambienti host supportati sono documentati
@@ -969,11 +1036,11 @@ per impostazione predefinita viene utilizzato lo spazio di archiviazione immutab
 tipo; le rappresentazioni basate sul descrittore sono riservate all'iteratore esplicito o
 confini dell'interfaccia e sono rappresentati da record di specializzazione.
 
-Il contratto del bytecode della VM è indipendente dal backend. A`FlintVmModule`
+Il contratto del bytecode della VM è indipendente dal backend. A `FlintVmModule`
 contiene funzioni tipizzate, costanti, layout aggregati, specializzazioni,
 importazioni di capacità, intervalli di origine e memoria lineare da 64 KiB
 Limite `fws_alloc`/`fws_dealloc`/`fws_realloc`. `interpret`, `jit` e `aot` sono in esecuzione
-modalità sulla stessa semantica istruzione/valore/trappola; Chiavi cache JIT e AOT
+modalità sulla stessa semantica istruzione/valore/trappola; Chiavi della cache JIT e AOT
 gli artefatti includono il compilatore e gli hash di origine. Le capacità sono solo richiamabili
 quando presente nel manifest del modulo.
 

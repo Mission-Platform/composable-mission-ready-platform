@@ -2,11 +2,11 @@
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> packages/hunspell/docs/index.md: [packages/hunspell/docs/index.md](../../index.md)
+> packages/content/hunspell/docs/index.md: [packages/content/hunspell/docs/index.md](../../index.md)
 > שפה: עברית (he)
 
 `@mission-platform/hunspell` מספק מנוע בדיקת איות בעל ביצועים גבוהים המבוסס על Hunspell, הידור כדי
-**WebAssembly** דרך Emscripten. הוא ארוז כמודול ES שפועל כולו בדפדפן או בתוך Web Workers.
+**WebAssembly** באמצעות Emscripten. הוא ארוז כמודול ES שפועל כולו בדפדפן או בתוך Web Workers.
 
 ## אַדְרִיכָלוּת
 
@@ -15,11 +15,11 @@
 1. **קומפילציה של WASM**: ספריית `hunspell-1.7.2` הידור צולב באמצעות Emscripten.
 2. **C++ Wrapper**: מעטפת C++ דקה (`hunspell_wrapper.cpp`) חושפת את הפונקציות הדרושות באמצעות כריכות Emscripten.
 3. **Artifact של קובץ בודד**: הפלט הסופי הוא `hunspell.js` עצמאי שבו ה-WASM הבינארי מוטבע בתור
-   base64, ביטול הצורך בטעינת קבצים נפרדים `.wasm` ורזולוציית כתובת URL.
+   base64, מבטל את הצורך בטעינת קבצים `.wasm` נפרדים וברזולוציית כתובת URL.
 
 ### בנייה מחדש של חפץ WASM
 
-בנייה מחדש דורשת [דוקר](https://www.docker.com/). השתמש בפקודה הבאה מהשורש:
+בנייה מחדש דורשת [Docker](https://www.docker.com/). השתמש בפקודה הבאה מהשורש:
 
 ```bash
 pnpm --filter @mission-platform/hunspell build:wasm
@@ -50,8 +50,8 @@ checker.delete();
 
 ### שילוב עורך מונקו
 
-החבילה מספקת אינטגרציה חלקה לעורך מונקו, מטפלת בהשרצת עובדים ובדיקת איות מבוטלת
-באופן אוטומטי.
+החבילה מספקת אינטגרציה חלקה לעורך מונקו, מטפלת בהשרצה של עובדים ובדיקת איות מבוטלת
+אוטומטית.
 
 #### Vue 3 (Composition API)
 
@@ -88,4 +88,4 @@ handle.dispose();
 חבילה זו **לא נשלחת עם מילונים מובנים** כדי לשמור על גודל החבילה קטן. אתה חייב לספק משלך
 צמד `.aff` (צירוף) ו-`.dic` (מילון).
 
-מקור מומלץ: [מילוני LibreOffice](https://github.com/LibreOffice/dictionaries).
+מקור מומלץ: [LibreOffice Dictionaries](https://github.com/LibreOffice/dictionaries).

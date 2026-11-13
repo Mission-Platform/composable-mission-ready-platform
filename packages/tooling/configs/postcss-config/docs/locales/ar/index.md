@@ -13,12 +13,12 @@
 pnpm add --save-dev @mission-platform/postcss-config
 ```
 
-قم بالرجوع إلى الحزمة من مساحة العمل `postcss.config.mjs` بدلا من
+قم بالإشارة إلى الحزمة من `postcss.config.mjs` لمساحة العمل بدلاً من
 تكرار خط أنابيب البرنامج المساعد المشترك. التجاوزات المحلية تنتمي إلى ذلك
 تكوين مساحة العمل.
 
 ## يساهم
 
-يجري `pnpm --filter @mission-platform/postcss-config lint` و
+قم بتشغيل `pnpm --filter @mission-platform/postcss-config lint` و
 `pnpm --filter @mission-platform/postcss-config format`. احتفظ بالمتصفح
 سلوك التوافق في هذه الحزمة وتجنب المكونات الإضافية الخاصة بالتطبيق.

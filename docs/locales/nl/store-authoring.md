@@ -28,8 +28,8 @@ src/stores/
 Pakketwinkels vermijden raamwerkspecifieke afhankelijkheden. In plaats daarvan volgen ze een eenvoudig waarneembaar patroon:
 
 1. **Privéstatus**: houd de status binnen het bereik van de module (gewone TypeScript-waarden).
-2. **Momentopnametoegang**: Geef een `getSnapshot()`-functie op om de huidige status op te halen.
-3. **Abonnement**: geef een `subscribe(listener)`-functie op die een terugbelverzoek aan een lijst toevoegt en een afmelding retourneert
+2. **Momentopnametoegang**: geef een `getSnapshot()`-functie op om de huidige status op te halen.
+3. **Abonnement**: geef een `subscribe(listener)`-functie op die een terugbelactie aan een lijst toevoegt en een afmelding retourneert
    functie.
 4. **Mutators**: Biedt functies om de status bij te werken, die alle luisteraars na de update MOET informeren.
 
@@ -81,9 +81,10 @@ useEffect(() => {
 
 ## Steiger
 
-Gebruik de Mission Platform Developer MCP-tool om een ​​nieuw winkelskelet te genereren:
+Gebruik de `scaffold_store`-tool via een verbonden Mission Platform Developer MCP-server om een nieuwe winkel te genereren
+skelet. Dit is een voorbeeld van een MCP-toolaanroep, geen shell-opdracht:
 
-```bash
+```text
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
@@ -92,5 +93,5 @@ scaffold_store(name="auth-store", package="components", apply=true)
 
 - [Pakketontwikkeling](package-development.md)
 - [Ontwerp van atomaire componenten](atomic-component-design.md)
-- [Composeerbaar schrijven](composable-authoring.md)
+- [Composable Authoring](composable-authoring.md)
 - [Util Authoring](util-authoring.md)

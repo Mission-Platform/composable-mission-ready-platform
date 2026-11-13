@@ -5,7 +5,7 @@
 > packages/tooling/configs/typescript-config/docs/index.md: [packages/tooling/configs/typescript-config/docs/index.md](../../index.md)
 > 言語: 日本語 (ja)
 
-共有 TypeScript すべての Mission Platform ワークスペースのプリセット。
+すべての Mission Platform ワークスペースで TypeScript プリセットを共有。
 
 ## インストールして使用する
 
@@ -13,14 +13,14 @@
 pnpm add --save-dev @mission-platform/typescript-config
 ```
 
-一致するプリセットを拡張します `tsconfig.json`： 使用 `app` のために Vue アプリ、
-`react` のために React アプリ、 `library` パッケージ宣言の場合、 `node` ツーリング用、
-そして `test` のために Vitest スペック。フレームワークの利用者もマッチングを使用する必要があります
-`framework-<name>` カスタム条件のプリセット。詳細については、パッケージの README を参照してください。
+`tsconfig.json` から一致するプリセットを拡張します。Vue アプリには `app` を使用します。
+React アプリの場合は `react`、パッケージ宣言の場合は `library`、ツールの場合は `node`、
+Vitest 仕様の場合は `test`。フレームワークの利用者もマッチングを使用する必要があります
+`framework-<name>` カスタム条件プリセット。詳細については、パッケージの README を参照してください。
 完全なプリセットテーブルと例。
 
 ## 貢献する
 
 共有コンパイラ フラグをプリセットに保持します。走る
-`pnpm --filter @mission-platform/typescript-config build:check` そしてフォーマットする
+`pnpm --filter @mission-platform/typescript-config build:check` と形式
 変更後のチェック。

@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> packages/email-renderer/docs/index.md: [packages/email-renderer/docs/index.md](../../index.md)
+> packages/content/email-renderer/docs/index.md: [packages/content/email-renderer/docs/index.md](../../index.md)
 > 语言: 简体中文 (zh)
 
 `@mission-platform/email-renderer` 拥有 Mission Platform 电子邮件树的框架中立渲染边界。它的根条目对于服务器端电子邮件生成来说是安全的；浏览器适配器被隔离在显式子路径后面。
@@ -24,7 +24,7 @@ Markdown 被转换为共享的 Forge 树，因此链接、图像、文本和 HTM
 
 - `@mission-platform/email-renderer/vue` → `renderToEmailVue`、`toEmailVueComponent`。
 - `@mission-platform/email-renderer/react` → `renderToEmailReact`、`toEmailReactComponent`。
-- `@mission-platform/email-renderer/svelte` → `renderToEmailSvelte` 用于 Svelte 5 `{@render ...}`。
+- `@mission-platform/email-renderer/svelte` → `renderToEmailSvelte` 为 Svelte 5 `{@render ...}`。
 - `@mission-platform/email-renderer/solid` → `renderToEmailSolid`、`toEmailSolidComponent`。
 - `@mission-platform/email-renderer/web-components` → `renderToEmailWebComponent`。
 

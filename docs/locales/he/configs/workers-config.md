@@ -9,28 +9,28 @@
 
 - [`@mission-platform/api-proxy`](../../../../packages/edge/workers/api-proxy/docs/locales/he/index.md) - פרוקסי API מוגבל לקריאה בלבד.
 - [`@mission-platform/email-sender`](../../../../packages/edge/workers/email-sender/docs/locales/he/index.md) - שולח מקומי מגובה MailPit.
-- [`@mission-platform/forge-spa`](../../../../packages/edge/workers/forge-spa/docs/locales/he/index.md) - משותף `ASSETS` מטפל חילופי ספא.
+- [`@mission-platform/forge-spa`](../../../../packages/edge/workers/forge-spa/docs/locales/he/index.md) - מטפל משותף `ASSETS` SPA.
 
-דף פרויקט זה שומר רק את מפת הפריסה בין שטחי עבודה. עובד
+דף הפרויקט הזה שומר רק את מפת הפריסה בין שטחי עבודה. עובד
 חבילות הן בעלות חוזי המטפל שלהן, דוגמאות, בדיקות והוראות בנייה;
 חבילות אפליקציות משלהן מסלולים, דומיינים, כריכות ופריסה
 סביבות.
 
 ## מפת פריסת יישומים
 
-| יישום            | מטפל                                            | תצורה                                 | נכסים                                           |
-| :--------------- | :---------------------------------------------- | :------------------------------------ | :---------------------------------------------- |
-| אתר              | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc`         | `apps/website/dist/`, קשור כ `ASSETS`           |
-| הערות הטיפול שלי | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc`   | `apps/my-care-notes/dist/`, קשור כ `ASSETS`     |
-| מוניטור שירות    | `apps/service-monitor/src/worker.tsx`           | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, קשור כ `ASSETS` |
-| מסמכים           | נכסים סטטיים                                    | `apps/docs/wrangler.jsonc`            | `apps/docs/dist/`                               |
+| יישום | מטפל | תצורה | נכסים |
+| :-------------- | :---------------------------------------------- | :------------------------------------ | :------------------------------------------------ |
+| אתר | `packages/edge/workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` | `apps/website/dist/`, קשור כ-`ASSETS` |
+| הערות הטיפול שלי | `packages/edge/workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` | `apps/my-care-notes/dist/`, קשור כ-`ASSETS` |
+| מוניטור שירות | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, קשור כ-`ASSETS` |
+| מסמכים | נכסים סטטיים | `apps/docs/wrangler.jsonc` | `apps/docs/dist/` |
 
 אתר האינטרנט ו-My Care Notes צורכים את עובד Forge SPA המשותף. מוניטור שירות
 הבעלים של נקודת ה-Werker ו-Durable Object מחייב. אתר המסמכים הוא א
-סטטי Vite פריסה ואין לו נקודת כניסה לעובד; ספר סיפורים אינו א
+פריסה סטטית של Vite ואין לה נקודת כניסה של Worker; ספר סיפורים אינו א
 יעד פריסה.
 
-פרוס מחבילת האפליקציה של מי Wrangler תצורה היא הבעלים של
+פרוס מחבילת האפליקציה שתצורת Wrangler שלה היא הבעלים של
 מסלול וסביבה. שמור סודות מחוץ לתצורה ושימוש במעקב
 אחסון סודי של Cloudflare לערכים רגישים. ראה את היישום הספציפי
 סקריפטים של פריסה ומדריכי עובדים מקומיים של החבילה ליישום

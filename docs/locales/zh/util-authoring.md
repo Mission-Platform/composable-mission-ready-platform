@@ -28,10 +28,10 @@ src/utils/
 1. **纯度**：优先选择没有副作用的纯函数。给定相同的输入，它们应该始终返回
    相同的输出。
 2. **无 UI 挂钩**：切勿在 util 中导入 `vue`、`react` 或 `@mission-platform/forge-jsx` 挂钩。逻辑要求
-   反应性属于 [可组合项](composable-authoring.md)。
+   反应性属于 [Composables](composable-authoring.md)。
 3. **显式类型**：为所有参数和返回值提供完整的 TypeScript 类型。
 4. **强制测试**：每个实用程序都必须有一个位于同一位置的 `.spec.ts` 文件。
-5. **单一职责**：每个 util 文件夹应专注于特定的、狭窄的任务。
+5. **单一职责**：每个 util 文件夹应该专注于一个特定的、狭窄的任务。
 
 ## 基本示例
 
@@ -46,16 +46,17 @@ export function clamp(value: number, min: number, max: number): number {
 
 ## 脚手架
 
-使用 Mission Platform Developer MCP 工具生成新的实用程序框架：
+通过连接的 Mission Platform Developer MCP 服务器使用 `scaffold_util` 工具生成新实用程序
+骨架。这是 MCP 工具调用示例，而不是 shell 命令：
 
-```bash
+```text
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```
 
 ## 相关指南
 
-- [封装开发](package-development.md)
+- [软件包开发](package-development.md)
 - [原子组件设计](atomic-component-design.md)
 - [可组合创作](composable-authoring.md)
 - [商店创作](store-authoring.md)

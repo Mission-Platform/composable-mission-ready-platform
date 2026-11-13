@@ -48,9 +48,9 @@ Accessoires de rappel `onUpdateModelValue`/`onChange`.
 
 #### Paramètres
 
-| Nom        | Tapez                             | Descriptif |
-| ---------- | --------------------------------- | ---------- |
-| propriétés | Lecture seule<CheckboxProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------------- | ----------- |
+| propriétés | Lecture seule<CheckboxProperties> |             |
 
 ## `src/components/atoms/forge-input/forge-input`
 
@@ -79,11 +79,11 @@ Accessoires de rappel `onUpdateModelValue`/`onChange`/`onBlur`/`onFocus`.
 
 #### Paramètres
 
-| Nom        | Tapez                          | Descriptif |
-| ---------- | ------------------------------ | ---------- |
-| propriétés | Lecture seule<InputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------- | ----------- |
+| propriétés | Lecture seule<InputProperties> |             |
 
-### EntréeAutocapitalize
+### EntréeAutocapitaliser
 
 **Genre :** type
 
@@ -133,7 +133,7 @@ Types d’entrée natifs pris en charge.
 function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 ```
 
-`ForgeRadio` — commande radio créée une fois dans le dialecte JSX neutre et
+`ForgeRadio` — commande radio créée une fois dans le dialecte neutre JSX et
 compilé directement dans React ou Vue par `@mission-platform/vite-plugin-forge`.
 
 Une seule radio est sélectionnée lorsque son `value` est égal au `modelValue` du groupe.
@@ -147,9 +147,9 @@ Accessoires de rappel `onUpdateModelValue`/`onChange`.
 
 #### Paramètres
 
-| Nom        | Tapez                          | Descriptif |
-| ---------- | ------------------------------ | ---------- |
-| propriétés | Lecture seule<RadioProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------- | ----------- |
+| propriétés | Lecture seule<RadioProperties> |             |
 
 ### Propriétés Radio
 
@@ -193,9 +193,9 @@ accessoires.
 
 #### Paramètres
 
-| Nom        | Tapez                               | Descriptif |
-| ---------- | ----------------------------------- | ---------- |
-| propriétés | Lecture seule<RangeInputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------ | ----------- |
+| propriétés | Lecture seule<RangeInputProperties> |             |
 
 ### RangeInputProperties
 
@@ -254,9 +254,9 @@ Accessoires de rappel `onUpdateModelValue`/`onChange`.
 
 #### Paramètres
 
-| Nom        | Tapez                           | Descriptif |
-| ---------- | ------------------------------- | ---------- |
-| propriétés | Lecture seule<RatingProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | -------------------------- | ----------- |
+| propriétés | Lecture seule<RatingProperties> |             |
 
 ### Propriétés de notation
 
@@ -307,9 +307,9 @@ Accessoires de rappel `onUpdateModelValue`/`onChange`.
 
 #### Paramètres
 
-| Nom        | Tapez                           | Descriptif |
-| ---------- | ------------------------------- | ---------- |
-| propriétés | Lecture seule<SliderProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | -------------------------- | ----------- |
+| propriétés | Lecture seule<SliderProperties> |             |
 
 ### Propriétés du curseur
 
@@ -356,9 +356,9 @@ accessoires.
 
 #### Paramètres
 
-| Nom        | Tapez                           | Descriptif |
-| ---------- | ------------------------------- | ---------- |
-| propriétés | Lecture seule<SwitchProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | -------------------------- | ----------- |
+| propriétés | Lecture seule<SwitchProperties> |             |
 
 ### Propriétés du commutateur
 
@@ -408,9 +408,9 @@ Accessoires de rappel `onUpdateModelValue`/`onChange`/`onBlur`/`onFocus`.
 
 #### Paramètres
 
-| Nom        | Tapez                             | Descriptif |
-| ---------- | --------------------------------- | ---------- |
-| propriétés | Lecture seule<TextareaProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------------- | ----------- |
+| propriétés | Lecture seule<TextareaProperties> |             |
 
 ### TextareaAutocapitalize
 
@@ -507,9 +507,9 @@ Les chevrons `@mission-platform/icons` deviennent des glyphes de texte ; et le 
 
 #### Paramètres
 
-| Nom        | Tapez                             | Descriptif |
-| ---------- | --------------------------------- | ---------- |
-| propriétés | Lecture seule<CalendarProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------------- | ----------- |
+| propriétés | Lecture seule<CalendarProperties> |             |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
 
@@ -558,9 +558,9 @@ Accessoires de rappel `onUpdateModelValue`/`onChange`.
 
 #### Paramètres
 
-| Nom        | Tapez                               | Descriptif |
-| ---------- | ----------------------------------- | ---------- |
-| propriétés | Lecture seule<ColorInputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------ | ----------- |
+| propriétés | Lecture seule<ColorInputProperties> |             |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
 
@@ -592,7 +592,7 @@ Taille du champ (échelle canonique `2xs … 2xl`).
 function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 ```
 
-`ForgeDateInput` — un sélecteur de date créé une fois dans le dialecte neutre JSX et
+`ForgeDateInput` — un sélecteur de date créé une fois dans le dialecte JSX neutre et
 compilé directement dans React ou Vue par `@mission-platform/vite-plugin-forge`.
 
 Un bouton de déclenchement affiche la date ISO sélectionnée (ou un espace réservé) et ouvre un
@@ -612,9 +612,9 @@ deviennent les accessoires de rappel `onUpdateModelValue`/`onChange`.
 
 #### Paramètres
 
-| Nom        | Tapez                              | Descriptif |
-| ---------- | ---------------------------------- | ---------- |
-| propriétés | Lecture seule<DateInputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ----------------------------- | ----------- |
+| propriétés | Lecture seule<DateInputProperties> |             |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
 
@@ -672,9 +672,9 @@ Accessoires de rappel `onUpdateModelValue`/`onChange`.
 
 #### Paramètres
 
-| Nom        | Tapez                                   | Descriptif |
-| ---------- | --------------------------------------- | ---------- |
-| propriétés | Lecture seule<DateRangeInputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------------------- | ----------- |
+| propriétés | Lecture seule<DateRangeInputProperties> |             |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
 
@@ -714,9 +714,9 @@ Accessoire `legend` (le dialecte neutre ne peut pas introspecter la présence d'
 
 #### Paramètres
 
-| Nom        | Tapez                             | Descriptif |
-| ---------- | --------------------------------- | ---------- |
-| propriétés | Lecture seule<FieldSetProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------------- | ----------- |
+| propriétés | Lecture seule<FieldSetProperties> |             |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
 
@@ -765,9 +765,9 @@ deviennent les accessoires de rappel `onUpdateModelValue`/`onChange`.
 
 #### Paramètres
 
-| Nom        | Tapez                              | Descriptif |
-| ---------- | ---------------------------------- | ---------- |
-| propriétés | Lecture seule<FileInputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ----------------------------- | ----------- |
+| propriétés | Lecture seule<FileInputProperties> |             |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
 
@@ -796,18 +796,17 @@ est livré avec ce package en tant que `location.ts` colocalisé et indépendant
 Substitutions à partir du SFC Vue d'origine : `useId` correspond directement au
 Hook `useId` natif du framework ; les tampons de texte locaux
 (`latText`/`lngText`) devient non paresseux {@link useState} (donc le rendu initial
-
 - y compris SSR - affiche déjà les coordonnées formatées) resynchronisées à partir du
-  modèle avec un {@link useEffect} ; et les émissions `v-model` + `change` deviennent le
-  Accessoires de rappel `onUpdateModelValue`/`onChange`. Les classes de disposition enfants sont
-  appliqué au wrapper `<div>`s plutôt que transmis au composé
-  composants.
+modèle avec un {@link useEffect} ; et les émissions `v-model` + `change` deviennent le
+Accessoires de rappel `onUpdateModelValue`/`onChange`. Les classes de disposition enfants sont
+appliqué au wrapper `<div>`s plutôt que transmis au composé
+composants.
 
 #### Paramètres
 
-| Nom        | Tapez                                  | Descriptif |
-| ---------- | -------------------------------------- | ---------- |
-| propriétés | Lecture seule<LocationInputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------------- | ----------- |
+| propriétés | Lecture seule<LocationInputProperties> |             |
 
 ### Propriétés d'entrée d'emplacement
 
@@ -880,9 +879,9 @@ accessoires de rappel.
 
 #### Paramètres
 
-| Nom        | Tapez                                  | Descriptif |
-| ---------- | -------------------------------------- | ---------- |
-| propriétés | Lecture seule<NumberStepperProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------------- | ----------- |
+| propriétés | Lecture seule<NumberStepperProperties> |             |
 
 ### NumberStepperPropriétés
 
@@ -933,11 +932,11 @@ Accessoires de rappel `onComplete`.
 
 #### Paramètres
 
-| Nom        | Tapez                             | Descriptif |
-| ---------- | --------------------------------- | ---------- |
-| propriétés | Lecture seule<OtpInputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------------- | ----------- |
+| propriétés | Lecture seule<OtpInputProperties> |             |
 
-### OtpInputProperties
+### Propriétés d'entrée Otp
 
 **Genre :** interface
 
@@ -1003,9 +1002,9 @@ Accessoires de rappel `onUpdateModelValue`/`onUpdateCountry`/`onChange`.
 
 #### Paramètres
 
-| Nom        | Tapez                               | Descriptif |
-| ---------- | ----------------------------------- | ---------- |
-| propriétés | Lecture seule<PhoneInputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------ | ----------- |
+| propriétés | Lecture seule<PhoneInputProperties> |             |
 
 ### Changement de téléphone
 
@@ -1079,9 +1078,9 @@ choix.
 
 #### Paramètres
 
-| Nom        | Tapez                               | Descriptif |
-| ---------- | ----------------------------------- | ---------- |
-| propriétés | Lecture seule<RadioGroupProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------ | ----------- |
+| propriétés | Lecture seule<RadioGroupProperties> |             |
 
 ### DirectionGroupeRadio
 
@@ -1091,7 +1090,7 @@ choix.
 export type RadioGroupDirection = 'vertical' | 'horizontal';
 ```
 
-Axez le flux des radios.
+Axez les radios circuler.
 
 ### Propriétés du groupe radio
 
@@ -1140,9 +1139,9 @@ Accessoires de rappel `onUpdateModelValue`/`onSearch`/`onClear`.
 
 #### Paramètres
 
-| Nom        | Tapez                                | Descriptif |
-| ---------- | ------------------------------------ | ---------- |
-| propriétés | Lecture seule<SearchInputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------- | ----------- |
+| propriétés | Lecture seule<SearchInputProperties> |             |
 
 ### Propriétés d'entrée de recherche
 
@@ -1192,9 +1191,9 @@ accessoires de rappel `onUpdateModelValue`/`onChange` établis.
 
 #### Paramètres
 
-| Nom        | Tapez                                   | Descriptif |
-| ---------- | --------------------------------------- | ---------- |
-| propriétés | Lecture seule<SegmentControlProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------------------- | ----------- |
+| propriétés | Lecture seule<SegmentControlProperties> |             |
 
 ### Propriétés de contrôle de segment
 
@@ -1257,9 +1256,9 @@ Accessoires de rappel `onUpdateModelValue`/`onChange`.
 
 #### Paramètres
 
-| Nom        | Tapez                              | Descriptif |
-| ---------- | ---------------------------------- | ---------- |
-| propriétés | Lecture seule<TimeInputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ----------------------------- | ----------- |
+| propriétés | Lecture seule<TimeInputProperties> |             |
 
 ### Propriétés d'entrée de temps
 
@@ -1302,7 +1301,7 @@ point final). Il possède son style via le module CSS colocalisé
 
 Substitutions depuis le SFC Vue d'origine : le popup `@floating-ui/vue` devient
 le {@link ForgeDropdown} à écriture unique (qui possède le fichier téléporté et ancré dans CSS
-panneau plus le clic extérieur/licence `Escape`), remplaçant `useZIndex` ; le
+panneau plus le clic extérieur/rejet `Escape`), remplaçant `useZIndex` ; le
 la logique d'analyse/formatage en ligne est
 délégué au `date-time.ts` colocalisé et indépendant du framework ; le local
 Les `ref` deviennent {@link useState} resynchronisés à partir de `modelValue` via un
@@ -1314,9 +1313,9 @@ Les noms `start`/`end` sont réservés pour les points de terminaison de la plag
 
 #### Paramètres
 
-| Nom        | Tapez                                   | Descriptif |
-| ---------- | --------------------------------------- | ---------- |
-| propriétés | Lecture seule<TimeRangeInputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------------------- | ----------- |
+| propriétés | Lecture seule<TimeRangeInputProperties> |             |
 
 ### TimeRangeInputProperties
 
@@ -1382,7 +1381,7 @@ le popover. Il possède son style via le module CSS colocalisé
 
 Substitutions depuis le SFC Vue d'origine : le popup `@floating-ui/vue` devient
 le {@link ForgeDropdown} à écriture unique (qui possède le fichier téléporté et ancré dans CSS
-panneau plus le clic extérieur/`Escape` licenciement), remplaçant `useZIndex` ; le
+panneau plus le clic extérieur/rejet `Escape`), remplaçant `useZIndex` ; le
 sur mesure piloté par vol stationnaire
 la grille bimensuelle est remplacée par des **`ForgeCalendar`s** composés par point de terminaison ;
 la logique d'analyse/format/fuseau horaire en ligne est déléguée au
@@ -1392,13 +1391,13 @@ Hook `useId` natif du framework ; les glyphes du calendrier/fuseau horaire sont
 les emplacements deviennent les emplacements nommés `startContent`/`endContent` (`<Slot>`, présence
 détecté avec l'assistant {@link hasSlot} indépendant du framework ); et le `v-model`
 
-- `change` émet et devient les accessoires de rappel `onUpdateModelValue`/`onChange`.
+- Les émissions `change` deviennent les accessoires de rappel `onUpdateModelValue`/`onChange`.
 
 #### Paramètres
 
-| Nom        | Tapez                                       | Descriptif |
-| ---------- | ------------------------------------------- | ---------- |
-| propriétés | Lecture seule<DateTimeRangeInputProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | -------------------------------------- | ----------- |
+| propriétés | Lecture seule<DateTimeRangeInputProperties> |             |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
@@ -1435,9 +1434,9 @@ conteneur), piloté par une cible d'insertion `dropIndicator` mise à jour sur `
 
 #### Paramètres
 
-| Nom        | Tapez                                | Descriptif |
-| ---------- | ------------------------------------ | ---------- |
-| propriétés | Lecture seule<FormBuilderProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------- | ----------- |
+| propriétés | Lecture seule<FormBuilderProperties> |             |
 
 ### Propriétés de FormBuilder
 
@@ -1484,9 +1483,9 @@ accessoires. L'index actif reste **contrôlé** (`modelValue`).
 
 #### Paramètres
 
-| Nom        | Tapez                               | Descriptif |
-| ---------- | ----------------------------------- | ---------- |
-| propriétés | Lecture seule<FormWizardProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------ | ----------- |
+| propriétés | Lecture seule<FormWizardProperties> |             |
 
 ### Propriétés de l'AssistantFormulaire
 
@@ -1507,6 +1506,85 @@ export interface WizardStep
 ```
 
 Une seule étape d'assistant.
+
+## `src/components/organisms/forge-form/forge-form`
+
+### ContexteFormulaire par défaut
+
+**Genre :** constante
+
+```typescript
+export const defaultFormContext: FormContextValue;
+```
+
+Contexte de formulaire par défaut de base fourni lorsque useFormContext est appelé en dehors d'un ForgeForm.
+
+### ForgeForme
+
+**Genre :** fonction
+
+```typescript
+function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement;
+```
+
+Composant de formulaire contextuel prenant en charge les états contrôlés et non contrôlés,
+Validation Standard Schema / Zod / Yup, résumé des erreurs accessible et adaptateurs de framework.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------ | ----------- |
+| propriétés | Lecture seule<ForgeFormProps> |             |
+
+### ForgeFormPropriétés
+
+**Genre :** type
+
+```typescript
+export type ForgeFormProperties = ForgeFormProps;
+```
+
+Aucune description fournie.
+
+### ForgeFormProps
+
+**Genre :** interface
+
+```typescript
+export interface ForgeFormProps
+```
+
+Aucune description fournie.
+
+### Contexte de formulaire
+
+**Genre :** constante
+
+```typescript
+export const FormContext: MpContext<FormContextValue | undefined>;
+```
+
+Aucune description fournie.
+
+### ValeurContexteFormulaire
+
+**Genre :** interface
+
+```typescript
+export interface FormContextValue
+```
+
+Aucune description fournie.
+
+### utiliserFormContext
+
+**Genre :** fonction
+
+```typescript
+function useFormContext(): FormContextValue;
+```
+
+Hook pour accéder au contexte du formulaire dans les champs enfants ou les composants imbriqués.
 
 ## `src/components/organisms/forge-schema-form-dialog/forge-schema-form-dialog`
 
@@ -1532,9 +1610,9 @@ s'il faut fermer sur une soumission valide.
 
 #### Paramètres
 
-| Nom        | Tapez                                     | Descriptif |
-| ---------- | ----------------------------------------- | ---------- |
-| propriétés | Lecture seule<SchemaFormDialogProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------------ | ----------- |
+| propriétés | Lecture seule<SchemaFormDialogProperties> |             |
 
 ### SchemaFormDialogPropriétés
 
@@ -1578,9 +1656,9 @@ un emplacement `actions` remplaçable.
 
 #### Paramètres
 
-| Nom        | Tapez                               | Descriptif |
-| ---------- | ----------------------------------- | ---------- |
-| propriétés | Lecture seule<SchemaFormProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------ | ----------- |
+| propriétés | Lecture seule<SchemaFormProperties> |             |
 
 ### SchemaFormFieldRenderer
 
@@ -1611,45 +1689,3 @@ export interface SchemaFormProperties
 ```
 
 Aucune description fournie.
-
-## `src/utils/date-time/date-time`
-
-### Plage de dates
-
-**Genre :** interface
-
-```typescript
-export interface DateRange
-```
-
-Une plage de dates ISO `{ start, end }` (`YYYY-MM-DD`).
-
-### DateTimeRange
-
-**Genre :** interface
-
-```typescript
-export interface DateTimeRange
-```
-
-Une plage date-heure `{ start, end, timezone }` (`YYYY-MM-DD HH:MM[:SS]`).
-
-### Plage de temps
-
-**Genre :** interface
-
-```typescript
-export interface TimeRange
-```
-
-Une plage horaire `{ start, end }` (`HH:MM` ou `HH:MM:SS`).
-
-### Mode fuseau horaire
-
-**Genre :** type
-
-```typescript
-export type TimezoneMode = 'browser' | 'utc';
-```
-
-Indique si une plage date-heure est interprétée dans la zone du navigateur ou en UTC.

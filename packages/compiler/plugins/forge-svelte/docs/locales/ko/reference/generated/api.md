@@ -26,16 +26,16 @@ function emitSvelteModule(
 
 중립 구성 요소 모듈을 Svelte 5 SFC로 인쇄합니다. 이미 달려온 발신자
 대상 단계는 정제된 `plan`을 전달합니다. 직접 발신자가 새로 전화를 받습니다.
-낮춰서 이미터는 항상 동일한 계약에 의해 구동됩니다.
+낮아졌으므로 이미터는 항상 동일한 계약에 의해 구동됩니다.
 
 #### 매개변수
 
-| 이름           | 유형                | 설명 |
-| -------------- | ------------------- | ---- |
-| 모듈           | 의미 모듈           |      |
-| 구성 요소 이름 | 문자열              |      |
-| 구성요소폴더   | 읽기전용Set<string> |      |
-| 계획           | SvelteLowered모듈   |      |
+| 이름 | 유형 | 설명 |
+| ---------------- | ------------------- | ----------- |
+| 모듈 | 의미 모듈 |             |
+| 구성 요소 이름 | 문자열 |             |
+| 구성요소폴더 | 읽기전용Set<string> |             |
+| 계획 | SvelteLowered모듈 |             |
 
 ### Svelte모듈 출력
 
@@ -61,9 +61,9 @@ function emitSvelteHookModule(module: SemanticModule): string;
 
 #### 매개변수
 
-| 이름 | 유형      | 설명 |
-| ---- | --------- | ---- |
-| 모듈 | 의미 모듈 |      |
+| 이름 | 유형 | 설명 |
+| ------ | -------------- | ----------- |
+| 모듈 | 의미 모듈 |             |
 
 ## `src/index`
 
@@ -93,9 +93,9 @@ function isSvelteLowered(
 
 #### 매개변수
 
-| 이름   | 유형                               | 설명 |
-| ------ | ---------------------------------- | ---- |
-| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------------------------- | ----------- |
+| 낮아진 | TargetLowered모듈 \| 정의되지 않음 |             |
 
 ### lowerSvelte모듈
 
@@ -112,10 +112,10 @@ function lowerSvelteModule(
 
 #### 매개변수
 
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| IR   | 의미 모듈    |      |
-| 맥락 | 타겟컨텍스트 |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------- | ----------- |
+| IR | 의미 모듈 |             |
+| 맥락 | 타겟컨텍스트 |             |
 
 ### SvelteBindingPlan
 
@@ -185,7 +185,7 @@ export interface SvelteImportPlan
 export type SvelteInitializationPlan = |
 ```
 
-중립 소스에 나타난 순서대로의 구성 요소 스크립트 초기화입니다.
+중립 소스에 나타난 순서대로의 구성 요소 스크립트 초기화 프로그램입니다.
 
 ### SvelteListKeyPlan
 
@@ -195,7 +195,7 @@ export type SvelteInitializationPlan = |
 export interface SvelteListKeyPlan
 ```
 
-목록과 이에 대해 추론된 `{#each … (key)}` 키 표현식입니다.
+목록과 그에 대해 추론된 `{#each … (key)}` 키 표현식입니다.
 
 ### SvelteLowered모듈
 
@@ -215,7 +215,7 @@ Svelte 소유 하강 계획은 `framework`을 차별합니다.
 export interface SveltePropPlan
 ```
 
-`$props()` 구조 분해 항목을 중립 소품으로 내립니다.
+`$props()` 구조 분해 항목은 중립 소품으로 내려갑니다.
 
 ### SvelteRenderHelperPlan
 
@@ -229,10 +229,10 @@ JSX 반환 로컬 도우미(`const renderX = (a, b) => (<div/>)`)가 다음으�
 Svelte `{#snippet}`.
 
 중립 렌더링 도우미는 매개변수화된 템플릿 값 함수입니다.
-안전한 재귀를 포함하여 Svelte 5 스니펫이 표현하는 내용이 정확히 무엇인지,
+안전한 재귀를 포함하여 Svelte 5 조각이 정확히 무엇을 표현하는지
 자기 참조 도우미(필드 세트로 재귀하는 필드 렌더러)가 작동합니다.
 인라인 없이. 단일 반환 표현식 외에도 최종 조기 반환
-경비원과 터미널 `switch`은 주문된 조각 분기로 표시됩니다.
+가드와 터미널 `switch`는 주문된 조각 분기로 표시됩니다.
 
 ### SvelteScriptPlan
 
@@ -302,10 +302,10 @@ function optimizeSvelteModule(
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 의도 | 타겟의도              |      |
-| 옵션 | TargetOptimizeOptions |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------- | ----------- |
+| 의도 | 타겟의도 |             |
+| 옵션 | TargetOptimizeOptions |             |
 
 ### SVELTE_OPTIMIZATIONS
 

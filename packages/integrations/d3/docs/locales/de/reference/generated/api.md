@@ -40,7 +40,7 @@ Eine D3-Auswahl, die ein einzelnes Element `E` ohne gebundenes Datum umschließt
 function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | null>;
 ```
 
-Geben Sie einen Verweis zum Anhängen an ein Element (`ref={reference}`) zurück und führen Sie `draw` aus
+Geben Sie einen Verweis zurück, der an ein Element angehängt werden soll (`ref={reference}`), und führen Sie `draw` aus
 gegen die D3-Auswahl dieses Elements.
 
 Der Effekt wird nach dem Mounten ausgeführt und bei jeder Änderung von `dependencies` erneut ausgeführt. wann
@@ -50,10 +50,10 @@ ordentlich – identisch auf React und Vue.
 
 #### Parameter
 
-| Name           | Geben Sie        | ein Beschreibung |
-| -------------- | ---------------- | ---------------- |
-| zeichnen       | D3Draw<E>        |                  |
-| Abhängigkeiten | MpDependencyList |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | ---------------- | ----------- |
+| zeichnen | D3Draw<E> |             |
+| Abhängigkeiten | MpDependencyList |             |
 
 ## `src/utils/margins`
 
@@ -81,9 +81,9 @@ Erzeugen Sie niemals negative Dimensionen (die D3-Waagen ablehnen).
 
 #### Parameter
 
-| Name  | Geben Sie | ein Beschreibung |
-| ----- | --------- | ---------------- |
-| Kiste | ChartBox  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | -------- | ----------- |
+| Kiste | ChartBox |             |
 
 ### Innere Dimensionen
 
@@ -130,6 +130,6 @@ der Rest an `0`. `undefined` ergibt eine Marge von Null.
 
 #### Parameter
 
-| Name    | Geben Sie   | ein Beschreibung |
-| ------- | ----------- | ---------------- |
-| Eingabe | MarginInput |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ----------- | ----------- |
+| Eingabe | MarginInput |             |

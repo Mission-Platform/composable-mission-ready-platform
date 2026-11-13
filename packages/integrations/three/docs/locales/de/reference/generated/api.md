@@ -19,14 +19,14 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/three`.
 function ForgeThreeCanvas(properties: Readonly<ForgeThreeCanvasProperties>): MpElement;
 ```
 
-ForgeThreeCanvas – eine Framework-neutrale Komponente, die einen <canvas> rendert
+ForgeThreeCanvas – eine Framework-neutrale Komponente, die a rendert <canvas>
 und verwaltet einen Three.js-WebGL-Kontext über `useThree`.
 
 #### Parameter
 
-| Name          | Geben Sie                                    | ein Beschreibung |
-| ------------- | -------------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ForgeThreeCanvasProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<ForgeThreeCanvasProperties> |             |
 
 ### ForgeThreeCanvasProperties
 
@@ -69,7 +69,7 @@ Automatische Bereinigung: Entsorgt den Renderer und bricht den Animationsrahmen 
 
 #### Parameter
 
-| Name           | Geben Sie                                       | ein Beschreibung |
-| -------------- | ----------------------------------------------- | ---------------- |
-| CanvasReferenz | ReferenzLike<HTMLCanvasElement \| null>         |                  |
-| onReady        | (Kontext: ThreeContext) => void \| (() => void) |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------------- | ----------------------------------------------- | ----------- |
+| CanvasReferenz | ReferenzLike<HTMLCanvasElement \| null> |             |
+| onReady | (Kontext: ThreeContext) => void \| (() => void) |             |

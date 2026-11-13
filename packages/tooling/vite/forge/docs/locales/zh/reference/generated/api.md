@@ -25,9 +25,9 @@ function forgeArtifactPublishPlugin(options: ForgeArtifactPublishOptions): Plugi
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 选项 | ForgeArtifact发布选项 |      |
+|名称 |类型 |描述 |
+| ------- | --------------------------- | ----------- |
+|选项 | ForgeArtifact发布选项 |             |
 
 ### forgeBuildLifecycle插件
 
@@ -42,9 +42,9 @@ function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): Plugin;
 
 #### 参数
 
-| 名称 | 类型                       | 描述                       |
-| ---- | -------------------------- | -------------------------- |
-| 选项 | ForgeBuildLifecycleOptions | ForgeBuildLifecycleOptions | ForgeBuildLifecycleOptions | ForgeBuildLifecycleOptions |
+|名称 |类型 |描述 |
+| ------- | -------------------------- | ----------- |
+|选项 | ForgeBuildLifecycleOptions | ForgeBuildLifecycleOptions | ForgeBuildLifecycleOptions | ForgeBuildLifecycleOptions             |
 
 ### 伪造虚拟入口
 
@@ -58,9 +58,9 @@ function forgeVirtualEntry(targetId: string): string;
 
 #### 参数
 
-| 名称    | 类型   | 描述 |
-| ------- | ------ | ---- |
-| 目标 ID | 字符串 |      |
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|目标 ID |字符串|             |
 
 ## `src/compiler/artifact-manifest`
 
@@ -80,11 +80,11 @@ function createForgeArtifactManifest(
 
 #### 参数
 
-| 名称    | 类型                       | 描述 |
-| ------- | -------------------------- | ---- |
-| 目标 ID | 字符串                     |      |
-| 文物    | 只读 ForgeArtifactRecord[] |      |
-| 完整    |                            |      |
+|名称 |类型 |描述 |
+| --------- | ------------------------------ | ----------- |
+|目标 ID |字符串|             |
+|文物|只读 ForgeArtifactRecord[] |             |
+|完整|                                |             |
 
 ### 锻造神器种类
 
@@ -131,9 +131,9 @@ function assertForgeArtifactRoot(root: string): string;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 根   | 字符串 |      |
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|根 |字符串|             |
 
 ### 确保ForgeArtifactDirectory
 
@@ -147,10 +147,10 @@ function ensureForgeArtifactDirectory(root: string, directory: string): string;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 根   | 字符串 |      |
-| 目录 | 字符串 |      |
+|名称 |类型 |描述 |
+| --------- | ------ | ----------- |
+|根 |字符串|             |
+|目录 |字符串|             |
 
 ### 解析ForgeArtifactPath
 
@@ -164,10 +164,10 @@ function resolveForgeArtifactPath(root: string, relativeName: string): string;
 
 #### 参数
 
-| 名称     | 类型   | 描述 |
-| -------- | ------ | ---- |
-| 根       | 字符串 |      |
-| 亲属姓名 | 字符串 |      |
+|名称 |类型 |描述 |
+| ------------ | ------ | ----------- |
+|根 |字符串|             |
+|亲属姓名 |字符串|             |
 
 ### validateForgeArtifactName
 
@@ -181,9 +181,9 @@ function validateForgeArtifactName(relativeName: string): string;
 
 #### 参数
 
-| 名称     | 类型   | 描述 |
-| -------- | ------ | ---- |
-| 亲属姓名 | 字符串 |      |
+|名称 |类型 |描述 |
+| ------------ | ------ | ----------- |
+|亲属姓名 |字符串|             |
 
 ### validateForgeArtifactSegment
 
@@ -197,9 +197,9 @@ function validateForgeArtifactSegment(segment: string): string;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 段   | 字符串 |      |
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|段 |字符串|             |
 
 ## `src/compiler/artifact-writer`
 
@@ -215,15 +215,15 @@ function createForgeArtifactWriter(
 ): ForgeArtifactWriter;
 ```
 
-没有提供描述。
+创建一个原子工件编写器来暂存和提交 Forge 工件。
 
 #### 参数
 
-| 名称     | 类型                     | 描述 |
-| -------- | ------------------------ | ---- |
-| 输出目录 | 字符串                   |      |
-| 目标 ID  | 字符串                   |      |
-| 选项     | ForgeArtifactWriter 选项 |      |
+|名称 |类型 |描述 |
+| -------- | -------------------------- | ----------- |
+|输出目录 |字符串|             |
+|目标 ID |字符串|             |
+|选项 | ForgeArtifactWriter 选项 |             |
 
 ### forgeArtifactAttempt目录
 
@@ -237,10 +237,10 @@ function forgeArtifactAttemptDirectory(outDir: string, targetId: string): string
 
 #### 参数
 
-| 名称     | 类型   | 描述 |
-| -------- | ------ | ---- |
-| 输出目录 | 字符串 |      |
-| 目标 ID  | 字符串 |      |
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|输出目录 |字符串|             |
+|目标 ID |字符串|             |
 
 ### ForgeArtifactWriter
 
@@ -314,10 +314,10 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 
 #### 参数
 
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 来源 | 字符串   |      |
-| 选项 | 编译选项 |      |
+|名称 |类型 |描述 |
+| ------- | -------------- | ----------- |
+|来源 |字符串|             |
+|选项 |编译选项 |             |
 
 ### 编译模块
 
@@ -343,10 +343,10 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| 来源 | 字符串       |      |
-| 选项 | 编译钩子选项 |      |
+|名称 |类型 |描述 |
+| ------- | ------------------ | ----------- |
+|来源 |字符串|             |
+|选项 |编译钩子选项 |             |
 
 ### 编译钩子选项
 
@@ -370,14 +370,14 @@ function compileModule(source: string, options: CompileModuleOptions): CompiledM
 
 与历史上的 JSX 便利包装器不同，此入口点保留了
 插件的开放输出语言和辅助模块语言。它是
-由独立目标包（例如 Astro）使用的共享接缝。
+独立目标包（例如 Astro）使用共享接缝。
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| 来源 | 字符串       |      |
-| 选项 | 编译模块选项 |      |
+|名称 |类型 |描述 |
+| ------- | -------------------- | ----------- |
+|来源 |字符串|             |
+|选项 |编译模块选项 |             |
 
 ### 编译模块选项
 
@@ -413,10 +413,10 @@ function findComponentFunction(sourceFile: OxcParsedModule, name: string): OxcNo
 
 #### 参数
 
-| 名称   | 类型           | 描述 |
-| ------ | -------------- | ---- |
-| 源文件 | OxcParsed 模块 |      |
-| 名称   | 字符串         |      |
+|名称 |类型 |描述 |
+| ---------- | --------------- | ----------- |
+|源文件 | OxcParsed 模块 |             |
+|名称 |字符串|             |
 
 ### 是槽元素
 
@@ -430,9 +430,9 @@ Oxc node 是否是中性命名槽元素。
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
+|名称 |类型 |描述 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ### 读取槽位名称
 
@@ -446,9 +446,9 @@ function readSlotName(node: OxcNode): string | undefined;
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
+|名称 |类型 |描述 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ## `src/compiler/constants`
 
@@ -484,9 +484,9 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| 框架 | Jsx框架 |      |
+|名称 |类型 |描述 |
+| --------- | ------------ | ----------- |
+|框架| Jsx框架 |             |
 
 ### 中性模块
 
@@ -512,11 +512,11 @@ function moduleTargetsFramework(fileName: string, source: string, framework: str
 
 #### 参数
 
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
-| 框架   | 字符串 |      |
+|名称 |类型 |描述 |
+| --------- | ------ | ----------- |
+|文件名 |字符串|             |
+|来源 |字符串|             |
+|框架|字符串|             |
 
 ### 阅读框架指令
 
@@ -530,10 +530,10 @@ function readFrameworkDirective(fileName: string, source: string): JsxFramework 
 
 #### 参数
 
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|文件名 |字符串|             |
+|来源 |字符串|             |
 
 ## `src/compiler/discover`
 
@@ -552,10 +552,10 @@ function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): Discov
 
 #### 参数
 
-| 名称     | 类型   | 描述 |
-| -------- | ------ | ---- |
-| 桶来源   | 字符串 |      |
-| 条带前缀 |        |      |
+|名称 |类型 |描述 |
+| ------------ | ------ | ----------- |
+|桶来源 |字符串|             |
+|条带前缀 |        |             |
 
 ### 从图表中发现组件
 
@@ -573,11 +573,11 @@ function discoverComponentsFromGraph(
 
 #### 参数
 
-| 名称     | 类型           | 描述 |
-| -------- | -------------- | ---- |
-| 图表     | ForgeFileGraph |      |
-| 条带前缀 |                |      |
-| 诊断     | 编译器诊断[]   |      |
+|名称 |类型 |描述 |
+| ----------- | -------------------- | ----------- |
+|图表| ForgeFileGraph |             |
+|条带前缀 |                      |             |
+|诊断 |编译器诊断[] |             |
 
 ### 发现组件
 
@@ -610,17 +610,18 @@ function discoverHelperExports(barrelSource: string, componentFolders: ReadonlyS
 ```
 
 发现桶重新导出的 **辅助模块** - 每个“导出 { … }”
-来自 './...'`语句，其模块基本名称**不是**已发现的之一
-组件文件夹。用于转发与框架无关的共享 API（例如`toast-store`的命令式`useToast`/`showToast`/... 助手，对应项
+来自 './...'` 语句，其模块基本名称**不是**已发现的之一
+组件文件夹。用于转发与框架无关的共享 API（例如
+`toast-store` 的命令式 `useToast`/`showToast`/... 助手，对应项
 Vue 包的 `useToast` 可组合项）通过生成的条目，因此
 消费者驱动组件使用的每个框架的单例。
 
 #### 参数
 
-| 名称       | 类型             | 描述 |
-| ---------- | ---------------- | ---- |
-| 桶来源     | 字符串           |      |
-| 组件文件夹 | 只读设置<string> |      |
+|名称 |类型 |描述 |
+| ---------------- | ------------------- | ----------- |
+|桶来源 |字符串|             |
+|组件文件夹 |只读设置<string> |             |
 
 ### 发现HelperExportsFromGraph
 
@@ -638,11 +639,11 @@ function discoverHelperExportsFromGraph(
 
 #### 参数
 
-| 名称       | 类型                       | 描述 |
-| ---------- | -------------------------- | ---- |
-| 图表       | ForgeFileGraph             |      |
-| 组件文件夹 | 只读设置<string>           |      |
-| 发现组件   | 只读 DiscoveredComponent[] |      |
+|名称 |类型 |描述 |
+| -------------------- | ------------------------------ | ----------- |
+|图表| ForgeFileGraph |             |
+|组件文件夹 |只读设置<string> |             |
+|发现组件 |只读 DiscoveredComponent[] |             |
 
 ## `src/compiler/facts`
 
@@ -698,10 +699,10 @@ function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
 
 #### 参数
 
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|文件名 |字符串|             |
+|来源 |字符串|             |
 
 ## `src/compiler/frontends`
 
@@ -719,10 +720,10 @@ function parseForgeSource(fileName: string, source: string): OxcParsedModule;
 
 #### 参数
 
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|文件名 |字符串|             |
+|来源 |字符串|             |
 
 ### 解析前端模块
 
@@ -741,12 +742,12 @@ function parseFrontendModule(
 
 #### 参数
 
-| 名称     | 类型              | 描述 |
-| -------- | ----------------- | ---- |
-| 文件名   | 字符串            |      |
-| 来源     | 字符串            |      |
-| 模块种类 | '组件'\| '可组合' |      |
-| 组件名称 | 字符串            |      |
+|名称 |类型 |描述 |
+| ------------- | --------------------------- | ----------- |
+|文件名 |字符串|             |
+|来源 |字符串|             |
+|模块种类 | '组件'\| '可组合' |             |
+|组件名称 |字符串|             |
 
 ## `src/compiler/generation-context`
 
@@ -762,9 +763,9 @@ function createForgeGenerationContext(options: ForgeGenerationContextOptions): F
 
 #### 参数
 
-| 名称 | 类型                          | 描述                          |
-| ---- | ----------------------------- | ----------------------------- |
-| 选项 | ForgeGenerationContextOptions | ForgeGenerationContextOptions | ForgeGenerationContextOptions | ForgeGenerationContextOptions |
+|名称 |类型 |描述 |
+| ------- | ----------------------------- | ----------- |
+|选项 | ForgeGenerationContextOptions | ForgeGenerationContextOptions | ForgeGenerationContextOptions | ForgeGenerationContextOptions             |
 
 ### ForgeGenerationContext
 
@@ -800,9 +801,9 @@ function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph;
 
 #### 参数
 
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 选项 | ForgeFileGraph 选项 |      |
+|名称 |类型 |描述 |
+| ------- | --------------------- | ----------- |
+|选项 | ForgeFileGraph 选项 |             |
 
 ### 锻造文件边缘
 
@@ -901,11 +902,11 @@ function hoistStaticJsx(
 
 #### 参数
 
-| 名称     | 类型              | 描述 |
-| -------- | ----------------- | ---- |
-| 模块     | OxcParsed 模块    |      |
-| 模块种类 | '组件'\| '可组合' |      |
-| 组件名称 | 字符串            |      |
+|名称 |类型 |描述 |
+| ------------- | --------------------------- | ----------- |
+|模块| OxcParsed 模块 |             |
+|模块种类 | '组件'\| '可组合' |             |
+|组件名称 |字符串|             |
 
 ## `src/compiler/imports`
 
@@ -931,10 +932,10 @@ function readExternalImports(fileName: string, source: string): string[];
 
 #### 参数
 
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|文件名 |字符串|             |
+|来源 |字符串|             |
 
 ### 阅读中性进口
 
@@ -948,10 +949,10 @@ function readNeutralImports(fileName: string, source: string): NeutralImports;
 
 #### 参数
 
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|文件名 |字符串|             |
+|来源 |字符串|             |
 
 ### 读取样式导入
 
@@ -965,11 +966,11 @@ function readStyleImports(fileName: string, source: string, sourceRoot?: string)
 
 #### 参数
 
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
-| 源根   | 字符串 |      |
+|名称 |类型 |描述 |
+| ---------- | ------ | ----------- |
+|文件名 |字符串|             |
+|来源 |字符串|             |
+|源根 |字符串|             |
 
 ### 解决工作空间本地导入
 
@@ -987,11 +988,11 @@ function resolveWorkspaceLocalImport(
 
 #### 参数
 
-| 名称     | 类型           | 描述 |
-| -------- | -------------- | ---- |
-| 说明符   | 字符串         |      |
-| 源文件名 | 字符串         |      |
-| 源根     | 字符串\|未定义 |      |
+|名称 |类型 |描述 |
+| -------------- | ------------------- | ----------- |
+|说明符|字符串|             |
+|源文件名 |字符串|             |
+|源根 |字符串\|未定义 |             |
 
 ### 样式导入
 
@@ -1015,9 +1016,9 @@ Oxc 模块或 node 是否调用 `i18next.t(...)`。
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
+|名称 |类型 |描述 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ## `src/compiler/optimize`
 
@@ -1038,17 +1039,17 @@ function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions =
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 模块 | OxcParsed 模块 |      |
-| 选项 | 优化选项       |      |
+|名称 |类型 |描述 |
+| ------- | --------------- | ----------- |
+|模块| OxcParsed 模块 |             |
+|选项 |优化选项 |             |
 
 ### 优化源文件
 
 **种类：**常数
 
 ```typescript
-export const optimizeSourceFile;
+export const optimizeSourceFile: typeof optimizeForgeModule;
 ```
 
 使用旧名称保留编译器集成的兼容性别名。
@@ -1067,9 +1068,9 @@ function buildOxcParentMap(root: OxcNode): Map<OxcNode, OxcNode>;
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| 根   | OxcNode |      |
+|名称 |类型 |描述 |
+| ---- | ------- | ----------- |
+|根 | OxcNode |             |
 
 ### isOxcJsxRoot
 
@@ -1083,9 +1084,9 @@ function isOxcJsxRoot(node: OxcNode): boolean;
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
+|名称 |类型 |描述 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ### isOxc节点
 
@@ -1099,9 +1100,9 @@ function isOxcNode(value: unknown): value is OxcNode;
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 价值 | 未知 |      |
+|名称 |类型 |描述 |
+| ----- | ------- | ----------- |
+|价值|未知 |             |
 
 ### oxcArray
 
@@ -1115,10 +1116,10 @@ function oxcArray(node: OxcNode, key: string): OxcNode[];
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
-| key  | 字符串  |      |
+|名称 |类型 |描述 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
+|关键|字符串|             |
 
 ### oxc儿童
 
@@ -1132,9 +1133,9 @@ function oxcChildren(node: OxcNode): OxcNode[];
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
+|名称 |类型 |描述 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ### Oxc评论
 
@@ -1158,9 +1159,9 @@ function oxcIdentifierName(node: OxcNode | undefined): string | undefined;
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| node | OxcNode \|未定义 |      |
+|名称 |类型 |描述 |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \|未定义 |             |
 
 ### oxc文字值
 
@@ -1174,9 +1175,9 @@ function oxcLiteralValue(node: OxcNode | undefined): unknown;
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| node | OxcNode \|未定义 |      |
+|名称 |类型 |描述 |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \|未定义 |             |
 
 ### 牛津节点
 
@@ -1200,10 +1201,10 @@ function oxcNodeText(source: string, node: OxcNode | undefined): string;
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 来源 | 字符串           |      |
-| node | OxcNode \|未定义 |      |
+|名称 |类型 |描述 |
+| ------ | -------------------- | ----------- |
+|来源 |字符串|             |
+| node | OxcNode \|未定义 |             |
 
 ### oxc对象
 
@@ -1217,10 +1218,10 @@ function oxcObject(node: OxcNode, key: string): OxcNode | undefined;
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
-| 关键 | 字符串  |      |
+|名称 |类型 |描述 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
+|关键|字符串|             |
 
 ### Oxc父地图
 
@@ -1264,9 +1265,9 @@ function oxcProgramBody(program: OxcNode): OxcNode[];
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| 节目 | OxcNode |      |
+|名称 |类型 |描述 |
+| ------- | ------- | ----------- |
+|节目| OxcNode |             |
 
 ### oxc源表达式
 
@@ -1284,11 +1285,11 @@ function oxcSourceExpression(
 
 #### 参数
 
-| 名称 | 类型                           | 描述 |
-| ---- | ------------------------------ | ---- |
-| 来源 | 字符串                         |      |
-| node | OxcNode                        |      |
-| 语法 | SourceBackedExpression['语法'] |      |
+|名称 |类型 |描述 |
+| ------ | -------------------------------- | ----------- |
+|来源 |字符串|             |
+| node | OxcNode |             |
+|语法| SourceBackedExpression['语法'] |             |
 
 ### oxc源跨度
 
@@ -1302,10 +1303,10 @@ function oxcSourceSpan(source: string, node: OxcNode): SourceSpan;
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| 来源 | 字符串  |      |
-| node | OxcNode |      |
+|名称 |类型 |描述 |
+| ------ | ------- | ----------- |
+|来源 |字符串|             |
+| node | OxcNode |             |
 
 ### oxc字符串
 
@@ -1319,10 +1320,10 @@ function oxcString(node: OxcNode | undefined, key: 'name' | 'value' | 'directive
 
 #### 参数
 
-| 名称 | 类型             | 描述   |
-| ---- | ---------------- | ------ |
-| node | OxcNode \|未定义 |        |
-| 关键 | '名字'\| '值'    | '指令' |     |
+|名称 |类型 |描述 |
+| ---- | -------------------------------- | ----------- |
+| node | OxcNode \|未定义 |             |
+|关键| '名字'\| '值' | '指令' |             |
 
 ### oxc类型节点
 
@@ -1336,9 +1337,9 @@ function oxcTypeNode(node: OxcNode | undefined): OxcNode | undefined;
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| node | OxcNode \|未定义 |      |
+|名称 |类型 |描述 |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \|未定义 |             |
 
 ### oxcUnwrapModule语句
 
@@ -1356,9 +1357,9 @@ function oxcUnwrapModuleStatement(statement: OxcNode): {
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| 声明 | OxcNode |      |
+|名称 |类型 |描述 |
+| --------- | ------- | ----------- |
+|声明| OxcNode |             |
 
 ### 解析Oxc模块
 
@@ -1372,10 +1373,10 @@ function parseOxcModule(fileName: string, source: string): OxcParsedModule;
 
 #### 参数
 
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 来源   | 字符串 |      |
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|文件名 |字符串|             |
+|来源 |字符串|             |
 
 ### stripOxc框架指令
 
@@ -1389,9 +1390,9 @@ function stripOxcFrameworkDirective(module: OxcParsedModule): OxcParsedModule;
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 模块 | OxcParsed 模块 |      |
+|名称 |类型 |描述 |
+| ------ | --------------- | ----------- |
+|模块| OxcParsed 模块 |             |
 
 ### 访问Oxc
 
@@ -1405,10 +1406,10 @@ function visitOxc(node: OxcNode, visitor: (node: OxcNode) => void | boolean): vo
 
 #### 参数
 
-| 名称 | 类型                           | 描述 |
-| ---- | ------------------------------ | ---- |
-| node | OxcNode                        |      |
-| 访客 | (node: OxcNode) => void \|布尔 |      |
+|名称 |类型 |描述 |
+| ------- | ---------------------------------- | ----------- |
+| node | OxcNode |             |
+|访客 | (node: OxcNode) => void \|布尔 |             |
 
 ## `src/compiler/pipeline`
 
@@ -1432,10 +1433,10 @@ function analyzeForgeModule(
 
 #### 参数
 
-| 名称 | 类型            | 描述 |
-| ---- | --------------- | ---- |
-| 输入 | 编译器输入      |      |
-| 服务 | Forge编译器服务 |      |
+|名称 |类型 |描述 |
+| ------- | -------------------- | ----------- |
+|输入 |编译器输入 |             |
+|服务 | Forge编译器服务 |             |
 
 ### 编译器输入
 
@@ -1469,9 +1470,9 @@ function createCompilerPipeline(service: ForgeCompilerService = createForgeCompi
 
 #### 参数
 
-| 名称 | 类型            | 描述 |
-| ---- | --------------- | ---- |
-| 服务 | Forge编译器服务 |      |
+|名称 |类型 |描述 |
+| ------- | -------------------- | ----------- |
+|服务 | Forge编译器服务 |             |
 
 ## `src/compiler/report`
 
@@ -1482,6 +1483,8 @@ function createCompilerPipeline(service: ForgeCompilerService = createForgeCompi
 ```typescript
 export interface ForgeCompilationReport
 ```
+
+在一个服务生命周期内收集的诊断和指标。
 
 ## `src/compiler/router`
 
@@ -1499,9 +1502,9 @@ function analyzeRouterCapabilities(
 
 #### 参数
 
-| 名称 | 类型                                                              | 描述 |
-| ---- | ----------------------------------------------------------------- | ---- |
-| 输入 | 选择<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |      |
+|名称 |类型 |描述 |
+| ----- | ----------------------------------------------------------------- | ----------- |
+|输入 |选择<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |             |
 
 ### 编译路由器模块
 
@@ -1515,16 +1518,16 @@ function compileRouterModule(input: RouterCompilerInput): RouterCompilationResul
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 输入 | 路由器编译器输入 |      |
+|名称 |类型 |描述 |
+| ----- | ------------------- | ----------- |
+|输入 |路由器编译器输入 |             |
 
 ### 创建RouterCompilerPipeline
 
 **种类：**功能
 
 ```typescript
-function createRouterCompilerPipeline();
+function createRouterCompilerPipeline(): { readonly compile: typeof compileRouterModule };
 ```
 
 Forge 编译器和独立目标装置使用的调度程序形式。
@@ -1539,7 +1542,7 @@ Forge 编译器和独立目标装置使用的调度程序形式。
 export interface CompiledArtifact
 ```
 
-目标输出加上服务元数据，无需更改GenerateModule本身。
+目标输出加上服务元数据，而不更改GeneratedModule本身。
 
 ### 创建Forge编译器服务
 
@@ -1553,9 +1556,9 @@ function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompile
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 限制 | ForgeCacheLimits |      |
+|名称 |类型 |描述 |
+| ------ | ---------------- | ----------- |
+|限制| ForgeCacheLimits |             |
 
 ### 伪造编译请求
 
@@ -1587,7 +1590,7 @@ export interface ForgeInvalidationResult
 
 没有提供描述。
 
-### ForgeProject输入
+### ForgeProjectInput
 
 **种类：**接口
 
@@ -1615,6 +1618,8 @@ export interface ForgeProjectSnapshot extends ForgeProjectInput
 export class PersistentForgeCompilerService implements ForgeCompilerService
 ```
 
+一个进程/构建会话的长期同步编译器状态。
+
 ## `src/compiler/session`
 
 ### 创建ForgeBuildSession
@@ -1631,9 +1636,9 @@ function createForgeBuildSession(options: CreateForgeBuildSessionOptions = {}): 
 
 #### 参数
 
-| 名称 | 类型                         | 描述 |
-| ---- | ---------------------------- | ---- |
-| 选项 | 创建ForgeBuildSessionOptions |      |
+|名称 |类型 |描述 |
+| ------- | ------------------------------ | ----------- |
+|选项 |创建ForgeBuildSessionOptions |             |
 
 ### CreateForgeBuildSessionOptions
 
@@ -1655,7 +1660,7 @@ export type ForgeBuildKind = 'component' | 'hook' | 'neutral' | 'router' | 'cms-
 
 构建共享 Forge 生命周期支持的策略。
 
-### 锻造建造计划
+### ForgeBuildPlan
 
 **种类：**接口
 
@@ -1703,7 +1708,9 @@ export interface ForgeTargetGenerationResult
 export interface ForgeTargetPlan
 ```
 
-### 伪造目标结果
+Forge 构建会话中调用者拥有的一个目标。
+
+### ForgeTargetResult
 
 **种类：**接口
 
@@ -1727,9 +1734,9 @@ function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserC
 
 #### 参数
 
-| 名称 | 类型                        | 描述                        |
-| ---- | --------------------------- | --------------------------- |
-| 选项 | JsxHookLibraryConfigOptions | JsxHookLibraryConfigOptions | JsxHookLibraryConfigOptions | JsxHookLibraryConfigOptions |
+|名称 |类型 |描述 |
+| ------- | --------------------------- | ----------- |
+|选项 | JsxHookLibraryConfigOptions | JsxHookLibraryConfigOptions | JsxHookLibraryConfigOptions | JsxHookLibraryConfigOptions             |
 
 ### 定义JsxLibraryConfig
 
@@ -1743,9 +1750,9 @@ function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig;
 
 #### 参数
 
-| 名称 | 类型                    | 描述                    |
-| ---- | ----------------------- | ----------------------- |
-| 选项 | JsxLibraryConfigOptions | JsxLibraryConfigOptions | JsxLibraryConfigOptions | JsxLibraryConfigOptions | JsxLibraryConfigOptions |
+|名称 |类型 |描述 |
+| ------- | ----------------------- | ----------- |
+|选项 | JsxLibraryConfigOptions | JsxLibraryConfigOptions | JsxLibraryConfigOptions | JsxLibraryConfigOptions | JsxLibraryConfigOptions             |
 
 ### JsxHookLibraryConfigOptions
 
@@ -1825,9 +1832,9 @@ function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[];
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| 插件 | 框架输出插件 |      |
+|名称 |类型 |描述 |
+| ------ | --------------------- | ----------- |
+|插件 |框架输出插件 |             |
 
 ### svelte插件
 
@@ -1847,7 +1854,7 @@ Vite 插件，用于编译生成的 Svelte 组件。
 function svelteTsdownPlugin(): Plugin;
 ```
 
-Rolldown/tsdown 兼容 Svelte 编译器插件。 Compiles `.svelte` SFCs via
+Rolldown/tsdown 兼容 Svelte 编译器插件。通过编译 `.svelte` SFC
 普通 `transform` 挂钩中的 `svelte/compiler` — 没有 Vite 解析配置 API。
 使用 tsdown 构建时更喜欢这个（或 {@link stagePluginsForTsdown}）。
 
@@ -1862,13 +1869,13 @@ function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions):
 ```
 
 将中性钩子库编译到其每个框架源代码树（第 1 阶段），
-returning the generated entry module path.
+返回生成的入口模块路径。
 
 #### 参数
 
-| 名称 | 类型                          | 描述 |
-| ---- | ----------------------------- | ---- |
-| 选项 | 生成HookLibrarySourcesOptions |      |
+|名称 |类型 |描述 |
+| ------- | --------------------------------- | ----------- |
+|选项 |生成HookLibrarySourcesOptions |             |
 
 ### 生成HookLibrarySources选项
 
@@ -1894,9 +1901,9 @@ function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSo
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| 插件 | 框架输出插件 |      |
+|名称 |类型 |描述 |
+| ------ | --------------------- | ----------- |
+|插件 |框架输出插件 |             |
 
 ### 框架源目标
 
@@ -1921,9 +1928,9 @@ function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): str
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 选项 | 生成框架源选项 |      |
+|名称 |类型 |描述 |
+| ------- | ------------------------------- | ----------- |
+|选项 |生成框架源选项 |             |
 
 ### 生成框架源选项
 
@@ -1937,7 +1944,7 @@ export interface GenerateFrameworkSourcesOptions
 
 ## `src/tsdown`
 
-### CanonicalChunkCandidate
+### 规范块候选
 
 **种类：**类型
 
@@ -1959,9 +1966,9 @@ function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOpti
 
 #### 参数
 
-| 名称 | 类型                               | 描述                               |
-| ---- | ---------------------------------- | ---------------------------------- |
-| 选项 | TsdownForgeComponentPluginsOptions | TsdownForgeComponentPluginsOptions | TsdownForgeComponentPluginsOptions |
+|名称 |类型 |描述 |
+| ------- | ---------------------------------- | ----------- |
+|选项 | TsdownForgeComponentPluginsOptions | TsdownForgeComponentPluginsOptions | TsdownForgeComponentPluginsOptions             |
 
 ### 定义TsdownForgeEmailComponents
 
@@ -1978,9 +1985,26 @@ function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOpt
 
 #### 参数
 
-| 名称 | 类型                              | 描述                              |
-| ---- | --------------------------------- | --------------------------------- |
-| 选项 | TsdownForgeEmailComponentsOptions | TsdownForgeEmailComponentsOptions | TsdownForgeEmailComponentsOptions |
+|名称 |类型 |描述 |
+| ------- | --------------------------------- | ----------- |
+|选项 | TsdownForgeEmailComponentsOptions | TsdownForgeEmailComponentsOptions | TsdownForgeEmailComponentsOptions             |
+
+### 定义TsdownForgeHooks
+
+**种类：**功能
+
+```typescript
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
+```
+
+为单个 Forge 框架挂钩构建构建一个 tsdown 配置。
+将代码和类型发出到目标框架分发目录中。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ----------------------- | ----------- |
+|选项 | TsdownForgeHooksOptions | TsdownForgeHooksOptions             |
 
 ### 定义TsdownForgeHooksAll
 
@@ -1992,13 +2016,13 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 
 为每个请求的 forge hooks 框架构建一系列 tsdown 配置
 （默认情况下加上中性根条目）。一个包的`tsdown.config.ts`可以
-`export default defineTsdownForgeHooksAll(...)`.
+`export default defineTsdownForgeHooksAll(...)`。
 
 #### 参数
 
-| 名称 | 类型                       | 描述                       |
-| ---- | -------------------------- | -------------------------- |
-| 选项 | TsdownForgeHooksAllOptions | TsdownForgeHooksAllOptions | TsdownForgeHooksAllOptions |
+|名称 |类型 |描述 |
+| ------- | -------------------------- | ----------- |
+|选项 | TsdownForgeHooksAllOptions | TsdownForgeHooksAllOptions | TsdownForgeHooksAllOptions             |
 
 ### 解析规范块名称
 
@@ -2014,9 +2038,9 @@ Vue 虚拟脚本模块到 `${component}.script.js`。
 
 #### 参数
 
-| 名称   | 类型               | 描述 |
-| ------ | ------------------ | ---- |
-| 块信息 | CanonicalChunk候选 |      |
+|名称 |类型 |描述 |
+| --------- | ----------------------- | ----------- |
+|块信息 | CanonicalChunk候选|             |
 
 ### 解析规范条目名称
 
@@ -2032,9 +2056,9 @@ function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string;
 
 #### 参数
 
-| 名称   | 类型               | 描述 |
-| ------ | ------------------ | ---- |
-| 块信息 | CanonicalChunk候选 |      |
+|名称 |类型 |描述 |
+| --------- | ----------------------- | ----------- |
+|块信息 | CanonicalChunk候选|             |
 
 ### tsdownForgeComponent插件
 
@@ -2050,9 +2074,9 @@ function tsdownForgeComponentPlugins(options: TsdownForgeComponentPluginsOptions
 
 #### 参数
 
-| 名称 | 类型                               | 描述                               |
-| ---- | ---------------------------------- | ---------------------------------- |
-| 选项 | TsdownForgeComponentPluginsOptions | TsdownForgeComponentPluginsOptions | TsdownForgeComponentPluginsOptions |
+|名称 |类型 |描述 |
+| ------- | ---------------------------------- | ----------- |
+|选项 | TsdownForgeComponentPluginsOptions | TsdownForgeComponentPluginsOptions | TsdownForgeComponentPluginsOptions             |
 
 ### TsdownForgeComponentPluginsOptions
 
@@ -2082,15 +2106,13 @@ export interface TsdownForgeEmailComponentsOptions
 function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
 ```
 
-钩子适配器的原生 tsdown-plugin 形式。返回的插件注入
-来自 `tsdownConfig` 的目标配置，允许组合钩子构建
-具有一个调用者拥有的 `defineTsdownLibrary` 配置。
+为所有配置的框架目标创建 tsdown 挂钩插件。
 
 #### 参数
 
-| 名称 | 类型                       | 描述                       |
-| ---- | -------------------------- | -------------------------- |
-| 选项 | TsdownForgeHooksAllOptions | TsdownForgeHooksAllOptions | TsdownForgeHooksAllOptions |
+|名称 |类型 |描述 |
+| ------- | -------------------------- | ----------- |
+|选项 | TsdownForgeHooksAllOptions | TsdownForgeHooksAllOptions | TsdownForgeHooksAllOptions             |
 
 ### TsdownForgeHooksAllOptions
 
@@ -2098,6 +2120,16 @@ function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlug
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
+```
+
+没有提供描述。
+
+### TsdownForgeHooksOptions
+
+**种类：**接口
+
+```typescript
+export interface TsdownForgeHooksOptions
 ```
 
 没有提供描述。

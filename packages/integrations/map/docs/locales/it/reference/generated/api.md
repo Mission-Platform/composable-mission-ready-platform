@@ -497,7 +497,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const MapContext;
+export const MapContext: MpContext<Map | undefined>;
 ```
 
 Contesto che trasporta l'istanza MapLibre `Map` dell'antenato `<MapLibre>` più vicino.

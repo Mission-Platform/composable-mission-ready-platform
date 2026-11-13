@@ -3524,7 +3524,7 @@ export const SUPPORTED_COUNTRY_CODES;
 **종류:** 상수
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS;
+export const COUNTRY_FLAG_SYMBOL_IDS: string[];
 ```
 
 설명이 제공되지 않았습니다.
@@ -3574,7 +3574,7 @@ export interface IconUseProperties
 **종류:** 상수
 
 ```typescript
-export const IconSpriteContext;
+export const IconSpriteContext: MpContext<IconSpriteContextValue>;
 ```
 
 설명이 제공되지 않았습니다.

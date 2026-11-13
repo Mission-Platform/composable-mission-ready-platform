@@ -21,6 +21,16 @@ export interface CompiledRegex
 
 Rappresentazione deterministica incorporata da un backend Forge.
 
+### FLINT_REGEX_BYTECODE_VERSION
+
+**Genere:** costante
+
+```typescript
+export const FLINT_REGEX_BYTECODE_VERSION;
+```
+
+Versione stabile del contratto bytecode regex condiviso di Flint.
+
 ### FORGE_REGEX_BYTECODE_VERSION
 
 **Genere:** costante
@@ -28,6 +38,8 @@ Rappresentazione deterministica incorporata da un backend Forge.
 ```typescript
 export const FORGE_REGEX_BYTECODE_VERSION;
 ```
+
+Nessuna descrizione fornita.
 
 ### INSTR_LARGHEZZA
 
@@ -57,7 +69,7 @@ Codici operativi utilizzati dal backend Forge e rispecchiati dall'oracolo di rif
 export type Opcode = (typeof Op)[keyof typeof Op];
 ```
 
-Nessuna descrizione fornita.
+Identificatore del codice operativo dell'istruzione binaria per l'esecuzione del bytecode regex.
 
 ## `src/compiler`
 
@@ -73,9 +85,29 @@ Compila il sottoinsieme regex deterministico supportato nel bytecode Forge.
 
 #### Parametri
 
-| Nome    | Digitare | Descrizione |
-| ------- | -------- | ----------- |
-| modello | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ------- | ------ | ----------- |
+| modello | stringa |             |
+
+### MAX_REGEX_PATTERN_LENGTH
+
+**Genere:** costante
+
+```typescript
+export const MAX_REGEX_PATTERN_LENGTH;
+```
+
+Nessuna descrizione fornita.
+
+### MAX_REGEX_REPEAT_BOUND
+
+**Genere:** costante
+
+```typescript
+export const MAX_REGEX_REPEAT_BOUND;
+```
+
+Nessuna descrizione fornita.
 
 ### Errore di sintassi Regex
 
@@ -86,6 +118,46 @@ export class RegexSyntaxError extends Error
 ```
 
 Errore di sintassi di proprietà del compilatore con messaggi deterministici relativi all'origine.
+
+## `src/index`
+
+### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
+
+**Genere:** costante
+
+```typescript
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+```
+
+Nessuna descrizione fornita.
+
+### flintStandardLibraryIdentity
+
+**Tipo:** funzione
+
+```typescript
+function flintStandardLibraryIdentity(
+  identity?: FlintStandardLibraryIdentity,
+): FlintStandardLibraryIdentity;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | ---------------------------- | ----------- |
+| identità | FlintStandardLibraryIdentity |             |
+
+### FlintStandardLibraryIdentity
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintStandardLibraryIdentity
+```
+
+Nessuna descrizione fornita.
 
 ## `src/reference-vm`
 
@@ -101,10 +173,10 @@ Leggi un'acquisizione finale senza esporre il layout dello slot bytecode ai chia
 
 #### Parametri
 
-| Nome    | Digitare         | Descrizione |
-| ------- | ---------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| -------- | ---------------- | ----------- |
 | cattura | Cattura \| nullo |             |
-| gruppo  | numero           |             |
+| gruppo | numero |             |
 
 ### Cattura
 
@@ -128,10 +200,10 @@ Leggi l'inizio di un'acquisizione senza esporre il layout dello slot bytecode ai
 
 #### Parametri
 
-| Nome    | Digitare         | Descrizione |
-| ------- | ---------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| -------- | ---------------- | ----------- |
 | cattura | Cattura \| nullo |             |
-| gruppo  | numero           |             |
+| gruppo | numero |             |
 
 ### fullMatch
 
@@ -141,14 +213,64 @@ Leggi l'inizio di un'acquisizione senza esporre il layout dello slot bytecode ai
 function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-Corrispondenza di stringa intera, ancorata alla posizione zero.
+Corrispondenza di stringa intera, ancorata alla posizione zero (utilizza PikeVM in tempo lineare per impostazione predefinita).
 
 #### Parametri
 
-| Nome     | Digitare        | Descrizione |
-| -------- | --------------- | ----------- |
-| ri       | Regex compilato |             |
-| ingresso | stringa         |             |
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| ri | CompilatoRegex |             |
+| ingresso | stringa |             |
+
+### fullMatchBacktracking
+
+**Tipo:** funzione
+
+```typescript
+function fullMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Backtracking dell'oracolo di riferimento della corrispondenza di stringhe intere.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| ri | CompilatoRegex |             |
+| ingresso | stringa |             |
+
+### fullMatchLinear
+
+**Tipo:** funzione
+
+```typescript
+function fullMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+Corrispondenza di tutta la stringa utilizzando il motore PikeVM in tempo lineare.
+Garantisce l'esecuzione O(M * N) e l'immunità al backtracking ReDoS.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| ri | CompilatoRegex |             |
+| ingresso | stringa |             |
+
+### PikeRunner
+
+**Gentile:** lezione
+
+```typescript
+export class PikeRunner extends BaseRunner
+```
+
+Motore di esecuzione PikeVM senza backtracking in tempo lineare.
+Garantisce la complessità temporale O(M * N) dove M è il conteggio delle istruzioni e N è la lunghezza dell'input,
+completamente immune a ReDoS (Regular Expression Denial of Service).
 
 ### prefissoMatch
 
@@ -158,14 +280,62 @@ Corrispondenza di stringa intera, ancorata alla posizione zero.
 function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-Corrispondenza del prefisso, ancorata alla posizione zero ma non alla fine.
+Corrispondenza del prefisso, ancorata alla posizione zero ma non alla fine (utilizza PikeVM in tempo lineare per impostazione predefinita).
 
 #### Parametri
 
-| Nome     | Digitare        | Descrizione |
-| -------- | --------------- | ----------- |
-| ri       | Regex compilato |             |
-| ingresso | stringa         |             |
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| ri | CompilatoRegex |             |
+| ingresso | stringa |             |
+
+### prefissoMatchBacktracking
+
+**Tipo:** funzione
+
+```typescript
+function prefixMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Oracolo di riferimento della corrispondenza del prefisso di backtracking.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| ri | CompilatoRegex |             |
+| ingresso | stringa |             |
+
+### prefissoMatchLinear
+
+**Tipo:** funzione
+
+```typescript
+function prefixMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+Corrispondenza del prefisso utilizzando il motore PikeVM in tempo lineare.
+Garantisce l'esecuzione O(M * N) e l'immunità al backtracking ReDoS.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| ri | CompilatoRegex |             |
+| ingresso | stringa |             |
+
+### Corridore
+
+**Gentile:** lezione
+
+```typescript
+export class Runner extends BaseRunner
+```
+
+Backtracking del runner di esecuzione dei riferimenti per la verifica delle istruzioni del bytecode.
 
 ### ricerca
 
@@ -175,15 +345,60 @@ Corrispondenza del prefisso, ancorata alla posizione zero ma non alla fine.
 function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
-Corrispondenza più a sinistra in corrispondenza o dopo `start`.
+Corrispondenza più a sinistra in corrispondenza o dopo `start` (utilizza PikeVM in tempo lineare per impostazione predefinita).
 
 #### Parametri
 
-| Nome     | Digitare        | Descrizione |
-| -------- | --------------- | ----------- |
-| ri       | Regex compilato |             |
-| ingresso | stringa         |             |
-| inizio   |                 |             |
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| ri | CompilatoRegex |             |
+| ingresso | stringa |             |
+| inizio |               |             |
+
+### searchBacktracking
+
+**Tipo:** funzione
+
+```typescript
+function searchBacktracking(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+Backtracking Oracle di riferimento per la ricerca.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| ri | CompilatoRegex |             |
+| ingresso | stringa |             |
+| inizio |               |             |
+
+### ricercaLineare
+
+**Tipo:** funzione
+
+```typescript
+function searchLinear(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+Corrispondenza più a sinistra in corrispondenza o dopo `start` utilizzando il motore PikeVM in tempo lineare.
+Immune al backtracking catastrofico su modelli di ricerca non ancorati.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| ri | CompilatoRegex |             |
+| ingresso | stringa |             |
+| inizio |               |             |
 
 ### test
 
@@ -193,11 +408,46 @@ Corrispondenza più a sinistra in corrispondenza o dopo `start`.
 function test(re: CompiledRegex, input: string): boolean;
 ```
 
-Corrispondenza booleana di stringa intera.
+Corrispondenza booleana di stringa intera (utilizza PikeVM in tempo lineare per impostazione predefinita).
 
 #### Parametri
 
-| Nome     | Digitare        | Descrizione |
-| -------- | --------------- | ----------- |
-| ri       | Regex compilato |             |
-| ingresso | stringa         |             |
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| ri | CompilatoRegex |             |
+| ingresso | stringa |             |
+
+### testBacktracking
+
+**Tipo:** funzione
+
+```typescript
+function testBacktracking(re: CompiledRegex, input: string): boolean;
+```
+
+Backtracking dell'oracolo di riferimento della corrispondenza booleana.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| ri | CompilatoRegex |             |
+| ingresso | stringa |             |
+
+### testLineare
+
+**Tipo:** funzione
+
+```typescript
+function testLinear(re: CompiledRegex, input: string): boolean;
+```
+
+Corrispondenza booleana di stringa intera utilizzando il motore PikeVM in tempo lineare.
+Immune al catastrofico backtracking sulle espressioni regolari patologiche.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| ri | CompilatoRegex |             |
+| ingresso | stringa |             |

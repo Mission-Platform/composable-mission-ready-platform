@@ -24,7 +24,7 @@ escrito una vez en el dialecto JSX neutral y compilado directamente en React o V
 por `@mission-platform/vite-plugin-forge`.
 
 Está respaldado por la tienda de temas observables compartida (`../theme-store`): haciendo clic
-impulsa el mismo singleton que configura `ForgeThemeProvider`, por lo que
+maneja el mismo singleton que configura `ForgeThemeProvider`, por lo que
 persiste la preferencia, fija `data-theme`/`color-scheme` en la raíz del documento
 (y el `<meta name="color-scheme">` sincronizado) y permanece sincronizado con el
 tema del sistema. El componente se suscribe a la tienda con el neutral.
@@ -39,8 +39,8 @@ a través de la ranura predeterminada.
 
 #### Parámetros
 
-| Nombre      | Tipo                                | Descripción |
-| ----------- | ----------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------- | ----------- |
 | propiedades | Sólo lectura<ThemeToggleProperties> |             |
 
 ### TemaAlternarPropiedades
@@ -74,7 +74,7 @@ function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpEl
 ```
 
 `ForgeThemeComposer`: compone anulaciones de token de diseño `--mp-*` en tiempo de ejecución (marca
-colores, colores de texto/superficie/borde, fuentes, tamaño/radio de base, además de un formato sin formato
+colores, colores de texto/superficie/borde, fuentes, tamaño/radio de base, además de un formato sin formato.
 trampilla de escape del token) y los aplica a su alcance. Escrito una vez en el
 dialecto JSX neutral y compilado directamente en React o Vue por
 `@mission-platform/vite-plugin-forge`.
@@ -96,8 +96,8 @@ El contenedor es un `<div>` fijo.
 
 #### Parámetros
 
-| Nombre      | Tipo                                  | Descripción |
-| ----------- | ------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------------- | ----------- |
 | propiedades | Sólo lectura<ThemeComposerProperties> |             |
 
 ### ThemeComposerPropiedades
@@ -151,8 +151,8 @@ almacén a nivel de documento con un contenedor `<div>` fijo.
 
 #### Parámetros
 
-| Nombre      | Tipo                                  | Descripción |
-| ----------- | ------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------------- | ----------- |
 | propiedades | Sólo lectura<ThemeProviderProperties> |             |
 
 ### Propiedades del proveedor del tema
@@ -201,8 +201,8 @@ La trampilla de escape `tokens` está fusionada en la parte superior.
 
 #### Parámetros
 
-| Nombre        | Tipo                | Descripción |
-| ------------- | ------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | ------------------- | ----------- |
 | configuración | ThemeComposerConfig |             |
 
 ### configToStyleString
@@ -217,8 +217,8 @@ Resuelva una configuración en la cadena `style` en línea completa (propiedades
 
 #### Parámetros
 
-| Nombre        | Tipo                | Descripción |
-| ------------- | ------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | ------------------- | ----------- |
 | configuración | ThemeComposerConfig |             |
 
 ### cssVariablesToString
@@ -233,8 +233,8 @@ Serializa un mapa de propiedades personalizadas de CSS en una cadena `style` en 
 
 #### Parámetros
 
-| Nombre    | Tipo                     | Descripción |
-| --------- | ------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------------- | ----------- |
 | variables | Registro<string, string> |             |
 
 ### fusionarConfig
@@ -249,10 +249,10 @@ Fusionar superficialmente una configuración parcial con la actual (borrando `un
 
 #### Parámetros
 
-| Nombre        | Tipo                | Descripción |
-| ------------- | ------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------- | ----------- |
 | configuración | ThemeComposerConfig |             |
-| parcial       | ThemeComposerConfig |             |
+| parcial | ThemeComposerConfig |             |
 
 ### eliminarConfigToken
 
@@ -266,10 +266,10 @@ Elimina una única anulación de token sin procesar.
 
 #### Parámetros
 
-| Nombre        | Tipo                | Descripción |
-| ------------- | ------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | ------------------- | ----------- |
 | configuración | ThemeComposerConfig |             |
-| clave         | cadena              |             |
+| clave | cadena |             |
 
 ### setConfigAttribute
 
@@ -287,11 +287,11 @@ Establezca un único atributo amigable (pase `undefined` para borrarlo).
 
 #### Parámetros
 
-| Nombre        | Tipo                   | Descripción |
-| ------------- | ---------------------- | ----------- |
-| configuración | ThemeComposerConfig    |             |
-| atributo      | k                      |             |
-| valor         | ThemeComposerConfig[K] |             |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------------- | ----------- |
+| configuración | ThemeComposerConfig |             |
+| atributo | k |             |
+| valor | ThemeComposerConfig[K] |             |
 
 ### setConfigToken
 
@@ -305,11 +305,33 @@ Establezca una anulación de token sin formato único. La clave puede omitir el 
 
 #### Parámetros
 
-| Nombre        | Tipo                | Descripción |
-| ------------- | ------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | ------------------- | ----------- |
 | configuración | ThemeComposerConfig |             |
-| clave         | cadena              |             |
-| valor         | cadena              |             |
+| clave | cadena |             |
+| valor | cadena |             |
+
+### TemaCompositorAtributo
+
+**Tipo:** tipo
+
+```typescript
+export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens' | 'colorScheme'>;
+```
+
+Las claves de atributos descriptivas que se asignan a una propiedad personalizada `--mp-*`.
+
+### Tema Composer Config
+
+**Tipo:** interfaz
+
+```typescript
+export interface ThemeComposerConfig
+```
+
+Una descripción mecanografiada de alto nivel de los atributos del tema que un consumidor puede componer.
+en tiempo de ejecución. Cada atributo se asigna a uno de los `--mp-*` de la plataforma.
+Propiedades personalizadas CSS del token de diseño (consulte {@link ATTRIBUTE_TO_CSS_VAR}).
 
 ## `src/stores/theme-store/theme-store`
 
@@ -327,8 +349,8 @@ adopte el `defaultTheme` del proveedor. Vuelve a aplicar y notifica a los suscri
 
 #### Parámetros
 
-| Nombre        | Tipo                   | Descripción |
-| ------------- | ---------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | ----------- | ----------- |
 | configuración | Configuración del tema |             |
 
 ### cicloTema
@@ -373,8 +395,8 @@ Establezca la preferencia del tema explícitamente.
 
 #### Parámetros
 
-| Nombre    | Tipo | Descripción |
-| --------- | ---- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---- | ----- | ----------- |
 | siguiente | Tema |             |
 
 ### suscribirseTema
@@ -389,8 +411,8 @@ Suscríbete para recibir cambios en la tienda; devuelve una función para cancel
 
 #### Parámetros
 
-| Nombre | Tipo       | Descripción |
-| ------ | ---------- | ----------- |
+| Nombre | Tipo | Descripción |
+| -------- | ---------- | ----------- |
 | oyente | () => nulo |             |
 
 ### Tema

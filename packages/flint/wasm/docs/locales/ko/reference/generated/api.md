@@ -9,9 +9,209 @@
 
 `@mission-platform/flint-wasm`의 공개 소스 선언에서 생성됩니다.
 
+## `src/codegen/abi`
+
+### AggregateFieldDescriptor
+
+**종류:** 인터페이스
+
+```typescript
+export interface AggregateFieldDescriptor
+```
+
+집계 필드 레이아웃 설명자.
+
+### AggregateLayoutDescriptor
+
+**종류:** 인터페이스
+
+```typescript
+export interface AggregateLayoutDescriptor
+```
+
+집계 구조체 레이아웃 설명자.
+
+### 정규화SliceCallingConvention
+
+**종류:** 기능
+
+```typescript
+function canonicalizeSliceCallingConvention(type: FlintWasmPrimitiveType): readonly FlintWasmPrimitiveType[];
+```
+
+슬라이스 또는 바이트 유형을 압축 해제된 WebAssembly 레지스터 유형으로 낮춥니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ---------------------- | ----------- |
+| 유형 | 플린트WasmPrimitiveType |             |
+
+### 계산배열할당크기
+
+**종류:** 기능
+
+```typescript
+function computeArrayAllocationSize(
+  count: number,
+  elementSize: number,
+  maxBytes: number = MAX_ARRAY_ALLOCATION_BYTES,
+): number;
+```
+
+count * elementSize의 배열 할당에 필요한 총 바이트 크기를 계산합니다.
+검사된 곱셈을 시행하고 정수 오버플로 또는 경계 위반 시 RangeError를 발생시킵니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ------ | ----------- |
+| 카운트 | 번호 |             |
+| 요소크기 | 번호 |             |
+| 최대바이트 | 번호 |             |
+
+### 계산슬라이스용량
+
+**종류:** 기능
+
+```typescript
+function computeSliceCapacity(bufferBytes: number, elementSize: number): number;
+```
+
+총 버퍼 바이트 크기와 요소 바이트 크기를 고려하여 슬라이스 설명자의 용량을 계산합니다.
+0으로 나누지 않고 무한/무제한 용량을 반환하여 크기가 0인 유형(elementSize === 0)을 안전하게 처리합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ------ | ----------- |
+| 버퍼바이트 | 번호 |             |
+| 요소크기 | 번호 |             |
+
+### 디코드슬라이스등록트리플렛
+
+**종류:** 기능
+
+```typescript
+function decodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+경계를 넘어 수신된 압축 해제된 `(ptr: i32, len: i32, cap: i32)` 레지스터 삼중항을 디코딩하고 유효성을 검사합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 포인터 | 번호 |             |
+| 길이 | 번호 |             |
+| 용량 | 번호 |             |
+
+### 인코딩슬라이스레지스터트리플렛
+
+**종류:** 기능
+
+```typescript
+function encodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+슬라이스 메타데이터를 압축 해제된 `(ptr: i32, len: i32, cap: i32)` 레지스터 삼중항으로 압축합니다.
+랩어라운드 악용을 방지하기 위해 서명되지 않은 경계 및 오버플로가 아닌 불변성을 적용합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 포인터 | 번호 |             |
+| 길이 | 번호 |             |
+| 용량 | 번호 |             |
+
+### MAX_ARRAY_ALLOCATION_BYTES
+
+**종류:** 상수
+
+```typescript
+export const MAX_ARRAY_ALLOCATION_BYTES;
+```
+
+설명이 제공되지 않았습니다.
+
+### MAX_SLICE_ADDRESS
+
+**종류:** 상수
+
+```typescript
+export const MAX_SLICE_ADDRESS;
+```
+
+설명이 제공되지 않았습니다.
+
+### SanitizeAggregatePadding
+
+**종류:** 기능
+
+```typescript
+function sanitizeAggregatePadding(buffer: Uint8Array, layout: AggregateLayoutDescriptor, baseOffset = 0): Uint8Array;
+```
+
+ABI 전송 전에 집계 구조체 버퍼 내의 모든 패딩 바이트를 0으로 초기화합니다.
+신뢰 경계를 넘어 초기화되지 않은 메모리와 기밀 데이터 유출을 방지합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------- | ---------------------------------------------------- |
+| 버퍼 | Uint8Array | - 직렬화된 집계를 포함하는 원시 버퍼입니다.        |
+| 레이아웃 | AggregateLayoutDescriptor | - 집계 레이아웃 설명자.                       |
+| 베이스오프셋 |                           | - 버퍼 내 시작 오프셋(기본값은 0)입니다. |
+
+#### 계약
+
+- **@param:** - 직렬화된 집계를 포함하는 원시 버퍼입니다.
+- **@param:** - 집계 레이아웃 설명자.
+- **@param:** - 버퍼 내 시작 오프셋(기본값은 0)입니다.
+- **@returns:** 제로 패딩으로 버퍼를 정리했습니다.
+
+### 슬라이스등록삼중항
+
+**종류:** 인터페이스
+
+```typescript
+export interface SliceRegisterTriplet
+```
+
+WebAssembly 경계를 직접 넘어 전달되는 압축 해제된 슬라이스의 표현을 등록합니다.
+
+### 유효성 검사SliceBounds
+
+**종류:** 기능
+
+```typescript
+function validateSliceBounds(pointer: number, length: number, capacity: number): boolean;
+```
+
+슬라이스 레지스터 삼중항이 공간 경계와 부호 없는 산술 비래핑 불변성을 충족하는지 확인합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 포인터 | 번호 |             |
+| 길이 | 번호 |             |
+| 용량 | 번호 |             |
+
+### ZERO_SIZED_TYPE_SENTINEL_POINTER
+
+**종류:** 상수
+
+```typescript
+export const ZERO_SIZED_TYPE_SENTINEL_POINTER;
+```
+
+설명이 제공되지 않았습니다.
+
 ## `src/collection-runtime`
 
-### buildFlintWasmCollectionRuntimeBodies
+### buildFlintWasmCollection런타임바디
 
 **종류:** 기능
 
@@ -19,7 +219,11 @@
 function buildFlintWasmCollectionRuntimeBodies(): readonly FlintWasmRuntimeBody[];
 ```
 
-설명이 제공되지 않았습니다.
+컬렉션 및 비동기 런타임 도우미 함수에 대한 메타데이터 설명자를 반환합니다.
+
+#### 계약
+
+- **@returns:** 런타임 함수 설명자의 배열입니다.
 
 ### buildFlintWasmCollection런타임WasmBodies
 
@@ -36,11 +240,11 @@ i64 `(done << 32) | i32 value` ABI를 포장했습니다.
 
 #### 매개변수
 
-| 이름          | 유형 | 설명 |
-| ------------- | ---- | ---- |
-| 할당자 인덱스 | 번호 |      |
+| 이름 | 유형 | 설명 |
+| -------------- | ------ | ----------- |
+| 할당자 인덱스 | 번호 |             |
 
-### FlintWasmRuntimeBody
+### 플린트Wasm런타임바디
 
 **종류:** 인터페이스
 
@@ -48,11 +252,11 @@ i64 `(done << 32) | i32 value` ABI를 포장했습니다.
 export interface FlintWasmRuntimeBody
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly에 포함된 표준 라이브러리 런타임 도우미 함수에 대한 계약 설명자입니다.
 
 ## `src/contracts`
 
-### FlintTarget기능
+### 플린트타겟특징
 
 **종류:** 인터페이스
 
@@ -60,7 +264,17 @@ export interface FlintWasmRuntimeBody
 export interface FlintTargetFeatures
 ```
 
-설명이 제공되지 않았습니다.
+코드 생성 중에 타겟 WebAssembly 제안 기능이 활성화됩니다.
+
+### 플린트WasmAggregateLayout
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintWasmAggregateLayout
+```
+
+선형 메모리에 배치된 집계 구조에 대한 메모리 레이아웃 설명자입니다.
 
 ### FlintWasmArtifact메타데이터
 
@@ -70,9 +284,9 @@ export interface FlintTargetFeatures
 export interface FlintWasmArtifactMetadata
 ```
 
-설명이 제공되지 않았습니다.
+방출된 WebAssembly 아티팩트의 메모리 레이아웃, 기능 요구 사항 및 기능 서명을 설명하는 메타데이터입니다.
 
-### FlintWasmAsyncCapability
+### FlintWasmAsync 기능
 
 **종류:** 유형
 
@@ -80,9 +294,9 @@ export interface FlintWasmArtifactMetadata
 export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 모듈에서 요청한 비동기 런타임 기능입니다.
 
-### FlintWasmAsyncContract
+### FlintWasmAsync계약
 
 **종류:** 인터페이스
 
@@ -90,9 +304,9 @@ export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker
 export interface FlintWasmAsyncContract
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly의 비동기 실행 및 메시징을 관리하는 계약 사양입니다.
 
-### FlintWasmBackendInput
+### 플린트Wasm백엔드 입력
 
 **종류:** 인터페이스
 
@@ -100,7 +314,7 @@ export interface FlintWasmAsyncContract
 export interface FlintWasmBackendInput
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 백엔드 컴파일 파이프라인에 전달된 전체 입력 페이로드입니다.
 
 ### FlintWasmBackendResult
 
@@ -110,7 +324,7 @@ export interface FlintWasmBackendInput
 export interface FlintWasmBackendResult
 ```
 
-설명이 제공되지 않았습니다.
+바이너리 아티팩트와 보고서를 포함하는 WebAssembly 백엔드 이미터가 반환한 결과입니다.
 
 ### FlintWasmBinaryOperator
 
@@ -120,7 +334,7 @@ export interface FlintWasmBackendResult
 export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly에서 지원되는 이진 산술, 논리 및 비교 연산자.
 
 ### FlintWasmCapability가져오기
 
@@ -130,9 +344,9 @@ export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' 
 export interface FlintWasmCapabilityImport
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 모듈에 필요한 호스트 기능 가져오기입니다.
 
-### FlintWasmCollection레이아웃
+### 플린트WasmCollection레이아웃
 
 **종류:** 인터페이스
 
@@ -140,9 +354,9 @@ export interface FlintWasmCapabilityImport
 export interface FlintWasmCollectionLayout
 ```
 
-설명이 제공되지 않았습니다.
+선형 메모리의 컬렉션 유형에 대한 레이아웃 및 전략 구성입니다.
 
-### FlintWasmCompilerHints
+### FlintWasm컴파일러힌트
 
 **종류:** 인터페이스
 
@@ -150,9 +364,9 @@ export interface FlintWasmCollectionLayout
 export interface FlintWasmCompilerHints
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 컴파일러 백엔드에 최적화 힌트가 제공됩니다.
 
-### FlintWasm진단
+### 플린트Wasm진단
 
 **종류:** 인터페이스
 
@@ -160,9 +374,9 @@ export interface FlintWasmCompilerHints
 export interface FlintWasmDiagnostic
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 낮추기, 검증 또는 확인 중에 컴파일러 진단이 내보내집니다.
 
-### FlintWasmEnumDeclaration
+### FlintWasmEnum선언
 
 **종류:** 인터페이스
 
@@ -170,9 +384,9 @@ export interface FlintWasmDiagnostic
 export interface FlintWasmEnumDeclaration
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 메모리 레이아웃에 표시되는 태그된 공용체 열거형 선언입니다.
 
-### FlintWasmExpression
+### 플린트Wasm표현
 
 **종류:** 유형
 
@@ -180,9 +394,9 @@ export interface FlintWasmEnumDeclaration
 export type FlintWasmExpression = |
 ```
 
-설명이 제공되지 않았습니다.
+중간 표현 표현이 WebAssembly 명령어로 낮아졌습니다.
 
-### FlintWasmFeatureRequirements
+### FlintWasm기능요구사항
 
 **종류:** 인터페이스
 
@@ -190,9 +404,29 @@ export type FlintWasmExpression = |
 export interface FlintWasmFeatureRequirements
 ```
 
-설명이 제공되지 않았습니다.
+코드 생성 중에 WebAssembly 기능 요구 사항이 발견되었습니다.
 
-### FlintWasm함수
+### 플린트Wasm외국 능력
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintWasmForeignCapability
+```
+
+WebAssembly 방출을 위한 외부 C 기능 모듈 가져오기 계약이 낮아졌습니다.
+
+### 플린트WasmForeignFunction
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintWasmForeignFunction
+```
+
+WebAssembly 방출을 위한 외부 C 함수 가져오기 계약이 낮아졌습니다.
+
+### 플린트Wasm함수
 
 **종류:** 인터페이스
 
@@ -200,9 +434,9 @@ export interface FlintWasmFeatureRequirements
 export interface FlintWasmFunction
 ```
 
-설명이 제공되지 않았습니다.
+함수 중간 표현이 WebAssembly 함수 정의로 낮아졌습니다.
 
-### FlintWasm일반전문화
+### FlintWasmGeneric전문화
 
 **종류:** 인터페이스
 
@@ -210,7 +444,7 @@ export interface FlintWasmFunction
 export interface FlintWasmGenericSpecialization
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly로 방출된 단일화된 일반 함수 전문화입니다.
 
 ### FlintWasmIteratorBoundaryDescriptor
 
@@ -220,7 +454,7 @@ export interface FlintWasmGenericSpecialization
 export interface FlintWasmIteratorBoundaryDescriptor
 ```
 
-설명이 제공되지 않았습니다.
+반복자 상태 머신 전환 및 내보내기를 정의하는 경계 설명자입니다.
 
 ### FlintWasmIterator 기능
 
@@ -230,7 +464,7 @@ export interface FlintWasmIteratorBoundaryDescriptor
 export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 ```
 
-설명이 제공되지 않았습니다.
+런타임 반복자가 지원하는 반복자 기능 범주입니다.
 
 ### FlintWasmIteratorCapabilityDescriptor
 
@@ -240,7 +474,7 @@ export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 export interface FlintWasmIteratorCapabilityDescriptor
 ```
 
-설명이 제공되지 않았습니다.
+반복자 반복 전략 및 요소 경계를 정의하는 설명자입니다.
 
 ### FlintWasmIterator내보내기
 
@@ -250,9 +484,9 @@ export interface FlintWasmIteratorCapabilityDescriptor
 export interface FlintWasmIteratorExport
 ```
 
-설명이 제공되지 않았습니다.
+호스트 런타임에 액세스할 수 있는 반복기 상태 시스템 기호를 내보냈습니다.
 
-### FlintWasmLogger
+### 플린트WasmLogger
 
 **종류:** 인터페이스
 
@@ -260,9 +494,9 @@ export interface FlintWasmIteratorExport
 export interface FlintWasmLogger
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 컴파일 이벤트를 위한 구조화된 로거 인터페이스입니다.
 
-### FlintWasm모듈
+### 플린트Wasm모듈
 
 **종류:** 인터페이스
 
@@ -270,7 +504,7 @@ export interface FlintWasmLogger
 export interface FlintWasmModule
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 방출을 위한 기능, 레이아웃 및 가져오기를 포함하는 모듈 중간 표현입니다.
 
 ### FlintWasm매개변수
 
@@ -280,18 +514,18 @@ export interface FlintWasmModule
 export interface FlintWasmParameter
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 함수 서명에 사용되는 함수 매개변수 정의입니다.
 
-### FlintWasmPrimitiveType
+### 플린트Wasm기본 유형
 
 **종류:** 유형
 
 ```typescript
 export type FlintWasmPrimitiveType =
-  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | 'v128';
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 백엔드 낮추기 패스에서 지원되는 기본 데이터 유형입니다.
 
 ### FlintWasmSource가져오기
 
@@ -301,9 +535,9 @@ export type FlintWasmPrimitiveType =
 export interface FlintWasmSourceImport
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 모듈로 가져온 링크된 소스 모듈 종속성입니다.
 
-### FlintWasmSourceSpan
+### 플린트WasmSourceSpan
 
 **종류:** 인터페이스
 
@@ -311,9 +545,9 @@ export interface FlintWasmSourceImport
 export interface FlintWasmSourceSpan
 ```
 
-설명이 제공되지 않았습니다.
+디버그 기호 생성을 위해 WebAssembly 지침에 매핑된 소스 위치 범위입니다.
 
-### FlintWasmStandardLibraryOperation
+### FlintWasmStandardLibrary작업
 
 **종류:** 유형
 
@@ -344,6 +578,8 @@ export type FlintWasmStandardLibraryOperation =
   | 'memory-realloc'
   | 'memory-load-u32'
   | 'memory-store-u32'
+  | 'memory-load-u8'
+  | 'memory-store-u8'
   | 'memory-load-f64'
   | 'memory-store-f64'
   | 'f64-from-u32'
@@ -366,12 +602,23 @@ export type FlintWasmStandardLibraryOperation =
   | 'signal-schedule'
   | 'async-schedule-microtask'
   | 'async-worker-post'
-  | 'async-worker-receive';
+  | 'async-worker-receive'
+  | 'memory-copy'
+  | 'memory-fill'
+  | 'simd-binarize'
+  | 'simd-i8x16-splat'
+  | 'simd-i8x16-eq'
+  | 'simd-i8x16-lt-u'
+  | 'simd-i8x16-bitmask'
+  | 'simd-i32x4-splat'
+  | 'simd-i32x4-add'
+  | 'simd-v128-load'
+  | 'simd-v128-store';
 ```
 
-설명이 제공되지 않았습니다.
+백엔드 컴파일러에 의해 WebAssembly 표준 라이브러리 내장 작업이 감소되었습니다.
 
-### FlintWasm문
+### 플린트Wasm성명서
 
 **종류:** 유형
 
@@ -379,7 +626,7 @@ export type FlintWasmStandardLibraryOperation =
 export type FlintWasmStatement = |
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 구조화된 제어 흐름으로 축소된 중간 표현문입니다.
 
 ### FlintWasm유형이름
 
@@ -389,11 +636,11 @@ export type FlintWasmStatement = |
 export interface FlintWasmTypeName
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly를 낮추는 동안 활용되는 추상 유형 이름 표현입니다.
 
 ## `src/emitter`
 
-### 컴파일FlintWasm
+### 컴파일플린트Wasm
 
 **종류:** 기능
 
@@ -401,18 +648,309 @@ export interface FlintWasmTypeName
 function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<input>'): FlintWasmBackendResult;
 ```
 
-설명이 제공되지 않았습니다.
+Flint IR 모듈을 WebAssembly 바이너리 및 텍스트 형식으로 컴파일하는 주요 진입점입니다.
 
 #### 매개변수
 
-| 이름      | 유형                  | 설명 |
-| --------- | --------------------- | ---- |
-| 입력      | FlintWasmBackendInput |      |
-| 파일 이름 |                       |      |
+| 이름 | 유형 | 설명 |
+| -------- | --------------------- | ----------- |
+| 입력 | FlintWasmBackendInput |             |
+| 파일 이름 |                       |             |
+
+## `src/emitter/section-builder`
+
+### SECTION_IDS
+
+**종류:** 상수
+
+```typescript
+export const SECTION_IDS;
+```
+
+설명이 제공되지 않았습니다.
+
+### 부분
+
+**종류:** 기능
+
+```typescript
+function section(id: number, contents: readonly number[]): number[];
+```
+
+섹션 ID와 길이 접두사를 사용하여 페이로드 바이트를 WebAssembly 섹션으로 패키징합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ----------------- | ----------- |
+| 아이디 | 번호 |             |
+| 내용 | 읽기 전용 숫자[] |             |
+
+### WasmSectionBuilder
+
+**종류:** 클래스
+
+```typescript
+export class WasmSectionBuilder
+```
+
+형식화된 WebAssembly 섹션 빌더를 생성합니다.
+
+## `src/encoding/bytes`
+
+### 추가F32
+
+**종류:** 기능
+
+```typescript
+function appendF32(value: number): number[];
+```
+
+NaN을 표준화하여 리틀 엔디안 이진 형식으로 32비트 부동 소수점 숫자를 추가합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 번호 |             |
+
+### 추가F64
+
+**종류:** 기능
+
+```typescript
+function appendF64(value: number): number[];
+```
+
+NaN을 표준화하여 리틀 엔디안 이진 형식으로 64비트 부동 소수점 숫자를 추가합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 번호 |             |
+
+### CANONICAL_F32_NAN_BYTES
+
+**종류:** 상수
+
+```typescript
+export const CANONICAL_F32_NAN_BYTES;
+```
+
+32비트 부동 소수점에 대한 표준적인 조용한 NaN 비트 패턴입니다(리틀 엔디안의 경우 0x7fc00000).
+
+### CANONICAL_F64_NAN_BYTES
+
+**종류:** 상수
+
+```typescript
+export const CANONICAL_F64_NAN_BYTES;
+```
+
+64비트 부동 소수점에 대한 표준적인 조용한 NaN 비트 패턴입니다(리틀 엔디안의 경우 0x7ff8000000000000).
+
+### 벡터
+
+**종류:** 기능
+
+```typescript
+function vector(values: readonly number[]): number[];
+```
+
+LEB128 인코딩의 개수를 바이트코드 요소 배열 앞에 붙입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ----------------- | ----------- |
+| 가치 | 읽기 전용 숫자[] |             |
+
+### wasmString
+
+**종류:** 기능
+
+```typescript
+function wasmString(value: string): number[];
+```
+
+WebAssembly 형식의 바이트 길이 앞에 UTF-8 문자열을 인코딩합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 문자열 |             |
+
+## `src/encoding/leb128`
+
+### 서명된Leb
+
+**종류:** 기능
+
+```typescript
+function signedLeb(value: number | bigint): number[];
+```
+
+부호 있는 32비트 또는 64비트 정수를 WebAssembly LEB128 바이트 배열로 인코딩합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---------------- | ----------- |
+| 가치 | 번호 \| 빅인트 |             |
+
+### 서명된Leb128
+
+**종류:** 기능
+
+```typescript
+function signedLeb128(value: number | bigint): number[];
+```
+
+signedLeb의 별칭입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---------------- | ----------- |
+| 가치 | 번호 \| 빅인트 |             |
+
+### 서명되지 않은Leb
+
+**종류:** 기능
+
+```typescript
+function unsignedLeb(value: number): number[];
+```
+
+부호 없는 32비트 정수를 WebAssembly LEB128 바이트 배열로 인코딩합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 번호 |             |
+
+### 서명되지 않은Leb128
+
+**종류:** 기능
+
+```typescript
+function unsignedLeb128(value: number): number[];
+```
+
+unsignedLeb의 별칭입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 번호 |             |
+
+## `src/optimizer`
+
+### FlintWasm최적화진단
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintWasmOptimizationDiagnostic
+```
+
+WebAssembly 최적화에서 내보낸 진단이 통과되었습니다.
+
+### 플린트WasmOptimizationPass
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintWasmOptimizationPass
+```
+
+개별 최적화 단계와 해당 측정항목을 설명하는 메타데이터입니다.
+
+### FlintWasmOptimization보고서
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintWasmOptimizationReport
+```
+
+적용된 모든 WebAssembly 최적화 패스 및 진단을 추적하는 요약 보고서입니다.
+
+### 플린트Wasm스테이지Ir
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintWasmStageIr
+```
+
+최적화 단계에서 모듈 상태의 중간 표현 스냅샷입니다.
+
+### FlintWasmSwitch전략
+
+**종류:** 유형
+
+```typescript
+export type FlintWasmSwitchStrategy = 'br-table' | 'sparse' | 'constant';
+```
+
+스위치 문을 낮추기 위한 코드 생성 전략.
+
+### 최적화플린트Wasm모듈
+
+**종류:** 기능
+
+```typescript
+function optimizeFlintWasmModule(
+  module: FlintWasmModule,
+  optimization: 'debug' | 'release' = 'release',
+): FlintWasmStageIr;
+```
+
+IR 모듈에서 WebAssembly 최적화 패스의 전체 제품군을 실행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------ | -------------------- | ----------- |
+| 모듈 | 플린트Wasm모듈 |             |
+| 최적화 | '디버그' \| '출시' |             |
+
+## `src/sections/custom`
+
+### encodeFlintAbiCustomSection
+
+**종류:** 기능
+
+```typescript
+function encodeFlintAbiCustomSection(manifest: FlintCAbiManifest | object): number[];
+```
+
+컴팩트 CBOR ABI 매니페스트(`flint.abi.v2`)가 포함된 바이너리 WebAssembly 사용자 정의 섹션을 내보냅니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | --------------------------- | ----------- |
+| 매니페스트 | FlintCAbiManifest \| 개체 |             |
+
+### FLINT_ABI_V2_CUSTOM_SECTION
+
+**종류:** 상수
+
+```typescript
+export const FLINT_ABI_V2_CUSTOM_SECTION;
+```
+
+내장된 바이너리 CBOR ABI 매니페스트에 대한 표준 WebAssembly 사용자 정의 섹션 이름입니다.
 
 ## `src/verifier`
 
-### FlintWasmArtifact매니페스트
+### 플린트WasmArtifact매니페스트
 
 **종류:** 인터페이스
 
@@ -430,7 +968,7 @@ export interface FlintWasmArtifactManifest
 export interface FlintWasmArtifactVerificationDiagnostic
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 바이너리 확인 중에 내보낸 진단 결과입니다.
 
 ### FlintWasmArtifact검증입력
 
@@ -440,7 +978,7 @@ export interface FlintWasmArtifactVerificationDiagnostic
 export interface FlintWasmArtifactVerificationInput
 ```
 
-설명이 제공되지 않았습니다.
+아티팩트 검증에 전달된 입력 매개변수 및 기대치입니다.
 
 ### FlintWasmArtifact검증정책
 
@@ -450,7 +988,7 @@ export interface FlintWasmArtifactVerificationInput
 export interface FlintWasmArtifactVerificationPolicy
 ```
 
-설명이 제공되지 않았습니다.
+아티팩트 확인 시행을 관리하는 정책 규칙입니다.
 
 ### FlintWasmArtifact검증결과
 
@@ -460,7 +998,7 @@ export interface FlintWasmArtifactVerificationPolicy
 export interface FlintWasmArtifactVerificationResult
 ```
 
-설명이 제공되지 않았습니다.
+검증 상태를 나타내는 종합 검증 결과 보고서입니다.
 
 ### FlintWasmArtifact검증심각도
 
@@ -470,7 +1008,7 @@ export interface FlintWasmArtifactVerificationResult
 export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info';
 ```
 
-설명이 제공되지 않았습니다.
+아티팩트 확인 중에 발생하는 진단 심각도 수준입니다.
 
 ### FlintWasmManifest함수
 
@@ -480,7 +1018,7 @@ export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info'
 export interface FlintWasmManifestFunction
 ```
 
-설명이 제공되지 않았습니다.
+확인을 위해 ABI 매니페스트에서 추출된 함수 메타데이터입니다.
 
 ### FlintWasm매니페스트가져오기
 
@@ -490,7 +1028,7 @@ export interface FlintWasmManifestFunction
 export interface FlintWasmManifestImport
 ```
 
-설명이 제공되지 않았습니다.
+ABI 매니페스트에서 추출된 선언 메타데이터를 가져옵니다.
 
 ### FlintWasmManifest매개변수
 
@@ -500,9 +1038,9 @@ export interface FlintWasmManifestImport
 export interface FlintWasmManifestParameter
 ```
 
-설명이 제공되지 않았습니다.
+매니페스트 함수 정의의 매개변수 유형 메타데이터입니다.
 
-### FlintWasmMemory레이아웃
+### 플린트Wasm메모리레이아웃
 
 **종류:** 인터페이스
 
@@ -510,7 +1048,7 @@ export interface FlintWasmManifestParameter
 export interface FlintWasmMemoryLayout
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 바이너리에 대해 검증된 메모리 레이아웃 예상.
 
 ### verifyFlintWasmArtifact
 
@@ -520,17 +1058,17 @@ export interface FlintWasmMemoryLayout
 function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): FlintWasmArtifactVerificationResult;
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 바이너리 및 어댑터 아티팩트를 검증하는 완전한 검증 진입점입니다.
 
 #### 매개변수
 
-| 이름 | 유형                               | 설명 |
-| ---- | ---------------------------------- | ---- |
-| 입력 | FlintWasmArtifactVerificationInput |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------------------------------- | ----------- |
+| 입력 | FlintWasmArtifact검증입력 |             |
 
 ## `src/wat`
 
-### FlintWasmWat메타데이터
+### 플린트WasmWat메타데이터
 
 **종류:** 인터페이스
 
@@ -538,9 +1076,9 @@ function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): Fli
 export interface FlintWasmWatMetadata
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 텍스트 형식(WAT) 주석 및 헤더로 내보낸 메타데이터입니다.
 
-### renderFlintWasmWat
+### 렌더링플린트WasmWat
 
 **종류:** 기능
 
@@ -548,11 +1086,37 @@ export interface FlintWasmWatMetadata
 function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmWatMetadata = {}): string;
 ```
 
-설명이 제공되지 않았습니다.
+전체 Flint WebAssembly 모듈 중간 표현을 텍스트 WAT 형식으로 낮춥니다.
 
 #### 매개변수
 
-| 이름       | 유형                   | 설명 |
-| ---------- | ---------------------- | ---- |
-| 모듈       | FlintWasmModule        |      |
-| 메타데이터 | FlintWasmWat메타데이터 |      |
+| 이름 | 유형 | 설명 |
+| -------- | -------------------- | -------------------------------------------------------- |
+| 모듈 | 플린트Wasm모듈 | - 컴파일된 모듈 중간 표현.           |
+| 메타데이터 | FlintWasmWat메타데이터 | - 편집 메타데이터 및 대상 기능 구성. |
+
+#### 계약
+
+- **@param:** - 컴파일된 모듈 중간 표현입니다.
+- **@param:** - 편집 메타데이터 및 대상 기능 구성입니다.
+- **@returns:** WebAssembly 텍스트 표현 문자열입니다.
+
+### toWat유형
+
+**종류:** 기능
+
+```typescript
+function toWatType(
+  type: string | { readonly name?: string; readonly reference?: string } | undefined,
+  memory64 = false,
+): string;
+```
+
+Flint 또는 C 유형 표현 문자열을 WebAssembly WAT 값 유형에 매핑합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------------------------------------------------------------------------------ | ----------- |
+| 유형 | 문자열 \| { 읽기 전용 이름?: 문자열; 읽기 전용 참조?: 문자열 } \| 정의되지 않음 |             |
+| 메모리64 |                                                                                |             |

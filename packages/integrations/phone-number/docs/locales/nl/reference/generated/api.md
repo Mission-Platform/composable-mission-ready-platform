@@ -33,23 +33,23 @@ Gemaksaccessor voor de gedeelde, synchrone {@link PhoneNumberUtil}-instantie.
 
 ### Telefoonnummerformaat
 
-**Soort:** constant
+**Soort:** type
 
 ```typescript
-export const PhoneNumberFormat;
+export type PhoneNumberFormat = (typeof PhoneNumberFormat)[keyof typeof PhoneNumberFormat];
 ```
 
-Uitvoerformaat, spiegeling van `PhoneNumberFormat` van libphonenumber.
+Geen beschrijving opgegeven.
 
 ### Telefoonnummertype
 
-**Soort:** constant
+**Soort:** type
 
 ```typescript
-export const PhoneNumberType;
+export type PhoneNumberType = (typeof PhoneNumberType)[keyof typeof PhoneNumberType];
 ```
 
-Lijntype van een telefoonnummer, dat de `PhoneNumberType` van het libphonenummer weerspiegelt.
+Geen beschrijving opgegeven.
 
 ### TelefoonnummerUtil
 
@@ -76,7 +76,7 @@ Een tweeletterige ISO 3166-1-regiocode, b.v. `"US"`, `"GB"`.
 
 ### landcode_voor_regio
 
-**Soort:** fws-export
+**Soort:** vuursteen-export
 
 ```typescript
 export fn country_code_for_region(region: string) -> i32
@@ -86,8 +86,8 @@ Wijst een ondersteunde regiocode toe aan de internationale landcode voor bellen.
 
 #### Parameters
 
-| Naam  | Typ        | Beschrijving                      |
-| ----- | ---------- | --------------------------------- |
+| Naam | Typ | Beschrijving |
+| ------ | ------ | ------------------------------------- |
 | regio | tekenreeks | ISO-regiocode zoals 'VS' of 'GB'. |
 
 #### Contract
@@ -97,7 +97,7 @@ Wijst een ondersteunde regiocode toe aan de internationale landcode voor bellen.
 
 ### nationaal_voorvoegsel
 
-**Soort:** fws-export
+**Soort:** vuursteen-export
 
 ```typescript
 export fn national_prefix(region: string) -> string
@@ -107,8 +107,8 @@ Retourneert het nationale netlijnvoorvoegsel dat wordt gebruikt bij het bellen b
 
 #### Parameters
 
-| Naam  | Typ        | Beschrijving   |
-| ----- | ---------- | -------------- |
+| Naam | Typ | Beschrijving |
+| ------ | ------ | ---------------- |
 | regio | tekenreeks | ISO-regiocode. |
 
 #### Contract
@@ -118,7 +118,7 @@ Retourneert het nationale netlijnvoorvoegsel dat wordt gebruikt bij het bellen b
 
 ### regio_voor_land_code
 
-**Soort:** fws-export
+**Soort:** vuursteen-export
 
 ```typescript
 export fn region_for_country_code(code: i32) -> string
@@ -128,8 +128,8 @@ Wijst een landbelcode toe aan een representatieve ISO-regio.
 
 #### Parameters
 
-| Naam | Typ  | Beschrijving                         |
-| ---- | ---- | ------------------------------------ |
+| Naam | Typ | Beschrijving |
+| ---- | ---- | ----------------------------------- |
 | code | ik32 | Landcode voor internationaal bellen. |
 
 #### Contract
@@ -139,7 +139,7 @@ Wijst een landbelcode toe aan een representatieve ISO-regio.
 
 ### regio_is
 
-**Soort:** fws-export
+**Soort:** vuursteen-export
 
 ```typescript
 export fn region_is(region: string, expected: string) -> bool
@@ -149,10 +149,10 @@ Retourneert waar als de regiocode gelijk is aan de verwachte waarde.
 
 #### Parameters
 
-| Naam     | Typ        | Beschrijving             |
-| -------- | ---------- | ------------------------ |
-| regio    | tekenreeks | Kandidaat-ISO-regiocode. |
-| verwacht | tekenreeks | Verwachte ISO-regiocode. |
+| Naam | Typ | Beschrijving |
+| -------- | ------ | -------------------------- |
+| regio | tekenreeks | Kandidaat-ISO-regiocode. |
+| verwacht | tekenreeks | Verwachte ISO-regiocode.  |
 
 #### Contract
 

@@ -19,7 +19,7 @@
 function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement;
 ```
 
-`ForgeThemeToggle` - يقوم بتدوير السمة النشطة من خلال `light → dark → auto`،
+`ForgeThemeToggle` — يقوم بتدوير السمة النشطة من خلال `light → dark → auto`،
 تم تأليفه مرة واحدة بلهجة JSX المحايدة وتم تجميعه مباشرة إلى React أو Vue
 بواسطة `@mission-platform/vite-plugin-forge`.
 
@@ -32,16 +32,16 @@ function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElemen
 كلا الإطارين.
 
 شارك Vue SFC الأصلي في متجر تفاعلي عبر `provide`/`inject` و
-أيقونات SVG المضمنة المقدمة؛ يستخدم الإصدار المحايد المتجر الفردي المشترك
+أيقونات SVG المضمنة المقدمة؛ يستخدم الإصدار المحايد المتجر المفرد المشترك
 (بديل للتقديم/الحقن) والحروف الرسومية النصية (`☀`/`☾`/`◐`)، وتنبعث
 `change` من خلال دعامة رد الاتصال `onChange`. التسمية قابلة للتجاوز
 من خلال الفتحة الافتراضية.
 
 #### حدود
 
-| الاسم | اكتب                               | الوصف |
-| ----- | ---------------------------------- | ----- |
-| خصائص | للقراءة فقط<ThemeToggleProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------- | ----------- |
+| خصائص | للقراءة فقط<ThemeToggleProperties> |             |
 
 ### ThemeToggleProperties
 
@@ -82,12 +82,12 @@ function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpEl
 شارك Vue SFC الأصلي متجرًا تفاعليًا عبر `provide`/`inject` و`v-model`.
 اللهجة المحايدة لا تحتوي على أي منهما، لذا فإن هذا الإصدار عبارة عن مكون **متحكم فيه**:
 فهو يحمل التكوين في خطاف {@link useState} محايد (مصنف من
-`modelValue`)، ويحلها إلى خصائص CSS المخصصة مع المساعدين النقيين
+`modelValue`)، ويحلها إلى خصائص CSS المخصصة باستخدام المساعدين النقيين
 `../theme-composer-store`، يطبقها على غلاف `display: contents` الخاص به
 (`<div>`) — أو إلى `document.documentElement` عند `global` — وينبعث منها كل
 التغيير من خلال دعامة رد الاتصال `onUpdateModelValue` (البديل لـ
 `v-model`). تستقبل الفتحة ذات النطاق الافتراضي الخاصة بها `{ config, cssVariables,
-styleString، setConfig، setAttribute، setToken،removeToken،reset }`.
+styleString، setConfig، setAttribute، setToken، RemoveToken، إعادة تعيين }`.
 
 المخزن المشترك (`provide`/`inject`) واستمرارية `localStorage` و
 تم تقليل علامة الغلاف القابلة للتكوين (`as`) عن عمد:
@@ -96,9 +96,9 @@ styleString، setConfig، setAttribute، setToken،removeToken،reset }`.
 
 #### حدود
 
-| الاسم | اكتب                                 | الوصف |
-| ----- | ------------------------------------ | ----- |
-| خصائص | للقراءة فقط<ThemeComposerProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------------- | ----------- |
+| خصائص | للقراءة فقط<ThemeComposerProperties> |             |
 
 ### خصائص الملحن
 
@@ -151,9 +151,9 @@ toggleTheme,cycleTheme }` كنطاق.
 
 #### حدود
 
-| الاسم | اكتب                                 | الوصف |
-| ----- | ------------------------------------ | ----- |
-| خصائص | للقراءة فقط<ThemeProviderProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------------- | ----------- |
+| خصائص | للقراءة فقط<ThemeProviderProperties> |             |
 
 ### ThemeProviderProperties
 
@@ -201,9 +201,9 @@ function configToCssVariables(config: ThemeComposerConfig): Record<string, strin
 
 #### حدود
 
-| الاسم   | اكتب        | الوصف |
-| ------- | ----------- | ----- |
-| التكوين | تكوين السمة |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------- | ----------- |
+| التكوين | تكوين السمة |             |
 
 ### configToStyleString
 
@@ -217,9 +217,9 @@ function configToStyleString(config: ThemeComposerConfig): string;
 
 #### حدود
 
-| الاسم   | اكتب        | الوصف |
-| ------- | ----------- | ----- |
-| التكوين | تكوين السمة |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------- | ----------- |
+| التكوين | تكوين السمة |             |
 
 ### cssVariablesToString
 
@@ -233,9 +233,9 @@ function cssVariablesToString(variables: Record<string, string>): string;
 
 #### حدود
 
-| الاسم     | اكتب                | الوصف |
-| --------- | ------------------- | ----- |
-| المتغيرات | سجل<string, string> |       |
+| الاسم | اكتب | الوصف |
+| --------- | ---------------------- | ----------- |
+| المتغيرات | سجل<string, string> |             |
 
 ### دمج التكوين
 
@@ -249,10 +249,10 @@ function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig):
 
 #### حدود
 
-| الاسم   | اكتب        | الوصف |
-| ------- | ----------- | ----- |
-| التكوين | تكوين السمة |       |
-| جزئي    | تكوين السمة |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------- | ----------- |
+| التكوين | تكوين السمة |             |
+| جزئي | تكوين السمة |             |
 
 ### إزالة ConfigToken
 
@@ -266,10 +266,10 @@ function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeCompo
 
 #### حدود
 
-| الاسم   | اكتب        | الوصف |
-| ------- | ----------- | ----- |
-| التكوين | تكوين السمة |       |
-| مفتاح   | سلسلة       |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------- | ----------- |
+| التكوين | تكوين السمة |             |
+| مفتاح | سلسلة |             |
 
 ### setConfigAttribute
 
@@ -287,11 +287,11 @@ function setConfigAttribute(
 
 #### حدود
 
-| الاسم   | اكتب                   | الوصف |
-| ------- | ---------------------- | ----- |
-| التكوين | تكوين السمة            |       |
-| السمة   | ك                      |       |
-| القيمة  | ThemeComposerConfig[K] |       |
+| الاسم | اكتب | الوصف |
+| --------- | ---------------------- | ----------- |
+| التكوين | تكوين السمة |             |
+| السمة | ك |             |
+| القيمة | ThemeComposerConfig[K] |             |
 
 ### setConfigToken
 
@@ -305,11 +305,33 @@ function setConfigToken(config: ThemeComposerConfig, key: string, value: string)
 
 #### حدود
 
-| الاسم   | اكتب        | الوصف |
-| ------- | ----------- | ----- |
-| التكوين | تكوين السمة |       |
-| مفتاح   | سلسلة       |       |
-| القيمة  | سلسلة       |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------- | ----------- |
+| التكوين | تكوين السمة |             |
+| مفتاح | سلسلة |             |
+| القيمة | سلسلة |             |
+
+### سمة الملحن
+
+**النوع:** النوع
+
+```typescript
+export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens' | 'colorScheme'>;
+```
+
+مفاتيح السمات المألوفة التي يتم تعيينها إلى خاصية مخصصة `--mp-*`.
+
+### تكوين الموضوع
+
+**النوع:** الواجهة
+
+```typescript
+export interface ThemeComposerConfig
+```
+
+وصف مكتوب عالي المستوى لسمات الموضوع التي يمكن للمستهلك كتابتها
+في وقت التشغيل. يتم تعيين كل سمة إلى أحد `--mp-*` الخاص بالنظام الأساسي
+خصائص CSS المخصصة للتصميم المميز (راجع {@link ATTRIBUTE_TO_CSS_VAR}).
 
 ## `src/stores/theme-store/theme-store`
 
@@ -327,9 +349,9 @@ function configureTheme(config: ThemeConfig): void;
 
 #### حدود
 
-| الاسم   | اكتب          | الوصف |
-| ------- | ------------- | ----- |
-| التكوين | تكوين الموضوع |       |
+| الاسم | اكتب | الوصف |
+| ------ | ----------- | ----------- |
+| التكوين | تكوين الموضوع |             |
 
 ### this.cycleTheme
 
@@ -359,7 +381,7 @@ function getThemeSnapshot(): ThemeSnapshot;
 export type ResolvedTheme = 'light' | 'dark';
 ```
 
-تم تطبيق السمة الملموسة فعليًا على واجهة المستخدم (وليس `'auto'` أبدًا).
+تم تطبيق السمة الملموسة فعليًا على واجهة المستخدم (ليس `'auto'` أبدًا).
 
 ### setTheme
 
@@ -373,9 +395,9 @@ function setTheme(next: Theme): void;
 
 #### حدود
 
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| التالي | موضوع |       |
+| الاسم | اكتب | الوصف |
+| ---- | ----- | ----------- |
+| التالي | موضوع |             |
 
 ### theme.subscribe
 
@@ -389,9 +411,9 @@ function subscribeTheme(listener: () => void): () => void;
 
 #### حدود
 
-| الاسم | اكتب       | الوصف |
-| ----- | ---------- | ----- |
-| مستمع | () => باطل |       |
+| الاسم | اكتب | الوصف |
+| -------- | ---------- | ----------- |
+| مستمع | () => باطل |             |
 
 ### سمة
 

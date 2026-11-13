@@ -11,7 +11,7 @@ con token di progettazione Mission Platform.
 ## Panoramica
 
 Il pacchetto `@mission-platform/layouts` contiene shell di applicazioni, contenitori, layout verticali e quattro riutilizzabili
-modelli di modelli reattivi. I suoi componenti vengono esportati attraverso la build del pacchetto condizionato dal framework esistente, quindi
+modelli di modelli reattivi. I suoi componenti vengono esportati attraverso la creazione del pacchetto condizionato dal framework esistente, quindi
 la stessa origine funziona con Vue 3, React, Solid, Svelte e Web Components.
 
 ## Caratteristiche
@@ -103,16 +103,16 @@ Tutti e quattro i modelli di pattern accettano:
 - `breakpoint`: `xs`, `sm`, `md`, `lg` o `xl`
 
 I componenti iniziano come layout a una colonna o in pila. Al punto di interruzione selezionato applicano il modello specifico
-aree della griglia. I wrapper della regione hanno classi di stile BEM prevedibili e vengono emessi solo quando è presente lo slot denominato.
+aree della griglia. I wrapper delle regioni hanno classi di stile BEM prevedibili e vengono emessi solo quando è presente lo slot denominato.
 
 ### Contratti regionali
 
-| Componente            | Regioni denominate                                         | Fonte composizione                                                                    |
-| --------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `ForgeBentoLayout`    | `hero`, `feature`, `supporting`                            | Sezioni di eroi e funzionalità di marketing del sito Web                              |
-| `ForgeGridLayout`     | Da `cell1` a `cell12`                                      | Schede dashboard di monitoraggio del servizio e riepiloghi dello stato                |
-| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer`        | Barra di navigazione/contesto dei documenti, articolo, barra laterale e piè di pagina |
-| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Contenuti e azioni alternati della pagina di destinazione                             |
+| Componente | Regioni denominate | Fonte composizione |
+| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
+| `ForgeBentoLayout` | `hero`, `feature`, `supporting` | Sezioni di eroi e funzionalità di marketing del sito Web |
+| `ForgeGridLayout` | Da `cell1` a `cell12` | Schede dashboard di monitoraggio del servizio e riepiloghi dello stato |
+| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer` | Barra di navigazione/contesto dei documenti, articolo, barra laterale e piè di pagina |
+| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Contenuti e azioni alternati della pagina di destinazione |
 
 `ForgeGridLayout` accetta `rows` e `columns`, li vincola entrambi a uno o più, limita l'area renderizzabile a 12 nomi
 celle e utilizza un fallback a colonna singola al di sotto del punto di interruzione. Le celle con nome vengono sempre visualizzate nell'ordine di origine.

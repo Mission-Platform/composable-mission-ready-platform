@@ -81,16 +81,17 @@ useEffect(() => {
 
 ## 脚手架
 
-使用 Mission Platform Developer MCP 工具生成新的商店骨架：
+通过连接的 Mission Platform Developer MCP 服务器使用 `scaffold_store` 工具生成新商店
+骨架。这是 MCP 工具调用示例，而不是 shell 命令：
 
-```bash
+```text
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
 
 ## 相关指南
 
-- [封装开发](package-development.md)
+- [软件包开发](package-development.md)
 - [原子组件设计](atomic-component-design.md)
 - [可组合创作](composable-authoring.md)
 - [实用程序创作](util-authoring.md)

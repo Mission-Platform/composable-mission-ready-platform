@@ -34,8 +34,8 @@ callback-prop `onRemove` (il sostituto emetti Vue `remove`).
 
 #### Parametri
 
-| Nome      | Digitare                    | Descrizione |
-| --------- | --------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------- | ----------- |
 | proprietà | Sola lettura<TagProperties> |             |
 
 ### Proprietà dei tag
@@ -83,8 +83,8 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome      | Digitare                                      | Descrizione |
-| --------- | --------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------------------- | ----------- |
 | proprietà | Sola lettura<ForgeLanguageSwitcherProperties> |             |
 
 ### Opzione ForgeLanguageSwitcher
@@ -146,8 +146,8 @@ diventare oggetti di scena di richiamo.
 
 #### Parametri
 
-| Nome      | Digitare                            | Descrizione |
-| --------- | ----------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------- | ----------- |
 | proprietà | Sola lettura<MultiselectProperties> |             |
 
 ### Opzioneselezione multipla
@@ -182,6 +182,26 @@ Scala di dimensione del controllo canonico.
 
 ## `src/components/molecules/forge-select/forge-select`
 
+### ForgeCombobox
+
+**Genere:** costante
+
+```typescript
+export const ForgeCombobox: typeof ForgeSelect;
+```
+
+Nessuna descrizione fornita.
+
+### ForgeComboboxProps
+
+**Genere:** tipo
+
+```typescript
+export type ForgeComboboxProps = SelectProperties;
+```
+
+Nessuna descrizione fornita.
+
 ### ForgeSelect
 
 **Tipo:** funzione
@@ -190,40 +210,24 @@ Scala di dimensione del controllo canonico.
 function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
-`ForgeSelect`: una casella combinata/selezione personalizzata creata una volta nel JSX neutro
-dialetto e compilato direttamente in React o Vue da
-`@mission-platform/vite-plugin-forge`.
-
-Per impostazione predefinita (`searchable`, l'impostazione predefinita) il trigger è un campo di testo che filtra
-le opzioni digitate dall'utente — mirroring {@link ForgeMultiselect} — quindi un valore
-può essere trovato effettuando una ricerca anziché scorrendo; impostare `searchable={false}` per a
-semplice pulsante di attivazione. In ogni caso la casella di riepilogo è supportata da un file visivamente nascosto
-`<select>` nativo in modo che la compilazione automatica del browser e l'invio di moduli nativi continuino a funzionare.
-La selezione è controllata con il `modelValue`+ stabilito
-`onUpdateModelValue`/`onChange` convenzione prop di callback. Possiede il suo stile
-attraverso il modulo CSS co-locato `forge-select.module.scss`.
-
-Il rendering della casella di riepilogo mobile viene eseguito tramite write-once **`ForgeDropdown`**
-(a sua volta compilato in React/Vue), composto tramite lo slot denominato neutro **passaggio**
-sintassi: il wrapper della casella combinata viene consegnato allo slot `trigger` del menu a discesa
-(`slot="trigger"`) e `<ul role="listbox">` diventa il suo slot predefinito, quindi
-il pannello viene portato tramite `<Teleport>` e ancorato con CSS Anchor
-Posizionamento invece di un elenco sul posto con posizionamento assoluto. L'interno
-Il flag di apertura `useState` viene mantenuto sincronizzato con il menu a discesa tramite il suo
-`onUpdateOpen` richiamata.
-
-Altre sostituzioni dall'SFC Vue originale: il componibile `useId` si associa a
-l'hook `useId` nativo del framework; il gallone è la scrittura una volta
-`@mission-platform/icons` `ForgeIconChevron` (ruotato tramite la sua prop `direction`,
-stesso compilato in React/Vue); le stringhe `useI18n` diventano testo semplice; e
-gli `v-model` + emettono diventano oggetti di richiamata. Gli slot denominati `start`/`end` sono
-conservati come slot con nome neutro.
+Componente ForgeSelect che fornisce un controllo di selezione accessibile e indipendente dal framework
+supporto per filtraggio live, ricerca asincrona, navigazione da tastiera e slot personalizzati.
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------- | ----------- |
 | proprietà | Sola lettura<SelectProperties> |             |
+
+### ForgeSelectProps
+
+**Genere:** tipo
+
+```typescript
+export type ForgeSelectProps = SelectProperties;
+```
+
+Nessuna descrizione fornita.
 
 ### Seleziona Opzione
 

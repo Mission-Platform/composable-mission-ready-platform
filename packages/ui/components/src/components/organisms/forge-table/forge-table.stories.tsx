@@ -1,7 +1,7 @@
 import { ForgeTable } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { TableColumn } from './forge-table';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const columns: TableColumn[] = [
   { key: 'name', label: 'Name', sortable: true },

@@ -1,4 +1,4 @@
-# Model- en kostenstrategie - Volledige dekking van het ZXING-corpus
+# Model- en kostenstrategie — Volledige dekking van het ZXING-corpus
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
@@ -25,14 +25,14 @@ moet worden besteed.
 
 ## Fase → niveautoewijzing
 
-| Fase                                                | Werk                                                    | Niveau |
-| --------------------------------------------------- | ------------------------------------------------------- | ------ |
-| 1 Leverancierscorpus + lader + harnas               | kopie/toeschrijving (C), lader + harnaslogica (B)       | C → B  |
-| 2 Verhoog de leessnelheid van ondersteunde formaten | locator afstemmen + paden opnieuw proberen              | A → B  |
-| 3 GS1 DataBar-familie                               | tabellen/encoders (B), RSS-14-locator + RS (A)          | A/B    |
-| 4 PDF417                                            | tabellen/encoder (B), rijscanlocator + GF(929) EC (A)   | A/B    |
-| 5 MaxiCode                                          | hex-rasterzoeker + GF(64) RS (A), tabellen (B)          | A/B    |
-| 6 Wire-up + JS + documenten                         | boilerplate/docs + bedrading (C), wasrevisie + rook (B) | C → B  |
+| Fase | Werk | Niveau |
+| ---------------------------------- | ------------------------------------------------------- | ---- |
+| 1 Leverancierscorpus + lader + harnas | kopie/toeschrijving (C), lader + harnaslogica (B) | C → B |
+| 2 Verhoog de leessnelheid van ondersteunde formaten | locator afstemmen + paden opnieuw proberen | A → B |
+| 3 GS1 DataBar-familie | tabellen/encoders (B), RSS-14-locator + RS (A) | A/B |
+| 4 PDF417 | tabellen/encoder (B), rijscanlocator + GF(929) EC (A) | A/B |
+| 5 MaxiCode | hex-rasterzoeker + GF(64) RS (A), tabellen (B) | A/B |
+| 6 Wire-up + JS + documenten | boilerplate/docs + bedrading (C), wasrevisie + rook (B) | C → B |
 
 ## Kostenprincipe
 
@@ -51,7 +51,23 @@ wiskunde, waarbij de fouten van een zwakker model duur zijn om te detecteren en 
   locators en Reed-Solomon (GF (929), GF (64), de RSS-combinatoriek) waren de Tier-A-kern - consistent met de matrix
   hierboven.
 
-> Tijdens de implementatie was er geen tool voor het delegeren van aangepaste agenten beschikbaar, dus a
-> één agent voerde het werk uit en besteedde er moeite aan volgens deze matrix. De
-> matrix blijft de leidraad voor toekomstige herhalingen waarbij delegatie naar meerdere wordt uitgevoerd
-> modellagen zijn mogelijk.
+> De implementatie maakte gebruik van gerichte gedelegeerde beoordelingen voor de correctheid van RSS, de
+> gestapelde 2D-lezers en QR-grafiekemissie. Die beoordelingen bevestigden de
+> beperkte de grens van de beperkte lezer en isoleerde de QR-fout naar het Forge Web
+> Scriptzender in plaats van deze te maskeren met een fallback. De matrix blijft de
+> gids voor toekomstige pariteitspassen waar het ontbrekende corpus en de decoder kunnen werken
+> veilig worden gesplitst.
+
+## Huidige herplanningsgrens
+
+Bij de voltooide fundering en het 1D/RSS-werk werd Tier B gebruikt voor ZXing-vormige poorten en
+Niveau Een recensie voor RSS-combinatoriek, controlesommen en gedrag van begrensd geheugen. De
+huidige gekoppelde 2D-lezers zijn bewust gereduceerde implementaties, zo beweren
+volledige ZXing-pariteit zou eerder een nieuwe Tier-A-decoder en detectorpas vereisen
+dan meer documentatie of opspanwerk.
+
+Het volgende onderzoek met de hoogste waarde is het falen van de Flint QR-zender:
+de zelfstandige QR-grafiek is geldig, maar koppelt de decoder aan de scanner
+grafiek mislukt `FLINT-WASM-001` vóór runtime. Totdat die compilergrens is
+opgelost, Tier-C-armatuur en API-werk moeten QR als een expliciete standalone behouden
+geval en mogen verminderde lokale wedstrijden niet omzetten in pariteitsclaims.

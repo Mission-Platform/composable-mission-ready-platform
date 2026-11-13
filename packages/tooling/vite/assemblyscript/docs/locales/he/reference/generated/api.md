@@ -32,15 +32,15 @@ function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<v
 הרכיב ערך AssemblyScript ל-WebAssembly ופלוט סינגל
 מודול ES עצמאי עם ה-wasm בינארי משובץ בתור base64.
 
-מפעיל את מהדר AssemblyScript באופן תוכנתי (ללא תהליך CLI חיצוני),
+מפעיל את מהדר AssemblyScript באופן תכנותי (ללא תהליך CLI חיצוני),
 לאחר מכן מעבד לאחר מכן את כריכות ה-ESM כך שהמופע מונע מה-
 בינארי מוטבע במקום כתובת URL `.wasm`.
 
 #### פרמטרים
 
-| שם       | הקלד                         | תיאור |
-| -------- | ---------------------------- | ----- |
-| אפשרויות | AssemblyScriptCompileOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ---------------------------- | ----------- |
+| אפשרויות | AssemblyScriptCompileOptions |             |
 
 ## `src/generate`
 
@@ -59,10 +59,10 @@ function buildGeneratedModule(wasmBase64: string, instantiateSource: string): st
 
 #### פרמטרים
 
-| שם                | הקלד   | תיאור |
-| ----------------- | ------ | ----- |
-| wasmBase64        | מחרוזת |       |
-| instantiateSource | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ----------------- | ------ | ----------- |
+| wasmBase64 | מחרוזת |             |
+| instantiateSource | מחרוזת |             |
 
 ### extractInstantiate
 
@@ -79,9 +79,9 @@ function extractInstantiate(bindingsSource: string): string;
 
 #### פרמטרים
 
-| שם             | הקלד   | תיאור |
-| -------------- | ------ | ----- |
-| bindingsSource | מחרוזת |       |
+| שם | הקלד | תיאור |
+| -------------- | ------ | ----------- |
+| bindingsSource | מחרוזת |             |
 
 ## `src/index`
 
@@ -97,15 +97,15 @@ function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 כניסה ל-WebAssembly ופולט מודול ES עצמאי יחיד עם
 wasm בינארי מוטבע כ-base64 (בתוספת מפעל `loadModule()` ממוזכר).
 
-הקומפילציה פועלת ב-rollup `buildStart` hook, כך שהמודול שנוצר הוא
+הקומפילציה פועלת ב-Rollup `buildStart` hook, כך שהמודול שנוצר הוא
 (מחדש) עבור `vite build`, `vite build --watch` ושרת הפיתוח כאחד
 — מה שהופך את `vite build` לנקודת הכניסה היחידה לבניית AssemblyScript.
 
 #### פרמטרים
 
-| שם       | הקלד                        | תיאור |
-| -------- | --------------------------- | ----- |
-| אפשרויות | AssemblyScriptPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------- | ----------- |
+| אפשרויות | AssemblyScriptPluginOptions |             |
 
 ### AssemblyScriptPluginOptions
 
@@ -129,12 +129,12 @@ function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 כניסה ל-WebAssembly ופולט מודול ES עצמאי יחיד עם
 wasm בינארי מוטבע כ-base64 (בתוספת מפעל `loadModule()` ממוזכר).
 
-הקומפילציה פועלת ב-rollup `buildStart` hook, כך שהמודול שנוצר הוא
+הקומפילציה פועלת ב-Rollup `buildStart` hook, כך שהמודול שנוצר הוא
 (מחדש) עבור `vite build`, `vite build --watch` ושרת הפיתוח כאחד
 — מה שהופך את `vite build` לנקודת הכניסה היחידה לבניית AssemblyScript.
 
 #### פרמטרים
 
-| שם       | הקלד                        | תיאור |
-| -------- | --------------------------- | ----- |
-| אפשרויות | AssemblyScriptPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------- | ----------- |
+| אפשרויות | AssemblyScriptPluginOptions |             |

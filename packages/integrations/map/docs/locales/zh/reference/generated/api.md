@@ -497,7 +497,7 @@ export interface UseSourceOptions
 **种类：**常数
 
 ```typescript
-export const MapContext;
+export const MapContext: MpContext<Map | undefined>;
 ```
 
 上下文携带最近的 `<MapLibre>` 祖先的 MapLibre `Map` 实例。

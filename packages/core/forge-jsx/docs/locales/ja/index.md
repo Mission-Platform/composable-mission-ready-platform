@@ -5,27 +5,25 @@
 > packages/core/forge-jsx/docs/index.md: [packages/core/forge-jsx/docs/index.md](../../index.md)
 > 言語: 日本語 (ja)
 
-Mission Platform 用の依存関係のない小さな「一度書き込めば、Vue 3 および React で実行できる」レイヤー。コンポーネントは一度作成される
-JSX を使用し、小さなアダプターを介していずれかのフレームワークでレンダリングされます。ビルド時のコード生成や外部コンパイラーはありません (これは
-有糸分裂のようなツールに代わる手巻きの代替品）。
+Mission Platform 用の依存関係のない、フレームワークに依存しない小型の JSX ランタイム。
+コンポーネントは JSX で一度作成され、別のメソッドを通じてレンダリングされます。
+`@mission-platform/forge-adapters` パッケージ。
 
 ## 仕組み
 
 ```
-author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ toReactComponent ──▶ React
-                                                          └──▶ toVueComponent  ──▶ Vue 3
+author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ framework adapter ──▶ target framework
 ```
 
 1. コンポーネントは、**クラシック** JSX 変換 (`jsxFactory: 'h'`、
    `jsxFragmentFactory: 'Fragment'`)。
 2. `h(...)` は、React/Vue 要素の代わりに、フレームワークに依存しないシリアル化可能な `MpElement` ツリーを構築します。
-3. フレームワークごとのアダプターはそのツリーをたどり、レンダリング時にすべての node を `React.createElement` または Vue の `h` にマップします。
+3. フレームワーク アダプターはそのツリーをたどって、すべての node をターゲットにマッピングします。
+   フレームワークのネイティブ レンダリング プリミティブ。
 
 ## 特徴
 
 - **フレームワーク中立の JSX ランタイム**: シリアル化可能な `MpElement` ツリーを構築する、依存関係のない小型のランタイム
-- **Vue 3 アダプター**: ニュートラルコンポーネントを適切な反応性を持つネイティブ Vue 3 SFC に変換します。
-- **React アダプター**: ニュートラル コンポーネントをネイティブ React コンポーネントに変換します。
 - **フックのサポート**: フレームワークに依存しない React スタイルのフック (`useState`、`useRef`、`useEffect`、`useMemo`、`useCallback`)
   同等のフレームワークにコンパイルされる
 - **ビルドタイム コード生成なし**: Mitosis や同様のツールとは異なり、このアプローチはビルドタイムではなくランタイム アダプターを使用します。
@@ -165,28 +163,6 @@ function App() {
 
 **戻り値:** メモ化された関数
 
-### アダプター
-
-#### `toVueComponent(component)`
-
-フレームワークに依存しないコンポーネントを Vue 3 コンポーネントに変換します。
-
-**パラメータ:**
-
-- `component`: フレームワークに依存しないコンポーネント関数
-
-**戻り値:** Vue コンポーネント定義
-
-#### `toReactComponent(component)`
-
-フレームワークに依存しないコンポーネントを React コンポーネントに変換します。
-
-**パラメータ:**
-
-- `component`: フレームワークに依存しないコンポーネント関数
-
-**戻り値:** React コンポーネント関数
-
 ## TypeScript のサポート
 
 パッケージには完全な TypeScript 宣言が含まれています。適切な型チェックを行って JSX を使用できます。
@@ -210,7 +186,7 @@ function MyComponent({ title, count = 0 }: Props) {
 
 ## 高度な使用法
 
-### Vite との併用
+### Vite での使用
 
 クラシック JSX 変換を使用するように `vite.config.ts` を構成します。
 

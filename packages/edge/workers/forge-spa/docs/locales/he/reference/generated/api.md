@@ -11,6 +11,16 @@
 
 ## `src/index`
 
+### בְּרִירַת מֶחדָל
+
+**סוג:** קבוע
+
+```typescript
+export const handler: ExportedHandler<Env>;
+```
+
+לא סופק תיאור.
+
 ### Env
 
 **סוג:** ממשק

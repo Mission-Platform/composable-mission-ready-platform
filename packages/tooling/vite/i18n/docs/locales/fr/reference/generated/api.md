@@ -19,13 +19,13 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-Aucune description fournie.
+Plugin Vite pour gérer et résoudre les ressources locales de l'application i18n.
 
 #### Paramètres
 
-| Nom     | Tapez                   | Descriptif |
-| ------- | ----------------------- | ---------- |
-| options | Options du plug-in I18n |            |
+| Nom | Tapez | Descriptif |
+| ------- | ----------------- | ----------- |
+| options | Options du plug-in I18n |             |
 
 ### Plugin i18n
 
@@ -35,13 +35,13 @@ Aucune description fournie.
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-Aucune description fournie.
+Plugin Vite pour gérer et résoudre les ressources locales de l'application i18n.
 
 #### Paramètres
 
-| Nom     | Tapez                   | Descriptif |
-| ------- | ----------------------- | ---------- |
-| options | Options du plug-in I18n |            |
+| Nom | Tapez | Descriptif |
+| ------- | ----------------- | ----------- |
+| options | Options du plug-in I18n |             |
 
 ### Options du plug-in I18n
 
@@ -71,9 +71,9 @@ de vérité au lieu de maintenir manuellement une liste parallèle.
 
 #### Paramètres
 
-| Nom     | Tapez                       | Descriptif |
-| ------- | --------------------------- | ---------- |
-| options | LireSupportedLocalesOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | --------------------------- | ----------- |
+| options | LireSupportedLocalesOptions |             |
 
 ### ReadSupportedLocalesOptions
 

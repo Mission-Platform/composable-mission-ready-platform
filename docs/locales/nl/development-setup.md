@@ -14,29 +14,29 @@ Voordat u de repository gaat klonen, moet u ervoor zorgen dat uw systeem aan de 
 
 ### Systeemvereisten
 
-| Gereedschap | Vereiste versie            | Doel                                             |
-| :---------- | :------------------------- | :----------------------------------------------- |
-| **Node.js** | `24.19.0`                  | Runtime-omgeving (actieve LTS)                   |
-| **pnpm**    | `11.21.0`                  | Pakketbeheerder en werkruimteorkestrator         |
-| **Git**     | Laatste stabiele           | Versiebeheer                                     |
-| **Roest**   | Stabiele gereedschapsketen | Optionele standalone Rust-benchmarkontwikkeling  |
-| **Dokker**  | Laatste stabiele           | Alleen vereist voor de Emscripten Hunspell-build |
+| Gereedschap | Vereiste versie | Doel |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0` | Runtime-omgeving (actieve LTS) |
+| **pnpm** | `12.4.2` | Pakketbeheerder en werkruimteorkestrator |
+| **Git** | Laatste stabiele | Versiebeheer |
+| **Roest** | Stabiele gereedschapsketen | Optionele standalone Rust-benchmarkontwikkeling |
+| **Dokker** | Laatste stabiele | Alleen vereist voor de Emscripten Hunspell-build |
 
 ### Versiebeheer (aanbevolen)
 
-Wij adviseren het gebruik van **nvm** (Node Versiebeheer) om er zeker van te zijn dat u de juiste versie gebruikt Node.js-versie gespecificeerd in het
-wortel `.nvmrc` bestand.
+We raden u aan **nvm** (Node Version Manager) te gebruiken om er zeker van te zijn dat u de juiste Node.js-versie gebruikt die is opgegeven in de
+root `.nvmrc`-bestand.
 
 ```bash
 nvm install
 nvm use
 ```
 
-Inschakelen **pnpm** bij gebruik van Corepack:
+Schakel **pnpm** in met Corepack:
 
 ```bash
 corepack enable
-corepack prepare pnpm@11.21.0 --activate
+corepack prepare pnpm@12.4.2 --activate
 ```
 
 ## Initiële installatie
@@ -58,8 +58,24 @@ Installeer alle afhankelijkheden van de werkruimte en stel git hooks in:
 pnpm install
 ```
 
-Deze opdracht activeert de `prepare` script, dat **Husky** initialiseert voor commit-linting en ervoor zorgt dat alle interne
+Deze opdracht activeert het `prepare`-script, dat **Husky** initialiseert voor commit-linting en ervoor zorgt dat alle interne
 pakketlinks zijn correct tot stand gebracht.
+
+### SonarLint-taalserver
+
+De `agent-lsp.json` van de repository bevat de officiële SonarLint-taalserver voor JavaScript en TypeScript. De
+server wordt gedistribueerd als een Java-archief in plaats van als een npm-pakket, dus installeer Java en bouw of download het
+`sonarlint-language-server`-archief van [SonarSource](https://github.com/SonarSource/sonarlint-language-server).
+
+Stel het serverarchief en de JavaScript-analysator in voordat u de LSP start:
+
+```bash
+export SONARLINT_LS_JAR=/path/to/sonarlint-language-server.jar
+export SONARLINT_ANALYZERS=/path/to/sonarjs.jar
+```
+
+De optionele variabele `SONARLINT_JAVA` kan een uitvoerbaar Java-bestand selecteren. Het repository-opstartprogramma valideert de geconfigureerde
+paden en stuurt het stdio-protocol van de server door zonder dat een globaal geïnstalleerde opdracht nodig is.
 
 ### 3. Controleer de installatie
 
@@ -69,9 +85,9 @@ Voer een rooktest uit om er zeker van te zijn dat het bouwsysteem en de omgeving
 pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
-De `...` bouwt ook de Forge-afhankelijkheden die door het pakket vereist zijn. De
+Het `...`-filter bouwt ook de Forge-afhankelijkheden op die door het pakket worden vereist. De
 neutrale codescanner is samengesteld uit de Flint-grafiek; dat is niet het geval
-vereisen een Roest of `wasm-pack` stap bouwen.
+vereist een Rust- of `wasm-pack`-buildstap.
 
 ## Ontwikkelingsworkflow
 
@@ -99,7 +115,7 @@ pnpm storybook:solid
 pnpm storybook:web-component
 ```
 
-Alle vijf modi gebruiken dezelfde neutrale verhaalinventaris. Om elke statische elektriciteit te valideren
+Alle vijf modi gebruiken dezelfde neutrale verhaalinventaris. Om elke statische waarde te valideren
 werkbank in één werkgang opgebouwd:
 
 ```bash
@@ -108,9 +124,9 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-Door Forge ondersteunde pakketten publiceren matching `mp:vue`, `mp:react`, `mp:svelte`,
-`mp:solid`, En `mp:web-component` voorwaarden. De actieve voorwaarde moet zijn
-geconfigureerd door de verbruikende bundelaar; zien [de compilerreferentie](../../../packages/tooling/vite/forge/docs/locales/nl/reference/compiler.md)
+Door Forge ondersteunde pakketten publiceren overeenkomende `mp:vue`, `mp:react`, `mp:svelte`,
+`mp:solid`- en `mp:web-component`-voorwaarden. De actieve voorwaarde moet zijn
+geconfigureerd door de verbruikende bundelaar; zie [de compilerreferentie](../../../packages/tooling/vite/forge/docs/locales/nl/reference/compiler.md)
 voor de doelplug-in en declaratiepijplijn.
 
 ### Applicatieontwikkeling
@@ -126,18 +142,18 @@ De applicatie is doorgaans beschikbaar op `http://localhost:5173`.
 
 ### Algemene opdrachten
 
-| Taak        | Commando      | Beschrijving                      |
-| :---------- | :------------ | :-------------------------------- |
-| **Bouw**    | `pnpm build`  | Bouw alle apps en pakketten       |
-| **Test**    | `pnpm test`   | Alles uitvoeren Vitest suites     |
-| **Lint**    | `pnpm lint`   | Loop ESLint over de monorepo      |
+| Task       | Command       | Beschrijving |
+| :--------- | :------------ | :----------------------------- |
+| **Bouw** | `pnpm build` | Bouw alle apps en pakketten |
+| **Test** | `pnpm test` | Voer alle Vitest-suites uit |
+| **Lint** | `pnpm lint` | Voer ESLint uit in de monorepo |
 | **Formaat** | `pnpm format` | Controleer de opmaak met Prettier |
 
 ## Problemen oplossen
 
-### Caches leegmaken
+### Caches wissen
 
-Als u onverwachte bouwfouten tegenkomt, wis dan de Turborepo en Node caches:
+Als u onverwachte buildfouten tegenkomt, wist u de caches van Turborepo en Node:
 
 ```bash
 # Remove Turborepo cache
@@ -150,7 +166,7 @@ pnpm install
 
 ### WASM-buildfouten
 
-Als een Flint-artefact niet kan worden gebouwd, controleer dan de diagnostische gegevens van de compiler
+Als een Flint-artefact niet kan worden gebouwd, controleer dan de diagnose van de compiler
 en verifieer het geselecteerde statische of dynamische linkprofiel. De
-`@mission-platform/hunspell` Voor het bouwen van Emscripten is Docker bovendien vereist
+`@mission-platform/hunspell` Emscripten-build vereist bovendien Docker
 rennen.

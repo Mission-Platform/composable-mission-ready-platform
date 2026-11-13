@@ -28,7 +28,7 @@ src/utils/
 1. **Purezza**: preferisci funzioni pure che non abbiano effetti collaterali. Dato lo stesso input, dovrebbero sempre restituire il file
    stessa uscita.
 2. **Nessun hook dell'interfaccia utente**: non importare mai gli hook `vue`, `react` o `@mission-platform/forge-jsx` in un'utilità. Richiede logica
-   la reattività appartiene [Componenti componibili](composable-authoring.md).
+   la reattività appartiene a [Composables](composable-authoring.md).
 3. **Digitazione esplicita**: fornisce tipi TypeScript completi per tutti gli argomenti e i valori restituiti.
 4. **Test obbligatorio**: ogni utilità deve avere un file `.spec.ts` co-localizzato.
 5. **Responsabilità unica**: ciascuna cartella util dovrebbe concentrarsi su un'attività specifica e ristretta.
@@ -46,16 +46,17 @@ export function clamp(value: number, min: number, max: number): number {
 
 ## Impalcature
 
-Utilizza lo strumento MCP Mission Platform Developer per generare un nuovo scheletro di utilità:
+Utilizzare lo strumento `scaffold_util` tramite un server MCP Mission Platform Developer connesso per generare una nuova utilità
+scheletro. Questo è un esempio di chiamata allo strumento MCP, non un comando shell:
 
-```bash
+```text
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```
 
 ## Guide correlate
 
-- [Sviluppo di pacchetti](package-development.md)
+- [Sviluppo pacchetto](package-development.md)
 - [Progettazione di componenti atomici](atomic-component-design.md)
-- [Authoring componibile](composable-authoring.md)
-- [Creazione di archivi](store-authoring.md)
+- [Creazione componibile](composable-authoring.md)
+- [Creazione archivio](store-authoring.md)

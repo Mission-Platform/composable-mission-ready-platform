@@ -16,17 +16,17 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined;
+function useObservable(source: Observable<T>, initialValue?: T): T | undefined;
 ```
 
-Abonnez-vous à `source` et renvoyez sa dernière émission sous forme d'état. Retours
-`undefined` jusqu'à l'arrivée de la première émission.
+Aucune description fournie.
 
 #### Paramètres
 
-| Nom    | Tapez         | Descriptif |
-| ------ | ------------- | ---------- |
-| source | Observable<T> |            |
+| Nom | Tapez | Descriptif |
+| ------------ | ------------- | ----------- |
+| source | Observable<T> |             |
+| valeurinitiale | T |             |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -58,11 +58,11 @@ durée de vie du composant, réabonnement lorsque `source` (ou tout supplément
 
 #### Paramètres
 
-| Nom                  | Tapez                                          | Descriptif |
-| -------------------- | ---------------------------------------------- | ---------- |
-| source               | Observable<T>                                  |            |
-| observateurOuSuivant | Partial<Observer<T>> \| ((valeur : T) => vide) |            |
-| dépendances          | MpDependencyList                               |            |
+| Nom | Tapez | Descriptif |
+| -------------- | -------------------------------------------- | ----------- |
+| source | Observable<T> |             |
+| observateurOuSuivant | Partielle<Observer<T>> \| ((valeur : T) => vide) |             |
+| dépendances | MpDependencyList |             |
 
 ### utiliser l'abonnement
 
@@ -78,7 +78,7 @@ il peut envelopper un simple appel `source.subscribe(...)` ou un pipeline entier
 
 #### Paramètres
 
-| Nom          | Tapez               | Descriptif |
-| ------------ | ------------------- | ---------- |
-| abonnez-vous | () => Désabonnement |            |
-| dépendances  | MpDependencyList    |            |
+| Nom | Tapez | Descriptif |
+| ------------ | -------------------- | ----------- |
+| abonnez-vous | () => Désabonnement |             |
+| dépendances | MpDependencyList |             |

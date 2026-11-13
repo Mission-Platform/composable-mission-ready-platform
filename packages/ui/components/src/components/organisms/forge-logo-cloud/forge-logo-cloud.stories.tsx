@@ -1,7 +1,8 @@
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
 import { ForgeLogoCloud } from './forge-logo-cloud';
 
 import type { LogoCloudProperties } from './forge-logo-cloud';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const meta = {
   title: 'Organisms/Marketing/ForgeLogoCloud',

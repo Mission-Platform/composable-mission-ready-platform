@@ -11,7 +11,7 @@ Mission Platform을 위한 CSS 디자인 토큰 및 SCSS 테마 정의. 이 패�
 
 ## 여기서 시작하세요
 
-- [구성요소 토큰 참조](reference/component-tokens.md) — 인벤토리,
+- [구성 요소 토큰 참조](reference/component-tokens.md) — 인벤토리,
   DTCG 경로, 생성된 출력 및 Figma 핸드오프 계약.
 - [빌드 및 테스트 가이드](guides/development.md) — 토큰 소스, 생성 및
   스타일시트를 확인합니다.

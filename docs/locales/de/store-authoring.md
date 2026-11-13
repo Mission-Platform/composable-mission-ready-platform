@@ -11,7 +11,7 @@ Einmal beschreibbare Komponenten, um sie unabhängig vom Host-Framework über Fo
 
 ## Verzeichnislayout
 
-Jeder Speicher MUSS sich in einem eigenen benannten Unterverzeichnis innerhalb von `src/stores/` befinden, begleitet von einer am selben Ort befindlichen Testdatei und einer
+Jeder Speicher MUSS sich in einem eigenen benannten Unterverzeichnis innerhalb von `src/stores/` befinden, zusammen mit einer am selben Ort befindlichen Testdatei und einer
 lokales Fass.
 
 ```text
@@ -81,9 +81,10 @@ useEffect(() => {
 
 ## Gerüst
 
-Verwenden Sie das MCP-Tool von Mission Platform Developer, um ein neues Geschäftsgerüst zu erstellen:
+Verwenden Sie das `scaffold_store`-Tool über einen verbundenen Mission Platform Developer MCP-Server, um einen neuen Store zu generieren
+Skelett. Dies ist ein Beispiel für einen MCP-Tool-Aufruf, kein Shell-Befehl:
 
-```bash
+```text
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
@@ -91,6 +92,6 @@ scaffold_store(name="auth-store", package="components", apply=true)
 ## Verwandte Leitfäden
 
 - [Paketentwicklung](package-development.md)
-- [Atomares Komponentendesign](atomic-component-design.md)
+- [Atomkomponentendesign](atomic-component-design.md)
 - [Composable Authoring](composable-authoring.md)
 - [Util Authoring](util-authoring.md)

@@ -2,7 +2,9 @@
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> packages/forge-figma-bridge/docs/index.md: [packages/forge-figma-bridge/docs/index.md](../../index.md)
+> packages/compiler/figma/forge-figma-bridge/docs/index.md: [packages/compiler/figma/forge-figma-bridge/docs/index.md](../../index.md)
 > اللغة: العربية (ar)
 
-يقبل الجسر `ForgeRepositoryExportRequest` الذي تمت مراجعته عبر `POST /export` ويكتب الحزمة في أحد جذور المستودع التي تم تكوينها بشكل صريح. قم بتكوين الجذور باستخدام خيار `--root <id>=<absolute-path>` الخاص بـ CLI.
+يقبل الجسر `ForgeRepositoryExportRequest` الذي تمت مراجعته عبر `POST /export` المصادق عليه ويكتب الحزمة في أحد جذور المستودع التي تم تكوينها بشكل صريح. قم بتكوين الجذور باستخدام خيار `--root <id>=<absolute-path>` الخاص بـ CLI.
+
+تقوم كل عملية خادم بإنشاء رمز مصادقة جديد. تقوم واجهة سطر الأوامر (CLI) بطباعة الرمز المميز عند بدء تشغيله؛ يجب على المتصلين إرساله كـ `Authorization: Bearer <token>` وإرسال الأصل الافتراضي `https://www.figma.com`. يمكن تغيير الأصل للتكامل المحلي الذي تم تكوينه بشكل صريح مع خيار خادم `allowedOrigin`. يتم رفض الطلبات من الأصول الأخرى والطلبات التي لا تحتوي على الرمز المميز قبل قراءة الحزمة أو كتابتها.

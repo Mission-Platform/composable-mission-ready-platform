@@ -11,12 +11,22 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/email-s
 
 ## `src/index`
 
+### standaard
+
+**Soort:** constant
+
+```typescript
+export const handler: ExportedHandler<WorkerEnvironment>;
+```
+
+Geen beschrijving opgegeven.
+
 ### Levering
 
 **Soort:** type
 
 ```typescript
-export type Delivery = (environment: Env, message: SmtpMessage) => Promise<void>;
+export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 ```
 
 Geen beschrijving opgegeven.
@@ -36,15 +46,26 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
+function handleRequest(
+  request: Request,
+  environment: WorkerEnvironment,
+  delivery: Delivery = defaultDelivery,
+): Promise<Response>;
 ```
 
-Geen beschrijving opgegeven.
+Verwerkt inkomende verzoeken om e-mailbezorging, valideert de invoer en bezorgt deze aan de SMTP-service.
 
 #### Parameters
 
-| Naam     | Typ      | Beschrijving |
-| -------- | -------- | ------------ |
-| verzoek  | Verzoek  |              |
-| omgeving | Env      |              |
-| levering | Levering |              |
+| Naam | Typ | Beschrijving |
+| ----------- | ----------------- | -------------------------------------------------- |
+| verzoek | Verzoek | - Binnenkomend HTTP-verzoek.                           |
+| omgeving | Werknemeromgeving | - Werknemersomgevingsbindingen.                     |
+| levering | Levering | - Bezorgfunctie voor het afhandelen van berichtoverdracht. |
+
+#### Contract
+
+- **@param:** - Binnenkomend HTTP-verzoek.
+- **@param:** - Werknemeromgevingsbindingen.
+- **@param:** - Bezorgfunctie voor het afhandelen van berichtoverdracht.
+- **@returns:** HTTP-antwoord.

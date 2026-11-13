@@ -21,6 +21,16 @@ export interface CompiledRegex
 
 التمثيل الحتمي المضمن في الواجهة الخلفية لـ Forge.
 
+### FLINT_REGEX_BYTECODE_VERSION
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_REGEX_BYTECODE_VERSION;
+```
+
+نسخة مستقرة من عقد الرمز الثانوي المشترك لـ Flint regex.
+
 ### FORGE_REGEX_BYTECODE_VERSION
 
 **النوع:** ثابت
@@ -29,7 +39,7 @@ export interface CompiledRegex
 export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
-نسخة مستقرة من عقد الرمز الثانوي Forge regex المشترك.
+لم يتم تقديم أي وصف.
 
 ### INSTR_WIDTH
 
@@ -59,7 +69,7 @@ export const Op;
 export type Opcode = (typeof Op)[keyof typeof Op];
 ```
 
-لم يتم تقديم أي وصف.
+معرف كود تشغيل التعليمات الثنائية لتنفيذ رمز regex bytecode.
 
 ## `src/compiler`
 
@@ -75,9 +85,29 @@ function compileRegex(pattern: string): CompiledRegex;
 
 #### حدود
 
-| الاسم | اكتب  | الوصف |
-| ----- | ----- | ----- |
-| نمط   | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| نمط | سلسلة |             |
+
+### MAX_REGEX_PATTERN_LENGTH
+
+**النوع:** ثابت
+
+```typescript
+export const MAX_REGEX_PATTERN_LENGTH;
+```
+
+لم يتم تقديم أي وصف.
+
+### MAX_REGEX_REPEAT_BOUND
+
+**النوع:** ثابت
+
+```typescript
+export const MAX_REGEX_REPEAT_BOUND;
+```
+
+لم يتم تقديم أي وصف.
 
 ### RegexSyntaxError
 
@@ -88,6 +118,46 @@ export class RegexSyntaxError extends Error
 ```
 
 خطأ في بناء الجملة مملوك للمترجم مع رسائل نسبية حتمية للمصدر.
+
+## `src/index`
+
+### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
+
+**النوع:** ثابت
+
+```typescript
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+```
+
+لم يتم تقديم أي وصف.
+
+### flintStandardLibraryIdentity
+
+**النوع:** الوظيفة
+
+```typescript
+function flintStandardLibraryIdentity(
+  identity?: FlintStandardLibraryIdentity,
+): FlintStandardLibraryIdentity;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ---------------------------- | ----------- |
+| الهوية | FlintStandardLibraryIdentity |             |
+
+### FlintStandardLibraryIdentity
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintStandardLibraryIdentity
+```
+
+لم يتم تقديم أي وصف.
 
 ## `src/reference-vm`
 
@@ -103,10 +173,10 @@ function captureEnd(captures: Captures | null, group: number): number;
 
 #### حدود
 
-| الاسم    | اكتب           | الوصف |
-| -------- | -------------- | ----- |
-| يلتقط    | يلتقط \| فارغة |       |
-| المجموعة | رقم            |       |
+| الاسم | اكتب | الوصف |
+| -------- | ---------------- | ----------- |
+| يلتقط | يلتقط \| فارغة |             |
+| المجموعة | رقم |             |
 
 ### يلتقط
 
@@ -130,10 +200,10 @@ function captureStart(captures: Captures | null, group: number): number;
 
 #### حدود
 
-| الاسم    | اكتب           | الوصف |
-| -------- | -------------- | ----- |
-| يلتقط    | يلتقط \| فارغة |       |
-| المجموعة | رقم            |       |
+| الاسم | اكتب | الوصف |
+| -------- | ---------------- | ----------- |
+| يلتقط | يلتقط \| فارغة |             |
+| المجموعة | رقم |             |
 
 ### com.fullMatch
 
@@ -143,14 +213,64 @@ function captureStart(captures: Captures | null, group: number): number;
 function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-تطابق كامل السلسلة، مثبت في الموضع صفر.
+مطابقة السلسلة الكاملة، مثبتة في الموضع صفر (تستخدم PikeVM للزمن الخطي بشكل افتراضي).
 
 #### حدود
 
-| الاسم   | اكتب          | الوصف |
-| ------- | ------------- | ----- |
-| إعادة   | CompiledRegex |       |
-| الإدخال | سلسلة         |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| إعادة | CompiledRegex |             |
+| الإدخال | سلسلة |             |
+
+### fullMatchBacktracking
+
+**النوع:** الوظيفة
+
+```typescript
+function fullMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+التراجع عن مرجع مطابقة السلسلة الكاملة أوراكل.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| إعادة | CompiledRegex |             |
+| الإدخال | سلسلة |             |
+
+### fullMatchLinear
+
+**النوع:** الوظيفة
+
+```typescript
+function fullMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+تطابق السلسلة الكاملة باستخدام محرك PikeVM الخطي.
+يضمن تنفيذ O(M * N) والحصانة ضد تراجع ReDoS.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| إعادة | CompiledRegex |             |
+| الإدخال | سلسلة |             |
+
+### بايك رنر
+
+**النوع:** فئة
+
+```typescript
+export class PikeRunner extends BaseRunner
+```
+
+محرك تنفيذ PikeVM ذو زمن خطي غير تراجعي.
+يضمن التعقيد الزمني O(M * N) حيث M هو عدد التعليمات وN هو طول الإدخال،
+محصن تمامًا ضد ReDoS (رفض خدمة التعبير العادي).
 
 ### prefixMatch
 
@@ -160,14 +280,62 @@ function fullMatch(re: CompiledRegex, input: string): Captures | null;
 function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-مطابقة البادئة، مثبتة في الموضع صفر ولكن ليس في النهاية.
+مطابقة البادئة، مثبتة في الموضع صفر ولكن ليس في النهاية (تستخدم PikeVM للوقت الخطي افتراضيًا).
 
 #### حدود
 
-| الاسم   | اكتب          | الوصف |
-| ------- | ------------- | ----- |
-| إعادة   | CompiledRegex |       |
-| الإدخال | سلسلة         |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| إعادة | CompiledRegex |             |
+| الإدخال | سلسلة |             |
+
+### prefixMatchBacktracking
+
+**النوع:** الوظيفة
+
+```typescript
+function prefixMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+بادئة التراجع تطابق مرجع أوراكل.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| إعادة | CompiledRegex |             |
+| الإدخال | سلسلة |             |
+
+### prefixMatchLinear
+
+**النوع:** الوظيفة
+
+```typescript
+function prefixMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+مطابقة البادئة باستخدام محرك PikeVM الخطي.
+يضمن تنفيذ O(M * N) والحصانة ضد تراجع ReDoS.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| إعادة | CompiledRegex |             |
+| الإدخال | سلسلة |             |
+
+### عداء
+
+**النوع:** فئة
+
+```typescript
+export class Runner extends BaseRunner
+```
+
+التراجع عن مشغل التنفيذ المرجعي للتحقق من تعليمات الرمز الثانوي.
 
 ### يبحث
 
@@ -177,15 +345,60 @@ function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
-يتطابق أقصى اليسار عند `start` أو بعده.
+يتطابق أقصى اليسار عند `start` أو بعده (يستخدم PikeVM للوقت الخطي بشكل افتراضي).
 
 #### حدود
 
-| الاسم   | اكتب          | الوصف |
-| ------- | ------------- | ----- |
-| إعادة   | CompiledRegex |       |
-| الإدخال | سلسلة         |       |
-| ابدأ    |               |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| إعادة | CompiledRegex |             |
+| الإدخال | سلسلة |             |
+| ابدأ |               |             |
+
+### com.searchBacktracking
+
+**النوع:** الوظيفة
+
+```typescript
+function searchBacktracking(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+التراجع عن مرجع البحث أوراكل
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| إعادة | CompiledRegex |             |
+| الإدخال | سلسلة |             |
+| ابدأ |               |             |
+
+### searchLinear
+
+**النوع:** الوظيفة
+
+```typescript
+function searchLinear(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+تطابق أقصى اليسار عند `start` أو بعده باستخدام محرك PikeVM للزمن الخطي.
+محصن ضد التراجع الكارثي في ​​​​أنماط البحث غير المثبتة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| إعادة | CompiledRegex |             |
+| الإدخال | سلسلة |             |
+| ابدأ |               |             |
 
 ### امتحان
 
@@ -195,11 +408,46 @@ function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 function test(re: CompiledRegex, input: string): boolean;
 ```
 
-مطابقة منطقية لسلسلة كاملة.
+تطابق منطقي لسلسلة كاملة (يستخدم PikeVM للوقت الخطي بشكل افتراضي).
 
 #### حدود
 
-| الاسم   | اكتب          | الوصف |
-| ------- | ------------- | ----- |
-| إعادة   | CompiledRegex |       |
-| الإدخال | سلسلة         |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| إعادة | CompiledRegex |             |
+| الإدخال | سلسلة |             |
+
+### testBacktracking
+
+**النوع:** الوظيفة
+
+```typescript
+function testBacktracking(re: CompiledRegex, input: string): boolean;
+```
+
+التراجع عن مرجع المطابقة المنطقية أوراكل
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| إعادة | CompiledRegex |             |
+| الإدخال | سلسلة |             |
+
+### testLinear
+
+**النوع:** الوظيفة
+
+```typescript
+function testLinear(re: CompiledRegex, input: string): boolean;
+```
+
+مطابقة منطقية لسلسلة كاملة باستخدام محرك PikeVM الخطي.
+محصن ضد التراجع الكارثي عن التعبيرات العادية المرضية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| إعادة | CompiledRegex |             |
+| الإدخال | سلسلة |             |

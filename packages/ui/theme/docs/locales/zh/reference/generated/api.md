@@ -39,9 +39,9 @@ function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElemen
 
 #### 参数
 
-| 名称 | 类型                        | 描述 |
-| ---- | --------------------------- | ---- |
-| 属性 | 只读<ThemeToggleProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------- | ----------- |
+|属性 |只读<ThemeToggleProperties> |             |
 
 ### 主题切换属性
 
@@ -86,7 +86,7 @@ function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpEl
 `../theme-composer-store`，将它们应用到其 `display: contents` 包装器
 (`<div>`) — 或当 `global` 时到 `document.documentElement` — 并发出每个
 通过 `onUpdateModelValue` 回调属性进行更改（替代
-`v-model`）。它的默认作用域插槽接收 `{ config, cssVariables,
+`v-model`）。它的默认作用域槽接收 `{ config, cssVariables,
 styleString、setConfig、setAttribute、setToken、removeToken、重置 }`。
 
 共享 (`provide`/`inject`) 存储、`localStorage` 持久性和
@@ -96,9 +96,9 @@ styleString、setConfig、setAttribute、setToken、removeToken、重置 }`。
 
 #### 参数
 
-| 名称 | 类型                          | 描述 |
-| ---- | ----------------------------- | ---- |
-| 属性 | 只读<ThemeComposerProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------------- | ----------- |
+|属性 |只读<ThemeComposerProperties> |             |
 
 ### ThemeComposer属性
 
@@ -141,7 +141,7 @@ function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpEl
 **共享可观察单例**存储 (`../theme-store`)
 `ForgeThemeToggle` 和任何其他消费者已阅读 - 单击切换
 任何地方都反映在这里，反之亦然。否则它是无渲染的：它渲染
-`display: contents` 包装器 (`<div>`)，因此它永远不会引入盒子，并且它的
+`display: contents` 包装器 (`<div>`)，因此它永远不会引入盒子，并且它
 默认槽接收`{ theme,resolvedTheme,systemTheme,setTheme,
 切换主题，周期主题 }` 作为范围。
 
@@ -151,9 +151,9 @@ function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpEl
 
 #### 参数
 
-| 名称 | 类型                          | 描述 |
-| ---- | ----------------------------- | ---- |
-| 属性 | 只读<ThemeProviderProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------------- | ----------- |
+|属性 |只读<ThemeProviderProperties> |             |
 
 ### 主题提供者属性
 
@@ -201,9 +201,9 @@ function configToCssVariables(config: ThemeComposerConfig): Record<string, strin
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 配置 | 主题作曲家配置 |      |
+|名称 |类型 |描述 |
+| ------ | ------------------- | ----------- |
+|配置 |主题作曲家配置 |             |
 
 ### 配置到样式字符串
 
@@ -217,9 +217,9 @@ function configToStyleString(config: ThemeComposerConfig): string;
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 配置 | 主题作曲家配置 |      |
+|名称 |类型 |描述 |
+| ------ | ------------------- | ----------- |
+|配置 |主题作曲家配置 |             |
 
 ### css变量转字符串
 
@@ -233,9 +233,9 @@ function cssVariablesToString(variables: Record<string, string>): string;
 
 #### 参数
 
-| 名称 | 类型                 | 描述 |
-| ---- | -------------------- | ---- |
-| 变量 | 记录<string, string> |      |
+|名称 |类型 |描述 |
+| --------- | ---------------------- | ----------- |
+|变量 |记录<string, string> |             |
 
 ### 合并配置
 
@@ -249,10 +249,10 @@ function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig):
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 配置 | 主题作曲家配置 |      |
-| 部分 | 主题作曲家配置 |      |
+|名称 |类型 |描述 |
+| ------- | ------------------- | ----------- |
+|配置 |主题作曲家配置 |             |
+|部分 |主题作曲家配置 |             |
 
 ### 删除配置令牌
 
@@ -266,10 +266,10 @@ function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeCompo
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 配置 | 主题作曲家配置 |      |
-| 关键 | 字符串         |      |
+|名称 |类型 |描述 |
+| ------ | ------------------- | ----------- |
+|配置 |主题作曲家配置 |             |
+|关键|字符串|             |
 
 ### 设置配置属性
 
@@ -287,11 +287,11 @@ function setConfigAttribute(
 
 #### 参数
 
-| 名称 | 类型              | 描述 |
-| ---- | ----------------- | ---- |
-| 配置 | 主题作曲家配置    |      |
-| 属性 | 克                |      |
-| 价值 | 主题作曲家配置[K] |      |
+|名称 |类型 |描述 |
+| --------- | ---------------------- | ----------- |
+|配置 |主题作曲家配置 |             |
+|属性|克 |             |
+|价值|主题作曲家配置[K] |             |
 
 ### 设置配置令牌
 
@@ -305,11 +305,33 @@ function setConfigToken(config: ThemeComposerConfig, key: string, value: string)
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 配置 | 主题作曲家配置 |      |
-| 关键 | 字符串         |      |
-| 价值 | 字符串         |      |
+|名称 |类型 |描述 |
+| ------ | ------------------- | ----------- |
+|配置 |主题作曲家配置 |             |
+|关键|字符串|             |
+|价值|字符串|             |
+
+### 主题作曲家属性
+
+**种类：**类型
+
+```typescript
+export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens' | 'colorScheme'>;
+```
+
+映射到 `--mp-*` 自定义属性的友好属性键。
+
+### 主题作曲家配置
+
+**种类：**接口
+
+```typescript
+export interface ThemeComposerConfig
+```
+
+消费者可以撰写的主题属性的高级类型描述
+在运行时。每个属性都映射到平台的 `--mp-*` 之一
+design-token CSS 自定义属性（请参阅 {@link ATTRIBUTE_TO_CSS_VAR}）。
 
 ## `src/stores/theme-store/theme-store`
 
@@ -327,9 +349,9 @@ function configureTheme(config: ThemeConfig): void;
 
 #### 参数
 
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 配置 | 主题配置 |      |
+|名称 |类型 |描述 |
+| ------ | ----------- | ----------- |
+|配置 |主题配置 |             |
 
 ### 周期主题
 
@@ -373,9 +395,9 @@ function setTheme(next: Theme): void;
 
 #### 参数
 
-| 名称   | 类型 | 描述 |
-| ------ | ---- | ---- |
-| 下一个 | 主题 |      |
+|名称 |类型 |描述 |
+| ---- | ----- | ----------- |
+|下一个 |主题|             |
 
 ### 订阅主题
 
@@ -389,9 +411,9 @@ function subscribeTheme(listener: () => void): () => void;
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 听众 | () => 无效 |      |
+|名称 |类型 |描述 |
+| -------- | ---------- | ----------- |
+|听众 | () => 无效 |             |
 
 ### 主题
 

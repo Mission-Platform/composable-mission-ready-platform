@@ -24,9 +24,39 @@ nombre en `names` (y cualquiera de sus importaciones de subruta, por ejemplo, `p
 
 #### Parámetros
 
-| Nombre  | Tipo                     | Descripción |
-| ------- | ------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ----- | ----------------- | ----------- |
 | nombres | cadena de solo lectura[] |             |
+
+### cssBundlePlugin
+
+**Tipo:** función
+
+```typescript
+function cssBundlePlugin(): TsdownPlugin;
+```
+
+Vuelva a vincular cada recurso CSS extraído al módulo JS que lo posee.
+
+tsdown/Rolldown extrae las importaciones `*.module.scss` / `*.scss` coubicadas en
+activos `.css` independientes: con el hash de nombre de clase ya aplicado y el
+nombres resueltos integrados en los mapas de clases de hermanos, pero, a diferencia de Vite, no
+_not_* reinyectar el `import './x.css'` coincidente en el fragmento JS (deja
+un marcador de posición `/* empty css *\/`) y escribe esos activos directamente en
+disco en lugar de a través del paquete acumulativo. Un consumidor que importa un componente
+por lo tanto obtiene su marcado sin sus estilos, y Rolldown no expone
+`viteMetadata.importedCss` para reconstruir el gráfico CSS por fragmento.
+
+Entonces, en `writeBundle` (después de que cada activo esté en el disco), este complemento antepone un
+efecto secundario `import './x.css'` al módulo propietario de cada hoja de estilo (consulte
+{@link resolveCssOwner}): el mapa de clases del módulo CSS (o, para Vue, el componente
+trozo) que los consumidores ya importan. Debido a que la hoja de estilo está insertada en un
+módulo que realmente se utiliza (no un barril de reexportación puro que una importación con nombre
+haría temblar los árboles), la importación de un solo componente atrae de manera confiable exactamente
+los estilos de ese componente y los estilos de toda la biblioteca cuando el barril está
+importado: coincide con la compilación automática por componente de la biblioteca histórica Vite
+Carga de CSS. Las hojas de estilo ya están codificadas una vez, por lo que los paquetes posteriores
+enviarlos palabra por palabra.
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
@@ -38,6 +68,23 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 
 Los nombres de paquetes predeterminados que cada biblioteca compartida deben tratar como proporcionados por pares.
 Refleja el {@link DEFAULT_LIBRARY_EXTERNALS} de `@mission-platform/vite-config`.
+
+### definirTsdownForgeTarget
+
+**Tipo:** función
+
+```typescript
+function defineTsdownForgeTarget(options: TsdownForgeTargetOptions): UserConfig;
+```
+
+Cree una configuración tsdown para el objetivo del componente neutral de Forge (`dist/components/**`).
+El valor predeterminado `outDir` es `'dist/components'` y al mismo tiempo conserva todas las funciones de {@link defineTsdownLibrary}.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ------------------------ | ----------- |
+| opciones | TsdownForgeTargetOptions |             |
 
 ### definirTsdownLibrary
 
@@ -53,8 +100,8 @@ Arquetipo A/B. Refleja la semántica de externalización `defineLibraryConfig` d
 
 #### Parámetros
 
-| Nombre   | Tipo                 | Descripción |
-| -------- | -------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------- | ----------- |
 | opciones | TsdownLibraryOptions |             |
 
 ### definirTsdownVueLibrary
@@ -70,8 +117,8 @@ para paquetes que envían SFC `.vue` (`i18n`, `router`,…).
 
 #### Parámetros
 
-| Nombre   | Tipo                 | Descripción |
-| -------- | -------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------- | ----------- |
 | opciones | TsdownLibraryOptions |             |
 
 ### leerPackageDependencyNames
@@ -79,7 +126,7 @@ para paquetes que envían SFC `.vue` (`i18n`, `router`,…).
 **Tipo:** función
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[];
+function readPackageDependencyNames(rootDirectory: string, options?: { includeDevDependencies?: boolean }): string[];
 ```
 
 Lea `dependencies` y `peerDependencies` declarados en package.json
@@ -88,9 +135,38 @@ de su propio paquete para que los consumidores puedan deduplicarlos y sacudirlos
 
 #### Parámetros
 
-| Nombre         | Tipo   | Descripción |
-| -------------- | ------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------------- | ------------------------------------ | ----------- |
 | directorioraíz | cadena |             |
+| opciones | { incluirDevDependencies?: booleano } |             |
+
+### resolverCssPropietario
+
+**Tipo:** función
+
+```typescript
+function resolveCssOwner(outputDirectory: string, cssRelative: string): string | undefined;
+```
+
+Resuelva el módulo JS que "posee" una hoja de estilo extraída `cssRelative`, por lo que
+La importación de efectos secundarios se puede volver a insertar en un módulo que los consumidores realmente
+tirar hacia adentro.
+
+Cada compilación del marco de Forge (react/neutral/solid/svelte/web-components) emite
+un mapa de clases de módulo CSS `X.module.js` junto a su `X.css` extraído, y cada
+El componente que usa esas clases importa el mapa de clases, por lo que el mapa de clases es
+el propietario natural (`forge-accordion.css` → `forge-accordion.module.js`, compartido
+`size.css` → `size.module.js`). Vue en su lugar emite hojas de estilo con alcance SFC denominadas
+`X.vue_vue_type_style_index_*.css` junto con un fragmento de componente simple `X.js`, por lo que
+ese trozo es el dueño. Devuelve la ruta del propietario relativa al directorio de salida,
+o `undefined` cuando no existe ningún fragmento propietario en el disco.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| --------------- | ------ | ----------- |
+| directorio de salida | cadena |             |
+| cssRelativo | cadena |             |
 
 ### resolverTsdownDirectorioSalida
 
@@ -106,11 +182,21 @@ promocionable de forma independiente sin permitir que tsdown limpie un árbol he
 
 #### Parámetros
 
-| Nombre               | Tipo   | Descripción |
-| -------------------- | ------ | ----------- |
-| directorioraíz       | cadena |             |
+| Nombre | Tipo | Descripción |
+| --------------- | ------ | ----------- |
+| directorioraíz | cadena |             |
 | directorio de salida | cadena |             |
-| raíz de salida       | cadena |             |
+| raíz de salida | cadena |             |
+
+### Opciones de TsdownForgeTarget
+
+**Tipo:** interfaz
+
+```typescript
+export interface TsdownForgeTargetOptions extends TsdownLibraryOptions
+```
+
+No se proporciona descripción.
 
 ### TsdownLibraryOptions
 

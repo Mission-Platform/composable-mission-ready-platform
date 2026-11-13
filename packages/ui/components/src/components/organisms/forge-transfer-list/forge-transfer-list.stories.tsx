@@ -1,6 +1,6 @@
-import { ForgeTransferList } from './forge-transfer-list';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeTransferList } from './forge-transfer-list';
 
 const meta = {
   title: 'Organisms/Forms/ForgeTransferList',

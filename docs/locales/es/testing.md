@@ -31,11 +31,31 @@ pnpm test
 
 ### Ejecutar pruebas para un espacio de trabajo específico
 
-Para ejecutar pruebas para un único paquete o aplicación:
+Para ejecutar pruebas para un único paquete o aplicación mientras se preparan automáticamente las dependencias ascendentes:
+
+```bash
+pnpm test:package @mission-platform/<name>
+```
+
+Alternativamente, invoca Turborepo directamente:
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
+
+### Preparación de dependencia ascendente
+
+Los paquetes en monorepo a menudo consumen artefactos compilados (`dist/`) de dependencias del espacio de trabajo ascendente. En árboles de trabajo recién aprovisionados o entornos limpios, es posible que estos artefactos aún no existan.
+
+Para resolver esto sin problemas:
+
+- **Resolución automática de Turborepo:** Los gráficos de tareas `test` y `build:check` en `turbo.json` aplican `"dependsOn": ["^build"]`. Turborepo crea automáticamente todas las dependencias ascendentes antes de ejecutar pruebas en el paquete de destino.
+- **Ayudante de paquete dedicado:** La ejecución de `pnpm test:package <package-name>` prepara explícitamente las compilaciones ascendentes (`build --filter <package-name>^...`) antes de ejecutar las pruebas de paquete. Este calentamiento es intencional a pesar de que la tarea `test` también declara `^build`: mantiene el comportamiento de preparación del asistente explícito y consistente, y no se almacena en caché cuando Turbo ya ha resuelto esas dependencias.
+- **Ayudante de compilación de paquetes:** La ejecución de `pnpm build:package <package-name>` utiliza el mismo calentamiento ascendente explícito antes de compilar el paquete de destino.
+- **Compilación manual ascendente:** Si ejecuta un ejecutor de prueba directamente (por ejemplo, `vitest` en un único directorio de paquete), primero prepare sus dependencias:
+  ```bash
+  pnpm exec turbo run build --filter @mission-platform/<name>^...
+  ```
 
 ### Ejecutar pruebas afectadas (estilo CI)
 
@@ -107,13 +127,13 @@ verificación.
 2. Asegúrese de que el paquete `vitest.config.ts` habilite el modo de navegador (consulte la referencia a continuación).
 3. Ejecute con `pnpm test`.
 
-### Pruebas de secuencias de comandos web de Forge
+### Pruebas de pedernal
 
 Utilice `@mission-platform/flint-vitest` para compilador determinista, artefacto, Wasm y paridad autohospedada
 cheques. Delega la compilación al mismo servicio de compilación y al complemento Vite utilizado por la producción; no crea un
 Sistema de segundo módulo.
 
-Instale el paquete en un espacio de trabajo que pruebe los módulos `.fws`, luego cree su adaptador con la configuración estándar Vitest:
+Instale el paquete en un espacio de trabajo que pruebe los módulos `.flint`, luego cree su adaptador con la configuración estándar Vitest:
 
 ```typescript
 // vitest.config.ts
@@ -143,7 +163,7 @@ import {
   createFlintTestHarness,
 } from "@mission-platform/flint-vitest";
 
-describe("FWS fixture", () => {
+describe("Flint fixture", () => {
   const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
@@ -201,7 +221,7 @@ expect((await load<{ answer: () => number }>()).answer()).toBe(42);
 expect(loadSync<{ answer: () => number }>().answer()).toBe(42);
 ```
 
-Para los valores de FWS, pruebe ambas capas explícitamente. Las pruebas WASM sin procesar deberían afirmar la
+Para los valores de Flint, pruebe ambas capas explícitamente. Las pruebas WASM sin procesar deberían afirmar la
 ABI de longitud de puntero y llamadas de propiedad; Las pruebas ESM generadas deben afirmar la
 Proyección de JavaScript:
 
@@ -234,16 +254,16 @@ debe continuar pasando una tupla `[pointer, length]` en lugar de esperar una
 conversión automática `Uint8Array`.
 
 El espacio de trabajo de referencia compara el adaptador de longitud del puntero sin formato con el
-Adaptador ESM generado como modos FWS separados:
+Adaptador ESM generado como modos Flint separados:
 
 ```bash
 pnpm --filter @mission-platform/benchmark run bench -- \
   --node-only --warmup 3 --samples 10 \
-  --output benchmark/results/fws-generated-boundary
+  --output benchmark/results/flint-generated-boundary
 ```
 
 Los informes incluyen las fases de construcción, inicialización y ejecución en estado estable. el
-La fila `wasm` sin formato de FWS utiliza instancias nuevas y tres asignaciones de entrada de cadena para
+La fila `wasm` sin formato de Flint utiliza instancias nuevas y tres asignaciones de entrada de cadena para
 el núcleo de referencia; `wasm-generated` utiliza el contrato `loadSync` generado
 y una asignación de entrada de cadena empaquetada. Porque el actual desasignador de invitados
 valida rangos sin reciclar el espacio del asignador de impacto, cadena/bytes generados
@@ -255,8 +275,8 @@ y los recuentos de asignación estática utilizados por la comparación. Compara
 cuando el hash del corpus, el tiempo de ejecución del host y el esquema de referencia coinciden.
 
 Por ejemplo, la ejecución anterior de Node produjo 336 resultados de fase medidos con
-cero fallos y hash de corpus `ad092f7c552cc914`. Ambas filas de FWS tenían Wasm sin procesar.
-hash `0ac58f11`, tamaño de Wasm sin formato 1625 bytes y tamaño de fuente de ESM generado 18490
+cero fallos y hash de corpus `ad092f7c552cc914`. Ambas filas de Flint tenían Wasm crudo.
+hash `0ac58f11`, tamaño de Wasm sin procesar 1625 bytes y tamaño de fuente de ESM generado 18490
 bytes; Los recuentos de asignación de entradas de cadenas sin procesar y generadas fueron 3 y 1. En el
 Unicode: cadena pequeña, la inicialización media fue de 0,00024 ms sin procesar versus
 Se generaron 0,00188 ms y la ejecución media fue de 0,0236 ms sin procesar frente a 0,1070 ms.
@@ -289,9 +309,9 @@ Cajas unitarias VM. Esto mantiene los nombres de los dispositivos y la limpieza 
 
 `checkVmParity(file, mode)` admite `interpret`, `jit` y `aot`, pero su informe es el archivo autohospedado limitado existente.
 contrato de paridad en etapa lex. Afirmar `parity`, huellas dactilares, pasos y metadatos de reproducibilidad de AOT; no trates el informe
-como ejecución arbitraria de VM con FWS compilado o como reemplazo de las pruebas de comportamiento de Wasm.
+como ejecución arbitraria de VM Flint compilada o como reemplazo de las pruebas de comportamiento de Wasm.
 
-Ejecute la matriz FWS enfocada con las tareas normales del espacio de trabajo:
+Ejecute la matriz Flint enfocada con las tareas normales del espacio de trabajo:
 
 ```bash
 pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
@@ -332,12 +352,12 @@ export default defineVitestConfig({
 
 ### Resumen de guiones
 
-| Guión           | Comando                                                    | Propósito                                                  |
-| :-------------- | :--------------------------------------------------------- | :--------------------------------------------------------- |
-| `test`          | `pnpm exec turbo run test`                                 | Ejecute todas las tareas de prueba del espacio de trabajo. |
-| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | Ejecute pruebas de componentes en modo reloj.              |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Generar un informe de cobertura de componentes.            |
-| Óxido/WASM      | `cargo test --workspace`                                   | Ejecute pruebas de cajas nativas de Rust.                  |
+| Guión | Comando | Propósito |
+| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
+| `test` | `pnpm exec turbo run test` | Ejecute todas las tareas de prueba del espacio de trabajo.          |
+| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | Ejecute pruebas de componentes en modo reloj.    |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Generar un informe de cobertura de componentes. |
+| Óxido/WASM | `cargo test --workspace` | Ejecute pruebas de cajas nativas de Rust.           |
 
 Los paquetes contenedores de Wasm se prueban a través de las tareas de su paquete propietario. Por ejemplo, ejecute el paquete del escáner y su
 contenedor juntos al cambiar el comportamiento del escáner:

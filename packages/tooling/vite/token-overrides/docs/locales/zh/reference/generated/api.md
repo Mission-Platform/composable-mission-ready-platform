@@ -19,7 +19,7 @@
 function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Vite 插件，可自动生成应用程序的设计令牌*覆盖*样式表。
+Vite 插件，可自动生成应用程序的设计令牌 _override_ 样式表。
 
 它读取 DTCG 样式的覆盖文档 (`options.source`)，并将其转换为
 {@link buildTokenOverrideScss}，并写入生成的 `:root { --<prefix>-*: … }`
@@ -27,25 +27,24 @@ SCSS 偏向 `options.outFile`。从您的导入生成的文件
 样式表 _after_ `@mission-platform/tokens` 因此覆盖赢得了级联。
 
 生成在汇总 `buildStart` 挂钩中运行（因此它涵盖了 `vite build`，
-`vite build --watch`，和开发服务器启动类似）并在源启动时重新运行
+`vite build --watch` 和开发服务器启动方式类似）并在源启动时重新运行
 文档在开发服务器运行时发生变化。生成的文件是一个构建文件
 artefact — 将其添加到 `.gitignore`/`.prettierignore` 而不是提交它。
 
 #### 参数
 
-| 名称 | 类型                        | 描述                        |
-| ---- | --------------------------- | --------------------------- |
-| 选项 | TokenOverridesPluginOptions | TokenOverridesPluginOptions |     |
+|名称 |类型 |描述 |
+| ------- | --------------------------- | ----------- |
+|选项 | TokenOverridesPluginOptions | TokenOverridesPluginOptions |             |
 
 #### 合同
 
 - **@例子：** ```ts
   // vite.config.ts
   import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
-plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
+  export default defineConfig({
+  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+  });
 
 ````
 ```scss
@@ -62,7 +61,7 @@ plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' }
 function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Vite 插件，可自动生成应用程序的设计令牌*覆盖*样式表。
+Vite 插件，可自动生成应用程序的设计令牌 _override_ 样式表。
 
 它读取 DTCG 样式的覆盖文档 (`options.source`)，并将其转换为
 {@link buildTokenOverrideScss}，并写入生成的 `:root { --<prefix>-*: … }`
@@ -70,25 +69,24 @@ SCSS 偏向 `options.outFile`。从您的导入生成的文件
 样式表 _after_ `@mission-platform/tokens` 因此覆盖赢得了级联。
 
 生成在汇总 `buildStart` 挂钩中运行（因此它涵盖了 `vite build`，
-`vite build --watch`，和开发服务器启动类似）并在源启动时重新运行
+`vite build --watch` 和开发服务器启动方式类似）并在源启动时重新运行
 文档在开发服务器运行时发生变化。生成的文件是一个构建文件
 artefact — 将其添加到 `.gitignore`/`.prettierignore` 而不是提交它。
 
 #### 参数
 
-| 名称 | 类型                        | 描述                        |
-| ---- | --------------------------- | --------------------------- |
-| 选项 | TokenOverridesPluginOptions | TokenOverridesPluginOptions |     |
+|名称 |类型 |描述 |
+| ------- | --------------------------- | ----------- |
+|选项 | TokenOverridesPluginOptions | TokenOverridesPluginOptions |             |
 
 #### 合同
 
 - **@例子：** ```ts
   // vite.config.ts
   import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
-plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
+  export default defineConfig({
+  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+  });
 
 ````
 ```scss
@@ -118,15 +116,15 @@ function buildTokenOverrideScss(document_: OverrideGroup, options: TokenOverride
 ```
 
 构建 SCSS/CSS 部分覆盖：单个 `:root { … }` 块
-`--<prefix>-*` 自定义属性是从 `document_` 扁平化的。 *之后*导入它
+`--<prefix>-*` 自定义属性是从 `document_` 扁平化的。 _之后_导入它
 基本 `@mission-platform/tokens` 因此声明赢得了级联。
 
 #### 参数
 
-| 名称  | 类型                     | 描述                     |
-| ----- | ------------------------ | ------------------------ |
-| 文件_ | 覆盖组                   |                          |
-| 选项  | TokenOverrideScssOptions | TokenOverrideScssOptions |     |
+|名称 |类型 |描述 |
+| --------- | ------------------------ | ----------- |
+| document_ |覆盖组 |             |
+|选项 | TokenOverrideScssOptions | TokenOverrideScssOptions |             |
 
 ### 平面覆盖
 
@@ -149,17 +147,16 @@ function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride
 递归地将覆盖文档展平为 {@link FlatOverride}。按键
 以 `递归地将覆盖文档展平为 {@link FlatOverride}。按键
 以 （DTCG 元数据）开头的被跳过；每片剩下的叶子都变成了
-`--<prefix>-<path-joined-by-dashes>`自定义属性。组件覆盖
-路径保留其`component._` DTCG 包装器，但生成的 CSS 忽略了这一点
-包装器（`component.button._`变为`--<prefix>-button-*`）。
+`--<prefix>-<path-joined-by-dashes>` 自定义属性。组件覆盖
+路径保留其 `component.*` DTCG 包装器，但生成的 CSS 忽略了这一点
+包装器（`component.button.*` 变为 `--<prefix>-button-*`）。
  `$`
-
 #### 参数
 
-| 名称  | 类型   | 描述 |
-| ----- | ------ | ---- |
-| 文件_ | 覆盖组 |      |
-| 前缀  |        |      |
+|名称 |类型 |描述 |
+| --------- | ------------- | ----------- |
+|文件_ |覆盖组 |             |
+|前缀 |               |             |
 
 ### 明暗值
 
@@ -181,7 +178,6 @@ export type OverrideGroup = Record<string, unknown>;
 
 DTCG 样式覆盖组 node（嵌套组/令牌加上可选的 `DTCG 样式覆盖组 node（嵌套组/令牌加上可选的  元数据）。
  `$`
-
 ### 覆盖令牌
 
 **种类：**接口

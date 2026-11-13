@@ -9,288 +9,65 @@
 
 `@mission-platform/barcode`의 공개 소스 선언에서 생성됩니다.
 
-## `src/encoder/index`
+## `src/components/molecules/forge-barcode/forge-barcode`
 
-### 바코드
+### 바코드작업
 
 **종류:** 인터페이스
 
 ```typescript
-export interface Barcode
+export interface BarcodeActions
 ```
 
-{@link encodeBarcode}의 결과: 총 너비가 포함된 모듈 비트.
+도구 모음에 표시되는 작업 버튼 `true`은 이 모든 기능을 활성화합니다.
 
-### 바코드기호
+### 바코드속성
 
-**종류:** 유형
+**종류:** 인터페이스
 
 ```typescript
-export type BarcodeSymbology =
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'ean13'
-  | 'ean8'
-  | 'upca'
-  | 'upce'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode';
+export interface BarcodeProperties
 ```
 
-선형 바코드 기호를 지원합니다.
+설명이 제공되지 않았습니다.
 
-### 인코딩바코드
+### Forge바코드
 
 **종류:** 기능
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
+function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement;
 ```
 
-패키지-로컬 Flint 그래프를 사용하여 `data`을 선형 바코드로 인코딩합니다.
+`ForgeBarcode` — 스캔 가능한 1D(선형) 바코드를 렌더링합니다.
+중립 JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
+`@mission-platform/vite-plugin-forge`.
+
+페이로드(`value`)는 클라이언트에서 완전히 인코딩됩니다.
+`@mission-platform/barcode`의 {@link encodeBarcode} 인코더 —
+Rust로 작성되고 WebAssembly로 컴파일된 종속성 없는 인코더
+선명하고 해상도에 독립적인 SVG로 그려집니다. 인접한 어두운 모듈이 병합됩니다.
+단일 `<rect>` 실행으로 마크업이 컴팩트하게 유지됩니다. 안정적인 스캔을 위해
+막대/배경색은 기본적으로 테마가 아닌 solid 흰색 바탕에 검정색으로 설정됩니다.
+토큰이지만 둘 다 `color` / `background`을 통해 재정의할 수 있습니다.
+
+지원되는 기호(`symbology`): 코드 128, GS1-128, 코드 39(+ 확장),
+코드 93(+ 확장), EAN-13, EAN-8, UPC-A, UPC-E, ITF(인터리브 2/5),
+ITF-14, Codabar, MSI(수정된 Plessey) 및 Pharmacode. 바 높이, 모듈
+너비와 여백(Quiet Zone)은 구성 가능하며 사람이 읽을 수 있는 값은 다음과 같습니다.
+`displayValue`을 통해 막대 아래에 표시됩니다.
+
+선택적 작업 도구 모음(`showActions`를 통해 활성화됨 — `true`은 모든
+버튼을 사용하거나 {@link BarcodeActions} 개체를 사용하여 개별적으로 선택)
+사용자는 **바코드를 PNG 이미지로 저장**, **이미지를
+클립보드** 및 **인코딩된 값을 클립보드에 복사**합니다. PNG는
+렌더링된 SVG를 캔버스에 그려 클라이언트에서 래스터화합니다. 는
+`onError` 콜백은 선택한 항목에 대해 값을 인코딩할 수 없을 때 실행됩니다.
+상징. 함께 배치된 CSS 모듈을 통해 스타일을 소유합니다.
+`forge-barcode.module.scss`.
 
 #### 매개변수
 
-| 이름   | 유형       | 설명 |
-| ------ | ---------- | ---- |
-| 기호   | 바코드기호 |      |
-| 데이터 | 문자열     |      |
-
-#### 계약
-
-- **@throws:** 선택한 기호에 대해 페이로드가 유효하지 않은 경우.
-
-### 인코딩바코드비동기화
-
-**종류:** 기능
-
-```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
-```
-
-패키지-로컬 Flint 그래프를 사용하여 `data`을 비동기적으로 인코딩합니다.
-
-#### 매개변수
-
-| 이름   | 유형       | 설명 |
-| ------ | ---------- | ---- |
-| 기호   | 바코드기호 |      |
-| 데이터 | 문자열     |      |
-
-## `src/fws/index`
-
-### 매개변수
-
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 가치 | 문자열 \| ArrayLike<number> |      |
-
-### 매개변수
-
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 가치 | 문자열 \| ArrayLike<number> |      |
-
-### 매개변수
-
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 가치 | 문자열 \| ArrayLike<number> |      |
-
-### 매개변수
-
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 가치 | 문자열 \| ArrayLike<number> |      |
-
-### encodeEan13Fws
-
-**종류:** 기능
-
-```typescript
-function encodeEan13Fws(value: string): string;
-```
-
-12자리 EAN-13 페이로드를 인코딩하고 FWS에서 해당 검사 숫자를 계산합니다.
-
-#### 매개변수
-
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 가치 | 문자열 |      |
-
-### encodeEan13FwsAsync
-
-**종류:** 기능
-
-```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>;
-```
-
-FWS 로더를 사용하여 12자리 EAN-13 페이로드를 비동기식으로 인코딩합니다.
-
-#### 매개변수
-
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 가치 | 문자열 |      |
-
-### encodeEan8Fws
-
-**종류:** 기능
-
-```typescript
-function encodeEan8Fws(value: string): string;
-```
-
-7자리 EAN-8 페이로드를 인코딩하고 FWS에서 해당 검사 숫자를 계산합니다.
-
-#### 매개변수
-
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 가치 | 문자열 |      |
-
-### encodeEan8FwsAsync
-
-**종류:** 기능
-
-```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>;
-```
-
-FWS 로더를 사용하여 7자리 EAN-8 페이로드를 비동기식으로 인코딩합니다.
-
-#### 매개변수
-
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 가치 | 문자열 |      |
-
-### encodeUpcaFws
-
-**종류:** 기능
-
-```typescript
-function encodeUpcaFws(value: string): string;
-```
-
-접두사가 0인 EAN-13 Flint 그래프를 통해 UPC-A 페이로드를 인코딩합니다.
-
-#### 매개변수
-
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 가치 | 문자열 |      |
-
-### encodeUpcaFwsAsync
-
-**종류:** 기능
-
-```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>;
-```
-
-FWS를 통해 UPC-A 페이로드를 비동기식으로 인코딩합니다.
-
-#### 매개변수
-
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 가치 | 문자열 |      |
-
-### 인코딩변수바코드Fws
-
-**종류:** 기능
-
-```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
-```
-
-사용 가능한 경우 기본 Flint 그래프를 통해 지원되는 가변 길이 바코드를 인코딩합니다.
-
-#### 매개변수
-
-| 이름 | 유형           | 설명 |
-| ---- | -------------- | ---- |
-| 기호 | 가변바코드기호 |      |
-| 가치 | 문자열         |      |
-
-### encodeVariableBarcodeFwsAsync
-
-**종류:** 기능
-
-```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
-```
-
-FWS를 통해 지원되는 가변 길이 바코드를 비동기식으로 인코딩합니다.
-
-#### 매개변수
-
-| 이름 | 유형           | 설명 |
-| ---- | -------------- | ---- |
-| 기호 | 가변바코드기호 |      |
-| 가치 | 문자열         |      |
-
-### verifyGs1DataBar값
-
-**종류:** 기능
-
-```typescript
-function validateGs1DataBarValue(value: string): boolean;
-```
-
-패키지-로컬 Flint 그래프에서 GS1 DataBar/RSS-14 GTIN-14 값을 검증합니다.
-
-#### 매개변수
-
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 가치 | 문자열 |      |
-
-### verifyGs1DataBarValueAsync
-
-**종류:** 기능
-
-```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
-```
-
-FWS를 통해 GS1 DataBar/RSS-14 GTIN-14 값을 비동기적으로 검증합니다.
-
-#### 매개변수
-
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 가치 | 문자열 |      |
-
-### 가변바코드기호학
-
-**종류:** 유형
-
-```typescript
-export type VariableBarcodeSymbology = Extract<
-  BarcodeSymbology,
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode'
->;
-```
-
-직접 바코드 Flint 어댑터가 지원하는 가변 길이 기호입니다.
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------- | ----------- |
+| 속성 | 읽기 전용<BarcodeProperties> |             |

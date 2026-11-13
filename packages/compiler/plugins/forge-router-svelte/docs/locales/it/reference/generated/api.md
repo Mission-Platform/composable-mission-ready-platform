@@ -27,8 +27,8 @@ Costruisci funzionalità neutre dalle primitive SvelteKit (prive di framework pe
 
 #### Parametri
 
-| Nome     | Digitare                                                                                                                                                                                   | Descrizione |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | ingresso | { pagina: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; parametri: Record<string, string> }; vai a: SvelteKitRouterSurface['vai']; risolverePath?: (percorso: stringa) => stringa; } |             |
 
 ### MpLink
@@ -36,7 +36,7 @@ Costruisci funzionalità neutre dalle primitive SvelteKit (prive di framework pe
 **Tipo:** componente
 
 ```typescript
-export const MpLink;
+export MpLink = 'a'
 ```
 
 SvelteKit utilizza normali ancore per i collegamenti. Il compilatore mantiene questo marcatore così
@@ -47,7 +47,7 @@ L'output Svelte può controllare l'utilizzo neutrale di `MpLink` da parte degli 
 **Tipo:** componente
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Outlet è di proprietà dell'applicazione in SvelteKit; la diagnostica della capacità rifiuta `view`.
@@ -64,9 +64,9 @@ Risolvi un obiettivo neutro in una stringa href.
 
 #### Parametri
 
-| Nome | Digitare           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---- | ------------------ | ----------- |
-| a    | MpRouteLocationRaw |             |
+| a | MpRouteLocationRaw |             |
 
 ### setForgeSvelteKitRouter
 
@@ -81,8 +81,8 @@ Le app in genere lo chiamano una volta da un layout root con moduli `$app`.
 
 #### Parametri
 
-| Nome       | Digitare                  | Descrizione |
-| ---------- | ------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | ---------------------- | ----------- |
 | superficie | SvelteKitRouterSuperficie |             |
 
 ### SvelteKitRouterSurface
@@ -110,8 +110,8 @@ Crea una posizione neutra da un'istantanea della pagina SvelteKit.
 
 #### Parametri
 
-| Nome   | Digitare                                                                                | Descrizione |
-| ------ | --------------------------------------------------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---- | ------------------------------------------------------------------------------------- | ----------- |
 | pagina | {url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; parametri: Record<string, string>; } |             |
 
 ### aSvelteHref
@@ -126,9 +126,9 @@ Serializza un target neutro per la navigazione SvelteKit.
 
 #### Parametri
 
-| Nome              | Digitare                       | Descrizione |
-| ----------------- | ------------------------------ | ----------- |
-| a                 | MpRouteLocationRaw             |             |
+| Nome | Digitare | Descrizione |
+| ----------- | ------------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 | risolverePercorso | (percorso: stringa) => stringa |             |
 
 ### useMpNavigation

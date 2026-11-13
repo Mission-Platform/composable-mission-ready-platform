@@ -6,7 +6,7 @@
 > שפה: עברית (he)
 
 `@mission-platform/phone-number` הוא יישום מחדש ממוקד של הליבה של
-גוגל [libphonenumber](https://github.com/google/libphonenumber), נכתב ב
+Google [libphonenumber](https://github.com/google/libphonenumber), כתוב ב
 [AssemblyScript](https://www.assemblyscript.org/) והידור ל-**WebAssembly**. הוא מנתח, מאמת, מסווג ו
 פורמט מספרי טלפון בינלאומיים, והוא ארוז כמודול ES עצמאי ללא תלות בזמן ריצה.
 
@@ -62,14 +62,14 @@ util.format('07911 123456', 'GB', PhoneNumberFormat.INTERNATIONAL); // '+44 7911
 util.format('4155552671', 'US', PhoneNumberFormat.RFC3966); // 'tel:+14155552671'
 ```
 
-יש להתייעץ עם הארגומנט `defaultRegion` (ISO 3166-1 alpha-2) רק כאשר הקלט **לא** כבר בבינלאומי
-טופס (`+…`, `00…`, או ה-NANP `011…`
+The `defaultRegion` argument (ISO 3166-1 alpha-2) is consulted only when the input is **not** already in international
+form (`+…`, `00…`, or the NANP `011…`
 קידומת IDD).
 
 ## אפשרות מול תוקף
 
 - **`isPossibleNumber`** בודק רק שלמספר הארצי המשמעותי יש אורך סביר לאזור.
-- **`isValidNumber`** מחייב בנוסף את המספר להיכנס לטווח קווי או נייד שהוקצה (מקביל
+- **`isValidNumber`** מחייב בנוסף את המספר להיכנס לטווח קווי או נייד מוקצה (שווה ערך
   ל-`getNumberType(...) !== UNKNOWN`).
 
 ```ts

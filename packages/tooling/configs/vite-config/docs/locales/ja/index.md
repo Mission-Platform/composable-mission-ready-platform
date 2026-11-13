@@ -5,7 +5,7 @@
 > packages/tooling/configs/vite-config/docs/index.md: [packages/tooling/configs/vite-config/docs/index.md](../../index.md)
 > 言語: 日本語 (ja)
 
-共有 Vite そして Vitest Mission Platform パッケージの構成ヘルパーと
+Mission Platform パッケージ用の共有 Vite および Vitest 構成ヘルパー
 アプリケーション。
 
 ## インストールして使用する
@@ -14,13 +14,13 @@
 pnpm add --save-dev @mission-platform/vite-config
 ```
 
-使用 `defineLibraryConfig` パッケージの場合、 `defineAppConfig` アプリケーション用、および
-`defineVitestConfig` からの `/vitest` サブパス。フレームワーク アプリケーションは、
-1つ選択してください `defineFrameworkAppConfig` 条件を設定してから共有パッケージをインポートします
+パッケージには `defineLibraryConfig` を使用し、アプリケーションには `defineAppConfig` を使用します。
+`/vitest` サブパスからの `defineVitestConfig`。フレームワーク アプリケーションは、
+`defineFrameworkAppConfig` 条件を 1 つ選択して、共有パッケージをインポートします
 裸のパッケージ指定子を介して。
 
 ## 貢献する
 
-走る `pnpm --filter @mission-platform/vite-config lint` そしてフォーマットチェック。キープする
-ヘルパーのデフォルトは再利用可能であり、共有されたものは保持されます。 Vite、PostCSS、および
+`pnpm --filter @mission-platform/vite-config lint` とフォーマット チェックを実行します。キープする
+ヘルパーのデフォルトは再利用可能で、共有の Vite、PostCSS、および
 外部化の動作についてはパッケージの README に記載されています。

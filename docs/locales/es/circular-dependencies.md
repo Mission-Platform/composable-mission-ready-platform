@@ -18,7 +18,7 @@ Una dependencia circular ocurre cuando dos o más paquetes dependen entre sí, y
 
 En un monorepo, estos ciclos son particularmente dañinos porque pueden causar:
 
-- **Fallas de compilación**: resolución del gráfico de dependencia (por ejemplo, por Turborepo o pnpm) puede estancarse o fracasar.
+- **Fallos de compilación**: la resolución del gráfico de dependencia (por ejemplo, por Turborepo o pnpm) puede bloquearse o fallar.
 - **Errores de tiempo de ejecución**: un módulo puede inicializarse parcialmente cuando el otro intenta utilizar sus exportaciones.
 - **Aumento del acoplamiento**: los paquetes se vuelven imposibles de usar o probar de forma aislada.
 
@@ -28,8 +28,8 @@ Mission Platform utiliza varias herramientas automatizadas para detectar depende
 
 ### ESLint `no-restricted-paths`
 
-nuestro compartido ESLint La configuración impone el flujo de dependencia unidireccional. Si intenta importar desde un paquete que
-debería estar "por encima" del suyo en la jerarquía, el linter arrojará un error.
+Nuestra configuración ESLint compartida impone el flujo de dependencia unidireccional. Si intenta importar desde un paquete que
+debe estar "por encima" del suyo en la jerarquía, el linter arrojará un error.
 
 Ejecute el linter para comprobar si hay infracciones:
 
@@ -39,7 +39,7 @@ pnpm lint
 
 ### Auditoría manual con Madge
 
-Para ciclos complejos que abarcan varios archivos, puede utilizar `madge` (si está instalado) o visualizadores similares para mapear el
+Para ciclos complejos que abarcan varios archivos, puede utilizar `madge` (si está instalado) o visualizadores similares para asignar los
 gráfico de dependencia.
 
 ## Cómo hacerlo: Resolver dependencias circulares
@@ -63,11 +63,11 @@ Si el Paquete A y el Paquete B necesitan una parte común de lógica, mueva esa 
 ### Estrategia 2: inversión de dependencia
 
 En lugar de importar el Paquete B directamente desde el Paquete A, haga que el Paquete B acepte la funcionalidad requerida como accesorio, un
-objeto de configuración, o mediante un bus de eventos.
+configuration object, or via an event bus.
 
 **Ejemplo**:
-en lugar de `AuthService` importador `UserService` para actualizar un perfil, `AuthService` puede emitir un `AUTH_SUCCESS` evento
-eso `UserService` escucha.
+En lugar de que `AuthService` importe `UserService` para actualizar un perfil, `AuthService` puede emitir un evento `AUTH_SUCCESS`.
+que `UserService` escucha.
 
 ### Estrategia 3: Consolidación
 
@@ -76,9 +76,9 @@ unidad lógica única. Considere fusionarlos en un solo paquete.
 
 ## Mejores prácticas de prevención
 
-1. **Siga el flujo unidireccional**: respete estrictamente el `Apps → Packages → Configs` dirección de dependencia.
-2. **Marco de autor: lógica neutral**: uso `@mission-platform/forge-jsx` para que la lógica central evite ciclos específicos del marco.
-3. **Utilice protocolos de espacio de trabajo**: utilice siempre `workspace:*` para dependencias internas para asegurar pnpm puede resolver correctamente
+1. **Siga el flujo unidireccional**: respete estrictamente la dirección de dependencia `Apps → Packages → Configs`.
+2. **Lógica neutral del marco de autor**: utilice `@mission-platform/forge-jsx` como lógica central para evitar ciclos específicos del marco.
+3. **Utilice protocolos de espacio de trabajo**: utilice siempre `workspace:*` para dependencias internas para garantizar que pnpm pueda resolverse correctamente.
    el gráfico.
 4. **Audite las importaciones periódicamente**: preste atención a las sugerencias de "importación automática" en su IDE, ya que a veces pueden introducir
    dependencias no deseadas entre paquetes.

@@ -23,9 +23,9 @@ Extrahieren Sie alle Importdeklarationen der obersten Ebene aus einem analysiert
 
 #### Parameter
 
-| Name     | Geben Sie | ein Beschreibung |
-| -------- | --------- | ---------------- |
-| Programm | Programm  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------- | ----------- |
+| Programm | Programm |             |
 
 ### parseCst
 
@@ -43,9 +43,9 @@ mit Token-Positionen, Kommentaren und vollständigen AST-Metadaten.
 
 #### Parameter
 
-| Name     | Geben Sie                       | ein Beschreibung                       |
-| -------- | ------------------------------- | -------------------------------------- |
-| Quelle   | Zeichenfolge                    | - Quellcode zum Parsen.                |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------- | ----------------------------------- |
+| Quelle | Zeichenfolge | - Quellcode zum Parsen.             |
 | Optionen | ParseCstOptions \| Zeichenfolge | - CST-Parsing-Optionen oder Dateiname. |
 
 #### Vertrag
@@ -103,10 +103,10 @@ Behält Kommentare, mehrzeilige Formatierung und AST-Integrität ohne fragiles R
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Quelle   | Zeichenfolge          |                  |
-| Optionen | RewriteImportsOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------- | ----------- |
+| Quelle | Zeichenfolge |             |
+| Optionen | RewriteImportsOptions |             |
 
 ### RewriteResult
 
@@ -117,3 +117,426 @@ export interface RewriteResult
 ```
 
 Ergebnis einer CST-Import-Rewrite-Transformation.
+
+## `src/text`
+
+### blankRegions
+
+**Art:** Funktion
+
+```typescript
+function blankRegions(text: string, regions: readonly string[]): string;
+```
+
+Blenden Sie jedes Vorkommen jeder Region aus und bewahren Sie dabei die Zeichenindizes.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ----------------- | ----------- |
+| Text | Zeichenfolge |             |
+| Regionen | schreibgeschützter String[] |             |
+
+### collapseWhitespace
+
+**Art:** Funktion
+
+```typescript
+function collapseWhitespace(text: string): string;
+```
+
+Reduzieren Sie alle Leerzeichenreihen auf einzelne Leerzeichen und kürzen Sie das Ergebnis.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Text | Zeichenfolge |             |
+
+### endOfTypeArguments
+
+**Art:** Funktion
+
+```typescript
+function endOfTypeArguments(text: string, start: number): number;
+```
+
+Der Index direkt hinter `>` schließt die bei `start` geöffnete Typ-Argument-Liste.
+oder `-1`, wenn die Liste nie geschlossen wird.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Text | Zeichenfolge |             |
+| Start | Nummer |             |
+
+### escapeAttribute
+
+**Art:** Funktion
+
+```typescript
+function escapeAttribute(value: string): string;
+```
+
+Escapezeichen für einen HTML-Attributwert in doppelten Anführungszeichen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Zeichenfolge |             |
+
+### escapeBinding
+
+**Art:** Funktion
+
+```typescript
+function escapeBinding(expression: string): string;
+```
+
+Escapen Sie einen Ausdruck zur Verwendung innerhalb einer Vue-Bindung in doppelten Anführungszeichen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------ | ----------- |
+| Ausdruck | Zeichenfolge |             |
+
+### indexOfTopLevel
+
+**Art:** Funktion
+
+```typescript
+function indexOfTopLevel(text: string, token: string, from = 0): number;
+```
+
+Index des ersten Vorkommens von `token` auf oberster Ebene in `text` (außerhalb).
+Klammern, Zeichenfolgen und Kommentare) oder `-1`.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Text | Zeichenfolge |             |
+| Token | Zeichenfolge |             |
+| von |        |             |
+
+### isIdentifierName
+
+**Art:** Funktion
+
+```typescript
+function isIdentifierName(name: string): boolean;
+```
+
+Alias ​​für isPlainIdentifier.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Name | Zeichenfolge |             |
+
+### isIdentifierPart
+
+**Art:** Funktion
+
+```typescript
+function isIdentifierPart(character: string | undefined): boolean;
+```
+
+Ob das Zeichen einen JavaScript-Bezeichner fortsetzen kann.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------------- | ----------- |
+| Charakter | Zeichenfolge \| undefiniert |             |
+
+### isIdentifierStart
+
+**Art:** Funktion
+
+```typescript
+function isIdentifierStart(character: string | undefined): boolean;
+```
+
+Ob das Zeichen einen JavaScript-Bezeichner starten kann.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------------- | ----------- |
+| Charakter | Zeichenfolge \| undefiniert |             |
+
+### isPlainIdentifier
+
+**Art:** Funktion
+
+```typescript
+function isPlainIdentifier(name: string): boolean;
+```
+
+Ob eine Zeichenfolge ein gültiger einfacher JavaScript-Bezeichnername ist.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Name | Zeichenfolge |             |
+
+### maskLiterals
+
+**Art:** Funktion
+
+```typescript
+function maskLiterals(text: string): boolean[];
+```
+
+Berechnen Sie eine boolesche Maske, die jeden Index in `text` markiert, der sich in einem Zeichenfolgenliteral befindet.
+Vorlagenliteral oder Kommentar. Mit `true` gekennzeichnete Positionen sind wörtlicher Inhalt und dürfen niemals
+strukturell umgeschrieben werden.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Text | Zeichenfolge |             |
+
+### matchBracket
+
+**Art:** Funktion
+
+```typescript
+function matchBracket(text: string, start: number): number;
+```
+
+Index der Klammer, die der öffnenden Klammer bei `start` entspricht, oder `-1`, wenn die
+Der Text ist unausgewogen. Literal- und Kommentarbereiche werden übersprungen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Text | Zeichenfolge |             |
+| Start | Nummer |             |
+
+### MemberAccess
+
+**Art:** Funktion
+
+```typescript
+function memberAccess(object: string, key: string): string;
+```
+
+Gibt `<object>.<key>` für einfache Bezeichner zurück, andernfalls `<object>["<key>"]` (Klammerschreibweise).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------ | ----------- |
+| Objekt | Zeichenfolge |             |
+| Schlüssel | Zeichenfolge |             |
+
+### Unterlage
+
+**Art:** Funktion
+
+```typescript
+function pad(depth: number): string;
+```
+
+Einzug für eine Vorlagentiefe (zwei Leerzeichen pro Ebene).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Tiefe | Nummer |             |
+
+### Zitat
+
+**Art:** Funktion
+
+```typescript
+function quote(value: string): string;
+```
+
+Alias ​​für quoteString.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Zeichenfolge |             |
+
+### quoteAttributeValue
+
+**Art:** Funktion
+
+```typescript
+function quoteAttributeValue(value: string): string;
+```
+
+Zitieren Sie eine Zeichenfolge als JSX-Attributwert.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Zeichenfolge |             |
+
+### quoteString
+
+**Art:** Funktion
+
+```typescript
+function quoteString(value: string): string;
+```
+
+String-Literal in doppelten Anführungszeichen für ausgegebenen Code (JSON-codiert).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Zeichenfolge |             |
+
+### ersetzenZuerst
+
+**Art:** Funktion
+
+```typescript
+function replaceFirst(
+  text: string,
+  search: string,
+  replacement: string,
+): string;
+```
+
+Ersetzen Sie das erste Vorkommen von `search` in `text` durch `replacement`.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ------ | ----------- |
+| Text | Zeichenfolge |             |
+| suchen | Zeichenfolge |             |
+| Ersatz | Zeichenfolge |             |
+
+### überspringenAtomicToken
+
+**Art:** Funktion
+
+```typescript
+function skipAtomicToken(text: string, index: number): number;
+```
+
+Gehen Sie über das Token hinaus, beginnend bei `index`, wenn es eine Zeichenfolge, Vorlage oder einen Kommentar öffnet.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Text | Zeichenfolge |             |
+| Index | Nummer |             |
+
+### überspringenTrivia
+
+**Art:** Funktion
+
+```typescript
+function skipTrivia(text: string, index: number): number;
+```
+
+Überspringen Sie Leerzeichen und Kommentare und geben Sie den Offset des nächsten signifikanten Zeichens zurück.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Text | Zeichenfolge |             |
+| Index | Nummer |             |
+
+### splitTopLevel
+
+**Art:** Funktion
+
+```typescript
+function splitTopLevel(text: string, separator: string): string[];
+```
+
+Teilen Sie `text` auf jedes Vorkommen von `separator` auf der obersten Ebene auf (ein einzelnes).
+Zeichen), wobei in Klammern, Zeichenfolgen oder Kommentaren verschachtelte Trennzeichen ignoriert werden.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------ | ----------- |
+| Text | Zeichenfolge |             |
+| Trennzeichen | Zeichenfolge |             |
+
+### stripOuterParentheses
+
+**Art:** Funktion
+
+```typescript
+function stripOuterParentheses(text: string): string;
+```
+
+Alias ​​für unwrapParentheses.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Text | Zeichenfolge |             |
+
+### stripTypeAssertion
+
+**Art:** Funktion
+
+```typescript
+function stripTypeAssertion(text: string): string;
+```
+
+Entfernen Sie eine nachgestellte `as T`/`satisfies T`-Behauptung.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Text | Zeichenfolge |             |
+
+### unquote
+
+**Art:** Funktion
+
+```typescript
+function unquote(text: string): string | undefined;
+```
+
+Hebt die Anführungszeichen eines Zeichenfolgenliterals auf, wenn es in einfache, doppelte oder Backtick-Anführungszeichen eingeschlossen ist, oder ist undefiniert, wenn nicht.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Text | Zeichenfolge |             |
+
+### unwrapParentheses
+
+**Art:** Funktion
+
+```typescript
+function unwrapParentheses(text: string): string;
+```
+
+Entfernen Sie wiederholt eine Schicht redundanter umschließender Klammern (`(x)` -> `x`).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Text | Zeichenfolge |             |

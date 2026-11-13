@@ -19,12 +19,12 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/vite
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-No se proporciona descripción.
+Complemento Vite para administrar y resolver los recursos locales de la aplicación i18n.
 
 #### Parámetros
 
-| Nombre   | Tipo                         | Descripción |
-| -------- | ---------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ----------------- | ----------- |
 | opciones | Opciones de complemento I18n |             |
 
 ### i18nPlugin
@@ -35,12 +35,12 @@ No se proporciona descripción.
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-No se proporciona descripción.
+Complemento Vite para administrar y resolver los recursos locales de la aplicación i18n.
 
 #### Parámetros
 
-| Nombre   | Tipo                         | Descripción |
-| -------- | ---------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ----------------- | ----------- |
 | opciones | Opciones de complemento I18n |             |
 
 ### Opciones de complemento I18n
@@ -71,8 +71,8 @@ de la verdad en lugar de mantener manualmente una lista paralela.
 
 #### Parámetros
 
-| Nombre   | Tipo                        | Descripción |
-| -------- | --------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | --------------------------- | ----------- |
 | opciones | ReadSupportedLocalesOptions |             |
 
 ### Leer opciones locales admitidas

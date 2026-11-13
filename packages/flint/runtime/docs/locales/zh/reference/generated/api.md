@@ -19,13 +19,18 @@
 function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 ```
 
-没有提供描述。
+根据运行时规范规则，断言 Flint ABI 清单有效。
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 清单 | FlintAbiManifest |      |
+|名称 |类型 |描述 |
+| -------- | ---------------- | --------------------------- |
+|清单 |弗林特阿比清单 | - 要验证的 ABI 清单。 |
+
+#### 合同
+
+- **@param:** - 要验证的 ABI 清单。
+- **@throws:** 如果清单验证失败。
 
 ### 等值函数
 
@@ -35,16 +40,22 @@ function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean;
 ```
 
-没有提供描述。
+比较两个 ABI 函数声明的结构等效性。
 
 #### 参数
 
-| 名称 | 类型             | 描述             |
-| ---- | ---------------- | ---------------- |
-| 左   | FlintAbiFunction | FlintAbiFunction |     |
-| 对   | FlintAbiFunction | FlintAbiFunction |     |
+|名称 |类型 |描述 |
+| ----- | ---------------- | ------------------------------ |
+|左| FlintAbi 函数 | - 第一个函数声明。  |
+|对| FlintAbi 函数 | - 第二个函数声明。 |
 
-### FlintAbiValidationResult
+#### 合同
+
+- **@param:** - 第一个函数声明。
+- **@param:** - 第二个函数声明。
+- **@returns:** 如果两个声明具有相同的签名、参数和返回类型，则为 True。
+
+### FlintAbi验证结果
 
 **种类：**接口
 
@@ -52,9 +63,9 @@ function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean
 export interface FlintAbiValidationResult
 ```
 
-没有提供描述。
+包含验证状态和错误消息的 Flint ABI 清单的验证结果。
 
-### validateFlintAbiManifest
+### 验证FlintAbiManifest
 
 **种类：**功能
 
@@ -62,17 +73,104 @@ export interface FlintAbiValidationResult
 function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidationResult;
 ```
 
-没有提供描述。
+根据规范要求、布局和功能限制验证 Flint ABI 清单。
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 清单 | FlintAbiManifest |      |
+|名称 |类型 |描述 |
+| -------- | ---------------- | --------------------------- |
+|清单 |弗林特阿比清单 | - 要验证的 ABI 清单。 |
+
+#### 合同
+
+- **@param:** - 要验证的 ABI 清单。
+- **@returns:** 包含布尔状态和收集的诊断错误的验证结果。
+
+## `src/allocator/slab`
+
+### 燧石原子自旋锁
+
+**种类：**类
+
+```typescript
+export class FlintAtomicSpinLock
+```
+
+原子自旋锁提供对共享 WebAssembly 内存结构的互斥访问。
+
+### 区域碰撞竞技场
+
+**种类：**类
+
+```typescript
+export class RegionalBumpArena
+```
+
+区域凹凸分配器竞技场提供 $O(1)$ 分配和即时批量重置。
+
+### 隔离Slab分配器
+
+**种类：**类
+
+```typescript
+export class SegregatedSlabAllocator
+```
+
+隔离的$O(1)$大小级slab分配器。
+
+### 隔离SlabAllocator选项
+
+**种类：**接口
+
+```typescript
+export interface SegregatedSlabAllocatorOptions
+```
+
+隔离板分配器的配置选项。
+
+### SLAB_CANARY_TAG
+
+**种类：**常数
+
+```typescript
+export const SLAB_CANARY_TAG;
+```
+
+没有提供描述。
+
+### SLAB_SIZE_CLASSES
+
+**种类：**常数
+
+```typescript
+export const SLAB_SIZE_CLASSES;
+```
+
+用于隔离中小型对象板分配的标准二次方大小类别。
+
+### 板块
+
+**种类：**接口
+
+```typescript
+export interface SlabBlock
+```
+
+分配板管理特定大小类别的固定大小插槽。
+
+### 板尺寸类
+
+**种类：**类型
+
+```typescript
+export type SlabSizeClass = (typeof SLAB_SIZE_CLASSES)[number];
+```
+
+没有提供描述。
 
 ## `src/async`
 
-### createFlintAsyncRuntime
+### 创建FlintAsyncRuntime
 
 **种类：**功能
 
@@ -80,36 +178,56 @@ function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidatio
 function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}): FlintAsyncRuntime;
 ```
 
-没有提供描述。
+创建管理异步任务队列的新 FlintAsyncRuntime 实例。
 
 #### 参数
 
-| 名称 | 类型                     | 描述                     |
-| ---- | ------------------------ | ------------------------ |
-| 选项 | FlintAsyncRuntimeOptions | FlintAsyncRuntimeOptions | FlintAsyncRuntimeOptions |
+|名称 |类型 |描述 |
+| ------- | ------------------------ | -------------------------------- |
+|选项 | FlintAsyncRuntimeOptions | FlintAsyncRuntimeOptions | - 运行时配置选项。 |
 
-### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+#### 合同
+
+- **@param:** - 运行时配置选项。
+- **@returns:** 配置的 FlintAsyncRuntime 实例。
+
+### 创建FlintJspiSuspender
+
+**种类：**功能
+
+```typescript
+function createFlintJspiSuspender(options?: FlintJspiOptions): FlintJspiSuspender;
+```
+
+创建 Flint JSPI 堆栈挂起程序的实例。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ---------------- | ----------- |
+|选项 | FlintJspi选项 |             |
+
+### FLINT_ASYNC_CAPABILITIES
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
+export const FLINT_ASYNC_CAPABILITIES;
 ```
 
 没有提供描述。
 
-### FlintAsyncCapability
+### FlintAsync功能
 
 **种类：**类型
 
 ```typescript
-export type FlintAsyncCapability =
-  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type FlintAsyncCapability = (typeof FLINT_ASYNC_CAPABILITIES)[keyof typeof FLINT_ASYNC_CAPABILITIES];
 ```
 
-没有提供描述。
+授权的异步运行时能力标识符字符串。
 
-### FlintAsyncExecution
+### Flint异步执行
 
 **种类：**接口
 
@@ -117,7 +235,7 @@ export type FlintAsyncCapability =
 export interface FlintAsyncExecution
 ```
 
-没有提供描述。
+包含任务输出负载的成功执行结果。
 
 ### FlintAsyncExecutionResult
 
@@ -127,7 +245,7 @@ export interface FlintAsyncExecution
 export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 ```
 
-没有提供描述。
+执行异步任务的结果（成功或失败）。
 
 ### FlintAsync失败
 
@@ -137,9 +255,9 @@ export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 export interface FlintAsyncFailure
 ```
 
-没有提供描述。
+异步调度或执行操作返回的失败报告。
 
-### FlintAsyncFailureCode
+### FlintAsync故障代码
 
 **种类：**类型
 
@@ -148,7 +266,7 @@ export type FlintAsyncFailureCode =
   'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
-没有提供描述。
+异步执行失败的错误类别代码。
 
 ### FlintAsyncHostAdapter
 
@@ -158,9 +276,9 @@ export type FlintAsyncFailureCode =
 export interface FlintAsyncHostAdapter
 ```
 
-没有提供描述。
+用于调度微任务和传递工作消息的主机集成挂钩。
 
-### FlintAsyncRuntime
+### FlintAsync运行时
 
 **种类：**接口
 
@@ -168,7 +286,7 @@ export interface FlintAsyncHostAdapter
 export interface FlintAsyncRuntime
 ```
 
-没有提供描述。
+异步运行时协调器管理微任务、工作队列和事件循环耗尽。
 
 ### FlintAsyncRuntimeOptions
 
@@ -178,7 +296,7 @@ export interface FlintAsyncRuntime
 export interface FlintAsyncRuntimeOptions
 ```
 
-没有提供描述。
+异步运行时引擎的配置选项。
 
 ### FlintAsyncScheduledTask
 
@@ -188,7 +306,7 @@ export interface FlintAsyncRuntimeOptions
 export interface FlintAsyncScheduledTask
 ```
 
-没有提供描述。
+异步任务的成功调度结果。
 
 ### FlintAsyncScheduleResult
 
@@ -198,9 +316,9 @@ export interface FlintAsyncScheduledTask
 export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailure;
 ```
 
-没有提供描述。
+调度异步任务的结果（已调度或失败）。
 
-### FlintAsyncTask
+### Flint异步任务
 
 **种类：**接口
 
@@ -208,7 +326,7 @@ export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailu
 export interface FlintAsyncTask
 ```
 
-没有提供描述。
+在运行时排队的异步任务的描述符。
 
 ### FlintAsyncTaskHandler
 
@@ -218,7 +336,7 @@ export interface FlintAsyncTask
 export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 ```
 
-没有提供描述。
+任务执行回调接受输入字节有效负载并返回输出字节有效负载。
 
 ### FlintAsyncTaskKind
 
@@ -228,9 +346,9 @@ export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 export type FlintAsyncTaskKind = 'microtask' | 'worker';
 ```
 
-没有提供描述。
+任务调度分类（“微任务”或“工人”）。
 
-### FlintAsyncWorkerMessage
+### FlintAsyncWorker消息
 
 **种类：**接口
 
@@ -238,7 +356,72 @@ export type FlintAsyncTaskKind = 'microtask' | 'worker';
 export interface FlintAsyncWorkerMessage
 ```
 
-没有提供描述。
+与工作线程之间传输的消息包。
+
+### FlintJspi选项
+
+**种类：**接口
+
+```typescript
+export interface FlintJspiOptions
+```
+
+配置 WebAssembly JavaScript Promise Integration (JSPI) 悬挂程序的选项。
+
+### FlintJspi吊带
+
+**种类：**类
+
+```typescript
+export class FlintJspiSuspender
+```
+
+WebAssembly JavaScript Promise Integration (JSPI) 堆栈切换。
+跨异步主机 Promise 暂停和恢复 WebAssembly 堆栈
+本机无需编译器驱动的 Asyncify 代码转换。
+
+## `src/async/fiber`
+
+### 燧石纤维
+
+**种类：**接口
+
+```typescript
+export interface FlintFiber<T = unknown>
+```
+
+处理活动或暂停的协作光纤延续。
+
+### FlintFiber调度器
+
+**种类：**类
+
+```typescript
+export class FlintFiberScheduler
+```
+
+支持 JSPI 风格的异步堆栈暂停的协作光纤调度器，
+帧隔离、堆栈边界断言和重入保护。
+
+### FlintFiberSchedulerOptions
+
+**种类：**接口
+
+```typescript
+export interface FlintFiberSchedulerOptions
+```
+
+协作光纤调度程序的配置选项。
+
+### 弗林特纤维州
+
+**种类：**类型
+
+```typescript
+export type FlintFiberState = 'ready' | 'running' | 'suspended' | 'completed' | 'failed' | 'cancelled';
+```
+
+协作纤程的执行状态。
 
 ## `src/collections`
 
@@ -257,12 +440,12 @@ function createFlintArray(
 
 #### 参数
 
-| 名称   | 类型                   | 描述 |
-| ------ | ---------------------- | ---- |
-| 价值观 | 只读 TValue[]          |      |
-| 所有权 | FlintCollection 所有权 |      |
+|名称 |类型 |描述 |
+| --------- | ------------------------ | ----------- |
+|价值观 |只读 TValue[] |             |
+|所有权 | FlintCollection所有权|             |
 
-### 创建FlintIterator
+### 创建Flint迭代器
 
 **种类：**功能
 
@@ -274,10 +457,10 @@ function createFlintIterator(values: Iterable<TValue>, descriptor: FlintIterator
 
 #### 参数
 
-| 名称   | 类型                    | 描述                    |
-| ------ | ----------------------- | ----------------------- |
-| 价值观 | 可迭代<TValue>          |                         |
-| 描述符 | FlintIteratorDescriptor | FlintIteratorDescriptor |     |
+|名称 |类型 |描述 |
+| ---------- | ----------------------- | ----------- |
+|价值观 |可迭代<TValue> |             |
+|描述符| FlintIterator描述符 |             |
 
 ### 创建FlintIteratorDescriptor
 
@@ -296,14 +479,14 @@ function createFlintIteratorDescriptor(
 
 #### 参数
 
-| 名称     | 类型                   | 描述 |
-| -------- | ---------------------- | ---- |
-| 编号     | 字符串                 |      |
-| 元素类型 |                        |      |
-| 能力     | FlintIterator 功能     |      |
-| 所有权   | FlintCollection 所有权 |      |
+|名称 |类型 |描述 |
+| ----------- | ------------------------ | ----------- |
+|编号 |字符串|             |
+|元素类型 |                          |             |
+|能力| FlintIterator 能力 |             |
+|所有权 | FlintCollection所有权|             |
 
-### 创建FlintMap
+### 创建弗林特地图
 
 **种类：**功能
 
@@ -314,16 +497,22 @@ function createFlintMap(
 ): FlintMap<TKey, TValue>;
 ```
 
-没有提供描述。
+创建一个用键值条目初始化的持久性 FlintMap。
 
 #### 参数
 
-| 名称 | 类型                               | 描述 |
-| ---- | ---------------------------------- | ---- |
-| 条目 | 只读 FlintMapEntry<TKey, TValue>[] |      |
-| 战略 | FlintHashStrategy<TKey>            |      |
+|名称 |类型 |描述 |
+| -------- | -------------------------------------- | --------------------------- |
+|条目 |只读 FlintMapEntry<TKey, TValue>[] | - 初始键值元组。 |
+|战略| FlintHashStrategy<TKey> |                             |
 
-### 创建FlintSet
+#### 合同
+
+- **@param:** - 初始键值元组。
+- **@param:** - 自定义键相等和哈希策略。
+- **@returns:** 初始化的 FlintMap 实例。
+
+### 创建燧石集
 
 **种类：**功能
 
@@ -334,14 +523,20 @@ function createFlintSet(
 ): FlintSet<TValue>;
 ```
 
-没有提供描述。
+创建一个用值初始化的持久性 FlintSet。
 
 #### 参数
 
-| 名称   | 类型                      | 描述 |
-| ------ | ------------------------- | ---- |
-| 价值观 | 只读 TValue[]             |      |
-| 战略   | FlintHashStrategy<TValue> |      |
+|名称 |类型 |描述 |
+| -------- | ------------------------- | ----------------------------- |
+|价值观 |只读 TValue[] | - 值的初始可迭代。 |
+|战略| FlintHashStrategy<TValue> |                               |
+
+#### 合同
+
+- **@param:** - 值的初始可迭代。
+- **@param:** - 自定义相等和哈希策略。
+- **@returns:** 初始化的 FlintSet 实例。
 
 ### 创建FlintVector
 
@@ -358,12 +553,12 @@ function createFlintVector(
 
 #### 参数
 
-| 名称   | 类型                   | 描述 |
-| ------ | ---------------------- | ---- |
-| 价值观 | 只读 TValue[]          |      |
-| 所有权 | FlintCollection 所有权 |      |
+|名称 |类型 |描述 |
+| --------- | ------------------------ | ----------- |
+|价值观 |只读 TValue[] |             |
+|所有权 | FlintCollection所有权|             |
 
-### FlintArray
+### 燧石阵列
 
 **种类：**接口
 
@@ -385,12 +580,12 @@ function flintArrayGet(array: FlintArray<TValue>, index: number): FlintOption<TV
 
 #### 参数
 
-| 名称 | 类型               | 描述 |
-| ---- | ------------------ | ---- |
-| 数组 | FlintArray<TValue> |      |
-| 索引 | 数量               |      |
+|名称 |类型 |描述 |
+| ----- | ------------------ | ----------- |
+|数组| FlintArray<TValue> |             |
+|索引 |数量 |             |
 
-### 伪造WebScriptArrayLength
+### 燧石数组长度
 
 **种类：**功能
 
@@ -402,9 +597,9 @@ function flintArrayLength(array: FlintArray<TValue>): number;
 
 #### 参数
 
-| 名称 | 类型               | 描述 |
-| ---- | ------------------ | ---- |
-| 数组 | FlintArray<TValue> |      |
+|名称 |类型 |描述 |
+| ----- | ------------------ | ----------- |
+|数组| FlintArray<TValue> |             |
 
 ### flintArraySet
 
@@ -418,11 +613,11 @@ function flintArraySet(array: FlintArray<TValue>, index: number, value: TValue):
 
 #### 参数
 
-| 名称 | 类型               | 描述 |
-| ---- | ------------------ | ---- |
-| 数组 | FlintArray<TValue> |      |
-| 索引 | 数量               |      |
-| 价值 | T值                |      |
+|名称 |类型 |描述 |
+| ----- | ------------------ | ----------- |
+|数组| FlintArray<TValue> |             |
+|索引 |数量 |             |
+|价值| T值|             |
 
 ### flintArrayTrySet
 
@@ -440,13 +635,13 @@ function flintArrayTrySet(
 
 #### 参数
 
-| 名称 | 类型               | 描述 |
-| ---- | ------------------ | ---- |
-| 数组 | FlintArray<TValue> |      |
-| 索引 | 数量               |      |
-| 价值 | T值                |      |
+|名称 |类型 |描述 |
+| ----- | ------------------ | ----------- |
+|数组| FlintArray<TValue> |             |
+|索引 |数量 |             |
+|价值| T值|             |
 
-### FlintCollection 所有权
+### FlintCollection所有权
 
 **种类：**类型
 
@@ -454,9 +649,9 @@ function flintArrayTrySet(
 export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 ```
 
-没有提供描述。
+集合元素的内存所有权语义（“拥有”、“借用”、“共享”）。
 
-### flintDefaultHash策略
+### flint默认哈希策略
 
 **种类：**功能
 
@@ -464,9 +659,13 @@ export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 function flintDefaultHashStrategy(): FlintHashStrategy<TValue>;
 ```
 
-没有提供描述。
+使用确定性序列化返回默认哈希策略。
 
-### 伪造WebScript错误
+#### 合同
+
+- **@returns:** 默认 FlintHashStrategy 实例。
+
+### 燧石错误
 
 **种类：**常数
 
@@ -484,7 +683,7 @@ export const flintError;
 export interface FlintHashStrategy<TValue>
 ```
 
-没有提供描述。
+Sets 和 Maps 中自定义键类型的相等和哈希策略接口。
 
 ### FlintIterable
 
@@ -496,7 +695,7 @@ export type FlintIterable<TValue> = FlintIterator<TValue> | FlintArray<TValue> |
 
 串行和并行迭代器操作接受的任何源。
 
-### Flint迭代器
+### 燧石迭代器
 
 **种类：**接口
 
@@ -506,7 +705,7 @@ export interface FlintIterator<TValue>
 
 具有描述符功能和可选直接索引的惰性迭代器视图。
 
-### flintIteratorAdd
+### flint迭代器添加
 
 **种类：**功能
 
@@ -518,12 +717,12 @@ function flintIteratorAdd(source: FlintIterator<TValue>, value: TValue): FlintIt
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 来源 | FlintIterator<TValue> |      |
-| 价值 | T值                   |      |
+|名称 |类型 |描述 |
+| ------ | --------------------- | ----------- |
+|来源 | FlintIterator<TValue> |             |
+|价值| T值 |             |
 
-### flintIteratorAt
+### flint迭代器
 
 **种类：**功能
 
@@ -531,16 +730,22 @@ function flintIteratorAdd(source: FlintIterator<TValue>, value: TValue): FlintIt
 function flintIteratorAt(iterator: FlintIterator<TValue>, index: number): FlintOption<TValue>;
 ```
 
-没有提供描述。
+返回包装在选项中的指定索引处的元素。
 
 #### 参数
 
-| 名称   | 类型                  | 描述 |
-| ------ | --------------------- | ---- |
-| 迭代器 | FlintIterator<TValue> |      |
-| 索引   | 数量                  |      |
+|名称 |类型 |描述 |
+| -------- | --------------------- | --------------------------- |
+|迭代器| FlintIterator<TValue> | - 源迭代器。          |
+|索引 |数量 | - 从零开始的元素索引。 |
 
-### FlintIterator 功能
+#### 合同
+
+- **@param:** - 源迭代器。
+- **@param:** - 从零开始的元素索引。
+- **@returns:** 选项包含索引处的元素或不包含元素。
+
+### FlintIterator能力
 
 **种类：**类型
 
@@ -550,7 +755,7 @@ export type FlintIteratorCapability = 'linear' | 'random-access';
 
 迭代器支持线性消耗或非消耗随机访问。
 
-### flintIteratorCollect
+### flint迭代器收集
 
 **种类：**功能
 
@@ -558,13 +763,18 @@ export type FlintIteratorCapability = 'linear' | 'random-access';
 function flintIteratorCollect(iterator: FlintIterator<TValue>): FlintVector<TValue>;
 ```
 
-没有提供描述。
+将迭代器具体化为所收集值的自有向量。
 
 #### 参数
 
-| 名称   | 类型                  | 描述 |
-| ------ | --------------------- | ---- |
-| 迭代器 | FlintIterator<TValue> |      |
+|名称 |类型 |描述 |
+| -------- | --------------------- | --------------------------- |
+|迭代器| FlintIterator<TValue> | - 源迭代器到耗尽。 |
+
+#### 合同
+
+- **@param:** - 要耗尽的源迭代器。
+- **@returns:** FlintVector 包含收集的值。
 
 ### flintIteratorConcat
 
@@ -578,12 +788,12 @@ function flintIteratorConcat(first: FlintIterator<TValue>, second: FlintIterable
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 第一 | FlintIterator<TValue> |      |
-| 第二 | FlintIterable<TValue> |      |
+|名称 |类型 |描述 |
+| ------ | --------------------- | ----------- |
+|第一 | FlintIterator<TValue> |             |
+|第二 | FlintIterable<TValue> |             |
 
-### FlintIteratorDescriptor
+### Flint迭代器描述符
 
 **种类：**接口
 
@@ -593,7 +803,7 @@ export interface FlintIteratorDescriptor
 
 描述元素表示、所有权和访问能力的 ABI 元数据。
 
-### flintIteratorFilter
+### flint迭代过滤器
 
 **种类：**功能
 
@@ -608,10 +818,10 @@ function flintIteratorFilter(
 
 #### 参数
 
-| 名称 | 类型                    | 描述 |
-| ---- | ----------------------- | ---- |
-| 来源 | FlintIterator<TValue>   |      |
-| 谓词 | （值：TValue）=> 布尔值 |      |
+|名称 |类型 |描述 |
+| --------- | -------------------------- | ----------- |
+|来源 | FlintIterator<TValue> |             |
+|谓词| （值：TValue）=> 布尔值 |             |
 
 ### flintIteratorFirst
 
@@ -621,13 +831,18 @@ function flintIteratorFilter(
 function flintIteratorFirst(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-没有提供描述。
+返回包装在选项中的迭代器的第一个元素。
 
 #### 参数
 
-| 名称   | 类型                  | 描述 |
-| ------ | --------------------- | ---- |
-| 迭代器 | FlintIterator<TValue> |      |
+|名称 |类型 |描述 |
+| -------- | --------------------- | ------------------ |
+|迭代器| FlintIterator<TValue> | - 源迭代器。 |
+
+#### 合同
+
+- **@param:** - 源迭代器。
+- **@returns:** 包含第一个元素或不包含第一个元素的选项。
 
 ### flintIteratorFlatten
 
@@ -641,11 +856,11 @@ function flintIteratorFlatten(source: FlintIterator<FlintIterable<TValue>>): Fli
 
 #### 参数
 
-| 名称 | 类型                                 | 描述 |
-| ---- | ------------------------------------ | ---- |
-| 来源 | FlintIterator<FlintIterable<TValue>> |      |
+|名称 |类型 |描述 |
+| ------ | ------------------------------------ | ----------- |
+|来源 | FlintIterator<FlintIterable<TValue>> |             |
 
-### flintIteratorFold
+### flint迭代器折叠
 
 **种类：**功能
 
@@ -657,15 +872,22 @@ function flintIteratorFold(
 ): TResult;
 ```
 
-没有提供描述。
+使用累加器回调从左到右减少迭代器。
 
 #### 参数
 
-| 名称   | 类型                                                  | 描述 |
-| ------ | ----------------------------------------------------- | ---- |
-| 迭代器 | FlintIterator<TValue>                                 |      |
-| 初始   | 结果                                                  |      |
-| 减速机 | （累加器：TResult，值：TValue，索引：数字）=> TResult |      |
+|名称 |类型 |描述 |
+| -------- | --------------------------------------------------------------- | ----------------------------- |
+|迭代器| FlintIterator<TValue> | - 源迭代器。            |
+|初始|结果 | - 初始累加器值。  |
+|减速机| （累加器：TResult，值：TValue，索引：数字）=> TResult | - 减少回调函数。 |
+
+#### 合同
+
+- **@param:** - 源迭代器。
+- **@param:** - 初始累加器值。
+- **@param:** - 减少回调函数。
+- **@returns:** 最终减少的累加器结果。
 
 ### flintIteratorFromArray
 
@@ -682,10 +904,10 @@ function flintIteratorFromArray(
 
 #### 参数
 
-| 名称   | 类型                    | 描述                    |
-| ------ | ----------------------- | ----------------------- |
-| 数组   | FlintArray<TValue>      |                         |
-| 描述符 | FlintIteratorDescriptor | FlintIteratorDescriptor |     |
+|名称 |类型 |描述 |
+| ---------- | ----------------------- | ----------- |
+|数组| FlintArray<TValue> |             |
+|描述符| FlintIterator描述符 |             |
 
 ### flintIteratorFromIterable
 
@@ -699,15 +921,15 @@ function flintIteratorFromIterable(
 ): FlintIterator<TValue>;
 ```
 
-将任意迭代器调整为惰性线性 Forge Web 脚本迭代器。
+将任意迭代器适配为惰性线性 Flint 迭代器。
 
 #### 参数
 
-| 名称     | 类型           | 描述 |
-| -------- | -------------- | ---- |
-| 价值观   | 可迭代<TValue> |      |
-| 元素类型 |                |      |
-| 编号     |                |      |
+|名称 |类型 |描述 |
+| ----------- | ---------------- | ----------- |
+|价值观 |可迭代<TValue> |             |
+|元素类型 |                  |             |
+|编号 |                  |             |
 
 ### flintIteratorFromVector
 
@@ -724,10 +946,10 @@ function flintIteratorFromVector(
 
 #### 参数
 
-| 名称   | 类型                    | 描述                    |
-| ------ | ----------------------- | ----------------------- |
-| 矢量   | FlintVector<TValue>     |                         |
-| 描述符 | FlintIteratorDescriptor | FlintIteratorDescriptor |     |
+|名称 |类型 |描述 |
+| ---------- | ----------------------- | ----------- |
+|矢量| FlintVector<TValue> |             |
+|描述符| FlintIterator描述符 |             |
 
 ### flintIteratorLast
 
@@ -737,15 +959,20 @@ function flintIteratorFromVector(
 function flintIteratorLast(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-没有提供描述。
+返回包装在选项中的迭代器的最后一个元素。
 
 #### 参数
 
-| 名称   | 类型                  | 描述 |
-| ------ | --------------------- | ---- |
-| 迭代器 | FlintIterator<TValue> |      |
+|名称 |类型 |描述 |
+| -------- | --------------------- | ------------------ |
+|迭代器| FlintIterator<TValue> | - 源迭代器。 |
 
-### flintIteratorMap
+#### 合同
+
+- **@param:** - 源迭代器。
+- **@returns:** 包含最后一个元素或不包含最后一个元素的选项。
+
+### flint迭代器映射
 
 **种类：**功能
 
@@ -761,13 +988,13 @@ function flintIteratorMap(
 
 #### 参数
 
-| 名称     | 类型                     | 描述 |
-| -------- | ------------------------ | ---- |
-| 来源     | FlintIterator<TValue>    |      |
-| 地图     | （值：TValue）=> TResult |      |
-| 元素类型 |                          |      |
+|名称 |类型 |描述 |
+| ----------- | -------------------------- | ----------- |
+|来源 | FlintIterator<TValue> |             |
+|地图 | （值：TValue）=> TResult |             |
+|元素类型 |                            |             |
 
-### FlintIteratorResult
+### Flint迭代器结果
 
 **种类：**接口
 
@@ -789,12 +1016,12 @@ function flintIteratorTake(source: FlintIterator<TValue>, count: number): FlintI
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 来源 | FlintIterator<TValue> |      |
-| 计数 | 数量                  |      |
+|名称 |类型 |描述 |
+| ------ | --------------------- | ----------- |
+|来源 | FlintIterator<TValue> |             |
+|计数|数量 |             |
 
-### flintIteratorToArray
+### flint迭代器到数组
 
 **种类：**功能
 
@@ -805,16 +1032,22 @@ function flintIteratorToArray(
 ): FlintArray<TValue>;
 ```
 
-没有提供描述。
+将迭代器转换为拥有的 FlintArray。
 
 #### 参数
 
-| 名称   | 类型                   | 描述 |
-| ------ | ---------------------- | ---- |
-| 迭代器 | FlintIterator<TValue>  |      |
-| 所有权 | FlintCollection 所有权 |      |
+|名称 |类型 |描述 |
+| --------- | ------------------------ | ----------------------------- |
+|迭代器| FlintIterator<TValue> | - 源迭代器。            |
+|所有权 | FlintCollection所有权| - 馆藏所有权模型。 |
 
-### FlintMap
+#### 合同
+
+- **@param:** - 源迭代器。
+- **@param:** - 集合所有权模型。
+- **@returns:** 初始化的 FlintArray。
+
+### 弗林特地图
 
 **种类：**接口
 
@@ -822,9 +1055,9 @@ function flintIteratorToArray(
 export interface FlintMap<TKey, TValue>
 ```
 
-没有提供描述。
+持久哈希图集合数据结构。
 
-### flintMapDelete
+### flintMap删除
 
 **种类：**功能
 
@@ -832,16 +1065,22 @@ export interface FlintMap<TKey, TValue>
 function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, TValue>;
 ```
 
-没有提供描述。
+从映射中删除键值映射，返回新的持久映射。
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 地图 | FlintMap<TKey, TValue> |      |
-| 关键 | T键                    |      |
+|名称 |类型 |描述 |
+| ---- | ---------------------- | ---------------- |
+|地图 | FlintMap<TKey, TValue> | - 目标地图。    |
+|关键| T键| - 要删除的键。 |
 
-### flintMapEntries
+#### 合同
+
+- **@param:** - 目标地图。
+- **@param:** - 要删除的键。
+- **@returns:** 更新了持久地图。
+
+### 火石地图条目
 
 **种类：**功能
 
@@ -849,15 +1088,20 @@ function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, 
 function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry<TKey, TValue>>;
 ```
 
-没有提供描述。
+将映射中包含的所有键值条目作为拥有的向量返回。
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 地图 | FlintMap<TKey, TValue> |      |
+|名称 |类型 |描述 |
+| ---- | ---------------------- | ------------- |
+|地图 | FlintMap<TKey, TValue> | - 目标地图。 |
 
-### FlintMapEntry
+#### 合同
+
+- **@param:** - 目标地图。
+- **@returns:** 地图中条目的向量。
+
+### 弗林特地图条目
 
 **种类：**接口
 
@@ -865,9 +1109,9 @@ function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry
 export interface FlintMapEntry<TKey, TValue>
 ```
 
-没有提供描述。
+持久哈希映射中的键值条目记录。
 
-### flintMapGet
+### 火石地图获取
 
 **种类：**功能
 
@@ -875,16 +1119,22 @@ export interface FlintMapEntry<TKey, TValue>
 function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue>;
 ```
 
-没有提供描述。
+从映射中检索与键关联的值。
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 地图 | FlintMap<TKey, TValue> |      |
-| 关键 | T键                    |      |
+|名称 |类型 |描述 |
+| ---- | ---------------------- | ------------- |
+|地图 | FlintMap<TKey, TValue> | - 目标地图。 |
+|关键| T键| - 查找键。 |
 
-### flintMapSet
+#### 合同
+
+- **@param:** - 目标地图。
+- **@param:** - 查找键。
+- **@returns:** 包含值或不包含值的选项。
+
+### 燧石地图集
 
 **种类：**功能
 
@@ -892,17 +1142,24 @@ function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue
 function flintMapSet(map: FlintMap<TKey, TValue>, key: TKey, value: TValue): FlintMap<TKey, TValue>;
 ```
 
-没有提供描述。
+插入或更新键值映射，返回新的持久映射。
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 地图 | FlintMap<TKey, TValue> |      |
-| 关键 | T键                    |      |
-| 价值 | T值                    |      |
+|名称 |类型 |描述 |
+| ----- | ---------------------- | ---------------- |
+|地图 | FlintMap<TKey, TValue> | - 目标地图。    |
+|关键| T键| - 映射键。   |
+|价值| T值 | - 映射值。 |
 
-### flint无
+#### 合同
+
+- **@param:** - 目标地图。
+- **@param:** - 映射键。
+- **@param:** - 映射值。
+- **@returns:** 更新了持久地图。
+
+### 燧石无
 
 **种类：**常数
 
@@ -912,7 +1169,7 @@ export const flintNone;
 
 构造一个空的 Option 值。
 
-### flintOk
+### 燧石好
 
 **种类：**常数
 
@@ -922,7 +1179,7 @@ export const flintOk;
 
 构造成功的 Result 值。
 
-### FlintOption
+### 燧石选项
 
 **种类：**接口
 
@@ -932,7 +1189,7 @@ export interface FlintOption<TValue>
 
 安全读取和空迭代器终端使用的类似选项的值。
 
-### FlintResultValue
+### Flint结果值
 
 **种类：**接口
 
@@ -942,7 +1199,7 @@ export interface FlintResultValue<TValue, TError = string>
 
 非捕获集合突变助手使用的类似结果的值。
 
-### FlintSet
+### 燧石
 
 **种类：**接口
 
@@ -950,9 +1207,9 @@ export interface FlintResultValue<TValue, TError = string>
 export interface FlintSet<TValue>
 ```
 
-没有提供描述。
+持久哈希集集合数据结构。
 
-### flintSetAdd
+### flintSet添加
 
 **种类：**功能
 
@@ -960,16 +1217,22 @@ export interface FlintSet<TValue>
 function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-没有提供描述。
+将一个元素添加到集合中，如果修改则返回一个新的持久集合。
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 集   | FlintSet<TValue> |      |
-| 价值 | T值              |      |
+|名称 |类型 |描述 |
+| ----- | ---------------- | ------------------ |
+|集| FlintSet<TValue> | - 目标设定。      |
+|价值| T值 | - 要插入的值。 |
 
-### flintSetDelete
+#### 合同
+
+- **@param:** - 目标集。
+- **@param:** - 要插入的值。
+- **@returns:** 更新了持久集。
+
+### flintSet删除
 
 **种类：**功能
 
@@ -977,16 +1240,22 @@ function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-没有提供描述。
+从集合中删除一个元素，如果修改则返回一个新的持久集。
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 集   | FlintSet<TValue> |      |
-| 价值 | T值              |      |
+|名称 |类型 |描述 |
+| ----- | ---------------- | ------------------ |
+|集| FlintSet<TValue> | - 目标设定。      |
+|价值| T值 | - 要删除的值。 |
 
-### flintSetHas
+#### 合同
+
+- **@param:** - 目标集。
+- **@param:** - 要删除的值。
+- **@returns:** 更新了持久集。
+
+### 燧石集有
 
 **种类：**功能
 
@@ -994,14 +1263,20 @@ function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 ```
 
-没有提供描述。
+测试集合中是否存在某个值。
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 集   | FlintSet<TValue> |      |
-| 价值 | T值              |      |
+|名称 |类型 |描述 |
+| ----- | ---------------- | ----------------- |
+|集| FlintSet<TValue> | - 目标设定。     |
+|价值| T值 | - 要检查的值。 |
+
+#### 合同
+
+- **@param:** - 目标集。
+- **@param:** - 要检查的值。
+- **@returns:** 如果值存在则为真。
 
 ### flintSetValues
 
@@ -1011,15 +1286,20 @@ function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 function flintSetValues(set: FlintSet<TValue>): FlintVector<TValue>;
 ```
 
-没有提供描述。
+将集合中包含的所有值作为自有向量返回。
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 集   | FlintSet<TValue> |      |
+|名称 |类型 |描述 |
+| ---- | ---------------- | ------------- |
+|集| FlintSet<TValue> | - 目标设定。 |
 
-### 伪造WebScriptSome
+#### 合同
+
+- **@param:** - 目标集。
+- **@returns:** 集合中值的向量。
+
+### 燧石一些
 
 **种类：**常数
 
@@ -1029,7 +1309,7 @@ export const flintSome;
 
 构造一个当前选项值。
 
-### Flint向量
+### 燧石矢量
 
 **种类：**接口
 
@@ -1040,7 +1320,7 @@ export interface FlintVector<TValue>
 可增长的连续集合。运行时创建的向量带有自有句柄
 合同，而借用/共享所有权则由衍生价值保留。
 
-### flintVectorAdd
+### flint向量添加
 
 **种类：**常数
 
@@ -1050,7 +1330,7 @@ export const flintVectorAdd;
 
 向量推送的别名，与 stdlib 迭代器 `add` 词汇表匹配。
 
-### flintVectorFilter
+### 火石矢量过滤器
 
 **种类：**功能
 
@@ -1065,12 +1345,12 @@ function flintVectorFilter(
 
 #### 参数
 
-| 名称 | 类型                                | 描述 |
-| ---- | ----------------------------------- | ---- |
-| 矢量 | FlintVector<TValue>                 |      |
-| 谓词 | （值：TValue，索引：数字）=> 布尔值 |      |
+|名称 |类型 |描述 |
+| --------- | ----------------------------------------- | ----------- |
+|矢量| FlintVector<TValue> |             |
+|谓词| （值：TValue，索引：数字）=> 布尔值 |             |
 
-### flintVectorFold
+### 火石矢量折叠
 
 **种类：**功能
 
@@ -1086,13 +1366,13 @@ function flintVectorFold(
 
 #### 参数
 
-| 名称   | 类型                                                  | 描述 |
-| ------ | ----------------------------------------------------- | ---- |
-| 矢量   | FlintVector<TValue>                                   |      |
-| 初始   | 结果                                                  |      |
-| 减速机 | （累加器：TResult，值：TValue，索引：数字）=> TResult |      |
+|名称 |类型 |描述 |
+| ------- | --------------------------------------------------------------- | ----------- |
+|矢量| FlintVector<TValue> |             |
+|初始|结果 |             |
+|减速机| （累加器：TResult，值：TValue，索引：数字）=> TResult |             |
 
-### flintVectorGet
+### 火石矢量获取
 
 **种类：**功能
 
@@ -1104,12 +1384,12 @@ function flintVectorGet(vector: FlintVector<TValue>, index: number): FlintOption
 
 #### 参数
 
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 矢量 | FlintVector<TValue> |      |
-| 索引 | 数量                |      |
+|名称 |类型 |描述 |
+| ------ | ------------------- | ----------- |
+|矢量| FlintVector<TValue> |             |
+|索引 |数量 |             |
 
-### 伪造WebScriptVectorLength
+### flint向量长度
 
 **种类：**功能
 
@@ -1121,11 +1401,11 @@ function flintVectorLength(vector: FlintVector<TValue>): number;
 
 #### 参数
 
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 矢量 | FlintVector<TValue> |      |
+|名称 |类型 |描述 |
+| ------ | ------------------- | ----------- |
+|矢量| FlintVector<TValue> |             |
 
-### flintVectorMap
+### 火石矢量地图
 
 **种类：**功能
 
@@ -1140,12 +1420,12 @@ function flintVectorMap(
 
 #### 参数
 
-| 名称 | 类型                                 | 描述 |
-| ---- | ------------------------------------ | ---- |
-| 矢量 | FlintVector<TValue>                  |      |
-| 变换 | （值：TValue，索引：数字）=> TResult |      |
+|名称 |类型 |描述 |
+| --------- | ----------------------------------------- | ----------- |
+|矢量| FlintVector<TValue> |             |
+|变换| （值：TValue，索引：数字）=> TResult |             |
 
-### flintVectorPop
+### 火石矢量流行音乐
 
 **种类：**功能
 
@@ -1160,11 +1440,11 @@ function flintVectorPop(vector: FlintVector<TValue>): {
 
 #### 参数
 
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 矢量 | FlintVector<TValue> |      |
+|名称 |类型 |描述 |
+| ------ | ------------------- | ----------- |
+|矢量| FlintVector<TValue> |             |
 
-### flintVectorPush
+### 火石矢量推
 
 **种类：**功能
 
@@ -1176,12 +1456,12 @@ function flintVectorPush(vector: FlintVector<TValue>, value: TValue): FlintVecto
 
 #### 参数
 
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 矢量 | FlintVector<TValue> |      |
-| 价值 | T值                 |      |
+|名称 |类型 |描述 |
+| ------ | ------------------- | ----------- |
+|矢量| FlintVector<TValue> |             |
+|价值| T值 |             |
 
-### flintVectorSet
+### 燧石矢量集
 
 **种类：**功能
 
@@ -1193,11 +1473,11 @@ function flintVectorSet(vector: FlintVector<TValue>, index: number, value: TValu
 
 #### 参数
 
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 矢量 | FlintVector<TValue> |      |
-| 索引 | 数量                |      |
-| 价值 | T值                 |      |
+|名称 |类型 |描述 |
+| ------ | ------------------- | ----------- |
+|矢量| FlintVector<TValue> |             |
+|索引 |数量 |             |
+|价值| T值 |             |
 
 ### flintVectorTrySet
 
@@ -1215,15 +1495,15 @@ function flintVectorTrySet(
 
 #### 参数
 
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 矢量 | FlintVector<TValue> |      |
-| 索引 | 数量                |      |
-| 价值 | T值                 |      |
+|名称 |类型 |描述 |
+| ------ | ------------------- | ----------- |
+|矢量| FlintVector<TValue> |             |
+|索引 |数量 |             |
+|价值| T值 |             |
 
 ## `src/ecs`
 
-### addFlintEcsComponent
+### 添加FlintEcsComponent
 
 **种类：**功能
 
@@ -1236,16 +1516,24 @@ function addFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-没有提供描述。
+将组件附加到实体（如果尚不存在）。
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 世界 | FlintEcsWorld<TValue> |      |
-| 实体 | FlintEcsEntity        |      |
-| 组件 | 字符串                |      |
-| 价值 | T值                   |      |
+|名称 |类型 |描述 |
+| --------- | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 当前世界快照。 |
+|实体| FlintEcsEntity | - 目标实体。          |
+|组件|字符串|                           |
+|价值| T值 | - 元件值数据。   |
+
+#### 合同
+
+- **@param:** - 当前世界快照。
+- **@param:** - 目标实体。
+- **@param:** - 组件名称。
+- **@param:** - 组件值数据。
+- **@returns:** 转换结果 结果。
 
 ### 创建FlintEcsScheduler
 
@@ -1260,16 +1548,21 @@ function createFlintEcsScheduler(
 ): FlintEcsScheduler<TValue>;
 ```
 
-没有提供描述。
+创建 ECS 执行管道调度程序。
 
 #### 参数
 
-| 名称     | 类型                          | 描述 |
-| -------- | ----------------------------- | ---- |
-| 系统     | 只读 FlintEcsSystem<TValue>[] |      |
-| 信号     | 只读 FlintEcsSignal[]         |      |
-| 订阅     | 只读 FlintEcsSubscription[]   |      |
-| 最大步数 |                               |      |
+|名称 |类型 |描述 |
+| ------------- | --------------------------------- | -------------------------------------------------- |
+|系统|只读 FlintEcsSystem<TValue>[] | - 在管道中注册的系统序列。 |
+|信号 |只读 FlintEcsSignal[] |                                                    |
+|订阅 |只读 FlintEcsSubscription[] |                                                    |
+|最大步数 |                                   |                                                    |
+
+#### 合同
+
+- **@param:** - 在管道中注册的系统序列。
+- **@returns:** 配置的 FlintEcsScheduler 实例。
 
 ### 创建FlintEcsWorld
 
@@ -1279,7 +1572,11 @@ function createFlintEcsScheduler(
 function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 ```
 
-没有提供描述。
+初始化一个空的实体组件系统世界。
+
+#### 合同
+
+- **@returns:** 新初始化的 FlintEcsWorld 实例。
 
 ### despawnFlintEcsEntity
 
@@ -1289,14 +1586,20 @@ function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): FlintEcsResult<TValue>;
 ```
 
-没有提供描述。
+消失一个实体，增加其生成并清除所有附加组件。
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 世界 | FlintEcsWorld<TValue> |      |
-| 实体 | FlintEcsEntity        |      |
+|名称 |类型 |描述 |
+| ------ | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 当前世界快照。 |
+|实体| FlintEcsEntity | - 实体消失。      |
+
+#### 合同
+
+- **@param:** - 当前世界快照。
+- **@param:** - 要消失的实体。
+- **@returns:** 转换结果 结果。
 
 ### FlintEcsComponentStore
 
@@ -1306,7 +1609,7 @@ function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEnt
 export interface FlintEcsComponentStore<TValue = Uint8Array>
 ```
 
-没有提供描述。
+组件存储将实体索引号映射到组件实例。
 
 ### FlintEcsEntity
 
@@ -1316,7 +1619,7 @@ export interface FlintEcsComponentStore<TValue = Uint8Array>
 export interface FlintEcsEntity
 ```
 
-没有提供描述。
+轻量级生成实体处理组合索引和生成计数器。
 
 ### FlintEcsEntityResult
 
@@ -1326,9 +1629,9 @@ export interface FlintEcsEntity
 export interface FlintEcsEntityResult<TValue = Uint8Array>
 ```
 
-没有提供描述。
+实体突变的结果返回修改后的世界和实体句柄。
 
-### FlintEcsQuery
+### FlintEcs查询
 
 **种类：**接口
 
@@ -1336,9 +1639,9 @@ export interface FlintEcsEntityResult<TValue = Uint8Array>
 export interface FlintEcsQuery
 ```
 
-没有提供描述。
+定义必需和排除的组件键的实体查询规范。
 
-### FlintEcsResult
+### FlintEcs结果
 
 **种类：**类型
 
@@ -1346,9 +1649,9 @@ export interface FlintEcsQuery
 export type FlintEcsResult<TValue = Uint8Array> = |
 ```
 
-没有提供描述。
+ECS 转换的结果，成功或失败。
 
-### FlintEcsScheduler
+### FlintEcs调度器
 
 **种类：**接口
 
@@ -1356,7 +1659,7 @@ export type FlintEcsResult<TValue = Uint8Array> = |
 export interface FlintEcsScheduler<TValue = Uint8Array>
 ```
 
-没有提供描述。
+管道调度程序协调系统阶段和信号传递。
 
 ### FlintEcsScheduleResult
 
@@ -1366,7 +1669,7 @@ export interface FlintEcsScheduler<TValue = Uint8Array>
 export interface FlintEcsScheduleResult<TValue = Uint8Array>
 ```
 
-没有提供描述。
+跨多个系统步骤执行 ECS 计划的结果。
 
 ### FlintEcsSignal
 
@@ -1376,7 +1679,7 @@ export interface FlintEcsScheduleResult<TValue = Uint8Array>
 export interface FlintEcsSignal
 ```
 
-没有提供描述。
+ECS 系统执行期间发出的事件或状态更改信号。
 
 ### FlintEcs订阅
 
@@ -1386,7 +1689,7 @@ export interface FlintEcsSignal
 export interface FlintEcsSubscription
 ```
 
-没有提供描述。
+订阅将信号绑定到事件处理程序回调。
 
 ### FlintEcs系统
 
@@ -1396,7 +1699,7 @@ export interface FlintEcsSubscription
 export interface FlintEcsSystem<TValue = Uint8Array>
 ```
 
-没有提供描述。
+系统执行单元根据查询和更新改变 ECS 世界。
 
 ### FlintEcsTransition
 
@@ -1406,9 +1709,9 @@ export interface FlintEcsSystem<TValue = Uint8Array>
 export interface FlintEcsTransition<TValue = Uint8Array>
 ```
 
-没有提供描述。
+记录世界转变，详细说明前一个世界、下一个世界和发出的信号。
 
-### FlintEcsWorld
+### 燧石世界
 
 **种类：**接口
 
@@ -1416,9 +1719,9 @@ export interface FlintEcsTransition<TValue = Uint8Array>
 export interface FlintEcsWorld<TValue = Uint8Array>
 ```
 
-没有提供描述。
+实体组件系统世界的不可变快照。
 
-### getFlintEcsComponent
+### 获取FlintEcsComponent
 
 **种类：**功能
 
@@ -1430,15 +1733,22 @@ function getFlintEcsComponent(
 ): TValue | undefined;
 ```
 
-没有提供描述。
+检索附加到实体的组件实例。
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 世界 | FlintEcsWorld<TValue> |      |
-| 实体 | FlintEcsEntity        |      |
-| 组件 | 字符串                |      |
+|名称 |类型 |描述 |
+| --------- | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 当前世界快照。 |
+|实体| FlintEcsEntity | - 目标实体。          |
+|组件|字符串|                           |
+
+#### 合同
+
+- **@param:** - 当前世界快照。
+- **@param:** - 目标实体。
+- **@param:** - 组件名称。
+- **@returns:** 组件值或未定义（如果不存在）。
 
 ### isFlintEcsEntityAlive
 
@@ -1448,16 +1758,22 @@ function getFlintEcsComponent(
 function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): boolean;
 ```
 
-没有提供描述。
+确定实体句柄是否与世界中的活动生成相匹配。
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 世界 | FlintEcsWorld<TValue> |      |
-| 实体 | FlintEcsEntity        |      |
+|名称 |类型 |描述 |
+| ------ | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 当前世界快照。 |
+|实体| FlintEcsEntity | - 要检查的实体句柄。 |
 
-### queryFlintEcsEntities
+#### 合同
+
+- **@param:** - 当前世界快照。
+- **@param:** - 要检查的实体句柄。
+- **@returns:** 如果还活着则为真。
+
+### 查询FlintEcsEntities
 
 **种类：**功能
 
@@ -1465,14 +1781,20 @@ function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEnt
 function queryFlintEcsEntities(world: FlintEcsWorld<TValue>, query: FlintEcsQuery): readonly FlintEcsEntity[];
 ```
 
-没有提供描述。
+查询与组件过滤条件匹配的活动实体。
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 世界 | FlintEcsWorld<TValue> |      |
-| 查询 | FlintEcsQuery         |      |
+|名称 |类型 |描述 |
+| ----- | --------------------- | ----------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 当前世界快照。     |
+|查询 | FlintEcs查询 | - 查询过滤器规格。 |
+
+#### 合同
+
+- **@param:** - 当前世界快照。
+- **@param:** - 查询过滤器规范。
+- **@returns:** 匹配实体句柄的数组。
 
 ### 删除FlintEcsComponent
 
@@ -1486,17 +1808,24 @@ function removeFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-没有提供描述。
+从实体中删除组件。
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 世界 | FlintEcsWorld<TValue> |      |
-| 实体 | FlintEcsEntity        |      |
-| 组件 | 字符串                |      |
+|名称 |类型 |描述 |
+| --------- | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 当前世界快照。 |
+|实体| FlintEcsEntity | - 目标实体。          |
+|组件|字符串|                           |
 
-### runFlintEcsScheduler
+#### 合同
+
+- **@param:** - 当前世界快照。
+- **@param:** - 目标实体。
+- **@param:** - 要删除的组件名称。
+- **@returns:** 转换结果 结果。
+
+### 运行FlintEcsScheduler
 
 **种类：**功能
 
@@ -1507,14 +1836,20 @@ function runFlintEcsScheduler(
 ): FlintEcsScheduleResult<TValue> | Extract<FlintEcsResult<TValue>, { readonly ok: false }>;
 ```
 
-没有提供描述。
+跨所有注册的系统和阶段运行 ECS 调度程序管道。
 
 #### 参数
 
-| 名称     | 类型                      | 描述 |
-| -------- | ------------------------- | ---- |
-| 世界     | FlintEcsWorld<TValue>     |      |
-| 调度程序 | FlintEcsScheduler<TValue> |      |
+|名称 |类型 |描述 |
+| --------- | ------------------------- | -------------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 初始世界快照。        |
+|调度程序| FlintEcsScheduler<TValue> | - 配置调度程序管道。 |
+
+#### 合同
+
+- **@param:** - 初始世界快照。
+- **@param:** - 配置的调度程序管道。
+- **@returns:** 安排执行报告。
 
 ### setFlintEcsComponent
 
@@ -1529,16 +1864,24 @@ function setFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-没有提供描述。
+设置或覆盖实体上的组件值。
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 世界 | FlintEcsWorld<TValue> |      |
-| 实体 | FlintEcsEntity        |      |
-| 组件 | 字符串                |      |
-| 价值 | T值                   |      |
+|名称 |类型 |描述 |
+| --------- | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 当前世界快照。 |
+|实体| FlintEcsEntity | - 目标实体。          |
+|组件|字符串|                           |
+|价值| T值 | - 元件值数据。   |
+
+#### 合同
+
+- **@param:** - 当前世界快照。
+- **@param:** - 目标实体。
+- **@param:** - 组件名称。
+- **@param:** - 组件值数据。
+- **@returns:** 转换结果 结果。
 
 ### spawnFlintEcsEntity
 
@@ -1548,15 +1891,20 @@ function setFlintEcsComponent(
 function spawnFlintEcsEntity(world: FlintEcsWorld<TValue>): FlintEcsEntityResult<TValue>;
 ```
 
-没有提供描述。
+分配一个新的实体句柄并将其添加到世界中。
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 世界 | FlintEcsWorld<TValue> |      |
+|名称 |类型 |描述 |
+| ----- | --------------------- | ------------------------- |
+|世界 | FlintEcsWorld<TValue> | - 当前世界快照。 |
 
-### validateFlintEcsSignals
+#### 合同
+
+- **@param:** - 当前世界快照。
+- **@returns:** 包含更新的世界和新实体的实体结果。
+
+### 验证FlintEcsSignals
 
 **种类：**功能
 
@@ -1566,17 +1914,33 @@ function validateFlintEcsSignals(
 ): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
-没有提供描述。
+根据声明的信号定义验证信号序列。
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 信号 | 只读 FlintEcsSignal[] |      |
+|名称 |类型 |描述 |
+| ------- | ------------------------- | ------------------------------- |
+|信号|只读 FlintEcsSignal[] | - 要验证的信号数组。 |
+
+#### 合同
+
+- **@param:** - 要验证的信号数组。
+- **@returns:** 具有有效状态和错误消息的对象。
 
 ## `src/host`
 
-### createDefaultFlintCapability
+### 原子环缓冲通道
+
+**种类：**类
+
+```typescript
+export class AtomicRingBufferChannel
+```
+
+同步共享主机互操作环缓冲区内存上的原子头/尾指针更新。
+使用与 WebAssembly 兼容的原子存储/加载操作和内存排序保证来防止竞争条件。
+
+### 创建默认FlintCapability
 
 **种类：**功能
 
@@ -1584,13 +1948,18 @@ function validateFlintEcsSignals(
 function createDefaultFlintCapabilities(options: FlintDefaultHostOptions = {}): FlintCapabilityRegistry;
 ```
 
-没有提供描述。
+创建默认的内置功能提供程序（例如 env.now）。
 
 #### 参数
 
-| 名称 | 类型                    | 描述                    |
-| ---- | ----------------------- | ----------------------- |
-| 选项 | FlintDefaultHostOptions | FlintDefaultHostOptions | FlintDefaultHostOptions | FlintDefaultHostOptions |
+|名称 |类型 |描述 |
+| ------- | ----------------------- | ------------------------------------------------- |
+|选项 | FlintDefaultHostOptions | FlintDefaultHostOptions | - 默认功能的配置选项。 |
+
+#### 合同
+
+- **@param:** - 默认功能的配置选项。
+- **@returns:** 具有默认功能实现的注册表。
 
 ### 创建FlintHost
 
@@ -1604,17 +1973,24 @@ function createFlintHost(
 ): FlintHost;
 ```
 
-没有提供描述。
+创建将来宾导入绑定到授权功能的运行时主机环境。
 
 #### 参数
 
-| 名称   | 类型                    | 描述                    |
-| ------ | ----------------------- | ----------------------- |
-| 清单   | FlintAbiManifest        |                         |
-| 注册表 | FlintCapabilityRegistry | FlintCapabilityRegistry | FlintCapabilityRegistry | FlintCapabilityRegistry |                  |
-| 选项   | FlintHostOptions        | FlintHostOptions        | FlintHostOptions        | FlintHostOptions        | FlintHostOptions |
+|名称 |类型 |描述 |
+| -------- | ----------------------- | ------------------------------------------------------------ |
+|清单 |弗林特阿比清单 | - ABI 清单描述所需的功能和导入。 |
+|注册表| FlintCapability 注册表 | - 可用功能实现的注册表。          |
+|选项 | FlintHostOptions | FlintHostOptions | - 主机初始化的配置选项。             |
 
-### Flint功能实现
+#### 合同
+
+- **@param:** - ABI 清单描述所需的功能和导入。
+- **@param:** - 可用功能实现的注册表。
+- **@param:** - 主机初始化的配置选项。
+- **@returns:** 配置的 FlintHost 实例。
+
+### FlintCapability实施
 
 **种类：**接口
 
@@ -1622,9 +1998,9 @@ function createFlintHost(
 export interface FlintCapabilityImplementation
 ```
 
-没有提供描述。
+注册调用处理程序和 ABI 签名的主机功能实现。
 
-### FlintCapabilityRegistry
+### 弗林特能力注册中心
 
 **种类：**类型
 
@@ -1632,9 +2008,9 @@ export interface FlintCapabilityImplementation
 export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImplementation>>;
 ```
 
-没有提供描述。
+将功能名称映射到其主机实现提供者。
 
-### FlintDefaultHostOptions
+### Flint默认主机选项
 
 **种类：**接口
 
@@ -1642,9 +2018,39 @@ export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImp
 export interface FlintDefaultHostOptions
 ```
 
-没有提供描述。
+默认内置功能提供程序的配置选项。
 
-### FlintHost
+### 弗林特外国电话
+
+**种类：**类型
+
+```typescript
+export type FlintForeignCall = (symbol: string, arguments_: readonly unknown[]) => unknown | Promise<unknown>;
+```
+
+托管外部功能调用处理程序。
+
+### FlintForeignCapability实施
+
+**种类：**接口
+
+```typescript
+export interface FlintForeignCapabilityImplementation
+```
+
+主机外部能力实现描述符。
+
+### 弗林特外国能力登记处
+
+**种类：**类型
+
+```typescript
+export type FlintForeignCapabilityRegistry = Readonly<Record<string, FlintForeignCapabilityImplementation>>;
+```
+
+可用的外国能力实现的注册表。
+
+### 燧石主机
 
 **种类：**接口
 
@@ -1652,7 +2058,7 @@ export interface FlintDefaultHostOptions
 export interface FlintHost
 ```
 
-没有提供描述。
+执行主机为来宾模块提供功能调用和生命周期管理。
 
 ### FlintHostCall
 
@@ -1662,9 +2068,9 @@ export interface FlintHost
 export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promise<unknown>;
 ```
 
-没有提供描述。
+由来宾运行时执行调用的可调用主机函数。
 
-### FlintHostOptions
+### FlintHost选项
 
 **种类：**接口
 
@@ -1672,11 +2078,56 @@ export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promis
 export interface FlintHostOptions
 ```
 
+用于初始化 FlintHost 实例的配置选项。
+
+### MAX_FFI_CALL_DEPTH
+
+**种类：**常数
+
+```typescript
+export const MAX_FFI_CALL_DEPTH;
+```
+
 没有提供描述。
+
+### 计时安全等字符串
+
+**种类：**功能
+
+```typescript
+function timingSafeEqualString(stringA: string, stringB: string): boolean;
+```
+
+对两个字符串执行恒定时间比较，以防止对安全关键标识符进行计时旁道攻击。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|字符串A |字符串|             |
+|字符串 B |字符串|             |
+
+### 验证主机指针边界
+
+**种类：**功能
+
+```typescript
+function validateHostPointerBounds(pointer: number, length: number, memoryLimit = 0xff_ff_ff_ff): boolean;
+```
+
+验证主机指针偏移量和长度是否满足空间边界不变量。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ------ | ----------- |
+|指针|数量 |             |
+|长度|数量 |             |
+|内存限制 |        |             |
 
 ## `src/iterator`
 
-### createFlintWasmIterator
+### 创建FlintWasm迭代器
 
 **种类：**功能
 
@@ -1692,11 +2143,11 @@ function createFlintWasmIterator(
 
 #### 参数
 
-| 名称   | 类型                                       | 描述 |
-| ------ | ------------------------------------------ | ---- |
-| 手柄   | 数量                                       |      |
-| 下一个 | （句柄：数字）=> FlintPackedIteratorResult |      |
-| 选项   | FlintWasmIteratorOptions<TValue>           |      |
+|名称 |类型 |描述 |
+| ------- | --------------------------------------------- | ----------- |
+|手柄|数量 |             |
+|下一个 | （句柄：数字）=> FlintPackedIteratorResult |             |
+|选项 | FlintWasmIteratorOptions<TValue> | FlintWasmIteratorOptions<TValue>             |
 
 ### 创建FlintWasmIteratorFactory
 
@@ -1714,11 +2165,11 @@ function createFlintWasmIteratorFactory(
 
 #### 参数
 
-| 名称   | 类型                                       | 描述 |
-| ------ | ------------------------------------------ | ---- |
-| 工厂   | (...arguments_: TArguments) => 数字        |      |
-| 下一个 | （句柄：数字）=> FlintPackedIteratorResult |      |
-| 选项   | FlintWasmIteratorOptions<TValue>           |      |
+|名称 |类型 |描述 |
+| ------- | --------------------------------------------- | ----------- |
+|工厂| (...arguments_: TArguments) => 数字 |             |
+|下一个 | （句柄：数字）=> FlintPackedIteratorResult |             |
+|选项 | FlintWasmIteratorOptions<TValue> | FlintWasmIteratorOptions<TValue>             |
 
 ### FlintPackedIteratorResult
 
@@ -1728,9 +2179,9 @@ function createFlintWasmIteratorFactory(
 export type FlintPackedIteratorResult = number | bigint;
 ```
 
-没有提供描述。
+从 WebAssembly 返回的迭代器下一次调用的打包数字表示形式。
 
-### FlintWasmIterator
+### FlintWasm迭代器
 
 **种类：**接口
 
@@ -1738,7 +2189,7 @@ export type FlintPackedIteratorResult = number | bigint;
 export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TValue>
 ```
 
-没有提供描述。
+JavaScript 迭代器和可迭代桥封装了 WebAssembly 迭代器状态句柄。
 
 ### FlintWasmIteratorOptions
 
@@ -1748,7 +2199,7 @@ export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TV
 export interface FlintWasmIteratorOptions<TValue>
 ```
 
-没有提供描述。
+用于构造 WebAssembly 迭代器包装器的配置选项。
 
 ## `src/logging`
 
@@ -1760,15 +2211,20 @@ export interface FlintWasmIteratorOptions<TValue>
 function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 ```
 
-没有提供描述。
+创建具有自定义严重性过滤和接收器的作用域 FlintLogger 实例。
 
 #### 参数
 
-| 名称 | 类型               | 描述               |
-| ---- | ------------------ | ------------------ |
-| 选项 | FlintLoggerOptions | FlintLoggerOptions | FlintLoggerOptions | FlintLoggerOptions |
+|名称 |类型 |描述 |
+| ------- | ------------------ | -------------------------------------------------- |
+|选项 | FlintLogger选项 | - 记录器初始化的配置选项。 |
 
-### FlintLogEvent
+#### 合同
+
+- **@param:** - 记录器初始化的配置选项。
+- **@returns:** 配置的 FlintLogger 实例。
+
+### 燧石日志事件
 
 **种类：**接口
 
@@ -1776,9 +2232,9 @@ function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 export interface FlintLogEvent
 ```
 
-没有提供描述。
+记录器发出的结构化运行时日志事件。
 
-### FlintLogger
+### 燧石记录器
 
 **种类：**接口
 
@@ -1786,9 +2242,9 @@ export interface FlintLogEvent
 export interface FlintLogger
 ```
 
-没有提供描述。
+用于运行时事件跟踪的范围诊断日志记录接口。
 
-### FlintLoggerOptions
+### FlintLogger选项
 
 **种类：**接口
 
@@ -1796,9 +2252,9 @@ export interface FlintLogger
 export interface FlintLoggerOptions
 ```
 
-没有提供描述。
+用于初始化运行时记录器实例的配置选项。
 
-### FlintLogLevel
+### 燧石日志级别
 
 **种类：**类型
 
@@ -1806,9 +2262,9 @@ export interface FlintLoggerOptions
 export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 ```
 
-没有提供描述。
+支持运行时事件记录的日志记录严重性级别。
 
-### FlintLogSink
+### 燧石日志接收器
 
 **种类：**类型
 
@@ -1816,37 +2272,4199 @@ export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 export type FlintLogSink = (event: FlintLogEvent) => void;
 ```
 
-没有提供描述。
+接收结构化运行时日志事件的消费者回调函数。
 
-## `src/memory`
+## `src/math/bignum`
 
-### 创建Flint内存
+### 创建FlintDMatrix
 
 **种类：**功能
 
 ```typescript
-function createFlintMemory(options?: FlintMemoryOptions): FlintMemory;
+function createFlintDMatrix(rows: number, cols: number, data?: readonly number[]): FlintDMatrix;
 ```
 
-没有提供描述。
+执行创建火石d矩阵操作。
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 选项 | Flint 内存选项 |      |
+|名称 |类型 |描述 |
+| ---- | ----------------- | ----------- |
+|行 |数量 |             |
+|列 |数量 |             |
+|数据|只读数字[] |             |
 
-### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+### 创建FlintTensor
+
+**种类：**功能
+
+```typescript
+function createFlintTensor(shape: FlintTensorShape, data: readonly TValue[]): FlintTensor<TValue>;
+```
+
+执行创建火石张量操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ----------------- | ----------- |
+|形状| FlintTensorShape |             |
+|数据|只读 TValue[] |             |
+
+### 创建FlintTensorShape
+
+**种类：**功能
+
+```typescript
+function createFlintTensorShape(dimensions: readonly number[]): FlintTensorShape;
+```
+
+执行创建燧石张量形状操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ----------------- | ----------- |
+|尺寸|只读数字[] |             |
+
+### 创建FlintTensorView
+
+**种类：**功能
+
+```typescript
+function createFlintTensorView(shape: FlintTensorShape, data: readonly TValue[], offset = 0): FlintTensorView<TValue>;
+```
+
+执行创建火石张量视图操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ----------------- | ----------- |
+|形状| FlintTensorShape |             |
+|数据|只读 TValue[] |             |
+|偏移|                   |             |
+
+### 弗林特Cholesky分解
+
+**种类：**接口
+
+```typescript
+export interface FlintCholeskyDecomposition
+```
+
+Cholesky 分解表示。
+
+### 火石矩阵
+
+**种类：**接口
+
+```typescript
+export interface FlintDMatrix
+```
+
+D 矩阵表示。
+
+### flintDMatrixAddInplace
+
+**种类：**功能
+
+```typescript
+function flintDMatrixAddInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+执行 d 矩阵添加就地操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------------ | ----------- |
+|矩阵A | FlintDMatrix |             |
+|矩阵B | FlintDMatrix |             |
+
+### flintDMatrixCholesky
+
+**种类：**功能
+
+```typescript
+function flintDMatrixCholesky(matrix: FlintDMatrix): FlintOption<FlintCholeskyDecomposition>;
+```
+
+执行 d 矩阵 cholesky 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------------ | ----------- |
+|矩阵| FlintDMatrix |             |
+
+### flintDM矩阵Cholesky求解
+
+**种类：**功能
+
+```typescript
+function flintDMatrixCholeskySolve(
+  chol: FlintCholeskyDecomposition,
+  rhsVector: FlintDMatrix,
+): FlintOption<FlintDMatrix>;
+```
+
+执行 d 矩阵 cholesky 求解运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | -------------------------- | ----------- |
+|胆| FlintCholesky分解|             |
+| rhs向量| FlintDMatrix |             |
+
+### flintD矩阵行列式
+
+**种类：**功能
+
+```typescript
+function flintDMatrixDeterminant(matrix: FlintDMatrix): FlintOption<number>;
+```
+
+执行 d 矩阵行列式运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------------ | ----------- |
+|矩阵| FlintDMatrix |             |
+
+### flintDMatrix特征对称
+
+**种类：**功能
+
+```typescript
+function flintDMatrixEigenSymmetric(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintEigenDecomposition>;
+```
+
+执行 d 矩阵特征对称运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------- | ------------ | ----------- |
+|矩阵| FlintDMatrix |             |
+|最大迭代次数 |              |             |
+|厄普西隆 |              |             |
+
+### flintDMatrixGet
+
+**种类：**功能
+
+```typescript
+function flintDMatrixGet(matrix: FlintDMatrix, row: number, col: number): FlintOption<number>;
+```
+
+执行d矩阵获取操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------------ | ----------- |
+|矩阵| FlintDMatrix |             |
+|行|数量 |             |
+|上校 |数量 |             |
+
+### flintDMatrixIdentity
+
+**种类：**功能
+
+```typescript
+function flintDMatrixIdentity(size: number): FlintDMatrix;
+```
+
+执行 d 矩阵恒等运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|尺寸|数量 |             |
+
+### flintDMatrix逆矩阵
+
+**种类：**功能
+
+```typescript
+function flintDMatrixInverse(matrix: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+执行d矩阵逆运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------------ | ----------- |
+|矩阵| FlintDMatrix |             |
+
+### 火石DMatrixLU
+
+**种类：**功能
+
+```typescript
+function flintDMatrixLU(matrix: FlintDMatrix): FlintOption<FlintLUDecomposition>;
+```
+
+进行d矩阵lu运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------------ | ----------- |
+|矩阵| FlintDMatrix |             |
+
+### flintDMatrixMul
+
+**种类：**功能
+
+```typescript
+function flintDMatrixMul(matrixA: FlintDMatrix, matrixB: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+执行 d 矩阵乘法运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------------ | ----------- |
+|矩阵A | FlintDMatrix |             |
+|矩阵B | FlintDMatrix |             |
+
+### flintDMatrix乘累加
+
+**种类：**功能
+
+```typescript
+function flintDMatrixMulAccumulate(
+  outMatrix: FlintDMatrix,
+  matrixA: FlintDMatrix,
+  matrixB: FlintDMatrix,
+  alpha = 1,
+): boolean;
+```
+
+执行d矩阵乘累加运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | ------------ | ----------- |
+|输出矩阵 | FlintDMatrix |             |
+|矩阵A | FlintDMatrix |             |
+|矩阵B | FlintDMatrix |             |
+|阿尔法 |              |             |
+
+### flintDM矩阵伪逆
+
+**种类：**功能
+
+```typescript
+function flintDMatrixPseudoinverse(matrix: FlintDMatrix, epsilon = FLINT_MATH_EPSILON): FlintOption<FlintDMatrix>;
+```
+
+执行 d 矩阵伪逆运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------------ | ----------- |
+|矩阵| FlintDMatrix |             |
+|厄普西隆 |              |             |
+
+### flintDMatrixQR
+
+**种类：**功能
+
+```typescript
+function flintDMatrixQR(matrix: FlintDMatrix): FlintOption<FlintQRDecomposition>;
+```
+
+执行 d 矩阵 q r 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------------ | ----------- |
+|矩阵| FlintDMatrix |             |
+
+### flintDMatrixScaleInplace
+
+**种类：**功能
+
+```typescript
+function flintDMatrixScaleInplace(matrix: FlintDMatrix, factor: number): void;
+```
+
+执行 d 矩阵缩放就地运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------------ | ----------- |
+|矩阵| FlintDMatrix |             |
+|因素|数量 |             |
+
+### flintDMatrixSet
+
+**种类：**功能
+
+```typescript
+function flintDMatrixSet(matrix: FlintDMatrix, row: number, col: number, value: number): boolean;
+```
+
+执行d矩阵集合运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------------ | ----------- |
+|矩阵| FlintDMatrix |             |
+|行|数量 |             |
+|上校 |数量 |             |
+|价值|数量 |             |
+
+### flintDMatrix求解
+
+**种类：**功能
+
+```typescript
+function flintDMatrixSolve(matrixA: FlintDMatrix, rhsVector: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+执行 d 矩阵求解运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | ------------ | ----------- |
+|矩阵A | FlintDMatrix |             |
+| rhs向量| FlintDMatrix |             |
+
+### flintDMatrixSubInplace
+
+**种类：**功能
+
+```typescript
+function flintDMatrixSubInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+执行 d 矩阵 sub 就地运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------------ | ----------- |
+|矩阵A | FlintDMatrix |             |
+|矩阵B | FlintDMatrix |             |
+
+### 火石DMatrixSVD
+
+**种类：**功能
+
+```typescript
+function flintDMatrixSVD(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintSVDDecomposition>;
+```
+
+执行 d 矩阵 s v d 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------- | ------------ | ----------- |
+|矩阵| FlintDMatrix |             |
+|最大迭代次数 |              |             |
+|厄普西隆 |              |             |
+
+### flintDMatrix转置
+
+**种类：**功能
+
+```typescript
+function flintDMatrixTranspose(matrix: FlintDMatrix): FlintDMatrix;
+```
+
+执行 d 矩阵转置运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------------ | ----------- |
+|矩阵| FlintDMatrix |             |
+
+### flintDMatrixZeros
+
+**种类：**功能
+
+```typescript
+function flintDMatrixZeros(rows: number, cols: number): FlintDMatrix;
+```
+
+执行 d 矩阵置零运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|行 |数量 |             |
+|列 |数量 |             |
+
+### Flint特征分解
+
+**种类：**接口
+
+```typescript
+export interface FlintEigenDecomposition
+```
+
+特征分解表示。
+
+### FlintLU分解
+
+**种类：**接口
+
+```typescript
+export interface FlintLUDecomposition
+```
+
+L U 分解表示。
+
+### FlintQR分解
+
+**种类：**接口
+
+```typescript
+export interface FlintQRDecomposition
+```
+
+Q R 分解表示。
+
+### FlintSVD分解
+
+**种类：**接口
+
+```typescript
+export interface FlintSVDDecomposition
+```
+
+S V D 分解表示。
+
+### 燧石张量
+
+**种类：**接口
+
+```typescript
+export interface FlintTensor<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+张量表示。
+
+### 火石张量填充
+
+**种类：**功能
+
+```typescript
+function flintTensorFill(shape: FlintTensorShape, value: TValue): FlintTensor<TValue>;
+```
+
+执行张量填充操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---------------- | ----------- |
+|形状| FlintTensorShape |             |
+|价值| T值 |             |
+
+### flint张量Matmul
+
+**种类：**功能
+
+```typescript
+function flintTensorMatmul(
+  tensorA: FlintTensor<number>,
+  tensorB: FlintTensor<number>,
+): FlintOption<FlintTensor<number>>;
+```
+
+执行张量 matmul 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------------------- | ----------- |
+|张量A | FlintTensor<number> |             |
+|张量B | FlintTensor<number> |             |
+
+### flintTensorReshape
+
+**种类：**功能
+
+```typescript
+function flintTensorReshape(tensor: FlintTensor<TValue>, newShape: FlintTensorShape): FlintOption<FlintTensor<TValue>>;
+```
+
+执行张量重塑操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------------------- | ----------- |
+|张量 | FlintTensor<TValue> |             |
+|新形状 | FlintTensorShape |             |
+
+### Flint张量形状
+
+**种类：**接口
+
+```typescript
+export interface FlintTensorShape
+```
+
+张量形状表示。
+
+### flintTensor形状大小
+
+**种类：**功能
+
+```typescript
+function flintTensorShapeSize(shape: FlintTensorShape): number;
+```
+
+执行张量形状大小运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---------------- | ----------- |
+|形状| FlintTensorShape |             |
+
+### 火石张量切片
+
+**种类：**功能
+
+```typescript
+function flintTensorSlice(
+  view: FlintTensorView<TValue>,
+  axis: number,
+  start: number,
+  length: number,
+): FlintOption<FlintTensorView<TValue>>;
+```
+
+执行张量切片操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ----------------------- | ----------- |
+|查看 | FlintTensorView<TValue> |             |
+|轴|数量 |             |
+|开始 |数量 |             |
+|长度|数量 |             |
+
+### flint张量视图
+
+**种类：**功能
+
+```typescript
+function flintTensorView(tensor: FlintTensor<TValue>): FlintTensorView<TValue>;
+```
+
+执行张量视图操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------------------- | ----------- |
+|张量 | FlintTensor<TValue> |             |
+
+### Flint张量视图
+
+**种类：**接口
+
+```typescript
+export interface FlintTensorView<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+张量视图表示。
+
+### flintTensorViewGet
+
+**种类：**功能
+
+```typescript
+function flintTensorViewGet(view: FlintTensorView<TValue>, indices: readonly number[]): FlintOption<TValue>;
+```
+
+执行张量视图获取操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ----------------------- | ----------- |
+|查看 | FlintTensorView<TValue> |             |
+|指数|只读数字[] |             |
+
+### flintTensorViewSet
+
+**种类：**功能
+
+```typescript
+function flintTensorViewSet(view: FlintTensorView<TValue>, indices: readonly number[], value: TValue): boolean;
+```
+
+执行张量视图集操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ----------------------- | ----------- |
+|查看 | FlintTensorView<TValue> |             |
+|指数|只读数字[] |             |
+|价值| T值 |             |
+
+## `src/math/ieee754`
+
+### 创建FlintColorRgba
+
+**种类：**功能
+
+```typescript
+function createFlintColorRgba(red = 0, green = 0, blue = 0, alpha = 1): FlintColorRgba;
+```
+
+执行创建火石颜色 rgba 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---- | ----------- |
+|红色|      |             |
+|绿色|      |             |
+|蓝色|      |             |
+|阿尔法 |      |             |
+
+### FLINT_MATH_DEG_TO_RAD
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
+export const FLINT_MATH_DEG_TO_RAD;
+```
+
+从度数到弧度的转换系数。
+
+### FLINT_数学_E
+
+**种类：**常数
+
+```typescript
+export const FLINT_MATH_E;
+```
+
+欧拉常数 (e)。
+
+### FLINT_MATH_EPSILON
+
+**种类：**常数
+
+```typescript
+export const FLINT_MATH_EPSILON;
+```
+
+欧拉常数 (e)。
+
+### FLINT_MATH_F32_EPSILON
+
+**种类：**常数
+
+```typescript
+export const FLINT_MATH_F32_EPSILON;
+```
+
+用于 32 位浮点运算的机器 epsilon。
+
+### FLINT_数学_PI
+
+**种类：**常数
+
+```typescript
+export const FLINT_MATH_PI;
+```
+
+Flint 运行时的标准数学常数。
+
+### FLINT_MATH_RAD_TO_DEG
+
+**种类：**常数
+
+```typescript
+export const FLINT_MATH_RAD_TO_DEG;
+```
+
+从弧度到度数的转换系数。
+
+### FLINT_数学_SQRT2
+
+**种类：**常数
+
+```typescript
+export const FLINT_MATH_SQRT2;
+```
+
+2 常数的平方根。
+
+### FLINT_数学_TAU
+
+**种类：**常数
+
+```typescript
+export const FLINT_MATH_TAU;
+```
+
+2 * PI (tau) 圆常数。
+
+### 燧石近似等于
+
+**种类：**功能
+
+```typescript
+function flintApproxEqual(first: number, second: number, epsilon = FLINT_MATH_EPSILON): boolean;
+```
+
+测试指定 epsilon 内的近似相等性。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|第一 |数量 |             |
+|第二 |数量 |             |
+|厄普西隆 |        |             |
+
+### 燧石细胞
+
+**种类：**功能
+
+```typescript
+function flintCeil(value: number): number;
+```
+
+计算大于或等于 x 的最小整数。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|数量 |             |
+
+### 火石夹
+
+**种类：**功能
+
+```typescript
+function flintClamp(value: number, minimum: number, maximum: number): number;
+```
+
+将数值限制在最小和最大界限之间。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|价值|数量 |             |
+|最小值|数量 |             |
+|最大|数量 |             |
+
+### 燧石颜色Hsv
+
+**种类：**接口
+
+```typescript
+export interface FlintColorHsv
+```
+
+颜色 Hsv 表示。
+
+### flintColorHsvToRgb
+
+**种类：**功能
+
+```typescript
+function flintColorHsvToRgb(hsv: FlintColorHsv): FlintColorRgba;
+```
+
+执行颜色 HSV 到 RGB 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------------- | ----------- |
+|单纯疱疹病毒|燧石颜色 Hsv |             |
+
+### flintColorLerpOklab
+
+**种类：**功能
+
+```typescript
+function flintColorLerpOklab(first: FlintColorRgba, second: FlintColorRgba, factor: number): FlintColorRgba;
+```
+
+执行 color lerp oklab 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | -------------- | ----------- |
+|第一 |燧石颜色RGB |             |
+|第二 |燧石颜色RGB |             |
+|因素|数量 |             |
+
+### flintColorLinearToSrgb
+
+**种类：**功能
+
+```typescript
+function flintColorLinearToSrgb(color: FlintColorRgba): FlintColorRgba;
+```
+
+执行颜色线性到 srgb 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | -------------- | ----------- |
+|颜色 |燧石颜色RGB |             |
+
+### 燧石颜色Oklab
+
+**种类：**接口
+
+```typescript
+export interface FlintColorOklab
+```
+
+颜色 Oklab 表示。
+
+### flintColorOklabToSrgb
+
+**种类：**功能
+
+```typescript
+function flintColorOklabToSrgb(lab: FlintColorOklab): FlintColorRgba;
+```
+
+执行颜色oklab转srgb操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | --------------- | ----------- |
+|实验室| FlintColorOklab |             |
+
+### 燧石颜色Rgba
+
+**种类：**接口
+
+```typescript
+export interface FlintColorRgba
+```
+
+颜色 Rgba 表示。
+
+### flintColorRgbToHsv
+
+**种类：**功能
+
+```typescript
+function flintColorRgbToHsv(color: FlintColorRgba): FlintColorHsv;
+```
+
+执行颜色 rgb 到 hsv 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | -------------- | ----------- |
+|颜色 |燧石颜色RGB |             |
+
+### flintColorSrgbToLinear
+
+**种类：**功能
+
+```typescript
+function flintColorSrgbToLinear(color: FlintColorRgba): FlintColorRgba;
+```
+
+执行颜色 srgb 到线性运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | -------------- | ----------- |
+|颜色 |燧石颜色RGB |             |
+
+### flintColorSrgbToOklab
+
+**种类：**功能
+
+```typescript
+function flintColorSrgbToOklab(color: FlintColorRgba): FlintColorOklab;
+```
+
+执行颜色 srgb 到 oklab 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | -------------- | ----------- |
+|颜色 |燧石颜色RGB |             |
+
+### 燧石度
+
+**种类：**功能
+
+```typescript
+function flintDegrees(radians: number): number;
+```
+
+将弧度转换为度数。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|弧度|数量 |             |
+
+### 燧石地板
+
+**种类：**功能
+
+```typescript
+function flintFloor(value: number): number;
+```
+
+计算小于或等于 x 的最大整数。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|数量 |             |
+
+### 燧石碎裂
+
+**种类：**功能
+
+```typescript
+function flintFract(value: number): number;
+```
+
+计算小数部分：x-floor(x)。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|数量 |             |
+
+### 燧石勒普
+
+**种类：**功能
+
+```typescript
+function flintLerp(start: number, end: number, factor: number): number;
+```
+
+按因子在开始和结束之间进行线性插值。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------ | ----------- |
+|开始 |数量 |             |
+|结束 |数量 |             |
+|因素|数量 |             |
+
+### 燧石弧度
+
+**种类：**功能
+
+```typescript
+function flintRadians(degrees: number): number;
+```
+
+将度数转换为弧度。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|度|数量 |             |
+
+### 燧石标志
+
+**种类：**功能
+
+```typescript
+function flintSign(value: number): number;
+```
+
+返回 x 的符号（1、-1、0 或 NaN）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|数量 |             |
+
+### 燧石平滑步
+
+**种类：**功能
+
+```typescript
+function flintSmoothstep(edge0: number, edge1: number, value: number): number;
+```
+
+边缘 0 和边缘 1 之间的平滑 Hermite 插值。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|边缘0 |数量 |             |
+|边缘1 |数量 |             |
+|价值|数量 |             |
+
+### 燧石步
+
+**种类：**功能
+
+```typescript
+function flintStep(edge: number, value: number): number;
+```
+
+如果 x < 边缘，则 Step 函数返回 0，否则返回 1。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|边缘|数量 |             |
+|价值|数量 |             |
+
+## `src/math/transcendental`
+
+### 创建FlintAABB2
+
+**种类：**功能
+
+```typescript
+function createFlintAABB2(minPoint: FlintVec2, maxPoint: FlintVec2): FlintAABB2;
+```
+
+执行create flint a a b b 2操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | --------- | ----------- |
+|最小点 | FlintVec2 |             |
+|最大点 | FlintVec2 |             |
+
+### 创建弗林特AABB3
+
+**种类：**功能
+
+```typescript
+function createFlintAABB3(minPoint: FlintVec3, maxPoint: FlintVec3): FlintAABB3;
+```
+
+执行create flint a a b b 3操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | --------- | ----------- |
+|最小点 | FlintVec3 |             |
+|最大点 | FlintVec3 |             |
+
+### 创建FlintBVHNode3
+
+**种类：**功能
+
+```typescript
+function createFlintBVHNode3(
+  bounds: FlintAABB3,
+  leftChild: number,
+  rightChild: number,
+  primitiveIndex: number,
+): FlintBVHNode3;
+```
+
+执行create flint b v h node 3 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------------- | ---------- | ----------- |
+|界限|燧石AABB3 |             |
+|左子 |数量 |             |
+|右子|数量 |             |
+|原始索引 |数量 |             |
+
+### 创建FlintBVHTree3
+
+**种类：**功能
+
+```typescript
+function createFlintBVHTree3(nodes: readonly FlintBVHNode3[], rootIndex = 0): FlintBVHTree3;
+```
+
+执行create flint b v h tree 3操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | ------------------------ | ----------- |
+|节点 |只读 FlintBVHNode3[] |             |
+|根索引 |                          |             |
+
+### 创建燧石圆
+
+**种类：**功能
+
+```typescript
+function createFlintCircle(center: FlintVec2, radius: number): FlintCircle;
+```
+
+执行创建燧石圈操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|中心 | FlintVec2 |             |
+|半径|数量 |             |
+
+### 创建FlintOBB2
+
+**种类：**功能
+
+```typescript
+function createFlintOBB2(center: FlintVec2, halfExtents: FlintVec2, angleRad = 0): FlintOBB2;
+```
+
+执行create flint ob b 2操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | --------- | ----------- |
+|中心 | FlintVec2 |             |
+|半范围 | FlintVec2 |             |
+|角度Rad |           |             |
+
+### 创建FlintOBB3
+
+**种类：**功能
+
+```typescript
+function createFlintOBB3(
+  center: FlintVec3,
+  halfExtents: FlintVec3,
+  orientation: FlintQuat = flintQuatIdentity(),
+): FlintOBB3;
+```
+
+执行create flint ob b 3操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | --------- | ----------- |
+|中心 | FlintVec3 |             |
+|半范围 | FlintVec3 |             |
+|方向 |燧石 |             |
+
+### 创建FlintPlane3
+
+**种类：**功能
+
+```typescript
+function createFlintPlane3(normal: FlintVec3, distance: number): FlintPlane3;
+```
+
+执行创建火石平面3操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | --------- | ----------- |
+|正常 | FlintVec3 |             |
+|距离 |数量 |             |
+
+### 创建FlintRay2
+
+**种类：**功能
+
+```typescript
+function createFlintRay2(origin: FlintVec2, direction: FlintVec2): FlintRay2;
+```
+
+执行创建火石射线 2 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | --------- | ----------- |
+|起源 | FlintVec2 |             |
+|方向 | FlintVec2 |             |
+
+### 创建FlintRay3
+
+**种类：**功能
+
+```typescript
+function createFlintRay3(origin: FlintVec3, direction: FlintVec3): FlintRay3;
+```
+
+执行创建火石射线 3 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | --------- | ----------- |
+|起源 | FlintVec3 |             |
+|方向 | FlintVec3 |             |
+
+### 创建FlintRayHit3
+
+**种类：**功能
+
+```typescript
+function createFlintRayHit3(
+  hit: boolean,
+  t: number,
+  point: FlintVec3,
+  normal: FlintVec3,
+  primitiveId: number,
+): FlintRayHit3;
+```
+
+执行创建燧石射线命中 3 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | --------- | ----------- |
+|击中|布尔 |             |
+| t |数量 |             |
+|点| FlintVec3 |             |
+|正常 | FlintVec3 |             |
+|原始ID |数量 |             |
+
+### 创建FlintSegment2
+
+**种类：**功能
+
+```typescript
+function createFlintSegment2(startPoint: FlintVec2, endPoint: FlintVec2): FlintSegment2;
+```
+
+执行创建火石段2操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------- | ----------- |
+|起点| FlintVec2 |             |
+|端点| FlintVec2 |             |
+
+### 创建FlintSegment3
+
+**种类：**功能
+
+```typescript
+function createFlintSegment3(startPoint: FlintVec3, endPoint: FlintVec3): FlintSegment3;
+```
+
+执行创建燧石段 3 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------- | ----------- |
+|起点| FlintVec3 |             |
+|端点| FlintVec3 |             |
+
+### 创建燧石球
+
+**种类：**功能
+
+```typescript
+function createFlintSphere(center: FlintVec3, radius: number): FlintSphere;
+```
+
+执行创建燧石球操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|中心 | FlintVec3 |             |
+|半径|数量 |             |
+
+### 创建弗林特三角形2
+
+**种类：**功能
+
+```typescript
+function createFlintTriangle2(pointA: FlintVec2, pointB: FlintVec2, pointC: FlintVec2): FlintTriangle2;
+```
+
+执行创建火石三角形2操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+| A点| FlintVec2 |             |
+| B点| FlintVec2 |             |
+| C点| FlintVec2 |             |
+
+### 创建弗林特三角形3
+
+**种类：**功能
+
+```typescript
+function createFlintTriangle3(pointA: FlintVec3, pointB: FlintVec3, pointC: FlintVec3): FlintTriangle3;
+```
+
+执行创建火石三角形3操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+| A点| FlintVec3 |             |
+| B点| FlintVec3 |             |
+| C点| FlintVec3 |             |
+
+### 燧石AABB2
+
+**种类：**接口
+
+```typescript
+export interface FlintAABB2
+```
+
+A A B B 2 表示。
+
+### 燧石AABB2区域
+
+**种类：**功能
+
+```typescript
+function flintAABB2Area(box: FlintAABB2): number;
+```
+
+执行 a a b b 2 区域操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ---------- | ----------- |
+|盒子|燧石AABB2 |             |
+
+### 燧石AABB2包含点
+
+**种类：**功能
+
+```typescript
+function flintAABB2ContainsPoint(box: FlintAABB2, point: FlintVec2): boolean;
+```
+
+执行a a b b 2包含点运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---------- | ----------- |
+|盒子|燧石AABB2 |             |
+|点| FlintVec2 |             |
+
+### 燧石AABB2相交AABB2
+
+**种类：**功能
+
+```typescript
+function flintAABB2IntersectsAABB2(first: FlintAABB2, second: FlintAABB2): boolean;
+```
+
+执行 a a b b 2 与 a a b b 2 相交运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---------- | ----------- |
+|第一 |燧石AABB2 |             |
+|第二 |燧石AABB2 |             |
+
+### 燧石AABB2联盟
+
+**种类：**功能
+
+```typescript
+function flintAABB2Union(first: FlintAABB2, second: FlintAABB2): FlintAABB2;
+```
+
+执行 a a b b 2 并集运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---------- | ----------- |
+|第一 |燧石AABB2 |             |
+|第二 |燧石AABB2 |             |
+
+### 燧石AABB3
+
+**种类：**接口
+
+```typescript
+export interface FlintAABB3
+```
+
+A A B B 3 表示。
+
+### 燧石AABB3包含点
+
+**种类：**功能
+
+```typescript
+function flintAABB3ContainsPoint(box: FlintAABB3, point: FlintVec3): boolean;
+```
+
+执行a a b b 3包含点运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---------- | ----------- |
+|盒子|燧石AABB3 |             |
+|点| FlintVec3 |             |
+
+### 燧石AABB3相交AABB3
+
+**种类：**功能
+
+```typescript
+function flintAABB3IntersectsAABB3(first: FlintAABB3, second: FlintAABB3): boolean;
+```
+
+执行 a a b b 3 与 a a b b 3 相交运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---------- | ----------- |
+|第一 |燧石AABB3 |             |
+|第二 |燧石AABB3 |             |
+
+### 燧石AABB3体积
+
+**种类：**功能
+
+```typescript
+function flintAABB3Volume(box: FlintAABB3): number;
+```
+
+执行 a a b b 3 体积操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ---------- | ----------- |
+|盒子|燧石AABB3 |             |
+
+### 燧石贝塞尔曲线2三次
+
+**种类：**功能
+
+```typescript
+function flintBezier2Cubic(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+执行贝塞尔曲线 2 三次运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|点0 | FlintVec2 |             |
+|点1 | FlintVec2 |             |
+|点2 | FlintVec2 |             |
+|点3 | FlintVec2 |             |
+|因素|数量 |             |
+
+### flintBezier2二次
+
+**种类：**功能
+
+```typescript
+function flintBezier2Quadratic(point0: FlintVec2, point1: FlintVec2, point2: FlintVec2, factor: number): FlintVec2;
+```
+
+执行贝塞尔曲线 2 二次运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|点0 | FlintVec2 |             |
+|点1 | FlintVec2 |             |
+|点2 | FlintVec2 |             |
+|因素|数量 |             |
+
+### 燧石Bezier3立方
+
+**种类：**功能
+
+```typescript
+function flintBezier3Cubic(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+执行贝塞尔曲线 3 三次运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|点0 | FlintVec3 |             |
+|点1 | FlintVec3 |             |
+|点2 | FlintVec3 |             |
+|点3 | FlintVec3 |             |
+|因素|数量 |             |
+
+### flintBVHBuildFromAABBs
+
+**种类：**功能
+
+```typescript
+function flintBVHBuildFromAABBs(boxes: readonly FlintAABB3[]): FlintBVHTree3;
+```
+
+从 a a b bs 操作执行 b v h 构建。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | --------------------- | ----------- |
+|盒子|只读 FlintAABB3[] |             |
+
+### 弗林特BVHNode3
+
+**种类：**接口
+
+```typescript
+export interface FlintBVHNode3
+```
+
+B V H Node 3 表示。
+
+### 燧石BVH射线相交
+
+**种类：**功能
+
+```typescript
+function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): FlintOption<FlintRayHit3>;
+```
+
+执行 b v h 射线相交操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------------- | ----------- |
+|树|弗林特BVHTree3 |             |
+|雷|燧石雷3 |             |
+
+### 弗林特BVHTree3
+
+**种类：**接口
+
+```typescript
+export interface FlintBVHTree3
+```
+
+B V H 树 3 表示。
+
+### 燧石CatmullRom2
+
+**种类：**功能
+
+```typescript
+function flintCatmullRom2(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+执行catmull rom 2操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|点0 | FlintVec2 |             |
+|点1 | FlintVec2 |             |
+|点2 | FlintVec2 |             |
+|点3 | FlintVec2 |             |
+|因素|数量 |             |
+
+### 燧石CatmullRom3
+
+**种类：**功能
+
+```typescript
+function flintCatmullRom3(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+执行catmull rom 3操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|点0 | FlintVec3 |             |
+|点1 | FlintVec3 |             |
+|点2 | FlintVec3 |             |
+|点3 | FlintVec3 |             |
+|因素|数量 |             |
+
+### 燧石圈
+
+**种类：**接口
+
+```typescript
+export interface FlintCircle
+```
+
+圆圈表示。
+
+### 燧石圆包含点
+
+**种类：**功能
+
+```typescript
+function flintCircleContainsPoint(circle: FlintCircle, point: FlintVec2): boolean;
+```
+
+执行圆包含点运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ----------- | ----------- |
+|圆 |燧石圈 |             |
+|点| FlintVec2 |             |
+
+### 燧石圆相交圆
+
+**种类：**功能
+
+```typescript
+function flintCircleIntersectsCircle(first: FlintCircle, second: FlintCircle): boolean;
+```
+
+执行圆与圆相交运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ----------- | ----------- |
+|第一 |燧石圈 |             |
+|第二 |燧石圈 |             |
+
+### 燧石锥台
+
+**种类：**接口
+
+```typescript
+export interface FlintFrustum
+```
+
+截锥体表示。
+
+### flintFrustumFromViewProj
+
+**种类：**功能
+
+```typescript
+function flintFrustumFromViewProj(viewProj: FlintMat4): FlintFrustum;
+```
+
+从视图项目执行视锥体操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | --------- | ----------- |
+|查看项目 |燧石垫4 |             |
+
+### 燧石平截头体相交球体
+
+**种类：**功能
+
+```typescript
+function flintFrustumIntersectsSphere(frustum: FlintFrustum, sphere: FlintSphere): boolean;
+```
+
+执行平截头体与球体相交操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------------ | ----------- |
+|截锥体|燧石锥体 |             |
+|球体|燧石球 |             |
+
+### 燧石OBB2
+
+**种类：**接口
+
+```typescript
+export interface FlintOBB2
+```
+
+O B B 2 表示。
+
+### 燧石OBB3
+
+**种类：**接口
+
+```typescript
+export interface FlintOBB3
+```
+
+O B B 3 表示。
+
+### 火石飞机3
+
+**种类：**接口
+
+```typescript
+export interface FlintPlane3
+```
+
+平面 3 表示。
+
+### flintPlane3距离到点
+
+**种类：**功能
+
+```typescript
+function flintPlane3DistanceToPoint(plane: FlintPlane3, point: FlintVec3): number;
+```
+
+执行平面 3 距离点操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ----------- | ----------- |
+|飞机 |燧石飞机 3 |             |
+|点| FlintVec3 |             |
+
+### 火石雷2
+
+**种类：**接口
+
+```typescript
+export interface FlintRay2
+```
+
+射线 2 表示。
+
+### 燧石雷3
+
+**种类：**接口
+
+```typescript
+export interface FlintRay3
+```
+
+射线 3 表示。
+
+### flintRay3IntersectOBB
+
+**种类：**功能
+
+```typescript
+function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOption<number>;
+```
+
+执行射线 3 相交 o b b 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | --------- | ----------- |
+|雷|燧石雷3 |             |
+| OB |燧石OBB3 |             |
+
+### flintRay3相交AABB3
+
+**种类：**功能
+
+```typescript
+function flintRay3IntersectsAABB3(ray: FlintRay3, box: FlintAABB3): FlintOption<number>;
+```
+
+执行射线 3 与 a a b b 3 相交操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ---------- | ----------- |
+|雷|燧石雷3 |             |
+|盒子|燧石AABB3 |             |
+
+### flintRay3相交Plane3
+
+**种类：**功能
+
+```typescript
+function flintRay3IntersectsPlane3(ray: FlintRay3, plane: FlintPlane3): FlintOption<number>;
+```
+
+执行射线 3 与平面 3 相交操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ----------- | ----------- |
+|雷|燧石雷3 |             |
+|飞机 |燧石飞机 3 |             |
+
+### flintRay3相交球体
+
+**种类：**功能
+
+```typescript
+function flintRay3IntersectsSphere(ray: FlintRay3, sphere: FlintSphere): FlintOption<number>;
+```
+
+执行射线 3 与球体相交操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ----------- | ----------- |
+|雷|燧石雷3 |             |
+|球体|燧石球 |             |
+
+### flintRay3相交三角形3
+
+**种类：**功能
+
+```typescript
+function flintRay3IntersectsTriangle3(ray: FlintRay3, triangle: FlintTriangle3): FlintOption<number>;
+```
+
+执行射线 3 与三角形 3 相交操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | -------------- | ----------- |
+|雷|燧石雷3 |             |
+|三角形|燧石三角3 |             |
+
+### 火石雷击3
+
+**种类：**接口
+
+```typescript
+export interface FlintRayHit3
+```
+
+Ray Hit 3 表示。
+
+### 燧石段2
+
+**种类：**接口
+
+```typescript
+export interface FlintSegment2
+```
+
+段 2 表示。
+
+### 燧石段3
+
+**种类：**接口
+
+```typescript
+export interface FlintSegment3
+```
+
+段 3 表示。
+
+### 燧石球
+
+**种类：**接口
+
+```typescript
+export interface FlintSphere
+```
+
+球体表示。
+
+### 燧石球体包含点
+
+**种类：**功能
+
+```typescript
+function flintSphereContainsPoint(sphere: FlintSphere, point: FlintVec3): boolean;
+```
+
+执行球体包含点操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ----------- | ----------- |
+|球体|燧石球 |             |
+|点| FlintVec3 |             |
+
+### 燧石球体相交球体
+
+**种类：**功能
+
+```typescript
+function flintSphereIntersectsSphere(first: FlintSphere, second: FlintSphere): boolean;
+```
+
+执行球体相交球体操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ----------- | ----------- |
+|第一 |燧石球 |             |
+|第二 |燧石球 |             |
+
+### 燧石三角2
+
+**种类：**接口
+
+```typescript
+export interface FlintTriangle2
+```
+
+三角形2表示。
+
+### 燧石三角形2面积
+
+**种类：**功能
+
+```typescript
+function flintTriangle2Area(triangle: FlintTriangle2): number;
+```
+
+执行三角形2区域运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | -------------- | ----------- |
+|三角形|燧石三角2 |             |
+
+### 燧石三角3
+
+**种类：**接口
+
+```typescript
+export interface FlintTriangle3
+```
+
+三角形3表示。
+
+### flintTriangle3Normal
+
+**种类：**功能
+
+```typescript
+function flintTriangle3Normal(triangle: FlintTriangle3): FlintVec3;
+```
+
+执行三角3正常操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | -------------- | ----------- |
+|三角形|燧石三角3 |             |
+
+## `src/math/vector`
+
+### 创建FlintIVec2
+
+**种类：**功能
+
+```typescript
+function createFlintIVec2(coordX = 0, coordY = 0): FlintIVec2;
+```
+
+执行create flint i vec 2 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---- | ----------- |
+|坐标X |      |             |
+|坐标|      |             |
+
+### 创建FlintIVec3
+
+**种类：**功能
+
+```typescript
+function createFlintIVec3(coordX = 0, coordY = 0, coordZ = 0): FlintIVec3;
+```
+
+执行create flint i vec 3 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---- | ----------- |
+|坐标X |      |             |
+|坐标|      |             |
+|坐标Z |      |             |
+
+### 创建FlintMat2
+
+**种类：**功能
+
+```typescript
+function createFlintMat2(column0OrElements?: FlintVec2 | readonly number[], column1?: FlintVec2): FlintMat2;
+```
+
+执行创建火石垫 2 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------------- | ------------------------------ | ----------- |
+|列 0 或元素 | FlintVec2 \|只读数字[] |             |
+|第 1 栏 | FlintVec2 |             |
+
+### 创建FlintMat3
+
+**种类：**功能
+
+```typescript
+function createFlintMat3(
+  column0OrElements?: FlintVec3 | readonly number[],
+  column1?: FlintVec3,
+  column2?: FlintVec3,
+): FlintMat3;
+```
+
+执行创建火石垫 3 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------------- | ------------------------------ | ----------- |
+|列 0 或元素 | FlintVec3 \|只读数字[] |             |
+|第 1 栏 | FlintVec3 |             |
+|第 2 栏 | FlintVec3 |             |
+
+### 创建FlintMat4
+
+**种类：**功能
+
+```typescript
+function createFlintMat4(
+  column0OrElements?: FlintVec4 | readonly number[],
+  column1?: FlintVec4,
+  column2?: FlintVec4,
+  column3?: FlintVec4,
+): FlintMat4;
+```
+
+执行创建火石垫 4 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------------- | ------------------------------ | ----------- |
+|列 0 或元素 | FlintVec4 \|只读数字[] |             |
+|第 1 栏 | FlintVec4 |             |
+|第 2 栏 | FlintVec4 |             |
+|第 3 栏 | FlintVec4 |             |
+
+### 创建FlintQuat
+
+**种类：**功能
+
+```typescript
+function createFlintQuat(coordX = 0, coordY = 0, coordZ = 0, coordW = 1): FlintQuat;
+```
+
+执行创建燧石季铵盐操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---- | ----------- |
+|坐标X |      |             |
+|坐标|      |             |
+|坐标Z |      |             |
+|坐标W |      |             |
+
+### 创建FlintVec2
+
+**种类：**功能
+
+```typescript
+function createFlintVec2(coordX = 0, coordY = 0): FlintVec2;
+```
+
+执行create flint vec 2 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---- | ----------- |
+|坐标X |      |             |
+|坐标|      |             |
+
+### 创建FlintVec3
+
+**种类：**功能
+
+```typescript
+function createFlintVec3(coordX = 0, coordY = 0, coordZ = 0): FlintVec3;
+```
+
+执行create flint vec 3 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---- | ----------- |
+|坐标X |      |             |
+|坐标|      |             |
+|坐标Z |      |             |
+
+### 创建FlintVec4
+
+**种类：**功能
+
+```typescript
+function createFlintVec4(coordX = 0, coordY = 0, coordZ = 0, coordW = 0): FlintVec4;
+```
+
+执行create flint vec 4 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---- | ----------- |
+|坐标X |      |             |
+|坐标|      |             |
+|坐标Z |      |             |
+|坐标W |      |             |
+
+### 弗林特IVec2
+
+**种类：**接口
+
+```typescript
+export interface FlintIVec2
+```
+
+二维整数向量。
+
+### 弗林特IVec3
+
+**种类：**接口
+
+```typescript
+export interface FlintIVec3
+```
+
+3D 整数向量。
+
+### 燧石垫2
+
+**种类：**接口
+
+```typescript
+export interface FlintMat2
+```
+
+垫 2 表示。
+
+### flintMat2Add
+
+**种类：**功能
+
+```typescript
+function flintMat2Add(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+执行 mat 2 添加操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 |燧石垫2 |             |
+|第二 |燧石垫2 |             |
+
+### flintMat2行列式
+
+**种类：**功能
+
+```typescript
+function flintMat2Determinant(matrix: FlintMat2): number;
+```
+
+执行 mat 2 行列式运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫2 |             |
+
+### flintMat2FromCols
+
+**种类：**功能
+
+```typescript
+function flintMat2FromCols(column0: FlintVec2, column1: FlintVec2): FlintMat2;
+```
+
+从 cols 操作中执行 mat 2。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | --------- | ----------- |
+|栏0 | FlintVec2 |             |
+|第 1 栏 | FlintVec2 |             |
+
+### flintMat2Identity
+
+**种类：**功能
+
+```typescript
+function flintMat2Identity(): FlintMat2;
+```
+
+执行 mat 2 恒等运算。
+
+### flintMat2Inverse
+
+**种类：**功能
+
+```typescript
+function flintMat2Inverse(matrix: FlintMat2): FlintOption<FlintMat2>;
+```
+
+执行 mat 2 的逆运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫2 |             |
+
+### 燧石Mat2Mul
+
+**种类：**功能
+
+```typescript
+function flintMat2Mul(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+执行 mat 2 mul 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 |燧石垫2 |             |
+|第二 |燧石垫2 |             |
+
+### flintMat2旋转
+
+**种类：**功能
+
+```typescript
+function flintMat2Rotation(angleRad: number): FlintMat2;
+```
+
+执行垫 2 旋转操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|角度Rad |数量 |             |
+
+### flintMat2Scale
+
+**种类：**功能
+
+```typescript
+function flintMat2Scale(matrix: FlintMat2, scalar: number): FlintMat2;
+```
+
+执行垫 2 规模操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫2 |             |
+|标量 |数量 |             |
+
+### flintMat2缩放
+
+**种类：**功能
+
+```typescript
+function flintMat2Scaling(scaleVector: FlintVec2): FlintMat2;
+```
+
+执行 mat 2 缩放操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | --------- | ----------- |
+|缩放矢量 | FlintVec2 |             |
+
+### 燧石Mat2Sub
+
+**种类：**功能
+
+```typescript
+function flintMat2Sub(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+执行 mat 2 子操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 |燧石垫2 |             |
+|第二 |燧石垫2 |             |
+
+### flintMat2TransformVec2
+
+**种类：**功能
+
+```typescript
+function flintMat2TransformVec2(matrix: FlintMat2, vector: FlintVec2): FlintVec2;
+```
+
+执行 mat 2 变换 vec 2 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫2 |             |
+|矢量| FlintVec2 |             |
+
+### flintMat2转置
+
+**种类：**功能
+
+```typescript
+function flintMat2Transpose(matrix: FlintMat2): FlintMat2;
+```
+
+执行 mat 2 转置操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫2 |             |
+
+### 燧石垫3
+
+**种类：**接口
+
+```typescript
+export interface FlintMat3
+```
+
+垫 3 表示。
+
+### flintMat3Add
+
+**种类：**功能
+
+```typescript
+function flintMat3Add(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+执行 mat 3 添加操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 |燧石垫3 |             |
+|第二 |燧石垫3 |             |
+
+### flintMat3行列式
+
+**种类：**功能
+
+```typescript
+function flintMat3Determinant(matrix: FlintMat3): number;
+```
+
+执行 mat 3 行列式运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫3 |             |
+
+### flintMat3FromCols
+
+**种类：**功能
+
+```typescript
+function flintMat3FromCols(column0: FlintVec3, column1: FlintVec3, column2: FlintVec3): FlintMat3;
+```
+
+从 cols 操作中执行 mat 3。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | --------- | ----------- |
+|栏0 | FlintVec3 |             |
+|第 1 栏 | FlintVec3 |             |
+|第 2 栏 | FlintVec3 |             |
+
+### flintMat3Identity
+
+**种类：**功能
+
+```typescript
+function flintMat3Identity(): FlintMat3;
+```
+
+执行 mat 3 恒等运算。
+
+### flintMat3逆
+
+**种类：**功能
+
+```typescript
+function flintMat3Inverse(matrix: FlintMat3): FlintOption<FlintMat3>;
+```
+
+执行 mat 3 的逆运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫3 |             |
+
+### 燧石Mat3Mul
+
+**种类：**功能
+
+```typescript
+function flintMat3Mul(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+执行 mat 3 mul 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 |燧石垫3 |             |
+|第二 |燧石垫3 |             |
+
+### flintMat3Rotate2D
+
+**种类：**功能
+
+```typescript
+function flintMat3Rotate2D(angleRad: number): FlintMat3;
+```
+
+执行 mat 3 旋转 2 d 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|角度Rad |数量 |             |
+
+### flintMat3Scale
+
+**种类：**功能
+
+```typescript
+function flintMat3Scale(matrix: FlintMat3, scalar: number): FlintMat3;
+```
+
+执行 mat 3 缩放操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫3 |             |
+|标量 |数量 |             |
+
+### flintMat3Scale2D
+
+**种类：**功能
+
+```typescript
+function flintMat3Scale2D(scale: FlintVec2): FlintMat3;
+```
+
+执行 mat 3 缩放 2 d 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | --------- | ----------- |
+|规模| FlintVec2 |             |
+
+### 燧石Mat3Sub
+
+**种类：**功能
+
+```typescript
+function flintMat3Sub(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+执行 mat 3 子操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 |燧石垫3 |             |
+|第二 |燧石垫3 |             |
+
+### flintMat3TransformVec2
+
+**种类：**功能
+
+```typescript
+function flintMat3TransformVec2(matrix: FlintMat3, vector: FlintVec2): FlintVec2;
+```
+
+执行 mat 3 变换 vec 2 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫3 |             |
+|矢量| FlintVec2 |             |
+
+### flintMat3TransformVec3
+
+**种类：**功能
+
+```typescript
+function flintMat3TransformVec3(matrix: FlintMat3, vector: FlintVec3): FlintVec3;
+```
+
+执行 mat 3 变换 vec 3 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫3 |             |
+|矢量| FlintVec3 |             |
+
+### flintMat3Translate2D
+
+**种类：**功能
+
+```typescript
+function flintMat3Translate2D(translation: FlintVec2): FlintMat3;
+```
+
+执行 mat 3 平移 2 d 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | --------- | ----------- |
+|翻译 | FlintVec2 |             |
+
+### flintMat3转置
+
+**种类：**功能
+
+```typescript
+function flintMat3Transpose(matrix: FlintMat3): FlintMat3;
+```
+
+执行 mat 3 转置操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫3 |             |
+
+### 燧石垫4
+
+**种类：**接口
+
+```typescript
+export interface FlintMat4
+```
+
+垫 4 表示。
+
+### flintMat4Add
+
+**种类：**功能
+
+```typescript
+function flintMat4Add(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+执行 mat 4 添加操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 |燧石垫4 |             |
+|第二 |燧石垫4 |             |
+
+### flintMat4行列式
+
+**种类：**功能
+
+```typescript
+function flintMat4Determinant(matrix: FlintMat4): number;
+```
+
+执行 mat 4 行列式运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫4 |             |
+
+### flintMat4FromCols
+
+**种类：**功能
+
+```typescript
+function flintMat4FromCols(column0: FlintVec4, column1: FlintVec4, column2: FlintVec4, column3: FlintVec4): FlintMat4;
+```
+
+执行 cols 操作中的 mat 4。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | --------- | ----------- |
+|栏0 | FlintVec4 |             |
+|第 1 栏 | FlintVec4 |             |
+|第 2 栏 | FlintVec4 |             |
+|第 3 栏 | FlintVec4 |             |
+
+### flintMat4Identity
+
+**种类：**功能
+
+```typescript
+function flintMat4Identity(): FlintMat4;
+```
+
+执行 mat 4 恒等运算。
+
+### flintMat4Inverse
+
+**种类：**功能
+
+```typescript
+function flintMat4Inverse(matrix: FlintMat4): FlintOption<FlintMat4>;
+```
+
+执行 mat 4 的逆运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫4 |             |
+
+### 燧石Mat4LookAt
+
+**种类：**功能
+
+```typescript
+function flintMat4LookAt(eye: FlintVec3, target: FlintVec3, up: FlintVec3): FlintMat4;
+```
+
+执行第 4 步查看操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|眼睛| FlintVec3 |             |
+|目标| FlintVec3 |             |
+|向上 | FlintVec3 |             |
+
+### 燧石Mat4Mul
+
+**种类：**功能
+
+```typescript
+function flintMat4Mul(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+执行 mat 4 mul 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 |燧石垫4 |             |
+|第二 |燧石垫4 |             |
+
+### flintMat4正交法
+
+**种类：**功能
+
+```typescript
+function flintMat4Orthographic(
+  left: number,
+  right: number,
+  bottom: number,
+  top: number,
+  zNear: number,
+  zFar: number,
+): FlintMat4;
+```
+
+执行 mat 4 正交运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------ | ----------- |
+|左|数量 |             |
+|对|数量 |             |
+|底部|数量 |             |
+|顶部 |数量 |             |
+| z近|数量 |             |
+|远远 |数量 |             |
+
+### flintMat4Perspective
+
+**种类：**功能
+
+```typescript
+function flintMat4Perspective(fovYRad: number, aspect: number, zNear: number, zFar: number): FlintMat4;
+```
+
+执行垫 4 透视操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|视场角 |数量 |             |
+|方面|数量 |             |
+| z近|数量 |             |
+|远远 |数量 |             |
+
+### flintMat4RotationAxisAngle
+
+**种类：**功能
+
+```typescript
+function flintMat4RotationAxisAngle(axis: FlintVec3, angleRad: number): FlintMat4;
+```
+
+执行垫4旋转轴角度操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | --------- | ----------- |
+|轴| FlintVec3 |             |
+|角度Rad |数量 |             |
+
+### 火石Mat4RotationX
+
+**种类：**功能
+
+```typescript
+function flintMat4RotationX(angleRad: number): FlintMat4;
+```
+
+执行垫 4 旋转 x 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|角度Rad |数量 |             |
+
+### flintMat4RotationY
+
+**种类：**功能
+
+```typescript
+function flintMat4RotationY(angleRad: number): FlintMat4;
+```
+
+执行垫 4 旋转 y 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|角度Rad |数量 |             |
+
+### 火石Mat4RotationZ
+
+**种类：**功能
+
+```typescript
+function flintMat4RotationZ(angleRad: number): FlintMat4;
+```
+
+执行 mat 4 旋转 z 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|角度Rad |数量 |             |
+
+### 燧石Mat4Scale
+
+**种类：**功能
+
+```typescript
+function flintMat4Scale(matrix: FlintMat4, scalar: number): FlintMat4;
+```
+
+执行垫 4 缩放操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫4 |             |
+|标量 |数量 |             |
+
+### flintMat4缩放
+
+**种类：**功能
+
+```typescript
+function flintMat4Scaling(scale: FlintVec3): FlintMat4;
+```
+
+执行 mat 4 缩放操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | --------- | ----------- |
+|规模| FlintVec3 |             |
+
+### 燧石Mat4Sub
+
+**种类：**功能
+
+```typescript
+function flintMat4Sub(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+执行 mat 4 子操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 |燧石垫4 |             |
+|第二 |燧石垫4 |             |
+
+### flintMat4TransformPoint3
+
+**种类：**功能
+
+```typescript
+function flintMat4TransformPoint3(matrix: FlintMat4, point: FlintVec3): FlintVec3;
+```
+
+执行 mat 4 变换点 3 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫4 |             |
+|点| FlintVec3 |             |
+
+### flintMat4TransformVec4
+
+**种类：**功能
+
+```typescript
+function flintMat4TransformVec4(matrix: FlintMat4, vector: FlintVec4): FlintVec4;
+```
+
+执行 mat 4 变换 vec 4 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫4 |             |
+|矢量| FlintVec4 |             |
+
+### flintMat4TransformVector3
+
+**种类：**功能
+
+```typescript
+function flintMat4TransformVector3(matrix: FlintMat4, vector: FlintVec3): FlintVec3;
+```
+
+执行 mat 4 变换向量 3 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫4 |             |
+|矢量| FlintVec3 |             |
+
+### flintMat4翻译
+
+**种类：**功能
+
+```typescript
+function flintMat4Translation(offset: FlintVec3): FlintMat4;
+```
+
+执行 mat 4 平移操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|偏移| FlintVec3 |             |
+
+### flintMat4Transpose
+
+**种类：**功能
+
+```typescript
+function flintMat4Transpose(matrix: FlintMat4): FlintMat4;
+```
+
+执行 mat 4 转置操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矩阵|燧石垫4 |             |
+
+### 燧石季铵盐
+
+**种类：**接口
+
+```typescript
+export interface FlintQuat
+```
+
+四元表示。
+
+### 燧石季铵共轭物
+
+**种类：**功能
+
+```typescript
+function flintQuatConjugate(quaternion: FlintQuat): FlintQuat;
+```
+
+执行四共轭运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------- | ----------- |
+|四元数 |燧石 |             |
+
+### 燧石四点
+
+**种类：**功能
+
+```typescript
+function flintQuatDot(first: FlintQuat, second: FlintQuat): number;
+```
+
+执行四点操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 |燧石 |             |
+|第二 |燧石 |             |
+
+### flintQuatFromAxisAngle
+
+**种类：**功能
+
+```typescript
+function flintQuatFromAxisAngle(axis: FlintVec3, angleRad: number): FlintQuat;
+```
+
+执行四轴角操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | --------- | ----------- |
+|轴| FlintVec3 |             |
+|角度Rad |数量 |             |
+
+### flintQuat来自欧拉
+
+**种类：**功能
+
+```typescript
+function flintQuatFromEuler(pitchX: number, yawY: number, rollZ: number): FlintQuat;
+```
+
+从欧拉运算执行 quat。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------ | ----------- |
+|间距X |数量 |             |
+|偏航 |数量 |             |
+|卷Z |数量 |             |
+
+### flintQuatIdentity
+
+**种类：**功能
+
+```typescript
+function flintQuatIdentity(): FlintQuat;
+```
+
+执行四恒等式运算。
+
+### flintQuat逆
+
+**种类：**功能
+
+```typescript
+function flintQuatInverse(quaternion: FlintQuat): FlintOption<FlintQuat>;
+```
+
+执行四元逆运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------- | ----------- |
+|四元数 |燧石 |             |
+
+### 燧石季铵盐
+
+**种类：**功能
+
+```typescript
+function flintQuatMul(first: FlintQuat, second: FlintQuat): FlintQuat;
+```
+
+执行四乘运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 |燧石 |             |
+|第二 |燧石 |             |
+
+### 燧石四范数
+
+**种类：**功能
+
+```typescript
+function flintQuatNorm(quaternion: FlintQuat): number;
+```
+
+执行四范数运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------- | ----------- |
+|四元数 |燧石 |             |
+
+### flintQuat标准化
+
+**种类：**功能
+
+```typescript
+function flintQuatNormalize(quaternion: FlintQuat): FlintQuat;
+```
+
+执行四标准化操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------- | ----------- |
+|四元数 |燧石 |             |
+
+### 燧石四正方
+
+**种类：**功能
+
+```typescript
+function flintQuatNormSq(quaternion: FlintQuat): number;
+```
+
+执行四范数平方运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------- | ----------- |
+|四元数 |燧石 |             |
+
+### flintQuatRotateVec3
+
+**种类：**功能
+
+```typescript
+function flintQuatRotateVec3(quaternion: FlintQuat, vector: FlintVec3): FlintVec3;
+```
+
+执行 quat 旋转 vec 3 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------- | ----------- |
+|四元数 |燧石 |             |
+|矢量| FlintVec3 |             |
+
+### 燧石四叶草
+
+**种类：**功能
+
+```typescript
+function flintQuatSlerp(first: FlintQuat, second: FlintQuat, factor: number): FlintQuat;
+```
+
+执行 quat slerp 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 |燧石 |             |
+|第二 |燧石 |             |
+|因素|数量 |             |
+
+### 燧石QuatToMat3
+
+**种类：**功能
+
+```typescript
+function flintQuatToMat3(quaternion: FlintQuat): FlintMat3;
+```
+
+执行 quat 到 mat 3 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------- | ----------- |
+|四元数 |燧石 |             |
+
+### 燧石QuatToMat4
+
+**种类：**功能
+
+```typescript
+function flintQuatToMat4(quaternion: FlintQuat): FlintMat4;
+```
+
+执行 quat 到 mat 4 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------- | ----------- |
+|四元数 |燧石 |             |
+
+### 弗林特Vec2
+
+**种类：**接口
+
+```typescript
+export interface FlintVec2
+```
+
+2D 浮点向量。
+
+### flintVec2Add
+
+**种类：**功能
+
+```typescript
+function flintVec2Add(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+执行 vec 2 加法运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec2 |             |
+|第二 | FlintVec2 |             |
+
+### 火石Vec2Angle
+
+**种类：**功能
+
+```typescript
+function flintVec2Angle(first: FlintVec2, second: FlintVec2): number;
+```
+
+执行 vec 2 角度运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec2 |             |
+|第二 | FlintVec2 |             |
+
+### flintVec2距离
+
+**种类：**功能
+
+```typescript
+function flintVec2Distance(first: FlintVec2, second: FlintVec2): number;
+```
+
+执行 vec 2 距离运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec2 |             |
+|第二 | FlintVec2 |             |
+
+### flintVec2距离平方
+
+**种类：**功能
+
+```typescript
+function flintVec2DistanceSquared(first: FlintVec2, second: FlintVec2): number;
+```
+
+执行 vec 2 距离平方运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec2 |             |
+|第二 | FlintVec2 |             |
+
+### flintVec2Div
+
+**种类：**功能
+
+```typescript
+function flintVec2Div(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+执行 vec 2 div 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec2 |             |
+|标量 |数量 |             |
+
+### 火石Vec2Dot
+
+**种类：**功能
+
+```typescript
+function flintVec2Dot(first: FlintVec2, second: FlintVec2): number;
+```
+
+执行 vec 2 点运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec2 |             |
+|第二 | FlintVec2 |             |
+
+### flintVec2长度
+
+**种类：**功能
+
+```typescript
+function flintVec2Length(vector: FlintVec2): number;
+```
+
+执行 vec 2 长度运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec2 |             |
+
+### flintVec2LengthSq
+
+**种类：**功能
+
+```typescript
+function flintVec2LengthSq(vector: FlintVec2): number;
+```
+
+执行 vec 2 长度 sq 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec2 |             |
+
+### 火石Vec2Lerp
+
+**种类：**功能
+
+```typescript
+function flintVec2Lerp(first: FlintVec2, second: FlintVec2, factor: number): FlintVec2;
+```
+
+执行 vec 2 lerp 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec2 |             |
+|第二 | FlintVec2 |             |
+|因素|数量 |             |
+
+### 火石Vec2Mul
+
+**种类：**功能
+
+```typescript
+function flintVec2Mul(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+执行 vec 2 mul 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec2 |             |
+|第二 | FlintVec2 |             |
+
+### 火石Vec2Neg
+
+**种类：**功能
+
+```typescript
+function flintVec2Neg(vector: FlintVec2): FlintVec2;
+```
+
+执行 vec 2 负运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec2 |             |
+
+### flintVec2标准化
+
+**种类：**功能
+
+```typescript
+function flintVec2Normalize(vector: FlintVec2): FlintVec2;
+```
+
+执行 vec 2 标准化操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec2 |             |
+
+### flintVec2PerpDot
+
+**种类：**功能
+
+```typescript
+function flintVec2PerpDot(first: FlintVec2, second: FlintVec2): number;
+```
+
+执行 vec 2 perp 点运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec2 |             |
+|第二 | FlintVec2 |             |
+
+### flintVec2项目
+
+**种类：**功能
+
+```typescript
+function flintVec2Project(vector: FlintVec2, target: FlintVec2): FlintVec2;
+```
+
+执行 vec 2 项目操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec2 |             |
+|目标| FlintVec2 |             |
+
+### flintVec2Reflect
+
+**种类：**功能
+
+```typescript
+function flintVec2Reflect(vector: FlintVec2, normal: FlintVec2): FlintVec2;
+```
+
+执行 vec 2 反射操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec2 |             |
+|正常 | FlintVec2 |             |
+
+### flintVec2旋转
+
+**种类：**功能
+
+```typescript
+function flintVec2Rotate(vector: FlintVec2, angleRad: number): FlintVec2;
+```
+
+执行 vec 2 旋转操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | --------- | ----------- |
+|矢量| FlintVec2 |             |
+|角度Rad |数量 |             |
+
+### flintVec2Scale
+
+**种类：**功能
+
+```typescript
+function flintVec2Scale(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+执行 vec 2 尺度运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec2 |             |
+|标量 |数量 |             |
+
+### 火石Vec2Sub
+
+**种类：**功能
+
+```typescript
+function flintVec2Sub(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+执行 vec 2 子操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec2 |             |
+|第二 | FlintVec2 |             |
+
+### 弗林特Vec3
+
+**种类：**接口
+
+```typescript
+export interface FlintVec3
+```
+
+3D 浮点向量。
+
+### flintVec3Add
+
+**种类：**功能
+
+```typescript
+function flintVec3Add(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+执行 vec 3 加法运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec3 |             |
+|第二 | FlintVec3 |             |
+
+### 火石Vec3Angle
+
+**种类：**功能
+
+```typescript
+function flintVec3Angle(first: FlintVec3, second: FlintVec3): number;
+```
+
+执行 vec 3 角度运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec3 |             |
+|第二 | FlintVec3 |             |
+
+### 火石Vec3Cross
+
+**种类：**功能
+
+```typescript
+function flintVec3Cross(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+执行 vec 3 交叉运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec3 |             |
+|第二 | FlintVec3 |             |
+
+### flintVec3距离
+
+**种类：**功能
+
+```typescript
+function flintVec3Distance(first: FlintVec3, second: FlintVec3): number;
+```
+
+执行 vec 3 距离运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec3 |             |
+|第二 | FlintVec3 |             |
+
+### flintVec3DistanceSquared
+
+**种类：**功能
+
+```typescript
+function flintVec3DistanceSquared(first: FlintVec3, second: FlintVec3): number;
+```
+
+执行 vec 3 距离平方运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec3 |             |
+|第二 | FlintVec3 |             |
+
+### flintVec3Div
+
+**种类：**功能
+
+```typescript
+function flintVec3Div(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+执行 vec 3 div 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec3 |             |
+|标量 |数量 |             |
+
+### 火石Vec3Dot
+
+**种类：**功能
+
+```typescript
+function flintVec3Dot(first: FlintVec3, second: FlintVec3): number;
+```
+
+执行 vec 3 点运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec3 |             |
+|第二 | FlintVec3 |             |
+
+### flintVec3长度
+
+**种类：**功能
+
+```typescript
+function flintVec3Length(vector: FlintVec3): number;
+```
+
+执行 vec 3 长度运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec3 |             |
+
+### flintVec3LengthSq
+
+**种类：**功能
+
+```typescript
+function flintVec3LengthSq(vector: FlintVec3): number;
+```
+
+执行 vec 3 长度 sq 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec3 |             |
+
+### flintVec3Lerp
+
+**种类：**功能
+
+```typescript
+function flintVec3Lerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+执行 vec 3 lerp 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec3 |             |
+|第二 | FlintVec3 |             |
+|因素|数量 |             |
+
+### 火石Vec3Mul
+
+**种类：**功能
+
+```typescript
+function flintVec3Mul(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+执行 vec 3 mul 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec3 |             |
+|第二 | FlintVec3 |             |
+
+### 火石Vec3Neg
+
+**种类：**功能
+
+```typescript
+function flintVec3Neg(vector: FlintVec3): FlintVec3;
+```
+
+执行 vec 3 负运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec3 |             |
+
+### flintVec3标准化
+
+**种类：**功能
+
+```typescript
+function flintVec3Normalize(vector: FlintVec3): FlintVec3;
+```
+
+执行 vec 3 标准化操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec3 |             |
+
+### flintVec3项目
+
+**种类：**功能
+
+```typescript
+function flintVec3Project(vector: FlintVec3, target: FlintVec3): FlintVec3;
+```
+
+执行vec 3项目操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec3 |             |
+|目标| FlintVec3 |             |
+
+### flintVec3Reflect
+
+**种类：**功能
+
+```typescript
+function flintVec3Reflect(vector: FlintVec3, normal: FlintVec3): FlintVec3;
+```
+
+执行 vec 3 反射操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec3 |             |
+|正常 | FlintVec3 |             |
+
+### 火石Vec3折射
+
+**种类：**功能
+
+```typescript
+function flintVec3Refract(vector: FlintVec3, normal: FlintVec3, eta: number): FlintVec3;
+```
+
+执行 vec 3 折射操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec3 |             |
+|正常 | FlintVec3 |             |
+|预计时间数量 |             |
+
+### flintVec3Reject
+
+**种类：**功能
+
+```typescript
+function flintVec3Reject(vector: FlintVec3, from: FlintVec3): FlintVec3;
+```
+
+执行 vec 3 拒绝操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec3 |             |
+|来自 | FlintVec3 |             |
+
+### flintVec3Scale
+
+**种类：**功能
+
+```typescript
+function flintVec3Scale(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+执行 vec 3 尺度运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec3 |             |
+|标量 |数量 |             |
+
+### 火石Vec3Slerp
+
+**种类：**功能
+
+```typescript
+function flintVec3Slerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+执行 vec 3 slerp 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec3 |             |
+|第二 | FlintVec3 |             |
+|因素|数量 |             |
+
+### 火石Vec3Sub
+
+**种类：**功能
+
+```typescript
+function flintVec3Sub(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+执行 vec 3 子操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec3 |             |
+|第二 | FlintVec3 |             |
+
+### 弗林特Vec4
+
+**种类：**接口
+
+```typescript
+export interface FlintVec4
+```
+
+4D 浮点向量。
+
+### flintVec4Add
+
+**种类：**功能
+
+```typescript
+function flintVec4Add(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+执行 vec 4 加法运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec4 |             |
+|第二 | FlintVec4 |             |
+
+### flintVec4Div
+
+**种类：**功能
+
+```typescript
+function flintVec4Div(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+执行 vec 4 div 运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec4 |             |
+|标量 |数量 |             |
+
+### 火石Vec4Dot
+
+**种类：**功能
+
+```typescript
+function flintVec4Dot(first: FlintVec4, second: FlintVec4): number;
+```
+
+执行 vec 4 点运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec4 |             |
+|第二 | FlintVec4 |             |
+
+### flintVec4长度
+
+**种类：**功能
+
+```typescript
+function flintVec4Length(vector: FlintVec4): number;
+```
+
+执行 vec 4 长度操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec4 |             |
+
+### flintVec4Lerp
+
+**种类：**功能
+
+```typescript
+function flintVec4Lerp(first: FlintVec4, second: FlintVec4, factor: number): FlintVec4;
+```
+
+执行 vec 4 lerp 操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec4 |             |
+|第二 | FlintVec4 |             |
+|因素|数量 |             |
+
+### 火石Vec4Neg
+
+**种类：**功能
+
+```typescript
+function flintVec4Neg(vector: FlintVec4): FlintVec4;
+```
+
+执行 vec 4 负运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec4 |             |
+
+### flintVec4标准化
+
+**种类：**功能
+
+```typescript
+function flintVec4Normalize(vector: FlintVec4): FlintVec4;
+```
+
+执行 vec 4 标准化操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec4 |             |
+
+### flintVec4Scale
+
+**种类：**功能
+
+```typescript
+function flintVec4Scale(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+执行 vec 4 尺度运算。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|矢量| FlintVec4 |             |
+|标量 |数量 |             |
+
+### 火石Vec4Sub
+
+**种类：**功能
+
+```typescript
+function flintVec4Sub(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+执行 vec 4 子操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | --------- | ----------- |
+|第一 | FlintVec4 |             |
+|第二 | FlintVec4 |             |
+
+## `src/memory`
+
+### 创建FlintMemory
+
+**种类：**功能
+
+```typescript
+function createFlintMemory(
+  memoryOrOptions?: WebAssembly.Memory | FlintMemoryOptions,
+  options?: FlintMemoryOptions,
+): FlintMemory;
+```
+
+创建配置好的 FlintMemory 实例。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------------- | ---------------------------------------- | ----------------------------------------------------------------- |
+|内存或选项 | WebAssembly.Memory \| FlintMemory选项 | - 现有的 WebAssembly.Memory 或内存创建选项。         |
+|选项 | FlintMemory选项 | - 内存创建和大小调整选项（如果提供内存实例）。 |
+
+#### 合同
+
+- **@param:** - 现有的 WebAssembly.Memory 或内存创建选项。
+- **@param:** - 内存创建和大小调整选项（如果提供内存实例）。
+- **@returns:** 初始化的 FlintMemory 实例。
+
+### 创建FlintMultiMemory
+
+**种类：**功能
+
+```typescript
+function createFlintMultiMemory(options?: FlintMultiMemoryOptions): FlintMultiMemory;
+```
+
+创建具有专用来宾堆、主机互操作和静态分区的隔离多内存实例。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ----------------------- | ----------- |
+|选项 | FlintMultiMemoryOptions | 多内存选项             |
+
+### FALLBACK_GUARD_PAGE_SIZE
+
+**种类：**常数
+
+```typescript
+export const FALLBACK_GUARD_PAGE_SIZE;
 ```
 
 没有提供描述。
 
-### 锻造WebScript内存
+### FLINT_MEMORY_CAPABILITIES
+
+**种类：**常数
+
+```typescript
+export const FLINT_MEMORY_CAPABILITIES;
+```
+
+没有提供描述。
+
+### 燧石内存
 
 **种类：**类
 
@@ -1854,9 +6472,9 @@ export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
 export class FlintMemory
 ```
 
-没有提供描述。
+管理 WebAssembly 线性内存分配、边界检查和二进制 I/O。
 
-### Flint内存地址
+### FlintMemory地址
 
 **种类：**类型
 
@@ -1864,7 +6482,7 @@ export class FlintMemory
 export type FlintMemoryAddress = number | bigint;
 ```
 
-没有提供描述。
+支持 32 位（数字）和 64 位（bigint）地址的内存地址指针表示。
 
 ### Flint内存选项
 
@@ -1874,26 +6492,83 @@ export type FlintMemoryAddress = number | bigint;
 export interface FlintMemoryOptions
 ```
 
-没有提供描述。
+用于创建 Flint 线性内存实例并调整其大小的配置选项。
+
+### FlintMemory分区名称
+
+**种类：**类型
+
+```typescript
+export type FlintMemoryPartitionName = 'guestHeap' | 'foreignHeap' | 'hostInterop' | 'staticData';
+```
+
+多内存模块的专用线性内存分区的名称。
+
+### 火石多存
+
+**种类：**类
+
+```typescript
+export class FlintMultiMemory
+```
+
+WebAssembly 多内存隔离协调器。
+将内存隔离到供来宾执行的专用空间（内存 0），
+外部不受信任的 C/Rust 堆（内存 1）、主机互操作缓冲区（内存 2）、
+和静态常量/表（内存 3）。
+
+支持本机多内存硬件隔离以及零分配
+针对没有多内存的运行时（例如 Safari / WebKit）的分区单内存后备模拟。
+
+### Flint多重内存选项
+
+**种类：**接口
+
+```typescript
+export interface FlintMultiMemoryOptions
+```
+
+配置多个独立线性内存分区的选项。
+
+### 弗林特地区竞技场
+
+**种类：**类
+
+```typescript
+export class FlintRegionalArena
+```
+
+范围区域碰撞分配器池（第 1 层）提供 O(1) 分配
+以及范围退出时的确定性批量释放。
+
+### 是否支持多内存
+
+**种类：**功能
+
+```typescript
+function isMultiMemorySupported(): boolean;
+```
+
+检测主机 JavaScript 环境是否原生支持 WebAssembly 多内存。
 
 ## `src/parallel`
 
-### FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+### FLINT_PARALLEL_CAPABILITIES
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
+export const FLINT_PARALLEL_CAPABILITIES;
 ```
 
 用于授权工作线程、线程、原子和共享内存执行的功能名称。
 
-### FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS
+### FLINT_PARALLEL_OPERATION_DESCRIPTORS
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
+export const FLINT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<FlintParallelOperation, FlintParallelOperationDescriptor>
 >;
 ```
@@ -1916,11 +6591,11 @@ function flintIteratorParAt(
 
 #### 参数
 
-| 名称 | 类型                  | 描述                 |
-| ---- | --------------------- | -------------------- |
-| 来源 | FlintIterable<TValue> |                      |
-| 索引 | 数量                  |                      |
-| 选项 | FlintParallelOptions  | FlintParallelOptions | FlintParallelOptions |
+|名称 |类型 |描述 |
+| ------- | --------------------- | ----------- |
+|来源 | FlintIterable<TValue> |             |
+|索引 |数量 |             |
+|选项 | FlintParallelOptions | FlintParallelOptions |             |
 
 ### flintIteratorParCollect
 
@@ -1937,12 +6612,12 @@ function flintIteratorParCollect(
 
 #### 参数
 
-| 名称 | 类型                  | 描述                 |
-| ---- | --------------------- | -------------------- |
-| 来源 | FlintIterable<TValue> |                      |
-| 选项 | FlintParallelOptions  | FlintParallelOptions | FlintParallelOptions |
+|名称 |类型 |描述 |
+| ------- | --------------------- | ----------- |
+|来源 | FlintIterable<TValue> |             |
+|选项 | FlintParallelOptions | FlintParallelOptions |             |
 
-### flintIteratorParFilter
+### flint迭代器ParFilter
 
 **种类：**功能
 
@@ -1959,11 +6634,11 @@ function flintIteratorParFilter(
 
 #### 参数
 
-| 名称 | 类型                                                        | 描述                 |
-| ---- | ----------------------------------------------------------- | -------------------- |
-| 来源 | FlintIterable<TValue>                                       |                      |
-| 谓词 | （值：TValue，索引：数字）=> 布尔值 \| PromiseLike<boolean> |                      |
-| 选项 | FlintParallelOptions                                        | FlintParallelOptions | FlintParallelOptions |
+|名称 |类型 |描述 |
+| --------- | ----------------------------------------------------------------- | ----------- |
+|来源 | FlintIterable<TValue> |             |
+|谓词| （值：TValue，索引：数字）=> 布尔值 \| PromiseLike<boolean> |             |
+|选项 | FlintParallelOptions | FlintParallelOptions |             |
 
 ### flintIteratorParFirst
 
@@ -1980,10 +6655,10 @@ function flintIteratorParFirst(
 
 #### 参数
 
-| 名称 | 类型                  | 描述                 |
-| ---- | --------------------- | -------------------- |
-| 来源 | FlintIterable<TValue> |                      |
-| 选项 | FlintParallelOptions  | FlintParallelOptions | FlintParallelOptions |
+|名称 |类型 |描述 |
+| ------- | --------------------- | ----------- |
+|来源 | FlintIterable<TValue> |             |
+|选项 | FlintParallelOptions | FlintParallelOptions |             |
 
 ### flintIteratorParFlatten
 
@@ -2000,12 +6675,12 @@ function flintIteratorParFlatten(
 
 #### 参数
 
-| 名称 | 类型                                 | 描述                 |
-| ---- | ------------------------------------ | -------------------- |
-| 来源 | FlintIterable<FlintIterable<TValue>> |                      |
-| 选项 | FlintParallelOptions                 | FlintParallelOptions | FlintParallelOptions |
+|名称 |类型 |描述 |
+| ------- | ------------------------------------ | ----------- |
+|来源 | FlintIterable<FlintIterable<TValue>> |             |
+|选项 | FlintParallelOptions | FlintParallelOptions |             |
 
-### flintIteratorParFold
+### flint迭代器ParFold
 
 **种类：**功能
 
@@ -2022,12 +6697,12 @@ function flintIteratorParFold(
 
 #### 参数
 
-| 名称   | 类型                                                  | 描述                 |
-| ------ | ----------------------------------------------------- | -------------------- |
-| 来源   | FlintIterable<TValue>                                 |                      |
-| 初始   | 结果                                                  |                      |
-| 减速机 | （累加器：TResult，值：TValue，索引：数字）=> TResult |                      |
-| 选项   | FlintParallelOptions                                  | FlintParallelOptions | FlintParallelOptions |
+|名称 |类型 |描述 |
+| ------- | --------------------------------------------------------------- | ----------- |
+|来源 | FlintIterable<TValue> |             |
+|初始|结果 |             |
+|减速机| （累加器：TResult，值：TValue，索引：数字）=> TResult |             |
+|选项 | FlintParallelOptions | FlintParallelOptions |             |
 
 ### flintIteratorParLast
 
@@ -2044,10 +6719,10 @@ function flintIteratorParLast(
 
 #### 参数
 
-| 名称 | 类型                  | 描述                 |
-| ---- | --------------------- | -------------------- |
-| 来源 | FlintIterable<TValue> |                      |
-| 选项 | FlintParallelOptions  | FlintParallelOptions | FlintParallelOptions |
+|名称 |类型 |描述 |
+| ------- | --------------------- | ----------- |
+|来源 | FlintIterable<TValue> |             |
+|选项 | FlintParallelOptions | FlintParallelOptions |             |
 
 ### flintIteratorParMap
 
@@ -2066,11 +6741,11 @@ function flintIteratorParMap(
 
 #### 参数
 
-| 名称 | 类型                                                         | 描述                 |
-| ---- | ------------------------------------------------------------ | -------------------- |
-| 来源 | FlintIterable<TValue>                                        |                      |
-| 地图 | （值：TValue，索引：数字）=> TResult \| PromiseLike<TResult> |                      |
-| 选项 | FlintParallelOptions                                         | FlintParallelOptions | FlintParallelOptions |
+|名称 |类型 |描述 |
+| ------- | ----------------------------------------------------------------- | ----------- |
+|来源 | FlintIterable<TValue> |             |
+|地图 | （值：TValue，索引：数字）=> TResult \| PromiseLike<TResult> |             |
+|选项 | FlintParallelOptions | FlintParallelOptions |             |
 
 ### flintIteratorParToArray
 
@@ -2087,10 +6762,10 @@ function flintIteratorParToArray(
 
 #### 参数
 
-| 名称 | 类型                  | 描述                 |
-| ---- | --------------------- | -------------------- |
-| 来源 | FlintIterable<TValue> |                      |
-| 选项 | FlintParallelOptions  | FlintParallelOptions | FlintParallelOptions |
+|名称 |类型 |描述 |
+| ------- | --------------------- | ----------- |
+|来源 | FlintIterable<TValue> |             |
+|选项 | FlintParallelOptions | FlintParallelOptions |             |
 
 ### flint并行描述符
 
@@ -2107,10 +6782,10 @@ function flintParallelDescriptor(
 
 #### 参数
 
-| 名称 | 类型                 | 描述                 |
-| ---- | -------------------- | -------------------- |
-| 操作 | Flint 并行操作       |                      |
-| 选项 | FlintParallelOptions | FlintParallelOptions | FlintParallelOptions |
+|名称 |类型 |描述 |
+| --------- | ---------------------- | ----------- |
+|操作| Flint并行操作|             |
+|选项 | FlintParallelOptions | FlintParallelOptions |             |
 
 ### Flint并行执行器
 
@@ -2163,7 +6838,7 @@ export interface FlintParallelOptions
 战略要求和能力输入。 `auto` 更喜欢允许的 Wasm 线程，
 然后宿主worker，最后串行执行；没有推断出不安全的能力。
 
-### Flint并行计划
+### 弗林特并行计划
 
 **种类：**接口
 
@@ -2183,7 +6858,7 @@ export type FlintParallelStrategy = 'serial' | 'host-workers' | 'wasm-threads';
 
 为有序并行操作选择的执行策略。
 
-### selectFlint并行策略
+### 选择FlintParallelStrategy
 
 **种类：**功能
 
@@ -2195,9 +6870,138 @@ function selectFlintParallelStrategy(options: FlintParallelOptions = {}): FlintP
 
 #### 参数
 
-| 名称 | 类型                 | 描述                 |
-| ---- | -------------------- | -------------------- |
-| 选项 | FlintParallelOptions | FlintParallelOptions | FlintParallelOptions |
+|名称 |类型 |描述 |
+| ------- | -------------------- | ----------- |
+|选项 | FlintParallelOptions | FlintParallelOptions |             |
+
+## `src/safe-heap`
+
+### 创建FlintSafeHeap
+
+**种类：**功能
+
+```typescript
+function createFlintSafeHeap(memory: FlintMemory): FlintSafeHeap;
+```
+
+创建新的 FlintSafeHeap 管理器的工厂函数。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ----------- | ------------------------- |
+|记忆 |燧石内存| - 线性内存实例。 |
+
+#### 合同
+
+- **@param:** - 线性内存实例。
+- **@returns:** 初始化的 FlintSafeHeap 实例。
+
+### FLINT_MEMORY_MODEL
+
+**种类：**常数
+
+```typescript
+export const FLINT_MEMORY_MODEL;
+```
+
+没有提供描述。
+
+### FlintDynamicTableManager
+
+**种类：**类
+
+```typescript
+export class FlintDynamicTableManager
+```
+
+动态 WebAssembly 功能表管理器提供插槽分配、生成跟踪、
+并在关闭释放时立即无效，以防止过时的函数调度。
+
+### 弗林特地区
+
+**种类：**接口
+
+```typescript
+export interface FlintRegion
+```
+
+标识活动内存区域的生命周期令牌。
+
+### 弗林特地区分配
+
+**种类：**接口
+
+```typescript
+export interface FlintRegionAllocation
+```
+
+跟踪绑定到生命周期区域的内存分配的描述符。
+
+### 弗林特地区竞技场
+
+**种类：**类
+
+```typescript
+export class FlintRegionArena
+```
+
+用于瞬态任务的高性能范围竞技场凹凸分配器。
+在瞬间 O(1) 指针重置中回收所有分配的内存。
+
+### 燧石安全堆
+
+**种类：**类
+
+```typescript
+export class FlintSafeHeap
+```
+
+编译器管理值的确定性作用域堆。原始 fws_alloc 调用
+保留在 FlintMemory 上，并且永远不会隐式保留在这里。
+
+### Flint共享句柄
+
+**种类：**接口
+
+```typescript
+export interface FlintSharedHandle
+```
+
+标识引用计数共享内存分配的句柄引用。
+
+### 燧石桌槽手柄
+
+**种类：**接口
+
+```typescript
+export interface FlintTableSlotHandle
+```
+
+动态函数表槽句柄跟踪表索引和分代令牌。
+
+### FlintTlsf分配器
+
+**种类：**类
+
+```typescript
+export class FlintTlsfAllocator
+```
+
+两级隔离配合 (TLSF) 内存分配器。
+通过立即物理合并保证 O(1) 分配和释放时间
+以及嵌入式/实时 Wasm 工作负载的最小碎片。
+
+### 燧石弱柄
+
+**种类：**接口
+
+```typescript
+export interface FlintWeakHandle
+```
+
+弱引用句柄引用共享内存分配而不增加强引用计数。
+减轻循环数据结构引起的单调内存泄漏。
 
 ## `src/self-hosted`
 
@@ -2209,7 +7013,7 @@ function selectFlintParallelStrategy(options: FlintParallelOptions = {}): FlintP
 export interface FlintSelfHostedRunOptions
 ```
 
-没有提供描述。
+用于在 VM 或 AOT 模式下执行自承载编译器阶段的配置选项。
 
 ### FlintSelfHostedVmRun
 
@@ -2219,9 +7023,9 @@ export interface FlintSelfHostedRunOptions
 export interface FlintSelfHostedVmRun
 ```
 
-没有提供描述。
+跨词法分析和解析阶段运行的自托管编译器的完整执行报告。
 
-### runFlintSelfHostedCompiler
+### 运行FlintSelfHostedCompiler
 
 **种类：**功能
 
@@ -2242,13 +7046,13 @@ function runFlintSelfHostedCompiler(
 
 #### 参数
 
-| 名称 | 类型                      | 描述                      |
-| ---- | ------------------------- | ------------------------- |
-| 输入 | FlintCompileInput         | FlintCompileInput         |                           |
-| 模式 | FlintVmExecutionMode      | FlintVmExecutionMode      |
-| 选项 | FlintSelfHostedRunOptions | FlintSelfHostedRunOptions | FlintSelfHostedRunOptions |
+|名称 |类型 |描述 |
+| ------- | ------------------------- | ----------- |
+|输入 | FlintCompile 输入 |             |
+|模式 | FlintVm执行模式 |             |
+|选项 | FlintSelfHostedRunOptions | FlintSelfHostedRunOptions |             |
 
-### runFlintSelfHostedLexStage
+### 运行FlintSelfHostedLexStage
 
 **种类：**功能
 
@@ -2260,19 +7064,53 @@ function runFlintSelfHostedLexStage(
 ): FlintSelfHostedStageReport;
 ```
 
-仅为编译器使用者执行有界 FWS 创作的 lex 阶段。
+仅为编译器使用者执行有界 FWS 编写的 lex 阶段。
 
 #### 参数
 
-| 名称 | 类型                                                                                            | 描述                      |
-| ---- | ----------------------------------------------------------------------------------------------- | ------------------------- |
-| 输入 | 选择<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |                           |
-| 模式 | FlintVmExecutionMode                                                                            | FlintVmExecutionMode      |
-| 选项 | FlintSelfHostedRunOptions                                                                       | FlintSelfHostedRunOptions | FlintSelfHostedRunOptions |
+|名称 |类型 |描述 |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+|输入 |选择<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+|模式 | FlintVm执行模式 |             |
+|选项 | FlintSelfHostedRunOptions | FlintSelfHostedRunOptions |             |
 
 ## `src/threading`
 
-### canUseFlintWasmThreads
+### 断言FlintSend
+
+**种类：**功能
+
+```typescript
+function assertFlintSend(value: T, context = 'value'): T;
+```
+
+断言某个值满足“发送”合约，如果违反则抛出陷阱。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ---- | ----------- |
+|价值| T |             |
+|背景 |      |             |
+
+### 断言FlintSync
+
+**种类：**功能
+
+```typescript
+function assertFlintSync(value: T, context = 'value'): T;
+```
+
+断言某个值满足“同步”合约，如果违反则抛出陷阱。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ---- | ----------- |
+|价值| T |             |
+|背景 |      |             |
+
+### 可以使用FlintWasmThreads
 
 **种类：**功能
 
@@ -2288,12 +7126,12 @@ function canUseFlintWasmThreads(
 
 #### 参数
 
-| 名称     | 类型                                   | 描述 |
-| -------- | -------------------------------------- | ---- |
-| 目标特征 | FlintWasmThreadTargetFeatures \|未定义 |      |
-| 能力     | 只读字符串[] \|未定义                  |      |
+|名称 |类型 |描述 |
+| -------------- | ------------------------------------------ | ----------- |
+|目标特征 | FlintWasmThreadTargetFeatures \|未定义 |             |
+|能力|只读字符串[] \|未定义 |             |
 
-### createFlintAtomicI32
+### 创建FlintAtomicI32
 
 **种类：**功能
 
@@ -2301,16 +7139,22 @@ function canUseFlintWasmThreads(
 function createFlintAtomicI32(length = 1, options: FlintAtomicI32Options = {}): FlintAtomicI32;
 ```
 
-没有提供描述。
+分配一个共享原子 32 位整数数组并用原子操作包装它。
 
 #### 参数
 
-| 名称 | 类型                  | 描述                  |
-| ---- | --------------------- | --------------------- |
-| 长度 |                       |                       |
-| 选项 | FlintAtomicI32Options | FlintAtomicI32Options | FlintAtomicI32Options |
+|名称 |类型 |描述 |
+| ------- | --------------------- | ---------------------------------------------------------- |
+|长度|                       | - 要分配的 32 位整数槽的数量。              |
+|选项 | FlintAtomicI32 选项 | - 分配选项，包括现有的 SharedArrayBuffer。 |
 
-### createFlintWasmThreadScheduler
+#### 合同
+
+- **@param:** - 要分配的 32 位整数槽数。
+- **@param:** - 分配选项，包括现有的 SharedArrayBuffer。
+- **@returns:** 配置的 FlintAtomicI32 实例。
+
+### 创建FlintWasmThreadScheduler
 
 **种类：**功能
 
@@ -2324,11 +7168,11 @@ function createFlintWasmThreadScheduler(options: FlintWasmThreadSchedulerOptions
 
 #### 参数
 
-| 名称 | 类型                            | 描述                            |
-| ---- | ------------------------------- | ------------------------------- |
-| 选项 | FlintWasmThreadSchedulerOptions | FlintWasmThreadSchedulerOptions |     |
+|名称 |类型 |描述 |
+| ------- | ------------------------------- | ----------- |
+|选项 | FlintWasmThreadSchedulerOptions | FlintWasmThreadSchedulerOptions |             |
 
-### 创建FlintWorkerRuntime
+### 创建FlintWorker运行时
 
 **种类：**功能
 
@@ -2336,21 +7180,31 @@ function createFlintWasmThreadScheduler(options: FlintWasmThreadSchedulerOptions
 function createFlintWorkerRuntime(
   createWorker: () => FlintWorkerPort,
   onMessage: (message: unknown) => void,
-  onError: (error: unknown) => void = () => {},
+  onError: (error: unknown) => void = (_error: unknown) => {
+    // Default no-op error handler.
+  },
   options: FlintWorkerRuntimeOptions = {},
 ): FlintWorkerRuntime;
 ```
 
-没有提供描述。
+使用提供的端口工厂和生命周期挂钩实例化工作线程运行时。
 
 #### 参数
 
-| 名称     | 类型                      | 描述                      |
-| -------- | ------------------------- | ------------------------- |
-| 创建工人 | () => FlintWorkerPort     |                           |
-| 消息     | （消息：未知）=> 无效     |                           |
-| 错误     | （错误：未知）=> 无效     |                           |
-| 选项     | FlintWorkerRuntimeOptions | FlintWorkerRuntimeOptions | FlintWorkerRuntimeOptions |
+|名称 |类型 |描述 |
+| ------------ | -------------------------- | ---------------------------------------- |
+|创建工人 | () => FlintWorkerPort | - 端口工厂回调。                 |
+|消息 | （消息：未知）=> 无效 | - 消息处理程序回调。              |
+|错误 | （错误：未知）=> 无效 | - 可选的错误处理程序回调。       |
+|选项 | FlintWorkerRuntimeOptions | FlintWorkerRuntimeOptions | FlintWorkerRuntimeOptions - 运行时的配置选项。 |
+
+#### 合同
+
+- **@param:** - 端口工厂回调。
+- **@param:** - 消息处理程序回调。
+- **@param:** - 可选的错误处理程序回调。
+- **@param:** - 运行时的配置选项。
+- **@returns:** 已初始化的 FlintWorkerRuntime。
 
 ### 创建FlintWorkerScheduler
 
@@ -2369,21 +7223,21 @@ function createFlintWorkerScheduler(options: FlintWorkerSchedulerOptions = {}): 
 
 #### 参数
 
-| 名称 | 类型                      | 描述 |
-| ---- | ------------------------- | ---- |
-| 选项 | FlintWorkerScheduler 选项 |      |
+|名称 |类型 |描述 |
+| ------- | --------------------------- | ----------- |
+|选项 | FlintWorkerScheduler 选项 |             |
 
-### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+### FLINT_THREADING_CAPABILITIES
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
+export const FLINT_THREADING_CAPABILITIES;
 ```
 
 没有提供描述。
 
-### FlintAtomicI32
+### 燧石原子I32
 
 **种类：**接口
 
@@ -2391,9 +7245,9 @@ export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
 export interface FlintAtomicI32
 ```
 
-没有提供描述。
+包装器在共享 32 位整数缓冲区上提供原子读取-修改-写入操作。
 
-### FlintAtomicI32Options
+### FlintAtomicI32选项
 
 **种类：**接口
 
@@ -2401,7 +7255,17 @@ export interface FlintAtomicI32
 export interface FlintAtomicI32Options
 ```
 
-没有提供描述。
+配置原子 32 位整数数组的分配或共享的选项。
+
+### 燧石螺纹安全标记
+
+**种类：**接口
+
+```typescript
+export interface FlintThreadSafetyMarker
+```
+
+验证共享内存并发保证的线程安全元数据标记。
 
 ### FlintWasmThreadSchedulerOptions
 
@@ -2411,7 +7275,7 @@ export interface FlintAtomicI32Options
 export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFeatures
 ```
 
-没有提供描述。
+配置由共享内存和工作线程支持的 WebAssembly 线程调度程序的选项。
 
 ### FlintWasmThreadTarget功能
 
@@ -2421,9 +7285,9 @@ export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFe
 export interface FlintWasmThreadTargetFeatures
 ```
 
-没有提供描述。
+WebAssembly 的目标是与多线程和共享内存相关的功能。
 
-### FlintWorkerPort
+### 弗林特工人港
 
 **种类：**接口
 
@@ -2431,7 +7295,7 @@ export interface FlintWasmThreadTargetFeatures
 export interface FlintWorkerPort
 ```
 
-没有提供描述。
+用于工作人员通信的通用 postMessage 消息端口合约。
 
 ### FlintWorker运行时
 
@@ -2441,9 +7305,9 @@ export interface FlintWorkerPort
 export interface FlintWorkerRuntime
 ```
 
-没有提供描述。
+运行时句柄管理工作人员通信端口及其生命周期拆卸。
 
-### FlintWorkerRuntimeOptions
+### FlintWorker运行时选项
 
 **种类：**接口
 
@@ -2451,9 +7315,9 @@ export interface FlintWorkerRuntime
 export interface FlintWorkerRuntimeOptions
 ```
 
-没有提供描述。
+配置工作线程运行时创建的选项。
 
-### FlintWorkerScheduler
+### FlintWorker调度程序
 
 **种类：**接口
 
@@ -2471,7 +7335,41 @@ export interface FlintWorkerScheduler
 export interface FlintWorkerSchedulerOptions
 ```
 
-没有提供描述。
+用于创建主机工作线程任务调度程序的配置选项。
+
+### 是FlintSend
+
+**种类：**功能
+
+```typescript
+function isFlintSend(value: unknown, visited = new Set<unknown>()): boolean;
+```
+
+验证值是否满足“发送”约定（可以安全地跨线程边界传输）。
+递归地验证普通对象、数组、基元和类型化缓冲区。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------- | ----------- |
+|价值|未知 |             |
+|访问过 |         |             |
+
+### 是FlintSync
+
+**种类：**功能
+
+```typescript
+function isFlintSync(value: unknown): boolean;
+```
+
+验证值是否满足“同步”约定（可以安全地跨线程并发共享）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------- | ----------- |
+|价值|未知 |             |
 
 ## `src/trace`
 
@@ -2483,16 +7381,22 @@ export interface FlintWorkerSchedulerOptions
 function createFlintTraceRecorder(options: FlintTraceOptions, functionName: string): FlintTraceRecorder;
 ```
 
-没有提供描述。
+创建一个执行跟踪记录器，强制执行大小预算和遥测捕获。
 
 #### 参数
 
-| 名称   | 类型              | 描述              |
-| ------ | ----------------- | ----------------- |
-| 选项   | FlintTraceOptions | FlintTraceOptions | FlintTraceOptions | FlintTraceOptions |
-| 函数名 | 字符串            |                   |
+|名称 |类型 |描述 |
+| ------------ | ----------------- | ------------------------------------ |
+|选项 | FlintTrace 选项 | - 跟踪的配置选项。 |
+|函数名 |字符串| - 主要入口点函数名称。 |
 
-### FlintTraceCaptureMode
+#### 合同
+
+- **@param:** - 跟踪的配置选项。
+- **@param:** - 主入口点函数名称。
+- **@returns:** 配置的 FlintTraceRecorder 实例。
+
+### FlintTrace捕获模式
 
 **种类：**类型
 
@@ -2500,9 +7404,9 @@ function createFlintTraceRecorder(options: FlintTraceOptions, functionName: stri
 export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 ```
 
-没有提供描述。
+捕获执行跟踪记录的详细模式。
 
-### FlintTraceCounters
+### 燧石追踪计数器
 
 **种类：**接口
 
@@ -2510,9 +7414,9 @@ export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 export interface FlintTraceCounters
 ```
 
-没有提供描述。
+跟踪期间记录的聚合执行指标和操作计数器。
 
-### FlintTraceEvent
+### 燧石追踪事件
 
 **种类：**接口
 
@@ -2520,7 +7424,7 @@ export interface FlintTraceCounters
 export interface FlintTraceEvent
 ```
 
-没有提供描述。
+在运行时或虚拟机解释期间捕获的详细执行跟踪事件。
 
 ### FlintTraceEventType
 
@@ -2531,9 +7435,9 @@ export type FlintTraceEventType =
   'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
-没有提供描述。
+记录的运行时跟踪事件的类别。
 
-### FlintTraceLimits
+### FlintTrace限制
 
 **种类：**接口
 
@@ -2541,9 +7445,9 @@ export type FlintTraceEventType =
 export interface FlintTraceLimits
 ```
 
-没有提供描述。
+资源限制限制了跟踪事件量和字节大小。
 
-### FlintTraceOptions
+### FlintTrace选项
 
 **种类：**接口
 
@@ -2551,9 +7455,9 @@ export interface FlintTraceLimits
 export interface FlintTraceOptions extends FlintTraceLimits
 ```
 
-没有提供描述。
+用于初始化执行跟踪记录的配置选项。
 
-### FlintTraceRecorder
+### 燧石追踪记录器
 
 **种类：**接口
 
@@ -2561,9 +7465,9 @@ export interface FlintTraceOptions extends FlintTraceLimits
 export interface FlintTraceRecorder
 ```
 
-没有提供描述。
+活动记录器接口消耗运行时执行事件并构建跟踪报告。
 
-### FlintTraceReport
+### 燧石踪迹报告
 
 **种类：**接口
 
@@ -2571,19 +7475,19 @@ export interface FlintTraceRecorder
 export interface FlintTraceReport
 ```
 
-没有提供描述。
+执行完成后总结的完整结构化执行跟踪报告。
 
-### FlintTraceSourceLocation
+### FlintTrace源位置
 
-**种类：**接口
+**种类：**类型
 
 ```typescript
-export interface FlintTraceSourceLocation extends FlintVmDebugSpan
+export type FlintTraceSourceLocation = FlintVmDebugSpan;
 ```
 
-没有提供描述。
+记录的执行跟踪事件的源映射位置。
 
-### summariseFlintVmValue
+### 总结FlintVm值
 
 **种类：**功能
 
@@ -2591,14 +7495,20 @@ export interface FlintTraceSourceLocation extends FlintVmDebugSpan
 function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValue) => string): string;
 ```
 
-没有提供描述。
+总结用于诊断跟踪的 VM 值，并可选择应用修订。
 
 #### 参数
 
-| 名称 | 类型                          | 描述 |
-| ---- | ----------------------------- | ---- |
-| 价值 | FlintVmValue                  |      |
-| 编辑 | （值：FlintVmValue）=> 字符串 |      |
+|名称 |类型 |描述 |
+| ------ | ------------------------------- | ------------------------------ |
+|价值| FlintVm值| - 要格式化的 VM 值。          |
+|编辑| （值：FlintVmValue）=> 字符串 | - 可选的编辑回调。 |
+
+#### 合同
+
+- **@param:** - 要格式化的 VM 值。
+- **@param:** - 可选的密文回调。
+- **@returns:** 人类可读的摘要字符串。
 
 ## `src/traps`
 
@@ -2610,16 +7520,21 @@ function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValu
 function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 ```
 
-没有提供描述。
+将执行跟踪报告与 Flint 陷阱错误相关联（如果适用）。
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 错误 | 未知             |      |
-| 追踪 | FlintTraceReport |      |
+|名称 |类型 |描述 |
+| ----- | ---------------- | ----------------------------------- |
+|错误 |未知 | - 候选错误对象。           |
+|追踪| FlintTrace 报告 | - 附加执行跟踪报告。 |
 
-### 伪造WebScript陷阱
+#### 合同
+
+- **@param:** - 候选错误对象。
+- **@param:** - 要附加的执行跟踪报告。
+
+### 燧石陷阱
 
 **种类：**类
 
@@ -2627,9 +7542,9 @@ function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 export class FlintTrap extends Error
 ```
 
-没有提供描述。
+表示 Flint 中的致命运行时或来宾执行陷阱。
 
-### FlintTrap代码
+### 燧石陷阱代码
 
 **种类：**类型
 
@@ -2641,12 +7556,18 @@ export type FlintTrapCode =
   | 'InvalidOwnership'
   | 'MemoryExhausted'
   | 'MemoryOutOfBounds'
-  | 'GuestTrap';
+  | 'GuestTrap'
+  | 'BorrowViolation'
+  | 'RegionExpired'
+  | 'UseAfterRelease'
+  | 'DoubleRelease'
+  | 'StackOverflow'
+  | 'CallDepthExhausted';
 ```
 
-没有提供描述。
+规范运行时陷阱错误类别代码。
 
-### FlintTrapOptions
+### 燧石陷阱选项
 
 **种类：**接口
 
@@ -2654,9 +7575,9 @@ export type FlintTrapCode =
 export interface FlintTrapOptions extends ErrorOptions
 ```
 
-没有提供描述。
+配置运行时陷阱错误报告和日志记录的选项。
 
-### toFlintHostError 错误
+### 弗林特主机错误
 
 **种类：**功能
 
@@ -2664,19 +7585,26 @@ export interface FlintTrapOptions extends ErrorOptions
 function toFlintHostError(error: unknown, capability: string, logger?: FlintLogger): FlintTrap;
 ```
 
-没有提供描述。
+将未知主机错误转换为规范化的 FlintTrap 实例。
 
 #### 参数
 
-| 名称   | 类型        | 描述 |
-| ------ | ----------- | ---- |
-| 错误   | 未知        |      |
-| 能力   | 字符串      |      |
-| 记录器 | FlintLogger |      |
+|名称 |类型 |描述 |
+| ---------- | ----------- | --------------------------------------------------- |
+|错误|未知 | - 原始捕获错误。                                 |
+|能力|字符串| - 目标主机能力标识符。                |
+|记录器|燧石记录器 | - 用于诊断遥测的可选运行时间记录器。 |
+
+#### 合同
+
+- **@param:** - 原始捕获错误。
+- **@param:** - 目标主机能力标识符。
+- **@param:** - 用于诊断遥测的可选运行时记录器。
+- **@returns:** 规范化的 FlintTrap 实例。
 
 ## `src/vm-executor`
 
-### createFlintVmAotArtifact
+### 创建FlintVmAotArtifact
 
 **种类：**功能
 
@@ -2684,16 +7612,22 @@ function toFlintHostError(error: unknown, capability: string, logger?: FlintLogg
 function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string): FlintVmAotArtifact;
 ```
 
-没有提供描述。
+将 VM 模块编译为提前 (AOT) JavaScript 工件。
 
 #### 参数
 
-| 名称       | 类型          | 描述 |
-| ---------- | ------------- | ---- |
-| 模块       | FlintVmModule |      |
-| 编译器版本 | 字符串        |      |
+|名称 |类型 |描述 |
+| --------------- | ------------- | -------------------------- |
+|模块| FlintVmModule | - 要编译的VM模块。    |
+|编译器版本 |字符串| - 编译器版本字符串。 |
 
-### 创建FlintVmExecutor
+#### 合同
+
+- **@param:** - 要编译的 VM 模块。
+- **@param:** - 编译器版本字符串。
+- **@returns:** 发出 AOT 工件。
+
+### 创建FlintVm执行器
 
 **种类：**功能
 
@@ -2701,13 +7635,18 @@ function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string
 function createFlintVmExecutor(executorOptions: FlintVmExecutorOptions = {}): FlintVmExecutor;
 ```
 
-没有提供描述。
+创建具有 JIT 编译支持的字节码 VM 执行器。
 
 #### 参数
 
-| 名称       | 类型                   | 描述                   |
-| ---------- | ---------------------- | ---------------------- |
-| 执行者选项 | FlintVmExecutorOptions | FlintVmExecutorOptions | FlintVmExecutorOptions |
+|名称 |类型 |描述 |
+| --------------- | ---------------------- | ----------------------------------------- |
+|执行者选项 | FlintVmExecutorOptions | FlintVmExecutorOptions | - 执行器的配置选项。 |
+
+#### 合同
+
+- **@param:** - 执行器的配置选项。
+- **@returns:** 配置的 FlintVmExecutor 实例。
 
 ### 执行FlintVm
 
@@ -2722,16 +7661,24 @@ function executeFlintVm(
 ): FlintVmExecutionResult;
 ```
 
-没有提供描述。
+在 VM 模块中执行函数的便捷运行程序。
 
 #### 参数
 
-| 名称   | 类型                    | 描述                    |
-| ------ | ----------------------- | ----------------------- |
-| 模块   | FlintVmModule           |                         |
-| 函数名 | 字符串                  |                         |
-| 论据_  | 只读 FlintVmValue[]     |                         |
-| 选项   | FlintVmExecutionOptions | FlintVmExecutionOptions | FlintVmExecutionOptions |
+|名称 |类型 |描述 |
+| ------------ | ----------------------- | ---------------------- |
+|模块| FlintVmModule | - 虚拟机模块。           |
+|函数名 |字符串| - 输入函数名称。 |
+|论据_ |只读 FlintVmValue[] | - 参数数组。     |
+|选项 | FlintVmExecutionOptions | FlintVmExecutionOptions | - 执行选项。   |
+
+#### 合同
+
+- **@param:** - VM 模块。
+- **@param:** - 输入函数名称。
+- **@param:** - 参数数组。
+- **@param:** - 执行选项。
+- **@returns:** 执行结果。
 
 ### 执行FlintVmAotArtifact
 
@@ -2746,16 +7693,24 @@ function executeFlintVmAotArtifact(
 ): FlintVmExecutionResult;
 ```
 
-没有提供描述。
+执行编译的 AOT 工件。
 
 #### 参数
 
-| 名称   | 类型                                  | 描述 |
-| ------ | ------------------------------------- | ---- |
-| 神器   | FlintVmAotArtifact                    |      |
-| 函数名 | 字符串                                |      |
-| 论据_  | 只读 FlintVmValue[]                   |      |
-| 选项   | 省略<FlintVmExecutionOptions, 'mode'> |      |
+|名称 |类型 |描述 |
+| ------------ | ------------------------------------- | ------------------------ |
+|神器|弗林特VMAotArtifact | - 编译AOT工件。 |
+|函数名 |字符串| - 输入函数名称。   |
+|论据_ |只读 FlintVmValue[] | - 参数数组。       |
+|选项 |省略<FlintVmExecutionOptions, 'mode'> | - 执行选项。     |
+
+#### 合同
+
+- **@param:** - 编译的 AOT 工件。
+- **@param:** - 输入函数名称。
+- **@param:** - 参数数组。
+- **@param:** - 执行选项。
+- **@returns:** 执行结果。
 
 ### FlintVmExecutorOptions
 
@@ -2765,7 +7720,7 @@ function executeFlintVmAotArtifact(
 export interface FlintVmExecutorOptions
 ```
 
-没有提供描述。
+Flint 虚拟机执行器的配置选项。
 
 ### runFlintVmBootstrap
 
@@ -2781,19 +7736,28 @@ function runFlintVmBootstrap(
 ): FlintVmExecutionResult;
 ```
 
-没有提供描述。
+在虚拟机中执行引导模块。
 
 #### 参数
 
-| 名称   | 类型                                  | 描述                 |
-| ------ | ------------------------------------- | -------------------- |
-| 模块   | FlintVmModule                         |                      |
-| 函数名 | 字符串                                |                      |
-| 论据_  | 只读 FlintVmValue[]                   |                      |
-| 模式   | FlintVmExecutionMode                  | FlintVmExecutionMode |
-| 选项   | 省略<FlintVmExecutionOptions, 'mode'> |                      |
+|名称 |类型 |描述 |
+| ------------ | ------------------------------------- | ---------------------- |
+|模块| FlintVmModule | - 引导虚拟机模块。 |
+|函数名 |字符串| - 输入函数名称。 |
+|论据_ |只读 FlintVmValue[] | - 参数数组。     |
+|模式| FlintVm执行模式 | - 执行模式。      |
+|选项 |省略<FlintVmExecutionOptions, 'mode'> | - 执行选项。   |
 
-### validateFlintVmModule
+#### 合同
+
+- **@param:** - 引导 VM 模块。
+- **@param:** - 输入函数名称。
+- **@param:** - 参数数组。
+- **@param:** - 执行模式。
+- **@param:** - 执行选项。
+- **@returns:** 执行结果。
+
+### 验证FlintVm模块
 
 **种类：**功能
 
@@ -2801,13 +7765,17 @@ function runFlintVmBootstrap(
 function validateFlintVmModule(module: FlintVmModule): void;
 ```
 
-没有提供描述。
+根据字节码规则验证 Flint VM 模块结构。
 
 #### 参数
 
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 模块 | FlintVmModule |      |
+|名称 |类型 |描述 |
+| ------ | ------------- | ------------------------ |
+|模块| FlintVmModule | - 要验证的VM模块。 |
+
+#### 合同
+
+- **@param:** - 要验证的 VM 模块。
 
 ## `src/vm-wasm`
 
@@ -2819,16 +7787,16 @@ function validateFlintVmModule(module: FlintVmModule): void;
 function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOptions = {}): FlintVmWasmArtifact;
 ```
 
-没有提供描述。
+将 Flint VM 模块编译为经过验证的 WebAssembly 字节码工件。
 
 #### 参数
 
-| 名称 | 类型                      | 描述                      |
-| ---- | ------------------------- | ------------------------- |
-| 模块 | FlintVmModule             |                           |
-| 选项 | FlintVmWasmCompileOptions | FlintVmWasmCompileOptions |     |
+|名称 |类型 |描述 |
+| ------- | ------------------------- | ----------- |
+|模块| FlintVmModule |             |
+|选项 | FlintVmWasm 编译选项 |             |
 
-### FlintVmWasmCompileOptions
+### FlintVmWasm编译选项
 
 **种类：**接口
 
@@ -2836,7 +7804,7 @@ function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOp
 export interface FlintVmWasmCompileOptions
 ```
 
-没有提供描述。
+配置将 Flint VM 模块编译到 WebAssembly 的选项。
 
 ### 准备FlintVm
 
@@ -2859,33 +7827,43 @@ function prepareFlintVmWasm(
 ): FlintVmPreparedExecutor;
 ```
 
-没有提供描述。
+从模块或工件准备 WebAssembly 执行器以进行快速调用。
 
 #### 参数
 
-| 名称       | 类型                                 | 描述                           |
-| ---------- | ------------------------------------ | ------------------------------ |
-| 模块或工件 | FlintVmModule \| FlintVmWasmArtifact |                                |
-| 选项       | FlintVmPreparedExecutorOptions       | FlintVmPreparedExecutorOptions |     |
+|名称 |类型 |描述 |
+| ---------------- | ------------------------------------ | ----------- |
+|模块或工件 | FlintVmModule \|弗林特VmWasmArtifact |             |
+|选项 | FlintVmPreparedExecutorOptions | FlintVmPreparedExecutorOptions |             |
 
 ## `src/vm`
 
-### FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+### FLINT_VM_DEFAULT_MAX_MEMORY_PAGES
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
+export const FLINT_VM_DEFAULT_MAX_MEMORY_PAGES;
 ```
 
 没有提供描述。
 
-### FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+### FLINT_VM_WASM_ABI_VERSION
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
+export const FLINT_VM_WASM_ABI_VERSION;
+```
+
+没有提供描述。
+
+### FLINT_VM_WASM_LOWERING_VERSION
+
+**种类：**常数
+
+```typescript
+export const FLINT_VM_WASM_LOWERING_VERSION;
 ```
 
 没有提供描述。
@@ -2898,9 +7876,9 @@ export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
 export interface FlintVmAotArtifact
 ```
 
-没有提供描述。
+从 VM 模块发出的提前编译的 JavaScript 工件。
 
-### FlintVmCapabilityImport
+### FlintVm能力导入
 
 **种类：**接口
 
@@ -2908,7 +7886,7 @@ export interface FlintVmAotArtifact
 export interface FlintVmCapabilityImport
 ```
 
-没有提供描述。
+VM 模块请求的主机能力导入描述符。
 
 ### FlintVmDebugSpan
 
@@ -2918,7 +7896,7 @@ export interface FlintVmCapabilityImport
 export interface FlintVmDebugSpan
 ```
 
-没有提供描述。
+调试源范围将字节码指令偏移量映射到源代码坐标。
 
 ### FlintVm执行模式
 
@@ -2928,9 +7906,9 @@ export interface FlintVmDebugSpan
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-没有提供描述。
+支持的 VM 字节码执行模式（'interpret'、'jit'、'aot'）。
 
-### FlintVmExecutionOptions
+### FlintVm执行选项
 
 **种类：**接口
 
@@ -2938,9 +7916,9 @@ export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 export interface FlintVmExecutionOptions
 ```
 
-没有提供描述。
+配置虚拟机执行限制、内存缓冲区和遥测的选项。
 
-### FlintVmExecutionResult
+### FlintVm执行结果
 
 **种类：**接口
 
@@ -2948,9 +7926,9 @@ export interface FlintVmExecutionOptions
 export interface FlintVmExecutionResult
 ```
 
-没有提供描述。
+VM 执行运行返回的结果，包括值和步骤指标。
 
-### FlintVmExecutor
+### FlintVm执行器
 
 **种类：**接口
 
@@ -2958,7 +7936,7 @@ export interface FlintVmExecutionResult
 export interface FlintVmExecutor
 ```
 
-没有提供描述。
+用于运行已编译的 Flint VM 模块的主要执行接口。
 
 ### FlintVm函数
 
@@ -2968,7 +7946,7 @@ export interface FlintVmExecutor
 export interface FlintVmFunction
 ```
 
-没有提供描述。
+编译后的 VM 函数定义包含指令、寄存器和元数据。
 
 ### FlintVm指令
 
@@ -2978,7 +7956,7 @@ export interface FlintVmFunction
 export type FlintVmInstruction = |
 ```
 
-没有提供描述。
+Flint 虚拟机支持的字节码指令操作。
 
 ### FlintVmJitCache
 
@@ -2988,7 +7966,7 @@ export type FlintVmInstruction = |
 export interface FlintVmJitCache
 ```
 
-没有提供描述。
+第 1 层 JIT 编译函数和热函数调用计数的缓存。
 
 ### FlintVmJitEntry
 
@@ -2998,7 +7976,7 @@ export interface FlintVmJitCache
 export interface FlintVmJitEntry
 ```
 
-没有提供描述。
+JIT 编译缓存条目存储已编译的函数和调用计数。
 
 ### FlintVm模块
 
@@ -3008,7 +7986,7 @@ export interface FlintVmJitEntry
 export interface FlintVmModule
 ```
 
-没有提供描述。
+VM 和 AOT 执行器使用的可执行字节码模块容器。
 
 ### FlintVmPreparedExecutor
 
@@ -3018,7 +7996,7 @@ export interface FlintVmModule
 export interface FlintVmPreparedExecutor
 ```
 
-没有提供描述。
+绑定到特定模块的可重用、预先分配的执行器实例。
 
 ### FlintVmPreparedExecutorOptions
 
@@ -3028,9 +8006,9 @@ export interface FlintVmPreparedExecutor
 export interface FlintVmPreparedExecutorOptions
 ```
 
-没有提供描述。
+配置准备好的、可重用的 VM 执行实例的选项。
 
-### FlintVmValue
+### 弗林特Vm值
 
 **种类：**类型
 
@@ -3038,9 +8016,9 @@ export interface FlintVmPreparedExecutorOptions
 export type FlintVmValue = |
 ```
 
-没有提供描述。
+标记联合表示由字节码 VM 操作的运行时值。
 
-### FlintVmWasmArtifact
+### 弗林特VmWasmArtifact
 
 **种类：**接口
 
@@ -3048,4 +8026,4 @@ export type FlintVmValue = |
 export interface FlintVmWasmArtifact
 ```
 
-没有提供描述。
+从 VM 模块发出的 WebAssembly 二进制文件和导入元数据工件。

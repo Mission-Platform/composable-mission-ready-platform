@@ -7,7 +7,7 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 Hulpprogramma's (utils) zijn pure, raamwerk-agnostische hulpfuncties. Ze moeten vrij zijn van import van UI-frameworks en, tenzij
 expliciet vereist en gedocumenteerd, vrij van DOM API's. Dit zorgt ervoor dat ze in elke context kunnen worden gebruikt, inclusief
-server-side logica en werkers.
+logica en werkers aan de serverzijde.
 
 ## Directory-indeling
 
@@ -28,9 +28,9 @@ src/utils/
 1. **Zuiverheid**: geef de voorkeur aan pure functies die geen bijwerkingen hebben. Gegeven dezelfde invoer moeten ze altijd de
    dezelfde uitgang.
 2. **Geen UI-hooks**: importeer nooit `vue`-, `react`- of `@mission-platform/forge-jsx`-hooks in een util. Logica vereist
-   reactiviteit hoort erbij [Composables](composable-authoring.md).
+   reactiviteit hoort thuis in [Composables](composable-authoring.md).
 3. **Expliciet typen**: geef volledige TypeScript-typen op voor alle argumenten en retourneerwaarden.
-4. **Verplicht testen**: elk hulpprogramma moet een medegelocaliseerd `.spec.ts`-bestand hebben.
+4. **Verplicht testen**: elk hulpprogramma moet een medegelokaliseerd `.spec.ts`-bestand hebben.
 5. **Eén verantwoordelijkheid**: elke util-map moet zich richten op een specifieke, beperkte taak.
 
 ## Basisvoorbeeld
@@ -46,9 +46,10 @@ export function clamp(value: number, min: number, max: number): number {
 
 ## Steiger
 
-Gebruik de Mission Platform Developer MCP-tool om een ​​nieuw hulpprogramma-skelet te genereren:
+Gebruik de `scaffold_util`-tool via een aangesloten Mission Platform Developer MCP-server om een nieuw hulpprogramma te genereren
+skelet. Dit is een voorbeeld van een MCP-toolaanroep, geen shell-opdracht:
 
-```bash
+```text
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```
@@ -57,5 +58,5 @@ scaffold_util(name="string-utils", package="i18n", apply=true)
 
 - [Pakketontwikkeling](package-development.md)
 - [Ontwerp van atomaire componenten](atomic-component-design.md)
-- [Composeerbaar schrijven](composable-authoring.md)
+- [Composable Authoring](composable-authoring.md)
 - [Winkelontwerp](store-authoring.md)

@@ -1,6 +1,6 @@
-import { ForgeTestimonialsSection } from './forge-testimonials-section';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeTestimonialsSection } from './forge-testimonials-section';
 
 const meta = {
   title: 'Organisms/Marketing/ForgeTestimonialsSection',

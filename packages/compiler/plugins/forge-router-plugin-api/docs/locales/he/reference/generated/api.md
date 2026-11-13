@@ -27,9 +27,9 @@ function createRouterDiagnostic(
 
 #### פרמטרים
 
-| שם    | הקלד                                                                              | תיאור |
-| ----- | --------------------------------------------------------------------------------- | ----- |
-| אבחון | השמט<CompilerDiagnostic, "phase" \| "fileName"> & { readonly fileName?: string; } |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------------------------------------------------------------- | ----------- |
+| אבחון | השמט<CompilerDiagnostic, "phase" \| "fileName"> & { readonly fileName?: string; } |             |
 
 ### defineForgeRouterPlugin
 
@@ -43,9 +43,9 @@ function defineForgeRouterPlugin(plugin: T): T;
 
 #### פרמטרים
 
-| שם   | הקלד | תיאור |
-| ---- | ---- | ----- |
-| תוסף | ט    |       |
+| שם | הקלד | תיאור |
+| ------ | ---- | ----------- |
+| תוסף | T |             |
 
 ### defineForgeRouterTarget
 
@@ -67,9 +67,9 @@ function defineForgeRouterTarget(
 
 #### פרמטרים
 
-| שם       | הקלד                     | תיאור |
-| -------- | ------------------------ | ----- |
-| אפשרויות | ForgeRouterTargetOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------------ | ----------- |
+| אפשרויות | ForgeRouterTargetOptions |             |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
@@ -79,9 +79,9 @@ function defineForgeRouterTarget(
 export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
-ייצוא זמן ריצה ניטרלי המשמר את חוזה מחבר החבילה.
+יצוא זמן ריצה ניטרלי המשמר את חוזה מחבר החבילה.
 
-יעדים שאינם יכולים לשנות את שמות הווים המקוריים 1:1 (לדוגמה של React
+יעדים שאינם יכולים לשנות שמות מקוריים 1:1 (לדוגמה של React
 `useNavigate` לעומת `useMpRouter().navigate` ניטרלי) חייבת לחשוף את השמות האלה
 ממודול זמן ריצה יעד ונקודה {@link ForgeRouterTargetOptions.runtimeModule}
 במודול הזה.
@@ -133,8 +133,6 @@ export interface GeneratedRouterModule
 ```typescript
 export const MP_ROUTER_COMPILER_MARKER;
 ```
-
-סמן יציב משותף עם חבילת הנתב הנייטרלית.
 
 ### MP_ROUTER_MODULE
 
@@ -245,7 +243,7 @@ export type RouterPluginSelection = RouterOutputPlugin | string;
 export interface RouterTargetContext
 ```
 
-הקשר האפליקציה/מסגרת שנבחר באופן עצמאי מיעד הנתב.
+הקשר האפליקציה/מסגרת נבחר באופן עצמאי מיעד הנתב.
 
 ### RouterTargetExtension Contract
 
@@ -282,10 +280,10 @@ function selectForgeRouterPlugin(
 
 #### פרמטרים
 
-| שם     | הקלד                              | תיאור |
-| ------ | --------------------------------- | ----- |
-| בחירה  | RouterPluginSelection \| לא מוגדר |       |
-| תוספים | Readonly RouterOutputPlugin[]     |       |
+| שם | הקלד | תיאור |
+| --------- | ---------------------------------- | ----------- |
+| בחירה | RouterPluginSelection \| לא מוגדר |             |
+| תוספים | Readonly RouterOutputPlugin[] |             |
 
 ### יכולות נתב לא נתמכות
 
@@ -302,7 +300,7 @@ function unsupportedRouterCapabilities(
 
 #### פרמטרים
 
-| שם   | הקלד                           | תיאור |
-| ---- | ------------------------------ | ----- |
-| ir   | RouterCapabilityModule         |       |
-| תוסף | RouterOutputPlugin \| לא מוגדר |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------------------- | ----------- |
+| ir | RouterCapabilityModule |             |
+| תוסף | RouterOutputPlugin \| לא מוגדר |             |

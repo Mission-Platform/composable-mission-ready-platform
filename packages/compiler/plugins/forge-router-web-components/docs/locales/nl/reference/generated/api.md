@@ -33,6 +33,16 @@ Routeruitgang waarop de neutrale DOM-weergave van een route is gemonteerd. Aanvr
 `viewAdapter` naar de router wanneer weergaven een aangepaste levenscyclus nodig hebben; anders een
 Node, string of DOM-fabriek in `route.component` wordt rechtstreeks weergegeven.
 
+### MpRouterViewElement
+
+**Soort:** component
+
+```typescript
+export class MpRouterViewElement extends MpRouterOutletElement
+```
+
+Geen beschrijving opgegeven.
+
 ### registreerRouterElements
 
 **Soort:** functie
@@ -45,9 +55,9 @@ Registreer de routerprimitieven één keer; veilig om te bellen vanwege hydratat
 
 #### Parameters
 
-| Naam   | Typ                              | Beschrijving |
-| ------ | -------------------------------- | ------------ |
-| opties | RegistrerenRouterElementsOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------------- | ----------- |
+| opties | RegistrerenRouterElementsOptions |             |
 
 ## `src/runtime/history`
 
@@ -63,9 +73,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam   | Typ     | Beschrijving |
-| ------ | ------- | ------------ |
-| winnen | Venster |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| winnen | Venster |             |
 
 ### maak GeheugenGeschiedenis
 
@@ -79,9 +89,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam        | Typ | Beschrijving |
-| ----------- | --- | ------------ |
-| initiëleUrl |     |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---- | ----------- |
+| initiëleUrl |      |             |
 
 ### maak WebGeschiedenis
 
@@ -189,9 +199,9 @@ Los een neutraal doel op via de gebonden Web Components-router.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| naar | MpRouteLocationRaw |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
 
 ### setForgeRouter
 
@@ -205,9 +215,9 @@ Bind de router van de app voor gecompileerde raamwerkvrije pakketmogelijkheden.
 
 #### Parameters
 
-| Naam   | Typ                         | Beschrijving |
-| ------ | --------------------------- | ------------ |
-| router | MpWebComponentsRouter<View> |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------------------- | ----------- |
+| router | MpWebComponentsRouter<View> |             |
 
 ### gebruikForgeNavigatie
 
@@ -297,9 +307,19 @@ geschiedenis, bewakers, omleidingen, abonnementen en browserscrollgedrag.
 
 #### Parameters
 
-| Naam   | Typ                                | Beschrijving |
-| ------ | ---------------------------------- | ------------ |
-| opties | MpWebComponentenRouteropties<View> |              |
+| Naam | Typ | Beschrijving |
+| ------- | ---------------------------------- | ----------- |
+| opties | MpWebComponentenRouteropties<View> |             |
+
+### getActiveRouter
+
+**Soort:** functie
+
+```typescript
+function getActiveRouter(): MpWebComponentsRouter<unknown> | undefined;
+```
+
+Geen beschrijving opgegeven.
 
 ### MpRouterLadenFallback
 
@@ -343,10 +363,26 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam   | Typ                | Beschrijving |
-| ------ | ------------------ | ------------ |
-| router | MpRouterAdapter    |              |
-| naar   | MpRouteLocationRaw |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------ | ----------- |
+| router | MpRouterAdapter |             |
+| naar | MpRouteLocationRaw |             |
+
+### setActiveRouter
+
+**Soort:** functie
+
+```typescript
+function setActiveRouter(router: MpWebComponentsRouter<View> | undefined): void;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---------------------------------------- | ----------- |
+| router | MpWebComponentsRouter<View> \| ongedefinieerd |             |
 
 ## `src/utils/forge-router-web-components`
 

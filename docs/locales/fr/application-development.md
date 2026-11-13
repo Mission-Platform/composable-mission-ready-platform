@@ -11,40 +11,40 @@ copié dans une application.
 
 ## Choisissez une application
 
-| Demande                             | Développement local                                   | Construire                                              | Déploiement                                                      |
+| Demande | Développement local | Construire | Déploiement |
 | :---------------------------------- | :---------------------------------------------------- | :------------------------------------------------------ | :--------------------------------------------------------------- |
-| `@mission-platform/docs`            | `pnpm --filter @mission-platform/docs dev`            | `pnpm --filter @mission-platform/docs build`            | Prévisualiser ou déployer via son hébergeur                      |
-| `@mission-platform/website`         | `pnpm --filter @mission-platform/website dev`         | `pnpm --filter @mission-platform/website build`         | `pnpm --filter @mission-platform/website deploy:staging`         |
-| `@mission-platform/my-care-notes`   | `pnpm --filter @mission-platform/my-care-notes dev`   | `pnpm --filter @mission-platform/my-care-notes build`   | `pnpm --filter @mission-platform/my-care-notes deploy:staging`   |
+| `@mission-platform/docs` | `pnpm --filter @mission-platform/docs dev` | `pnpm --filter @mission-platform/docs build` | Prévisualiser ou déployer via son hébergeur |
+| `@mission-platform/website` | `pnpm --filter @mission-platform/website dev` | `pnpm --filter @mission-platform/website build` | `pnpm --filter @mission-platform/website deploy:staging` |
+| `@mission-platform/my-care-notes` | `pnpm --filter @mission-platform/my-care-notes dev` | `pnpm --filter @mission-platform/my-care-notes build` | `pnpm --filter @mission-platform/my-care-notes deploy:staging` |
 | `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging` |
-| `@mission-platform/storybook`       | `pnpm --filter @mission-platform/storybook dev`       | `pnpm --filter @mission-platform/storybook build`       | Utiliser le flux de travail Storybook/Chromatic configuré        |
+| `@mission-platform/storybook` | `pnpm --filter @mission-platform/storybook dev` | `pnpm --filter @mission-platform/storybook build` | Utiliser le flux de travail Storybook/Chromatic configuré |
 
-Le dossier de candidature possède son Vite ou Wrangler configuration. Ne cours pas `wrangler deploy` d'un travailleur réutilisable
-package sauf si ce package a son propre `wrangler.jsonc`.
+Le package d'application possède sa configuration Vite ou Wrangler. Ne pas exécuter `wrangler deploy` à partir d'un travailleur réutilisable
+package sauf si ce package possède son propre `wrangler.jsonc`.
 
 ## Développer un changement
 
-1. Démarrez l'application cible avec son package `dev` scénario.
-2. Apportez des modifications réutilisables dans `packages/` et les changements de composition spécifiques à l'application dans `apps/<name>/`.
+1. Démarrez l'application cible avec son script package `dev`.
+2. Apportez des modifications réutilisables dans `packages/` et des modifications de composition spécifiques à l'application dans `apps/<name>/`.
 3. Créez l'application modifiée et ses dépendances :
 
-```bash
+   ```bash
    pnpm exec turbo run build --filter @mission-platform/<app>...
-```
+   ```
 
 4. Exécutez des tests, du lint, des vérifications de style et du formatage pour l'espace de travail concerné :
 
-```bash
+   ```bash
    pnpm exec turbo run test lint lint:style format --filter @mission-platform/<app>
-```
+   ```
 
-Pour un changement de package partagé, remplacez `<app>` avec le nom du package et son utilisation `...` lorsque vous avez besoin d'espaces de travail dépendants
+Pour une modification de package partagé, remplacez `<app>` par le nom du package et utilisez `...` lorsque vous avez besoin d'espaces de travail dépendants
 inclus dans le graphique de construction.
 
 ## Documentation statique et création de sites Web
 
-Les documents et les applications de sites Web utilisent `vite-ssg`. Une version de production génère des routes statiques à partir du contenu source et
-catalogues locaux. Vérifiez la sortie générée avec le package `preview` scénario:
+Les documents et les applications Web utilisent `vite-ssg`. Une version de production génère des routes statiques à partir du contenu source et
+catalogues locaux. Vérifiez la sortie générée avec le script `preview` du package :
 
 ```bash
 pnpm --filter @mission-platform/docs build
@@ -54,12 +54,12 @@ pnpm --filter @mission-platform/website build
 pnpm --filter @mission-platform/website preview
 ```
 
-Conserver la documentation Markdown sous `docs/` et les messages du site Web dans le catalogue local propriétaire. N'ajoutez pas une seconde
+Conservez la documentation Markdown sous `docs/` et les messages du site Web dans le catalogue local propriétaire. N'ajoutez pas une seconde
 copie au moment du rendu de l'une ou l'autre source.
 
 ## Développement et déploiement Cloudflare
 
-Les candidatures avec un `wrangler.jsonc` exposez les commandes sensibles à l'environnement :
+Les applications avec un `wrangler.jsonc` exposent des commandes adaptées à l'environnement :
 
 ```bash
 pnpm --filter @mission-platform/website cf:dev
@@ -71,13 +71,13 @@ pnpm --filter @mission-platform/my-care-notes deploy:staging
 pnpm --filter @mission-platform/service-monitor deploy:staging
 ```
 
-Utiliser `wrangler secret put` pour les secrets. Conserver les liaisons et les valeurs par défaut non secrètes dans `wrangler.jsonc`, et vérifiez le
+Utilisez `wrangler secret put` pour les secrets. Conservez les liaisons et les valeurs par défaut non secrètes dans `wrangler.jsonc` et vérifiez les
 l'environnement sélectionné avant le déploiement.
 
 ## Guides associés
 
 - [Configuration du développement](development-setup.md)
 - [Structure de l'espace de travail](workspace-structure.md)
-- [Construire un système](build-system.md)
+- [Construire le système](build-system.md)
 - [Configuration du travailleur](configs/workers-config.md)
-- [Essai](testing.md)
+- [Test](testing.md)

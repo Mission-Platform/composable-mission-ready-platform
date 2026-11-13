@@ -22,11 +22,11 @@ pnpm --filter @mission-platform/email-sender dev -- --port 8787
 ```
 
 デフォルトの SMTP エンドポイントは `127.0.0.1:1025` で、MailPit UI は次のとおりです。
-`http://localhost:8025`。別の変数を使用する場合は、ローカルの Wrangler 変数をオーバーライドします
+`http://localhost:8025`。別の変数を使用する場合は、ローカルの Wrangler 変数をオーバーライドします。
 ホスト。
 
 このワーカーはローカル ショーケースであり、運用メール サービスではありません。決してしない
-追跡対象の Wrangler 構成に資格情報またはシークレットを入れます。
+追跡対象の Wrangler 構成に認証情報またはシークレットを追加します。
 
 - [開発ガイド](guides/development.md)
 - [`README.md`](../../../README.md)

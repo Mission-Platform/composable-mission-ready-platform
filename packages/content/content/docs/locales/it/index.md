@@ -2,9 +2,9 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> packages/content/docs/index.md: [packages/content/docs/index.md](../../index.md)
+> packages/content/content/docs/index.md: [packages/content/content/docs/index.md](../../index.md)
 > Lingua: Italiano (it)
 
-Forge Monaco, Markdown, e AST-first WYSIWYG content components
+Forgia Monaco, Markdown e i primi componenti di contenuto WYSIWYG AST
 
-See `llms.txt` per il public API e usage examples.
+Vedere `llms.txt` per l'API pubblica e gli esempi di utilizzo.

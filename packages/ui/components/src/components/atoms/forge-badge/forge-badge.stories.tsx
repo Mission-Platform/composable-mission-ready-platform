@@ -1,7 +1,7 @@
 import { ForgeBadge } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { BadgeProperties } from './forge-badge';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * `ForgeBadge` is the write-once badge component of `@mission-platform/components`.

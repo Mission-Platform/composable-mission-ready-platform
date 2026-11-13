@@ -24,13 +24,13 @@ function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 أو Vue بواسطة `@mission-platform/vite-plugin-forge`.
 
 يتم تشفير الحمولة (`value`) بالكامل على العميل بواسطة ملف
-برنامج التشفير {@link encodeMatrix} من `@mission-platform/matrix-code` — أ
+برنامج التشفير {@link encodeMatrix} من `@mission-platform/matrix-code` - أ
 برنامج تشفير خالي من التبعية مكتوب بلغة Rust ويتم تجميعه إلى WebAssembly (تلقائي
 تغيير حجم الرمز وتصحيح خطأ ريد-سولومون) - وتم رسمه بشكل واضح،
 SVG مستقلة عن الدقة. يتم إصدار `<path>` واحد لجميع الوحدات المظلمة،
 لذلك تظل العلامات مضغوطة حتى بالنسبة للرموز الكبيرة. لمسح موثوق به
 الألوان الداكنة / الفاتحة هي solid باللون الأسود على الأبيض بدلاً من الرموز المميزة،
-لكن كلاهما قابل للتجاوز عبر `color` / `background`.
+لكن كلاهما يمكن تجاوزهما عبر `color` / `background`.
 
 يمكن رسم وحدات البيانات كمربعات أو مربعات مستديرة أو نقاط
 (`moduleShape`); يقبل التعبئة الداكنة `gradient` الخطي أو الشعاعي ذو التوقفتين؛
@@ -50,9 +50,9 @@ SVG مستقلة عن الدقة. يتم إصدار `<path>` واحد لجميع
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<MatrixCodeProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<MatrixCodeProperties> |             |
 
 ### MatrixCodeActions
 
@@ -103,72 +103,3 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 ```
 
 الشكل المستخدم لرسم كل وحدة من الكود.
-
-## `src/encoder/index`
-
-### com.encodeMatrix
-
-**النوع:** الوظيفة
-
-```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
-```
-
-قم بتشفير `data` في باركود مصفوفة ثنائية الأبعاد لـ `symbology` المحدد، مع تحميل
-صياغة قطعة أثرية التشفير بشكل متزامن عند الاستخدام الأول.
-
-#### حدود
-
-| الاسم    | اكتب              | الوصف |
-| -------- | ----------------- | ----- |
-| الرموز   | ماتريكس سيمبولوجي |       |
-| البيانات | سلسلة             |       |
-
-#### عقد
-
-- **@throws:** إذا كانت الحمولة غير صالحة للرموز (فارغة، أو
-  كبير جدًا بالنسبة للرموز المدعومة).
-
-### encodeMatrixAsync
-
-**النوع:** الوظيفة
-
-```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
-```
-
-قم بتشفير `data` في باركود مصفوفة ثنائية الأبعاد لـ `symbology` المحدد، مع تحميل
-صياغة قطعة أثرية التشفير بشكل غير متزامن عند الاستخدام الأول.
-
-#### حدود
-
-| الاسم    | اكتب              | الوصف |
-| -------- | ----------------- | ----- |
-| الرموز   | ماتريكس سيمبولوجي |       |
-| البيانات | سلسلة             |       |
-
-#### عقد
-
-- **@throws:** إذا كانت الحمولة غير صالحة للترميز.
-
-### MatrixCode
-
-**النوع:** الواجهة
-
-```typescript
-export interface MatrixCode
-```
-
-باركود مصفوفي معبأ: الأبعاد بالإضافة إلى قائمة صف رئيسية من وحدات البت
-(`0` = فاتح، `1` = داكن).
-
-### MatrixSymbology
-
-**النوع:** النوع
-
-```typescript
-export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
-```
-
-رموز المصفوفة ثنائية الأبعاد التي يدعمها هذا التشفير. مرت كحجة أولى
-إلى {@link encodeMatrix} / {@link encodeMatrixAsync}.

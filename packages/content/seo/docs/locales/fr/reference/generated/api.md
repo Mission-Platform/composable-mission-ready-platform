@@ -96,7 +96,23 @@ Schema.org `ImageObject`.
 **Genre :** constante
 
 ```typescript
-export const jsonLd;
+export const jsonLd: {
+  readonly webSite: typeof webSite;
+  readonly organization: typeof organization;
+  readonly localBusiness: typeof localBusiness;
+  readonly person: typeof person;
+  readonly webPage: typeof webPage;
+  readonly breadcrumbList: typeof breadcrumbList;
+  readonly article: typeof article;
+  readonly product: typeof product;
+  readonly faqPage: typeof faqPage;
+  readonly event: typeof event;
+  readonly videoObject: typeof videoObject;
+  readonly imageObject: typeof imageObject;
+  readonly softwareApplication: typeof softwareApplication;
+  readonly recipe: typeof recipe;
+  readonly review: typeof review;
+};
 ```
 
 Réexportation de l'espace de noms afin que les consommateurs puissent effectuer `import { jsonLd } depuis
@@ -524,7 +540,7 @@ Accepte une référence, un getter ou un simple objet {@link SeoMetadata} afin q
 **Genre :** composant
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 Composant `<Seo>` sans rendu : un wrapper déclaratif autour de {@link useSeo}.
@@ -546,7 +562,7 @@ synchronisez-les dans l’en-tête du document. Ne restitue aucun DOM propre.
 **Genre :** composant
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 Composant `<Seo>` sans rendu : un wrapper déclaratif autour de {@link useSeo}.

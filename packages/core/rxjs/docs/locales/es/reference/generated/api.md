@@ -16,17 +16,17 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/rxjs
 **Tipo:** función
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined;
+function useObservable(source: Observable<T>, initialValue?: T): T | undefined;
 ```
 
-Suscríbase a `source` y devuelva su última emisión como estado. Devoluciones
-`undefined` hasta que llegue la primera emisión.
+No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo          | Descripción |
-| ------ | ------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------------ | ------------- | ----------- |
 | fuente | Observable<T> |             |
+| valor inicial | T |             |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -38,7 +38,7 @@ Suscríbase a `source` y devuelva su última emisión como estado. Devoluciones
 export interface Unsubscribable
 ```
 
-Cualquier cosa a la que se pueda cancelar la suscripción coincide con `Unsubscribable` de RxJS.
+Cualquier cosa que pueda cancelarse: coincide con `Unsubscribable` de RxJS.
 
 ### utilizarSuscribirse
 
@@ -58,11 +58,11 @@ vida útil del componente, volviendo a suscribirse cuando `source` (o cualquier
 
 #### Parámetros
 
-| Nombre                | Tipo                                         | Descripción |
-| --------------------- | -------------------------------------------- | ----------- |
-| fuente                | Observable<T>                                |             |
+| Nombre | Tipo | Descripción |
+| -------------- | -------------------------------------------- | ----------- |
+| fuente | Observable<T> |             |
 | observadorOrSiguiente | Parcial<Observer<T>> \| ((valor: T) => nulo) |             |
-| dependencias          | MpDependencyList                             |             |
+| dependencias | MpDependencyList |             |
 
 ### utilizarSuscripción
 
@@ -78,7 +78,7 @@ puede envolver una llamada `source.subscribe(...)` simple o una canalización co
 
 #### Parámetros
 
-| Nombre       | Tipo                       | Descripción |
-| ------------ | -------------------------- | ----------- |
-| suscríbete   | () => Cancelar suscripción |             |
-| dependencias | MpDependencyList           |             |
+| Nombre | Tipo | Descripción |
+| ------------ | -------------------- | ----------- |
+| suscríbete | () => Cancelar suscripción |             |
+| dependencias | MpDependencyList |             |

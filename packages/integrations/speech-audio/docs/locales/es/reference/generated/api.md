@@ -21,7 +21,7 @@ export interface MidiControls
 
 Estado reactivo y controles devueltos por {@link useMidi}.
 
-### usarMidi
+### usoMidi
 
 **Tipo:** función
 
@@ -66,7 +66,7 @@ desmontar.
 
 #### Parámetros
 
-| Nombre | Tipo   | Descripción |
+| Nombre | Tipo | Descripción |
 | ------ | ------ | ----------- |
 | fuente | cadena |             |
 
@@ -90,7 +90,7 @@ Estado reactivo y controles devueltos por {@link useSpeechRecognition}.
 export interface SpeechRecognitionOptions
 ```
 
-Opciones aplicadas al iniciar una sesión de {@link useSpeechRecognition}.
+Opciones aplicadas al iniciar una sesión {@link useSpeechRecognition}.
 
 ### utilizarReconocimiento de voz
 
@@ -138,7 +138,7 @@ Estado reactivo y controles devueltos por {@link useSpeechSynthesis}.
 function useSpeechSynthesis(): SpeechSynthesisControls;
 ```
 
-Enlace de texto a voz neutral en el marco de trabajo integrado en el navegador nativo
+Enlace de texto a voz neutral en el marco de trabajo creado en el navegador nativo
 API de síntesis de voz.
 
 Seguro para SSR: `isSupported` es `false` y todos los controles no funcionan cuando la API

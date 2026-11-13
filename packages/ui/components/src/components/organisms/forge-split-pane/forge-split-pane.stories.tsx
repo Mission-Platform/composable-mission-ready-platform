@@ -1,6 +1,6 @@
-import { ForgeSplitPane } from './forge-split-pane';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeSplitPane } from './forge-split-pane';
 
 const meta = {
   title: 'Organisms/Layout/ForgeSplitPane',

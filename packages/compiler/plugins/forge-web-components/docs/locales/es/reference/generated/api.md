@@ -23,9 +23,9 @@ Imprima la subclase `ForgeElement` y su registro para un plan rebajado.
 
 #### Parámetros
 
-| Nombre | Tipo                       | Descripción |
-| ------ | -------------------------- | ----------- |
-| plano  | WebComponentsMódulo bajado |             |
+| Nombre | Tipo | Descripción |
+| ---- | -------------------------- | ----------- |
+| plano | WebComponentsMódulo bajado |             |
 
 ## `src/emitters/module`
 
@@ -46,12 +46,12 @@ Transforme todo el módulo en la fuente de destino nativa de Web-Components.
 
 #### Parámetros
 
-| Nombre                  | Tipo                       | Descripción |
-| ----------------------- | -------------------------- | ----------- |
-| módulo                  | Módulo Semántico           |             |
-| nombredelcomponente     | cadena                     |             |
-| carpetas de componentes | Sólo lecturaSet<string>    |             |
-| bajado                  | WebComponentsMódulo bajado |             |
+| Nombre | Tipo | Descripción |
+| ---------------- | -------------------------- | ----------- |
+| módulo | Módulo Semántico |             |
+| nombredelcomponente | cadena |             |
+| carpetas de componentes | Sólo lecturaSet<string> |             |
+| bajado | WebComponentsMódulo bajado |             |
 
 ## `src/index`
 
@@ -66,6 +66,74 @@ function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 Cree el complemento de salida de componentes web exclusivo de TypeScript.
 
 ## `src/lower`
+
+### módulo de componentes web inferior
+
+**Tipo:** función
+
+```typescript
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
+```
+
+Baje el IR neutral hacia las intenciones de destino de los componentes web.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| módulo | Módulo Semántico |             |
+| contexto | Contexto objetivo |             |
+
+### plan de componentes web inferior
+
+**Tipo:** función
+
+```typescript
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
+```
+
+Cree el plan objetivo de componentes web para un módulo neutral.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| módulo | Módulo Semántico |             |
+| contexto | Contexto objetivo |             |
+
+## `src/lower/host-plan`
+
+### inferWebComponentsHost
+
+**Tipo:** función
+
+```typescript
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+  component?: GenericComponent,
+): WebComponentsHostPlan;
+```
+
+Deduzca un host integrado personalizado solo a partir de una única raíz intrínseca estática.
+
+La lista de permitidos es intencionalmente conservadora: una etiqueta intrínseca es válida
+HTML no garantiza que sea un archivo integrado personalizado seguro o útil.
+base en todas las implementaciones DOM compatibles.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------ | ----------- |
+| nodo de retorno | GenericRenderNode \| indefinido |             |
+| componente | Componente genérico |             |
+
+## `src/lower/types`
 
 ### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
 
@@ -87,28 +155,6 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 
 Se conservan los valores predeterminados de compatibilidad para los componentes generados.
 
-### inferWebComponentsHost
-
-**Tipo:** función
-
-```typescript
-function inferWebComponentsHost(
-  returnNode: GenericRenderNode | undefined,
-): WebComponentsHostPlan;
-```
-
-Deduzca un host integrado personalizado solo a partir de una única raíz intrínseca estática.
-
-La lista de permitidos es intencionalmente conservadora: una etiqueta intrínseca es válida
-HTML no garantiza que sea un archivo integrado personalizado seguro o útil.
-base en todas las implementaciones DOM compatibles.
-
-#### Parámetros
-
-| Nombre          | Tipo                            | Descripción |
-| --------------- | ------------------------------- | ----------- |
-| nodo de retorno | GenericRenderNode \| indefinido |             |
-
 ### isWebComponentsBajado
 
 **Tipo:** función
@@ -123,49 +169,9 @@ Limite un plan de destino al plan de componentes web sin conversión.
 
 #### Parámetros
 
-| Nombre | Tipo                             | Descripción |
-| ------ | -------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------------------- | ----------- |
 | bajado | TargetLoweredModule\| indefinido |             |
-
-### módulo de componentes web inferior
-
-**Tipo:** función
-
-```typescript
-function lowerWebComponentsModule(
-  module: SemanticModule,
-  context: TargetContext,
-): TargetIntentions;
-```
-
-Baje el IR neutral hacia las intenciones de destino de los componentes web.
-
-#### Parámetros
-
-| Nombre   | Tipo              | Descripción |
-| -------- | ----------------- | ----------- |
-| módulo   | Módulo Semántico  |             |
-| contexto | Contexto objetivo |             |
-
-### plan de componentes web inferior
-
-**Tipo:** función
-
-```typescript
-function lowerWebComponentsPlan(
-  module: SemanticModule,
-  context: TargetContext,
-): WebComponentsLoweredModule;
-```
-
-Cree el plan objetivo de componentes web para un módulo neutral.
-
-#### Parámetros
-
-| Nombre   | Tipo              | Descripción |
-| -------- | ----------------- | ----------- |
-| módulo   | Módulo Semántico  |             |
-| contexto | Contexto objetivo |             |
 
 ### DESCONOCIDO_TYPE
 
@@ -192,7 +198,7 @@ El ID del marco del complemento y el discriminador de su plan reducido.
 **Tipo:** constante
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS;
+export const WEBCOMPONENTS_NATIVE_HOSTS: Readonly<Record<string, string>>;
 ```
 
 La tabla de compatibilidad para raíces que se pueden personalizar de forma segura.
@@ -227,7 +233,7 @@ sus propias declaraciones (que el captador debe ejecutar en lugar de devolver).
 export interface WebComponentsDerivedValue
 ```
 
-Un valor memorizado, reducido a un captador recalculado durante la lectura.
+Un valor memorizado, reducido a un captador respaldado por una caché de instancia opcional.
 
 ### WebComponentsElementRef
 
@@ -325,7 +331,7 @@ Una devolución de llamada del ciclo de vida generada y las declaraciones que ej
 export interface WebComponentsListKey
 ```
 
-Un candidato clave de representación de listas retenido para la salida de la lista del objetivo.
+Un candidato clave de representación de lista retenido para la salida de la lista del objetivo.
 
 ### WebComponentsMódulo bajado
 
@@ -348,12 +354,9 @@ export interface WebComponentsPromotedLocal
 Una constante de cabezal de renderizado **promovida** a un miembro de elemento.
 
 Se emiten un captador de notas, una devolución de llamada del ciclo de vida y un inicializador de campo.
-_fuera_ de `render()`, por lo que un local que el cabezal de renderizado declara no existe para
+_fuera_ `render()`, por lo que un local que el cabezal de renderizado declara no existe para
 ellos. Promocionar la declaración entre un miembro es lo que hace que dicha lectura
-resoluble, a través de `this.<name>`, en lugar de colgar.
-
-Sólo se promueve una declaración demostrablemente libre de efectos (ver
-{@enlace promocionadoHeadLocals}); todo lo demás permanece en `render()`.
+resoluble - a través de `this.<name>` - en lugar de colgar.
 
 ### Declaración de propiedad de componentes web
 
@@ -404,28 +407,6 @@ export interface WebComponentsSetupPhase
 ```
 
 La fase única de **configuración** del elemento.
-
-Una semilla como `useState(parseTime(modelValue))` lee una propiedad reactiva y
-una propiedad solo tiene un valor una vez que se han adoptado los atributos del host.
-lo que sucede al conectarse, mucho después de que se haya ejecutado el constructor. Peor aún, el
-El valor generalmente se alcanza a través de una constante de cabezal de renderizado (`const inicial =
-parseTime(modelValue);`) que no se pudo demostrar que esté libre de efectos y por lo tanto
-permanece en `render()`, por lo que una semilla de constructor haría referencia a un nombre que no
-no existe allí en absoluto.
-
-Dicha semilla se difiere a `ForgeElement.setup()`, que el tiempo de ejecución llama
-después de la adopción del atributo y antes del primer renderizado, exactamente una vez por elemento
-— una reconexión no debe volver a generar ni descartar lo que el usuario ha cambiado desde entonces.
-Las declaraciones principales que la semilla necesita se reproducen allí primero, en el orden principal y
-transitivamente cerrado, y **solo** esos.
-
-La reproducción en lugar del almacenamiento en caché es deliberada. En la fuente neutral la cabeza
-_es_ el cuerpo del componente, por lo que `const initial = parseTime(modelValue);` ya
-se ejecuta en cada renderizado; evaluarlo una vez más durante la configuración no realiza ninguna llamada
-el componente creado aún no se ejecuta en cada pasada. Almacenarlo en caché en un
-En su lugar, el campo _reduciría_ el número de evaluaciones y le daría al valor un
-identidad que la fuente nunca prometió. Sólo un `const` simple (o una función)
-La declaración se repite alguna vez; consulte {@link headReplay}.
 
 ### WebComponentsShadowPolicy
 
@@ -484,10 +465,10 @@ Optimizar las intenciones de destino de los componentes web; otros objetivos pas
 
 #### Parámetros
 
-| Nombre      | Tipo                                | Descripción |
-| ----------- | ----------------------------------- | ----------- |
-| intenciones | Intenciones objetivo                |             |
-| opciones    | Opciones de optimización de destino |             |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------- | ----------- |
+| intenciones | Intenciones objetivo |             |
+| opciones | Opciones de optimización de destino |             |
 
 ### optimizar el plan de componentes web
 
@@ -500,13 +481,13 @@ function optimizeWebComponentsPlan(
 ): WebComponentsLoweredModule;
 ```
 
-Refine un plan de componentes web reducido y registre cada paso que se ejecutó.
+Perfeccione un plan de componentes web reducido y registre cada paso que se ejecutó.
 
 #### Parámetros
 
-| Nombre   | Tipo                                | Descripción |
-| -------- | ----------------------------------- | ----------- |
-| plano    | WebComponentsMódulo bajado          |             |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------------- | ----------- |
+| plano | WebComponentsMódulo bajado |             |
 | opciones | Opciones de optimización de destino |             |
 
 ### OPTIMIZACIONES_COMPONENTES_WEB
@@ -544,8 +525,8 @@ Transforme un módulo de enlace neutral en su fuente de componentes web.
 
 #### Parámetros
 
-| Nombre | Tipo             | Descripción |
-| ------ | ---------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | -------------- | ----------- |
 | módulo | Módulo Semántico |             |
 
 ## `src/transformers/expression`
@@ -577,9 +558,9 @@ es: el cuerpo todavía funciona exactamente cuando se le llama.
 
 #### Parámetros
 
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| texto  | cadena |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| texto | cadena |             |
 
 ### esPureExpressionText
 
@@ -592,16 +573,16 @@ function isPureExpressionText(text: string): boolean;
 Si una expresión está **probablemente** libre de efectos: sin llamada, sin `new`, sin
 `await`, sin asignación ni incremento, en cualquier profundidad.
 
-Se utiliza para decidir si una constante de cabezal de procesamiento se puede promover a captador.
+Se utiliza para decidir si una constante de cabezal de procesamiento puede promocionarse a captador.
 La prueba es deliberadamente sintáctica y pesimista: una llamada a un ayudante puro.
 es indistinguible de una llamada a un mutador, por lo que cualquier llamada descalifica al
 declaración y permanece en `render()`.
 
 #### Parámetros
 
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| texto  | cadena |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| texto | cadena |             |
 
 ## `src/transformers/props-binding`
 
@@ -620,9 +601,9 @@ por lo que el patrón debe recortarse antes de que pueda descomponerse.
 
 #### Parámetros
 
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| texto  | cadena |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| texto | cadena |             |
 
 ### parsePropsBinding
 
@@ -640,7 +621,7 @@ su comportamiento anterior en lugar de actuar sobre una lectura parcial.
 
 #### Parámetros
 
-| Nombre      | Tipo   | Descripción |
+| Nombre | Tipo | Descripción |
 | ----------- | ------ | ----------- |
 | patrónTexto | cadena |             |
 
@@ -684,10 +665,10 @@ por lo que su valor predeterminado es byte idéntico al del autor.
 
 #### Parámetros
 
-| Nombre         | Tipo                         | Descripción |
-| -------------- | ---------------------------- | ----------- |
-| encuadernación | AccesoriosEncuadernación     |             |
-| está leído     | (nombre: cadena) => booleano |             |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------------- | ----------- |
+| encuadernación | AccesoriosEncuadernación |             |
+| está leído | (nombre: cadena) => booleano |             |
 
 ## `src/transformers/props-type`
 
@@ -713,10 +694,10 @@ cada lectura de un accesorio requerido posiblemente-`undefined`.
 
 #### Parámetros
 
-| Nombre     | Tipo                             | Descripción |
-| ---------- | -------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| --------- | ------------------ | ----------- |
 | referencia | Referencia de tipo de accesorios |             |
-| miembro    | cadena                           |             |
+| miembro | cadena |             |
 
 ### AccesoriosTipoReferencia
 
@@ -747,9 +728,9 @@ en cualquier caso, la referencia no se resolvería en el módulo generado.
 
 #### Parámetros
 
-| Nombre        | Tipo                                   | Descripción |
-| ------------- | -------------------------------------- | ----------- |
-| anotación     | cadena \| indefinido                   |             |
+| Nombre | Tipo | Descripción |
+| ------------ | --------------------------- | ----------- |
+| anotación | cadena \| indefinido |             |
 | declaraciones | Declaración genérica de sólo lectura[] |             |
 
 ### tipoMiembros
@@ -771,8 +752,8 @@ dirección segura.
 
 #### Parámetros
 
-| Nombre           | Tipo   | Descripción |
-| ---------------- | ------ | ----------- |
+| Nombre | Tipo | Descripción |
+| --------------- | ------ | ----------- |
 | declaraciónTexto | cadena |             |
 
 ### desenvolverPropsTypeName
@@ -788,6 +769,6 @@ paréntesis y envoltorios genéricos que preservan miembros que un componente pu
 
 #### Parámetros
 
-| Nombre | Tipo                 | Descripción |
-| ------ | -------------------- | ----------- |
-| texto  | cadena \| indefinido |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------- | ----------- |
+| texto | cadena \| indefinido |             |

@@ -5,7 +5,7 @@
 > packages/tooling/configs/vite-config/docs/index.md: [packages/tooling/configs/vite-config/docs/index.md](../../index.md)
 > שפה: עברית (he)
 
-מְשׁוּתָף Vite ו Vitest עוזרי תצורה עבור חבילות Mission Platform ו
+עוזרי תצורה משותפים Vite ו-Vitest עבור חבילות Mission Platform ו
 יישומים.
 
 ## התקן והשתמש
@@ -14,13 +14,13 @@
 pnpm add --save-dev @mission-platform/vite-config
 ```
 
-לְהִשְׁתַמֵשׁ `defineLibraryConfig` עבור חבילות, `defineAppConfig` עבור יישומים, ו
-`defineVitestConfig` מה `/vitest` נתיב משנה. יישומי מסגרת צריכים
-בחר אחד `defineFrameworkAppConfig` condition ולאחר מכן לייבא חבילות משותפות
+השתמש ב-`defineLibraryConfig` עבור חבילות, ב-`defineAppConfig` עבור יישומים, ו
+`defineVitestConfig` מנתיב המשנה `/vitest`. יישומי מסגרת צריכים
+בחר תנאי `defineFrameworkAppConfig` אחד ולאחר מכן ייבא חבילות משותפות
 דרך מפרטי החבילות החשופים שלהם.
 
 ## לִתְרוֹם
 
-לָרוּץ `pnpm --filter @mission-platform/vite-config lint` ובדיקות פורמט. שמור
-ברירות המחדל של העוזר ניתנות לשימוש חוזר ולשמור על המשותף Vite, PostCSS ו
+הפעל `pnpm --filter @mission-platform/vite-config lint` ובדיקות עיצוב. שמור
+ברירות המחדל של העוזר ניתנות לשימוש חוזר ומשמרות את ה-Vite, PostCSS ו-
 התנהגות החצנה המתוארת בחבילת README.

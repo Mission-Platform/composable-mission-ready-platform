@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> packages/email-renderer/docs/index.md: [packages/email-renderer/docs/index.md](../../index.md)
+> packages/content/email-renderer/docs/index.md: [packages/content/email-renderer/docs/index.md](../../index.md)
 > Lingua: Italiano (it)
 
 `@mission-platform/email-renderer` possiede il limite di rendering indipendente dal framework per gli alberi di posta elettronica di Mission Platform. La sua voce root è sicura per la generazione di posta elettronica lato server; gli adattatori del browser sono isolati dietro sottopercorsi espliciti.
@@ -24,7 +24,7 @@ Utilizzare solo il percorso secondario dell'adattatore richiesto da un'anteprima
 
 - `@mission-platform/email-renderer/vue` → `renderToEmailVue`, `toEmailVueComponent`.
 - `@mission-platform/email-renderer/react` → `renderToEmailReact`, `toEmailReactComponent`.
-- `@mission-platform/email-renderer/svelte` → `renderToEmailSvelte` for Svelte 5 `{@render ...}`.
+- `@mission-platform/email-renderer/svelte` → `renderToEmailSvelte` per Svelte 5 `{@render ...}`.
 - `@mission-platform/email-renderer/solid` → `renderToEmailSolid`, `toEmailSolidComponent`.
 - `@mission-platform/email-renderer/web-components` → `renderToEmailWebComponent`.
 

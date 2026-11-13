@@ -33,23 +33,23 @@ Accesorio de acceso conveniente para la instancia {@link PhoneNumberUtil} compar
 
 ### Formato de número de teléfono
 
-**Tipo:** constante
+**Tipo:** tipo
 
 ```typescript
-export const PhoneNumberFormat;
+export type PhoneNumberFormat = (typeof PhoneNumberFormat)[keyof typeof PhoneNumberFormat];
 ```
 
-Formato de salida, reflejando `PhoneNumberFormat` de libphonenumber.
+No se proporciona descripción.
 
 ### Tipo de número de teléfono
 
-**Tipo:** constante
+**Tipo:** tipo
 
 ```typescript
-export const PhoneNumberType;
+export type PhoneNumberType = (typeof PhoneNumberType)[keyof typeof PhoneNumberType];
 ```
 
-Tipo de línea de un número de teléfono, que refleja `PhoneNumberType` de libphonenumber.
+No se proporciona descripción.
 
 ### NúmeroTeléfonoUtil
 
@@ -76,7 +76,7 @@ Un código de región ISO 3166-1 de dos letras, p. `"US"`, `"GB"`.
 
 ### código_país_para_región
 
-**Tipo:** fws-export
+**Tipo:** pedernal-exportación
 
 ```typescript
 export fn country_code_for_region(region: string) -> i32
@@ -86,8 +86,8 @@ Asigna un código de región admitido a su código de país de marcación intern
 
 #### Parámetros
 
-| Nombre | Tipo   | Descripción                                |
-| ------ | ------ | ------------------------------------------ |
+| Nombre | Tipo | Descripción |
+| ------ | ------ | ------------------------------------- |
 | región | cadena | Código de región ISO como "EE.UU." o "GB". |
 
 #### Contrato
@@ -97,7 +97,7 @@ Asigna un código de región admitido a su código de país de marcación intern
 
 ### prefijo_nacional
 
-**Tipo:** fws-export
+**Tipo:** pedernal-exportación
 
 ```typescript
 export fn national_prefix(region: string) -> string
@@ -107,8 +107,8 @@ Devuelve el prefijo troncal nacional utilizado al marcar dentro de una región.
 
 #### Parámetros
 
-| Nombre | Tipo   | Descripción           |
-| ------ | ------ | --------------------- |
+| Nombre | Tipo | Descripción |
+| ------ | ------ | ---------------- |
 | región | cadena | Código de región ISO. |
 
 #### Contrato
@@ -118,7 +118,7 @@ Devuelve el prefijo troncal nacional utilizado al marcar dentro de una región.
 
 ### región_para_código_país
 
-**Tipo:** fws-export
+**Tipo:** pedernal-exportación
 
 ```typescript
 export fn region_for_country_code(code: i32) -> string
@@ -128,9 +128,9 @@ Asigna un código de llamada de país a una región ISO representativa.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción                                  |
-| ------ | ---- | -------------------------------------------- |
-| código | i32  | Código de país para marcación internacional. |
+| Nombre | Tipo | Descripción |
+| ---- | ---- | ----------------------------------- |
+| código | i32 | Código de país para marcación internacional. |
 
 #### Contrato
 
@@ -139,7 +139,7 @@ Asigna un código de llamada de país a una región ISO representativa.
 
 ### región_es
 
-**Tipo:** fws-export
+**Tipo:** pedernal-exportación
 
 ```typescript
 export fn region_is(region: string, expected: string) -> bool
@@ -149,9 +149,9 @@ Devuelve verdadero cuando el código de región es igual al valor esperado.
 
 #### Parámetros
 
-| Nombre   | Tipo   | Descripción                     |
-| -------- | ------ | ------------------------------- |
-| región   | cadena | Código de región ISO candidato. |
+| Nombre | Tipo | Descripción |
+| -------- | ------ | -------------------------- |
+| región | cadena | Código de región ISO candidato. |
 | esperado | cadena | Código de región ISO esperado.  |
 
 #### Contrato

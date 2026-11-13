@@ -23,9 +23,9 @@ function getImportDeclarations(program: Program): readonly ImportDeclaration[];
 
 #### 매개변수
 
-| 이름     | 유형     | 설명 |
-| -------- | -------- | ---- |
-| 프로그램 | 프로그램 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------- | ----------- |
+| 프로그램 | 프로그램 |             |
 
 ### 파싱Cst
 
@@ -43,9 +43,9 @@ TypeScript/JavaScript/TSX 소스 텍스트를 CST(구체적 구문 트리)로 �
 
 #### 매개변수
 
-| 이름 | 유형                      | 설명                                 |
-| ---- | ------------------------- | ------------------------------------ |
-| 출처 | 문자열                    | - 분석할 소스 코드.                  |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------------- | ----------------------------------- |
+| 출처 | 문자열 | - 분석할 소스 코드.             |
 | 옵션 | ParseCstOptions \| 문자열 | - CST 구문 분석 옵션 또는 파일 이름. |
 
 #### 계약
@@ -74,7 +74,7 @@ CST 구문 분석을 구성하는 옵션입니다.
 export interface ImportRewriteSpec
 ```
 
-특정 모듈을 대상으로 하는 가져오기 재작성 사양입니다.
+특정 모듈을 대상으로 하는 가져오기를 다시 작성하기 위한 사양입니다.
 
 ### 다시 쓰기가져오기옵션
 
@@ -103,10 +103,10 @@ function rewriteImportsWithCst(
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 출처 | 문자열             |      |
-| 옵션 | RewriteImports옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------- | ----------- |
+| 출처 | 문자열 |             |
+| 옵션 | RewriteImports옵션 |             |
 
 ### 결과 다시 쓰기
 
@@ -117,3 +117,426 @@ export interface RewriteResult
 ```
 
 CST 가져오기 다시 쓰기 변환의 결과입니다.
+
+## `src/text`
+
+### 공백지역
+
+**종류:** 기능
+
+```typescript
+function blankRegions(text: string, regions: readonly string[]): string;
+```
+
+문자 인덱스를 유지하면서 각 영역의 모든 항목을 비웁니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ----------------- | ----------- |
+| 텍스트 | 문자열 |             |
+| 지역 | 읽기 전용 문자열[] |             |
+
+### 축소공백
+
+**종류:** 기능
+
+```typescript
+function collapseWhitespace(text: string): string;
+```
+
+모든 공백 실행을 단일 공백으로 축소하고 결과를 자릅니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
+
+### endOfType인수
+
+**종류:** 기능
+
+```typescript
+function endOfTypeArguments(text: string, start: number): number;
+```
+
+`start`에서 열린 형식 인수 목록을 닫는 `>` 바로 앞의 인덱스,
+또는 목록이 닫히지 않는 경우 `-1`입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
+| 시작 | 번호 |             |
+
+### escape속성
+
+**종류:** 기능
+
+```typescript
+function escapeAttribute(value: string): string;
+```
+
+큰따옴표로 묶인 HTML 속성 값을 이스케이프합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 문자열 |             |
+
+### 이스케이프바인딩
+
+**종류:** 기능
+
+```typescript
+function escapeBinding(expression: string): string;
+```
+
+큰따옴표로 묶인 Vue 바인딩 내에서 사용하기 위해 표현식을 이스케이프합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------ | ----------- |
+| 표현 | 문자열 |             |
+
+### indexOfTop레벨
+
+**종류:** 기능
+
+```typescript
+function indexOfTopLevel(text: string, token: string, from = 0): number;
+```
+
+`text`에서 `token`의 첫 번째 최상위 수준 발생 인덱스(외부)
+대괄호, 문자열 및 주석) 또는 `-1`.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
+| 토큰 | 문자열 |             |
+| 에서 |        |             |
+
+### isIdentifierName
+
+**종류:** 기능
+
+```typescript
+function isIdentifierName(name: string): boolean;
+```
+
+isPlainIdentifier의 별칭입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 이름 | 문자열 |             |
+
+### isIdentifierPart
+
+**종류:** 기능
+
+```typescript
+function isIdentifierPart(character: string | undefined): boolean;
+```
+
+문자가 JavaScript 식별자를 계속할 수 있는지 여부입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | ------------------- | ----------- |
+| 캐릭터 | 문자열 \| 정의되지 않음 |             |
+
+### isIdentifierStart
+
+**종류:** 기능
+
+```typescript
+function isIdentifierStart(character: string | undefined): boolean;
+```
+
+문자가 JavaScript 식별자를 시작할 수 있는지 여부입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | ------------------- | ----------- |
+| 캐릭터 | 문자열 \| 정의되지 않음 |             |
+
+### isPlain식별자
+
+**종류:** 기능
+
+```typescript
+function isPlainIdentifier(name: string): boolean;
+```
+
+문자열이 유효한 일반 JavaScript 식별자 이름인지 여부입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 이름 | 문자열 |             |
+
+### 마스크 리터럴
+
+**종류:** 기능
+
+```typescript
+function maskLiterals(text: string): boolean[];
+```
+
+문자열 리터럴 내부에 있는 `text`의 모든 인덱스를 표시하는 부울 마스크를 계산합니다.
+템플릿 리터럴 또는 주석. `true`로 표시된 위치는 문자 그대로의 내용이므로 절대로 입력해서는 안 됩니다.
+구조적으로 다시 작성해야 합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
+
+### matchBracket
+
+**종류:** 기능
+
+```typescript
+function matchBracket(text: string, start: number): number;
+```
+
+`start` 또는 `-1`에서 여는 괄호와 일치하는 괄호 인덱스
+텍스트의 균형이 맞지 않습니다. 리터럴 및 주석 영역은 건너뜁니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
+| 시작 | 번호 |             |
+
+### 회원액세스
+
+**종류:** 기능
+
+```typescript
+function memberAccess(object: string, key: string): string;
+```
+
+일반 식별자의 경우 `<object>.<key>`을 반환하고, 그렇지 않은 경우 `<object>["<key>"]`(대괄호 표기법)을 반환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------ | ----------- |
+| 개체 | 문자열 |             |
+| 키 | 문자열 |             |
+
+### 인주
+
+**종류:** 기능
+
+```typescript
+function pad(depth: number): string;
+```
+
+템플릿 깊이에 대한 들여쓰기(레벨당 공백 2개)
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 깊이 | 번호 |             |
+
+### 인용하다
+
+**종류:** 기능
+
+```typescript
+function quote(value: string): string;
+```
+
+quoteString의 별칭입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 문자열 |             |
+
+### quote속성값
+
+**종류:** 기능
+
+```typescript
+function quoteAttributeValue(value: string): string;
+```
+
+문자열을 JSX 속성 값으로 인용합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 문자열 |             |
+
+### quoteString
+
+**종류:** 기능
+
+```typescript
+function quoteString(value: string): string;
+```
+
+내보낸 코드(JSON 인코딩)에 대한 큰따옴표로 묶인 문자열 리터럴입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 문자열 |             |
+
+### 교체첫 번째
+
+**종류:** 기능
+
+```typescript
+function replaceFirst(
+  text: string,
+  search: string,
+  replacement: string,
+): string;
+```
+
+`text`에서 `search`의 첫 번째 항목을 `replacement`로 바꿉니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
+| 검색 | 문자열 |             |
+| 교체 | 문자열 |             |
+
+### SkipAtomicToken
+
+**종류:** 기능
+
+```typescript
+function skipAtomicToken(text: string, index: number): number;
+```
+
+문자열, 템플릿 또는 주석을 열 때 `index`에서 시작하는 토큰을 지나서 진행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
+| 색인 | 번호 |             |
+
+### 건너뛰기퀴즈
+
+**종류:** 기능
+
+```typescript
+function skipTrivia(text: string, index: number): number;
+```
+
+공백과 주석을 건너뛰고 다음 유효 문자의 오프셋을 반환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
+| 색인 | 번호 |             |
+
+### 분할탑레벨
+
+**종류:** 기능
+
+```typescript
+function splitTopLevel(text: string, separator: string): string[];
+```
+
+`separator`의 모든 최상위 레벨 발생에서 `text`을 분할합니다(단일
+문자), 대괄호, 문자열 또는 주석에 중첩된 구분 기호는 무시됩니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
+| 구분 기호 | 문자열 |             |
+
+### 스트립외부 괄호
+
+**종류:** 기능
+
+```typescript
+function stripOuterParentheses(text: string): string;
+```
+
+unwrapParentheses의 별칭입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
+
+### 스트립 유형 주장
+
+**종류:** 기능
+
+```typescript
+function stripTypeAssertion(text: string): string;
+```
+
+후행 `as T` / `satisfies T` 어설션을 제거합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
+
+### 인용 해제
+
+**종류:** 기능
+
+```typescript
+function unquote(text: string): string | undefined;
+```
+
+작은따옴표, 큰따옴표 또는 백틱 따옴표로 묶인 경우 문자열 리터럴을 인용 해제하고, 그렇지 않은 경우 정의되지 않습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 텍스트 | 문자열 |             |
+
+### unwrap괄호
+
+**종류:** 기능
+
+```typescript
+function unwrapParentheses(text: string): string;
+```
+
+중복된 래핑 괄호(`(x)` -> `x`)의 한 레이어를 반복적으로 제거합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 텍스트 | 문자열 |             |

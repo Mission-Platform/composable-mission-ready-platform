@@ -71,9 +71,9 @@ function getBreakpointValue(key: BreakpointKey): number;
 
 #### פרמטרים
 
-| שם   | הקלד          | תיאור |
-| ---- | ------------- | ----- |
-| מפתח | BreakpointKey |       |
+| שם | הקלד | תיאור |
+| ---- | ------------- | ----------- |
+| מפתח | BreakpointKey |             |
 
 ### maxMediaQuery
 
@@ -88,9 +88,9 @@ function maxMediaQuery(key: BreakpointKey): string;
 
 #### פרמטרים
 
-| שם   | הקלד          | תיאור |
-| ---- | ------------- | ----- |
-| מפתח | BreakpointKey |       |
+| שם | הקלד | תיאור |
+| ---- | ------------- | ----------- |
+| מפתח | BreakpointKey |             |
 
 #### חוֹזֶה
 
@@ -108,9 +108,9 @@ function mediaQuery(key: BreakpointKey): string;
 
 #### פרמטרים
 
-| שם   | הקלד          | תיאור |
-| ---- | ------------- | ----- |
-| מפתח | BreakpointKey |       |
+| שם | הקלד | תיאור |
+| ---- | ------------- | ----------- |
+| מפתח | BreakpointKey |             |
 
 #### חוֹזֶה
 
@@ -125,13 +125,13 @@ function mediaQuery(key: BreakpointKey): string;
 function resolveBreakpoint(width: number): BreakpointKey;
 ```
 
-בהינתן רוחב פיקסל, מחזיר את מפתח נקודת השבירה הפעיל כרגע.
+בהינתן רוחב פיקסל, מחזיר את מפתח נקודת השבירה הפעיל כעת.
 
 #### פרמטרים
 
-| שם   | הקלד | תיאור |
-| ---- | ---- | ----- |
-| רוחב | מספר |       |
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| רוחב | מספר |             |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -143,7 +143,7 @@ function resolveBreakpoint(width: number): BreakpointKey;
 function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 ```
 
-`ForgeHideAt` — ההיפך של {@link ForgeShowAt}: הוא מסתיר את חריץ ברירת המחדל שלו כאשר
+`ForgeHideAt` — היפוך של {@link ForgeShowAt}: הוא מסתיר את חריץ ברירת המחדל שלו כאשר
 נקודת התצוגה נמצאת ב-`min` או מעליו (ו/או מתחת ל-`max`) בקובץ המשותף
 סולם נקודות שבירה בן שבעה שלבים, והופך אותו אחרת. נכתב פעם אחת ב
 ניב JSX ניטרלי והורכב ישר ל-React או Vue על-ידי
@@ -155,9 +155,9 @@ function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| נכסים | לקריאה בלבד<HideAtProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<HideAtProperties> |             |
 
 ### HideAtProperties
 
@@ -192,9 +192,9 @@ function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| נכסים | לקריאה בלבד<ShowAtProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ShowAtProperties> |             |
 
 ### ShowAtProperties
 
@@ -216,7 +216,7 @@ export interface ShowAtProperties
 export type BreakpointDebugProperties = Record<string, never>;
 ```
 
-שכבת העל לא לוקחת מאפיינים: היא קוראת את יציאת התצוגה החיה עצמה.
+שכבת-העל אינה מקבלת מאפיינים: היא קוראת את יציאת התצוגה החיה עצמה.
 
 ### ForgeBreakpointDebug
 
@@ -235,14 +235,14 @@ function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>):
 (`useState`/`useEffect`). התוויות שלו ממוקמות דרך i18next: כל אחת
 שיחת `i18next.t(...)` נושאת `defaultValue` (החזרה באנגלית), וכן
 `@mission-platform/vite-plugin-forge` מזריק את המסגרת `useI18n()` וו כל כך
-אותו מקור פותר נגד מרחב השמות `mp.breakpoints` של החבילה ב-
+אותו מקור פותר נגד מרחב השמות `mp.breakpoints` של החבילה
 גם React וגם Vue.
 
 #### פרמטרים
 
-| שם     | הקלד                                   | תיאור |
-| ------ | -------------------------------------- | ----- |
-| _נכסים | לקריאה בלבד<BreakpointDebugProperties> |       |
+| שם | הקלד | תיאור |
+| ----------- | ----------------------------------- | ----------- |
+| _נכסים | לקריאה בלבד<BreakpointDebugProperties> |             |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 

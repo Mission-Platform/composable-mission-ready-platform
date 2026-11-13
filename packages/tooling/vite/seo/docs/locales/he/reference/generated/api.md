@@ -25,23 +25,22 @@ function seoPlugin(options: SeoPluginOptions): Plugin;
 
 #### פרמטרים
 
-| שם       | הקלד             | תיאור |
-| -------- | ---------------- | ----- |
-| אפשרויות | SeoPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ---------------- | ----------- |
+| אפשרויות | SeoPluginOptions |             |
 
 #### חוֹזֶה
 
 - **@example:** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 
@@ -59,23 +58,22 @@ function seoPlugin(options: SeoPluginOptions): Plugin
 
 #### פרמטרים
 
-| שם       | הקלד             | תיאור |
-| -------- | ---------------- | ----- |
-| אפשרויות | SeoPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ---------------- | ----------- |
+| אפשרויות | SeoPluginOptions |             |
 
 #### חוֹזֶה
 
 - **@example:** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 

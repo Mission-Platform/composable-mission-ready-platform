@@ -9,896 +9,6 @@
 
 `@mission-platform/forge-jsx` のパブリック ソース宣言から生成されます。
 
-## `src/adapters/react`
-
-### HTMLコンテンツ
-
-**種類:** 関数
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement;
-```
-
-`dangerouslySetInnerHTML` を使用して、信頼された HTML を React ホストにレンダリングします。
-
-#### パラメータ
-
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| プロパティ | HtmlContentProperties |      |
-
-### レンダリングして反応する
-
-**種類:** 関数
-
-```typescript
-function renderToReact(element: MpElement): ReactElement;
-```
-
-ニュートラルな {@link MpElement} ツリーを React 要素にレンダリングします。
-
-#### パラメータ
-
-| 名前 | タイプ             | 説明 |
-| ---- | ------------------ | ---- |
-| 要素 | エムピーエレメント |      |
-
-### テレポート
-
-**種類:** 関数
-
-```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
-```
-
-ニュートラル `<Teleport>` プリミティブの React ビルド - 薄いラッパー
-`react-dom` の {@link createPortal}。 `@mission-platform/vite-plugin-forge`
-コンポーネントの `import { Teleport } from '@mission-platform/forge-jsx'` を次のように書き換えます。
-このコンポーネントをインポートするため、一度だけ書き込み可能な `<Teleport to="body">…</Teleport>`
-ネイティブ React ポータルにコンパイルされます。
-
-`to` がすでに DOM **要素** である場合 (一般的なクライアントのケース - 例:
-解決された `<dialog>` または呼び出し元によって渡された `document.body`)、子は
-**レンダリング中に同期してポータルにポータルされる**ため、同じ場所にマウントされます。
-それらを開いたコミット。これは、Vue の `<Teleport>` と一致します (これにより、
-同期的にターゲットに設定されます)、正確性のために必要です: ポータル化されたパネル
-Popover API を使用してブラウザの最上位層に自身を昇格させます
-(`popover="manual"` + 次のフレームの `showPopover()`) はすでに設定されている必要があります
-フレームの実行時にマウントされます。レンダリングによってポータルを遅延させると、そのフレームが失われます。
-レース、パネル `display:none` を離れる (表示されていない UA のデフォルト)
-ポップオーバー)、したがって非表示になります。
-
-セレクター **string** のみにマウント後の `document.querySelector` が必要です。
-コンポーネントを SSR セーフに保ちます: サーバーのレンダリング中、および最初のクライアント
-文字列ターゲットのレンダリング — 何もレンダリングしません (または、`disabled` の場合、
-子が配置されている)、`createPortal` は DOM ターゲットが存在する場合にのみ実行されます。
-
-#### パラメータ
-
-| 名前                              | タイプ                 | 説明 |
-| --------------------------------- | ---------------------- | ---- |
-| { to = 'body'、無効 = false、子 } | テレポートのプロパティ |      |
-
-### テレポートのプロパティ
-
-**種類:** インターフェース
-
-```typescript
-export interface TeleportProperties
-```
-
-React {@link Teleport} コンポーネントで受け入れられるプロパティ。
-
-### toReactコンポーネント
-
-**種類:** 関数
-
-```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
-```
-
-ニュートラルコンポーネントをファーストクラスの React 関数コンポーネントとしてラップし、すぐに使用できるようにします。
-`react-dom` によってレンダリングされるか、他の React コンポーネント内で構成されます。
-
-#### パラメータ
-
-| 名前           | タイプ         | 説明 |
-| -------------- | -------------- | ---- |
-| コンポーネント | MpComponent<P> |      |
-| 表示名         | 文字列         |      |
-
-### 遷移
-
-**種類:** 関数
-
-```typescript
-function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
-```
-
-中立的な `<Transition>` プリミティブの React ビルド — 小さな CSS クラス
-Vue の組み込み `<Transition>` をミラーリングするドライバー。単一のアニメーションをアニメーション化します
-`<name>-enter-*` / `<name>-leave-*` の切り替えによる条件付きでレンダリングされた子
-クラス (つまり、同じスタイルシートが両方のフレームワークを駆動する) を作成し、子を保持します
-離れるアニメーションを通じてマウントされます。 `@mission-platform/vite-plugin-forge`
-コンポーネントの `import { Transition } from '@mission-platform/forge-jsx'` を次のように書き換えます。
-このコンポーネントを React ターゲットにインポートします。
-
-SSR セーフです。サーバー レンダー (および最初のクライアント ペイント) が子をレンダリングします。
-Vue の SSR 出力と一致する位置に配置され、アニメーションはその後にのみ実行されます。
-
-#### パラメータ
-
-| 名前                                                      | タイプ         | 説明 |
-| --------------------------------------------------------- | -------------- | ---- |
-| { 名前 = 'v'、表示 = false、期間、子、...オーバーライド } | 遷移プロパティ |      |
-
-### 移行グループ
-
-**種類:** 関数
-
-```typescript
-function TransitionGroup({
-  name = 'v',
-  tag,
-  moveClass,
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionGroupProperties): ReactNode;
-```
-
-ニュートラル `<TransitionGroup>` プリミティブの React ビルド - CSS クラス
-Vue の組み込み `<TransitionGroup>` をミラーリングするドライバー。 **キー付きをアニメーション化します
-list**: 子を入力すると `<name>-enter-*` が取得され、子はマウントされたままになります。
-`<name>-leave-*` アニメーションと、変化する生き残った子供たちを通して
-位置は `<name>-move` で FLIP アニメーション化されます (同じスタイルシートが両方を駆動します)
-フレームワーク）。 `@mission-platform/vite-plugin-forge` はコンポーネントの
-これをインポートするには `import { TransitionGroup } from '@mission-platform/forge-jsx'`
-React ターゲット。
-
-SSR セーフです。サーバー レンダー (および最初のクライアント ペイント) は、
-子が所定の位置に配置され、Vue の SSR 出力と一致し、アニメーションのみが実行されます。
-その後。移行クラスは各子の DOM node に適用されるため、 —
-単一の {@link Transition} と同様に、DOM 要素の子に影響します。
-それ自体が (非参照転送) コンポーネントである子もマウント/アンマウントします。
-正しく動作しますが、クラスを受け取りません (中立 SSR インプレース ベースラインと一致します)。
-
-#### パラメータ
-
-| 名前                                                                       | タイプ                   | 説明 |
-| -------------------------------------------------------------------------- | ------------------------ | ---- |
-| { 名前 = 'v'、タグ、moveClass、表示 = false、期間、子、...オーバーライド } | 遷移グループのプロパティ |      |
-
-### 遷移グループのプロパティ
-
-**種類:** インターフェース
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-React {@link TransitionGroup} コンポーネントによって受け入れられるプロパティ。
-
-### 遷移プロパティ
-
-**種類:** インターフェース
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-React {@link Transition} コンポーネントで受け入れられるプロパティ。
-
-## `src/adapters/solid`
-
-### HTMLコンテンツ
-
-**種類:** 関数
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element;
-```
-
-ニュートラル `<HtmlContent>` プリミティブの Solid ビルド。 Solid さん
-`innerHTML` プロパティは、ネイティブ置換ベースの生コンテンツ操作です。
-
-#### パラメータ
-
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| プロパティ | HtmlContentProperties |      |
-
-### テレポート
-
-**種類:** 関数
-
-```typescript
-function Teleport(properties: TeleportProperties): JSX.Element;
-```
-
-ニュートラル `<Teleport>` プリミティブの Solid ビルド - 薄いラッパー
-Solid の {@link ポータル}。 `@mission-platform/vite-plugin-forge` は、
-これをインポートするにはコンポーネントの `import { Teleport } from '@mission-platform/forge-jsx'`
-コンポーネントなので、ライトワンス `<Teleport to="body">…</Teleport>` は、
-ネイティブ Solid ポータル。
-
-ポータル ターゲットはクライアント上で解決されるため、コンポーネントは SSR に対して安全です。
-サーバーのレンダリング中、および DOM ターゲットが存在する前に、レンダリングが行われます。
-何もなく（または、`disabled` の場合は子が配置され）、{@link Portal} のみ
-実際のターゲットが利用可能になるとマウントされます。
-
-#### パラメータ
-
-| 名前       | タイプ                 | 説明 |
-| ---------- | ---------------------- | ---- |
-| プロパティ | テレポートのプロパティ |      |
-
-### テレポートのプロパティ
-
-**種類:** インターフェース
-
-```typescript
-export interface TeleportProperties
-```
-
-Solid {@link Teleport} コンポーネントで受け入れられるプロパティ。
-
-### 遷移
-
-**種類:** 関数
-
-```typescript
-function Transition(properties: TransitionProperties): JSX.Element;
-```
-
-ニュートラル `<Transition>` プリミティブの Solid ビルド。最低限の正解
-子を**その場**でレンダリングする実装 — React に一致
-アダプターの SSR / アダプター パリティ パスとニュートラル ランタイム ベースライン - したがって
-ライトワンスコンポーネントは、サードパーティを利用せずにタイプチェックとマウントを実行します。
-Solid 移行ライブラリ。クラスに入る/退出するアニメーションは後で重ねて表示できます。
-プロップ サーフェスはすでに Vue/React (`name`、`appear`、`duration`、および
-フェーズごとのクラスがオーバーライドされます)。
-
-`@mission-platform/vite-plugin-forge` はコンポーネントの
-これをインポートするには `import { Transition } from '@mission-platform/forge-jsx'`
-Solid ターゲット。
-
-#### パラメータ
-
-| 名前       | タイプ         | 説明 |
-| ---------- | -------------- | ---- |
-| プロパティ | 遷移プロパティ |      |
-
-### 移行グループ
-
-**種類:** 関数
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
-```
-
-ニュートラル `<TransitionGroup>` プリミティブの Solid ビルド。好き
-{@link Transition}、これは、
-子 **所定の位置** (React アダプタの SSR / アダプタ パリティ ベースライン)
-サードパーティのリスト遷移を使用せずに生成された Solid コンポーネントの型チェック
-図書館。プロップ サーフェスは Vue/React (`name`、`tag`、`moveClass`、
-`appear`、`duration`、およびフェーズごとのクラス オーバーライド)、ライトワンス用
-パリティ。
-
-`@mission-platform/vite-plugin-forge` はコンポーネントの
-これをインポートするには `import { TransitionGroup } from '@mission-platform/forge-jsx'`
-Solid ターゲット。
-
-#### パラメータ
-
-| 名前       | タイプ                   | 説明 |
-| ---------- | ------------------------ | ---- |
-| プロパティ | 遷移グループのプロパティ |      |
-
-### 遷移グループのプロパティ
-
-**種類:** インターフェース
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-Solid {@link TransitionGroup} コンポーネントによって受け入れられるプロパティ。
-
-### 遷移プロパティ
-
-**種類:** インターフェース
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-Solid {@link Transition} コンポーネントで受け入れられるプロパティ。
-
-## `src/adapters/svelte`
-
-### HTMLコンテンツ
-
-**種類:** 関数
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet;
-```
-
-Svelte アダプターの raw コンテンツ実装。 `createRawSnippet` は
-Svelte の `{@html}` 操作の実行時形式とそのセットアップ コールバックは保持されます。
-手書きのアダプターを使用するためのホスト参照とイベント転送。
-
-#### パラメータ
-
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| プロパティ | HtmlContentProperties |      |
-
-### テレポート
-
-**種類:** 関数
-
-```typescript
-function Teleport(properties: TeleportProperties): Snippet;
-```
-
-Svelte SSR とクライアント パリティの適切な場所に Forge 子スニペットをレンダリングします。
-
-#### パラメータ
-
-| 名前       | タイプ                 | 説明 |
-| ---------- | ---------------------- | ---- |
-| プロパティ | テレポートのプロパティ |      |
-
-### テレポートのプロパティ
-
-**種類:** インターフェース
-
-```typescript
-export interface TeleportProperties
-```
-
-Svelte {@link Teleport} プリミティブによって受け入れられるプロパティ。
-
-### 遷移
-
-**種類:** 関数
-
-```typescript
-function Transition(properties: TransitionProperties): Snippet;
-```
-
-単一の遷移の子をレンダリングします。アニメーションはネイティブ Svelte マークアップによって提供されます。
-
-#### パラメータ
-
-| 名前       | タイプ         | 説明 |
-| ---------- | -------------- | ---- |
-| プロパティ | 遷移プロパティ |      |
-
-### 移行グループ
-
-**種類:** 関数
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet;
-```
-
-ネイティブ Svelte キー付きブロックの所定の位置に遷移グループの子をレンダリングします。
-
-#### パラメータ
-
-| 名前       | タイプ                   | 説明 |
-| ---------- | ------------------------ | ---- |
-| プロパティ | 遷移グループのプロパティ |      |
-
-### 遷移グループのプロパティ
-
-**種類:** インターフェース
-
-```typescript
-export interface TransitionGroupProperties extends TransitionProperties
-```
-
-Svelte {@link TransitionGroup} プリミティブによって受け入れられるプロパティ。
-
-### 遷移プロパティ
-
-**種類:** インターフェース
-
-```typescript
-export interface TransitionProperties
-```
-
-Svelte {@link Transition} プリミティブによって受け入れられるプロパティ。
-
-## `src/adapters/vue`
-
-### コンテキストの作成
-
-**種類:** 関数
-
-```typescript
-function createContext(defaultValue: T): VueContext<T>;
-```
-
-ニュートラル `createContext` プリミティブの Vue ビルド。ハンドルを返します。
-`Provider` は、`provide()` の `value` をデフォルトに設定する実際のコンポーネントです
-スロットなので、ライトワンス `<Ctx.Provider value={…}><Slot /></Ctx.Provider>`
-ネイティブ Vue が提供するようにコンパイルします。 `@mission-platform/vite-plugin-forge` は、
-コンポーネントの `import { createContext, useContext } from '@mission-platform/forge-jsx'`
-これらを Vue ターゲットにインポートします。
-
-#### パラメータ
-
-| 名前         | タイプ | 説明 |
-| ------------ | ------ | ---- |
-| デフォルト値 | た     |      |
-
-### HTMLコンテンツ
-
-**種類:** 関数
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode;
-```
-
-レンダリング関数 `innerHTML` バインディングを使用して、信頼された HTML を Vue ホストにレンダリングします。
-
-#### パラメータ
-
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| プロパティ | HtmlContentProperties |      |
-
-### renderToVue
-
-**種類:** 関数
-
-```typescript
-function renderToVue(element: MpElement): VNode;
-```
-
-ニュートラルな {@link MpElement} ツリーを Vue `VNode` にレンダリングします。
-
-#### パラメータ
-
-| 名前 | タイプ             | 説明 |
-| ---- | ------------------ | ---- |
-| 要素 | エムピーエレメント |      |
-
-### toVueコンポーネント
-
-**種類:** 関数
-
-```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
-```
-
-ニュートラルコンポーネントを Vue 機能コンポーネントとしてラップします。受信属性
-ニュートラル プロパティになり、デフォルト スロット (存在する場合) がニュートラルとして転送されます。
-`children`、およびすべての名前付きスロットはその名前で (スコープ付きスロットとして) 転送されます。
-関数）のため、コンポーネント内の `<Slot name="…" />` はそれに対して解決され、
-結果は、他の Vue コンポーネントと同様に使用できます。
-
-#### パラメータ
-
-| 名前           | タイプ         | 説明 |
-| -------------- | -------------- | ---- |
-| コンポーネント | MpComponent<P> |      |
-| 名前           | 文字列         |      |
-
-### useContext
-
-**種類:** 関数
-
-```typescript
-function useContext(context: VueContext<T>): T;
-```
-
-ニュートラル `useContext` プリミティブの Vue ビルド - 薄いラッパー
-`inject()` は、囲みがない場合にコンテキストのデフォルト値に戻ります。
-プロバイダーが提供しました。
-
-#### パラメータ
-
-| 名前         | タイプ        | 説明 |
-| ------------ | ------------- | ---- |
-| コンテキスト | VueContext<T> |      |
-
-### VueContext
-
-**種類:** インターフェース
-
-```typescript
-export interface VueContext<T>
-```
-
-Vue コンテキスト ハンドル: `provide()` に基づく `Provider` と `inject()` キー。
-
-## `src/adapters/web-components`
-
-### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
-
-**種類:** 定数
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
-```
-
-内部は無害に機能ゲート化されています。フォームの関連付けはオプトインのままです。
-
-### DEFAULT_WEBCOMPONENTS_SHADOW_POLICY
-
-**種類:** 定数
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
-```
-
-生成されたクラスがポリシーをオーバーライドしない場合に使用される互換性のデフォルト。
-
-### DomTemplateResult
-
-**種類:** クラス
-
-```typescript
-export class DomTemplateResult
-```
-
-安定した定義同一性を持つ直接 DOM 生成された結果。
-
-### 動的要素
-
-**種類:** 関数
-
-```typescript
-function dynamicElement(
-  tag: unknown,
-  properties: Readonly<Record<string, unknown>>,
-  ...children: readonly unknown[]
-): DynamicElementResult;
-```
-
-実行時にタグが選択されるネイティブ Web コンポーネント要素を構築します。
-
-#### パラメータ
-
-| 名前       | タイプ                                | 説明 |
-| ---------- | ------------------------------------- | ---- |
-| タグ       | 不明                                  |      |
-| プロパティ | 読み取り専用<Record<string, unknown>> |      |
-| 子供たち   | 読み取り専用 不明[]                   |      |
-
-### 動的要素結果
-
-**種類:** クラス
-
-```typescript
-export class DynamicElementResult
-```
-
-計算された JSX タグの実行時に選択された要素とその子。
-
-### フォージエレメント
-
-**種類:** クラス
-
-```typescript
-export class ForgeElement extends ForgeHTMLElement
-```
-
-生成されたカスタム要素のネイティブ `HTMLElement` 基本クラス -
-`LitElement` の依存関係のない代用。
-
-サブクラスは、`static properties` (ミラーリング) を介してそのリアクティブ サーフェスを宣言します。
-点灯): 各キーはプロトタイプ アクセサーになり、そのセッターが
-マイクロタスクが再レンダリングされ、`state` 以外の各キーの小文字が観察されます。
-属性。 `render()` は、レンダリングされた要素の {@link html}`…` テンプレートを返します
-オープンシャドウルートに。リアクティブコミットにより既存のテンプレートが更新されます
-インクリメンタル: 位置リストは互換性のあるエントリとスロット アウトレットを再利用します。
-無関係な部分が変更される間、ネイティブの投影ノードは保持されます。
-
-### ForgeElementConstructor
-
-**種類:** インターフェース
-
-```typescript
-export interface ForgeElementConstructor
-```
-
-生成された Forge 要素によって実装される静的スタイルシート コントラクト。
-
-URL はドキュメント内ではなく要素クラス上に保持されるため、シャドウ
-root は、ドキュメントレベルのスタイルでは到達できないコンパイルされたサイドカーをロードできます。
-
-### ForgeElementHostConstructor
-
-**種類：**タイプ
-
-```typescript
-export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
-```
-
-{@link ForgeElementMixin} によって受け入れられる構築可能なネイティブ要素クラス。
-
-### ForgeElementMixin
-
-**種類:** 関数
-
-```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
-```
-
-Forge のホストに依存しないランタイムをネイティブ要素コンストラクターに追加します。
-カスタマイズされた組み込みは、`ForgeElement` と `HTMLDivElement` の両方を拡張することはできません。
-このミックスインは、ネイティブ プロトタイプ チェーンを維持しながら動作をコピーします。
-
-#### パラメータ
-
-| 名前   | タイプ  | 説明 |
-| ------ | ------- | ---- |
-| ベース | Tベース |      |
-
-### スロットマーカーを鍛造する
-
-**種類:** インターフェース
-
-```typescript
-export interface ForgeSlotMarker extends HTMLElement
-```
-
-あいまいなスロットに対して Web コンポーネント コンパイラによって発行されるランタイム マーカー。
-
-### スロットコンテンツあり
-
-**種類:** 関数
-
-```typescript
-function hasSlotContent(host: Element, name?: string): boolean;
-```
-
-`host` にそのスロットの 1 つ (ネイティブ ターゲットのコンテンツ) にコンテンツが与えられたかどうか
-ニュートラル `hasSlot('x')` マーカーの代替品。
-
-`hasSlot` はコンパイル時の語彙です。Vue はそれを `!!slots.x` に、React は
-`properties.x != null`、カスタム要素にはどちらも含まれていないため、チェックが行われます
-代わりに DOM に対して。生成された要素は **開いたシャドウにレンダリングされます
-root**。これは、消費者がプロジェクトをホストのホストに保存するコンテンツを意味します。
-**light** DOM をその子として — 名前付きスロットは、
-`slot="<name>"`、および何も持たない子によるデフォルトのスロット。のみ
-直接の子は、スロット割り当て自体とまったく同様に考慮されます。
-ホワイトスペースのみのテキスト node はコンテンツとしてカウントされません。
-
-子は `[slot="…"]` でクエリされるのではなくウォークされるため、スロット名は
-CSS エスケープが必要ないため、裸のテキストの子 (どのセレクターも一致しません)
-デフォルトのスロットはまだ埋まっています。
-
-スロットは、ホストの子が存在する場合にのみ観察可能であることに注意してください。
-初期 HTML、`connectedCallback` で記述された要素のパーサーのアップグレード
-接続される前に実行されます。投影されたコンテンツは後で要素を再レンダリングします
-通常の反応的なパスを介して。
-
-#### パラメータ
-
-| 名前   | タイプ | 説明 |
-| ------ | ------ | ---- |
-| ホスト | 要素   |      |
-| 名前   | 文字列 |      |
-
-### html
-
-**種類:** 関数
-
-```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
-```
-
-タグ付きテンプレートファクトリー。呼び出しサイトの静的文字列と動的文字列をキャプチャします。
-{@link render} の値を {@link TemplateResult} に変換して DOM に実現します。
-
-#### パラメータ
-
-| 名前   | タイプ                 | 説明 |
-| ------ | ---------------------- | ---- |
-| 文字列 | テンプレート文字列配列 |      |
-| 値     | 読み取り専用 不明[]    |      |
-
-### HTMLコンテンツ
-
-**種類:** 関数
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
-```
-
-`html` をエスケープせずに、ネイティブ Web コンポーネントの生コンテンツの結果を構築します。
-
-#### パラメータ
-
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| プロパティ | HtmlContentProperties |      |
-
-### HtmlContentProperties
-
-**種類:** インターフェース
-
-```typescript
-export interface HtmlContentProperties
-```
-
-ネイティブ Web コンポーネントの HtmlContent ヘルパーによって受け入れられるプロパティ。
-
-### HTMLコンテンツ結果
-
-**種類:** クラス
-
-```typescript
-export class HtmlContentResult
-```
-
-ネイティブ ホストと信頼できる生の子マークアップ。{@link render} によってレンダリングされます。
-
-### 何もない
-
-**種類:** 定数
-
-```typescript
-export const nothing: unique symbol;
-```
-
-Sentinel は「値なし」としてレンダリングされます。子の位置では何も生成されません。
-属性の位置 属性を削除します。ネイティブで同等のものです。
-lit-html の `nothing`。
-
-### プロパティ宣言
-
-**種類:** インターフェース
-
-```typescript
-export interface PropertyDeclaration
-```
-
-{@link ForgeElement} サブクラスのリアクティブ プロパティ宣言。
-
-### RawHTML
-
-**種類:** クラス
-
-```typescript
-export class RawHtml
-```
-
-ネイティブ Web コンポーネント アダプターによって使用される、信頼できる生の HTML 値。
-
-### 与える
-
-**種類:** 関数
-
-```typescript
-function render(
-  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
-  container: ParentNode,
-): void;
-```
-
-永続的なテンプレート インスタンスを使用して、結果を `container` にレンダリングします。静的
-DOM とネイティブ フォームの状態は保持され、変更されたバインディング範囲のみが保持されます。
-更新されました。互換性のないテンプレートの種類は、レンダラーが所有するコンテンツを置き換えます。
-
-#### パラメータ
-
-| 名前     | タイプ                                                                     | 説明 |
-| -------- | -------------------------------------------------------------------------- | ---- |
-| 結果     | テンプレート結果 \| DomTemplateResult \|動的要素結果 \| HTMLコンテンツ結果 |      |
-| コンテナ | 親ノード                                                                   |      |
-
-### 解決フォージスロットマーカー
-
-**種類:** 関数
-
-```typescript
-function resolveForgeSlotMarkers(
-  root: ParentNode,
-  owner: ForgeElement,
-  sourceChildren: readonly Node[],
-  destinationRoot: ShadowRoot,
-): void;
-```
-
-レンダー フラグメント内のコンパイラが発行したランタイム スロット マーカーを解決します。
-
-コンテンツ プロパティのないマーカーはネイティブ スロットになり、
-同じスロットが使用されていない限り、ブラウザのフォールバックと割り当てのセマンティクス
-レンダーツリーで繰り返されます。アウトレットを繰り返すと、
-元の light-DOM の子なので、各アウトレットは決定的なコンテンツを受け取ります。
-コンテンツ マーカーの値が所有者の値である場合、コンテンツ マーカーはネイティブ スロットに下げられます。
-元の light-DOM の子とアウトレットは繰り返されません。そうでなければ彼らの
-値は最後の手段として具体化されます。
-
-#### パラメータ
-
-| 名前             | タイプ              | 説明 |
-| ---------------- | ------------------- | ---- |
-| ルート           | 親ノード            |      |
-| オーナー         | フォージエレメント  |      |
-| ソースチルドレン | 読み取り専用 Node[] |      |
-| 宛先ルート       | シャドウルート      |      |
-
-### テンプレート結果
-
-**種類:** クラス
-
-```typescript
-export class TemplateResult
-```
-
-解析された `html\`…\`` の結果: 静的文字列と補間された値。
-
-### 安全でないHTML
-
-**種類:** 関数
-
-```typescript
-function unsafeHtml(value: string): RawHtml;
-```
-
-文字列をネイティブ Web コンポーネント パスの信頼できる子マークアップとしてマークします。
-
-#### パラメータ
-
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 文字列 |      |
-
-### useId
-
-**種類:** 関数
-
-```typescript
-function useId(): string;
-```
-
-React の `useId` のネイティブ ターゲットの置き換え。
-
-中立的な語彙では、コントロールをそのコントロールに結び付ける ID として `useId()` が提供されます。
-`<label for>` / `aria-describedby`; React は、それを独自の `useId` および Solid にマップします。
-`createUniqueId` に変換されますが、カスタム要素には借用できるフレームワーク ランタイムがありません
-からの 1 つ — これがそれです。
-
-ここではモジュールレベルのカウンタで十分であり、意図的にカウンタよりも単純化されています。
-ランダム/ハッシュ ジェネレーター: ID は **ドキュメント内** 内でのみ一意である必要があります。
-そしてコンパイラは `render()` から `const x = useId()` を取り出します。
-インスタンス フィールドなので、各要素のインスタンスはこれを 1 回だけ呼び出してから、
-ID は生涯にわたって保持されます。したがって、連続呼び出しは決して行われません
-衝突するため、依存関係 (ナノイド、`crypto.randomUUID`) は必要ありません。
-結果は安定しており、デバッグ可能です (`forge-1`、`forge-2`、…)。値は
-有効な HTML `id` と有効な CSS 識別子なので、セレクターで使用できます
-逃げられない。
-
-### Webコンポーネント内部ポリシー
-
-**種類:** インターフェース
-
-```typescript
-export interface WebComponentsInternalsPolicy
-```
-
-プラットフォームの {@link ElementInternals} API の機能リクエスト。
-
-### Webコンポーネントシャドウポリシー
-
-**種類:** インターフェース
-
-```typescript
-export interface WebComponentsShadowPolicy
-```
-
-生成された Forge 要素によって受け入れられる、型指定されたシャドウ ルート オプション。
-
 ## `src/runtime/class-names`
 
 ### クラス名
@@ -915,9 +25,9 @@ function classNames(...values: readonly ClassValue[]): string;
 
 #### パラメータ
 
-| 名前 | タイプ                    | 説明 |
-| ---- | ------------------------- | ---- |
-| 値   | 読み取り専用 ClassValue[] |      |
+|名前 |タイプ |説明 |
+| ------ | --------------------- | ----------- |
+|値 |読み取り専用 ClassValue[] |             |
 
 ### クラス値
 
@@ -945,9 +55,9 @@ function createContext(defaultValue: T): MpContext<T>;
 
 #### パラメータ
 
-| 名前         | タイプ | 説明 |
-| ------------ | ------ | ---- |
-| デフォルト値 | た     |      |
+|名前 |タイプ |説明 |
+| ------------ | ---- | ----------- |
+|デフォルト値 |た |             |
 
 ### isContextProvider
 
@@ -961,9 +71,9 @@ function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 
 #### パラメータ
 
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 不明   |      |
+|名前 |タイプ |説明 |
+| ----- | ------- | ----------- |
+|値 |不明 |             |
 
 ### MP_CONTEXT
 
@@ -994,7 +104,7 @@ export interface MpContext<T>
 export interface MpContextProvider<T> extends MpComponent<MpContextProviderProperties<T>>
 ```
 
-提供するコンテキストのタグが付けられたコンテキスト プロバイダー関数。
+提供するコンテキストでタグ付けされたコンテキスト プロバイダー関数。
 
 ### MpContextProviderProperties
 
@@ -1019,9 +129,9 @@ function useContext(context: MpContext<T>): T;
 
 #### パラメータ
 
-| 名前         | タイプ       | 説明 |
-| ------------ | ------------ | ---- |
-| コンテキスト | MpContext<T> |      |
+|名前 |タイプ |説明 |
+| ------- | ------------ | ----------- |
+|コンテキスト | MpContext<T> |             |
 
 ## `src/runtime/dynamic`
 
@@ -1055,8 +165,8 @@ export interface MpDynamicProperties extends MpPropertyBag
 これは、**オープンバッグ**を合法的に保持する数少ない宣言の 1 つです。
 `is` 以外のすべてのプロパティは要素 `is` にそのまま転送されます。
 に解決され、その要素は実行時にのみ認識されるため、その属性は
-ここでは受け入れることはできません。コンポーネント props インターフェイスは _してはなりません_
-このパターンに従ってください — {@link MpPropertyBag} を参照してください。
+ここでは受け入れることはできません。コンポーネントの小道具インターフェイスは次のようにしてはなりません_
+このパターンに従います — {@link MpPropertyBag} を参照してください。
 
 ## `src/runtime/h`
 
@@ -1081,11 +191,11 @@ function h(
 
 #### パラメータ
 
-| 名前       | タイプ                                          | 説明 |
-| ---------- | ----------------------------------------------- | ---- |
-| タイプ     | MpElementType \| ((プロパティ: P) => MpElement) |      |
-| プロパティ | P \|ヌル                                        |      |
-| 子供たち   | MpChild[]                                       |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------------------------- | ----------- |
+|タイプ | MpElementType \| ((プロパティ: P) => MpElement) |             |
+|プロパティ | P \|ヌル |             |
+|子供たち | MpChild[] |             |
 
 ## `src/runtime/hooks`
 
@@ -1104,7 +214,7 @@ export type MpDependencyList = readonly unknown[];
 **種類:** コンポーネント
 
 ```typescript
-export type MpEffectCallback = () => void | MpEffectCleanup;
+export type MpEffectCallback = () => MpEffectCleanup | void;
 ```
 
 {@link useEffect} によって実行されるエフェクト コールバック。
@@ -1134,7 +244,7 @@ React の `MutableRefObject` をミラーリングする、変更可能な ref �
 **種類:** コンポーネント
 
 ```typescript
-export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
+export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 ```
 
 新しい値に、またはアップデーター関数を介して、状態の一部を更新します。
@@ -1151,10 +261,10 @@ function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 
 #### パラメータ
 
-| 名前         | タイプ           | 説明 |
-| ------------ | ---------------- | ---- |
-| コールバック | た               |      |
-| _依存関係    | MpDependencyList |      |
+|名前 |タイプ |説明 |
+| ------------- | ---------------- | ----------- |
+|コールバック |た |             |
+| _依存関係 | MpDependencyList |             |
 
 ### useEffect
 
@@ -1169,10 +279,10 @@ function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList):
 
 #### パラメータ
 
-| 名前      | タイプ               | 説明 |
-| --------- | -------------------- | ---- |
-| _効果     | MpEffectコールバック |      |
-| _依存関係 | MpDependencyList     |      |
+|名前 |タイプ |説明 |
+| ------------- | ---------------- | ----------- |
+| _効果 | MpEffectコールバック |             |
+| _依存関係 | MpDependencyList |             |
 
 ### useId
 
@@ -1187,7 +297,7 @@ function useId(): string;
 手巻きカウンターのない協会。ベースライン実装の手
 プロセスインクリメント ID (`:mp0:`、`:mp1:`、…) を出力します。ビルド時プラグイン
 このインポートを各フレームワークのネイティブ `useId` (React または Vue) と交換します。
-ランタイム アダプターと SSR はこの決定論的な形式を共有するため、単一のレンダリングが実行されます。
+ランタイム アダプターと SSR はこの決定論的な形式を共有するため、単一のレンダリングで
 安定した状態を保ちます (両方のフレームワーク間で同一です)。
 
 ### 使用メモ
@@ -1202,17 +312,17 @@ function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 
 #### パラメータ
 
-| 名前      | タイプ           | 説明 |
-| --------- | ---------------- | ---- |
-| 工場      | () => T          |      |
-| _依存関係 | MpDependencyList |      |
+|名前 |タイプ |説明 |
+| ------------- | ---------------- | ----------- |
+|工場 | () => T |             |
+| _依存関係 | MpDependencyList |             |
 
 ### useRef
 
 **種類:** 関数
 
 ```typescript
-function useRef(initial: T): MpRef<T>;
+function useRef(initial?: T): MpRef<T>;
 ```
 
 ニュートラル `useRef`。単一の新しい `{ current }` コンテナを返します。
@@ -1220,16 +330,16 @@ function useRef(initial: T): MpRef<T>;
 
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| イニシャル | た     |      |
+|名前 |タイプ |説明 |
+| ------- | ---- | ----------- |
+|イニシャル |た |             |
 
 ### 使用状態
 
 **種類:** 関数
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>];
+function useState(initial?: T | (() => T)): [T, MpSetState<T>];
 ```
 
 ニュートラル `useState`。ベースライン実装は初期値を返し、
@@ -1238,9 +348,9 @@ no-op セッター (フレームワークを再レンダリングしない限り
 
 #### パラメータ
 
-| 名前       | タイプ         | 説明 |
-| ---------- | -------------- | ---- |
-| イニシャル | T \| (() => T) |      |
+|名前 |タイプ |説明 |
+| ------- | -------------- | ----------- |
+|イニシャル | T \| (() => T) |             |
 
 ## `src/runtime/html-content`
 
@@ -1269,9 +379,32 @@ export interface HtmlContentProperties extends MpPropertyBag
 
 `html`/`as` を超えると、残りのすべてのプロパティがそのままホストに転送されます。
 要素 (属性、イベント ハンドラー、`ref`) を使用するため、宣言はオープンのままになります。
-DOM 属性表面全体を列挙するのではなく、バッグに入れます。
+DOM 属性表面全体を列挙するのではなく、バッグに追加します。
 
 ## `src/runtime/slots`
+
+### スロット付き子供たちを収集する
+
+**種類:** 関数
+
+```typescript
+function collectSlottedChildren(children: readonly MpChild[]): SlottedChildren;
+```
+
+親コンポーネントの子を `slot="…"` マーカーで分割します。
+ライトワンスコンポーネントは子コンポーネントの名前付きスロットにコンテンツを**渡す**ことができます
+(`<ForgeDropdown><button slot="trigger" />…</ForgeDropdown>`)。運ぶ子供たち
+`slot` プロパティはその名前の下にグループ化されます (マーカーは削除されているため、
+解決されたコンテンツは、迷走する `slot` 属性を発行することはありません)。他のすべて
+{@link SlottedChildren.defaultChildren} に残ります。アダプターは名前付きの
+コンパイラが子プロパティをルーティングする方法を正確に反映して、子のプロパティにグループ化します。
+`slot="…"` マーカーを Vue `<template #name>` / React `name` プロパティと同じにします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------------------ | ----------- |
+|子供たち |読み取り専用             |
 
 ### スロットあり
 
@@ -1304,16 +437,16 @@ Vue の `$slots.x` / React `properties.x != null` チェックに相当します
 
 #### パラメータ
 
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 名前 | 文字列 |      |
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|名前 |文字列 |             |
 
 ### MpRenderProperty
 
 **種類:** コンポーネント
 
 ```typescript
-export type MpRenderProperty<S = MpPropertyBag> = (scope: S) => MpChild | readonly MpChild[];
+export type MpRenderProperty<S = MpPropertyBag, R = MpChild | readonly MpChild[]> = (scope: S) => R;
 ```
 
 **render-prop /scoped-slot** 関数: スロットのスコープを指定して返します。
@@ -1371,9 +504,9 @@ function pushSlotScope(properties: MpPropertyBag): void;
 
 #### パラメータ
 
-| 名前       | タイプ        | 説明 |
-| ---------- | ------------- | ---- |
-| プロパティ | MpPropertyBag |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------- | ----------- |
+|プロパティ | MpPropertyBag |             |
 
 ### スロットの解決
 
@@ -1384,16 +517,45 @@ function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[])
 ```
 
 `<Slot name="…" />` の内容を、それを囲んでいる内容に対して解決します。
-コンポーネントの小道具、何もなかったときにスロット自体の子にフォールバックする
+コンポーネントの props、何もなかったときにスロット自体の子にフォールバックする
 提供されます。スコープ付きスロット (関数値スロット プロパティ) は、
 スロット要素の残りの (`name` 以外) プロパティ。
 
 #### パラメータ
 
-| 名前           | タイプ            | 説明 |
-| -------------- | ----------------- | ---- |
-| プロパティ     | MpSlot プロパティ |      |
-| フォールバック | 読み取り専用      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------ | ----------- |
+|プロパティ | MpSlot プロパティ |             |
+|フォールバック |読み取り専用             |
+
+### スロットマーカーの解決
+
+**種類:** 関数
+
+```typescript
+function resolveSlotMarkers(children: readonly MpChild[]): MpChild[];
+```
+
+あらゆることを深く解決する `<Slot name="…" />` 親が作成したもの内の **マーカー**
+**現在の** (親) スコープに対する子ツリー。具体的なツリーを返します。
+内容。これにより、追記型コンポーネントが独自のコンポーネントを**転送**できるようになります。
+名前付きスロットを子コンポーネントのスロットに追加します。
+`<ForgeDrawer><div slot="header"><Slot name="startHeader" /></div></ForgeDrawer>`
+— そして、それを字句的に（転送コンポーネントに対して）正確に解決します。
+コンパイルされた出力のように (React 捕獲する `properties.startHeader` で
+親のレンダリング。 Vue スロットを転送します `<template #header>`）。
+
+アダプターは、コンポーネント要素の子に対して、**プッシュする前**にこれを呼び出します。
+子のスコープなので、マーカーはそれを作成した親スコープを参照します。マーカー
+返される子自体は変更されません (後で解決されます)
+子供自身の範囲）。非スロット要素は再帰的に探索されるため、ネストされたマーカー
+(内側 `slot="…"` ラッパー）も解決します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------------------ | ----------- |
+|子供たち |読み取り専用             |
 
 ## `src/runtime/teleport`
 
@@ -1482,6 +644,467 @@ SSR 用に子を配置)、`@mission-platform/vite-plugin-forge` がそのマッ�
 
 ## `src/runtime/types`
 
+### ラクダとケバブ
+
+**種類：**タイプ
+
+```typescript
+export type CamelToKebab<S extends string> = S extends `$
+```
+
+キャメルケース文字列型をケバブケースに変換します。
+
+### アバターコンテナスタイルの作成
+
+**種類:** 関数
+
+```typescript
+function createAvatarContainerStyle(): Record<string, string>;
+```
+
+説明はありません。
+
+### createAvatarImageImgStyle
+
+**種類:** 関数
+
+```typescript
+function createAvatarImageImgStyle(): Record<string, string>;
+```
+
+説明はありません。
+
+### createAvatarInlineStyle
+
+**種類:** 関数
+
+```typescript
+function createAvatarInlineStyle(
+  size: string = 'md',
+  shape: string = 'circle',
+  src?: string,
+  variant: string = 'primary',
+  color?: string,
+): Record<string, string>;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|サイズ |文字列 |             |
+|形状 |文字列 |             |
+|ソース |文字列 |             |
+|バリアント |文字列 |             |
+|色 |文字列 |             |
+
+### createAvatarStatusInlineStyle
+
+**種類:** 関数
+
+```typescript
+function createAvatarStatusInlineStyle(size: string = 'md', status?: string): Record<string, string> | undefined;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------ | ----------- |
+|サイズ |文字列 |             |
+|ステータス |文字列 |             |
+
+### createBackgroundVideoInlineStyle
+
+**種類:** 関数
+
+```typescript
+function createBackgroundVideoInlineStyle(minHeight: string = '24rem'): Record<string, string>;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | ------ | ----------- |
+|最小高さ |文字列 |             |
+
+### createCodeScannerStyle
+
+**種類:** 関数
+
+```typescript
+function createCodeScannerStyle(): Record<string, string>;
+```
+
+説明はありません。
+
+### createContainerInlineStyle
+
+**種類:** 関数
+
+```typescript
+function createContainerInlineStyle(
+  variant: string = 'responsive',
+  maxWidth: string = 'lg',
+  gutter: string = 'md',
+  center: boolean = true,
+): Record<string, string>;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------- | ----------- |
+|バリアント |文字列 |             |
+|最大幅 |文字列 |             |
+|側溝 |文字列 |             |
+|中央 |ブール値 |             |
+
+### createCoverObjectFitStyle
+
+**種類:** 関数
+
+```typescript
+function createCoverObjectFitStyle(): Record<string, string>;
+```
+
+説明はありません。
+
+### createForgeComponentStyle
+
+**種類:** 関数
+
+```typescript
+function createForgeComponentStyle(
+  prefix: string,
+  properties?: T,
+  style?: Record<string, string>,
+): Record<string, string> | undefined;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ---------------------- | ----------- |
+|接頭辞 |文字列 |             |
+|プロパティ |た |             |
+|スタイル |レコード<string, string> |             |
+
+### createForgeStyle
+
+**種類:** 関数
+
+```typescript
+function createForgeStyle(style: T): DefinedForgeStyle<T> | undefined;
+```
+
+定義されたカスタム プロパティ値から中立的な `style` マップを構築します。
+
+値が `undefined` であるエントリは省略されるため、SCSS
+`var(--forge-*, <token fallback>)` チェーンはアクティブなままです。 `undefined` を返します
+オーバーライドが存在しない場合。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---- | ----------- |
+|スタイル |た |             |
+
+### createGaugeInlineMath
+
+**種類:** 関数
+
+```typescript
+function createGaugeInlineMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): {
+  clampedValue: number;
+  percentage: number;
+  displayValue: string;
+  dashOffset: number;
+};
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |番号 |             |
+|分 |番号 |             |
+|最大 |番号 |             |
+
+### createGridLayoutInlineStyle
+
+**種類:** 関数
+
+```typescript
+function createGridLayoutInlineStyle(rows: number = 1, columns: number = 1, gap: string = 'md'): Record<string, string>;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|行 |番号 |             |
+|列 |番号 |             |
+|ギャップ |文字列 |             |
+
+### ハイライトスタイルの作成
+
+**種類:** 関数
+
+```typescript
+function createHighlightStyle(left: string = '0%', width: string = '100%'): Record<string, string>;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|左 |文字列 |             |
+|幅 |文字列 |             |
+
+### createLeftPositionStyle
+
+**種類:** 関数
+
+```typescript
+function createLeftPositionStyle(left: string = '0%'): Record<string, string>;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|左 |文字列 |             |
+
+### createObjectFitStyle
+
+**種類:** 関数
+
+```typescript
+function createObjectFitStyle(fit: string = 'cover'): Record<string, string>;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|フィット |文字列 |             |
+
+### createPreviewTextStyle
+
+**種類:** 関数
+
+```typescript
+function createPreviewTextStyle(): Record<string, string>;
+```
+
+説明はありません。
+
+### createProgressBarPercent
+
+**種類:** 関数
+
+```typescript
+function createProgressBarPercent(
+  value: number = 0,
+  max: number = 100,
+  indeterminate: boolean = false,
+): { percent: number; percentLabel: string };
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------- | ------- | ----------- |
+|値 |番号 |             |
+|最大 |番号 |             |
+|不定 |ブール値 |             |
+
+### createRangeInputMath
+
+**種類:** 関数
+
+```typescript
+function createRangeInputMath(
+  modelValue: [number, number] = [0, 100],
+  min: number = 0,
+  max: number = 100,
+): {
+  minPercent: number;
+  maxPercent: number;
+  highlightLeft: string;
+  highlightWidth: string;
+  minLeft: string;
+  maxLeft: string;
+};
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ---------------- | ----------- |
+|モデル値 | [数値、数値] |             |
+|分 |番号 |             |
+|最大 |番号 |             |
+
+### createResponsiveImageInlineStyle
+
+**種類:** 関数
+
+```typescript
+function createResponsiveImageInlineStyle(aspectRatio?: string): Record<string, string> | undefined;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ------ | ----------- |
+|アスペクト比 |文字列 |             |
+
+### createResponsiveVideoInlineStyle
+
+**種類:** 関数
+
+```typescript
+function createResponsiveVideoInlineStyle(
+  aspectRatio: string = '16 / 9',
+  fit: string = 'contain',
+): Record<string, string>;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ------ | ----------- |
+|アスペクト比 |文字列 |             |
+|フィット |文字列 |             |
+
+### createSkeletonInlineStyle
+
+**種類:** 関数
+
+```typescript
+function createSkeletonInlineStyle(width?: string, height?: string): Record<string, string>;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------ | ----------- |
+|幅 |文字列 |             |
+|身長 |文字列 |             |
+
+### createSliderMath
+
+**種類:** 関数
+
+```typescript
+function createSliderMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): { percent: number; fillWidth: string; thumbLeft: string };
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |番号 |             |
+|分 |番号 |             |
+|最大 |番号 |             |
+
+### createVerticalLayoutInlineStyle
+
+**種類:** 関数
+
+```typescript
+function createVerticalLayoutInlineStyle(gap: string = 'var(--mp-spacing-4)'): Record<string, string>;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|ギャップ |文字列 |             |
+
+### createWidthStyle
+
+**種類:** 関数
+
+```typescript
+function createWidthStyle(width: string = '0%'): Record<string, string>;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|幅 |文字列 |             |
+
+### CSSスタイルプロパティ
+
+**種類：**タイプ
+
+```typescript
+export type CSSStyleProperties =
+```
+
+JSX `style` 属性によって使用されるフレームワークに依存しない CSS スタイル オブジェクト。
+
+コンポーネントが所有するカスタム プロパティは、この型を明示的に拡張する必要があります。
+`--forge-*` キー (例: `CSSStyleProperties & { '--forge-button-radius'?: string | undefined }`)
+型なしスタイルの辞書や非 DOM `styles` バッグを導入するのではなく。
+
+### 鍛造プロパティバッグ
+
+**種類：**タイプ
+
+```typescript
+export type ForgePropertyBag<T extends Record<string, string | undefined> = Record<string, string | undefined>> =
+```
+
+ケバブケースまたはキャメルケースのプロパティ キーを受け入れる寛容なプロパティ オーバーライド バッグ。
+
 ### 断片
 
 **種類:** 定数
@@ -1515,11 +1138,21 @@ function isMpElement(value: unknown): value is MpElement;
 
 #### パラメータ
 
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 不明   |      |
+|名前 |タイプ |説明 |
+| ----- | ------- | ----------- |
+|値 |不明 |             |
 
-### mpチャイルド
+### ケバブとラクダ
+
+**種類：**タイプ
+
+```typescript
+export type KebabToCamel<S extends string> = S extends `$
+```
+
+ケバブケースの文字列型をキャメルケースに変換します。
+
+### MpChild
 
 **種類:** コンポーネント
 
@@ -1576,12 +1209,12 @@ export type MpPropertyBag = Record<string, unknown>;
 {@link MpElement} によって運ばれる属性/小道具の **ランタイム** バッグ。
 
 これは意図的にプレーンで型付けされていないレコードです。これは JSX ファクトリの内容です。
-中立的なツリーをたどる際に、アダプターが何をビルドするか、そして何にインデックスを付けるか。それは
-_ではありません_ コンポーネントの props の基本型 — コンポーネントは正確に宣言します
+中立的なツリーをたどる際に、アダプターが何をビルドし、何にインデックスを付けるか。それは
+コンポーネントの props の基本型ではありません — コンポーネントは、正確に
 受け入れるプロパティ (`children?: MpChild | readonly MpChild[]` を含む)
 それらをレンダリングするとき)、過剰なプロパティのチェックと `keyof` が維持されるようにする
 コンパイルされたすべてのターゲットで意味があります。各要素の少数の属性
-{@link MpReservedProperties} で一度宣言されているかどうかに関係なく受け入れられます。
+{@link MpReservedProperties} で 1 回宣言されても受け入れられます。
 
 ### MpReservedProperties
 
@@ -1604,9 +1237,837 @@ export interface MpReservedProperties
   `"default"`) はデフォルトのスロットを意味します。
 
 どちらもコンポーネント自身の props コントラクトの一部ではありません。両方ともコンポーネントによって読み取られます。
-_親_ (リコンサイラー、スロットルーター)、決してコンポーネント自体によるものではありません —
+_parent_ (リコンサイラー、スロットルーター)、決してコンポーネント自体によるものではありません —
 したがって、各要素で宣言されるのではなく、ここのすべての要素で受け入れられます。
 小道具インターフェイス。
+
+### MPサスペンス子供
+
+**種類:** コンポーネント
+
+```typescript
+export type MpSuspenseChild = MpChild | PromiseLike<MpSuspenseChild> | readonly MpSuspenseChild[];
+```
+
+サスペンスで受け入れられる同期コンテンツまたは再帰的非同期コンテンツ。
+
+### MpSuspenseProperties
+
+**種類:** コンポーネント
+
+```typescript
+export interface MpSuspenseProperties
+```
+
+フレームワーク中立のサスペンス マーカーによって運ばれる小道具。
+
+### renderAccordionItems
+
+**種類:** 関数
+
+```typescript
+function renderAccordionItems(
+  items: readonly any[] = [],
+  _exclusive: boolean = true,
+  defaultOpen: readonly string[] = [],
+  _properties?: any,
+): any;
+```
+
+キャメルケースまたはケバブケースのプロパティ バッグからコンポーネント スコープの CSS カスタム プロパティ スタイル マップを構築します。
+
+キャメルケースのキーをケバブケースに自動的に変換し、コンポーネントの名前空間を確保します
+プレフィックス `--forge-<prefix>-` が適用され、未定義のエントリが省略されるため、CSS トークンのフォールバックが行われます。
+チェーンはアクティブなままです。定義されたオーバーライドが存在しない場合は、`undefined` を返します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ----------------- | ----------- |
+|アイテム |読み取り専用任意[] |             |
+| _排他的 |ブール値 |             |
+|デフォルト開く |読み取り専用文字列[] |             |
+| _プロパティ |任意 |             |
+
+### renderActivityFeedItems
+
+**種類:** 関数
+
+```typescript
+function renderActivityFeedItems(items: readonly any[] = [], maxItems?: number, onItemClick?: (item: any) => void): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ------------------- | ----------- |
+|アイテム |読み取り専用任意[] |             |
+|最大アイテム数 |番号 |             |
+| onItemClick | (項目: 任意) => 無効 |             |
+
+### レンダリングアセットブラウザグリッド
+
+**種類:** 関数
+
+```typescript
+function renderAssetBrowserGrid(
+  assets: readonly any[] = [],
+  selected: readonly string[] = [],
+  onSelect?: (asset: any) => void,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | -------------------- | ----------- |
+|資産 |読み取り専用任意[] |             |
+|選択済み |読み取り専用文字列[] |             |
+|オンセレクト | (アセット: 任意) => void |             |
+
+### renderBarcodeSvg
+
+**種類:** 関数
+
+```typescript
+function renderBarcodeSvg(
+  value: string = '',
+  symbology: string = 'code128',
+  color: string = '#000000',
+  background: string = '#ffffff',
+  displayValue: boolean = false,
+  ariaLabel?: string,
+  onError?: (err: Error) => void,
+  showActions?: any,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------ | -------------------- | ----------- |
+|値 |文字列 |             |
+|記号学 |文字列 |             |
+|色 |文字列 |             |
+|背景 |文字列 |             |
+|表示値 |ブール値 |             |
+|アリアラベル |文字列 |             |
+|エラー発生時 | (err: エラー) => 無効 |             |
+|アクションを表示 |任意 |             |
+
+### レンダーブレッドクラム項目
+
+**種類:** 関数
+
+```typescript
+function renderBreadcrumbItems(items: readonly any[] = [], separator: string = '/'): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | -------------- | ----------- |
+|アイテム |読み取り専用任意[] |             |
+|区切り文字 |文字列 |             |
+
+### renderCarouselIndicatorItems
+
+**種類:** 関数
+
+```typescript
+function renderCarouselIndicatorItems(
+  total: number = 0,
+  current: number = 0,
+  clickable: boolean = true,
+  variant: string = 'dots',
+  onSelect?: (index: number) => void,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | ----------------------- | ----------- |
+|合計 |番号 |             |
+|現在 |番号 |             |
+|クリック可能 |ブール値 |             |
+|バリアント |文字列 |             |
+|オンセレクト | (インデックス: 数値) => void |             |
+
+### レンダリングカルーセルスライド
+
+**種類:** 関数
+
+```typescript
+function renderCarouselSlides(
+  slides: readonly any[] = [],
+  current: number = 0,
+  _orientation: string = 'horizontal',
+  slideWidth: number = 100,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------ | -------------- | ----------- |
+|スライド |読み取り専用任意[] |             |
+|現在 |番号 |             |
+| _方向 |文字列 |             |
+|スライド幅 |番号 |             |
+
+### レンダリングカタログアイコン
+
+**種類:** 関数
+
+```typescript
+function renderCatalogIcon(name: string, size: number = 20, color: string = 'currentColor'): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|名前 |文字列 |             |
+|サイズ |番号 |             |
+|色 |文字列 |             |
+
+### renderCodeBlockLineNumbers
+
+**種類:** 関数
+
+```typescript
+function renderCodeBlockLineNumbers(code: string = ''): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|コード |文字列 |             |
+
+### renderCommandPaletteGroups
+
+**種類:** 関数
+
+```typescript
+function renderCommandPaletteGroups(
+  commands: readonly any[] = [],
+  _groups: readonly string[] = [],
+  activeIndex: number = 0,
+  onSelect?: (command: any) => void,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ---------------------- | ----------- |
+|コマンド |読み取り専用任意[] |             |
+| _グループ |読み取り専用文字列[] |             |
+|アクティブインデックス |番号 |             |
+|オンセレクト | (コマンド: 任意) => void |             |
+
+### レンダリングコメントツリー
+
+**種類:** 関数
+
+```typescript
+function renderCommentTree(
+  comments: readonly any[] = [],
+  onReply?: (comment: any) => void,
+  onResolve?: (comment: any) => void,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | ---------------------- | ----------- |
+|コメント |読み取り専用任意[] |             |
+| on返信 | (コメント: 任意) => void |             |
+|オンリゾルブ | (コメント: 任意) => void |             |
+
+### レンダリング比較テーブル本体
+
+**種類:** 関数
+
+```typescript
+function renderComparisonTableBody(items: readonly any[] = [], features: readonly any[] = []): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | -------------- | ----------- |
+|アイテム |読み取り専用任意[] |             |
+|特徴 |読み取り専用任意[] |             |
+
+### renderComparisonTableHeaders
+
+**種類:** 関数
+
+```typescript
+function renderComparisonTableHeaders(items: readonly any[] = []): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | -------------- | ----------- |
+|アイテム |読み取り専用任意[] |             |
+
+### renderCtaBannerActions
+
+**種類:** 関数
+
+```typescript
+function renderCtaBannerActions(actions: readonly any[] = []): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | -------------- | ----------- |
+|アクション |読み取り専用任意[] |             |
+
+### renderDataCardMetrics
+
+**種類:** 関数
+
+```typescript
+function renderDataCardMetrics(metrics: readonly any[] = []): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | -------------- | ----------- |
+|メトリクス |読み取り専用任意[] |             |
+
+### renderDropdownItems
+
+**種類:** 関数
+
+```typescript
+function renderDropdownItems(items: readonly any[] = [], onSelect?: (item: any) => void): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------------------- | ----------- |
+|アイテム |読み取り専用任意[] |             |
+|オンセレクト | (項目: 任意) => 無効 |             |
+
+### レンダリング画像ソース
+
+**種類:** 関数
+
+```typescript
+function renderImageSources(sources?: readonly any[]): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | -------------- | ----------- |
+|ソース |読み取り専用任意[] |             |
+
+### renderマーケティングヘッダーアクション
+
+**種類:** 関数
+
+```typescript
+function renderMarketingHeaderActions(actions: readonly any[] = []): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | -------------- | ----------- |
+|アクション |読み取り専用任意[] |             |
+
+### renderNavbarItems
+
+**種類:** 関数
+
+```typescript
+function renderNavbarItems(items: readonly any[] = []): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | -------------- | ----------- |
+|アイテム |読み取り専用任意[] |             |
+
+### renderNotificationPanelItems
+
+**種類:** 関数
+
+```typescript
+function renderNotificationPanelItems(
+  notifications: readonly any[] = [],
+  onDismiss?: (id: string) => void,
+  _onRead?: (id: string) => void,
+  onActionClick?: (item: any) => void,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------- | -------------------- | ----------- |
+|通知 |読み取り専用任意[] |             |
+|却下 | (id: 文字列) => 無効 |             |
+| _onRead | (id: 文字列) => 無効 |             |
+|アクションクリック時 | (項目: 任意) => 無効 |             |
+
+### renderPaginationControls
+
+**種類:** 関数
+
+```typescript
+function renderPaginationControls(
+  currentPage: number = 1,
+  totalPages: number = 1,
+  maxVisiblePages: number = 7,
+  showEdges: boolean = false,
+  onPageChange?: (page: number) => void,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------------- | ---------------------- | ----------- |
+|現在のページ |番号 |             |
+|合計ページ数 |番号 |             |
+| maxVisiblePages |番号 |             |
+|エッジを表示 |ブール値 |             |
+| onPageChange | (ページ:番号) => void |             |
+
+### レンダリング評価星
+
+**種類:** 関数
+
+```typescript
+function renderRatingStars(
+  max: number = 5,
+  modelValue: number = 0,
+  disabled: boolean = false,
+  isReadonly: boolean = false,
+  onUpdateModelValue?: (val: number) => void,
+  onChange?: (val: number) => void,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------------ | --------------------- | ----------- |
+|最大 |番号 |             |
+|モデル値 |番号 |             |
+|無効 |ブール値 |             |
+|読み取り専用です |ブール値 |             |
+| onUpdateModelValue | (val: 数値) => void |             |
+|オンチェンジ | (val: 数値) => void |             |
+
+### renderResourcePlannerRows
+
+**種類:** 関数
+
+```typescript
+function renderResourcePlannerRows(
+  resources: readonly any[] = [],
+  segments: readonly any[] = [],
+  _assignments: readonly any[] = [],
+  _availability: readonly any[] = [],
+  _onEventClick?: (assignment: any) => void,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------- | ------------------------- | ----------- |
+|リソース |読み取り専用任意[] |             |
+|セグメント |読み取り専用任意[] |             |
+| _課題 |読み取り専用任意[] |             |
+| _可用性 |読み取り専用任意[] |             |
+| _onイベントクリック | (代入: 任意) => void |             |
+
+### renderSegmentControlオプション
+
+**種類:** 関数
+
+```typescript
+function renderSegmentControlOptions(
+  options: readonly any[] = [],
+  modelValue?: string,
+  onSelect?: (value: string) => void,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ----------------------- | ----------- |
+|オプション |読み取り専用任意[] |             |
+|モデル値 |文字列 |             |
+|オンセレクト | (値: 文字列) => void |             |
+
+### renderSiteFooterSections
+
+**種類:** 関数
+
+```typescript
+function renderSiteFooterSections(sections: readonly any[] = []): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | -------------- | ----------- |
+|セクション |読み取り専用任意[] |             |
+
+### renderStepsItems
+
+**種類:** 関数
+
+```typescript
+function renderStepsItems(
+  steps: readonly any[] = [],
+  currentStep: number = 0,
+  onStepClick?: (step: number) => void,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ---------------------- | ----------- |
+|ステップ |読み取り専用任意[] |             |
+|現在のステップ |番号 |             |
+|オンステップクリック | (ステップ: 番号) => void |             |
+
+### renderTableColumns
+
+**種類:** 関数
+
+```typescript
+function renderTableColumns(columns: readonly any[] = []): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | -------------- | ----------- |
+|列 |読み取り専用任意[] |             |
+
+### レンダリングテーブル行
+
+**種類:** 関数
+
+```typescript
+function renderTableRows(data: readonly any[] = [], columns: readonly any[] = []): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | -------------- | ----------- |
+|データ |読み取り専用任意[] |             |
+|列 |読み取り専用任意[] |             |
+
+### renderTabsList
+
+**種類:** 関数
+
+```typescript
+function renderTabsList(
+  tabs: readonly any[] = [],
+  activeId?: string,
+  variant: string = 'line',
+  closable: boolean = false,
+  onSelect?: (id: string) => void,
+  onClose?: (id: string) => void,
+  addable: boolean = false,
+  addLabel: string = 'Add tab',
+  onAdd?: () => void,
+): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | -------------------- | ----------- |
+|タブ |読み取り専用任意[] |             |
+|アクティブID |文字列 |             |
+|バリアント |文字列 |             |
+|開閉可能 |ブール値 |             |
+|オンセレクト | (id: 文字列) => 無効 |             |
+|閉じる | (id: 文字列) => 無効 |             |
+|追加可能 |ブール値 |             |
+|ラベルを追加 |文字列 |             |
+| on追加 | () => 無効 |             |
+
+### renderTimelineItems
+
+**種類:** 関数
+
+```typescript
+function renderTimelineItems(items: readonly any[] = [], align: string = 'start'): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | -------------- | ----------- |
+|アイテム |読み取り専用任意[] |             |
+|整列 |文字列 |             |
+
+### renderTreeViewNode
+
+**種類:** 関数
+
+```typescript
+function renderTreeViewNodes(nodes: readonly any[] = [], onSelect?: (node: any) => void): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------------------- | ----------- |
+|ノード |読み取り専用任意[] |             |
+|オンセレクト | (node: 任意) => void |             |
+
+### レンダリング未読バッジ
+
+**種類:** 関数
+
+```typescript
+function renderUnreadBadge(unreadCount: number = 0): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ------ | ----------- |
+|未読数 |番号 |             |
+
+### レンダリングビデオソース
+
+**種類:** 関数
+
+```typescript
+function renderVideoSources(sources?: readonly any[]): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | -------------- | ----------- |
+|ソース |読み取り専用任意[] |             |
+
+### 解決カタログアイコン
+
+**種類:** 関数
+
+```typescript
+function resolveCatalogIcon(catalog: Record<string, any>, name: string): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------------------- | ----------- |
+|カタログ |レコード<string, any> |             |
+|名前 |文字列 |             |
+
+### 解決電子メールタイポグラフィータグ
+
+**種類:** 関数
+
+```typescript
+function resolveEmailTypographyTag(asTag?: string, variant?: string): string;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|タグ |文字列 |             |
+|バリアント |文字列 |             |
+
+### 解決アイコンピクセルサイズ
+
+**種類:** 関数
+
+```typescript
+function resolveIconPixelSize(size: string = 'md'): number;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|サイズ |文字列 |             |
+
+### 解決ステータスアイコン
+
+**種類:** 関数
+
+```typescript
+function resolveStatusIcon(catalog: Record<string, any>, status: string = 'neutral'): any;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------------------- | ----------- |
+|カタログ |レコード<string, any> |             |
+|ステータス |文字列 |             |
+
+### 解決同期ステータスラベル
+
+**種類:** 関数
+
+```typescript
+function resolveSyncStatusLabel(status: string = 'synced', label?: string): string;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------ | ----------- |
+|ステータス |文字列 |             |
+|ラベル |文字列 |             |
+
+### solveTextVariantForQuote
+
+**種類:** 関数
+
+```typescript
+function resolveTextVariantForQuote(size: string = 'md'): string;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|サイズ |文字列 |             |
+
+### タイポグラフィースケールバリアント
+
+**種類:** 関数
+
+```typescript
+function resolveTypographyScaleVariant(variant?: string): string;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|バリアント |文字列 |             |
+
+### タイポグラフィータグを解決する
+
+**種類:** 関数
+
+```typescript
+function resolveTypographyTag(asTag?: string, href?: string, variant?: string): string;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|タグ |文字列 |             |
+| ｈｒｅｆ |文字列 |             |
+|バリアント |文字列 |             |
 
 ### スロット
 
@@ -1623,4 +2084,14 @@ export const Slot: MpComponent;
 ただし、実際には呼び出されることはありません: ビルド時コンパイラ
 (`@mission-platform/vite-plugin-forge`) すべての `<Slot>` をターゲットに書き換えます
 フレームワーク独自のスロット メカニズムと、ランタイム アダプターがそれをインターセプトします。
-呼び出しの前に ID (`type === Slot`) を実行します。直接呼び出すのはバグです。
+呼び出しの前に ID (`type === Slot`) を確認してください。直接呼び出すのはバグです。
+
+### サスペンス
+
+**種類:** 定数
+
+```typescript
+export const Suspense: MpComponent<MpSuspenseProperties>;
+```
+
+各フレームワーク コンパイラーによってネイティブの非同期境界マーカーが引き下げられました。

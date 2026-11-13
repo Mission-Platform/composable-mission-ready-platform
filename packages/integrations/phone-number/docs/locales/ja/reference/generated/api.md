@@ -33,23 +33,23 @@ function getPhoneNumberUtilSync(): PhoneNumberUtil;
 
 ### 電話番号の形式
 
-**種類:** 定数
+**種類：**タイプ
 
 ```typescript
-export const PhoneNumberFormat;
+export type PhoneNumberFormat = (typeof PhoneNumberFormat)[keyof typeof PhoneNumberFormat];
 ```
 
-出力形式、libphonenumber の `PhoneNumberFormat` をミラーリングします。
+説明はありません。
 
 ### 電話番号の種類
 
-**種類:** 定数
+**種類：**タイプ
 
 ```typescript
-export const PhoneNumberType;
+export type PhoneNumberType = (typeof PhoneNumberType)[keyof typeof PhoneNumberType];
 ```
 
-電話番号の回線タイプ。libphonenumber の `PhoneNumberType` をミラーリングします。
+説明はありません。
 
 ### 電話番号使用状況
 
@@ -76,19 +76,19 @@ export type RegionCode = string;
 
 ### 地域の国コード
 
-**種類:** fws-export
+**種類:** フリントエクスポート
 
 ```typescript
 export fn country_code_for_region(region: string) -> i32
 ```
 
-サポートされている地域コードを国際ダイヤルの国コードにマッピングします。
+サポートされている地域コードを国際ダイヤルの国コードにマップします。
 
 #### パラメータ
 
-| 名前 | タイプ | 説明                                         |
-| ---- | ------ | -------------------------------------------- |
-| 地域 | 文字列 | 「US」や「GB」などの ISO リージョン コード。 |
+|名前 |タイプ |説明 |
+| ------ | ------ | ------------------------------------- |
+|地域 |文字列 | 「US」や「GB」などの ISO リージョン コード。 |
 
 #### 契約
 
@@ -97,7 +97,7 @@ export fn country_code_for_region(region: string) -> i32
 
 ### ナショナルプレフィックス
 
-**種類:** fws-export
+**種類:** フリントエクスポート
 
 ```typescript
 export fn national_prefix(region: string) -> string
@@ -107,18 +107,18 @@ export fn national_prefix(region: string) -> string
 
 #### パラメータ
 
-| 名前 | タイプ | 説明                    |
-| ---- | ------ | ----------------------- |
-| 地域 | 文字列 | ISO リージョン コード。 |
+|名前 |タイプ |説明 |
+| ------ | ------ | ---------------- |
+|地域 |文字列 | ISO リージョン コード。 |
 
 #### 契約
 
 - **@param:** リージョン ISO リージョン コード。
-- **@returns:** 各国のプレフィックス文字列、または何も適用されない場合は空です。
+- **@returns:** 国内プレフィックス文字列、または何も適用されない場合は空です。
 
 ### 国コードの地域
 
-**種類:** fws-export
+**種類:** フリントエクスポート
 
 ```typescript
 export fn region_for_country_code(code: i32) -> string
@@ -128,9 +128,9 @@ export fn region_for_country_code(code: i32) -> string
 
 #### パラメータ
 
-| 名前   | タイプ | 説明                   |
-| ------ | ------ | ---------------------- |
-| コード | i32    | 国際ダイヤルの国番号。 |
+|名前 |タイプ |説明 |
+| ---- | ---- | ----------------------------------- |
+|コード | i32 |国際ダイヤルの国番号。 |
 
 #### 契約
 
@@ -139,7 +139,7 @@ export fn region_for_country_code(code: i32) -> string
 
 ### 地域です
 
-**種類:** fws-export
+**種類:** フリントエクスポート
 
 ```typescript
 export fn region_is(region: string, expected: string) -> bool
@@ -149,10 +149,10 @@ export fn region_is(region: string, expected: string) -> bool
 
 #### パラメータ
 
-| 名前       | タイプ | 説明                               |
-| ---------- | ------ | ---------------------------------- |
-| 地域       | 文字列 | ISO 地域コードの候補。             |
-| 予想される | 文字列 | 予期される ISO リージョン コード。 |
+|名前 |タイプ |説明 |
+| -------- | ------ | -------------------------- |
+|地域 |文字列 | ISO 地域コードの候補。 |
+|予想される |文字列 |予期される ISO リージョン コード。  |
 
 #### 契約
 

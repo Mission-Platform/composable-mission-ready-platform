@@ -11,7 +11,7 @@ raamwerkneutrale haken geleverd door `@mission-platform/forge-jsx`.
 
 ## Directory-indeling
 
-Elke composable MOET zich in zijn eigen benoemde submap bevinden `src/composables/`, vergezeld van een co-located test
+Elke composable MOET zich in zijn eigen benoemde submap binnen `src/composables/` bevinden, vergezeld van een co-located test
 bestand en een lokaal vat.
 
 ```text
@@ -25,18 +25,18 @@ src/composables/
 
 ## Auteursregels
 
-1. **Gebruik Forge Hooks**: importeer alleen reactieve primitieven (bijv. `useState`, `useEffect`, `useMemo`, `useRef`) van
-   `@mission-platform/forge-jsx`. Importeer nooit rechtstreeks uit `vue` of `react`.
-2. **Naamgevingsconventie**: samengestelde namen moeten kebab-case gebruiken en worden voorafgegaan door `use-` (e.g., `use-media-query`).
+1. **Gebruik Forge Hooks**: Importeer alleen reactieve primitieven (bijvoorbeeld `useState`, `useEffect`, `useMemo`, `useRef`) uit
+   `@mission-platform/forge-jsx`. Importeer nooit rechtstreeks vanuit `vue` of `react`.
+2. **Naamgevingsconventie**: samengestelde namen moeten kebab-case gebruiken en worden voorafgegaan door `use-` (bijvoorbeeld `use-media-query`).
 3. **SSR-veiligheid**: Zorg ervoor dat de logica veilig is voor server-side rendering. Bewaak elke toegang tot browser-only API's zoals `window`,
-   `document`, of `localStorage`.
+   `document` of `localStorage`.
 4. **Geen UI-componenten**: Composables moeten zich richten op logica. Retourneer of manipuleer UI-componenten niet rechtstreeks; in plaats daarvan,
    retourstatus, refs of callbacks.
-5. **Verplicht testen**: Elke composable moet een co-located hebben `.spec.ts` bestand gebruiken Vitest.
+5. **Verplicht testen**: Elke composable moet een medegelokaliseerd `.spec.ts`-bestand hebben met behulp van Vitest.
 
 ## Basisvoorbeeld
 
-Hier is een typische write-once-composable die een gebeurtenislistener beheert.
+Hier is een typisch write-once composable dat een gebeurtenislistener beheert.
 
 ```ts
 import { type MpRef, useEffect } from "@mission-platform/forge-jsx";
@@ -64,9 +64,10 @@ export function useEventListener(
 
 ## Steiger
 
-De snelste manier om een ​​nieuwe composable te maken is via de Mission Platform Developer MCP-tool:
+De snelste manier om een nieuwe composable te maken is via de `scaffold_composable`-tool op een verbonden Mission Platform
+MCP-server voor ontwikkelaars. Dit is een voorbeeld van een MCP-toolaanroep, geen shell-opdracht:
 
-```bash
+```text
 # Example: Creating a new 'use-click-outside' composable in the 'observers' package
 scaffold_composable(name="use-click-outside", package="observers", apply=true)
 ```

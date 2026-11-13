@@ -23,7 +23,7 @@ function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElemen
 rédigé une fois dans le dialecte JSX neutre et compilé directement dans React ou Vue
 par `@mission-platform/vite-plugin-forge`.
 
-Il est soutenu par le magasin de thèmes observables partagé (`../theme-store`) : en cliquant
+Il est soutenu par le magasin de thèmes observables partagé (`../theme-store`) : en cliquant
 il pilote le même singleton que celui configuré par `ForgeThemeProvider`, donc il
 conserve la préférence, épingle `data-theme`/`color-scheme` à la racine du document
 (et le `<meta name="color-scheme">` synchronisé), et reste synchronisé avec le
@@ -39,9 +39,9 @@ via l'emplacement par défaut.
 
 #### Paramètres
 
-| Nom        | Tapez                                | Descriptif |
-| ---------- | ------------------------------------ | ---------- |
-| propriétés | Lecture seule<ThemeToggleProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------- | ----------- |
+| propriétés | Lecture seule<ThemeToggleProperties> |             |
 
 ### ThemeTogglePropriétés
 
@@ -96,9 +96,9 @@ le wrapper est un `<div>` fixe.
 
 #### Paramètres
 
-| Nom        | Tapez                                  | Descriptif |
-| ---------- | -------------------------------------- | ---------- |
-| propriétés | Lecture seule<ThemeComposerProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------------- | ----------- |
+| propriétés | Lecture seule<ThemeComposerProperties> |             |
 
 ### Propriétés du compositeur de thème
 
@@ -151,9 +151,9 @@ magasin au niveau du document avec un wrapper `<div>` fixe.
 
 #### Paramètres
 
-| Nom        | Tapez                                  | Descriptif |
-| ---------- | -------------------------------------- | ---------- |
-| propriétés | Lecture seule<ThemeProviderProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------------- | ----------- |
+| propriétés | Lecture seule<ThemeProviderProperties> |             |
 
 ### Propriétés du fournisseur de thème
 
@@ -173,7 +173,7 @@ Aucune description fournie.
 export type ThemeProviderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-Jeton de taille – échelle canonique 2xs → 2xl (héritée via le wrapper sans rendu).
+Jeton de taille — échelle canonique 2xs → 2xl (hérité via le wrapper sans rendu).
 
 ## `src/stores/theme-composer-store/theme-composer-store`
 
@@ -201,9 +201,9 @@ La trappe d'évacuation `tokens` est fusionnée sur le dessus.
 
 #### Paramètres
 
-| Nom           | Tapez               | Descriptif |
-| ------------- | ------------------- | ---------- |
-| configuration | ThemeComposerConfig |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------------------- | ----------- |
+| configuration | ThemeComposerConfig |             |
 
 ### configVersStyleString
 
@@ -213,13 +213,13 @@ La trappe d'évacuation `tokens` est fusionnée sur le dessus.
 function configToStyleString(config: ThemeComposerConfig): string;
 ```
 
-Résolvez une configuration en chaîne `style` en ligne complète (propriétés personnalisées + `color-scheme`).
+Résolvez une configuration avec la chaîne `style` en ligne complète (propriétés personnalisées + `color-scheme`).
 
 #### Paramètres
 
-| Nom           | Tapez               | Descriptif |
-| ------------- | ------------------- | ---------- |
-| configuration | ThemeComposerConfig |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------------------- | ----------- |
+| configuration | ThemeComposerConfig |             |
 
 ### cssVariablesVersChaîne
 
@@ -233,9 +233,9 @@ Sérialise une carte de propriétés personnalisées CSS dans une chaîne `style
 
 #### Paramètres
 
-| Nom       | Tapez                          | Descriptif |
-| --------- | ------------------------------ | ---------- |
-| variables | Enregistrement<string, string> |            |
+| Nom | Tapez | Descriptif |
+| --------- | ---------------------- | ----------- |
+| variables | Enregistrement<string, string> |             |
 
 ### mergeConfig
 
@@ -249,10 +249,10 @@ Fusionnez superficiellement une configuration partielle dans la configuration ac
 
 #### Paramètres
 
-| Nom           | Tapez               | Descriptif |
-| ------------- | ------------------- | ---------- |
-| configuration | ThemeComposerConfig |            |
-| partiel       | ThemeComposerConfig |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------- | ----------- |
+| configuration | ThemeComposerConfig |             |
+| partiel | ThemeComposerConfig |             |
 
 ### supprimerConfigToken
 
@@ -266,10 +266,10 @@ Supprimez un seul remplacement de jeton brut.
 
 #### Paramètres
 
-| Nom           | Tapez               | Descriptif |
-| ------------- | ------------------- | ---------- |
-| configuration | ThemeComposerConfig |            |
-| clé           | chaîne              |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------------------- | ----------- |
+| configuration | ThemeComposerConfig |             |
+| clé | chaîne |             |
 
 ### setConfigAttribute
 
@@ -287,11 +287,11 @@ Définissez un seul attribut convivial (passez `undefined` pour l'effacer).
 
 #### Paramètres
 
-| Nom           | Tapez                  | Descriptif |
-| ------------- | ---------------------- | ---------- |
-| configuration | ThemeComposerConfig    |            |
-| attribut      | K                      |            |
-| valeur        | ThemeComposerConfig[K] |            |
+| Nom | Tapez | Descriptif |
+| --------- | ---------------------- | ----------- |
+| configuration | ThemeComposerConfig |             |
+| attribut | K |             |
+| valeur | ThemeComposerConfig[K] |             |
 
 ### setConfigToken
 
@@ -305,11 +305,33 @@ Définissez un seul remplacement de jeton brut. La clé peut omettre le préfixe
 
 #### Paramètres
 
-| Nom           | Tapez               | Descriptif |
-| ------------- | ------------------- | ---------- |
-| configuration | ThemeComposerConfig |            |
-| clé           | chaîne              |            |
-| valeur        | chaîne              |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------------------- | ----------- |
+| configuration | ThemeComposerConfig |             |
+| clé | chaîne |             |
+| valeur | chaîne |             |
+
+### ThemeComposerAttribute
+
+**Genre :** type
+
+```typescript
+export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens' | 'colorScheme'>;
+```
+
+Clés d'attribut conviviales mappées à une propriété personnalisée `--mp-*`.
+
+### ThemeComposerConfig
+
+**Genre :** interface
+
+```typescript
+export interface ThemeComposerConfig
+```
+
+Une description typée de haut niveau des attributs du thème qu'un consommateur peut composer
+au moment de l'exécution. Chaque attribut correspond à l'un des `--mp-*` de la plateforme.
+Propriétés personnalisées CSS du jeton de conception (voir {@link ATTRIBUTE_TO_CSS_VAR}).
 
 ## `src/stores/theme-store/theme-store`
 
@@ -327,9 +349,9 @@ adopter le `defaultTheme` du fournisseur. Réapplique et informe les abonnés.
 
 #### Paramètres
 
-| Nom           | Tapez       | Descriptif |
-| ------------- | ----------- | ---------- |
-| configuration | ThèmeConfig |            |
+| Nom | Tapez | Descriptif |
+| ------ | ----------- | ----------- |
+| configuration | ThèmeConfig |             |
 
 ### cycleThème
 
@@ -373,9 +395,9 @@ Définissez explicitement la préférence de thème.
 
 #### Paramètres
 
-| Nom     | Tapez | Descriptif |
-| ------- | ----- | ---------- |
-| suivant | Thème |            |
+| Nom | Tapez | Descriptif |
+| ---- | ----- | ----------- |
+| suivant | Thème |             |
 
 ### abonnez-vousThème
 
@@ -389,9 +411,9 @@ Abonnez-vous pour stocker les modifications ; renvoie une fonction de désabonn
 
 #### Paramètres
 
-| Nom      | Tapez      | Descriptif |
-| -------- | ---------- | ---------- |
-| auditeur | () => vide |            |
+| Nom | Tapez | Descriptif |
+| -------- | ---------- | ----------- |
+| auditeur | () => vide |             |
 
 ### Thème
 

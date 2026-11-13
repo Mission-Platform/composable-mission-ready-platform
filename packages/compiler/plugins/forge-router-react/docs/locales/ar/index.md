@@ -5,6 +5,6 @@
 > packages/compiler/plugins/forge-router-react/docs/index.md: [packages/compiler/plugins/forge-router-react/docs/index.md](../../index.md)
 > اللغة: العربية (ar)
 
-صياغة هدف جهاز التوجيه ل React جهاز التوجيه
+صياغة هدف جهاز التوجيه لجهاز التوجيه React
 
-يرى `llms.txt` لواجهة برمجة التطبيقات العامة وأمثلة الاستخدام.
+راجع `llms.txt` للحصول على واجهة برمجة التطبيقات العامة وأمثلة الاستخدام.

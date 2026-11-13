@@ -23,10 +23,10 @@ Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name      | Geben Sie         | ein Beschreibung |
-| --------- | ----------------- | ---------------- |
-| defaultNS | Zeichenfolge      |                  |
-| Optionen  | I18nConfigOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ----------------- | ----------- |
+| defaultNS | Zeichenfolge |             |
+| Optionen | I18nConfigOptions |             |
 
 ### DEFAULT_LOCALE
 

@@ -9,945 +9,43 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/flint`.
 
-## `src/analysis/analyze`
-
-### analyseerFlint
-
-**Soort:** functie
-
-```typescript
-function analyzeFlint(frontend: FlintFrontendResult, options: FlintAnalysisOptions = {}): FlintAnalysisReport;
-```
-
-Voer de geregistreerde bronanalyseregels uit op basis van één frontendresultaat.
-
-#### Parameters
-
-| Naam     | Typ                  | Beschrijving |
-| -------- | -------------------- | ------------ |
-| frontend | FlintFrontendResult  |              |
-| opties   | FlintAnalysisOptions |              |
-
-## `src/analysis/context`
-
-### createFlintAnalysisContext
-
-**Soort:** functie
-
-```typescript
-function createFlintAnalysisContext(
-  frontend: FlintFrontendResult,
-  options: FlintAnalysisOptions = {},
-): FlintAnalysisContext;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam     | Typ                  | Beschrijving |
-| -------- | -------------------- | ------------ |
-| frontend | FlintFrontendResult  |              |
-| opties   | FlintAnalysisOptions |              |
-
-## `src/analysis/contracts`
-
-### FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
-```
-
-Stabiele voorvoegsels gereserveerd voor diagnostische families van bronanalyse.
-
-### FlintAnalysisCallGraphNode
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisCallGraphNode
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalyseVermogenFeit
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisCapabilityFact
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisCategorie
-
-**Soort:** type
-
-```typescript
-export type FlintAnalysisCategory = 'type' | 'control-flow' | 'memory' | 'ownership' | 'security' | 'resource';
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisContext
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisContext
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisControlFlowFact
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisControlFlowFact
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalyseBewijs
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisEvidence
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisFacts
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisFacts
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalyseFinding
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisFinding
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisLimits
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisLimits
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisOptions
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisOptions
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalyseEigendomFact
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisOwnershipFact
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalyseBeleid
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisPolicy
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisProfiel
-
-**Soort:** type
-
-```typescript
-export type FlintAnalysisProfile = 'development' | 'strict';
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisRangeFact
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisRangeFact
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisReport
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisReport
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisResourceFact
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisResourceFact
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisRule
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisRule
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalyseErnst
-
-**Soort:** type
-
-```typescript
-export type FlintAnalysisSeverity = FlintDiagnosticSeverity;
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisSourceFile
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisSourceFile
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisBronMap
-
-**Soort:** type
-
-```typescript
-export type FlintAnalysisSourceMap = readonly FlintAnalysisSourceMapEntry[];
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisSourceMapEntry
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisSourceMapEntry
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalysisTypeFact
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisTypeFact
-```
-
-Geen beschrijving opgegeven.
-
-## `src/analysis/default-rules`
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly FlintAnalysisRule[];
-```
-
-Geen beschrijving opgegeven.
-
-## `src/analysis/facts`
-
-### createFlintAnalysisFacts
-
-**Soort:** functie
-
-```typescript
-function createFlintAnalysisFacts(frontend: FlintFrontendResult): FlintAnalysisFacts;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam     | Typ                 | Beschrijving |
-| -------- | ------------------- | ------------ |
-| frontend | FlintFrontendResult |              |
-
-## `src/analysis/policy`
-
-### createFlintAnalysisPolicy
-
-**Soort:** functie
-
-```typescript
-function createFlintAnalysisPolicy(policy: FlintAnalysisOptionsLike = {}): FlintAnalysisPolicy;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam   | Typ                            | Beschrijving |
-| ------ | ------------------------------ | ------------ |
-| beleid | FlintAnalyseOptiesVind ik leuk |              |
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: FlintAnalysisLimits;
-```
-
-Geen beschrijving opgegeven.
-
-### FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-Geen beschrijving opgegeven.
-
-### FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAnalyseOptiesVind ik leuk
-
-**Soort:** type
-
-```typescript
-export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limits'> &
-```
-
-Geen beschrijving opgegeven.
-
-### isFlintAnalyseFindingBlocking
-
-**Soort:** functie
-
-```typescript
-function isFlintAnalysisFindingBlocking(finding: FlintAnalysisFinding, policy: FlintAnalysisPolicy): boolean;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam   | Typ                 | Beschrijving |
-| ------ | ------------------- | ------------ |
-| vinden | FlintAnalyseFinding |              |
-| beleid | FlintAnalyseBeleid  |              |
-
-## `src/analysis/registry`
-
-### createFlintAnalysisRuleRegistry
-
-**Soort:** functie
-
-```typescript
-function createFlintAnalysisRuleRegistry(
-  rules: readonly FlintAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
-): FlintAnalysisRuleRegistry;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam   | Typ                              | Beschrijving |
-| ------ | -------------------------------- | ------------ |
-| regels | alleen-lezen FlintAnalysisRule[] |              |
-
-### FlintAnalysisRuleRegistry
-
-**Soort:** interface
-
-```typescript
-export interface FlintAnalysisRuleRegistry
-```
-
-Geen beschrijving opgegeven.
-
-## `src/analysis/report`
-
-### createFlintAnalysisDiagnostic
-
-**Soort:** functie
-
-```typescript
-function createFlintAnalysisDiagnostic(finding: FlintAnalysisFinding): FlintDiagnostic;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam   | Typ                 | Beschrijving |
-| ------ | ------------------- | ------------ |
-| vinden | FlintAnalyseFinding |              |
-
-## `src/ast`
-
-### FlintArrayLiteralExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintArrayLiteralExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAssignmentStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintAssignmentStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintBinaryExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintBinaryExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintBinaryOperator
-
-**Soort:** type
-
-```typescript
-export type FlintBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
-```
-
-Geen beschrijving opgegeven.
-
-### FlintCallExpressie
-
-**Soort:** interface
-
-```typescript
-export interface FlintCallExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintCapabilityImporteren
-
-**Soort:** interface
-
-```typescript
-export interface FlintCapabilityImport
-```
-
-Geen beschrijving opgegeven.
-
-### FlintDocumentatie
-
-**Soort:** interface
-
-```typescript
-export interface FlintDocumentation
-```
-
-Geen beschrijving opgegeven.
-
-### FlintDocumentatieTag
-
-**Soort:** interface
-
-```typescript
-export interface FlintDocumentationTag
-```
-
-Geen beschrijving opgegeven.
-
-### FlintDoWhileStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintDoWhileStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintEnumDeclaration
-
-**Soort:** interface
-
-```typescript
-export interface FlintEnumDeclaration
-```
-
-Geen beschrijving opgegeven.
-
-### FlintEnumValueExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintEnumValueExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintEnumVariant
-
-**Soort:** interface
-
-```typescript
-export interface FlintEnumVariant
-```
-
-Geen beschrijving opgegeven.
-
-### FlintExpressie
-
-**Soort:** type
-
-```typescript
-export type FlintExpression =
-  | FlintBinaryExpression
-  | FlintCallExpression
-  | FlintIdentifierExpression
-  | FlintLiteralExpression
-  | FlintFunctionValueExpression
-  | FlintStructValueExpression
-  | FlintEnumValueExpression
-  | FlintArrayLiteralExpression
-  | FlintVectorLiteralExpression
-  | FlintIndexExpression
-  | FlintMatchExpression
-  | FlintUnaryExpression;
-```
-
-Geen beschrijving opgegeven.
-
-### FlintExpressionStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintExpressionStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintForStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintForStatement
-```
-
-Geen beschrijving opgegeven.
-
-### Flint-functie
-
-**Soort:** interface
-
-```typescript
-export interface FlintFunction
-```
-
-Geen beschrijving opgegeven.
-
-### FlintFunctionValueExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintFunctionValueExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintGenericParameter
-
-**Soort:** interface
-
-```typescript
-export interface FlintGenericParameter
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIdentifierExpressie
-
-**Soort:** interface
-
-```typescript
-export interface FlintIdentifierExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIfStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIfStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIndexExpressie
-
-**Soort:** interface
-
-```typescript
-export interface FlintIndexExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintInterfaceDeclaratie
-
-**Soort:** interface
-
-```typescript
-export interface FlintInterfaceDeclaration
-```
-
-Een structureel contract tijdens het compileren; het heeft geen runtime-weergave.
-
-### FlintInterfaceFunctie
-
-**Soort:** interface
-
-```typescript
-export interface FlintInterfaceFunction
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIteratorLoopStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIteratorLoopStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintLetStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintLetStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintLiteralExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintLiteralExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintMatchArm
-
-**Soort:** interface
-
-```typescript
-export interface FlintMatchArm
-```
-
-Geen beschrijving opgegeven.
-
-### FlintMatchExpressie
-
-**Soort:** interface
-
-```typescript
-export interface FlintMatchExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintMatchStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintMatchStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintModule
-
-**Soort:** interface
-
-```typescript
-export interface FlintModule
-```
-
-Geen beschrijving opgegeven.
-
-### FlintOwnership
-
-**Soort:** type
-
-```typescript
-export type FlintOwnership = 'borrowed' | 'owned' | 'shared';
-```
-
-Geen beschrijving opgegeven.
-
-### FlintParameter
-
-**Soort:** interface
-
-```typescript
-export interface FlintParameter
-```
-
-Geen beschrijving opgegeven.
-
-### FlintPattern
-
-**Soort:** type
-
-```typescript
-export type FlintPattern = |
-```
-
-Geen beschrijving opgegeven.
-
-### FlintPrimitiveType
-
-**Soort:** type
-
-```typescript
-export type FlintPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
-```
-
-Geen beschrijving opgegeven.
-
-### FlintReturnStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintReturnStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintSourceModuleImport
-
-**Soort:** interface
-
-```typescript
-export interface FlintSourceModuleImport
-```
-
-Geen beschrijving opgegeven.
-
-### FlintStatement
-
-**Soort:** type
-
-```typescript
-export type FlintStatement =
-  | FlintExpressionStatement
-  | FlintAssignmentStatement
-  | FlintIfStatement
-  | FlintLetStatement
-  | FlintMatchStatement
-  | FlintSwitchStatement
-  | FlintReturnStatement
-  | FlintForStatement
-  | FlintDoWhileStatement
-  | FlintWhileStatement
-  | FlintYieldStatement
-  | FlintIteratorLoopStatement;
-```
-
-Geen beschrijving opgegeven.
-
-### FlintStructDeclaration
-
-**Soort:** interface
-
-```typescript
-export interface FlintStructDeclaration
-```
-
-Geen beschrijving opgegeven.
-
-### FlintStructField
-
-**Soort:** interface
-
-```typescript
-export interface FlintStructField
-```
-
-Geen beschrijving opgegeven.
-
-### FlintStructValueExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintStructValueExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintSwitchCase
-
-**Soort:** interface
-
-```typescript
-export interface FlintSwitchCase
-```
-
-Geen beschrijving opgegeven.
-
-### FlintSwitchStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintSwitchStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintTypeName
-
-**Soort:** interface
-
-```typescript
-export interface FlintTypeName
-```
-
-Geen beschrijving opgegeven.
-
-### flintTypeNameToString
-
-**Soort:** functie
-
-```typescript
-function flintTypeNameToString(type: FlintTypeName): string;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam | Typ           | Beschrijving |
-| ---- | ------------- | ------------ |
-| typ  | FlintTypeName |              |
-
-### FlintUnaryExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintUnaryExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintVectorLiteralExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintVectorLiteralExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintWhileStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintWhileStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintYieldStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintYieldStatement
-```
-
-Geen beschrijving opgegeven.
-
 ## `src/cache`
+
+### FlintCacheIndex
+
+**Soort:** interface
+
+```typescript
+export interface FlintCacheIndex
+```
+
+Aanhoudend cachemanifest dat actieve artefacten in modules bijhoudt om verouderde opschoning mogelijk te maken.
+
+### FlintCacheIndexEntry
+
+**Soort:** interface
+
+```typescript
+export interface FlintCacheIndexEntry
+```
+
+Indexitem bijhouden van cachebestanden en tijdstempel voor een specifieke modulesleutel.
+
+### flintCacheIndexPath
+
+**Soort:** functie
+
+```typescript
+function flintCacheIndexPath(cache: FlintWatCache): string;
+```
+
+Retourneert het pad naar het cache-indexbestand `.flint-cache-index.json`.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| cache | FlintWatCache |             |
 
 ### FlintCacheLogger
 
@@ -957,7 +55,7 @@ Geen beschrijving opgegeven.
 export interface FlintCacheLogger
 ```
 
-Geen beschrijving opgegeven.
+Diagnostische loggerinterface voor cachebewerkingen en cachetreffers/-missers.
 
 ### FlintDebugArtifactPaths
 
@@ -967,7 +65,7 @@ Geen beschrijving opgegeven.
 export interface FlintDebugArtifactPaths
 ```
 
-Geen beschrijving opgegeven.
+Bestandspaden naar persistente foutopsporingsartefacten die tijdens de compilatie zijn verzonden.
 
 ### FlintDebugArtefactVariant
 
@@ -977,7 +75,25 @@ Geen beschrijving opgegeven.
 export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 ```
 
-Geen beschrijving opgegeven.
+Optimalisatievariant-ID voor uitgezonden foutopsporingsartefacten.
+
+### flintSoNPath
+
+**Soort:** functie
+
+```typescript
+function flintSoNPath(cache: FlintWatCache, key: string, variant: 'optimized' | 'unoptimized' = 'optimized'): string;
+```
+
+Retourneert het pad naar het SonIR JSON-artefact voor een bepaalde cachesleutel en variant.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ---------------------------- | ----------- |
+| cache | FlintWatCache |             |
+| sleutel | tekenreeks |             |
+| variant | 'geoptimaliseerd' \| 'niet-geoptimaliseerd' |             |
 
 ### FlintWatCache
 
@@ -987,7 +103,7 @@ Geen beschrijving opgegeven.
 export interface FlintWatCache
 ```
 
-Geen beschrijving opgegeven.
+Bestandssysteem of cacheprovider in het geheugen voor compilerartefacten en WAT-uitvoer.
 
 ### flintWatCacheKey
 
@@ -997,15 +113,15 @@ Geen beschrijving opgegeven.
 function flintWatCacheKey(input: FlintWatCacheKeyInput): string;
 ```
 
-Geen beschrijving opgegeven.
+Berekent een deterministische cachesleutel voor een compilatieverzoek.
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| invoer | FlintWatCacheKeyInput |              |
+| Naam | Typ | Beschrijving |
+| ----- | --------------------- | ----------- |
+| invoer | FlintWatCacheKeyInput |             |
 
-### FlintWatCacheKeyInput
+### FlintWatCacheKeyInvoer
 
 **Soort:** interface
 
@@ -1013,9 +129,9 @@ Geen beschrijving opgegeven.
 export interface FlintWatCacheKeyInput
 ```
 
-Geen beschrijving opgegeven.
+Invoerparameters die worden gebruikt om een ​​deterministische compilatiecachesleutel te berekenen.
 
-### flintWatPath
+### vuursteenWatPath
 
 **Soort:** functie
 
@@ -1023,14 +139,14 @@ Geen beschrijving opgegeven.
 function flintWatPath(cache: FlintWatCache, key: string): string;
 ```
 
-Geen beschrijving opgegeven.
+Retourneert het pad naar het WAT-bestand voor een bepaalde cachesleutel.
 
 #### Parameters
 
-| Naam    | Typ           | Beschrijving |
-| ------- | ------------- | ------------ |
-| cache   | FlintWatCache |              |
-| sleutel | tekenreeks    |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| cache | FlintWatCache |             |
+| sleutel | tekenreeks |             |
 
 ### persistentFlintDebugArtefacten
 
@@ -1049,17 +165,41 @@ function persistFlintDebugArtifacts(
 ): FlintDebugArtifactPaths;
 ```
 
-Geen beschrijving opgegeven.
+Blijft foutopsporingsartefacten (WAT en Wasm, zowel geoptimaliseerd als niet-geoptimaliseerd) op schijf uitvoeren.
 
 #### Parameters
 
-| Naam       | Typ                                                                                                                                                                                              | Beschrijving |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------ |
-| cache      | FlintWatCache \| ongedefinieerd                                                                                                                                                                  |              |
-| sleutel    | tekenreeks                                                                                                                                                                                       |              |
-| artefacten | { alleen-lezen geoptimaliseerdWat?: string; alleen-lezen niet-geoptimaliseerdWat?: string; alleen-lezen geoptimaliseerdWasm?: Uint8Array; alleen-lezen niet-geoptimaliseerdeWasm?: Uint8Array; } |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| cache | FlintWatCache \| ongedefinieerd |             |
+| sleutel | tekenreeks |             |
+| artefacten | { alleen-lezen geoptimaliseerdWat?: string; alleen-lezen niet-geoptimaliseerdWat?: string; alleen-lezen geoptimaliseerdWasm?: Uint8Array; alleen-lezen niet-geoptimaliseerdeWasm?: Uint8Array; } |             |
 
-### persistentFlintWat
+### volhoudenFlintSoN
+
+**Soort:** functie
+
+```typescript
+function persistFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  module: FlintSoNModule,
+  variant: 'optimized' | 'unoptimized' = 'optimized',
+): string | undefined;
+```
+
+Laat een SonIR-module op schijf in de cachemap staan.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ---------------------------- | ----------- |
+| cache | FlintWatCache \| ongedefinieerd |             |
+| sleutel | tekenreeks |             |
+| module | FlintSoNModule |             |
+| variant | 'geoptimaliseerd' \| 'niet-geoptimaliseerd' |             |
+
+### volhoudenFlintWat
 
 **Soort:** functie
 
@@ -1067,19 +207,433 @@ Geen beschrijving opgegeven.
 function persistFlintWat(cache: FlintWatCache | undefined, key: string, wat: string): string | undefined;
 ```
 
-Geen beschrijving opgegeven.
+Bewaart een WAT-tekenreeks op schijf in de cachemap.
 
 #### Parameters
 
-| Naam    | Typ                             | Beschrijving |
-| ------- | ------------------------------- | ------------ |
-| cache   | FlintWatCache \| ongedefinieerd |              |
-| sleutel | tekenreeks                      |              |
-| wat     | tekenreeks                      |              |
+| Naam | Typ | Beschrijving |
+| ----- | -------------------------- | ----------- |
+| cache | FlintWatCache \| ongedefinieerd |             |
+| sleutel | tekenreeks |             |
+| wat | tekenreeks |             |
 
-## `src/compiler`
+### snoeienOrphanedFlintCacheFiles
 
-### compileFlint
+**Soort:** functie
+
+```typescript
+function pruneOrphanedFlintCacheFiles(cache: FlintWatCache | undefined): readonly string[];
+```
+
+Verwijdert verweesde tijdelijke en niet-geïndexeerde cachebestanden uit de cachemap.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | -------------------------- | ----------- |
+| cache | FlintWatCache \| ongedefinieerd |             |
+
+### snoeienStaleFlintCache
+
+**Soort:** functie
+
+```typescript
+function pruneStaleFlintCache(
+  cache: FlintWatCache | undefined,
+  moduleIdOrPath: string,
+  currentKey: string,
+  newFiles: readonly string[],
+): void;
+```
+
+Verwijdert verouderde artefacten in de cache voor een bepaalde module-ID wanneer de cachesleutel ervan is gewijzigd.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------------- | -------------------------- | ----------- |
+| cache | FlintWatCache \| ongedefinieerd |             |
+| moduleIdOrPath | tekenreeks |             |
+| huidige sleutel | tekenreeks |             |
+| nieuweBestanden | alleen-lezen tekenreeks[] |             |
+
+### leesFlintCacheIndex
+
+**Soort:** functie
+
+```typescript
+function readFlintCacheIndex(cache: FlintWatCache | undefined): FlintCacheIndex | undefined;
+```
+
+Leest en parseert de cache-index van schijf en retourneert ongedefinieerd als deze ontbreekt of verkeerd is opgemaakt.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | -------------------------- | ----------- |
+| cache | FlintWatCache \| ongedefinieerd |             |
+
+### leesFlintSoN
+
+**Soort:** functie
+
+```typescript
+function readFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  expected?: {
+    readonly compilerVersion?: string;
+    readonly languageVersion?: string;
+    readonly abiVersion?: string;
+    readonly sourceHash?: string;
+    readonly graphHash?: string;
+    readonly optimization?: 'debug' | 'release';
+    readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
+    readonly memoryModel?: 'region-arc-checked-linear';
+  },
+): FlintSoNModule | undefined;
+```
+
+Leest en deserialiseert een SonIR-module vanaf schijf.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| cache | FlintWatCache \| ongedefinieerd |             |
+| sleutel | tekenreeks |             |
+| verwacht | { alleen-lezen compilerVersion?: string; alleen-lezen taalversie?: string; alleen-lezen abiVersion?: string; alleen-lezen sourceHash?: string; alleen-lezen graphHash?: string; alleen-lezen optimalisatie?: 'debug' \| 'uitgave'; alleen-lezen boundsChecks?: 'runtime' \| 'bewezen veilig' \| 'uitgesloten per profiel'; alleen-lezen geheugenModel?: 'regio-boog-gecontroleerd-lineair'; } |             |
+
+## `src/compiler/backend`
+
+### artefactVerificatieDiagnostisch
+
+**Soort:** functie
+
+```typescript
+function artifactVerificationDiagnostic(diagnostic: FlintWasmArtifactVerificationDiagnostic): FlintDiagnostic;
+```
+
+Converteert een Wasm-artefactverificatiediagnostiek naar een standaard compilerdiagnostiek.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------------------- | ----------- |
+| diagnostisch | FlintWasmArtifactVerificationDiagnostisch |             |
+
+### dynamicLinkMetadata
+
+**Soort:** functie
+
+```typescript
+function dynamicLinkMetadata(manifest: FlintAbiManifest, artifactId: string): FlintDynamicLinkMetadata | undefined;
+```
+
+Berekent metagegevens van dynamische koppelingen voor modules die in het manifest zijn gemarkeerd met de dynamische koppelingsmodus.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------- | ----------- |
+| manifesteren | FlintAbiManifest |             |
+| artefactId | tekenreeks |             |
+
+### encoder
+
+**Soort:** constant
+
+```typescript
+export const encoder;
+```
+
+Geen beschrijving opgegeven.
+
+### FlintBackendCompilatieResultaat
+
+**Soort:** interface
+
+```typescript
+export interface FlintBackendCompilationResult
+```
+
+Resultaatstructuur geretourneerd door het genereren van back-endcode van WebAssembly.
+
+### hashBytes
+
+**Soort:** functie
+
+```typescript
+function hashBytes(bytes: Uint8Array): string;
+```
+
+Berekent een 32-bits FNV-1a-hash van de gegeven byte-array, geretourneerd als een hexadecimale tekenreeks.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ---------- | ----------- |
+| bytes | Uint8Array |             |
+
+### bronHashForArtifact
+
+**Soort:** functie
+
+```typescript
+function sourceHashForArtifact(source: string, fileName: string): string;
+```
+
+Berekent een genormaliseerde bron-hash voor een artefact uit de tokenstroom zonder commentaar.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| bron | tekenreeks |             |
+| bestandsnaam | tekenreeks |             |
+
+### verificatieBackendArtifact
+
+**Soort:** functie
+
+```typescript
+function verifyBackendArtifact(input: {
+  readonly wasm: Uint8Array;
+  readonly unoptimizedWasm?: Uint8Array;
+  readonly fileName: string;
+  readonly manifest: FlintAbiManifest;
+  readonly metadata: Parameters<typeof compileFlintWasm>[0]['metadata'];
+  readonly targetFeatures?: Parameters<typeof verifyFlintWasmArtifact>[0]['targetFeatures'];
+  readonly featureRequirements?: FlintWasmFeatureRequirements;
+  readonly iteratorExports?: readonly FlintIteratorExport[];
+  readonly expectedContentHash: string;
+  readonly expectedSourceHash: string;
+  readonly esmSource: string;
+  readonly profile: 'strict' | 'development';
+  readonly allowedCapabilities?: readonly string[];
+}): {
+  readonly verificationDiagnostics: readonly FlintDiagnostic[];
+  readonly artifactVerification: FlintArtifactVerificationReport;
+};
+```
+
+Verifieert backend WebAssembly-artefacten ten opzichte van beleid, doelfuncties en manifestbeperkingen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| invoer | { alleen-lezen wasm: Uint8Array; alleen-lezen niet-geoptimaliseerdeWasm?: Uint8Array; alleen-lezen bestandsnaam: string; alleen-lezen manifest: FlintAbiManifest; alleen-lezen metadata: Parameters<typeof compileFlintWasm>[0]['metadata']; alleen-lezen targetFeatures?: Parameters<typeof verifyFlintWasmArtifact>[0]['targetFeatures']; alleen-lezen functie Vereisten?: FlintWasmFeature Vereisten; alleen-lezen iteratorExports?: alleen-lezen FlintIteratorExport[]; alleen-lezen verwachteContentHash: string; alleen-lezen verwachteSourceHash: string; alleen-lezen esmSource: string; alleen-lezen profiel: 'strikt' \| 'ontwikkeling'; alleen-lezen toegestane mogelijkheden?: alleen-lezen string[]; } |             |
+
+## `src/compiler/declarations`
+
+### maak verklaringen
+
+**Soort:** functie
+
+```typescript
+function createDeclarations(manifest: FlintAbiManifest): string;
+```
+
+Genereert de volledige inhoud van het TypeScript-declaratiebestand voor een gecompileerd Flint-manifest.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ---------------- | ----------- |
+| manifesteren | FlintAbiManifest |             |
+
+### declaratieFunctie
+
+**Soort:** functie
+
+```typescript
+function declarationFunction(
+  declaration: FlintAbiFunction,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+Genereert de functiehandtekening TypeScript voor een ABI-functiedeclaratie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ------------------- | ----------- |
+| verklaring | FlintAbiFunctie |             |
+| enumNames | Alleen-lezenSet<string> |             |
+| recordnamen | Alleen-lezenSet<string> |             |
+
+### verklaringEigendom
+
+**Soort:** functie
+
+```typescript
+function declarationProperty(name: string): string;
+```
+
+Formatteert een ID als een veilige eigenschapsnaam of een tekenreeks tussen JSON-aanhalingstekens.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| naam | tekenreeks |             |
+
+### aangifteRecord
+
+**Soort:** functie
+
+```typescript
+function declarationRecord(
+  declarations: readonly FlintAbiFunction[],
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+Zendt TypeScript-definities uit voor getypte ABI-exportrecords.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------ | --------------------------- | ----------- |
+| verklaringen | alleen-lezen FlintAbiFunction[] |             |
+| enumNames | Alleen-lezenSet<string> |             |
+| recordnamen | Alleen-lezenSet<string> |             |
+
+### declaratieType
+
+**Soort:** functie
+
+```typescript
+function declarationType(
+  value: string | FlintAbiParameter,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+Wijst een Flint ABI-parameter of typenaam toe aan een TypeScript-declaratietype.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | --------------------------- | ----------- |
+| waarde | tekenreeks \| FlintAbiParameter |             |
+| enumNames | Alleen-lezenSet<string> |             |
+| recordnamen | Alleen-lezenSet<string> |             |
+
+### rawDeclarationFunctie
+
+**Soort:** functie
+
+```typescript
+function rawDeclarationFunction(declaration: FlintAbiFunction): string;
+```
+
+Genereert de ruwe functiehandtekening op laag niveau met pointer/lengte-uitbreiding voor tekenreeksen en bytes.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ---------------- | ----------- |
+| verklaring | FlintAbiFunctie |             |
+
+### rawDeclaratieRecord
+
+**Soort:** functie
+
+```typescript
+function rawDeclarationRecord(declarations: readonly FlintAbiFunction[]): string;
+```
+
+Zendt TypeScript-definities uit voor onbewerkte WebAssembly-exportrecords.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------ | --------------------------- | ----------- |
+| verklaringen | alleen-lezen FlintAbiFunction[] |             |
+
+### rawDeclarationType
+
+**Soort:** functie
+
+```typescript
+function rawDeclarationType(value: FlintPrimitiveType | FlintAbiParameter): string;
+```
+
+Wijst een ABI-parameter of primitief type toe aan het onbewerkte WebAssembly-parametertype in TypeScript.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | --------------------------------------- | ----------- |
+| waarde | FlintPrimitiveType \| FlintAbiParameter |             |
+
+## `src/compiler/esm`
+
+### bytesToBase64
+
+**Soort:** functie
+
+```typescript
+function bytesToBase64(bytes: Uint8Array): string;
+```
+
+Codeert een byte-array in een standaard Base64-tekenreeks.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ---------- | ----------- |
+| bytes | Uint8Array |             |
+
+### createEsmSource
+
+**Soort:** functie
+
+```typescript
+function createEsmSource(
+  wasm: Uint8Array,
+  manifest: FlintAbiManifest,
+  iteratorExports: readonly FlintIteratorExport[] = [],
+  dynamicMetadata?: FlintDynamicLinkMetadata,
+): string;
+```
+
+Genereert een ESM-ladermodulereeks met daarin ingebedde WebAssembly- en runtime-adapters.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------------- | ------------------------------ | ----------- |
+| was | Uint8Array |             |
+| manifesteren | FlintAbiManifest |             |
+| iteratorExport | alleen-lezen FlintIteratorExport[] |             |
+| dynamischeMetadata | FlintDynamicLinkMetadata |             |
+
+## `src/compiler/module`
+
+### analyseOpties
+
+**Soort:** functie
+
+```typescript
+function analysisOptions(input: FlintCompileInput): FlintAnalysisOptions;
+```
+
+Lost statische analyseopties op van compilatie-invoer en beleidsinstellingen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ----------------- | ----------- |
+| invoer | FlintCompileInvoer |             |
+
+### compilerenFlint
 
 **Soort:** functie
 
@@ -1087,15 +641,66 @@ Geen beschrijving opgegeven.
 function compileFlint(input: FlintCompileInput): FlintArtifact;
 ```
 
-Geen beschrijving opgegeven.
+Compileert een Flint-bronreeks naar WebAssembly en runtime-artefacten.
 
 #### Parameters
 
-| Naam   | Typ               | Beschrijving |
-| ------ | ----------------- | ------------ |
-| invoer | FlintCompileInput |              |
+| Naam | Typ | Beschrijving |
+| ----- | ----------------- | ----------- |
+| invoer | FlintCompileInvoer |             |
 
-### compileFlintSeed
+### compileerFlintGraph
+
+**Soort:** functie
+
+```typescript
+function compileFlintGraph(input: FlintGraphCompileInput): FlintArtifact;
+```
+
+Compileert een Flint-modulegrafiek met meerdere modules tot een verenigd WebAssembly-artefact.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ---------------------- | ----------- |
+| invoer | FlintGraphCompileInvoer |             |
+
+### compileerFlintModule
+
+**Soort:** functie
+
+```typescript
+function compileFlintModule(
+  input: FlintCompileInput,
+  frontend: FlintFrontendResult,
+  graphMetadata: Pick<
+    FlintArtifact,
+    'graphHash' | 'linkMode' | 'linkedModules' | 'linkProfile' | 'optimizationProfile'
+  > = {},
+  sourceFiles: readonly string[] = frontend.sourceFiles,
+): FlintArtifact;
+```
+
+Compileert een enkele geanalyseerde Flint-module naar WebAssembly en synthetiseert ESM-laderartefacten.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| invoer | FlintCompileInvoer | - Modulecompilatie-invoerspecificatie.                  |
+| frontend | FlintFrontendResultaat | - Voorbereid frontend-compilerresultaat.                       |
+| grafiekMetadata | Kies< FlintArtifact, 'graphHash' \| 'linkMode' \| 'gekoppeldeModules' \| 'linkProfiel' \| 'optimalisatieProfiel' > | - Optionele metagegevens doorgegeven via het koppelen van modulegrafieken.  |
+| bronbestanden | alleen-lezen tekenreeks[] | - Bronbestandspaden die bijdragen aan deze compilatie-eenheid. |
+
+#### Contract
+
+- **@param:** - Modulecompilatie-invoerspecificatie.
+- **@param:** - Voorbereid resultaat van de frontend-compiler.
+- **@param:** - Optionele metagegevens doorgegeven via de koppeling van modulegrafieken.
+- **@param:** - Bronbestandspaden die bijdragen aan deze compilatie-eenheid.
+- **@returns:** Compleet gecompileerd artefact met binaire bestanden, declaraties en rapporten.
+
+### compilerenFlintSeed
 
 **Soort:** functie
 
@@ -1103,14 +708,13 @@ Geen beschrijving opgegeven.
 function compileFlintSeed(input: FlintCompileInput): FlintArtifact;
 ```
 
-Het begrensde TypeScript-zaad dat door de zelf-hostende bootstrap wordt gebruikt totdat het is opgelost
-puntpariteit promoveert de FLINT-compiler naar de normale frontend-eigenaar.
+Compileert een Flint-zaadinvoer door frontend-AST's voor te bereiden en de resulterende module te compileren.
 
 #### Parameters
 
-| Naam   | Typ               | Beschrijving |
-| ------ | ----------------- | ------------ |
-| invoer | FlintCompileInput |              |
+| Naam | Typ | Beschrijving |
+| ----- | ----------------- | ----------- |
+| invoer | FlintCompileInvoer |             |
 
 ### createFlintCompiler
 
@@ -1120,9 +724,78 @@ puntpariteit promoveert de FLINT-compiler naar de normale frontend-eigenaar.
 function createFlintCompiler(): FlintCompiler;
 ```
 
-Geen beschrijving opgegeven.
+Creëert een exemplaar van de Flint-compiler.
 
-### createFlintCompilerService
+#### Contract
+
+- **@returns:** Geconfigureerde compilerinstantie.
+
+### runSelfHostedStage
+
+**Soort:** functie
+
+```typescript
+function runSelfHostedStage(
+  input: Pick<FlintCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  options: FlintCompilerServiceOptions,
+): {
+  readonly report?: FlintSelfHostedStageReport;
+  readonly stageReports?: readonly FlintSelfHostedStageReport[];
+  readonly diagnostic?: FlintDiagnostic;
+};
+```
+
+Voert een zelf-hostende compilerfase uit en valideert pariteitsrapporten aan de hand van verwachte vingerafdrukken.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+| invoer | Kies<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+| opties | FlintCompilerServiceOptions |             |
+
+### selfHostedDiagnostisch
+
+**Soort:** functie
+
+```typescript
+function selfHostedDiagnostic(
+  input: Pick<FlintCompileInput, 'fileName'>,
+  message: string,
+  stage: FlintSelfHostedStageReport['stage'] = 'lex',
+): FlintDiagnostic;
+```
+
+Creëert een diagnose voor zelf-hostende bootstrap- of pariteitsverificatieproblemen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------------------- | ----------- |
+| invoer | Kies<FlintCompileInput, 'fileName'> |             |
+| bericht | tekenreeks |             |
+| stadium | FlintSelfHostedStageReport['fase'] |             |
+
+### metSelfHostedResult
+
+**Soort:** functie
+
+```typescript
+function withSelfHostedResult(artifact: FlintArtifact, result: ReturnType<typeof runSelfHostedStage>): FlintArtifact;
+```
+
+Voegt zelfgehoste verificatieresultaten van de tweede fase samen in het uiteindelijke compilatieartefact.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------------------------------------- | ----------- |
+| artefact | FlintArtefact |             |
+| resultaat | Retourtype<typeof runSelfHostedStage> |             |
+
+## `src/compiler/service`
+
+### maakFlintCompilerService
 
 **Soort:** functie
 
@@ -1130,13 +803,18 @@ Geen beschrijving opgegeven.
 function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): FlintCompilerService;
 ```
 
-Geen beschrijving opgegeven.
+Creëert een caching-compilerservice in het geheugen voor incrementele compilatie en grafiekopbouw.
 
 #### Parameters
 
-| Naam   | Typ                         | Beschrijving |
-| ------ | --------------------------- | ------------ |
-| opties | FlintCompilerServiceOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------- | ------------------------------------------------ |
+| opties | FlintCompilerServiceOptions | Optionele configuratieopties voor de compilerservice. |
+
+#### Contract
+
+- **@param:** Optionele configuratieopties voor de compilerservice.
+- **@returns:** Stateful FlintCompilerService-exemplaar.
 
 ## `src/contracts`
 
@@ -1148,9 +826,9 @@ Geen beschrijving opgegeven.
 export interface FlintArtifact
 ```
 
-Geen beschrijving opgegeven.
+Verpakt compilerartefact met ABI, bronnen, binaire bestanden en diagnostische gegevens.
 
-### FlintArtifactVerificationReport
+### FlintArtifactVerificatierapport
 
 **Soort:** interface
 
@@ -1158,7 +836,7 @@ Geen beschrijving opgegeven.
 export interface FlintArtifactVerificationReport
 ```
 
-Geen beschrijving opgegeven.
+Resultaat van het verifiëren van verzonden hashes en varianten van artefactinhoud.
 
 ### FlintAsyncCapability
 
@@ -1168,7 +846,7 @@ Geen beschrijving opgegeven.
 export type FlintAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-Geen beschrijving opgegeven.
+Genoemde asynchrone hostmogelijkheid vereist door asynchrone compilatiecontracten.
 
 ### FlintAsyncCompilationContract
 
@@ -1190,7 +868,7 @@ export interface FlintBackendInput
 
 Invoer die eigendom is van een backend-implementatie nadat de frontend-validatie is geslaagd.
 
-### FlintBackendResult
+### FlintBackendResultaat
 
 **Soort:** interface
 
@@ -1208,7 +886,7 @@ Backend-uitvoer is opzettelijk onafhankelijk van het ESM-artefact van de compati
 export interface FlintCompileInput
 ```
 
-Geen beschrijving opgegeven.
+Compilatieverzoek voor één module dat wordt gebruikt door de frontend- en compilerservice.
 
 ### FlintCompiler
 
@@ -1218,7 +896,7 @@ Geen beschrijving opgegeven.
 export interface FlintCompiler
 ```
 
-Geen beschrijving opgegeven.
+Minimale compilergevel die compilatie en verwijdering van één module blootlegt.
 
 ### FlintCompilerHints
 
@@ -1228,7 +906,7 @@ Geen beschrijving opgegeven.
 export interface FlintCompilerHints
 ```
 
-Geen beschrijving opgegeven.
+Optionele verlagingstips die gespecialiseerde backend-emissie begeleiden.
 
 ### FlintCompilerLogger
 
@@ -1238,9 +916,9 @@ Geen beschrijving opgegeven.
 export interface FlintCompilerLogger
 ```
 
-Geen beschrijving opgegeven.
+Gestructureerd loggercontract dat wordt gebruikt door servicefasen van compilers.
 
-### FlintCompilerReport
+### FlintCompilerrapport
 
 **Soort:** interface
 
@@ -1248,7 +926,7 @@ Geen beschrijving opgegeven.
 export interface FlintCompilerReport
 ```
 
-Geen beschrijving opgegeven.
+Geaggregeerd servicerapport met diagnostiek, cachestatistieken en analyse.
 
 ### FlintCompilerService
 
@@ -1258,7 +936,7 @@ Geen beschrijving opgegeven.
 export interface FlintCompilerService extends FlintCompiler
 ```
 
-Geen beschrijving opgegeven.
+Incrementele compilerservice die het compileren en valideren van grafieken ondersteunt.
 
 ### FlintCompilerServiceOptions
 
@@ -1268,7 +946,7 @@ Geen beschrijving opgegeven.
 export interface FlintCompilerServiceOptions
 ```
 
-Geen beschrijving opgegeven.
+Configuratiepakket geaccepteerd bij het construeren van een compiler-servicegevel.
 
 ### FlintDebugArtefacten
 
@@ -1278,9 +956,9 @@ Geen beschrijving opgegeven.
 export interface FlintDebugArtifacts
 ```
 
-Geen beschrijving opgegeven.
+Optionele WAT/Wasm-snapshots worden bewaard voor foutopsporing en verificatie.
 
-### FlintDeterministicArtifactMetadata
+### FlintDeterministicArtefactMetadata
 
 **Soort:** interface
 
@@ -1288,7 +966,7 @@ Geen beschrijving opgegeven.
 export interface FlintDeterministicArtifactMetadata
 ```
 
-Geen beschrijving opgegeven.
+Deterministische identiteitsvelden geregistreerd naast uitgezonden compilerartefacten.
 
 ### FlintFrontendLinkMetadata
 
@@ -1298,9 +976,9 @@ Geen beschrijving opgegeven.
 export interface FlintFrontendLinkMetadata
 ```
 
-Geen beschrijving opgegeven.
+Metagegevens met linktijd gekoppeld aan een frontend-resultaat voor backend-verpakkingen.
 
-### FlintFrontendResult
+### FlintFrontendResultaat
 
 **Soort:** interface
 
@@ -1310,7 +988,7 @@ export interface FlintFrontendResult
 
 Het stabiele, backend-onafhankelijke resultaat van het parseren, controleren en verlagen van een module.
 
-### FlintGraphCompileInput
+### FlintGraphCompileInvoer
 
 **Soort:** interface
 
@@ -1318,7 +996,7 @@ Het stabiele, backend-onafhankelijke resultaat van het parseren, controleren en 
 export interface FlintGraphCompileInput
 ```
 
-Geen beschrijving opgegeven.
+Multi-module grafiekcompilatieverzoek inclusief invoerselectie en linkbeleid.
 
 ### FlintIteratorExport
 
@@ -1328,9 +1006,9 @@ Geen beschrijving opgegeven.
 export interface FlintIteratorExport
 ```
 
-Geen beschrijving opgegeven.
+ABI-metagegevens die een geëxporteerd iteratorprotocoloppervlak beschrijven.
 
-### FlintLinkOptimizationProfile
+### FlintLinkOptimisatieprofiel
 
 **Soort:** type
 
@@ -1340,17 +1018,7 @@ export type FlintLinkOptimizationProfile = 'standard' | 'static-aggressive' | 'd
 
 Linktijdbeleid vastgelegd naast de gewone compileroptimalisatie.
 
-### FlintLinkProfiel
-
-**Soort:** type
-
-```typescript
-export type FlintLinkProfile = 'static' | 'dynamic';
-```
-
-Benoemd cross-project verpakkingsprofiel dat wordt gebruikt door grafiekbewuste consumenten.
-
-### Flintoptimalisatie
+### FlintOptimalisatie
 
 **Soort:** type
 
@@ -1358,7 +1026,7 @@ Benoemd cross-project verpakkingsprofiel dat wordt gebruikt door grafiekbewuste 
 export type FlintOptimization = 'debug' | 'release';
 ```
 
-Geen beschrijving opgegeven.
+Compiler-optimalisatieniveau waarbij debug of release-verlaging wordt geselecteerd.
 
 ### FlintSelfHostedStageReport
 
@@ -1368,7 +1036,7 @@ Geen beschrijving opgegeven.
 export interface FlintSelfHostedStageReport
 ```
 
-Resultaat van de begrensde, door FWS geschreven compilerfase die wordt gebruikt door toolingadapters.
+Resultaat van de begrensde, door FLINT geschreven compilerfase die wordt gebruikt door toolingadapters.
 
 ### FlintSelfHostedStageRunner
 
@@ -1383,7 +1051,7 @@ export type FlintSelfHostedStageRunner = (
 
 VM-ingangspunt geleverd door de runtime zonder de browserveilige gevel eraan te koppelen.
 
-### FlintTargetFeatures
+### FlintTarget-functies
 
 **Soort:** interface
 
@@ -1391,7 +1059,7 @@ VM-ingangspunt geleverd door de runtime zonder de browserveilige gevel eraan te 
 export interface FlintTargetFeatures
 ```
 
-Geen beschrijving opgegeven.
+Optionele WebAssembly-doelfunctievlaggen aangevraagd door de host.
 
 ### FlintVmExecutionMode
 
@@ -1401,7 +1069,7 @@ Geen beschrijving opgegeven.
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-Geen beschrijving opgegeven.
+Ondersteunde VM-uitvoeringsmodi voor zelf-hostende compilerfasen.
 
 ## `src/diagnostics`
 
@@ -1422,20 +1090,32 @@ function createDiagnostic(
 ): FlintDiagnostic;
 ```
 
-Geen beschrijving opgegeven.
+Creëert een gestructureerde compilerdiagnostiek met optionele hints en beveiligingsmetagegevens.
 
 #### Parameters
 
-| Naam         | Typ                                                                                           | Beschrijving |
-| ------------ | --------------------------------------------------------------------------------------------- | ------------ |
-| bestandsnaam | tekenreeks                                                                                    |              |
-| fase         | FlintDiagnosticPhase                                                                          |              |
-| code         | tekenreeks                                                                                    |              |
-| bericht      | tekenreeks                                                                                    |              |
-| spanwijdte   | FlintSourceSpan                                                                               |              |
-| ernst        | FlintDiagnosticSeverity                                                                       |              |
-| tip          | tekenreeks                                                                                    |              |
-| metagegevens | Kies<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |              |
+| Naam | Typ | Beschrijving |
+| -------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| bestandsnaam | tekenreeks | - Pad of identificatie van het bronbestand.                                  |
+| fase | FlintDiagnostischePhase | - Compilerfase die de diagnose uitzendt.                                 |
+| code | tekenreeks | - Diagnostische fout of waarschuwingscode.                                       |
+| bericht | tekenreeks | - Beschrijvend, voor mensen leesbaar diagnostisch bericht.                          |
+| spanwijdte | FlintSourceSpan | - Bronbereikcoördinaten voor de diagnoselocatie.                    |
+| ernst | FlintDiagnosticSeverity | - Ernstniveau, standaard ingesteld op 'fout'.                                  |
+| tip | tekenreeks | - Optionele herstelhint of uitvoerbaar advies.                         |
+| metagegevens | Kies<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> | - Optionele regel-ID, categorie, bewijs of beveiligingstaxonomie-ID's. |
+
+#### Contract
+
+- **@param:** - Pad of identificatie van het bronbestand.
+- **@param:** - Compilerfase die de diagnose verzendt.
+- **@param:** - Diagnostische fout of waarschuwingscode.
+- **@param:** - Beschrijvend, voor mensen leesbaar diagnostisch bericht.
+- **@param:** - Bronbereikcoördinaten voor de diagnostische locatie.
+- **@param:** - Ernstniveau, standaard ingesteld op 'fout'.
+- **@param:** - Optionele herstelhint of uitvoerbaar advies.
+- **@param:** - Optionele regel-ID, categorie, bewijs of beveiligingstaxonomie-ID's.
+- **@returns:** Een gestructureerde FlintDiagnostic-instantie.
 
 ### diagnostische sleutel
 
@@ -1445,13 +1125,48 @@ Geen beschrijving opgegeven.
 function diagnosticKey(diagnostic: FlintDiagnostic): string;
 ```
 
-Geen beschrijving opgegeven.
+Berekent een deterministische identiteitsreekssleutel voor het ontdubbelen van diagnostische gegevens.
 
 #### Parameters
 
-| Naam         | Typ               | Beschrijving |
-| ------------ | ----------------- | ------------ |
-| diagnostisch | FlintDiagnostisch |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------- | ---------------------------------- |
+| diagnostisch | FlintDiagnostisch | - Diagnose om een ​​sleutel voor te berekenen. |
+
+#### Contract
+
+- **@param:** - Diagnose om een ​​sleutel voor te berekenen.
+- **@returns:** Deterministische JSON-tekenreekscodering voor bestandsnaam, fase, code, bereik en bericht.
+
+### FLINT_PARSE_STACK_OVERFLOW
+
+**Soort:** constant
+
+```typescript
+export const FLINT_PARSE_STACK_OVERFLOW;
+```
+
+Diagnostische foutcode wanneer de recursiediepte van de parser de geconfigureerde limiet overschrijdt.
+
+### FLINT_PARSE_UNCLOSED_DELIMITER
+
+**Soort:** constant
+
+```typescript
+export const FLINT_PARSE_UNCLOSED_DELIMITER;
+```
+
+Diagnostische foutcode wanneer scheidingstekens niet gesloten blijven bij EOF.
+
+### FLINT_SECURITY_SOURCE_TOO_LARGE
+
+**Soort:** constant
+
+```typescript
+export const FLINT_SECURITY_SOURCE_TOO_LARGE;
+```
+
+Diagnostische foutcode wanneer het bronbestand MAX_SOURCE_INPUT_BYTES overschrijdt.
 
 ### FlintDiagnostisch
 
@@ -1461,7 +1176,7 @@ Geen beschrijving opgegeven.
 export interface FlintDiagnostic
 ```
 
-Geen beschrijving opgegeven.
+Gestructureerd diagnostisch record geproduceerd over compilerfasen of statische analysepassages.
 
 ### FlintDiagnostischBewijs
 
@@ -1471,7 +1186,7 @@ Geen beschrijving opgegeven.
 export interface FlintDiagnosticEvidence
 ```
 
-Geen beschrijving opgegeven.
+Secundair bewijs of gerelateerde locatie gekoppeld aan een diagnostische bevinding.
 
 ### FlintDiagnostische fase
 
@@ -1479,12 +1194,12 @@ Geen beschrijving opgegeven.
 
 ```typescript
 export type FlintDiagnosticPhase =
-  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+  'lex' | 'parse' | 'macro' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
-Geen beschrijving opgegeven.
+Compilatiefase waarin een diagnose werd uitgezonden.
 
-### FlintDiagnosticSeverity
+### FlintDiagnostische ernst
 
 **Soort:** type
 
@@ -1492,9 +1207,9 @@ Geen beschrijving opgegeven.
 export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 ```
 
-Geen beschrijving opgegeven.
+Ernstniveau voor compilerdiagnostiek.
 
-### FlintSourceSpan
+### FlintBronSpan
 
 **Soort:** interface
 
@@ -1502,7 +1217,40 @@ Geen beschrijving opgegeven.
 export interface FlintSourceSpan
 ```
 
-Geen beschrijving opgegeven.
+Broncoördinatenbereik dat de precieze locatie van een token, AST node of diagnose in een bestand definieert.
+
+### getSourceByteLengte
+
+**Soort:** functie
+
+```typescript
+function getSourceByteLength(source: string): number;
+```
+
+Berekent de werkelijke bytegrootte van een UTF-8-gecodeerde tekenreeks.
+JavaScript-tekenreeksen gebruiken intern UTF-16, dus `.length` telt code-eenheden, geen bytes.
+Deze functie codeert naar UTF-8 en retourneert het werkelijke aantal bytes.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------ | --------------------------- |
+| bron | tekenreeks | - Bronreeks om te meten. |
+
+#### Contract
+
+- **@param:** - Brontekenreeks die moet worden gemeten.
+- **@returns:** Aantal bytes indien gecodeerd als UTF-8.
+
+### MAX_SOURCE_INPUT_BYTES
+
+**Soort:** constant
+
+```typescript
+export const MAX_SOURCE_INPUT_BYTES;
+```
+
+Maximaal toegestane Flint-bronbestandsgrootte in bytes (16 MiB).
 
 ## `src/documentation`
 
@@ -1514,13 +1262,18 @@ Geen beschrijving opgegeven.
 function parseFlintDocumentation(comment: string): FlintDocumentation;
 ```
 
-Geen beschrijving opgegeven.
+Parseert een Flint-documentopmerking in gestructureerde beschrijvings- en documentatietags.
 
 #### Parameters
 
-| Naam       | Typ        | Beschrijving |
-| ---------- | ---------- | ------------ |
-| commentaar | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ------------------------- |
+| commentaar | tekenreeks | - Ruwe documentcommentaarreeks. |
+
+#### Contract
+
+- **@param:** - Ruwe documentcommentaarreeks.
+- **@returns:** Gestructureerd documentatierecord met genormaliseerde beschrijving en tags.
 
 ### renderFlintDocumentatie
 
@@ -1530,25 +1283,30 @@ Geen beschrijving opgegeven.
 function renderFlintDocumentation(documentation: FlintDocumentation): string;
 ```
 
-Geen beschrijving opgegeven.
+Geeft een gestructureerd Flint-documentatierecord terug naar de afwaardering van documentcommentaar.
 
 #### Parameters
 
-| Naam         | Typ               | Beschrijving |
-| ------------ | ----------------- | ------------ |
-| documentatie | FlintDocumentatie |              |
+| Naam | Typ | Beschrijving |
+| ------------- | ------------------ | ---------------------------------- |
+| documentatie | FlintDocumentatie | - Gestructureerd documentatierecord. |
+
+#### Contract
+
+- **@param:** - Gestructureerd documentatierecord.
+- **@returns:** Opgemaakte documentatie-markdown-tekst.
 
 ## `src/dynamic-links`
 
-### FlintDynamicCallable
+### FlintDynamicOproepbaar
 
 **Soort:** type
 
 ```typescript
-export type FlintDynamicCallable = (...args: readonly number[]) => unknown;
+export type FlintDynamicCallable = (...arguments_: readonly number[]) => unknown;
 ```
 
-Geen beschrijving opgegeven.
+Oproepbare functiehandtekening voor dynamische module-exports die numerieke handvatten/argumenten accepteren.
 
 ### FlintDynamicLinkCache
 
@@ -1569,7 +1327,7 @@ Als u een van beide identiteitscomponenten vervangt, worden de oude opvraagbare 
 export interface FlintDynamicLinkIdentity
 ```
 
-Geen beschrijving opgegeven.
+Unieke identiteitsdescriptor voor een dynamisch linkartefact en manifestpaar.
 
 ### FlintDynamicModule
 
@@ -1579,11 +1337,11 @@ Geen beschrijving opgegeven.
 export interface FlintDynamicModule
 ```
 
-Geen beschrijving opgegeven.
+Dynamisch gekoppelde module met opvraagbare exports en optionele ABI-handtekeningen.
 
 ## `src/frontend`
 
-### prepareFlintFrontend
+### bereidFlintFrontend voor
 
 **Soort:** functie
 
@@ -1591,15 +1349,21 @@ Geen beschrijving opgegeven.
 function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 ```
 
-Geen beschrijving opgegeven.
+Voert de frontend-pijplijn uit voor een enkel Flint-bronbestand.
+Voert lexing, parsing, typecontrole, IR-verlaging en Sea-of-Nodes-optimalisatie uit.
 
 #### Parameters
 
-| Naam   | Typ               | Beschrijving |
-| ------ | ----------------- | ------------ |
-| invoer | FlintCompileInput |              |
+| Naam | Typ | Beschrijving |
+| ----- | ----------------- | ----------------------------------------------------- |
+| invoer | FlintCompileInvoer | - Invoeropties voor compiler met één bestand en broncode. |
 
-### prepareFlintGraphFrontend
+#### Contract
+
+- **@param:** - Invoeropties en broncode van de compiler voor één bestand.
+- **@returns:** Frontend-compilatieresultaat met AST-, IR- en ABI-manifest.
+
+### bereidFlintGraphFrontend voor
 
 **Soort:** functie
 
@@ -1607,109 +1371,488 @@ Geen beschrijving opgegeven.
 function prepareFlintGraphFrontend(input: FlintGraphCompileInput): FlintFrontendResult;
 ```
 
-Geen beschrijving opgegeven.
+Bereidt de frontend van de compiler voor op een gekoppelde grafiek met meerdere modules.
+Lost het sluiten van statische afhankelijkheid op, controleert het type van de gecombineerde component,
+en verlaagt de gekoppelde module naar geoptimaliseerde IR- en ABI-manifesten.
 
 #### Parameters
 
-| Naam   | Typ                    | Beschrijving |
-| ------ | ---------------------- | ------------ |
-| invoer | FlintGraphCompileInput |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------------------- | ----------------------------------------------------------------------------- |
+| invoer | FlintGraphCompileInvoer | - Multi-module grafiekcompilatie-invoer inclusief grafiekranden en ingangspunt. |
 
-## `src/generics`
+#### Contract
 
-### createFlintGenericSpecialisatie
+- **@param:** - Invoer voor grafiekcompilatie met meerdere modules, inclusief grafiekranden en ingangspunt.
+- **@returns:** Gecombineerd frontend-compilatieresultaat voor de gekoppelde modulegrafiek.
+
+## `src/graph-compiler/ast-builder`
+
+### buildGraphAst
 
 **Soort:** functie
 
 ```typescript
-function createFlintGenericSpecialization(request: FlintGenericSpecializationRequest): FlintSpecialization;
+function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult;
 ```
 
-Geen beschrijving opgegeven.
+Verlaagt een gevalideerde FlintNodeGraph naar een FlintModule AST en bidirectionele bronkaart in het geheugen.
 
 #### Parameters
 
-| Naam    | Typ                                | Beschrijving |
-| ------- | ---------------------------------- | ------------ |
-| verzoek | FlintGeneriekSpecialisatieAanvraag |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------- | ----------- |
+| inputGrafiek | FlintNodeGraph |             |
 
-### createFlintIteratorBoundaryDescriptor
-
-**Soort:** functie
-
-```typescript
-function createFlintIteratorBoundaryDescriptor(
-  generic: string,
-  elementType: FlintTypeName,
-  nextFunction: string,
-  ownership: FlintOwnership = 'borrowed',
-): FlintIteratorBoundaryDescriptor;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam            | Typ            | Beschrijving |
-| --------------- | -------------- | ------------ |
-| generiek        | tekenreeks     |              |
-| elementType     | FlintTypeName  |              |
-| volgendeFunctie | tekenreeks     |              |
-| eigendom        | FlintOwnership |              |
-
-### FlintGeneriekBoundary
-
-**Soort:** type
-
-```typescript
-export type FlintGenericBoundary = 'value' | 'interface' | 'iterator';
-```
-
-Geen beschrijving opgegeven.
-
-### flintGenericRepresentation
-
-**Soort:** functie
-
-```typescript
-function flintGenericRepresentation(boundary: FlintGenericBoundary = 'value'): FlintSpecialization['representation'];
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam  | Typ                    | Beschrijving |
-| ----- | ---------------------- | ------------ |
-| grens | FlintGeneriekeBoundary |              |
-
-### FlintGeneriekSpecialisatieVerzoek
+### FlintAstBuildResultaat
 
 **Soort:** interface
 
 ```typescript
-export interface FlintGenericSpecializationRequest
+export interface FlintAstBuildResult
 ```
 
 Geen beschrijving opgegeven.
 
-### sortFlintSpecialisaties
+## `src/graph-compiler/catalog`
+
+### createNodeFromDefinition
 
 **Soort:** functie
 
 ```typescript
-function sortFlintSpecializations(specializations: readonly FlintSpecialization[]): readonly FlintSpecialization[];
+function createNodeFromDefinition(
+  definition: FlintNodeDefinition,
+  id: string,
+  position: { readonly x: number; readonly y: number } = DEFAULT_NODE_POSITION,
+  properties?: Readonly<Record<string, unknown>>,
+): FlintGraphNode;
+```
+
+Instantiseert een FlintGraphNode vanuit een catalogusdefinitie met gegeven ID-, positie- en eigenschapoverschrijvingen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------------------ | ----------- |
+| definitie | FlintNodeDefinitie |             |
+| ID | tekenreeks |             |
+| positie | { alleen-lezen x: nummer; alleen-lezen y: nummer } |             |
+| eigenschappen | Alleen-lezen<Record<string, unknown>> |             |
+
+### FlintNodeDefinitie
+
+**Soort:** interface
+
+```typescript
+export interface FlintNodeDefinition
 ```
 
 Geen beschrijving opgegeven.
 
+### getAllNodeDefinitions
+
+**Soort:** functie
+
+```typescript
+function getAllNodeDefinitions(): readonly FlintNodeDefinition[];
+```
+
+Retourneert alle geregistreerde standaard node-definities.
+
+### getNodeDefinition
+
+**Soort:** functie
+
+```typescript
+function getNodeDefinition(operation: string): FlintNodeDefinition | undefined;
+```
+
+Haalt een standaard node-definitie op via zijn unieke bewerkings-ID.
+
 #### Parameters
 
-| Naam           | Typ                               | Beschrijving |
-| -------------- | --------------------------------- | ------------ |
-| specialisaties | alleen-lezen FlintSpecialisatie[] |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------ | ----------- |
+| operatie | tekenreeks |             |
+
+### getNodeDefinitionsByCategory
+
+**Soort:** functie
+
+```typescript
+function getNodeDefinitionsByCategory(category: FlintNodeCategory): readonly FlintNodeDefinition[];
+```
+
+Retourneert node-definities gefilterd op categorie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ----------------- | ----------- |
+| categorie | FlintNodeCategorie |             |
+
+## `src/graph-compiler/generator`
+
+### compileGraphToFlint
+
+**Soort:** functie
+
+```typescript
+function compileGraphToFlint(graph: FlintNodeGraph): FlintGraphCompilationArtifact;
+```
+
+Dubbele compilergenerator voor Flint visuele node-grafieken.
+Synthetiseert getypte FlintModule AST in het geheugen en opgemaakte .flint-brontekst met bidirectionele bronkaarten.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | -------------- | ----------- |
+| grafiek | FlintNodeGraph |             |
+
+### compileNodeGraph
+
+**Soort:** functie
+
+```typescript
+function compileNodeGraph(graph: FlintNodeGraph, options?: Partial<FlintCompileInput>): FlintCompiledNodeGraphArtifact;
+```
+
+Compileert een visuele FlintNodeGraph end-to-end in het binaire WebAssembly-bestand, het ABI-manifest en de bronartefacten.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------- | ----------- |
+| grafiek | FlintNodeGraph |             |
+| opties | Gedeeltelijk<FlintCompileInput> |             |
+
+### FlintCompiledNodeGraphArtefact
+
+**Soort:** interface
+
+```typescript
+export interface FlintCompiledNodeGraphArtifact extends Omit<FlintArtifact, 'sourceMap'>
+```
+
+Geen beschrijving opgegeven.
+
+### FlintGraphCompilatieArtefact
+
+**Soort:** interface
+
+```typescript
+export interface FlintGraphCompilationArtifact
+```
+
+Geen beschrijving opgegeven.
+
+## `src/graph-compiler/source-emitter`
+
+### emitGraphSource
+
+**Soort:** functie
+
+```typescript
+function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmissionResult;
+```
+
+Zendt schone, geformatteerde Flint-broncode uit een gevalideerde grafiek met exacte bidirectionele bronkaarten.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | -------------- | ----------- |
+| inputGrafiek | FlintNodeGraph |             |
+
+### FlintBronEmissieResultaat
+
+**Soort:** interface
+
+```typescript
+export interface FlintSourceEmissionResult
+```
+
+Geen beschrijving opgegeven.
+
+## `src/graph-compiler/types`
+
+### createContainerType
+
+**Soort:** functie
+
+```typescript
+function createContainerType(
+  container: string,
+  typeArguments: readonly FlintTypeName[] = [],
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+Creëert een generieke of geaggregeerde FlintTypeName node.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------- | ------------------------ | ----------- |
+| houder | tekenreeks |             |
+| typeArgumenten | alleen-lezen FlintTypeName[] |             |
+| spanwijdte | FlintSourceSpan |             |
+
+### createPrimitiveType
+
+**Soort:** functie
+
+```typescript
+function createPrimitiveType(
+  primitive: FlintPrimitiveType,
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+Creëert een primitieve FlintTypeName node.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | ------------------ | ----------- |
+| primitief | FlintPrimitiveType |             |
+| spanwijdte | FlintSourceSpan |             |
+
+### creëerSynthetischeSpan
+
+**Soort:** functie
+
+```typescript
+function createSyntheticSpan(line = 1, column = 1, length = 1): FlintSourceSpan;
+```
+
+Creëert een synthetische bronreeks voor door grafieken gegenereerde AST-knooppunten.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---- | ----------- |
+| lijn |      |             |
+| kolom |      |             |
+| lengte |      |             |
+
+### afvlakkenGrafiek
+
+**Soort:** functie
+
+```typescript
+function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph;
+```
+
+Recursief lijnt en vlakt u alle metaknooppunten in een grafiek uit tot hun samenstellende interne knooppunten en randen.
+Wordt gebruikt tijdens validatie, AST-generatie en bronemissie om naadloos samengestelde metaknooppunten samen te stellen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | -------------- | ----------- |
+| grafiek | FlintNodeGraph |             |
+
+### FlintGraphEdge
+
+**Soort:** interface
+
+```typescript
+export interface FlintGraphEdge
+```
+
+Geen beschrijving opgegeven.
+
+### FlintGraphGroep
+
+**Soort:** interface
+
+```typescript
+export interface FlintGraphGroup
+```
+
+Geen beschrijving opgegeven.
+
+### FlintGraphNode
+
+**Soort:** interface
+
+```typescript
+export interface FlintGraphNode
+```
+
+Geen beschrijving opgegeven.
+
+### FlintGraphPort
+
+**Soort:** interface
+
+```typescript
+export interface FlintGraphPort
+```
+
+Geen beschrijving opgegeven.
+
+### FlintGraphValidatieprobleem
+
+**Soort:** interface
+
+```typescript
+export interface FlintGraphValidationIssue
+```
+
+Geen beschrijving opgegeven.
+
+### FlintGraphValidatieResultaat
+
+**Soort:** interface
+
+```typescript
+export interface FlintGraphValidationResult
+```
+
+Geen beschrijving opgegeven.
+
+### FlintGraphValidatieErnst
+
+**Soort:** type
+
+```typescript
+export type FlintGraphValidationSeverity = 'error' | 'warning' | 'info';
+```
+
+Geen beschrijving opgegeven.
+
+### FlintMetaNodeDefinitie
+
+**Soort:** interface
+
+```typescript
+export interface FlintMetaNodeDefinition
+```
+
+Geen beschrijving opgegeven.
+
+### FlintMetaNodePortMapping
+
+**Soort:** interface
+
+```typescript
+export interface FlintMetaNodePortMapping
+```
+
+Geen beschrijving opgegeven.
+
+### FlintMetaNodeSubgraph
+
+**Soort:** interface
+
+```typescript
+export interface FlintMetaNodeSubgraph
+```
+
+Geen beschrijving opgegeven.
+
+### FlintNodeCategorie
+
+**Soort:** type
+
+```typescript
+export type FlintNodeCategory = 'math' | 'logic' | 'text' | 'collection' | 'control' | 'capability' | 'custom';
+```
+
+Geen beschrijving opgegeven.
+
+### FlintNodeGraph
+
+**Soort:** interface
+
+```typescript
+export interface FlintNodeGraph
+```
+
+Geen beschrijving opgegeven.
+
+### FlintNodeKind
+
+**Soort:** type
+
+```typescript
+export type FlintNodeKind =
+  'input' | 'output' | 'constant' | 'operation' | 'stdlib_call' | 'capability_call' | 'custom';
+```
+
+Geen beschrijving opgegeven.
+
+### FlintNodeSourceMap
+
+**Soort:** interface
+
+```typescript
+export interface FlintNodeSourceMap
+```
+
+Geen beschrijving opgegeven.
+
+### FlintPortRichting
+
+**Soort:** type
+
+```typescript
+export type FlintPortDirection = 'input' | 'output';
+```
+
+Geen beschrijving opgegeven.
+
+## `src/graph-compiler/validator`
+
+### areTypesCompatibel
+
+**Soort:** functie
+
+```typescript
+function areTypesCompatible(source: FlintTypeName, target: FlintTypeName): boolean;
+```
+
+Controleert structurele en semantische compatibiliteit tussen bron- en doel-Flint-typen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------------- | ----------- |
+| bron | FlintTypeNaam |             |
+| doel | FlintTypeNaam |             |
+
+### valideerGrafiek
+
+**Soort:** functie
+
+```typescript
+function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult;
+```
+
+Valideert grafiektopologie, edge-verbindingen, poorttypen en detecteert cycli.
+Retourneert gesorteerde node-ID's als de grafiek een geldige Directed Acyclic Graph (DAG) is.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | -------------- | ----------- |
+| grafiek | FlintNodeGraph |             |
 
 ## `src/graph`
+
+### FlintForeignObjectReferentie
+
+**Soort:** interface
+
+```typescript
+export interface FlintForeignObjectReference
+```
+
+Buitenlandse verplaatsbare objectreferentie geleverd aan de linker.
 
 ### FlintGraphResultaat
 
@@ -1719,9 +1862,9 @@ Geen beschrijving opgegeven.
 export interface FlintGraphResult
 ```
 
-Geen beschrijving opgegeven.
+Geaggregeerd resultaat van het oplossen van een modulegrafiek, waarbij de modulegrafiekstructuur en diagnostiek worden geretourneerd.
 
-### FlintLinkConfiguratie
+### FlintLink-configuratie
 
 **Soort:** interface
 
@@ -1729,7 +1872,7 @@ Geen beschrijving opgegeven.
 export interface FlintLinkConfiguration
 ```
 
-Geen beschrijving opgegeven.
+Configuratieopties voor het koppelen van modules tussen projecten en hetzelfde project.
 
 ### FlintLinkMode
 
@@ -1737,6 +1880,17 @@ Geen beschrijving opgegeven.
 
 ```typescript
 export type FlintLinkMode = 'static' | 'dynamic';
+```
+
+Koppelingsmodus die specificeert of afhankelijkheden statisch worden opgelost (gebundeld
+in één component) of dynamisch (via runtime-import op hostniveau).
+
+### FlintLinkProfiel
+
+**Soort:** type
+
+```typescript
+export type FlintLinkProfile = 'standard' | 'minimal' | 'full' | 'dynamic' | 'static' | 'monolithic' | 'cross-package';
 ```
 
 Geen beschrijving opgegeven.
@@ -1749,7 +1903,8 @@ Geen beschrijving opgegeven.
 export interface FlintModuleEdge
 ```
 
-Geen beschrijving opgegeven.
+Gerichte afhankelijkheidsrand in de modulegrafiek die een importeur aan een importee koppelt
+met een bijbehorende koppelingsstrategie en broncodelocatiebereik.
 
 ### FlintModuleGraph
 
@@ -1759,7 +1914,8 @@ Geen beschrijving opgegeven.
 export interface FlintModuleGraph
 ```
 
-Geen beschrijving opgegeven.
+Gerichte module-afhankelijkheidsgrafiek waarin opgeloste modules, afhankelijkheidsranden,
+en deelnemende projectgrenzen.
 
 ### FlintModuleResolver
 
@@ -1769,7 +1925,7 @@ Geen beschrijving opgegeven.
 export interface FlintModuleResolver
 ```
 
-Geen beschrijving opgegeven.
+Interface voor het oplossen van importspecificaties en het asynchroon laden van modulebrontekst.
 
 ### FlintProject
 
@@ -1779,7 +1935,7 @@ Geen beschrijving opgegeven.
 export interface FlintProject
 ```
 
-Geen beschrijving opgegeven.
+Vertegenwoordigt een projectgrens die een bestandshoofdmap en een afgeleide identificatie bevat.
 
 ### FlintResolvedModule
 
@@ -1789,7 +1945,18 @@ Geen beschrijving opgegeven.
 export interface FlintResolvedModule
 ```
 
-Geen beschrijving opgegeven.
+Flint-bronmodule opgelost met geparseerde AST, brontekst,
+projectwortelassociatie en inhoudhash.
+
+### ForeignObjectFormat
+
+**Soort:** type
+
+```typescript
+export type ForeignObjectFormat = 'wasm-relocatable' | 'elf-object' | 'mach-o';
+```
+
+Verplaatsbaar vreemd-objectformaat (samengesteld uit C/C++ clang of Rust cargo).
 
 ### hashFlintModuleGraph
 
@@ -1799,16 +1966,22 @@ Geen beschrijving opgegeven.
 function hashFlintModuleGraph(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): string;
 ```
 
-Geen beschrijving opgegeven.
+Berekent een deterministische 32-bits FNV-1a hex-hash van een modulegrafiek en de linkconfiguratie ervan.
 
 #### Parameters
 
-| Naam         | Typ                   | Beschrijving |
-| ------------ | --------------------- | ------------ |
-| grafiek      | FlintModuleGraph      |              |
-| configuratie | FlintLinkConfiguratie |              |
+| Naam | Typ | Beschrijving |
+| ------------- | ---------------------- | -------------------------------------------------- |
+| grafiek | FlintModuleGraph | - Module-afhankelijkheidsgrafiek naar hash.                 |
+| configuratie | FlintLink-configuratie | - Linkconfiguratie die de grafiekresolutie beïnvloedt. |
 
-### solveFlintModuleGraph
+#### Contract
+
+- **@param:** - Module-afhankelijkheidsgrafiek naar hash.
+- **@param:** - Linkconfiguratie die de grafiekresolutie beïnvloedt.
+- **@returns:** Een hexadecimale hash-tekenreeks van 8 tekens in kleine letters.
+
+### oplossingFlintModuleGraph
 
 **Soort:** functie
 
@@ -1820,19 +1993,26 @@ function resolveFlintModuleGraph(
 ): Promise<FlintGraphResult>;
 ```
 
-Geen beschrijving opgegeven.
+Lost asynchroon de volledige moduleafhankelijkheidsgrafiek op, beginnend bij een of meer toegangspunten.
 
 #### Parameters
 
-| Naam         | Typ                       | Beschrijving |
-| ------------ | ------------------------- | ------------ |
-| inzendingen  | alleen-lezen tekenreeks[] |              |
-| oplosser     | FlintModuleResolver       |              |
-| configuratie | FlintLinkConfiguratie     |              |
+| Naam | Typ | Beschrijving |
+| ------------- | ---------------------- | ------------------------------------------------------------------- |
+| inzendingen | alleen-lezen tekenreeks[] | - Bestandspaden van rootinvoermodules die moeten worden opgelost.                      |
+| oplosser | FlintModuleResolver | - Module-resolver die verantwoordelijk is voor het in kaart brengen van paden en het laden van inhoud. |
+| configuratie | FlintLink-configuratie | - Configuratieopties voor het koppelen en verpakken.                      |
+
+#### Contract
+
+- **@param:** - Bestandspaden van rootinvoermodules die moeten worden opgelost.
+- **@param:** - Module-resolver die verantwoordelijk is voor het in kaart brengen van paden en het laden van inhoud.
+- **@param:** - Configuratieopties voor koppeling en verpakking.
+- **@returns:** Grafiekresultaat met opgeloste modules, afhankelijkheidsranden, projecten en diagnostiek.
 
 ## `src/identity`
 
-### deriveFlintModuleId
+### ontleenFlintModuleId
 
 **Soort:** functie
 
@@ -1840,16 +2020,23 @@ Geen beschrijving opgegeven.
 function deriveFlintModuleId(fileName: string, root?: string): string;
 ```
 
-Geen beschrijving opgegeven.
+Leidt een canonieke module-ID af voor een Flint-bronbestand.
+Trimt de voorvoegsels van het hoofdpad, de voorafgaande relatieve padmarkeringen en de bestandsextensie `.flint`.
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| bestandsnaam | tekenreeks |              |
-| wortel       | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ------------------------------------------------------------------- |
+| bestandsnaam | tekenreeks | - Bestandsnaam of pad van het Flint-bronbestand.                       |
+| wortel | tekenreeks | - Optioneel hoofdmappad om de module-ID te verwijderen. |
 
-### normalizeFlintFileId
+#### Contract
+
+- **@param:** - Bestandsnaam of pad van het Flint-bronbestand.
+- **@param:** - Optioneel hoofdmappad om te verwijderen van de module-ID.
+- **@returns:** Canonieke module-ID, of `'<input>'` als de resulterende ID leeg is.
+
+### normaliseerFlintFileId
 
 **Soort:** functie
 
@@ -1857,704 +2044,20 @@ Geen beschrijving opgegeven.
 function normalizeFlintFileId(fileName: string): string;
 ```
 
-Geen beschrijving opgegeven.
+Normaliseert een bestandsidentificatie voor Flint-compilatie.
+Verwijdert queryparameters, converteert Windows-padscheidingstekens naar POSIX-slashes,
+en vouwt dubbele schuine strepen naar voren.
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| bestandsnaam | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ------------------------------- |
+| bestandsnaam | tekenreeks | - Raw-bestandsnaam of padreeks. |
 
-## `src/ir`
+#### Contract
 
-### countFlintIr
-
-**Soort:** functie
-
-```typescript
-function countFlintIr(module: FlintIrModule): FlintIrCounts;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam   | Typ           | Beschrijving |
-| ------ | ------------- | ------------ |
-| module | FlintIrModule |              |
-
-### FlintCollectionOperation
-
-**Soort:** type
-
-```typescript
-export type FlintCollectionOperation = 'array-iter' | 'iterator-next' | 'array-length';
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrArrayLiteralExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrArrayLiteralExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrAssignmentStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrAssignmentStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrBinaryExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrBinaryExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrCallExpressie
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrCallExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrCounts
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrCounts
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrDoWhileStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrDoWhileStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrEnumValueExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrEnumValueExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrExpressie
-
-**Soort:** type
-
-```typescript
-export type FlintIrExpression =
-  | FlintIrBinaryExpression
-  | FlintIrCallExpression
-  | FlintIrIdentifierExpression
-  | FlintIrLiteralExpression
-  | FlintIrFunctionValueExpression
-  | FlintIrStructValueExpression
-  | FlintIrEnumValueExpression
-  | FlintIrMatchExpression
-  | FlintIrUnaryExpression
-  | FlintIrArrayLiteralExpression
-  | FlintIrIndexExpression;
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrExpressionStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrExpressionStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrFunctie
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrFunction
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrFunctionAnalysis
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrFunctionAnalysis
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrFunctionValueExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrFunctionValueExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrIdentifierExpressie
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrIdentifierExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrIfStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrIfStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrIndexExpressie
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrIndexExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrIteratorLoopStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrIteratorLoopStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrLetStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrLetStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrLiteralExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrLiteralExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrMatchArm
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrMatchArm
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrMatchExpressie
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrMatchExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrMatchStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrMatchStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrModule
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrModule
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrZuiverheid
-
-**Soort:** type
-
-```typescript
-export type FlintIrPurity = 'pure' | 'effectful' | 'unknown';
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrReturnStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrReturnStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrStatement
-
-**Soort:** type
-
-```typescript
-export type FlintIrStatement =
-  | FlintIrExpressionStatement
-  | FlintIrAssignmentStatement
-  | FlintIrIfStatement
-  | FlintIrWhileStatement
-  | FlintIrDoWhileStatement
-  | FlintIrLetStatement
-  | FlintIrReturnStatement
-  | FlintIrMatchStatement
-  | FlintIrSwitchStatement
-  | FlintIrYieldStatement
-  | FlintIrIteratorLoopStatement;
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrStructValueExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrStructValueExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrSwitchStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrSwitchStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrUnaryExpression
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrUnaryExpression
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrWhileStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrWhileStatement
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIrYieldStatement
-
-**Soort:** interface
-
-```typescript
-export interface FlintIrYieldStatement
-```
-
-Geen beschrijving opgegeven.
-
-### lowerFlintIrToModule
-
-**Soort:** functie
-
-```typescript
-function lowerFlintIrToModule(module: FlintIrModule): FlintModule;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam   | Typ           | Beschrijving |
-| ------ | ------------- | ------------ |
-| module | FlintIrModule |              |
-
-### lowerFlintToIr
-
-**Soort:** functie
-
-```typescript
-function lowerFlintToIr(module: FlintModule): FlintIrModule;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam   | Typ         | Beschrijving |
-| ------ | ----------- | ------------ |
-| module | FlintModule |              |
-
-## `src/lexer`
-
-### FlintLexResultaat
-
-**Soort:** interface
-
-```typescript
-export interface FlintLexResult
-```
-
-Geen beschrijving opgegeven.
-
-### FlintToken
-
-**Soort:** interface
-
-```typescript
-export interface FlintToken
-```
-
-Geen beschrijving opgegeven.
-
-### FlintTokenKind
-
-**Soort:** type
-
-```typescript
-export type FlintTokenKind =
-  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
-```
-
-Geen beschrijving opgegeven.
-
-### lexFlint
-
-**Soort:** functie
-
-```typescript
-function lexFlint(source: string, fileName = '<input>'): FlintLexResult;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| bron         | tekenreeks |              |
-| bestandsnaam |            |              |
-
-## `src/linker`
-
-### FlintLinkResultaat
-
-**Soort:** interface
-
-```typescript
-export interface FlintLinkResult
-```
-
-Geen beschrijving opgegeven.
-
-### valideerFlintLinks
-
-**Soort:** functie
-
-```typescript
-function validateFlintLinks(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): FlintLinkResult;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam         | Typ                   | Beschrijving |
-| ------------ | --------------------- | ------------ |
-| grafiek      | FlintModuleGraph      |              |
-| configuratie | FlintLinkConfiguratie |              |
-
-## `src/manifest`
-
-### createFlintAbiManifest
-
-**Soort:** functie
-
-```typescript
-function createFlintAbiManifest(module: FlintModule, options: FlintAbiManifestOptions = {}): FlintAbiManifest;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam   | Typ                     | Beschrijving |
-| ------ | ----------------------- | ------------ |
-| module | FlintModule             |              |
-| opties | FlintAbiManifestOptions |              |
-
-### FORGE_WEB_SCRIPT_ABI_VERSION
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-Geen beschrijving opgegeven.
-
-### FORGE_WEB_SCRIPT_LANGUAGE_VERSION
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAbiFunctie
-
-**Soort:** interface
-
-```typescript
-export interface FlintAbiFunction
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAbiManifest
-
-**Soort:** interface
-
-```typescript
-export interface FlintAbiManifest
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAbiManifestOptions
-
-**Soort:** interface
-
-```typescript
-export interface FlintAbiManifestOptions
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAbiParameter
-
-**Soort:** interface
-
-```typescript
-export interface FlintAbiParameter
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAbiVersion
-
-**Soort:** type
-
-```typescript
-export type FlintAbiVersion = typeof FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAggregateFieldLayout
-
-**Soort:** interface
-
-```typescript
-export interface FlintAggregateFieldLayout
-```
-
-Geen beschrijving opgegeven.
-
-### FlintAggregateLayout
-
-**Soort:** interface
-
-```typescript
-export interface FlintAggregateLayout
-```
-
-Geen beschrijving opgegeven.
-
-### FlintCollectionLayout
-
-**Soort:** interface
-
-```typescript
-export interface FlintCollectionLayout
-```
-
-Geen beschrijving opgegeven.
-
-### FlintDynamicLinkMetadata
-
-**Soort:** interface
-
-```typescript
-export interface FlintDynamicLinkMetadata
-```
-
-Stabiele metagegevens die worden gebruikt door dynamische laders en hun verzendcaches.
-
-### FlintDynamicModuleBinding
-
-**Soort:** interface
-
-```typescript
-export interface FlintDynamicModuleBinding
-```
-
-Duidelijk zichtbare bindingsinformatie voor een expliciet dynamische module.
-
-### FlintEnumMetadata
-
-**Soort:** interface
-
-```typescript
-export interface FlintEnumMetadata
-```
-
-Geen beschrijving opgegeven.
-
-### FlintHostImporteren
-
-**Soort:** interface
-
-```typescript
-export interface FlintHostImport
-```
-
-Geen beschrijving opgegeven.
-
-### FlintIteratorBoundaryDescriptor
-
-**Soort:** interface
-
-```typescript
-export interface FlintIteratorBoundaryDescriptor
-```
-
-Geen beschrijving opgegeven.
-
-### FlintLanguageVersion
-
-**Soort:** type
-
-```typescript
-export type FlintLanguageVersion = typeof FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-Geen beschrijving opgegeven.
-
-### FlintLinkedExport
-
-**Soort:** interface
-
-```typescript
-export interface FlintLinkedExport
-```
-
-Geen beschrijving opgegeven.
-
-### FlintMemoryLayout
-
-**Soort:** interface
-
-```typescript
-export interface FlintMemoryLayout
-```
-
-Geen beschrijving opgegeven.
-
-### FlintSourceImporteren
-
-**Soort:** interface
-
-```typescript
-export interface FlintSourceImport
-```
-
-Geen beschrijving opgegeven.
-
-### FlintSpecialisatie
-
-**Soort:** interface
-
-```typescript
-export interface FlintSpecialization
-```
-
-Geen beschrijving opgegeven.
-
-### FlintValueRepresentation
-
-**Soort:** type
-
-```typescript
-export type FlintValueRepresentation =
-  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
-```
-
-Geen beschrijving opgegeven.
+- **@param:** - Onbewerkte bestandsnaam of padreeks.
+- **@returns:** Genormaliseerde bestandspad-ID in POSIX-stijl.
 
 ## `src/module-types`
 
@@ -2566,7 +2069,7 @@ Geen beschrijving opgegeven.
 export interface FlintImportTypeEnvironment
 ```
 
-Geen beschrijving opgegeven.
+Externe typeomgeving met declaraties geïmporteerd in een module.
 
 ### solveFlintImportTypeEnvironment
 
@@ -2579,130 +2082,160 @@ function resolveFlintImportTypeEnvironment(
 ): FlintImportTypeEnvironment;
 ```
 
-Geen beschrijving opgegeven.
+Lost geïmporteerde functiehandtekeningen van upstream-afhankelijkheidsmodules op in een modulegrafiek.
 
 #### Parameters
 
-| Naam      | Typ                 | Beschrijving |
-| --------- | ------------------- | ------------ |
-| importeur | FlintResolvedModule |              |
-| grafiek   | FlintModuleGraph    |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------------------- | ------------------------------------------------------------------------ |
+| importeur | FlintResolvedModule | - Module opgelost waarvan de importafhankelijkheden worden geïnspecteerd.         |
+| grafiek | FlintModuleGraph | - Multi-module afhankelijkheidsgrafiek met alle gekoppelde modules en randen. |
 
-## `src/optimizer`
+#### Contract
 
-### FlintOptimizationBeslissing
+- **@param:** - Module opgelost waarvan de importafhankelijkheden worden geïnspecteerd.
+- **@param:** - Multi-module afhankelijkheidsgrafiek met alle gekoppelde modules en randen.
+- **@returns:** Een importtype-omgeving die geëxporteerde externe functies bevat (zowel kaal als met een alias-voorvoegsel).
 
-**Soort:** interface
+## `src/safety`
 
-```typescript
-export interface FlintOptimizationDecision
-```
-
-Geen beschrijving opgegeven.
-
-### FlintOptimizationReport
-
-**Soort:** interface
-
-```typescript
-export interface FlintOptimizationReport
-```
-
-Geen beschrijving opgegeven.
-
-### FlintOptimizationResultaat
-
-**Soort:** interface
-
-```typescript
-export interface FlintOptimizationResult
-```
-
-Geen beschrijving opgegeven.
-
-### optimizeFlintIr
+### kanLifetimeEscape
 
 **Soort:** functie
 
 ```typescript
-function optimizeFlintIr(input: FlintIrModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function canLifetimeEscape(source: RegionLifetime, target: RegionLifetime): boolean;
 ```
 
-Geen beschrijving opgegeven.
+Valideert dat een toewijzing of terugkeer van de levensduur van de bron naar de levensduur van het doel de veiligheid van de regio niet schendt.
+Het opslaan van een verwijzing met een kortere levensduur in een doel met een langere levensduur zonder expliciete promotie/klonen is niet toegestaan.
 
 #### Parameters
 
-| Naam   | Typ                            | Beschrijving |
-| ------ | ------------------------------ | ------------ |
-| invoer | FlintIrModule                  |              |
-| modus  | 'foutopsporing' \| 'vrijgeven' |              |
+| Naam | Typ | Beschrijving |
+| ------ | -------------- | ----------- |
+| bron | RegioLifetime |             |
+| doel | RegioLifetime |             |
 
-### optimizeFlintModule
+### checkFlintSafety
 
 **Soort:** functie
 
 ```typescript
-function optimizeFlintModule(module: FlintModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function checkFlintSafety(module: FlintModule, fileName: string, diagnostics: FlintDiagnostic[]): void;
 ```
 
-Geen beschrijving opgegeven.
+Voert controles op bronniveau uit die niet kunnen worden weergegeven door tekenreeksen van het oude type.
 
 #### Parameters
 
-| Naam   | Typ                            | Beschrijving |
-| ------ | ------------------------------ | ------------ |
-| module | FlintModule                    |              |
-| modus  | 'foutopsporing' \| 'vrijgeven' |              |
+| Naam | Typ | Beschrijving |
+| ----------- | ----------------- | ------------------------------------ |
+| module | FlintModule | - Module AST om te valideren.            |
+| bestandsnaam | tekenreeks | - Bestandsnaam gebruikt voor diagnostiek.    |
+| diagnostiek | FlintDiagnostisch[] | - Accumulator voor foutdiagnose. |
 
-## `src/parser`
+#### Contract
 
-### FlintParseOptions
+- **@param:** - Module AST om te valideren.
+- **@param:** - Bestandsnaam gebruikt voor diagnose.
+- **@param:** - Accumulator voor foutdiagnostiek.
+
+### SluitingCaptureInfo
 
 **Soort:** interface
 
 ```typescript
-export interface FlintParseOptions
+export interface ClosureCaptureInfo
 ```
 
-Geen beschrijving opgegeven.
+Descriptor van een variabele die wordt vastgelegd door een afsluiting.
 
-### FlintParseResult
+### MoveSafetyInfo
 
 **Soort:** interface
 
 ```typescript
-export interface FlintParseResult
+export interface MoveSafetyInfo
 ```
 
-Geen beschrijving opgegeven.
+Veiligheidsinfodescriptor voor structuurverplaatsing.
 
-### parseFlint
-
-**Soort:** functie
-
-```typescript
-function parseFlint(source: string, fileName = '<input>', options: FlintParseOptions = {}): FlintParseResult;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam         | Typ               | Beschrijving |
-| ------------ | ----------------- | ------------ |
-| bron         | tekenreeks        |              |
-| bestandsnaam |                   |              |
-| opties       | FlintParseOptions |              |
-
-### primitieve typen
+### REGION_LIFETIME_ORDER
 
 **Soort:** constant
 
 ```typescript
-export const primitiveTypes;
+export const REGION_LIFETIME_ORDER: Readonly<Record<RegionLifetime, number>>;
 ```
 
 Geen beschrijving opgegeven.
+
+### REGION_LIFETIMES
+
+**Soort:** constant
+
+```typescript
+export const REGION_LIFETIMES;
+```
+
+Geen beschrijving opgegeven.
+
+### RegioLevensduur
+
+**Soort:** type
+
+```typescript
+export type RegionLifetime = 'local' | 'function' | 'arena' | 'global' | 'Local' | 'Function' | 'Arena' | 'GlobalHeap';
+```
+
+Regionale levensroosterhiërarchie: Lokaal < Functie < Arena < GlobalHeap.
+
+### validateClosureCaptureVeiligheid
+
+**Soort:** functie
+
+```typescript
+function validateClosureCaptureSafety(capture: ClosureCaptureInfo): {
+  readonly safe: boolean;
+  readonly requiresHeapPromotion: boolean;
+  readonly reason?: string;
+};
+```
+
+Valideert de veiligheid bij het vastleggen van sluitingen en bepaalt of stapelvariabele heap-promotie verplicht is.
+Voorkomt geheugenbeschadiging na gebruik na bereik wanneer sluitingen de vastgelegde stapelframes overleven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------------ | -------------------------------------- |
+| vastleggen | SluitingCaptureInfo | - Sluiting van de metadata-descriptor. |
+
+#### Contract
+
+- **@param:** - Sluiting van de metadata-descriptor.
+- **@returns:** Validatieresultaat, of heap-promotie vereist is en foutmelding indien onveilig.
+
+### valideerMoveSafety
+
+**Soort:** functie
+
+```typescript
+function validateMoveSafety(info: MoveSafetyInfo): {
+  readonly safe: boolean;
+  readonly reason?: string;
+};
+```
+
+Valideert of een aggregatie- of structuurwaarde veilig per waarde kan worden verplaatst.
+Verbiedt het verplaatsen van vastgezette of zelfreferentiële structuren om het breken van het stapelframe en het gebruik-na-verplaatsingsrisico te elimineren.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | -------------- | ----------- |
+| informatie | MoveSafetyInfo |             |
 
 ## `src/self-hosted`
 
@@ -2714,9 +2247,13 @@ Geen beschrijving opgegeven.
 function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHostedSourceModule[];
 ```
 
-Geen beschrijving opgegeven.
+Creëert het volledige manifest van zelf-gehoste compilerbronmodules.
 
-### decodeFlintSelfHostedFingerprint
+#### Contract
+
+- **@returns:** Een reeks zelf-gehoste bronmodules.
+
+### decodeerFlintSelfHostedFingerprint
 
 **Soort:** functie
 
@@ -2724,13 +2261,18 @@ Geen beschrijving opgegeven.
 function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
-Geen beschrijving opgegeven.
+Decodeert een zelf-gehoste vingerafdruk van een UTF-8 byte-array.
 
 #### Parameters
 
-| Naam  | Typ        | Beschrijving |
-| ----- | ---------- | ------------ |
-| bytes | Uint8Array |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------- | ------------------------------- |
+| bytes | Uint8Array | - De UTF-8-gecodeerde byte-array. |
+
+#### Contract
+
+- **@param:** - De UTF-8-gecodeerde byte-array.
+- **@returns:** De gedecodeerde vingerafdrukreeks.
 
 ### coderenFlintSelfHostedFingerprint
 
@@ -2740,15 +2282,20 @@ Geen beschrijving opgegeven.
 function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
-Geen beschrijving opgegeven.
+Codeert een zelfgehoste vingerafdrukreeks in een UTF-8 byte-array.
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| vingerafdruk | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ----------- | ------ | ------------------------- |
+| vingerafdruk | tekenreeks | - De vingerafdrukreeks. |
 
-### FlintSelfHostedCompilatie
+#### Contract
+
+- **@param:** - De vingerafdrukreeks.
+- **@returns:** De UTF-8-gecodeerde byte-array.
+
+### FlintSelfHosted-compilatie
 
 **Soort:** interface
 
@@ -2756,7 +2303,8 @@ Geen beschrijving opgegeven.
 export interface FlintSelfHostedCompilation
 ```
 
-Geen beschrijving opgegeven.
+Vertegenwoordigt de begrensde zelf-hostende compilatie-eenheid, waarbij de TypeScript-zaadreferentie wordt samengevoegd
+uitvoering met de begrensde zelf-hostende lex/token-normalisatie VM-fase.
 
 ### FlintSelfHostedNormalizedOutput
 
@@ -2766,7 +2314,8 @@ Geen beschrijving opgegeven.
 export interface FlintSelfHostedNormalizedOutput
 ```
 
-Geen beschrijving opgegeven.
+Vertegenwoordigt de genormaliseerde, deterministische uitvoerrepresentatie van een Flint-compilatie.
+Dit zorgt ervoor dat compilatieartefacten (AST, IR, WA, diagnostiek) stabiel kunnen worden vergeleken.
 
 ### FlintSelfHostedVmExecutionMode
 
@@ -2776,9 +2325,9 @@ Geen beschrijving opgegeven.
 export type FlintSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-Geen beschrijving opgegeven.
+De uitvoeringsmodus voor de Flint VM bij het uitvoeren van een zelf-hostende compilatie.
 
-### prepareFlintSelfHostedCompilation
+### bereidFlintSelfHostedCompilation voor
 
 **Soort:** functie
 
@@ -2793,9 +2342,9 @@ De volledige frontend/backend-compilatie blijft op het TypeScript-zaad staan ​
 
 #### Parameters
 
-| Naam   | Typ               | Beschrijving |
-| ------ | ----------------- | ------------ |
-| invoer | FlintCompileInput |              |
+| Naam | Typ | Beschrijving |
+| ----- | ----------------- | ----------- |
+| invoer | FlintCompileInvoer |             |
 
 ### prepareFlintSelfHostedCompilationLegacyFingerprint
 
@@ -2809,9 +2358,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam   | Typ               | Beschrijving |
-| ------ | ----------------- | ------------ |
-| invoer | FlintCompileInput |              |
+| Naam | Typ | Beschrijving |
+| ----- | ----------------- | ----------- |
+| invoer | FlintCompileInvoer |             |
 
 #### Contract
 
@@ -2832,16 +2381,24 @@ function createFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-Geen beschrijving opgegeven.
+createFlintSelfHostedStageArtifact-implementatie.
 
 #### Parameters
 
-| Naam        | Typ                                  | Beschrijving |
-| ----------- | ------------------------------------ | ------------ |
-| stadium     | FlintSelfHostedCompilerStage         |              |
-| identiteit  | FlintSelfHostedStageArtifactIdentity |              |
-| lading      | Uint8Array                           |              |
-| diagnostiek | alleen-lezen FlintDiagnostic[]       |              |
+| Naam | Typ | Beschrijving |
+| ----------- | ------------------------------------ | ---------------------------- |
+| stadium | FlintSelfHostedCompilerStage | - De faseparameter.       |
+| identiteit | FlintSelfHostedStageArtifactIdentity | - De identiteitsparameter.    |
+| lading | Uint8Array | - De payloadparameter.     |
+| diagnostiek | alleen-lezen FlintDiagnostic[] | - De diagnostische parameter. |
+
+#### Contract
+
+- **@param:** - De faseparameter.
+- **@param:** - De identiteitsparameter.
+- **@param:** - De payloadparameter.
+- **@param:** - De diagnostische parameter.
+- **@returns:** Het FlintSelfHostedStageArtifact-resultaat.
 
 ### decodeFlintSelfHostedDiagnostics
 
@@ -2851,15 +2408,20 @@ Geen beschrijving opgegeven.
 function decodeFlintSelfHostedDiagnostics(bytes: Uint8Array): readonly FlintDiagnostic[];
 ```
 
-Geen beschrijving opgegeven.
+decodeFlintSelfHostedDiagnostics-implementatie.
 
 #### Parameters
 
-| Naam  | Typ        | Beschrijving |
-| ----- | ---------- | ------------ |
-| bytes | Uint8Array |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------- | ---------------------- |
+| bytes | Uint8Array | - De bytesparameter. |
 
-### decodeFlintSelfHostedStageArtefact
+#### Contract
+
+- **@param:** - De bytesparameter.
+- **@returns:** Het alleen-lezen FlintDiagnostic[] resultaat.
+
+### decodeerFlintSelfHostedStageArtefact
 
 **Soort:** functie
 
@@ -2870,16 +2432,22 @@ function decodeFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-Geen beschrijving opgegeven.
+decodeFlintSelfHostedStageArtifact-implementatie.
 
 #### Parameters
 
-| Naam   | Typ                                       | Beschrijving |
-| ------ | ----------------------------------------- | ------------ |
-| bytes  | Uint8Array                                |              |
-| opties | FlintSelfHostedStageArtifactDecodeOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------------------------- | ------------------------ |
+| bytes | Uint8Array | - De bytesparameter.   |
+| opties | FlintSelfHostedStageArtifactDecodeOptions | - De optieparameter. |
 
-### codeFlintSelfHostedDiagnostics
+#### Contract
+
+- **@param:** - De bytesparameter.
+- **@param:** - De optieparameter.
+- **@returns:** Het FlintSelfHostedStageArtifact-resultaat.
+
+### coderenFlintSelfHostedDiagnostics
 
 **Soort:** functie
 
@@ -2887,15 +2455,20 @@ Geen beschrijving opgegeven.
 function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[]): Uint8Array;
 ```
 
-Geen beschrijving opgegeven.
+encodeFlintSelfHostedDiagnostics-implementatie.
 
 #### Parameters
 
-| Naam        | Typ                            | Beschrijving |
-| ----------- | ------------------------------ | ------------ |
-| diagnostiek | alleen-lezen FlintDiagnostic[] |              |
+| Naam | Typ | Beschrijving |
+| ----------- | -------------------------- | ---------------------------- |
+| diagnostiek | alleen-lezen FlintDiagnostic[] | - De diagnostische parameter. |
 
-### coderenFlintSelfHostedStageArtefact
+#### Contract
+
+- **@param:** - De diagnostische parameter.
+- **@returns:** Het Uint8Array-resultaat.
+
+### coderenFlintSelfHostedStageArtifact
 
 **Soort:** functie
 
@@ -2903,50 +2476,55 @@ Geen beschrijving opgegeven.
 function encodeFlintSelfHostedStageArtifact(artifact: FlintSelfHostedStageArtifact): Uint8Array;
 ```
 
-Geen beschrijving opgegeven.
+encodeFlintSelfHostedStageArtifact-implementatie.
 
 #### Parameters
 
-| Naam     | Typ                          | Beschrijving |
-| -------- | ---------------------------- | ------------ |
-| artefact | FlintSelfHostedStageArtefact |              |
+| Naam | Typ | Beschrijving |
+| -------- | ---------------------------- | ------------------------- |
+| artefact | FlintSelfHostedStageArtefact | - De artefactparameter. |
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+#### Contract
+
+- **@param:** - De artefactparameter.
+- **@returns:** Het Uint8Array-resultaat.
+
+### FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
+export const FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 Geen beschrijving opgegeven.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 Geen beschrijving opgegeven.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 Geen beschrijving opgegeven.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
+### FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
+export const FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
 ```
 
 Geen beschrijving opgegeven.
@@ -2960,7 +2538,7 @@ export type FlintSelfHostedCompilerStage =
   'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
-Geen beschrijving opgegeven.
+FlintSelfHostedCompilerStage-implementatie.
 
 ### FlintSelfHostedStageArtefact
 
@@ -2970,7 +2548,7 @@ Geen beschrijving opgegeven.
 export interface FlintSelfHostedStageArtifact
 ```
 
-Geen beschrijving opgegeven.
+FlintSelfHostedStageArtifact-implementatie.
 
 ### FlintSelfHostedStageArtifactDecodeOptions
 
@@ -2980,7 +2558,7 @@ Geen beschrijving opgegeven.
 export interface FlintSelfHostedStageArtifactDecodeOptions
 ```
 
-Geen beschrijving opgegeven.
+FlintSelfHostedStageArtifactDecodeOptions-implementatie.
 
 ### FlintSelfHostedStageArtifactIdentity
 
@@ -2990,7 +2568,7 @@ Geen beschrijving opgegeven.
 export interface FlintSelfHostedStageArtifactIdentity
 ```
 
-Geen beschrijving opgegeven.
+FlintSelfHostedStageArtifactIdentity-implementatie.
 
 ### hashFlintSelfHostedBytes
 
@@ -3000,13 +2578,18 @@ Geen beschrijving opgegeven.
 function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
-Geen beschrijving opgegeven.
+hashFlintSelfHostedBytes-implementatie.
 
 #### Parameters
 
-| Naam  | Typ        | Beschrijving |
-| ----- | ---------- | ------------ |
-| bytes | Uint8Array |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------- | ---------------------- |
+| bytes | Uint8Array | - De bytesparameter. |
+
+#### Contract
+
+- **@param:** - De bytesparameter.
+- **@returns:** Het tekenreeksresultaat.
 
 ### hashFlintSelfHostedSourceIdentity
 
@@ -3016,21 +2599,28 @@ Geen beschrijving opgegeven.
 function hashFlintSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
-Geen beschrijving opgegeven.
+hashFlintSelfHostedSourceIdentity-implementatie.
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| bron         | tekenreeks |              |
-| bestandsnaam | tekenreeks |              |
-| grafiekHash  | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------ | -------------------------- |
+| bron | tekenreeks | - De bronparameter.    |
+| bestandsnaam | tekenreeks | - De bestandsnaamparameter.  |
+| grafiekHash | tekenreeks | - De graphHash-parameter. |
 
-## `src/self-hosted/fws/lexer`
+#### Contract
+
+- **@param:** - De bronparameter.
+- **@param:** - De bestandsnaamparameter.
+- **@param:** - De graphHash-parameter.
+- **@returns:** Het tekenreeksresultaat.
+
+## `src/self-hosted/flint/lexer`
 
 ### is_ws
 
-**Soort:** fws-export
+**Soort:** vuursteen-export
 
 ```typescript
 export fn is_ws(byte: i32) -> bool
@@ -3040,7 +2630,7 @@ Retourneert waar als de byte ASCII-spatie is.
 
 #### Parameters
 
-| Naam | Typ  | Beschrijving          |
+| Naam | Typ | Beschrijving |
 | ---- | ---- | --------------------- |
 | byte | ik32 | Kandidaat-bytewaarde. |
 
@@ -3051,7 +2641,7 @@ Retourneert waar als de byte ASCII-spatie is.
 
 ## `src/self-hosted/lex-stage`
 
-### computeFlintLexStageFingerprint
+### berekenFlintLexStageFingerprint
 
 **Soort:** functie
 
@@ -3064,11 +2654,16 @@ Moet qua gedrag identiek blijven aan {@link createFlintLexStageVmModule}.
 
 #### Parameters
 
-| Naam | Typ        | Beschrijving |
-| ---- | ---------- | ------------ |
-| bron | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------ | -------------------- |
+| bron | tekenreeks | - Vuurstenen brontekst. |
 
-### createFlintLexStageVmModule
+#### Contract
+
+- **@param:** - Vuurstenen brontekst.
+- **@returns:** 32-bits ondertekende gehele vingerafdruk.
+
+### maakFlintLexStageVmModule
 
 **Soort:** functie
 
@@ -3076,52 +2671,52 @@ Moet qua gedrag identiek blijven aan {@link createFlintLexStageVmModule}.
 function createFlintLexStageVmModule(sourceHash: string): FlintSelfHostedVmModule;
 ```
 
-Met de hand neergelaten VM-module voor de lex-vingerafdruktrap.
+Met de hand neergelaten VM-module voor de lex-vingerafdrukfase.
 Invoer: lex_fingerprint (bron: FlintSourceBytes) -> i32
 
 #### Parameters
 
-| Naam     | Typ        | Beschrijving |
-| -------- | ---------- | ------------ |
-| bronHash | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------ | ----------- |
+| bronHash | tekenreeks |             |
 
-### codeFlintLexStageSource
+### coderenFlintLexStageSource
 
 **Soort:** functie
 
 ```typescript
 function encodeFlintLexStageSource(source: string): {
   readonly kind: 'aggregate';
-  readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+  readonly layout: typeof FLINT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
 };
 ```
 
-Geen beschrijving opgegeven.
+Codeert de broncode in de binaire representatie die wordt verwacht door de VM-lexer-fase.
 
 #### Parameters
 
-| Naam | Typ        | Beschrijving |
-| ---- | ---------- | ------------ |
-| bron | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------ | ----------- |
+| bron | tekenreeks |             |
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+### FLINT_LEX_STAGE_ENTRY
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
+export const FLINT_LEX_STAGE_ENTRY;
 ```
 
 Geen beschrijving opgegeven.
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+### FLINT_LEX_STAGE_SOURCE_LAYOUT
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+export const FLINT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 Geen beschrijving opgegeven.
@@ -3134,7 +2729,7 @@ Geen beschrijving opgegeven.
 export interface FlintSelfHostedVmFunction
 ```
 
-Geen beschrijving opgegeven.
+Functiedefinitie uitgevoerd door de zelf-hostende virtuele machine.
 
 ### FlintSelfHostedVmInstruction
 
@@ -3144,7 +2739,7 @@ Geen beschrijving opgegeven.
 export type FlintSelfHostedVmInstruction = |
 ```
 
-Geen beschrijving opgegeven.
+Virtuele machine-instructietupel uitgevoerd tijdens zelf-gehoste lexing.
 
 ### FlintSelfHostedVmModule
 
@@ -3154,7 +2749,7 @@ Geen beschrijving opgegeven.
 export interface FlintSelfHostedVmModule
 ```
 
-Geen beschrijving opgegeven.
+Zelf-gehoste compiler-VM-modulestructuur met bytecode en constanten.
 
 ### FlintSelfHostedVmValue
 
@@ -3164,7 +2759,7 @@ Geen beschrijving opgegeven.
 export type FlintSelfHostedVmValue = |
 ```
 
-Geen beschrijving opgegeven.
+Constante waarde opgeslagen in de zelf-hostende VM-constantepool.
 
 ## `src/self-hosted/parser-module-stage`
 
@@ -3191,11 +2786,11 @@ Envelopindeling (alle u32 little-endian):
 
 #### Parameters
 
-| Naam         | Typ                           | Beschrijving |
-| ------------ | ----------------------------- | ------------ |
-| bronHash     | tekenreeks                    |              |
-| bestandsnaam | tekenreeks                    |              |
-| opties       | FlintParserModuleStageOptions |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------------- | ----------- |
+| bronHash | tekenreeks |             |
+| bestandsnaam | tekenreeks |             |
+| opties | FlintParserModuleStageOptions |             |
 
 ### decodeFlintParserModuleEnvelope
 
@@ -3205,25 +2800,30 @@ Envelopindeling (alle u32 little-endian):
 function decodeFlintParserModuleEnvelope(bytes: Uint8Array): FlintParserModuleEnvelope;
 ```
 
-Geen beschrijving opgegeven.
+decodeFlintParserModuleEnvelope-implementatie.
 
 #### Parameters
 
-| Naam  | Typ        | Beschrijving |
-| ----- | ---------- | ------------ |
-| bytes | Uint8Array |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------- | ---------------------- |
+| bytes | Uint8Array | - De bytesparameter. |
 
-### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+#### Contract
+
+- **@param:** - De bytesparameter.
+- **@returns:** Het FlintParserModuleEnvelope-resultaat.
+
+### FLINT_PARSER_MODULE_STAGE_ENTRY
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
+export const FLINT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 Geen beschrijving opgegeven.
 
-### FlintParserModuleEnvelope
+### FlintParserModuleEnvelop
 
 **Soort:** interface
 
@@ -3231,7 +2831,7 @@ Geen beschrijving opgegeven.
 export interface FlintParserModuleEnvelope
 ```
 
-Gedecodeerde envelop geretourneerd door {@link FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY}.
+Gedecodeerde envelop geretourneerd door {@link FLINT_PARSER_MODULE_STAGE_ENTRY}.
 
 ### FlintParserModuleStageOptions
 
@@ -3241,11 +2841,11 @@ Gedecodeerde envelop geretourneerd door {@link FORGE_WEB_SCRIPT_PARSER_MODULE_ST
 export interface FlintParserModuleStageOptions
 ```
 
-Geen beschrijving opgegeven.
+FlintParserModuleStageOptions-implementatie.
 
 ## `src/self-hosted/parser-stage`
 
-### computeFlintParserStageFingerprint
+### berekenFlintParserStageFingerprint
 
 **Soort:** functie
 
@@ -3253,14 +2853,18 @@ Geen beschrijving opgegeven.
 function computeFlintParserStageFingerprint(source: string): number;
 ```
 
-Seed-referentie voor de zelf-hostende parserfase.
-Moet qua gedrag identiek blijven aan {@link createFlintParserStageVmModule}.
+Berekent een deterministische 32-bits FNV-vingerafdruk voor de zelf-hostende parserfase.
 
 #### Parameters
 
-| Naam | Typ        | Beschrijving |
-| ---- | ---------- | ------------ |
-| bron | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------ | --------------------------- |
+| bron | tekenreeks | - Flint-broncodereeks. |
+
+#### Contract
+
+- **@param:** - Flint-broncodereeks.
+- **@returns:** Deterministische 32-bits ondertekende gehele vingerafdruk.
 
 ### createFlintParserStageVmModule
 
@@ -3278,17 +2882,17 @@ Invoer: parse_stage(bron: FlintSourceBytes) -> i32
 
 #### Parameters
 
-| Naam     | Typ                             | Beschrijving |
-| -------- | ------------------------------- | ------------ |
-| bronHash | tekenreeks                      |              |
-| opties   | FlintParserStageVmModuleOptions |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------- | ----------- |
+| bronHash | tekenreeks |             |
+| opties | FlintParserStageVmModuleOptions |             |
 
-### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+### FLINT_PARSER_STAGE_ENTRY
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
+export const FLINT_PARSER_STAGE_ENTRY;
 ```
 
 Geen beschrijving opgegeven.
@@ -3305,7 +2909,7 @@ Optionele fabrieksknoppen die worden gebruikt bij opzettelijke divergentietests.
 
 ## `src/self-hosted/stage-codec`
 
-### createFlintSelfHostedParserArtefact
+### createFlintSelfHostedParserArtifact
 
 **Soort:** functie
 
@@ -3319,17 +2923,26 @@ function createFlintSelfHostedParserArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-Geen beschrijving opgegeven.
+createFlintSelfHostedParserArtifact-implementatie.
 
 #### Parameters
 
-| Naam         | Typ                            | Beschrijving |
-| ------------ | ------------------------------ | ------------ |
-| bron         | tekenreeks                     |              |
-| bestandsnaam | tekenreeks                     |              |
-| module       | FlintModule                    |              |
-| diagnostiek  | alleen-lezen FlintDiagnostic[] |              |
-| grafiekHash  | tekenreeks                     |              |
+| Naam | Typ | Beschrijving |
+| ----------- | -------------------------- | ---------------------------- |
+| bron | tekenreeks | - De bronparameter.      |
+| bestandsnaam | tekenreeks | - De bestandsnaamparameter.    |
+| module | FlintModule | - De moduleparameter.      |
+| diagnostiek | alleen-lezen FlintDiagnostic[] | - De diagnostische parameter. |
+| grafiekHash | tekenreeks | - De graphHash-parameter.   |
+
+#### Contract
+
+- **@param:** - De bronparameter.
+- **@param:** - De bestandsnaamparameter.
+- **@param:** - De moduleparameter.
+- **@param:** - De diagnostische parameter.
+- **@param:** - De graphHash-parameter.
+- **@returns:** Het FlintSelfHostedStageArtifact-resultaat.
 
 ### createFlintSelfHostedTokenArtefact
 
@@ -3345,17 +2958,26 @@ function createFlintSelfHostedTokenArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-Geen beschrijving opgegeven.
+createFlintSelfHostedTokenArtifact-implementatie.
 
 #### Parameters
 
-| Naam         | Typ                            | Beschrijving |
-| ------------ | ------------------------------ | ------------ |
-| bron         | tekenreeks                     |              |
-| bestandsnaam | tekenreeks                     |              |
-| tokens       | alleen-lezen FlintToken[]      |              |
-| diagnostiek  | alleen-lezen FlintDiagnostic[] |              |
-| grafiekHash  | tekenreeks                     |              |
+| Naam | Typ | Beschrijving |
+| ----------- | -------------------------- | ---------------------------- |
+| bron | tekenreeks | - De bronparameter.      |
+| bestandsnaam | tekenreeks | - De bestandsnaamparameter.    |
+| tokens | alleen-lezen FlintToken[] | - De tokensparameter.      |
+| diagnostiek | alleen-lezen FlintDiagnostic[] | - De diagnostische parameter. |
+| grafiekHash | tekenreeks | - De graphHash-parameter.   |
+
+#### Contract
+
+- **@param:** - De bronparameter.
+- **@param:** - De bestandsnaamparameter.
+- **@param:** - De tokensparameter.
+- **@param:** - De diagnostische parameter.
+- **@param:** - De graphHash-parameter.
+- **@returns:** Het FlintSelfHostedStageArtifact-resultaat.
 
 ### decodeFlintSelfHostedModule
 
@@ -3365,15 +2987,20 @@ Geen beschrijving opgegeven.
 function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 ```
 
-Geen beschrijving opgegeven.
+Decodeert de payload van een zelf-hostende parsermodule.
 
 #### Parameters
 
-| Naam  | Typ        | Beschrijving |
-| ----- | ---------- | ------------ |
-| bytes | Uint8Array |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------- | ------------------------ |
+| bytes | Uint8Array | - Binaire module-payload. |
 
-### decodeFlintSelfHostedTokens
+#### Contract
+
+- **@param:** - Payload van binaire module.
+- **@returns:** Gedecodeerde module AST.
+
+### decodeerFlintSelfHostedTokens
 
 **Soort:** functie
 
@@ -3381,15 +3008,20 @@ Geen beschrijving opgegeven.
 function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 ```
 
-Geen beschrijving opgegeven.
+Decodeert een zelf-gehoste tokenstream-payload.
 
 #### Parameters
 
-| Naam  | Typ        | Beschrijving |
-| ----- | ---------- | ------------ |
-| bytes | Uint8Array |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------- | ----------------------- |
+| bytes | Uint8Array | - Binaire token-payload. |
 
-### codeFlintSelfHostedModule
+#### Contract
+
+- **@param:** - Binaire token-payload.
+- **@returns:** Gedecodeerde tokenstream.
+
+### coderenFlintSelfHostedModule
 
 **Soort:** functie
 
@@ -3397,15 +3029,20 @@ Geen beschrijving opgegeven.
 function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 ```
 
-Geen beschrijving opgegeven.
+Codeert de payload van een zelf-hostende parsermodule.
 
 #### Parameters
 
-| Naam   | Typ         | Beschrijving |
-| ------ | ----------- | ------------ |
-| module | FlintModule |              |
+| Naam | Typ | Beschrijving |
+| ------ | ----------- | -------------------------- |
+| module | FlintModule | - Module AST om te serialiseren. |
 
-### codeFlintSelfHostedTokens
+#### Contract
+
+- **@param:** - Module AST om te serialiseren.
+- **@returns:** Payload binaire module.
+
+### coderenFlintSelfHostedTokens
 
 **Soort:** functie
 
@@ -3413,13 +3050,18 @@ Geen beschrijving opgegeven.
 function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 ```
 
-Geen beschrijving opgegeven.
+Codeert een zelf-hostende tokenstream-payload.
 
 #### Parameters
 
-| Naam   | Typ                       | Beschrijving |
-| ------ | ------------------------- | ------------ |
-| tokens | alleen-lezen FlintToken[] |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------------- | ---------------------------- |
+| tokens | alleen-lezen FlintToken[] | - Tokenstream om te serialiseren. |
+
+#### Contract
+
+- **@param:** - Tokenstream om te serialiseren.
+- **@returns:** Binaire token-payload.
 
 ### hashFlintSelfHostedStagePayload
 
@@ -3429,15 +3071,20 @@ Geen beschrijving opgegeven.
 function hashFlintSelfHostedStagePayload(artifact: FlintSelfHostedStageArtifact): string;
 ```
 
-Geen beschrijving opgegeven.
+hashFlintSelfHostedStagePayload-implementatie.
 
 #### Parameters
 
-| Naam     | Typ                          | Beschrijving |
-| -------- | ---------------------------- | ------------ |
-| artefact | FlintSelfHostedStageArtefact |              |
+| Naam | Typ | Beschrijving |
+| -------- | ---------------------------- | ------------------------- |
+| artefact | FlintSelfHostedStageArtefact | - De artefactparameter. |
 
-### validateFlintSelfHostedStageArtifact
+#### Contract
+
+- **@param:** - De artefactparameter.
+- **@returns:** Het tekenreeksresultaat.
+
+### valideerFlintSelfHostedStageArtefact
 
 **Soort:** functie
 
@@ -3451,279 +3098,30 @@ function validateFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-Geen beschrijving opgegeven.
+valideer de implementatie van FlintSelfHostedStageArtifact.
 
 #### Parameters
 
-| Naam         | Typ                          | Beschrijving |
-| ------------ | ---------------------------- | ------------ |
-| artefact     | FlintSelfHostedStageArtefact |              |
-| stadium      | FlintSelfHostedCompilerStage |              |
-| bron         | tekenreeks                   |              |
-| bestandsnaam | tekenreeks                   |              |
-| grafiekHash  | tekenreeks                   |              |
-
-## `src/stdlib/memory`
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
-```
-
-Geen beschrijving opgegeven.
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly FlintMemoryFunction[];
-```
-
-Geen beschrijving opgegeven.
-
-### FlintMemoryFunctie
-
-**Soort:** interface
-
-```typescript
-export interface FlintMemoryFunction
-```
-
-Geen beschrijving opgegeven.
-
-### FlintMemoryOperation
-
-**Soort:** type
-
-```typescript
-export type FlintMemoryOperation =
-  | 'memory-alloc'
-  | 'memory-dealloc'
-  | 'memory-realloc'
-  | 'memory-load-u32'
-  | 'memory-store-u32'
-  | 'memory-load-f64'
-  | 'memory-store-f64'
-  | 'f64-from-u32';
-```
-
-Gecontroleerde gast-lineaire geheugenbewerkingen gereserveerd door de compiler.
-
-## `src/stdlib/regex`
-
-### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
-
-**Soort:** constant
-
-```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
-```
-
-Geen beschrijving opgegeven.
-
-### FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
-```
-
-Geen beschrijving opgegeven.
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
-```
-
-Geen beschrijving opgegeven.
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTIONS
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly FlintStandardLibraryFunction[];
-```
-
-Aanroepen die eigendom zijn van de compiler. Het zijn gereserveerde bronnamen, geen hostimports, en
-worden in de backend-fase verlaagd naar de Forge Web Script WASM-runtime.
-Opnamebewerkingen retourneren `-1` voor een uitgeschakelde groep of wanneer er geen overeenkomst bestaat.
-
-### FORGE_WEB_SCRIPT_REGEX_VERSION
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION;
-```
-
-Geen beschrijving opgegeven.
-
-### FlintRegexOperation
-
-**Soort:** type
-
-```typescript
-export type FlintRegexOperation =
-  | 'full-match'
-  | 'prefix-match'
-  | 'search'
-  | 'full-capture-start'
-  | 'full-capture-end'
-  | 'prefix-capture-start'
-  | 'prefix-capture-end'
-  | 'search-capture-start'
-  | 'search-capture-end';
-```
-
-Geen beschrijving opgegeven.
-
-### FlintStandardBibliotheekfunctie
-
-**Soort:** interface
-
-```typescript
-export interface FlintStandardLibraryFunction
-```
-
-Geen beschrijving opgegeven.
-
-### flintStandardLibraryIdentity
-
-**Soort:** functie
-
-```typescript
-function flintStandardLibraryIdentity(
-  overrides: Partial<FlintStandardLibraryIdentity> = {},
-): FlintStandardLibraryIdentity;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam         | Typ                                        | Beschrijving |
-| ------------ | ------------------------------------------ | ------------ |
-| overschrijft | Gedeeltelijk<FlintStandardLibraryIdentity> |              |
-
-### FlintStandardLibraryIdentity
-
-**Soort:** interface
-
-```typescript
-export interface FlintStandardLibraryIdentity
-```
-
-Stabiele identiteitsinvoer die van invloed is op de compilatie van regex en gegenereerde artefacten.
-
-## `src/stdlib/string`
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
-```
-
-Geen beschrijving opgegeven.
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTIONS
-
-**Soort:** constant
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly FlintStringFunction[];
-```
-
-Geen beschrijving opgegeven.
-
-### FlintStringFunctie
-
-**Soort:** interface
-
-```typescript
-export interface FlintStringFunction
-```
-
-Geen beschrijving opgegeven.
-
-### FlintStringOperation
-
-**Soort:** type
-
-```typescript
-export type FlintStringOperation =
-  | 'string-concat'
-  | 'string-length'
-  | 'string-byte-at'
-  | 'string-starts-with'
-  | 'string-slice'
-  | 'string-to-i32'
-  | 'bytes-length'
-  | 'bytes-length-u32'
-  | 'bytes-byte-at'
-  | 'bytes-byte-at-u32'
-  | 'bytes-slice';
-```
-
-Deterministische tekenreeks- en bytebewerkingen die eigendom zijn van de compiler.
-
-## `src/type-checker`
-
-### checkFlint
-
-**Soort:** functie
-
-```typescript
-function checkFlint(
-  module: FlintModule,
-  fileName = '<input>',
-  options: FlintTypeCheckOptions = {},
-): FlintTypeCheckResult;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam         | Typ                   | Beschrijving |
-| ------------ | --------------------- | ------------ |
-| module       | FlintModule           |              |
-| bestandsnaam |                       |              |
-| opties       | FlintTypeCheckOptions |              |
-
-### FlintTypeCheckOptions
-
-**Soort:** interface
-
-```typescript
-export interface FlintTypeCheckOptions
-```
-
-Geen beschrijving opgegeven.
-
-### FlintTypeCheckResult
-
-**Soort:** interface
-
-```typescript
-export interface FlintTypeCheckResult
-```
-
-Geen beschrijving opgegeven.
+| Naam | Typ | Beschrijving |
+| --------- | ---------------------------- | -------------------------- |
+| artefact | FlintSelfHostedStageArtefact | - De artefactparameter.  |
+| stadium | FlintSelfHostedCompilerStage | - De faseparameter.     |
+| bron | tekenreeks | - De bronparameter.    |
+| bestandsnaam | tekenreeks | - De bestandsnaamparameter.  |
+| grafiekHash | tekenreeks | - De graphHash-parameter. |
+
+#### Contract
+
+- **@param:** - De artefactparameter.
+- **@param:** - De faseparameter.
+- **@param:** - De bronparameter.
+- **@param:** - De bestandsnaamparameter.
+- **@param:** - De graphHash-parameter.
+- **@returns:** Het FlintSelfHostedStageArtifact-resultaat.
 
 ## `src/validate`
 
-### FlintValidationResult
+### FlintValidatieResultaat
 
 **Soort:** interface
 
@@ -3731,7 +3129,7 @@ Geen beschrijving opgegeven.
 export interface FlintValidationResult
 ```
 
-Geen beschrijving opgegeven.
+Resultaat van het valideren van een Flint-bronbestand via parseren en typecontrole.
 
 ### valideerFlint
 
@@ -3745,41 +3143,20 @@ function validateFlint(
 ): FlintValidationResult;
 ```
 
-Geen beschrijving opgegeven.
+Valideert Flint-brontekst door de parser en typecontrole uit te voeren.
+Verzamelt en ontdubbelt syntactische en semantische diagnostiek.
 
 #### Parameters
 
-| Naam         | Typ                   | Beschrijving |
-| ------------ | --------------------- | ------------ |
-| bron         | tekenreeks            |              |
-| bestandsnaam |                       |              |
-| opties       | FlintTypeCheckOptions |              |
+| Naam | Typ | Beschrijving |
+| -------- | --------------------- | -------------------------------------------------------------------------------- |
+| bron | tekenreeks | - Flint-broncodetekst.                                                        |
+| bestandsnaam |                       | - Optioneel bestandspad of naam gebruikt in diagnostische bereiken (standaard ingesteld op `'<input>'`). |
+| opties | FlintTypeCheckOptions | - Optionele configuratievlaggen voor typecontrole en externe symbooltabellen.          |
 
-## `src/wat`
+#### Contract
 
-### FlintWatMetadata
-
-**Soort:** interface
-
-```typescript
-export interface FlintWatMetadata
-```
-
-Geen beschrijving opgegeven.
-
-### renderFlintWat
-
-**Soort:** functie
-
-```typescript
-function renderFlintWat(module: FlintModule, metadata: FlintWatMetadata = {}): string;
-```
-
-Geen beschrijving opgegeven.
-
-#### Parameters
-
-| Naam         | Typ              | Beschrijving |
-| ------------ | ---------------- | ------------ |
-| module       | FlintModule      |              |
-| metagegevens | FlintWatMetadata |              |
+- **@param:** - Flint-broncodetekst.
+- **@param:** - Optioneel bestandspad of naam gebruikt in diagnostische bereiken (standaard ingesteld op `'<input>'`).
+- **@param:** - Optionele configuratievlaggen voor typecontrole en externe symbooltabellen.
+- **@returns:** Gecombineerd validatieresultaat met geparseerde module (indien beschikbaar), diagnostiek en geldige vlag.

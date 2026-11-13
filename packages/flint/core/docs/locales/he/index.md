@@ -5,15 +5,15 @@
 > packages/flint/core/docs/index.md: [packages/flint/core/docs/index.md](../../index.md)
 > שפה: עברית (he)
 
-Flint v1 חוזי שפה, מנתח bootstrap ותקני התאמה.
+חוזי שפה של Flint v1, מנתח bootstrap ותקני התאמה.
 חבילה זו היא הבעלים של חוזה השפה והתיעוד לצרכנים ו
 תורמים.
 
 ## התחל כאן
 
-- [התייחסות לשפה ו-ABI](reference/language.md) - דקדוק, סוגים, יכולות,
+- [הפניה לשפה ו-ABI](reference/language.md) - דקדוק, סוגים, יכולות,
   אבחון, גילויים והתנהגות מהדר.
-- [מדריך בנייה ובדיקה](guides/development.md) - צ'קים מקומיים, מתקנים ומוצרים
+- [מדריך בנייה ובדיקה](guides/development.md) - בדיקות מקומיות, מתקנים והפקה
   חפצים.
 - [`llms.txt`](../../../llms.txt) - API תמציתי והערות שימוש עבור כלי עבודה ועוזרים.
 

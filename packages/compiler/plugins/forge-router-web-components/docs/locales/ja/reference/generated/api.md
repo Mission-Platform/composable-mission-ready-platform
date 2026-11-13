@@ -33,6 +33,16 @@ export class MpRouterOutletElement extends HTMLElement
 ビューにカスタム ライフサイクルが必要な場合は、`viewAdapter` をルーターに送信します。それ以外の場合は
 Node、文字列、または `route.component` の DOM ファクトリは直接レンダリングされます。
 
+### MpRouterViewElement
+
+**種類:** コンポーネント
+
+```typescript
+export class MpRouterViewElement extends MpRouterOutletElement
+```
+
+説明はありません。
+
 ### registerRouterElements
 
 **種類:** 関数
@@ -45,9 +55,9 @@ function registerRouterElements(options: RegisterRouterElementsOptions = {}): vo
 
 #### パラメータ
 
-| 名前       | タイプ                           | 説明 |
-| ---------- | -------------------------------- | ---- |
-| オプション | RegisterRouterElementsオプション |      |
+|名前 |タイプ |説明 |
+| ------- | ----------------------------- | ----------- |
+|オプション | RegisterRouterElementsオプション |             |
 
 ## `src/runtime/history`
 
@@ -63,9 +73,9 @@ function createBrowserHistory(win?: Window): MpBrowserHistory;
 
 #### パラメータ
 
-| 名前 | タイプ     | 説明 |
-| ---- | ---------- | ---- |
-| 勝つ | ウィンドウ |      |
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|勝つ |ウィンドウ |             |
 
 ### メモリ履歴の作成
 
@@ -79,9 +89,9 @@ function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 
 #### パラメータ
 
-| 名前    | タイプ | 説明 |
-| ------- | ------ | ---- |
-| 初期URL |        |      |
+|名前 |タイプ |説明 |
+| ---------- | ---- | ----------- |
+|初期URL |      |             |
 
 ### ウェブ履歴の作成
 
@@ -129,7 +139,7 @@ export const ForgeRouterLink;
 
 - **@非推奨:** {@link MpLink} を優先します。既存のランタイム コンシューマのために保持されます。
 
-### フォージルーターアウトレット
+### Forgeルーターアウトレット
 
 **種類:** 定数
 
@@ -189,9 +199,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### パラメータ
 
-| 名前 | タイプ             | 説明 |
-| ---- | ------------------ | ---- |
-| へ   | MpRouteLocationRaw |      |
+|名前 |タイプ |説明 |
+| ---- | ------------------ | ----------- |
+|へ | MpRouteLocationRaw |             |
 
 ### setForgeRouter
 
@@ -205,9 +215,9 @@ function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 
 #### パラメータ
 
-| 名前     | タイプ                        | 説明 |
-| -------- | ----------------------------- | ---- |
-| ルーター | MpWebComponentsRou​​ter<View> |      |
+|名前 |タイプ |説明 |
+| ------ | --------------------------- | ----------- |
+|ルーター | MpWebComponentsRou​​ter<View> |             |
 
 ### useForgeNavigation
 
@@ -297,9 +307,19 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 
 #### パラメータ
 
-| 名前       | タイプ                               | 説明 |
-| ---------- | ------------------------------------ | ---- |
-| オプション | MpWebComponentsRou​​terOptions<View> |      |
+|名前 |タイプ |説明 |
+| ------- | ---------------------------------- | ----------- |
+|オプション | MpWebComponentsRou​​terOptions<View> |             |
+
+### getActiveRouter
+
+**種類:** 関数
+
+```typescript
+function getActiveRouter(): MpWebComponentsRouter<unknown> | undefined;
+```
+
+説明はありません。
 
 ### MpRouterLoadingFallback
 
@@ -343,10 +363,26 @@ function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 
 #### パラメータ
 
-| 名前     | タイプ             | 説明 |
-| -------- | ------------------ | ---- |
-| ルーター | MpRouterAdapter    |      |
-| へ       | MpRouteLocationRaw |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------ | ----------- |
+|ルーター | MpRouterAdapter |             |
+|に | MpRouteLocationRaw |             |
+
+### setActiveRouter
+
+**種類:** 関数
+
+```typescript
+function setActiveRouter(router: MpWebComponentsRouter<View> | undefined): void;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---------------------------------------- | ----------- |
+|ルーター | MpWebComponentsRou​​ter<View> \|未定義 |             |
 
 ## `src/utils/forge-router-web-components`
 

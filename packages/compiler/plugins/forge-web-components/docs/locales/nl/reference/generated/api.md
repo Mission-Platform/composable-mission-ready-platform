@@ -23,9 +23,9 @@ Druk de `ForgeElement`-subklasse en de registratie ervan voor een verlaagd abonn
 
 #### Parameters
 
-| Naam    | Typ                        | Beschrijving |
-| ------- | -------------------------- | ------------ |
-| plannen | WebComponentsLoweredModule |              |
+| Naam | Typ | Beschrijving |
+| ---- | -------------------------- | ----------- |
+| plannen | WebComponentsLoweredModule |             |
 
 ## `src/emitters/module`
 
@@ -46,12 +46,12 @@ Transformeer de hele module naar de oorspronkelijke doelbron voor webcomponenten
 
 #### Parameters
 
-| Naam            | Typ                        | Beschrijving |
-| --------------- | -------------------------- | ------------ |
-| module          | SemantischeModule          |              |
-| componentnaam   | tekenreeks                 |              |
-| componentMappen | Alleen-lezenSet<string>    |              |
-| verlaagd        | WebComponentsLoweredModule |              |
+| Naam | Typ | Beschrijving |
+| ---------------- | -------------------------- | ----------- |
+| module | SemantischeModule |             |
+| componentnaam | tekenreeks |             |
+| componentMappen | Alleen-lezenSet<string> |             |
+| verlaagd | WebComponentsLoweredModule |             |
 
 ## `src/index`
 
@@ -66,6 +66,74 @@ function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 Maak de uitvoerplug-in Web Components die alleen voor TypeScript beschikbaar is.
 
 ## `src/lower`
+
+### lagereWebComponentsModule
+
+**Soort:** functie
+
+```typescript
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
+```
+
+Verlaag de neutrale IR in de doelintenties van de webcomponenten.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| module | SemantischeModule |             |
+| context | DoelContext |             |
+
+### lagereWebComponentsPlan
+
+**Soort:** functie
+
+```typescript
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
+```
+
+Bouw het Web-Components doelplan voor een neutrale module.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| module | SemantischeModule |             |
+| context | DoelContext |             |
+
+## `src/lower/host-plan`
+
+### afleidenWebComponentsHost
+
+**Soort:** functie
+
+```typescript
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+  component?: GenericComponent,
+): WebComponentsHostPlan;
+```
+
+Leid een op maat gemaakte ingebouwde host alleen af ​​op basis van een enkele, statische intrinsieke root.
+
+De toelatingslijst is opzettelijk conservatief: een intrinsieke tag is geldig
+HTML garandeert niet dat het een veilige of nuttige, op maat gemaakte ingebouwde versie is
+basis voor de ondersteunde DOM-implementaties.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------ | ----------- |
+| returnNode | GenericRenderNode \| ongedefinieerd |             |
+| bestanddeel | GeneriekComponent |             |
+
+## `src/lower/types`
 
 ### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
 
@@ -87,28 +155,6 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 
 Standaardwaarden voor compatibiliteit blijven behouden voor gegenereerde componenten.
 
-### afleidenWebComponentsHost
-
-**Soort:** functie
-
-```typescript
-function inferWebComponentsHost(
-  returnNode: GenericRenderNode | undefined,
-): WebComponentsHostPlan;
-```
-
-Leid een op maat gemaakte ingebouwde host alleen af ​​op basis van een enkele, statische intrinsieke root.
-
-De toelatingslijst is opzettelijk conservatief: een intrinsieke tag is geldig
-HTML garandeert niet dat het een veilige of nuttige, op maat gemaakte ingebouwde versie is
-basis voor de ondersteunde DOM-implementaties.
-
-#### Parameters
-
-| Naam       | Typ                                 | Beschrijving |
-| ---------- | ----------------------------------- | ------------ |
-| returnNode | GenericRenderNode \| ongedefinieerd |              |
-
 ### isWebComponentsVerlaagd
 
 **Soort:** functie
@@ -123,49 +169,9 @@ Beperk een doelplan tot het webcomponentenplan zonder te casten.
 
 #### Parameters
 
-| Naam     | Typ                                   | Beschrijving |
-| -------- | ------------------------------------- | ------------ |
-| verlaagd | TargetLoweredModule \| ongedefinieerd |              |
-
-### lagereWebComponentsModule
-
-**Soort:** functie
-
-```typescript
-function lowerWebComponentsModule(
-  module: SemanticModule,
-  context: TargetContext,
-): TargetIntentions;
-```
-
-Verlaag de neutrale IR in de doelintenties van de webcomponenten.
-
-#### Parameters
-
-| Naam    | Typ               | Beschrijving |
-| ------- | ----------------- | ------------ |
-| module  | SemantischeModule |              |
-| context | DoelContext       |              |
-
-### lagereWebComponentsPlan
-
-**Soort:** functie
-
-```typescript
-function lowerWebComponentsPlan(
-  module: SemanticModule,
-  context: TargetContext,
-): WebComponentsLoweredModule;
-```
-
-Bouw het Web-Components doelplan voor een neutrale module.
-
-#### Parameters
-
-| Naam    | Typ               | Beschrijving |
-| ------- | ----------------- | ------------ |
-| module  | SemantischeModule |              |
-| context | DoelContext       |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------------- | ----------- |
+| verlaagd | TargetLoweredModule \| ongedefinieerd |             |
 
 ### ONBEKEND_TYPE
 
@@ -192,7 +198,7 @@ De raamwerk-ID van de plug-in en de discriminator van het verlaagde plan.
 **Soort:** constant
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS;
+export const WEBCOMPONENTS_NATIVE_HOSTS: Readonly<Record<string, string>>;
 ```
 
 De compatibiliteitstabel voor wortels die veilig ingebouwd kunnen worden op maat.
@@ -227,7 +233,7 @@ zijn eigen verklaringen (die de getter moet uitvoeren in plaats van retourneren)
 export interface WebComponentsDerivedValue
 ```
 
-Een opgeslagen waarde, verlaagd tot een getter die bij het lezen opnieuw wordt berekend.
+Een opgeslagen waarde, verlaagd naar een getter, ondersteund door een optionele instancecache.
 
 ### WebComponentsElementRef
 
@@ -348,12 +354,9 @@ export interface WebComponentsPromotedLocal
 Een weergavekopconstante **gepromoveerd** naar een elementlid.
 
 Er worden allemaal een memo-getter, een lifecycle callback en een veldinitialisator uitgezonden
-_buiten_ `render()`, dus een lokale versie waarvan de renderkop aangeeft dat deze niet bestaat
+_outside_ `render()`, dus een local waarvoor de renderhead declareert, bestaat niet
 zij. Het promoten van de verklaring bij een lid is wat een dergelijke lezing tot stand brengt
 oplosbaar — via `this.<name>` — in plaats van te bungelen.
-
-Alleen een aantoonbaar effectvrije verklaring wordt bevorderd (zie
-{@link gepromootHeadLocals}); al het andere blijft in `render()`.
 
 ### WebComponentenEigendomsverklaring
 
@@ -404,28 +407,6 @@ export interface WebComponentsSetupPhase
 ```
 
 De eenmalige **instelfase** van het element.
-
-Een zaadje zoals `useState(parseTime(modelValue))` leest een reactieve eigenschap, en
-een eigenschap heeft pas een waarde als de attributen van de host zijn overgenomen -
-wat gebeurt bij verbinding, lang nadat de constructor is uitgevoerd. Erger nog, de
-waarde wordt meestal bereikt via een render-head-constante (`const initial =
-parseTime(modelValue);`) waarvan niet kon worden bewezen dat het effectvrij was en daarom
-blijft in `render()`, dus een constructor-seed zou verwijzen naar een naam die dat wel doet
-bestaat daar helemaal niet.
-
-Een dergelijk zaad wordt uitgesteld naar `ForgeElement.setup()`, dat door de runtime wordt aangeroepen
-na de adoptie van het attribuut en vóór de eerste weergave, precies één keer per element
-— een herverbinding mag niet opnieuw beginnen en weggooien wat de gebruiker sindsdien heeft gewijzigd.
-De hoofdverklaringen die het zaad nodig heeft, worden daar eerst herhaald, in hoofdvolgorde en
-transitief gesloten, en **alleen** die.
-
-Herspelen in plaats van caching is opzettelijk. In de neutrale bron het hoofd
-_is_ de componentbody, dus al `const initial = parseTime(modelValue);`
-draait op elke weergave; Als u het nogmaals evalueert tijdens de installatie, wordt er geen oproep uitgevoerd
-de geschreven component presteert niet al bij elke doorgang. Het cachen in een
-veld zou in plaats daarvan het aantal evaluaties _verminderen_ en de waarde an geven
-identiteit die de bron nooit heeft beloofd. Alleen een gewone `const` (of een functie)
-declaratie wordt altijd opnieuw afgespeeld — zie {@link headReplay}.
 
 ### WebComponentenSchaduwbeleid
 
@@ -484,10 +465,10 @@ Optimaliseer de doelintenties van de webcomponenten; andere doelen passeren.
 
 #### Parameters
 
-| Naam        | Typ                   | Beschrijving |
-| ----------- | --------------------- | ------------ |
-| bedoelingen | DoelIntenties         |              |
-| opties      | TargetOptimizeOptions |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------- | ----------- |
+| bedoelingen | DoelIntenties |             |
+| opties | TargetOptimizeOptions |             |
 
 ### optimaliseerWebComponentsPlan
 
@@ -504,10 +485,10 @@ Verfijn een verlaagd webcomponentenplan en registreer elke uitgevoerde passage.
 
 #### Parameters
 
-| Naam    | Typ                        | Beschrijving |
-| ------- | -------------------------- | ------------ |
-| plannen | WebComponentsLoweredModule |              |
-| opties  | TargetOptimizeOptions      |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------- | ----------- |
+| plannen | WebComponentsLoweredModule |             |
+| opties | TargetOptimizeOptions |             |
 
 ### WEB_COMPONENTS_OPTIMIZATIES
 
@@ -544,9 +525,9 @@ Transformeer een neutrale hook-module in zijn Web-Components-bron.
 
 #### Parameters
 
-| Naam   | Typ               | Beschrijving |
-| ------ | ----------------- | ------------ |
-| module | SemantischeModule |              |
+| Naam | Typ | Beschrijving |
+| ------ | -------------- | ----------- |
+| module | SemantischeModule |             |
 
 ## `src/transformers/expression`
 
@@ -577,9 +558,9 @@ is: het lichaam loopt nog steeds precies wanneer het wordt opgeroepen.
 
 #### Parameters
 
-| Naam  | Typ        | Beschrijving |
-| ----- | ---------- | ------------ |
-| tekst | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| tekst | tekenreeks |             |
 
 ### isPureExpressionText
 
@@ -599,9 +580,9 @@ instructie en deze blijft in `render()`.
 
 #### Parameters
 
-| Naam  | Typ        | Beschrijving |
-| ----- | ---------- | ------------ |
-| tekst | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| tekst | tekenreeks |             |
 
 ## `src/transformers/props-binding`
 
@@ -620,9 +601,9 @@ dus het patroon moet worden uitgesneden voordat het kan worden ontleed.
 
 #### Parameters
 
-| Naam  | Typ        | Beschrijving |
-| ----- | ---------- | ------------ |
-| tekst | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| tekst | tekenreeks |             |
 
 ### parsePropsBinding
 
@@ -640,9 +621,9 @@ zijn eerdere gedrag in plaats van te handelen op basis van een gedeeltelijke met
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| patroonTekst | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ----------- | ------ | ----------- |
+| patroonTekst | tekenreeks |             |
 
 ### RekwisietenBindend
 
@@ -684,10 +665,10 @@ dus de standaard is byte-identiek aan de geschreven versie.
 
 #### Parameters
 
-| Naam    | Typ                       | Beschrijving |
-| ------- | ------------------------- | ------------ |
-| bindend | RekwisietenBinden         |              |
-| isLees  | (naam: string) => boolean |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------- | ----------- |
+| bindend | RekwisietenBinden |             |
+| isLees | (naam: string) => boolean |             |
 
 ## `src/transformers/props-type`
 
@@ -704,7 +685,7 @@ function indexedAccessType(
 
 De geïndexeerde toegangsannotatie waarmee een lid van het props-type wordt verzonden.
 
-De eigen optioneelheid van het lid blijft precies behouden: een verplicht lid is _niet_
+De eigen keuzevrijheid van het lid blijft exact behouden: een vereist lid is _not_
 verbreed met `| undefined`. Het veld van het element wordt pas ingevuld zodra de
 runtime neemt zijn attribuut over, dus het is echt uitgeschakeld in de constructor -
 maar dat wordt uitgedrukt door het veld uit te zenden als `declare` (de runtime is eigenaar van de
@@ -713,10 +694,10 @@ elke lezing van een vereiste prop, mogelijk `undefined`.
 
 #### Parameters
 
-| Naam       | Typ                 | Beschrijving |
-| ---------- | ------------------- | ------------ |
-| referentie | PropsTypeReferentie |              |
-| lid        | tekenreeks          |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------------------ | ----------- |
+| referentie | PropsTypeReferentie |             |
+| lid | tekenreeks |             |
 
 ### PropsTypeReferentie
 
@@ -747,10 +728,10 @@ in beide gevallen zou de verwijzing niet worden omgezet in de gegenereerde modul
 
 #### Parameters
 
-| Naam         | Typ                             | Beschrijving |
-| ------------ | ------------------------------- | ------------ |
-| annotatie    | tekenreeks \| ongedefinieerd    |              |
-| verklaringen | alleen-lezen GenericStatement[] |              |
+| Naam | Typ | Beschrijving |
+| ------------ | --------------------------- | ----------- |
+| annotatie | tekenreeks \| ongedefinieerd |             |
+| verklaringen | alleen-lezen GenericStatement[] |             |
 
 ### typeLeden
 
@@ -765,15 +746,15 @@ elk is optioneel (`name?: T`).
 
 Alleen leden op het hoogste niveau van de eerste `{…}`-instantie worden verzameld, en alleen
 waar een lid legitiem mag starten (direct na het openingsaccolade, een `;`
-of een `,`). Leden die zijn bijgedragen door een `extends`/`&`-basis zijn daarom _niet_
+of een `,`). Leden die zijn bijgedragen door een `extends`/`&`-basis zijn daarom _not_
 gerapporteerd - de beller behandelt ze als onbekend en valt terug, wat de
 veilige richting.
 
 #### Parameters
 
-| Naam          | Typ        | Beschrijving |
-| ------------- | ---------- | ------------ |
-| aangifteTekst | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| --------------- | ------ | ----------- |
+| aangifteTekst | tekenreeks |             |
 
 ### unwrapPropsTypeName
 
@@ -783,11 +764,11 @@ veilige richting.
 function unwrapPropsTypeName(text: string | undefined): string | undefined;
 ```
 
-Reduceer een rekwisietannotatie tot de gewone naam waarnaar deze verwijst, en pak de
+Reduceer een rekwisietenannotatie tot de gewone naam waarnaar deze verwijst, en pak de
 haakjes en ledenbehoudende generieke wrappers die een component kan schrijven.
 
 #### Parameters
 
-| Naam  | Typ                          | Beschrijving |
-| ----- | ---------------------------- | ------------ |
-| tekst | tekenreeks \| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------- | ----------- |
+| tekst | tekenreeks \| ongedefinieerd |             |

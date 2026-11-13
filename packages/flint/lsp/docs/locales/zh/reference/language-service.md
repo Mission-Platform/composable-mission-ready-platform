@@ -1,13 +1,13 @@
-# Forge Web 脚本语言工具
+# Flint 语言工具
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> packages/flint-lsp/docs/reference/language-service.md: [packages/flint-lsp/docs/reference/language-service.md](../../../reference/language-service.md)
+> packages/flint/lsp/docs/reference/language-service.md: [packages/flint/lsp/docs/reference/language-service.md](../../../reference/language-service.md)
 > 语言: 简体中文 (zh)
 
 Flint (`.flint`) 有一个编辑器中立的语言服务，一个 stdio
 语言服务器协议 (LSP) 服务器和面向浏览器的 Monaco 适配器。
-所有三个都使用可执行的 Flint v1 合约
+这三者都使用可执行的 Flint v1 合约
 `@mission-platform/flint`，因此诊断、源范围、符号、
 完成和悬停信息来自相同的解析器和
 验证器。
@@ -15,7 +15,7 @@ Flint (`.flint`) 有一个编辑器中立的语言服务，一个 stdio
 支持的语言合约是**版本 1.0**，ABI 合约是
 **版本 1.2**。该工具确实
 不改变语法、编译器输出、ABI 或现有的 Rust 和
-AssemblyScript 集成。看 [Forge Web 脚本 v1](../../../../../flint/docs/locales/zh/reference/language.md)
+AssemblyScript 集成。请参阅 [Flint v1](../../../../../flint/docs/reference/language.md)
 获取语言和 ABI 参考。
 
 ## 特征和边界
@@ -110,7 +110,7 @@ Adds one to a value.
 细节/签名。描述段落和标签之间用空行分隔；
 保留标签顺序、重复标签和未知标签。核心语法和
 规范化规则，包括功能关联和支持的主题
-形式，指定于 [FWS 语言参考](../../../../../flint/docs/locales/zh/reference/language.md)。
+形式，在 [FWS 语言参考](../../../../../flint/docs/reference/language.md) 中指定。
 
 文档只是信息性元数据。它不会改变诊断，
 类型检查、函数解析、生成的声明、ABI 签名、
@@ -137,7 +137,7 @@ LSP 服务器不会重新解释标签或应用特定于编辑器的格式。
 `@mission-platform/content` 注册相同的进程内语言服务
 `ForgeMonacoEditor` 使用的提供程序：
 
-- 摩纳哥悬停 `contents` 包含签名和呈现的文档，如下所示
+- 摩纳哥悬停 `contents` 包含签名和渲染文档，如下所示
   单独的 Markdown 兼容值；
 - 源函数建议的 `documentation` 字段包含相同的内容
   将字符串渲染为 LSP 补全；
@@ -179,7 +179,7 @@ stdio 始终是传输。客户端应发送 `initialize`，使用
 
 分别接受命令和参数的客户端应该使用
 `flint-lsp` 用于已安装的软件包。结帐可以使用 `node` 和
-而是构建的入口点：
+改为构建的入口点：
 
 ```json
 {
@@ -256,7 +256,7 @@ VS Code 需要 LSP 客户端扩展；配置该扩展
 将其设置为绝对路径或相对于第一个工作区文件夹的路径
 测试本地构建或项目提供的 `dist/main.js`。附加
 参数在服务器入口点之后传递。使用 `messages` 或 `verbose`
-用于LSP追踪；启动失败被写入 **Forge Web 脚本
+用于LSP追踪；启动失败写入 **Flint
 语言服务器** 输出通道并显示为编辑器错误。
 
 对于从此存储库进行本地开发：
@@ -296,7 +296,7 @@ LSP4IJ 集成。该插件针对 IntelliJ IDEA 社区进行编译
 
 该插件将 `*.flint` 映射到语言 ID `fws` 并启动一个共享 stdio
 项目的服务器。 IntelliJ 配置由以下公司独家提供
-**设置|工具|伪造网页脚本**；没有项目脚本或 Flora
+**设置|工具|燧石**;没有项目脚本或 Flora
 配置路径。配置：
 
 - **Node.js 可执行文件** — Node 24 或更高版本；默认为 `node`。
@@ -344,7 +344,7 @@ JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-23.jdk/Contents/Home \
   ./extensions/flint-ij/gradlew -p extensions/flint-ij test verifyPlugin buildPlugin --no-daemon --offline
 ```
 
-分阶段服务器和 IntelliJ 烟雾测试执行相同的初始化，
+分阶段服务器和 IntelliJ 冒烟测试执行相同的初始化，
 诊断、完成、悬停、语义标记、关闭和项目根
 启动合同。共享 LSP 测试还涵盖工作区文件夹
 转发、`file:` URI 处理、根包含的监视文件失效、
@@ -363,7 +363,7 @@ JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-23.jdk/Contents/Home \
   `pnpm exec turbo run build --filter=fws-vscode`，确认
   `extensions/flint-vscode/server/dist/main.js` 存在，或设置
   `flint.serverPath` 到有效的内置入口点。检查
-  **伪造 Web 脚本语言服务器** 启用跟踪的输出通道。
+  **Flint 语言服务器** 启用跟踪的输出通道。
 - **未找到 IntelliJ 服务器命令：** 安装
   `@mission-platform/flint-lsp` 在打开的项目中，确保其
   `node_modules/.bin` 存在，或配置显式命令/路径。的
@@ -443,7 +443,7 @@ interface FlintWorkspaceOptions {
 省略 `requireExports` 选项时的编译器 ABI 函数。
 
 当使用核心或以编程方式创建的 LSP 服务器时，调用
-`refreshWorkspace(uri)` 打开文档之后和依赖之前
+`refreshWorkspace(uri)` 打开文档后和依赖之前
 工作区派生的诊断、完成或悬停。 LSP适配器执行
 在发布诊断之前和服务完成之前刷新或
 悬停请求。
@@ -455,16 +455,16 @@ interface FlintWorkspaceOptions {
 标准零基 `Position` 和半开放 `Range`；字符偏移量计数
 UTF-16 代码单元，包括 Unicode 出现在诊断之前的情况。
 
-LSP服务器发布`source: "flint"`。阶段和提示是
+LSP 服务器发布 `source: "flint"`。阶段和提示是
 也包含在诊断 `data` 对象中。典型的稳定代码族
 是：
 
-| 代码家族        | 相           | 意义                                                       |
-| --------------- | ------------ | ---------------------------------------------------------- |
-| `FLINT-LEX-*`   | `lex`        | 无效字符/转义符、原始字符串行终止符或未终止的字符串/块注释 |
-| `FLINT-PARSE-*` | `parse`      | 无效的模块、声明、语句或表达式语法                         |
-| `FLINT-TYPE-*`  | `type-check` | 无效的类型、名称、运算符、参数或返回                       |
-| `FLINT-ABI-*`   | `abi`        | 重复名称、被拒绝的功能、导出或导入                         |
+|代码家族|相|意义|
+| --------------- | ------------ | ----------------------------------------------------------------------------------------------- |
+| `FLINT-LEX-*` | `lex` |无效字符/转义符、原始字符串行终止符或未终止的字符串/块注释 |
+| `FLINT-PARSE-*` | `parse` |无效的模块、声明、语句或表达式语法 |
+| `FLINT-TYPE-*` | `type-check` |无效的类型、名称、运算符、参数或返回 |
+| `FLINT-ABI-*` | `abi` |重复名称、被拒绝的功能、导出或导入 |
 
 在解析器恢复允许的情况下，仍会对格式错误的输入进行标记和分析
 它。例如，格式错误的源可能会生成 `FLINT-PARSE-017`，同时保留
@@ -472,9 +472,9 @@ LSP服务器发布`source: "flint"`。阶段和提示是
 提供的范围和代码而不是匹配的诊断文本。
 
 字符串词法分析仅接受 JSON 兼容的转义（`\\`、`\"`、`\/`、`\b`、
-`\f`、`\n`、`\r`、`\t` 和 `\uXXXX`）。原始行终止符、无效转义符、
-和尾部反斜杠产生词法诊断（`FLINT-LEX-004` 或
-`FLINT-LEX-005`)。词法分析器和诊断范围受源长度限制；
+`\f`、`\n`、`\r`、`\t` 和 `\uXXXX`)。原始行终止符、无效转义符、
+和尾随反斜杠产生词法诊断（`FLINT-LEX-004` 或
+`FLINT-LEX-005`）。词法分析器和诊断范围受源长度限制；
 客户端可以安全地将它们直接转换为 UTF-16 LSP 范围。
 
 ## 嵌入 Monaco 适配器
@@ -557,10 +557,10 @@ handle.dispose();
 
 ## LSP 与浏览器工作区
 
-| 消费者          | 工作区实施                          | 根/安全边界                                      | 交通         |
-| --------------- | ----------------------------------- | ------------------------------------------------ | ------------ |
-| Node LSP 客户端 | `RootBoundedFlintWorkspaceHost`     | 规范化的配置文件系统根；外部读取被拒绝           | stdio LSP    |
-| 摩纳哥/浏览器   | 应用程序提供的 `FlintWorkspaceHost` | 主机决定公开哪些 URI/文件/选项；没有文件系统假设 | 进程内适配器 |
+|消费者 |工作区实施 |根/安全边界|交通 |
+| --------------- | ----------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
+| Node LSP 客户端 | `RootBoundedFlintWorkspaceHost` |规范化的配置文件系统根；外部读取被拒绝 | stdio LSP |
+|摩纳哥/浏览器 |应用程序提供的 `FlintWorkspaceHost` |主机决定公开哪些 URI/文件/选项；没有文件系统假设|进程内适配器|
 
 两个适配器都使用相同的语言服务契约和分析语义，
 但它们不共享文档存储或传输。浏览器主机不得
@@ -596,7 +596,7 @@ pnpm --filter @mission-platform/content build:check
 ```
 
 包范围内的内容 lint 和格式命令还会检查不相关的 CSS/SCSS
-文件；仅限于现有文件的故障不是 Forge Web 脚本
+文件；仅限于现有文件的故障不是 Flint
 语言工具回归。权威语言夹具期望
 保留在 `../../../flint/src/fixtures/bootstrap.ts` 中并且
-[语言参考](../../../../../flint/docs/locales/zh/reference/language.md)。
+[语言参考](../../../../../flint/docs/reference/language.md)。

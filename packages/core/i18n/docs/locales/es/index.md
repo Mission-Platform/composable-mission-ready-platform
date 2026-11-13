@@ -6,7 +6,7 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > Idioma: Español (es)
 
 `@mission-platform/i18n` es un contenedor de internacionalización independiente del marco (i18n) creado
-en [i18siguiente](https://www.i18next.com/). Proporciona una forma unificada de manejar las traducciones en toda la Plataforma de la Misión,
+en [i18next](https://www.i18next.com/). Proporciona una forma unificada de manejar las traducciones en toda la Plataforma de la Misión,
 con adaptadores dedicados tanto para Vue 3 como para React.
 
 ## Punto de entrada
@@ -17,11 +17,11 @@ la condición de exportación activa `mp:<framework>`, que selecciona **una vez*
 `@mission-platform/vite-config`) y `customConditions` en TypeScript (a través del
 `@mission-platform/typescript-config/framework-<name>` preajustes). Cada importación permanece vacía.
 
-| Condición activa | Resuelve                          | Exportaciones clave                                                     |
-| :--------------- | :-------------------------------- | :---------------------------------------------------------------------- |
-| _(ninguno)_      | Núcleo neutral en cuanto al marco | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
-| `mp:vue`         | Vue 3 adaptadores                 | el núcleo neutro más `createForgeI18NVue`, `useI18n`                    |
-| `mp:react`       | Adaptador React                   | el núcleo neutro más `ForgeI18NProvider`, `useI18n`                     |
+| Condición activa | Resuelve | Exportaciones clave |
+| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
+| _(ninguno)_ | Núcleo neutral en cuanto al marco | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
+| `mp:vue` | Vue 3 adaptadores | el núcleo neutro más `createForgeI18NVue`, `useI18n` |
+| `mp:react` | Adaptador React | el núcleo neutro más `ForgeI18NProvider`, `useI18n` |
 
 ## Conceptos básicos
 

@@ -19,13 +19,18 @@
 function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 ```
 
-لم يتم تقديم أي وصف.
+التأكد من أن بيان Flint ABI صالح وفقًا لقواعد مواصفات وقت التشغيل.
 
 #### حدود
 
-| الاسم | اكتب             | الوصف |
-| ----- | ---------------- | ----- |
-| بيان  | FlintAbiManifest |       |
+| الاسم | اكتب | الوصف |
+| -------- | ---------------- | --------------------------- |
+| بيان | فلينتابيمانيفيست | - بيان ABI للتحقق من صحته. |
+
+#### عقد
+
+- **@param:** - بيان ABI للتحقق من صحته.
+- **@throws:** إذا فشل التحقق من صحة البيان.
 
 ### وظيفة متساوية
 
@@ -35,14 +40,20 @@ function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean;
 ```
 
-لم يتم تقديم أي وصف.
+يقارن بين إعلانين لوظيفة ABI للتكافؤ الهيكلي.
 
 #### حدود
 
-| الاسم  | اكتب             | الوصف |
-| ------ | ---------------- | ----- |
-| اليسار | FlintAbiFunction |       |
-| حق     | FlintAbiFunction |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------------- | ------------------------------ |
+| اليسار | فلينتابيفونكشن | - إعلان الوظيفة الأولى.  |
+| حق | فلينتابيفونكشن | - إعلان الوظيفة الثانية. |
+
+#### عقد
+
+- **@param:** - إعلان الوظيفة الأولى.
+- **@param:** - إعلان الوظيفة الثانية.
+- **@returns:** صحيح إذا كان كلا الإعلانين لهما توقيعات ومعلمات وأنواع إرجاع متطابقة.
 
 ### FlintAbiValidationResult
 
@@ -52,7 +63,7 @@ function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean
 export interface FlintAbiValidationResult
 ```
 
-لم يتم تقديم أي وصف.
+نتيجة التحقق من صحة بيان Flint ABI الذي يحتوي على حالة التحقق من الصحة ورسائل الخطأ.
 
 ### validateFlintAbiManifest
 
@@ -62,13 +73,100 @@ export interface FlintAbiValidationResult
 function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidationResult;
 ```
 
-لم يتم تقديم أي وصف.
+التحقق من صحة بيان Flint ABI مقابل متطلبات المواصفات والتخطيطات وقيود القدرة.
 
 #### حدود
 
-| الاسم | اكتب             | الوصف |
-| ----- | ---------------- | ----- |
-| بيان  | FlintAbiManifest |       |
+| الاسم | اكتب | الوصف |
+| -------- | ---------------- | --------------------------- |
+| بيان | فلينتابيمانيفيست | - بيان ABI للتحقق من صحته. |
+
+#### عقد
+
+- **@param:** - بيان ABI للتحقق من صحته.
+- **@returns:** نتيجة التحقق التي تحتوي على الحالة المنطقية والأخطاء التشخيصية المجمعة.
+
+## `src/allocator/slab`
+
+### FlintAtomicSpinLock
+
+**النوع:** فئة
+
+```typescript
+export class FlintAtomicSpinLock
+```
+
+يوفر Spinlock الذري وصولاً حصريًا متبادلًا إلى هياكل ذاكرة WebAssembly المشتركة.
+
+### RegionalBumpArena
+
+**النوع:** فئة
+
+```typescript
+export class RegionalBumpArena
+```
+
+توفر ساحة تخصيص النتوءات الإقليمية تخصيص $O(1)$ وإعادة التعيين الجماعي الفوري.
+
+### SegregratedSlabAllocator
+
+**النوع:** فئة
+
+```typescript
+export class SegregatedSlabAllocator
+```
+
+مُخصص ألواح فئة الحجم المنفصل $O(1)$.
+
+### خيارات منفصلة SlabAllocator
+
+**النوع:** الواجهة
+
+```typescript
+export interface SegregatedSlabAllocatorOptions
+```
+
+خيارات التكوين لمخصص الألواح المنفصلة.
+
+### SLAB_CANARY_TAG
+
+**النوع:** ثابت
+
+```typescript
+export const SLAB_CANARY_TAG;
+```
+
+لم يتم تقديم أي وصف.
+
+### SLAB_SIZE_CLASSES
+
+**النوع:** ثابت
+
+```typescript
+export const SLAB_SIZE_CLASSES;
+```
+
+فئات قياسية ذات حجمين لتخصيص ألواح الكائنات الصغيرة والمتوسطة المنفصلة.
+
+### SlabBlock
+
+**النوع:** الواجهة
+
+```typescript
+export interface SlabBlock
+```
+
+لوحة التخصيص تدير فتحات ذات حجم ثابت لفئة حجم محددة.
+
+### SlabSizeClass
+
+**النوع:** النوع
+
+```typescript
+export type SlabSizeClass = (typeof SLAB_SIZE_CLASSES)[number];
+```
+
+لم يتم تقديم أي وصف.
 
 ## `src/async`
 
@@ -80,20 +178,41 @@ function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidatio
 function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}): FlintAsyncRuntime;
 ```
 
-لم يتم تقديم أي وصف.
+إنشاء مثيل FlintAsyncRuntime جديد لإدارة قوائم انتظار المهام غير المتزامنة.
 
 #### حدود
 
-| الاسم  | اكتب                     | الوصف |
-| ------ | ------------------------ | ----- |
-| خيارات | FlintAsyncRuntimeOptions |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------ | -------------------------------- |
+| خيارات | خيارات فلينتاسينكرونتيمي | - خيارات تكوين وقت التشغيل. |
 
-### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+#### عقد
+
+- **@param:** - خيارات تكوين وقت التشغيل.
+- **@returns:** تم تكوين مثيل FlintAsyncRuntime.
+
+### createFlintJspiSuspender
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintJspiSuspender(options?: FlintJspiOptions): FlintJspiSuspender;
+```
+
+إنشاء مثيل لتعليق مكدس Flint JSPI.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ---------------- | ----------- |
+| خيارات | فلينتجسبيوبتيونس |             |
+
+### FLINT_ASYNC_CAPABILITIES
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
+export const FLINT_ASYNC_CAPABILITIES;
 ```
 
 لم يتم تقديم أي وصف.
@@ -103,11 +222,10 @@ export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
 **النوع:** النوع
 
 ```typescript
-export type FlintAsyncCapability =
-  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type FlintAsyncCapability = (typeof FLINT_ASYNC_CAPABILITIES)[keyof typeof FLINT_ASYNC_CAPABILITIES];
 ```
 
-لم يتم تقديم أي وصف.
+سلسلة معرفات قدرة وقت التشغيل غير المتزامنة المعتمدة.
 
 ### FlintAsyncExecution
 
@@ -117,7 +235,7 @@ export type FlintAsyncCapability =
 export interface FlintAsyncExecution
 ```
 
-لم يتم تقديم أي وصف.
+نتيجة التنفيذ الناجح التي تحتوي على حمولة إخراج المهمة.
 
 ### FlintAsyncExecutionResult
 
@@ -127,7 +245,7 @@ export interface FlintAsyncExecution
 export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 ```
 
-لم يتم تقديم أي وصف.
+نتيجة تنفيذ مهمة غير متزامنة (إما النجاح أو الفشل).
 
 ### FlintAsyncFailure
 
@@ -137,7 +255,7 @@ export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 export interface FlintAsyncFailure
 ```
 
-لم يتم تقديم أي وصف.
+يتم إرجاع تقرير الفشل عن طريق عملية جدولة أو تنفيذ غير متزامنة.
 
 ### FlintAsyncFailureCode
 
@@ -148,7 +266,7 @@ export type FlintAsyncFailureCode =
   'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
-لم يتم تقديم أي وصف.
+رموز فئة الخطأ لحالات فشل التنفيذ غير المتزامن.
 
 ### FlintAsyncHostAdapter
 
@@ -158,7 +276,7 @@ export type FlintAsyncFailureCode =
 export interface FlintAsyncHostAdapter
 ```
 
-لم يتم تقديم أي وصف.
+خطافات تكامل المضيف لجدولة المهام الصغيرة وتسليم رسائل العامل.
 
 ### FlintAsyncRuntime
 
@@ -168,7 +286,7 @@ export interface FlintAsyncHostAdapter
 export interface FlintAsyncRuntime
 ```
 
-لم يتم تقديم أي وصف.
+يقوم منسق وقت التشغيل غير المتزامن بإدارة المهام الدقيقة وقوائم انتظار العمال واستنزاف حلقة الأحداث.
 
 ### FlintAsyncRuntimeOptions
 
@@ -178,7 +296,7 @@ export interface FlintAsyncRuntime
 export interface FlintAsyncRuntimeOptions
 ```
 
-لم يتم تقديم أي وصف.
+خيارات التكوين لمحرك وقت التشغيل غير المتزامن.
 
 ### FlintAsyncScheduledTask
 
@@ -188,7 +306,7 @@ export interface FlintAsyncRuntimeOptions
 export interface FlintAsyncScheduledTask
 ```
 
-لم يتم تقديم أي وصف.
+نتيجة جدولة ناجحة لمهمة غير متزامنة.
 
 ### FlintAsyncScheduleResult
 
@@ -198,7 +316,7 @@ export interface FlintAsyncScheduledTask
 export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailure;
 ```
 
-لم يتم تقديم أي وصف.
+نتيجة جدولة مهمة غير متزامنة (إما مجدولة أو فاشلة).
 
 ### FlintAsyncTask
 
@@ -208,7 +326,7 @@ export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailu
 export interface FlintAsyncTask
 ```
 
-لم يتم تقديم أي وصف.
+واصف مهمة غير متزامنة في قائمة الانتظار في وقت التشغيل.
 
 ### FlintAsyncTaskHandler
 
@@ -218,7 +336,7 @@ export interface FlintAsyncTask
 export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 ```
 
-لم يتم تقديم أي وصف.
+رد اتصال تنفيذ المهمة يأخذ حمولة بايت الإدخال ويعيد حمولة بايت الإخراج.
 
 ### FlintAsyncTaskKind
 
@@ -228,7 +346,7 @@ export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 export type FlintAsyncTaskKind = 'microtask' | 'worker';
 ```
 
-لم يتم تقديم أي وصف.
+تصنيف جدولة المهام ("المهام الصغيرة" أو "العامل").
 
 ### FlintAsyncWorkerMessage
 
@@ -238,7 +356,72 @@ export type FlintAsyncTaskKind = 'microtask' | 'worker';
 export interface FlintAsyncWorkerMessage
 ```
 
-لم يتم تقديم أي وصف.
+تم نقل حزمة الرسائل من أو إلى سلسلة رسائل عاملة.
+
+### FlintJspiOptions
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintJspiOptions
+```
+
+خيارات تكوين برنامج تعليق WebAssembly JavaScript Promise Integration (JSPI).
+
+### FlintJspiSuspender
+
+**النوع:** فئة
+
+```typescript
+export class FlintJspiSuspender
+```
+
+WebAssembly JavaScript Promise Integration (JSPI) تبديل المكدس.
+تعليق واستئناف مكدسات WebAssembly عبر وعود المضيف غير المتزامنة
+محليًا دون الحاجة إلى تحويلات كود Asyncify المستندة إلى برنامج التحويل البرمجي.
+
+## `src/async/fiber`
+
+### فلينتفايبر
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintFiber<T = unknown>
+```
+
+التعامل مع استمرار الألياف التعاونية النشطة أو المعلقة.
+
+### FlintFiberScheduler
+
+**النوع:** فئة
+
+```typescript
+export class FlintFiberScheduler
+```
+
+جدولة الألياف التعاونية التي تدعم تعليق المكدس غير المتزامن على طراز JSPI،
+عزل الإطار، وتأكيد حدود المكدس، وحماية إعادة الدخول.
+
+### FlintFiberSchedulerOptions
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintFiberSchedulerOptions
+```
+
+خيارات التكوين لجدولة الألياف التعاونية.
+
+### FlintFiberState
+
+**النوع:** النوع
+
+```typescript
+export type FlintFiberState = 'ready' | 'running' | 'suspended' | 'completed' | 'failed' | 'cancelled';
+```
+
+حالة التنفيذ للألياف التعاونية.
 
 ## `src/collections`
 
@@ -257,10 +440,10 @@ function createFlintArray(
 
 #### حدود
 
-| الاسم | اكتب                     | الوصف |
-| ----- | ------------------------ | ----- |
-| القيم | للقراءة فقط TValue[]     |       |
-| ملكية | FlintCollectionOwnership |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------------------------ | ----------- |
+| القيم | للقراءة فقط TValue[] |             |
+| ملكية | ملكية فلينت |             |
 
 ### createFlintIterator
 
@@ -274,10 +457,10 @@ function createFlintIterator(values: Iterable<TValue>, descriptor: FlintIterator
 
 #### حدود
 
-| الاسم | اكتب                    | الوصف |
-| ----- | ----------------------- | ----- |
-| القيم | Iterable<TValue>        |       |
-| واصف  | FlintIteratorDescriptor |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------- | ----------- |
+| القيم | Iterable<TValue> |             |
+| واصف | فلينتيتيراتورديسكريبتور |             |
 
 ### createFlintIteratorDescriptor
 
@@ -296,12 +479,12 @@ function createFlintIteratorDescriptor(
 
 #### حدود
 
-| الاسم      | اكتب                     | الوصف |
-| ---------- | ------------------------ | ----- |
-| معرف       | سلسلة                    |       |
-| نوع العنصر |                          |       |
-| القدرة     | FlintIteratorCapability  |       |
-| ملكية      | FlintCollectionOwnership |       |
+| الاسم | اكتب | الوصف |
+| ----------- | ------------------------ | ----------- |
+| معرف | سلسلة |             |
+| نوع العنصر |                          |             |
+| القدرة | فلينتيتيراتوركابابيليتي |             |
+| ملكية | ملكية فلينت |             |
 
 ### createFlintMap
 
@@ -314,14 +497,20 @@ function createFlintMap(
 ): FlintMap<TKey, TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+ينشئ FlintMap مستمرًا تتم تهيئته بإدخالات قيمة المفتاح.
 
 #### حدود
 
-| الاسم      | اكتب                                      | الوصف |
-| ---------- | ----------------------------------------- | ----- |
-| مداخل      | للقراءة فقط FlintMapEntry<TKey, TValue>[] |       |
-| استراتيجية | فورجويبسكريبتHashStrategy<TKey>           |       |
+| الاسم | اكتب | الوصف |
+| -------- | -------------------------------------- | --------------------------- |
+| مداخل | للقراءة فقط FlintMapEntry<TKey, TValue>[] | - مجموعات القيمة الرئيسية الأولية. |
+| استراتيجية | استراتيجية فلينت هاش<TKey> |                             |
+
+#### عقد
+
+- **@param:** - مجموعات قيمة المفتاح الأولية.
+- **@param:** - استراتيجية التجزئة والمساواة الرئيسية المخصصة.
+- **@returns:** مثيل FlintMap الذي تمت تهيئته.
 
 ### createFlintSet
 
@@ -334,14 +523,20 @@ function createFlintSet(
 ): FlintSet<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+إنشاء FlintSet مستمر تمت تهيئته بالقيم.
 
 #### حدود
 
-| الاسم      | اكتب                              | الوصف |
-| ---------- | --------------------------------- | ----- |
-| القيم      | للقراءة فقط TValue[]              |       |
-| استراتيجية | فورجويبسكريبتHashStrategy<TValue> |       |
+| الاسم | اكتب | الوصف |
+| -------- | ------------------------- | ----------------------------- |
+| القيم | للقراءة فقط TValue[] | - التكرار الأولي للقيم. |
+| استراتيجية | استراتيجية فلينتهاش<TValue> |                               |
+
+#### عقد
+
+- **@param:** - القيم القابلة للتكرار الأولية.
+- **@param:** - استراتيجية المساواة والتجزئة المخصصة.
+- **@returns:** مثيل FlintSet المُهيأ.
 
 ### createFlintVector
 
@@ -358,10 +553,10 @@ function createFlintVector(
 
 #### حدود
 
-| الاسم | اكتب                     | الوصف |
-| ----- | ------------------------ | ----- |
-| القيم | للقراءة فقط TValue[]     |       |
-| ملكية | FlintCollectionOwnership |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------------------------ | ----------- |
+| القيم | للقراءة فقط TValue[] |             |
+| ملكية | ملكية فلينت |             |
 
 ### FlintArray
 
@@ -385,10 +580,10 @@ function flintArrayGet(array: FlintArray<TValue>, index: number): FlintOption<TV
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| مصفوفة | فورج ويب سكريبت أرراي <TValue> |       |
-| الفهرس | رقم                            |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------------ | ----------- |
+| مصفوفة | فلينتأرراي<TValue> |             |
+| الفهرس | رقم |             |
 
 ### flintArrayLength
 
@@ -402,9 +597,9 @@ function flintArrayLength(array: FlintArray<TValue>): number;
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| مصفوفة | فورج ويب سكريبت أرراي <TValue> |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------------ | ----------- |
+| مصفوفة | فلينتأرراي<TValue> |             |
 
 ### flintArraySet
 
@@ -418,11 +613,11 @@ function flintArraySet(array: FlintArray<TValue>, index: number, value: TValue):
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| مصفوفة | فورج ويب سكريبت أرراي <TValue> |       |
-| الفهرس | رقم                            |       |
-| القيمة | TValue                         |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------------ | ----------- |
+| مصفوفة | فلينتأرراي<TValue> |             |
+| الفهرس | رقم |             |
+| القيمة | TValue |             |
 
 ### flintArrayTrySet
 
@@ -440,13 +635,13 @@ function flintArrayTrySet(
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| مصفوفة | فورج ويب سكريبت أرراي <TValue> |       |
-| الفهرس | رقم                            |       |
-| القيمة | TValue                         |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------------ | ----------- |
+| مصفوفة | فلينتأرراي<TValue> |             |
+| الفهرس | رقم |             |
+| القيمة | TValue |             |
 
-### ملكية FlintCollection
+### ملكية فلينت كوليكشن
 
 **النوع:** النوع
 
@@ -454,7 +649,7 @@ function flintArrayTrySet(
 export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 ```
 
-لم يتم تقديم أي وصف.
+دلالات ملكية الذاكرة لعناصر المجموعة ("مملوكة"، "مستعارة"، "مشتركة").
 
 ### flintDefaultHashStrategy
 
@@ -464,9 +659,13 @@ export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 function flintDefaultHashStrategy(): FlintHashStrategy<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+إرجاع استراتيجية التجزئة الافتراضية باستخدام التسلسل الحتمي.
 
-### خطأ في Flint
+#### عقد
+
+- **@returns:** مثيل FlintHashStrategy الافتراضي.
+
+### flintError
 
 **النوع:** ثابت
 
@@ -476,7 +675,7 @@ export const flintError;
 
 إنشاء قيمة نتيجة خطأ دون رمي.
 
-### استراتيجية FlintHash
+### استراتيجية فلينت هاش
 
 **النوع:** الواجهة
 
@@ -484,7 +683,7 @@ export const flintError;
 export interface FlintHashStrategy<TValue>
 ```
 
-لم يتم تقديم أي وصف.
+واجهة استراتيجية المساواة والتجزئة لأنواع المفاتيح المخصصة في المجموعات والخرائط.
 
 ### FlintIterable
 
@@ -518,10 +717,10 @@ function flintIteratorAdd(source: FlintIterator<TValue>, value: TValue): FlintIt
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| المصدر | فورجويبسكريبتايتيراتور<TValue> |       |
-| القيمة | TValue                         |       |
+| الاسم | اكتب | الوصف |
+| ------ | --------------------- | ----------- |
+| المصدر | فلينتيتيراتور<TValue> |             |
+| القيمة | TValue |             |
 
 ### flintIteratorAt
 
@@ -531,14 +730,20 @@ function flintIteratorAdd(source: FlintIterator<TValue>, value: TValue): FlintIt
 function flintIteratorAt(iterator: FlintIterator<TValue>, index: number): FlintOption<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+إرجاع العنصر في فهرس محدد ملفوف في خيار.
 
 #### حدود
 
-| الاسم  | اكتب                              | الوصف |
-| ------ | --------------------------------- | ----- |
-| مكرر   | فورج ويب سكريبت إيتراتور <TValue> |       |
-| الفهرس | رقم                               |       |
+| الاسم | اكتب | الوصف |
+| -------- | --------------------- | --------------------------- |
+| مكرر | فلينتيتيراتور<TValue> | - مكرر المصدر.          |
+| الفهرس | رقم | - فهرس العناصر الصفري. |
+
+#### عقد
+
+- **@param:** - مكرر المصدر.
+- **@param:** - فهرس العناصر الصفري.
+- **@returns:** خيار يحتوي على عنصر في الفهرس أو لا شيء.
 
 ### FlintIteratorCapability
 
@@ -558,13 +763,18 @@ export type FlintIteratorCapability = 'linear' | 'random-access';
 function flintIteratorCollect(iterator: FlintIterator<TValue>): FlintVector<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+تجسيد المكرر في ناقل مملوك للقيم المجمعة.
 
 #### حدود
 
-| الاسم | اكتب                           | الوصف |
-| ----- | ------------------------------ | ----- |
-| مكرر  | فورجويبسكريبتايتيراتور<TValue> |       |
+| الاسم | اكتب | الوصف |
+| -------- | --------------------- | --------------------------- |
+| مكرر | فلينتيتيراتور<TValue> | - مكرر المصدر للتصريف. |
+
+#### عقد
+
+- **@param:** - مكرر المصدر المراد تصريفه.
+- **@returns:** FlintVector يحتوي على القيم المجمعة.
 
 ### flintIteratorConcat
 
@@ -578,10 +788,10 @@ function flintIteratorConcat(first: FlintIterator<TValue>, second: FlintIterable
 
 #### حدود
 
-| الاسم   | اكتب                           | الوصف |
-| ------- | ------------------------------ | ----- |
-| الأول   | فورجويبسكريبتايتيراتور<TValue> |       |
-| الثانية | FlintIterable<TValue>          |       |
+| الاسم | اكتب | الوصف |
+| ------ | --------------------- | ----------- |
+| الأول | فلينتيتيراتور<TValue> |             |
+| الثانية | فلينتايتيرابل<TValue> |             |
 
 ### FlintIteratorDescriptor
 
@@ -608,10 +818,10 @@ function flintIteratorFilter(
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| المصدر | فورجويبسكريبتايتيراتور<TValue> |       |
-| المسند | (القيمة: TValue) => منطقية     |       |
+| الاسم | اكتب | الوصف |
+| --------- | -------------------------- | ----------- |
+| المصدر | فلينتيتيراتور<TValue> |             |
+| المسند | (القيمة: TValue) => منطقية |             |
 
 ### flintIteratorFirst
 
@@ -621,13 +831,18 @@ function flintIteratorFilter(
 function flintIteratorFirst(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+إرجاع العنصر الأول من المكرر المغلف بالخيار.
 
 #### حدود
 
-| الاسم | اكتب                           | الوصف |
-| ----- | ------------------------------ | ----- |
-| مكرر  | فورجويبسكريبتايتيراتور<TValue> |       |
+| الاسم | اكتب | الوصف |
+| -------- | --------------------- | ------------------ |
+| مكرر | فلينتيتيراتور<TValue> | - مكرر المصدر. |
+
+#### عقد
+
+- **@param:** - مكرر المصدر.
+- **@returns:** خيار يحتوي على العنصر الأول أو لا شيء.
 
 ### flintIteratorFlatten
 
@@ -641,9 +856,9 @@ function flintIteratorFlatten(source: FlintIterator<FlintIterable<TValue>>): Fli
 
 #### حدود
 
-| الاسم  | اكتب                                 | الوصف |
-| ------ | ------------------------------------ | ----- |
-| المصدر | FlintIterator<FlintIterable<TValue>> |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------------------------ | ----------- |
+| المصدر | فلينتيتيراتور<FlintIterable<TValue>> |             |
 
 ### flintIteratorFold
 
@@ -657,15 +872,22 @@ function flintIteratorFold(
 ): TResult;
 ```
 
-لم يتم تقديم أي وصف.
+يقلل المكرر من اليسار إلى اليمين باستخدام رد اتصال المجمع.
 
 #### حدود
 
-| الاسم  | اكتب                                                      | الوصف |
-| ------ | --------------------------------------------------------- | ----- |
-| مكرر   | فورج ويب سكريبت إيتراتور <TValue>                         |       |
-| الأولي | النتيجة                                                   |       |
-| المخفض | (المجمع: TResult، القيمة: TValue، الفهرس: رقم) => TResult |       |
+| الاسم | اكتب | الوصف |
+| -------- | --------------------------------------------------------------- | ----------------------------- |
+| مكرر | فلينتيتيراتور<TValue> | - مكرر المصدر.            |
+| الأولي | النتيجة | - قيمة التراكم الأولية.  |
+| المخفض | (المجمع: TResult، القيمة: TValue، الفهرس: رقم) => TResult | - تقليل وظيفة رد الاتصال. |
+
+#### عقد
+
+- **@param:** - مكرر المصدر.
+- **@param:** - قيمة التراكم الأولية.
+- **@param:** - تقليل وظيفة رد الاتصال.
+- **@returns:** النتيجة النهائية للتراكم المخفض.
 
 ### flintIteratorFromArray
 
@@ -682,10 +904,10 @@ function flintIteratorFromArray(
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| مصفوفة | فورج ويب سكريبت أرراي <TValue> |       |
-| واصف   | FlintIteratorDescriptor        |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------- | ----------- |
+| مصفوفة | فلينتأرراي<TValue> |             |
+| واصف | فلينتيتيراتورديسكريبتور |             |
 
 ### flintIteratorFromIterable
 
@@ -699,15 +921,15 @@ function flintIteratorFromIterable(
 ): FlintIterator<TValue>;
 ```
 
-قم بتكييف عنصر تكراري عشوائي مع مكرر Forge Web Script الخطي البطيء.
+قم بتكييف التكرار التعسفي مع مكرر Flint الخطي البطيء.
 
 #### حدود
 
-| الاسم      | اكتب             | الوصف |
-| ---------- | ---------------- | ----- |
-| القيم      | Iterable<TValue> |       |
-| نوع العنصر |                  |       |
-| معرف       |                  |       |
+| الاسم | اكتب | الوصف |
+| ----------- | ---------------- | ----------- |
+| القيم | Iterable<TValue> |             |
+| نوع العنصر |                  |             |
+| معرف |                  |             |
 
 ### flintIteratorFromVector
 
@@ -724,10 +946,10 @@ function flintIteratorFromVector(
 
 #### حدود
 
-| الاسم  | اكتب                            | الوصف |
-| ------ | ------------------------------- | ----- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
-| واصف   | FlintIteratorDescriptor         |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------- | ----------- |
+| ناقلات | فلينتفيكتور<TValue> |             |
+| واصف | فلينتيتيراتورديسكريبتور |             |
 
 ### flintIteratorLast
 
@@ -737,13 +959,18 @@ function flintIteratorFromVector(
 function flintIteratorLast(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+إرجاع العنصر الأخير من المكرر المغلف بالخيار.
 
 #### حدود
 
-| الاسم | اكتب                           | الوصف |
-| ----- | ------------------------------ | ----- |
-| مكرر  | فورجويبسكريبتايتيراتور<TValue> |       |
+| الاسم | اكتب | الوصف |
+| -------- | --------------------- | ------------------ |
+| مكرر | فلينتيتيراتور<TValue> | - مكرر المصدر. |
+
+#### عقد
+
+- **@param:** - مكرر المصدر.
+- **@returns:** خيار يحتوي على العنصر الأخير أو لا شيء.
 
 ### flintIteratorMap
 
@@ -761,11 +988,11 @@ function flintIteratorMap(
 
 #### حدود
 
-| الاسم      | اكتب                           | الوصف |
-| ---------- | ------------------------------ | ----- |
-| المصدر     | فورجويبسكريبتايتيراتور<TValue> |       |
-| الخريطة    | (القيمة: TValue) => TResult    |       |
-| نوع العنصر |                                |       |
+| الاسم | اكتب | الوصف |
+| ----------- | -------------------------- | ----------- |
+| المصدر | فلينتيتيراتور<TValue> |             |
+| الخريطة | (القيمة: TValue) => TResult |             |
+| نوع العنصر |                            |             |
 
 ### FlintIteratorResult
 
@@ -775,7 +1002,7 @@ function flintIteratorMap(
 export interface FlintIteratorResult<TValue>
 ```
 
-نتيجة سحب مكرر معبأة واحدة؛ يبقى صحيحا بعد الإرهاق.
+نتيجة سحب مكرر معبأة واحدة؛ يبقى صحيحا بعد استنفاد.
 
 ### flintIteratorTake
 
@@ -789,10 +1016,10 @@ function flintIteratorTake(source: FlintIterator<TValue>, count: number): FlintI
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| المصدر | فورجويبسكريبتايتيراتور<TValue> |       |
-| العد   | رقم                            |       |
+| الاسم | اكتب | الوصف |
+| ------ | --------------------- | ----------- |
+| المصدر | فلينتيتيراتور<TValue> |             |
+| العد | رقم |             |
 
 ### flintIteratorToArray
 
@@ -805,16 +1032,22 @@ function flintIteratorToArray(
 ): FlintArray<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+يحول المكرر إلى FlintArray مملوك.
 
 #### حدود
 
-| الاسم | اكتب                           | الوصف |
-| ----- | ------------------------------ | ----- |
-| مكرر  | فورجويبسكريبتايتيراتور<TValue> |       |
-| ملكية | FlintCollectionOwnership       |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------------------------ | ----------------------------- |
+| مكرر | فلينتيتيراتور<TValue> | - مكرر المصدر.            |
+| ملكية | ملكية فلينت | - نموذج ملكية المجموعة. |
 
-### FlintMap
+#### عقد
+
+- **@param:** - مكرر المصدر.
+- **@param:** - نموذج ملكية المجموعة.
+- **@returns:** تمت تهيئة FlintArray.
+
+### خريطة فلينت
 
 **النوع:** الواجهة
 
@@ -822,7 +1055,7 @@ function flintIteratorToArray(
 export interface FlintMap<TKey, TValue>
 ```
 
-لم يتم تقديم أي وصف.
+بنية بيانات جمع خريطة التجزئة المستمرة.
 
 ### flintMapDelete
 
@@ -832,14 +1065,20 @@ export interface FlintMap<TKey, TValue>
 function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+يحذف تعيين القيمة الرئيسية من الخريطة، ويعيد خريطة ثابتة جديدة.
 
 #### حدود
 
-| الاسم   | اكتب                             | الوصف |
-| ------- | -------------------------------- | ----- |
-| الخريطة | فورجيويبسكريبت ماب<TKey, TValue> |       |
-| مفتاح   | مفتاح تي                         |       |
+| الاسم | اكتب | الوصف |
+| ---- | ---------------------- | ---------------- |
+| الخريطة | فلينت ماب<TKey, TValue> | - خريطة الهدف.    |
+| مفتاح | مفتاح تي | - مفتاح للحذف. |
+
+#### عقد
+
+- **@param:** - خريطة الهدف.
+- **@param:** - مفتاح الحذف.
+- **@returns:** خريطة ثابتة محدثة.
 
 ### flintMapEntries
 
@@ -849,13 +1088,18 @@ function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, 
 function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry<TKey, TValue>>;
 ```
 
-لم يتم تقديم أي وصف.
+يُرجع جميع إدخالات القيمة الأساسية الموجودة في الخريطة كمتجه مملوك.
 
 #### حدود
 
-| الاسم   | اكتب                             | الوصف |
-| ------- | -------------------------------- | ----- |
-| الخريطة | فورجيويبسكريبت ماب<TKey, TValue> |       |
+| الاسم | اكتب | الوصف |
+| ---- | ---------------------- | ------------- |
+| الخريطة | فلينت ماب<TKey, TValue> | - خريطة الهدف. |
+
+#### عقد
+
+- **@param:** - خريطة الهدف.
+- **@returns:** متجه الإدخالات في الخريطة.
 
 ### FlintMapEntry
 
@@ -865,7 +1109,7 @@ function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry
 export interface FlintMapEntry<TKey, TValue>
 ```
 
-لم يتم تقديم أي وصف.
+سجل إدخال قيمة المفتاح في خريطة التجزئة المستمرة.
 
 ### flintMapGet
 
@@ -875,14 +1119,20 @@ export interface FlintMapEntry<TKey, TValue>
 function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+يسترد القيمة المرتبطة بالمفتاح من الخريطة.
 
 #### حدود
 
-| الاسم   | اكتب                             | الوصف |
-| ------- | -------------------------------- | ----- |
-| الخريطة | فورجيويبسكريبت ماب<TKey, TValue> |       |
-| مفتاح   | مفتاح تي                         |       |
+| الاسم | اكتب | الوصف |
+| ---- | ---------------------- | ------------- |
+| الخريطة | فلينت ماب<TKey, TValue> | - خريطة الهدف. |
+| مفتاح | مفتاح تي | - مفتاح البحث. |
+
+#### عقد
+
+- **@param:** - خريطة الهدف.
+- **@param:** - مفتاح البحث.
+- **@returns:** خيار يحتوي على قيمة أو لا شيء.
 
 ### flintMapSet
 
@@ -892,15 +1142,22 @@ function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue
 function flintMapSet(map: FlintMap<TKey, TValue>, key: TKey, value: TValue): FlintMap<TKey, TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+يقوم بإدراج أو تحديث تعيين قيمة المفتاح، مما يؤدي إلى إرجاع خريطة مستمرة جديدة.
 
 #### حدود
 
-| الاسم   | اكتب                             | الوصف |
-| ------- | -------------------------------- | ----- |
-| الخريطة | فورجيويبسكريبت ماب<TKey, TValue> |       |
-| مفتاح   | مفتاح تي                         |       |
-| القيمة  | TValue                           |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------------------- | ---------------- |
+| الخريطة | فلينت ماب<TKey, TValue> | - خريطة الهدف.    |
+| مفتاح | مفتاح تي | - مفتاح رسم الخرائط.   |
+| القيمة | TValue | - قيمة رسم الخرائط. |
+
+#### عقد
+
+- **@param:** - خريطة الهدف.
+- **@param:** - مفتاح التعيين.
+- **@param:** - قيمة التعيين.
+- **@returns:** خريطة ثابتة محدثة.
 
 ### flintNone
 
@@ -912,7 +1169,7 @@ export const flintNone;
 
 إنشاء قيمة خيار فارغة.
 
-### flintOk
+### فلينتموافق
 
 **النوع:** ثابت
 
@@ -922,7 +1179,7 @@ export const flintOk;
 
 بناء قيمة نتيجة ناجحة.
 
-### FlintOption
+### فلينتوبتيون
 
 **النوع:** الواجهة
 
@@ -942,7 +1199,7 @@ export interface FlintResultValue<TValue, TError = string>
 
 القيمة المشابهة للنتيجة المستخدمة من قبل مساعدي طفرة المجموعة غير الملائمة.
 
-### FlintSet
+### فلينتسيت
 
 **النوع:** الواجهة
 
@@ -950,7 +1207,7 @@ export interface FlintResultValue<TValue, TError = string>
 export interface FlintSet<TValue>
 ```
 
-لم يتم تقديم أي وصف.
+بنية بيانات جمع مجموعة التجزئة المستمرة.
 
 ### flintSetAdd
 
@@ -960,14 +1217,20 @@ export interface FlintSet<TValue>
 function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+يضيف عنصرًا إلى المجموعة، ويعيد مجموعة ثابتة جديدة إذا تم تعديلها.
 
 #### حدود
 
-| الاسم  | اكتب                         | الوصف |
-| ------ | ---------------------------- | ----- |
-| مجموعة | فورجي ويب سكريبت سيت<TValue> |       |
-| القيمة | TValue                       |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------------- | ------------------ |
+| مجموعة | فلينت سيت<TValue> | - تحديد الهدف.      |
+| القيمة | TValue | - القيمة المراد إدراجها. |
+
+#### عقد
+
+- **@param:** - مجموعة الأهداف.
+- **@param:** - القيمة المطلوب إدراجها.
+- **@returns:** مجموعة ثابتة محدثة.
 
 ### flintSetDelete
 
@@ -977,14 +1240,20 @@ function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+يحذف عنصرًا من المجموعة، ويعيد مجموعة ثابتة جديدة إذا تم تعديلها.
 
 #### حدود
 
-| الاسم  | اكتب                         | الوصف |
-| ------ | ---------------------------- | ----- |
-| مجموعة | فورجي ويب سكريبت سيت<TValue> |       |
-| القيمة | TValue                       |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------------- | ------------------ |
+| مجموعة | فلينت سيت<TValue> | - تحديد الهدف.      |
+| القيمة | TValue | - القيمة المراد إزالتها. |
+
+#### عقد
+
+- **@param:** - مجموعة الأهداف.
+- **@param:** - القيمة المراد إزالتها.
+- **@returns:** مجموعة ثابتة محدثة.
 
 ### flintSetHas
 
@@ -994,14 +1263,20 @@ function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 ```
 
-لم يتم تقديم أي وصف.
+يختبر ما إذا كانت القيمة موجودة في المجموعة.
 
 #### حدود
 
-| الاسم  | اكتب                         | الوصف |
-| ------ | ---------------------------- | ----- |
-| مجموعة | فورجي ويب سكريبت سيت<TValue> |       |
-| القيمة | TValue                       |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------------- | ----------------- |
+| مجموعة | فلينت سيت<TValue> | - تحديد الهدف.     |
+| القيمة | TValue | - القيمة للتحقق. |
+
+#### عقد
+
+- **@param:** - مجموعة الأهداف.
+- **@param:** - القيمة المطلوب التحقق منها.
+- **@returns:** صحيح إذا كانت القيمة موجودة.
 
 ### flintSetValues
 
@@ -1011,13 +1286,18 @@ function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 function flintSetValues(set: FlintSet<TValue>): FlintVector<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+إرجاع كافة القيم الموجودة في المجموعة كمتجه مملوك.
 
 #### حدود
 
-| الاسم  | اكتب                         | الوصف |
-| ------ | ---------------------------- | ----- |
-| مجموعة | فورجي ويب سكريبت سيت<TValue> |       |
+| الاسم | اكتب | الوصف |
+| ---- | ---------------- | ------------- |
+| مجموعة | فلينت سيت<TValue> | - تحديد الهدف. |
+
+#### عقد
+
+- **@param:** - مجموعة الأهداف.
+- **@returns:** ناقل القيم في المجموعة.
 
 ### flintSome
 
@@ -1029,7 +1309,7 @@ export const flintSome;
 
 إنشاء قيمة الخيار الحالية.
 
-### FlintVector
+### فلينتفيكتور
 
 **النوع:** الواجهة
 
@@ -1065,10 +1345,10 @@ function flintVectorFilter(
 
 #### حدود
 
-| الاسم  | اكتب                                     | الوصف |
-| ------ | ---------------------------------------- | ----- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue>          |       |
-| المسند | (القيمة: TValue، الفهرس: الرقم) => منطقي |       |
+| الاسم | اكتب | الوصف |
+| --------- | ----------------------------------------- | ----------- |
+| ناقلات | فلينتفيكتور<TValue> |             |
+| المسند | (القيمة: TValue، الفهرس: الرقم) => منطقي |             |
 
 ### flintVectorFold
 
@@ -1086,11 +1366,11 @@ function flintVectorFold(
 
 #### حدود
 
-| الاسم  | اكتب                                                      | الوصف |
-| ------ | --------------------------------------------------------- | ----- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue>                           |       |
-| الأولي | النتيجة                                                   |       |
-| المخفض | (المجمع: TResult، القيمة: TValue، الفهرس: رقم) => TResult |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------------------------------------------------- | ----------- |
+| ناقلات | فلينتفيكتور<TValue> |             |
+| الأولي | النتيجة |             |
+| المخفض | (المجمع: TResult، القيمة: TValue، الفهرس: رقم) => TResult |             |
 
 ### flintVectorGet
 
@@ -1104,10 +1384,10 @@ function flintVectorGet(vector: FlintVector<TValue>, index: number): FlintOption
 
 #### حدود
 
-| الاسم  | اكتب                            | الوصف |
-| ------ | ------------------------------- | ----- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
-| الفهرس | رقم                             |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------- | ----------- |
+| ناقلات | فلينتفيكتور<TValue> |             |
+| الفهرس | رقم |             |
 
 ### flintVectorLength
 
@@ -1121,9 +1401,9 @@ function flintVectorLength(vector: FlintVector<TValue>): number;
 
 #### حدود
 
-| الاسم  | اكتب                            | الوصف |
-| ------ | ------------------------------- | ----- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------- | ----------- |
+| ناقلات | فلينتفيكتور<TValue> |             |
 
 ### flintVectorMap
 
@@ -1140,10 +1420,10 @@ function flintVectorMap(
 
 #### حدود
 
-| الاسم  | اكتب                                       | الوصف |
-| ------ | ------------------------------------------ | ----- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue>            |       |
-| تحويل  | (القيمة: TValue، الفهرس: الرقم) => TResult |       |
+| الاسم | اكتب | الوصف |
+| --------- | ----------------------------------------- | ----------- |
+| ناقلات | فلينتفيكتور<TValue> |             |
+| تحويل | (القيمة: TValue، الفهرس: الرقم) => TResult |             |
 
 ### flintVectorPop
 
@@ -1160,9 +1440,9 @@ function flintVectorPop(vector: FlintVector<TValue>): {
 
 #### حدود
 
-| الاسم  | اكتب                            | الوصف |
-| ------ | ------------------------------- | ----- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------- | ----------- |
+| ناقلات | فلينتفيكتور<TValue> |             |
 
 ### flintVectorPush
 
@@ -1176,10 +1456,10 @@ function flintVectorPush(vector: FlintVector<TValue>, value: TValue): FlintVecto
 
 #### حدود
 
-| الاسم  | اكتب                            | الوصف |
-| ------ | ------------------------------- | ----- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
-| القيمة | TValue                          |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------- | ----------- |
+| ناقلات | فلينتفيكتور<TValue> |             |
+| القيمة | TValue |             |
 
 ### flintVectorSet
 
@@ -1189,15 +1469,15 @@ function flintVectorPush(vector: FlintVector<TValue>, value: TValue): FlintVecto
 function flintVectorSet(vector: FlintVector<TValue>, index: number, value: TValue): FlintVector<TValue>;
 ```
 
-استبدال عنصر ناقل؛ مؤشرات غير صالحة ترمي RangeError.
+استبدال عنصر متجه؛ مؤشرات غير صالحة ترمي RangeError.
 
 #### حدود
 
-| الاسم  | اكتب                            | الوصف |
-| ------ | ------------------------------- | ----- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
-| الفهرس | رقم                             |       |
-| القيمة | TValue                          |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------- | ----------- |
+| ناقلات | فلينتفيكتور<TValue> |             |
+| الفهرس | رقم |             |
+| القيمة | TValue |             |
 
 ### flintVectorTrySet
 
@@ -1215,11 +1495,11 @@ function flintVectorTrySet(
 
 #### حدود
 
-| الاسم  | اكتب                            | الوصف |
-| ------ | ------------------------------- | ----- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
-| الفهرس | رقم                             |       |
-| القيمة | TValue                          |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------- | ----------- |
+| ناقلات | فلينتفيكتور<TValue> |             |
+| الفهرس | رقم |             |
+| القيمة | TValue |             |
 
 ## `src/ecs`
 
@@ -1236,16 +1516,24 @@ function addFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+إرفاق مكون بكيان إذا لم يكن موجودًا بالفعل.
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
-| كيان   | FlintEcsEntity                 |       |
-| المكون | سلسلة                          |       |
-| القيمة | TValue                         |       |
+| الاسم | اكتب | الوصف |
+| --------- | --------------------- | ------------------------- |
+| العالم | فلينت إيكس وورلد<TValue> | - لقطة العالم الحالي. |
+| كيان | فلينتيكسينتي | - الكيان المستهدف.          |
+| المكون | سلسلة |                           |
+| القيمة | TValue | - بيانات قيمة المكون.   |
+
+#### عقد
+
+- **@param:** - لقطة للعالم الحالي.
+- **@param:** - الكيان المستهدف.
+- **@param:** - اسم المكون.
+- **@param:** - بيانات قيمة المكون.
+- **@returns:** نتيجة نتيجة الانتقال.
 
 ### createFlintEcsScheduler
 
@@ -1260,16 +1548,21 @@ function createFlintEcsScheduler(
 ): FlintEcsScheduler<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+إنشاء جدولة خط أنابيب تنفيذ ECS.
 
 #### حدود
 
-| الاسم      | اكتب                                 | الوصف |
-| ---------- | ------------------------------------ | ----- |
-| أنظمة      | للقراءة فقط FlintEcsSystem<TValue>[] |       |
-| إشارات     | للقراءة فقط FlintEcsSignal[]         |       |
-| اشتراكات   | للقراءة فقط FlintEcsSubscription[]   |       |
-| ماكس ستيبس |                                      |       |
+| الاسم | اكتب | الوصف |
+| ------------- | --------------------------------- | -------------------------------------------------- |
+| أنظمة | للقراءة فقط FlintEcsSystem<TValue>[] | - تسلسل أنظمة التسجيل في خط الأنابيب. |
+| إشارات | للقراءة فقط FlintEcsSignal[] |                                                    |
+| اشتراكات | للقراءة فقط FlintEcsSubscription[] |                                                    |
+| ماكس ستيبس |                                   |                                                    |
+
+#### عقد
+
+- **@param:** - تسلسل الأنظمة المطلوب تسجيلها في المسار.
+- **@returns:** تم تكوين مثيل FlintEcsScheduler.
 
 ### createFlintEcsWorld
 
@@ -1279,7 +1572,11 @@ function createFlintEcsScheduler(
 function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+تهيئة عالم نظام مكونات الكيان الفارغ.
+
+#### عقد
+
+- **@returns:** مثيل FlintEcsWorld الذي تمت تهيئته حديثًا.
 
 ### despawnFlintEcsEntity
 
@@ -1289,14 +1586,20 @@ function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): FlintEcsResult<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+يلغي كيانًا ما، ويزيد من توليده ويزيل جميع المكونات المرتبطة به.
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
-| كيان   | FlintEcsEntity                 |       |
+| الاسم | اكتب | الوصف |
+| ------ | --------------------- | ------------------------- |
+| العالم | فلينت إيكس وورلد<TValue> | - لقطة العالم الحالي. |
+| كيان | فلينتيكسينتي | - كيان لليأس.      |
+
+#### عقد
+
+- **@param:** - لقطة للعالم الحالي.
+- **@param:** - الكيان المراد التخلص منه.
+- **@returns:** نتيجة نتيجة الانتقال.
 
 ### FlintEcsComponentStore
 
@@ -1306,7 +1609,7 @@ function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEnt
 export interface FlintEcsComponentStore<TValue = Uint8Array>
 ```
 
-لم يتم تقديم أي وصف.
+يقوم تخزين المكونات بتعيين أرقام فهرس الكيانات إلى مثيلات المكونات.
 
 ### FlintEcsEntity
 
@@ -1316,7 +1619,7 @@ export interface FlintEcsComponentStore<TValue = Uint8Array>
 export interface FlintEcsEntity
 ```
 
-لم يتم تقديم أي وصف.
+كيان جيلي خفيف الوزن يجمع بين الفهرس وعداد التوليد.
 
 ### FlintEcsEntityResult
 
@@ -1326,7 +1629,7 @@ export interface FlintEcsEntity
 export interface FlintEcsEntityResult<TValue = Uint8Array>
 ```
 
-لم يتم تقديم أي وصف.
+نتيجة طفرة في الكيان تعيد العالم المعدل ومقبض الكيان.
 
 ### FlintEcsQuery
 
@@ -1336,7 +1639,7 @@ export interface FlintEcsEntityResult<TValue = Uint8Array>
 export interface FlintEcsQuery
 ```
 
-لم يتم تقديم أي وصف.
+مواصفات استعلام الكيان التي تحدد مفاتيح المكونات المطلوبة والمستبعدة.
 
 ### FlintEcsResult
 
@@ -1346,7 +1649,7 @@ export interface FlintEcsQuery
 export type FlintEcsResult<TValue = Uint8Array> = |
 ```
 
-لم يتم تقديم أي وصف.
+النتيجة النهائية لعملية انتقال ECS، سواء كانت ناجحة أو فاشلة.
 
 ### FlintEcsScheduler
 
@@ -1356,7 +1659,7 @@ export type FlintEcsResult<TValue = Uint8Array> = |
 export interface FlintEcsScheduler<TValue = Uint8Array>
 ```
 
-لم يتم تقديم أي وصف.
+جدولة خطوط الأنابيب وتنسيق مراحل النظام وتوصيل الإشارة.
 
 ### FlintEcsScheduleResult
 
@@ -1366,7 +1669,7 @@ export interface FlintEcsScheduler<TValue = Uint8Array>
 export interface FlintEcsScheduleResult<TValue = Uint8Array>
 ```
 
-لم يتم تقديم أي وصف.
+نتيجة تنفيذ جدول ECS عبر خطوات النظام المتعددة.
 
 ### FlintEcsSignal
 
@@ -1376,9 +1679,9 @@ export interface FlintEcsScheduleResult<TValue = Uint8Array>
 export interface FlintEcsSignal
 ```
 
-لم يتم تقديم أي وصف.
+إشارة تغيير الحدث أو الحالة المنبعثة أثناء تنفيذ نظام ECS.
 
-### FlintEcsSubscription
+### FlintEcsاشتراك
 
 **النوع:** الواجهة
 
@@ -1386,7 +1689,7 @@ export interface FlintEcsSignal
 export interface FlintEcsSubscription
 ```
 
-لم يتم تقديم أي وصف.
+ربط الاشتراك إشارة إلى رد اتصال معالج الحدث.
 
 ### FlintEcsSystem
 
@@ -1396,7 +1699,7 @@ export interface FlintEcsSubscription
 export interface FlintEcsSystem<TValue = Uint8Array>
 ```
 
-لم يتم تقديم أي وصف.
+وحدة تنفيذ النظام تعمل على تحويل عالم ECS بناءً على الاستعلامات والتحديثات.
 
 ### FlintEcsTransition
 
@@ -1406,7 +1709,7 @@ export interface FlintEcsSystem<TValue = Uint8Array>
 export interface FlintEcsTransition<TValue = Uint8Array>
 ```
 
-لم يتم تقديم أي وصف.
+انتقال العالم المسجل الذي يوضح تفاصيل العالم السابق والعالم التالي والإشارات المنبعثة.
 
 ### FlintEcsWorld
 
@@ -1416,7 +1719,7 @@ export interface FlintEcsTransition<TValue = Uint8Array>
 export interface FlintEcsWorld<TValue = Uint8Array>
 ```
 
-لم يتم تقديم أي وصف.
+لقطة ثابتة لعالم نظام مكونات الكيان.
 
 ### getFlintEcsComponent
 
@@ -1430,15 +1733,22 @@ function getFlintEcsComponent(
 ): TValue | undefined;
 ```
 
-لم يتم تقديم أي وصف.
+يسترد نسخة المكون المرفقة بكيان.
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
-| كيان   | FlintEcsEntity                 |       |
-| المكون | سلسلة                          |       |
+| الاسم | اكتب | الوصف |
+| --------- | --------------------- | ------------------------- |
+| العالم | فلينت إيكس وورلد<TValue> | - لقطة العالم الحالي. |
+| كيان | فلينتيكسينتي | - الكيان المستهدف.          |
+| المكون | سلسلة |                           |
+
+#### عقد
+
+- **@param:** - لقطة للعالم الحالي.
+- **@param:** - الكيان المستهدف.
+- **@param:** - اسم المكون.
+- **@returns:** قيمة المكون أو غير محددة في حالة عدم وجودها.
 
 ### isFlintEcsEntityAlive
 
@@ -1448,14 +1758,20 @@ function getFlintEcsComponent(
 function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): boolean;
 ```
 
-لم يتم تقديم أي وصف.
+يحدد ما إذا كان مقبض الكيان يتطابق مع الجيل النشط في العالم.
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
-| كيان   | FlintEcsEntity                 |       |
+| الاسم | اكتب | الوصف |
+| ------ | --------------------- | ------------------------- |
+| العالم | فلينت إيكس وورلد<TValue> | - لقطة العالم الحالي. |
+| كيان | فلينتيكسينتي | - التعامل مع الكيان للتحقق. |
+
+#### عقد
+
+- **@param:** - لقطة للعالم الحالي.
+- **@param:** - مؤشر الكيان المطلوب التحقق منه.
+- **@returns:** صحيح إذا كان على قيد الحياة.
 
 ### queryFlintEcsEntities
 
@@ -1465,16 +1781,22 @@ function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEnt
 function queryFlintEcsEntities(world: FlintEcsWorld<TValue>, query: FlintEcsQuery): readonly FlintEcsEntity[];
 ```
 
-لم يتم تقديم أي وصف.
+الاستعلام عن الكيانات النشطة المطابقة لمعايير تصفية المكونات.
 
 #### حدود
 
-| الاسم   | اكتب                           | الوصف |
-| ------- | ------------------------------ | ----- |
-| العالم  | فورجويب سكريبتEcsWorld<TValue> |       |
-| استعلام | FlintEcsQuery                  |       |
+| الاسم | اكتب | الوصف |
+| ----- | --------------------- | ----------------------------- |
+| العالم | فلينت إيكس وورلد<TValue> | - لقطة العالم الحالي.     |
+| استعلام | فلينتيكسكويري | - مواصفات مرشح الاستعلام. |
 
-### إزالة FlintEcsComponent
+#### عقد
+
+- **@param:** - لقطة للعالم الحالي.
+- **@param:** - مواصفات مرشح الاستعلام.
+- **@returns:** مجموعة من مقابض الكيانات المطابقة.
+
+### RemoveFlintEcsComponent
 
 **النوع:** الوظيفة
 
@@ -1486,15 +1808,22 @@ function removeFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+يزيل مكونًا من كيان.
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
-| كيان   | FlintEcsEntity                 |       |
-| المكون | سلسلة                          |       |
+| الاسم | اكتب | الوصف |
+| --------- | --------------------- | ------------------------- |
+| العالم | فلينت إيكس وورلد<TValue> | - لقطة العالم الحالي. |
+| كيان | فلينتيكسينتي | - الكيان المستهدف.          |
+| المكون | سلسلة |                           |
+
+#### عقد
+
+- **@param:** - لقطة للعالم الحالي.
+- **@param:** - الكيان المستهدف.
+- **@param:** - اسم المكون المطلوب إزالته.
+- **@returns:** نتيجة نتيجة الانتقال.
 
 ### runFlintEcsScheduler
 
@@ -1507,14 +1836,20 @@ function runFlintEcsScheduler(
 ): FlintEcsScheduleResult<TValue> | Extract<FlintEcsResult<TValue>, { readonly ok: false }>;
 ```
 
-لم يتم تقديم أي وصف.
+تشغيل خط أنابيب جدولة ECS عبر جميع الأنظمة والمراحل المسجلة.
 
 #### حدود
 
-| الاسم  | اكتب                              | الوصف |
-| ------ | --------------------------------- | ----- |
-| العالم | فورجويب سكريبتEcsWorld<TValue>    |       |
-| مجدول  | فورجيويبسكربتEcsScheduler<TValue> |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------------------------- | -------------------------------- |
+| العالم | فلينت إيكس وورلد<TValue> | - لقطة العالم الأولية.        |
+| مجدول | فلينتيكسجدولر<TValue> | - خط أنابيب جدولة تكوينه. |
+
+#### عقد
+
+- **@param:** - لقطة العالم الأولية.
+- **@param:** - خط أنابيب المجدول الذي تم تكوينه.
+- **@returns:** جدولة تقرير التنفيذ.
 
 ### setFlintEcsComponent
 
@@ -1529,16 +1864,24 @@ function setFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+يقوم بتعيين أو استبدال قيمة مكون في كيان ما.
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
-| كيان   | FlintEcsEntity                 |       |
-| المكون | سلسلة                          |       |
-| القيمة | TValue                         |       |
+| الاسم | اكتب | الوصف |
+| --------- | --------------------- | ------------------------- |
+| العالم | فلينت إيكس وورلد<TValue> | - لقطة العالم الحالي. |
+| كيان | فلينتيكسينتي | - الكيان المستهدف.          |
+| المكون | سلسلة |                           |
+| القيمة | TValue | - بيانات قيمة المكون.   |
+
+#### عقد
+
+- **@param:** - لقطة للعالم الحالي.
+- **@param:** - الكيان المستهدف.
+- **@param:** - اسم المكون.
+- **@param:** - بيانات قيمة المكون.
+- **@returns:** نتيجة نتيجة الانتقال.
 
 ### SpawnFlintEcsEntity
 
@@ -1548,13 +1891,18 @@ function setFlintEcsComponent(
 function spawnFlintEcsEntity(world: FlintEcsWorld<TValue>): FlintEcsEntityResult<TValue>;
 ```
 
-لم يتم تقديم أي وصف.
+يخصص مقبض كيان جديد ويضيفه إلى العالم.
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
+| الاسم | اكتب | الوصف |
+| ----- | --------------------- | ------------------------- |
+| العالم | فلينت إيكس وورلد<TValue> | - لقطة العالم الحالي. |
+
+#### عقد
+
+- **@param:** - لقطة للعالم الحالي.
+- **@returns:** نتيجة الكيان التي تحتوي على العالم المحدث والكيان الجديد.
 
 ### validateFlintEcsSignals
 
@@ -1566,15 +1914,31 @@ function validateFlintEcsSignals(
 ): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
-لم يتم تقديم أي وصف.
+التحقق من صحة سلسلة من الإشارات مقابل تعريفات الإشارة المعلنة.
 
 #### حدود
 
-| الاسم  | اكتب                         | الوصف |
-| ------ | ---------------------------- | ----- |
-| إشارات | للقراءة فقط FlintEcsSignal[] |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------- | ------------------------------- |
+| إشارات | للقراءة فقط FlintEcsSignal[] | - مجموعة من الإشارات للتحقق من صحتها. |
+
+#### عقد
+
+- **@param:** - مجموعة من الإشارات للتحقق من صحتها.
+- **@returns:** كائن ذو حالة صالحة ورسائل خطأ.
 
 ## `src/host`
+
+### AtomicRingBufferChannel
+
+**النوع:** فئة
+
+```typescript
+export class AtomicRingBufferChannel
+```
+
+مزامنة تحديثات مؤشر الرأس/الذيل الذري على ذاكرة المخزن المؤقت لحلقة التشغيل المتداخل للمضيف المشترك.
+يستخدم عمليات التخزين/التحميل الذري المتوافقة مع WebAssembly مع ضمانات ترتيب الذاكرة لمنع حالات السباق.
 
 ### createDefaultFlintCapabilities
 
@@ -1584,13 +1948,18 @@ function validateFlintEcsSignals(
 function createDefaultFlintCapabilities(options: FlintDefaultHostOptions = {}): FlintCapabilityRegistry;
 ```
 
-لم يتم تقديم أي وصف.
+ينشئ موفري القدرة المضمنين الافتراضيين (مثل env.now).
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| خيارات | فورجيويبسكريبتديفولهوستوبتيونس |       |
+| الاسم | اكتب | الوصف |
+| ------- | ----------------------- | ------------------------------------------------- |
+| خيارات | فلينتديفاولت هوستوبتيونس | - خيارات التكوين للقدرات الافتراضية. |
+
+#### عقد
+
+- **@param:** - خيارات التكوين للإمكانيات الافتراضية.
+- **@returns:** التسجيل مع تطبيقات القدرة الافتراضية.
 
 ### createFlintHost
 
@@ -1604,17 +1973,24 @@ function createFlintHost(
 ): FlintHost;
 ```
 
-لم يتم تقديم أي وصف.
+إنشاء بيئة مضيفة في وقت التشغيل تربط عمليات استيراد الضيف بالإمكانيات المعتمدة.
 
 #### حدود
 
-| الاسم   | اكتب                       | الوصف |
-| ------- | -------------------------- | ----- |
-| بيان    | FlintAbiManifest           |       |
-| التسجيل | FlintCapabilityRegistry    |       |
-| خيارات  | فورجيويبسكريبت هوستوبتيونس |       |
+| الاسم | اكتب | الوصف |
+| -------- | ----------------------- | ------------------------------------------------------------ |
+| بيان | فلينتابيمانيفيست | - بيان ABI يصف القدرات والواردات المطلوبة. |
+| التسجيل | فلينت كابابيليتي ريجيستري | - سجل تطبيقات القدرات المتاحة.          |
+| خيارات | خيارات فلينت هوست | - خيارات التكوين لتهيئة المضيف.             |
 
-### تنفيذ FlintCapability
+#### عقد
+
+- **@param:** - بيان ABI الذي يصف الإمكانات المطلوبة وعمليات الاستيراد.
+- **@param:** - سجل تطبيقات القدرات المتاحة.
+- **@param:** - خيارات التكوين لتهيئة المضيف.
+- **@returns:** مثيل FlintHost الذي تم تكوينه.
+
+### تنفيذ قدرة فلينت
 
 **النوع:** الواجهة
 
@@ -1622,7 +1998,7 @@ function createFlintHost(
 export interface FlintCapabilityImplementation
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ قدرة المضيف بتسجيل معالج الاستدعاء وتوقيع ABI.
 
 ### FlintCapabilityRegistry
 
@@ -1632,7 +2008,7 @@ export interface FlintCapabilityImplementation
 export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImplementation>>;
 ```
 
-لم يتم تقديم أي وصف.
+تعيين أسماء القدرات لموفري التنفيذ المضيفين.
 
 ### FlintDefaultHostOptions
 
@@ -1642,9 +2018,39 @@ export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImp
 export interface FlintDefaultHostOptions
 ```
 
-لم يتم تقديم أي وصف.
+خيارات التكوين لموفري الإمكانات الافتراضية المضمنة.
 
-### FlintHost
+### فلينتفورينكول
+
+**النوع:** النوع
+
+```typescript
+export type FlintForeignCall = (symbol: string, arguments_: readonly unknown[]) => unknown | Promise<unknown>;
+```
+
+معالج استدعاء القدرة الأجنبية المضيفة.
+
+### تنفيذ القدرة الأجنبية فلينت
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintForeignCapabilityImplementation
+```
+
+مضيف واصف تنفيذ القدرات الأجنبية.
+
+### FlintForeignCapabilityRegistry
+
+**النوع:** النوع
+
+```typescript
+export type FlintForeignCapabilityRegistry = Readonly<Record<string, FlintForeignCapabilityImplementation>>;
+```
+
+سجل تطبيقات القدرات الأجنبية المتاحة.
+
+### فلينت هوست
 
 **النوع:** الواجهة
 
@@ -1652,7 +2058,7 @@ export interface FlintDefaultHostOptions
 export interface FlintHost
 ```
 
-لم يتم تقديم أي وصف.
+يوفر مضيف التنفيذ إمكانية استدعاء القدرات وإدارة مدى الحياة لوحدات الضيف.
 
 ### FlintHostCall
 
@@ -1662,9 +2068,9 @@ export interface FlintHost
 export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promise<unknown>;
 ```
 
-لم يتم تقديم أي وصف.
+يتم استدعاء وظيفة المضيف القابلة للاستدعاء من خلال تنفيذ وقت تشغيل الضيف.
 
-### خيارات FlintHostOptions
+### FlintHostOptions
 
 **النوع:** الواجهة
 
@@ -1672,7 +2078,52 @@ export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promis
 export interface FlintHostOptions
 ```
 
+خيارات التكوين لتهيئة مثيل FlintHost.
+
+### MAX_FFI_CALL_DEPTH
+
+**النوع:** ثابت
+
+```typescript
+export const MAX_FFI_CALL_DEPTH;
+```
+
 لم يتم تقديم أي وصف.
+
+### TimingSafeEqualString
+
+**النوع:** الوظيفة
+
+```typescript
+function timingSafeEqualString(stringA: string, stringB: string): boolean;
+```
+
+إجراء مقارنة زمنية ثابتة بين سلسلتين لمنع توقيت هجمات القناة الجانبية على المعرفات ذات الأهمية الأمنية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| سلسلة أ | سلسلة |             |
+| سلسلة ب | سلسلة |             |
+
+### validateHostPointerBounds
+
+**النوع:** الوظيفة
+
+```typescript
+function validateHostPointerBounds(pointer: number, length: number, memoryLimit = 0xff_ff_ff_ff): boolean;
+```
+
+التحقق من أن إزاحة مؤشر المضيف وطوله يلبيان ثوابت الحدود المكانية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ------ | ----------- |
+| المؤشر | رقم |             |
+| الطول | رقم |             |
+| حد الذاكرة |        |             |
 
 ## `src/iterator`
 
@@ -1692,11 +2143,11 @@ function createFlintWasmIterator(
 
 #### حدود
 
-| الاسم  | اكتب                                         | الوصف |
-| ------ | -------------------------------------------- | ----- |
-| مقبض   | رقم                                          |       |
-| التالي | (المقبض: الرقم) => FlintPackedIteratorResult |       |
-| خيارات | فورجي ويب سكريبت WasmIteratorOptions<TValue> |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------------------------------- | ----------- |
+| مقبض | رقم |             |
+| التالي | (المقبض: الرقم) => FlintPackedIteratorResult |             |
+| خيارات | فلينتواسميتيراتوروبشن<TValue> |             |
 
 ### createFlintWasmIteratorFactory
 
@@ -1714,11 +2165,11 @@ function createFlintWasmIteratorFactory(
 
 #### حدود
 
-| الاسم  | اكتب                                         | الوصف |
-| ------ | -------------------------------------------- | ----- |
-| مصنع   | (...arguments_: TArguments) => الرقم         |       |
-| التالي | (المقبض: الرقم) => FlintPackedIteratorResult |       |
-| خيارات | فورجي ويب سكريبت WasmIteratorOptions<TValue> |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------------------------------- | ----------- |
+| مصنع | (...arguments_: TArguments) => الرقم |             |
+| التالي | (المقبض: الرقم) => FlintPackedIteratorResult |             |
+| خيارات | فلينتواسميتيراتوروبشن<TValue> |             |
 
 ### FlintPackedIteratorResult
 
@@ -1728,7 +2179,7 @@ function createFlintWasmIteratorFactory(
 export type FlintPackedIteratorResult = number | bigint;
 ```
 
-لم يتم تقديم أي وصف.
+تم إرجاع تمثيل رقمي معبأ لاستدعاء المكرر التالي من WebAssembly.
 
 ### FlintWasmIterator
 
@@ -1738,7 +2189,7 @@ export type FlintPackedIteratorResult = number | bigint;
 export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TValue>
 ```
 
-لم يتم تقديم أي وصف.
+مكرر JavaScript وجسر قابل للتكرار يغلف مقبض حالة مكرر WebAssembly.
 
 ### FlintWasmIteratorOptions
 
@@ -1748,7 +2199,7 @@ export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TV
 export interface FlintWasmIteratorOptions<TValue>
 ```
 
-لم يتم تقديم أي وصف.
+خيارات التكوين لإنشاء غلاف مكرر WebAssembly.
 
 ## `src/logging`
 
@@ -1760,13 +2211,18 @@ export interface FlintWasmIteratorOptions<TValue>
 function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 ```
 
-لم يتم تقديم أي وصف.
+ينشئ مثيل FlintLogger محدد النطاق مع تصفية وأحواض خطورة مخصصة.
 
 #### حدود
 
-| الاسم  | اكتب                       | الوصف |
-| ------ | -------------------------- | ----- |
-| خيارات | فورجيويبسكريبتلوججروبتيونس |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------ | -------------------------------------------------- |
+| خيارات | خيارات فلينتلوجر | - خيارات التكوين لتهيئة المسجل. |
+
+#### عقد
+
+- **@param:** - خيارات التكوين لتهيئة المسجل.
+- **@returns:** مثيل FlintLogger الذي تم تكوينه.
 
 ### FlintLogEvent
 
@@ -1776,9 +2232,9 @@ function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 export interface FlintLogEvent
 ```
 
-لم يتم تقديم أي وصف.
+حدث سجل وقت التشغيل المنظم المنبعث من المسجل.
 
-### FlintLogger
+### فلينتلوغر
 
 **النوع:** الواجهة
 
@@ -1786,7 +2242,7 @@ export interface FlintLogEvent
 export interface FlintLogger
 ```
 
-لم يتم تقديم أي وصف.
+واجهة تسجيل تشخيصية محددة النطاق لتتبع أحداث وقت التشغيل.
 
 ### FlintLoggerOptions
 
@@ -1796,7 +2252,7 @@ export interface FlintLogger
 export interface FlintLoggerOptions
 ```
 
-لم يتم تقديم أي وصف.
+خيارات التكوين لتهيئة مثيل مسجل وقت التشغيل.
 
 ### FlintLogLevel
 
@@ -1806,9 +2262,9 @@ export interface FlintLoggerOptions
 export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 ```
 
-لم يتم تقديم أي وصف.
+مستويات خطورة التسجيل المدعومة لتسجيل أحداث وقت التشغيل.
 
-### FlintLogSink
+### فلينتلوجسينك
 
 **النوع:** النوع
 
@@ -1816,7 +2272,4133 @@ export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 export type FlintLogSink = (event: FlintLogEvent) => void;
 ```
 
-لم يتم تقديم أي وصف.
+وظيفة رد اتصال المستهلك تتلقى أحداث سجل وقت التشغيل المنظمة.
+
+## `src/math/bignum`
+
+### createFlintDMatrix
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintDMatrix(rows: number, cols: number, data?: readonly number[]): FlintDMatrix;
+```
+
+تنفيذ عملية إنشاء مصفوفة فلينت د.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ----------------- | ----------- |
+| صفوف | رقم |             |
+| كولز | رقم |             |
+| البيانات | رقم للقراءة فقط[] |             |
+
+### createFlintTensor
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintTensor(shape: FlintTensorShape, data: readonly TValue[]): FlintTensor<TValue>;
+```
+
+تنفيذ عملية إنشاء موتر الصوان.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ----------------- | ----------- |
+| الشكل | فلينتتينسورشيب |             |
+| البيانات | للقراءة فقط TValue[] |             |
+
+### createFlintTensorShape
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintTensorShape(dimensions: readonly number[]): FlintTensorShape;
+```
+
+تنفيذ عملية إنشاء شكل موتر الصوان.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------- | ----------- |
+| الأبعاد | رقم للقراءة فقط[] |             |
+
+### createFlintTensorView
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintTensorView(shape: FlintTensorShape, data: readonly TValue[], offset = 0): FlintTensorView<TValue>;
+```
+
+تنفيذ عملية إنشاء عرض موتر الصوان.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ----------------- | ----------- |
+| الشكل | فلينتتينسورشيب |             |
+| البيانات | للقراءة فقط TValue[] |             |
+| إزاحة |                   |             |
+
+### FlintCholeskyDecomposition
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintCholeskyDecomposition
+```
+
+تمثيل التحلل تشوليسكي.
+
+### FlintDMatrix
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintDMatrix
+```
+
+تمثيل المصفوفة D.
+
+### flintDMatrixAddInplace
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixAddInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+تنفيذ عملية إضافة مصفوفة d في مكانها.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------ | ----------- |
+| مصفوفة أ | فلينتدماتريكس |             |
+| مصفوفة ب | فلينتدماتريكس |             |
+
+### flintDMatrixCholesky
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixCholesky(matrix: FlintDMatrix): FlintOption<FlintCholeskyDecomposition>;
+```
+
+تنفيذ عملية تشوليسكي مصفوفة د.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------------ | ----------- |
+| مصفوفة | فلينتدماتريكس |             |
+
+### flintDMatrixCholeskySolve
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixCholeskySolve(
+  chol: FlintCholeskyDecomposition,
+  rhsVector: FlintDMatrix,
+): FlintOption<FlintDMatrix>;
+```
+
+تنفيذ عملية حل مصفوفة تشوليسكي.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | -------------------------- | ----------- |
+| تشول | تحليل فلينت تشوليسكي |             |
+| rhsVector | فلينتدماتريكس |             |
+
+### flintDMatrixDeterminant
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixDeterminant(matrix: FlintDMatrix): FlintOption<number>;
+```
+
+تنفيذ عملية محدد مصفوفة د.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------------ | ----------- |
+| مصفوفة | فلينتدماتريكس |             |
+
+### flintDMatrixEigenSymmetric
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixEigenSymmetric(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintEigenDecomposition>;
+```
+
+إجراء عملية متماثلة لمصفوفة d.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------- | ------------ | ----------- |
+| مصفوفة | فلينتدماتريكس |             |
+| التكرارات القصوى |              |             |
+| إبسيلون |              |             |
+
+### flintDMatrixGet
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixGet(matrix: FlintDMatrix, row: number, col: number): FlintOption<number>;
+```
+
+تنفيذ عملية الحصول على مصفوفة d.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------------ | ----------- |
+| مصفوفة | فلينتدماتريكس |             |
+| صف | رقم |             |
+| العقيد | رقم |             |
+
+### flintDMatrixIdentity
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixIdentity(size: number): FlintDMatrix;
+```
+
+تنفيذ عملية هوية المصفوفة d.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| الحجم | رقم |             |
+
+### flintDMatrixInverse
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixInverse(matrix: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+إجراء عملية معكوسة للمصفوفة d.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------------ | ----------- |
+| مصفوفة | فلينتدماتريكس |             |
+
+### فلينتDMatrixLU
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixLU(matrix: FlintDMatrix): FlintOption<FlintLUDecomposition>;
+```
+
+تنفيذ عملية d مصفوفة l u.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------------ | ----------- |
+| مصفوفة | فلينتدماتريكس |             |
+
+### flintDMatrixMul
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixMul(matrixA: FlintDMatrix, matrixB: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+تنفيذ عملية d مصفوفة مول.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------ | ----------- |
+| مصفوفة أ | فلينتدماتريكس |             |
+| مصفوفة ب | فلينتدماتريكس |             |
+
+### flintDMatrixMulAccumulate
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixMulAccumulate(
+  outMatrix: FlintDMatrix,
+  matrixA: FlintDMatrix,
+  matrixB: FlintDMatrix,
+  alpha = 1,
+): boolean;
+```
+
+تنفيذ عملية تجميع مصفوفة d.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | ------------ | ----------- |
+| أوت ماتريكس | فلينتدماتريكس |             |
+| مصفوفة أ | فلينتدماتريكس |             |
+| مصفوفة ب | فلينتدماتريكس |             |
+| ألفا |              |             |
+
+### flintDMatrixPseudoinverse
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixPseudoinverse(matrix: FlintDMatrix, epsilon = FLINT_MATH_EPSILON): FlintOption<FlintDMatrix>;
+```
+
+إجراء عملية عكسية زائفة للمصفوفة d.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------ | ----------- |
+| مصفوفة | فلينتدماتريكس |             |
+| إبسيلون |              |             |
+
+### فلينتDMatrixQR
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixQR(matrix: FlintDMatrix): FlintOption<FlintQRDecomposition>;
+```
+
+تنفيذ عملية d مصفوفة q r.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------------ | ----------- |
+| مصفوفة | فلينتدماتريكس |             |
+
+### flintDMatrixScaleInplace
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixScaleInplace(matrix: FlintDMatrix, factor: number): void;
+```
+
+قم بتنفيذ عملية مقياس المصفوفة d في مكانها.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------------ | ----------- |
+| مصفوفة | فلينتدماتريكس |             |
+| عامل | رقم |             |
+
+### flintDMatrixSet
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixSet(matrix: FlintDMatrix, row: number, col: number, value: number): boolean;
+```
+
+تنفيذ عملية مجموعة المصفوفة d.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------------ | ----------- |
+| مصفوفة | فلينتدماتريكس |             |
+| صف | رقم |             |
+| العقيد | رقم |             |
+| القيمة | رقم |             |
+
+### flintDMatrixSolve
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixSolve(matrixA: FlintDMatrix, rhsVector: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+تنفيذ عملية حل مصفوفة د.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | ------------ | ----------- |
+| مصفوفة أ | فلينتدماتريكس |             |
+| rhsVector | فلينتدماتريكس |             |
+
+### flintDMatrixSubInplace
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixSubInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+تنفيذ عملية d مصفوفة فرعية في مكانها.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------ | ----------- |
+| مصفوفة أ | فلينتدماتريكس |             |
+| مصفوفة ب | فلينتدماتريكس |             |
+
+### flintDMatrixSVD
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixSVD(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintSVDDecomposition>;
+```
+
+تنفيذ عملية d مصفوفة s v d.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------- | ------------ | ----------- |
+| مصفوفة | فلينتدماتريكس |             |
+| التكرارات القصوى |              |             |
+| إبسيلون |              |             |
+
+### flintDMatrixTranspose
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixTranspose(matrix: FlintDMatrix): FlintDMatrix;
+```
+
+تنفيذ عملية تبديل مصفوفة d.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------------ | ----------- |
+| مصفوفة | فلينتدماتريكس |             |
+
+### flintDMatrixZeros
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDMatrixZeros(rows: number, cols: number): FlintDMatrix;
+```
+
+تنفيذ عملية الأصفار مصفوفة د.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| صفوف | رقم |             |
+| كولز | رقم |             |
+
+### FlintEigenDecomposition
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintEigenDecomposition
+```
+
+تمثيل التحلل الذاتي.
+
+### FlintLUDecomposition
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintLUDecomposition
+```
+
+L U تمثيل التحلل.
+
+### فلينتQRالتحلل
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintQRDecomposition
+```
+
+QR تمثيل التحلل.
+
+### FlintSVDDecomposition
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintSVDDecomposition
+```
+
+تمثيل التحلل SVD.
+
+### فلينتتينسور
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintTensor<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+تمثيل الموتر.
+
+### flintTensorFill
+
+**النوع:** الوظيفة
+
+```typescript
+function flintTensorFill(shape: FlintTensorShape, value: TValue): FlintTensor<TValue>;
+```
+
+تنفيذ عملية تعبئة الموتر.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---------------- | ----------- |
+| الشكل | فلينتتينسورشيب |             |
+| القيمة | TValue |             |
+
+### flintTensorMatmul
+
+**النوع:** الوظيفة
+
+```typescript
+function flintTensorMatmul(
+  tensorA: FlintTensor<number>,
+  tensorB: FlintTensor<number>,
+): FlintOption<FlintTensor<number>>;
+```
+
+تنفيذ عملية الموتر matmul.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------------- | ----------- |
+| الموتر أ | فلينتتينسور<number> |             |
+| الموتر ب | فلينتتينسور<number> |             |
+
+### flintTensorReshape
+
+**النوع:** الوظيفة
+
+```typescript
+function flintTensorReshape(tensor: FlintTensor<TValue>, newShape: FlintTensorShape): FlintOption<FlintTensor<TValue>>;
+```
+
+إجراء عملية إعادة تشكيل الموتر.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------------------- | ----------- |
+| الموتر | فلينتتينسور<TValue> |             |
+| شكل جديد | فلينتتينسورشيب |             |
+
+### FlintTensorShape
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintTensorShape
+```
+
+تمثيل شكل الموتر.
+
+### flintTensorShapeSize
+
+**النوع:** الوظيفة
+
+```typescript
+function flintTensorShapeSize(shape: FlintTensorShape): number;
+```
+
+تنفيذ عملية حجم شكل الموتر.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---------------- | ----------- |
+| الشكل | فلينتتينسورشيب |             |
+
+### flintTensorSlice
+
+**النوع:** الوظيفة
+
+```typescript
+function flintTensorSlice(
+  view: FlintTensorView<TValue>,
+  axis: number,
+  start: number,
+  length: number,
+): FlintOption<FlintTensorView<TValue>>;
+```
+
+تنفيذ عملية شريحة الموتر.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ----------------------- | ----------- |
+| عرض | فلينتتينسورفيو<TValue> |             |
+| المحور | رقم |             |
+| ابدأ | رقم |             |
+| الطول | رقم |             |
+
+### flintTensorView
+
+**النوع:** الوظيفة
+
+```typescript
+function flintTensorView(tensor: FlintTensor<TValue>): FlintTensorView<TValue>;
+```
+
+تنفيذ عملية عرض الموتر.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------------------- | ----------- |
+| الموتر | فلينتتينسور<TValue> |             |
+
+### FlintTensorView
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintTensorView<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+تمثيل عرض الموتر.
+
+### flintTensorViewGet
+
+**النوع:** الوظيفة
+
+```typescript
+function flintTensorViewGet(view: FlintTensorView<TValue>, indices: readonly number[]): FlintOption<TValue>;
+```
+
+تنفيذ عرض الموتر للحصول على العملية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ----------------------- | ----------- |
+| عرض | فلينتتينسورفيو<TValue> |             |
+| المؤشرات | رقم للقراءة فقط[] |             |
+
+### flintTensorViewSet
+
+**النوع:** الوظيفة
+
+```typescript
+function flintTensorViewSet(view: FlintTensorView<TValue>, indices: readonly number[], value: TValue): boolean;
+```
+
+تنفيذ عملية مجموعة عرض الموتر.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ----------------------- | ----------- |
+| عرض | فلينتتينسورفيو<TValue> |             |
+| المؤشرات | رقم للقراءة فقط[] |             |
+| القيمة | TValue |             |
+
+## `src/math/ieee754`
+
+### createFlintColorRgba
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintColorRgba(red = 0, green = 0, blue = 0, alpha = 1): FlintColorRgba;
+```
+
+تنفيذ عملية إنشاء لون الصوان rgba.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---- | ----------- |
+| أحمر |      |             |
+| أخضر |      |             |
+| أزرق |      |             |
+| ألفا |      |             |
+
+### FLINT_MATH_DEG_TO_RAD
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_MATH_DEG_TO_RAD;
+```
+
+عامل التحويل من الدرجات إلى الراديان.
+
+### FLINT_MATH_E
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_MATH_E;
+```
+
+ثابت أويلر (هـ).
+
+### FLINT_MATH_EPSILON
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_MATH_EPSILON;
+```
+
+ثابت أويلر (هـ).
+
+### FLINT_MATH_F32_EPSILON
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_MATH_F32_EPSILON;
+```
+
+آلة إبسيلون لعمليات الفاصلة العائمة 32 بت.
+
+### FLINT_MATH_PI
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_MATH_PI;
+```
+
+الثوابت الرياضية القياسية لوقت تشغيل فلينت.
+
+### FLINT_MATH_RAD_TO_DEG
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_MATH_RAD_TO_DEG;
+```
+
+معامل التحويل من الراديان إلى الدرجات.
+
+### FLINT_MATH_SQRT2
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_MATH_SQRT2;
+```
+
+الجذر التربيعي لـ 2 ثابت.
+
+### FLINT_MATH_TAU
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_MATH_TAU;
+```
+
+2 * ثابت دائرة PI (tau).
+
+### فلينتApproxEqual
+
+**النوع:** الوظيفة
+
+```typescript
+function flintApproxEqual(first: number, second: number, epsilon = FLINT_MATH_EPSILON): boolean;
+```
+
+اختبار المساواة التقريبية ضمن إبسيلون المحدد.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| الأول | رقم |             |
+| الثانية | رقم |             |
+| إبسيلون |        |             |
+
+### flintCeil
+
+**النوع:** الوظيفة
+
+```typescript
+function flintCeil(value: number): number;
+```
+
+حساب أصغر عدد صحيح أكبر من أو يساوي x.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | رقم |             |
+
+### flintClamp
+
+**النوع:** الوظيفة
+
+```typescript
+function flintClamp(value: number, minimum: number, maximum: number): number;
+```
+
+قم بتثبيت قيمة رقمية بين الحد الأدنى والحد الأقصى.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| القيمة | رقم |             |
+| الحد الأدنى | رقم |             |
+| الحد الأقصى | رقم |             |
+
+### FlintColorHsv
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintColorHsv
+```
+
+تمثيل اللون Hsv.
+
+### flintColorHsvToRgb
+
+**النوع:** الوظيفة
+
+```typescript
+function flintColorHsvToRgb(hsv: FlintColorHsv): FlintColorRgba;
+```
+
+تنفيذ عملية اللون hsv إلى rgb.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------------- | ----------- |
+| هسف | فلينتكولورهسف |             |
+
+### flintColorLerpOklab
+
+**النوع:** الوظيفة
+
+```typescript
+function flintColorLerpOklab(first: FlintColorRgba, second: FlintColorRgba, factor: number): FlintColorRgba;
+```
+
+تنفيذ عملية Color lerp oklab.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | -------------- | ----------- |
+| الأول | فلينت كولور رغبا |             |
+| الثانية | فلينت كولور رغبا |             |
+| عامل | رقم |             |
+
+### flintColorLinearToSrgb
+
+**النوع:** الوظيفة
+
+```typescript
+function flintColorLinearToSrgb(color: FlintColorRgba): FlintColorRgba;
+```
+
+تنفيذ اللون الخطي لعملية srgb.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | -------------- | ----------- |
+| اللون | فلينت كولور رغبا |             |
+
+### FlintColorOklab
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintColorOklab
+```
+
+تمثيل اللون Oklab.
+
+### flintColorOklabToSrgb
+
+**النوع:** الوظيفة
+
+```typescript
+function flintColorOklabToSrgb(lab: FlintColorOklab): FlintColorRgba;
+```
+
+أداء اللون oklab لعملية srgb.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | --------------- | ----------- |
+| معمل | فلينت كولور أوكلاب |             |
+
+### FlintColorRgba
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintColorRgba
+```
+
+تمثيل اللون Rgba.
+
+### flintColorRgbToHsv
+
+**النوع:** الوظيفة
+
+```typescript
+function flintColorRgbToHsv(color: FlintColorRgba): FlintColorHsv;
+```
+
+تنفيذ عملية اللون rgb إلى hsv.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | -------------- | ----------- |
+| اللون | فلينت كولور رغبا |             |
+
+### flintColorSrgbToLinear
+
+**النوع:** الوظيفة
+
+```typescript
+function flintColorSrgbToLinear(color: FlintColorRgba): FlintColorRgba;
+```
+
+تنفيذ اللون srgb للتشغيل الخطي.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | -------------- | ----------- |
+| اللون | فلينت كولور رغبا |             |
+
+### flintColorSrgbToOklab
+
+**النوع:** الوظيفة
+
+```typescript
+function flintColorSrgbToOklab(color: FlintColorRgba): FlintColorOklab;
+```
+
+تنفيذ لون srgb لعملية oklab.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | -------------- | ----------- |
+| اللون | فلينت كولور رغبا |             |
+
+### flintDegrees
+
+**النوع:** الوظيفة
+
+```typescript
+function flintDegrees(radians: number): number;
+```
+
+تحويل راديان إلى درجات.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| راديان | رقم |             |
+
+### flintFloor
+
+**النوع:** الوظيفة
+
+```typescript
+function flintFloor(value: number): number;
+```
+
+حساب أكبر عدد صحيح أقل من أو يساوي x.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | رقم |             |
+
+### flintFract
+
+**النوع:** الوظيفة
+
+```typescript
+function flintFract(value: number): number;
+```
+
+حساب الجزء الكسري: x - الكلمة(x).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | رقم |             |
+
+### flintLerp
+
+**النوع:** الوظيفة
+
+```typescript
+function flintLerp(start: number, end: number, factor: number): number;
+```
+
+يتم الاستيفاء خطيًا بين البداية والنهاية حسب العامل.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------ | ----------- |
+| ابدأ | رقم |             |
+| النهاية | رقم |             |
+| عامل | رقم |             |
+
+### فلينت راديان
+
+**النوع:** الوظيفة
+
+```typescript
+function flintRadians(degrees: number): number;
+```
+
+تحويل الدرجات إلى راديان.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| درجات | رقم |             |
+
+### flintSign
+
+**النوع:** الوظيفة
+
+```typescript
+function flintSign(value: number): number;
+```
+
+علامة الإرجاع لـ x (1، -1، 0، أو NaN).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | رقم |             |
+
+### فلينتسموثستيب
+
+**النوع:** الوظيفة
+
+```typescript
+function flintSmoothstep(edge0: number, edge1: number, value: number): number;
+```
+
+الاستيفاء السلس هيرميت بين edge0 و edge1.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| الحافة0 | رقم |             |
+| edge1 | رقم |             |
+| القيمة | رقم |             |
+
+### flintStep
+
+**النوع:** الوظيفة
+
+```typescript
+function flintStep(edge: number, value: number): number;
+```
+
+تقوم الدالة الخطوة بإرجاع 0 إذا كانت x < edge، و1 بخلاف ذلك.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| الحافة | رقم |             |
+| القيمة | رقم |             |
+
+## `src/math/transcendental`
+
+### createFlintAABB2
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintAABB2(minPoint: FlintVec2, maxPoint: FlintVec2): FlintAABB2;
+```
+
+قم بإجراء عملية إنشاء صوان a a b b 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | --------- | ----------- |
+| مين بوينت | فلينتفيك2 |             |
+| ماكس بوينت | فلينتفيك2 |             |
+
+### إنشاءFlintAABB3
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintAABB3(minPoint: FlintVec3, maxPoint: FlintVec3): FlintAABB3;
+```
+
+قم بإجراء عملية إنشاء صوان a a b b 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | --------- | ----------- |
+| مين بوينت | فلينتفيك3 |             |
+| ماكس بوينت | فلينتفيك3 |             |
+
+### createFlintBVHNode3
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintBVHNode3(
+  bounds: FlintAABB3,
+  leftChild: number,
+  rightChild: number,
+  primitiveIndex: number,
+): FlintBVHNode3;
+```
+
+قم بإجراء عملية إنشاء فلينت b v h node 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------------- | ---------- | ----------- |
+| حدود | فلينتAABB3 |             |
+| اليسار الطفل | رقم |             |
+| حق الطفل | رقم |             |
+| الفهرس البدائي | رقم |             |
+
+### createFlintBVHTree3
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintBVHTree3(nodes: readonly FlintBVHNode3[], rootIndex = 0): FlintBVHTree3;
+```
+
+تنفيذ عملية إنشاء شجرة الصوان b v h 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | ------------------------ | ----------- |
+| العقد | للقراءة فقط FlintBVHNode3[] |             |
+| فهرس الجذر |                          |             |
+
+### createFlintCircle
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintCircle(center: FlintVec2, radius: number): FlintCircle;
+```
+
+تنفيذ عملية إنشاء دائرة الصوان.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مركز | فلينتفيك2 |             |
+| نصف القطر | رقم |             |
+
+### createFlintOBB2
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintOBB2(center: FlintVec2, halfExtents: FlintVec2, angleRad = 0): FlintOBB2;
+```
+
+تنفيذ عملية إنشاء الصوان o b b 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | --------- | ----------- |
+| مركز | فلينتفيك2 |             |
+| نصف الامتدادات | فلينتفيك2 |             |
+| زاوية راد |           |             |
+
+### createFlintOBB3
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintOBB3(
+  center: FlintVec3,
+  halfExtents: FlintVec3,
+  orientation: FlintQuat = flintQuatIdentity(),
+): FlintOBB3;
+```
+
+قم بتنفيذ عملية إنشاء فلينت أو ب ب 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | --------- | ----------- |
+| مركز | فلينتفيك3 |             |
+| نصف الامتدادات | فلينتفيك3 |             |
+| التوجه | فلينت كوات |             |
+
+### createFlintPlane3
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintPlane3(normal: FlintVec3, distance: number): FlintPlane3;
+```
+
+تنفيذ عملية إنشاء طائرة الصوان 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | --------- | ----------- |
+| عادي | فلينتفيك3 |             |
+| المسافة | رقم |             |
+
+### createFlintRay2
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintRay2(origin: FlintVec2, direction: FlintVec2): FlintRay2;
+```
+
+تنفيذ عملية إنشاء شعاع الصوان 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | --------- | ----------- |
+| الأصل | فلينتفيك2 |             |
+| الاتجاه | فلينتفيك2 |             |
+
+### إنشاءFlintRay3
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintRay3(origin: FlintVec3, direction: FlintVec3): FlintRay3;
+```
+
+تنفيذ عملية إنشاء فلينت راي 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | --------- | ----------- |
+| الأصل | فلينتفيك3 |             |
+| الاتجاه | فلينتفيك3 |             |
+
+### createFlintRayHit3
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintRayHit3(
+  hit: boolean,
+  t: number,
+  point: FlintVec3,
+  normal: FlintVec3,
+  primitiveId: number,
+): FlintRayHit3;
+```
+
+تنفيذ عملية إنشاء شعاع الصوان ضرب 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | --------- | ----------- |
+| ضرب | منطقية |             |
+| ر | رقم |             |
+| نقطة | فلينتفيك3 |             |
+| عادي | فلينتفيك3 |             |
+| المعرف البدائي | رقم |             |
+
+### createFlintSegment2
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintSegment2(startPoint: FlintVec2, endPoint: FlintVec2): FlintSegment2;
+```
+
+تنفيذ عملية إنشاء قطعة الصوان 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------- | ----------- |
+| نقطة البداية | فلينتفيك2 |             |
+| نقطة النهاية | فلينتفيك2 |             |
+
+### createFlintSegment3
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintSegment3(startPoint: FlintVec3, endPoint: FlintVec3): FlintSegment3;
+```
+
+تنفيذ عملية إنشاء قطعة الصوان 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------- | ----------- |
+| نقطة البداية | فلينتفيك3 |             |
+| نقطة النهاية | فلينتفيك3 |             |
+
+### createFlintSphere
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintSphere(center: FlintVec3, radius: number): FlintSphere;
+```
+
+تنفيذ عملية إنشاء كرة الصوان.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مركز | فلينتفيك3 |             |
+| نصف القطر | رقم |             |
+
+### createFlintTriangle2
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintTriangle2(pointA: FlintVec2, pointB: FlintVec2, pointC: FlintVec2): FlintTriangle2;
+```
+
+تنفيذ عملية إنشاء مثلث الصوان 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| النقطة أ | فلينتفيك2 |             |
+| النقطة ب | فلينتفيك2 |             |
+| بوينت ج | فلينتفيك2 |             |
+
+### createFlintTriangle3
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintTriangle3(pointA: FlintVec3, pointB: FlintVec3, pointC: FlintVec3): FlintTriangle3;
+```
+
+تنفيذ عملية إنشاء مثلث الصوان 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| النقطة أ | فلينتفيك3 |             |
+| النقطة ب | فلينتفيك3 |             |
+| بوينت ج | فلينتفيك3 |             |
+
+### فلينتAABB2
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintAABB2
+```
+
+تمثيل أ أ ب ب 2.
+
+### فلينتAABB2Area
+
+**النوع:** الوظيفة
+
+```typescript
+function flintAABB2Area(box: FlintAABB2): number;
+```
+
+إجراء عملية منطقة a b b 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ---------- | ----------- |
+| صندوق | فلينتAABB2 |             |
+
+### flintAABB2ContainsPoint
+
+**النوع:** الوظيفة
+
+```typescript
+function flintAABB2ContainsPoint(box: FlintAABB2, point: FlintVec2): boolean;
+```
+
+تنفيذ a b b 2 يحتوي على عملية النقطة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---------- | ----------- |
+| صندوق | فلينتAABB2 |             |
+| نقطة | فلينتفيك2 |             |
+
+### فلينتAABB2 يتقاطعAABB2
+
+**النوع:** الوظيفة
+
+```typescript
+function flintAABB2IntersectsAABB2(first: FlintAABB2, second: FlintAABB2): boolean;
+```
+
+إجراء عملية a a b b 2 يتقاطع a a b b 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---------- | ----------- |
+| الأول | فلينتAABB2 |             |
+| الثانية | فلينتAABB2 |             |
+
+### فلينتAABB2Union
+
+**النوع:** الوظيفة
+
+```typescript
+function flintAABB2Union(first: FlintAABB2, second: FlintAABB2): FlintAABB2;
+```
+
+تنفيذ عملية الاتحاد a b b 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---------- | ----------- |
+| الأول | فلينتAABB2 |             |
+| الثانية | فلينتAABB2 |             |
+
+### فلينتAABB3
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintAABB3
+```
+
+تمثيل أ ب ب 3.
+
+### flintAABB3ContainsPoint
+
+**النوع:** الوظيفة
+
+```typescript
+function flintAABB3ContainsPoint(box: FlintAABB3, point: FlintVec3): boolean;
+```
+
+تنفيذ a b b 3 يحتوي على عملية النقطة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---------- | ----------- |
+| صندوق | فلينتAABB3 |             |
+| نقطة | فلينتفيك3 |             |
+
+### فلينتAABB3 يتقاطعAABB3
+
+**النوع:** الوظيفة
+
+```typescript
+function flintAABB3IntersectsAABB3(first: FlintAABB3, second: FlintAABB3): boolean;
+```
+
+إجراء عملية a a b b 3 يتقاطع a a b b 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---------- | ----------- |
+| الأول | فلينتAABB3 |             |
+| الثانية | فلينتAABB3 |             |
+
+### فلينتAABB3Volume
+
+**النوع:** الوظيفة
+
+```typescript
+function flintAABB3Volume(box: FlintAABB3): number;
+```
+
+إجراء عملية حجم a b b 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ---------- | ----------- |
+| صندوق | فلينتAABB3 |             |
+
+### فلينتBezier2Cubic
+
+**النوع:** الوظيفة
+
+```typescript
+function flintBezier2Cubic(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+تنفيذ عملية بيزير 2 مكعب.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| نقطة0 | فلينتفيك2 |             |
+| نقطة 1 | فلينتفيك2 |             |
+| نقطة2 | فلينتفيك2 |             |
+| نقطة 3 | فلينتفيك2 |             |
+| عامل | رقم |             |
+
+### فلينت بيزير2 تربيعي
+
+**النوع:** الوظيفة
+
+```typescript
+function flintBezier2Quadratic(point0: FlintVec2, point1: FlintVec2, point2: FlintVec2, factor: number): FlintVec2;
+```
+
+تنفيذ عملية بيزير 2 التربيعية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| نقطة0 | فلينتفيك2 |             |
+| نقطة 1 | فلينتفيك2 |             |
+| نقطة2 | فلينتفيك2 |             |
+| عامل | رقم |             |
+
+### فلينتBezier3Cubic
+
+**النوع:** الوظيفة
+
+```typescript
+function flintBezier3Cubic(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+تنفيذ عملية بيزير 3 مكعب.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| نقطة0 | فلينتفيك3 |             |
+| نقطة 1 | فلينتفيك3 |             |
+| نقطة2 | فلينتفيك3 |             |
+| نقطة 3 | فلينتفيك3 |             |
+| عامل | رقم |             |
+
+### flintBVHBuildFromAABBs
+
+**النوع:** الوظيفة
+
+```typescript
+function flintBVHBuildFromAABBs(boxes: readonly FlintAABB3[]): FlintBVHTree3;
+```
+
+تنفيذ b v h build من عملية a b bs.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | --------------------- | ----------- |
+| صناديق | للقراءة فقط FlintAABB3[] |             |
+
+### فلينتBVHNode3
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintBVHNode3
+```
+
+ب ف ح Node 3 تمثيل.
+
+### flintBVHRayIntersect
+
+**النوع:** الوظيفة
+
+```typescript
+function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): FlintOption<FlintRayHit3>;
+```
+
+إجراء عملية تقاطع الشعاع b v h.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------------- | ----------- |
+| شجرة | فلينتBVHTree3 |             |
+| راي | فلينت راي 3 |             |
+
+### فلينتBVHTree3
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintBVHTree3
+```
+
+تمثيل B V H Tree 3.
+
+### فلينتكاتمولروم2
+
+**النوع:** الوظيفة
+
+```typescript
+function flintCatmullRom2(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+قم بإجراء عملية catmull rom 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| نقطة0 | فلينتفيك2 |             |
+| نقطة 1 | فلينتفيك2 |             |
+| نقطة2 | فلينتفيك2 |             |
+| نقطة 3 | فلينتفيك2 |             |
+| عامل | رقم |             |
+
+### فلينتكاتمولروم3
+
+**النوع:** الوظيفة
+
+```typescript
+function flintCatmullRom3(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+قم بإجراء عملية catmull rom 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| نقطة0 | فلينتفيك3 |             |
+| نقطة 1 | فلينتفيك3 |             |
+| نقطة2 | فلينتفيك3 |             |
+| نقطة 3 | فلينتفيك3 |             |
+| عامل | رقم |             |
+
+### فلينت سيركل
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintCircle
+```
+
+تمثيل الدائرة.
+
+### flintCircleContainsPoint
+
+**النوع:** الوظيفة
+
+```typescript
+function flintCircleContainsPoint(circle: FlintCircle, point: FlintVec2): boolean;
+```
+
+تنفيذ دائرة تحتوي على عملية نقطة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ----------- | ----------- |
+| دائرة | فلينت سيركل |             |
+| نقطة | فلينتفيك2 |             |
+
+### flintCircleIntersectsCircle
+
+**النوع:** الوظيفة
+
+```typescript
+function flintCircleIntersectsCircle(first: FlintCircle, second: FlintCircle): boolean;
+```
+
+تنفيذ عملية الدائرة تتقاطع مع الدائرة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ----------- | ----------- |
+| الأول | فلينت سيركل |             |
+| الثانية | فلينت سيركل |             |
+
+### فلينت فروستوم
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintFrustum
+```
+
+تمثيل فروستوم.
+
+### flintFrustumFromViewProj
+
+**النوع:** الوظيفة
+
+```typescript
+function flintFrustumFromViewProj(viewProj: FlintMat4): FlintFrustum;
+```
+
+تنفيذ عملية الإحباط من عرض المشروع.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | --------- | ----------- |
+| عرض المشروع | فلينت مات 4 |             |
+
+### flintFrustumIntersectsSphere
+
+**النوع:** الوظيفة
+
+```typescript
+function flintFrustumIntersectsSphere(frustum: FlintFrustum, sphere: FlintSphere): boolean;
+```
+
+تنفيذ عملية المجال المتقاطع.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------ | ----------- |
+| محبط | فلينت فروستوم |             |
+| المجال | فلينت سفير |             |
+
+### فلينتOBB2
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintOBB2
+```
+
+تمثيل O B B 2 .
+
+### فلينتOBB3
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintOBB3
+```
+
+تمثيل O B B 3 .
+
+### طائرة فلينت3
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintPlane3
+```
+
+تمثيل الطائرة 3.
+
+### flintPlane3DistanceToPoint
+
+**النوع:** الوظيفة
+
+```typescript
+function flintPlane3DistanceToPoint(plane: FlintPlane3, point: FlintVec3): number;
+```
+
+أداء الطائرة 3 المسافة إلى نقطة العملية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ----------- | ----------- |
+| طائرة | فلينت بلان 3 |             |
+| نقطة | فلينتفيك3 |             |
+
+### فلينتراي2
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintRay2
+```
+
+تمثيل راي 2
+
+### فلينتراي3
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintRay3
+```
+
+تمثيل راي 3
+
+### flintRay3IntersectOBB
+
+**النوع:** الوظيفة
+
+```typescript
+function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOption<number>;
+```
+
+تنفيذ عملية تقاطع الشعاع 3 o b b.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | --------- | ----------- |
+| راي | فلينت راي 3 |             |
+| أوب | فلينتOBB3 |             |
+
+### فلينت راي 3 يتقاطع مع AABB3
+
+**النوع:** الوظيفة
+
+```typescript
+function flintRay3IntersectsAABB3(ray: FlintRay3, box: FlintAABB3): FlintOption<number>;
+```
+
+قم بإجراء عملية تقاطع الشعاع 3 a a b b 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ---------- | ----------- |
+| راي | فلينت راي 3 |             |
+| صندوق | فلينتAABB3 |             |
+
+### فلينت راي 3 يتقاطع مع الطائرة 3
+
+**النوع:** الوظيفة
+
+```typescript
+function flintRay3IntersectsPlane3(ray: FlintRay3, plane: FlintPlane3): FlintOption<number>;
+```
+
+قم بإجراء عملية الشعاع 3 الذي يتقاطع مع المستوى 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ----------- | ----------- |
+| راي | فلينت راي 3 |             |
+| طائرة | فلينت بلان 3 |             |
+
+### flintRay3IntersectsSphere
+
+**النوع:** الوظيفة
+
+```typescript
+function flintRay3IntersectsSphere(ray: FlintRay3, sphere: FlintSphere): FlintOption<number>;
+```
+
+تنفيذ عملية تقاطع الشعاع 3 مع الكرة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ----------- | ----------- |
+| راي | فلينت راي 3 |             |
+| المجال | فلينت سفير |             |
+
+### فلينت راي 3 يتقاطع مع المثلث 3
+
+**النوع:** الوظيفة
+
+```typescript
+function flintRay3IntersectsTriangle3(ray: FlintRay3, triangle: FlintTriangle3): FlintOption<number>;
+```
+
+إجراء عملية الشعاع 3 الذي يتقاطع مع المثلث 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | -------------- | ----------- |
+| راي | فلينت راي 3 |             |
+| مثلث | مثلث فلينت3 |             |
+
+### فلينت راي هيت3
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintRayHit3
+```
+
+راي هيت 3 التمثيل.
+
+### فلينتSegment2
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintSegment2
+```
+
+تمثيل الجزء 2.
+
+### فلينتSegment3
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintSegment3
+```
+
+تمثيل الجزء 3.
+
+### فلينتسفير
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintSphere
+```
+
+تمثيل المجال.
+
+### flintSphereContainsPoint
+
+**النوع:** الوظيفة
+
+```typescript
+function flintSphereContainsPoint(sphere: FlintSphere, point: FlintVec3): boolean;
+```
+
+أداء المجال يحتوي على عملية نقطة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ----------- | ----------- |
+| المجال | فلينت سفير |             |
+| نقطة | فلينتفيك3 |             |
+
+### flintSphereIntersectsSphere
+
+**النوع:** الوظيفة
+
+```typescript
+function flintSphereIntersectsSphere(first: FlintSphere, second: FlintSphere): boolean;
+```
+
+أداء المجال يتقاطع العملية المجال.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ----------- | ----------- |
+| الأول | فلينت سفير |             |
+| الثانية | فلينت سفير |             |
+
+### مثلث فلينت2
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintTriangle2
+```
+
+تمثيل المثلث 2
+
+### flintTriangle2Area
+
+**النوع:** الوظيفة
+
+```typescript
+function flintTriangle2Area(triangle: FlintTriangle2): number;
+```
+
+تنفيذ عملية منطقة المثلث 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | -------------- | ----------- |
+| مثلث | فلينتتريانجل 2 |             |
+
+### مثلث فلينت3
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintTriangle3
+```
+
+تمثيل المثلث 3.
+
+### flintTriangle3Normal
+
+**النوع:** الوظيفة
+
+```typescript
+function flintTriangle3Normal(triangle: FlintTriangle3): FlintVec3;
+```
+
+تنفيذ المثلث 3 العملية العادية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | -------------- | ----------- |
+| مثلث | مثلث فلينت3 |             |
+
+## `src/math/vector`
+
+### createFlintIVec2
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintIVec2(coordX = 0, coordY = 0): FlintIVec2;
+```
+
+تنفيذ عملية إنشاء فلينت i vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---- | ----------- |
+| كوردكس |      |             |
+| تنسيق |      |             |
+
+### createFlintIVec3
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintIVec3(coordX = 0, coordY = 0, coordZ = 0): FlintIVec3;
+```
+
+تنفيذ عملية إنشاء فلينت i vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---- | ----------- |
+| كوردكس |      |             |
+| تنسيق |      |             |
+| كوردز |      |             |
+
+### createFlintMat2
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintMat2(column0OrElements?: FlintVec2 | readonly number[], column1?: FlintVec2): FlintMat2;
+```
+
+تنفيذ عملية إنشاء حصيرة الصوان 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------------- | ------------------------------ | ----------- |
+| العمود 0 أو العناصر | فلينتفيك2 \| رقم للقراءة فقط[] |             |
+| العمود 1 | فلينتفيك2 |             |
+
+### createFlintMat3
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintMat3(
+  column0OrElements?: FlintVec3 | readonly number[],
+  column1?: FlintVec3,
+  column2?: FlintVec3,
+): FlintMat3;
+```
+
+تنفيذ عملية إنشاء حصيرة الصوان 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------------- | ------------------------------ | ----------- |
+| العمود 0 أو العناصر | فلينتفيك3 \| رقم للقراءة فقط[] |             |
+| العمود 1 | فلينتفيك3 |             |
+| العمود 2 | فلينتفيك3 |             |
+
+### createFlintMat4
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintMat4(
+  column0OrElements?: FlintVec4 | readonly number[],
+  column1?: FlintVec4,
+  column2?: FlintVec4,
+  column3?: FlintVec4,
+): FlintMat4;
+```
+
+تنفيذ عملية إنشاء حصيرة الصوان 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------------- | ------------------------------ | ----------- |
+| العمود 0 أو العناصر | فلينتفيك4 \| رقم للقراءة فقط[] |             |
+| العمود 1 | فلينتفيك4 |             |
+| العمود 2 | فلينتفيك4 |             |
+| العمود 3 | فلينتفيك4 |             |
+
+### createFlintQuat
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintQuat(coordX = 0, coordY = 0, coordZ = 0, coordW = 1): FlintQuat;
+```
+
+تنفيذ عملية إنشاء فلينت كوات.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---- | ----------- |
+| كوردكس |      |             |
+| تنسيق |      |             |
+| كوردز |      |             |
+| التنسيقW |      |             |
+
+### createFlintVec2
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintVec2(coordX = 0, coordY = 0): FlintVec2;
+```
+
+تنفيذ عملية إنشاء فلينت vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---- | ----------- |
+| كوردكس |      |             |
+| تنسيق |      |             |
+
+### createFlintVec3
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintVec3(coordX = 0, coordY = 0, coordZ = 0): FlintVec3;
+```
+
+تنفيذ عملية إنشاء فلينت vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---- | ----------- |
+| كوردكس |      |             |
+| تنسيق |      |             |
+| كوردز |      |             |
+
+### createFlintVec4
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintVec4(coordX = 0, coordY = 0, coordZ = 0, coordW = 0): FlintVec4;
+```
+
+تنفيذ عملية إنشاء فلينت vec 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---- | ----------- |
+| كوردكس |      |             |
+| تنسيق |      |             |
+| كوردز |      |             |
+| التنسيقW |      |             |
+
+### فلينت IVec2
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintIVec2
+```
+
+ناقل عدد صحيح ثنائي الأبعاد.
+
+### فلينت IVec3
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintIVec3
+```
+
+ناقل عدد صحيح ثلاثي الأبعاد.
+
+### فلينت مات2
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintMat2
+```
+
+تمثيل حصيرة 2.
+
+### flintMat2Add
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat2Add(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+تنفيذ عملية إضافة حصيرة 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينت مات2 |             |
+| الثانية | فلينت مات2 |             |
+
+### flintMat2Determinant
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat2Determinant(matrix: FlintMat2): number;
+```
+
+تنفيذ عملية تحديد حصيرة 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات2 |             |
+
+### flintMat2FromCols
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat2FromCols(column0: FlintVec2, column1: FlintVec2): FlintMat2;
+```
+
+تنفيذ حصيرة 2 من عملية cols.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | --------- | ----------- |
+| العمود0 | فلينتفيك2 |             |
+| العمود 1 | فلينتفيك2 |             |
+
+### flintMat2Identity
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat2Identity(): FlintMat2;
+```
+
+تنفيذ عملية هوية mat 2.
+
+### flintMat2Inverse
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat2Inverse(matrix: FlintMat2): FlintOption<FlintMat2>;
+```
+
+قم بتنفيذ العملية العكسية لـ mat 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات2 |             |
+
+### flintMat2Mul
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat2Mul(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+قم بتنفيذ عملية mat 2 mul.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينت مات2 |             |
+| الثانية | فلينت مات2 |             |
+
+### flintMat2Rotation
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat2Rotation(angleRad: number): FlintMat2;
+```
+
+قم بإجراء عملية دوران الحصيرة 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| زاوية راد | رقم |             |
+
+### flintMat2Scale
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat2Scale(matrix: FlintMat2, scalar: number): FlintMat2;
+```
+
+تنفيذ عملية مقياس حصيرة 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات2 |             |
+| العددية | رقم |             |
+
+### flintMat2Scaling
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat2Scaling(scaleVector: FlintVec2): FlintMat2;
+```
+
+تنفيذ عملية قياس الحصيرة 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | --------- | ----------- |
+| مقياس المتجهات | فلينتفيك2 |             |
+
+### flintMat2Sub
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat2Sub(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+قم بتنفيذ العملية الفرعية mat 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينت مات2 |             |
+| الثانية | فلينت مات2 |             |
+
+### flintMat2TransformVec2
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat2TransformVec2(matrix: FlintMat2, vector: FlintVec2): FlintVec2;
+```
+
+تنفيذ عملية تحويل mat 2 vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات2 |             |
+| ناقلات | فلينتفيك2 |             |
+
+### flintMat2Transpose
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat2Transpose(matrix: FlintMat2): FlintMat2;
+```
+
+تنفيذ عملية تبديل الحصيرة 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات2 |             |
+
+### فلينت مات3
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintMat3
+```
+
+تمثيل حصيرة 3.
+
+### flintMat3Add
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3Add(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+تنفيذ عملية الإضافة 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينت مات3 |             |
+| الثانية | فلينت مات3 |             |
+
+### flintMat3Determinant
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3Determinant(matrix: FlintMat3): number;
+```
+
+تنفيذ عملية تحديد حصيرة 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات3 |             |
+
+### flintMat3FromCols
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3FromCols(column0: FlintVec3, column1: FlintVec3, column2: FlintVec3): FlintMat3;
+```
+
+تنفيذ حصيرة 3 من عملية cols.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | --------- | ----------- |
+| العمود0 | فلينتفيك3 |             |
+| العمود 1 | فلينتفيك3 |             |
+| العمود 2 | فلينتفيك3 |             |
+
+### flintMat3Identity
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3Identity(): FlintMat3;
+```
+
+تنفيذ عملية هوية mat 3.
+
+### flintMat3Inverse
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3Inverse(matrix: FlintMat3): FlintOption<FlintMat3>;
+```
+
+قم بإجراء عملية عكسية لـ mat 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات3 |             |
+
+### flintMat3Mul
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3Mul(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+قم بتنفيذ عملية mat 3 mul.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينت مات3 |             |
+| الثانية | فلينت مات3 |             |
+
+### flintMat3Rotate2D
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3Rotate2D(angleRad: number): FlintMat3;
+```
+
+قم بإجراء عملية التدوير 3 لـ 2 d.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| زاوية راد | رقم |             |
+
+### flintMat3Scale
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3Scale(matrix: FlintMat3, scalar: number): FlintMat3;
+```
+
+قم بتنفيذ عملية مقياس mat 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات3 |             |
+| العددية | رقم |             |
+
+### flintMat3Scale2D
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3Scale2D(scale: FlintVec2): FlintMat3;
+```
+
+تنفيذ عملية حصيرة 3 مقياس 2 د.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | --------- | ----------- |
+| مقياس | فلينتفيك2 |             |
+
+### flintMat3Sub
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3Sub(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+قم بتنفيذ العملية الفرعية mat 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينت مات3 |             |
+| الثانية | فلينت مات3 |             |
+
+### flintMat3TransformVec2
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3TransformVec2(matrix: FlintMat3, vector: FlintVec2): FlintVec2;
+```
+
+قم بإجراء عملية تحويل mat 3 vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات3 |             |
+| ناقلات | فلينتفيك2 |             |
+
+### flintMat3TransformVec3
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3TransformVec3(matrix: FlintMat3, vector: FlintVec3): FlintVec3;
+```
+
+قم بإجراء عملية تحويل mat 3 vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات3 |             |
+| ناقلات | فلينتفيك3 |             |
+
+### flintMat3Translate2D
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3Translate2D(translation: FlintVec2): FlintMat3;
+```
+
+تنفيذ عملية mat 3 ترجمة 2 d.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | --------- | ----------- |
+| ترجمة | فلينتفيك2 |             |
+
+### flintMat3Transpose
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat3Transpose(matrix: FlintMat3): FlintMat3;
+```
+
+تنفيذ عملية تبديل حصيرة 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات3 |             |
+
+### فلينت مات4
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintMat4
+```
+
+تمثيل حصيرة 4.
+
+### flintMat4Add
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4Add(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+تنفيذ عملية إضافة حصيرة 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينت مات 4 |             |
+| الثانية | فلينت مات 4 |             |
+
+### flintMat4Determinant
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4Determinant(matrix: FlintMat4): number;
+```
+
+تنفيذ عملية تحديد حصيرة 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات 4 |             |
+
+### flintMat4FromCols
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4FromCols(column0: FlintVec4, column1: FlintVec4, column2: FlintVec4, column3: FlintVec4): FlintMat4;
+```
+
+تنفيذ حصيرة 4 من عملية cols.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | --------- | ----------- |
+| العمود0 | فلينتفيك4 |             |
+| العمود 1 | فلينتفيك4 |             |
+| العمود 2 | فلينتفيك4 |             |
+| العمود 3 | فلينتفيك4 |             |
+
+### flintMat4Identity
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4Identity(): FlintMat4;
+```
+
+تنفيذ عملية هوية mat 4.
+
+### flintMat4Inverse
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4Inverse(matrix: FlintMat4): FlintOption<FlintMat4>;
+```
+
+قم بإجراء عملية عكسية لـ mat 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات 4 |             |
+
+### flintMat4LookAt
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4LookAt(eye: FlintVec3, target: FlintVec3, up: FlintVec3): FlintMat4;
+```
+
+أداء حصيرة 4 نظرة على العملية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| عين | فلينتفيك3 |             |
+| الهدف | فلينتفيك3 |             |
+| فوق | فلينتفيك3 |             |
+
+### flintMat4Mul
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4Mul(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+قم بتنفيذ عملية mat 4 mul.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينت مات 4 |             |
+| الثانية | فلينت مات 4 |             |
+
+### flintMat4Orthographic
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4Orthographic(
+  left: number,
+  right: number,
+  bottom: number,
+  top: number,
+  zNear: number,
+  zFar: number,
+): FlintMat4;
+```
+
+قم بتنفيذ العملية الإملائية حصيرة 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------ | ----------- |
+| اليسار | رقم |             |
+| حق | رقم |             |
+| أسفل | رقم |             |
+| أعلى | رقم |             |
+| بالقرب | رقم |             |
+| زفار | رقم |             |
+
+### flintMat4Perspective
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4Perspective(fovYRad: number, aspect: number, zNear: number, zFar: number): FlintMat4;
+```
+
+تنفيذ عملية منظور mat 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| فوفيريراد | رقم |             |
+| الجانب | رقم |             |
+| بالقرب | رقم |             |
+| زفار | رقم |             |
+
+### flintMat4RotationAxisAngle
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4RotationAxisAngle(axis: FlintVec3, angleRad: number): FlintMat4;
+```
+
+تنفيذ عملية زاوية محور دوران حصيرة 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | --------- | ----------- |
+| المحور | فلينتفيك3 |             |
+| زاوية راد | رقم |             |
+
+### flintMat4RotationX
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4RotationX(angleRad: number): FlintMat4;
+```
+
+تنفيذ عملية دوران حصيرة 4 ×.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| زاوية راد | رقم |             |
+
+### فلينت مات 4 دوران Y
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4RotationY(angleRad: number): FlintMat4;
+```
+
+قم بتنفيذ عملية دوران mat 4 y.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| زاوية راد | رقم |             |
+
+### فلينتMat4RotationZ
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4RotationZ(angleRad: number): FlintMat4;
+```
+
+قم بإجراء عملية دوران mat 4 z.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| زاوية راد | رقم |             |
+
+### flintMat4Scale
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4Scale(matrix: FlintMat4, scalar: number): FlintMat4;
+```
+
+إجراء عملية على نطاق mat 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات 4 |             |
+| العددية | رقم |             |
+
+### flintMat4Scaling
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4Scaling(scale: FlintVec3): FlintMat4;
+```
+
+تنفيذ عملية قياس mat 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | --------- | ----------- |
+| مقياس | فلينتفيك3 |             |
+
+### flintMat4Sub
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4Sub(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+قم بتنفيذ العملية الفرعية mat 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينت مات 4 |             |
+| الثانية | فلينت مات 4 |             |
+
+### flintMat4TransformPoint3
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4TransformPoint3(matrix: FlintMat4, point: FlintVec3): FlintVec3;
+```
+
+تنفيذ عملية تحويل نقطة 4 حصيرة 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات 4 |             |
+| نقطة | فلينتفيك3 |             |
+
+### flintMat4TransformVec4
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4TransformVec4(matrix: FlintMat4, vector: FlintVec4): FlintVec4;
+```
+
+قم بإجراء عملية تحويل mat 4 vec 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات 4 |             |
+| ناقلات | فلينتفيك4 |             |
+
+### flintMat4TransformVector3
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4TransformVector3(matrix: FlintMat4, vector: FlintVec3): FlintVec3;
+```
+
+قم بإجراء عملية تحويل mat 4 لناقل 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات 4 |             |
+| ناقلات | فلينتفيك3 |             |
+
+### flintMat4Translation
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4Translation(offset: FlintVec3): FlintMat4;
+```
+
+تنفيذ عملية ترجمة mat 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| إزاحة | فلينتفيك3 |             |
+
+### flintMat4Transpose
+
+**النوع:** الوظيفة
+
+```typescript
+function flintMat4Transpose(matrix: FlintMat4): FlintMat4;
+```
+
+تنفيذ عملية تبديل حصيرة 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| مصفوفة | فلينت مات 4 |             |
+
+### فلينتكوات
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintQuat
+```
+
+تمثيل كوات.
+
+### flintQuatConjugate
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatConjugate(quaternion: FlintQuat): FlintQuat;
+```
+
+إجراء عملية الاقتران الرباعية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------- | ----------- |
+| الرباعي | فلينت كوات |             |
+
+### flintQuatDot
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatDot(first: FlintQuat, second: FlintQuat): number;
+```
+
+تنفيذ عملية الكوت دوت.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينت كوات |             |
+| الثانية | فلينت كوات |             |
+
+### flintQuatFromAxisAngle
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatFromAxisAngle(axis: FlintVec3, angleRad: number): FlintQuat;
+```
+
+إجراء عملية القرفصاء من زاوية المحور.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | --------- | ----------- |
+| المحور | فلينتفيك3 |             |
+| زاوية راد | رقم |             |
+
+### flintQuatFromEuler
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatFromEuler(pitchX: number, yawY: number, rollZ: number): FlintQuat;
+```
+
+تنفيذ quat من عملية أويلر.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------ | ----------- |
+| الملعبX | رقم |             |
+| ياوي | رقم |             |
+| رولز | رقم |             |
+
+### flintQuatIdentity
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatIdentity(): FlintQuat;
+```
+
+تنفيذ عملية تحديد هوية quat.
+
+### flintQuatInverse
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatInverse(quaternion: FlintQuat): FlintOption<FlintQuat>;
+```
+
+تنفيذ عملية quat العكسية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------- | ----------- |
+| الرباعي | فلينت كوات |             |
+
+### flintQuatMul
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatMul(first: FlintQuat, second: FlintQuat): FlintQuat;
+```
+
+قم بإجراء عملية quat mul.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينت كوات |             |
+| الثانية | فلينت كوات |             |
+
+### flintQuatNorm
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatNorm(quaternion: FlintQuat): number;
+```
+
+تنفيذ عملية quat القاعدة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------- | ----------- |
+| الرباعي | فلينت كوات |             |
+
+### flintQuatNormalize
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatNormalize(quaternion: FlintQuat): FlintQuat;
+```
+
+إجراء عملية التطبيع quat.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------- | ----------- |
+| الرباعي | فلينت كوات |             |
+
+### flintQuatNormSq
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatNormSq(quaternion: FlintQuat): number;
+```
+
+تنفيذ عملية quat norm sq.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------- | ----------- |
+| الرباعي | فلينت كوات |             |
+
+### flintQuatRotateVec3
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatRotateVec3(quaternion: FlintQuat, vector: FlintVec3): FlintVec3;
+```
+
+قم بإجراء عملية quat Rotate vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------- | ----------- |
+| الرباعي | فلينت كوات |             |
+| ناقلات | فلينتفيك3 |             |
+
+### flintQuatSlerp
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatSlerp(first: FlintQuat, second: FlintQuat, factor: number): FlintQuat;
+```
+
+إجراء عملية quat slerp.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينت كوات |             |
+| الثانية | فلينت كوات |             |
+| عامل | رقم |             |
+
+### فلينتQuatToMat3
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatToMat3(quaternion: FlintQuat): FlintMat3;
+```
+
+قم بإجراء عملية quat to mat 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------- | ----------- |
+| الرباعي | فلينت كوات |             |
+
+### فلينتQuatToMat4
+
+**النوع:** الوظيفة
+
+```typescript
+function flintQuatToMat4(quaternion: FlintQuat): FlintMat4;
+```
+
+قم بإجراء عملية quat to mat 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------- | ----------- |
+| الرباعي | فلينت كوات |             |
+
+### فلينتفيك2
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintVec2
+```
+
+ناقل النقطة العائمة ثنائي الأبعاد.
+
+### flintVec2Add
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Add(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+تنفيذ عملية إضافة vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك2 |             |
+| الثانية | فلينتفيك2 |             |
+
+### flintVec2Angle
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Angle(first: FlintVec2, second: FlintVec2): number;
+```
+
+قم بإجراء عملية زاوية vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك2 |             |
+| الثانية | فلينتفيك2 |             |
+
+### flintVec2Distance
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Distance(first: FlintVec2, second: FlintVec2): number;
+```
+
+تنفيذ عملية vec 2 عن بعد.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك2 |             |
+| الثانية | فلينتفيك2 |             |
+
+### flintVec2DistanceSquared
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2DistanceSquared(first: FlintVec2, second: FlintVec2): number;
+```
+
+تنفيذ عملية vec 2 للمسافة المربعة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك2 |             |
+| الثانية | فلينتفيك2 |             |
+
+### flintVec2Div
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Div(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+تنفيذ عملية vec 2 div.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك2 |             |
+| العددية | رقم |             |
+
+### flintVec2Dot
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Dot(first: FlintVec2, second: FlintVec2): number;
+```
+
+قم بتنفيذ عملية vec 2 dot.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك2 |             |
+| الثانية | فلينتفيك2 |             |
+
+### flintVec2Length
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Length(vector: FlintVec2): number;
+```
+
+تنفيذ عملية طول vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك2 |             |
+
+### فلينتVec2LengthSq
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2LengthSq(vector: FlintVec2): number;
+```
+
+تنفيذ عملية vec 2 بطول مربع.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك2 |             |
+
+### flintVec2Lerp
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Lerp(first: FlintVec2, second: FlintVec2, factor: number): FlintVec2;
+```
+
+تنفيذ عملية vec 2 lerp.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك2 |             |
+| الثانية | فلينتفيك2 |             |
+| عامل | رقم |             |
+
+### فلينتVec2Mul
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Mul(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+تنفيذ عملية vec 2 mul.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك2 |             |
+| الثانية | فلينتفيك2 |             |
+
+### فلينتVec2Neg
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Neg(vector: FlintVec2): FlintVec2;
+```
+
+تنفيذ عملية vec 2 neg.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك2 |             |
+
+### flintVec2Normalize
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Normalize(vector: FlintVec2): FlintVec2;
+```
+
+تنفيذ عملية التطبيع vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك2 |             |
+
+### flintVec2PerpDot
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2PerpDot(first: FlintVec2, second: FlintVec2): number;
+```
+
+تنفيذ عملية vec 2 perp dot.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك2 |             |
+| الثانية | فلينتفيك2 |             |
+
+### flintVec2Project
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Project(vector: FlintVec2, target: FlintVec2): FlintVec2;
+```
+
+تنفيذ عملية مشروع vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك2 |             |
+| الهدف | فلينتفيك2 |             |
+
+### flintVec2Reflect
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Reflect(vector: FlintVec2, normal: FlintVec2): FlintVec2;
+```
+
+قم بتنفيذ عملية الانعكاس vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك2 |             |
+| عادي | فلينتفيك2 |             |
+
+### flintVec2Rotate
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Rotate(vector: FlintVec2, angleRad: number): FlintVec2;
+```
+
+قم بتنفيذ عملية التدوير vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | --------- | ----------- |
+| ناقلات | فلينتفيك2 |             |
+| زاوية راد | رقم |             |
+
+### flintVec2Scale
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Scale(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+تنفيذ عملية مقياس vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك2 |             |
+| العددية | رقم |             |
+
+### فلينتVec2Sub
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec2Sub(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+تنفيذ العملية الفرعية vec 2.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك2 |             |
+| الثانية | فلينتفيك2 |             |
+
+### فلينتفيك3
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintVec3
+```
+
+ناقل النقطة العائمة ثلاثي الأبعاد.
+
+### flintVec3Add
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Add(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+تنفيذ عملية إضافة vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك3 |             |
+| الثانية | فلينتفيك3 |             |
+
+### flintVec3Angle
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Angle(first: FlintVec3, second: FlintVec3): number;
+```
+
+قم بإجراء عملية زاوية vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك3 |             |
+| الثانية | فلينتفيك3 |             |
+
+### flintVec3Cross
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Cross(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+تنفيذ عملية vec 3 المتقاطعة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك3 |             |
+| الثانية | فلينتفيك3 |             |
+
+### flintVec3Distance
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Distance(first: FlintVec3, second: FlintVec3): number;
+```
+
+تنفيذ عملية vec 3 عن بعد.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك3 |             |
+| الثانية | فلينتفيك3 |             |
+
+### flintVec3DistanceSquared
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3DistanceSquared(first: FlintVec3, second: FlintVec3): number;
+```
+
+تنفيذ عملية vec 3 المسافة التربيعية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك3 |             |
+| الثانية | فلينتفيك3 |             |
+
+### flintVec3Div
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Div(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+تنفيذ عملية vec 3 div.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك3 |             |
+| العددية | رقم |             |
+
+### flintVec3Dot
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Dot(first: FlintVec3, second: FlintVec3): number;
+```
+
+تنفيذ عملية vec 3 نقطة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك3 |             |
+| الثانية | فلينتفيك3 |             |
+
+### flintVec3Length
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Length(vector: FlintVec3): number;
+```
+
+تنفيذ عملية طول vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك3 |             |
+
+### فلينتVec3LengthSq
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3LengthSq(vector: FlintVec3): number;
+```
+
+إجراء عملية vec بطول 3 مربع.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك3 |             |
+
+### flintVec3Lerp
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Lerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+تنفيذ عملية vec 3 lerp.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك3 |             |
+| الثانية | فلينتفيك3 |             |
+| عامل | رقم |             |
+
+### فلينتVec3Mul
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Mul(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+قم بإجراء عملية vec 3 mul.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك3 |             |
+| الثانية | فلينتفيك3 |             |
+
+### فلينتVec3Neg
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Neg(vector: FlintVec3): FlintVec3;
+```
+
+تنفيذ عملية vec 3 neg.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك3 |             |
+
+### flintVec3Normalize
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Normalize(vector: FlintVec3): FlintVec3;
+```
+
+تنفيذ عملية تطبيع vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك3 |             |
+
+### flintVec3Project
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Project(vector: FlintVec3, target: FlintVec3): FlintVec3;
+```
+
+تنفيذ عملية مشروع vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك3 |             |
+| الهدف | فلينتفيك3 |             |
+
+### flintVec3Reflect
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Reflect(vector: FlintVec3, normal: FlintVec3): FlintVec3;
+```
+
+قم بتنفيذ عملية الانعكاس vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك3 |             |
+| عادي | فلينتفيك3 |             |
+
+### flintVec3Refract
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Refract(vector: FlintVec3, normal: FlintVec3, eta: number): FlintVec3;
+```
+
+تنفيذ عملية الانكسار vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك3 |             |
+| عادي | فلينتفيك3 |             |
+| إيتا | رقم |             |
+
+### flintVec3Reject
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Reject(vector: FlintVec3, from: FlintVec3): FlintVec3;
+```
+
+قم بإجراء عملية الرفض vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك3 |             |
+| من | فلينتفيك3 |             |
+
+### flintVec3Scale
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Scale(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+تنفيذ عملية مقياس vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك3 |             |
+| العددية | رقم |             |
+
+### flintVec3Slerp
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Slerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+تنفيذ عملية vec 3 slerp.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك3 |             |
+| الثانية | فلينتفيك3 |             |
+| عامل | رقم |             |
+
+### فلينتVec3Sub
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec3Sub(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+تنفيذ العملية الفرعية vec 3.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك3 |             |
+| الثانية | فلينتفيك3 |             |
+
+### فلينتفيك4
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintVec4
+```
+
+4D ناقلات النقطة العائمة.
+
+### flintVec4Add
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec4Add(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+تنفيذ عملية إضافة vec 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك4 |             |
+| الثانية | فلينتفيك4 |             |
+
+### flintVec4Div
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec4Div(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+تنفيذ عملية vec 4 div.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك4 |             |
+| العددية | رقم |             |
+
+### flintVec4Dot
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec4Dot(first: FlintVec4, second: FlintVec4): number;
+```
+
+تنفيذ عملية vec 4 نقطة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك4 |             |
+| الثانية | فلينتفيك4 |             |
+
+### flintVec4Length
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec4Length(vector: FlintVec4): number;
+```
+
+قم بإجراء عملية طول vec 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك4 |             |
+
+### flintVec4Lerp
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec4Lerp(first: FlintVec4, second: FlintVec4, factor: number): FlintVec4;
+```
+
+تنفيذ عملية vec 4 lerp.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك4 |             |
+| الثانية | فلينتفيك4 |             |
+| عامل | رقم |             |
+
+### فلينتVec4Neg
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec4Neg(vector: FlintVec4): FlintVec4;
+```
+
+تنفيذ عملية vec 4 neg.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك4 |             |
+
+### flintVec4Normalize
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec4Normalize(vector: FlintVec4): FlintVec4;
+```
+
+تنفيذ عملية التطبيع vec 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك4 |             |
+
+### flintVec4Scale
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec4Scale(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+تنفيذ عملية مقياس vec 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| ناقلات | فلينتفيك4 |             |
+| العددية | رقم |             |
+
+### flintVec4Sub
+
+**النوع:** الوظيفة
+
+```typescript
+function flintVec4Sub(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+تنفيذ العملية الفرعية vec 4.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | --------- | ----------- |
+| الأول | فلينتفيك4 |             |
+| الثانية | فلينتفيك4 |             |
 
 ## `src/memory`
 
@@ -1825,28 +6407,64 @@ export type FlintLogSink = (event: FlintLogEvent) => void;
 **النوع:** الوظيفة
 
 ```typescript
-function createFlintMemory(options?: FlintMemoryOptions): FlintMemory;
+function createFlintMemory(
+  memoryOrOptions?: WebAssembly.Memory | FlintMemoryOptions,
+  options?: FlintMemoryOptions,
+): FlintMemory;
 ```
 
-لم يتم تقديم أي وصف.
+إنشاء مثيل FlintMemory تم تكوينه.
 
 #### حدود
 
-| الاسم  | اكتب                             | الوصف |
-| ------ | -------------------------------- | ----- |
-| خيارات | فورجي ويب سكريبت ميموري أوبتيونس |       |
+| الاسم | اكتب | الوصف |
+| --------------- | ---------------------------------------- | ----------------------------------------------------------------- |
+| ذاكرةأوخيارات | WebAssembly.Memory \| خيارات ذاكرة فلينت | - خيارات WebAssembly.Memory أو إنشاء الذاكرة الموجودة.         |
+| خيارات | خيارات ذاكرة فلينت | - خيارات إنشاء الذاكرة وتحجيمها إذا تم توفير مثيل الذاكرة. |
 
-### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+#### عقد
+
+- **@param:** - خيارات WebAssembly.Memory أو إنشاء الذاكرة الموجودة.
+- **@param:** - خيارات إنشاء الذاكرة وتغيير حجمها إذا تم توفير مثيل الذاكرة.
+- **@returns:** مثيل FlintMemory الذي تمت تهيئته.
+
+### createFlintMultiMemory
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintMultiMemory(options?: FlintMultiMemoryOptions): FlintMultiMemory;
+```
+
+ينشئ مثيلًا معزولًا متعدد الذاكرة مع كومة ضيف مخصصة وإمكانية تشغيل متداخل للمضيف وأقسام ثابتة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ----------------------- | ----------- |
+| خيارات | فلينتمولتيميموريوبشن |             |
+
+### FALBACK_GUARD_PAGE_SIZE
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
+export const FALLBACK_GUARD_PAGE_SIZE;
 ```
 
 لم يتم تقديم أي وصف.
 
-### FlintMemory
+### FLINT_MEMORY_CAPABILITIES
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_MEMORY_CAPABILITIES;
+```
+
+لم يتم تقديم أي وصف.
+
+### فلينتميموري
 
 **النوع:** فئة
 
@@ -1854,7 +6472,7 @@ export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
 export class FlintMemory
 ```
 
-لم يتم تقديم أي وصف.
+يدير عمليات تخصيص الذاكرة الخطية WebAssembly، والتحقق من الحدود، والإدخال/الإخراج الثنائي.
 
 ### FlintMemoryAddress
 
@@ -1864,9 +6482,9 @@ export class FlintMemory
 export type FlintMemoryAddress = number | bigint;
 ```
 
-لم يتم تقديم أي وصف.
+تمثيل مؤشر عنوان الذاكرة يدعم كلا من العناوين 32 بت (رقم) و64 بت (كبيرة).
 
-### FlintMemoryOptions
+### خيارات ذاكرة فلينت
 
 **النوع:** الواجهة
 
@@ -1874,26 +6492,83 @@ export type FlintMemoryAddress = number | bigint;
 export interface FlintMemoryOptions
 ```
 
-لم يتم تقديم أي وصف.
+خيارات التكوين لإنشاء مثيل ذاكرة خطية Flint وتغيير حجمه.
+
+### FlintMemoryPartitionName
+
+**النوع:** النوع
+
+```typescript
+export type FlintMemoryPartitionName = 'guestHeap' | 'foreignHeap' | 'hostInterop' | 'staticData';
+```
+
+أسماء أقسام الذاكرة الخطية المخصصة لوحدات الذاكرة المتعددة.
+
+### فلينتمولتيميموري
+
+**النوع:** فئة
+
+```typescript
+export class FlintMultiMemory
+```
+
+WebAssembly منسق فصل الذاكرة المتعددة.
+يعزل الذاكرة إلى مساحات مخصصة لتنفيذ الضيف (الذاكرة 0)،
+كومة الصدأ/C الخارجية غير الموثوق بها (الذاكرة 1)، المخزن المؤقت للتشغيل المتداخل للمضيف (الذاكرة 2)،
+والثوابت/الجداول الثابتة (الذاكرة 3).
+
+يدعم عزل الأجهزة الأصلية متعددة الذاكرة بالإضافة إلى عدم التخصيص
+محاكاة احتياطية مقسمة لذاكرة واحدة لأوقات التشغيل بدون ذاكرة متعددة (مثل Safari / WebKit).
+
+### خيارات فلينت مولتي ميموري
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintMultiMemoryOptions
+```
+
+خيارات تكوين أقسام ذاكرة خطية مستقلة متعددة.
+
+### ساحة فلينت الإقليمية
+
+**النوع:** فئة
+
+```typescript
+export class FlintRegionalArena
+```
+
+مجموعة مخصصات النتوءات الإقليمية ذات النطاق (المستوى 1) التي توفر تخصيص O(1).
+والتخصيص بالجملة الحتمية عند الخروج من النطاق.
+
+### هو MultiMemorySupported
+
+**النوع:** الوظيفة
+
+```typescript
+function isMultiMemorySupported(): boolean;
+```
+
+يكتشف ما إذا كانت بيئة JavaScript المضيفة تدعم في الأصل ذاكرة WebAssembly المتعددة.
 
 ## `src/parallel`
 
-### FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+### FLINT_PARALLEL_CAPABILITIES
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
+export const FLINT_PARALLEL_CAPABILITIES;
 ```
 
 يتم استخدام أسماء القدرات للسماح بتنفيذ العامل والخيط والذري والذاكرة المشتركة.
 
-### FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS
+### FLINT_PARALLEL_OPERATION_DESCRIPTORS
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
+export const FLINT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<FlintParallelOperation, FlintParallelOperationDescriptor>
 >;
 ```
@@ -1916,11 +6591,11 @@ function flintIteratorParAt(
 
 #### حدود
 
-| الاسم  | اكتب                  | الوصف |
-| ------ | --------------------- | ----- |
-| المصدر | FlintIterable<TValue> |       |
-| الفهرس | رقم                   |       |
-| خيارات | FlintParallelOptions  |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------- | ----------- |
+| المصدر | فلينتايتيرابل<TValue> |             |
+| الفهرس | رقم |             |
+| خيارات | خيارات فلينت باراليل |             |
 
 ### flintIteratorParCollect
 
@@ -1933,14 +6608,14 @@ function flintIteratorParCollect(
 ): Promise<FlintVector<TValue>>;
 ```
 
-تجسيد النتائج الموازية المطلوبة في ناقل مملوك.
+تجسيد النتائج المتوازية المطلوبة في ناقل مملوك.
 
 #### حدود
 
-| الاسم  | اكتب                  | الوصف |
-| ------ | --------------------- | ----- |
-| المصدر | FlintIterable<TValue> |       |
-| خيارات | FlintParallelOptions  |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------- | ----------- |
+| المصدر | فلينتايتيرابل<TValue> |             |
+| خيارات | خيارات فلينت باراليل |             |
 
 ### flintIteratorParFilter
 
@@ -1959,11 +6634,11 @@ function flintIteratorParFilter(
 
 #### حدود
 
-| الاسم  | اكتب                                                         | الوصف |
-| ------ | ------------------------------------------------------------ | ----- |
-| المصدر | FlintIterable<TValue>                                        |       |
-| المسند | (القيمة: TValue، الفهرس: الرقم) => منطقي \| وعد مثل<boolean> |       |
-| خيارات | FlintParallelOptions                                         |       |
+| الاسم | اكتب | الوصف |
+| --------- | ----------------------------------------------------------------- | ----------- |
+| المصدر | فلينتايتيرابل<TValue> |             |
+| المسند | (القيمة: TValue، الفهرس: الرقم) => منطقي \| وعد مثل<boolean> |             |
+| خيارات | خيارات فلينت باراليل |             |
 
 ### flintIteratorParFirst
 
@@ -1980,10 +6655,10 @@ function flintIteratorParFirst(
 
 #### حدود
 
-| الاسم  | اكتب                  | الوصف |
-| ------ | --------------------- | ----- |
-| المصدر | FlintIterable<TValue> |       |
-| خيارات | FlintParallelOptions  |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------- | ----------- |
+| المصدر | فلينتايتيرابل<TValue> |             |
+| خيارات | خيارات فلينت باراليل |             |
 
 ### flintIteratorParFlatten
 
@@ -2000,10 +6675,10 @@ function flintIteratorParFlatten(
 
 #### حدود
 
-| الاسم  | اكتب                                 | الوصف |
-| ------ | ------------------------------------ | ----- |
-| المصدر | FlintIterable<FlintIterable<TValue>> |       |
-| خيارات | FlintParallelOptions                 |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------------------ | ----------- |
+| المصدر | فلينتايتيرابل<FlintIterable<TValue>> |             |
+| خيارات | خيارات فلينت باراليل |             |
 
 ### flintIteratorParFold
 
@@ -2022,12 +6697,12 @@ function flintIteratorParFold(
 
 #### حدود
 
-| الاسم  | اكتب                                                      | الوصف |
-| ------ | --------------------------------------------------------- | ----- |
-| المصدر | FlintIterable<TValue>                                     |       |
-| الأولي | النتيجة                                                   |       |
-| المخفض | (المجمع: TResult، القيمة: TValue، الفهرس: رقم) => TResult |       |
-| خيارات | FlintParallelOptions                                      |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------------------------------------------------- | ----------- |
+| المصدر | فلينتايتيرابل<TValue> |             |
+| الأولي | النتيجة |             |
+| المخفض | (المجمع: TResult، القيمة: TValue، الفهرس: رقم) => TResult |             |
+| خيارات | خيارات فلينت باراليل |             |
 
 ### flintIteratorParLast
 
@@ -2044,10 +6719,10 @@ function flintIteratorParLast(
 
 #### حدود
 
-| الاسم  | اكتب                  | الوصف |
-| ------ | --------------------- | ----- |
-| المصدر | FlintIterable<TValue> |       |
-| خيارات | FlintParallelOptions  |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------- | ----------- |
+| المصدر | فلينتايتيرابل<TValue> |             |
+| خيارات | خيارات فلينت باراليل |             |
 
 ### flintIteratorParMap
 
@@ -2066,11 +6741,11 @@ function flintIteratorParMap(
 
 #### حدود
 
-| الاسم   | اكتب                                                           | الوصف |
-| ------- | -------------------------------------------------------------- | ----- |
-| المصدر  | FlintIterable<TValue>                                          |       |
-| الخريطة | (القيمة: TValue، الفهرس: الرقم) => TResult \| وعد مثل<TResult> |       |
-| خيارات  | FlintParallelOptions                                           |       |
+| الاسم | اكتب | الوصف |
+| ------- | ----------------------------------------------------------------- | ----------- |
+| المصدر | فلينتايتيرابل<TValue> |             |
+| الخريطة | (القيمة: TValue، الفهرس: الرقم) => TResult \| وعد مثل<TResult> |             |
+| خيارات | خيارات فلينت باراليل |             |
 
 ### flintIteratorParToArray
 
@@ -2083,14 +6758,14 @@ function flintIteratorParToArray(
 ): Promise<FlintArray<TValue>>;
 ```
 
-تجسيد النتائج المتوازية المطلوبة في مصفوفة ثابتة مملوكة.
+تجسيد النتائج الموازية المطلوبة في مصفوفة ثابتة مملوكة.
 
 #### حدود
 
-| الاسم  | اكتب                  | الوصف |
-| ------ | --------------------- | ----- |
-| المصدر | FlintIterable<TValue> |       |
-| خيارات | FlintParallelOptions  |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------- | ----------- |
+| المصدر | فلينتايتيرابل<TValue> |             |
+| خيارات | خيارات فلينت باراليل |             |
 
 ### flintParallelDescriptor
 
@@ -2107,10 +6782,10 @@ function flintParallelDescriptor(
 
 #### حدود
 
-| الاسم  | اكتب                   | الوصف |
-| ------ | ---------------------- | ----- |
-| عملية  | FlintParallelOperation |       |
-| خيارات | FlintParallelOptions   |       |
+| الاسم | اكتب | الوصف |
+| --------- | ---------------------- | ----------- |
+| عملية | عملية فلينت باراليل |             |
+| خيارات | خيارات فلينت باراليل |             |
 
 ### FlintParallelExecutor
 
@@ -2173,7 +6848,7 @@ export interface FlintParallelPlan
 
 الإستراتيجية المحددة والسبب الواضح الذي تم اختياره.
 
-### FlintParallelStrategy
+### استراتيجية فلينت باراليل
 
 **النوع:** النوع
 
@@ -2183,7 +6858,7 @@ export type FlintParallelStrategy = 'serial' | 'host-workers' | 'wasm-threads';
 
 استراتيجية التنفيذ المحددة لعملية متوازية مرتبة.
 
-### حددFlintParallelStrategy
+### حدد استراتيجية فلينت باراليل
 
 **النوع:** الوظيفة
 
@@ -2195,9 +6870,138 @@ function selectFlintParallelStrategy(options: FlintParallelOptions = {}): FlintP
 
 #### حدود
 
-| الاسم  | اكتب                 | الوصف |
-| ------ | -------------------- | ----- |
-| خيارات | FlintParallelOptions |       |
+| الاسم | اكتب | الوصف |
+| ------- | -------------------- | ----------- |
+| خيارات | خيارات فلينت باراليل |             |
+
+## `src/safe-heap`
+
+### createFlintSafeHeap
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintSafeHeap(memory: FlintMemory): FlintSafeHeap;
+```
+
+وظيفة المصنع تنشئ مدير FlintSafeHeap جديد.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ----------- | ------------------------- |
+| الذاكرة | ذاكرة فلينت | - مثيل الذاكرة الخطية. |
+
+#### عقد
+
+- **@param:** - مثيل الذاكرة الخطية.
+- **@returns:** مثيل FlintSafeHeap الذي تمت تهيئته.
+
+### FLINT_MEMORY_MODEL
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_MEMORY_MODEL;
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintDynamicTableManager
+
+**النوع:** فئة
+
+```typescript
+export class FlintDynamicTableManager
+```
+
+يوفر مدير جدول وظائف WebAssembly الديناميكي تخصيص الفتحات وتتبع الإنشاء،
+والإبطال الفوري عند إصدار الإغلاق لمنع إرسال الوظيفة التي لا معنى لها.
+
+### منطقة فلينت
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintRegion
+```
+
+رمز مدى الحياة يحدد منطقة الذاكرة النشطة.
+
+### تخصيص منطقة فلينت
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintRegionAllocation
+```
+
+واصف يتتبع تخصيص الذاكرة المرتبط بمنطقة العمر.
+
+### منطقة فلينت أرينا
+
+**النوع:** فئة
+
+```typescript
+export class FlintRegionArena
+```
+
+أداة تخصيص عثرة الساحة عالية الأداء للمهام العابرة.
+يستعيد كل الذاكرة المخصصة في إعادة تعيين مؤشر O(1) بشكل فوري.
+
+### FlintSafeHeap
+
+**النوع:** فئة
+
+```typescript
+export class FlintSafeHeap
+```
+
+الكومة المحددة النطاق للقيم التي يديرها المترجم. مكالمات fws_alloc الأولية
+تبقى على FlintMemory ولا يتم الاحتفاظ بها ضمنيًا هنا.
+
+### FlintSharedHandle
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintSharedHandle
+```
+
+التعامل مع المرجع الذي يحدد تخصيص الذاكرة المشتركة التي تم حسابها كمرجع.
+
+### FlintTableSlotHandle
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintTableSlotHandle
+```
+
+مقبض فتحة جدول الوظائف الديناميكية ومؤشر جدول التتبع ورمز الأجيال.
+
+### FlintTlsfAllocator
+
+**النوع:** فئة
+
+```typescript
+export class FlintTlsfAllocator
+```
+
+مُخصص الذاكرة ذو المستويين المنفصلين (TLSF).
+يضمن تخصيص وقت O(1) وإلغاء التخصيص مع الاندماج المادي الفوري
+والحد الأدنى من التجزئة لأحمال عمل Wasm المضمنة/في الوقت الحقيقي.
+
+### FlintWeakHandle
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintWeakHandle
+```
+
+مؤشر مرجعي ضعيف يشير إلى تخصيص ذاكرة مشتركة دون زيادة عدد المراجع القوية.
+يخفف من تسرب الذاكرة الرتيبة الناجمة عن هياكل البيانات الدورية.
 
 ## `src/self-hosted`
 
@@ -2209,7 +7013,7 @@ function selectFlintParallelStrategy(options: FlintParallelOptions = {}): FlintP
 export interface FlintSelfHostedRunOptions
 ```
 
-لم يتم تقديم أي وصف.
+خيارات التكوين لتنفيذ مراحل برنامج التحويل البرمجي المستضاف ذاتيًا في أوضاع VM أو AOT.
 
 ### FlintSelfHostedVmRun
 
@@ -2219,7 +7023,7 @@ export interface FlintSelfHostedRunOptions
 export interface FlintSelfHostedVmRun
 ```
 
-لم يتم تقديم أي وصف.
+تقرير تنفيذ كامل لمترجم مستضاف ذاتيًا يتم تشغيله عبر مراحل التأليف والتحليل.
 
 ### runFlintSelfHostedCompiler
 
@@ -2242,11 +7046,11 @@ function runFlintSelfHostedCompiler(
 
 #### حدود
 
-| الاسم   | اكتب                      | الوصف |
-| ------- | ------------------------- | ----- |
-| الإدخال | فورجيويبسكريبتكومبيلينبوت |       |
-| الوضع   | FlintVmExecutionMode      |       |
-| خيارات  | FlintSelfHostedRunOptions |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------- | ----------- |
+| الإدخال | فلينتكومبيلينبوت |             |
+| الوضع | وضع تنفيذ فلينتفم |             |
+| خيارات | فلينتسيلف هوستيدرونوبتيونس |             |
 
 ### runFlintSelfHostedLexStage
 
@@ -2264,13 +7068,47 @@ function runFlintSelfHostedLexStage(
 
 #### حدود
 
-| الاسم   | اكتب                                                                                             | الوصف |
-| ------- | ------------------------------------------------------------------------------------------------ | ----- |
-| الإدخال | يختار<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |       |
-| الوضع   | FlintVmExecutionMode                                                                             |       |
-| خيارات  | FlintSelfHostedRunOptions                                                                        |       |
+| الاسم | اكتب | الوصف |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+| الإدخال | يختار<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+| الوضع | وضع تنفيذ FlintVm |             |
+| خيارات | فلينتسيلف هوستيدرونوبتيونس |             |
 
 ## `src/threading`
+
+### تأكيدFlintSend
+
+**النوع:** الوظيفة
+
+```typescript
+function assertFlintSend(value: T, context = 'value'): T;
+```
+
+يؤكد أن القيمة تفي بعقد "الإرسال"، ويتم رمي الفخ في حالة انتهاكه.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ---- | ----------- |
+| القيمة | ت |             |
+| السياق |      |             |
+
+### AssurFlintSync
+
+**النوع:** الوظيفة
+
+```typescript
+function assertFlintSync(value: T, context = 'value'): T;
+```
+
+يؤكد أن القيمة تفي بعقد "المزامنة"، ويتم رمي الفخ في حالة انتهاكه.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ---- | ----------- |
+| القيمة | ت |             |
+| السياق |      |             |
 
 ### canUseFlintWasmThreads
 
@@ -2283,15 +7121,15 @@ function canUseFlintWasmThreads(
 ): boolean;
 ```
 
-يتم تمكين تنفيذ مؤشر الترابط عند حدود التجميع ووقت التشغيل. في
+يتم تنفيذ تنفيذ مؤشر الترابط عند حدود التجميع ووقت التشغيل. في
 وعلى وجه الخصوص، فإن قائمة القدرات غير المعلنة لا تتيح هذا المسار مطلقًا.
 
 #### حدود
 
-| الاسم        | اكتب                                      | الوصف |
-| ------------ | ----------------------------------------- | ----- |
-| مميزات الهدف | FlintWasmThreadTargetFeatures \| غير محدد |       |
-| القدرات      | سلسلة للقراءة فقط[] \| غير محدد           |       |
+| الاسم | اكتب | الوصف |
+| -------------- | ------------------------------------------ | ----------- |
+| مميزات الهدف | FlintWasmThreadTargetFeatures \| غير محدد |             |
+| القدرات | سلسلة للقراءة فقط[] \| غير محدد |             |
 
 ### createFlintAtomicI32
 
@@ -2301,14 +7139,20 @@ function canUseFlintWasmThreads(
 function createFlintAtomicI32(length = 1, options: FlintAtomicI32Options = {}): FlintAtomicI32;
 ```
 
-لم يتم تقديم أي وصف.
+يخصص مصفوفة أعداد صحيحة ذرية مشتركة ذات 32 بت ويغلفها بالعمليات الذرية.
 
 #### حدود
 
-| الاسم  | اكتب                  | الوصف |
-| ------ | --------------------- | ----- |
-| الطول  |                       |       |
-| خيارات | خيارات FlintAtomicI32 |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------- | ---------------------------------------------------------- |
+| الطول |                       | - عدد فتحات الأعداد الصحيحة 32 بت المطلوب تخصيصها.              |
+| خيارات | خيارات فلينت أتوميك I32 | - خيارات التخصيص بما في ذلك SharedArrayBuffer الموجودة. |
+
+#### عقد
+
+- **@param:** - عدد فتحات الأعداد الصحيحة 32 بت المطلوب تخصيصها.
+- **@param:** - خيارات التخصيص بما في ذلك SharedArrayBuffer الموجود.
+- **@returns:** مثيل FlintAtomicI32 الذي تم تكوينه.
 
 ### createFlintWasmThreadScheduler
 
@@ -2324,9 +7168,9 @@ function createFlintWasmThreadScheduler(options: FlintWasmThreadSchedulerOptions
 
 #### حدود
 
-| الاسم  | اكتب                            | الوصف |
-| ------ | ------------------------------- | ----- |
-| خيارات | FlintWasmThreadSchedulerOptions |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------------- | ----------- |
+| خيارات | فلينتواسمثريدسشيدوليرأوبتيونس |             |
 
 ### createFlintWorkerRuntime
 
@@ -2336,21 +7180,31 @@ function createFlintWasmThreadScheduler(options: FlintWasmThreadSchedulerOptions
 function createFlintWorkerRuntime(
   createWorker: () => FlintWorkerPort,
   onMessage: (message: unknown) => void,
-  onError: (error: unknown) => void = () => {},
+  onError: (error: unknown) => void = (_error: unknown) => {
+    // Default no-op error handler.
+  },
   options: FlintWorkerRuntimeOptions = {},
 ): FlintWorkerRuntime;
 ```
 
-لم يتم تقديم أي وصف.
+إنشاء مثيل لوقت تشغيل العامل باستخدام منفذ المصنع وخطافات دورة الحياة المتوفرة.
 
 #### حدود
 
-| الاسم       | اكتب                               | الوصف |
-| ----------- | ---------------------------------- | ----- |
-| إنشاء عامل  | () => FlintWorkerPort              |       |
-| على الرسالة | (الرسالة: غير معروفة) => باطلة     |       |
-| خطأ         | (خطأ: غير معروف) => باطل           |       |
-| خيارات      | فورجي ويب سكريبت ووركيرونتيميوبشنز |       |
+| الاسم | اكتب | الوصف |
+| ------------ | -------------------------- | ---------------------------------------- |
+| إنشاء عامل | () => فلينتووركيربورت | - رد اتصال مصنع الميناء.                 |
+| على الرسالة | (الرسالة: غير معروفة) => باطلة | - رد اتصال معالج الرسائل.              |
+| خطأ | (خطأ: غير معروف) => باطل | - رد اتصال معالج الأخطاء الاختياري.       |
+| خيارات | فلينتووركيررونتيميوبشنز | - خيارات التكوين لوقت التشغيل. |
+
+#### عقد
+
+- **@param:** - رد اتصال مصنع المنفذ.
+- **@param:** - رد اتصال معالج الرسائل.
+- **@param:** - رد اتصال اختياري لمعالج الأخطاء.
+- **@param:** - خيارات التكوين لوقت التشغيل.
+- **@returns:** تمت تهيئة FlintWorkerRuntime.
 
 ### createFlintWorkerScheduler
 
@@ -2369,21 +7223,21 @@ function createFlintWorkerScheduler(options: FlintWorkerSchedulerOptions = {}): 
 
 #### حدود
 
-| الاسم  | اكتب                                     | الوصف |
-| ------ | ---------------------------------------- | ----- |
-| خيارات | فورجي ويب سكريبت ووركير شيدولير أوبتيونس |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------------- | ----------- |
+| خيارات | فلينتووركيرشيدوليرأوبتيونس |             |
 
-### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+### FLINT_THREADING_CAPABILITIES
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
+export const FLINT_THREADING_CAPABILITIES;
 ```
 
 لم يتم تقديم أي وصف.
 
-### FlintAtomicI32
+### فلينت أتوميك I32
 
 **النوع:** الواجهة
 
@@ -2391,9 +7245,9 @@ export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
 export interface FlintAtomicI32
 ```
 
-لم يتم تقديم أي وصف.
+يوفر الغلاف عمليات القراءة والتعديل والكتابة الذرية على مخزن مؤقت مشترك لعدد صحيح 32 بت.
 
-### خيارات FlintAtomicI32
+### خيارات فلينت أتوميك I32
 
 **النوع:** الواجهة
 
@@ -2401,7 +7255,17 @@ export interface FlintAtomicI32
 export interface FlintAtomicI32Options
 ```
 
-لم يتم تقديم أي وصف.
+خيارات تكوين التخصيص أو المشاركة لمصفوفة أعداد صحيحة ذرية 32 بت.
+
+### FlintThreadSafetyMarker
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintThreadSafetyMarker
+```
+
+علامة بيانات التعريف الخاصة بسلامة الخيط للتحقق من ضمانات توافق الذاكرة المشتركة.
 
 ### FlintWasmThreadSchedulerOptions
 
@@ -2411,7 +7275,7 @@ export interface FlintAtomicI32Options
 export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFeatures
 ```
 
-لم يتم تقديم أي وصف.
+خيارات تكوين برنامج جدولة مؤشر ترابط WebAssembly المدعوم بالذاكرة المشتركة والعاملين.
 
 ### ميزات FlintWasmThreadTarget
 
@@ -2421,7 +7285,7 @@ export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFe
 export interface FlintWasmThreadTargetFeatures
 ```
 
-لم يتم تقديم أي وصف.
+يستهدف WebAssembly الميزات ذات الصلة بتعدد مؤشرات الترابط والذاكرة المشتركة.
 
 ### FlintWorkerPort
 
@@ -2431,7 +7295,7 @@ export interface FlintWasmThreadTargetFeatures
 export interface FlintWorkerPort
 ```
 
-لم يتم تقديم أي وصف.
+عقد منفذ رسالة postMessage العام لاتصالات العمال.
 
 ### FlintWorkerRuntime
 
@@ -2441,7 +7305,7 @@ export interface FlintWorkerPort
 export interface FlintWorkerRuntime
 ```
 
-لم يتم تقديم أي وصف.
+التعامل مع وقت التشغيل لإدارة منفذ اتصال العامل وتفكيك دورة حياته.
 
 ### FlintWorkerRuntimeOptions
 
@@ -2451,7 +7315,7 @@ export interface FlintWorkerRuntime
 export interface FlintWorkerRuntimeOptions
 ```
 
-لم يتم تقديم أي وصف.
+خيارات تكوين إنشاء وقت تشغيل العامل.
 
 ### FlintWorkerScheduler
 
@@ -2471,7 +7335,41 @@ export interface FlintWorkerScheduler
 export interface FlintWorkerSchedulerOptions
 ```
 
-لم يتم تقديم أي وصف.
+خيارات التكوين لإنشاء برنامج جدولة مهام العامل المضيف.
+
+### isFlintSend
+
+**النوع:** الوظيفة
+
+```typescript
+function isFlintSend(value: unknown, visited = new Set<unknown>()): boolean;
+```
+
+التحقق من صحة ما إذا كانت القيمة تفي بعقد "الإرسال" (آمن للنقل عبر حدود الخيط).
+التحقق بشكل متكرر من الكائنات العادية والمصفوفات والأوليات والمخازن المؤقتة المكتوبة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------- | ----------- |
+| القيمة | غير معروف |             |
+| زار |         |             |
+
+### com.isFlintSync
+
+**النوع:** الوظيفة
+
+```typescript
+function isFlintSync(value: unknown): boolean;
+```
+
+التحقق من صحة ما إذا كانت القيمة تفي بعقد "المزامنة" (آمن للمشاركة بشكل متزامن عبر سلاسل الرسائل).
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------- | ----------- |
+| القيمة | غير معروف |             |
 
 ## `src/trace`
 
@@ -2483,14 +7381,20 @@ export interface FlintWorkerSchedulerOptions
 function createFlintTraceRecorder(options: FlintTraceOptions, functionName: string): FlintTraceRecorder;
 ```
 
-لم يتم تقديم أي وصف.
+إنشاء مسجل تتبع التنفيذ الذي يفرض ميزانيات الحجم ولقطات القياس عن بعد.
 
 #### حدود
 
-| الاسم       | اكتب              | الوصف |
-| ----------- | ----------------- | ----- |
-| خيارات      | FlintTraceOptions |       |
-| اسم الوظيفة | سلسلة             |       |
+| الاسم | اكتب | الوصف |
+| ------------ | ----------------- | ------------------------------------ |
+| خيارات | خيارات فلينتريس | - خيارات التكوين للتتبع. |
+| اسم الوظيفة | سلسلة | - اسم وظيفة نقطة الدخول الأساسية. |
+
+#### عقد
+
+- **@param:** - خيارات التكوين للتتبع.
+- **@param:** - اسم وظيفة نقطة الإدخال الأساسية.
+- **@returns:** تم تكوين مثيل FlintTraceRecorder.
 
 ### FlintTraceCaptureMode
 
@@ -2500,7 +7404,7 @@ function createFlintTraceRecorder(options: FlintTraceOptions, functionName: stri
 export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 ```
 
-لم يتم تقديم أي وصف.
+التقاط وضع الإسهاب لتسجيل تتبع التنفيذ.
 
 ### FlintTraceCounters
 
@@ -2510,7 +7414,7 @@ export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 export interface FlintTraceCounters
 ```
 
-لم يتم تقديم أي وصف.
+تم تسجيل مقاييس التنفيذ المجمعة وعدادات التشغيل أثناء التتبع.
 
 ### FlintTraceEvent
 
@@ -2520,7 +7424,7 @@ export interface FlintTraceCounters
 export interface FlintTraceEvent
 ```
 
-لم يتم تقديم أي وصف.
+حدث تتبع التنفيذ التفصيلي الذي تم التقاطه أثناء وقت التشغيل أو تفسير VM.
 
 ### FlintTraceEventType
 
@@ -2531,7 +7435,7 @@ export type FlintTraceEventType =
   'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
-لم يتم تقديم أي وصف.
+فئة حدث تتبع وقت التشغيل المسجل.
 
 ### FlintTraceLimits
 
@@ -2541,7 +7445,7 @@ export type FlintTraceEventType =
 export interface FlintTraceLimits
 ```
 
-لم يتم تقديم أي وصف.
+حدود الموارد تقيد حجم حدث التتبع وحجم البايت.
 
 ### FlintTraceOptions
 
@@ -2551,7 +7455,7 @@ export interface FlintTraceLimits
 export interface FlintTraceOptions extends FlintTraceLimits
 ```
 
-لم يتم تقديم أي وصف.
+خيارات التكوين لتهيئة تسجيل تتبع التنفيذ.
 
 ### FlintTraceRecorder
 
@@ -2561,9 +7465,9 @@ export interface FlintTraceOptions extends FlintTraceLimits
 export interface FlintTraceRecorder
 ```
 
-لم يتم تقديم أي وصف.
+واجهة مسجل نشطة تستهلك أحداث تنفيذ وقت التشغيل وتنشئ تقارير التتبع.
 
-### FlintTraceReport
+### تقرير فلينت تراسي
 
 **النوع:** الواجهة
 
@@ -2571,17 +7475,17 @@ export interface FlintTraceRecorder
 export interface FlintTraceReport
 ```
 
-لم يتم تقديم أي وصف.
+تقرير تتبع التنفيذ المنظم الكامل والذي تم تلخيصه بعد اكتمال التنفيذ.
 
 ### FlintTraceSourceLocation
 
-**النوع:** الواجهة
+**النوع:** النوع
 
 ```typescript
-export interface FlintTraceSourceLocation extends FlintVmDebugSpan
+export type FlintTraceSourceLocation = FlintVmDebugSpan;
 ```
 
-لم يتم تقديم أي وصف.
+موضع تعيين المصدر لأحداث تتبع التنفيذ المسجلة.
 
 ### تلخيصFlintVmValue
 
@@ -2591,14 +7495,20 @@ export interface FlintTraceSourceLocation extends FlintVmDebugSpan
 function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValue) => string): string;
 ```
 
-لم يتم تقديم أي وصف.
+يلخص قيمة VM للتتبع التشخيصي، مع تطبيق عمليات التنقيح بشكل اختياري.
 
 #### حدود
 
-| الاسم  | اكتب                            | الوصف |
-| ------ | ------------------------------- | ----- |
-| القيمة | فورجي ويب سكريبت VmValue        |       |
-| تنقيح  | (القيمة: FlintVmValue) => سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------------------- | ------------------------------ |
+| القيمة | فلينتفمفالو ​​| - قيمة VM للتنسيق.          |
+| تنقيح | (القيمة: FlintVmValue) => سلسلة | - رد اتصال التنقيح الاختياري. |
+
+#### عقد
+
+- **@param:** - قيمة VM المراد تنسيقها.
+- **@param:** - رد اتصال تنقيح اختياري.
+- **@returns:** سلسلة ملخصة يمكن قراءتها بواسطة الإنسان.
 
 ## `src/traps`
 
@@ -2610,16 +7520,21 @@ function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValu
 function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 ```
 
-لم يتم تقديم أي وصف.
+إقران تقرير تتبع التنفيذ بخطأ اعتراض Flint إذا كان ذلك ممكنًا.
 
 #### حدود
 
-| الاسم | اكتب             | الوصف |
-| ----- | ---------------- | ----- |
-| خطأ   | غير معروف        |       |
-| أثر   | FlintTraceReport |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------------- | ----------------------------------- |
+| خطأ | غير معروف | - كائن خطأ المرشح.           |
+| تتبع | تقرير فلينت تراسي | - تقرير تتبع التنفيذ لإرفاقه. |
 
-### FlintTrap
+#### عقد
+
+- **@param:** - كائن خطأ المرشح.
+- **@param:** - لإرفاق تقرير تتبع التنفيذ.
+
+### فلينتتراب
 
 **النوع:** فئة
 
@@ -2627,9 +7542,9 @@ function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 export class FlintTrap extends Error
 ```
 
-لم يتم تقديم أي وصف.
+يمثل وقت التشغيل القاتل أو فخ إعدام الضيف في فلينت.
 
-### FlintTrapCode
+### فلينتتراب كود
 
 **النوع:** النوع
 
@@ -2641,10 +7556,16 @@ export type FlintTrapCode =
   | 'InvalidOwnership'
   | 'MemoryExhausted'
   | 'MemoryOutOfBounds'
-  | 'GuestTrap';
+  | 'GuestTrap'
+  | 'BorrowViolation'
+  | 'RegionExpired'
+  | 'UseAfterRelease'
+  | 'DoubleRelease'
+  | 'StackOverflow'
+  | 'CallDepthExhausted';
 ```
 
-لم يتم تقديم أي وصف.
+رموز فئة خطأ اعتراض وقت التشغيل الأساسي.
 
 ### FlintTrapOptions
 
@@ -2654,7 +7575,7 @@ export type FlintTrapCode =
 export interface FlintTrapOptions extends ErrorOptions
 ```
 
-لم يتم تقديم أي وصف.
+خيارات تكوين الإبلاغ عن أخطاء اعتراض وقت التشغيل وتسجيلها.
 
 ### toFlintHostError
 
@@ -2664,15 +7585,22 @@ export interface FlintTrapOptions extends ErrorOptions
 function toFlintHostError(error: unknown, capability: string, logger?: FlintLogger): FlintTrap;
 ```
 
-لم يتم تقديم أي وصف.
+يحول خطأ مضيف غير معروف إلى مثيل FlintTrap تمت تسويته.
 
 #### حدود
 
-| الاسم  | اكتب                  | الوصف |
-| ------ | --------------------- | ----- |
-| خطأ    | غير معروف             |       |
-| القدرة | سلسلة                 |       |
-| مسجل   | فورجي ويب سكريبت لوجر |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------- | --------------------------------------------------- |
+| خطأ | غير معروف | - تم اكتشاف خطأ خام.                                 |
+| القدرة | سلسلة | - معرف قدرة المضيف الهدف.                |
+| مسجل | فلينتلوجر | - مسجل وقت التشغيل الاختياري للقياس عن بعد التشخيصي. |
+
+#### عقد
+
+- **@param:** - تم اكتشاف خطأ أولي.
+- **@param:** - معرف قدرة المضيف الهدف.
+- **@param:** - مسجل وقت التشغيل الاختياري للقياس التشخيصي عن بعد.
+- **@returns:** مثيل FlintTrap الطبيعي.
 
 ## `src/vm-executor`
 
@@ -2684,14 +7612,20 @@ function toFlintHostError(error: unknown, capability: string, logger?: FlintLogg
 function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string): FlintVmAotArtifact;
 ```
 
-لم يتم تقديم أي وصف.
+تجميع وحدة VM في قطعة أثرية JavaScript مسبقة (AOT).
 
 #### حدود
 
-| الاسم           | اكتب          | الوصف |
-| --------------- | ------------- | ----- |
-| الوحدة النمطية  | FlintVmModule |       |
-| الإصدار المترجم | سلسلة         |       |
+| الاسم | اكتب | الوصف |
+| --------------- | ------------- | -------------------------- |
+| الوحدة النمطية | فلينتفممودول | - وحدة VM للتجميع.    |
+| الإصدار المترجم | سلسلة | - سلسلة إصدار المترجم. |
+
+#### عقد
+
+- **@param:** - وحدة VM المراد تجميعها.
+- **@param:** - سلسلة إصدار المترجم.
+- **@returns:** قطعة أثرية منبعثة من AOT.
 
 ### createFlintVmExecutor
 
@@ -2701,15 +7635,20 @@ function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string
 function createFlintVmExecutor(executorOptions: FlintVmExecutorOptions = {}): FlintVmExecutor;
 ```
 
-لم يتم تقديم أي وصف.
+ينشئ منفذ VM للرمز الثانوي مع دعم تجميع JIT.
 
 #### حدود
 
-| الاسم         | اكتب                            | الوصف |
-| ------------- | ------------------------------- | ----- |
-| خيارات المنفذ | فورجيويبسكريبتفmExecutorOptions |       |
+| الاسم | اكتب | الوصف |
+| --------------- | ---------------------- | ----------------------------------------- |
+| خيارات المنفذ | خيارات فلينتفميكسيكوتور | - خيارات التكوين للمنفذ. |
 
-### ExecuteFlintVm
+#### عقد
+
+- **@param:** - خيارات التكوين للمنفذ.
+- **@returns:** تم تكوين مثيل FlintVmExecutor.
+
+### تنفيذFlintVm
 
 **النوع:** الوظيفة
 
@@ -2722,18 +7661,26 @@ function executeFlintVm(
 ): FlintVmExecutionResult;
 ```
 
-لم يتم تقديم أي وصف.
+مشغل ملائم ينفذ وظيفة في وحدة VM.
 
 #### حدود
 
-| الاسم          | اكتب                       | الوصف |
-| -------------- | -------------------------- | ----- |
-| الوحدة النمطية | FlintVmModule              |       |
-| اسم الوظيفة    | سلسلة                      |       |
-| الحجج_         | للقراءة فقط FlintVmValue[] |       |
-| خيارات         | FlintVmExecutionOptions    |       |
+| الاسم | اكتب | الوصف |
+| ------------ | ----------------------- | ---------------------- |
+| الوحدة النمطية | فلينتفممودول | - وحدة VM.           |
+| اسم الوظيفة | سلسلة | - اسم وظيفة الإدخال. |
+| الحجج_ | للقراءة فقط FlintVmValue[] | - مصفوفة الحجج.     |
+| خيارات | خيارات فلينتفميكسيكوتيون | - خيارات التنفيذ.   |
 
-### ExecuteFlintVmAotArtifact
+#### عقد
+
+- **@param:** - وحدة VM.
+- **@param:** - اسم وظيفة الإدخال.
+- **@param:** - مصفوفة الوسائط.
+- **@param:** - خيارات التنفيذ.
+- **@returns:** نتيجة التنفيذ.
+
+### تنفيذFlintVmAotArtifact
 
 **النوع:** الوظيفة
 
@@ -2746,16 +7693,24 @@ function executeFlintVmAotArtifact(
 ): FlintVmExecutionResult;
 ```
 
-لم يتم تقديم أي وصف.
+ينفذ قطعة أثرية AOT المترجمة.
 
 #### حدود
 
-| الاسم       | اكتب                                   | الوصف |
-| ----------- | -------------------------------------- | ----- |
-| قطعة أثرية  | FlintVmAotArtifact                     |       |
-| اسم الوظيفة | سلسلة                                  |       |
-| الحجج_      | للقراءة فقط FlintVmValue[]             |       |
-| خيارات      | أوميت<FlintVmExecutionOptions, 'mode'> |       |
+| الاسم | اكتب | الوصف |
+| ------------ | ------------------------------------- | ------------------------ |
+| قطعة أثرية | فلينتVmAotArtifact | - قطعة أثرية AOT المجمعة. |
+| اسم الوظيفة | سلسلة | - اسم وظيفة الإدخال.   |
+| الحجج_ | للقراءة فقط FlintVmValue[] | - مصفوفة الحجج.       |
+| خيارات | أوميت<FlintVmExecutionOptions, 'mode'> | - خيارات التنفيذ.     |
+
+#### عقد
+
+- **@param:** - قطعة أثرية AOT مجمعة.
+- **@param:** - اسم وظيفة الإدخال.
+- **@param:** - مصفوفة الوسائط.
+- **@param:** - خيارات التنفيذ.
+- **@returns:** نتيجة التنفيذ.
 
 ### FlintVmExecutorOptions
 
@@ -2765,7 +7720,7 @@ function executeFlintVmAotArtifact(
 export interface FlintVmExecutorOptions
 ```
 
-لم يتم تقديم أي وصف.
+خيارات التكوين لمنفذ الجهاز الظاهري Flint.
 
 ### runFlintVmBootstrap
 
@@ -2781,17 +7736,26 @@ function runFlintVmBootstrap(
 ): FlintVmExecutionResult;
 ```
 
-لم يتم تقديم أي وصف.
+ينفذ وحدة تمهيد التشغيل في الجهاز الظاهري.
 
 #### حدود
 
-| الاسم          | اكتب                                   | الوصف |
-| -------------- | -------------------------------------- | ----- |
-| الوحدة النمطية | FlintVmModule                          |       |
-| اسم الوظيفة    | سلسلة                                  |       |
-| الحجج_         | للقراءة فقط FlintVmValue[]             |       |
-| الوضع          | FlintVmExecutionMode                   |       |
-| خيارات         | أوميت<FlintVmExecutionOptions, 'mode'> |       |
+| الاسم | اكتب | الوصف |
+| ------------ | ------------------------------------- | ---------------------- |
+| الوحدة النمطية | فلينتفممودول | - وحدة Bootstrap VM. |
+| اسم الوظيفة | سلسلة | - اسم وظيفة الإدخال. |
+| الحجج_ | للقراءة فقط FlintVmValue[] | - مصفوفة الحجج.     |
+| الوضع | وضع تنفيذ فلينتفم | - وضع التنفيذ.      |
+| خيارات | أوميت<FlintVmExecutionOptions, 'mode'> | - خيارات التنفيذ.   |
+
+#### عقد
+
+- **@param:** - وحدة Bootstrap VM.
+- **@param:** - اسم وظيفة الإدخال.
+- **@param:** - مصفوفة الوسائط.
+- **@param:** - وضع التنفيذ.
+- **@param:** - خيارات التنفيذ.
+- **@returns:** نتيجة التنفيذ.
 
 ### validateFlintVmModule
 
@@ -2801,13 +7765,17 @@ function runFlintVmBootstrap(
 function validateFlintVmModule(module: FlintVmModule): void;
 ```
 
-لم يتم تقديم أي وصف.
+التحقق من صحة بنية وحدة Flint VM مقابل قواعد الرمز الثانوي.
 
 #### حدود
 
-| الاسم          | اكتب          | الوصف |
-| -------------- | ------------- | ----- |
-| الوحدة النمطية | FlintVmModule |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------- | ------------------------ |
+| الوحدة النمطية | فلينتفممودول | - وحدة VM للتحقق من صحتها. |
+
+#### عقد
+
+- **@param:** - وحدة VM للتحقق من صحتها.
 
 ## `src/vm-wasm`
 
@@ -2819,14 +7787,14 @@ function validateFlintVmModule(module: FlintVmModule): void;
 function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOptions = {}): FlintVmWasmArtifact;
 ```
 
-لم يتم تقديم أي وصف.
+تجميع وحدة Flint VM في قطعة أثرية لرمز WebAssembly تم التحقق من صحتها.
 
 #### حدود
 
-| الاسم          | اكتب                               | الوصف |
-| -------------- | ---------------------------------- | ----- |
-| الوحدة النمطية | FlintVmModule                      |       |
-| خيارات         | فورجيويبسكريبتفmWasmCompileOptions |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------- | ----------- |
+| الوحدة النمطية | فلينتفممودول |             |
+| خيارات | فلينتفمواسمكومبيليوبتيونس |             |
 
 ### FlintVmWasmCompileOptions
 
@@ -2836,7 +7804,7 @@ function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOp
 export interface FlintVmWasmCompileOptions
 ```
 
-لم يتم تقديم أي وصف.
+خيارات تكوين تجميع وحدة Flint VM إلى WebAssembly.
 
 ### PreparFlintVm
 
@@ -2859,33 +7827,43 @@ function prepareFlintVmWasm(
 ): FlintVmPreparedExecutor;
 ```
 
-لم يتم تقديم أي وصف.
+يقوم بإعداد منفذ WebAssembly من وحدة نمطية أو قطعة أثرية للاستدعاء السريع.
 
 #### حدود
 
-| الاسم              | اكتب                                 | الوصف |
-| ------------------ | ------------------------------------ | ----- |
-| وحدة أو قطعة أثرية | FlintVmModule \| FlintVmWasmArtifact |       |
-| خيارات             | FlintVmPreparedExecutorOptions       |       |
+| الاسم | اكتب | الوصف |
+| ---------------- | ------------------------------------ | ----------- |
+| وحدة أو قطعة أثرية | FlintVmModule \| فلينت VmWasmArtifact |             |
+| خيارات | فلينتفمبريباريدكسيكتوروبشنز |             |
 
 ## `src/vm`
 
-### FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+### FLINT_VM_DEFAULT_MAX_MEMORY_PAGES
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
+export const FLINT_VM_DEFAULT_MAX_MEMORY_PAGES;
 ```
 
 لم يتم تقديم أي وصف.
 
-### FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+### FLINT_VM_WASM_ABI_VERSION
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
+export const FLINT_VM_WASM_ABI_VERSION;
+```
+
+لم يتم تقديم أي وصف.
+
+### FLINT_VM_WASM_LOWERING_VERSION
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_VM_WASM_LOWERING_VERSION;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2898,7 +7876,7 @@ export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
 export interface FlintVmAotArtifact
 ```
 
-لم يتم تقديم أي وصف.
+قطعة أثرية JavaScript مجمعة مسبقًا منبعثة من وحدة VM.
 
 ### FlintVmCapabilityImport
 
@@ -2908,7 +7886,7 @@ export interface FlintVmAotArtifact
 export interface FlintVmCapabilityImport
 ```
 
-لم يتم تقديم أي وصف.
+واصف استيراد قدرة المضيف المطلوب بواسطة وحدة VM.
 
 ### FlintVmDebugSpan
 
@@ -2918,7 +7896,7 @@ export interface FlintVmCapabilityImport
 export interface FlintVmDebugSpan
 ```
 
-لم يتم تقديم أي وصف.
+يقوم تصحيح نطاق المصدر بتعيين إزاحة تعليمات الكود الثانوي لإحداثيات الكود المصدري.
 
 ### FlintVmExecutionMode
 
@@ -2928,7 +7906,7 @@ export interface FlintVmDebugSpan
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-لم يتم تقديم أي وصف.
+أوضاع تنفيذ VM bytecode المدعومة ("interpret" و"jit" و"aot").
 
 ### FlintVmExecutionOptions
 
@@ -2938,7 +7916,7 @@ export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 export interface FlintVmExecutionOptions
 ```
 
-لم يتم تقديم أي وصف.
+خيارات تكوين حدود تنفيذ VM، والمخازن المؤقتة للذاكرة، والقياس عن بعد.
 
 ### FlintVmExecutionResult
 
@@ -2948,7 +7926,7 @@ export interface FlintVmExecutionOptions
 export interface FlintVmExecutionResult
 ```
 
-لم يتم تقديم أي وصف.
+النتيجة التي تم إرجاعها بواسطة تشغيل تنفيذ VM بما في ذلك مقاييس القيمة والخطوة.
 
 ### FlintVmExecutor
 
@@ -2958,7 +7936,7 @@ export interface FlintVmExecutionResult
 export interface FlintVmExecutor
 ```
 
-لم يتم تقديم أي وصف.
+واجهة التنفيذ الأساسية لتشغيل وحدات Flint VM المجمعة.
 
 ### FlintVmFunction
 
@@ -2968,7 +7946,7 @@ export interface FlintVmExecutor
 export interface FlintVmFunction
 ```
 
-لم يتم تقديم أي وصف.
+تعريف وظيفة VM المترجمة الذي يحتوي على التعليمات والسجلات والبيانات الوصفية.
 
 ### FlintVmInstruction
 
@@ -2978,7 +7956,7 @@ export interface FlintVmFunction
 export type FlintVmInstruction = |
 ```
 
-لم يتم تقديم أي وصف.
+عمليات تعليمات Bytecode التي يدعمها جهاز Flint الظاهري.
 
 ### FlintVmJitCache
 
@@ -2988,7 +7966,7 @@ export type FlintVmInstruction = |
 export interface FlintVmJitCache
 ```
 
-لم يتم تقديم أي وصف.
+ذاكرة التخزين المؤقت للوظائف المترجمة من المستوى 1 JIT وأعداد استدعاء الوظائف الساخنة.
 
 ### FlintVmJitEntry
 
@@ -2998,7 +7976,7 @@ export interface FlintVmJitCache
 export interface FlintVmJitEntry
 ```
 
-لم يتم تقديم أي وصف.
+إدخال ذاكرة التخزين المؤقت لتجميع JIT يقوم بتخزين الوظيفة المترجمة وعدد المكالمات.
 
 ### FlintVmModule
 
@@ -3008,7 +7986,7 @@ export interface FlintVmJitEntry
 export interface FlintVmModule
 ```
 
-لم يتم تقديم أي وصف.
+حاوية وحدة bytecode القابلة للتنفيذ والتي يستهلكها منفذو VM وAOT.
 
 ### FlintVmPreparedExecutor
 
@@ -3018,7 +7996,7 @@ export interface FlintVmModule
 export interface FlintVmPreparedExecutor
 ```
 
-لم يتم تقديم أي وصف.
+نسخة منفذة قابلة لإعادة الاستخدام ومخصصة مسبقًا ومرتبطة بوحدة نمطية محددة.
 
 ### FlintVmPreparedExecutorOptions
 
@@ -3028,7 +8006,7 @@ export interface FlintVmPreparedExecutor
 export interface FlintVmPreparedExecutorOptions
 ```
 
-لم يتم تقديم أي وصف.
+خيارات تكوين مثيل تنفيذ VM جاهز وقابل لإعادة الاستخدام.
 
 ### FlintVmValue
 
@@ -3038,7 +8016,7 @@ export interface FlintVmPreparedExecutorOptions
 export type FlintVmValue = |
 ```
 
-لم يتم تقديم أي وصف.
+اتحاد ذو علامات يمثل قيم وقت التشغيل التي يتم التعامل معها بواسطة رمز البايت VM.
 
 ### FlintVmWasmArtifact
 
@@ -3048,4 +8026,4 @@ export type FlintVmValue = |
 export interface FlintVmWasmArtifact
 ```
 
-لم يتم تقديم أي وصف.
+WebAssembly البيانات التعريفية الثنائية والاستيرادية المنبعثة من وحدة VM.

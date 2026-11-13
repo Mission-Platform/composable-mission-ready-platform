@@ -33,10 +33,10 @@ function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 
 #### パラメータ
 
-| 名前   | タイプ       | 説明 |
-| ------ | ------------ | ---- |
-| ソース | 文字列       |      |
-| 編集   | 読み取り専用 |
+|名前 |タイプ |説明 |
+| ------ | --------------------- | ----------- |
+|ソース |文字列 |             |
+|編集 |読み取り専用             |
 
 ### CLASS_NAME_ATTRIBUTE
 
@@ -60,9 +60,9 @@ Vue スタイルの `on<Event>` プロパティで表されるイベント名を
 
 #### パラメータ
 
-| 名前         | タイプ | 説明 |
-| ------------ | ------ | ---- |
-| プロパティ名 | 文字列 |      |
+|名前 |タイプ |説明 |
+| ------------ | ------ | ----------- |
+|プロパティ名 |文字列 |             |
 
 ### フレームワークアダプターモジュール
 
@@ -76,9 +76,9 @@ function frameworkAdapterModule(framework: JsxFramework): string;
 
 #### パラメータ
 
-| 名前           | タイプ            | 説明 |
-| -------------- | ----------------- | ---- |
-| フレームワーク | Jsxフレームワーク |      |
+|名前 |タイプ |説明 |
+| --------- | ------------ | ----------- |
+|フレームワーク | Jsxフレームワーク |             |
 
 ### ディレクティブのフレームワーク
 
@@ -92,9 +92,9 @@ function frameworkForDirective(directive: string): JsxFramework | undefined;
 
 #### パラメータ
 
-| 名前           | タイプ | 説明 |
-| -------------- | ------ | ---- |
-| ディレクティブ | 文字列 |      |
+|名前 |タイプ |説明 |
+| --------- | ------ | ----------- |
+|ディレクティブ |文字列 |             |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -148,9 +148,9 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 
 #### パラメータ
 
-| 名前           | タイプ            | 説明 |
-| -------------- | ----------------- | ---- |
-| フレームワーク | Jsxフレームワーク |      |
+|名前 |タイプ |説明 |
+| --------- | ------------ | ----------- |
+|フレームワーク | Jsxフレームワーク |             |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
@@ -296,9 +296,9 @@ function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 
 #### パラメータ
 
-| 名前       | タイプ           | 説明 |
-| ---------- | ---------------- | ---- |
-| モジュール | GenericModuleAst |      |
+|名前 |タイプ |説明 |
+| ------ | ---------------- | ----------- |
+|モジュール | GenericModuleAst |             |
 
 ### MP_HOIST_PREFIX
 
@@ -327,10 +327,10 @@ AST 実装タイプを公開せずに、ソース編集をモジュール ソー
 
 #### パラメータ
 
-| 名前       | タイプ           | 説明 |
-| ---------- | ---------------- | ---- |
-| モジュール | GenericModuleAst |      |
-| 編集       | 読み取り専用     |
+|名前 |タイプ |説明 |
+| ------ | --------------------- | ----------- |
+|モジュール | GenericModuleAst |             |
+|編集 |読み取り専用             |
 
 ### 定数ブール値
 
@@ -344,9 +344,9 @@ function constantBoolean(expression: ExpressionLike): boolean | undefined;
 
 #### パラメータ
 
-| 名前 | タイプ     | 説明 |
-| ---- | ---------- | ---- |
-| 式   | 式のような |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------- | ----------- |
+|式 |式のような |             |
 
 ### GenericOptimizationResult
 
@@ -370,9 +370,9 @@ function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 
 #### パラメータ
 
-| 名前 | タイプ                          | 説明 |
-| ---- | ------------------------------- | ---- |
-| 属性 | 読み取り専用 GenericAttribute[] |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------------------- | ----------- |
+|属性 |読み取り専用 GenericAttribute[] |             |
 
 ### hasMpStaticMarker
 
@@ -386,9 +386,9 @@ function hasMpStaticMarker(node: GenericRenderNode): boolean;
 
 #### パラメータ
 
-| 名前 | タイプ                     | 説明 |
-| ---- | -------------------------- | ---- |
-| node | ジェネリックレンダーノード |      |
+|名前 |タイプ |説明 |
+| ---- | ----------------- | ----------- |
+| node |ジェネリックレンダーノード |             |
 
 ### isCompileTimeConstant
 
@@ -402,9 +402,9 @@ function isCompileTimeConstant(expression: ExpressionLike): boolean;
 
 #### パラメータ
 
-| 名前 | タイプ     | 説明 |
-| ---- | ---------- | ---- |
-| 式   | 式のような |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------- | ----------- |
+|式 |式のような |             |
 
 ### MP_STATIC_ATTR
 
@@ -431,10 +431,10 @@ function optimizeGenericModule(
 
 #### パラメータ
 
-| 名前        | タイプ           | 説明 |
-| ----------- | ---------------- | ---- |
-| モジュール  | GenericModuleAst |      |
-| _オプション | 最適化オプション |      |
+|名前 |タイプ |説明 |
+| -------- | ---------------- | ----------- |
+|モジュール | GenericModuleAst |             |
+| _オプション |最適化オプション |             |
 
 ### 最適化オプション
 
@@ -460,9 +460,9 @@ function stripMpStaticAttributes(
 
 #### パラメータ
 
-| 名前 | タイプ                          | 説明 |
-| ---- | ------------------------------- | ---- |
-| 属性 | 読み取り専用 GenericAttribute[] |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------------------- | ----------- |
+|属性 |読み取り専用 GenericAttribute[] |             |
 
 ### ストリップMp静的マーカー
 
@@ -476,9 +476,9 @@ function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 
 #### パラメータ
 
-| 名前 | タイプ                     | 説明 |
-| ---- | -------------------------- | ---- |
-| node | ジェネリックレンダーノード |      |
+|名前 |タイプ |説明 |
+| ---- | ----------------- | ----------- |
+| node |ジェネリックレンダーノード |             |
 
 ## `src/diagnostics`
 
@@ -543,9 +543,9 @@ function createCompilerDiagnostic(
 
 #### パラメータ
 
-| 名前 | タイプ                                                       | 説明 |
-| ---- | ------------------------------------------------------------ | ---- |
-| 診断 | 省略<CompilerDiagnostic, "fileName"> & { fileName?: string } |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------------------------------------ | ----------- |
+|診断 |省略<CompilerDiagnostic, "fileName"> & { fileName?: string } |             |
 
 ### フォーマットコンパイラ診断
 
@@ -559,9 +559,9 @@ function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 
 #### パラメータ
 
-| 名前 | タイプ         | 説明 |
-| ---- | -------------- | ---- |
-| 診断 | コンパイラ診断 |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------ | ----------- |
+|診断 |コンパイラ診断 |             |
 
 ### throwOnCompilerErrors
 
@@ -577,9 +577,9 @@ function throwOnCompilerErrors(
 
 #### パラメータ
 
-| 名前 | タイプ                                 | 説明 |
-| ---- | -------------------------------------- | ---- |
-| 診断 | readonly CompilerDiagnostic[] \|未定義 |      |
+|名前 |タイプ |説明 |
+| ----------- | ------------------------------------------ | ----------- |
+|診断 | readonly CompilerDiagnostic[] \|未定義 |             |
 
 ## `src/framework`
 
@@ -653,6 +653,16 @@ export interface GeneratedModule
 ```
 
 フレームワーク出力プラグインによって返されるソース アーティファクト。
+
+### 生成されたスタイルアーティファクト
+
+**種類:** インターフェース
+
+```typescript
+export interface GeneratedStyleArtifact
+```
+
+生成されたソース モジュールと一緒に出力されるスタイルシート。
 
 ### ジェネレーターコンテキスト
 
@@ -734,7 +744,7 @@ export type TargetFrameworkId = FrameworkId;
 export interface TargetIntentions< TLowered extends TargetLoweredModule = TargetLoweredModule, >
 ```
 
-ターゲット固有の意図ラッパー。中立的な事実は、後のパスで利用可能なままになります。
+ターゲット固有の意図ラッパー。中立的な事実は、後のパスで利用できるままになります。
 
 ### ターゲットLoweredモジュール
 
@@ -787,7 +797,7 @@ export interface ViteBuildContext
 **種類:** 定数
 
 ```typescript
-export const defineForgeFramework;
+export const defineForgeFramework: typeof defineForgeOutputPlugin;
 ```
 
 フレームワーク パッケージがターゲット実装を登録することを強調するエイリアス。
@@ -800,13 +810,13 @@ export const defineForgeFramework;
 function defineForgeOutputPlugin(plugin: T): T;
 ```
 
-コンシューマによる登録のためにフレームワーク出力プラグインを検証して返します。
+コンシューマーによる登録のためにフレームワーク出力プラグインを検証して返します。
 
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| プラグイン | た     |      |
+|名前 |タイプ |説明 |
+| ------ | ---- | ----------- |
+|プラグイン |た |             |
 
 ### ForgePluginId
 
@@ -832,9 +842,9 @@ function validateForgeOutputPlugin(
 
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| プラグイン | 不明   |      |
+|名前 |タイプ |説明 |
+| ------ | ------- | ----------- |
+|プラグイン |不明 |             |
 
 ### validateForgeOutputPluginSelection
 
@@ -850,9 +860,9 @@ function validateForgeOutputPluginSelection(
 
 #### パラメータ
 
-| 名前       | タイプ           | 説明 |
-| ---------- | ---------------- | ---- |
-| プラグイン | 読み取り専用 T[] |      |
+|名前 |タイプ |説明 |
+| ------- | ------------ | ----------- |
+|プラグイン |読み取り専用 T[] |             |
 
 ## `src/ir`
 
@@ -871,10 +881,10 @@ function attributeExpressionText(
 
 #### パラメータ
 
-| 名前 | タイプ                     | 説明 |
-| ---- | -------------------------- | ---- |
-| node | ジェネリックレンダーノード |      |
-| 名前 | 文字列                     |      |
+|名前 |タイプ |説明 |
+| ---- | ----------------- | ----------- |
+| node |ジェネリックレンダーノード |             |
+|名前 |文字列 |             |
 
 ### 属性文字列値
 
@@ -891,10 +901,42 @@ function attributeStringValue(
 
 #### パラメータ
 
-| 名前 | タイプ                     | 説明 |
-| ---- | -------------------------- | ---- |
-| node | ジェネリックレンダーノード |      |
-| 名前 | 文字列                     |      |
+|名前 |タイプ |説明 |
+| ---- | ----------------- | ----------- |
+| node |ジェネリックレンダーノード |             |
+|名前 |文字列 |             |
+
+### 子スロット名
+
+**種類:** 関数
+
+```typescript
+function childSlotName(
+  child: GenericRenderChild,
+  slotAttributeName = "slot",
+  defaultSlotName = "default",
+): string | undefined;
+```
+
+子がルーティングされる `slot="…"` 名、またはデフォルト スロット コンテンツの場合は `undefined` です。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------------- | ------------------ | ----------- |
+|子供 |ジェネリックレンダーチャイルド |             |
+|スロット属性名 |                    |             |
+|デフォルトスロット名 |                    |             |
+
+### 計算されたセットアップ値
+
+**種類:** インターフェース
+
+```typescript
+export interface ComputedSetupValue
+```
+
+セットアップから返され、レンダリング/スタイル バインディングによってアドレス指定できる名前付きの値。
 
 ### 動的ノードの意図
 
@@ -961,10 +1003,10 @@ function findAttribute(
 
 #### パラメータ
 
-| 名前 | タイプ                     | 説明 |
-| ---- | -------------------------- | ---- |
-| node | ジェネリックレンダーノード |      |
-| 名前 | 文字列                     |      |
+|名前 |タイプ |説明 |
+| ---- | ----------------- | ----------- |
+| node |ジェネリックレンダーノード |             |
+|名前 |文字列 |             |
 
 ### GenericAstNode
 
@@ -982,7 +1024,8 @@ export type GenericAstNode =
 **種類：**タイプ
 
 ```typescript
-export type GenericAttribute = GenericJsxAttribute | GenericJsxSpreadAttribute;
+export type GenericAttribute =
+  GenericJsxAttribute | GenericJsxSpreadAttribute | GenericSlotAttribute;
 ```
 
 説明はありません。
@@ -1084,7 +1127,11 @@ export interface GenericParameter
 
 ```typescript
 export type GenericRenderChild =
-  GenericRenderNode | GenericTextNode | GenericExpressionNode;
+  | GenericRenderNode
+  | GenericTextNode
+  | GenericExpressionNode
+  | GenericConditionalNode
+  | GenericForNode;
 ```
 
 説明はありません。
@@ -1130,6 +1177,56 @@ export type GenericStatementKind =
 
 保持されたモジュールレベルのステートメントの大まかな分類。
 
+### GenericStyleAtRule
+
+**種類:** インターフェース
+
+```typescript
+export interface GenericStyleAtRule
+```
+
+Flint スタイル コンパニオンから継承された正規化された CSS at-rule。
+
+### GenericStyleClassMapNode
+
+**種類:** インターフェース
+
+```typescript
+export interface GenericStyleClassMapNode
+```
+
+正規化された CSS モジュール クラス マップ内の 1 つのアドレス指定可能なローカル クラス。
+
+### ジェネリックスタイルコンパニオン
+
+**種類:** インターフェース
+
+```typescript
+export interface GenericStyleCompanion
+```
+
+1 つの Flint モジュールが所有するターゲット中立スタイルのアーティファクト。
+
+### ジェネリックスタイル宣言
+
+**種類:** インターフェース
+
+```typescript
+export interface GenericStyleDeclaration
+```
+
+Flint スタイル コンパニオンから引き継がれた正規化された CSS 宣言。
+
+### ジェネリックスタイルルール
+
+**種類:** インターフェース
+
+```typescript
+export interface GenericStyleRule
+```
+
+Flint スタイル コンパニオンから継承された正規化された CSS ルール。
+
 ### ジェネリックタグの種類
 
 **種類：**タイプ
@@ -1150,6 +1247,23 @@ export interface GenericTextNode
 
 JSX タグ間のリテラル テキスト。
 
+### isComponentNode
+
+**種類:** 関数
+
+```typescript
+function isComponentNode(node: GenericRenderNode): boolean;
+```
+
+node のタグがコンポーネント (大文字の識別子、または動的/メンバー式) に名前を付けるかどうか
+組み込みの HTML 要素ではなく。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ----------------- | ----------- |
+| node |ジェネリックレンダーノード |             |
+
 ### isExpressionNode
 
 **種類:** 関数
@@ -1164,9 +1278,9 @@ function isExpressionNode(
 
 #### パラメータ
 
-| 名前 | タイプ                         | 説明 |
-| ---- | ------------------------------ | ---- |
-| 子供 | ジェネリックレンダーチャイルド |      |
+|名前 |タイプ |説明 |
+| ----- | ------------------ | ----------- |
+|子供 |ジェネリックレンダーチャイルド |             |
 
 ### isRenderNode
 
@@ -1180,9 +1294,26 @@ function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 
 #### パラメータ
 
-| 名前 | タイプ                         | 説明 |
-| ---- | ------------------------------ | ---- |
-| 子供 | ジェネリックレンダーチャイルド |      |
+|名前 |タイプ |説明 |
+| ----- | ------------------ | ----------- |
+|子供 |ジェネリックレンダーチャイルド |             |
+
+### isRenderNodeMarker
+
+**種類:** 関数
+
+```typescript
+function isRenderNodeMarker(node: GenericRenderNode, tag: string): boolean;
+```
+
+node が名前付きコンパイル時マーカーであるかどうか。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ----------------- | ----------- |
+| node |ジェネリックレンダーノード |             |
+|タグ |文字列 |             |
 
 ### isTextNode
 
@@ -1196,9 +1327,9 @@ function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 
 #### パラメータ
 
-| 名前 | タイプ                         | 説明 |
-| ---- | ------------------------------ | ---- |
-| 子供 | ジェネリックレンダーチャイルド |      |
+|名前 |タイプ |説明 |
+| ----- | ------------------ | ----------- |
+|子供 |ジェネリックレンダーチャイルド |             |
 
 ### ListKeyIntention
 
@@ -1210,6 +1341,24 @@ export interface ListKeyIntention
 
 ターゲット リスト レンダラーの安定したキー候補。
 
+### 意味のある子供たち
+
+**種類:** 関数
+
+```typescript
+function meaningfulChildren(
+  node: GenericRenderNode,
+): readonly GenericRenderChild[];
+```
+
+ターゲットまで生き残った子 (空白のみのテキストには何も含まれません)。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ----------------- | ----------- |
+| node |ジェネリックレンダーノード |             |
+
 ### メモ意図
 
 **種類:** インターフェース
@@ -1219,6 +1368,16 @@ export interface MemoIntention
 ```
 
 メモ化された値または派生した値。
+
+### モデル契約
+
+**種類:** インターフェース
+
+```typescript
+export interface ModelContract
+```
+
+ターゲットに中立な制御値とその型指定された更新イベント。
 
 ### プロップインテンション
 
@@ -1230,6 +1389,16 @@ export interface PropIntention
 
 コンポーネントのシグネチャまたは props タイプから推測される中立的な props 宣言。
 
+### リアクティブプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface ReactiveProperty
+```
+
+すべてのターゲット エミッタによって共有されるリアクティブ コンポーネント プロパティ。
+
 ### リフレインテンション
 
 **種類:** インターフェース
@@ -1240,7 +1409,7 @@ export interface RefIntention
 
 ターゲットの ref 表現から独立した ref インテンション。
 
-### renderNodeTagName
+### レンダリングノードタグ名
 
 **種類:** 関数
 
@@ -1252,9 +1421,25 @@ function renderNodeTagName(node: GenericRenderNode): string | undefined;
 
 #### パラメータ
 
-| 名前 | タイプ                     | 説明 |
-| ---- | -------------------------- | ---- |
-| node | ジェネリックレンダーノード |      |
+|名前 |タイプ |説明 |
+| ---- | ----------------- | ----------- |
+| node |ジェネリックレンダーノード |             |
+
+### renderNodeTagText
+
+**種類:** 関数
+
+```typescript
+function renderNodeTagText(node: GenericRenderNode): string;
+```
+
+レンダー node のプレーンなタグ テキスト (計算されたタグはそのソース式を出力します)。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ----------------- | ----------- |
+| node |ジェネリックレンダーノード |             |
 
 ### セマンティックインテンション
 
@@ -1276,6 +1461,36 @@ export interface SemanticModule
 
 すべてのフレームワーク出力プラグインによって消費される型付きセマンティック IR。
 
+### セットアップ契約
+
+**種類:** インターフェース
+
+```typescript
+export interface SetupContract
+```
+
+すべてのターゲットの下位層によって消費される正規のセットアップ/イベント/モデル コントラクト。
+
+### セットアップイベントエミッター
+
+**種類:** インターフェース
+
+```typescript
+export interface SetupEventEmitter
+```
+
+イベント エミッタはセットアップの外部で宣言され、イベント設定とペアになっています。
+
+### SetupEventHandler
+
+**種類:** インターフェース
+
+```typescript
+export interface SetupEventHandler
+```
+
+イベント ハンドラーがセットアップの外部で宣言されました。
+
 ### スロットインテンション
 
 **種類:** インターフェース
@@ -1284,7 +1499,7 @@ export interface SemanticModule
 export interface SlotIntention
 ```
 
-スロットの読み取り、または子コンポーネントに渡されたスロット。
+読み取られたスロット、または子コンポーネントに渡されたスロット。
 
 ### ソース裏付け済み
 
@@ -1298,15 +1513,15 @@ function sourceBacked(
 ): SourceBackedExpression;
 ```
 
-すでに出力されているテキストからソースに裏付けされた式を構築します。
+すでに出力されているテキストからソースに裏付けられた式を構築します。
 
 #### パラメータ
 
-| 名前     | タイプ                         | 説明 |
-| -------- | ------------------------------ | ---- |
-| テキスト | 文字列                         |      |
-| 構文     | SourceBackedExpression["構文"] |      |
-| スパン   | ソーススパン                   |      |
+|名前 |タイプ |説明 |
+| ------ | -------------------------------- | ----------- |
+|テキスト |文字列 |             |
+|構文 | SourceBackedExpression["構文"] |             |
+|スパン |ソーススパン |             |
 
 ### SourceBackedExpression
 
@@ -1353,10 +1568,465 @@ function walkRenderNodes(
 
 #### パラメータ
 
-| 名前   | タイプ                            | 説明     |
-| ------ | --------------------------------- | -------- |
-| ノード | GenericRenderNode[]               | readonly |
-| 訪問   | (node: GenericRenderNode) => void |          |
+|名前 |タイプ |説明 |
+| ----- | --------------------------------- | ----------- |
+|ノード | GenericRenderNode[] | readonly             |
+|訪問 | (node: GenericRenderNode) => void |             |
+
+### スロット属性なし
+
+**種類:** 関数
+
+```typescript
+function withoutSlotAttribute(
+  node: GenericRenderNode,
+  slotAttributeName = "slot",
+): GenericRenderNode;
+```
+
+`slot="…"` ルーティング マーカーのない node のコピー。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------------- | ----------------- | ----------- |
+| node |ジェネリックレンダーノード |             |
+|スロット属性名 |                   |             |
+
+## `src/lowering/dynamic`
+
+### 下位動的ノード
+
+**種類:** 関数
+
+```typescript
+function lowerDynamicNodes(
+  module: SemanticModule,
+): readonly NormalizedDynamicPlan[];
+```
+
+動的な node インテンションを下げ、ツリー `<Dynamic>` タグをレンダリングします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | -------------- | ----------- |
+|モジュール |セマンティックモジュール |             |
+
+### lowerListKeys
+
+**種類:** 関数
+
+```typescript
+function lowerListKeys(
+  module: SemanticModule,
+): readonly NormalizedListKeyPlan[];
+```
+
+`SemanticModule` からキー候補をリストダウンします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | -------------- | ----------- |
+|モジュール |セマンティックモジュール |             |
+
+### 下位静的サブツリー
+
+**種類:** 関数
+
+```typescript
+function lowerStaticSubtrees(
+  module: SemanticModule,
+): readonly NormalizedStaticSubtreePlan[];
+```
+
+`mp-static` でマークされた静的サブツリー候補を下げます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | -------------- | ----------- |
+|モジュール |セマンティックモジュール |             |
+
+### 正規化された動的計画
+
+**種類:** インターフェース
+
+```typescript
+export interface NormalizedDynamicPlan
+```
+
+動的 node `<Dynamic is={...}>` の正規化された記述子。
+
+### NormalizedListKeyPlan
+
+**種類:** インターフェース
+
+```typescript
+export interface NormalizedListKeyPlan
+```
+
+リストキーバインディングの正規化された記述子。
+
+### NormalizedStaticSubtreePlan
+
+**種類:** インターフェース
+
+```typescript
+export interface NormalizedStaticSubtreePlan
+```
+
+ホイストされた静的サブツリーの正規化された記述子。
+
+## `src/lowering/events`
+
+### 正規イベント名
+
+**種類:** 関数
+
+```typescript
+function canonicalEventName(propName: string): string;
+```
+
+`onXxx` プロパティ名から正規イベント名を抽出します (例: `onClick` -> `click`、`onKeyDown` -> `keydown`)。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|プロップ名 |文字列 |             |
+
+### フォーマットターゲットイベント名
+
+**種類:** 関数
+
+```typescript
+function formatTargetEventName(
+  eventName: string,
+  target: "react" | "solid" | "vue" | "svelte" | "web-components",
+): string;
+```
+
+ターゲット フレームワークの規則に従ってイベント名の形式を設定します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | ----------------------------------------------------------- | ----------- |
+|イベント名 |文字列 |             |
+|ターゲット | "react" \| "solid" \| "vue" \| "svelte" \| "Web コンポーネント" |             |
+
+### isEventHandlerProp
+
+**種類:** 関数
+
+```typescript
+function isEventHandlerProp(propName: string): boolean;
+```
+
+プロパティ名がイベント ハンドラー プロパティ (`onClick`、`onKeyDown` など) を表すかどうかを決定します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|プロップ名 |文字列 |             |
+
+### 下位イベント意図
+
+**種類:** 関数
+
+```typescript
+function lowerEventIntentions(
+  module: SemanticModule,
+): readonly NormalizedEventPlan[];
+```
+
+`SemanticModule` からすべてのイベント ハンドラーの意図を抽出します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | -------------- | ----------- |
+|モジュール |セマンティックモジュール |             |
+
+### 正規化されたイベントプラン
+
+**種類:** インターフェース
+
+```typescript
+export interface NormalizedEventPlan
+```
+
+引き下げられたコンポーネント イベント ハンドラーの正規化された記述子。
+
+## `src/lowering/pipeline`
+
+### BaseLoweredモジュール
+
+**種類:** インターフェース
+
+```typescript
+export interface BaseLoweredModule extends TargetLoweredModule
+```
+
+フレームワーク プラグインを埋め込んだり、その上に構築したりできる、標準ベースラインの引き下げられたプラン。
+
+### createBaseLoweredModule
+
+**種類:** 関数
+
+```typescript
+function createBaseLoweredModule(
+  module: SemanticModule,
+  framework: TargetFrameworkId,
+): BaseLoweredModule;
+```
+
+共有プロップ正規化、スロット合成、
+イベントの低下、動的な node 抽出、およびリスト キーの正規化。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| --------- | ----------------- | ----------------------------------- |
+|モジュール |セマンティックモジュール | - フロントエンド IR からのセマンティック モジュール。 |
+|フレームワーク |ターゲットフレームワークID | - ターゲット フレームワーク ID。          |
+
+#### 契約
+
+- **@param:** - フロントエンド IR からのセマンティック モジュール。
+- **@param:** - ターゲット フレームワーク ID。
+- **@returns:** 標準ベースの低めのモジュール。
+
+### validateLoweredInvariants
+
+**種類:** 関数
+
+```typescript
+function validateLoweredInvariants(lowered: TargetLoweredModule): void;
+```
+
+下げられたモジュールが必要な構造的不変条件に準拠していることを検証します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------------------- | ------------------------------ |
+|下げた |ターゲットLoweredモジュール | - モジュールを下げて確認します。 |
+
+#### 契約
+
+- **@param:** - チェックする降下モジュール。
+- **@throws:** 不変契約に違反した場合。
+
+## `src/lowering/props`
+
+### canonicalizePropsContract
+
+**種類:** 関数
+
+```typescript
+function canonicalizePropsContract(
+  module: SemanticModule,
+  defaultParameterName = "props",
+): NormalizedPropsContract;
+```
+
+`SemanticModule` からの props コントラクトを正規化します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------------------- | -------------- | ----------------------------------------------------------------------------- |
+|モジュール |セマンティックモジュール | - 検査するセマンティックモジュール。                                             |
+|デフォルトパラメータ名 |                | - 何も宣言されていない場合のフォールバック props パラメータ名 (デフォルト: 'props')。 |
+
+#### 契約
+
+- **@param:** - 検査するセマンティック モジュール。
+- **@param:** - 何も宣言されていない場合のフォールバック props パラメータ名 (デフォルト: 'props')。
+- **@returns:** 正規の小道具コントラクト。
+
+### 正規化されたプロップ
+
+**種類:** インターフェース
+
+```typescript
+export interface NormalizedProp
+```
+
+正規化された、ターゲットに依存しないプロパティの説明。
+
+### NormalizedPropsContract
+
+**種類:** インターフェース
+
+```typescript
+export interface NormalizedPropsContract
+```
+
+コンポーネントの正規化された props コントラクト。
+
+### 解決PropTypeText
+
+**種類:** 関数
+
+```typescript
+function resolvePropTypeText(prop: PropIntention): string;
+```
+
+prop インテンションの型文字列を解決します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------------- | ----------- |
+|小道具 |プロップインテンション |             |
+
+### UNKNOWN_PROP_TYPE
+
+**種類:** 定数
+
+```typescript
+export const UNKNOWN_PROP_TYPE;
+```
+
+宣言された型または推論された型が存在しない場合のフォールバック型文字列。
+
+## `src/lowering/setup`
+
+### EMPTY_SETUP_CONTRACT
+
+**種類:** 定数
+
+```typescript
+export const EMPTY_SETUP_CONTRACT: SetupContract;
+```
+
+セットアップのないレガシーフリーのコンポーザブル モジュールによって使用される空のセットアップ コントラクト。
+
+### 正規化セットアップ契約
+
+**種類:** 関数
+
+```typescript
+function normalizeSetupContract(module: SemanticModule): SetupContract;
+```
+
+フロントエンドによってアタッチされた正規セットアップ コントラクトを取得します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | -------------- | ----------- |
+|モジュール |セマンティックモジュール |             |
+
+### validateSetupContract
+
+**種類:** 関数
+
+```typescript
+function validateSetupContract(
+  contract: SetupContract,
+  fileName = "<unknown>",
+): readonly CompilerDiagnostic[];
+```
+
+ターゲットを下げる前に、セットアップの依存関係、名前、モデル ペイロードの互換性を検証します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------------- | ----------- |
+|契約 |セットアップ契約 |             |
+|ファイル名 |               |             |
+
+## `src/lowering/slots`
+
+### DEFAULT_SLOT_NAME
+
+**種類:** 定数
+
+```typescript
+export const DEFAULT_SLOT_NAME;
+```
+
+サポートされているすべてのターゲット フレームワークにわたるデフォルトのスロット名。
+
+### isDefaultSlotName
+
+**種類:** 関数
+
+```typescript
+function isDefaultSlotName(name: string): boolean;
+```
+
+スロット名がデフォルトのスロットであるかどうかを決定します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|名前 |文字列 |             |
+
+### isSlotRenderNode
+
+**種類:** 関数
+
+```typescript
+function isSlotRenderNode(node: GenericRenderNode): boolean;
+```
+
+レンダリング node がスロット プレースホルダー タグ (`<Slot>` または `<slot>`) を表すかどうかを決定します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ----------------- | ----------- |
+| node |ジェネリックレンダーノード |             |
+
+### 正規化されたスロットプラン
+
+**種類:** インターフェース
+
+```typescript
+export interface NormalizedSlotPlan
+```
+
+コンポーネントスロットの正規化された記述子。
+
+### 正規化されたスロット契約
+
+**種類:** インターフェース
+
+```typescript
+export interface NormalizedSlotsContract
+```
+
+コンポーネント用に合成されたすべてのスロットの正規化されたコレクション。
+
+### スロットプランを合成する
+
+**種類:** 関数
+
+```typescript
+function synthesizeSlotPlans(module: SemanticModule): NormalizedSlotsContract;
+```
+
+`SemanticModule` の統合スロット コントラクトを合成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | -------------- | --------------------------------- |
+|モジュール |セマンティックモジュール | - 分析するセマンティックモジュール。 |
+
+#### 契約
+
+- **@param:** - 分析するセマンティック モジュール。
+- **@returns:** 正規化されたスロット プラン コントラクト。
 
 ## `src/schema`
 
@@ -1372,15 +2042,15 @@ function assertTargetIntentionsLowered(
 ```
 
 提供された意図が有効であり、引き下げられた目標計画が含まれていることをアサートします。
-インテンションが不完全な場合は、TargetIntentionsValidationError (TypeError のサブクラス) をスローします。
+インテントが不完全な場合は、TargetIntentionsValidationError (TypeError のサブクラス) をスローします。
 または、引き下げられた計画識別子が予想されるフレームワークと一致しない場合。
 
 #### パラメータ
 
-| 名前                     | タイプ           | 説明 |
-| ------------------------ | ---------------- | ---- |
-| 意図                     | 不明             |      |
-| 期待されるフレームワーク | フレームワークID |      |
+|名前 |タイプ |説明 |
+| ----------------- | ----------- | ----------- |
+|意図 |不明 |             |
+|期待されるフレームワーク |フレームワークID |             |
 
 ### 宣言的スキーマ
 
@@ -1404,9 +2074,9 @@ function findActionableSpan(value: unknown): SourceSpan | undefined;
 
 #### パラメータ
 
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 不明   |      |
+|名前 |タイプ |説明 |
+| ----- | ------- | ----------- |
+|値 |不明 |             |
 
 ### スキーマフィールドルール
 
@@ -1521,15 +2191,15 @@ function validateAgainstSchema(
 ): SchemaValidationIssue[];
 ```
 
-宣言スキーマに対してターゲット オブジェクトを検証し、すべての構造上の問題を収集します。
+ターゲット オブジェクトを宣言スキーマに対して検証し、すべての構造上の問題を収集します。
 
 #### パラメータ
 
-| 名前       | タイプ                 | 説明                                         |
-| ---------- | ---------------------- | -------------------------------------------- |
-| ターゲット | 不明                   | - 検証する対象のオブジェクトまたはレコード。 |
-| スキーマ   | 宣言的スキーマ         | - 構造ルールを定義する宣言型スキーマ。       |
-| オプション | スキーマ検証オプション | - 検証構成オプション。                       |
+|名前 |タイプ |説明 |
+| ------- | ----------------------- | ----------------------------------------------- |
+|ターゲット |不明 | - 検証する対象のオブジェクトまたはレコード。          |
+|スキーマ |宣言的スキーマ | - 構造ルールを定義する宣言型スキーマ。 |
+|オプション |スキーマ検証オプション | - 検証構成オプション。             |
 
 #### 契約
 
@@ -1554,7 +2224,552 @@ function validateTargetIntentions(
 
 #### パラメータ
 
-| 名前                     | タイプ           | 説明 |
-| ------------------------ | ---------------- | ---- |
-| 意図                     | 不明             |      |
-| 期待されるフレームワーク | フレームワークID |      |
+|名前 |タイプ |説明 |
+| ----------------- | ----------- | ----------- |
+|意図 |不明 |             |
+|期待されるフレームワーク |フレームワークID |             |
+
+## `src/testing`
+
+### ブール属性
+
+**種類:** 関数
+
+```typescript
+function booleanAttribute(name: string): GenericJsxAttribute;
+```
+
+値のないブール短縮属性 (`disabled`)。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|名前 |文字列 |             |
+
+### 成分
+
+**種類:** 関数
+
+```typescript
+function component(parts: {
+  name: string;
+  parameter?: string;
+  parameterType?: string;
+  exported?: boolean;
+  body?: readonly GenericStatement[];
+  returnNode?: GenericRenderNode;
+  returnExpression?: string;
+  returned?: { expression: string; nodes?: readonly GenericRenderNode[] };
+}): GenericComponent;
+```
+
+モジュールの名前の由来となっているコンポーネント レコードを構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|部品 | { 名前: 文字列;パラメータ?: 文字列;パラメータタイプ?: 文字列;エクスポートされましたか?: ブール値; body?: readonly GenericStatement[]; returnNode?: GenericRenderNode; returnExpression?: 文字列;返されましたか?: { 式: 文字列;ノード?: readonly GenericRenderNode[] }; } |             |
+
+### 動的要素
+
+**種類:** 関数
+
+```typescript
+function dynamicElement(
+  expression: string,
+  parts: {
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+  } = {},
+): GenericRenderNode;
+```
+
+計算タグ レンダー node を構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | -------------------------------------------------------------------------------------------------------- | ----------- |
+|式 |文字列 |             |
+|部品 | { 属性?: 読み取り専用 GenericAttribute[];子供?: readonly GenericRenderChild[];ソース?: 文字列; } |             |
+
+### 動的ノード
+
+**種類:** 関数
+
+```typescript
+function dynamicNode(
+  expression: string,
+  span: SourceSpan = EMPTY_SPAN,
+): DynamicNodeIntention;
+```
+
+動的 node インテンションを構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ---------- | ----------- |
+|式 |文字列 |             |
+|スパン |ソーススパン |             |
+
+### 効果
+
+**種類:** 関数
+
+```typescript
+function effect(
+  body: string,
+  second?:
+    | readonly string[]
+    | string
+    | { cleanup?: string; dependencies?: readonly string[] },
+  third?: string | readonly string[],
+): EffectIntention;
+```
+
+効果の意図を構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---------------------------------------------------------------------------------------- | ----------- |
+|ボディ |文字列 |             |
+| 2番目 | \|読み取り専用文字列[] \|文字列 \| { クリーンアップ?: 文字列;依存関係?: 読み取り専用 string[] } |             |
+| 3番目 |文字列 \|読み取り専用文字列[] |             |
+
+### 要素
+
+**種類:** 関数
+
+```typescript
+function element(
+  tag: string,
+  parts: {
+    tagKind?: GenericTagKind;
+    selfClosing?: boolean;
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+    span?: SourceSpan;
+  } = {},
+): GenericRenderNode;
+```
+
+レンダリング node をビルドします。 `source` は node 自体のテキストで、ネストされたマークアップを結合するときに使用されます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|タグ |文字列 |             |
+|部品 | { tagKind?: GenericTagKind; selfClosing?: ブール値;属性?: 読み取り専用 GenericAttribute[];子供?: readonly GenericRenderChild[];ソース?: 文字列;スパン?: ソーススパン; } |             |
+
+### 要素参照
+
+**種類:** 定数
+
+```typescript
+export const elementRef: typeof reference;
+```
+
+`reference` のエイリアス (Web コンポーネント仕様で使用)。
+
+### イベント
+
+**種類:** 関数
+
+```typescript
+function event(name: string, handler: string): EventIntention;
+```
+
+イベントの意図を構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|名前 |文字列 |             |
+|ハンドラー |文字列 |             |
+
+### 式属性
+
+**種類:** 関数
+
+```typescript
+function expressionAttribute(
+  name: string,
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericJsxAttribute;
+```
+
+`name={expression}` 属性。オプションでネストされたマークアップを保持します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---------------------------- | ----------- |
+|名前 |文字列 |             |
+|テキスト |文字列 |             |
+|ネストされた | GenericRenderNode[] | readonly             |
+
+### 式子供
+
+**種類:** 関数
+
+```typescript
+function expressionChild(
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericExpressionNode;
+```
+
+子位置の `{ … }` 補間。オプションでネストされたマークアップを保持します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---------------------------- | ----------- |
+|テキスト |文字列 |             |
+|ネストされた | GenericRenderNode[] | readonly             |
+
+### 備品の意図
+
+**種類：**タイプ
+
+```typescript
+export type FixtureIntentions = SemanticModuleParts;
+```
+
+`SemanticModuleParts` と従来の Vue 仕様との互換性のエイリアス。
+
+### 断片
+
+**種類:** 関数
+
+```typescript
+function fragment(
+  children: readonly GenericRenderChild[] = [],
+  source = "<Fragment />",
+): GenericRenderNode;
+```
+
+フラグメント レンダー node (`<>…</>` または `<Fragment>…</Fragment>`) を構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ----------------------------- | ----------- |
+|子供たち | GenericRenderChild[] | readonly             |
+|ソース |                               |             |
+
+### リストキー
+
+**種類:** 関数
+
+```typescript
+function listKey(
+  source: string,
+  second?: boolean | string | { key?: string; stable?: boolean },
+  third?: boolean | string,
+): ListKeyIntention;
+```
+
+リストキーインテンションを構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------------------------------------------------------- | ----------- |
+|ソース |文字列 |             |
+| 2番目 |ブール値 \|文字列 \| { キー?: 文字列;安定していますか?: ブール値 } |             |
+| 3番目 |ブール値 \|文字列 |             |
+
+### メモ
+
+**種類:** 関数
+
+```typescript
+function memo(
+  name: string,
+  factory: string,
+  dependencies?: readonly string[],
+): MemoIntention;
+```
+
+メモの意図を構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------ | ----------------- | ----------- |
+|名前 |文字列 |             |
+|工場 |文字列 |             |
+|依存関係 |読み取り専用文字列[] |             |
+
+### モジュールインポート
+
+**種類:** 関数
+
+```typescript
+function moduleImport(
+  text: string,
+  source: string,
+  parts: Partial<Omit<GenericImport, "kind" | "text" | "source" | "span">> = {},
+): GenericImport;
+```
+
+ソーステキストと解決された指定子からインポートレコードを構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | -------------------------------------------------------------------- | ----------- |
+|テキスト |文字列 |             |
+|ソース |文字列 |             |
+|部品 | Partial<Omit<GenericImport, "kind" \| "text" \| "source" \| "span">> |             |
+
+### ニュートラルインポート
+
+**種類:** 関数
+
+```typescript
+function neutralImport(
+  valueNames: readonly string[],
+  typeNames: readonly string[] = [],
+): GenericImport;
+```
+
+その名前からわかるように、中立的な `@mission-platform/forge-jsx` インポート。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ----------------- | ----------- |
+|値名 |読み取り専用文字列[] |             |
+|タイプ名 |読み取り専用文字列[] |             |
+
+### 小道具
+
+**種類:** 関数
+
+```typescript
+function prop(
+  name: string,
+  second?:
+    string | { type?: string; optional?: boolean; defaultValue?: string },
+  third?: boolean | { optional?: boolean; defaultValue?: string },
+  fourth?: string,
+): PropIntention;
+```
+
+プロップ意図を構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ---------------------------------------------------------------------- | ----------- |
+|名前 |文字列 |             |
+| 2番目 |文字列 \| { タイプ?: 文字列;オプション?: ブール値;デフォルト値?: 文字列 } |             |
+| 3番目 |ブール値 \| { オプション?: ブール値;デフォルト値?: 文字列 } |             |
+| 4番目 |文字列 |             |
+
+### 参照
+
+**種類:** 関数
+
+```typescript
+function reference(
+  name: string,
+  elementType?: string,
+  initializer?: string,
+): RefIntention;
+```
+
+参照意図を構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ------ | ----------- |
+|名前 |文字列 |             |
+|要素タイプ |文字列 |             |
+|イニシャライザ |文字列 |             |
+
+### returnステートメント
+
+**種類:** 関数
+
+```typescript
+function returnStatement(
+  expression: string,
+  renderNodes: readonly GenericRenderNode[] = [],
+): GenericStatement;
+```
+
+コンポーネント本体の `return …;` ステートメントを構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ---------------------------- | ----------- |
+|式 |文字列 |             |
+|レンダリングノード | GenericRenderNode[] | readonly             |
+
+### セマンティックモジュール
+
+**種類:** 関数
+
+```typescript
+function semanticModule(parts: SemanticModuleParts): SemanticModule;
+```
+
+治具パーツから `SemanticModule` を組み立てます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------------------- | ----------- |
+|部品 |セマンティックモジュールパーツ |             |
+
+### セマンティックモジュールパーツ
+
+**種類:** インターフェース
+
+```typescript
+export interface SemanticModuleParts
+```
+
+テストフィクスチャが宣言できる意図事実。
+
+### スロット
+
+**種類:** 関数
+
+```typescript
+function slot(name: string, fallback?: string): SlotIntention;
+```
+
+スロットの意図を構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|名前 |文字列 |             |
+|フォールバック |文字列 |             |
+
+### スプレッド属性
+
+**種類:** 関数
+
+```typescript
+function spreadAttribute(
+  text: string,
+  span: SourceSpan = EMPTY_SPAN,
+): GenericJsxSpreadAttribute;
+```
+
+`{...expression}` スプレッド属性。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ---------- | ----------- |
+|テキスト |文字列 |             |
+|スパン |ソーススパン |             |
+
+### 州
+
+**種類:** 関数
+
+```typescript
+function state(
+  name: string,
+  setterName?: string,
+  parts: { type?: string; inferredType?: string; initializer?: string } = {},
+): StateIntention;
+```
+
+国家の意図を構築する。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | -------------------------------------------------------------- | ----------- |
+|名前 |文字列 |             |
+|セッター名 |文字列 |             |
+|部品 | { タイプ?: 文字列; inferredType?: 文字列;初期化子?: 文字列 } |             |
+
+### 声明
+
+**種類:** 関数
+
+```typescript
+function statement(
+  text: string,
+  statementKind: GenericStatementKind = "variable",
+  parts: {
+    name?: string;
+    exported?: boolean;
+    renderNodes?: readonly GenericRenderNode[];
+  } = {},
+): GenericStatement;
+```
+
+ソーステキストからステートメントレコードを構築します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------- | ---------------------------------------------------------------------------------- | ----------- |
+|テキスト |文字列 |             |
+|ステートメントの種類 |ジェネリックステートメント種類 |             |
+|部品 | { 名前?: 文字列;エクスポートされましたか?: ブール値; renderNodes?: readonly GenericRenderNode[]; } |             |
+
+### 文字列属性
+
+**種類:** 関数
+
+```typescript
+function stringAttribute(name: string, value: string): GenericJsxAttribute;
+```
+
+`name="value"` 属性。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|名前 |文字列 |             |
+|値 |文字列 |             |
+
+### テンプレート参照
+
+**種類:** 定数
+
+```typescript
+export const templateRef: typeof reference;
+```
+
+`reference` のエイリアス (Vue 仕様で使用)。
+
+### テキスト子
+
+**種類:** 関数
+
+```typescript
+function textChild(text: string): GenericTextNode;
+```
+
+タグ間のリテラルテキスト。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|テキスト |文字列 |             |

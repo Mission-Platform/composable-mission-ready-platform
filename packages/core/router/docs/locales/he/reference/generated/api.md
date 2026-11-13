@@ -58,7 +58,7 @@ export const MP_ROUTER_COMPILER_MARKER;
 **סוג:** רכיב
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor;
+export function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 סמן קישור ניטרלי. יעדים מקוריים מחליפים פונקציה זו במהלך ההידור.
@@ -154,7 +154,7 @@ export type MpRouterCapabilityOverrides = Partial<MpRouterCapabilities>;
 **סוג:** רכיב
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
+export function MpRouterView(properties: MpRouterViewProps =
 ```
 
 סמן יציאה/תצוגה ניטרלי. יעדים מקוריים מחליפים פונקציה זו במהלך ההידור.
@@ -244,7 +244,11 @@ function useMpRouter(): MpRouterCapabilities;
 **סוג:** קבוע
 
 ```typescript
-export const applicationCompatibilityFixtures;
+export const applicationCompatibilityFixtures: {
+  readonly website: ForgeCompatibilityFixture;
+  readonly myCareNotes: ForgeCompatibilityFixture;
+  readonly guardsAndLazy: ForgeCompatibilityFixture;
+};
 ```
 
 לא סופק תיאור.

@@ -38,18 +38,18 @@ Modulo `forge-checkbox.module.scss` e compone il neutro {@link ForgeTypography}
 per l'etichetta/suggerimento/testo di errore.
 
 Sostituzioni dall'SFC Vue originale: le mappe componibili `useId` direttamente
-all'hook `useId` nativo del framework; the indeterminate
+all'hook `useId` nativo del framework; l'indeterminato
 La proprietà DOM viene impostata tramite una coppia `useRef` + `useEffect` (la
 equivalente dell'SFC `watch`); i marcatori di controllo/indeterminati sono i
-scrivi una volta `@mission-platform/icons` `ForgeIconCheck`/`ForgeIconMinus`; the `useI18n`
+scrivi una volta `@mission-platform/icons` `ForgeIconCheck`/`ForgeIconMinus`; il `useI18n`
 Il titolo "richiesto" diventa semplice
-string; e l'emissione `v-model` + `change` diventa quella stabilita
+stringa; e l'emissione `v-model` + `change` diventa quella stabilita
 `onUpdateModelValue`/`onChange` oggetti di richiamata.
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<CheckboxProperties> |             |
 
 ## `src/components/atoms/forge-input/forge-input`
@@ -67,20 +67,20 @@ compilato direttamente in React o Vue da `@mission-platform/vite-plugin-forge`.
 
 Supporta la scala di dimensioni canonica `2xs … 2xl`, un trio etichetta/suggerimento/errore, un
 `<datalist>` opzionale (da `list`) e contenuto dell'estensione iniziale/finale.
-It owns its styling through the co-located CSS Module `forge-input.module.scss`
+Possiede il suo stile attraverso il modulo CSS co-localizzato `forge-input.module.scss`
 e compone il {@link ForgeTypography} neutro per il testo dell'etichetta/suggerimento/errore.
 
 Sostituzioni dall'SFC Vue originale: le mappe componibili `useId` direttamente
 all'hook `useId` nativo del framework; il `start`/`prefix`/
-`suffix`/`end` regions are authored as named slots (`<Slot>`), with their
+Le regioni `suffix`/`end` vengono create come slot denominati (`<Slot>`), con i relativi
 presenza rilevata tramite l'helper {@link hasSlot} indipendente dal framework; e
-the `v-model` + `change`/`blur`/`focus` emits become the
+gli emessi `v-model` + `change`/`blur`/`focus` diventano
 `onUpdateModelValue`/`onChange`/`onBlur`/`onFocus` oggetti di richiamata.
 
 #### Parametri
 
-| Nome      | Digitare                      | Descrizione |
-| --------- | ----------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------- | ----------- |
 | proprietà | Sola lettura<InputProperties> |             |
 
 ### InputAutocapitalize
@@ -143,12 +143,12 @@ Possiede il suo stile attraverso il modulo CSS co-localizzato `forge-radio.modul
 dopo l'etichetta.
 
 L'emissione `v-model` + `change` dell'SFC originale Vue diventa la soluzione consolidata
-`onUpdateModelValue`/`onChange` prop di richiamata.
+Props di richiamata `onUpdateModelValue`/`onChange`.
 
 #### Parametri
 
-| Nome      | Digitare                      | Descrizione |
-| --------- | ----------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------- | ----------- |
 | proprietà | Sola lettura<RadioProperties> |             |
 
 ### Proprietà radio
@@ -193,8 +193,8 @@ oggetti di scena.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<RangeInputProperties> |             |
 
 ### RangeInputProperties
@@ -238,24 +238,24 @@ function ForgeRating(properties: Readonly<RatingProperties>): MpElement;
 ```
 
 `ForgeRating`: input/visualizzazione della valutazione in stelle creato una volta nel JSX neutro
-dialect and compiled straight to React or Vue by
+dialetto e compilato direttamente in React o Vue da
 `@mission-platform/vite-plugin-forge`.
 
-Renders a row of stars representing a value from `0` to `max`, with optional
-half-star precision, a read-only display mode, hover preview, and keyboard
-control (`role="slider"` when interactive, `role="img"` when read-only). Esso
+Rende una riga di stelle che rappresenta un valore da `0` a `max`, con facoltativo
+precisione a mezza stella, modalità di visualizzazione di sola lettura, anteprima al passaggio del mouse e tastiera
+controllo (`role="slider"` se interattivo, `role="img"` se di sola lettura). Esso
 possiede il suo stile attraverso il modulo CSS co-localizzato `forge-rating.module.scss`.
 
-Substitutions from the original Vue SFC: the stars are the write-once
-`@mission-platform/icons` `ForgeIconStar` (the empty layer tinted via CSS, the fill
-layer clipped by width, both scaled to the row's `1em`); l'anteprima al passaggio del mouse
+Sostituzioni dall'SFC Vue originale: le stelle sono write-once
+`@mission-platform/icons` `ForgeIconStar` (il livello vuoto colorato tramite CSS, il riempimento
+livello ritagliato in base alla larghezza, entrambi ridimensionati al `1em` della riga); l'anteprima al passaggio del mouse
 utilizza il gancio neutro `useState`; e l'emissione `v-model` + `change` diventa il
 `onUpdateModelValue`/`onChange` prop di richiamata.
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------- | ----------- |
 | proprietà | Sola lettura<RatingProperties> |             |
 
 ### Proprietà di valutazione
@@ -307,8 +307,8 @@ aiutante `pointer-drag` co-localizzato; diventano le API di composizione origina
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------- | ----------- |
 | proprietà | Sola lettura<SliderProperties> |             |
 
 ### SliderProperties
@@ -356,8 +356,8 @@ oggetti di scena.
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------- | ----------- |
 | proprietà | Sola lettura<SwitchProperties> |             |
 
 ### SwitchProperties
@@ -408,8 +408,8 @@ tramite l'helper {@link hasSlot} indipendente dal framework; e `v-model` +
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<TextareaProperties> |             |
 
 ### TextareaAutocapitalize
@@ -502,13 +502,13 @@ Modulo CSS co-localizzato `forge-calendar.module.scss`.
 Sostituzioni dall'SFC Vue originale: lo stato di visualizzazione `ref` diventa
 {@link useState}; la griglia `computed` diventa {@link useMemo}; il
 external-sync `watch` diventa un {@link useEffect}; il
-`@mission-platform/icons` i galloni diventano glifi di testo; e `v-model` +
+`@mission-platform/icons` i simboli chevron diventano glifi di testo; e `v-model` +
 Gli emessi `change` diventano gli oggetti di richiamata `onUpdateModelValue`/`onChange`.
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<CalendarProperties> |             |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
@@ -558,8 +558,8 @@ un {@link useEffect}; e l'emissione `v-model` + `change` diventa il
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<ColorInputProperties> |             |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
@@ -592,28 +592,28 @@ Dimensione del campo (scala canonica `2xs … 2xl`).
 function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 ```
 
-`ForgeDateInput` — a date picker authored once in the neutral JSX dialect and
+`ForgeDateInput`: un selettore di date creato una volta nel dialetto neutro JSX e
 compilato direttamente in React o Vue da `@mission-platform/vite-plugin-forge`.
 
-A trigger button shows the selected ISO date (or a placeholder) and opens a
-popover that composes the already-migrated {@link ForgeCalendar} month grid. Esso
-owns its styling through the co-located CSS Module `forge-date-input.module.scss`.
+Un pulsante di attivazione mostra la data ISO selezionata (o un segnaposto) e apre un file
+popover che compone la griglia dei mesi {@link ForgeCalendar} già migrata. Esso
+possiede il suo stile attraverso il modulo CSS co-localizzato `forge-date-input.module.scss`.
 
 Sostituzioni dall'SFC Vue originale: il popup `@floating-ui/vue` diventa
-the write-once {@link ForgeDropdown} (which owns the teleported, CSS-anchored
-panel plus the outside-click/`Escape` dismissal), replacing `useZIndex`; il
+il write-once {@link ForgeDropdown} (che possiede il teletrasporto, ancorato ai CSS
+pannello più il clic esterno/`Escape` chiusura), in sostituzione di `useZIndex`; il
 la griglia mensile in linea è delegata a `ForgeCalendar`; il componibile `useId`
 si associa all'hook `useId` nativo del framework; il
 il glifo del calendario è il write-once `@mission-platform/icons` `ForgeIconCalendar`
-(itself compiled to React/Vue); the `start`/`end` regions are authored as
+(a sua volta compilato in React/Vue); le regioni `start`/`end` sono create come
 slot denominati (`<Slot>`) con la loro presenza rilevata tramite il file
 aiutante {@link hasSlot} indipendente dal framework; ed emette `v-model` + `change`
 diventano le prop di callback `onUpdateModelValue`/`onChange`.
 
 #### Parametri
 
-| Nome      | Digitare                          | Descrizione |
-| --------- | --------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------- | ----------- |
 | proprietà | Sola lettura<DateInputProperties> |             |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
@@ -672,8 +672,8 @@ aiutante {@link hasSlot}; e gli emessi `v-model` + `change` diventano il
 
 #### Parametri
 
-| Nome      | Digitare                               | Descrizione |
-| --------- | -------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------------- | ----------- |
 | proprietà | Sola lettura<DateRangeInputProperties> |             |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
@@ -701,7 +701,7 @@ Dialetto JSX e compilato direttamente in React o Vue da
 `@mission-platform/vite-plugin-forge`.
 
 Rende un `<fieldset>` nativo con un `<legend>` facoltativo e una descrizione,
-dando ai controlli correlati un'etichetta accessibile e una struttura coerente. Lo è
+dando ai controlli correlati un'etichetta accessibile e una cornice coerente. Lo è
 solo presentazione e indipendente dal contenuto: passa campi raggruppati o arbitrari
 markup attraverso lo slot predefinito. L'impostazione `disabled` utilizza il file nativo
 Comportamento `<fieldset disabled>`. Possiede il suo stile attraverso la co-localizzazione
@@ -714,8 +714,8 @@ diventa un semplice flex `<div>` e lo slot con nome `legend` viene ridotto allo
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<FieldSetProperties> |             |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
@@ -738,6 +738,8 @@ Nessuna descrizione fornita.
 export type FileInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
+Token della dimensione del campo: scala canonica 2xs → 2xl.
+
 ### ForgeFileInput
 
 **Tipo:** funzione
@@ -746,25 +748,25 @@ export type FileInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement;
 ```
 
-`ForgeFileInput` — file input authored once in the neutral JSX dialect and
-compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
+`ForgeFileInput`: input di file creato una volta nel dialetto JSX neutro e
+compilato direttamente in React o Vue da `@mission-platform/vite-plugin-forge`.
 
-Wraps a visually-hidden native `<input type="file">` with either a browse
-button row or a drag-and-drop dropzone (`dragDrop`), plus a label/hint/error
+Avvolge un `<input type="file">` nativo visivamente nascosto con un browser
+riga di pulsanti o una zona di rilascio con trascinamento della selezione (`dragDrop`), più un'etichetta/suggerimento/errore
 trio. Possiede il suo stile attraverso il modulo CSS co-localizzato
-`forge-file-input.module.scss` and composes the neutral {@link ForgeTypography}.
+`forge-file-input.module.scss` e compone il neutro {@link ForgeTypography}.
 
-Substitutions from the original Vue SFC: the `useId` composable maps straight
+Sostituzioni dall'SFC Vue originale: le mappe componibili `useId` direttamente
 all'hook `useId` nativo del framework; il trascinamento/selezione
 lo stato utilizza l'hook neutro `useState`; l'icona di caricamento è quella di scrittura una volta
-`@mission-platform/icons` `ForgeIconUpload` (itself compiled to React/Vue); il
+`@mission-platform/icons` `ForgeIconUpload` (a sua volta compilato in React/Vue); il
 Le etichette `useI18n` diventano semplici oggetti di scena a forma di stringa; e emettono `v-model` + `change`
-become the `onUpdateModelValue`/`onChange` callback props.
+diventano le prop di callback `onUpdateModelValue`/`onChange`.
 
 #### Parametri
 
-| Nome      | Digitare                          | Descrizione |
-| --------- | --------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------- | ----------- |
 | proprietà | Sola lettura<FileInputProperties> |             |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
@@ -777,33 +779,33 @@ become the `onUpdateModelValue`/`onChange` callback props.
 function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement;
 ```
 
-`ForgeLocationInput` — a geographic coordinate input authored once in the
-neutral JSX dialect and compiled straight to React or Vue by
+`ForgeLocationInput`: un input di coordinate geografiche creato una volta nel file
+dialetto JSX neutro e compilato direttamente in React o Vue da
 `@mission-platform/vite-plugin-forge`.
 
-It captures a latitude/longitude point in one of three representations —
-Decimal Degrees (DD), Degrees Decimal Minutes (DM), or Degrees Minutes
-Seconds (DMS) — chosen via the format selector. Qualunque sia la variante utilizzata
-entry, the canonical {@link LocationValue} model always carries signed
-decimal-degree `lat`/`lng` rounded to centimetre precision. Compone il
-already-migrated {@link ForgeSelect}, {@link ForgeInput}, and
-{@link ForgeTypography} primitives and owns its styling through the co-located
+Cattura un punto di latitudine/longitudine in una delle tre rappresentazioni:
+Gradi decimali (DD), Gradi decimali minuti (DM) o Gradi minuti
+Secondi (DMS): scelti tramite il selettore del formato. Qualunque sia la variante utilizzata
+voce, il modello canonico {@link LocationValue} porta sempre firmato
+gradi decimali `lat`/`lng` arrotondati con precisione centimetrica. Compone il
+{@link ForgeSelect}, {@link ForgeInput} già migrati e
+{@link ForgeTypography} primitivi e possiede il suo stile attraverso il co-located
 Modulo CSS `forge-location-input.module.scss`. La logica di conversione/analisi
-ships with this package as the framework-agnostic, co-located `location.ts`.
+viene fornito con questo pacchetto come `location.ts` indipendente dal framework e co-localizzato.
 
-Substitutions from the original Vue SFC: `useId` maps straight to the
+Sostituzioni dall'SFC Vue originale: `useId` si associa direttamente al
 hook `useId` nativo del framework; i buffer di testo locali
-(`latText`/`lngText`) become non-lazy {@link useState} (so the initial render
-— including SSR — already shows the formatted coordinates) resynced from the
-modello con un {@link useEffect}; and the `v-model` + `change` emits become the
+(`latText`/`lngText`) diventano non pigri {@link useState} (quindi il rendering iniziale
+- incluso SSR - mostra già le coordinate formattate) risincronizzate da
+modello con un {@link useEffect}; e gli emessi `v-model` + `change` diventano il
 `onUpdateModelValue`/`onChange` prop di richiamata. Le classi di layout figlie sono
-applied to wrapper `<div>`s rather than passed through to the composed
+applicato al wrapper `<div>`s anziché passato al composto
 componenti.
 
 #### Parametri
 
-| Nome      | Digitare                              | Descrizione |
-| --------- | ------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------------- | ----------- |
 | proprietà | Sola lettura<LocationInputProperties> |             |
 
 ### PosizioneInputProperties
@@ -836,6 +838,8 @@ Dimensioni del campo, corrispondenti al composto {@link ForgeInput}/{@link Forge
 export type LocationFormat = 'latlng' | 'dd' | 'dms' | 'dm' | 'geojson';
 ```
 
+La rappresentazione delle coordinate come {@link LocationValue} viene inserita/serializzata.
+
 ### PosizioneValore
 
 **Tipo:** interfaccia
@@ -858,25 +862,25 @@ significa "nessun input".
 function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement;
 ```
 
-`ForgeNumberStepper` — numeric stepper authored once in the neutral JSX dialect
-and compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
+`ForgeNumberStepper`: stepper numerico creato una volta nel dialetto JSX neutro
+e compilato direttamente in React o Vue da `@mission-platform/vite-plugin-forge`.
 
-A number field flanked by decrement/increment buttons, configurable as a
-signed/unsigned integer or a fixed-`precision` float. Possiede il suo stile
-through the co-located CSS Module `forge-number-stepper.module.scss` and
+Un campo numerico fiancheggiato da pulsanti di decremento/incremento, configurabili come a
+intero con/senza segno o un float fisso-`precision`. Possiede il suo stile
+attraverso il modulo CSS co-locato `forge-number-stepper.module.scss` e
 compone il {@link ForgeTypography} neutro per il testo di etichetta/suggerimento/errore.
 
-Substitutions from the original Vue SFC: the `useId` composable maps straight
+Sostituzioni dall'SFC Vue originale: le mappe componibili `useId` direttamente
 all'hook `useId` nativo del framework; il `ForgeStack`
 l'involucro diventa un semplice foglio flessibile `<div>`; i glifi di decremento/incremento sono i
-write-once `@mission-platform/icons` `ForgeIconMinus`/`ForgeIconPlus`; e il
-`v-model` + `change` emit become the established `onUpdateModelValue`/`onChange`
+scrivi una volta `@mission-platform/icons` `ForgeIconMinus`/`ForgeIconPlus`; e il
+`v-model` + `change` emettono diventano gli `onUpdateModelValue`/`onChange` consolidati
 oggetti di scena di richiamata.
 
 #### Parametri
 
-| Nome      | Digitare                              | Descrizione |
-| --------- | ------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------------- | ----------- |
 | proprietà | Sola lettura<NumberStepperProperties> |             |
 
 ### NumberStepperProperties
@@ -909,27 +913,27 @@ Token di dimensione (scala canonica `2xs … 2xl`).
 function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 ```
 
-`ForgeOtpInput` — segmented one-time-password input authored once in the
-neutral JSX dialect and compiled straight to React or Vue by
+`ForgeOtpInput`: input segmentato di password monouso creato una volta nel file
+dialetto JSX neutro e compilato direttamente in React o Vue da
 `@mission-platform/vite-plugin-forge`.
 
-Renders `length` single-character cells bound to a single string
-`modelValue`. Typing advances focus, `Backspace` steps back, arrow keys move
+Rende `length` celle a carattere singolo legate a una singola stringa
+`modelValue`. La digitazione fa avanzare la messa a fuoco, `Backspace` torna indietro, i tasti freccia si spostano
 tra le celle e incollando distribuisce il codice. Possiede il suo stile attraverso
 il modulo CSS co-locato `forge-otp-input.module.scss`.
 
-Substitutions from the original Vue SFC: the Vue template **ref array** (the
-neutral dialect models only single element refs) becomes a single container
-`useRef` plus `querySelectorAll('input')` for focus management (as
-`ForgeSegmentControl` lo fa); `nextTick` is dropped (the cells already exist, so
-il focus si sposta in modo sincrono); the `onMounted` autofocus becomes a `useEffect`;
-and the `v-model` + `complete` emit become the `onUpdateModelValue`/
+Sostituzioni dall'SFC Vue originale: il modello Vue **ref array** (il
+modelli dialettali neutri solo singolo elemento ref) diventa un unico contenitore
+`useRef` più `querySelectorAll('input')` per la gestione dei focus (es
+`ForgeSegmentControl` lo fa); `nextTick` viene eliminato (le celle esistono già, quindi
+il focus si sposta in modo sincrono); l'autofocus `onMounted` diventa `useEffect`;
+e l'emissione `v-model` + `complete` diventa `onUpdateModelValue`/
 `onComplete` oggetti di richiamata.
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<OtpInputProperties> |             |
 
 ### OtpInputProperties
@@ -998,8 +1002,8 @@ gancio; l'indicatore di validità è il write-once `@mission-platform/icons`
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<PhoneInputProperties> |             |
 
 ### Cambia telefono
@@ -1042,6 +1046,8 @@ Token di dimensione (scala canonica `2xs … 2xl`).
 export interface PhoneCountry
 ```
 
+Un paese/regione selezionabile nel selettore del paese dell'input del telefono.
+
 ## `src/components/molecules/forge-radio-group/forge-radio-group`
 
 ### ForgeRadioGroup
@@ -1052,28 +1058,28 @@ export interface PhoneCountry
 function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement;
 ```
 
-`ForgeRadioGroup` — groups several {@link ForgeRadio} controls under a shared
-legend, authored once in the neutral JSX dialect and compiled straight to
-React or Vue by `@mission-platform/vite-plugin-forge`.
+`ForgeRadioGroup`: raggruppa diversi controlli {@link ForgeRadio} in uno condiviso
+legend, scritto una volta nel dialetto neutrale JSX e compilato direttamente in
+React o Vue da `@mission-platform/vite-plugin-forge`.
 
-Selection is controlled with the established `modelValue` +
-`onUpdateModelValue`/`onChange` callback-prop convention; le radio lo sono
-driven from the `options` array (flattening the SFC's slot-based composition,
-the same approach the migrated {@link ForgeTabs} took). Compone il
-migrated {@link ForgeStack}, {@link ForgeRadio}, and {@link ForgeTypography}
-primitives and owns its styling through the co-located CSS Module
+La selezione è controllata con il `modelValue` + stabilito
+`onUpdateModelValue`/`onChange` convenzione prop di callback; le radio lo sono
+guidato dall'array `options` (appiattendo la composizione basata su slot dell'SFC,
+lo stesso approccio adottato dai {@link ForgeTabs} migrati). Compone il
+ho eseguito la migrazione di {@link ForgeStack}, {@link ForgeRadio} e {@link ForgeTypography}
+primitivi e possiede il suo stile attraverso il modulo CSS co-localizzato
 `forge-radio-group.module.scss`.
 
-Substitutions from the original Vue SFC: the `useId`/random group name maps
+Sostituzioni dall'SFC Vue originale: mappe dei nomi dei gruppi `useId`/random
 all'hook `useId` nativo del framework; il
-`useI18n` "required" title becomes a plain string; ed emette `v-model`+
+`useI18n` il titolo "richiesto" diventa una stringa semplice; ed emette `v-model` +
 diventare gli oggetti di scena del callback. Qualsiasi contenuto dello slot predefinito viene visualizzato dopo il file
 opzioni.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<RadioGroupProperties> |             |
 
 ### RadioGruppoDirezione
@@ -1133,8 +1139,8 @@ oggetti di scena; e gli emessi `v-model` + `search`/`clear` diventano
 
 #### Parametri
 
-| Nome      | Digitare                            | Descrizione |
-| --------- | ----------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------- | ----------- |
 | proprietà | Sola lettura<SearchInputProperties> |             |
 
 ### SearchInputProperties
@@ -1185,8 +1191,8 @@ proprietà di callback `onUpdateModelValue`/`onChange` stabilite.
 
 #### Parametri
 
-| Nome      | Digitare                               | Descrizione |
-| --------- | -------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------------- | ----------- |
 | proprietà | Sola lettura<SegmentControlProperties> |             |
 
 ### SegmentControlProperties
@@ -1207,7 +1213,7 @@ Nessuna descrizione fornita.
 export type SegmentControlSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-Token di dimensione che controlla le dimensioni del segmento: scala canonica 2xs → 2xl.
+Gettone di dimensione che controlla le dimensioni del segmento: scala canonica 2xs → 2xl.
 
 ### Opzione segmento
 
@@ -1250,8 +1256,8 @@ aiutante {@link hasSlot}; e gli emessi `v-model` + `change` diventano il
 
 #### Parametri
 
-| Nome      | Digitare                          | Descrizione |
-| --------- | --------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------- | ----------- |
 | proprietà | Sola lettura<TimeInputProperties> |             |
 
 ### TimeInputProperties
@@ -1302,13 +1308,13 @@ Gli `ref` vengono {@link useState} risincronizzati da `modelValue` tramite un
 {@link useEffect}; le mappe componibili `useId` all'hook `useId` nativo del framework; il `start`/
 Gli slot SFC `end` diventano gli slot denominati `startContent`/`endContent` (`<Slot>`,
 presenza rilevata con l'helper {@link hasSlot} indipendente dal framework; il
-i nomi `start`/`end` sono riservati per gli estremi dell'intervallo); e `v-model`+
-Gli emessi `change` diventano gli oggetti di richiamata `onUpdateModelValue`/`onChange`.
+i nomi `start`/`end` sono riservati per gli estremi dell'intervallo); e `v-model` +
+Gli emessi `change` diventano i prop di callback `onUpdateModelValue`/`onChange`.
 
 #### Parametri
 
-| Nome      | Digitare                               | Descrizione |
-| --------- | -------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------------- | ----------- |
 | proprietà | Sola lettura<TimeRangeInputProperties> |             |
 
 ### TimeRangeInputProperties
@@ -1365,7 +1371,7 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 dialetto JSX neutro e compilato direttamente in React o Vue da
 `@mission-platform/vite-plugin-forge`.
 
-Un pulsante di attivazione mostra il riepilogo `start → end (timezone)` e apre un
+Un pulsante di attivazione mostra il riepilogo `start → end (timezone)` e apre un file
 popover con attivazione/disattivazione browser/UTC sopra un {@link ForgeFormWizard} in due passaggi
 (**Data**, quindi **Ora**): il passaggio **Data** seleziona le date di inizio/fine dell'intervallo
 su due {@link ForgeCalendar} e il passaggio **Ora** seleziona gli orari di inizio/fine
@@ -1389,8 +1395,8 @@ rilevato con l'helper {@link hasSlot} indipendente dal framework); e `v-model`
 
 #### Parametri
 
-| Nome      | Digitare                                   | Descrizione |
-| --------- | ------------------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------------------- | ----------- |
 | proprietà | Sola lettura<DateTimeRangeInputProperties> |             |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
@@ -1428,8 +1434,8 @@ contenitore), guidato da un insert-target `dropIndicator` aggiornato su `dragove
 
 #### Parametri
 
-| Nome      | Digitare                            | Descrizione |
-| --------- | ----------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------- | ----------- |
 | proprietà | Sola lettura<FormBuilderProperties> |             |
 
 ### Proprietà di FormBuilder
@@ -1477,8 +1483,8 @@ oggetti di scena. L'indice attivo rimane **controllato** (`modelValue`).
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<FormWizardProperties> |             |
 
 ### FormWizardProperties
@@ -1500,6 +1506,85 @@ export interface WizardStep
 ```
 
 Un unico passaggio della procedura guidata.
+
+## `src/components/organisms/forge-form/forge-form`
+
+### defaultFormContext
+
+**Genere:** costante
+
+```typescript
+export const defaultFormContext: FormContextValue;
+```
+
+Contesto del modulo predefinito di base fornito quando useFormContext viene chiamato all'esterno di ForgeForm.
+
+### ForgeForm
+
+**Tipo:** funzione
+
+```typescript
+function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement;
+```
+
+Componente del modulo basato sul contesto che supporta lo stato controllato e non controllato,
+Convalida schema standard/Zod/Yup, riepilogo errori accessibile e adattatori framework.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------ | ----------- |
+| proprietà | Sola lettura<ForgeFormProps> |             |
+
+### ForgeFormProperties
+
+**Genere:** tipo
+
+```typescript
+export type ForgeFormProperties = ForgeFormProps;
+```
+
+Nessuna descrizione fornita.
+
+### ForgeFormProps
+
+**Tipo:** interfaccia
+
+```typescript
+export interface ForgeFormProps
+```
+
+Nessuna descrizione fornita.
+
+### FormContext
+
+**Genere:** costante
+
+```typescript
+export const FormContext: MpContext<FormContextValue | undefined>;
+```
+
+Nessuna descrizione fornita.
+
+### FormContextValue
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FormContextValue
+```
+
+Nessuna descrizione fornita.
+
+### utilizzareFormContext
+
+**Tipo:** funzione
+
+```typescript
+function useFormContext(): FormContextValue;
+```
+
+Hook per accedere al contesto del modulo nei campi figlio o nei componenti nidificati.
 
 ## `src/components/organisms/forge-schema-form-dialog/forge-schema-form-dialog`
 
@@ -1525,8 +1610,8 @@ se chiudere con un invio valido.
 
 #### Parametri
 
-| Nome      | Digitare                                 | Descrizione |
-| --------- | ---------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------------ | ----------- |
 | proprietà | Sola lettura<SchemaFormDialogProperties> |             |
 
 ### SchemaFormDialogProperties
@@ -1557,7 +1642,7 @@ Come l'originale Vue, è gestito interamente da uno schema JSON: sia il file
 i campi renderizzati e le regole di validazione ne derivano tramite il file
 pacchetto `@mission-platform/forms-core` condiviso (quindi i due framework validano
 identicamente — parità per costruzione). Uno schema a oggetto singolo esegue il rendering di a
-modulo in un'unica fase; un **array** di livello superiore esegue il rendering di una **procedura guidata** a più passaggi. Campi
+modulo in un solo passaggio; un **array** di livello superiore esegue il rendering di una **procedura guidata** a più passaggi. Campi
 supporta set di campi nidificati, visibilità condizionale `ui.visibleWhen` e Ajv
 la convalida è emersa come messaggi di errore per campo.
 
@@ -1571,8 +1656,8 @@ uno slot `actions` sovrascrivibile.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<SchemaFormProperties> |             |
 
 ### SchemaFormFieldRenderer
@@ -1604,45 +1689,3 @@ export interface SchemaFormProperties
 ```
 
 Nessuna descrizione fornita.
-
-## `src/utils/date-time/date-time`
-
-### Intervallo di date
-
-**Tipo:** interfaccia
-
-```typescript
-export interface DateRange
-```
-
-Un intervallo di date ISO `{ start, end }` (`YYYY-MM-DD`).
-
-### DateTimeRange
-
-**Tipo:** interfaccia
-
-```typescript
-export interface DateTimeRange
-```
-
-Un intervallo data-ora `{ start, end, timezone }` (`YYYY-MM-DD HH:MM[:SS]`).
-
-### Intervallo di tempo
-
-**Tipo:** interfaccia
-
-```typescript
-export interface TimeRange
-```
-
-Un intervallo di tempo `{ start, end }` (`HH:MM` o `HH:MM:SS`).
-
-### Modalità fuso orario
-
-**Genere:** tipo
-
-```typescript
-export type TimezoneMode = 'browser' | 'utc';
-```
-
-Indica se un intervallo di date e ore viene interpretato nella zona del browser o nell'ora UTC.

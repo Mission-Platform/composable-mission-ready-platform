@@ -18,7 +18,7 @@ interoperabele pakketten.
 ### Samenstelbare bouwstenen
 
 Applicaties worden samengesteld uit gedeelde pakketten, waardoor een gemeenschappelijke logica wordt gewaarborgd: van UI-componenten tot internationalisering
-en routing – wordt één keer geschreven en overal hergebruikt. Deze aanpak vermindert dubbel werk, vereenvoudigt het onderhoud en
+en routering – wordt één keer geschreven en overal hergebruikt. Deze aanpak vermindert duplicatie, vereenvoudigt het onderhoud en
 zorgt voor een consistente gebruikerservaring in de hele productsuite.
 
 ### Multiframework per ontwerp
@@ -35,14 +35,14 @@ snelheid en codekwaliteit.
 
 ## Belangrijkste kenmerken
 
-| Kenmerk                    | Beschrijving                                                                                                                               |
-| :------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------- |
-| **Forge JSX-runtime**      | Een raamwerkneutraal JSX-dialect: één keer schrijven en bouwen voor Vue 3, React, Svelte, Solid en webcomponenten zonder runtime-overhead. |
-| **Componentenbibliotheek** | Een uitgebreide set lay-out, typografie en interactieve componenten, één keer geschreven voor meerdere raamwerken.                         |
-| **Ontwerpfiches**          | Een DTCG-compatibel tokensysteem dat SCSS- en TypeScript-artefacten genereert voor consistente thema's.                                    |
-| **Agnostische routering**  | Een typeveilig routeringssysteem dat onafhankelijk van het UI-framework werkt.                                                             |
-| **Universeel I18n**        | Een framework-agnostische internationaliseringswrapper gebaseerd op i18next met speciale Vue- en React-adapters.                           |
-| **Wasm-hulpprogramma's**   | Hoogwaardige hulpprogramma's voor het scannen van streepjescodes, spellingcontrole en meer, mogelijk gemaakt door WebAssembly.             |
+| Kenmerk | Beschrijving |
+| :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forge JSX-runtime** | Een raamwerkneutraal JSX-dialect: één keer schrijven en bouwen voor Vue 3, React, Svelte, Solid en webcomponenten zonder runtime-overhead. |
+| **Componentenbibliotheek** | Een uitgebreide set lay-out, typografie en interactieve componenten, één keer geschreven voor meerdere raamwerken.                           |
+| **Ontwerpfiches** | Een DTCG-compatibel tokensysteem dat SCSS- en TypeScript-artefacten genereert voor consistente thema's.                                     |
+| **Agnostische routering** | Een typeveilig routeringssysteem dat onafhankelijk van het UI-framework werkt.                                                               |
+| **Universeel I18n** | Een framework-agnostische internationaliseringswrapper gebaseerd op i18next met speciale Vue- en React-adapters.                              |
+| **Wasm-hulpprogramma's** | Hoogwaardige hulpprogramma's voor het scannen van streepjescodes, spellingcontrole en meer, mogelijk gemaakt door WebAssembly.                                     |
 
 ## Technologie stapel
 
@@ -50,8 +50,8 @@ Mission Platform is gebouwd op een moderne, krachtige stack:
 
 - **Forge JSX (`@mission-platform/forge-jsx`)**: het primaire UI-framework — een raamwerkneutrale JSX-runtime waarin alle
   gedeelde componenten (alles behalve de apps) zijn geschreven.
-- **Vue 3**: het raamwerk waarmee de toepassingen in `apps/` zijn gebouwd, en een van de vele native renderdoelen waarvoor
-  Smeed componenten.
+- **Vue 3**: gebruikt door verschillende toepassingen en een van de vele native renderdoelen voor Forge-componenten. De
+  De `service-monitor`-toepassing gebruikt in plaats daarvan RedwoodSDK/React.
 - **TypeScript**: de standaard voor alle broncode.
 - **Vite**: de bouwtool die snelle HMR en geoptimaliseerde productiebundels mogelijk maakt.
 - **pnpm-werkruimten**: efficiënt afhankelijkheidsbeheer met gedeelde lockfiles.
@@ -64,7 +64,7 @@ Mission Platform is gebouwd op een moderne, krachtige stack:
 De repository is georganiseerd in verschillende afzonderlijke gebieden:
 
 - **`apps/`**: inzetbare toepassingen (bijvoorbeeld `my-care-notes`, `website`) die pakketten in producten samenstellen.
-- **`packages/`**: de kernbouwstenen, waaronder `@mission-platform/components`, `@mission-platform/router` en
+- **`packages/`**: de belangrijkste bouwstenen, waaronder `@mission-platform/components`, `@mission-platform/router` en
   `@mission-platform/i18n`.
 - **`packages/tooling/configs/`**: gedeelde configuraties voor ESLint, Prettier, TypeScript en Vite.
 - **`packages/tooling/vite/`**: aangepaste buildtime-tools voor ontwerptokens, Forge-compilatie en SEO.
@@ -74,7 +74,7 @@ De repository is georganiseerd in verschillende afzonderlijke gebieden:
 
 Raadpleeg de volgende handleidingen om te beginnen met ontwikkelen op het Mission Platform:
 
-- **[Ontwikkeling instellen](development-setup.md)**: bereid uw omgeving voor en installeer afhankelijkheden.
-- **[Architectuur](architecture.md)**: Diepe duik in de ontwerpprincipes en de afhankelijkheidsstroom van het platform.
-- **[Structuur van de werkruimte](workspace-structure.md)**: Begrijp de mapindeling en pakketconventies.
-- **[Testen](testing.md)**: Leer meer over onze teststrategieën en tools.
+- **[Ontwikkelingsinstellingen](development-setup.md)**: bereid uw omgeving voor en installeer afhankelijkheden.
+- **[Architectuur](architecture.md)**: Duik diep in de ontwerpprincipes en de afhankelijkheidsstroom van het platform.
+- **[Werkruimtestructuur](workspace-structure.md)**: Begrijp de mapindeling en pakketconventies.
+- **[Testen](testing.md)**: leer meer over onze teststrategieën en -hulpmiddelen.

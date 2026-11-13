@@ -1,7 +1,7 @@
 import { ForgeBreadcrumb } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { BreadcrumbItem } from './forge-breadcrumb';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const items: BreadcrumbItem[] = [
   { label: 'Home', href: '/' },

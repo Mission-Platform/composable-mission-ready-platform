@@ -9,288 +9,65 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/barcode`.
 
-## `src/encoder/index`
+## `src/components/molecules/forge-barcode/forge-barcode`
 
-### Streepjescode
+### Streepjescodeacties
 
 **Soort:** interface
 
 ```typescript
-export interface Barcode
+export interface BarcodeActions
 ```
 
-Het resultaat van {@link encodeBarcode}: modulebits met hun totale breedte.
+Welke actieknoppen de werkbalk toont. `true` maakt ze allemaal mogelijk.
 
-### BarcodeSymbologie
+### Barcode-eigenschappen
 
-**Soort:** type
+**Soort:** interface
 
 ```typescript
-export type BarcodeSymbology =
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'ean13'
-  | 'ean8'
-  | 'upca'
-  | 'upce'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode';
+export interface BarcodeProperties
 ```
 
-Ondersteunde lineaire barcodesymbolieken.
+Geen beschrijving opgegeven.
 
-### coderenBarcode
+### ForgeBarcode
 
 **Soort:** functie
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
+function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement;
 ```
 
-Codeer `data` in een lineaire streepjescode met behulp van de pakket-lokale FWS-grafiek.
+`ForgeBarcode` — geeft een scanbare 1D (lineaire) barcode weer, eenmaal geschreven in de
+neutraal JSX-dialect en rechtstreeks gecompileerd naar React of Vue door
+`@mission-platform/vite-plugin-forge`.
+
+De payload (`value`) wordt volledig op de client gecodeerd door de
+{@link encodeBarcode}-encoder van `@mission-platform/barcode` — a
+afhankelijkheidsvrije encoder geschreven in Rust en gecompileerd naar WebAssembly - en
+getekend als een scherpe, resolutie-onafhankelijke SVG. Aangrenzende donkere modules worden samengevoegd
+in één enkele `<rect>`-run, zodat de markup compact blijft. Voor betrouwbaar scannen
+de balk-/achtergrondkleuren zijn standaard solid zwart op wit in plaats van thema
+tokens, maar beide kunnen worden overschreven via `color` / `background`.
+
+Ondersteunde symbologieën (`symbology`): Code 128, GS1-128, Code 39 (+ uitgebreid),
+Code 93 (+ uitgebreid), EAN-13, EAN-8, UPC-A, UPC-E, ITF (Interleaved 2 van 5),
+ITF-14, Codabar, MSI (gemodificeerde Plessey) en Pharmacode. De staafhoogte, module
+breedte en stille zone zijn configureerbaar, en de voor mensen leesbare waarde kan dat zijn
+weergegeven onder de balken via `displayValue`.
+
+Een optionele actiewerkbalk (ingeschakeld via `showActions` — `true` voor elke
+knop, of een {@link BarcodeActions}-object om ze afzonderlijk te kiezen) let
+gebruikers **sla de streepjescode op als een PNG-afbeelding**, **kopieer de afbeelding naar de
+klembord** en **kopieer de gecodeerde waarde naar het klembord**. Het PNG-bestand is
+gerasterd op de client door de gerenderde SVG op een canvas te tekenen. De
+`onError` callback wordt geactiveerd wanneer de waarde niet kan worden gecodeerd voor de gekozen waarde
+symboliek. Het is eigenaar van de stijl via de naast elkaar geplaatste CSS-module
+`forge-barcode.module.scss`.
 
 #### Parameters
 
-| Naam      | Typ               | Beschrijving |
-| --------- | ----------------- | ------------ |
-| symboliek | BarcodeSymbologie |              |
-| gegevens  | tekenreeks        |              |
-
-#### Contract
-
-- **@throws:** wanneer de payload ongeldig is voor de geselecteerde symbologie.
-
-### coderenBarcodeAsync
-
-**Soort:** functie
-
-```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
-```
-
-Codeer `data` asynchroon met behulp van de pakket-lokale FWS-grafiek.
-
-#### Parameters
-
-| Naam      | Typ               | Beschrijving |
-| --------- | ----------------- | ------------ |
-| symboliek | BarcodeSymbologie |              |
-| gegevens  | tekenreeks        |              |
-
-## `src/fws/index`
-
-### Parameters
-
-| Naam   | Typ                             | Beschrijving |
-| ------ | ------------------------------- | ------------ |
-| waarde | tekenreeks \| ArrayLike<number> |              |
-
-### Parameters
-
-| Naam   | Typ                             | Beschrijving |
-| ------ | ------------------------------- | ------------ |
-| waarde | tekenreeks \| ArrayLike<number> |              |
-
-### Parameters
-
-| Naam   | Typ                             | Beschrijving |
-| ------ | ------------------------------- | ------------ |
-| waarde | tekenreeks \| ArrayLike<number> |              |
-
-### Parameters
-
-| Naam   | Typ                             | Beschrijving |
-| ------ | ------------------------------- | ------------ |
-| waarde | tekenreeks \| ArrayLike<number> |              |
-
-### coderenEan13Fws
-
-**Soort:** functie
-
-```typescript
-function encodeEan13Fws(value: string): string;
-```
-
-Codeert een twaalfcijferige EAN-13-payload en berekent het controlecijfer in FWS.
-
-#### Parameters
-
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| waarde | tekenreeks |              |
-
-### coderenEan13FwsAsync
-
-**Soort:** functie
-
-```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>;
-```
-
-Codeert asynchroon een twaalfcijferige EAN-13-payload met de FWS-lader.
-
-#### Parameters
-
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| waarde | tekenreeks |              |
-
-### coderenEan8Fws
-
-**Soort:** functie
-
-```typescript
-function encodeEan8Fws(value: string): string;
-```
-
-Codeert een zevencijferige EAN-8-payload en berekent het controlecijfer in FWS.
-
-#### Parameters
-
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| waarde | tekenreeks |              |
-
-### coderenEan8FwsAsync
-
-**Soort:** functie
-
-```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>;
-```
-
-Codeert asynchroon een zevencijferige EAN-8-payload met de FWS-lader.
-
-#### Parameters
-
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| waarde | tekenreeks |              |
-
-### coderenUpcaFws
-
-**Soort:** functie
-
-```typescript
-function encodeUpcaFws(value: string): string;
-```
-
-Codeert een UPC-A-payload via de EAN-13 FWS-grafiek met nulvoorvoegsel.
-
-#### Parameters
-
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| waarde | tekenreeks |              |
-
-### coderenUpcaFwsAsync
-
-**Soort:** functie
-
-```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>;
-```
-
-Codeert asynchroon een UPC-A-payload via FWS.
-
-#### Parameters
-
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| waarde | tekenreeks |              |
-
-### encodeVariableBarcodeFws
-
-**Soort:** functie
-
-```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
-```
-
-Codeert een ondersteunde streepjescode met variabele lengte via de eigen FWS-grafiek, indien beschikbaar.
-
-#### Parameters
-
-| Naam      | Typ                              | Beschrijving |
-| --------- | -------------------------------- | ------------ |
-| symboliek | VariabelestreepjescodeSymbologie |              |
-| waarde    | tekenreeks                       |              |
-
-### encodeVariableBarcodeFwsAsync
-
-**Soort:** functie
-
-```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
-```
-
-Codeert asynchroon een ondersteunde streepjescode met variabele lengte via FWS.
-
-#### Parameters
-
-| Naam      | Typ                              | Beschrijving |
-| --------- | -------------------------------- | ------------ |
-| symboliek | VariabelestreepjescodeSymbologie |              |
-| waarde    | tekenreeks                       |              |
-
-### validateGs1DataBarValue
-
-**Soort:** functie
-
-```typescript
-function validateGs1DataBarValue(value: string): boolean;
-```
-
-Valideert een GS1 DataBar/RSS-14 GTIN-14-waarde in de pakket-lokale FWS-grafiek.
-
-#### Parameters
-
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| waarde | tekenreeks |              |
-
-### validateGs1DataBarValueAsync
-
-**Soort:** functie
-
-```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
-```
-
-Valideert asynchroon een GS1 DataBar/RSS-14 GTIN-14-waarde via FWS.
-
-#### Parameters
-
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| waarde | tekenreeks |              |
-
-### VariabeleBarcodeSymbologie
-
-**Soort:** type
-
-```typescript
-export type VariableBarcodeSymbology = Extract<
-  BarcodeSymbology,
-  | 'code128'
-  | 'gs1-128'
-  | 'code39'
-  | 'code39ext'
-  | 'code93'
-  | 'code93ext'
-  | 'itf'
-  | 'itf14'
-  | 'codabar'
-  | 'msi'
-  | 'pharmacode'
->;
-```
-
-Symbologieën met variabele lengte ondersteund door de directe barcode FWS-adapter.
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<BarcodeProperties> |             |

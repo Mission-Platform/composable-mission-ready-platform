@@ -28,9 +28,9 @@ Bouw neutrale mogelijkheden van React Router-primitieven (haakvrij voor tests).
 
 #### Parameters
 
-| Naam   | Typ                                                                                                                                                                           | Beschrijving |
-| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| invoer | { locatie: { padnaam: string; zoeken: tekenreeks; hash: tekenreeks }; parameters?: Record<string, string \| undefined>; navigeren: NavigeerFunctie; stopcontact?: onbekend; } |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| invoer | { locatie: { padnaam: string; zoeken: tekenreeks; hash: tekenreeks }; parameters?: Record<string, string \| undefined>; navigeren: NavigeerFunctie; stopcontact?: onbekend; } |             |
 
 ### oplossingMpLink
 
@@ -44,9 +44,9 @@ Een neutraal doel omzetten in een href-tekenreeks.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| naar | MpRouteLocationRaw |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
 
 ### toMpLocationFromReact
 
@@ -55,7 +55,7 @@ Een neutraal doel omzetten in een href-tekenreeks.
 ```typescript
 function toMpLocationFromReact(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
@@ -63,10 +63,10 @@ Bouw een neutrale locatie op basis van React Routerlocatie/params-snapshots.
 
 #### Parameters
 
-| Naam    | Typ                                                       | Beschrijving |
-| ------- | --------------------------------------------------------- | ------------ |
-| locatie | { padnaam: string; zoeken: tekenreeks; hash: tekenreeks } |              |
-| params  | Record<string, string \| undefined>                       |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------------------------------- | ----------- |
+| locatie | { padnaam: string; zoeken: tekenreeks; hash: tekenreeks } |             |
+| parameters | Record<string, string \| undefined> |             |
 
 ### naarReactHref
 
@@ -80,9 +80,9 @@ Serialiseer een neutraal doel naar een href-tekenreeks.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| naar | MpRouteLocationRaw |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
 
 ### naarReactTo
 
@@ -96,9 +96,9 @@ Converteer een neutraal doel naar een React Router `To`-waarde.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| naar | MpRouteLocationRaw |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
 
 ### gebruik MpNavigatie
 
@@ -108,7 +108,7 @@ Converteer een neutraal doel naar een React Router `To`-waarde.
 function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
-Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
+Alleen noodzakelijke navigatie-/oplossingsmogelijkheden lezen.
 
 ### gebruikMpRoute
 

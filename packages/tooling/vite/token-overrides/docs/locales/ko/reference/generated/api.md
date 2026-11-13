@@ -19,12 +19,12 @@
 function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-앱의 디자인 토큰 _재정의_ 스타일시트를 자동 생성하는 Vite 플러그인입니다.
+앱의 디자인 토큰 _override_ 스타일시트를 자동 생성하는 Vite 플러그인입니다.
 
 DTCG 스타일 재정의 문서(`options.source`)를 읽고 다음으로 변환합니다.
 {@link buildTokenOverrideScss}, 결과 `:root { --<prefix>-*: … }`을 작성합니다.
 `options.outFile`의 일부 SCSS입니다. 생성된 파일을 다음에서 가져옵니다.
-스타일시트 _이후_ `@mission-platform/tokens`이므로 재정의가 캐스케이드에서 승리합니다.
+스타일시트 _after_ `@mission-platform/tokens`이므로 재정의가 캐스케이드에서 승리합니다.
 
 생성은 롤업 `buildStart` 후크에서 실행됩니다(따라서 `vite build`,
 `vite build --watch` 및 dev-server가 똑같이 시작됨) 소스가
@@ -33,19 +33,18 @@ DTCG 스타일 재정의 문서(`options.source`)를 읽고 다음으로 변환�
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 옵션 | TokenOverridesPluginOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------------- | ----------- |
+| 옵션 | TokenOverridesPluginOptions |             |
 
 #### 계약
 
 - **@예:** ```ts
   // vite.config.ts
   import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
-plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
+  export default defineConfig({
+  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+  });
 
 ````
 ```scss
@@ -62,12 +61,12 @@ plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' }
 function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-앱의 디자인 토큰 _재정의_ 스타일시트를 자동 생성하는 Vite 플러그인입니다.
+앱의 디자인 토큰 _override_ 스타일시트를 자동 생성하는 Vite 플러그인입니다.
 
 DTCG 스타일 재정의 문서(`options.source`)를 읽고 다음으로 변환합니다.
 {@link buildTokenOverrideScss}, 결과 `:root { --<prefix>-*: … }`을 작성합니다.
 `options.outFile`의 일부 SCSS입니다. 생성된 파일을 다음에서 가져옵니다.
-스타일시트 _이후_ `@mission-platform/tokens`이므로 재정의가 캐스케이드에서 승리합니다.
+스타일시트 _after_ `@mission-platform/tokens`이므로 재정의가 캐스케이드에서 승리합니다.
 
 생성은 롤업 `buildStart` 후크에서 실행됩니다(따라서 `vite build`,
 `vite build --watch` 및 dev-server가 똑같이 시작됨) 소스가
@@ -76,19 +75,18 @@ DTCG 스타일 재정의 문서(`options.source`)를 읽고 다음으로 변환�
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 옵션 | TokenOverridesPluginOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------------- | ----------- |
+| 옵션 | TokenOverridesPluginOptions |             |
 
 #### 계약
 
 - **@예:** ```ts
   // vite.config.ts
   import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
-plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
+  export default defineConfig({
+  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+  });
 
 ````
 ```scss
@@ -123,10 +121,10 @@ SCSS/CSS 재정의 부분 빌드: 단일 `:root { … }` 블록
 
 #### 매개변수
 
-| 이름  | 유형                  | 설명 |
-| ----- | --------------------- | ---- |
-| 문서_ | 그룹 재정의           |      |
-| 옵션  | TokenOverrideScss옵션 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------------------------ | ----------- |
+| 문서_ | 그룹 재정의 |             |
+| 옵션 | TokenOverrideScss옵션 |             |
 
 ### 플랫오버라이드
 
@@ -149,17 +147,16 @@ function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride
 재정의 문서를 {@link FlatOverride}로 반복적으로 평면화합니다. 키는
 `재정의 문서를 {@link FlatOverride}로 반복적으로 평면화합니다. 키는
 (DTCG 메타데이터)으로 시작하면 건너뜁니다. 남은 모든 잎은 나뭇잎이 된다
-`--<prefix>-<path-joined-by-dashes>`사용자 정의 특성. 구성요소 재정의
-경로는`component._` DTCG 래퍼를 유지하지만 생성된 CSS는 이를 생략합니다.
-래퍼(`component.button._`은 `--<prefix>-button-*`가 됨)
+`--<prefix>-<path-joined-by-dashes>` 사용자 정의 특성. 구성요소 재정의
+경로는 `component.*` DTCG 래퍼를 유지하지만 생성된 CSS는 이를 생략합니다.
+래퍼(`component.button.*`은 `--<prefix>-button-*`가 됨)
  `$`
-
 #### 매개변수
 
-| 이름   | 유형        | 설명 |
-| ------ | ----------- | ---- |
-| 문서_  | 그룹 재정의 |      |
-| 접두사 |             |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------------- | ----------- |
+| 문서_ | 그룹 재정의 |             |
+| 접두사 |               |             |
 
 ### LightDark값
 
@@ -181,7 +178,6 @@ export type OverrideGroup = Record<string, unknown>;
 
 DTCG 스타일 재정의 그룹 node(중첩된 그룹/토큰과 선택적 `DTCG 스타일 재정의 그룹 node(중첩된 그룹/토큰과 선택적 -메타데이터).
  `$`
-
 ### 재정의토큰
 
 **종류:** 인터페이스
@@ -200,7 +196,7 @@ DTCG 스타일 재정의 리프 토큰입니다.
 export type OverrideValue = string | number | LightDarkValue;
 ```
 
-단일 재정의 `$value` - 스칼라 또는 구성표 인식 `{ light, dark }` 쌍입니다.
+단일 재정의 `$value` — 스칼라 또는 구성표 인식 `{ light, dark }` 쌍입니다.
 
 ### TokenOverrideScss옵션
 

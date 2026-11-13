@@ -25,9 +25,9 @@ sources générées. Les bundlers natifs et les outils de déclaration peuvent �
 
 #### Paramètres
 
-| Nom     | Tapez                       | Descriptif |
-| ------- | --------------------------- | ---------- |
-| options | ForgeArtifactPublishOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | --------------------------- | ----------- |
+| options | ForgeArtifactPublishOptions |             |
 
 ### forgeBuildLifecyclePlugin
 
@@ -42,9 +42,9 @@ délibérément attendu des hooks de cycle de vie, jamais pendant la création d
 
 #### Paramètres
 
-| Nom     | Tapez                      | Descriptif |
-| ------- | -------------------------- | ---------- |
-| options | ForgeBuildLifecycleOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------------- | ----------- |
+| options | ForgeBuildLifecycleOptions |             |
 
 ### forgeVirtualEntry
 
@@ -58,9 +58,9 @@ Entrée virtuelle stable utilisée jusqu'à ce que la cible ait été préparée
 
 #### Paramètres
 
-| Nom     | Tapez  | Descriptif |
-| ------- | ------ | ---------- |
-| IDcible | chaîne |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------ | ----------- |
+| IDcible | chaîne |             |
 
 ## `src/compiler/artifact-manifest`
 
@@ -80,11 +80,11 @@ Créez un manifeste stable sans introduire d'horodatage dans la sortie généré
 
 #### Paramètres
 
-| Nom       | Tapez                               | Descriptif |
-| --------- | ----------------------------------- | ---------- |
-| IDcible   | chaîne                              |            |
-| artefacts | lecture seule ForgeArtifactRecord[] |            |
-| compléter |                                     |            |
+| Nom | Tapez | Descriptif |
+| --------- | ------------------------------ | ----------- |
+| IDcible | chaîne |             |
+| artefacts | lecture seule ForgeArtifactRecord[] |             |
+| compléter |                                |             |
 
 ### ForgeArtefactGenre
 
@@ -131,9 +131,9 @@ Les composants descendants sont vérifiés par le résolveur d'artefacts avant u
 
 #### Paramètres
 
-| Nom    | Tapez  | Descriptif |
-| ------ | ------ | ---------- |
-| racine | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| racine | chaîne |             |
 
 ### assurerForgeArtifactDirectory
 
@@ -147,10 +147,10 @@ Créez un répertoire de sortie un composant à la fois sans suivre les liens.
 
 #### Paramètres
 
-| Nom      | Tapez  | Descriptif |
-| -------- | ------ | ---------- |
-| racine   | chaîne |            |
-| annuaire | chaîne |            |
+| Nom | Tapez | Descriptif |
+| --------- | ------ | ----------- |
+| racine | chaîne |             |
+| répertoire | chaîne |             |
 
 ### résoudreForgeArtifactPath
 
@@ -164,10 +164,10 @@ Résolvez un nom d'artefact et vérifiez que les composants de chemin existants 
 
 #### Paramètres
 
-| Nom        | Tapez  | Descriptif |
-| ---------- | ------ | ---------- |
-| racine     | chaîne |            |
-| nomrelatif | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ------------ | ------ | ----------- |
+| racine | chaîne |             |
+| nomrelatif | chaîne |             |
 
 ### validateForgeArtifactName
 
@@ -181,9 +181,9 @@ Validez un nom d'artefact sans normaliser les segments de chemin dangereux.
 
 #### Paramètres
 
-| Nom        | Tapez  | Descriptif |
-| ---------- | ------ | ---------- |
-| nomrelatif | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ------------ | ------ | ----------- |
+| nomrelatif | chaîne |             |
 
 ### validerForgeArtifactSegment
 
@@ -193,13 +193,13 @@ Validez un nom d'artefact sans normaliser les segments de chemin dangereux.
 function validateForgeArtifactSegment(segment: string): string;
 ```
 
-Validez un composant de chemin unique utilisé pour construire une racine d'artefact.
+Validez un composant de chemin unique utilisé pour construire une racine d’artefact.
 
 #### Paramètres
 
-| Nom     | Tapez  | Descriptif |
-| ------- | ------ | ---------- |
-| segment | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------ | ----------- |
+| segment | chaîne |             |
 
 ## `src/compiler/artifact-writer`
 
@@ -215,15 +215,15 @@ function createForgeArtifactWriter(
 ): ForgeArtifactWriter;
 ```
 
-Aucune description fournie.
+Créez un rédacteur d'artefacts atomiques pour préparer et valider les artefacts Forge.
 
 #### Paramètres
 
-| Nom     | Tapez                      | Descriptif |
-| ------- | -------------------------- | ---------- |
-| outDir  | chaîne                     |            |
-| IDcible | chaîne                     |            |
-| options | ForgeArtifactWriterOptions |            |
+| Nom | Tapez | Descriptif |
+| -------- | -------------------------- | ----------- |
+| outDir | chaîne |             |
+| IDcible | chaîne |             |
+| options | ForgeArtifactWriterOptions |             |
 
 ### forgeArtifactTentativeRépertoire
 
@@ -237,10 +237,10 @@ Allouez un répertoire frère détenu pour une tentative de génération de cibl
 
 #### Paramètres
 
-| Nom     | Tapez  | Descriptif |
-| ------- | ------ | ---------- |
-| outDir  | chaîne |            |
-| IDcible | chaîne |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------ | ----------- |
+| outDir | chaîne |             |
+| IDcible | chaîne |             |
 
 ### ForgeArtefactÉcrivain
 
@@ -314,10 +314,10 @@ la construction du framework non correspondant est gérée en amont par l'étape
 
 #### Paramètres
 
-| Nom     | Tapez                  | Descriptif |
-| ------- | ---------------------- | ---------- |
-| source  | chaîne                 |            |
-| options | Options de compilation |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| source | chaîne |             |
+| options | Options de compilation |             |
 
 ### Module compilé
 
@@ -343,10 +343,10 @@ source par framework (étape 1).
 
 #### Paramètres
 
-| Nom     | Tapez              | Descriptif |
-| ------- | ------------------ | ---------- |
-| source  | chaîne             |            |
-| options | CompileHookOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------ | ----------- |
+| source | chaîne |             |
+| options | CompileHookOptions |             |
 
 ### CompileHookOptions
 
@@ -368,16 +368,16 @@ function compileModule(source: string, options: CompileModuleOptions): CompiledM
 
 Compilez un module neutre via un plugin de sortie fourni par l'appelant.
 
-Contrairement aux wrappers pratiques historiques de JSX, ce point d'entrée préserve
+Contrairement aux wrappers pratiques JSX historiques, ce point d'entrée préserve
 le langage de sortie ouvert du plugin et les langages des modules auxiliaires. C'est le
-couture partagée utilisée par des packages cibles autonomes tels qu'Astro.
+couture partagée utilisée par des packages cibles autonomes tels que Astro.
 
 #### Paramètres
 
-| Nom     | Tapez                | Descriptif |
-| ------- | -------------------- | ---------- |
-| source  | chaîne               |            |
-| options | CompileModuleOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------- | ----------- |
+| source | chaîne |             |
+| options | CompileModuleOptions |             |
 
 ### Options du module de compilation
 
@@ -413,10 +413,10 @@ Recherchez une déclaration de fonction Oxc exportée pour un composant neutre p
 
 #### Paramètres
 
-| Nom            | Tapez           | Descriptif |
-| -------------- | --------------- | ---------- |
-| fichier source | OxcParsedModule |            |
-| nom            | chaîne          |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------- | ----------- |
+| fichier source | OxcParsedModule |             |
+| nom | chaîne |             |
 
 ### isSlotElement
 
@@ -430,9 +430,9 @@ Indique si un Oxc node est un élément d'emplacement nommé neutre.
 
 #### Paramètres
 
-| Nom  | Tapez    | Descriptif |
-| ---- | -------- | ---------- |
-| node | OxcNoeud |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------- | ----------- |
+| node | OxcNoeud |             |
 
 ### readSlotName
 
@@ -446,9 +446,9 @@ Lisez le `name="…"` statique d'un élément Oxc `<Slot>`.
 
 #### Paramètres
 
-| Nom  | Tapez    | Descriptif |
-| ---- | -------- | ---------- |
-| node | OxcNoeud |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------- | ----------- |
+| node | OxcNoeud |             |
 
 ## `src/compiler/constants`
 
@@ -484,9 +484,9 @@ Générez les déclarations de type JSX colocalisées spécifiques au framework.
 
 #### Paramètres
 
-| Nom   | Tapez        | Descriptif |
-| ----- | ------------ | ---------- |
-| cadre | JsxFramework |            |
+| Nom | Tapez | Descriptif |
+| --------- | ------------ | ----------- |
+| cadre | JsxFramework |             |
 
 ### NEUTRAL_MODULE
 
@@ -512,11 +512,11 @@ Indique si un module neutre ou spécifique au framework appartient à une versio
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| Nom du fichier | chaîne |            |
-| source         | chaîne |            |
-| cadre          | chaîne |            |
+| Nom | Tapez | Descriptif |
+| --------- | ------ | ----------- |
+| Nom du fichier | chaîne |             |
+| source | chaîne |             |
+| cadre | chaîne |             |
 
 ### readFrameworkDirective
 
@@ -530,10 +530,10 @@ Lisez la directive principale `"use <framework>"` à partir d'un module Oxc.
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| Nom du fichier | chaîne |            |
-| source         | chaîne |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------ | ----------- |
+| Nom du fichier | chaîne |             |
+| source | chaîne |             |
 
 ## `src/compiler/discover`
 
@@ -552,10 +552,10 @@ in (le nom de base du module de réexportation).
 
 #### Paramètres
 
-| Nom          | Tapez  | Descriptif |
-| ------------ | ------ | ---------- |
-| barilSource  | chaîne |            |
-| stripPréfixe |        |            |
+| Nom | Tapez | Descriptif |
+| ------------ | ------ | ----------- |
+| barilSource | chaîne |             |
+| stripPréfixe |        |             |
 
 ### découvrirComponentsFromGraph
 
@@ -573,11 +573,11 @@ Projetez les exportations de composants publics à partir du graphe canonique to
 
 #### Paramètres
 
-| Nom          | Tapez                   | Descriptif |
-| ------------ | ----------------------- | ---------- |
-| graphique    | ForgeFileGraph          |            |
-| stripPréfixe |                         |            |
-| diagnostic   | CompilateurDiagnostic[] |            |
+| Nom | Tapez | Descriptif |
+| ----------- | -------------------- | ----------- |
+| graphique | ForgeFileGraph |             |
+| stripPréfixe |                      |             |
+| diagnostic | CompilateurDiagnostic[] |             |
 
 ### Composant découvert
 
@@ -618,10 +618,10 @@ les consommateurs utilisent exactement le même singleton par framework que celu
 
 #### Paramètres
 
-| Nom                    | Tapez               | Descriptif |
-| ---------------------- | ------------------- | ---------- |
-| barilSource            | chaîne              |            |
-| dossiers de composants | ReadonlySet<string> |            |
+| Nom | Tapez | Descriptif |
+| ---------------- | ------------------- | ----------- |
+| barilSource | chaîne |             |
+| dossiers de composants | ReadonlySet<string> |             |
 
 ### discoverHelperExportsFromGraph
 
@@ -639,11 +639,11 @@ Projetez les exportations publiques non composantes à partir du graphe canoniqu
 
 #### Paramètres
 
-| Nom                    | Tapez                               | Descriptif |
-| ---------------------- | ----------------------------------- | ---------- |
-| graphique              | ForgeFileGraph                      |            |
-| dossiers de composants | ReadonlySet<string>                 |            |
-| Composants découverts  | lecture seule DiscoveredComponent[] |            |
+| Nom | Tapez | Descriptif |
+| -------------------- | ------------------------------ | ----------- |
+| graphique | ForgeFileGraph |             |
+| dossiers de composants | ReadonlySet<string> |             |
+| Composants découverts | lecture seule DiscoveredComponent[] |             |
 
 ## `src/compiler/facts`
 
@@ -699,10 +699,10 @@ Extrayez les importations statiques, les exportations, les bords de type uniquem
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| Nom du fichier | chaîne |            |
-| source         | chaîne |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------ | ----------- |
+| Nom du fichier | chaîne |             |
+| source | chaîne |             |
 
 ## `src/compiler/frontends`
 
@@ -720,10 +720,10 @@ créé; le module renvoyé est la représentation unique basée sur l'analyseur.
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| Nom du fichier | chaîne |            |
-| source         | chaîne |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------ | ----------- |
+| Nom du fichier | chaîne |             |
+| source | chaîne |             |
 
 ### parseFrontendModule
 
@@ -742,12 +742,12 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom              | Tapez                       | Descriptif |
-| ---------------- | --------------------------- | ---------- |
-| Nom du fichier   | chaîne                      |            |
-| source           | chaîne                      |            |
-| moduleType       | 'composant' \| 'composable' |            |
-| Nom du composant | chaîne                      |            |
+| Nom | Tapez | Descriptif |
+| ------------- | --------------------------- | ----------- |
+| Nom du fichier | chaîne |             |
+| source | chaîne |             |
+| moduleType | 'composant' \| 'composable' |             |
+| Nom du composant | chaîne |             |
 
 ## `src/compiler/generation-context`
 
@@ -763,9 +763,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom     | Tapez                         | Descriptif |
-| ------- | ----------------------------- | ---------- |
-| options | ForgeGenerationContextOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ----------------------------- | ----------- |
+| options | ForgeGenerationContextOptions |             |
 
 ### ForgeGenerationContext
 
@@ -801,9 +801,9 @@ Construisez le graphique source canonique à partir d’un module d’entrée co
 
 #### Paramètres
 
-| Nom     | Tapez                 | Descriptif |
-| ------- | --------------------- | ---------- |
-| options | ForgeFileGraphOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | --------------------- | ----------- |
+| options | ForgeFileGraphOptions |             |
 
 ### ForgeFileEdge
 
@@ -884,7 +884,7 @@ Aucune description fournie.
 
 ## `src/compiler/hoist-static`
 
-### palanStaticJsx
+### palanStatiqueJsx
 
 **Genre :** fonction
 
@@ -897,16 +897,16 @@ function hoistStaticJsx(
 ```
 
 Static-mark hisse ensuite l'arbre de rendu d'un module analysé par Oxc, renvoyant le
-module générique levé plus les entrées soulevées. Équivalent à l'exécution du
+module générique hissé plus les entrées levées. Équivalent à l'exécution du
 Passe de marquage statique étape 1 suivie d'un levage générique.
 
 #### Paramètres
 
-| Nom              | Tapez                       | Descriptif |
-| ---------------- | --------------------------- | ---------- |
-| modules          | OxcParsedModule             |            |
-| moduleType       | 'composant' \| 'composable' |            |
-| Nom du composant | chaîne                      |            |
+| Nom | Tapez | Descriptif |
+| ------------- | --------------------------- | ----------- |
+| modules | OxcParsedModule |             |
+| moduleType | 'composant' \| 'composable' |             |
+| Nom du composant | chaîne |             |
 
 ## `src/compiler/imports`
 
@@ -932,10 +932,10 @@ Collectez les importations de packages nus transportées textuellement dans les 
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| Nom du fichier | chaîne |            |
-| source         | chaîne |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------ | ----------- |
+| Nom du fichier | chaîne |             |
+| source | chaîne |             |
 
 ### readNeutralImports
 
@@ -949,10 +949,10 @@ Inspectez les importations de packages neutres d’un module.
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| Nom du fichier | chaîne |            |
-| source         | chaîne |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------ | ----------- |
+| Nom du fichier | chaîne |             |
+| source | chaîne |             |
 
 ### readStyleImports
 
@@ -966,11 +966,11 @@ Collectez les importations de feuilles de style relatives à partir d'un module 
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| Nom du fichier | chaîne |            |
-| source         | chaîne |            |
-| sourceRacine   | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------ | ----------- |
+| Nom du fichier | chaîne |             |
+| source | chaîne |             |
+| sourceRacine | chaîne |             |
 
 ### résoudreWorkspaceLocalImport
 
@@ -988,11 +988,11 @@ Résolvez une importation `@/` locale dans l'espace de travail par rapport à so
 
 #### Paramètres
 
-| Nom              | Tapez              | Descriptif |
-| ---------------- | ------------------ | ---------- |
-| prescripteur     | chaîne             |            |
-| nomFichiersource | chaîne             |            |
-| sourceRacine     | chaîne \| indéfini |            |
+| Nom | Tapez | Descriptif |
+| -------------- | ------------------- | ----------- |
+| prescripteur | chaîne |             |
+| nomFichiersource | chaîne |             |
+| sourceRacine | chaîne \| indéfini |             |
 
 ### Importation de style
 
@@ -1016,9 +1016,9 @@ Qu'un module Oxc ou node appelle `i18next.t(...)`.
 
 #### Paramètres
 
-| Nom  | Tapez    | Descriptif |
-| ---- | -------- | ---------- |
-| node | OxcNoeud |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------- | ----------- |
+| node | OxcNoeud |             |
 
 ## `src/compiler/optimize`
 
@@ -1039,17 +1039,17 @@ Par défaut, chaque passage est activé ; passez `{ deadBranchPruning: false, �
 
 #### Paramètres
 
-| Nom     | Tapez            | Descriptif |
-| ------- | ---------------- | ---------- |
-| modules | OxcParsedModule  |            |
-| options | OptimiserOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | --------------- | ----------- |
+| modules | OxcParsedModule |             |
+| options | OptimiserOptions |             |
 
 ### optimiserFichierSource
 
 **Genre :** constante
 
 ```typescript
-export const optimizeSourceFile;
+export const optimizeSourceFile: typeof optimizeForgeModule;
 ```
 
 Alias ​​de compatibilité conservé pour les intégrations du compilateur utilisant l'ancien nom.
@@ -1068,9 +1068,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom    | Tapez    | Descriptif |
-| ------ | -------- | ---------- |
-| racine | OxcNoeud |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------- | ----------- |
+| racine | OxcNoeud |             |
 
 ### isOxcJsxRoot
 
@@ -1084,9 +1084,9 @@ True lorsque node est un élément JSX, un élément à fermeture automatique ou
 
 #### Paramètres
 
-| Nom  | Tapez    | Descriptif |
-| ---- | -------- | ---------- |
-| node | OxcNoeud |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------- | ----------- |
+| node | OxcNoeud |             |
 
 ### isOxcNode
 
@@ -1100,9 +1100,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom    | Tapez   | Descriptif |
-| ------ | ------- | ---------- |
-| valeur | inconnu |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------- | ----------- |
+| valeur | inconnu |             |
 
 ### oxcArray
 
@@ -1116,12 +1116,12 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom  | Tapez    | Descriptif |
-| ---- | -------- | ---------- |
-| node | OxcNoeud |            |
-| clé  | chaîne   |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------- | ----------- |
+| node | OxcNoeud |             |
+| clé | chaîne |             |
 
-### oxcEnfants
+### oxcChildren
 
 **Genre :** fonction
 
@@ -1133,9 +1133,9 @@ L'enfant en profondeur parcourt d'innombrables propriétés valorisées node.
 
 #### Paramètres
 
-| Nom  | Tapez    | Descriptif |
-| ---- | -------- | ---------- |
-| node | OxcNoeud |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------- | ----------- |
+| node | OxcNoeud |             |
 
 ### OxcComment
 
@@ -1159,9 +1159,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom  | Tapez               | Descriptif |
-| ---- | ------------------- | ---------- |
-| node | OxcNode \| indéfini |            |
+| Nom | Tapez | Descriptif |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \| indéfini |             |
 
 ### oxcLiteralValue
 
@@ -1175,9 +1175,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom  | Tapez               | Descriptif |
-| ---- | ------------------- | ---------- |
-| node | OxcNode \| indéfini |            |
+| Nom | Tapez | Descriptif |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \| indéfini |             |
 
 ### Noeud Oxc
 
@@ -1201,10 +1201,10 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom    | Tapez               | Descriptif |
-| ------ | ------------------- | ---------- |
-| source | chaîne              |            |
-| node   | OxcNode \| indéfini |            |
+| Nom | Tapez | Descriptif |
+| ------ | -------------------- | ----------- |
+| source | chaîne |             |
+| node | OxcNode \| indéfini |             |
 
 ### oxcObject
 
@@ -1218,10 +1218,10 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom  | Tapez    | Descriptif |
-| ---- | -------- | ---------- |
-| node | OxcNoeud |            |
-| clé  | chaîne   |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------- | ----------- |
+| node | OxcNoeud |             |
+| clé | chaîne |             |
 
 ### OxcParentMap
 
@@ -1265,9 +1265,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom       | Tapez    | Descriptif |
-| --------- | -------- | ---------- |
-| programme | OxcNoeud |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------- | ----------- |
+| programme | OxcNoeud |             |
 
 ### oxcSourceExpression
 
@@ -1285,11 +1285,11 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom     | Tapez                             | Descriptif |
-| ------- | --------------------------------- | ---------- |
-| source  | chaîne                            |            |
-| node    | OxcNoeud                          |            |
-| syntaxe | SourceBackedExpression['syntaxe'] |            |
+| Nom | Tapez | Descriptif |
+| ------ | -------------------------------- | ----------- |
+| source | chaîne |             |
+| node | OxcNoeud |             |
+| syntaxe | SourceBackedExpression['syntaxe'] |             |
 
 ### oxcSourceSpan
 
@@ -1303,10 +1303,10 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom    | Tapez    | Descriptif |
-| ------ | -------- | ---------- |
-| source | chaîne   |            |
-| node   | OxcNoeud |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------- | ----------- |
+| source | chaîne |             |
+| node | OxcNoeud |             |
 
 ### chaîne oxc
 
@@ -1320,10 +1320,10 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom  | Tapez                              | Descriptif |
-| ---- | ---------------------------------- | ---------- |
-| node | OxcNode \| indéfini                |            |
-| clé  | 'nom' \| 'valeur' ​​\| 'directive' |            |
+| Nom | Tapez | Descriptif |
+| ---- | -------------------------------- | ----------- |
+| node | OxcNode \| indéfini |             |
+| clé | 'nom' \| 'valeur' ​​\| 'directive' |             |
 
 ### oxcTypeNoeud
 
@@ -1337,9 +1337,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom  | Tapez               | Descriptif |
-| ---- | ------------------- | ---------- |
-| node | OxcNode \| indéfini |            |
+| Nom | Tapez | Descriptif |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \| indéfini |             |
 
 ### oxcUnwrapModuleStatement
 
@@ -1357,9 +1357,9 @@ Déballez les wrappers `export …` afin que les appelants voient la déclaratio
 
 #### Paramètres
 
-| Nom         | Tapez    | Descriptif |
-| ----------- | -------- | ---------- |
-| déclaration | OxcNoeud |            |
+| Nom | Tapez | Descriptif |
+| --------- | ------- | ----------- |
+| déclaration | OxcNoeud |             |
 
 ### parseOxcModule
 
@@ -1373,10 +1373,10 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| Nom du fichier | chaîne |            |
-| source         | chaîne |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------ | ----------- |
+| Nom du fichier | chaîne |             |
+| source | chaîne |             |
 
 ### stripOxcFrameworkDirective
 
@@ -1390,9 +1390,9 @@ Supprimez les principales directives de prologue `"use <framework>"` d'un module
 
 #### Paramètres
 
-| Nom     | Tapez           | Descriptif |
-| ------- | --------------- | ---------- |
-| modules | OxcParsedModule |            |
+| Nom | Tapez | Descriptif |
+| ------ | --------------- | ----------- |
+| modules | OxcParsedModule |             |
 
 ### visiterOxc
 
@@ -1406,10 +1406,10 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom      | Tapez                               | Descriptif |
-| -------- | ----------------------------------- | ---------- |
-| node     | OxcNoeud                            |            |
-| visiteur | (node : OxcNode) => vide \| booléen |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---------------------------------- | ----------- |
+| node | OxcNoeud |             |
+| visiteur | (node : OxcNode) => vide \| booléen |             |
 
 ## `src/compiler/pipeline`
 
@@ -1433,10 +1433,10 @@ Le composant analysé pour plusieurs cibles dans une seule build n’est déduit
 
 #### Paramètres
 
-| Nom         | Tapez                 | Descriptif |
-| ----------- | --------------------- | ---------- |
-| entrée      | Entrée du compilateur |            |
-| prestations | ForgeCompilerService  |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------- | ----------- |
+| entrée | Entrée du compilateur |             |
+| prestations | ForgeCompilerService |             |
 
 ### Entrée du compilateur
 
@@ -1470,9 +1470,9 @@ Créez le répartiteur de phases utilisé par les points d'entrée du compilateu
 
 #### Paramètres
 
-| Nom         | Tapez                | Descriptif |
-| ----------- | -------------------- | ---------- |
-| prestations | ForgeCompilerService |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------- | ----------- |
+| prestations | ForgeCompilerService |             |
 
 ## `src/compiler/report`
 
@@ -1502,9 +1502,9 @@ Analysez les importations et les utilisations de routeurs neutres sans importer 
 
 #### Paramètres
 
-| Nom    | Tapez                                                                | Descriptif |
-| ------ | -------------------------------------------------------------------- | ---------- |
-| entrée | Choisir<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |            |
+| Nom | Tapez | Descriptif |
+| ----- | ----------------------------------------------------------------- | ----------- |
+| entrée | Choisir<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |             |
 
 ### compileRouterModule
 
@@ -1518,16 +1518,16 @@ Compilez l’utilisation neutre du routeur via un adaptateur cible natif sélect
 
 #### Paramètres
 
-| Nom    | Tapez                            | Descriptif |
-| ------ | -------------------------------- | ---------- |
-| entrée | Entrée du compilateur de routeur |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------------------- | ----------- |
+| entrée | Entrée du compilateur de routeur |             |
 
 ### createRouterCompilerPipeline
 
 **Genre :** fonction
 
 ```typescript
-function createRouterCompilerPipeline();
+function createRouterCompilerPipeline(): { readonly compile: typeof compileRouterModule };
 ```
 
 Formulaire de répartiteur utilisé par le compilateur Forge et par les appareils cibles autonomes.
@@ -1556,9 +1556,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom     | Tapez            | Descriptif |
-| ------- | ---------------- | ---------- |
-| limites | ForgeCacheLimits |            |
+| Nom | Tapez | Descriptif |
+| ------ | ---------------- | ----------- |
+| limites | ForgeCacheLimits |             |
 
 ### ForgeCompileRequest
 
@@ -1636,9 +1636,9 @@ La construction enregistre uniquement la propriété du service ; la découvert
 
 #### Paramètres
 
-| Nom     | Tapez                          | Descriptif |
-| ------- | ------------------------------ | ---------- |
-| options | CreateForgeBuildSessionOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------------------ | ----------- |
+| options | CreateForgeBuildSessionOptions |             |
 
 ### CreateForgeBuildSessionOptions
 
@@ -1688,7 +1688,7 @@ Aucune description fournie.
 export interface ForgeTargetGenerationContext
 ```
 
-Contexte passé à un rappel de génération cible après la préparation du projet.
+Contexte transmis à un rappel de génération cible après la préparation du projet.
 
 ### ForgeTargetGenerationResult
 
@@ -1700,7 +1700,7 @@ export interface ForgeTargetGenerationResult
 
 Le résultat renvoyé par l'étape de génération de source paresseuse d'une cible.
 
-### ForgeTargetPlan
+### ForgerTargetPlan
 
 **Genre :** interface
 
@@ -1734,9 +1734,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom     | Tapez                       | Descriptif |
-| ------- | --------------------------- | ---------- |
-| options | JsxHookLibraryConfigOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | --------------------------- | ----------- |
+| options | JsxHookLibraryConfigOptions |             |
 
 ### définirJsxLibraryConfig
 
@@ -1750,9 +1750,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom     | Tapez                   | Descriptif |
-| ------- | ----------------------- | ---------- |
-| options | JsxLibraryConfigOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ----------------------- | ----------- |
+| options | JsxLibraryConfigOptions |             |
 
 ### JsxHookLibraryConfigOptions
 
@@ -1832,9 +1832,9 @@ ils nécessitent la configuration résolue de Vite.
 
 #### Paramètres
 
-| Nom    | Tapez                 | Descriptif |
-| ------ | --------------------- | ---------- |
-| plugin | FrameworkOutputPlugin |            |
+| Nom | Tapez | Descriptif |
+| ------ | --------------------- | ----------- |
+| plugin | FrameworkOutputPlugin |             |
 
 ### sveltePlugin
 
@@ -1873,9 +1873,9 @@ renvoyant le chemin du module d'entrée généré.
 
 #### Paramètres
 
-| Nom     | Tapez                            | Descriptif |
-| ------- | -------------------------------- | ---------- |
-| options | GénérerHookLibrarySourcesOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | --------------------------------- | ----------- |
+| options | GénérerHookLibrarySourcesOptions |             |
 
 ### GénérerHookLibrarySourcesOptions
 
@@ -1901,9 +1901,9 @@ Créez un descripteur d'arborescence source à partir d'un plugin de sortie expl
 
 #### Paramètres
 
-| Nom    | Tapez                 | Descriptif |
-| ------ | --------------------- | ---------- |
-| plugin | FrameworkOutputPlugin |            |
+| Nom | Tapez | Descriptif |
+| ------ | --------------------- | ----------- |
+| plugin | FrameworkOutputPlugin |             |
 
 ### FrameworkSourceTarget
 
@@ -1928,9 +1928,9 @@ renvoyant le chemin du module d'entrée généré.
 
 #### Paramètres
 
-| Nom     | Tapez                                   | Descriptif |
-| ------- | --------------------------------------- | ---------- |
-| options | Générer des options de sources de cadre |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------------------- | ----------- |
+| options | Générer des options de sources de cadre |             |
 
 ### Générer des options de sources de cadre
 
@@ -1966,9 +1966,9 @@ Créez des configurations tsdown indépendantes pour chaque framework de composa
 
 #### Paramètres
 
-| Nom     | Tapez                              | Descriptif |
-| ------- | ---------------------------------- | ---------- |
-| options | TsdownForgeComponentPluginsOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---------------------------------- | ----------- |
+| options | TsdownForgeComponentPluginsOptions |             |
 
 ### définirTsdownForgeEmailComponents
 
@@ -1985,9 +1985,26 @@ Il préserve l'arbre de la Forge ainsi
 
 #### Paramètres
 
-| Nom     | Tapez                             | Descriptif |
-| ------- | --------------------------------- | ---------- |
-| options | TsdownForgeEmailComponentsOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | --------------------------------- | ----------- |
+| options | TsdownForgeEmailComponentsOptions |             |
+
+### defineTsdownForgeHooks
+
+**Genre :** fonction
+
+```typescript
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
+```
+
+Créez une configuration tsdown pour une seule version de hooks de framework Forge.
+Émet du code et des types dans le répertoire de distribution du framework cible.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | ----------------------- | ----------- |
+| options | TsdownForgeHooksOptions |             |
 
 ### définirTsdownForgeHooksAll
 
@@ -2003,9 +2020,9 @@ Créez un tableau de configurations tsdown pour chaque framework de hooks forge 
 
 #### Paramètres
 
-| Nom     | Tapez                         | Descriptif |
-| ------- | ----------------------------- | ---------- |
-| options | TsdownForgeHooksToutesOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------------- | ----------- |
+| options | TsdownForgeHooksToutesOptions |             |
 
 ### résoudreCanonicalChunkName
 
@@ -2021,9 +2038,9 @@ Modules de script virtuel Vue vers `${component}.script.js`.
 
 #### Paramètres
 
-| Nom       | Tapez                   | Descriptif |
-| --------- | ----------------------- | ---------- |
-| chunkInfo | CanonicalChunkCandidate |            |
+| Nom | Tapez | Descriptif |
+| --------- | ----------------------- | ----------- |
+| chunkInfo | CanonicalChunkCandidate |             |
 
 ### résoudreCanonicalEntryName
 
@@ -2034,14 +2051,14 @@ function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string;
 ```
 
 Déterminez le nom de fichier d’entrée canonique émis pour un morceau.
-Les entrées de forge virtuelle sont mappées sur `index.js`, tout en étant préservées
+Les entrées de forge virtuelle sont mappées sur `index.js`, tout en étant conservées
 les modules délèguent à la résolution du nom du bloc.
 
 #### Paramètres
 
-| Nom       | Tapez                   | Descriptif |
-| --------- | ----------------------- | ---------- |
-| chunkInfo | CanonicalChunkCandidate |            |
+| Nom | Tapez | Descriptif |
+| --------- | ----------------------- | ----------- |
+| chunkInfo | CanonicalChunkCandidate |             |
 
 ### tsdownForgeComponentPlugins
 
@@ -2057,9 +2074,9 @@ Reproduisez un framework **composant** Archetype-C construit sous tsdown :
 
 #### Paramètres
 
-| Nom     | Tapez                              | Descriptif |
-| ------- | ---------------------------------- | ---------- |
-| options | TsdownForgeComponentPluginsOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---------------------------------- | ----------- |
+| options | TsdownForgeComponentPluginsOptions |             |
 
 ### OptionsTsdownForgeComponentPlugins
 
@@ -2089,15 +2106,13 @@ Aucune description fournie.
 function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
 ```
 
-Forme native de plug-in tsdown de l'adaptateur de crochet. Les plugins renvoyés injectent
-leur configuration cible à partir de `tsdownConfig`, permettant de composer des builds hook
-avec une configuration `defineTsdownLibrary` appartenant à l'appelant.
+Crée des plugins tsdown hook pour toutes les cibles de framework configurées.
 
 #### Paramètres
 
-| Nom     | Tapez                         | Descriptif |
-| ------- | ----------------------------- | ---------- |
-| options | TsdownForgeHooksToutesOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------------- | ----------- |
+| options | TsdownForgeHooksToutesOptions |             |
 
 ### TsdownForgeHooksAllOptions
 
@@ -2105,6 +2120,16 @@ avec une configuration `defineTsdownLibrary` appartenant à l'appelant.
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
+```
+
+Aucune description fournie.
+
+### TsdownForgeHooksOptions
+
+**Genre :** interface
+
+```typescript
+export interface TsdownForgeHooksOptions
 ```
 
 Aucune description fournie.

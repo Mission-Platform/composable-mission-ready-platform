@@ -48,8 +48,8 @@ Accesorios de devolución de llamada `onUpdateModelValue`/`onChange`.
 
 #### Parámetros
 
-| Nombre      | Tipo                             | Descripción |
-| ----------- | -------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ---------------------------- | ----------- |
 | propiedades | Sólo lectura<CheckboxProperties> |             |
 
 ## `src/components/atoms/forge-input/forge-input`
@@ -79,8 +79,8 @@ el `v-model` + `change`/`blur`/`focus` emite se convierten en
 
 #### Parámetros
 
-| Nombre      | Tipo                          | Descripción |
-| ----------- | ----------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------- | ----------- |
 | propiedades | Sólo lectura<InputProperties> |             |
 
 ### EntradaAutocapitalizar
@@ -138,7 +138,7 @@ compilado directamente en React o Vue por `@mission-platform/vite-plugin-forge`.
 
 Se selecciona una sola radio cuando su `value` es igual al `modelValue` del grupo.
 Posee su estilo a través del módulo CSS `forge-radio.module.scss` ubicado en el mismo lugar.
-(el punto seleccionado es un CSS puro `::after`) y compone el neutral
+(el punto seleccionado es un `::after` CSS puro) y compone el neutral
 {@link ForgeTypography} para el texto de la etiqueta; cualquier contenido de la ranura predeterminada se representa
 después de la etiqueta.
 
@@ -147,8 +147,8 @@ Accesorios de devolución de llamada `onUpdateModelValue`/`onChange`.
 
 #### Parámetros
 
-| Nombre      | Tipo                          | Descripción |
-| ----------- | ----------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------- | ----------- |
 | propiedades | Sólo lectura<RadioProperties> |             |
 
 ### RadioPropiedades
@@ -193,8 +193,8 @@ accesorios.
 
 #### Parámetros
 
-| Nombre      | Tipo                               | Descripción |
-| ----------- | ---------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------ | ----------- |
 | propiedades | Sólo lectura<RangeInputProperties> |             |
 
 ### Propiedades de entrada de rango
@@ -242,9 +242,9 @@ dialecto y compilado directamente en React o Vue por
 `@mission-platform/vite-plugin-forge`.
 
 Representa una fila de estrellas que representan un valor de `0` a `max`, con opción
-Precisión de media estrella, modo de visualización de solo lectura, vista previa al pasar el mouse y teclado.
+Precisión de media estrella, modo de visualización de solo lectura, vista previa al pasar el cursor y teclado.
 control (`role="slider"` cuando es interactivo, `role="img"` cuando es de solo lectura). eso
-posee su estilo a través del módulo CSS `forge-rating.module.scss` ubicado en el mismo lugar.
+posee su estilo a través del módulo CSS `forge-rating.module.scss` ubicado conjuntamente.
 
 Sustituciones del Vue SFC original: las estrellas son las de una sola escritura
 `@mission-platform/icons` `ForgeIconStar` (la capa vacía teñida mediante CSS, el relleno
@@ -254,8 +254,8 @@ Accesorios de devolución de llamada `onUpdateModelValue`/`onChange`.
 
 #### Parámetros
 
-| Nombre      | Tipo                           | Descripción |
-| ----------- | ------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------- | ----------- |
 | propiedades | Sólo lectura<RatingProperties> |             |
 
 ### Propiedades de calificación
@@ -307,8 +307,8 @@ Accesorios de devolución de llamada `onUpdateModelValue`/`onChange`.
 
 #### Parámetros
 
-| Nombre      | Tipo                           | Descripción |
-| ----------- | ------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------- | ----------- |
 | propiedades | Sólo lectura<SliderProperties> |             |
 
 ### Propiedades del control deslizante
@@ -356,8 +356,8 @@ accesorios.
 
 #### Parámetros
 
-| Nombre      | Tipo                           | Descripción |
-| ----------- | ------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------- | ----------- |
 | propiedades | Sólo lectura<SwitchProperties> |             |
 
 ### Cambiar propiedades
@@ -399,17 +399,17 @@ un trío de etiqueta/pista/error y contenido de extensión inicial/final. es due
 diseñar a través del módulo CSS `forge-textarea.module.scss` ubicado conjuntamente y
 compone el {@link ForgeTypography} neutral para la etiqueta/pista/texto de error.
 
-Sustituciones del SFC Vue original: los mapas componibles `useId` directamente
+Sustituciones del Vue SFC original: el `useId` se mapea directamente
 al gancho `useId` nativo del marco; el `start`/`end`
 las regiones se crean como espacios con nombre (`<Slot>`) y se detecta su presencia
-a través del asistente {@link hasSlot} neutral en el marco de trabajo; y el `v-model`+
+a través del asistente {@link hasSlot} neutral en el marco; y el `v-model`+
 `change`/`blur`/`focus` emite se convierte en el
-`onUpdateModelValue`/`onChange`/`onBlur`/`onFocus` accesorios de devolución de llamada.
+Accesorios de devolución de llamada `onUpdateModelValue`/`onChange`/`onBlur`/`onFocus`.
 
 #### Parámetros
 
-| Nombre      | Tipo                             | Descripción |
-| ----------- | -------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ---------------------------- | ----------- |
 | propiedades | Sólo lectura<TextareaProperties> |             |
 
 ### Área de texto Autocapitalizar
@@ -486,10 +486,10 @@ function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement;
 dialecto y compilado directamente en React o Vue por
 `@mission-platform/vite-plugin-forge`.
 
-Presenta una cuadrícula mensual navegable (domingo primero) de días seleccionables, respetando
+Representa una cuadrícula mensual navegable (domingo primero) de días seleccionables, respetando
 Límites `min`/`max` y una lista `disabledDates` explícita, con zona horaria de IANA
 renderizado consciente a través de `luxon`. Al hacer clic en la etiqueta del mes se cambia la cuadrícula del día por una
-cuadrícula de doce meses y al hacer clic en el año se cambia por una cuadrícula de diez años que
+cuadrícula de doce meses, y al hacer clic en el año se cambia por una cuadrícula de diez años que
 páginas en grupos de diez (2026 → 2020–2029), por lo que las fechas lejanas son un par de
 clics de distancia. También puede resaltar un rango seleccionado (`rangeStart`/`rangeEnd`),
 obtener una vista previa de un rango tentativo desde el inicio hasta el día seleccionado (`previewEnd`,
@@ -507,8 +507,8 @@ Las emisiones `change` se convierten en los accesorios de devolución de llamada
 
 #### Parámetros
 
-| Nombre      | Tipo                             | Descripción |
-| ----------- | -------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ---------------------------- | ----------- |
 | propiedades | Sólo lectura<CalendarProperties> |             |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
@@ -558,8 +558,8 @@ Accesorios de devolución de llamada `onUpdateModelValue`/`onChange`.
 
 #### Parámetros
 
-| Nombre      | Tipo                               | Descripción |
-| ----------- | ---------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------ | ----------- |
 | propiedades | Sólo lectura<ColorInputProperties> |             |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
@@ -612,8 +612,8 @@ conviértase en los accesorios de devolución de llamada `onUpdateModelValue`/`o
 
 #### Parámetros
 
-| Nombre      | Tipo                              | Descripción |
-| ----------- | --------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ----------------------------- | ----------- |
 | propiedades | Sólo lectura<DateInputProperties> |             |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
@@ -651,7 +651,7 @@ dialecto y compilado directamente en React o Vue por
 `@mission-platform/vite-plugin-forge`.
 
 Un botón de activación muestra el resumen `start → end` y abre una ventana teletransportada.
-ventana emergente con dos cuadrículas {@link ForgeCalendar}: la cuadrícula de inicio está limitada al final
+ventana emergente con dos cuadrículas {@link ForgeCalendar}: la cuadrícula de inicio tiene un límite en la
 `end` actual (y `max`), la rejilla final se encuentra en el `start` actual (y
 `min`), por lo que el rango permanece ordenado. Una vez que se elige un comienzo pero el final es
 aún abierto, el día bajo el cursor se retroalimenta a ambos calendarios como
@@ -672,8 +672,8 @@ Accesorios de devolución de llamada `onUpdateModelValue`/`onChange`.
 
 #### Parámetros
 
-| Nombre      | Tipo                                   | Descripción |
-| ----------- | -------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ---------------------------------- | ----------- |
 | propiedades | Sólo lectura<DateRangeInputProperties> |             |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
@@ -705,7 +705,7 @@ dando a los controles relacionados una etiqueta accesible y un marco consistente
 Solo presentación e independiente del contenido: pase campos agrupados o arbitrarios.
 marcado a través de la ranura predeterminada. La configuración `disabled` utiliza el nativo
 Comportamiento `<fieldset disabled>`. Es dueño de su estilo a través de la ubicación compartida.
-Módulo CSS `forge-field-set.module.scss` y compone el neutral
+Módulo CSS `forge-field-set.module.scss` y compone el neutro
 {@link ForgeTypography} para el texto de leyenda/descripción.
 
 Sustituciones del SFC Vue original: el contenedor de contenido `ForgeStack`
@@ -714,8 +714,8 @@ Accesorio `legend` (el dialecto neutral no puede introspeccionar la presencia de
 
 #### Parámetros
 
-| Nombre      | Tipo                             | Descripción |
-| ----------- | -------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ---------------------------- | ----------- |
 | propiedades | Sólo lectura<FieldSetProperties> |             |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
@@ -765,8 +765,8 @@ conviértase en los accesorios de devolución de llamada `onUpdateModelValue`/`o
 
 #### Parámetros
 
-| Nombre      | Tipo                              | Descripción |
-| ----------- | --------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ----------------------------- | ----------- |
 | propiedades | Sólo lectura<FileInputProperties> |             |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
@@ -804,8 +804,8 @@ componentes.
 
 #### Parámetros
 
-| Nombre      | Tipo                                  | Descripción |
-| ----------- | ------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------------- | ----------- |
 | propiedades | Sólo lectura<LocationInputProperties> |             |
 
 ### UbicaciónEntradaPropiedades
@@ -879,8 +879,8 @@ accesorios de devolución de llamada.
 
 #### Parámetros
 
-| Nombre      | Tipo                                  | Descripción |
-| ----------- | ------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------------- | ----------- |
 | propiedades | Sólo lectura<NumberStepperProperties> |             |
 
 ### NúmeroStepperPropiedades
@@ -927,13 +927,13 @@ modelos de dialecto neutral solo referencias de un solo elemento) se convierte e
 `useRef` más `querySelectorAll('input')` para gestión de enfoque (como
 `ForgeSegmentControl` sí); `nextTick` se elimina (las celdas ya existen, por lo que
 el foco se mueve sincrónicamente); el enfoque automático `onMounted` se convierte en `useEffect`;
-y el `v-model` + `complete` emiten se convierte en `onUpdateModelValue`/
+y la emisión `v-model` + `complete` se convierte en `onUpdateModelValue`/
 `onComplete` accesorios de devolución de llamada.
 
 #### Parámetros
 
-| Nombre      | Tipo                             | Descripción |
-| ----------- | -------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ---------------------------- | ----------- |
 | propiedades | Sólo lectura<OtpInputProperties> |             |
 
 ### OtpInputProperties
@@ -980,7 +980,7 @@ function ForgePhoneInput(properties: Readonly<PhoneInputProperties>): MpElement;
 dialecto JSX neutral y compilado directamente en React o Vue por
 `@mission-platform/vite-plugin-forge`.
 
-Un selector de país: la bandera de listado {@link ForgeSelect} con capacidad de búsqueda + nombre +
+Un selector de país: la bandera de lista de búsqueda {@link ForgeSelect} + nombre +
 código de marcación, para que se pueda encontrar una región escribiendo: se encuentra al lado de un
 Campo `type="tel"`. A medida que el usuario escribe, la entrada se formatea a medida que escribe para
 el país seleccionado (`@mission-platform/components` marco independiente
@@ -1002,8 +1002,8 @@ gancho; el marcador de validez es el `@mission-platform/icons` de una sola escri
 
 #### Parámetros
 
-| Nombre      | Tipo                               | Descripción |
-| ----------- | ---------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------ | ----------- |
 | propiedades | Sólo lectura<PhoneInputProperties> |             |
 
 ### Cambiar teléfono
@@ -1078,8 +1078,8 @@ opciones.
 
 #### Parámetros
 
-| Nombre      | Tipo                               | Descripción |
-| ----------- | ---------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------ | ----------- |
 | propiedades | Sólo lectura<RadioGroupProperties> |             |
 
 ### RadioGrupoDirección
@@ -1135,12 +1135,12 @@ al gancho `useId` nativo del marco; los iconos de búsqueda/borrar
 son los de escritura única `@mission-platform/icons` `ForgeIconSearch`/`ForgeIconClose`
 (ellos mismos compilados en React/Vue); las etiquetas `useI18n` se convierten en una cadena simple
 accesorios; y las emisiones `v-model` + `search`/`clear` se convierten en las
-`onUpdateModelValue`/`onSearch`/`onClear` accesorios de devolución de llamada.
+Accesorios de devolución de llamada `onUpdateModelValue`/`onSearch`/`onClear`.
 
 #### Parámetros
 
-| Nombre      | Tipo                                | Descripción |
-| ----------- | ----------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------- | ----------- |
 | propiedades | Sólo lectura<SearchInputProperties> |             |
 
 ### Propiedades de entrada de búsqueda
@@ -1191,8 +1191,8 @@ Estableció accesorios de devolución de llamada `onUpdateModelValue`/`onChange`
 
 #### Parámetros
 
-| Nombre      | Tipo                                   | Descripción |
-| ----------- | -------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ---------------------------------- | ----------- |
 | propiedades | Sólo lectura<SegmentControlProperties> |             |
 
 ### Propiedades de control de segmento
@@ -1248,7 +1248,7 @@ panel más el despido de clic exterior/`Escape`), reemplazando `useZIndex`; el
 la lógica de análisis/formato en línea es
 delegado al `date-time.ts` independiente del marco ubicado en el mismo lugar; el local
 Los `ref` pasan a ser {@link useState} resincronizados desde `modelValue` a través de un
-{@enlace useEffect}; los mapas componibles `useId` al gancho `useId` nativo del marco; el en linea
+{@enlace useEffect}; los mapas componibles `useId` al gancho `useId` nativo del marco; el en línea
 el reloj SVG se convierte en un glifo `🕒`; las regiones `start`/`end` se crean como se nombran
 ranuras (`<Slot>`) con su presencia detectada a través del marco neutral
 {@link hasSlot} ayudante; y el `v-model` + `change` emite se convierte en el
@@ -1256,8 +1256,8 @@ Accesorios de devolución de llamada `onUpdateModelValue`/`onChange`.
 
 #### Parámetros
 
-| Nombre      | Tipo                              | Descripción |
-| ----------- | --------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ----------------------------- | ----------- |
 | propiedades | Sólo lectura<TimeInputProperties> |             |
 
 ### Propiedades de entrada de tiempo
@@ -1307,14 +1307,14 @@ delegado al `date-time.ts` independiente del marco ubicado en el mismo lugar; el
 Los `ref` pasan a ser {@link useState} resincronizados desde `modelValue` a través de un
 {@enlace useEffect}; los mapas componibles `useId` al gancho `useId` nativo del marco; el `start`/
 Las ranuras SFC `end` se convierten en las ranuras con nombre `startContent`/`endContent` (`<Slot>`,
-presencia detectada con el asistente {@link hasSlot} neutral en el marco de trabajo; el
+presencia detectada con el asistente {@link hasSlot} neutral del marco; el
 Los nombres `start`/`end` están reservados para los puntos finales del rango); y el `v-model`+
 Las emisiones `change` se convierten en los accesorios de devolución de llamada `onUpdateModelValue`/`onChange`.
 
 #### Parámetros
 
-| Nombre      | Tipo                                   | Descripción |
-| ----------- | -------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ---------------------------------- | ----------- |
 | propiedades | Sólo lectura<TimeRangeInputProperties> |             |
 
 ### Propiedades de entrada de rango de tiempo
@@ -1339,7 +1339,7 @@ Tamaño del campo (escala canónica `2xs … 2xl`).
 
 ## `src/components/organisms/forge-date-time-range-input/forge-date-time-range-input`
 
-### Propiedades de entrada de rango de fecha y hora
+### DateTimeRangeInputProperties
 
 **Tipo:** interfaz
 
@@ -1384,24 +1384,24 @@ el {@link ForgeDropdown} de escritura única (que posee el sistema teletransport
 panel más el despido de clic exterior/`Escape`), reemplazando `useZIndex`; el
 a medida con motor flotante
 la cuadrícula de dos meses se sustituye por **`ForgeCalendar`s** compuestos por punto final;
-la lógica de análisis/formato/zona horaria en línea se delega a la ubicación compartida
+la lógica de análisis/formato/zona horaria en línea se delega al co-ubicado
 `date-time.ts` independiente del marco; los mapas componibles `useId` al
 gancho `useId` nativo del marco; los glifos de calendario/zona horaria son de escritura única
 `@mission-platform/icons` `ForgeIconCalendar`/`ForgeIconGlobe`; el `start`/`end` SFC
 las ranuras se convierten en ranuras con nombre `startContent`/`endContent` (`<Slot>`, presencia
 detectado con el asistente {@link hasSlot} neutral del marco); y el `v-model`
 
-- Las emisiones `change` se convierten en accesorios de devolución de llamada `onUpdateModelValue`/`onChange`.
+- Las emisiones `change` se convierten en los accesorios de devolución de llamada `onUpdateModelValue`/`onChange`.
 
 #### Parámetros
 
-| Nombre      | Tipo                                       | Descripción |
-| ----------- | ------------------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------------------- | ----------- |
 | propiedades | Sólo lectura<DateTimeRangeInputProperties> |             |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
-### ForjaFormBuilder
+### Constructor de formularios de forja
 
 **Tipo:** función
 
@@ -1434,8 +1434,8 @@ contenedor), impulsado por un objetivo de inserción `dropIndicator` actualizado
 
 #### Parámetros
 
-| Nombre      | Tipo                                | Descripción |
-| ----------- | ----------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------- | ----------- |
 | propiedades | Sólo lectura<FormBuilderProperties> |             |
 
 ### Propiedades del generador de formularios
@@ -1483,8 +1483,8 @@ accesorios. El índice activo permanece **controlado** (`modelValue`).
 
 #### Parámetros
 
-| Nombre      | Tipo                               | Descripción |
-| ----------- | ---------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------ | ----------- |
 | propiedades | Sólo lectura<FormWizardProperties> |             |
 
 ### Propiedades del Asistente de formulario
@@ -1506,6 +1506,85 @@ export interface WizardStep
 ```
 
 Un solo paso del asistente.
+
+## `src/components/organisms/forge-form/forge-form`
+
+### contexto de formulario predeterminado
+
+**Tipo:** constante
+
+```typescript
+export const defaultFormContext: FormContextValue;
+```
+
+Contexto de formulario predeterminado de referencia proporcionado cuando se llama a useFormContext fuera de ForgeForm.
+
+### ForjarForm
+
+**Tipo:** función
+
+```typescript
+function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement;
+```
+
+Componente de formulario basado en contexto que admite estados controlados y no controlados,
+Validación estándar de esquema/Zod/Sí, resumen de errores accesible y adaptadores de marco.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------ | ----------- |
+| propiedades | Sólo lectura<ForgeFormProps> |             |
+
+### Propiedades de ForgeForm
+
+**Tipo:** tipo
+
+```typescript
+export type ForgeFormProperties = ForgeFormProps;
+```
+
+No se proporciona descripción.
+
+### ForgeFormProps
+
+**Tipo:** interfaz
+
+```typescript
+export interface ForgeFormProps
+```
+
+No se proporciona descripción.
+
+### Contexto de formulario
+
+**Tipo:** constante
+
+```typescript
+export const FormContext: MpContext<FormContextValue | undefined>;
+```
+
+No se proporciona descripción.
+
+### ValorContextoFormulario
+
+**Tipo:** interfaz
+
+```typescript
+export interface FormContextValue
+```
+
+No se proporciona descripción.
+
+### utilizarFormContext
+
+**Tipo:** función
+
+```typescript
+function useFormContext(): FormContextValue;
+```
+
+Gancho para acceder al contexto del formulario en campos secundarios o componentes anidados.
 
 ## `src/components/organisms/forge-schema-form-dialog/forge-schema-form-dialog`
 
@@ -1531,8 +1610,8 @@ si se debe cerrar con un envío válido.
 
 #### Parámetros
 
-| Nombre      | Tipo                                     | Descripción |
-| ----------- | ---------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------------ | ----------- |
 | propiedades | Sólo lectura<SchemaFormDialogProperties> |             |
 
 ### Propiedades de diálogo de formulario de esquema
@@ -1577,8 +1656,8 @@ una ranura `actions` reemplazable.
 
 #### Parámetros
 
-| Nombre      | Tipo                               | Descripción |
-| ----------- | ---------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------ | ----------- |
 | propiedades | Sólo lectura<SchemaFormProperties> |             |
 
 ### SchemaFormFieldRenderer
@@ -1610,45 +1689,3 @@ export interface SchemaFormProperties
 ```
 
 No se proporciona descripción.
-
-## `src/utils/date-time/date-time`
-
-### Rango de fechas
-
-**Tipo:** interfaz
-
-```typescript
-export interface DateRange
-```
-
-Un rango de fechas ISO `{ start, end }` (`YYYY-MM-DD`).
-
-### Rango de fecha y hora
-
-**Tipo:** interfaz
-
-```typescript
-export interface DateTimeRange
-```
-
-Un rango de fecha y hora `{ start, end, timezone }` (`YYYY-MM-DD HH:MM[:SS]`).
-
-### Rango de tiempo
-
-**Tipo:** interfaz
-
-```typescript
-export interface TimeRange
-```
-
-Un rango de tiempo `{ start, end }` (`HH:MM` o `HH:MM:SS`).
-
-### Modo de zona horaria
-
-**Tipo:** tipo
-
-```typescript
-export type TimezoneMode = 'browser' | 'utc';
-```
-
-Si un rango de fecha y hora se interpreta en la zona del navegador o UTC.

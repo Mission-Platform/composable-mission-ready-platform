@@ -12,16 +12,16 @@
 
 ## פיצול האחריות
 
-אוסף Forge חוצה מספר חבילות, שלכל אחת יש אחריות צרה במתכוון:
+קומפילציה של Forge חוצה כמה חבילות, שלכל אחת יש אחריות צרה במתכוון:
 
-| שכבה                                             | בעל                                                                                                                   | אינו בעל                                                   |
-| :----------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------- |
-| `@mission-platform/vite-plugin-forge`            | ניתוח, נורמליזציה, ניתוח ניטרלי, IR סמנטי, אופטימיזציה משותפת, מטמון/גילוי, שיגור ותזמור Vite/tsdown גנרי             | React, Vue, Solid, Svelte, רכיבי אינטרנט או פולטי מקור CMS |
-| `@mission-platform/forge-plugin-api`             | `FrameworkOutputPlugin`, חוזי יעד סמנטיים, סוגי מודול שנוצר, מטא נתונים של יעד וסוגי מתאמים Vite/tsdown               | רישום יישום מסגרת או בחירת יעד                             |
-| חבילות `@mission-platform/forge-plugin-*` מובנות | הורדת יעדים, אופטימיזציה של יעדים, יצירת מקור, אבחון יעדים, מטא נתונים של זמן ריצה ומתאמי בנייה מקוריים               | ניתוח ניטרלי ותזמור חוצה יעדים                             |
-| `@mission-platform/forge-cms-plugin-api`         | `CmsOutputPlugin`, מודל התוכן הנייטרלי, מנהל ההתקן של discover→analyse→emit→write, יצירת משותף באי, ועוזרים לבנות CMS | כל סכימה, תבנית או צורת מניפסט ספציפיים לפלטפורמה          |
-| חבילות `@mission-platform/forge-cms-*`           | פלטפורמת תוכן אחת כל אחת: מיפוי שדות, ניב תבנית, צורת מניפסט ואבחון פלטפורמה                                          | סיווג אבזר ניטרלי או תזמור חוצה מטרות                      |
-| חבילת קבצי `tsdown.config.ts`                    | בחירת מופעי הפלאגין היעד ועקיפות ספציפיות לחבילה                                                                      | יישום מחדש של שלבי מהדר או טבלאות מתג מסגרת                |
+| שכבה | בעל | אינו בעל |
+| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------- |
+| `@mission-platform/vite-plugin-forge` | ניתוח, נורמליזציה, ניתוח ניטרלי, IR סמנטי, אופטימיזציה משותפת, מטמון/גילוי, שיגור ותזמור Vite/tsdown גנרי | React, Vue, Solid, Svelte, רכיבי אינטרנט או פולטי מקור CMS |
+| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin`, חוזי יעד סמנטיים, סוגי מודול שנוצר, מטא נתונים של יעד וסוגי מתאמים Vite/tsdown | רישום יישום מסגרת או בחירת יעד |
+| חבילות `@mission-platform/forge-plugin-*` מובנות | הורדת יעדים, אופטימיזציה של יעדים, יצירת מקור, אבחון יעדים, מטא נתונים של זמן ריצה ומתאמי בנייה מקוריים | ניתוח ניטרלי ותזמור חוצה יעדים |
+| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin`, מודל התוכן הנייטרלי, מנהל ההתקן של discover→analyse→emit→write, יצירת משותף באי, ועוזרים לבנות CMS | כל סכימה, תבנית או צורת מניפסט ספציפיים לפלטפורמה |
+| `@mission-platform/forge-cms-*` חבילות | פלטפורמת תוכן אחת כל אחת: מיפוי שדות, ניב תבנית, צורת מניפסט ואבחון פלטפורמה | סיווג אבזר ניטרלי או תזמור חוצה מטרות |
+| חבילת `tsdown.config.ts` קבצי | בחירת מופעי הפלאגין היעד ועקיפות ספציפיות לחבילה | יישום מחדש של שלבי מהדר או טבלאות מתג מסגרת |
 
 כיוון התלות הוא מפורש: חבילה מייבאת את תוסף היעד שהיא רוצה, מעבירה את המופע הזה לנייטרלי
 מנהל התקן, ומקבל תצורת בנייה ספציפית ליעד. הדרייבר לעולם אינו בונה יעד ממחרוזת או מייבא
@@ -57,51 +57,57 @@ flowchart LR
 הנחיות מהדר, להסיק מפתחות יציבים, לגזום ענפים מתים ניטרליים וניתוח לשימוש חוזר במטמון. התוצאה היא א
 `SemanticModule`: ייצוג מפורש של רכיב המודול או ההתנהגות הניתנת לחיבור והעובדות הנייטרליות שלו.
 
-ה-IR הסמנטי הוא החוזה בין המהדר הגנרי לבין תוסף יעד. החזית שומר גם על המקור
-ניתוח TypeScript `SourceFile` כפרט זמן ריצה שאינו ניתן למספר במודול הסמנטי. פולטי מטרה עשויים לצרוך
-אותו עץ מנותח משותף עבור עלים מגובים במקור, אך אסור להם לקרוא שוב `parseTsx` במקור המודול. זה
-שומר את המטמון ניתן לסידרה תוך הבטחה שהמקור מנותח פעם אחת בלבד.
+ה-IR הסמנטי הוא החוזה בין המהדר הגנרי לבין תוסף יעד. ה-frontend מנתח מקור ניטרלי
+שימוש ב-Oxc למבני AST גנריים וביטויים/טווחים מגובים במקור מבלי לייצר או לשנות TypeScript
+צמתי AST. מנמיכי יעד ופולטים צורכים רשומות `SemanticModule`, אבחון ועריכות מקור ללא ישירות
+צימוד לצמתי AST מנתח, שמירה על קובץ המטמון ניתן לסידרה תוך הבטחה שהמקור מנותח פעם אחת בלבד.
 
 ### הורדת יעד ואופטימיזציה
 
 המתקשר מספק מופע `FrameworkOutputPlugin`. הדרייבר קורא לפונקציה `lower` שלו עם המודול הסמנטי
-ו-`TargetContext`, המייצר `TargetIntentions`. הנמכה ממפה מושגים ניטרליים למושגי יעד: למשל,
-ווים וחריצים ניטרליים הופכים למצב/מחזור החיים של המטרה וייצוג החריצים, בעוד שאלמנטים ניטרליים הופכים להיות
-מודל האלמנט או הרכיב של המטרה.
+ו-`TargetContext`, המייצר `TargetIntentions` עם תוכנית `lowered` נדרשת. הורדת מפות מושגים ניטרליים ל
+מושגי יעד: לדוגמה, ווים וחריצים ניטרליים הופכים למצב/מחזור החיים של היעד ולייצוג החריצים, בעוד
+אלמנטים ניטרליים הופכים לדגם האלמנט או הרכיב של המטרה.
 
-פונקציית `optimize` של התוסף מבצעת פישוט ספציפי ליעד. הוא מקבל את האפשרויות הנייטרליות המשותפות
-לצד נקודת הרחבה לאפשרויות יעד. זה מרחיק את כללי המסגרת מהאופטימיזציה הנייטרלית תוך אפשרות א
-מטרה לבצע אופטימיזציה של הייצוג שנוצר בעצמו לפני יצירת המקור.
+לאחר מכן, פונקציית `optimize` של התוסף מבצעת פישוט ספציפי ליעד בתוכנית הנמוכה. הוא מקבל את המשותף
+אפשרויות ניטרליות לצד נקודת הרחבה לאפשרויות יעד. זה מרחיק את כללי המסגרת מהמייעל הנייטרלי
+תוך מתן אפשרות למטרה לייעל את הייצוג שנוצר בעצמו לפני יצירת המקור.
+
+המהדר בהחלט דורש הורדה לפני היצירה: `service.ts` וצינור המהדר טוענים כי
+`intentions.lowered` קיים ושמאבחן המסגרת שלו תואם את מזהה היעד באמצעות
+`assertTargetIntentionsLowered`. ייצור ישיר ללא הורדה נדחה; תוספי יעד כבר לא יורדים בשקט
+לפי דרישה.
 
 ### יצירת מקורות וקומפילציה מקורית
 
-הפונקציה `generate` של התוסף מחזירה `GeneratedModule`. זה יכול לכלול את המקור הראשי, מודולי עזר ו
-אבחון מטרות. המקור שנוצר הוא בכוונה חפץ ביניים בבעלות חבילת היעד: React,
-Vue, Solid, Svelte ו-Web Components יכולים כל אחד לבחור את צורת המקור שמצפה לו שרשרת הכלים המקורית שלו.
+פונקציית ה-`generate` של התוסף מקבלת את ה-`TargetIntentions` הנמוך והמוטב ומחזירה `GeneratedModule`.
+זה יכול לכלול את המקור הראשי, מודולי עזר ואבחון יעד. המקור שנוצר הוא בכוונה
+חפץ ביניים בבעלות חבילת היעד: React, Vue, Solid, Svelte ורכיבי אינטרנט יכולים לבחור את
+צורת מקור שרשרת הכלים המקורית שלהם מצפה.
 
-השלב האחרון הוא לא עוד פולט פורג'. מתאם `build.vite` או `build.tsdown` של התוסף מספק את המקור
+השלב האחרון הוא לא עוד פולט Forge. מתאם `build.vite` או `build.tsdown` של התוסף מספק את המקור
 תוספי מסגרת והגדרות בנייה עבור העץ שנוצר. אוסף Vite/Rolldown מקורי, יצירת הצהרות,
-החצנה ואריזת פלט מתרחשות לאחר מכן באמצעות שרשרת הכלים הרגילה של אותו יעד.
+החצנה ואריזת פלט מתרחשות לאחר מכן באמצעות שרשרת הכלים הרגילה של היעד הזה.
 
 ### אבחון ושמירה במטמון
 
 אבחון נושא את שלב המהדר, היעד, טווח המקור וסיבה ניתנת לפעולה. יעד חייב לדווח על לא נתמך
 node סמנטי במקום לפלוט בשקט סגירת זמן ריצה גנרית או מקור מקורי לא חוקי. מודולים סמנטיים ניטרליים
-מאוחסנים במטמון לפי תוכן מקור, סוג מודול ואפשרויות המשפיעות על סמנטיות; שלבי היעד מקבלים את אותו מטמון
-מודול עבור כל מסגרת שנבחרה תוך שמירה על עצמאות הורדת יעד ואופטימיזציה.
+מאוחסנים במטמון לפי תוכן מקור, סוג מודול ואפשרויות המשפיעות סמנטית; שלבי היעד מקבלים את אותו מטמון
+מודול לכל מסגרת שנבחרה תוך שמירה על חוסר תלות בהורדת יעדים ואופטימיזציה.
 
 ## מחזור חיי שירות ובנייה מצטברת
 
 עוזרי Vite ו-tsdown משתמשים ב-`ForgeCompilerService` אחד בתהליך למשך כל החיים של הפעלת בנייה. השירות הוא בבעלותו
 תמונת המצב של המקור, הגרף, החזית המנתחת, אופטימיזציה ניטרלית, IR סמנטי ומטמונים של חפצי יעד. זה בטוח לעשות
 לשרת מספר מטרות מפורשות ברצף או במקביל; חפצי יעד מקודדים לפי מזהה יעד ולעולם אינם חולקים א
-ספרייה שנוצרה. עוזרים חד-פעמיים מפטרים את השירות לאחר הבנייה, בעוד שעוזרי שעונים שומרים עליו עד Vite
+ספרייה שנוצרה. עוזרים חד-פעמיים מפטרים את השירות לאחר הבנייה, בעוד שעוזרים שומרים עליו עד Vite
 שרת נסגר.
 
 מפתח מטמון יעיל כולל את טביעת האצבע של המקור, סוג המודול, אפשרויות המהדר והנתב, מקור-שורש/תצורה
 טביעות אצבע, מזהה יעד וטביעת אצבע של תוסף, ותנאים רלוונטיים. קובץ שהשתנה מבטל את תוקף הגרף ההפוך שלו
 תלויים, לרבות כניסות רכיבים טרנזיטיביים והוק, במקום ניקוי מטרות לא קשורות. `tsconfig.json`
-`baseUrl` ו-`paths` כלולים בהכנת גרפים, כך שכינויים נפתרים באופן עקבי ב-Vite ו-tsdown.
+`baseUrl` ו-`paths` כלולים בהכנת גרפים, כך שכינויים נפתרים באופן עקבי ב-Vite ו-tsdown builds.
 התקשר ל-`invalidate(changedFiles)` מאינטגרציות של שעונים מותאמים אישית והתקשר ל-`dispose()` כאשר אין עוד צורך בשירות.
 
 דוח השירות חושף תזמוני שלב, כניסות/החמצות של מטמון, קבצים לא חוקיים, אזהרות, שגיאות וחפץ שנפלט
@@ -121,12 +127,17 @@ node סמנטי במקום לפלוט בשקט סגירת זמן ריצה גנר
 
 החוזים המרכזיים חיים ב-`packages/compiler/plugins/forge-plugin-api/src/framework.ts`:
 
-- `FrameworkOutputPlugin` מזהה יעד ובבעלותו `lower`, `optimize`, `generate` ו-`build`.
+- `FrameworkOutputPlugin` מזהה יעד דרך `id: FrameworkId` ובבעלותו `lower`, `optimize`, `generate` ו-`build`.
+- `FrameworkId` (`JsxFramework | (string & {})`) מספק כינוי מזהה מסגרת פתוח עבור תוספי יעד, המאפשרים
+  כל יעד מותאם אישית כדי להגדיר מזהה מחרוזת ייחודי תוך שמירה על השלמה אוטומטית של IDE עבור יעדים מובנים ידועים.
+- `JsxFramework` מייצג את האיחוד הסגור של מסגרות מובנות (`react`, `vue`, `solid`, `svelte`, `web-components`),
+  בשימוש כאשר נוחות והנחיות מובנות (`use react`, `use vue` וכו') מיועדות במפורש.
 - `TargetContext` נושא הקשר בנייה גנרי כגון סוג מודול, שם רכיב ותיקיות רכיבים שהתגלו.
-- `TargetIntentions` עוטף את המודול הסמנטי לאחר הורדת יעד תוך שמירה על אבחון.
+- `TargetLoweredModule` מייצג את התוכנית הנמוכה בבעלות היעד, מופלה על `framework: FrameworkId`.
+- `TargetIntentions<TLowered>` עוטף את המודול הסמנטי בתוכנית `lowered: TLowered` הנדרשת, תוך שמירה על אבחון.
 - `GeneratedModule` מתאר מקור שנוצר, שפת הפלט שלו, מודולי עזר ואבחון.
 - `ForgeBuildAdapters` מספק מתאמי Vite ו-tsdown המוקלדים באופן עצמאי.
-- `FrameworkSourceMetadata`, רכיבים חיצוניים של זמן ריצה ומטא נתונים של שם תצוגה מאפשרים לתזמור גנרי לגזור פרטי פלט
+- `FrameworkSourceMetadata`, רכיבי זמן ריצה חיצוניים ומטא נתונים של שם תצוגה מאפשרים לתזמור גנרי לגזור פרטי פלט
   ללא הצהרת מתג יעד.
 
 יעדים מובנים בנויים על ידי חבילות משלהם, למשל `forgeReactFramework()`, `forgeVueFramework()`,
@@ -134,24 +145,29 @@ node סמנטי במקום לפלוט בשקט סגירת זמן ריצה גנר
 יעדים שהוא מפרסם:
 
 ```ts
-import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { tsdownForgeComponentPlugins } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
 import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
-export default defineTsdownForgeComponents({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  frameworks: [
-    forgeVueFramework(),
-    forgeReactFramework(),
-    forgeSvelteFramework(),
-    forgeSolidFramework(),
-    forgeWebComponentsFramework(),
-  ],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: 'MissionPlatformComponents',
+  entry: 'src/index.ts',
+  plugins: tsdownForgeComponentPlugins({
+    rootDir: import.meta.dirname,
+    frameworks: [
+      forgeVueFramework(),
+      forgeReactFramework(),
+      forgeSvelteFramework(),
+      forgeSolidFramework(),
+      forgeWebComponentsFramework(),
+    ],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+    name: 'MissionPlatformComponents',
+  }),
 });
 ```
 
@@ -171,8 +187,8 @@ export default defineConfig({
 });
 ```
 
-ההגדרה המוגדרת מראש של TypeScript היא `@mission-platform/typescript-config/framework-web-component` עם
-`customConditions: ['mp:web-component']`. יישומי דפדפן יכולים להשתמש בהיסטוריית דפדפן מקורית; בנייה סטטית/עיבוד מראש
+הקביעה המוגדרת מראש של TypeScript היא `@mission-platform/typescript-config/framework-web-component` עם
+`customConditions: ['mp:web-component']`. יישומי דפדפן יכולים להשתמש בהיסטוריית דפדפן מקורית; בנייה סטטית/רנדור מראש
 צריך לספק היסטוריית זיכרון ולרשום אלמנטים במהלך העיבוד. רכיבי השקע והקישור של הנתב מקבלים
 יעדי מסלול מורכבים כמאפיינים ואינם תלויים במודל עריכת הרכיבים של Forge.
 
@@ -199,12 +215,13 @@ flowchart LR
 ## בונה רכיבים
 
 רכיב חבילות מחבר מודולים ניטרליים כנגד `@mission-platform/forge-jsx`, בדרך כלל דרך חבית רכיב ניטרלי.
-`defineTsdownForgeComponents` יוצר יעד אחד עבור כל תוסף שסופק. לכל מטרה זה:
+`tsdownForgeComponentPlugins` מחזיר תוספים מקוריים של tsdown עבור כל יעד שסופק. צרכנים מוסיפים תוספים אלה לאחד
+שיחת `defineTsdownLibrary`; הדור נשאר עצלן עד ש-tsdown מפעיל את ווי מחזור החיים שלו. לכל מטרה זה:
 
 1. מנתח, מנרמל ומנתח את מודולי הרכיב הנייטרלי;
 2. מפעיל מעברים ניטרליים ויוצר מודולים סמנטיים;
 3. מפעיל את שלבי ההורדה, האופטימיזציה והיצירה של התוסף הנבחר;
-4. כותב מקור יעד ומודול עזר למטמון ספציפי ליעד;
+4. כותב מקור יעד ומודול עזר למטמון ספציפי למטרה;
 5. מפעיל את מתאמי tsdown/Vite של התוסף;
 6. פולט את ספריית היעד, הצהרות, רכיבי זמן ריצה חיצוניים וחפצי הזנת חבילה.
 
@@ -213,11 +230,12 @@ flowchart LR
 עדיין להוסיף עקיפות מתקשרים, טיפול ב-CSS, תוספים להכרזה או אפשרויות Vite ספציפיות ליעד מבלי להזיז את אלה
 דאגות לתוך המהדר הגנרי.
 
-## קרס ובנייה ניתנת לחיבור
+## קרס ובניית חיבורים
 
 הוקס הם רכיבי חיבור ניטרליים ולא רכיבי ממשק משתמש, אך משתמשים באותו גבול בעלות יעד מפורש. וו
-הצרכן מעביר `FrameworkOutputPlugin` אחד ל-`defineTsdownForgeHooks`. הדרייבר הגנרי מנתח את הערך הנייטרלי,
-שומר על מודולים אגנוסטיים של מסגרת במידת האפשר, ושולח מודולים תלויי יעד דרך התוסף המחמיר
+הצרכן מעביר `FrameworkOutputPlugin` אחד ל-`tsdownForgeHookPlugins` ומוסיף את הפלאגין שהוחזר ל
+`defineTsdownLibrary`. הדרייבר הגנרי מנתח את הערך הנייטרלי,
+משמר מודולים אגנוסטיים של מסגרת במידת האפשר, ושולח מודולים תלויי יעד דרך התוסף המחמיר
 להוריד/למטב/ליצור נתיב.
 
 התוסף שנבחר שולט בשפת פלט ה-hook ובמתאם המקורי. זה מאפשר, למשל, לבנות וו React
@@ -229,7 +247,7 @@ flowchart LR
 
 הקרנת רכיבים על גבי _פלטפורמת תוכן_ היא ציר אורתוגונלי להורדת המסגרת, לא מסגרת
 יישום מוסתר בתוך הדרייבר הראשי. רכיב הופך לבלוק של Storyblok, לאי אסטרו, לחלקי רפאים, א
-Jekyll כוללים, או רכיב קוד Webflow - וכל אחד מאלה ניתן לשיוך עם **כל** תוסף פלט מסגרת.
+Jekyll כוללים, או רכיב קוד Webflow - וכל אחד מאלה יכול להיות מזווג עם **כל** תוסף פלט מסגרת.
 לכן `storyblok × vue`, `astro × solid` ו-`ghost × web-components` הם תצורה ולא קוד חדש.
 
 `@mission-platform/forge-cms-plugin-api` הוא הבעלים של התפר הזה. זה תורם שלושה דברים:
@@ -237,7 +255,7 @@ Jekyll כוללים, או רכיב קוד Webflow - וכל אחד מאלה ני�
 1. **מודל תוכן נייטרלי.** `analyzeContentComponent` ממפה את ממשק האביזרים של רכיב לפי הזמנה
    `ContentField`s עם סוג (`text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`), a JSDoc
    תיאור, דגל נדרש, ברירת מחדל מילולית, מטא נתונים של משבצת ודגל `@cmsSetting`. אביזרי התקשרות חוזרים נשמטים
-   ואיגוד מערבב מחרוזת מילולית עם `string`/`number` מתדרדר ל-`text` - הוחלט פעם אחת, אז כל פלטפורמה
+   ואיגוד מערבב מחרוזת מילולית עם `string`/`number` מתדרדר ל-`text` - החליטו פעם אחת, אז כל פלטפורמה
    מסכים. כאשר ה-IR הסמנטי מסופק, `ContentComponent.interactive` מדווח אם הרכיב נושא מצב,
    שופטים, אפקטים או אירועים.
 2. **חוזה יעד.** `CmsOutputPlugin` _מרכיב_ `FrameworkOutputPlugin` במקום להיות אחד, ומצהיר על
@@ -245,33 +263,38 @@ Jekyll כוללים, או רכיב קוד Webflow - וכל אחד מאלה ני�
    זמן הגדרה, כולל הגבלת `supportedFrameworks` של יעד.
 3. **נהג גנרי ועוזרים לבנות.** `generateCmsArtifacts` מגלה את החבית הניטרלית, משיג את כל רכיב
    IR דרך `analyzeForgeModule`, מנתחת את מודל התוכן, מתקשרת לפולטות היעד וכותבת כל מוחזר
-   `CmsArtifact`. `defineTsdownForgeCms(All)` מריץ אותו לתוך מטמון לכל יעד ופולט
+   `CmsArtifact`. `tsdownForgeCmsPlugins` מזריק אותו לתצורת tsdown אחת בבעלות המתקשר ופולט
    `dist/cms/<cms>/<framework>/**`, שיקוף חפצי `asset: true` לתוך `dist/cms/<cms>/`.
 
 הנהג אף פעם לא ממפה מזהה מחרוזת על יעד - צרכנים בונים ומעבירים מופעים, בדיוק כפי שהם עושים עבור
 תוספי מסגרת:
 
 ```ts
-import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { tsdownForgeCmsPlugins } from '@mission-platform/forge-cms-plugin-api';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
-export default defineTsdownForgeCmsAll({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  targets: [
-    forgeStoryblokCms({
-      packageName: '@mission-platform/components',
-      plugin: forgeReactFramework(),
-      storyblokRuntime: '@storyblok/react',
-    }),
-    forgeStoryblokCms({
-      packageName: '@mission-platform/components',
-      plugin: forgeVueFramework(),
-      storyblokRuntime: '@storyblok/vue',
-    }),
-  ],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  entry: 'src/index.ts',
+  plugins: tsdownForgeCmsPlugins({
+    rootDir: import.meta.dirname,
+    targets: [
+      forgeStoryblokCms({
+        packageName: '@mission-platform/components',
+        plugin: forgeReactFramework(),
+        storyblokRuntime: '@storyblok/react',
+      }),
+      forgeStoryblokCms({
+        packageName: '@mission-platform/components',
+        plugin: forgeVueFramework(),
+        storyblokRuntime: '@storyblok/vue',
+      }),
+    ],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  }),
 });
 ```
 
@@ -290,13 +313,13 @@ flowchart TD
 
 ### המטרות
 
-| חבילה                                   | מפעל                | פולט                                                                  |
-| :-------------------------------------- | :------------------ | :-------------------------------------------------------------------- |
+| חבילה | מפעל | פולט |
+| :-------------------------------------- | :------------------ | :------------------------------------------------------------------------------------------- |
 | `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | אובייקט רכיב לכל רכיב, מעטפת בלוק מסגרת, `components.json`, ערך מודפס |
-| `@mission-platform/forge-cms-astro`     | `forgeAstroCms`     | `.astro` סטטי או אי `client:load`, בתוספת זוד `content.config.ts`     |
-| `@mission-platform/forge-cms-ghost`     | `forgeGhostCms`     | חלקי כידון בתוספת קטע נושא `config.custom`                            |
-| `@mission-platform/forge-cms-jekyll`    | `forgeJekyllCms`    | נוזל כולל בתוספת `_data/forge-components.yml` ושבר `_config.yml`      |
-| `@mission-platform/forge-cms-webflow`   | `forgeWebflowCms`   | הצהרות רכיבי קוד `declareComponent` בתוספת קטע ספריית `webflow.json`  |
+| `@mission-platform/forge-cms-astro` | `forgeAstroCms` | `.astro` סטטי או אי `client:load`, בתוספת זוד `content.config.ts` |
+| `@mission-platform/forge-cms-ghost` | `forgeGhostCms` | חלקי כידון בתוספת קטע ערכת נושא `config.custom` |
+| `@mission-platform/forge-cms-jekyll` | `forgeJekyllCms` | נוזל כולל פלוס `_data/forge-components.yml` ושבר `_config.yml` |
+| `@mission-platform/forge-cms-webflow` | `forgeWebflowCms` | הצהרות רכיבי קוד `declareComponent` בתוספת קטע ספריית `webflow.json` |
 
 כל מיפוי לא נתמך מייצר `CompilerDiagnostic` עם שלב, קוד וסיבה ניתנת לפעולה ולא עם
 השמטה שקטה - Ghost מתריע על שדות מספריים ועל חריגה מהמכסה של ~20 הגדרות, Webflow מזהיר כאשר מספר
@@ -307,8 +330,8 @@ flowchart TD
 
 יעד שמצהיר על `island: 'framework'` (Astro, Webflow) זקוק לרכיב זמן ריצה אמיתי כדי לחות. במקום
 ייבוא נתיב המשנה `./vue` או `./react` שנבנה כבר מהחבילה המארח - מה שיגרום לפלט CMS להיות תלוי באחר
-לבנות לאחר הפעלה ראשונה - הנהג מריץ את **תוסף המסגרת הכרוכה** על אותו חבית ניטרלי לתוך אח
-`island/`, והתבנית הנפלטת מייבאת קובץ שבבעלותה. האי מחולק על ידי ה-tsdown של התוסף עצמו
+לבנות לאחר הפעלה ראשונה - הנהג מריץ את **תוסף המסגרת הכרוכה** על אותה חבית ניטראלית לתוך אח
+`island/`, והתבנית הנפלטת מייבאת קובץ שבבעלותה. האי מורכב על ידי ה-tsdown של התוסף עצמו
 פלאגין שלב באותו מבנה ממש.
 
 זו הסיבה שאסטרו היא יעד CMS ולא תוסף מסגרת: היא שלחה בעבר אי וניל-DOM מגולגל ביד
@@ -323,19 +346,19 @@ flowchart TD
    בניית IR סמנטי, וצבירה אבחנתית.
 2. **התנהגות יעד:** בדוק את חבילת `forge-plugin-*` שנבחרה ואת `lower`, `optimize`, `generate` שלה, ובנה
    יישומי מתאם.
-3. **צורת מבנה כללית:** בדוק את `packages/tooling/vite/forge/src/generate.ts`, `generate-hooks.ts` ו-`tsdown.ts` עבור מטמון,
+3. **צורת בנייה כללית:** בדוק את `packages/tooling/vite/forge/src/generate.ts`, `generate-hooks.ts` ו-`tsdown.ts` עבור מטמון,
    פלט, הצהרה והתנהגות של ביטול מתקשר.
 4. **פלט CMS:** בדוק את `packages/compiler/plugins/forge-cms-plugin-api/` עבור דגם התוכן, מנהל ההתקן והמבנה
    עוזרים, ולאחר מכן היעד הספציפי של `packages/compiler/plugins/forge-cms-*` עבור הפולטות שלה ומיפוי הפלטפורמה.
 5. **בחירת חבילה:** בדוק את התלות ה-`tsdown.config.ts` והישירה של `forge-plugin-*` של החבילה הצורכת.
 
 לבנייה חוזרת או שעון, בדוק תחילה את ה-`ForgeCompilationReport`: שיעור פגיעה נמוך מצביע על מקור/תצורה או יעד
-טביעות אצבע, בעוד שקבוצת קבצים מושפעים גדולה מציינת קצוות גרפים או תצורת כינוי. בדוק את מניפסט היעד
-לפני בדיקת פלט צרור מקורי; הוא מבחין בין חפץ שנוצר חסר לבין שגיאת קומפילציה מקורית.
+טביעות אצבעות, בעוד שקבוצת קבצים מושפעים גדולה מציינת קצוות גרפים או תצורת כינוי. בדוק את מניפסט היעד
+לפני בדיקת פלט צרור מקורי; הוא מבדיל בין חפץ שנוצר חסר לבין שגיאת קומפילציה מקורית.
 
 העדות השימושית ביותר היא שלב הכשל הראשון והאבחון שלו. אם IR סמנטי שגוי, תקן ניתוח ניטרלי או
-ניתוח. אם ה-IR תקין אבל המקור המקורי שגוי, תקן את תוסף היעד שנבחר. אם המקור שנוצר נכון
-אך הצרור נכשל, בדוק את מתאם Vite/tsdown של התוסף או את תצורת ביטול הצרכן.
+ניתוח. אם ה-IR תקין אך המקור המקורי שגוי, תקן את תוסף היעד שנבחר. אם המקור שנוצר נכון
+אך חבילה נכשלת, בדוק את מתאם Vite/tsdown של התוסף או את תצורת ביטול הצרכן.
 
 ## הרחבת פורג' עם מטרה
 
@@ -349,7 +372,7 @@ flowchart TD
 6. הוסף את התוסף כתלות ישירה בכל חבילה שמפרסמת את היעד;
 7. להעביר מופעי פלאגין חדשים בתצורת ה-build של אותה חבילה.
 
-אין להוסיף מזהה מסגרת לרישום ב-`vite-plugin-forge`, לייבא חבילת מסגרת ממנהל ההתקן הנייטרלי, או להוסיף
+אין להוסיף מזהה מסגרת לרישום ב-`vite-plugin-forge`, לייבא חבילת מסגרת ממנהל ההתקן הנייטרלי או להוסיף
 ענף ספציפי למטרה לניתוח ותזמור גנרי של פלט. החוזה פתוח בכוונה אז המטרה
 חבילות יכולות לפתח את ייצוג המקור שלהן בעוד שהצינור הנייטרלי נשאר יציב.
 
@@ -361,7 +384,7 @@ flowchart TD
 2. ייצא מפעל שמחזיר `defineForgeCmsPlugin({ id, framework, packageName, … })` תוך שימוש בתוסף המסגרת
    מהמתקשר במקום לבחור אחד;
 3. ליישם את `emitTemplate`, ומה מבין `emitSchema`, `emitManifest` ו-`emitEntry` שהפלטפורמה צריכה - א
-   פלטפורמת תבניות בלבד כגון Ghost או Jekyll מיישמת רק את השניים הראשונים והנהג כותב מציין מיקום
+   פלטפורמת תבנית בלבד כגון Ghost או Jekyll מיישמת רק את השניים הראשונים והנהג כותב מציין מיקום
    כניסה;
 4. מפה את ה-`ContentFieldKind`s הנייטרלי על אוצר המילים של הפלטפורמה במקום אחד, ודחוף א
    `CompilerDiagnostic` עבור כל מיפוי שהפלטפורמה לא יכולה לייצג נאמנה;
@@ -370,10 +393,38 @@ flowchart TD
 6. הוסף מפרט על המתקנים המשותפים המיוצאים מ-`@mission-platform/forge-cms-plugin-api/fixtures`, כך שהחדש
    המטרה מופעלת כנגד אותן תשומות בדיוק כמו כל אחת אחרת;
 7. להוסיף את החבילה כתלות ישירה של כל צרכן שמפרסם את היעד ולהעביר מופע חדש אל
-   `defineTsdownForgeCms`.
+   `tsdownForgeCmsPlugins`.
 
-אל תוסיף לוגיקת סיווג אבזרי למטרה: תיקון לאיחוד, JSDoc, ברירת מחדל או טיפול במשבצת שייך ל-
+אל תוסיפו לוגיקת סיווג אביזרים למטרה: תיקון לאיחוד, JSDoc, ברירת מחדל או טיפול במשבצת שייך ל-
 מודל תוכן משותף כך שכל פלטפורמה מרוויחה בבת אחת.
 
-לסקירה כללית של בניית מערכת וכיוון התלות בפלטפורמה, ראה [בניית מערכת](../../../../../../docs/locales/he/build-system.md) ו
-[ארכיטקטורת פלטפורמת המשימה](../../../../../../docs/locales/he/architecture.md).
+## הדרכה להגירה
+
+### הגירה מיצוא TypeScript AST מדור קודם
+
+שכבת התאימות TypeScript AST מדור קודם ב-`packages/tooling/vite/forge/src/compiler/ast.ts` הוסרה.
+Oxc הוא כעת נתיב ה-AST המהדר היחיד על פני מנהל ההתקן של Forge:
+
+- מפעלי AST מדור קודם, מבקרים, שנאים ותאי תאימות `@ts-nocheck` אינם מסופקים עוד.
+- אם הקוד שלך צרך עוזרים מ-`compiler/ast.ts`, העבר למודול האחים הממוקד:
+  - `compiler/components.js`: עובדות גבול רכיב והצהרה.
+  - `compiler/constants.js`: קבועים של מודול ניטרלי וסמן זמן ריצה.
+  - `compiler/directives.js`: בדיקת הנחיות והחלטת מסגרת.
+  - `compiler/facts.js`: עובדות AST, טווחים ושירותי בדיקה.
+  - `compiler/imports.js`: הצהרת יבוא ובדיקת מפרטים.
+
+### הגירה עבור מתקשרים ליצירת יעדים ישירים
+
+כל התוספים המובנים (`forge-vue`, `forge-web-components`, `forge-react`, `forge-solid`, `forge-svelte`) הוסרו
+הורדת נפילה מהדור הישיר:
+
+- קריאה ל-`plugin.generate(intentions)` עם כוונות לא מורמות (או כוונות חסרות `lowered`) זורקת כעת
+  `TypeError`.
+- מתקשרים ישירים וחבילות בדיקה חייבים להפעיל את `plugin.lower(module, context)` ו-`plugin.optimize(loweredIntentions, options)`
+  לפני התקשרות ל-`generate()`, או לבצע קומפילציה באמצעות שירות המהדר הסטנדרטי:
+  `createForgeCompilerService().compile(request, plugin)`.
+- מחברי תוספים מותאמים אישית חייבים לוודא ש-`lower()` מגדיר תוכנית `lowered` לא ריקה עם `framework` תואם
+  מפלה על `TargetIntentions` שהוחזר.
+
+לסקירה כללית של מערכת הבנייה וכיוון התלות בפלטפורמה, ראה [בניית מערכת](../../../../../../docs/build-system.md) ו
+[ארכיטקטורת פלטפורמת המשימה](../../../../../../docs/architecture.md).

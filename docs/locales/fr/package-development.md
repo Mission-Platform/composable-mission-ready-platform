@@ -14,11 +14,22 @@ Espaces de travail pnpm et Turborepo.
 La méthode recommandée pour créer un package consiste à utiliser l'outil MCP Mission Platform Developer, qui garantit que tous
 les configurations, les scripts et les structures de dossiers suivent les normes de la plateforme.
 
+### Constructions de packages Forge
+
+Les packages de composants Forge, de hook et de CMS utilisent un seul appel `defineTsdownLibrary`. Ajouter
+les plugins natifs renvoyés par `tsdownForgeComponentPlugins`,
+`tsdownForgeHookPlugins`, ou `tsdownForgeCmsPlugins` à son option `plugins` ;
+ces plugins préparent et publient des cibles à partir des hooks de cycle de vie tsdown plutôt que
+effectuer une découverte de graphiques pendant que la configuration est évaluée. Conserver le cadre et
+Plugins de sortie CMS appartenant à l'appelant et explicites, donc la sélection de la cible reste
+composable et isolé.
+
 ### 1. Échafaudage avec MCP
 
-Utilisez l'outil `scaffold_package` pour générer le squelette.
+Utilisez l'outil `scaffold_package` via un serveur MCP Mission Platform Developer connecté pour générer le squelette.
+Ce qui suit est un exemple d’appel d’outil MCP, et non une commande shell ; utilisez la section de configuration manuelle si MCP n’est pas disponible.
 
-```bash
+```text
 # Example: Creating a new 'date-utils' package
 # The tool defaults to a dry-run; set apply=true to write files
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
@@ -34,7 +45,7 @@ Cela génère un répertoire `packages/date-utils/` conforme à la convention av
 
 ### 2. Configuration manuelle (facultatif)
 
-Si vous n'utilisez pas l'outil MCP, assurez-vous que votre `package.json` utilise [Catalogues pnpm](https://pnpm.io/catalogs) pour
+Si vous n'utilisez pas l'outil MCP, assurez-vous que votre `package.json` utilise les [catalogues pnpm](https://pnpm.io/catalogs) pour
 gestion des dépendances et suit la convention de dénomination étendue :
 
 ```json
@@ -87,9 +98,9 @@ packages/<name>/
 └── README.md
 ```
 
-## Stylelint pour les packages contenant des styles
+## Stylelint pour les packages de type porteur
 
-Les packages contenant `CSS`, `SCSS` ou des blocs de style `Vue` doivent fournir une configuration Stylelint et des scripts de lint :
+Les packages qui contiennent des blocs de style CSS, SCSS ou Vue doivent conserver une configuration Stylelint détectable et des scripts lint :
 
 ```text
 packages/<name>/
@@ -99,7 +110,7 @@ packages/<name>/
 └── package.json                    # Stylelint scripts and devDependencies
 ```
 
-Ajoutez la configuration partagée et ses dépendances directes de syntaxe et de configuration à `devDependencies` :
+Ajoutez la configuration partagée et ses dépendances directes de syntaxe/configuration à `devDependencies` :
 
 ```json
 {
@@ -114,7 +125,7 @@ Ajoutez la configuration partagée et ses dépendances directes de syntaxe et de
 }
 ```
 
-Utilisez la configuration partagée depuis `stylelint.config.mjs` au lieu de dupliquer les entrées `extends` :
+Utilisez la configuration partagée de `stylelint.config.mjs` au lieu de dupliquer ses entrées `extends` :
 
 ```js
 // stylelint.config.mjs
@@ -123,7 +134,7 @@ import baseConfig from "@mission-platform/stylelint-config";
 export default { ...baseConfig };
 ```
 
-Ajoutez des scripts couvrant les sources de styles réelles du workspace, puis exécutez la vérification avant publication :
+Ajoutez des scripts qui couvrent les sources de style réelles de l'espace de travail, puis exécutez la vérification avant la publication :
 
 ```json
 {
@@ -153,7 +164,7 @@ Pour obtenir des instructions de création détaillées, voir :
 - [Conception de composants atomiques](atomic-component-design.md)
 - [Création composable](composable-authoring.md)
 - [Création de magasin](store-authoring.md)
-- [Création utilitaire](util-authoring.md)
+- [Création util](util-authoring.md)
 
 ### Bâtiment
 
@@ -217,16 +228,15 @@ extracteur décrit dans l'application de documentation README.
 
 ## Édition
 
-La Plateforme Mission utilise [Ensembles de modifications](https://github.com/changesets/changesets) pour la gestion des versions et la publication.
+La plateforme de mission utilise [Changesets](https://github.com/changesets/changesets) pour la gestion des versions et la publication.
 
 1. **Ajouter un ensemble de modifications** : après avoir apporté des modifications, exécutez :
-
-```bash
+   ```bash
    pnpm changeset
-```
-
-Sélectionnez le package et le type de modification (correctif, mineur, majeur). 2. **Commit the Changeset** : validez le fichier `.changeset/*.md` généré. 3. **Version et publication** : CI/CD gère la publication proprement dite, mais vous pouvez prévisualiser localement les versions avec :
-
-```bash
+   ```
+   Sélectionnez le package et le type de modification (correctif, mineur, majeur).
+2. **Commit the Changeset** : validez le fichier `.changeset/*.md` généré.
+3. **Version et publication** : CI/CD gère la publication proprement dite, mais vous pouvez prévisualiser localement les versions avec :
+   ```bash
    pnpm changeset version
-```
+   ```

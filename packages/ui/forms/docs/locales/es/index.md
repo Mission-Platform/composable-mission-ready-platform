@@ -102,4 +102,3 @@ El paquete proporciona ayudas de accesibilidad compartida a través de:
 import '@mission-platform/forms/styles';
 ```
 
-Cada componente también utiliza sus propios módulos CSS ubicados conjuntamente para un estilo específico.

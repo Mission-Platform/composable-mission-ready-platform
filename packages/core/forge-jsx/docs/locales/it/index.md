@@ -5,27 +5,25 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 > packages/core/forge-jsx/docs/index.md: [packages/core/forge-jsx/docs/index.md](../../index.md)
 > Lingua: Italiano (it)
 
-Un piccolo livello "scrivi una volta, esegui su Vue 3 e React" senza dipendenze per Mission Platform. I componenti vengono creati una sola volta
-JSX e reso su entrambi i framework tramite piccoli adattatori: nessun codegen in fase di compilazione, nessun compilatore esterno (questo è un
-alternativa arrotolata a mano a strumenti come Mitosis).
+Un runtime JSX piccolo, indipendente dal framework e privo di dipendenze per Mission Platform.
+I componenti vengono creati una volta in JSX e sottoposti a rendering tramite separate
+Pacchetto `@mission-platform/forge-adapters`.
 
 ## Come funziona
 
 ```
-author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ toReactComponent ──▶ React
-                                                          └──▶ toVueComponent  ──▶ Vue 3
+author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ framework adapter ──▶ target framework
 ```
 
 1. I componenti sono scritti in JSX compilato dalla trasformazione JSX **classica** (`jsxFactory: 'h'`,
    `jsxFragmentFactory: 'Fragment'`).
 2. `h(...)` crea un albero `MpElement` serializzabile e indipendente dal framework invece di un elemento React/Vue.
-3. Gli adattatori per framework percorrono quell'albero e mappano ogni node su `React.createElement` o `h` di Vue al momento del rendering.
+3. Un adattatore framework percorre quell'albero e mappa ogni node sulla destinazione
+   primitive di rendering native del framework.
 
 ## Caratteristiche
 
 - **JSX Runtime neutro dal framework**: un runtime piccolo e privo di dipendenze che crea alberi `MpElement` serializzabili
-- **Adattatore Vue 3**: Converte i componenti neutri in SFC Vue 3 nativi con reattività adeguata
-- **Adattatore React**: converte i componenti neutri in componenti React nativi
 - **Supporto hook**: hook stile React indipendenti dal framework (`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`)
   che vengono compilati nei loro equivalenti framework
 - **Nessun codegen Build-Time**: a differenza di Mitosis o strumenti simili, questo approccio utilizza adattatori runtime anziché build-time
@@ -122,7 +120,7 @@ Hook di stato neutrale rispetto al quadro normativo.
 
 - `initialValue`: valore dello stato iniziale
 
-**Restituisce:** `[state, setState]` - Valore dello stato e funzione di impostazione
+**Restituisce:** `[state, setState]` - Valore dello stato e funzione setter
 
 #### `useRef(initialValue)`
 
@@ -136,7 +134,7 @@ Crea un oggetto riferimento modificabile.
 
 #### `useEffect(effect, dependencies?)`
 
-Gancio per effetti collaterali neutro dal quadro.
+Gancio per effetti collaterali neutro rispetto alla struttura.
 
 **Parametri:**
 
@@ -164,28 +162,6 @@ Memorizza una funzione.
 - `dependencies`: array di dipendenze
 
 **Restituisce:** Funzione memorizzata
-
-### Adattatori
-
-#### `toVueComponent(component)`
-
-Converte un componente indipendente dal framework in un componente Vue 3.
-
-**Parametri:**
-
-- `component`: funzione del componente indipendente dal contesto
-
-**Restituisce:** Definizione del componente Vue
-
-#### `toReactComponent(component)`
-
-Converte un componente indipendente dal framework in un componente React.
-
-**Parametri:**
-
-- `component`: funzione del componente indipendente dal contesto
-
-**Restituisce:** Funzione componente React
 
 ## Supporto TypeScript
 

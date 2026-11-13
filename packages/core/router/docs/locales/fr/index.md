@@ -108,7 +108,7 @@ L'adaptateur spécifique à Vue permet l'intégration avec `vue-router`.
 - **`useMpRoute`** : Composable pour accéder aux informations d'itinéraire actuelles
 - **`MpRouterLink`** : composant de liaison de routeur indépendant du framework
 
-**Exemple:**
+**Exemple :**
 
 ```vue
 <template>
@@ -202,7 +202,7 @@ export default defineApp([renderRoutes(Document, routes)]);
 
 Le package suit une architecture en couches :
 
-1. **Core Layer** : modèle de route et utilitaires neutres en termes de framework
+1. **Couche centrale** : modèle de route et utilitaires indépendants du cadre
 2. **Adapter Layer** : implémentations spécifiques au framework (Vue, React)
 3. **API publique** : interface unifiée pour tous les frameworks
 

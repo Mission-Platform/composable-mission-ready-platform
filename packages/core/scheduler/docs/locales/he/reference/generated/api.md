@@ -41,9 +41,9 @@ function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                             | תיאור |
-| ----- | -------------------------------- | ----- |
-| נכסים | לקריאה בלבד<SchedulerProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------- | ----------- |
+| נכסים | לקריאה בלבד<SchedulerProperties> |             |
 
 ### מאפייני מתזמן
 
@@ -80,10 +80,10 @@ function applyEventPatch(event: VEvent, patch: Partial<Omit<VEvent, 'uid'>>): VE
 
 #### פרמטרים
 
-| שם    | הקלד                      | תיאור |
-| ----- | ------------------------- | ----- |
-| אירוע | VEvent                    |       |
-| תיקון | חלקי<Omit<VEvent, 'uid'>> |       |
+| שם | הקלד | תיאור |
+| ----- | ---------------------------- | ----------- |
+| אירוע | VEvent |             |
+| תיקון | חלקי<Omit<VEvent, 'uid'>> |             |
 
 ### ליצור אירוע
 
@@ -98,9 +98,9 @@ function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent;
 
 #### פרמטרים
 
-| שם   | הקלד                             | תיאור |
-| ---- | -------------------------------- | ----- |
-| חלקי | השמט<VEvent, 'uid' \| 'dtstamp'> |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------------------- | ----------- |
+| חלקי | השמט<VEvent, 'uid' \| 'dtstamp'> |             |
 
 ### eventsForDay
 
@@ -114,10 +114,10 @@ function eventsForDay(events: VEvent[], day: Date): VEvent[];
 
 #### פרמטרים
 
-| שם      | הקלד     | תיאור |
-| ------- | -------- | ----- |
-| אירועים | VEvent[] |       |
-| יום     | תאריך    |       |
+| שם | הקלד | תיאור |
+| ------ | -------- | ----------- |
+| אירועים | VEvent[] |             |
+| יום | תאריך |             |
 
 ### eventsForRange
 
@@ -134,11 +134,11 @@ function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[];
 
 #### פרמטרים
 
-| שם      | הקלד     | תיאור |
-| ------- | -------- | ----- |
-| אירועים | VEvent[] |       |
-| להתחיל  | תאריך    |       |
-| סוף     | תאריך    |       |
+| שם | הקלד | תיאור |
+| ------ | -------- | ----------- |
+| אירועים | VEvent[] |             |
+| להתחיל | תאריך |             |
+| סוף | תאריך |             |
 
 ### פורמטDuration
 
@@ -148,13 +148,13 @@ function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[];
 function formatDuration(event: VEvent): string;
 ```
 
-מחזירה מחרוזת משך הניתנת לקריאה על ידי אדם עבור אירוע, למשל. "שעה 30 מ'".
+מחזירה מחרוזת משך קריאה אנושית עבור אירוע, למשל. "שעה 30 מ'".
 
 #### פרמטרים
 
-| שם    | הקלד   | תיאור |
-| ----- | ------ | ----- |
-| אירוע | VEvent |       |
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| אירוע | VEvent |             |
 
 ### יום layout
 
@@ -164,15 +164,15 @@ function formatDuration(event: VEvent): string;
 function layoutDay(events: VEvent[]): SchedulerEventSlot[];
 ```
 
-פרק אירועים ליום אחד באמצעות התנגשות פשוטה מבוססת עמודים
+ערכו אירועים ליום אחד באמצעות התנגשות פשוטה מבוססת עמודים
 אלגוריתם: כל אירוע ממוקם בעמודה השמאלית ביותר, הוא אינו חופף,
-וכל אחד תופס `column` של `totalColumns` רצועות מקבילות.
+וכל אחד מהם תופס `column` של `totalColumns` רצועות מקבילות.
 
 #### פרמטרים
 
-| שם      | הקלד     | תיאור |
-| ------- | -------- | ----- |
-| אירועים | VEvent[] |       |
+| שם | הקלד | תיאור |
+| ------ | -------- | ----------- |
+| אירועים | VEvent[] |             |
 
 ### moveEventPatch
 
@@ -187,10 +187,10 @@ function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' 
 
 #### פרמטרים
 
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| אירוע   | VEvent |       |
-| deltaMs | מספר   |       |
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| אירוע | VEvent |             |
+| deltaMs | מספר |             |
 
 ### resizeEventPatch
 
@@ -205,10 +205,10 @@ function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
 
 #### פרמטרים
 
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| אירוע   | VEvent |       |
-| deltaMs | מספר   |       |
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| אירוע | VEvent |             |
+| deltaMs | מספר |             |
 
 ## `src/core/range`
 
@@ -225,11 +225,11 @@ function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date;
 
 #### פרמטרים
 
-| שם    | הקלד        | תיאור |
-| ----- | ----------- | ----- |
-| צפה   | תזמון צפייה |       |
-| עוגן  | תאריך       |       |
-| כיוון | -1 \| 1     |       |
+| שם | הקלד | תיאור |
+| --------- | ------------- | ----------- |
+| צפה | תזמון צפייה |             |
+| עוגן | תאריך |             |
+| כיוון | -1 \| 1 |             |
 
 ### visibleRangeFor
 
@@ -240,15 +240,15 @@ function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekSt
 ```
 
 חלון `[start, end)` הפתוח למחצה גלוי עבור ה-`view` הנתון המעוגן ב-
-`anchor`, כבוד `weekStartsOn` עבור צפיות מבוססות שבוע.
+`anchor`, מכבד את `weekStartsOn` עבור צפיות מבוססות שבוע.
 
 #### פרמטרים
 
-| שם           | הקלד        | תיאור |
-| ------------ | ----------- | ----- |
-| צפה          | תזמון צפייה |       |
-| עוגן         | תאריך       |       |
-| weekStartsOn | תחילת שבוע  |       |
+| שם | הקלד | תיאור |
+| ------------ | ------------- | ----------- |
+| צפה | תזמון צפייה |             |
+| עוגן | תאריך |             |
+| weekStartsOn | שבוע התחלה |             |
 
 ## `src/core/recurrence`
 
@@ -271,11 +271,11 @@ function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEv
 
 #### פרמטרים
 
-| שם        | הקלד   | תיאור |
-| --------- | ------ | ----- |
-| אירוע     | VEvent |       |
-| טווח התחל | תאריך  |       |
-| rangeEnd  | תאריך  |       |
+| שם | הקלד | תיאור |
+| ---------- | ------ | ----------- |
+| אירוע | VEvent |             |
+| טווח התחל | תאריך |             |
+| rangeEnd | תאריך |             |
 
 ## `src/core/types`
 

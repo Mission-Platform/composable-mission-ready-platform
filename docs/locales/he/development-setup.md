@@ -14,29 +14,29 @@
 
 ### דרישות מערכת
 
-| כלי         | גרסה נדרשת       | מטרה                                   |
-| :---------- | :--------------- | :------------------------------------- |
-| **Node.js** | `24.19.0`        | סביבת זמן ריצה (Active LTS)            |
-| **pnpm**    | `11.21.0`        | מנהל חבילות ומתזמר חללי עבודה          |
-| **Git**     | היציב האחרון     | בקרת גרסה                              |
-| **חלודה**   | שרשרת כלים יציבה | פיתוח ברנצ'מרק עצמאי אופציונלי         |
-| **דוקר**    | היציב האחרון     | נדרש רק עבור המבנה Emscripten Hunspell |
+| כלי | גרסה נדרשת | מטרה |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0` | סביבת זמן ריצה (Active LTS) |
+| **pnpm** | `12.4.2` | מנהל חבילות ומתזמר חללי עבודה |
+| **Git** | היציב האחרון | בקרת גרסה |
+| **חלודה** | שרשרת כלים יציבה | פיתוח ברנצ'מרק עצמאי אופציונלי |
+| **דוקר** | היציב האחרון | נדרש רק עבור המבנה Emscripten Hunspell |
 
 ### ניהול גרסאות (מומלץ)
 
-אנו ממליצים להשתמש ב-**nvm** (Node מנהל הגרסאות) כדי לוודא שאתה משתמש נכון Nodeגרסת .js שצוינה ב-
-שורש `.nvmrc` קוֹבֶץ.
+אנו ממליצים להשתמש ב-**nvm** (מנהל הגרסאות Node) כדי לוודא שאתה משתמש בגרסת Node.js הנכונה שצוינה ב-
+קובץ שורש `.nvmrc`.
 
 ```bash
 nvm install
 nvm use
 ```
 
-אפשר **pnpm** באמצעות Corepack:
+הפעל את **pnpm** באמצעות Corepack:
 
 ```bash
 corepack enable
-corepack prepare pnpm@11.21.0 --activate
+corepack prepare pnpm@12.4.2 --activate
 ```
 
 ## הגדרה ראשונית
@@ -58,8 +58,24 @@ cd composable-mission-ready-platform
 pnpm install
 ```
 
-פקודה זו מפעילה את `prepare` סקריפט, המאתחל את **Husky** עבור commit linting ומבטיח את כל פנימי
+פקודה זו מפעילה את הסקריפט `prepare`, אשר מאתחל את **Husky** עבור commit linting ומבטיח כל פנימי
 קישורי החבילה הוקמו כהלכה.
+
+### שרת השפה של SonarLint
+
+`agent-lsp.json` של המאגר כולל את שרת השפה הרשמי SonarLint עבור JavaScript ו-TypeScript. ה
+השרת מופץ כארכיון Java במקום חבילת npm, אז התקן את Java ובנה או הורד את
+ארכיון `sonarlint-language-server` מ-[SonarSource](https://github.com/SonarSource/sonarlint-language-server).
+
+הגדר את ארכיון השרת ואת מנתח JavaScript לפני הפעלת ה-LSP:
+
+```bash
+export SONARLINT_LS_JAR=/path/to/sonarlint-language-server.jar
+export SONARLINT_ANALYZERS=/path/to/sonarjs.jar
+```
+
+המשתנה האופציונלי `SONARLINT_JAVA` יכול לבחור קובץ הפעלה של Java. מפעיל המאגר מאמת את המוגדר
+נתיב ומעביר את פרוטוקול stdio של השרת מבלי לדרוש פקודה מותקנת גלובלית.
 
 ### 3. ודא את ההתקנה
 
@@ -69,9 +85,9 @@ pnpm install
 pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
-ה `...` גם בונה את התלות של Forge הנדרשת על ידי החבילה. ה
-סורק קוד ניטרלי מורכב מגרף Flint שלו; זה לא
-דורשים חלודה או `wasm-pack` שלב לבנות.
+המסנן `...` בונה גם את התלות של Forge הנדרשת על ידי החבילה. ה
+סורק קוד ניטרלי מורכב מגרף ה- Flint שלו; זה לא
+דורש שלב בנייה של Rust או `wasm-pack`.
 
 ## זרימת עבודה לפיתוח
 
@@ -108,9 +124,9 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-חבילות מגובות מזויפות מפרסמות התאמה `mp:vue`, `mp:react`, `mp:svelte`,
-`mp:solid`, ו `mp:web-component` תנאים. המצב הפעיל חייב להיות
-מוגדר על ידי המצרף הצורך; לִרְאוֹת [הפניה מהדר](../../../packages/tooling/vite/forge/docs/locales/he/reference/compiler.md)
+חבילות מגובות מזויפות מפרסמות `mp:vue`, `mp:react`, `mp:svelte` תואמות,
+`mp:solid`, ו-`mp:web-component` תנאים. המצב הפעיל חייב להיות
+מוגדר על ידי המצרף הצורך; ראה [הפניה למהדר](../../../packages/tooling/vite/forge/docs/locales/he/reference/compiler.md)
 עבור תוסף היעד וצינור ההצהרה.
 
 ### פיתוח אפליקציות
@@ -122,22 +138,22 @@ done
 pnpm exec turbo run dev --filter @mission-platform/my-care-notes
 ```
 
-האפליקציה תהיה זמינה בדרך כלל ב- `http://localhost:5173`.
+היישום יהיה זמין בדרך כלל ב-`http://localhost:5173`.
 
 ### פקודות נפוצות
 
-| משימה     | פקודה         | תיאור                        |
-| :-------- | :------------ | :--------------------------- |
-| **בנייה** | `pnpm build`  | בניית כל האפליקציות והחבילות |
-| **מבחן**  | `pnpm test`   | הפעל הכל Vitest סוויטות      |
-| **מוך**   | `pnpm lint`   | לָרוּץ ESLint מעבר למונורפו  |
-| **פורמט** | `pnpm format` | בדוק עיצוב עם Prettier       |
+| משימה | פקודה | תיאור |
+| :--------- | :------------ | :----------------------------- |
+| **בנייה** | `pnpm build` | בניית כל האפליקציות והחבילות |
+| **מבחן** | `pnpm test` | הפעל את כל חבילות Vitest |
+| **מוך** | `pnpm lint` | הפעל ESLint על פני המונורפו |
+| **פורמט** | `pnpm format` | בדוק עיצוב עם Prettier |
 
 ## פתרון בעיות
 
 ### ניקוי מטמונים
 
-אם אתה נתקל בשגיאות בנייה בלתי צפויות, נקה את ה-Turborepo ו Node מטמונים:
+אם אתה נתקל בשגיאות בנייה בלתי צפויות, נקה את המטמון Turborepo ו-Node:
 
 ```bash
 # Remove Turborepo cache
@@ -150,7 +166,7 @@ pnpm install
 
 ### כשלים בבניית WASM
 
-אם חפץ Flint לא מצליח להיבנות, בדוק את אבחון המהדר שלו
+אם חפץ פלינט לא מצליח להיבנות, בדוק את אבחון המהדר שלו
 ואמת את פרופיל הקישור הסטטי או הדינמי שנבחר. ה
 `@mission-platform/hunspell` בניית Emscripten מחייבת בנוסף את Docker
 להיות רץ.

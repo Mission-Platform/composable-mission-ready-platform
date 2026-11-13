@@ -71,9 +71,9 @@ function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | 只读<AvatarProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<AvatarProperties> |             |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -133,9 +133,9 @@ function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): 
 
 #### 参数
 
-| 名称 | 类型                            | 描述 |
-| ---- | ------------------------------- | ---- |
-| 属性 | 只读<BackgroundVideoProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------------- | ----------- |
+|属性 |只读<BackgroundVideoProperties> |             |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -197,9 +197,9 @@ function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 属性 | 只读<BadgeProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------- | ----------- |
+|属性 |只读<BadgeProperties> |             |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -251,9 +251,53 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | 只读<ButtonProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<ButtonProperties> |             |
+
+## `src/components/atoms/forge-divider/forge-divider`
+
+### 分隔线方向
+
+**种类：**类型
+
+```typescript
+export type DividerOrientation = 'horizontal' | 'vertical';
+```
+
+分隔线的布局方向。
+
+### 分隔线属性
+
+**种类：**接口
+
+```typescript
+export interface DividerProperties
+```
+
+没有提供描述。
+
+### 锻造分隔器
+
+**种类：**功能
+
+```typescript
+function ForgeDivider(properties: Readonly<DividerProperties>): MpElement;
+```
+
+`ForgeDivider` — 在中性 JSX 中编写的细边框分隔线
+方言并直接编译为 React 或 Vue
+`@mission-platform/vite-plugin-forge`。
+
+它根据 `orientation` 填充可用的宽度或高度并使用
+默认情况下语义 `<hr>` 元素。将 `decorative` 设置为 `false` 以使用
+而是角色承载 `<div>`。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------------------------- | ----------- |
+|属性 |只读<DividerProperties> |             |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -278,9 +322,9 @@ function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<IconButtonProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<IconButtonProperties> |             |
 
 ### 图标按钮属性
 
@@ -313,6 +357,94 @@ export type IconButtonVariant =
 
 图标按钮的视觉处理 - 规范颜色集加上透明的 `ghost`。
 
+## `src/components/atoms/forge-icon/forge-icon`
+
+### 锻造图标
+
+**种类：**功能
+
+```typescript
+function ForgeIcon(properties: Readonly<IconProperties>): MpElement;
+```
+
+框架中立的图标外观由经过审查的 `@mission-platform/icons` 支持
+目录。解析是数据驱动的，未知的名称永远不会呈现无效
+组件；包装器拥有可访问的名称，因此目录 SVG 保持沉默。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------ | ----------- |
+|属性 |只读<IconProperties> |             |
+
+### 图标名称
+
+**种类：**类型
+
+```typescript
+export type IconName = string;
+```
+
+目录名称，例如 `forge-icon-check`；未知名称使用后备图标。
+
+### 图标属性
+
+**种类：**接口
+
+```typescript
+export interface IconProperties
+```
+
+没有提供描述。
+
+### 图标大小
+
+**种类：**类型
+
+```typescript
+export type IconSize = 'sm' | 'md' | 'lg' | 'xl';
+```
+
+图标大小映射到目录的像素尺寸。
+
+## `src/components/atoms/forge-kbd/forge-kbd`
+
+### 伪造Kbd
+
+**种类：**功能
+
+```typescript
+function ForgeKbd(properties: Readonly<KbdProperties>): MpElement;
+```
+
+以中性 JSX 方言呈现的语义键盘键/和弦标签。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ----------------------- | ----------- |
+|属性 |只读<KbdProperties> |             |
+
+### Kbd属性
+
+**种类：**接口
+
+```typescript
+export interface KbdProperties
+```
+
+没有提供描述。
+
+### Kbd大小
+
+**种类：**类型
+
+```typescript
+export type KbdSize = 'sm' | 'md' | 'lg';
+```
+
+键盘按键大小。
+
 ## `src/components/atoms/forge-progress-bar/forge-progress-bar`
 
 ### 锻造进度条
@@ -335,9 +467,9 @@ function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElemen
 
 #### 参数
 
-| 名称 | 类型                        | 描述 |
-| ---- | --------------------------- | ---- |
-| 属性 | 只读<ProgressBarProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------- | ----------- |
+|属性 |只读<ProgressBarProperties> |             |
 
 ### 进度条属性
 
@@ -397,9 +529,9 @@ JSX 方言并直接编译为 React 或 Vue
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 属性 | 只读<QuoteProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------- | ----------- |
+|属性 |只读<QuoteProperties> |             |
 
 ### 报价属性
 
@@ -459,9 +591,9 @@ Vue 由 `@mission-platform/vite-plugin-forge` 提供。
 
 #### 参数
 
-| 名称 | 类型                            | 描述 |
-| ---- | ------------------------------- | ---- |
-| 属性 | 只读<ResponsiveImageProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------------- | ----------- |
+|属性 |只读<ResponsiveImageProperties> |             |
 
 ### 响应式图像适配
 
@@ -523,9 +655,9 @@ function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): 
 
 #### 参数
 
-| 名称 | 类型                            | 描述 |
-| ---- | ------------------------------- | ---- |
-| 属性 | 只读<ResponsiveVideoProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------------- | ----------- |
+|属性 |只读<ResponsiveVideoProperties> |             |
 
 ### 响应式视频适配
 
@@ -567,7 +699,7 @@ export interface ResponsiveVideoSource
 function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
 ```
 
-`ForgeSeparator` — 在中性位置创作一次的视觉分隔符/分隔符
+`ForgeSeparator` — 一次在中性位置创作的视觉分隔符/分隔符
 JSX 方言并直接编译为 React 或 Vue
 `@mission-platform/vite-plugin-forge`。
 
@@ -578,16 +710,16 @@ JSX 方言并直接编译为 React 或 Vue
 将其标记为纯粹的演示性 (`role="none"`)。
 
 它通过并置的 CSS 模块拥有自己的样式
-`forge-separator.module.scss`（由两阶段传递到每个框架
+`forge-separator.module.scss`（通过两阶段方法应用于每个框架
 编译器，因此该组件附带其自己的 `@layer mp.components` CSS）。的
 散列模块类名是用框架中立的
 {@link classNames} 帮助器。
 
 #### 参数
 
-| 名称 | 类型                      | 描述 |
-| ---- | ------------------------- | ---- |
-| 属性 | 只读<SeparatorProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------- | ----------- |
+|属性 |只读<SeparatorProperties> |             |
 
 ### 分离器方向
 
@@ -643,7 +775,7 @@ function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
 方言并直接编译为 React 或 Vue
 `@mission-platform/vite-plugin-forge`。
 
-它以三种形状之一呈现 `aria-hidden` 块 (`line`/`circle`/
+它以三种形状之一渲染 `aria-hidden` 块 (`line`/`circle`/
 `block`) 具有可选的闪烁动画，接受显式 `width`/
 `height` 覆盖。它通过并置的 CSS 模块拥有自己的样式
 `forge-skeleton.module.scss`，用框架中性组装
@@ -651,9 +783,9 @@ function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<SkeletonProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<SkeletonProperties> |             |
 
 ### 骨架属性
 
@@ -699,9 +831,9 @@ JSX 方言并直接编译为 React 或 Vue
 
 #### 参数
 
-| 名称 | 类型                    | 描述 |
-| ---- | ----------------------- | ---- |
-| 属性 | 只读<SpinnerProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------- | ----------- |
+|属性 |只读<SpinnerProperties> |             |
 
 ### Spinner 属性
 
@@ -756,9 +888,9 @@ function ForgeStack(properties: Readonly<StackProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 属性 | 只读<StackProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------- | ----------- |
+|属性 |只读<StackProperties> |             |
 
 ### 堆栈对齐
 
@@ -824,9 +956,9 @@ function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<StatusIconProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<StatusIconProperties> |             |
 
 ### 状态图标级别
 
@@ -858,6 +990,102 @@ export type StatusIconSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
 规范 2xs → 2xl 尺寸比例。
+
+## `src/components/atoms/forge-surface/forge-surface`
+
+### 锻造表面
+
+**种类：**功能
+
+```typescript
+function ForgeSurface(properties: Readonly<SurfaceProperties>): MpElement;
+```
+
+具有默认槽的主题化语义表面。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------------------------- | ----------- |
+|属性 |只读<SurfaceProperties> |             |
+
+### 表面高程
+
+**种类：**类型
+
+```typescript
+export type SurfaceElevation = 0 | 1 | 2 | 3;
+```
+
+表面高程水平。
+
+### 表面填充
+
+**种类：**类型
+
+```typescript
+export type SurfacePadding = 'none' | 'sm' | 'md' | 'lg';
+```
+
+表面填充比例。
+
+### 表面特性
+
+**种类：**接口
+
+```typescript
+export interface SurfaceProperties
+```
+
+没有提供描述。
+
+### 表面圆形
+
+**种类：**类型
+
+```typescript
+export type SurfaceRounded = 'none' | 'sm' | 'md' | 'lg' | 'xl';
+```
+
+表面圆角半径处理。
+
+## `src/components/atoms/forge-sync-status-indicator/forge-sync-status-indicator`
+
+### ForgeSyncStatusIndicator
+
+**种类：**功能
+
+```typescript
+function ForgeSyncStatusIndicator(properties: Readonly<SyncStatusIndicatorProperties>): MpElement;
+```
+
+紧凑、易于访问的同步状态指示器。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------------------------------------- | ----------- |
+|属性 |只读<SyncStatusIndicatorProperties> |             |
+
+### 同步状态
+
+**种类：**类型
+
+```typescript
+export type SyncStatus = 'synced' | 'syncing' | 'pending' | 'error' | 'offline';
+```
+
+由指示器表示的同步状态。
+
+### 同步状态指示器属性
+
+**种类：**接口
+
+```typescript
+export interface SyncStatusIndicatorProperties
+```
+
+没有提供描述。
 
 ## `src/components/molecules/forge-accordion/forge-accordion`
 
@@ -919,9 +1147,57 @@ React/Vue);每个项目的 `summary`/default 槽变成两个作用域槽
 
 #### 参数
 
-| 名称 | 类型                      | 描述 |
-| ---- | ------------------------- | ---- |
-| 属性 | 只读<AccordionProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------- | ----------- |
+|属性 |只读<AccordionProperties> |             |
+
+## `src/components/molecules/forge-alert/forge-alert`
+
+### 警报属​​性
+
+**种类：**接口
+
+```typescript
+export interface AlertProperties
+```
+
+没有提供描述。
+
+### 警报大小
+
+**种类：**类型
+
+```typescript
+export type AlertSize = 'sm' | 'md' | 'lg';
+```
+
+没有提供描述。
+
+### 警报变体
+
+**种类：**类型
+
+```typescript
+export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+没有提供描述。
+
+### 伪造警报
+
+**种类：**功能
+
+```typescript
+function ForgeAlert(properties: Readonly<AlertProperties>): MpElement;
+```
+
+具有可组合消息和操作槽的可访问、可关闭的状态消息。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------- | ----------- |
+|属性 |只读<AlertProperties> |             |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -970,9 +1246,9 @@ function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<BreadcrumbProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<BreadcrumbProperties> |             |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1030,9 +1306,57 @@ function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElemen
 
 #### 参数
 
-| 名称 | 类型                        | 描述 |
-| ---- | --------------------------- | ---- |
-| 属性 | 只读<ButtonGroupProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------- | ----------- |
+|属性 |只读<ButtonGroupProperties> |             |
+
+## `src/components/molecules/forge-callout-block/forge-callout-block`
+
+### 标注块属性
+
+**种类：**接口
+
+```typescript
+export interface CalloutBlockProperties
+```
+
+没有提供描述。
+
+### 标注块大小
+
+**种类：**类型
+
+```typescript
+export type CalloutBlockSize = 'sm' | 'md';
+```
+
+没有提供描述。
+
+### 标注块变体
+
+**种类：**类型
+
+```typescript
+export type CalloutBlockVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+没有提供描述。
+
+### 伪造标注块
+
+**种类：**功能
+
+```typescript
+function ForgeCalloutBlock(properties: Readonly<CalloutBlockProperties>): MpElement;
+```
+
+一个突出的信息块，包含标题、描述、内容和操作槽。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | -------------------------------- | ----------- |
+|属性 |只读<CalloutBlockProperties> |             |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1081,9 +1405,57 @@ React 的道具存在检查）因此存在检测在两者上的工作方式相�
 
 #### 参数
 
-| 名称 | 类型                 | 描述 |
-| ---- | -------------------- | ---- |
-| 属性 | 只读<CardProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------ | ----------- |
+|属性 |只读<CardProperties> |             |
+
+## `src/components/molecules/forge-carousel-indicator/forge-carousel-indicator`
+
+### 轮播指示器方向
+
+**种类：**类型
+
+```typescript
+export type CarouselIndicatorOrientation = 'horizontal' | 'vertical';
+```
+
+没有提供描述。
+
+### CarouselIndicator属性
+
+**种类：**接口
+
+```typescript
+export interface CarouselIndicatorProperties
+```
+
+没有提供描述。
+
+### 轮播指示器大小
+
+**种类：**类型
+
+```typescript
+export type CarouselIndicatorSize = 'sm' | 'md' | 'lg';
+```
+
+没有提供描述。
+
+### ForgeCarousel指示器
+
+**种类：**功能
+
+```typescript
+function ForgeCarouselIndicator(properties: Readonly<CarouselIndicatorProperties>): MpElement;
+```
+
+用于轮播的可访问、可通过键盘操作的分页点。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------------------- | ----------- |
+|属性 |只读<CarouselIndicatorProperties> |             |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1143,9 +1515,9 @@ function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<ChatBubbleProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<ChatBubbleProperties> |             |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1187,9 +1559,9 @@ function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<CollapseProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<CollapseProperties> |             |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1255,9 +1627,125 @@ chrome，以中性 JSX 方言编写一次 (`@mission-platform/forge-jsx`)
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<DeviceMockProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<DeviceMockProperties> |             |
+
+## `src/components/molecules/forge-drop-zone/forge-drop-zone`
+
+### DropZone属性
+
+**种类：**接口
+
+```typescript
+export interface DropZoneProperties
+```
+
+没有提供描述。
+
+### 删除区域拒绝
+
+**种类：**接口
+
+```typescript
+export interface DropZoneReject
+```
+
+没有提供描述。
+
+### 拖放区域范围
+
+**种类：**接口
+
+```typescript
+export interface DropZoneScope
+```
+
+没有提供描述。
+
+### 放置区域大小
+
+**种类：**类型
+
+```typescript
+export type DropZoneSize = 'sm' | 'md' | 'lg';
+```
+
+没有提供描述。
+
+### 放置区域值
+
+**种类：**类型
+
+```typescript
+export type DropZoneValue = File | File[];
+```
+
+没有提供描述。
+
+### 锻造空降区
+
+**种类：**功能
+
+```typescript
+function ForgeDropZone(properties: Readonly<DropZoneProperties>): MpElement;
+```
+
+具有客户端验证的键盘可访问拖放文件目标。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<DropZoneProperties> |             |
+
+## `src/components/molecules/forge-empty-state/forge-empty-state`
+
+### 空状态属性
+
+**种类：**接口
+
+```typescript
+export interface EmptyStateProperties
+```
+
+没有提供描述。
+
+### 空状态大小
+
+**种类：**类型
+
+```typescript
+export type EmptyStateSize = 'sm' | 'md' | 'lg';
+```
+
+没有提供描述。
+
+### 空状态变体
+
+**种类：**类型
+
+```typescript
+export type EmptyStateVariant = 'neutral' | 'info';
+```
+
+没有提供描述。
+
+### 伪造空状态
+
+**种类：**功能
+
+```typescript
+function ForgeEmptyState(properties: Readonly<EmptyStateProperties>): MpElement;
+```
+
+居中的无内容消息，带有可选图标、支持副本和操作。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<EmptyStateProperties> |             |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1286,9 +1774,9 @@ function ForgeGrid(properties: Readonly<GridProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                 | 描述 |
-| ---- | -------------------- | ---- |
-| 属性 | 只读<GridProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------ | ----------- |
+|属性 |只读<GridProperties> |             |
 
 ### 网格对齐
 
@@ -1331,20 +1819,20 @@ function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
 ```
 
 `ForgeInView` — 包装内容并使用 `IntersectionObserver` 来显示它
-滚动到视图后的可配置动画。曾在
+滚动到视图中后的可配置动画。曾在
 中性 JSX 方言；跨框架状态/生命周期由
 中性钩子 (`useState`/`useRef`/`useEffect`)，编译为 React 钩子
 或通过 `@mission-platform/vite-plugin-forge` 的 Vue 挂钩垫片。
 
-注意：与 Vue 原始版本不同，它不公开作用域槽 — 显示状态
+注意：与 Vue 原始版本不同，它不公开作用域槽 - 显示状态
 纯粹通过包装的动画风格和
 `onEnter`/`onLeave` 回调，干净地映射到两个框架。
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | 只读<InViewProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<InViewProperties> |             |
 
 ### 视图动画
 
@@ -1362,6 +1850,64 @@ export type InViewAnimation = 'fade' | 'slide-up' | 'slide-left' | 'slide-right'
 
 ```typescript
 export interface InViewProperties
+```
+
+没有提供描述。
+
+## `src/components/molecules/forge-inline-edit/forge-inline-edit`
+
+### ForgeInline编辑
+
+**种类：**功能
+
+```typescript
+function ForgeInlineEdit(properties: Readonly<InlineEditProperties>): MpElement;
+```
+
+带有键盘提交、取消和验证功能的紧凑型读取/编辑控件。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<InlineEditProperties> |             |
+
+### 内联编辑输入类型
+
+**种类：**类型
+
+```typescript
+export type InlineEditInputType = 'text' | 'email' | 'url' | 'number';
+```
+
+没有提供描述。
+
+### 内联编辑属性
+
+**种类：**接口
+
+```typescript
+export interface InlineEditProperties
+```
+
+没有提供描述。
+
+### 内联编辑大小
+
+**种类：**类型
+
+```typescript
+export type InlineEditSize = 'sm' | 'md' | 'lg';
+```
+
+没有提供描述。
+
+### 内联编辑验证器
+
+**种类：**类型
+
+```typescript
+export type InlineEditValidator = (value: string) => string | undefined;
 ```
 
 没有提供描述。
@@ -1394,9 +1940,9 @@ function ForgeList(properties: Readonly<ListProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                 | 描述 |
-| ---- | -------------------- | ---- |
-| 属性 | 只读<ListProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------ | ----------- |
+|属性 |只读<ListProperties> |             |
 
 ### 列表项
 
@@ -1468,9 +2014,9 @@ CSS）；动态多列属性是内联应用的。
 
 #### 参数
 
-| 名称 | 类型                    | 描述 |
-| ---- | ----------------------- | ---- |
-| 属性 | 只读<MasonryProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------- | ----------- |
+|属性 |只读<MasonryProperties> |             |
 
 ### 砌体间隙
 
@@ -1488,6 +2034,54 @@ export type MasonryGap = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 ```typescript
 export interface MasonryProperties
+```
+
+没有提供描述。
+
+## `src/components/molecules/forge-mention-input/forge-mention-input`
+
+### ForgeMent输入
+
+**种类：**功能
+
+```typescript
+function ForgeMentionInput(properties: Readonly<MentionInputProperties>): MpElement;
+```
+
+带有可访问的、可通过键盘导航的提及建议的文本区域。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | -------------------------------- | ----------- |
+|属性 |只读<MentionInputProperties> |             |
+
+### 提及输入属性
+
+**种类：**接口
+
+```typescript
+export interface MentionInputProperties
+```
+
+没有提供描述。
+
+### 提及项目
+
+**种类：**接口
+
+```typescript
+export interface MentionItem
+```
+
+没有提供描述。
+
+### 提及建议范围
+
+**种类：**接口
+
+```typescript
+export interface MentionSuggestionScope
 ```
 
 没有提供描述。
@@ -1519,9 +2113,9 @@ function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<MenuItemProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<MenuItemProperties> |             |
 
 ### 菜单项属性
 
@@ -1577,9 +2171,9 @@ function ForgeMenu(properties: Readonly<MenuProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                 | 描述 |
-| ---- | -------------------- | ---- |
-| 属性 | 只读<MenuProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------ | ----------- |
+|属性 |只读<MenuProperties> |             |
 
 ### 菜单节点
 
@@ -1610,6 +2204,76 @@ export interface MenuProperties
 ```
 
 没有提供描述。
+
+## `src/components/molecules/forge-metric-card/forge-metric-card`
+
+### 伪造公制卡
+
+**种类：**功能
+
+```typescript
+function ForgeMetricCard(properties: Readonly<MetricCardProperties>): MpElement;
+```
+
+`ForgeMetricCard` — 在中性 JSX 中编写的紧凑指标摘要。
+它将价值、趋势、加载状态和支持内容集中在一起
+可访问的文章，同时将视觉处理留给其 CSS 模块。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<MetricCardProperties> |             |
+
+### MetricCard 属性
+
+**种类：**接口
+
+```typescript
+export interface MetricCardProperties
+```
+
+没有提供描述。
+
+### 公制卡尺寸
+
+**种类：**类型
+
+```typescript
+export type MetricCardSize = 'sm' | 'md' | 'lg';
+```
+
+控制公制卡比例的尺寸标记。
+
+### 公制卡趋势
+
+**种类：**接口
+
+```typescript
+export interface MetricCardTrend
+```
+
+可选的更改指示器呈现在指标值下方。
+
+### 度量卡趋势方向
+
+**种类：**类型
+
+```typescript
+export type MetricCardTrendDirection = 'up' | 'down' | 'flat';
+```
+
+由度量趋势表示的变化方向。
+
+### 公制卡变体
+
+**种类：**类型
+
+```typescript
+export type MetricCardVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+公制卡的表面色调。
 
 ## `src/components/molecules/forge-navbar-item/forge-navbar-item`
 
@@ -1646,9 +2310,9 @@ React 的元素类型/Vue 的 `<component :is>`)，其中 `tag` 解析为 `'a'`
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<NavbarItemProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<NavbarItemProperties> |             |
 
 ### 导航栏项目子项
 
@@ -1699,7 +2363,7 @@ function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
 用于大页数的控件和 MUI 样式的截断省略号。目前的
 页面通过 `modelValue` **控制**；用户交互同时触发
 `onUpdateModelValue`（`v-model` 更新）和 `onChange`。提供任一
-直接 `pageCount`，或 `total` + `pageSize` 并导出页计数。
+直接 `pageCount`，或 `total` + `pageSize` 并导出页数。
 它通过并置的 CSS 模块拥有自己的样式
 `forge-pagination.module.scss`。
 
@@ -1708,9 +2372,9 @@ function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<PaginationProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<PaginationProperties> |             |
 
 ### 分页项
 
@@ -1783,9 +2447,9 @@ function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                 | 描述 |
-| ---- | -------------------- | ---- |
-| 属性 | 只读<TabsProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------ | ----------- |
+|属性 |只读<TabsProperties> |             |
 
 ### 选项卡项
 
@@ -1827,6 +2491,57 @@ export type TabsVariant = 'line' | 'pill';
 
 选项卡列表的可视化处理。
 
+## `src/components/molecules/forge-tag-input/forge-tag-input`
+
+### 伪造标签输入
+
+**种类：**功能
+
+```typescript
+function ForgeTagInput(properties: Readonly<TagInputProperties>): MpElement;
+```
+
+`ForgeTagInput` — 一个用中性语言编写的受控、可访问的标签编辑器
+JSX。输入或逗号提交修剪后的草稿，退格键删除最后一个标签
+当草稿为空时，并且在之前应用重复/最大标签规则
+受控更新回调被触发。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<TagInputProperties> |             |
+
+### 标签输入属性
+
+**种类：**接口
+
+```typescript
+export interface TagInputProperties
+```
+
+没有提供描述。
+
+### 标签输入大小
+
+**种类：**类型
+
+```typescript
+export type TagInputSize = 'sm' | 'md' | 'lg';
+```
+
+控制标签输入比例的大小标记。
+
+### 标签输入变量
+
+**种类：**类型
+
+```typescript
+export type TagInputVariant = 'neutral' | 'primary' | 'error';
+```
+
+标签输入的表面色调。
+
 ## `src/components/molecules/forge-timeline/forge-timeline`
 
 ### 锻造时间线
@@ -1855,9 +2570,9 @@ function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<TimelineProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<TimelineProperties> |             |
 
 ### 时间线对齐
 
@@ -1867,7 +2582,7 @@ function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 export type TimelineAlign = 'start' | 'alternate';
 ```
 
-垂直时间线项目如何相对于线条定位。
+垂直时间线项目如何相对于线定位。
 
 ### 时间线项目
 
@@ -1952,9 +2667,9 @@ props（替换原始 SFC 的发射）。中性 `useState` / `useRef`
 
 #### 参数
 
-| 名称 | 类型                         | 描述 |
-| ---- | ---------------------------- | ---- |
-| 属性 | 只读<WindowPopoutProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------------- | ----------- |
+|属性 |只读<WindowPopoutProperties> |             |
 
 ### WindowPopout 属性
 
@@ -1965,6 +2680,164 @@ export interface WindowPopoutProperties
 ```
 
 没有提供描述。
+
+## `src/components/organisms/forge-activity-feed/forge-activity-feed`
+
+### 活动提要项目
+
+**种类：**类型
+
+```typescript
+export type ActivityFeedItem = ActivityItem;
+```
+
+没有提供描述。
+
+#### 合同
+
+- **@deprecated:** 使用 `ActivityItem`。
+
+### 活动源属性
+
+**种类：**接口
+
+```typescript
+export interface ActivityFeedProperties
+```
+
+没有提供描述。
+
+### 活动提要大小
+
+**种类：**类型
+
+```typescript
+export type ActivityFeedSize = 'sm' | 'md' | 'lg';
+```
+
+没有提供描述。
+
+### 活动提要变体
+
+**种类：**类型
+
+```typescript
+export type ActivityFeedVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+没有提供描述。
+
+### Forge 活动源
+
+**种类：**功能
+
+```typescript
+function ForgeActivityFeed(properties: Readonly<ActivityFeedProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | -------------------------------- | ----------- |
+|属性 |只读<ActivityFeedProperties> |             |
+
+## `src/components/organisms/forge-announcement-bar/forge-announcement-bar`
+
+### 公告栏属性
+
+**种类：**接口
+
+```typescript
+export interface AnnouncementBarProperties
+```
+
+没有提供描述。
+
+### 公告栏变体
+
+**种类：**类型
+
+```typescript
+export type AnnouncementBarVariant = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+没有提供描述。
+
+### Forge公告栏
+
+**种类：**功能
+
+```typescript
+function ForgeAnnouncementBar(properties: Readonly<AnnouncementBarProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ----------------------------------- | ----------- |
+|属性 |只读<AnnouncementBarProperties> |             |
+
+## `src/components/organisms/forge-asset-browser/forge-asset-browser`
+
+### 资产浏览器项目
+
+**种类：**接口
+
+```typescript
+export interface AssetBrowserItem
+```
+
+没有提供描述。
+
+### 资产浏览器属性
+
+**种类：**接口
+
+```typescript
+export interface AssetBrowserProperties
+```
+
+没有提供描述。
+
+### 资产浏览器大小
+
+**种类：**类型
+
+```typescript
+export type AssetBrowserSize = 'sm' | 'md' | 'lg';
+```
+
+没有提供描述。
+
+### 资产浏览器价值
+
+**种类：**类型
+
+```typescript
+export type AssetBrowserValue = string | string[];
+```
+
+没有提供描述。
+
+### ForgeAssetBrowser
+
+**种类：**功能
+
+```typescript
+function ForgeAssetBrowser(properties: Readonly<AssetBrowserProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | -------------------------------- | ----------- |
+|属性 |只读<AssetBrowserProperties> |             |
 
 ## `src/components/organisms/forge-carousel/forge-carousel`
 
@@ -2018,19 +2891,19 @@ function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement;
 原始 Vue SFC 的替换：幻灯片来自默认插槽
 计数是通过内省时隙 VNode 得出的 - 其中中性
 方言无法做到这一点 - 因此幻灯片由 `slides` 数组驱动（带有
-用于自定义内容的作用域 `slide` 插槽），同样对迁移的进行扁平化
+用于自定义内容的范围 `slide` 插槽），同样对迁移的进行扁平化
 使用了{@link ForgeTabs}。组合物-API `ref`/`watch`/`onBeforeUnmount`
-自动播放管道变为 `useState` + `useEffect` 间隔（按
-活跃索引，因此它会在没有陈旧关闭的情况下前进）； `useReducedMotion`
+自动播放管道变为 `useState` + `useEffect` 间隔（在
+活跃索引，因此它在没有陈旧关闭的情况下前进）； `useReducedMotion`
 可组合性成为效果内的内联 `matchMedia` 检查；指针
 起始坐标变为 `useRef`； `defineExpose` 已被删除；和
 `v-model` + 发出成为回调道具。
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<CarouselProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<CarouselProperties> |             |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2052,7 +2925,7 @@ export interface ChatAreaProperties
 function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 ```
 
-`ForgeChatArea` — 一次在
+`ForgeChatArea` — 一次在文档中编写的可滚动对话界面
 中性 JSX 方言并直接编译为 React 或 Vue
 `@mission-platform/vite-plugin-forge`。
 
@@ -2060,12 +2933,12 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 `aria-live="polite"` `role="log"` 消息列表（默认槽 — 通常是
 渲染为 `<li>`s 的 {@link ForgeChatBubble} 堆栈），以及一个可选的
 `footer` 作曲家插槽。当 `autoScroll` 启用（默认）时
-将日志固定在装载上的最新消息上，并随着其内容的增长，
+将日志固定到装载上的最新消息并随着其内容的增长，
 当用户向上滚动以阅读历史记录时暂停。它拥有自己的风格
 位于同一位置的 CSS 模块 `forge-chat-area.module.scss`。
 
 原始 Vue SFC 的替换：组合 API `onMounted` +
-`watch` + `ResizeObserver` 管道变成单个中性 `useEffect`
+`watch` + `ResizeObserver` 管道变成单一中性 `useEffect`
 （编译器将其映射到每个框架的挂载/清理生命周期），以及
 可变的“固定到底部”标志变成 `useRef` （因此更新它不会
 重新渲染）。 SFC 的 `defineExpose({ scrollToBottom })` 命令句柄是
@@ -2074,9 +2947,425 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<ChatAreaProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<ChatAreaProperties> |             |
+
+## `src/components/organisms/forge-command-palette/forge-command-palette`
+
+### 命令面板命令
+
+**种类：**类型
+
+```typescript
+export type CommandPaletteCommand = CommandItem;
+```
+
+没有提供描述。
+
+#### 合同
+
+- **@deprecated:** 使用 `CommandItem`。
+
+### 命令面板属性
+
+**种类：**接口
+
+```typescript
+export interface CommandPaletteProperties
+```
+
+没有提供描述。
+
+### 命令面板大小
+
+**种类：**类型
+
+```typescript
+export type CommandPaletteSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+控制命令调色板比例的大小标记。
+
+### Forge命令面板
+
+**种类：**功能
+
+```typescript
+function ForgeCommandPalette(properties: Readonly<CommandPaletteProperties>): MpElement;
+```
+
+具有模态叠加层的可搜索、键盘优先的命令面板。中立者
+实现保持过滤和选择框架独立，同时
+保护 SSR 的全局文档监听器。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ---------------------------------- | ----------- |
+|属性 |只读<CommandPaletteProperties> |             |
+
+## `src/components/organisms/forge-comment-thread/forge-comment-thread`
+
+### 评论主题评论
+
+**种类：**接口
+
+```typescript
+export interface CommentThreadComment
+```
+
+没有提供描述。
+
+### 评论线程属性
+
+**种类：**接口
+
+```typescript
+export interface CommentThreadProperties
+```
+
+没有提供描述。
+
+### 评论线程大小
+
+**种类：**类型
+
+```typescript
+export type CommentThreadSize = 'sm' | 'md' | 'lg';
+```
+
+没有提供描述。
+
+### 伪造评论线程
+
+**种类：**功能
+
+```typescript
+function ForgeCommentThread(properties: Readonly<CommentThreadProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------------------------------- | ----------- |
+|属性 |只读<CommentThreadProperties> |             |
+
+## `src/components/organisms/forge-comparison-table/forge-comparison-table`
+
+### 比较表功能
+
+**种类：**类型
+
+```typescript
+export type ComparisonTableFeature = FeatureRow;
+```
+
+没有提供描述。
+
+#### 合同
+
+- **@deprecated:** 使用 `FeatureRow`。
+
+### 比较表计划
+
+**种类：**类型
+
+```typescript
+export type ComparisonTablePlan = ComparisonItem;
+```
+
+没有提供描述。
+
+#### 合同
+
+- **@deprecated:** 使用 `ComparisonItem`。
+
+### 比较表属性
+
+**种类：**接口
+
+```typescript
+export interface ComparisonTableProperties
+```
+
+没有提供描述。
+
+### 比较表大小
+
+**种类：**类型
+
+```typescript
+export type ComparisonTableSize = 'sm' | 'md' | 'lg';
+```
+
+没有提供描述。
+
+### 比较表值
+
+**种类：**类型
+
+```typescript
+export type ComparisonTableValue = string | number | boolean;
+```
+
+没有提供描述。
+
+### 锻造比较表
+
+**种类：**功能
+
+```typescript
+function ForgeComparisonTable(properties: Readonly<ComparisonTableProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ----------------------------------- | ----------- |
+|属性 |只读<ComparisonTableProperties> |             |
+
+## `src/components/organisms/forge-cookie-consent/forge-cookie-consent`
+
+### Cookie类别
+
+**种类：**接口
+
+```typescript
+export interface CookieCategory
+```
+
+用户可配置的 cookie 类别。
+
+### Cookie 同意属性
+
+**种类：**接口
+
+```typescript
+export interface CookieConsentProperties
+```
+
+没有提供描述。
+
+### Cookie同意大小
+
+**种类：**类型
+
+```typescript
+export type CookieConsentSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+控制同意表面规模的大小令牌。
+
+### Cookie同意状态
+
+**种类：**接口
+
+```typescript
+export interface CookieConsentState
+```
+
+同意有效负载发送到主机应用程序并保留在存储中。
+
+### 伪造 Cookie 同意
+
+**种类：**功能
+
+```typescript
+function ForgeCookieConsent(properties: Readonly<CookieConsentProperties>): MpElement;
+```
+
+带有所需类别的同意横幅和可访问的首选项对话框
+执行和受保护的本地/会话存储持久性。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------------------------------- | ----------- |
+|属性 |只读<CookieConsentProperties> |             |
+
+## `src/components/organisms/forge-cta-banner/forge-cta-banner`
+
+### CtaBanner动作
+
+**种类：**接口
+
+```typescript
+export interface CtaBannerAction
+```
+
+没有提供描述。
+
+### CtaBanner 属性
+
+**种类：**接口
+
+```typescript
+export interface CtaBannerProperties
+```
+
+没有提供描述。
+
+### CtaBanner变体
+
+**种类：**类型
+
+```typescript
+export type CtaBannerVariant = 'neutral' | 'primary' | 'secondary' | 'success' | 'warning';
+```
+
+没有提供描述。
+
+### 锻造Cta旗帜
+
+**种类：**功能
+
+```typescript
+function ForgeCtaBanner(properties: Readonly<CtaBannerProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ----------------------------- | ----------- |
+|属性 |只读<CtaBannerProperties> |             |
+
+## `src/components/organisms/forge-data-card/forge-data-card`
+
+### 数据卡数据
+
+**种类：**类型
+
+```typescript
+export type DataCardData = VCardData | ICalendarData;
+```
+
+`ForgeDataCard` 显示键入的联系人或日历数据。
+
+### 数据卡属性
+
+**种类：**接口
+
+```typescript
+export interface DataCardProperties
+```
+
+没有提供描述。
+
+### 数据卡尺寸
+
+**种类：**类型
+
+```typescript
+export type DataCardSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+控制数据卡比例的大小标记。
+
+### 数据卡趋势
+
+**种类：**接口
+
+```typescript
+export interface DataCardTrend
+```
+
+没有提供描述。
+
+#### 合同
+
+- **@deprecated：** 数据卡现在使用 `VCardData` 或 `ICalendarData`。
+
+### 数据卡变体
+
+**种类：**类型
+
+```typescript
+export type DataCardVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+```
+
+卡表面的色调。
+
+### 伪造数据卡
+
+**种类：**功能
+
+```typescript
+function ForgeDataCard(properties: Readonly<DataCardProperties>): MpElement;
+```
+
+具有符合标准的下载功能的语义联系人或日历卡。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<DataCardProperties> |             |
+
+## `src/components/organisms/forge-diff-viewer/forge-diff-viewer`
+
+### 差异线类型
+
+**种类：**类型
+
+```typescript
+export type DiffLineType = 'context' | 'addition' | 'deletion';
+```
+
+没有提供描述。
+
+### 差异查看器线
+
+**种类：**接口
+
+```typescript
+export interface DiffViewerLine
+```
+
+没有提供描述。
+
+### 差异查看器模式
+
+**种类：**类型
+
+```typescript
+export type DiffViewerMode = 'unified' | 'split';
+```
+
+没有提供描述。
+
+### DiffViewer 属性
+
+**种类：**接口
+
+```typescript
+export interface DiffViewerProperties
+```
+
+没有提供描述。
+
+### ForgeDiffViewer
+
+**种类：**功能
+
+```typescript
+function ForgeDiffViewer(properties: Readonly<DiffViewerProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<DiffViewerProperties> |             |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2178,9 +3467,199 @@ helper）和 `closeLabel` 属性代替 i18n。
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | 只读<DrawerProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<DrawerProperties> |             |
+
+## `src/components/organisms/forge-error-page/forge-error-page`
+
+### 错误页面操作
+
+**种类：**接口
+
+```typescript
+export interface ErrorPageAction
+```
+
+错误消息下方显示的操作。
+
+### 错误页数据
+
+**种类：**接口
+
+```typescript
+export interface ErrorPageData
+```
+
+可以作为一个公共数据对象传递的结构化错误信息。
+
+### 错误页属性
+
+**种类：**接口
+
+```typescript
+export interface ErrorPageProperties
+```
+
+没有提供描述。
+
+### 错误页面大小
+
+**种类：**类型
+
+```typescript
+export type ErrorPageSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+控制错误页面比例的大小标记。
+
+### 伪造错误页面
+
+**种类：**功能
+
+```typescript
+function ForgeErrorPage(properties: Readonly<ErrorPageProperties>): MpElement;
+```
+
+具有类型化操作描述符的语义、槽友好的错误状态页。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ----------------------------- | ----------- |
+|属性 |只读<ErrorPageProperties> |             |
+
+## `src/components/organisms/forge-kanban-board/forge-kanban-board`
+
+### 锻造看板
+
+**种类：**功能
+
+```typescript
+function ForgeKanbanBoard(properties: Readonly<KanbanBoardProperties>): MpElement;
+```
+
+用于在列之间移动项目的响应板。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------------- | ----------- |
+|属性 |只读<KanbanBoardProperties> |             |
+
+### 看板属性
+
+**种类：**接口
+
+```typescript
+export interface KanbanBoardProperties
+```
+
+没有提供描述。
+
+### 看板卡
+
+**种类：**类型
+
+```typescript
+export type KanbanCard = KanbanItem;
+```
+
+没有提供描述。
+
+#### 合同
+
+- **@deprecated:** 使用 `KanbanItem`。
+
+### 看板栏
+
+**种类：**接口
+
+```typescript
+export interface KanbanColumn
+```
+
+没有提供描述。
+
+## `src/components/organisms/forge-logo-cloud/forge-logo-cloud`
+
+### ForgeLogo云
+
+**种类：**功能
+
+```typescript
+function ForgeLogoCloud(properties: Readonly<LogoCloudProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ----------------------------- | ----------- |
+|属性 |只读<LogoCloudProperties> |             |
+
+### 标志云项目
+
+**种类：**类型
+
+```typescript
+export type LogoCloudItem = Logo;
+```
+
+没有提供描述。
+
+#### 合同
+
+- **@deprecated:** 使用 `Logo`。
+
+### 徽标云属性
+
+**种类：**接口
+
+```typescript
+export interface LogoCloudProperties
+```
+
+没有提供描述。
+
+## `src/components/organisms/forge-marketing-header/forge-marketing-header`
+
+### Forge营销标题
+
+**种类：**功能
+
+```typescript
+function ForgeMarketingHeader(properties: Readonly<MarketingHeaderProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ----------------------------------- | ----------- |
+|属性 |只读<MarketingHeaderProperties> |             |
+
+### 营销标题动作
+
+**种类：**接口
+
+```typescript
+export interface MarketingHeaderAction
+```
+
+没有提供描述。
+
+### 营销标头属性
+
+**种类：**接口
+
+```typescript
+export interface MarketingHeaderProperties
+```
+
+没有提供描述。
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2216,9 +3695,9 @@ leaf 触发其 `onClick`。与 Vue 原始版本一样，每个选项仅打开一
 
 #### 参数
 
-| 名称 | 类型                    | 描述 |
-| ---- | ----------------------- | ---- |
-| 属性 | 只读<MenubarProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------- | ----------- |
+|属性 |只读<MenubarProperties> |             |
 
 ### 菜单栏属性
 
@@ -2258,9 +3737,9 @@ JSX 方言并直接编译为 React 或 Vue
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | 只读<NavbarProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<NavbarProperties> |             |
 
 ### 导航栏对齐
 
@@ -2294,6 +3773,306 @@ export interface NavbarProperties
 
 没有提供描述。
 
+## `src/components/organisms/forge-notification-panel/forge-notification-panel`
+
+### 伪造通知面板
+
+**种类：**功能
+
+```typescript
+function ForgeNotificationPanel(properties: Readonly<NotificationPanelProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------------------- | ----------- |
+|属性 |只读<NotificationPanelProperties> |             |
+
+### 通知项目
+
+**种类：**接口
+
+```typescript
+export interface NotificationItem
+```
+
+没有提供描述。
+
+### 通知面板属性
+
+**种类：**接口
+
+```typescript
+export interface NotificationPanelProperties
+```
+
+没有提供描述。
+
+### 通知类型
+
+**种类：**类型
+
+```typescript
+export type NotificationType = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+没有提供描述。
+
+## `src/components/organisms/forge-onboarding-tour/forge-onboarding-tour`
+
+### Forge 入门之旅
+
+**种类：**功能
+
+```typescript
+function ForgeOnboardingTour(properties: Readonly<OnboardingTourProperties>): MpElement;
+```
+
+具有键盘导航和可选的完成持久性的易于访问的聚光灯之旅。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ---------------------------------- | ----------- |
+|属性 |只读<OnboardingTourProperties> |             |
+
+### 入职步骤
+
+**种类：**类型
+
+```typescript
+export type OnboardingStep = TourStep;
+```
+
+没有提供描述。
+
+#### 合同
+
+- **@deprecated:** 使用 `TourStep`。
+
+### 入职旅游安置
+
+**种类：**类型
+
+```typescript
+export type OnboardingTourPlacement = 'top' | 'right' | 'bottom' | 'left' | 'center';
+```
+
+锚定到目标的游览对话框的放置首选项。
+
+### 入职旅游属性
+
+**种类：**接口
+
+```typescript
+export interface OnboardingTourProperties
+```
+
+没有提供描述。
+
+### 入职旅游规模
+
+**种类：**类型
+
+```typescript
+export type OnboardingTourSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+控制游览对话框比例的大小标记。
+
+## `src/components/organisms/forge-pricing-table/forge-pricing-table`
+
+### 伪造定价表
+
+**种类：**功能
+
+```typescript
+function ForgePricingTable(properties: Readonly<PricingTableProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | -------------------------------- | ----------- |
+|属性 |只读<PricingTableProperties> |             |
+
+### 定价功能
+
+**种类：**接口
+
+```typescript
+export interface PricingFeature
+```
+
+没有提供描述。
+
+### 定价计划
+
+**种类：**接口
+
+```typescript
+export interface PricingPlan
+```
+
+没有提供描述。
+
+### 定价表属性
+
+**种类：**接口
+
+```typescript
+export interface PricingTableProperties
+```
+
+没有提供描述。
+
+## `src/components/organisms/forge-profile-card/forge-profile-card`
+
+### 伪造个人资料卡
+
+**种类：**功能
+
+```typescript
+function ForgeProfileCard(properties: Readonly<ProfileCardProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------------- | ----------- |
+|属性 |只读<ProfileCardProperties> |             |
+
+### 个人资料卡属性
+
+**种类：**接口
+
+```typescript
+export interface ProfileCardProperties
+```
+
+没有提供描述。
+
+## `src/components/organisms/forge-site-footer/forge-site-footer`
+
+### ForgeSite页脚
+
+**种类：**功能
+
+```typescript
+function ForgeSiteFooter(properties: Readonly<SiteFooterProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<SiteFooterProperties> |             |
+
+### 网站页脚栏
+
+**种类：**接口
+
+```typescript
+export interface SiteFooterColumn
+```
+
+没有提供描述。
+
+### 网站页脚链接
+
+**种类：**接口
+
+```typescript
+export interface SiteFooterLink
+```
+
+没有提供描述。
+
+### 站点页脚属性
+
+**种类：**接口
+
+```typescript
+export interface SiteFooterProperties
+```
+
+没有提供描述。
+
+## `src/components/organisms/forge-split-pane/forge-split-pane`
+
+### 锻造分割窗格
+
+**种类：**功能
+
+```typescript
+function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ----------------------------- | ----------- |
+|属性 |只读<SplitPaneProperties> |             |
+
+### 分割窗格属性
+
+**种类：**接口
+
+```typescript
+export interface SplitPaneProperties
+```
+
+没有提供描述。
+
+## `src/components/organisms/forge-stats-section/forge-stats-section`
+
+### Forge统计部分
+
+**种类：**功能
+
+```typescript
+function ForgeStatsSection(properties: Readonly<StatsSectionProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | -------------------------------- | ----------- |
+|属性 |只读<StatsSectionProperties> |             |
+
+### 统计项目
+
+**种类：**接口
+
+```typescript
+export interface StatItem
+```
+
+没有提供描述。
+
+### 统计部分属性
+
+**种类：**接口
+
+```typescript
+export interface StatsSectionProperties
+```
+
+没有提供描述。
+
 ## `src/components/organisms/forge-table/forge-table`
 
 ### 锻造台
@@ -2304,29 +4083,13 @@ export interface NavbarProperties
 function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
-`ForgeTable` — 使用中性 JSX 方言编写的可排序数据表
-并由 `@mission-platform/vite-plugin-forge` 直接编译为 React 或 Vue。
-
-它将 `columns`/`rows` 呈现为语义 `<table>`，并具有单击排序功能
-触发 `onSort` 回调的标头（循环 asc → desc → unsorted），
-可选标题、加载覆盖和空状态。单元格文本已呈现
-通过组合中性的{@link ForgeTypography}；排序状态由
-中性的 {@link useState}/{@link useMemo} 挂钩。它有它的风格
-通过位于同一位置的 CSS 模块 `forge-table.module.scss`。
-
-原始 Vue SFC 在行类型上是通用的，由
-`ForgeTableHead`/`ForgeTableBody` 子组件，使用 `sort` 发射，并暴露
-每列范围的 `cell-<key>` 插槽。中性版本使用
-`Record<string, unknown>` 行，内联头部/正文，使用 `onSort`
-回调，并通过每列的可选参数驱动每个单元格的渲染
-`render` 格式化程序（范围单元槽被删除）- 与方式一致
-其他迁移的组件删除了作用域插槽。
+没有提供描述。
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 属性 | 只读<TableProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------- | ----------- |
+|属性 |只读<TableProperties> |             |
 
 ### 排序方向
 
@@ -2358,6 +4121,104 @@ export interface TableProperties
 
 没有提供描述。
 
+## `src/components/organisms/forge-testimonials-section/forge-testimonials-section`
+
+### 伪造推荐部分
+
+**种类：**功能
+
+```typescript
+function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectionProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------------------------------------- | ----------- |
+|属性 |只读<TestimonialsSectionProperties> |             |
+
+### 感言
+
+**种类：**接口
+
+```typescript
+export interface Testimonial
+```
+
+没有提供描述。
+
+### 感言部分属性
+
+**种类：**接口
+
+```typescript
+export interface TestimonialsSectionProperties
+```
+
+没有提供描述。
+
+## `src/components/organisms/forge-transfer-list/forge-transfer-list`
+
+### 伪造传输列表
+
+**种类：**功能
+
+```typescript
+function ForgeTransferList(properties: Readonly<TransferListProperties>): MpElement;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | -------------------------------- | ----------- |
+|属性 |只读<TransferListProperties> |             |
+
+### 转移物品
+
+**种类：**接口
+
+```typescript
+export interface TransferItem
+```
+
+没有提供描述。
+
+### 传输列表属性
+
+**种类：**接口
+
+```typescript
+export interface TransferListProperties
+```
+
+没有提供描述。
+
+## `src/components/organisms/forge-tree-view/forge-tree-view-item`
+
+### 树视图标签范围
+
+**种类：**接口
+
+```typescript
+export interface TreeViewLabelScope
+```
+
+每个 node 传递到 {@link ForgeTreeView} 的 `label`（作用域）槽的范围。
+
+### 树视图节点
+
+**种类：**接口
+
+```typescript
+export interface TreeViewNode
+```
+
+由 {@link ForgeTreeView} 呈现的树中的 node。
+
 ## `src/components/organisms/forge-tree-view/forge-tree-view`
 
 ### 锻造树视图
@@ -2368,7 +4229,7 @@ export interface TableProperties
 function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
 ```
 
-`ForgeTreeView` — 在中性 JSX 中编写一次的递归、可访问的树
+`ForgeTreeView` — 在中性 JSX 中编写一次的递归、可访问树
 方言并直接编译为 React 或 Vue
 `@mission-platform/vite-plugin-forge`。每个 node 都可以展开/折叠
 点击；打开状态由中立的 {@link useState} 钩子保持，并且
@@ -2391,29 +4252,9 @@ function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 属性 | 只读<TreeViewProperties> |      |
-
-### 树视图标签范围
-
-**种类：**接口
-
-```typescript
-export interface TreeViewLabelScope
-```
-
-每个 node 传递到 {@link ForgeTreeView} 的 `label`（作用域）槽的范围。
-
-### 树视图节点
-
-**种类：**接口
-
-```typescript
-export interface TreeViewNode
-```
-
-由 {@link ForgeTreeView} 呈现的树中的 node。
+|名称 |类型 |描述 |
+| ---------- | ---------------------------- | ----------- |
+|属性 |只读<TreeViewProperties> |             |
 
 ### 树视图属性
 
@@ -2453,9 +4294,9 @@ function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElemen
 
 #### 参数
 
-| 名称 | 类型                        | 描述 |
-| ---- | --------------------------- | ---- |
-| 属性 | 只读<VirtualListProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------- | ----------- |
+|属性 |只读<VirtualListProperties> |             |
 
 ### 虚拟列表项范围
 
@@ -2504,9 +4345,9 @@ Vue 由 `@mission-platform/vite-plugin-forge` 提供；它仅呈现其中的行
 
 #### 参数
 
-| 名称 | 类型                             | 描述 |
-| ---- | -------------------------------- | ---- |
-| 属性 | 只读<VirtualLogViewerProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------------ | ----------- |
+|属性 |只读<VirtualLogViewerProperties> |             |
 
 ### 日志条目
 
@@ -2575,9 +4416,9 @@ function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElem
 
 #### 参数
 
-| 名称 | 类型                         | 描述 |
-| ---- | ---------------------------- | ---- |
-| 属性 | 只读<VirtualTableProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------------- | ----------- |
+|属性 |只读<VirtualTableProperties> |             |
 
 ### 虚拟表单元作用域
 
@@ -2625,7 +4466,7 @@ function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElemen
 
 它的行为类似于 {@link ForgeTabs}（ARIA `tablist`/`tab`/`tabpanel`，流动
 `tabindex`，箭头/Home/End 键盘导航，可关闭/可添加功能可供性，
-范围内的 `panel` **render-prop**），但从不安装非活动面板 -
+作用域 `panel` **render-prop**），但从不安装非活动面板 —
 适合厚重的面板内容。它通过同位 CSS 拥有自己的样式
 模块 `forge-virtual-tabs.module.scss`。
 
@@ -2641,9 +4482,9 @@ function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElemen
 
 #### 参数
 
-| 名称 | 类型                        | 描述 |
-| ---- | --------------------------- | ---- |
-| 属性 | 只读<VirtualTabsProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------- | ----------- |
+|属性 |只读<VirtualTabsProperties> |             |
 
 ### 虚拟选项卡面板范围
 
@@ -2693,9 +4534,9 @@ function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): 
 
 #### 参数
 
-| 名称 | 类型                            | 描述 |
-| ---- | ------------------------------- | ---- |
-| 属性 | 只读<VirtualTreeViewProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------------- | ----------- |
+|属性 |只读<VirtualTreeViewProperties> |             |
 
 ### 树节点
 
@@ -2744,7 +4585,7 @@ function ForgeHero(properties: Readonly<HeroProperties>): MpElement;
 它呈现一个突出的横幅，带有可选的眉毛、标题、副标题、
 自由格式的正文内容（默认槽）和一行 `actions`。 `media`
 区域可以在内容后面渲染全出血背景，并带有
-可选的稀松布 `overlay` 以保持文本对比度（在介质上眉毛/
+可选稀松布 `overlay` 以保持文本对比度（在眉毛上方/介质上方）
 标题/副标题切换到反色文本颜色）。
 
 它为眉毛组成了同级一次性写入{@link ForgeTypography}，
@@ -2756,9 +4597,9 @@ helper) 和 `eyebrow`/`title`/`subtitle` 是字符串道具。
 
 #### 参数
 
-| 名称 | 类型                 | 描述 |
-| ---- | -------------------- | ---- |
-| 属性 | 只读<HeroProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------ | ----------- |
+|属性 |只读<HeroProperties> |             |
 
 ### 英雄对齐
 
@@ -2790,6 +4631,281 @@ export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 垂直填充比例 — 规范的 2xs → 2xl 比例。
 
+## `src/utils/date-time/date-time`
+
+### 浏览器时区标签
+
+**种类：**功能
+
+```typescript
+function browserTimezoneLabel(): string;
+```
+
+浏览器时区的 IANA 名称，或 `'Local'`（如果不可用）。
+
+### 夹钳
+
+**种类：**功能
+
+```typescript
+function clamp(value: number, min: number, max: number): number;
+```
+
+将数字钳入 `[min, max]` 范围内。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|数量 |             |
+|分钟 |数量 |             |
+|最大|数量 |             |
+
+### 日期范围
+
+**种类：**接口
+
+```typescript
+export interface DateRange
+```
+
+`{ start, end }` ISO 日期范围 (`YYYY-MM-DD`)。
+
+### 日期时间范围
+
+**种类：**接口
+
+```typescript
+export interface DateTimeRange
+```
+
+`{ start, end, timezone }` 日期时间范围 (`YYYY-MM-DD HH:MM[:SS]`)。
+
+### 显示时间
+
+**种类：**功能
+
+```typescript
+function displayTime(value: string, withSeconds: boolean): string;
+```
+
+将存储的时间字符串标准化为配置的精度（空则保持空）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ------- | ----------- |
+|价值|字符串|             |
+|与秒 |布尔 |             |
+
+### 格式化日期范围
+
+**种类：**功能
+
+```typescript
+function formatDateRange(value: DateRange | undefined): string;
+```
+
+将 ISO 日期范围格式化为 `start → end` 摘要（空部分折叠）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---------------------- | ----------- |
+|价值|日期范围\|未定义 |             |
+
+### 格式化日期时间
+
+**种类：**功能
+
+```typescript
+function formatDateTime(date: string, parts: TimeParts, withSeconds: boolean): string;
+```
+
+将 `YYYY-MM-DD` 日期和时间部分连接到 `YYYY-MM-DD HH:MM[:SS]` 字符串中。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | --------- | ----------- |
+|日期 |字符串|             |
+|零件 |时间零件 |             |
+|与秒 |布尔 |             |
+
+### 格式时间
+
+**种类：**功能
+
+```typescript
+function formatTime(parts: TimeParts, withSeconds: boolean): string;
+```
+
+将小时/分钟（/秒）组件格式化为 `HH:MM` 或 `HH:MM:SS`。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | --------- | ----------- |
+|零件 |时间零件 |             |
+|与秒 |布尔 |             |
+
+### 格式时间范围
+
+**种类：**功能
+
+```typescript
+function formatTimeRange(value: TimeRange | undefined, withSeconds: boolean): string;
+```
+
+以配置的精度将时间范围格式化为 `start → end` 摘要。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ---------------------- | ----------- |
+|价值|时间范围\|未定义 |             |
+|与秒 |布尔 |             |
+
+### 小时数
+
+**种类：**常数
+
+```typescript
+export const HOURS: readonly number[];
+```
+
+可选择的小时 (0–23)、分钟 (0–59) 和秒 (0–59) 列表。
+
+### 分钟
+
+**种类：**常数
+
+```typescript
+export const MINUTES: readonly number[];
+```
+
+没有提供描述。
+
+### 软垫
+
+**种类：**功能
+
+```typescript
+function pad(value: number): string;
+```
+
+将数字补零为两位数。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|数量 |             |
+
+### 解析日期
+
+**种类：**功能
+
+```typescript
+function parseDate(value: string): Date | undefined;
+```
+
+将 `YYYY-MM-DD` ISO 日期字符串解析为 `Date`（当地午夜）或 `undefined`。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|字符串|             |
+
+### 解析日期时间
+
+**种类：**功能
+
+```typescript
+function parseDateTime(value: string): { date: string } & TimeParts;
+```
+
+将 `YYYY-MM-DD HH:MM[:SS]`（或 ISO `T`/`Z`）字符串拆分为日期 + 时间部分。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|字符串|             |
+
+### 解析时间
+
+**种类：**功能
+
+```typescript
+function parseTime(value: string): TimeParts;
+```
+
+将 `HH:MM[:SS]` 字符串解析为其小时/分钟/秒部分。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|字符串|             |
+
+### 范围
+
+**种类：**功能
+
+```typescript
+function range(length: number): number[];
+```
+
+`[0, 1, …, length - 1]`。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------ | ----------- |
+|长度|数量 |             |
+
+### 秒
+
+**种类：**常数
+
+```typescript
+export const SECONDS: readonly number[];
+```
+
+没有提供描述。
+
+### 时间部分
+
+**种类：**接口
+
+```typescript
+export interface TimeParts
+```
+
+解析时间的小时/分钟/秒组成部分。
+
+### 时间范围
+
+**种类：**接口
+
+```typescript
+export interface TimeRange
+```
+
+`{ start, end }` 时间范围（`HH:MM` 或 `HH:MM:SS`）。
+
+### 时区模式
+
+**种类：**类型
+
+```typescript
+export type TimezoneMode = 'browser' | 'utc';
+```
+
+日期时间范围是在浏览器区域还是 UTC 中解释。
+
 ## `src/utils/pointer-drag/pointer-drag`
 
 ### 开始指针拖动
@@ -2808,9 +4924,9 @@ function beginPointerDrag(handlers: PointerDragHandlers): () => void;
 
 #### 参数
 
-| 名称     | 类型             | 描述 |
-| -------- | ---------------- | ---- |
-| 处理程序 | 指针拖动处理程序 |      |
+|名称 |类型 |描述 |
+| -------- | ------------------- | ----------- |
+|处理程序 |指针拖动处理程序 |             |
 
 ### 指针拖动处理程序
 

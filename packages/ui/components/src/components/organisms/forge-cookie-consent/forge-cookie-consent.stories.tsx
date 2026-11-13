@@ -1,5 +1,4 @@
 import { ForgeCookieConsent } from '@mission-platform/components';
-
 import type { CookieCategory, CookieConsentProperties } from '@mission-platform/components';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 

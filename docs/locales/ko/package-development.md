@@ -14,11 +14,22 @@ pnpm 작업공간 및 Turborepo.
 패키지를 생성하는 권장 방법은 Mission Platform Developer MCP 도구를 사용하는 것입니다.
 구성, 스크립트 및 폴더 구조는 플랫폼의 표준을 따릅니다.
 
+### Forge 패키지 빌드
+
+Forge 구성 요소, 후크 및 CMS 패키지는 하나의 `defineTsdownLibrary` 호출을 사용합니다. 추가
+`tsdownForgeComponentPlugins`에서 반환된 기본 플러그인,
+`tsdownForgeHookPlugins` 또는 `tsdownForgeCmsPlugins`을 해당 `plugins` 옵션으로 변경합니다.
+이러한 플러그인은 tsdown 수명 주기 후크에서 대상을 준비하고 게시합니다.
+구성이 평가되는 동안 그래프 검색을 수행합니다. 프레임워크를 유지하고
+CMS 출력 플러그인은 호출자가 소유하고 명시적이므로 대상 선택이 유지됩니다.
+구성 가능하고 격리되어 있습니다.
+
 ### 1. MCP를 사용한 비계
 
-`scaffold_package` 도구를 사용하여 뼈대를 생성합니다.
+연결된 Mission Platform Developer MCP 서버를 통해 `scaffold_package` 도구를 사용하여 골격을 생성합니다.
+다음은 쉘 명령이 아닌 MCP 도구 호출 예입니다. MCP를 사용할 수 없는 경우 수동 설정 섹션을 사용하십시오.
 
-```bash
+```text
 # Example: Creating a new 'date-utils' package
 # The tool defaults to a dry-run; set apply=true to write files
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
@@ -26,15 +37,15 @@ scaffold_package(name="date-utils", description="Shared date manipulation utilit
 
 그러면 다음을 사용하여 규칙을 준수하는 `packages/date-utils/` 디렉터리가 생성됩니다.
 
-- 작업 공간에 즉시 사용 가능한 스크립트 및 공유 구성을 갖춘 `package.json`.
-- `tsconfig.json`은 플랫폼 기본값을 확장합니다.
+- 작업 공간에 바로 사용 가능한 스크립트 및 공유 구성이 포함된 `package.json`.
+- `tsconfig.json`는 플랫폼 기본값을 확장합니다.
 - 최적화된 빌드를 위한 `vite.config.ts`.
 - `src/index.ts` 배럴 파일.
 - AI 지원 문서용 `llms.txt`.
 
 ### 2. 수동 설정(선택 사항)
 
-MCP 도구를 사용하지 않는 경우 `package.json`이 사용하는지 확인하십시오. [pnpm 카탈로그](https://pnpm.io/catalogs)
+MCP 도구를 사용하지 않는 경우 `package.json`이 [pnpm 카탈로그](https://pnpm.io/catalogs)를 사용하는지 확인하세요.
 종속성 관리를 수행하고 범위 지정 명명 규칙을 따릅니다.
 
 ```json
@@ -60,7 +71,7 @@ MCP 도구를 사용하지 않는 경우 `package.json`이 사용하는지 확�
 
 ## 패키지 구조
 
-각 패키지는 엄격한 내부 레이아웃을 따릅니다. 코드 단위(구성요소, 컴포저블, 저장소 또는 유틸리티)는 다음 위치에 있어야 합니다.
+각 패키지는 엄격한 내부 레이아웃을 따릅니다. 코드 단위(구성요소, 컴포저블, 저장소 또는 유틸리티)는 다음 위치에 있어야 합니다(MUST).
 동일한 위치에 테스트가 있는 자체 명명된 하위 디렉터리.
 
 ```text
@@ -87,9 +98,9 @@ packages/<name>/
 └── README.md
 ```
 
-## 스타일이 있는 패키지의 Stylelint
+## 스타일을 갖춘 패키지용 Stylelint
 
-`CSS`, `SCSS` 또는 `Vue` 스타일 블록을 포함하는 패키지는 Stylelint 구성과 린트 스크립트를 포함해야 합니다.
+CSS, SCSS 또는 Vue 스타일 블록을 포함하는 패키지는 검색 가능한 Stylelint 구성 및 Lint 스크립트를 유지해야 합니다.
 
 ```text
 packages/<name>/
@@ -99,7 +110,7 @@ packages/<name>/
 └── package.json                    # Stylelint scripts and devDependencies
 ```
 
-공유 구성과 직접적인 구문 및 구성 종속성을 `devDependencies`에 추가합니다.
+공유 구성과 해당 직접 구문/구성 종속성을 `devDependencies`에 추가합니다.
 
 ```json
 {
@@ -114,7 +125,7 @@ packages/<name>/
 }
 ```
 
-`extends` 항목을 복제하지 말고 `stylelint.config.mjs`에서 공유 구성을 사용합니다.
+`extends` 항목을 복제하는 대신 `stylelint.config.mjs`의 공유 구성을 사용합니다.
 
 ```js
 // stylelint.config.mjs
@@ -123,7 +134,7 @@ import baseConfig from "@mission-platform/stylelint-config";
 export default { ...baseConfig };
 ```
 
-작업 공간의 실제 스타일 소스를 포함하는 스크립트를 추가하고 게시 전에 검사를 실행합니다.
+작업공간의 실제 스타일 소스를 다루는 스크립트를 추가한 다음 게시하기 전에 확인을 실행하세요.
 
 ```json
 {
@@ -138,7 +149,7 @@ export default { ...baseConfig };
 pnpm exec turbo run lint:style --filter @mission-platform/<name>
 ```
 
-## 개발 워크플로우
+## 개발 워크플로
 
 ### 저작 규칙
 
@@ -146,14 +157,14 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 2. **프레임워크 중립성**: 프레임워크에 구애받지 않는 논리를 선호합니다. Forge JSX에서 대상으로 구성 요소를 한 번 작성해야 합니다.
    여러 프레임워크.
 3. **격리**: 패키지는 `apps/`에서 가져오면 안 됩니다.
-4. **테스트**: 모든 유닛(컴포저블, 저장소, 유틸리티, 구성 요소)에는 동일한 위치에 `.spec.ts` 파일이 있어야 합니다.
+4. **테스트**: 모든 유닛(컴포저블, 저장소, 유틸리티, 구성 요소)에는 공동 배치된 `.spec.ts` 파일이 있어야 합니다.
 
 자세한 작성 지침은 다음을 참조하세요.
 
-- [원자 구성 요소 설계](atomic-component-design.md)
+- [원자부품설계](atomic-component-design.md)
 - [구성 가능한 저작](composable-authoring.md)
-- [스토어 작성](store-authoring.md)
-- [저작 활용](util-authoring.md)
+- [스토어 저작](store-authoring.md)
+- [유틸 저작](util-authoring.md)
 
 ### 건물
 
@@ -198,7 +209,7 @@ export default {
 ## 문서(`llms.txt`)
 
 모든 패키지의 루트에는 `llms.txt` 파일이 포함되어 있습니다. 이 파일은 다음에 대한 간결하고 기술적인 설명을 제공합니다.
-패키지의 API, 구성 요소 및 동작을 분석하여 AI 도우미가 패키지를 더 잘 이해하고 사용할 수 있도록 합니다.
+패키지의 API, 구성 요소 및 동작을 분석하여 AI 보조자가 패키지를 더 잘 이해하고 사용할 수 있도록 합니다.
 
 - **제목**: 범위가 지정된 패키지 이름을 사용합니다.
 - **구성 요소/API**: 해당 속성 및 책임이 포함된 사용 가능한 기호의 테이블 또는 목록입니다.
@@ -206,7 +217,7 @@ export default {
 
 ## 패키지 문서 소유권
 
-패키지별 설치, 사용법, 제한 사항, 기여자 워크플로 및 API 참조 페이지는
+패키지별 설치, 사용법, 제한 사항, 기여자 작업 흐름 및 API 참조 페이지는
 저장소 전체 `docs/` 트리가 아닌 패키지의 `docs/` 디렉터리입니다. 문서 사이트는 이러한 파일을 직접 수집하고
 `/packages/integrations/barcode/index` 또는 `/packages/tooling/configs/eslint-config/index`과 같은 안정적인 패키지 네임스페이스에 게시합니다.
 프로젝트 전반의 개념, 아키텍처, 작업 공간 워크플로우 및 패키지 간 문제 해결은 루트 `docs/`에 남아 있습니다.
@@ -217,16 +228,15 @@ export default {
 
 ## 출판
 
-미션 플랫폼은 [변경 세트](https://github.com/changesets/changesets)을 사용하여 버전 관리 및 게시를 수행합니다.
+Mission Platform은 버전 관리 및 게시를 위해 [Changesets](https://github.com/changesets/changesets)를 사용합니다.
 
 1. **변경 세트 추가**: 변경 후 다음을 실행합니다.
-
-```bash
+   ```bash
    pnpm changeset
-```
-
-패키지와 변경 유형(패치, 마이너, 메이저)을 선택합니다. 2. **변경 세트 커밋**: 생성된 `.changeset/*.md` 파일을 커밋합니다. 3. **버전 및 게시**: CI/CD는 실제 게시를 처리하지만 다음을 사용하여 로컬에서 버전을 미리 볼 수 있습니다.
-
-```bash
+   ```
+   패키지와 변경 유형(패치, 마이너, 메이저)을 선택합니다.
+2. **변경 세트 커밋**: 생성된 `.changeset/*.md` 파일을 커밋합니다.
+3. **버전 및 게시**: CI/CD는 실제 게시를 처리하지만 다음을 사용하여 로컬에서 버전을 미리 볼 수 있습니다.
+   ```bash
    pnpm changeset version
-```
+   ```

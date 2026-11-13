@@ -74,7 +74,7 @@ matches.forEach((match) => {
 
 ### Utilità di localizzazione
 
-**`resolveLocation`**: risolve la posizione di un instradamento in un percorso URL.
+**`resolveLocation`**: risolve la posizione di un percorso in un percorso URL.
 
 **Esempio:**
 
@@ -146,16 +146,16 @@ L'adattatore React fornisce l'integrazione con il router React.
 
 ### Adattatore RedwoodSDK (`./redwood`)
 
-RedwoodSDK non è uno dei framework `mp:*`, quindi mantiene un sottopercorso dedicato. Fornisce l'integrazione con
-`rwsdk/router`: la tabella di routing flat di richiesta/risposta utilizzata da RedwoodSDK (React su Cloudflare Workers).
+RedwoodSDK non è uno dei `mp:*` framework, quindi mantiene un sottopercorso dedicato. Fornisce l'integrazione con
+`rwsdk/router` — la tabella di routing piatta di richiesta/risposta utilizzata da RedwoodSDK (React sui lavoratori Cloudflare).
 
 **Principali esportazioni:**
 
-- **`toRedwoodRoutes`**: traduce l'albero neutro `MpRoute` in un elenco semplice di definizioni di percorso `rwsdk` (nidificate
+- **`toRedwoodRoutes`**: Traduce il neutro `MpRoute` albero in un elenco semplice di `rwsdk` definizioni di percorso (nidificate
   i percorsi vengono appiattiti in percorsi assoluti).
-- **`renderRoutes`**: racchiude i percorsi tradotti in un documento, mirroring
-  `render(Document, routes, options)` di `rwsdk`.
-- **`toRedwoodPath`**: converte un modello di percorso neutro nella grammatica di Redwood (solo caratteri jolly `:param` e `*`);
+- **`renderRoutes`**: racchiude i percorsi tradotti in un documento, rispecchiandoli
+  `rwsdk`'s `render(Document, routes, options)`.
+- **`toRedwoodPath`**: Converte un modello di percorso neutro nella grammatica di Redwood (`:param` E `*` solo caratteri jolly;
   `:param?` → `:param`, `:param*` / `:param+`
   → `*`).
 - **`redwoodHref`** / **`createRedwoodLinks`**: crea href relativi alle app da posizioni neutre, a partire da RedwoodSDK
@@ -381,7 +381,7 @@ const routes = defineRoutes([
 1. **Organizzazione del percorso**: raggruppa insieme percorsi correlati e utilizza percorsi nidificati per i componenti del layout
 2. **Percorsi con nome**: utilizza sempre percorsi con nome per la navigazione programmatica
 3. **Convalida parametri**: convalida i parametri dinamici nei componenti del percorso
-4. **Gestione degli errori**: gestione di 404 casi con un percorso generale (`/*`)
+4. **Gestione degli errori**: gestire 404 casi con un percorso generale (`/*`)
 5. **Lazy Loading**: utilizza importazioni dinamiche per la suddivisione del codice (specifica del framework)
 6. **Type Safety**: definisce le interfacce per i parametri di instradamento e gli oggetti di query
 7. **Gestione delle query**: mantieni i parametri delle query semplici e sicuri per gli URL
@@ -408,7 +408,7 @@ Durante la migrazione da react-router-dom:
 
 ### Da Next.js
 
-Per le applicazioni Next.js, considerare:
+Per le applicazioni Next.js, considera:
 
 - Utilizzo delle definizioni del percorso neutro per coerenza
 - Creazione di un livello adattatore personalizzato, se necessario

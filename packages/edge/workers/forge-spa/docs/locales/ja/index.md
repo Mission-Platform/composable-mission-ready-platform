@@ -20,10 +20,10 @@ pnpm --filter @mission-platform/forge-spa build
 
 コンシューマ構成では、`main` を次のように設定する必要があります。
 `packages/edge/workers/forge-spa/dist/index.js` を作成し、そのアプリケーション `dist/` ディレクトリを次のようにバインドします
-SPA フォールバック処理を備えた `ASSETS`。ウェブサイトとMy Care Notesは最新のものです
+`ASSETS` (SPA フォールバック処理付き)。ウェブサイトとMy Care Notesは最新のものです
 消費者。
 
-ワーカーはアプリケーション ルート、資産、ドメイン、環境を所有しません。
+ワーカーはアプリケーション ルート、アセット、ドメイン、環境を所有しません。
 秘密。これらは、使用するアプリケーション パッケージ内に残ります。
 
 - [開発ガイド](guides/development.md)

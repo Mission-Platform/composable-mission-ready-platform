@@ -27,12 +27,12 @@ function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 `variant` (`as` でオーバーライド可能)、バリアントの型スケールに加えて
 オプションの `weight`、`color`、`horizontalAlign`、`verticalAlign`、および `truncate` 修飾子。
 
-リンクもここから来ます。2 つの方法があります: スタンドアロンのリンク テキストの場合は `variant="link"`、
-**任意**のバリアントでは `href` が指定されているため、見出しまたはキャプションはリンクにできません。
+ここからもリンクが来ます。2 つの方法があります: スタンドアロンのリンク テキストの場合は `variant="link"`、
+**任意**のバリアントでは `href` が使用されるため、見出しまたはキャプションをリンクにすることができます。
 独自のタイプスケールを残します。いずれの方法でも、要素は `<a>` としてレンダリングされます。
 リンクの色、ホバー/アクティブ、`:visited` 処理、目に見えるフォーカス リング
 および選択された `underline` モード (デフォルトでは `'always'`)。 `target="_blank"` を取得
-`rel="noopener noreferrer"` が自動的に実行されます。それはそれを所有しています
+`rel="noopener noreferrer"` が自動的に設定されます。それはそれを所有しています
 同じ場所にある CSS モジュール `forge-typography.module.scss` によるスタイリング
 (2 段階のコンパイラーによってすべてのフレームワークに引き継がれるため、コンポーネント
 独自の `@layer mp.typography` CSS を同梱)。ハッシュ化されたクラス名は
@@ -46,9 +46,9 @@ function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                             | 説明 |
-| ---------- | ---------------------------------- | ---- |
-| プロパティ | 読み取り専用<TypographyProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<TypographyProperties> |             |
 
 ### タイポグラフィーカラー
 
@@ -115,6 +115,26 @@ export type TypographySize = SizeScale;
 
 オプションのサイズ トークン — 正規の 2xs → 2xl スケール (設定時にバリアントのフォント サイズをオーバーライドします)。
 
+### タイポグラフィスタイル
+
+**種類：**タイプ
+
+```typescript
+export type TypographyStyle = CSSStyleProperties &
+```
+
+説明はありません。
+
+### タイポグラフィスタイルプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface TypographyStyleProperties
+```
+
+タイポグラフィの子孫およびポップアップ コンテンツによって継承されるコンポーネント所有の CSS 値。
+
 ### タイポグラフィーターゲット
 
 **種類：**タイプ
@@ -179,4 +199,4 @@ export type TypographyVerticalAlign =
 export type TypographyWeight = 'regular' | 'medium' | 'semibold' | 'bold';
 ```
 
-フォントのウェイトのオーバーライドは、バリアントのデフォルトのウェイトに加えて適用されます。
+バリアントのデフォルトのウェイトに加えて適用されるフォントのウェイトのオーバーライド。

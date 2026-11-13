@@ -32,11 +32,11 @@ Pulizia automatica: disconnette l'osservatore durante lo smontaggio.
 
 #### Parametri
 
-| Nome       | Digitare                     | Descrizione |
-| ---------- | ---------------------------- | ----------- |
-| obiettivo  | MpRef<Element \| null>       |             |
+| Nome | Digitare | Descrizione |
+| -------- | ---------------------------- | ----------- |
+| obiettivo | MpRef<Element \| null> |             |
 | richiamata | IntersectionObserverCallback |             |
-| opzioni    | IntersezioneObserverInit     |             |
+| opzioni | IntersezioneObserverInit |             |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -60,11 +60,11 @@ Pulizia automatica: disconnette l'osservatore durante lo smontaggio.
 
 #### Parametri
 
-| Nome       | Digitare             | Descrizione |
-| ---------- | -------------------- | ----------- |
-| obiettivo  | MpRef<Node \| null>  |             |
-| richiamata | MutazioneRichiamata  |             |
-| opzioni    | MutationObserverInit |             |
+| Nome | Digitare | Descrizione |
+| -------- | -------------------- | ----------- |
+| obiettivo | MpRef<Node \| null> |             |
+| richiamata | MutazioneRichiamata |             |
+| opzioni | MutationObserverInit |             |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -85,7 +85,7 @@ Pulizia automatica: disconnette l'osservatore durante lo smontaggio.
 
 #### Parametri
 
-| Nome       | Digitare                      | Descrizione |
-| ---------- | ----------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| -------- | --------------------------- | ----------- |
 | richiamata | PerformanceObserverRichiamata |             |
-| opzioni    | PerformanceObserverInit       |             |
+| opzioni | PerformanceObserverInit |             |

@@ -39,7 +39,7 @@ fenêtrage, tri, expansion de l'arborescence et présentation de l'état. La sou
 utilise `@mission-platform/forge-jsx` et, là où du texte ou des glyphes sont composés,
 `@mission-platform/typography` et `@mission-platform/icons` ; ceux-ci devraient rester
 dépendances de niveau inférieur d’un futur package. Les composants virtuels doivent se déplacer avec
-leurs styles/spécifications/histoires co-localisés donc leur comportement de crochet neutre et cinq
+leurs styles/spécifications/histoires colocalisés donc leur comportement de crochet neutre et cinq
 Les cibles Forge restent testées ensemble.
 
 ### `@mission-platform/layout`
@@ -60,7 +60,7 @@ l'arborescence source du package de domaine.
 
 Les trois premiers possèdent leur propre sémantique de chargement/rendu multimédia, tandis que le carrousel et le périphérique
 simuler ajouter une présentation autour des médias. Leur source neutre dépend actuellement de
-`@mission-platform/forge-jsx` et, pour les contrôles de carrousel, `@mission-platform/icons` ;
+`@mission-platform/forge-jsx` et, pour les commandes de carrousel, `@mission-platform/icons` ;
 il n'y a aucune dépendance sur les packages extraits. Préserver les mouvements réduits et
 CSS par composant dans le cadre d'un mouvement futur plutôt que de diviser le comportement des médias
 de ses styles.
@@ -106,7 +106,7 @@ typographie de `@mission-platform/typography` et styles/utilitaires locaux du pa
 Les histoires peuvent importer le paquet baril pour exercer la surface publique ; ce n'est pas
 une dépendance d’implémentation ou un cycle de package.
 
-Chaque composant résiduel conserve son `index.ts` colocalisé, source neutre, SCSS,
+Chaque composant résiduel conserve son `index.ts`, source neutre, SCSS, colocalisé.
 spécifications et histoire de Storybook. Le manifeste du package publie `dist`, les composants,
 styles et utilitaires uniquement ; l'arborescence du magasin extraite n'est plus incluse.
 
@@ -120,7 +120,7 @@ inclure de manière fiable un module CSS appartenant à `@mission-platform/compo
 
 Le baril de jetons inclut `scss/_size.scss` une fois dans la cascade `mp.tokens`
 couche, aux côtés des propriétés personnalisées du jeton et des réinitialisations de base. Cela préserve
-le contrat de préséance existant : les styles d'application sans couche remplacent le
+le contrat de priorité existant : les styles d'application sans couche remplacent le
 règles utilitaires, et chaque entrée d'application/storybook concernée importe déjà le
-baril de jetons. Les composants continuent donc d'émettre la classe globale stable
+baril de jetons. Les composants continuent donc à émettre la classe globale stable
 noms sans dupliquer l’échelle de taille dans chaque paquet.

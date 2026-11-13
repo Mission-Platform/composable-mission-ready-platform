@@ -90,15 +90,15 @@ const increment = () => {
 
 生命周期挂钩已重命名并且必须导入。
 
-| Vue 2                      | Vue 3                      |
-| :------------------------- | :------------------------- |
-| `beforeCreate` / `created` | `beforeCreate` / `created` | 直接使用`setup()` / `<script setup>` |
-| `beforeMount`              | `onBeforeMount`            |
-| `mounted`                  | `onMounted`                |
-| `beforeUpdate`             | `onBeforeUpdate`           |
-| `updated`                  | `onUpdated`                |
-| `beforeDestroy`            | `onBeforeUnmount`          |
-| `destroyed`                | `onUnmounted`              |
+| Vue 2 | Vue 3 |
+| :------------------------- | :---------------------------------------- |
+| `beforeCreate` / `created` | `beforeCreate` / `created` |直接使用`setup()` / `<script setup>` |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 例子：
 
@@ -135,7 +135,7 @@ const increment = () => count.value++;
 
 ### 参考访问
 
-`this.$refs` 不再使用。定义与元素上的 `ref` 属性同名的引用。
+`this.$refs` 不再使用。定义一个与元素上的 `ref` 属性同名的引用。
 
 ```vue
 <template>

@@ -21,6 +21,16 @@ export interface CompiledRegex
 
 Forge バックエンドによって埋め込まれた決定論的表現。
 
+### FLINT_REGEX_BYTECODE_VERSION
+
+**種類:** 定数
+
+```typescript
+export const FLINT_REGEX_BYTECODE_VERSION;
+```
+
+共有 Flint 正規表現バイトコード コントラクトの安定バージョン。
+
 ### FORGE_REGEX_BYTECODE_VERSION
 
 **種類:** 定数
@@ -29,7 +39,7 @@ Forge バックエンドによって埋め込まれた決定論的表現。
 export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
-共有 Forge 正規表現バイトコード コントラクトの安定バージョン。
+説明はありません。
 
 ### INSTR_WIDTH
 
@@ -59,7 +69,7 @@ Forge バックエンドによって消費され、参照オラクルによっ�
 export type Opcode = (typeof Op)[keyof typeof Op];
 ```
 
-説明はありません。
+正規表現バイトコード実行用のバイナリ命令オペコード識別子。
 
 ## `src/compiler`
 
@@ -75,9 +85,29 @@ function compileRegex(pattern: string): CompiledRegex;
 
 #### パラメータ
 
-| 名前     | タイプ | 説明 |
-| -------- | ------ | ---- |
-| パターン | 文字列 |      |
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|パターン |文字列 |             |
+
+### MAX_REGEX_PATTERN_LENGTH
+
+**種類:** 定数
+
+```typescript
+export const MAX_REGEX_PATTERN_LENGTH;
+```
+
+説明はありません。
+
+### MAX_REGEX_REPEAT_BOUND
+
+**種類:** 定数
+
+```typescript
+export const MAX_REGEX_REPEAT_BOUND;
+```
+
+説明はありません。
 
 ### RegexSyntaxError
 
@@ -88,6 +118,46 @@ export class RegexSyntaxError extends Error
 ```
 
 確定的なソース関連メッセージを伴うコンパイラ所有の構文エラー。
+
+## `src/index`
+
+### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
+
+**種類:** 定数
+
+```typescript
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+```
+
+説明はありません。
+
+### フリント標準ライブラリアイデンティティ
+
+**種類:** 関数
+
+```typescript
+function flintStandardLibraryIdentity(
+  identity?: FlintStandardLibraryIdentity,
+): FlintStandardLibraryIdentity;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ---------------------------- | ----------- |
+|アイデンティティ | FlintStandardLibraryアイデンティティ |             |
+
+### フリント標準ライブラリアイデンティティ
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintStandardLibraryIdentity
+```
+
+説明はありません。
 
 ## `src/reference-vm`
 
@@ -103,10 +173,10 @@ function captureEnd(captures: Captures | null, group: number): number;
 
 #### パラメータ
 
-| 名前       | タイプ                    | 説明 |
-| ---------- | ------------------------- | ---- |
-| キャプチャ | \| をキャプチャしますヌル |      |
-| グループ   | 番号                      |      |
+|名前 |タイプ |説明 |
+| -------- | ---------------- | ----------- |
+|キャプチャ | \| をキャプチャしますヌル |             |
+|グループ |番号 |             |
 
 ### キャプチャ
 
@@ -130,10 +200,10 @@ function captureStart(captures: Captures | null, group: number): number;
 
 #### パラメータ
 
-| 名前       | タイプ                    | 説明 |
-| ---------- | ------------------------- | ---- |
-| キャプチャ | \| をキャプチャしますヌル |      |
-| グループ   | 番号                      |      |
+|名前 |タイプ |説明 |
+| -------- | ---------------- | ----------- |
+|キャプチャ | \| をキャプチャしますヌル |             |
+|グループ |番号 |             |
 
 ### フルマッチ
 
@@ -143,14 +213,64 @@ function captureStart(captures: Captures | null, group: number): number;
 function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-文字列全体が一致し、位置 0 に固定されます。
+位置 0 に固定された文字列全体の一致 (デフォルトで線形時間 PikeVM を使用)。
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 再   | コンパイル済み正規表現 |      |
-| 入力 | 文字列                 |      |
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|再 |コンパイル済み正規表現 |             |
+|入力 |文字列 |             |
+
+### フルマッチバックトラッキング
+
+**種類:** 関数
+
+```typescript
+function fullMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+文字列全体の一致参照オラクルをバックトラックします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|再 |コンパイル済み正規表現 |             |
+|入力 |文字列 |             |
+
+### フルマッチリニア
+
+**種類:** 関数
+
+```typescript
+function fullMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+線形時間 PikeVM エンジンを使用した文字列全体の一致。
+O(M * N) の実行と ReDoS バックトラッキングに対する耐性を保証します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|再 |コンパイル済み正規表現 |             |
+|入力 |文字列 |             |
+
+### パイクランナー
+
+**種類:** クラス
+
+```typescript
+export class PikeRunner extends BaseRunner
+```
+
+線形時間の非バックトラッキング PikeVM 実行エンジン。
+O(M * N) の時間計算量を保証します。ここで、M は命令数、N は入力長です。
+ReDoS (正規表現サービス拒否) の影響を完全に受けません。
 
 ### プレフィックスマッチ
 
@@ -160,14 +280,62 @@ function fullMatch(re: CompiledRegex, input: string): Captures | null;
 function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-前方一致。位置 0 に固定されますが、最後には固定されません。
+前方一致。位置 0 に固定されますが、最後には固定されません (デフォルトで線形時間 PikeVM を使用します)。
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 再   | コンパイル済み正規表現 |      |
-| 入力 | 文字列                 |      |
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|再 |コンパイル済み正規表現 |             |
+|入力 |文字列 |             |
+
+### prefixMatchバックトラッキング
+
+**種類:** 関数
+
+```typescript
+function prefixMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+バックトラッキングプレフィックスマッチ参照オラクル。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|再 |コンパイル済み正規表現 |             |
+|入力 |文字列 |             |
+
+### prefixMatchLinear
+
+**種類:** 関数
+
+```typescript
+function prefixMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+線形時間 PikeVM エンジンを使用したプレフィックス マッチ。
+O(M * N) の実行と ReDoS バックトラッキングに対する耐性を保証します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|再 |コンパイル済み正規表現 |             |
+|入力 |文字列 |             |
+
+### ランナー
+
+**種類:** クラス
+
+```typescript
+export class Runner extends BaseRunner
+```
+
+バイトコード命令検証のためのバックトラッキング参照実行ランナー。
 
 ### 検索
 
@@ -177,15 +345,60 @@ function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
-`start` 以降の左端の一致。
+`start` 以降の左端の一致 (デフォルトで線形時間 PikeVM を使用)。
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 再   | コンパイル済み正規表現 |      |
-| 入力 | 文字列                 |      |
-| 開始 |                        |      |
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|再 |コンパイル済み正規表現 |             |
+|入力 |文字列 |             |
+|開始 |               |             |
+
+### 検索バックトラッキング
+
+**種類:** 関数
+
+```typescript
+function searchBacktracking(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+バックトラッキング検索参照オラクル。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|再 |コンパイル済み正規表現 |             |
+|入力 |文字列 |             |
+|開始 |               |             |
+
+### 検索リニア
+
+**種類:** 関数
+
+```typescript
+function searchLinear(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+線形時間 PikeVM エンジンを使用した `start` 以降の左端の一致。
+アンカーされていない検索パターンでの壊滅的な後戻りの影響を受けません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|再 |コンパイル済み正規表現 |             |
+|入力 |文字列 |             |
+|開始 |               |             |
 
 ### テスト
 
@@ -195,11 +408,46 @@ function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 function test(re: CompiledRegex, input: string): boolean;
 ```
 
-文字列全体のブール一致。
+文字列全体のブール一致 (デフォルトでは線形時間 PikeVM を使用)。
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 再   | コンパイル済み正規表現 |      |
-| 入力 | 文字列                 |      |
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|再 |コンパイル済み正規表現 |             |
+|入力 |文字列 |             |
+
+### テストバックトラッキング
+
+**種類:** 関数
+
+```typescript
+function testBacktracking(re: CompiledRegex, input: string): boolean;
+```
+
+ブール一致参照オラクルをバックトラックします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|再 |コンパイル済み正規表現 |             |
+|入力 |文字列 |             |
+
+### テストリニア
+
+**種類:** 関数
+
+```typescript
+function testLinear(re: CompiledRegex, input: string): boolean;
+```
+
+線形時間 PikeVM エンジンを使用した文字列全体のブール一致。
+病的な正規表現に対する壊滅的なバックトラッキングの影響を受けません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------------- | ----------- |
+|再 |コンパイル済み正規表現 |             |
+|入力 |文字列 |             |

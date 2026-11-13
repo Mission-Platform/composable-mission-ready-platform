@@ -29,32 +29,32 @@ Créez des capacités neutres à partir de primitives Redwood (sans framework po
 
 #### Paramètres
 
-| Nom    | Tapez                                                                                                                                                                                                                                    | Descriptif |
-| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| entrée | { emplacement : { chemin : chaîne ; recherche : chaîne ; hachage?: chaîne }; paramètres ? : MpRouteParameters ; naviguer : RedwoodRouterSurface['navigate'] ; itinéraires ? : RedwoodRouterSurface['itinéraires'] ; lien ? : inconnu ; } |            |
+| Nom | Tapez | Descriptif |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| entrée | { emplacement : { chemin : chaîne ; recherche : chaîne ; hachage?: chaîne }; paramètres ? : MpRouteParameters ; naviguer : RedwoodRouterSurface['navigate'] ; itinéraires ? : RedwoodRouterSurface['itinéraires'] ; lien ? : inconnu ; } |             |
 
 ### MpLink
 
 **Genre :** composant
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown;
+export function MpLink(properties:
 ```
 
 Proxy du composant de lien ; les applications lient le Redwood natif `Link` via {@link setForgeRedwoodRouter}.
 
 #### Paramètres
 
-| Nom        | Tapez                                                                    | Descriptif |
-| ---------- | ------------------------------------------------------------------------ | ---------- |
-| propriétés | { à : MpRouteLocationRaw ; remplacer ? : booléen ; enfants ? : inconnu } |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ----------------------------------------------------------------- | ----------- |
+| propriétés | { à : MpRouteLocationRaw ; remplacer ? : booléen ; enfants ? : inconnu } |             |
 
 ### MpRouterView
 
 **Genre :** composant
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Redwood n'a pas de prise portable ; le compilateur signale `view` comme non pris en charge.
@@ -81,9 +81,9 @@ Résolvez une cible neutre en une chaîne href.
 
 #### Paramètres
 
-| Nom | Tapez              | Descriptif |
-| --- | ------------------ | ---------- |
-| à   | MpRouteLocationRaw |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
 
 ### setForgeRedwoodRouter
 
@@ -98,9 +98,9 @@ cette couture pour que les formes de crochet/appel correspondent au contrat neut
 
 #### Paramètres
 
-| Nom      | Tapez                      | Descriptif |
-| -------- | -------------------------- | ---------- |
-| surfaces | Surface du routeur Redwood |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------- | ----------- |
+| surfaces | Surface du routeur Redwood |             |
 
 ### versMpEmplacementDeRedwood
 
@@ -109,7 +109,7 @@ cette couture pour que les formes de crochet/appel correspondent au contrat neut
 ```typescript
 function toMpLocationFromRedwood(
   location: { pathname: string; search: string; hash?: string },
-  params: MpRouteParameters = {},
+  parameters: MpRouteParameters = {},
 ): MpResolvedLocation;
 ```
 
@@ -117,10 +117,10 @@ Créez un emplacement neutre à partir d'un instantané d'emplacement Redwood.
 
 #### Paramètres
 
-| Nom         | Tapez                                                       | Descriptif |
-| ----------- | ----------------------------------------------------------- | ---------- |
-| emplacement | { chemin : chaîne ; recherche : chaîne ; hachage?: chaîne } |            |
-| paramètres  | Paramètres MpRoute                                          |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------------------------------- | ----------- |
+| emplacement | { chemin : chaîne ; recherche : chaîne ; hachage?: chaîne } |             |
+| paramètres | Paramètres MpRoute |             |
 
 ### àRedwoodHref
 
@@ -134,10 +134,10 @@ Sérialisez une cible neutre pour la navigation Redwood.
 
 #### Paramètres
 
-| Nom         | Tapez                          | Descriptif |
-| ----------- | ------------------------------ | ---------- |
-| à           | MpRouteLocationRaw             |            |
-| itinéraires | RedwoodRouterSurface['routes'] |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------------------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
+| itinéraires | RedwoodRouterSurface['routes'] |             |
 
 ### useMpNavigation
 

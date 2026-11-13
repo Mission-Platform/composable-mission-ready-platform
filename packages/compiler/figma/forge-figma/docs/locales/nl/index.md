@@ -2,9 +2,9 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> packages/forge-figma/docs/index.md: [packages/forge-figma/docs/index.md](../../index.md)
+> packages/compiler/figma/forge-figma/docs/index.md: [packages/compiler/figma/forge-figma/docs/index.md](../../index.md)
 > Taal: Nederlands (nl)
 
-Framework-neutral Figma design model, Forge component mappings, token resolution, en export contracts.
+Kaderneutraal Figma-ontwerpmodel, Forge-componenttoewijzingen, tokenresolutie en exportcontracten.
 
-See `llms.txt` voor de public API en usage examples.
+Zie `llms.txt` voor de openbare API en gebruiksvoorbeelden.

@@ -37,7 +37,7 @@ Vue および React の実装は、構造上完全な同等性を維持します
 - `evaluateCondition(condition, values)`: JSON スキーマのようなコンビネータを使用して `FieldCondition` を評価します。
   - `allOf`: AND ロジック (すべての条件が true である必要があります)。
   - `anyOf`: OR ロジック (少なくとも 1 つの条件が true である必要があります)。
-  - `oneOf`: XOR ロジック (1 つの条件だけが true でなければなりません)。
+  - `oneOf`: XOR ロジック (1 つの条件だけが true である必要があります)。
 - `isFieldVisible(field, values)`: 特定のフィールドの `visibleWhen` プロパティが満たされているかどうかを判断するヘルパー。
 
 ### 3. JSON スキーマの統合 (`src/json-schema.ts`)

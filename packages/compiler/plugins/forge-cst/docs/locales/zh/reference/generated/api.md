@@ -23,9 +23,9 @@ function getImportDeclarations(program: Program): readonly ImportDeclaration[];
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 节目 | 节目 |      |
+|名称 |类型 |描述 |
+| ------- | ------- | ----------- |
+|节目|节目|             |
 
 ### 解析Cst
 
@@ -43,10 +43,10 @@ function parseCst(
 
 #### 参数
 
-| 名称 | 类型                     | 描述                     |
-| ---- | ------------------------ | ------------------------ |
-| 来源 | 字符串                   | - 要解析的源代码。       |
-| 选项 | ParseCstOptions \|字符串 | - CST 解析选项或文件名。 |
+|名称 |类型 |描述 |
+| ------- | ------------------------- | ----------------------------------- |
+|来源 |字符串| - 要解析的源代码。             |
+|选项 | ParseCstOptions \|字符串| - CST 解析选项或文件名。 |
 
 #### 合同
 
@@ -103,10 +103,10 @@ function rewriteImportsWithCst(
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| 来源 | 字符串       |      |
-| 选项 | 重写导入选项 |      |
+|名称 |类型 |描述 |
+| ------- | --------------------- | ----------- |
+|来源 |字符串|             |
+|选项 |重写导入选项 |             |
 
 ### 重写结果
 
@@ -117,3 +117,426 @@ export interface RewriteResult
 ```
 
 CST 导入重写转换的结果。
+
+## `src/text`
+
+### 空白区域
+
+**种类：**功能
+
+```typescript
+function blankRegions(text: string, regions: readonly string[]): string;
+```
+
+清空每个区域的每个出现位置，保留字符索引。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ----------------- | ----------- |
+|文字|字符串|             |
+|地区 |只读字符串[] |             |
+
+### 折叠空白
+
+**种类：**功能
+
+```typescript
+function collapseWhitespace(text: string): string;
+```
+
+将所有空白行折叠为单个空格并修剪结果。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|文字|字符串|             |
+
+### 类型参数结束
+
+**种类：**功能
+
+```typescript
+function endOfTypeArguments(text: string, start: number): number;
+```
+
+刚刚经过 `>` 的索引关闭了在 `start` 打开的类型参数列表，
+或 `-1`（当列表永不关闭时）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|文字|字符串|             |
+|开始 |数量 |             |
+
+### escape属性
+
+**种类：**功能
+
+```typescript
+function escapeAttribute(value: string): string;
+```
+
+转义双引号 HTML 属性值。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|字符串|             |
+
+### 转义绑定
+
+**种类：**功能
+
+```typescript
+function escapeBinding(expression: string): string;
+```
+
+对双引号 Vue 绑定内使用的表达式进行转义。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------ | ----------- |
+|表达|字符串|             |
+
+### 顶级索引
+
+**种类：**功能
+
+```typescript
+function indexOfTopLevel(text: string, token: string, from = 0): number;
+```
+
+`text` 中第一个顶级出现的 `token` 的索引（外部
+括号、字符串和注释）或 `-1`。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|文字|字符串|             |
+|代币|字符串|             |
+|来自 |        |             |
+
+### 是标识符名称
+
+**种类：**功能
+
+```typescript
+function isIdentifierName(name: string): boolean;
+```
+
+isPlainIdentifier 的别名。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|名称 |字符串|             |
+
+### 是标识符部分
+
+**种类：**功能
+
+```typescript
+function isIdentifierPart(character: string | undefined): boolean;
+```
+
+该字符是否可以继续 JavaScript 标识符。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | ------------------- | ----------- |
+|人物 |字符串\|未定义 |             |
+
+### 是标识符开始
+
+**种类：**功能
+
+```typescript
+function isIdentifierStart(character: string | undefined): boolean;
+```
+
+字符是否可以启动 JavaScript 标识符。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | ------------------- | ----------- |
+|人物 |字符串\|未定义 |             |
+
+### 是简单标识符
+
+**种类：**功能
+
+```typescript
+function isPlainIdentifier(name: string): boolean;
+```
+
+字符串是否是有效的纯 JavaScript 标识符名称。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|名称 |字符串|             |
+
+### 掩码文字
+
+**种类：**功能
+
+```typescript
+function maskLiterals(text: string): boolean[];
+```
+
+计算一个布尔掩码，标记 `text` 中位于字符串文字内的每个索引，
+模板文字或注释。标记为 `true` 的位置是文字内容，绝不能
+结构上被重写。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|文字|字符串|             |
+
+### 匹配括号
+
+**种类：**功能
+
+```typescript
+function matchBracket(text: string, start: number): number;
+```
+
+与 `start` 或 `-1` 处的左括号匹配的括号索引
+文本不平衡。文字和注释区域被跳过。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|文字|字符串|             |
+|开始 |数量 |             |
+
+### 会员访问
+
+**种类：**功能
+
+```typescript
+function memberAccess(object: string, key: string): string;
+```
+
+对于普通标识符，返回 `<object>.<key>`，否则返回 `<object>["<key>"]`（括号表示法）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------ | ----------- |
+|对象|字符串|             |
+|关键|字符串|             |
+
+### 软垫
+
+**种类：**功能
+
+```typescript
+function pad(depth: number): string;
+```
+
+模板深度的缩进（每级两个空格）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|深度|数量 |             |
+
+### 引用
+
+**种类：**功能
+
+```typescript
+function quote(value: string): string;
+```
+
+quoteString 的别名。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|字符串|             |
+
+### quote属性值
+
+**种类：**功能
+
+```typescript
+function quoteAttributeValue(value: string): string;
+```
+
+将字符串引用为 JSX 属性值。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|字符串|             |
+
+### 引用字符串
+
+**种类：**功能
+
+```typescript
+function quoteString(value: string): string;
+```
+
+发出的代码的双引号字符串文字（JSON 编码）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|字符串|             |
+
+### 替换第一个
+
+**种类：**功能
+
+```typescript
+function replaceFirst(
+  text: string,
+  search: string,
+  replacement: string,
+): string;
+```
+
+将 `text` 中第一次出现的 `search` 替换为 `replacement`。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ------ | ----------- |
+|文字|字符串|             |
+|搜索 |字符串|             |
+|更换|字符串|             |
+
+### 跳过原子令牌
+
+**种类：**功能
+
+```typescript
+function skipAtomicToken(text: string, index: number): number;
+```
+
+当打开字符串、模板或注释时，前进到从 `index` 开始的标记。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|文字|字符串|             |
+|索引 |数量 |             |
+
+### 跳过琐事
+
+**种类：**功能
+
+```typescript
+function skipTrivia(text: string, index: number): number;
+```
+
+跳过空格和注释，返回下一个有效字符的偏移量。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|文字|字符串|             |
+|索引 |数量 |             |
+
+### 分割顶层
+
+**种类：**功能
+
+```typescript
+function splitTopLevel(text: string, separator: string): string[];
+```
+
+在 `separator` 的每个顶级出现处拆分 `text`（单个
+字符），忽略嵌套在括号、字符串或注释中的分隔符。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | ------ | ----------- |
+|文字|字符串|             |
+|分隔符 |字符串|             |
+
+### 去掉外括号
+
+**种类：**功能
+
+```typescript
+function stripOuterParentheses(text: string): string;
+```
+
+unwrapParentheses 的别名。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|文字|字符串|             |
+
+### stripType断言
+
+**种类：**功能
+
+```typescript
+function stripTypeAssertion(text: string): string;
+```
+
+删除尾随的 `as T` / `satisfies T` 断言。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|文字|字符串|             |
+
+### 取消引用
+
+**种类：**功能
+
+```typescript
+function unquote(text: string): string | undefined;
+```
+
+如果用单引号、双引号或反引号括起来，则取消对字符串文字的引号；如果不是，则取消定义。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|文字|字符串|             |
+
+### 展开括号
+
+**种类：**功能
+
+```typescript
+function unwrapParentheses(text: string): string;
+```
+
+重复去除一层多余的环绕括号 (`(x)` -> `x`)。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|文字|字符串|             |

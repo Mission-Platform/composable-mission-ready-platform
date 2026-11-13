@@ -3524,7 +3524,7 @@ Códigos de países con símbolos de banderas canónicas en el objeto publicado.
 **Tipo:** constante
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS;
+export const COUNTRY_FLAG_SYMBOL_IDS: string[];
 ```
 
 No se proporciona descripción.
@@ -3574,7 +3574,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const IconSpriteContext;
+export const IconSpriteContext: MpContext<IconSpriteContextValue>;
 ```
 
 No se proporciona descripción.

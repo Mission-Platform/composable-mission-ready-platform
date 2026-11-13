@@ -16,7 +16,7 @@ pnpm --filter @mission-platform/vite-plugin-forge test
 ```
 
 `pnpm --filter @mission-platform/vite-plugin-forge build`으로 빌드하세요. 번들
-and declarations are emitted to `dist/`; do not commit local build output.
+선언은 `dist/`로 내보내집니다. 로컬 빌드 출력을 커밋하지 마세요.
 
 ## 컴파일러 변경
 
@@ -28,5 +28,5 @@ and declarations are emitted to `dist/`; do not commit local build output.
 
 패키지는 Vite 및 tsdown 모두에서 계속 사용할 수 있어야 합니다. 대상을 추가하지 마세요.
 테이블 또는 프레임워크 런타임 종속성을 중립 드라이버로 전환합니다. 업데이트
-[컴파일러 파이프라인 참조](../reference/compiler.md) 공개 무대 또는
+[컴파일러 파이프라인 참조](../reference/compiler.md) 공개 단계 또는
 아티팩트 계약이 변경됩니다.

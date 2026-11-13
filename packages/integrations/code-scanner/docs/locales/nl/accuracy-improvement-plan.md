@@ -1,4 +1,4 @@
-# Codescanner: plan voor verbetering van de nauwkeurigheid en migratierecord
+# Codescanner: plan voor nauwkeurigheidsverbetering en migratierecord
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
@@ -9,7 +9,7 @@ Een plan om de leessnelheid van `@mission-platform/code-scanner` te verhogen op 
 frames) en om de scanpijplijn binnen één statisch gekoppeld Flint/WebAssembly-artefact te houden.
 
 > **Huidige implementatie:** De scanner wordt geleverd als statisch gekoppelde scanner
-> Maak een webscriptgrafiek onder `src/fws`, met een dynamisch bronmoduleprofiel
+> Vuursteengrafiek onder `src/fws`, met een dynamisch bronmoduleprofiel
 > beschikbaar voor onafhankelijk cachebare decodermodules. De Roest en krat
 > onderstaande referenties betreffen uitsluitend de historische migratieherkomst; zij zijn
 > geen runtime-afhankelijkheden verpakken of inputs bouwen.
@@ -22,15 +22,24 @@ frames) en om de scanpijplijn binnen één statisch gekoppeld Flint/WebAssembly-
 > (item 4), de Azteken-locator (item 6) en multi-symbool + ROI-scannen (item 7)
 > zijn allemaal geland.
 
+> **ZXing-poortstatus (12-09-2026):** De Flint-grafiek, eigendom van de scanner, bevat nu
+> begrensde ZXing-vormige fundering, 1D/RSS, Data Matrix, compact Aztec, PDF417,
+> en MaxiCode-paden. Het TypeScript-model geeft tekst, bytes, aantal bits,
+> punten, metagegevens en tijdstempel, terwijl alleen het huidige Flint-draadformaat beschikbaar is
+> serialiseert het formaat, het aantal bits en de payload; punten en metadata blijven behouden
+> leeg totdat de binaire envelopmigratie landt. QR-decodergrafieken worden uitgezonden
+> onafhankelijk, maar gecombineerde QR-koppeling wordt geblokkeerd door Flint
+> `FLINT-WASM-001`; de gereduceerde 2D-paden claimen geen volledige ZXing-pariteit.
+
 De oorspronkelijke implementatie splitste de pijplijn:
 
 - **Locate + sample** uitgevoerd in een oudere native/wasm-pijplijn: `binarize` → per-symbologie-locators. Het `scan`-toegangspunt
-  heeft een **gelabelde buffer** `[format, ...payload]` geretourneerd — deze heeft **niet** gedecodeerd.
+  heeft een **getagde buffer** `[format, ...payload]` geretourneerd — deze heeft **niet** gedecodeerd.
 - **Decode** draaide in JavaScript en riep afzonderlijke decodermodules aan.
 
 Fase 1 verving dat door een enkele Flint `scan_and_decode`-oproep (zie §1); de
 historische motivatie hieronder wordt als grondgedachte aangehouden, terwijl de huidige bron van
-De waarheid is de FWS-grafiek en de bijbehorende Vitest-conformiteitssuite.
+De waarheid is de Flint-grafiek en zijn Vitest-conformiteitssuite.
 
 ## 1. Het structurele kernprobleem: de pijpleiding passeerde tweemaal de wasm↔JS-grens
 
@@ -60,7 +69,7 @@ de kabelzoeker en de decoder kunnen niet samenwerken:
   gerapporteerd als EAN-13 (geverifieerd door de nieuwe testsuite). Door te decoderen in Rust kan de locator structurele hints bevatten (element
   tellen, bewakingspatronen) om de juiste symboliek te kiezen.
 
-### Doelarchitectuur: één FWS-oproep, beeld erin, payload eruit
+### Doelarchitectuur: één Flint-oproep, beeld erin, payload eruit
 
 > **Status: geïmplementeerd.** De scanner exporteert `scan_and_decode`, koppelt de
 > decoder Flint maakt rechtstreeks grafieken, en de JS-façade decodeert via die single
@@ -74,8 +83,8 @@ image (JS)
 
 `scan_and_decode(width, height, luma) -> Option<ScanOutcome>` voert de hele pijplijn uit binnen `src/fws/scanner.flint` en
 retourneert de **gedecodeerde payload** rechtstreeks (`value` is leeg als een symbool zich bevindt maar niet kan worden gedecodeerd). De JS-gevel
-(`scanner/index.ts`) is een dunne verzamellaag die de QR-, matrix- en barcode-FWS-bronnen tijdens het bouwen met elkaar verbindt;
-die pakketten blijven onafhankelijk publiceerbaar.
+(`scanner/index.ts`) is een dunne verzamellaag over Flint-bronnen die eigendom zijn van een scanner;
+de encoderpakketten blijven onafhankelijk publiceerbaar en laten geen decoderfaçade zien.
 
 #### Waarom dit nu bespreekbaar is
 
@@ -93,7 +102,7 @@ De oplossing was een kleine, mechanische refactor – **alle vier de stappen zij
    (`decode_modules`, `decode_matrix`, `decode_qr`) en de `#[wasm_bindgen]`
    De export van `decode`/`start` vindt plaats achter een nieuwe kratfunctie `wasm-api` (standaard ingeschakeld en geïmpliceerd door `console`).
 2. **`code-scan` is afhankelijk van de decoderkratten met `default-features = false`**
-   (dus `wasm-api` is uitgeschakeld), gepromoveerd van ontwikkelaarsafhankelijkheden naar echte afhankelijkheden. Er is geen wasm-bindgen `decode`-symbool
+   (dus `wasm-api` staat uit), gepromoveerd van ontwikkelaarsafhankelijkheden naar echte afhankelijkheden. Er is geen wasm-bindgen `decode`-symbool
    gecompileerd in de scanner cdylib, dus er is geen botsing - geverifieerd door de scanner wasm opnieuw op te bouwen.
 3. **`scan_and_decode`** in `crates/code-scan/src/lib.rs` lokaliseert de gewone Rust-kernen van de decoders en roept deze aan
    en retourneert een `ScanOutcome {-formaat,
@@ -127,7 +136,7 @@ hieronder geannoteerd.
    tegenoverliggende hoek gereconstrueerd door de parallellogramregel, grootte afgelezen van de timingranden, onafhankelijk bemonsterd
    kolom-/rijassen, zodat ook afschuiving wordt verwerkt)
    bestrijkt gematigde hoeken, en een terugval voor rechttrekken en opnieuw proberen herstelt steile hoeken: `Bitmap::orientation` vindt de
-   rotatie via een grensvak met een minimaal oppervlak (robuust in de 45 °-familie, waar uiterste punthoeken degenereren),
+   rotatie via een begrenzingsvak met een minimaal oppervlak (robuust in de 45 °-familie, waar uiterste punthoeken degenereren),
    `image::rotate_luma` maakt het frame recht en de afgestemde rechtopstaande pijpleiding bemonstert het. 1D-barcodes worden verwerkt
    op dezelfde manier: de kanteling wordt hersteld en het frame wordt rechtgetrokken (alle vier as-uitlijningsoriëntaties geprobeerd), zodat de
    horizontale scanlijnen kruisen de staven. Gedekt door geroteerde pijpleidingtests over verschillende hoeken (incl.
@@ -143,7 +152,7 @@ hieronder geannoteerd.
    encoder produceerde al Aztec, maar de scanner had geen Aztec _locator_. Een compacte Azteekse bullseye-locator toegevoegd
    (`crates/code-scan/src/aztec.rs`): het vindt de centrale roos door zijn negen-run `1:1:1:1:1:1:1:1:1` vinderhandtekening
    (binnenste zeven runs vertrouwd, buitenste twee alleen vereist aanwezig omdat ze de modusring raken), verifieert het op beide assen,
-   herstelt de modulegrootte, bemonstert elk plausibel compact formaat (15/19/23/27) op een gespikkelde kopie en routeert elk
+   herstelt de modulegrootte, bemonstert elk plausibel compact formaat (15/19/23/27) op een met spikkels gereinigde kopie en routeert elk
    naar het bestaande Azteekse decodeerpad, waarvan de mode-message + Reed-Solomon-controles de verkeerde formaten afwijzen. `scan_and_decode`
    rapporteert dit als `FORMAT_AZTEC`.
 7. **Meerdere symbolen + ROI-scannen. _(klaar — Fase 3.)_** `scan_and_decode_all`
@@ -164,12 +173,12 @@ Nauwkeurigheidswerk moet worden gemeten en niet met het oog worden bevestigd.
   `scan_and_decode`-oproep) herstelt de payload. De 1D-gevallen vergelijken zich met de eigen symbologievoorrang van de scanner
   (inclusief het ondubbelzinnig maken van UPC-A/EAN-13).
 - **Alle codetypen coderen↔decoderen retour.** `crates/code-scan/tests/generated.rs`
-  codeert **elke** symboliek die de encoders kunnen produceren: QR (4 ECC-niveaus), alle vier de matrixsymboliek (Data Matrix
+  codeert **elke** symboliek die de encoders kunnen produceren: QR (4 ECC-niveaus), alle vier matrixsymbologieën (Data Matrix
   vierkant/rechthoekig, GS1 Data Matrix, Aztec)
-  en alle vijftien 1D-symbologieën (inclusief Code 93, GS1-128, UPC-E, ITF-14, MSI, Pharmacode) - en beweert dat ze allemaal decoderen
+  en alle vijftien 1D-symbologieën (incl. Code 93, GS1-128, UPC-E, ITF-14, MSI, Pharmacode) - en beweert dat ze allemaal decoderen
   getrouw (hercodeer gelijkheid), met betrekking tot de codetypen die de scanner nog niet kan _lokaliseren_.
 - **Fase 2 degradatiegevallen.** `image.rs` unit test adaptieve binarisatie op een lichtgradiënt; `tests/pipeline.rs`
-  bewijst dat een door gradiënt gedegradeerde QR die het globale Otsu-only pad niet kan lezen, wordt hersteld door de Phase 2 adaptive +
+  bewijst dat een door gradiënt gedegradeerde QR die het globale Otsu-pad niet kan lezen, wordt hersteld door de Phase 2 adaptive +
   grijze bemonsteringspijplijn; de RS-kratten testen fouten en wissen herstel dat verder gaat dan het vermogen tot blinde fouten.
 - **Verslechtering van de opname per formaat.** Elk gegenereerd beeld wordt vervormd door een deterministisch **projectief**
   transformatie — niet-uniforme aspectschaal, rotatie, scheefheid en een onafhankelijke per-hoek x/y/z **morph** (een homografie) —
@@ -183,7 +192,7 @@ Nauwkeurigheidswerk moet worden gemeten en niet met het oog worden bevestigd.
   percentage per formaat**, gecodeerd in CI, zodat een wijziging deze niet stilletjes kan terugdraaien.
 - **Real-capture corpus.** Verzamel een vaste set echte foto's (de veldrapporten verwijzen naar 448×336 frames met lage resolutie
   en ~3px/module barcodes) met bekende payloads, en houd de leessnelheid bij als de belangrijkste statistiek voor alle releases.
-- **Determinisme.** Houd alle synthetische afbraak in de kiem (het bestaande `speckle`
+- **Determinisme.** Houd alle synthetische afbraak in de kiem (de bestaande `speckle`
   gebruikt een vaste LCG) zodat de resultaten reproduceerbaar zijn.
 
 ## 4. Aanbevolen volgorde
@@ -224,7 +233,7 @@ _regressie_ — zodat onherstelbare uitschieters de voortgang nooit blokkeren te
 
 Het corpus is verkocht, de PNG-lezer is gegeneraliseerd (`tests/support/png.rs`:
 paletkleurtype 3 bij diepten 1/2/4/8, grijstinten met lage diepte, RGB (A), grijs+alfa, plus 90/180/270 rotatiehulpmiddelen
-matching van de ZXing-semantiek) met een loader unit-test (`tests/png_loader.rs`), en de basislijn wordt vastgelegd.
+overeenkomende ZXing-semantiek) met een ladereenheidtest (`tests/png_loader.rs`), en de basislijn wordt vastgelegd.
 
 ### Stap 2 — verhoog de leessnelheid voor ondersteunde formaten _(in uitvoering)_
 
@@ -239,25 +248,25 @@ overweldigend _gelokaliseerd-maar-niet-gedecodeerd_, niet _niet-gelokaliseerd_.
   een niet-gerelateerd symbool (een QR, andere balken) dat triviaal is "gedecodeerd" tot een valse waarde van 2 of 4 cijfers. `itf::decode` nu
   wijst payloads af die korter zijn dan **zes cijfers**, wat overeenkomt met de ondergrens van ZXing's `ITFReader::DEFAULT_ALLOWED_LENGTHS`
   (`{6,8,10,12,14}`). Dit zorgde ervoor dat de valse positieven in `falsepositives`, `falsepositives-2` en `unsupported` naar
-  **nul** en door het verwijderen van de korte leesbewerkingen die de prioriteitsvolgorde kortsloten, werden verschillende positieve waarden opgeheven
+  **nul** en door het verwijderen van de korte leesbewerkingen die de prioriteitsvolgorde kortsloten, werden verschillende positieve
   mappen (bijvoorbeeld `qrcode-4`, `qrcode-5`). Gedekt door een nieuwe regressietest (`barcode-decode`:
   `itf_rejects_runs_shorter_than_six_digits`) en de basislijnupdate.
 
 **Gekwantificeerde volgende kansen (gelokaliseerd, nog niet gedecodeerd):**
 
-- **1D-decodering per cijfer (grootste mogelijkheid).** UPC/EAN-mappen lokaliseren honderden scanlijnen, maar decoderen bijna
+- **1D rijdecodering per cijfer (grootste mogelijkheid).** UPC/EAN-mappen lokaliseren honderden scanlijnen, maar decoderen bijna
   geen van de harde camerafoto's (`upca-2` 206 gelokaliseerd / 0 gedecodeerd, `upce-2` 160 / 0, `ean13-3` 204 / 6). De grondoorzaak
   is dat de locator elke scanlijn kwantiseert naar een **enkele globale module-eenheid** voordat de modulebits aan de
   decoder; bij perspectiefverkorting varieert de werkelijke modulebreedte over het symbool, waardoor het globale raster afwijkt
   en een rigide EAN/UPC-celraster wijst dit af. De oplossing is een **per-cijferige** rijdecoder in ZXing-stijl die overeenkomt met de rijen van elk cijfer
   run-length verhoudingen lokaal (patroon-match variantie) in plaats van een globale kwantisering – een grotere verandering in de
-  locator↔decoder-interface, bijgehouden als de volgende stap-2-iteratie.
+  locator↔decoder-interface, gevolgd als de volgende stap-2-iteratie.
 - **QR-perspectief / uitlijningspatroonbemonstering.** `qrcode-1` (77 gelokaliseerd / 0 gedecodeerd) en `qrcode-6` (60 / 0) zijn
   symbolen van hogere versies: de sampler bouwt een puur **affien** raster op van de drie vindercentra, dat over de grenzen heen drijft
   een groot of perspectief-verwrongen symbool. Met behulp van het **uitlijningspatroon** rechtsonder
   voor een vierpuntsperspectieftransformatie (zoals ZXing's `Detector` doet) is de bijbehorende QR-overwinning.
 - **Datamatrix-grootte + polariteit.** De enkele `inverted`-datamatrix bevindt zich nu na een omkering van de polariteit, maar
-  verkeerde afmetingen door de locator (22 × 22 voor een numeriek symbool van 10 cijfers waarvan de werkelijke grootte ~ 12–14 is), zodat het niet wordt gedecodeerd; een
+  verkeerd formaat door de locator (22×22 voor een 10-cijferig numeriek symbool waarvan de werkelijke grootte ~12–14 is), zodat het niet wordt gedecodeerd; een
   Er werd een prototype gemaakt van een poging tot volledige frame-omgekeerde polariteit, maar deze werd voor deze stap teruggedraaid omdat hierdoor de corpus-sweep-tijd werd verdubbeld
   voor nul netto corpuswinsten (de blokkering is de DM-grootte, niet de polariteit). Omgekeerde ondersteuning zou moeten terugkeren zodra de DM-locator is bereikt
   De maatvoering is aangescherpt, zodat de extra pas alleen werkt op frames die anders zouden falen.
@@ -270,22 +279,22 @@ Een nieuw krattrio weerspiegelt de `*-common` / `*-encode` / `*-decode`-splitsin
 
 - **`gs1-databar-common`** — de ISO/IEC 24724 combinatorische primitieven geporteerd van ZXing's `RSSUtils`: `combins`,
   `get_rss_value` (breedtes → waarde, decoderen) en de exacte inverse `get_rss_widths` (waarde → breedtes, coderen), plus de
-  breedte-verhouding variantiezoeker matcher. Een unit-test beweert dat de waarde/breedte-toewijzing voor elke RSS-14 zelf-invers is
+  breedte-verhouding variantiezoeker matcher. Een eenheidstest beweert dat de waarde/breedte-toewijzing voor elke RSS-14 zelf-invers is
   deelverzameling.
-- **`gs1-databar-decode`** — een getrouwe port van ZXing's `RSS14Reader`: vinderdetectie, `parseFoundFinderPattern`,
-  `decodeDataCharacter` (met de oneven/even-tellingsaanpassing) en de mod-79-checksum, die de 14-cijferige GTIN reconstrueert.
+- **`gs1-databar-decode`** — een trouwe port van ZXing's `RSS14Reader`: vinderdetectie, `parseFoundFinderPattern`,
+  `decodeDataCharacter` (met de oneven/even-tellingsaanpassing) en de mod-79-controlesom, die de 14-cijferige GTIN reconstrueert.
   Omdat DataBar-tekens worden gedecodeerd vanuit elementbreedte _ratios_ (niet een vast glyph-raster), leest de rijdecoder run
   lengtes direct buiten een scanlijn - dus tolereert het de variërende modulebreedte van een verkorte opname die verslaat
   het globale kwantiserings-1D-pad (§2).
-- **`gs1-databar-encode`** — de waarde →module-bit inverse. De fysieke indeling (beschermbeugel, buiten-/zoeker-/binnenelement
+- **`gs1-databar-encode`** — de waarde →module-bit inverse. De fysieke lay-out (beschermbeugel, buiten-/zoeker-/binnenelement
   volgorde en het omgekeerde binnen/rechts-paar) werd vastgezet door de gemeten elementbreedtes van de decoder te vergelijken van a
   echt corpussymbool tegen de berekende karakters van de encoder, vervolgens bevestigd door een retour-encode → decode.
 
-De scanner heeft er `crates/code-scan/src/gs1_databar.rs` bij gekregen, een dunne locator die veelbelovende scanlijnen levert
+De scanner kreeg `crates/code-scan/src/gs1_databar.rs`, een dunne locator die veelbelovende scanlijnen levert
 (drukste overgangsrijen, vervolgens kolommen voor 90°/270°-opnamen) naar de rijdecoder; de sterke RSS-14-checksum maakt een
 match gezaghebbend, dus het rapporteert alleen een gedecodeerde waarde of niets (waardoor de fout-positieve beveiliging schoon blijft). Het is bedraad
 in `scan_and_decode` als nieuw
-`FORMAT_DATABAR`-tag (waarbij `FORMAT_PDF417` / `FORMAT_MAXICODE` gereserveerd is voor latere stappen).
+`FORMAT_DATABAR`-tag (met `FORMAT_PDF417` / `FORMAT_MAXICODE` gereserveerd voor latere stappen).
 
 **Resultaat:** de corpusmappen `rss14-1` en `rss14-2` zijn gewijzigd van **0 → 16**
 correcte decodering over de vier rotaties (rijen lezen 0°/180°, kolommen lezen 90°/270°), met **geen regressie** in welke
@@ -293,8 +302,8 @@ andere map en de negatieve mappen staan nog steeds op **nul** valse positieven. 
 `gs1-databar-decode/tests/roundtrip.rs` en `code-scan/tests/generated.rs`.
 
 **Volgende DataBar-iteratie:** GS1 DataBar **Expanded** en **Expanded-Stacked**
-(`rssexpanded-*`, `rssexpandedstacked-*`) zijn een afzonderlijke, grotere decoder (een AI/veldparser voor algemene doeleinden plus
-montage in gestapelde rijen) en blijven op basislijn 0, gevolgd als vervolg op deze stap. RSS-14 **Gestapeld** heeft eveneens behoefte
+(`rssexpanded-*`, `rssexpandedstacked-*`) zijn een afzonderlijke, grotere decoder (een AI/veldparser voor algemeen gebruik plus
+assemblage in gestapelde rijen) en blijven op basislijn 0, gevolgd als vervolg op deze stap. RSS-14 **Gestapeld** heeft eveneens behoefte
 tweerijige montage in de locator.
 
 ### Stap 4 — PDF417 coderen + decoderen + gestapelde rij-locator _(klaar)_
@@ -304,7 +313,7 @@ Een nieuw krattrio weerspiegelt de `*-common` / `*-encode` / `*-decode`-splitsin
 
 - **`pdf417-common`** — de gedeelde tabellen en wiskunde die beide kanten nodig hebben: het symbool ↔ codewoordtabellen (2.787 vermeldingen,
   gegenereerd op basis van de ZXing-referentie), de codewoord-/clusterzoekopdrachten (`get_codeword`, `bucket_from_symbol`), de
-  module-bit-count → symboolsampler (exact snel pad plus een lui gebouwde terugval met de dichtstbijzijnde verhouding), en de **GF (929)
+  module-bit-count → symboolsampler (exact snel pad plus een lui gebouwde fallback met de dichtstbijzijnde verhouding), en de **GF (929)
   Reed-Solomon** foutcorrectiedecoder (`ModulusGF` / `ModulusPoly` / Euclidisch algoritme). Een eenheidstest bevestigt alles
   codewoordwaarde heeft een symbool in elk van de drie clusters en retouren.
 - **`pdf417-decode`** — GF (929) EC-correctie plus een bitstream-parser op hoog niveau (`DecodedBitStreamParser`) die
@@ -330,7 +339,7 @@ Twee robuustheidsdetails bleken essentieel:
   terugval met de dichtstbijzijnde ratio zou anders de corpus sweep domineren.
 - **Een bescherming tegen gaten in de RS-overcorrectie.** Bij hoge EC-niveaus fabriceert Reed–Solomon graag een
   _valid-but-wrong_ codewoord uit een grotendeels lege assembly (waargenomen als afval dat `"AAAA…"` decodeert). De zoeker dus
-  weigert te decoderen wanneer het aantal gaten `num_ec / 2` (het RS-correctiebudget) overschrijdt, waardoor **elke** wordt verwijderd
+  weigert te decoderen wanneer het aantal gaten `num_ec / 2` overschrijdt (het RS-correctiebudget), waardoor **elke** wordt verwijderd
   garbage decodeert met behoud van alle correcte - en houdt de vals-positieve bewaker van de negatieve map schoon.
 
 Een bug die onderweg is verholpen: de standaardarm van de bitstream-parser kon voor altijd op een beschadigde stream blijven draaien (tekst opnieuw uitvoeren
@@ -344,8 +353,8 @@ map en de negatieve mappen staan nog steeds op **nul** valse positieven. Retourr
 `code-scan/tests/pipeline.rs`.
 
 **Volgende PDF417-iteratie:** rotaties **90°/270°** blijven op basislijn 0 — een kwartgedraaid symbool wordt weergegeven als verticale balken
-dat de rijscanlocator niet leest. Een kolomscan (transponeer) pas, of het harnas dat het getransponeerde frame voedt, is dat wel
-het bijpassende vervolg. Voor een steilere scheefheid is het volledige ZXing `Detector`-perspectiefmodel met vier hoeken nodig.
+dat de rijscanlocator niet leest. Een kolomscan (transpositie), of het harnas dat het getransponeerde frame voedt, is dat wel
+the matching follow-up. Voor een steilere scheefheid is het volledige ZXing `Detector`-perspectiefmodel met vier hoeken nodig.
 
 ### Stap 5 — MaxiCode coderen + decoderen + zeshoekige locator _(klaar)_
 
@@ -353,7 +362,7 @@ Een nieuw krattrio weerspiegelt de `*-common` / `*-encode` / `*-decode`-splitsin
 (Apache-2.0):
 
 - **`maxicode-common`** — de gedeelde primitieven die beide zijden nodig hebben: de vaste symboolgeometrie (30 kolommen × 33 rijen), de
-  **`BITNR`** per cel → codewoord-bit map (poort van ZXing's `BitMatrixParser.BITNR`, getranscribeerd en unit-getest zodat elke
+  **`BITNR`** per cel → codewoord-bitkaart (poort van ZXing's `BitMatrixParser.BITNR`, getranscribeerd en unit-getest, zodat elke
   van de 864 databits komt precies één keer voor), de `read_codewords` / `place_codewords`
   invers paar, en de **GF (64) Reed-Solomon** corrector (primitieve `x⁶+x+1`, generatorbasis 1) met alleen fouten
   Berlekamp–Massey/Chien/Forney. Eenheidstests omvatten een schoon codewoord, correctie tot de helft van de EG-begroting, en een
@@ -363,14 +372,14 @@ Een nieuw krattrio weerspiegelt de `*-common` / `*-encode` / `*-decode`-splitsin
   interleaves worden onafhankelijk gecorrigeerd), leest de modusnibble, stelt de datawoorden samen en voert de vijf sets uit
   (`SETS[0..5]`) grendel/shift/nummer-compactiestroom, inclusief de modus 2/3 gestructureerde drager
   postcode/land/dienstklasse montage. Omdat alle drie de RS-blokken moeten valideren, is een geretourneerde waarde gezaghebbend.
-- **`maxicode-encode`** — een afhankelijkheidsvrije targetingmodus voor schrijvers 4/5 met de primaire tekensets A en B (genoeg om
+- **`maxicode-encode`** — een afhankelijkheidsvrije schrijver-targetingmodus 4/5 met de primaire tekensets A en B (genoeg om
   codeer ASCII-payloads en zaai de retourvluchten), genereer de primaire + interleaved-secundaire EC en leg de 144
   codewoorden in het moduleraster via de gedeelde `BITNR`-kaart.
 
 De scanner heeft `crates/code-scan/src/maxicode.rs` verkregen. MaxiCode wordt gelezen als een puur symbool, precies zoals dat van ZXing
 `MaxiCodeReader` doet dat: de locator neemt de omsluitende rechthoek van de donkere pixels en bemonstert het vaste raster van 30×33
 eroverheen, waarbij de x-positie van het monster een halve module op oneven rijen wordt verschoven om de zeshoekige offset te volgen. Een goedkoop vierkant aspect
-De bewaker slaat duidelijk niet-MaxiCode-gebieden (1D-streepjescodes, hoge labels) over voordat er monsters worden genomen, en de drie RS-blokken weigeren
+De bewaker slaat duidelijk niet-MaxiCode-gebieden (1D-barcodes, hoge labels) over voordat er monsters worden genomen, en de drie RS-blokken weigeren
 elke niet-MaxiCode-afbeelding die op deze manier is bemonsterd. Het is aangesloten op `scan_and_decode` als
 `FORMAT_MAXICODE`.
 
@@ -384,27 +393,27 @@ valse positieven. Retourreizen vallen onder `maxicode-decode/tests/roundtrip.rs`
 basislijn 0 (een geroteerd symbool bemonstert het zeshoekige raster verkeerd en RS wijst het af - geen valse positieven). Een roos
 vinder die de rotatie van het symbool herstelt voordat de bemonstering de andere drie rotaties zou opheffen.
 
-### Stap 6 — sluit de nieuwe formaten aan op de JS-gevel + bouw het FWS-artefact _(klaar)_
+### Stap 6 — sluit de nieuwe formaten aan op de JS-gevel + bouw het Flint-artefact _(klaar)_
 
 Stappen 3–5 brachten PDF417, GS1 DataBar (RSS-14) en MaxiCode in de scanner
-pijpleiding achter de tags `FORMAT_PDF417` / `FORMAT_DATABAR` / `FORMAT_MAXICODE`, terwijl de JS-façade alleen de
+pijplijn achter de tags `FORMAT_PDF417` / `FORMAT_DATABAR` / `FORMAT_MAXICODE`, terwijl de JS-façade alleen de
 originele vier formaten. Met deze stap worden de nieuwe symbologieën tijdens runtime zichtbaar:
 
 - **`FORMAT_NAMES`** in `src/scanner/index.ts` brengt nu `4 → 'pdf417'` in kaart,
   `5 → 'databar'`, `6 → 'maxicode'` en de `ScanFormat`-vereniging in `src/types.ts`
   krijgt dezelfde drie namen — dus `scanImageData` / `scanImageDataAsync` (en de
   `*All` / ROI-varianten) retourneert ze zoals elk ander formaat.
-- **Het FWS-artefact van de scanner is gebouwd** van `src/fws/scanner.flint` door de Flint Vite-plug-in. Het statische profiel
+- **Het Flint-artefact van de scanner is gebouwd** van `src/fws/scanner.flint` door de Flint Vite-plug-in. Het statische profiel
   koppelt de decodergrafieken tot één op zichzelf staand artefact, maakt WebAssembly SIMD mogelijk en past agressieve linktijd toe
   optimalisatie; het dynamische profiel behoudt expliciete grenzen van de decodermodule en cachet exportverzending.
-- **De FWS-grafiek- en gevelsuites** (`src/fws/scanner-graph.spec.ts` en
+- **De Flint-grafiek- en gevelsuites** (`src/fws/scanner-graph.spec.ts` en
   `src/scanner/index.spec.ts`) oefen de gekoppelde decodergrafieken uit via de
   scanner ABI en beide openbare toegangspunten, waaronder PDF417, GS1 DataBar,
   MaxiCode, ROI, multi-resultaat, synchrone en asynchrone paden. De
   package-local PDF417-tekstfixatie houdt het conformiteitsgeval onafhankelijk van
   de gepensioneerde native corpuswerkruimte.
 
-**Resultaat:** `vitest` is groen tegenover het FWS-artefact en de `tsc`-build
+**Resultaat:** `vitest` is groen tegen het Flint-artefact en de `tsc`-build
 cheque is schoon. De ondersteunde gezinnen blijven volledig gedekt door de
 grafiek- en openbare gevelsuites, en de modellagen per fase die de leidraad vormden
 inspanning is gedocumenteerd in `docs/model-cost-strategy.md`.
@@ -419,7 +428,7 @@ elementen tegen het verkeerde raster en de rigide EAN/UPC-celdecoder verwerpt he
 retourneert kandidaat-scanlijnen) maar nooit _gedecodeerd_.
 
 De oplossing is een nieuwe `crates/code-scan/src/barcode_row.rs`, een trouwe port van de `UPCEANReader`-familie van ZXing. Het nooit
-kwantiseert naar een globaal raster: het loopt de scanlijn patroon voor patroon af en normaliseert voor **elk cijfer afzonderlijk**
+kwantiseert naar een globaal raster: het loopt de scanlijn patroon voor patroon af en normaliseert, voor **elk cijfer afzonderlijk**
 de vier runbreedtes van dat cijfer naar de cel met zeven modules voordat het wordt vergeleken met de L/G/R-breedtetabellen
 (`patternMatchVariance` met `MAX_AVG_VARIANCE` /
 `MAX_INDIVIDUAL_VARIANCE`). Omdat elk cijfer zijn eigen lokale eenheid met zich meedraagt, is er geen sprake meer van een geleidelijke verschuiving over het symbool
@@ -436,7 +445,7 @@ kwantiseerder, dus beide waren essentieel:
   dat, gecombineerd met een toevallig geldige controlesom, de bron van de eerste 9 + 12 valse positieven op
   `falsepositives*`.
 - **Consensus over meerdere rijen voor de korte symbologieën.** De 8-cijferige EAN-8 / UPC-E zijn gevoelig voor een toevalstreffer en zijn geldig
-  rommelige kadrering, zodat ze alleen worden geaccepteerd als **≥ 2 scanrijen** onafhankelijk dezelfde waarde decoderen (een echte
+  framing in rommelige, dus ze worden alleen geaccepteerd als **≥ 2 scanrijen** onafhankelijk dezelfde waarde decoderen (een echte
   streepjescode decodeert op veel rijen van de staafhoogte; er verschijnt een toevalstreffer). De 13-cijferige EAN-13 / UPC-A (12 datacijfers
   plus het van pariteit afgeleide eerste cijfer)
   zijn veel minder gevoelig en worden vanuit één rij geaccepteerd. Elke geretourneerde waarde wordt bovendien gevalideerd door de symbolen
@@ -453,9 +462,9 @@ smoke suite verkrijgt UPC-E + EAN-13 camerafoto's via zowel het upload- als het 
 
 **Opmerking: `img.png`.** De real-world opname van de werkruimte-root (`real_world.rs`) is nu netjes gelokaliseerd, maar codeert
 het klassieke generatorvoorbeeld `01234567`
-waarvan het laatste cijfer **geen** een geldige mod-10-controle is (`0123456` → `01234565`). Een lezer die aan de specificaties voldoet – deze, en
+waarvan het laatste cijfer **geen** een geldige mod-10-controle is (`0123456` → `01234565`). Een aan de specificaties voldoende lezer – deze, en
 ZXing zelf - wijst een streepjescode af die zijn eigen controlesom niet haalt, dus de pijplijn retourneert daar geen waarde _by design_; dat
-test blijft `#[ignore]` als documentatie van de opzettelijke afwijzing (het laten vallen van de controlesombewaker om deze te lezen zou
+test blijft `#[ignore]` als documentatie van de opzettelijke afwijzing (het laten vallen van de checksum-bewaker om deze te lezen zou
 heropen de valse positieven die de bewaker verwijdert).
 
 **Volgende 1D-iteratie:** UPC/EAN **add-on**-extensies (`upcean-extension-*`, de 2-/5-cijferige supplementen) en de moeilijkste

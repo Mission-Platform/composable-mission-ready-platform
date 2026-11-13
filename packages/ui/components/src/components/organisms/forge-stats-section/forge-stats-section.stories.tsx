@@ -1,6 +1,6 @@
-import { ForgeStatsSection } from './forge-stats-section';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeStatsSection } from './forge-stats-section';
 
 const meta = {
   title: 'Organisms/Marketing/ForgeStatsSection',

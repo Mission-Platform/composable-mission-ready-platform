@@ -32,7 +32,7 @@ Converteer gemaksopties naar een compleet, beschrijfbaar vCard-document.
 **Soort:** constant
 
 ```typescript
-export const parseVCard;
+export const parseVCard: typeof readVCard;
 ```
 
 Alias ​​voor bellers die de voorkeur geven aan de parserterminologie.
@@ -616,7 +616,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const parseICalendar;
+export const parseICalendar: typeof readICalendar;
 ```
 
 Geen beschrijving opgegeven.
@@ -642,7 +642,7 @@ Parseer een RFC 5545 iCalendar-stream, waarbij elk onderdeel en elke eigenschap 
 **Soort:** constant
 
 ```typescript
-export const serializeICalendar;
+export const serializeICalendar: typeof writeICalendar;
 ```
 
 Geen beschrijving opgegeven.

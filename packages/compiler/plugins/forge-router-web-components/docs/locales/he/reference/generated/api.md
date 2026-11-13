@@ -33,6 +33,16 @@ export class MpRouterOutletElement extends HTMLElement
 `viewAdapter` לנתב כאשר תצוגות זקוקות למחזור חיים מותאם אישית; אחרת א
 Node, מחרוזת או DOM במפעל `route.component` מעובד ישירות.
 
+### MpRouterViewElement
+
+**סוג:** רכיב
+
+```typescript
+export class MpRouterViewElement extends MpRouterOutletElement
+```
+
+לא סופק תיאור.
+
 ### registerRouterElements
 
 פונקציה **סוג:**
@@ -45,9 +55,9 @@ function registerRouterElements(options: RegisterRouterElementsOptions = {}): vo
 
 #### פרמטרים
 
-| שם       | הקלד                          | תיאור |
-| -------- | ----------------------------- | ----- |
-| אפשרויות | RegisterRouterElementsOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ----------------------------- | ----------- |
+| אפשרויות | RegisterRouterElementsOptions |             |
 
 ## `src/runtime/history`
 
@@ -63,9 +73,9 @@ function createBrowserHistory(win?: Window): MpBrowserHistory;
 
 #### פרמטרים
 
-| שם   | הקלד | תיאור |
-| ---- | ---- | ----- |
-| לנצח | חלון |       |
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| לנצח | חלון |             |
 
 ### createMemoryHistory
 
@@ -79,9 +89,9 @@ function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 
 #### פרמטרים
 
-| שם         | הקלד | תיאור |
-| ---------- | ---- | ----- |
-| initialUrl |      |       |
+| שם | הקלד | תיאור |
+| ---------- | ---- | ----------- |
+| initialUrl |      |             |
 
 ### createWebHistory
 
@@ -185,13 +195,13 @@ export const resolveForgeLink;
 function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
-פתרו יעד ניטרלי באמצעות נתב רכיבי האינטרנט המחוברים.
+פתרו יעד ניטרלי דרך נתב רכיבי הרשת המחוברים.
 
 #### פרמטרים
 
-| שם  | הקלד               | תיאור |
-| --- | ------------------ | ----- |
-| ל   | MpRouteLocationRaw |       |
+| שם | הקלד | תיאור |
+| ---- | ------------------ | ----------- |
+| ל | MpRouteLocationRaw |             |
 
 ### setForgeRouter
 
@@ -205,9 +215,9 @@ function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 
 #### פרמטרים
 
-| שם  | הקלד                        | תיאור |
-| --- | --------------------------- | ----- |
-| נתב | MpWebComponentsRouter<View> |       |
+| שם | הקלד | תיאור |
+| ------ | --------------------------- | ----------- |
+| נתב | MpWebComponentsRouter<View> |             |
 
 ### useForgeNavigation
 
@@ -297,9 +307,19 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 
 #### פרמטרים
 
-| שם       | הקלד                               | תיאור |
-| -------- | ---------------------------------- | ----- |
-| אפשרויות | MpWebComponentsRouterOptions<View> |       |
+| שם | הקלד | תיאור |
+| ------- | ---------------------------------- | ----------- |
+| אפשרויות | MpWebComponentsRouterOptions<View> |             |
+
+### getActiveRouter
+
+פונקציה **סוג:**
+
+```typescript
+function getActiveRouter(): MpWebComponentsRouter<unknown> | undefined;
+```
+
+לא סופק תיאור.
 
 ### MpRouterLoadingFallback
 
@@ -343,10 +363,26 @@ function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 
 #### פרמטרים
 
-| שם  | הקלד               | תיאור |
-| --- | ------------------ | ----- |
-| נתב | MpRouterAdapter    |       |
-| ל   | MpRouteLocationRaw |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------ | ----------- |
+| נתב | MpRouterAdapter |             |
+| ל | MpRouteLocationRaw |             |
+
+### setActiveRouter
+
+פונקציה **סוג:**
+
+```typescript
+function setActiveRouter(router: MpWebComponentsRouter<View> | undefined): void;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---------------------------------------- | ----------- |
+| נתב | MpWebComponentsRouter<View> \| לא מוגדר |             |
 
 ## `src/utils/forge-router-web-components`
 

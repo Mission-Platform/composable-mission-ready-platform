@@ -17,7 +17,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 
 ```typescript
 function analyzeStoryblokComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: StoryblokComponentNames,
   options: StoryblokProjectionOptions = {},
 ): AnalyzedStoryblokComponent;
@@ -27,11 +27,11 @@ Analysez un module de composant neutre pour Storyblok.
 
 #### Paramètres
 
-| Nom            | Tapez                           | Descriptif |
-| -------------- | ------------------------------- | ---------- |
-| fichier source | ts.SourceFichier                |            |
-| noms           | Noms des composants Storyblok   |            |
-| options        | Options de projection Storyblok |            |
+| Nom | Tapez | Descriptif |
+| ---------- | -------------------------- | ----------- |
+| fichier source | OxcParsedModule |             |
+| noms | Noms des composants Storyblok |             |
+| options | StoryblokProjectionOptions |             |
 
 ### contentFieldToStoryblokField
 
@@ -53,10 +53,10 @@ donc `type`/`pos`/`description`/`translatable`/`options`/`default_value`/
 
 #### Paramètres
 
-| Nom     | Tapez                           | Descriptif |
-| ------- | ------------------------------- | ---------- |
-| champ   | Champ de contenu                |            |
-| options | Options de projection Storyblok |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------------- | ----------- |
+| champ | Champ de contenu |             |
+| options | StoryblokProjectionOptions |             |
 
 ### contentKindToStoryblokFieldType
 
@@ -72,9 +72,9 @@ Le type de champ Storyblok sur lequel un type de contenu neutre est mappé.
 
 #### Paramètres
 
-| Nom   | Tapez                 | Descriptif |
-| ----- | --------------------- | ---------- |
-| genre | ContentField["genre"] |            |
+| Nom | Tapez | Descriptif |
+| ---- | -------------------- | ----------- |
+| genre | ContentField["genre"] |             |
 
 ### émettreStoryblokComponent
 
@@ -82,7 +82,7 @@ Le type de champ Storyblok sur lequel un type de contenu neutre est mappé.
 
 ```typescript
 function emitStoryblokComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: StoryblokComponentNames,
   options: StoryblokProjectionOptions = {},
 ): StoryblokComponent;
@@ -92,11 +92,11 @@ function emitStoryblokComponent(
 
 #### Paramètres
 
-| Nom            | Tapez                           | Descriptif |
-| -------------- | ------------------------------- | ---------- |
-| fichier source | ts.SourceFichier                |            |
-| noms           | Noms des composants Storyblok   |            |
-| options        | Options de projection Storyblok |            |
+| Nom | Tapez | Descriptif |
+| ---------- | -------------------------- | ----------- |
+| fichier source | OxcParsedModule |             |
+| noms | Noms des composants Storyblok |             |
+| options | StoryblokProjectionOptions |             |
 
 ### solveStoryblokMetadata
 
@@ -117,10 +117,10 @@ Le hachage du nom lui donne une couleur Storyblok reproductible.
 
 #### Paramètres
 
-| Nom       | Tapez                           | Descriptif |
-| --------- | ------------------------------- | ---------- |
-| composant | Composant de contenu            |            |
-| options   | Options de projection Storyblok |            |
+| Nom | Tapez | Descriptif |
+| --------- | -------------------------- | ----------- |
+| composant | Composant de contenu |             |
+| options | StoryblokProjectionOptions |             |
 
 ### versStoryblokComponent
 
@@ -137,10 +137,10 @@ Projetez un composant de contenu neutre sur son objet et ses champs de composant
 
 #### Paramètres
 
-| Nom       | Tapez                           | Descriptif |
-| --------- | ------------------------------- | ---------- |
-| composant | Composant de contenu            |            |
-| options   | Options de projection Storyblok |            |
+| Nom | Tapez | Descriptif |
+| --------- | -------------------------- | ----------- |
+| composant | Composant de contenu |             |
+| options | StoryblokProjectionOptions |             |
 
 ## `src/runtime/solid`
 
@@ -158,9 +158,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom        | Tapez                             | Descriptif |
-| ---------- | --------------------------------- | ---------- |
-| propriétés | Propriétés du composant Storyblok |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------------- | ----------- |
+| propriétés | Propriétés du composant Storyblok |             |
 
 ### Propriétés du composant Storyblok
 
@@ -184,7 +184,7 @@ export type StoryblokComponentRegistry = Readonly<
 
 Aucune description fournie.
 
-### Type de composant Storyblok
+### StoryblokComponentType
 
 **Genre :** type
 
@@ -208,9 +208,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom        | Tapez                               | Descriptif |
-| ---------- | ----------------------------------- | ---------- |
-| propriétés | Propriétés du fournisseur Storyblok |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------- | ----------- |
+| propriétés | Propriétés du fournisseur Storyblok |             |
 
 ### Propriétés du fournisseur Storyblok
 
@@ -224,6 +224,36 @@ Aucune description fournie.
 
 ## `src/storyblok`
 
+### defaultStoryblokFrameworks
+
+**Genre :** fonction
+
+```typescript
+function defaultStoryblokFrameworks(): FrameworkOutputPlugin[];
+```
+
+5 plugins de framework Forge par défaut ciblant React, Vue, Svelte, Solid et les composants Web.
+
+### définirStoryblokCmsConfig
+
+**Genre :** fonction
+
+```typescript
+function defineStoryblokCmsConfig(
+  options: StoryblokCmsConfigOptions,
+): UserConfig[];
+```
+
+Renvoie les configurations natives tsdown `UserConfig[]` pour les cibles Storyblok CMS.
+Résout automatiquement `packageName` à partir de package.json en cas d'omission et par défaut
+`componentsModule` et les 5 plugins de sortie du framework standard.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | ------------------------- | ----------- |
+| options | StoryblokCmsConfigOptions |             |
+
 ### forgeStoryblokCms
 
 **Genre :** fonction
@@ -236,9 +266,9 @@ Liez la projection Storyblok à un plugin de sortie de framework appartenant à 
 
 #### Paramètres
 
-| Nom     | Tapez                    | Descriptif |
-| ------- | ------------------------ | ---------- |
-| options | ForgeStoryblokCmsOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------------ | ----------- |
+| options | ForgeStoryblokCmsOptions |             |
 
 ### ForgeStoryblokCmsOptions
 
@@ -264,9 +294,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom     | Tapez                           | Descriptif |
-| ------- | ------------------------------- | ---------- |
-| options | ForgeStoryblokCmsTargetsOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------------------- | ----------- |
+| options | ForgeStoryblokCmsTargetsOptions |             |
 
 ### ForgeStoryblokCmsTargetsOptions
 
@@ -274,6 +304,16 @@ Aucune description fournie.
 
 ```typescript
 export interface ForgeStoryblokCmsTargetsOptions
+```
+
+Aucune description fournie.
+
+### StoryblokCmsConfigOptions
+
+**Genre :** interface
+
+```typescript
+export interface StoryblokCmsConfigOptions
 ```
 
 Aucune description fournie.
@@ -300,6 +340,16 @@ export interface AnalyzedStoryblokComponent
 
 Le résultat complet de l’analyse d’un composant neutre pour Storyblok.
 
+### Composant Storyblok
+
+**Genre :** interface
+
+```typescript
+export interface StoryblokComponent
+```
+
+Un _objet composant_ Storyblok (le sous-ensemble inscriptible consommé lors du transfert de composants).
+
 ### Noms des composants Storyblok
 
 **Genre :** type
@@ -311,7 +361,7 @@ export type StoryblokComponentNames = ContentComponentNamesInput;
 Identifier les noms d'un composant neutre découvert.
 
 Les noms eux-mêmes sont dérivés du modèle de contenu partagé ; ce pseudo
-maintient la signature face à Storyblok lisible.
+garde la signature face à Storyblok lisible.
 
 ### StoryblokFieldType
 
@@ -391,9 +441,9 @@ nu `SbBlokData`.
 
 #### Paramètres
 
-| Nom     | Tapez                     | Descriptif |
-| ------- | ------------------------- | ---------- |
-| analysé | ComposantAnalyséStoryblok |            |
+| Nom | Tapez | Descriptif |
+| -------- | -------------------------- | ----------- |
+| analysé | ComposantAnalyséStoryblok |             |
 
 ### émettreStoryblokBlokWrapper
 
@@ -413,11 +463,11 @@ ou un élément personnalisé natif de composant Web (`.ts`).
 
 #### Paramètres
 
-| Nom       | Tapez                       | Descriptif |
-| --------- | --------------------------- | ---------- |
-| analysé   | ComposantAnalyséStoryblok   |            |
-| nompublic | chaîne                      |            |
-| options   | StoryblokBlokWrapperOptions |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------- | ----------- |
+| analysé | ComposantAnalyséStoryblok |             |
+| nompublic | chaîne |             |
+| options | StoryblokBlokWrapperOptions |             |
 
 ### StoryblokBlokWrapperOptions
 

@@ -6,8 +6,8 @@
 > 语言: 简体中文 (zh)
 
 `@mission-platform/phone-number` 是对核心的集中重新实现
-谷歌 [库电话号码](https://github.com/google/libphonenumber)，写成
-[汇编脚本](https://www.assemblyscript.org/）并编译为 **WebAssembly**。它解析、验证、分类和
+Google [libphonenumber](https://github.com/google/libphonenumber)，编写为
+[AssemblyScript](https://www.assemblyscript.org/) 并编译为 **WebAssembly**。它解析、验证、分类和
 格式化国际电话号码，并打包为独立的 ES 模块，没有运行时依赖性。
 
 ## 建筑学

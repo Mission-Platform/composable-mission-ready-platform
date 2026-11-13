@@ -19,14 +19,44 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/tsdown-
 function createExternalMatcher(names: readonly string[]): (id: string) => boolean;
 ```
 
-Bouw een rolldown `external` / `deps.neverBundle` predikaat dat elke behandelt
-naam erin `names` (en al hun subpad-importen, b.v. `pkg/sub`) als extern.
+Bouw een Rolldown `external`/`deps.neverBundle`-predikaat dat elke
+naam in `names` (en eventuele importen van subpaden, bijvoorbeeld `pkg/sub`) als extern.
 
 #### Parameters
 
-| Naam  | Typ                       | Beschrijving |
-| ----- | ------------------------- | ------------ |
-| namen | alleen-lezen tekenreeks[] |              |
+| Naam | Typ | Beschrijving |
+| ----- | ----------------- | ----------- |
+| namen | alleen-lezen tekenreeks[] |             |
+
+### cssBundlePlugin
+
+**Soort:** functie
+
+```typescript
+function cssBundlePlugin(): TsdownPlugin;
+```
+
+Koppel elk geëxtraheerd CSS-item opnieuw aan de JS-module die er eigenaar van is.
+
+tsdown/Rolldown extraheert co-located `*.module.scss` / `*.scss` importen in
+zelfstandige `.css`-middelen — waarbij de hashing van de klassenaam al is toegepast en de
+opgeloste namen ingebakken in de klassenkaarten van broers en zussen, maar, in tegenstelling tot Vite, wel
+_not_* injecteer de overeenkomende `import './x.css'` opnieuw in het JS-fragment (het laat
+in plaats daarvan een tijdelijke aanduiding `/* empty css *\/`) en schrijft deze activa rechtstreeks naar
+schijf in plaats van via de Rollup-bundel. Een consument die een onderdeel importeert
+krijgt daarom zijn markup zonder zijn stijlen, en Rolldown onthult nee
+`viteMetadata.importedCss` om de CSS-grafiek per stuk te reconstrueren.
+
+Dus in `writeBundle` (nadat elk item op schijf staat), wordt deze plug-in voorafgegaan door a
+neveneffect `import './x.css'` voor de eigen module van elk stylesheet (zie
+{@link solveCssOwner}) — de CSS-Module-klassenkaart (of, voor Vue, de component
+chunk) die consumenten al importeren. Omdat het stylesheet is ingebed in een
+module die daadwerkelijk wordt gebruikt (geen puur re-exportvat dat een benoemde import
+zou wegschudden), het importeren van een enkel onderdeel komt betrouwbaar precies binnen
+de stijlen van dat onderdeel, en de stijlen van de hele bibliotheek als het vat aanwezig is
+geïmporteerd - passend bij de automatische opbouw van de historische Vite-bibliotheek per component
+CSS-laden. De stylesheets zijn al een keer gehasht, dus downstream bundelaars
+verzend ze woordelijk.
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
@@ -37,7 +67,24 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 ```
 
 Standaardpakketnamen die elke gedeelde bibliotheek moet behandelen als peer-geleverd.
-Spiegels `@mission-platform/vite-config`van {@link DEFAULT_LIBRARY_EXTERNALS}.
+Spiegelt `@mission-platform/vite-config`'s {@link DEFAULT_LIBRARY_EXTERNALS}.
+
+### definieerTsdownForgeTarget
+
+**Soort:** functie
+
+```typescript
+function defineTsdownForgeTarget(options: TsdownForgeTargetOptions): UserConfig;
+```
+
+Bouw een tsdown-configuratie voor het neutrale Forge-componentdoel (`dist/components/**`).
+Standaard wordt `outDir` ingesteld op `'dist/components'`, terwijl alle functies van {@link definitionTsdownLibrary} behouden blijven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------ | ----------- |
+| opties | TsdownForgeTargetOptions |             |
 
 ### definieerTsdownBibliotheek
 
@@ -47,15 +94,15 @@ Spiegels `@mission-platform/vite-config`van {@link DEFAULT_LIBRARY_EXTERNALS}.
 function defineTsdownLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
-Bouw een tsdown-configuratie voor een vlakte TypeScript (of enkele bundel) bibliotheek —
-Archetype A/B. Spiegels `defineLibraryConfig` externaliseringssemantiek van
+Bouw een tsdown-configuratie voor een gewone TypeScript-bibliotheek (of enkele bundel) -
+Archetype A/B. Mirrors `defineLibraryConfig` externalisatie-semantiek van
 `@mission-platform/vite-config`.
 
 #### Parameters
 
-| Naam   | Typ                  | Beschrijving |
-| ------ | -------------------- | ------------ |
-| opties | TsdownLibraryOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------- | ----------- |
+| opties | TsdownLibraryOptions |             |
 
 ### definieerTsdownVueBibliotheek
 
@@ -65,32 +112,61 @@ Archetype A/B. Spiegels `defineLibraryConfig` externaliseringssemantiek van
 function defineTsdownVueLibrary(options: TsdownLibraryOptions): UserConfig;
 ```
 
-Zoals {@link definitionTsdownLibrary}, maar met draden `unplugin-vue` En Vue- bewuste dts
-voor pakketten die worden verzonden `.vue` SFC's (`i18n`, `router`, …).
+Zoals {@link definitionTsdownLibrary}, maar met bedrading voor `unplugin-vue` en Vue-bewuste dts
+voor pakketten die `.vue` SFC's verzenden (`i18n`, `router`, ...).
 
 #### Parameters
 
-| Naam   | Typ                  | Beschrijving |
-| ------ | -------------------- | ------------ |
-| opties | TsdownLibraryOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------- | ----------- |
+| opties | TsdownLibraryOptions |             |
 
 ### leesPackageDependencyNames
 
 **Soort:** functie
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[];
+function readPackageDependencyNames(rootDirectory: string, options?: { includeDevDependencies?: boolean }): string[];
 ```
 
-Lees de `dependencies` En `peerDependencies` gedeclareerd in package.json
-gelegen op `rootDirectory`. Wordt gebruikt om de runtime-afhankelijkheden van een bibliotheek buiten te houden
+Lees de `dependencies` en `peerDependencies` die zijn gedeclareerd in package.json
+gevestigd op `rootDirectory`. Wordt gebruikt om de runtime-afhankelijkheden van een bibliotheek buiten te houden
 van zijn eigen bundel, zodat consumenten deze kunnen ontdubbelen en aan de boom kunnen schudden.
 
 #### Parameters
 
-| Naam          | Typ        | Beschrijving |
-| ------------- | ---------- | ------------ |
-| rootDirectory | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------------- | ------------------------------------ | ----------- |
+| rootDirectory | tekenreeks |             |
+| opties | { includeDevDependencies?: boolean } |             |
+
+### solveCssOwner
+
+**Soort:** functie
+
+```typescript
+function resolveCssOwner(outputDirectory: string, cssRelative: string): string | undefined;
+```
+
+Los de JS-module op die een geëxtraheerd stylesheet `cssRelative` "eigenaar" is, dus een
+import van neveneffecten kan worden teruggevoerd in een module die consumenten daadwerkelijk gebruiken
+naar binnen trekken.
+
+Elke forge-framework-build (react/neutral/solid/svelte/web-components) zendt
+een CSS-module klassenkaart `X.module.js` naast de geëxtraheerde `X.css`, en elke
+component die deze klassen gebruikt, importeert de klassenkaart, dus de klassenkaart is dat ook
+de natuurlijke eigenaar (`forge-accordion.css` → `forge-accordion.module.js`, gedeeld
+`size.css` → `size.module.js`). Vue zendt in plaats daarvan SFC-gerichte stylesheets met de naam
+`X.vue_vue_type_style_index_*.css` naast een gewoon `X.js`-componentstuk, dus
+dat deel is de eigenaar. Retourneert het pad van de eigenaar ten opzichte van de uitvoermap,
+of `undefined` wanneer er geen eigenaarsdeel op schijf bestaat.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------------- | ------ | ----------- |
+| uitvoerDirectory | tekenreeks |             |
+| cssRelatief | tekenreeks |             |
 
 ### solveTsdownOutputDirectory
 
@@ -100,17 +176,27 @@ van zijn eigen bundel, zodat consumenten deze kunnen ontdubbelen en aan de boom 
 function resolveTsdownOutputDirectory(rootDirectory: string, outputDirectory: string, outputRoot?: string): string;
 ```
 
-Spiegel het uiteindelijke pakketuitvoerpad naar een geïsoleerde buildroot. Het houden van de
+Spiegel een definitief pakketuitvoerpad naar een geïsoleerde buildroot. Het houden van de
 pakket-relatief achtervoegsel maakt neutrale, raamwerk-, e-mail- en CMS-uitvoer
-onafhankelijk te promoten zonder dat tsdown een zusterboom hoeft schoon te maken.
+onafhankelijk te promoten zonder dat tsdown een zusterboom mag opruimen.
 
 #### Parameters
 
-| Naam             | Typ        | Beschrijving |
-| ---------------- | ---------- | ------------ |
-| rootDirectory    | tekenreeks |              |
-| uitvoerDirectory | tekenreeks |              |
-| uitvoerRoot      | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| --------------- | ------ | ----------- |
+| rootDirectory | tekenreeks |             |
+| uitvoerDirectory | tekenreeks |             |
+| uitvoerRoot | tekenreeks |             |
+
+### TsdownForgeTargetOptions
+
+**Soort:** interface
+
+```typescript
+export interface TsdownForgeTargetOptions extends TsdownLibraryOptions
+```
+
+Geen beschrijving opgegeven.
 
 ### TsdownBibliotheekOpties
 

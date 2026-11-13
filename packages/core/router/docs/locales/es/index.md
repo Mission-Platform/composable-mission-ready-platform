@@ -94,7 +94,7 @@ Los adaptadores **no** están expuestos como subrutas por marco. `@mission-platf
 `mp:<framework>` condiciones de exportación en su única entrada `.`, por lo que selecciona el marco **una vez** —
 `resolve.conditions` en Vite (ver `defineFrameworkAppConfig` / `frameworkResolveConditions` de
 `@mission-platform/vite-config`) y `customConditions` en TypeScript (a través del
-`@mission-platform/typescript-config/framework-<name>` presets) y luego importar todo con el especificador simple.
+`@mission-platform/typescript-config/framework-<name>` presets) y luego importe todo con el especificador simple.
 Cada compilación de adaptador también reexporta todo el núcleo neutro.
 
 ### Adaptador Vue (condición `mp:vue`)
@@ -154,7 +154,7 @@ RedwoodSDK no es uno de los marcos `mp:*`, por lo que mantiene una subruta dedic
 - **`toRedwoodRoutes`**: traduce el árbol neutral `MpRoute` en una lista plana de definiciones de ruta `rwsdk` (anidadas).
   las rutas se reducen a rutas absolutas).
 - **`renderRoutes`**: Envuelve las rutas traducidas en un Documento, reflejando
-  `render(Document, routes, options)` de `rwsdk`.
+  `rwsdk`'s `render(Document, routes, options)`.
 - **`toRedwoodPath`**: Convierte un patrón de ruta neutral en la gramática de Redwood (solo comodines `:param` y `*`;
   `:param?` → `:param`, `:param*` / `:param+`
   → `*`).
@@ -188,12 +188,12 @@ export default defineApp([renderRoutes(Document, routes)]);
 - **TypeScript**: Definiciones de tipos y seguridad de tipos
 - **Sin dependencias del marco**: JavaScript puro/TypeScript
 
-**Adaptador Vue:**
+**Vue Adaptador:**
 
 - **vue-router**: Biblioteca oficial de enrutadores Vue
 - **vue**: Vue 3 núcleos
 
-**Adaptador React:**
+**React Adaptador:**
 
 - **react-router-dom**: React Enrutador para aplicaciones web
 - **react**: núcleo React
@@ -384,7 +384,7 @@ const routes = defineRoutes([
 4. **Manejo de errores**: Maneje 404 casos con una ruta general (`/*`)
 5. **Carga diferida**: utilice importaciones dinámicas para dividir el código (específico del marco)
 6. **Seguridad de tipos**: Defina interfaces para parámetros de ruta y objetos de consulta
-7. **Administración de consultas**: mantenga los parámetros de consulta simples y seguros para URL
+7. **Administración de consultas**: mantenga los parámetros de consulta simples y seguros para las URL
 
 ## Guía de migración
 

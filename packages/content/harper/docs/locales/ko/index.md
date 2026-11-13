@@ -2,10 +2,10 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> packages/harper/docs/index.md: [packages/harper/docs/index.md](../../index.md)
+> packages/content/harper/docs/index.md: [packages/content/harper/docs/index.md](../../index.md)
 > 언어: 한국어 (ko)
 
-`@mission-platform/harper`은 다음과 같은 통합을 제공합니다. [하퍼](https://writewithharper.com) 문법 검사기 및
+`@mission-platform/harper`은 [Harper](https://writewithharper.com) 문법 검사기와
 모나코 편집자. Harper는 WebAssembly로 구동되는 빠른 오프라인 개인 정보 보호 우선 영어 문법 검사기입니다.
 브라우저에서 완전히.
 

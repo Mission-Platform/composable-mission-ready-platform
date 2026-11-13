@@ -2,10 +2,10 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> packages/harper/docs/index.md: [packages/harper/docs/index.md](../../index.md)
+> packages/content/harper/docs/index.md: [packages/content/harper/docs/index.md](../../index.md)
 > Lingua: Italiano (it)
 
-`@mission-platform/harper` fornisce un'integrazione tra il [Harper](https://writewithharper.com) correttore grammaticale e
+`@mission-platform/harper` fornisce un'integrazione tra il correttore grammaticale [Harper](https://writewithharper.com) e
 l'editore di Monaco. Harper è un correttore grammaticale inglese veloce, offline e incentrato sulla privacy, basato su WebAssembly e funzionante
 interamente nel browser.
 
@@ -21,7 +21,7 @@ interamente nel browser.
 
 ## Impostazione e configurazione
 
-Poiché Harper viene eseguito in un Web Worker, l'applicazione deve configurare la Worker Factory prima di inizializzare qualsiasi editor
+Poiché Harper viene eseguito in un Web Worker, l'applicazione deve configurare la work factory prima di inizializzare qualsiasi editor
 istanze.
 
 ### Configurazione dell'ambiente globale

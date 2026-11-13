@@ -13,12 +13,12 @@ Von Paketen und Anwendungen gemeinsam genutzte Repository-Formatierungsstandardw
 pnpm add --save-dev @mission-platform/prettier-config
 ```
 
-Exportieren Sie die freigegebene Konfiguration aus dem Arbeitsbereich `prettier.config.js`.
-Verwenden Sie lokale Überschreibungen sparsam, sodass Markdown, TypeScript, Vueund Konfiguration
+Exportieren Sie die freigegebene Konfiguration aus dem `prettier.config.js` des Arbeitsbereichs.
+Verwenden Sie lokale Überschreibungen sparsam, also Markdown, TypeScript, Vue und Konfiguration
 Dateien bleiben im gesamten Monorepo konsistent.
 
 ## Beitragen
 
-Laufen `pnpm --filter @mission-platform/prettier-config format` nach dem Wechsel des
+Führen Sie `pnpm --filter @mission-platform/prettier-config format` aus, nachdem Sie die geändert haben
 Konfiguration. Änderungen sollten konsistent für jeden verwendeten Arbeitsbereich gelten
 das Paket.

@@ -27,8 +27,8 @@ Cree capacidades neutrales a partir de primitivas de SvelteKit (sin marco para p
 
 #### Parámetros
 
-| Nombre  | Tipo                                                                                                                                                                                | Descripción |
-| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | entrada | { página: { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>; parámetros: Record<string, string> }; ir a: SvelteKitRouterSurface['ir a']; resolvePath?: (ruta: cadena) => cadena; } |             |
 
 ### MpEnlace
@@ -36,7 +36,7 @@ Cree capacidades neutrales a partir de primitivas de SvelteKit (sin marco para p
 **Tipo:** componente
 
 ```typescript
-export const MpLink;
+export MpLink = 'a'
 ```
 
 SvelteKit utiliza anclajes normales para los enlaces. El compilador mantiene este marcador para que
@@ -47,7 +47,7 @@ La salida Svelte puede verificar el uso neutral de `MpLink` de los autores del p
 **Tipo:** componente
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Outlet es propiedad de la aplicación en SvelteKit; El diagnóstico de capacidad rechaza `view`.
@@ -64,9 +64,9 @@ Resuelva un objetivo neutral en una cadena href.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| a      | MpRouteLocationRaw |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 
 ### setForgeSvelteKitRouter
 
@@ -81,8 +81,8 @@ Las aplicaciones suelen llamar a esto una vez desde un diseño raíz con módulo
 
 #### Parámetros
 
-| Nombre     | Tipo                      | Descripción |
-| ---------- | ------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ---------------------- | ----------- |
 | superficie | SvelteKitRouterSuperficie |             |
 
 ### SvelteKitRouterSuperficie
@@ -110,8 +110,8 @@ Cree una ubicación neutral a partir de una instantánea de la página de Svelte
 
 #### Parámetros
 
-| Nombre | Tipo                                                                                       | Descripción |
-| ------ | ------------------------------------------------------------------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------------------------------------------------------------------------- | ----------- |
 | página | {url: Elegir<URL, 'pathname' \| 'search' \| 'hash'>; parámetros: Record<string, string>; } |             |
 
 ### toSvelteHref
@@ -122,13 +122,13 @@ Cree una ubicación neutral a partir de una instantánea de la página de Svelte
 function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string;
 ```
 
-Serializa un objetivo neutral para la navegación SvelteKit.
+Serializar un objetivo neutral para la navegación SvelteKit.
 
 #### Parámetros
 
-| Nombre       | Tipo                     | Descripción |
-| ------------ | ------------------------ | ----------- |
-| a            | MpRouteLocationRaw       |             |
+| Nombre | Tipo | Descripción |
+| ----------- | ------------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 | resolverRuta | (ruta: cadena) => cadena |             |
 
 ### utilizarMpNavigation

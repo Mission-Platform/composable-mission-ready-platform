@@ -47,11 +47,11 @@ Bouw een generatiefasewaarschuwing; het Ghost-doel geeft nooit fouten weer.
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| code         | tekenreeks |              |
-| bericht      | tekenreeks |              |
-| bestandsnaam | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| code | tekenreeks |             |
+| bericht | tekenreeks |             |
+| bestandsnaam | tekenreeks |             |
 
 ## `src/ghost`
 
@@ -67,9 +67,9 @@ Bind Ghost-themaprojectie aan een framework-uitvoerplug-in die eigendom is van d
 
 #### Parameters
 
-| Naam   | Typ                  | Beschrijving |
-| ------ | -------------------- | ------------ |
-| opties | ForgeGhostCmsOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------- | ----------- |
+| opties | ForgeGhostCmsOptions |             |
 
 ### ForgeGhostCmsOptions
 
@@ -103,11 +103,11 @@ dezelfde knop, en Ghost heeft er maar één naamruimte voor.
 
 #### Parameters
 
-| Naam        | Typ                             | Beschrijving |
-| ----------- | ------------------------------- | ------------ |
-| componenten | alleen-lezen ContentComponent[] |              |
-| themaNaam   | tekenreeks                      |              |
-| diagnostiek | CompilerDiagnostisch[]          |              |
+| Naam | Typ | Beschrijving |
+| ----------- | --------------------------- | ----------- |
+| componenten | alleen-lezen ContentComponent[] |             |
+| themaNaam | tekenreeks |             |
+| diagnostiek | CompilerDiagnostisch[] |             |
 
 ### DEFAULT_GHOST_THEME_NAME
 
@@ -133,9 +133,9 @@ Verzend het contract met gedeeltelijke parameters als mooi afgedrukte JSON.
 
 #### Parameters
 
-| Naam        | Typ                             | Beschrijving |
-| ----------- | ------------------------------- | ------------ |
-| componenten | alleen-lezen ContentComponent[] |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------- | ----------- |
+| componenten | alleen-lezen ContentComponent[] |             |
 
 ### emitGhostThemeConfig
 
@@ -153,11 +153,11 @@ Zend het `config.custom`-fragment uit als mooi afgedrukte JSON.
 
 #### Parameters
 
-| Naam        | Typ                             | Beschrijving |
-| ----------- | ------------------------------- | ------------ |
-| componenten | alleen-lezen ContentComponent[] |              |
-| themaNaam   | tekenreeks                      |              |
-| diagnostiek | CompilerDiagnostisch[]          |              |
+| Naam | Typ | Beschrijving |
+| ----------- | --------------------------- | ----------- |
+| componenten | alleen-lezen ContentComponent[] |             |
+| themaNaam | tekenreeks |             |
+| diagnostiek | CompilerDiagnostisch[] |             |
 
 ### GHOST_COMPONENTS_MANIFEST
 
@@ -211,7 +211,7 @@ De invoer van één component in `forge-components.json`.
 export interface GhostComponentsManifest
 ```
 
-Het hele gedeeltelijke parametercontract.
+Het hele deelparametercontract.
 
 ### GhostParameter
 
@@ -249,9 +249,9 @@ zou de projectie niet-deterministisch maken.
 
 #### Parameters
 
-| Naam | Typ        | Beschrijving |
-| ---- | ---------- | ------------ |
-| veld | InhoudVeld |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------ | ----------- |
+| veld | InhoudVeld |             |
 
 ### GhostSettingType
 
@@ -298,9 +298,9 @@ Projecteer één component op zijn `forge-components.json`-invoer.
 
 #### Parameters
 
-| Naam        | Typ             | Beschrijving |
-| ----------- | --------------- | ------------ |
-| bestanddeel | InhoudComponent |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
 
 ## `src/template`
 
@@ -320,9 +320,9 @@ het onderdeel is veranderd.
 
 #### Parameters
 
-| Naam        | Typ             | Beschrijving |
-| ----------- | --------------- | ------------ |
-| bestanddeel | InhoudComponent |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
 
 ### ghostGedeeltelijkeBestandsnaam
 
@@ -336,9 +336,9 @@ Het thema-relatieve pad waarnaar het gedeeltelijke wordt geschreven.
 
 #### Parameters
 
-| Naam        | Typ             | Beschrijving |
-| ----------- | --------------- | ------------ |
-| bestanddeel | InhoudComponent |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
 
 ### ghostGedeeltelijkeNaam
 
@@ -352,9 +352,9 @@ De gedeeltelijke naam waaronder een component wordt aangeroepen (`{{> forge/badg
 
 #### Parameters
 
-| Naam        | Typ             | Beschrijving |
-| ----------- | --------------- | ------------ |
-| bestanddeel | InhoudComponent |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
 
 ### ghostTemplateDiagnostiek
 
@@ -375,7 +375,7 @@ wat ermee te maken heeft, moet gebeuren voordat het gedeeltelijke wordt ingeroep
 
 #### Parameters
 
-| Naam         | Typ             | Beschrijving |
-| ------------ | --------------- | ------------ |
-| bestanddeel  | InhoudComponent |              |
-| bestandsnaam | tekenreeks      |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
+| bestandsnaam | tekenreeks |             |

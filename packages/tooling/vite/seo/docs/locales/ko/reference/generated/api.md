@@ -25,23 +25,22 @@ function seoPlugin(options: SeoPluginOptions): Plugin;
 
 #### 매개변수
 
-| 이름 | 유형            | 설명 |
-| ---- | --------------- | ---- |
-| 옵션 | Seo플러그인옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ---------------- | ----------- |
+| 옵션 | Seo플러그인옵션 |             |
 
 #### 계약
 
 - **@예:** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 
@@ -59,23 +58,22 @@ function seoPlugin(options: SeoPluginOptions): Plugin
 
 #### 매개변수
 
-| 이름 | 유형            | 설명 |
-| ---- | --------------- | ---- |
-| 옵션 | Seo플러그인옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ---------------- | ----------- |
+| 옵션 | Seo플러그인옵션 |             |
 
 #### 계약
 
 - **@예:** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 

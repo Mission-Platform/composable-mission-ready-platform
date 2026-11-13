@@ -13,12 +13,12 @@ Gemeinsame PostCSS-Pipeline, die von Mission Platform-Stylesheets verwendet wird
 pnpm add --save-dev @mission-platform/postcss-config
 ```
 
-Verweisen Sie im Arbeitsbereich auf das Paket `postcss.config.mjs` eher als
+Verweisen Sie auf das Paket aus dem `postcss.config.mjs` des Arbeitsbereichs statt
 Duplizieren der gemeinsam genutzten Plugin-Pipeline. Dazu gehören lokale Overrides
 Arbeitsbereichskonfiguration.
 
 ## Beitragen
 
-Laufen `pnpm --filter @mission-platform/postcss-config lint` Und
+Führen Sie `pnpm --filter @mission-platform/postcss-config lint` aus und
 `pnpm --filter @mission-platform/postcss-config format`. Browser behalten
 Kompatibilitätsverhalten in diesem Paket und vermeiden Sie anwendungsspezifische Plugins.

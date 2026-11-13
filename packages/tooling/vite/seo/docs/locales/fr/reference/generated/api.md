@@ -25,23 +25,22 @@ chaque exécution de build et de serveur de développement.
 
 #### Paramètres
 
-| Nom     | Tapez                 | Descriptif |
-| ------- | --------------------- | ---------- |
-| options | Options du plugin SEO |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---------------- | ----------- |
+| options | Options du plugin SEO |             |
 
 #### Contracter
 
 - **@exemple:** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 
@@ -59,23 +58,22 @@ chaque exécution de build et de serveur de développement.
 
 #### Paramètres
 
-| Nom     | Tapez                 | Descriptif |
-| ------- | --------------------- | ---------- |
-| options | Options du plugin SEO |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---------------- | ----------- |
+| options | Options du plugin SEO |             |
 
 #### Contracter
 
 - **@exemple:** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 

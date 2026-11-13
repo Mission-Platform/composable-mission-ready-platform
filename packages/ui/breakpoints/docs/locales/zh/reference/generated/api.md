@@ -71,9 +71,9 @@ function getBreakpointValue(key: BreakpointKey): number;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 关键 | 断点键 |      |
+|名称 |类型 |描述 |
+| ---- | ------------- | ----------- |
+|关键|断点键 |             |
 
 ### 最大媒体查询
 
@@ -88,9 +88,9 @@ function maxMediaQuery(key: BreakpointKey): string;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 关键 | 断点键 |      |
+|名称 |类型 |描述 |
+| ---- | ------------- | ----------- |
+|关键|断点键 |             |
 
 #### 合同
 
@@ -108,9 +108,9 @@ function mediaQuery(key: BreakpointKey): string;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 关键 | 断点键 |      |
+|名称 |类型 |描述 |
+| ---- | ------------- | ----------- |
+|关键|断点键 |             |
 
 #### 合同
 
@@ -129,9 +129,9 @@ function resolveBreakpoint(width: number): BreakpointKey;
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 宽度 | 数量 |      |
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|宽度|数量 |             |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -155,9 +155,9 @@ function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | 只读<HideAtProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<HideAtProperties> |             |
 
 ### 隐藏在属性
 
@@ -192,9 +192,9 @@ function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | 只读<ShowAtProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<ShowAtProperties> |             |
 
 ### 在属性处显示
 
@@ -233,16 +233,16 @@ function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>):
 
 通过中性钩子跟踪反应视口宽度
 （`useState`/`useEffect`）。它的标签通过 i18next 进行本地化：每个
-`i18next.t(...)` 调用携带 `defaultValue` （英语后备），并且
+`i18next.t(...)` 调用携带 `defaultValue`（英语后备），并且
 `@mission-platform/vite-plugin-forge` 注入框架 `useI18n()` 钩子所以
 相同的源解析为包的 `mp.breakpoints` 命名空间
 React 和 Vue。
 
 #### 参数
 
-| 名称  | 类型                            | 描述 |
-| ----- | ------------------------------- | ---- |
-| _属性 | 只读<BreakpointDebugProperties> |      |
+|名称 |类型 |描述 |
+| ----------- | ----------------------------------- | ----------- |
+| _属性 |只读<BreakpointDebugProperties> |             |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 

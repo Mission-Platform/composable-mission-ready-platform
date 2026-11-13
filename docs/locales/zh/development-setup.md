@@ -14,13 +14,13 @@
 
 ### 系统要求
 
-| 工具         | 所需版本     | 目的                            |
-| :----------- | :----------- | :------------------------------ |
-| **Node.js**  | `24.19.0`    | 运行时环境（主动 LTS）          |
-| **pnpm**     | `11.21.0`    | 包管理器和工作区编排器          |
-| **吉特**     | 最新稳定     | 版本控制                        |
-| **生锈**     | 稳定的工具链 | 可选的独立 Rust 基准测试开发    |
-| **码头工人** | 最新稳定     | 仅 Emscripten Hunspell 构建需要 |
+|工具|所需版本 |目的|
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0` |运行时环境（主动 LTS）|
+| **pnpm** | `12.4.2` |包管理器和工作区编排器 |
+| **吉特** |最新稳定|版本控制 |
+| **生锈** |稳定的工具链 |可选的独立 Rust 基准测试开发 |
+| **码头工人** |最新稳定|仅 Emscripten Hunspell 构建需要 |
 
 ### 版本管理（推荐）
 
@@ -32,11 +32,11 @@ nvm install
 nvm use
 ```
 
-使能够 **pnpm** 使用核心包：
+使用 Corepack 启用 **pnpm**：
 
 ```bash
 corepack enable
-corepack prepare pnpm@11.21.0 --activate
+corepack prepare pnpm@12.4.2 --activate
 ```
 
 ## 初始设置
@@ -58,8 +58,24 @@ cd composable-mission-ready-platform
 pnpm install
 ```
 
-该命令触发 `prepare` 脚本，它初始化 **Husky** 以进行提交 linting 并确保所有内部
+此命令触发 `prepare` 脚本，该脚本初始化 **Husky** 以进行提交检查并确保所有内部
 包链接已正确建立。
+
+### SonarLint 语言服务器
+
+存储库的 `agent-lsp.json` 包括用于 JavaScript 和 TypeScript 的官方 SonarLint 语言服务器。的
+服务器作为 Java 存档而不是 npm 包分发，因此安装 Java 并构建或下载
+来自 [SonarSource](https://github.com/SonarSource/sonarlint-language-server) 的 `sonarlint-language-server` 存档。
+
+在启动 LSP 之前设置服务器存档和 JavaScript 分析器：
+
+```bash
+export SONARLINT_LS_JAR=/path/to/sonarlint-language-server.jar
+export SONARLINT_ANALYZERS=/path/to/sonarjs.jar
+```
+
+可选的 `SONARLINT_JAVA` 变量可以选择 Java 可执行文件。存储库启动器验证配置的
+路径并转发服务器的 stdio 协议，而不需要全局安装的命令。
 
 ### 3. 验证安装
 
@@ -69,7 +85,7 @@ pnpm install
 pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
-这 `...` 还构建包所需的 Forge 依赖项。的
+`...` 过滤器还构建包所需的 Forge 依赖项。的
 中性代码扫描器是根据其 Flint 图编译的；它没有
 需要 Rust 或 `wasm-pack` 构建步骤。
 
@@ -108,9 +124,9 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-Forge 支持的包发布匹配 `mp:vue`, `mp:react`, `mp:svelte`,
-`mp:solid`， 和 `mp:web-component` 状况。活动状态必须是
-由消费捆绑器配置；看 [编译器参考](../../../packages/tooling/vite/forge/docs/locales/zh/reference/compiler.md)
+Forge 支持的软件包发布匹配的 `mp:vue`、`mp:react`、`mp:svelte`、
+`mp:solid` 和 `mp:web-component` 条件。活动状态必须是
+由消费捆绑器配置；请参阅[编译器参考](../../../packages/tooling/vite/forge/docs/locales/zh/reference/compiler.md)
 用于目标插件和声明管道。
 
 ### 应用开发
@@ -122,22 +138,22 @@ Forge 支持的包发布匹配 `mp:vue`, `mp:react`, `mp:svelte`,
 pnpm exec turbo run dev --filter @mission-platform/my-care-notes
 ```
 
-该应用程序通常可在 `http://localhost:5173`.
+该应用程序通常可通过 `http://localhost:5173` 获取。
 
 ### 常用命令
 
-| 任务     | 命令          | 描述                      |
-| :------- | :------------ | :------------------------ |
-| **构建** | `pnpm build`  | 构建所有应用程序和包      |
-| **测试** | `pnpm test`   | 运行全部 Vitest 套房      |
-| **棉绒** | `pnpm lint`   | 跑步 ESLint 穿过 monorepo |
-| **格式** | `pnpm format` | 检查格式 Prettier         |
+|任务|命令|描述 |
+| :--------- | :------------ | :----------------------------- |
+| **构建** | `pnpm build` |构建所有应用程序和包 |
+| **测试** | `pnpm test` |运行所有 Vitest 套件 |
+| **棉绒** | `pnpm lint` |跨 monorepo 运行 ESLint |
+| **格式** | `pnpm format` |使用 Prettier 检查格式 |
 
 ## 故障排除
 
 ### 清除缓存
 
-如果遇到意外的构建错误，请清除 Turborepo 并 Node 缓存：
+如果遇到意外的构建错误，请清除 Turborepo 和 Node 缓存：
 
 ```bash
 # Remove Turborepo cache
@@ -150,7 +166,7 @@ pnpm install
 
 ### WASM 构建失败
 
-如果 Forge Web 脚本工件无法构建，请检查其编译器诊断
-并验证所选的静态或动态链路配置文件。这
+如果 Flint 工件无法构建，请检查其编译器诊断
+并验证所选的静态或动态链路配置文件。的
 `@mission-platform/hunspell` Emscripten 构建还需要 Docker
 正在跑步。

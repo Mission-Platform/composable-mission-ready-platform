@@ -23,9 +23,9 @@ Drucken Sie die Unterklasse `ForgeElement` und ihre Registrierung für einen abg
 
 #### Parameter
 
-| Name   | Geben Sie                  | ein Beschreibung |
-| ------ | -------------------------- | ---------------- |
-| planen | WebComponentsLoweredModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | -------------------------- | ----------- |
+| planen | WebComponentsLoweredModule |             |
 
 ## `src/emitters/module`
 
@@ -46,12 +46,12 @@ Transformieren Sie das gesamte Modul in die native Web-Components-Zielquelle.
 
 #### Parameter
 
-| Name              | Geben Sie                  | ein Beschreibung |
-| ----------------- | -------------------------- | ---------------- |
-| Modul             | SemanticModule             |                  |
-| Komponentenname   | Zeichenfolge               |                  |
-| Komponentenordner | ReadonlySet<string>        |                  |
-| abgesenkt         | WebComponentsLoweredModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------------- | -------------------------- | ----------- |
+| Modul | SemanticModule |             |
+| Komponentenname | Zeichenfolge |             |
+| Komponentenordner | ReadonlySet<string> |             |
+| abgesenkt | WebComponentsLoweredModule |             |
 
 ## `src/index`
 
@@ -66,6 +66,74 @@ function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 Erstellen Sie das reine TypeScript-Webkomponenten-Ausgabe-Plugin.
 
 ## `src/lower`
+
+### LowerWebComponentsModule
+
+**Art:** Funktion
+
+```typescript
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
+```
+
+Senken Sie die neutrale IR in die Zielabsichten der Web-Komponenten.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------- | ----------- |
+| Modul | SemanticModule |             |
+| Kontext | Zielkontext |             |
+
+### LowerWebComponentsPlan
+
+**Art:** Funktion
+
+```typescript
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
+```
+
+Erstellen Sie den Web-Components-Zielplan für ein neutrales Modul.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------- | ----------- |
+| Modul | SemanticModule |             |
+| Kontext | Zielkontext |             |
+
+## `src/lower/host-plan`
+
+### inferWebComponentsHost
+
+**Art:** Funktion
+
+```typescript
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+  component?: GenericComponent,
+): WebComponentsHostPlan;
+```
+
+Leiten Sie einen benutzerdefinierten integrierten Host nur von einem einzigen, statischen intrinsischen Root ab.
+
+Die Zulassungsliste ist absichtlich konservativ: Ein intrinsisches Tag ist gültig
+HTML garantiert nicht, dass es sich um eine sichere oder nützliche benutzerdefinierte Integration handelt
+Basis für alle unterstützten DOM-Implementierungen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| returnNode | GenericRenderNode \| undefiniert |             |
+| Komponente | GenericComponent |             |
+
+## `src/lower/types`
 
 ### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
 
@@ -87,28 +155,6 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 
 Kompatibilitätsstandardwerte werden für generierte Komponenten beibehalten.
 
-### inferWebComponentsHost
-
-**Art:** Funktion
-
-```typescript
-function inferWebComponentsHost(
-  returnNode: GenericRenderNode | undefined,
-): WebComponentsHostPlan;
-```
-
-Leiten Sie einen benutzerdefinierten integrierten Host nur von einem einzigen, statischen intrinsischen Root ab.
-
-Die Zulassungsliste ist absichtlich konservativ: Ein intrinsisches Tag ist gültig
-HTML garantiert nicht, dass es sich um eine sichere oder nützliche benutzerdefinierte Integration handelt
-Basis für alle unterstützten DOM-Implementierungen.
-
-#### Parameter
-
-| Name       | Geben Sie                        | ein Beschreibung |
-| ---------- | -------------------------------- | ---------------- |
-| returnNode | GenericRenderNode \| undefiniert |                  |
-
 ### isWebComponentsLowered
 
 **Art:** Funktion
@@ -123,49 +169,9 @@ Grenzen Sie einen Zielplan ohne Casting auf den Webkomponenten-Plan ein.
 
 #### Parameter
 
-| Name      | Geben Sie                          | ein Beschreibung |
-| --------- | ---------------------------------- | ---------------- |
-| abgesenkt | TargetLoweredModule \| undefiniert |                  |
-
-### LowerWebComponentsModule
-
-**Art:** Funktion
-
-```typescript
-function lowerWebComponentsModule(
-  module: SemanticModule,
-  context: TargetContext,
-): TargetIntentions;
-```
-
-Senken Sie die neutrale IR in die Zielabsichten der Web-Komponenten.
-
-#### Parameter
-
-| Name    | Geben Sie      | ein Beschreibung |
-| ------- | -------------- | ---------------- |
-| Modul   | SemanticModule |                  |
-| Kontext | Zielkontext    |                  |
-
-### LowerWebComponentsPlan
-
-**Art:** Funktion
-
-```typescript
-function lowerWebComponentsPlan(
-  module: SemanticModule,
-  context: TargetContext,
-): WebComponentsLoweredModule;
-```
-
-Erstellen Sie den Web-Components-Zielplan für ein neutrales Modul.
-
-#### Parameter
-
-| Name    | Geben Sie      | ein Beschreibung |
-| ------- | -------------- | ---------------- |
-| Modul   | SemanticModule |                  |
-| Kontext | Zielkontext    |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------------------- | ----------- |
+| abgesenkt | TargetLoweredModule \| undefiniert |             |
 
 ### UNBEKANNTER_TYP
 
@@ -192,7 +198,7 @@ Die Framework-ID des Plugins und der Diskriminator seines niedrigeren Plans.
 **Art:** konstant
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS;
+export const WEBCOMPONENTS_NATIVE_HOSTS: Readonly<Record<string, string>>;
 ```
 
 Die Kompatibilitätstabelle für Roots, die problemlos integriert werden können.
@@ -215,7 +221,7 @@ Ein privates Feld, das die Bereinigungsfunktion eines Effekts zwischen Lebenszyk
 export type WebComponentsDerivedBody = |
 ```
 
-Der Hauptteil eines abgeleiteten Getters, bereits in den Element-Instanz-Bereich umgeschrieben:
+Der Hauptteil eines abgeleiteten Getters, bereits in den Elementinstanzbereich umgeschrieben:
 Eine prägnante Memo-Fabrik gibt einen einzelnen Ausdruck zurück, eine mit Blockkörper bringt einen
 seine eigenen Anweisungen (die der Getter ausführen und nicht zurückgeben muss).
 
@@ -227,7 +233,7 @@ seine eigenen Anweisungen (die der Getter ausführen und nicht zurückgeben muss
 export interface WebComponentsDerivedValue
 ```
 
-Ein gespeicherter Wert, der auf einen Getter reduziert wird, der beim Lesen neu berechnet wird.
+Ein gespeicherter Wert, der auf einen Getter reduziert wird, der von einem optionalen Instanzcache unterstützt wird.
 
 ### WebComponentsElementRef
 
@@ -325,7 +331,7 @@ Ein generierter Lebenszyklusrückruf und die von ihm ausgeführten Anweisungen.
 export interface WebComponentsListKey
 ```
 
-Ein Listenrendering-Schlüsselkandidat, der für die Listenausgabe des Ziels beibehalten wird.
+Ein Schlüsselkandidat für die Listenwiedergabe, der für die Listenausgabe des Ziels beibehalten wird.
 
 ### WebComponentsLoweredModule
 
@@ -348,12 +354,9 @@ export interface WebComponentsPromotedLocal
 Eine Render-Head-Konstante, die zu einem Elementmitglied **heraufgestuft** wurde.
 
 Es werden ein Memo-Getter, ein Lebenszyklus-Callback und ein Feldinitialisierer ausgegeben
-_außerhalb_ `render()`, also gibt es für ein vom Render-Head deklariertes Local kein Existieren
+_outside_ `render()`, also ein Local, für das der Render-Head deklariert, dass es nicht existiert
 sie. Die Werbung für die Erklärung gegenüber einem Mitglied ist das, was eine solche Lektüre ausmacht
 auflösbar – durch `this.<name>` – statt baumelnd.
-
-Gefördert wird nur eine nachweislich wirkungsfreie Erklärung (vgl
-{@link promoteHeadLocals}); alles andere bleibt in `render()`.
 
 ### WebComponentsPropertyDeclaration
 
@@ -393,7 +396,7 @@ Die `customElements.define`-Optionen, die für eine benutzerdefinierte integrier
 export interface WebComponentsRuntimeImports
 ```
 
-Das importiert ein generiertes Elementmodul, das benötigt wird.
+Der Import eines generierten Elementmoduls erfordert.
 
 ### WebComponentsSetupPhase
 
@@ -404,28 +407,6 @@ export interface WebComponentsSetupPhase
 ```
 
 Die einmalige **Einrichtung**-Phase des Elements.
-
-Ein Seed wie `useState(parseTime(modelValue))` liest eine reaktive Eigenschaft und
-Eine Eigenschaft enthält erst dann einen Wert, wenn die Attribute des Hosts übernommen wurden.
-Dies geschieht bei der Verbindung, lange nachdem der Konstruktor ausgeführt wurde. Schlimmer noch, die
-Der Wert wird normalerweise über eine Render-Head-Konstante erreicht („const initial =
-parseTime(modelValue);`), dessen Wirkungsfreiheit nicht nachgewiesen werden konnte und daher
-bleibt in `render()`, sodass ein Konstruktor-Seed auf einen Namen verweisen würde, der dies tut
-gibt es dort überhaupt nicht.
-
-Ein solcher Startwert wird auf `ForgeElement.setup()` verschoben, das von der Laufzeit aufgerufen wird
-nach der Attributübernahme und vor dem ersten Rendern genau einmal pro Element
-– Eine erneute Verbindung darf nicht erneut erfolgen und verwerfen, was der Benutzer seitdem geändert hat.
-Die Kopfaussagen, die der Seed benötigt, werden dort zuerst in der Kopfreihenfolge und wiederholt
-transitiv geschlossen, und **nur** diese.
-
-Das Wiedergeben statt Zwischenspeichern ist bewusst. In der neutralen Quelle der Kopf
-_ist_ der Komponentenkörper, also `const initial = parseTime(modelValue);` bereits
-läuft bei jedem Rendern; Eine erneute Auswertung während des Setups führt zu keinem Aufruf
-Die erstellte Komponente führt nicht bereits bei jedem Durchgang eine Leistung aus. Zwischenspeichern in einem
-Das Feld würde stattdessen die Anzahl der Bewertungen _reduzieren_ und den Wert an angeben
-Identität, die die Quelle nie versprochen hat. Nur ein einfaches `const` (oder eine Funktion)
-Die Deklaration wird jemals wiederholt – siehe {@link headReplay}.
 
 ### WebComponentsShadowPolicy
 
@@ -484,10 +465,10 @@ Optimieren Sie die Zielabsichten der Web-Komponenten. andere Ziele passieren.
 
 #### Parameter
 
-| Name      | Geben Sie             | ein Beschreibung |
-| --------- | --------------------- | ---------------- |
-| Absichten | Zielabsichten         |                  |
-| Optionen  | TargetOptimizeOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------- | ----------- |
+| Absichten | Zielabsichten |             |
+| Optionen | TargetOptimizeOptions |             |
 
 ### optimiereWebComponentsPlan
 
@@ -504,10 +485,10 @@ Verfeinern Sie einen reduzierten Web-Komponenten-Plan und zeichnen Sie jeden aus
 
 #### Parameter
 
-| Name     | Geben Sie                  | ein Beschreibung |
-| -------- | -------------------------- | ---------------- |
-| planen   | WebComponentsLoweredModule |                  |
-| Optionen | TargetOptimizeOptions      |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------------- | ----------- |
+| planen | WebComponentsLoweredModule |             |
+| Optionen | TargetOptimizeOptions |             |
 
 ### WEB_COMPONENTS_OPTIMIZATIONS
 
@@ -544,9 +525,9 @@ Transformieren Sie ein neutrales Hook-Modul in seine Web-Components-Quelle.
 
 #### Parameter
 
-| Name  | Geben Sie      | ein Beschreibung |
-| ----- | -------------- | ---------------- |
-| Modul | SemanticModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------- | ----------- |
+| Modul | SemanticModule |             |
 
 ## `src/transformers/expression`
 
@@ -577,9 +558,9 @@ ist: Der Körper läuft immer noch genau dann, wenn er aufgerufen wird.
 
 #### Parameter
 
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Text | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Text | Zeichenfolge |             |
 
 ### isPureExpressionText
 
@@ -599,9 +580,9 @@ Anweisung und sie bleibt in `render()`.
 
 #### Parameter
 
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Text | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Text | Zeichenfolge |             |
 
 ## `src/transformers/props-binding`
 
@@ -620,9 +601,9 @@ Daher muss das Muster ausgeschnitten werden, bevor es zerlegt werden kann.
 
 #### Parameter
 
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Text | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Text | Zeichenfolge |             |
 
 ### parsePropsBinding
 
@@ -640,9 +621,9 @@ sein bisheriges Verhalten, anstatt auf eine Teillesung zu reagieren.
 
 #### Parameter
 
-| Name       | Geben Sie    | ein Beschreibung |
-| ---------- | ------------ | ---------------- |
-| MusterText | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ------ | ----------- |
+| MusterText | Zeichenfolge |             |
 
 ### PropsBinding
 
@@ -684,10 +665,10 @@ es ist also die Standardeinstellung – Byte-identisch mit der erstellten.
 
 #### Parameter
 
-| Name    | Geben Sie                       | ein Beschreibung |
-| ------- | ------------------------------- | ---------------- |
-| Bindung | PropsBinding                    |                  |
-| isRead  | (Name: Zeichenfolge) => boolean |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------- | ----------- |
+| Bindung | PropsBinding |             |
+| isRead | (Name: Zeichenfolge) => boolean |             |
 
 ## `src/transformers/props-type`
 
@@ -713,10 +694,10 @@ Jeder Lesevorgang einer erforderlichen Requisite, möglicherweise `undefined`.
 
 #### Parameter
 
-| Name     | Geben Sie          | ein Beschreibung |
-| -------- | ------------------ | ---------------- |
-| Referenz | PropsTypeReference |                  |
-| Mitglied | Zeichenfolge       |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------------ | ----------- |
+| Referenz | PropsTypeReference |             |
+| Mitglied | Zeichenfolge |             |
 
 ### PropsTypeReference
 
@@ -747,10 +728,10 @@ In beiden Fällen würde die Referenz im generierten Modul nicht aufgelöst werd
 
 #### Parameter
 
-| Name        | Geben Sie                   | ein Beschreibung |
-| ----------- | --------------------------- | ---------------- |
-| Anmerkung   | Zeichenfolge \| undefiniert |                  |
-| Erklärungen | readonly GenericStatement[] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | --------------------------- | ----------- |
+| Anmerkung | Zeichenfolge \| undefiniert |             |
+| Erklärungen | readonly GenericStatement[] |             |
 
 ### typeMembers
 
@@ -765,15 +746,15 @@ Jeder ist optional (`name?: T`).
 
 Es werden nur Mitglieder auf der obersten Ebene des ersten `{…}`-Körpers erfasst, und zwar nur
 wo ein Mitglied rechtmäßig beginnen darf (direkt nach der öffnenden Klammer, ein `;`
-oder ein `,`). Mitglieder, die von einer `extends`/`&`-Basis beigesteuert wurden, sind daher _nicht_
+oder ein `,`). Von einer `extends`/`&`-Basis beigetragene Mitglieder sind daher _nicht_
 gemeldet – der Anrufer behandelt sie als unbekannt und greift zurück, was der Fall ist
 sichere Richtung.
 
 #### Parameter
 
-| Name             | Geben Sie    | ein Beschreibung |
-| ---------------- | ------------ | ---------------- |
-| Deklarationstext | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------------- | ------ | ----------- |
+| Deklarationstext | Zeichenfolge |             |
 
 ### unwrapPropsTypeName
 
@@ -788,6 +769,6 @@ Klammern und mitgliedererhaltende generische Wrapper, die eine Komponente schrei
 
 #### Parameter
 
-| Name | Geben Sie                   | ein Beschreibung |
-| ---- | --------------------------- | ---------------- |
-| Text | Zeichenfolge \| undefiniert |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------- | ----------- |
+| Text | Zeichenfolge \| undefiniert |             |

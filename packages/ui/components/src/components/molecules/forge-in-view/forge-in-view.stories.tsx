@@ -1,8 +1,7 @@
 import { ForgeInView } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import styles from './forge-in-view.module.scss';
-
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * `ForgeInView` is the write-once component of `@mission-platform/components`.

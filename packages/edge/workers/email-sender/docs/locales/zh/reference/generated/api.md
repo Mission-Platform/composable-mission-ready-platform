@@ -11,12 +11,22 @@
 
 ## `src/index`
 
+### 默认
+
+**种类：**常数
+
+```typescript
+export const handler: ExportedHandler<WorkerEnvironment>;
+```
+
+没有提供描述。
+
 ### 送货
 
 **种类：**类型
 
 ```typescript
-export type Delivery = (environment: Env, message: SmtpMessage) => Promise<void>;
+export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 ```
 
 没有提供描述。
@@ -36,15 +46,26 @@ export interface EmailRequest
 **种类：**功能
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
+function handleRequest(
+  request: Request,
+  environment: WorkerEnvironment,
+  delivery: Delivery = defaultDelivery,
+): Promise<Response>;
 ```
 
-没有提供描述。
+处理传入的电子邮件传送请求、验证输入并传送到 SMTP 服务。
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 请求 | 请求 |      |
-| 环境 | 环境 |      |
-| 交货 | 交货 |      |
+|名称 |类型 |描述 |
+| ----------- | ----------------- | -------------------------------------------------- |
+|请求 |请求 | - 传入 HTTP 请求。                           |
+|环境 |工人环境 | - 工作环境绑定。                     |
+|交货 |交货| - 处理消息传输的传递函数。 |
+
+#### 合同
+
+- **@param:** - 传入 HTTP 请求。
+- **@param:** - Worker 环境绑定。
+- **@param:** - 处理消息传输的传递函数。
+- **@returns:** HTTP 响应。

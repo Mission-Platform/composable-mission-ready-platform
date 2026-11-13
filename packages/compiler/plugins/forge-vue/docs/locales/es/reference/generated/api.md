@@ -48,12 +48,12 @@ Transforme un módulo de componente neutro en un SFC Vue (más cualquier SFC aux
 
 #### Parámetros
 
-| Nombre                  | Tipo                    | Descripción |
-| ----------------------- | ----------------------- | ----------- |
-| módulo                  | Módulo Semántico        |             |
-| nombredelcomponente     | cadena                  |             |
+| Nombre | Tipo | Descripción |
+| ---------------- | ------------------- | ----------- |
+| módulo | Módulo Semántico |             |
+| nombredelcomponente | cadena |             |
 | carpetas de componentes | Sólo lecturaSet<string> |             |
-| plano                   | Módulo VueBajado        |             |
+| plano | Módulo VueBajado |             |
 
 ## `src/emitters/hook-module`
 
@@ -69,8 +69,8 @@ Compile un módulo de enlace neutro en su fuente componible Vue (`.ts`).
 
 #### Parámetros
 
-| Nombre | Tipo             | Descripción |
-| ------ | ---------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | -------------- | ----------- |
 | módulo | Módulo Semántico |             |
 
 ## `src/index`
@@ -101,8 +101,8 @@ Limite un plan de destino al plan Vue sin realizar casting.
 
 #### Parámetros
 
-| Nombre | Tipo                             | Descripción |
-| ------ | -------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------------------- | ----------- |
 | bajado | TargetLoweredModule\| indefinido |             |
 
 ### módulo Vue inferior
@@ -121,9 +121,9 @@ en intacto para que las fases posteriores mantengan acceso completo al IR.
 
 #### Parámetros
 
-| Nombre   | Tipo              | Descripción |
-| -------- | ----------------- | ----------- |
-| ir       | Módulo Semántico  |             |
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| ir | Módulo Semántico |             |
 | contexto | Contexto objetivo |             |
 
 ### VuePlan Computado
@@ -276,7 +276,7 @@ Contraer declaraciones `computed` que comparten una fábrica.
 export const DROP_UNUSED_IMPORTS;
 ```
 
-Prune `vue` importa el plan refinado que ya no necesita.
+Ciruela pasa `vue` importa el plan refinado que ya no necesita.
 
 ### HOIST_STATIC_SUBTREES
 
@@ -296,7 +296,7 @@ Elevar subárboles totalmente estáticos (constantes de módulo/`v-once`).
 export const INLINE_SINGLE_USE_REFS;
 ```
 
-Emite un estado nunca reasignado como `const` simple en lugar de `ref`.
+Emitir estado nunca reasignado como simple `const` en lugar de un `ref`.
 
 ### optimizarVueModule
 
@@ -314,10 +314,10 @@ devuelto intacto, por lo que es seguro ejecutar el optimizador en cualquier cana
 
 #### Parámetros
 
-| Nombre      | Tipo                                | Descripción |
-| ----------- | ----------------------------------- | ----------- |
-| intenciones | Intenciones objetivo                |             |
-| opciones    | Opciones de optimización de destino |             |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------- | ----------- |
+| intenciones | Intenciones objetivo |             |
+| opciones | Opciones de optimización de destino |             |
 
 ### STABLE_LIST_KEYS
 
@@ -327,7 +327,7 @@ devuelto intacto, por lo que es seguro ejecutar el optimizador en cualquier cana
 export const STABLE_LIST_KEYS;
 ```
 
-Mantenga sólo las claves de lista que demuestren ser estables y registre las listas que no estén claves.
+Mantenga sólo las claves de lista que hayan demostrado ser estables y registre las listas que no estén claves.
 
 ### VUE_OPTIMIZACIONES
 

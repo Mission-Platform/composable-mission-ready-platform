@@ -17,5 +17,5 @@ Mission Platform 的 CSS 设计令牌和 SCSS 主题定义。这个套餐
   样式表检查。
 - [`README.md`](../../../README.md) — 包导出和基本设置。
 
-导入包的public `.` 或来自的 SCSS 子路径 `package.json`;不
+从 `package.json` 导入包的公共 `.` 或 SCSS 子路径；不
 将生成的令牌文件复制到应用程序中。

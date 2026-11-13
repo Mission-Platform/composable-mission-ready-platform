@@ -66,9 +66,9 @@ aussteigen.
 
 #### Parameter
 
-| Name   | Geben Sie    | ein Beschreibung |
-| ------ | ------------ | ---------------- |
-| Quelle | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------ | ----------- |
+| Quelle | Zeichenfolge |             |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 

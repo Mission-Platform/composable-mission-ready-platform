@@ -28,32 +28,32 @@ Bouw neutrale mogelijkheden op basis van Solid Router-primitieven (frameworkvrij
 
 #### Parameters
 
-| Naam   | Typ                                                                                                                                                                         | Beschrijving |
-| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| invoer | { locatie: { padnaam: string; zoeken: tekenreeks; hash: tekenreeks }; parameters?: Record<string, string \| undefined>; navigeren: SolidNavigate; stopcontact?: onbekend; } |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| invoer | { locatie: { padnaam: string; zoeken: tekenreeks; hash: tekenreeks }; parameters?: Record<string, string \| undefined>; navigeren: SolidNavigate; stopcontact?: onbekend; } |             |
 
 ### MpLink
 
 **Soort:** component
 
 ```typescript
-function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
+export function MpLink(properties:
 ```
 
 Solid-proxy voor ankercomponent gebonden via {@link setForgeSolidRouter}.
 
 #### Parameters
 
-| Naam          | Typ                                                                                         | Beschrijving |
-| ------------- | ------------------------------------------------------------------------------------------- | ------------ |
-| eigenschappen | { href?: tekenreeks; naar?: MpRouteLocationRaw; kinderen?: onbekend; vervangen?: boolean; } |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------------------------------------------------------------------- | ----------- |
+| eigenschappen | { href?: tekenreeks; naar?: MpRouteLocationRaw; kinderen?: onbekend; vervangen?: boolean; } |             |
 
 ### MpRouterView
 
 **Soort:** component
 
 ```typescript
-function MpRouterView(): unknown;
+export function MpRouterView(): unknown;
 ```
 
 Solid outlet-proxy gebonden via {@link setForgeSolidRouter}.
@@ -70,9 +70,9 @@ Een neutraal doel omzetten in een href-tekenreeks.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| naar | MpRouteLocationRaw |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
 
 ### setForgeSolidRouter
 
@@ -87,9 +87,9 @@ hook/call-vormen (`useMpRouter().navigate`, `useMpRoute().query`, …).
 
 #### Parameters
 
-| Naam      | Typ                | Beschrijving |
-| --------- | ------------------ | ------------ |
-| oppervlak | SolidRouterSurface |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------ | ----------- |
+| oppervlak | SolidRouterSurface |             |
 
 ### SolidRouterSurface
 
@@ -108,7 +108,7 @@ Minimaal Solid Routeroppervlak gebruikt door de runtime-shim.
 ```typescript
 function toMpLocationFromSolid(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
@@ -116,10 +116,10 @@ Bouw een neutrale locatie op basis van Solid Routerlocatie/params-snapshots.
 
 #### Parameters
 
-| Naam    | Typ                                                       | Beschrijving |
-| ------- | --------------------------------------------------------- | ------------ |
-| locatie | { padnaam: string; zoeken: tekenreeks; hash: tekenreeks } |              |
-| params  | Record<string, string \| undefined>                       |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------------------------------- | ----------- |
+| locatie | { padnaam: string; zoeken: tekenreeks; hash: tekenreeks } |             |
+| parameters | Record<string, string \| undefined> |             |
 
 ### naarSolidHref
 
@@ -133,9 +133,9 @@ Serialiseer een neutraal doel voor Solid Routernavigatie.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| naar | MpRouteLocationRaw |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
 
 ### gebruik MpNavigatie
 
@@ -145,7 +145,7 @@ Serialiseer een neutraal doel voor Solid Routernavigatie.
 function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
-Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
+Alleen noodzakelijke navigatie-/oplossingsmogelijkheden lezen.
 
 ### gebruikMpRoute
 

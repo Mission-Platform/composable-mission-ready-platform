@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-c
 **Soort:** constant
 
 ```typescript
-export const BADGE;
+export const BADGE: readonly string[];
 ```
 
 Letterlijke unie-opties, JSDoc-beschrijvingen en `?? literal`-standaardwaarden.
@@ -36,7 +36,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const BUTTON;
+export const BUTTON: readonly string[];
 ```
 
 Een vakbond die vernedert tot tekst plus een verwijderde callback-prop.
@@ -56,7 +56,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const COUNTER;
+export const COUNTER: readonly string[];
 ```
 
 Een interactief onderdeel: de staat en een gebeurtenishandler forceren een gehydrateerd eiland.
@@ -76,7 +76,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const EMPTY;
+export const EMPTY: readonly string[];
 ```
 
 Een onderdeel zonder rekwisieten.
@@ -96,7 +96,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const GRID;
+export const GRID: readonly string[];
 ```
 
 Een numerieke prop met een numerieke standaardwaarde.
@@ -116,7 +116,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const LAYOUT;
+export const LAYOUT: readonly string[];
 ```
 
 Een benoemd slot naast het standaardslot.
@@ -136,7 +136,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const REQUIRED;
+export const REQUIRED: readonly string[];
 ```
 
 Een vereiste (niet-optionele) prop naast een optionele.
@@ -156,7 +156,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const SITE_HEADER;
+export const SITE_HEADER: readonly string[];
 ```
 
 Een component met een instellingsprop voor de hele site.
@@ -186,8 +186,98 @@ Maak een stub-framework-plug-in met een overschrijfbare ID.
 #### Parameters
 
 | Naam | Typ | Beschrijving |
-| ---- | --- | ------------ |
-| ID   |     |              |
+| ---- | ---- | ----------- |
+| ID |      |             |
+
+## `src/__fixtures__/workspace`
+
+### BADGE_COMPONENT
+
+**Soort:** constant
+
+```typescript
+export const BADGE_COMPONENT: WorkspaceComponentDefinition;
+```
+
+Geen beschrijving opgegeven.
+
+### CmsWerkruimte
+
+**Soort:** interface
+
+```typescript
+export interface CmsWorkspace
+```
+
+Geen beschrijving opgegeven.
+
+### COUNTER_COMPONENT
+
+**Soort:** constant
+
+```typescript
+export const COUNTER_COMPONENT: WorkspaceComponentDefinition;
+```
+
+Geen beschrijving opgegeven.
+
+### createCmsWorkspace
+
+**Soort:** functie
+
+```typescript
+function createCmsWorkspace(
+  components: readonly WorkspaceComponentDefinition[],
+): CmsWorkspace;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------------------- | ----------- |
+| componenten | alleen-lezen WorkspaceComponentDefinition[] |             |
+
+### GRID_COMPONENT
+
+**Soort:** constant
+
+```typescript
+export const GRID_COMPONENT: WorkspaceComponentDefinition;
+```
+
+Geen beschrijving opgegeven.
+
+### LAYOUT_COMPONENT
+
+**Soort:** constant
+
+```typescript
+export const LAYOUT_COMPONENT: WorkspaceComponentDefinition;
+```
+
+Geen beschrijving opgegeven.
+
+### NESTED_BADGE_COMPONENT
+
+**Soort:** constant
+
+```typescript
+export const NESTED_BADGE_COMPONENT: WorkspaceComponentDefinition;
+```
+
+Geen beschrijving opgegeven.
+
+### WerkruimteComponentDefinitie
+
+**Soort:** interface
+
+```typescript
+export interface WorkspaceComponentDefinition
+```
+
+Geen beschrijving opgegeven.
 
 ## `src/analyze`
 
@@ -197,7 +287,7 @@ Maak een stub-framework-plug-in met een overschrijfbare ID.
 
 ```typescript
 function analyzeContentComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: ContentComponentNamesInput,
   semantic?: SemanticModule,
 ): ContentComponent;
@@ -209,11 +299,11 @@ een gehydrateerde looptijd.
 
 #### Parameters
 
-| Naam        | Typ                         | Beschrijving |
-| ----------- | --------------------------- | ------------ |
-| bronbestand | ts.Bronbestand              |              |
-| namen       | ContentComponentNamesInvoer |              |
-| semantisch  | SemantischeModule           |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------- | ----------- |
+| bronbestand | OxcParsedModule |             |
+| namen | ContentComponentNamesInvoer |             |
+| semantisch | SemantischeModule |             |
 
 ### CMS_COLOR_TAG
 
@@ -289,9 +379,9 @@ Leid de volledige naamset af van de door de beller geleverde subset.
 
 #### Parameters
 
-| Naam  | Typ                         | Beschrijving |
-| ----- | --------------------------- | ------------ |
-| namen | ContentComponentNamesInvoer |              |
+| Naam | Typ | Beschrijving |
+| ----- | -------------------------- | ----------- |
+| namen | ContentComponentNamesInvoer |             |
 
 ### isInteractieveModule
 
@@ -305,9 +395,69 @@ Waar als de neutrale IR gedrag vertoont dat alleen een echte runtime kan bieden.
 
 #### Parameters
 
-| Naam       | Typ                                 | Beschrijving |
-| ---------- | ----------------------------------- | ------------ |
-| semantisch | SemantischeModule \| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| -------- | --------------------------- | ----------- |
+| semantisch | SemantischeModule \| ongedefinieerd |             |
+
+## `src/assets`
+
+### copyAndPruneAssets
+
+**Soort:** functie
+
+```typescript
+function copyAndPruneAssets(
+  safeCacheDirectory: string,
+  destinationRoot: string,
+  assets: readonly CmsArtifact[],
+  preservedDirectories: ReadonlySet<string> = new Set(),
+): void;
+```
+
+Synchroniseer activa van `safeCacheDirectory` naar `destinationRoot`,
+het snoeien van verouderde of verwijderde activa uit eerdere builds.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------------------- | ---------------------- | ----------- |
+| safeCacheDirectory | tekenreeks |             |
+| bestemmingRoot | tekenreeks |             |
+| activa | alleen-lezen CmsArtifact[] |             |
+| bewaarde mappen | Alleen-lezenSet<string> |             |
+
+### BEKENDE_KADER
+
+**Soort:** constant
+
+```typescript
+export const KNOWN_FRAMEWORKS: ReadonlySet<string>;
+```
+
+Geen beschrijving opgegeven.
+
+### pruimStaleAssets
+
+**Soort:** functie
+
+```typescript
+function pruneStaleAssets(
+  destinationRoot: string,
+  activeAssetNames: ReadonlySet<string>,
+  preservedDirectories: ReadonlySet<string> = new Set(),
+): void;
+```
+
+Snoei verouderde bestanden en lege mappen in `destinationRoot` op die dat niet doen
+komen overeen met actieve activa, waarbij raamwerkmappen en niet-activabomen behouden blijven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------------------- | ------------------- | ----------- |
+| bestemmingRoot | tekenreeks |             |
+| activeAssetNames | Alleen-lezenSet<string> |             |
+| bewaarde mappen | Alleen-lezenSet<string> |             |
 
 ## `src/classify`
 
@@ -337,8 +487,8 @@ Het resultaat van het classificeren van een rekwisiet (`undefined` → laat het 
 
 ```typescript
 function classifyType(
-  node: ts.TypeNode,
-  aliases: Map<string, ts.TypeNode>,
+  node: CmsTypeNode,
+  aliases: Map<string, CmsTypeNode>,
   seen: Set<string> = new Set(),
 ): ClassifiedFieldKind;
 ```
@@ -347,11 +497,11 @@ Classificeer het type node van een prop in een neutraal inhoudstype, waarbij lok
 
 #### Parameters
 
-| Naam     | Typ                        | Beschrijving |
-| -------- | -------------------------- | ------------ |
-| node     | ts.TypeNode                |              |
-| aliassen | Kaart<string, ts.TypeNode> |              |
-| gezien   | Stel<string> in            |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------ | ----------- |
+| node | CmsTypeNode |             |
+| aliassen | Kaart<string, CmsTypeNode> |             |
+| gezien | Stel<string> in |             |
 
 ### collectTypeAliassen
 
@@ -359,17 +509,17 @@ Classificeer het type node van een prop in een neutraal inhoudstype, waarbij lok
 
 ```typescript
 function collectTypeAliases(
-  sourceFile: ts.SourceFile,
-): Map<string, ts.TypeNode>;
+  sourceFile: OxcParsedModule,
+): Map<string, CmsTypeNode>;
 ```
 
 Wijs elke `type X = …`-alias op het hoogste niveau toe aan het type node, voor unieresolutie.
 
 #### Parameters
 
-| Naam        | Typ            | Beschrijving |
-| ----------- | -------------- | ------------ |
-| bronbestand | ts.Bronbestand |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------- | ----------- |
+| bronbestand | OxcParsedModule |             |
 
 ### LINK_TYPE_REFERENTIES
 
@@ -466,9 +616,9 @@ Het mapsegment waarin de uitvoer per raamwerk van een doel wordt geschreven.
 
 #### Parameters
 
-| Naam    | Typ             | Beschrijving |
-| ------- | --------------- | ------------ |
-| plug-in | CmsOutputPlugin |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------- | ----------- |
+| plug-in | CmsOutputPlugin |             |
 
 ### CmsTargetId
 
@@ -495,11 +645,47 @@ bereik de bestuurder en stoot stilletjes een gedeeltelijke boom uit.
 
 #### Parameters
 
-| Naam    | Typ | Beschrijving |
-| ------- | --- | ------------ |
-| plug-in | T   |              |
+| Naam | Typ | Beschrijving |
+| ------ | ---- | ----------- |
+| plug-in | T |             |
 
 ## `src/config`
+
+### cmsAssetsPlugin
+
+**Soort:** functie
+
+```typescript
+function cmsAssetsPlugin(
+  rootDir: string,
+  cacheDirectory: string,
+  targetOrTargetId: string | CmsOutputPlugin,
+  getAssets: () => readonly CmsArtifact[],
+  options?: CmsAssetsPluginOptions,
+): Plugin;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------------- | ---------------------------- | ----------- |
+| rootDir | tekenreeks |             |
+| cacheDirectory | tekenreeks |             |
+| targetOrTargetId | tekenreeks \| CmsOutputPlugin |             |
+| getAssets | () => alleen-lezen CmsArtifact[] |             |
+| opties | CmsAssetsPluginOpties |             |
+
+### CmsAssetsPluginOptions
+
+**Soort:** interface
+
+```typescript
+export interface CmsAssetsPluginOptions
+```
+
+Geen beschrijving opgegeven.
 
 ### definieerViteForgeCmsBibliotheek
 
@@ -515,9 +701,9 @@ Maak een Vite-bibliotheekconfiguratie voor één CMS-doel.
 
 #### Parameters
 
-| Naam   | Typ                        | Beschrijving |
-| ------ | -------------------------- | ------------ |
-| opties | ViteForgeCmsLibraryOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------- | ----------- |
+| opties | ViteForgeCmsLibraryOptions |             |
 
 ### ViteForgeCmsLibraryOptions
 
@@ -605,7 +791,7 @@ Eén enkel schrijfbaar veld geprojecteerd vanuit een componentprop.
 export type ContentFieldKind = |
 ```
 
-Het soort inhoud waar het TypeScript-type van een prop aan wordt toegewezen.
+Het type inhoud waar het TypeScript-type van een prop aan wordt toegewezen.
 
 `undefined` is hier nooit gemodelleerd – een rekwisiet die niet op een projectiescherm kan worden geprojecteerd
 inhoudsveld (een callback, een ondoorzichtig object) wordt eenvoudigweg verwijderd door de
@@ -633,9 +819,9 @@ De velden van een component die geen slots zijn (scalaire, auteurbare inhoud).
 
 #### Parameters
 
-| Naam        | Typ             | Beschrijving |
-| ----------- | --------------- | ------------ |
-| bestanddeel | InhoudComponent |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
 
 ### slotFields
 
@@ -649,9 +835,9 @@ De velden van een component die geneste inhoud bevatten.
 
 #### Parameters
 
-| Naam        | Typ             | Beschrijving |
-| ----------- | --------------- | ------------ |
-| bestanddeel | InhoudComponent |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
 
 ## `src/driver`
 
@@ -670,9 +856,9 @@ target, waarbij het pad van de invoermodule wordt geretourneerd en alles wat is 
 
 #### Parameters
 
-| Naam   | Typ                          | Beschrijving |
-| ------ | ---------------------------- | ------------ |
-| opties | Genereer CmsArtifactsOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------- | ----------- |
+| opties | Genereer CmsArtifactsOptions |             |
 
 ### Genereer CmsArtifactsOptions
 
@@ -717,13 +903,14 @@ function generateIsland(
 ```
 
 Mede genereren van de raamwerk-eilandboom voor een doel, waarbij de specificatie wordt geretourneerd
-een verzonden sjabloon zou deze moeten importeren.
+een verzonden sjabloon zou deze moeten importeren. Dit betreft alleen de generatiefase – de
+CMS-stuurprogramma/sessie is eigenaar wanneer deze wordt uitgevoerd.
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| opties | GenereerIslandOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------- | ----------- |
+| opties | GenereerIslandOptions |             |
 
 ### GenereerIslandOptions
 
@@ -759,9 +946,9 @@ Converteer een openbare naam naar de weergavenaam (`InView` → `In View`).
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| publiekeNaam | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------ | ----------- |
+| publiekeNaam | tekenreeks |             |
 
 ### naarKebabNaam
 
@@ -775,9 +962,9 @@ Converteer een openbare naam naar een naam met kebab-omhulsel (`InView` → `in-
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| publiekeNaam | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------ | ----------- |
+| publiekeNaam | tekenreeks |             |
 
 ### naarTechnischeNaam
 
@@ -791,113 +978,68 @@ Converteer een openbare naam naar de technische naam (`InView` → `in_view`).
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| publiekeNaam | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------ | ----------- |
+| publiekeNaam | tekenreeks |             |
 
 ## `src/tsdown`
 
-### cmsCacheDirectory
+### definieerTsdownForgeCmsTargetConfigs
 
 **Soort:** functie
 
 ```typescript
-function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string;
-```
-
-De cachemap waarnaar de gegenereerde boom van een doel wordt geschreven.
-
-#### Parameters
-
-| Naam    | Typ             | Beschrijving |
-| ------- | --------------- | ------------ |
-| rootDir | tekenreeks      |              |
-| doel    | CmsOutputPlugin |              |
-
-### cmsOutputDirectory
-
-**Soort:** functie
-
-```typescript
-function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string;
-```
-
-De distributiemap waar de per-framework modules van een doel naartoe worden verzonden.
-
-#### Parameters
-
-| Naam    | Typ             | Beschrijving |
-| ------- | --------------- | ------------ |
-| rootDir | tekenreeks      |              |
-| doel    | CmsOutputPlugin |              |
-
-### definieerTsdownForgeCms
-
-**Soort:** functie
-
-```typescript
-function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig;
-```
-
-Maak een tsdown-configuratie voor één CMS-doel.
-
-#### Parameters
-
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| opties | TsdownForgeCmsOptions |              |
-
-### definieerTsdownForgeCmsAll
-
-**Soort:** functie
-
-```typescript
-function defineTsdownForgeCmsAll(
-  options: TsdownForgeCmsAllOptions,
+function defineTsdownForgeCmsTargetConfigs(
+  options: TsdownForgeCmsPluginsOptions,
 ): UserConfig[];
 ```
 
-Maak tsdown-configuraties voor elk aangevraagd CMS-doel.
+Retourneer systeemeigen tsdown `UserConfig[]`-configuraties voor de geselecteerde CMS-doelen.
+Elke configuratie stelt direct zijn eigen CMS-doel en projecties samen,
+waardoor tsdown / Rolldown tegelijkertijd doelen kan uitvoeren zonder dummy-schijfvermeldingen
+of geneste uitvoeringslussen.
 
 #### Parameters
 
-| Naam   | Typ                      | Beschrijving |
-| ------ | ------------------------ | ------------ |
-| opties | TsdownForgeCmsAllOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ---------------------------- | ----------- |
+| opties | TsdownForgeCmsPluginsOpties |             |
 
-### solveComponentsModule
+### ForgeCmsTsdownPlugin
+
+**Soort:** type
+
+```typescript
+export type ForgeCmsTsdownPlugin = TsdownPlugin &
+```
+
+Plug-in geretourneerd door {@link tsdownForgeCmsPlugins}, inclusief doelconfiguraties voor tests.
+
+### tsdownForgeCmsPlugins
 
 **Soort:** functie
 
 ```typescript
-function resolveComponentsModule(rootDir: string, explicit?: string): string;
+function tsdownForgeCmsPlugins(
+  options: TsdownForgeCmsPluginsOptions,
+): TsdownPlugin[];
 ```
 
-Zoek de neutrale componentencilinder van een pakket.
+Native tsdown-plug-invorm van de CMS-adapter voor gebruik met één doel.
+Voor het genereren van meerdere doelen geeft u de voorkeur aan {@link definitionTsdownForgeCmsTargetConfigs}.
 
 #### Parameters
 
-| Naam      | Typ        | Beschrijving |
-| --------- | ---------- | ------------ |
-| rootDir   | tekenreeks |              |
-| expliciet | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------- | ---------------------------- | ----------- |
+| opties | TsdownForgeCmsPluginsOpties |             |
 
-### TsdownForgeCmsAllOptions
-
-**Soort:** interface
-
-```typescript
-export interface TsdownForgeCmsAllOptions
-```
-
-Opties voor {@link definitionTsdownForgeCmsAll}.
-
-### TsdownForgeCmsOptions
+### TsdownForgeCmsPluginsOpties
 
 **Soort:** interface
 
 ```typescript
-export interface TsdownForgeCmsOptions
+export interface TsdownForgeCmsPluginsOptions
 ```
 
-Opties voor {@link definitionTsdownForgeCms}.
+Opties geaccepteerd door {@link tsdownForgeCmsPlugins}.

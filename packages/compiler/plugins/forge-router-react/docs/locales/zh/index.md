@@ -5,6 +5,6 @@
 > packages/compiler/plugins/forge-router-react/docs/index.md: [packages/compiler/plugins/forge-router-react/docs/index.md](../../index.md)
 > 语言: 简体中文 (zh)
 
-伪造路由器目标 React 路由器
+Forge React 路由器的路由器目标
 
-看 `llms.txt` 了解公共 API 和使用示例。
+有关公共 API 和用法示例，请参阅 `llms.txt`。

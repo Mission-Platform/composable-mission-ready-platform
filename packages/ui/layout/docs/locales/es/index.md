@@ -18,10 +18,10 @@ la misma fuente funciona con Vue 3, React, Solid, Svelte y componentes web.
 
 - **Shell de la aplicación**: `ForgeApplicationLayout`, `ForgeContainer` y `ForgeVerticalLayout`
 - **Composición de Bento**: un héroe dominante con funciones y regiones de apoyo.
-- **Cuadrícula regular**: celdas con nombre ordenadas para colecciones de tarjetas de estado y métricas
-- **Composición del patrón F**: regiones de encabezado, introducción, artículo, secundaria y pie de página de estilo documentación
+- **Cuadrícula normal**: celdas con nombre ordenadas para colecciones de tarjetas de estado y métricas
+- **Composición del patrón F**: regiones de encabezado, introducción, artículo, secundaria y pie de página de estilo de documentación
 - **Composición del patrón Z**: alternancia de regiones de contenido superior, media e inferior
-- **Capacidad de respuesta solo CSS**: reflujo móvil primero sin `window`, `matchMedia` o estado del cliente
+- **Respuesta solo CSS**: reflujo móvil primero sin `window`, `matchMedia` o estado del cliente
 - **Integración de tokens de diseño**: los espacios, el relleno y los márgenes utilizan tokens de espaciado de Mission Platform
 
 ## Instalación
@@ -107,12 +107,12 @@ Los componentes comienzan como diseños de una columna o apilados. En el punto d
 
 ### Contratos regionales
 
-| Componente            | Regiones nombradas                                         | Fuente de composición                                                         |
-| --------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `ForgeBentoLayout`    | `hero`, `feature`, `supporting`                            | Secciones destacadas y destacadas del marketing de sitios web                 |
-| `ForgeGridLayout`     | `cell1` a `cell12`                                         | Tarjetas del panel de control de servicio y resúmenes de estado               |
-| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer`        | Barra de navegación/contexto de Docs, artículo, barra lateral y pie de página |
-| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Contenido y acciones alternos de la página de destino                         |
+| Componente | Regiones nombradas | Fuente de composición |
+| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
+| `ForgeBentoLayout` | `hero`, `feature`, `supporting` | Secciones destacadas y destacadas del marketing de sitios web |
+| `ForgeGridLayout` | `cell1` a `cell12` | Tarjetas del panel de control de servicio y resúmenes de estado |
+| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer` | Barra de navegación/contexto de Docs, artículo, barra lateral y pie de página |
+| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Contenido y acciones alternos de la página de destino |
 
 `ForgeGridLayout` acepta `rows` y `columns`, fija ambos a uno o más, limita el área renderizable a 12 nombres
 celdas y utiliza un respaldo de una sola columna debajo de su punto de interrupción. Las celdas con nombre siempre se representan en el orden de origen.
@@ -121,7 +121,7 @@ celdas y utiliza un respaldo de una sola columna debajo de su punto de interrupc
 
 Las plantillas extraen la estructura, no el comportamiento de la aplicación. Tarjetas de paquetes del sitio web y contenido de preguntas frecuentes, navegación de documentos y
 el enrutamiento y el sondeo del monitor de servicio, los formularios y el estado del incidente siguen siendo propiedad de sus aplicaciones. Esas aplicaciones
-puede pasar su contenido existente a las regiones nombradas sin introducir importaciones de `apps/` a `packages/layout`.
+pueden pasar su contenido existente a las regiones nombradas sin introducir importaciones de `apps/` a `packages/layout`.
 
 Para mayor accesibilidad, mantenga el contenido proporcionado en orden de lectura semántica y trate las áreas de la cuadrícula CSS solo como ubicación visual.
 El contenido extenso está protegido por `min-width: 0` y `overflow-wrap: anywhere`; SSR no requiere `window` o

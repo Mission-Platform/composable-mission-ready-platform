@@ -27,9 +27,9 @@ Maak een bron-lokale diagnose voor een fout in de routercompiler.
 
 #### Parameters
 
-| Naam         | Typ                                                                                           | Beschrijving |
-| ------------ | --------------------------------------------------------------------------------------------- | ------------ |
-| diagnostisch | Laat<CompilerDiagnostic, "phase" \| "fileName"> weg & { alleen-lezen bestandsnaam?: string; } |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------------------------------------------------------------- | ----------- |
+| diagnostisch | Laat<CompilerDiagnostic, "phase" \| "fileName"> weg & { alleen-lezen bestandsnaam?: string; } |             |
 
 ### definieerForgeRouterPlugin
 
@@ -43,9 +43,9 @@ Valideer de metagegevens van de routerplug-in voordat deze in een compilerpijpli
 
 #### Parameters
 
-| Naam    | Typ | Beschrijving |
-| ------- | --- | ------------ |
-| plug-in | T   |              |
+| Naam | Typ | Beschrijving |
+| ------ | ---- | ----------- |
+| plug-in | T |             |
 
 ### definieerForgeRouterTarget
 
@@ -67,9 +67,9 @@ op bestanden gebaseerde of server-only routers.
 
 #### Parameters
 
-| Naam   | Typ                      | Beschrijving |
-| ------ | ------------------------ | ------------ |
-| opties | ForgeRouterTargetOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------ | ----------- |
+| opties | ForgeRouterTargetOptions |             |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
@@ -81,7 +81,7 @@ export const FORGE_ROUTER_RUNTIME_EXPORTS;
 
 Neutrale runtime-exports waarbij het pakketauteurcontract behouden blijft.
 
-Doelen die de native hooks niet 1:1 kunnen hernoemen (bijvoorbeeld React's
+Doelen die de oorspronkelijke hooks niet 1:1 kunnen hernoemen (bijvoorbeeld React's
 `useNavigate` versus neutrale `useMpRouter().navigate`) moeten deze namen weergeven
 vanuit een doelruntimemodule en punt {@link ForgeRouterTargetOptions.runtimeModule}
 bij die module.
@@ -282,10 +282,10 @@ Vind een direct of ID-geselecteerd routerdoel zonder dit aan UI-plug-ins te kopp
 
 #### Parameters
 
-| Naam     | Typ                                    | Beschrijving |
-| -------- | -------------------------------------- | ------------ |
-| selectie | RouterPluginSelectie \| ongedefinieerd |              |
-| plug-ins | alleen-lezen RouterOutputPlugin[]      |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------------------------- | ----------- |
+| selectie | RouterPluginSelectie \| ongedefinieerd |             |
+| plug-ins | alleen-lezen RouterOutputPlugin[] |             |
 
 ### niet-ondersteunde routermogelijkheden
 
@@ -302,7 +302,7 @@ Rapporteer hiaten in de capaciteit voordat een doelwit de kans krijgt om stillet
 
 #### Parameters
 
-| Naam    | Typ                                 | Beschrijving |
-| ------- | ----------------------------------- | ------------ |
-| ir      | RouterCapabilityModule              |              |
-| plug-in | RouterOutputPlugin\| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------------------- | ----------- |
+| ir | RouterCapabilityModule |             |
+| plug-in | RouterOutputPlugin\| ongedefinieerd |             |

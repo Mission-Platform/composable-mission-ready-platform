@@ -17,7 +17,7 @@ pnpm add --save-dev @mission-platform/i18n-config
 ```
 
 Mantieni le origini locali accanto all'area di lavoro che le possiede. L'estrazione scrive
-bundle di spazi dei nomi sotto lo spazio di lavoro proprietario `locales/<locale>/` elenco;
+bundle dello spazio dei nomi nella directory `locales/<locale>/` dello spazio di lavoro proprietario;
 il comando a livello di repository orchestra tutte le aree di lavoro configurate.
 
 ## Contribuire

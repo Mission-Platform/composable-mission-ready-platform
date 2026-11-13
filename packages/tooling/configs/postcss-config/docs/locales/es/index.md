@@ -13,12 +13,12 @@ Canalización PostCSS compartida utilizada por las hojas de estilo de Mission Pl
 pnpm add --save-dev @mission-platform/postcss-config
 ```
 
-Haga referencia al paquete desde el espacio de trabajo. `postcss.config.mjs` en lugar de
+Haga referencia al paquete desde `postcss.config.mjs` del espacio de trabajo en lugar de
 duplicar la canalización de complementos compartidos. Las anulaciones locales pertenecen a ese
 configuración del espacio de trabajo.
 
 ## Contribuir
 
-Correr `pnpm --filter @mission-platform/postcss-config lint` y
+Ejecute `pnpm --filter @mission-platform/postcss-config lint` y
 `pnpm --filter @mission-platform/postcss-config format`. Mantener navegador
 Comportamiento de compatibilidad en este paquete y evitar complementos específicos de la aplicación.

@@ -27,9 +27,9 @@ Créez un diagnostic source-local pour une défaillance du compilateur de routeu
 
 #### Paramètres
 
-| Nom        | Tapez                                                                                              | Descriptif |
-| ---------- | -------------------------------------------------------------------------------------------------- | ---------- |
-| diagnostic | Omit<CompilerDiagnostic, "phase" \| "fileName"> & { nom de fichier en lecture seule ? : chaîne ; } |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------------------------------------------------------------- | ----------- |
+| diagnostic | Omit<CompilerDiagnostic, "phase" \| "fileName"> & { nom de fichier en lecture seule ? : chaîne ; } |             |
 
 ### définirForgeRouterPlugin
 
@@ -43,9 +43,9 @@ Validez les métadonnées du plug-in du routeur avant qu'elles n'entrent dans un
 
 #### Paramètres
 
-| Nom    | Tapez | Descriptif |
-| ------ | ----- | ---------- |
-| plugin | T     |            |
+| Nom | Tapez | Descriptif |
+| ------ | ---- | ----------- |
+| plugin | T |             |
 
 ### définirForgeRouterTarget
 
@@ -67,9 +67,9 @@ routeurs basés sur des fichiers ou sur serveur uniquement.
 
 #### Paramètres
 
-| Nom     | Tapez                    | Descriptif |
-| ------- | ------------------------ | ---------- |
-| options | ForgeRouterTargetOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------------ | ----------- |
+| options | ForgeRouterTargetOptions |             |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
@@ -144,7 +144,7 @@ Marqueur stable partagé avec le package de routeur neutre.
 export const MP_ROUTER_MODULE;
 ```
 
-Le package dont les importations sont comprises par la passe du compilateur du routeur.
+Le package dont les importations sont comprises par le pass du compilateur du routeur.
 
 ### Capacité du routeur
 
@@ -282,10 +282,10 @@ Recherchez une cible de routeur directe ou sélectionnée par identifiant sans l
 
 #### Paramètres
 
-| Nom       | Tapez                                      | Descriptif |
-| --------- | ------------------------------------------ | ---------- |
-| sélection | Sélection du plugin de routeur \| indéfini |            |
-| plugins   | lecture seule RouterOutputPlugin[]         |            |
+| Nom | Tapez | Descriptif |
+| --------- | ---------------------------------- | ----------- |
+| sélection | Sélection du plugin de routeur \| indéfini |             |
+| plugins | lecture seule RouterOutputPlugin[] |             |
 
 ### capacités de routeur non prises en charge
 
@@ -302,7 +302,7 @@ Signalez les lacunes en matière de capacités avant qu'une cible n'ait la possi
 
 #### Paramètres
 
-| Nom    | Tapez                          | Descriptif |
-| ------ | ------------------------------ | ---------- |
-| ir     | Module de capacité de routeur  |            |
-| plugin | RouterOutputPlugin \| indéfini |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------------------------------- | ----------- |
+| ir | Module de capacité de routeur |             |
+| plugin | RouterOutputPlugin \| indéfini |             |
