@@ -476,7 +476,6 @@ function buildStagedDtsOptions(
   const stagedDeclarationDirectory = resolveTsdownOutputDirectory(rootDirectory, outDirectory, outputRoot);
   const existingCompilerOptions = toOptionObject(resolved.compilerOptions);
   const existingTscOptions = resolved.tsc ?? {};
-
   return {
     ...resolved,
     // Never reuse in-memory or on-disk declaration caches from a previous final
@@ -502,14 +501,42 @@ function buildStagedDtsOptions(
 Resolves the base DtsOptions object from boolean or DtsOptions value.
 */
 function toDtsOptions(dts: true | DtsOptions): DtsOptions {
+  const options = dts === true ? {} : dts;
+  const {
+    build: legacyBuild,
+    incremental: legacyIncremental,
+    parallel: legacyParallel,
+    eager: legacyEager,
+    newContext: legacyNewContext,
+    vue: legacyVue,
+    ...rest
+  } = options;
+  const existingTscOptions = options.tsc ?? {};
   const compilerOptions = {
     isolatedDeclarations: true,
-    ...(dts === true ? {} : toOptionObject(dts.compilerOptions)),
+    ...toOptionObject(options.compilerOptions),
   };
 
-  return dts === true
-    ? { generator: 'oxc', compilerOptions, tsc: { build: false } }
-    : { ...dts, generator: dts.generator ?? 'oxc', compilerOptions, tsc: { build: false, ...dts.tsc } };
+  return {
+    ...rest,
+    generator: options.generator ?? 'oxc',
+    compilerOptions,
+    tsc: {
+      ...existingTscOptions,
+      build: existingTscOptions.build ?? legacyBuild ?? false,
+      ...(existingTscOptions.incremental === undefined && legacyIncremental !== undefined
+        ? { incremental: legacyIncremental }
+        : {}),
+      ...(existingTscOptions.parallel === undefined && legacyParallel !== undefined
+        ? { parallel: legacyParallel }
+        : {}),
+      ...(existingTscOptions.eager === undefined && legacyEager !== undefined ? { eager: legacyEager } : {}),
+      ...(existingTscOptions.newContext === undefined && legacyNewContext !== undefined
+        ? { newContext: legacyNewContext }
+        : {}),
+      ...(existingTscOptions.vue === undefined && legacyVue !== undefined ? { vue: legacyVue } : {}),
+    },
+  };
 }
 
 /**

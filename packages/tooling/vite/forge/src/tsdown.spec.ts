@@ -338,8 +338,8 @@ describe('Forge tsdown component helpers', () => {
 
     for (const config of [components, sprite]) {
       expect(config.dts).toMatchObject({
-        build: false,
         generator: 'oxc',
+        tsc: { build: false },
       });
     }
 

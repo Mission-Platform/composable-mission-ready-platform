@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           # Full history lets `turbo run … --affected` diff against the base.
           fetch-depth: 0
@@ -107,19 +107,19 @@ jobs:
           printf 'TURBO_SCM_HEAD=%s\n' "$head" >> "$GITHUB_ENV"
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
         with:
           run_install: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version-file: .nvmrc
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Cache Turborepo
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: .turbo
           key: turbo-${{ runner.os }}-${{ github.job }}-${{ github.sha }}
@@ -132,6 +132,9 @@ jobs:
 
       - name: Audit dependencies for critical vulnerabilities
         run: pnpm audit --audit-level=critical
+
+      - name: Build MCP security test dependencies
+        run: pnpm exec turbo run build --filter=@mission-platform/mcp-developer...
 
       - name: Run MCP security and compliance checks
         run: pnpm --filter @mission-platform/mcp-developer exec node --test src/security.test.ts
@@ -157,7 +160,7 @@ jobs:
           node packages/flint/cli/dist/main.js check packages/flint/core/src/fixtures/file-compile.flint --format sarif > artifacts/flint-sarif.json
 
       - name: Upload Flint SARIF artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: flint-sarif
           path: artifacts/flint-sarif.json

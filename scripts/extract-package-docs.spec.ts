@@ -239,7 +239,7 @@ fn helper() -> unit {}
       'utf8',
     );
 
-    const parserPath = fileURLToPath(new URL('../packages/flint/core/dist/parser.js', import.meta.url));
+    const parserPath = fileURLToPath(new URL('../packages/flint/parser/dist/parser.js', import.meta.url));
     const parserModule = (await import(pathToFileURL(parserPath).href)) as {
       readonly parseFlint: (
         source: string,
