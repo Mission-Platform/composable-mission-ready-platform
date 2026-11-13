@@ -71,9 +71,9 @@ function getBreakpointValue(key: BreakpointKey): number;
 
 #### パラメータ
 
-| 名前 | タイプ               | 説明 |
-| ---- | -------------------- | ---- |
-| キー | ブレークポイントキー |      |
+|名前 |タイプ |説明 |
+| ---- | ------------- | ----------- |
+|キー |ブレークポイントキー |             |
 
 ### maxMediaQuery
 
@@ -88,9 +88,9 @@ function maxMediaQuery(key: BreakpointKey): string;
 
 #### パラメータ
 
-| 名前 | タイプ               | 説明 |
-| ---- | -------------------- | ---- |
-| キー | ブレークポイントキー |      |
+|名前 |タイプ |説明 |
+| ---- | ------------- | ----------- |
+|キー |ブレークポイントキー |             |
 
 #### 契約
 
@@ -108,9 +108,9 @@ function mediaQuery(key: BreakpointKey): string;
 
 #### パラメータ
 
-| 名前 | タイプ               | 説明 |
-| ---- | -------------------- | ---- |
-| キー | ブレークポイントキー |      |
+|名前 |タイプ |説明 |
+| ---- | ------------- | ----------- |
+|キー |ブレークポイントキー |             |
 
 #### 契約
 
@@ -129,9 +129,9 @@ function resolveBreakpoint(width: number): BreakpointKey;
 
 #### パラメータ
 
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 幅   | 番号   |      |
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|幅 |番号 |             |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -155,9 +155,9 @@ function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| プロパティ | 読み取り専用<HideAtProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------- | ----------- |
+|プロパティ |読み取り専用<HideAtProperties> |             |
 
 ### HideAtProperties
 
@@ -192,9 +192,9 @@ function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| プロパティ | 読み取り専用<ShowAtProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------- | ----------- |
+|プロパティ |読み取り専用<ShowAtProperties> |             |
 
 ### ShowAtProperties
 
@@ -240,9 +240,9 @@ React と Vue の両方。
 
 #### パラメータ
 
-| 名前        | タイプ                                  | 説明 |
-| ----------- | --------------------------------------- | ---- |
-| _プロパティ | 読み取り専用<BreakpointDebugProperties> |      |
+|名前 |タイプ |説明 |
+| ----------- | ----------------------------------- | ----------- |
+| _プロパティ |読み取り専用<BreakpointDebugProperties> |             |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 

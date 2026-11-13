@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/api-pro
 **Soort:** constant
 
 ```typescript
-export const ALLOWED_METHODS;
+export const ALLOWED_METHODS: Set<string>;
 ```
 
 Houd de proxy alleen-lezen en beperkt tot de gedocumenteerde API-routes.
@@ -26,7 +26,17 @@ Houd de proxy alleen-lezen en beperkt tot de gedocumenteerde API-routes.
 **Soort:** constant
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES;
+export const ALLOWED_ROUTE_PREFIXES: string[];
+```
+
+Geen beschrijving opgegeven.
+
+### standaard
+
+**Soort:** constant
+
+```typescript
+export const handler: ExportedHandler;
 ```
 
 Geen beschrijving opgegeven.
@@ -39,10 +49,15 @@ Geen beschrijving opgegeven.
 function isAllowedProxyRequest(request: Request): boolean;
 ```
 
-Geen beschrijving opgegeven.
+Bepaalt of een binnenkomend clientverzoek is toegestaan ​​door het proxybeleid.
 
 #### Parameters
 
-| Naam    | Typ     | Beschrijving |
-| ------- | ------- | ------------ |
-| verzoek | Verzoek |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------- | ------------------------ |
+| verzoek | Verzoek | - Binnenkomend HTTP-verzoek. |
+
+#### Contract
+
+- **@param:** - Binnenkomend HTTP-verzoek.
+- **@returns:** Waar als de methode en het pad op de proxy-toelatingslijst staan.

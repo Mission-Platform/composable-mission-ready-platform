@@ -16,7 +16,7 @@
 **種類:** 定数
 
 ```typescript
-export const ALLOWED_METHODS;
+export const ALLOWED_METHODS: Set<string>;
 ```
 
 プロキシを読み取り専用にし、文書化された API ルートに限定します。
@@ -26,7 +26,17 @@ export const ALLOWED_METHODS;
 **種類:** 定数
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES;
+export const ALLOWED_ROUTE_PREFIXES: string[];
+```
+
+説明はありません。
+
+### デフォルト
+
+**種類:** 定数
+
+```typescript
+export const handler: ExportedHandler;
 ```
 
 説明はありません。
@@ -39,10 +49,15 @@ export const ALLOWED_ROUTE_PREFIXES;
 function isAllowedProxyRequest(request: Request): boolean;
 ```
 
-説明はありません。
+受信クライアント要求がプロキシ ポリシーによって許可されるかどうかを決定します。
 
 #### パラメータ
 
-| 名前       | タイプ     | 説明 |
-| ---------- | ---------- | ---- |
-| リクエスト | リクエスト |      |
+|名前 |タイプ |説明 |
+| ------- | ------- | ------------------------ |
+|リクエスト |リクエスト | - 受信 HTTP リクエスト。 |
+
+#### 契約
+
+- **@param:** - 受信 HTTP リクエスト。
+- **@returns:** メソッドとパスがプロキシ許可リスト内にある場合は True。

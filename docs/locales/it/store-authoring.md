@@ -81,16 +81,17 @@ useEffect(() => {
 
 ## Impalcature
 
-Utilizza lo strumento MCP Mission Platform Developer per generare una nuova struttura del negozio:
+Utilizza lo strumento `scaffold_store` tramite un server MCP Mission Platform Developer connesso per generare un nuovo negozio
+scheletro. Questo è un esempio di chiamata allo strumento MCP, non un comando shell:
 
-```bash
+```text
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
 
 ## Guide correlate
 
-- [Sviluppo di pacchetti](package-development.md)
+- [Sviluppo pacchetto](package-development.md)
 - [Progettazione di componenti atomici](atomic-component-design.md)
-- [Authoring componibile](composable-authoring.md)
+- [Creazione componibile](composable-authoring.md)
 - [Creazione utile](util-authoring.md)

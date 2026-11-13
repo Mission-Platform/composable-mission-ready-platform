@@ -24,8 +24,8 @@ e gestisce un contesto WebGL Three.js tramite `useThree`.
 
 #### Parametri
 
-| Nome      | Digitare                                 | Descrizione |
-| --------- | ---------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------------ | ----------- |
 | proprietà | Sola lettura<ForgeThreeCanvasProperties> |             |
 
 ### ForgeThreeCanvasProperties
@@ -69,7 +69,7 @@ Pulizia automatica: elimina il renderer e cancella il fotogramma dell'animazione
 
 #### Parametri
 
-| Nome            | Digitare                                         | Descrizione |
-| --------------- | ------------------------------------------------ | ----------- |
-| telaRiferimento | RiferimentoCome<HTMLCanvasElement \| null>       |             |
-| onPronto        | (contesto: TreContesto) => void \| (() => vuoto) |             |
+| Nome | Digitare | Descrizione |
+| --------------- | ----------------------------------------------- | ----------- |
+| telaRiferimento | RiferimentoCome<HTMLCanvasElement \| null> |             |
+| onPronto | (contesto: TreContesto) => void \| (() => vuoto) |             |

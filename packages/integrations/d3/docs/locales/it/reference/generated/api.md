@@ -50,9 +50,9 @@ ordinato: in modo identico su React e Vue.
 
 #### Parametri
 
-| Nome       | Digitare         | Descrizione |
-| ---------- | ---------------- | ----------- |
-| disegnare  | D3Draw<E>        |             |
+| Nome | Digitare | Descrizione |
+| ------------ | ---------------- | ----------- |
+| disegnare | D3Draw<E> |             |
 | dipendenze | MpDependencyList |             |
 
 ## `src/utils/margins`
@@ -81,8 +81,8 @@ non produrre mai dimensioni negative (che le scale D3 rifiutano).
 
 #### Parametri
 
-| Nome    | Digitare   | Descrizione |
-| ------- | ---------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---- | -------- | ----------- |
 | scatola | GraficoBox |             |
 
 ### Dimensioni interne
@@ -102,8 +102,6 @@ L'area del tracciato interna risolta prodotta da {@link innerDimensions}.
 ```typescript
 export interface Margin
 ```
-
-Il margine su quattro lati attorno all'area di tracciamento di un grafico, in pixel.
 
 ### MargineInput
 
@@ -130,6 +128,6 @@ il resto in `0`. `undefined` restituisce un margine pari a zero.
 
 #### Parametri
 
-| Nome     | Digitare         | Descrizione |
-| -------- | ---------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ----------- | ----------- |
 | ingresso | Ingresso margine |             |

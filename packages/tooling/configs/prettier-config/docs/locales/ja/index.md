@@ -13,12 +13,12 @@
 pnpm add --save-dev @mission-platform/prettier-config
 ```
 
-ワークスペースの共有設定をエクスポートします。 `prettier.config.js`。
-ローカルオーバーライドは控えめに使用してください。 TypeScript, Vue、および構成
+ワークスペースの `prettier.config.js` から共有構成をエクスポートします。
+Markdown、TypeScript、Vue、および設定を変更できるように、ローカル オーバーライドは控えめに使用してください。
 ファイルはモノリポジトリ全体で一貫性を保ちます。
 
 ## 貢献する
 
-走る `pnpm --filter @mission-platform/prettier-config format` を変更した後、
+を変更した後、`pnpm --filter @mission-platform/prettier-config format` を実行します。
 構成。変更は、を使用するすべてのワークスペースに一貫して適用される必要があります。
 パッケージ。

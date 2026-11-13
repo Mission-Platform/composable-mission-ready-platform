@@ -29,32 +29,32 @@ Erstellen Sie neutrale Funktionen aus Redwood-Primitiven (Framework-frei für Te
 
 #### Parameter
 
-| Name    | Geben Sie                                                                                                                                                                                                     | ein Beschreibung |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| Eingabe | { Ort: { Pfadname: Zeichenfolge; Suche: Zeichenfolge; Hash?: string }; params?: MpRouteParameters; navigieren: RedwoodRouterSurface['navigate']; Routen?: RedwoodRouterSurface['routes']; Link?: unbekannt; } |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Eingabe | { Ort: { Pfadname: Zeichenfolge; Suche: Zeichenfolge; Hash?: string }; params?: MpRouteParameters; navigieren: RedwoodRouterSurface['navigate']; Routen?: RedwoodRouterSurface['routes']; Link?: unbekannt; } |             |
 
 ### MpLink
 
 **Art:** Komponente
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown;
+export function MpLink(properties:
 ```
 
 Link-Komponenten-Proxy; Apps binden den nativen Redwood `Link` über {@link setForgeRedwoodRouter}.
 
 #### Parameter
 
-| Name          | Geben Sie                                                          | ein Beschreibung |
-| ------------- | ------------------------------------------------------------------ | ---------------- |
-| Eigenschaften | { to: MpRouteLocationRaw; ersetzen?: boolean; Kinder?: unbekannt } |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------------------------------------------- | ----------- |
+| Eigenschaften | { to: MpRouteLocationRaw; ersetzen?: boolean; Kinder?: unbekannt } |             |
 
 ### MpRouterView
 
 **Art:** Komponente
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Redwood hat keine tragbare Steckdose; Der Compiler meldet `view` als nicht unterstützt.
@@ -81,9 +81,9 @@ Ein neutrales Ziel in eine href-Zeichenfolge auflösen.
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| zu   | MpRouteLocationRaw |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
 
 ### setForgeRedwoodRouter
 
@@ -98,9 +98,9 @@ Diese Naht ist so gestaltet, dass die Haken-/Rufformen dem neutralen Vertrag ent
 
 #### Parameter
 
-| Name       | Geben Sie            | ein Beschreibung |
-| ---------- | -------------------- | ---------------- |
-| Oberfläche | RedwoodRouterSurface |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------- | ----------- |
+| Oberfläche | RedwoodRouterSurface |             |
 
 ### toMpLocationFromRedwood
 
@@ -109,7 +109,7 @@ Diese Naht ist so gestaltet, dass die Haken-/Rufformen dem neutralen Vertrag ent
 ```typescript
 function toMpLocationFromRedwood(
   location: { pathname: string; search: string; hash?: string },
-  params: MpRouteParameters = {},
+  parameters: MpRouteParameters = {},
 ): MpResolvedLocation;
 ```
 
@@ -117,10 +117,10 @@ Erstellen Sie einen neutralen Standort anhand eines Redwood-Standort-Schnappschu
 
 #### Parameter
 
-| Name      | Geben Sie                                                | ein Beschreibung |
-| --------- | -------------------------------------------------------- | ---------------- |
-| Standort  | { Pfadname: string; Suche: Zeichenfolge; hash?: string } |                  |
-| Parameter | MpRouteParameters                                        |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------------------------------- | ----------- |
+| Standort | { Pfadname: string; Suche: Zeichenfolge; hash?: string } |             |
+| Parameter | MpRouteParameters |             |
 
 ### toRedwoodHref
 
@@ -134,10 +134,10 @@ Serialisieren Sie ein neutrales Ziel für die Redwood-Navigation.
 
 #### Parameter
 
-| Name   | Geben Sie                      | ein Beschreibung |
-| ------ | ------------------------------ | ---------------- |
-| zu     | MpRouteLocationRaw             |                  |
-| Routen | RedwoodRouterSurface['routes'] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
+| Routen | RedwoodRouterSurface['routes'] |             |
 
 ### useMpNavigation
 

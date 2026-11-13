@@ -23,8 +23,8 @@ Stampa la sottoclasse `ForgeElement` e la sua registrazione per un piano ribassa
 
 #### Parametri
 
-| Nome  | Digitare                   | Descrizione |
-| ----- | -------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---- | -------------------------- | ----------- |
 | piano | WebComponentsLoweredModule |             |
 
 ## `src/emitters/module`
@@ -46,12 +46,12 @@ Trasforma l'intero modulo nell'origine di destinazione dei componenti Web nativi
 
 #### Parametri
 
-| Nome               | Digitare                   | Descrizione |
-| ------------------ | -------------------------- | ----------- |
-| modulo             | Modulo Semantico           |             |
-| nomecomponente     | stringa                    |             |
-| componenteCartelle | Sola letturaSet<string>    |             |
-| abbassato          | WebComponentsLoweredModule |             |
+| Nome | Digitare | Descrizione |
+| ---------------- | -------------------------- | ----------- |
+| modulo | Modulo Semantico |             |
+| nomecomponente | stringa |             |
+| componenteCartelle | Sola letturaSet<string> |             |
+| abbassato | WebComponentsLoweredModule |             |
 
 ## `src/index`
 
@@ -66,6 +66,74 @@ function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 Creare il plug-in di output dei componenti Web solo per TypeScript.
 
 ## `src/lower`
+
+### lowerWebComponentsModule
+
+**Tipo:** funzione
+
+```typescript
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
+```
+
+Abbassare l'IR neutro nelle intenzioni target dei componenti Web.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| modulo | Modulo Semantico |             |
+| contesto | Contesto di destinazione |             |
+
+### lowerWebComponentsPlan
+
+**Tipo:** funzione
+
+```typescript
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
+```
+
+Costruisci il piano target dei componenti Web per un modulo neutro.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| modulo | Modulo Semantico |             |
+| contesto | Contesto di destinazione |             |
+
+## `src/lower/host-plan`
+
+### dedurreWebComponentsHost
+
+**Tipo:** funzione
+
+```typescript
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+  component?: GenericComponent,
+): WebComponentsHostPlan;
+```
+
+Dedurre un host integrato personalizzato solo da una singola radice intrinseca statica.
+
+La lista consentita è intenzionalmente conservativa: un tag intrinseco è valido
+HTML non garantisce che si tratti di un'integrazione personalizzata sicura o utile
+base attraverso le implementazioni DOM supportate.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
+| returnNode | GenericRenderNode \| indefinito |             |
+| componente | Componente generico |             |
+
+## `src/lower/types`
 
 ### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
 
@@ -87,28 +155,6 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 
 Impostazioni predefinite di compatibilità conservate per i componenti generati.
 
-### dedurreWebComponentsHost
-
-**Tipo:** funzione
-
-```typescript
-function inferWebComponentsHost(
-  returnNode: GenericRenderNode | undefined,
-): WebComponentsHostPlan;
-```
-
-Dedurre un host integrato personalizzato solo da una singola radice intrinseca statica.
-
-La lista consentita è intenzionalmente conservativa: un tag intrinseco è valido
-HTML non garantisce che si tratti di un'integrazione personalizzata sicura o utile
-base attraverso le implementazioni DOM supportate.
-
-#### Parametri
-
-| Nome       | Digitare                        | Descrizione |
-| ---------- | ------------------------------- | ----------- |
-| returnNode | GenericRenderNode \| indefinito |             |
-
 ### isWebComponentsLowered
 
 **Tipo:** funzione
@@ -123,49 +169,9 @@ Restringi un piano target al piano Componenti Web senza trasmettere.
 
 #### Parametri
 
-| Nome      | Digitare                          | Descrizione |
-| --------- | --------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | -------------------------------- | ----------- |
 | abbassato | TargetLoweredModule \| indefinito |             |
-
-### lowerWebComponentsModule
-
-**Tipo:** funzione
-
-```typescript
-function lowerWebComponentsModule(
-  module: SemanticModule,
-  context: TargetContext,
-): TargetIntentions;
-```
-
-Abbassare l'IR neutro nelle intenzioni target dei componenti Web.
-
-#### Parametri
-
-| Nome     | Digitare                 | Descrizione |
-| -------- | ------------------------ | ----------- |
-| modulo   | Modulo Semantico         |             |
-| contesto | Contesto di destinazione |             |
-
-### lowerWebComponentsPlan
-
-**Tipo:** funzione
-
-```typescript
-function lowerWebComponentsPlan(
-  module: SemanticModule,
-  context: TargetContext,
-): WebComponentsLoweredModule;
-```
-
-Costruisci il piano target dei componenti Web per un modulo neutro.
-
-#### Parametri
-
-| Nome     | Digitare                 | Descrizione |
-| -------- | ------------------------ | ----------- |
-| modulo   | Modulo Semantico         |             |
-| contesto | Contesto di destinazione |             |
 
 ### TIPO_SCONOSCIUTO
 
@@ -192,7 +198,7 @@ L'ID del framework del plugin e il discriminatore del suo piano ribassato.
 **Genere:** costante
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS;
+export const WEBCOMPONENTS_NATIVE_HOSTS: Readonly<Record<string, string>>;
 ```
 
 La tabella di compatibilità per root che può essere tranquillamente personalizzata integrata.
@@ -227,7 +233,7 @@ le proprie istruzioni (che il getter deve eseguire anziché restituire).
 export interface WebComponentsDerivedValue
 ```
 
-Un valore memorizzato, ridotto a un getter ricalcolato in lettura.
+Un valore memorizzato, ridotto a un getter supportato da una cache dell'istanza opzionale.
 
 ### WebComponentsElementRef
 
@@ -348,12 +354,9 @@ export interface WebComponentsPromotedLocal
 Una costante render-head **promossa** a membro dell'elemento.
 
 Vengono emessi un memo getter, una richiamata del ciclo di vita e un inizializzatore di campo
-_esterno_ `render()`, quindi un locale per il quale la testa di rendering dichiara non esiste
+_outside_ `render()`, quindi un locale per il quale la testa di rendering dichiara non esiste
 loro. Promuovere la dichiarazione a un membro è ciò che rende tale lettura
 risolvibile — tramite `this.<name>` — invece di penzolare.
-
-Viene promossa solo una dichiarazione dimostrabilmente priva di effetti (vedi
-{@link promossoHeadLocals}); tutto il resto rimane in `render()`.
 
 ### WebComponentsPropertyDeclaration
 
@@ -404,28 +407,6 @@ export interface WebComponentsSetupPhase
 ```
 
 La fase di **configurazione** una tantum dell'elemento.
-
-Un seme come `useState(parseTime(modelValue))` legge una proprietà reattiva e
-una proprietà mantiene un valore solo una volta che gli attributi dell'host sono stati adottati —
-che avviene al momento della connessione, molto tempo dopo l'esecuzione del costruttore. Peggio ancora, il
-Il valore viene solitamente raggiunto tramite una costante render-head (`const partial =
-parseTime(modelValue);`) che non è stato possibile dimostrare privo di effetti e quindi
-rimane in `render()`, quindi un seed del costruttore farebbe riferimento a un nome che lo fa
-non esistere affatto lì.
-
-Tale seed viene rinviato a `ForgeElement.setup()`, richiamato dal runtime
-dopo l'adozione dell'attributo e prima del primo rendering, esattamente una volta per elemento
-— una riconnessione non deve eseguire nuovamente il seeding ed eliminare ciò che l'utente ha modificato da allora.
-Le dichiarazioni principali di cui il seme ha bisogno vengono riprodotte per prime, in ordine di testa e
-transitivamente chiusi, e **solo** quelli.
-
-La riproduzione anziché la memorizzazione nella cache è intenzionale. Nella fonte neutra la testa
-_è_ il corpo del componente, quindi già `const initial = parseTime(modelValue);`
-funziona su ogni rendering; valutarlo ancora una volta durante l'installazione non esegue alcuna chiamata
-il componente creato non viene già eseguito a ogni passaggio. Memorizzandolo nella cache in a
-il campo _ridurrebbe_ invece il numero di valutazioni e darebbe il valore an
-identità che la fonte non ha mai promesso. Solo un semplice `const` (o una funzione)
-la dichiarazione viene mai riprodotta: vedi {@link headReplay}.
 
 ### WebComponentsShadowPolicy
 
@@ -484,10 +465,10 @@ Ottimizzare le intenzioni target dei componenti Web; passano gli altri bersagli.
 
 #### Parametri
 
-| Nome       | Digitare              | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---------- | --------------------- | ----------- |
-| intenzioni | Intenzioni target     |             |
-| opzioni    | TargetOptimizeOptions |             |
+| intenzioni | Intenzioni target |             |
+| opzioni | TargetOptimizeOptions |             |
 
 ### ottimizzareWebComponentsPlan
 
@@ -504,10 +485,10 @@ Perfeziona un piano di componenti Web ridotto, registrando ogni passaggio esegui
 
 #### Parametri
 
-| Nome    | Digitare                   | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | -------------------------- | ----------- |
-| piano   | WebComponentsLoweredModule |             |
-| opzioni | TargetOptimizeOptions      |             |
+| piano | WebComponentsLoweredModule |             |
+| opzioni | TargetOptimizeOptions |             |
 
 ### WEB_COMPONENTI_OTTIMIZZAZIONI
 
@@ -544,8 +525,8 @@ Trasforma un modulo hook neutro nella sua sorgente Web-Components.
 
 #### Parametri
 
-| Nome   | Digitare         | Descrizione |
-| ------ | ---------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------ | -------------- | ----------- |
 | modulo | Modulo Semantico |             |
 
 ## `src/transformers/expression`
@@ -577,9 +558,9 @@ può essere promosso a membro dell'elemento (vedere `../lower`) indipendentement
 
 #### Parametri
 
-| Nome  | Digitare | Descrizione |
-| ----- | -------- | ----------- |
-| testo | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| testo | stringa |             |
 
 ### èPureExpressionText
 
@@ -599,9 +580,9 @@ istruzione e rimane in `render()`.
 
 #### Parametri
 
-| Nome  | Digitare | Descrizione |
-| ----- | -------- | ----------- |
-| testo | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| testo | stringa |             |
 
 ## `src/transformers/props-binding`
 
@@ -613,16 +594,16 @@ istruzione e rimane in `render()`.
 function leadingObjectPattern(text: string): string | undefined;
 ```
 
-Il modello di oggetto che _inizia_ `text`, scartando tutto ciò che segue.
+Il modello di oggetto che _avvia_ `text`, scartando tutto ciò che segue.
 
 Il testo sorgente di un parametro porta la sua annotazione (`{ a, b }: Readonly<P>`),
 quindi il modello deve essere ritagliato prima di poter essere scomposto.
 
 #### Parametri
 
-| Nome  | Digitare | Descrizione |
-| ----- | -------- | ----------- |
-| testo | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| testo | stringa |             |
 
 ### parsePropsBinding
 
@@ -635,14 +616,14 @@ function parsePropsBinding(patternText: string): PropsBinding | undefined;
 Decomporre un modello di oggetti di scena.
 
 Restituisce `undefined` quando il testo non è un modello di oggetto o contiene un modello
-voce che questo modulo non modella (una chiave calcolata, diciamo) - il chiamante quindi la mantiene
+voce che questo modulo non modella (una chiave calcolata, diciamo) - il chiamante la mantiene
 il suo comportamento precedente invece di agire su una lettura parziale.
 
 #### Parametri
 
-| Nome         | Digitare | Descrizione |
-| ------------ | -------- | ----------- |
-| modelloTesto | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ----------- | ------ | ----------- |
+| modelloTesto | stringa |             |
 
 ### PropsBinding
 
@@ -679,15 +660,15 @@ Riproduci un modello di oggetti di scena come `const { … } = this;`, limitato 
 i cui locali vengono effettivamente letti dall'ambito di destinazione.
 
 Limitarlo mantiene un ambito sollevato libero da vincoli che non utilizza mai (che a
-La build `noUnusedLocals` verrebbe rifiutata) lasciando ogni voce mantenuta - e
+La build `noUnusedLocals` verrebbe rifiutata) lasciando ogni voce conservata - e
 quindi è predefinito: identico in byte a quello creato.
 
 #### Parametri
 
-| Nome       | Digitare                    | Descrizione |
-| ---------- | --------------------------- | ----------- |
-| vincolante | Oggetti di scenaRilegatura  |             |
-| èLeggi     | (nome: stringa) => booleano |             |
+| Nome | Digitare | Descrizione |
+| ------- | ------------------------- | ----------- |
+| vincolante | Oggetti di scenaRilegatura |             |
+| èLeggi | (nome: stringa) => booleano |             |
 
 ## `src/transformers/props-type`
 
@@ -704,19 +685,19 @@ function indexedAccessType(
 
 L'annotazione di accesso indicizzato come viene emesso un membro del tipo props.
 
-L'opzionalità del membro viene mantenuta esattamente: un membro obbligatorio _non_
+Le facoltatività del membro vengono mantenute esattamente: un membro richiesto è _non_
 ampliato con `| undefined`. Il campo dell'elemento viene popolato solo una volta
 il runtime adotta il suo attributo, quindi è veramente non impostato nel costruttore —
 ma ciò viene espresso emettendo il campo come `declare` (il runtime possiede il file
 accessor), che lo esenta da `strictPropertyInitialization` senza effettuare
-ogni lettura di una prop richiesta possibilmente-`undefined`.
+ogni lettura di un oggetto richiesto possibilmente-`undefined`.
 
 #### Parametri
 
-| Nome        | Digitare           | Descrizione |
-| ----------- | ------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| --------- | ------------------ | ----------- |
 | riferimento | PropsTypeReference |             |
-| membro      | stringa            |             |
+| membro | stringa |             |
 
 ### PropsTypeReference
 
@@ -747,9 +728,9 @@ in entrambi i casi il riferimento non verrebbe risolto nel modulo generato.
 
 #### Parametri
 
-| Nome          | Digitare                        | Descrizione |
-| ------------- | ------------------------------- | ----------- |
-| annotazione   | stringa \| indefinito           |             |
+| Nome | Digitare | Descrizione |
+| ------------ | --------------------------- | ----------- |
+| annotazione | stringa \| indefinito |             |
 | dichiarazioni | sola lettura GenericStatement[] |             |
 
 ### typeMembers
@@ -771,9 +752,9 @@ direzione sicura.
 
 #### Parametri
 
-| Nome               | Digitare | Descrizione |
-| ------------------ | -------- | ----------- |
-| dichiarazioneTesto | stringa  |             |
+| Nome | Digitare | Descrizione |
+| --------------- | ------ | ----------- |
+| dichiarazioneTesto | stringa |             |
 
 ### unwrapPropsTypeName
 
@@ -788,6 +769,6 @@ parentesi e wrapper generici che preservano i membri che un componente può scri
 
 #### Parametri
 
-| Nome  | Digitare              | Descrizione |
-| ----- | --------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---- | ------------------- | ----------- |
 | testo | stringa \| indefinito |             |

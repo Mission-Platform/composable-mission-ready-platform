@@ -24,16 +24,15 @@ Stellt eine i18next-Instanz für den React-Baum bereit (delegiert an
 
 #### Parameter
 
-| Name          | Geben Sie                   | ein Beschreibung |
-| ------------- | --------------------------- | ---------------- |
-| Eigenschaften | ForgeI18NProviderProperties |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Eigenschaften | ForgeI18NProviderProperties |             |
 
 #### Vertrag
 
 - **@example:** import { createForgeI18N, ForgeI18NProvider } from '@mission-platform/i18n'
-
-const i18n = createForgeI18N({ messages: { en: { hello: 'Hello' } } })
-root.render(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)
+  const i18n = createForgeI18N({ messages: { en: { hello: 'Hello' } } })
+  root.render(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)
 
 ### ForgeI18NProviderProperties
 
@@ -52,25 +51,24 @@ Requisiten für {@link ForgeI18NProvider}.
 **Art:** Funktion
 
 ```typescript
-function createForgeI18NVue(i18next: I18nInstance): Plugin;
+function createForgeI18NVue(i18next: ForgeI18nInstance): Plugin;
 ```
 
-Bindet eine i18next-Instanz in ein Vue-Plugin ein (delegiert an `i18next-vue`), sodass es funktioniert
+Wickelt eine i18next-Instanz in ein Vue-Plugin ein (delegiert an `i18next-vue`), sodass es funktioniert
 kann mit `app.use(...)` installiert werden. Komponenten lösen dann Übersetzungen über auf
 der `$t`-Vorlagenhelfer oder das `useI18n`-Composable.
 
 #### Parameter
 
-| Name    | Geben Sie    | ein Beschreibung |
-| ------- | ------------ | ---------------- |
-| i18next | I18nInstance |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ----------------- | ----------- |
+| i18next | ForgeI18nInstance |             |
 
 #### Vertrag
 
 - **@example:** import { createForgeI18N, createForgeI18NVue } aus '@mission-platform/i18n'
-
-const i18n = createForgeI18N({ messages: { en: { hello: 'Hello' } } })
-app.use(createForgeI18NVue(i18n))
+  const i18n = createForgeI18N({ messages: { en: { hello: 'Hello' } } })
+  app.use(createForgeI18NVue(i18n))
 
 ## `src/composables/use-i18n/use-i18n.neutral`
 
@@ -89,9 +87,9 @@ Framework-Laufzeit in ihren neutralen Fallback.
 
 #### Parameter
 
-| Name       | Geben Sie    | ein Beschreibung |
-| ---------- | ------------ | ---------------- |
-| Namensraum | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------ | ----------- |
+| Namensraum | Zeichenfolge |             |
 
 ### Verwenden Sie I18nReturn
 
@@ -113,7 +111,7 @@ Rückgabeform des Framework-neutralen {@link useI18n}-Fallbacks.
 function useI18n(namespace?: string): UseI18nReturn;
 ```
 
-Hook legt die Übersetzungsfunktion und die zugrunde liegende i18next-Instanz offen
+Hook legt die Übersetzungsfunktion, die zugrunde liegende i18next-Instanz, offen
 aktives Gebietsschema und eine `setLocale`-Aktion. Eine dünne Hülle über `react-i18next`
 `useTranslation`.
 
@@ -123,9 +121,9 @@ Namespace (das eigene `mp.<app>` einer App, das auf alle anderen zurückgreift).
 
 #### Parameter
 
-| Name       | Geben Sie    | ein Beschreibung |
-| ---------- | ------------ | ---------------- |
-| Namensraum | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------ | ----------- |
+| Namensraum | Zeichenfolge |             |
 
 ### Verwenden Sie I18nReturn
 
@@ -158,9 +156,9 @@ Namespace (das eigene `mp.<app>` einer App, das auf alle anderen zurückgreift).
 
 #### Parameter
 
-| Name       | Geben Sie    | ein Beschreibung |
-| ---------- | ------------ | ---------------- |
-| Namensraum | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------ | ----------- |
+| Namensraum | Zeichenfolge |             |
 
 ### Verwenden Sie I18nReturn
 
@@ -179,7 +177,7 @@ Rückgabeform von {@link useI18n}.
 **Art:** Funktion
 
 ```typescript
-function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance;
+function createForgeI18N(options: CreateForgeI18NOptions = {}): ForgeI18nInstance;
 ```
 
 Erstellt ein konfiguriertes, Framework-unabhängiges [i18next](https://www.i18next.com/)
@@ -201,31 +199,28 @@ Apps können `overrides` pro Namespace zusätzlich zu den Zeichenfolgen eines Pa
 
 #### Parameter
 
-| Name     | Geben Sie              | ein Beschreibung |
-| -------- | ---------------------- | ---------------- |
-| Optionen | CreateForgeI18NOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------------- | ----------- |
+| Optionen | CreateForgeI18NOptions |             |
 
 #### Vertrag
 
 - **@example:** // Framework-neutrale Verwendung
   importiere { createForgeI18N } aus '@mission-platform/i18n'
-
-const i18n = createForgeI18N({ messages: { en: { hello: 'Hallo {name}' } } })
-i18n.t('hello', { name: 'World' }) // → 'Hello World'
-
+  const i18n = createForgeI18N({ messages: { en: { hello: 'Hallo {name}' } } })
+  i18n.t('hello', { name: 'World' }) // → 'Hello World'
 - **@example:** // Namespace-Nutzung mit einer App, die die Zeichenfolge eines Pakets überschreibt
   import { createForgeI18N, forgeNamespace } aus '@mission-platform/i18n'
-
-const i18n = createForgeI18N({
-Namespace: forgeNamespace('my-care-notes'),
-Namensräume: {
-[forgeNamespace('my-care-notes')]: { de: { nav: { Notes: 'Notes' } } },
-[forgeNamespace('breakpoints')]: { de: { breakpoint: 'breakpoint:' } },
-},
-überschreibt: {
-[forgeNamespace('breakpoints')]: { de: { breakpoint: 'Viewport:' } },
-},
-})
+  const i18n = createForgeI18N({
+  Namespace: forgeNamespace('my-care-notes'),
+  Namensräume: {
+  [forgeNamespace('my-care-notes')]: { de: { nav: { Notes: 'Notes' } } },
+  [forgeNamespace('breakpoints')]: { de: { breakpoint: 'breakpoint:' } },
+  },
+  überschreibt: {
+  [forgeNamespace('breakpoints')]: { de: { breakpoint: 'Viewport:' } },
+  },
+  })
 
 ### CreateForgeI18NOptions
 
@@ -260,10 +255,10 @@ Führt einen Rückruf innerhalb eines anforderungsbezogenen i18n-Kontexts auf de
 
 #### Parameter
 
-| Name    | Geben Sie    | ein Beschreibung |
-| ------- | ------------ | ---------------- |
-| i18n    | I18nInstance |                  |
-| Rückruf | () => T      |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------------ | ----------- |
+| i18n | I18nInstance |             |
+| Rückruf | () => T |             |
 
 ### setServerI18n
 
@@ -277,9 +272,9 @@ Konfiguriert die globale Fallback-serverseitige i18n-Instanz.
 
 #### Parameter
 
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| i18n | I18nInstance |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------ | ----------- |
+| i18n | I18nInstance |             |
 
 ## `src/utils/merge-locales`
 
@@ -297,10 +292,10 @@ Gibt eine neue {@link ForgeLocales}-Karte zurück. Wird zum Layern von Namespace
 
 #### Parameter
 
-| Name   | Geben Sie    | ein Beschreibung |
-| ------ | ------------ | ---------------- |
-| Ziel   | ForgeLocales |                  |
-| Quelle | ForgeLocales |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------ | ----------- |
+| Ziel | ForgeLocales |             |
+| Quelle | ForgeLocales |             |
 
 ### deepMergeMessages
 
@@ -320,10 +315,10 @@ gewinnen und der Rest des Paketpakets bleibt erhalten.
 
 #### Parameter
 
-| Name   | Geben Sie          | ein Beschreibung |
-| ------ | ------------------ | ---------------- |
-| Ziel   | ForgeMessageObject |                  |
-| Quelle | ForgeMessageObject |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------ | ----------- |
+| Ziel | ForgeMessageObject |             |
+| Quelle | ForgeMessageObject |             |
 
 ### mergeLocales
 
@@ -338,9 +333,9 @@ Module werden von links nach rechts verarbeitet; Spätere Einträge überschreib
 
 #### Parameter
 
-| Name   | Geben Sie           | ein Beschreibung |
-| ------ | ------------------- | ---------------- |
-| Module | ForgeLocaleModule[] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------- | ----------- |
+| Module | ForgeLocaleModule[] |             |
 
 ## `src/utils/namespace`
 
@@ -384,9 +379,9 @@ Erstellt einen Mission Platform i18next-Namespace für einen Arbeitsbereich, z. 
 
 #### Parameter
 
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Name | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Name | Zeichenfolge |             |
 
 ### localeNamespaces
 
@@ -404,10 +399,10 @@ die Option {@link CreateForgeI18NOptions.namespaces} (und `overrides`) erwartet
 
 #### Parameter
 
-| Name          | Geben Sie                          | ein Beschreibung |
-| ------------- | ---------------------------------- | ---------------- |
-| Gebietsschema | Zeichenfolge                       |                  |
-| Bündel        | Record<string, ForgeMessageObject> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------------------------- | ----------- |
+| Gebietsschema | Zeichenfolge |             |
+| Bündel | Record<string, ForgeMessageObject> |             |
 
 #### Vertrag
 
@@ -418,6 +413,16 @@ die Option {@link CreateForgeI18NOptions.namespaces} (und `overrides`) erwartet
   })
 
 ## `src/utils/types`
+
+### ForgeI18nInstance
+
+**Art:** Typ
+
+```typescript
+export type ForgeI18nInstance = Omit<I18nInstance, 't'> &
+```
+
+i18next-Instanztyp mit der selektorfähigen Übersetzungsfunktion.
 
 ### ForgeLocaleModule
 
@@ -467,5 +472,25 @@ Ein einzelner Nachrichtenwert: eine Zeichenfolge, ein verschachteltes Objekt ode
 export type ForgeNamespaceLocales = Record<string, ForgeLocales>;
 ```
 
-Eine Zuordnung von i18next-Namespaces (`mp.<workspace>`) zu ihren lokalen Nachrichten.
-Wird von den Optionen `namespaces` und `overrides` von `createForgeI18N` verwendet.
+Eine Zuordnung der i18next-Namespaces (`mp.<workspace>`) zu ihren lokalen Nachrichten.
+Wird sowohl von den Optionen `namespaces` als auch `overrides` von `createForgeI18N` verwendet.
+
+### ForgeTranslationFunction
+
+**Art:** Typ
+
+```typescript
+export type ForgeTranslationFunction = TFunction &
+```
+
+Übersetzungsfunktionstyp, der über Paketgrenzen hinweg wählbar bleibt.
+
+### ForgeTranslationSource
+
+**Art:** Typ
+
+```typescript
+export type ForgeTranslationSource =
+```
+
+Rekursiver Quelltyp, der von der Selektor-Callback-API von i18next verwendet wird.

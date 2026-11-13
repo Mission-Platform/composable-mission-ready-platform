@@ -1,5 +1,4 @@
 import { ForgeBackgroundVideo } from '@mission-platform/components';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const SAMPLE_VIDEO = 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4';

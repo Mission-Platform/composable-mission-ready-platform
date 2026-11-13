@@ -27,15 +27,14 @@ import {
   slotFields,
   toDisplayName,
 } from "@mission-platform/forge-cms-plugin-api";
-
-import { FORGE_WEBFLOW_NUMBER_AS_TEXT, webflowWarning } from "./diagnostics.js";
-
 import type {
   ContentComponent,
   ContentField,
   ContentFieldKind,
 } from "@mission-platform/forge-cms-plugin-api";
 import type { CompilerDiagnostic } from "@mission-platform/forge-plugin-api";
+
+import { FORGE_WEBFLOW_NUMBER_AS_TEXT, webflowWarning } from "./diagnostics.js";
 
 /** The island specifier used when the driver co-generated none (tests, dry runs). */
 export const DEFAULT_ISLAND_ENTRY = "./island/index.js";

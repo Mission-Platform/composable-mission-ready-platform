@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
+
 import { createSolidRouterCapabilities, resolveMpLink, toMpLocationFromSolid } from '../runtime';
 
 import { forgeRouterSolid } from './forge-router-solid';
-
-import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
 
 describe('forgeRouterSolid', () => {
   it('rewrites neutral imports to the Solid runtime helpers', () => {

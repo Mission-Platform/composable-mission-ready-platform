@@ -26,7 +26,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@mission-platform/flint-runtime": "workspace:*"
+    "@mission-platform/flint-runtime": "workspace:*",
+    "@mission-platform/wasm-bridge": "workspace:*"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",

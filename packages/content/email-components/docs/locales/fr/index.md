@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> packages/email-components/docs/index.md: [packages/email-components/docs/index.md](../../index.md)
+> packages/content/email-components/docs/index.md: [packages/content/email-components/docs/index.md](../../index.md)
 > Langue: Français (fr)
 
 `@mission-platform/email-components` contient des composants Forge JSX typés et neutres en termes de framework pour générer des arborescences sécurisées pour la messagerie. Utilisez `@mission-platform/email-renderer` pour sérialiser ces arborescences sur le serveur ; aucun Vue, React, Svelte, Solid, environnement d'exécution des composants Web, DOM du navigateur ou JavaScript n'est requis par le chemin de courrier électronique.
@@ -60,6 +60,6 @@ Toute la mise en page est basée sur `table`, `tbody`, `tr` et `td`. Les boutons
 
 ## Politique de compatibilité
 
-La ligne de base suit la [Puis-je envoyer un catalogue de fonctionnalités par e-mail](https://www.caniemail.com/features), révisé sur `2026-08-08`. La mise en œuvre repose sur [Tableaux HTML](https://www.caniemail.com/features/html-tables), [styles en ligne](https://www.caniemail.com/features/css-inline-styles), [largeur maximale](https://www.caniemail.com/features/css-max-width), et en option [requêtes médiatiques](https://www.caniemail.com/features/css-at-media). La sortie statique ne repose pas sur flexbox, grille, propriétés personnalisées CSS, propriétés logiques, scripts, gestionnaires d'événements ou marqueurs d'hydratation du framework.
+La référence suit le [Catalogue de fonctionnalités Puis-je envoyer un e-mail](https://www.caniemail.com/features), examiné sur `2026-08-08`. L'implémentation s'appuie sur des [tables HTML](https://www.caniemail.com/features/html-tables), des [styles en ligne](https://www.caniemail.com/features/css-inline-styles), de la [largeur maximale](https://www.caniemail.com/features/css-max-width) et des [requêtes multimédias] facultatives (https://www.caniemail.com/features/css-at-media). La sortie statique ne repose pas sur flexbox, grille, propriétés personnalisées CSS, propriétés logiques, scripts, gestionnaires d'événements ou marqueurs d'hydratation du framework.
 
 Le CSS réactif est une amélioration progressive uniquement : la disposition du tableau en ligne reste utilisable lorsque le bloc `<style>` est supprimé ou ignoré. Utilisez `assertCompatibleEmailHtml` dans les tests d'application lors de l'ajout de nœuds personnalisés.

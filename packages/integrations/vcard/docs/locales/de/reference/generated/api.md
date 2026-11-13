@@ -32,7 +32,7 @@ Konvertieren Sie Komfortoptionen in ein vollständiges, beschreibbares vCard-Dok
 **Art:** konstant
 
 ```typescript
-export const parseVCard;
+export const parseVCard: typeof readVCard;
 ```
 
 Alias ​​für Anrufer, die die Parser-Terminologie bevorzugen.
@@ -616,7 +616,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const parseICalendar;
+export const parseICalendar: typeof readICalendar;
 ```
 
 Keine Beschreibung angegeben.
@@ -642,7 +642,7 @@ Analysieren Sie einen RFC 5545 iCalendar-Stream und bewahren Sie dabei alle Komp
 **Art:** konstant
 
 ```typescript
-export const serializeICalendar;
+export const serializeICalendar: typeof writeICalendar;
 ```
 
 Keine Beschreibung angegeben.

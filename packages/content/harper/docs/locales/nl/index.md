@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> packages/harper/docs/index.md: [packages/harper/docs/index.md](../../index.md)
+> packages/content/harper/docs/index.md: [packages/content/harper/docs/index.md](../../index.md)
 > Taal: Nederlands (nl)
 
 `@mission-platform/harper` biedt een integratie tussen de [Harper](https://writewithharper.com) grammaticacontrole en
@@ -13,7 +13,7 @@ geheel in de browser.
 
 - **Realtime grammaticacontrole**: problemen worden gedetecteerd terwijl u typt, waarbij de resultaten 300 ms worden teruggestuurd om de editor te behouden
   prestatie.
-- **Visuele markeringen**: problemen met grammatica en stijl worden rechtstreeks in de Monaco-editor gemarkeerd met behulp van standaardmarkeringen.
+- **Visuele markeringen**: grammatica- en stijlproblemen worden rechtstreeks in de Monaco-editor gemarkeerd met behulp van standaardmarkeringen.
 - **Snelle oplossingen**: Dankzij de integratie met Monaco's 'gloeilamp'-codeacties kunnen gebruikers voorgestelde correcties toepassen
   onmiddellijk.
 - **Privacy First**: Alle verwerking gebeurt lokaal in een Web Worker; er wordt nooit een tekst over het netwerk verzonden.
@@ -127,7 +127,7 @@ interface HarperIssue {
 ### Werkstroom
 
 1. **Worker Spawn**: het pakket gebruikt de fabriek uit `window.HarperEnvironment` om een ​​Harper Web Worker te spawnen.
-2. **Debounced-controle**: Elke wijziging aan het editormodel activeert een debounced-verzoek aan de werknemer.
-3. **Markertoewijzing**: door Harper geretourneerde problemen worden voor visuele markering toegewezen aan Monaco-markeringen.
+2. **Debounced-controle**: elke wijziging aan het editormodel activeert een debounced-verzoek aan de werknemer.
+3. **Markertoewijzing**: door Harper geretourneerde problemen worden toegewezen aan Monaco-markeringen voor visuele markering.
 4. **Codeacties**: een aangepaste provider is geregistreerd in Monaco om `HarperIssue.suggestions` als snelle oplossing te presenteren
    acties.

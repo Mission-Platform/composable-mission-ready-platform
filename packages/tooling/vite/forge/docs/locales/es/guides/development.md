@@ -28,5 +28,5 @@ preservación al cambiar el controlador.
 
 El paquete debe seguir siendo utilizable tanto desde Vite como desde tsdown. No agregar un objetivo
 cambie la dependencia del tiempo de ejecución de la tabla o del marco al controlador neutral. Actualizar el
-[referencia de canalización del compilador](../reference/compiler.md) cuando un escenario público o
+[referencia de canalización del compilador](../reference/compiler.md) cuando una etapa pública o
 cambios en el contrato de artefactos.

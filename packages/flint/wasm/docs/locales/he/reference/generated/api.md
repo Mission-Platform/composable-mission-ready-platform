@@ -9,6 +9,206 @@
 
 נוצר מהצהרות מקור ציבורי ב-`@mission-platform/flint-wasm`.
 
+## `src/codegen/abi`
+
+### AggregateFieldDescriptor
+
+**סוג:** ממשק
+
+```typescript
+export interface AggregateFieldDescriptor
+```
+
+מתאר פריסת שדה מצטבר.
+
+### AggregateLayoutDescriptor
+
+**סוג:** ממשק
+
+```typescript
+export interface AggregateLayoutDescriptor
+```
+
+מתאר פריסת מבנה מצטבר.
+
+### canonicalizeSliceCallingConvention
+
+פונקציה **סוג:**
+
+```typescript
+function canonicalizeSliceCallingConvention(type: FlintWasmPrimitiveType): readonly FlintWasmPrimitiveType[];
+```
+
+מוריד סוג פרוסה או בתים לסוגי אוגר WebAssembly לא ארוזים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ---------------------- | ----------- |
+| הקלד | FlintWasmPrimitiveType |             |
+
+### computeArrayAllocationSize
+
+פונקציה **סוג:**
+
+```typescript
+function computeArrayAllocationSize(
+  count: number,
+  elementSize: number,
+  maxBytes: number = MAX_ARRAY_ALLOCATION_BYTES,
+): number;
+```
+
+מחשב את גודל הבתים הכולל הנדרש להקצאת מערך של count * elementSize.
+אוכף כפל מסומן וזורק RangeError על הצפת מספרים שלמים או הפרת גבולות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ------ | ----------- |
+| לספור | מספר |             |
+| elementSize | מספר |             |
+| maxBytes | מספר |             |
+
+### computeSliceCapacity
+
+פונקציה **סוג:**
+
+```typescript
+function computeSliceCapacity(bufferBytes: number, elementSize: number): number;
+```
+
+מחשב את הקיבולת עבור מתאר פרוסה בהינתן גודל בתים מאגר הכולל וגודל בתים של אלמנט.
+מטפל בצורה בטוחה בסוגים בגודל אפס (elementSize === 0) על ידי החזרת קיבולת אינסופית/בלתי מוגבלת ללא חלוקה באפס.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ------ | ----------- |
+| bufferBytes | מספר |             |
+| elementSize | מספר |             |
+
+### decodeSliceRegisterTriplet
+
+פונקציה **סוג:**
+
+```typescript
+function decodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+מפענח ומאמת שלישיית רישום `(ptr: i32, len: i32, cap: i32)` לא ארוז שהתקבלה מעבר לגבול.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| מצביע | מספר |             |
+| אורך | מספר |             |
+| קיבולת | מספר |             |
+
+### encodeSliceRegisterTriplet
+
+פונקציה **סוג:**
+
+```typescript
+function encodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+אורז מטא נתונים של פרוסות לתוך שלישיית רישום `(ptr: i32, len: i32, cap: i32)` לא ארוז.
+אוכפת גבולות לא חתומים ואינווריאציות ללא הצפה כדי למנוע ניצול עטוף.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| מצביע | מספר |             |
+| אורך | מספר |             |
+| קיבולת | מספר |             |
+
+### MAX_ARRAY_ALLOCATION_BYTES
+
+**סוג:** קבוע
+
+```typescript
+export const MAX_ARRAY_ALLOCATION_BYTES;
+```
+
+לא סופק תיאור.
+
+### MAX_SLICE_ADDRESS
+
+**סוג:** קבוע
+
+```typescript
+export const MAX_SLICE_ADDRESS;
+```
+
+לא סופק תיאור.
+
+### sanitizeAggregatePadding
+
+פונקציה **סוג:**
+
+```typescript
+function sanitizeAggregatePadding(buffer: Uint8Array, layout: AggregateLayoutDescriptor, baseOffset = 0): Uint8Array;
+```
+
+אפס מאתחל את כל בייטי הריפוד בתוך מאגר מבנה מצטבר לפני שידור ABI.
+מונע זיכרון לא מאותחל וזליגת נתונים סודיים על פני גבולות אמון.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------- | ---------------------------------------------------- |
+| חיץ | Uint8Array | - חיץ גולמי המכיל אגרגט מסודר.        |
+| פריסה | AggregateLayoutDescriptor | - מתאר פריסה מצטבר.                       |
+| baseOffset |                           | - הסטת התחלה בתוך המאגר (ברירת המחדל היא 0). |
+
+#### חוֹזֶה
+
+- **@param:** - מאגר גולמי המכיל אגרגט מסודר.
+- **@param:** - מתאר פריסה מצטבר.
+- **@param:** - הסטת התחלה בתוך המאגר (ברירת המחדל היא 0).
+- **@returns:** חיץ ניקה עם ריפוד מאופס.
+
+### SliceRegisterTriplet
+
+**סוג:** ממשק
+
+```typescript
+export interface SliceRegisterTriplet
+```
+
+ייצוג רישום של פרוסה לא ארוז עבר ישירות על פני גבולות WebAssembly.
+
+### validateSliceBounds
+
+פונקציה **סוג:**
+
+```typescript
+function validateSliceBounds(pointer: number, length: number, capacity: number): boolean;
+```
+
+מאמת ששלשות רושמות פרוסות עומדות בגבולות מרחביים ובאינוריאנטים אריתמטיים ללא סימנים ללא עטיפה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| מצביע | מספר |             |
+| אורך | מספר |             |
+| קיבולת | מספר |             |
+
+### ZERO_SIZED_TYPE_SENTINEL_POINTER
+
+**סוג:** קבוע
+
+```typescript
+export const ZERO_SIZED_TYPE_SENTINEL_POINTER;
+```
+
+לא סופק תיאור.
+
 ## `src/collection-runtime`
 
 ### buildFlintWasmCollectionRuntimeBodies
@@ -19,7 +219,11 @@
 function buildFlintWasmCollectionRuntimeBodies(): readonly FlintWasmRuntimeBody[];
 ```
 
-לא סופק תיאור.
+מחזיר מתארי מטא נתונים עבור פונקציות מסייעות של איסוף וזמן ריצה אסינכרון.
+
+#### חוֹזֶה
+
+- **@returns:** מערך של מתארי פונקציות של זמן ריצה.
 
 ### buildFlintWasmCollectionRuntimeWasmBodies
 
@@ -36,9 +240,9 @@ function buildFlintWasmCollectionRuntimeWasmBodies(allocatorIndex: number): read
 
 #### פרמטרים
 
-| שם             | הקלד | תיאור |
-| -------------- | ---- | ----- |
-| allocatorIndex | מספר |       |
+| שם | הקלד | תיאור |
+| -------------- | ------ | ----------- |
+| allocatorIndex | מספר |             |
 
 ### FlintWasmRuntimeBody
 
@@ -48,7 +252,7 @@ function buildFlintWasmCollectionRuntimeWasmBodies(allocatorIndex: number): read
 export interface FlintWasmRuntimeBody
 ```
 
-לא סופק תיאור.
+מתאר חוזה עבור פונקציות מסייעות בזמן ריצה ספריות סטנדרטיות המוטמעות ב-WebAssembly.
 
 ## `src/contracts`
 
@@ -60,7 +264,17 @@ export interface FlintWasmRuntimeBody
 export interface FlintTargetFeatures
 ```
 
-לא סופק תיאור.
+תכונות ההצעה של Target WebAssembly מופעלות במהלך פליטת קוד.
+
+### FlintWasmAggregateLayout
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintWasmAggregateLayout
+```
+
+מתאר פריסת זיכרון עבור מבנים מצטברים המונחים בזיכרון ליניארי.
 
 ### FlintWasmArtifactMetadata
 
@@ -70,7 +284,7 @@ export interface FlintTargetFeatures
 export interface FlintWasmArtifactMetadata
 ```
 
-לא סופק תיאור.
+מטא נתונים המתארים פריסת זיכרון, דרישות תכונה וחתימות פונקציות של חפץ WebAssembly הנפלט.
 
 ### FlintWasmAsyncCapability
 
@@ -80,7 +294,7 @@ export interface FlintWasmArtifactMetadata
 export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-לא סופק תיאור.
+יכולות זמן ריצה אסינכרוניות המבוקשות על ידי מודולי WebAssembly.
 
 ### FlintWasmAsyncContract
 
@@ -90,7 +304,7 @@ export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker
 export interface FlintWasmAsyncContract
 ```
 
-לא סופק תיאור.
+מפרט חוזה המסדיר ביצוע אסינכרוני והעברת הודעות ב-WebAssembly.
 
 ### FlintWasmBackendInput
 
@@ -100,7 +314,7 @@ export interface FlintWasmAsyncContract
 export interface FlintWasmBackendInput
 ```
 
-לא סופק תיאור.
+עומס קלט מלא הועבר לצינור ההידור האחורי של WebAssembly.
 
 ### FlintWasmBackendResult
 
@@ -110,7 +324,7 @@ export interface FlintWasmBackendInput
 export interface FlintWasmBackendResult
 ```
 
-לא סופק תיאור.
+תוצאה שהוחזרה על ידי פולט ה-WebAssembly העורפי המכילה חפצים ודוחות בינאריים.
 
 ### FlintWasmBinaryOperator
 
@@ -120,7 +334,7 @@ export interface FlintWasmBackendResult
 export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
-לא סופק תיאור.
+נתמכים באופרטורים של חשבון בינארי, לוגי והשוואה ב-WebAssembly.
 
 ### FlintWasmCapabilityImport
 
@@ -130,7 +344,7 @@ export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' 
 export interface FlintWasmCapabilityImport
 ```
 
-לא סופק תיאור.
+ייבוא ​​יכולת מארח נדרש על ידי מודול WebAssembly.
 
 ### FlintWasmCollectionLayout
 
@@ -140,7 +354,7 @@ export interface FlintWasmCapabilityImport
 export interface FlintWasmCollectionLayout
 ```
 
-לא סופק תיאור.
+תצורת פריסה ואסטרטגיה לסוגי אוסף בזיכרון ליניארי.
 
 ### FlintWasmCompilerHints
 
@@ -150,7 +364,7 @@ export interface FlintWasmCollectionLayout
 export interface FlintWasmCompilerHints
 ```
 
-לא סופק תיאור.
+רמזי אופטימיזציה סופקו ל-backend של מהדר WebAssembly.
 
 ### FlintWasmDiagnostic
 
@@ -160,7 +374,7 @@ export interface FlintWasmCompilerHints
 export interface FlintWasmDiagnostic
 ```
 
-לא סופק תיאור.
+אבחון מהדר הנפלט במהלך הורדה, אימות או אימות של WebAssembly.
 
 ### FlintWasmEnumDeclaration
 
@@ -170,7 +384,7 @@ export interface FlintWasmDiagnostic
 export interface FlintWasmEnumDeclaration
 ```
 
-לא סופק תיאור.
+הצהרת enum של איגוד מתויג המיוצגת בפריסות זיכרון של WebAssembly.
 
 ### FlintWasmExpression
 
@@ -180,9 +394,9 @@ export interface FlintWasmEnumDeclaration
 export type FlintWasmExpression = |
 ```
 
-לא סופק תיאור.
+ביטוי ייצוג ביניים ירד להוראות WebAssembly.
 
-### FlintWasmFeatureRequirements
+### FlintWasmFeature Requirements
 
 **סוג:** ממשק
 
@@ -190,7 +404,27 @@ export type FlintWasmExpression = |
 export interface FlintWasmFeatureRequirements
 ```
 
-לא סופק תיאור.
+דרישות תכונת WebAssembly שהתגלו במהלך יצירת הקוד.
+
+### FlintWasmForeignCapability
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintWasmForeignCapability
+```
+
+חוזה ייבוא ​​של מודול C זר מופחת עבור פליטת WebAssembly.
+
+### FlintWasmForeignFunction
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintWasmForeignFunction
+```
+
+חוזה ייבוא ​​של פונקציית C זרה הוריד עבור פליטת WebAssembly.
 
 ### FlintWasmFunction
 
@@ -200,7 +434,7 @@ export interface FlintWasmFeatureRequirements
 export interface FlintWasmFunction
 ```
 
-לא סופק תיאור.
+ייצוג ביניים של פונקציה ירד להגדרת הפונקציה WebAssembly.
 
 ### FlintWasmGenericSpecialization
 
@@ -210,7 +444,7 @@ export interface FlintWasmFunction
 export interface FlintWasmGenericSpecialization
 ```
 
-לא סופק תיאור.
+התמחות בפונקציות גנריות מונומורפי שנפלטת ל-WebAssembly.
 
 ### FlintWasmIteratorBoundaryDescriptor
 
@@ -220,7 +454,7 @@ export interface FlintWasmGenericSpecialization
 export interface FlintWasmIteratorBoundaryDescriptor
 ```
 
-לא סופק תיאור.
+מתאר גבול המגדיר מעברים וייצוא של מכונת מצב איטרטור.
 
 ### FlintWasmIteratorCapability
 
@@ -230,7 +464,7 @@ export interface FlintWasmIteratorBoundaryDescriptor
 export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 ```
 
-לא סופק תיאור.
+קטגוריית יכולת איטרטור נתמכת על ידי איטרטורים של זמן ריצה.
 
 ### FlintWasmIteratorCapabilityDescriptor
 
@@ -240,7 +474,7 @@ export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 export interface FlintWasmIteratorCapabilityDescriptor
 ```
 
-לא סופק תיאור.
+מתאר המגדיר אסטרטגיית איטרציה של איטרטור וגבולות אלמנטים.
 
 ### FlintWasmIteratorExport
 
@@ -250,7 +484,7 @@ export interface FlintWasmIteratorCapabilityDescriptor
 export interface FlintWasmIteratorExport
 ```
 
-לא סופק תיאור.
+סמלי מצב-מכונה של איטרטור נגישים לזמני ריצה מארח.
 
 ### FlintWasmLogger
 
@@ -260,7 +494,7 @@ export interface FlintWasmIteratorExport
 export interface FlintWasmLogger
 ```
 
-לא סופק תיאור.
+ממשק לוגר מובנה עבור אירועי הידור של WebAssembly.
 
 ### FlintWasmModule
 
@@ -270,7 +504,7 @@ export interface FlintWasmLogger
 export interface FlintWasmModule
 ```
 
-לא סופק תיאור.
+ייצוג ביניים של מודול המכיל פונקציות, פריסות וייבוא ​​עבור פליטת WebAssembly.
 
 ### FlintWasmParameter
 
@@ -280,7 +514,7 @@ export interface FlintWasmModule
 export interface FlintWasmParameter
 ```
 
-לא סופק תיאור.
+הגדרת פרמטר פונקציה בשימוש בחתימות פונקציות WebAssembly.
 
 ### FlintWasmPrimitiveType
 
@@ -288,10 +522,10 @@ export interface FlintWasmParameter
 
 ```typescript
 export type FlintWasmPrimitiveType =
-  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | 'v128';
 ```
 
-לא סופק תיאור.
+סוגי נתונים פרימיטיביים הנתמכים על ידי מעבר הורדת ה-WebAssembly האחורי.
 
 ### FlintWasmSourceImport
 
@@ -301,7 +535,7 @@ export type FlintWasmPrimitiveType =
 export interface FlintWasmSourceImport
 ```
 
-לא סופק תיאור.
+תלות מודול מקור מקושר מיובאת למודול WebAssembly.
 
 ### FlintWasmSourceSpan
 
@@ -311,7 +545,7 @@ export interface FlintWasmSourceImport
 export interface FlintWasmSourceSpan
 ```
 
-לא סופק תיאור.
+טווח מיקום המקור ממופה להוראות WebAssembly ליצירת סמלים לניפוי באגים.
 
 ### FlintWasmStandardLibraryOperation
 
@@ -344,6 +578,8 @@ export type FlintWasmStandardLibraryOperation =
   | 'memory-realloc'
   | 'memory-load-u32'
   | 'memory-store-u32'
+  | 'memory-load-u8'
+  | 'memory-store-u8'
   | 'memory-load-f64'
   | 'memory-store-f64'
   | 'f64-from-u32'
@@ -366,10 +602,21 @@ export type FlintWasmStandardLibraryOperation =
   | 'signal-schedule'
   | 'async-schedule-microtask'
   | 'async-worker-post'
-  | 'async-worker-receive';
+  | 'async-worker-receive'
+  | 'memory-copy'
+  | 'memory-fill'
+  | 'simd-binarize'
+  | 'simd-i8x16-splat'
+  | 'simd-i8x16-eq'
+  | 'simd-i8x16-lt-u'
+  | 'simd-i8x16-bitmask'
+  | 'simd-i32x4-splat'
+  | 'simd-i32x4-add'
+  | 'simd-v128-load'
+  | 'simd-v128-store';
 ```
 
-לא סופק תיאור.
+פעולות פנימיות של ספריית WebAssembly מופחתות על ידי המהדר האחורי.
 
 ### FlintWasmStatement
 
@@ -379,7 +626,7 @@ export type FlintWasmStandardLibraryOperation =
 export type FlintWasmStatement = |
 ```
 
-לא סופק תיאור.
+הצהרת ייצוג ביניים ירדה לזרימת בקרה מובנית של WebAssembly.
 
 ### FlintWasmTypeName
 
@@ -389,7 +636,7 @@ export type FlintWasmStatement = |
 export interface FlintWasmTypeName
 ```
 
-לא סופק תיאור.
+ייצוג שם מופשט בשימוש במהלך הורדת WebAssembly.
 
 ## `src/emitter`
 
@@ -401,14 +648,305 @@ export interface FlintWasmTypeName
 function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<input>'): FlintWasmBackendResult;
 ```
 
-לא סופק תיאור.
+נקודת כניסה ראשית הקומפלציה של מודול Flint IR לפורמטים בינאריים וטקסטים של WebAssembly.
 
 #### פרמטרים
 
-| שם      | הקלד                  | תיאור |
-| ------- | --------------------- | ----- |
-| קלט     | FlintWasmBackendInput |       |
-| שם קובץ |                       |       |
+| שם | הקלד | תיאור |
+| -------- | --------------------- | ----------- |
+| קלט | FlintWasmBackendInput |             |
+| שם קובץ |                       |             |
+
+## `src/emitter/section-builder`
+
+### SECTION_IDS
+
+**סוג:** קבוע
+
+```typescript
+export const SECTION_IDS;
+```
+
+לא סופק תיאור.
+
+### סָעִיף
+
+פונקציה **סוג:**
+
+```typescript
+function section(id: number, contents: readonly number[]): number[];
+```
+
+חבילות בתים של מטען במקטע WebAssembly עם מזהה מקטע וקידומת אורך.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ----------------- | ----------- |
+| id | מספר |             |
+| תוכן | מספר לקריאה בלבד[] |             |
+
+### WasmSectionBuilder
+
+**סוג:** כיתה
+
+```typescript
+export class WasmSectionBuilder
+```
+
+יוצר בונה מקטעים מוקלד של WebAssembly.
+
+## `src/encoding/bytes`
+
+### appendF32
+
+פונקציה **סוג:**
+
+```typescript
+function appendF32(value: number): number[];
+```
+
+מוסיף מספר נקודה צפה של 32 סיביות בפורמט בינארי קטן-אנדיאן, תוך קנוניזציה של NaNs.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מספר |             |
+
+### appendF64
+
+פונקציה **סוג:**
+
+```typescript
+function appendF64(value: number): number[];
+```
+
+מוסיף מספר נקודה צפה של 64 סיביות בפורמט בינארי קטן-אנדיאן, תוך קנוניזציה של NaNs.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מספר |             |
+
+### CANONICAL_F32_NAN_BYTES
+
+**סוג:** קבוע
+
+```typescript
+export const CANONICAL_F32_NAN_BYTES;
+```
+
+תבנית סיביות NaN שקטה קנונית עבור צפים של 32 סיביות (0x7fc00000 ב-little-endian).
+
+### CANONICAL_F64_NAN_BYTES
+
+**סוג:** קבוע
+
+```typescript
+export const CANONICAL_F64_NAN_BYTES;
+```
+
+דפוס סיביות NaN שקטה קנונית עבור צפים של 64 סיביות (0x7ff8000000000000 ב-little-endian).
+
+### וֶקטוֹר
+
+פונקציה **סוג:**
+
+```typescript
+function vector(values: readonly number[]): number[];
+```
+
+מקדים מערך של רכיבי bytecode עם הספירה שלו בקידוד LEB128.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ----------------- | ----------- |
+| ערכים | מספר לקריאה בלבד[] |             |
+
+### wasmString
+
+פונקציה **סוג:**
+
+```typescript
+function wasmString(value: string): number[];
+```
+
+מקודד מחרוזת UTF-8 עם קידומת אורך הבייטים שלה בפורמט WebAssembly.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מחרוזת |             |
+
+## `src/encoding/leb128`
+
+### חתום לב
+
+פונקציה **סוג:**
+
+```typescript
+function signedLeb(value: number | bigint): number[];
+```
+
+מקודד מספר שלם של 32 סיביות או 64 סיביות חתום לתוך מערך בתים של WebAssembly LEB128.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---------------- | ----------- |
+| ערך | מספר \| bigint |             |
+
+### חתום Leb128
+
+פונקציה **סוג:**
+
+```typescript
+function signedLeb128(value: number | bigint): number[];
+```
+
+כינוי לחתום לב.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---------------- | ----------- |
+| ערך | מספר \| bigint |             |
+
+### לא חתום לב
+
+פונקציה **סוג:**
+
+```typescript
+function unsignedLeb(value: number): number[];
+```
+
+מקודד מספר שלם של 32 סיביות ללא סימן לתוך מערך בתים של WebAssembly LEB128.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מספר |             |
+
+### לא חתום Leb128
+
+פונקציה **סוג:**
+
+```typescript
+function unsignedLeb128(value: number): number[];
+```
+
+כינוי ללב לא חתום.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מספר |             |
+
+## `src/optimizer`
+
+### FlintWasmOptimizationDiagnostic
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintWasmOptimizationDiagnostic
+```
+
+אבחון שנפלט על ידי ביצוע אופטימיזציה של WebAssembly.
+
+### FlintWasmOptimizationPass
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintWasmOptimizationPass
+```
+
+מטא נתונים המתארים מעבר אופטימיזציה בודד והמדדים שלו.
+
+### FlintWasmOptimizationReport
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintWasmOptimizationReport
+```
+
+דוח סיכום העוקב אחר כל מעברי האופטימיזציה והדיאגנוסטיקה המיושמים של WebAssembly.
+
+### FlintWasmStageIr
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintWasmStageIr
+```
+
+תמונת מצב של ייצוג ביניים של מצב מודול בשלב אופטימיזציה.
+
+### אסטרטגיית FlintWasmSwitch
+
+**סוג:** סוג
+
+```typescript
+export type FlintWasmSwitchStrategy = 'br-table' | 'sparse' | 'constant';
+```
+
+אסטרטגיית יצירת קוד להורדת הצהרות מתגים.
+
+### optimizeFlintWasmModule
+
+פונקציה **סוג:**
+
+```typescript
+function optimizeFlintWasmModule(
+  module: FlintWasmModule,
+  optimization: 'debug' | 'release' = 'release',
+): FlintWasmStageIr;
+```
+
+מבצע את החבילה המלאה של אופטימיזציה של WebAssembly עובר על מודול IR.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------ | -------------------- | ----------- |
+| מודול | FlintWasmModule |             |
+| אופטימיזציה | 'באגים' \| 'לשחרר' |             |
+
+## `src/sections/custom`
+
+### encodeFlintAbiCustomSection
+
+פונקציה **סוג:**
+
+```typescript
+function encodeFlintAbiCustomSection(manifest: FlintCAbiManifest | object): number[];
+```
+
+פולט קטע WebAssembly מותאם אישית בינארי המכיל מניפסט CBOR ABI קומפקטי (`flint.abi.v2`).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | --------------------------- | ----------- |
+| מניפסט | FlintCAbiManifest \| חפץ |             |
+
+### FLINT_ABI_V2_CUSTOM_SECTION
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_ABI_V2_CUSTOM_SECTION;
+```
+
+שם מקטע מותאם אישית סטנדרטי של WebAssembly עבור מניפסטים בינאריים CBOR ABI מוטמעים.
 
 ## `src/verifier`
 
@@ -430,7 +968,7 @@ export interface FlintWasmArtifactManifest
 export interface FlintWasmArtifactVerificationDiagnostic
 ```
 
-לא סופק תיאור.
+ממצא אבחוני שנפלט במהלך אימות בינארי של WebAssembly.
 
 ### FlintWasmArtifactVerificationInput
 
@@ -440,7 +978,7 @@ export interface FlintWasmArtifactVerificationDiagnostic
 export interface FlintWasmArtifactVerificationInput
 ```
 
-לא סופק תיאור.
+פרמטרי קלט וציפיות הועברו לאימות חפץ.
 
 ### FlintWasmArtifactVerificationPolicy
 
@@ -450,7 +988,7 @@ export interface FlintWasmArtifactVerificationInput
 export interface FlintWasmArtifactVerificationPolicy
 ```
 
-לא סופק תיאור.
+כללי מדיניות המסדירים אכיפת אימות חפצים.
 
 ### FlintWasmArtifactVerificationResult
 
@@ -460,7 +998,7 @@ export interface FlintWasmArtifactVerificationPolicy
 export interface FlintWasmArtifactVerificationResult
 ```
 
-לא סופק תיאור.
+דוח תוצאות אימות מקיף המציין סטטוס אימות.
 
 ### FlintWasmArtifactVerificationSeverity
 
@@ -470,7 +1008,7 @@ export interface FlintWasmArtifactVerificationResult
 export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info';
 ```
 
-לא סופק תיאור.
+רמות חומרה אבחנתיות הנפלטות במהלך אימות חפץ.
 
 ### FlintWasmManifestFunction
 
@@ -480,7 +1018,7 @@ export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info'
 export interface FlintWasmManifestFunction
 ```
 
-לא סופק תיאור.
+מטא נתונים של פונקציה חולצו ממניפסט ABI לצורך אימות.
 
 ### FlintWasmManifestImport
 
@@ -490,7 +1028,7 @@ export interface FlintWasmManifestFunction
 export interface FlintWasmManifestImport
 ```
 
-לא סופק תיאור.
+מטא נתונים של הצהרת יבוא שחולצו ממניפסט ABI.
 
 ### FlintWasmManifestParameter
 
@@ -500,7 +1038,7 @@ export interface FlintWasmManifestImport
 export interface FlintWasmManifestParameter
 ```
 
-לא סופק תיאור.
+מטא נתונים מסוג פרמטר בהגדרת פונקציית מניפסט.
 
 ### FlintWasmMemoryLayout
 
@@ -510,7 +1048,7 @@ export interface FlintWasmManifestParameter
 export interface FlintWasmMemoryLayout
 ```
 
-לא סופק תיאור.
+ציפיות פריסת זיכרון מאומתות מול בינארי WebAssembly.
 
 ### verifyFlintWasmArtifact
 
@@ -520,13 +1058,13 @@ export interface FlintWasmMemoryLayout
 function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): FlintWasmArtifactVerificationResult;
 ```
 
-לא סופק תיאור.
+השלם נקודת כניסה לאימות המאמתת חפצים בינאריים ומתאמים של WebAssembly.
 
 #### פרמטרים
 
-| שם  | הקלד                               | תיאור |
-| --- | ---------------------------------- | ----- |
-| קלט | FlintWasmArtifactVerificationInput |       |
+| שם | הקלד | תיאור |
+| ----- | ---------------------------------- | ----------- |
+| קלט | FlintWasmArtifactVerificationInput |             |
 
 ## `src/wat`
 
@@ -538,7 +1076,7 @@ function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): Fli
 export interface FlintWasmWatMetadata
 ```
 
-לא סופק תיאור.
+מטא נתונים הנפלטים לתוך הערות וכותרות בפורמט WebAssembly (WAT).
 
 ### renderFlintWasmWat
 
@@ -548,11 +1086,37 @@ export interface FlintWasmWatMetadata
 function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmWatMetadata = {}): string;
 ```
 
-לא סופק תיאור.
+מוריד ייצוג ביניים שלם של מודול Flint WebAssembly לפורמט WAT טקסטואלי.
 
 #### פרמטרים
 
-| שם         | הקלד                 | תיאור |
-| ---------- | -------------------- | ----- |
-| מודול      | FlintWasmModule      |       |
-| מטא נתונים | FlintWasmWatMetadata |       |
+| שם | הקלד | תיאור |
+| -------- | -------------------- | -------------------------------------------------------- |
+| מודול | FlintWasmModule | - ייצוג ביניים מודול מורכב.           |
+| מטא נתונים | FlintWasmWatMetadata | - מטא נתונים אוסף ותצורת תכונת יעד. |
+
+#### חוֹזֶה
+
+- **@param:** - ייצוג ביניים מודול מורכב.
+- **@param:** - מטא נתונים אוסף ותצורת תכונת יעד.
+- **@returns:** מחרוזת ייצוג טקסט של WebAssembly.
+
+### toWatType
+
+פונקציה **סוג:**
+
+```typescript
+function toWatType(
+  type: string | { readonly name?: string; readonly reference?: string } | undefined,
+  memory64 = false,
+): string;
+```
+
+ממפה מחרוזת ייצוג מסוג Flint או C לסוג ערך WAT של WebAssembly.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------------------------------------------------------------------------------ | ----------- |
+| הקלד | מחרוזת \| { קריאה בלבד שם?: מחרוזת; הפניה לקריאה בלבד?: string } \| לא מוגדר |             |
+| זיכרון64 |                                                                                |             |

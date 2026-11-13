@@ -121,7 +121,7 @@ for packages that ship `.vue` SFCs (`i18n`, `router`, …).
 **Kind:** function
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[];
+function readPackageDependencyNames(rootDirectory: string, options?: { includeDevDependencies?: boolean }): string[];
 ```
 
 Read the `dependencies` and `peerDependencies` declared in the package.json
@@ -130,9 +130,10 @@ of its own bundle so consumers can dedupe and tree-shake them.
 
 #### Parameters
 
-| Name          | Type   | Description |
-| ------------- | ------ | ----------- |
-| rootDirectory | string |             |
+| Name          | Type                                 | Description |
+| ------------- | ------------------------------------ | ----------- |
+| rootDirectory | string                               |             |
+| options       | { includeDevDependencies?: boolean } |             |
 
 ### resolveCssOwner
 

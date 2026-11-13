@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/api-proxy`.
 **Art:** konstant
 
 ```typescript
-export const ALLOWED_METHODS;
+export const ALLOWED_METHODS: Set<string>;
 ```
 
 Halten Sie den Proxy schreibgeschützt und auf die dokumentierten API-Routen beschränkt.
@@ -26,7 +26,17 @@ Halten Sie den Proxy schreibgeschützt und auf die dokumentierten API-Routen bes
 **Art:** konstant
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES;
+export const ALLOWED_ROUTE_PREFIXES: string[];
+```
+
+Keine Beschreibung angegeben.
+
+### Standard
+
+**Art:** konstant
+
+```typescript
+export const handler: ExportedHandler;
 ```
 
 Keine Beschreibung angegeben.
@@ -39,10 +49,15 @@ Keine Beschreibung angegeben.
 function isAllowedProxyRequest(request: Request): boolean;
 ```
 
-Keine Beschreibung angegeben.
+Bestimmt, ob eine eingehende Clientanforderung durch die Proxy-Richtlinie zulässig ist.
 
 #### Parameter
 
-| Name    | Geben Sie | ein Beschreibung |
-| ------- | --------- | ---------------- |
-| Anfrage | Anfrage   |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------- | ------------------------ |
+| Anfrage | Anfrage | - Eingehende HTTP-Anfrage. |
+
+#### Vertrag
+
+- **@param:** – Eingehende HTTP-Anfrage.
+- **@returns:** True, wenn Methode und Pfad in der Proxy-Zulassungsliste enthalten sind.

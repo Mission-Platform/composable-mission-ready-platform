@@ -5,7 +5,7 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > packages/ui/components/docs/decomposition-map.md: [packages/ui/components/docs/decomposition-map.md](../../decomposition-map.md)
 > Sprache: Deutsch (de)
 
-In diesem Dokument wird der Restbestand nach dem Extrahieren von `ForgeTag` erfasst
+In diesem Dokument wird der Restbestand nach der Extraktion von `ForgeTag` erfasst
 `@mission-platform/select`, Floating- und Benachrichtigungs-UI zu `@mission-platform/float`,
 und Design-Benutzeroberfläche/-Status auf `@mission-platform/theme`. Der neutrale Lauf bei
 `src/components/index.ts` exportiert derzeit **45** Komponenten; Die folgenden Listen sind
@@ -62,7 +62,7 @@ Die ersten drei besitzen die Semantik für das Laden/Rendering von Medien, Karus
 Mock-Add-Präsentation rund um die Medien. Ihre neutrale Quelle hängt derzeit davon ab
 `@mission-platform/forge-jsx` und für Karussellsteuerungen `@mission-platform/icons`;
 Es besteht keine Abhängigkeit von den extrahierten Paketen. Reduzierte Bewegung beibehalten und
-CSS pro Komponente als Teil eines zukünftigen Schritts zu integrieren, anstatt das Medienverhalten aufzuteilen
+CSS pro Komponente als Teil eines zukünftigen Schritts, anstatt das Medienverhalten aufzuteilen
 aus seinen Stilen.
 
 ### `@mission-platform/communication`
@@ -72,7 +72,7 @@ aus seinen Stilen.
 Diese Komponenten teilen die Konversationssemantik, das Verhalten in der Live-Region und die Nachricht
 Layout. `ForgeChatBubble` setzt sich aus `ForgeAvatar` und `@mission-platform/typography` zusammen
 Daher sollte das künftige Paket von stabilen öffentlichen Aufträgen für diese Bereiche abhängen
-Primitive (oder behalten Sie sie im Basispaket), anstatt Residuen zu importieren
+Grundelemente (oder behalten Sie sie im Basispaket), anstatt Reste zu importieren
 Komponentenquelldateien über einen Alias.
 
 ## Komponenten, die vorerst zusammen bleiben
@@ -83,7 +83,7 @@ bis genügend API-Oberfläche vorhanden ist, um eine weitere Grenze zu rechtfert
 `ForgeAvatar`, `ForgeButton`, `ForgeButtonGroup`, `ForgeIconButton`, `ForgeQuote`,
 `ForgeSkeleton`, `ForgeSpinner` und `ForgeHero`.
 
-`ForgeInView` bleibt auch als kleines Interaktionsdienstprogramm erhalten. `ForgeTypography`
+`ForgeInView` wird auch als kleines Interaktionsdienstprogramm beibehalten. `ForgeTypography`
 ist Eigentum von `@mission-platform/typography` und ist absichtlich nicht Teil des
 Restfass.
 
@@ -106,9 +106,9 @@ Typografie von `@mission-platform/typography` und paketlokale Stile/Dienstprogra
 Geschichten können das Paketfass importieren, um die öffentliche Oberfläche zu nutzen; das ist es nicht
 eine Implementierungsabhängigkeit oder ein Paketzyklus.
 
-Jede Restkomponente behält ihre am selben Ort befindliche `index.ts`, neutrale Quelle, SCSS,
+Jede verbleibende Komponente behält ihre an derselben Stelle befindliche `index.ts`, neutrale Quelle, SCSS,
 Spezifikation und Storybook-Geschichte. Das Paketmanifest veröffentlicht `dist`, Komponenten,
-Stile und nur Dienstprogramme; Der extrahierte Geschäftsbaum ist nicht mehr enthalten.
+Stile und nur Dienstprogramme; Der extrahierte Store-Baum ist nicht mehr enthalten.
 
 ## Versorgungsvertrag mit geteilter Größe
 

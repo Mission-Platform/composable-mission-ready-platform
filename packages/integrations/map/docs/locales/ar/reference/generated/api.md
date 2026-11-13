@@ -497,7 +497,7 @@ export interface UseSourceOptions
 **النوع:** ثابت
 
 ```typescript
-export const MapContext;
+export const MapContext: MpContext<Map | undefined>;
 ```
 
 السياق يحمل الأقرب `<MapLibre>` MapLibre للأجداد `Map` مثال.

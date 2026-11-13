@@ -1,3 +1,5 @@
+import mermaid from 'mermaid';
+
 import {
   Fragment,
   HtmlContent,
@@ -10,7 +12,6 @@ import {
   type CSSStyleProperties,
 } from '@mission-platform/forge-jsx';
 import { ForgeTypography } from '@mission-platform/typography';
-import mermaid from 'mermaid';
 
 import { mermaidThemeCSS } from './forge-mermaid-theme';
 import styles from './forge-mermaid.module.scss';
@@ -105,7 +106,7 @@ export function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpEl
   const [renderError, setRenderError] = useState<boolean>(false);
   // The explicit initial value keeps the neutral hook type safe while allowing
   // the render result to remain absent until the async Mermaid call resolves.
-  // eslint-disable-next-line unicorn/no-useless-undefined
+
   const [renderedDiagram, setRenderedDiagram] = useState<MermaidRenderResult | undefined>(undefined);
 
   useEffect(() => {

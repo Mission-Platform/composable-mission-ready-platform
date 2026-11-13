@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import type { ForgeExportBundle, ForgeExportFile } from '@mission-platform/forge-figma';
+
 import {
   DEFAULT_BRIDGE_TIMEOUT_MS,
   copyForgeFile,
@@ -8,8 +10,6 @@ import {
   sendBundleToBridge,
 } from './delivery';
 import { isAllowedForgeBridgeUrl } from './messages';
-
-import type { ForgeExportBundle, ForgeExportFile } from '@mission-platform/forge-figma';
 
 const files: readonly ForgeExportFile[] = [
   { path: 'checkout.tsx', kind: 'tsx', content: 'export const Checkout = {};' },

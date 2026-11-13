@@ -1,9 +1,10 @@
 'use client';
 
+import { useCallback, useEffect, useState } from 'react';
+
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeContainer } from '@mission-platform/layouts';
 import { ForgeTypography } from '@mission-platform/typography';
-import { useCallback, useEffect, useState } from 'react';
 
 import { createMonitorSession, deleteMonitor, hasMonitorSession, loadMonitors, saveMonitor } from '../hooks/streams';
 import { ServiceMonitorShell } from '../layouts/service-monitor-shell';

@@ -49,7 +49,7 @@ Scala di dimensioni Canonical 2xs → 2xl condivisa tra i componenti del display
 export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy' | undefined;
 ```
 
-Indicatore di presenza opzionale rappresentato come punto d'angolo.
+Indicatore di presenza opzionale reso come punto d'angolo.
 
 ### ForgeAvatar
 
@@ -71,8 +71,8 @@ il contenuto demo di Storybook.
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------- | ----------- |
 | proprietà | Sola lettura<AvatarProperties> |             |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
@@ -133,8 +133,8 @@ Assistente {@link classNames}.
 
 #### Parametri
 
-| Nome      | Digitare                                | Descrizione |
-| --------- | --------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------------- | ----------- |
 | proprietà | Sola lettura<BackgroundVideoProperties> |             |
 
 ## `src/components/atoms/forge-badge/forge-badge`
@@ -197,8 +197,8 @@ stringhe semplici e il modulo oggetto `{ className: boolean }`.
 
 #### Parametri
 
-| Nome      | Digitare                      | Descrizione |
-| --------- | ----------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------- | ----------- |
 | proprietà | Sola lettura<BadgeProperties> |             |
 
 ## `src/components/atoms/forge-button/forge-button`
@@ -251,9 +251,53 @@ assemblato con l'helper {@link classNames} indipendente dal framework, incluso i
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------- | ----------- |
 | proprietà | Sola lettura<ButtonProperties> |             |
+
+## `src/components/atoms/forge-divider/forge-divider`
+
+### Orientamento divisore
+
+**Genere:** tipo
+
+```typescript
+export type DividerOrientation = 'horizontal' | 'vertical';
+```
+
+Direzione del layout del divisore.
+
+### Proprietà divisore
+
+**Tipo:** interfaccia
+
+```typescript
+export interface DividerProperties
+```
+
+Nessuna descrizione fornita.
+
+### ForgeDivider
+
+**Tipo:** funzione
+
+```typescript
+function ForgeDivider(properties: Readonly<DividerProperties>): MpElement;
+```
+
+`ForgeDivider` — un divisore con bordo sottile creato una volta nel JSX neutro
+dialetto e compilato direttamente in React o Vue da
+`@mission-platform/vite-plugin-forge`.
+
+Riempie la larghezza o l'altezza disponibile in base a `orientation` e utilizza
+l'elemento semantico `<hr>` per impostazione predefinita. Impostare `decorative` su `false` per utilizzare a
+invece `<div>` con ruolo.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------- | ----------- |
+| proprietà | Sola lettura<DividerProperties> |             |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -278,8 +322,8 @@ Assistente {@link classNames}.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<IconButtonProperties> |             |
 
 ### IconButtonProperties
@@ -313,6 +357,94 @@ export type IconButtonVariant =
 
 Trattamento visivo del pulsante icona: il set di colori canonici più un `ghost` trasparente.
 
+## `src/components/atoms/forge-icon/forge-icon`
+
+### ForgeIcon
+
+**Tipo:** funzione
+
+```typescript
+function ForgeIcon(properties: Readonly<IconProperties>): MpElement;
+```
+
+Facciata di icone neutrale rispetto al framework supportata dal `@mission-platform/icons` rivisto
+catalogo. La risoluzione è basata sui dati e i nomi sconosciuti non rendono mai un messaggio non valido
+componente; il wrapper possiede il nome accessibile in modo che gli SVG del catalogo rimangano silenziosi.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------ | ----------- |
+| proprietà | Sola lettura<IconProperties> |             |
+
+### NomeIcona
+
+**Genere:** tipo
+
+```typescript
+export type IconName = string;
+```
+
+Un nome di catalogo come `forge-icon-check`; i nomi sconosciuti utilizzano l'icona di fallback.
+
+### ProprietàIcona
+
+**Tipo:** interfaccia
+
+```typescript
+export interface IconProperties
+```
+
+Nessuna descrizione fornita.
+
+### Dimensione icona
+
+**Genere:** tipo
+
+```typescript
+export type IconSize = 'sm' | 'md' | 'lg' | 'xl';
+```
+
+Dimensione dell'icona mappata alle dimensioni in pixel del catalogo.
+
+## `src/components/atoms/forge-kbd/forge-kbd`
+
+### ForgeKbd
+
+**Tipo:** funzione
+
+```typescript
+function ForgeKbd(properties: Readonly<KbdProperties>): MpElement;
+```
+
+Un'etichetta semantica di tasto/accordo della tastiera resa nel dialetto JSX neutro.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------- | ----------- |
+| proprietà | Sola lettura<KbdProperties> |             |
+
+### KbdProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface KbdProperties
+```
+
+Nessuna descrizione fornita.
+
+### KbdSize
+
+**Genere:** tipo
+
+```typescript
+export type KbdSize = 'sm' | 'md' | 'lg';
+```
+
+Dimensioni dei tasti della tastiera.
+
 ## `src/components/atoms/forge-progress-bar/forge-progress-bar`
 
 ### ForgeProgressBar
@@ -335,8 +467,8 @@ Assistente {@link classNames}.
 
 #### Parametri
 
-| Nome      | Digitare                            | Descrizione |
-| --------- | ----------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------- | ----------- |
 | proprietà | Sola lettura<ProgressBarProperties> |             |
 
 ### ProgressBarProperties
@@ -372,7 +504,7 @@ Tono del riempimento di avanzamento.
 
 ## `src/components/atoms/forge-quote/forge-quote`
 
-### ForgeCitazione
+### ForgeQuote
 
 **Tipo:** funzione
 
@@ -393,13 +525,12 @@ aiutante {@link classNames} indipendente dal framework.
 L'SFC Vue originale esponeva inoltre uno slot `author` con ambito (sostituendo
 gli oggetti di scena `author`/`source`) e la presenza di slot rilevata; la versione neutra
 elimina lo slot con ambito: l'attribuzione è guidata dalle prop `author`/`source`
-
 - coerente con il modo in cui gli altri componenti migrati hanno eliminato gli slot con ambito.
 
 #### Parametri
 
-| Nome      | Digitare                      | Descrizione |
-| --------- | ----------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------- | ----------- |
 | proprietà | Sola lettura<QuoteProperties> |             |
 
 ### QuoteProprietà
@@ -460,8 +591,8 @@ convenzione utilizzata nei componenti migrati).
 
 #### Parametri
 
-| Nome      | Digitare                                | Descrizione |
-| --------- | --------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------------- | ----------- |
 | proprietà | Sola lettura<ResponsiveImageProperties> |             |
 
 ### ResponsiveImageFit
@@ -524,8 +655,8 @@ componenti).
 
 #### Parametri
 
-| Nome      | Digitare                                | Descrizione |
-| --------- | --------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------------- | ----------- |
 | proprietà | Sola lettura<ResponsiveVideoProperties> |             |
 
 ### ResponsiveVideoFit
@@ -568,7 +699,7 @@ Una singola sorgente video specifica per il formato.
 function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
 ```
 
-`ForgeSeparator` — un separatore/divisore visivo creato una volta in modo neutro
+`ForgeSeparator`: un separatore/divisore visivo creato una volta in modo neutro
 Dialetto JSX e compilato direttamente in React o Vue da
 `@mission-platform/vite-plugin-forge`.
 
@@ -586,8 +717,8 @@ Assistente {@link classNames}.
 
 #### Parametri
 
-| Nome      | Digitare                          | Descrizione |
-| --------- | --------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------- | ----------- |
 | proprietà | Sola lettura<SeparatorProperties> |             |
 
 ### Orientamento separatore
@@ -646,14 +777,14 @@ dialetto e compilato direttamente in React o Vue da
 
 Rende un blocco `aria-hidden` in una delle tre forme (`line`/`circle`/
 `block`) con un'animazione shimmer opzionale, che accetta `width`/ esplicito
-`height` ha la priorità. Possiede il suo stile attraverso il modulo CSS co-localizzato
+`height` ha la precedenza. Possiede il suo stile attraverso il modulo CSS co-localizzato
 `forge-skeleton.module.scss`, assemblato con quadro neutro
 Assistente {@link classNames}.
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<SkeletonProperties> |             |
 
 ### Proprietà dello scheletro
@@ -700,8 +831,8 @@ la versione neutra (i18n non fa parte di questa libreria) imposta `label` su
 
 #### Parametri
 
-| Nome      | Digitare                        | Descrizione |
-| --------- | ------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------- | ----------- |
 | proprietà | Sola lettura<SpinnerProperties> |             |
 
 ### SpinnerProperties
@@ -752,13 +883,13 @@ dialetto e compilato direttamente in React o Vue da
 `@mission-platform/vite-plugin-forge`.
 
 Emette i nomi delle classi BEM più lo stile in linea flexbox calcolato; la dimostrazione
-lo styling vive nel co-locato `forge-stack.module.scss` (importato da
+styling vive nel co-locato `forge-stack.module.scss` (importato da
 `forge-stack.stories.tsx`).
 
 #### Parametri
 
-| Nome      | Digitare                      | Descrizione |
-| --------- | ----------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------- | ----------- |
 | proprietà | Sola lettura<StackProperties> |             |
 
 ### StackAlign
@@ -825,8 +956,8 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<StatusIconProperties> |             |
 
 ### StatusIconLevel
@@ -859,6 +990,102 @@ export type StatusIconSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
 Canonico 2xs → scala di dimensioni 2xl.
+
+## `src/components/atoms/forge-surface/forge-surface`
+
+### ForgeSurface
+
+**Tipo:** funzione
+
+```typescript
+function ForgeSurface(properties: Readonly<SurfaceProperties>): MpElement;
+```
+
+Una superficie semantica tematica con uno slot predefinito.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------- | ----------- |
+| proprietà | Sola lettura<SurfaceProperties> |             |
+
+### Elevazione della superficie
+
+**Genere:** tipo
+
+```typescript
+export type SurfaceElevation = 0 | 1 | 2 | 3;
+```
+
+Livello di elevazione della superficie.
+
+### SurfacePadding
+
+**Genere:** tipo
+
+```typescript
+export type SurfacePadding = 'none' | 'sm' | 'md' | 'lg';
+```
+
+Scala di imbottitura della superficie.
+
+### Proprietà superficie
+
+**Tipo:** interfaccia
+
+```typescript
+export interface SurfaceProperties
+```
+
+Nessuna descrizione fornita.
+
+### Superficiearrotondata
+
+**Genere:** tipo
+
+```typescript
+export type SurfaceRounded = 'none' | 'sm' | 'md' | 'lg' | 'xl';
+```
+
+Trattamento del raggio d'angolo della superficie.
+
+## `src/components/atoms/forge-sync-status-indicator/forge-sync-status-indicator`
+
+### ForgeSyncStatusIndicator
+
+**Tipo:** funzione
+
+```typescript
+function ForgeSyncStatusIndicator(properties: Readonly<SyncStatusIndicatorProperties>): MpElement;
+```
+
+Un indicatore dello stato di sincronizzazione compatto e accessibile.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------------------- | ----------- |
+| proprietà | Sola lettura<SyncStatusIndicatorProperties> |             |
+
+### SyncStatus
+
+**Genere:** tipo
+
+```typescript
+export type SyncStatus = 'synced' | 'syncing' | 'pending' | 'error' | 'offline';
+```
+
+Stato di sincronizzazione rappresentato dall'indicatore.
+
+### SyncStatusIndicatorProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface SyncStatusIndicatorProperties
+```
+
+Nessuna descrizione fornita.
 
 ## `src/components/molecules/forge-accordion/forge-accordion`
 
@@ -913,16 +1140,64 @@ un unico elemento aperto; impostarlo su `false` per consentirne diversi contempo
 styling attraverso il modulo CSS co-localizzato `forge-accordion.module.scss`.
 
 Sostituzioni dagli SFC originali: `provide`/`inject` diventa interno
-`useState`; il simbolo chevron è `@mission-platform/icons` riscrivibile una volta
+`useState`; il simbolo chevron è il valore riscrivibile `@mission-platform/icons`
 `ForgeIconChevron` (ruotato tramite la sua prop `direction`, a sua volta compilata
 React/Vue); e gli slot `summary`/default per articolo diventano due slot con ambito
 che ricadono nel testo `title`/`content` dell'elemento.
 
 #### Parametri
 
-| Nome      | Digitare                          | Descrizione |
-| --------- | --------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------- | ----------- |
 | proprietà | Sola lettura<AccordionProperties> |             |
+
+## `src/components/molecules/forge-alert/forge-alert`
+
+### AlertProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface AlertProperties
+```
+
+Nessuna descrizione fornita.
+
+### Dimensioni avviso
+
+**Genere:** tipo
+
+```typescript
+export type AlertSize = 'sm' | 'md' | 'lg';
+```
+
+Nessuna descrizione fornita.
+
+### AlertVariant
+
+**Genere:** tipo
+
+```typescript
+export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+Nessuna descrizione fornita.
+
+### ForgeAlert
+
+**Tipo:** funzione
+
+```typescript
+function ForgeAlert(properties: Readonly<AlertProperties>): MpElement;
+```
+
+Un messaggio di stato accessibile e ignorabile con un messaggio componibile e uno slot di azione.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------- | ----------- |
+| proprietà | Sola lettura<AlertProperties> |             |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -971,8 +1246,8 @@ sostituzione), quindi viene trasferito solo il modulo di collegamento `href`.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<BreadcrumbProperties> |             |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
@@ -1031,9 +1306,57 @@ Assistente {@link classNames}.
 
 #### Parametri
 
-| Nome      | Digitare                            | Descrizione |
-| --------- | ----------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------- | ----------- |
 | proprietà | Sola lettura<ButtonGroupProperties> |             |
+
+## `src/components/molecules/forge-callout-block/forge-callout-block`
+
+### CalloutBlockProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface CalloutBlockProperties
+```
+
+Nessuna descrizione fornita.
+
+### CalloutBlockSize
+
+**Genere:** tipo
+
+```typescript
+export type CalloutBlockSize = 'sm' | 'md';
+```
+
+Nessuna descrizione fornita.
+
+### CalloutBlockVariant
+
+**Genere:** tipo
+
+```typescript
+export type CalloutBlockVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+Nessuna descrizione fornita.
+
+### ForgeCalloutBlock
+
+**Tipo:** funzione
+
+```typescript
+function ForgeCalloutBlock(properties: Readonly<CalloutBlockProperties>): MpElement;
+```
+
+Un blocco informativo prominente con titolo, descrizione, contenuto e spazi di azione.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------------- | ----------- |
+| proprietà | Sola lettura<CalloutBlockProperties> |             |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1077,14 +1400,62 @@ Assistente {@link classNames}.
 Il corpo è lo slot predefinito; l'opzionale `header` E `footer` slot denominati
 ciascuno rende la propria regione delimitata solo quando lo slot è pieno, rilevato
 l'helper {@link hasSlot} indipendente dal framework (compilato in Vue's `$slots` /
-React's prop-presence check) so presence detection works identically on both
+Reactprop-presence check) quindi il rilevamento della presenza funziona in modo identico su entrambi
 quadri.
 
 #### Parametri
 
-| Nome      | Digitare                     | Descrizione |
-| --------- | ---------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------ | ----------- |
 | proprietà | Sola lettura<CardProperties> |             |
+
+## `src/components/molecules/forge-carousel-indicator/forge-carousel-indicator`
+
+### Orientamento indicatore carosello
+
+**Genere:** tipo
+
+```typescript
+export type CarouselIndicatorOrientation = 'horizontal' | 'vertical';
+```
+
+Nessuna descrizione fornita.
+
+### CarouselIndicatorProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface CarouselIndicatorProperties
+```
+
+Nessuna descrizione fornita.
+
+### Indicatore carosello Dimensioni
+
+**Genere:** tipo
+
+```typescript
+export type CarouselIndicatorSize = 'sm' | 'md' | 'lg';
+```
+
+Nessuna descrizione fornita.
+
+### Indicatore ForgeCarousel
+
+**Tipo:** funzione
+
+```typescript
+function ForgeCarouselIndicator(properties: Readonly<CarouselIndicatorProperties>): MpElement;
+```
+
+Punti di impaginazione accessibili e utilizzabili da tastiera per un carosello.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------------- | ----------- |
+| proprietà | Sola lettura<CarouselIndicatorProperties> |             |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1144,8 +1515,8 @@ presenza rilevata tramite l'helper {@link hasSlot} indipendente dal framework.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<ChatBubbleProperties> |             |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
@@ -1179,7 +1550,7 @@ Possiede il suo stile attraverso il modulo CSS co-localizzato
 Assistente {@link classNames}.
 
 L'SFC Vue originale utilizzava `@mission-platform/icons` `ForgeIconChevron`, un
-emissione `toggle` e override dello slot `summary`; la versione neutra rende il
+Emissione `toggle` e override dello slot `summary`; la versione neutra rende il
 riscrivi una volta `@mission-platform/icons` `ForgeIconChevron` ruotato esclusivamente dal
 attributo nativo `[open]` (non è necessario lo stato aperto JS), il cross-framework
 richiamata `onToggle` e una semplice prop di testo `summary` (l'override dello slot è
@@ -1188,13 +1559,13 @@ scontrarsi con oggetti di scena con lo stesso nome).
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<CollapseProperties> |             |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
-### DispositivoMockOrientamento
+### DispositivoMockOrientation
 
 **Genere:** tipo
 
@@ -1252,13 +1623,129 @@ Il frame è disegnato interamente con token di progettazione CSS e dimensionato 
 quindi il token `size` condiviso (`2xs … 2xl`) ridimensiona l'intero dispositivo. Il
 i telai portatili (`mobile`/`tablet`) onorano l'elica `orientation`; il
 Il frame `browser` esegue il rendering di una barra del titolo con controlli semaforo e un file
-`url` barra degli indirizzi. Lo slot predefinito viene proiettato sullo schermo del dispositivo.
+Barra degli indirizzi `url`. Lo slot predefinito viene proiettato sullo schermo del dispositivo.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<DeviceMockProperties> |             |
+
+## `src/components/molecules/forge-drop-zone/forge-drop-zone`
+
+### DropZoneProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface DropZoneProperties
+```
+
+Nessuna descrizione fornita.
+
+### Rifiuta DropZone
+
+**Tipo:** interfaccia
+
+```typescript
+export interface DropZoneReject
+```
+
+Nessuna descrizione fornita.
+
+### DropZoneScope
+
+**Tipo:** interfaccia
+
+```typescript
+export interface DropZoneScope
+```
+
+Nessuna descrizione fornita.
+
+### Dimensione DropZone
+
+**Genere:** tipo
+
+```typescript
+export type DropZoneSize = 'sm' | 'md' | 'lg';
+```
+
+Nessuna descrizione fornita.
+
+### DropZoneValue
+
+**Genere:** tipo
+
+```typescript
+export type DropZoneValue = File | File[];
+```
+
+Nessuna descrizione fornita.
+
+### ForgeDropZone
+
+**Tipo:** funzione
+
+```typescript
+function ForgeDropZone(properties: Readonly<DropZoneProperties>): MpElement;
+```
+
+Una destinazione di file drag-and-drop accessibile da tastiera con convalida lato client.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
+| proprietà | Sola lettura<DropZoneProperties> |             |
+
+## `src/components/molecules/forge-empty-state/forge-empty-state`
+
+### VuotoStateProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface EmptyStateProperties
+```
+
+Nessuna descrizione fornita.
+
+### DimensioneStatoVuoto
+
+**Genere:** tipo
+
+```typescript
+export type EmptyStateSize = 'sm' | 'md' | 'lg';
+```
+
+Nessuna descrizione fornita.
+
+### VuotoStatoVariante
+
+**Genere:** tipo
+
+```typescript
+export type EmptyStateVariant = 'neutral' | 'info';
+```
+
+Nessuna descrizione fornita.
+
+### ForgeEmptyState
+
+**Tipo:** funzione
+
+```typescript
+function ForgeEmptyState(properties: Readonly<EmptyStateProperties>): MpElement;
+```
+
+Un messaggio centrato senza contenuto con icona opzionale, testo di supporto e azione.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
+| proprietà | Sola lettura<EmptyStateProperties> |             |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1287,8 +1774,8 @@ vive nel co-locato `forge-grid.module.scss` (importato da
 
 #### Parametri
 
-| Nome      | Digitare                     | Descrizione |
-| --------- | ---------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------ | ----------- |
 | proprietà | Sola lettura<GridProperties> |             |
 
 ### GridAlignment
@@ -1343,8 +1830,8 @@ Callback `onEnter`/`onLeave`, che vengono mappati in modo pulito su entrambi i f
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------- | ----------- |
 | proprietà | Sola lettura<InViewProperties> |             |
 
 ### AnimazioneInView
@@ -1363,6 +1850,64 @@ Nessuna descrizione fornita.
 
 ```typescript
 export interface InViewProperties
+```
+
+Nessuna descrizione fornita.
+
+## `src/components/molecules/forge-inline-edit/forge-inline-edit`
+
+### ForgeInlineModifica
+
+**Tipo:** funzione
+
+```typescript
+function ForgeInlineEdit(properties: Readonly<InlineEditProperties>): MpElement;
+```
+
+Un controllo di lettura/modifica compatto con invio, annullamento e convalida da tastiera.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
+| proprietà | Sola lettura<InlineEditProperties> |             |
+
+### InlineEditInputType
+
+**Genere:** tipo
+
+```typescript
+export type InlineEditInputType = 'text' | 'email' | 'url' | 'number';
+```
+
+Nessuna descrizione fornita.
+
+### InlineEditProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface InlineEditProperties
+```
+
+Nessuna descrizione fornita.
+
+### Dimensioni modifica in linea
+
+**Genere:** tipo
+
+```typescript
+export type InlineEditSize = 'sm' | 'md' | 'lg';
+```
+
+Nessuna descrizione fornita.
+
+### InlineEditValidator
+
+**Genere:** tipo
+
+```typescript
+export type InlineEditValidator = (value: string) => string | undefined;
 ```
 
 Nessuna descrizione fornita.
@@ -1395,8 +1940,8 @@ gli altri componenti migrati hanno eliminato gli slot con ambito.
 
 #### Parametri
 
-| Nome      | Digitare                     | Descrizione |
-| --------- | ---------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------ | ----------- |
 | proprietà | Sola lettura<ListProperties> |             |
 
 ### Elemento di elenco
@@ -1469,8 +2014,8 @@ CSS); le proprietà dinamiche a più colonne vengono applicate in linea.
 
 #### Parametri
 
-| Nome      | Digitare                        | Descrizione |
-| --------- | ------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------- | ----------- |
 | proprietà | Sola lettura<MasonryProperties> |             |
 
 ### MasonryGap
@@ -1489,6 +2034,54 @@ Scala del gap denominata; ogni passaggio si risolve in un token di progettazione
 
 ```typescript
 export interface MasonryProperties
+```
+
+Nessuna descrizione fornita.
+
+## `src/components/molecules/forge-mention-input/forge-mention-input`
+
+### ForgeMentionInput
+
+**Tipo:** funzione
+
+```typescript
+function ForgeMentionInput(properties: Readonly<MentionInputProperties>): MpElement;
+```
+
+Un'area di testo con suggerimenti di menzioni accessibili e navigabili tramite tastiera.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------------- | ----------- |
+| proprietà | Sola lettura<MentionInputProperties> |             |
+
+### MenzioneInputProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface MentionInputProperties
+```
+
+Nessuna descrizione fornita.
+
+### MenzioneArticolo
+
+**Tipo:** interfaccia
+
+```typescript
+export interface MentionItem
+```
+
+Nessuna descrizione fornita.
+
+### MenzioneSuggestionScope
+
+**Tipo:** interfaccia
+
+```typescript
+export interface MentionSuggestionScope
 ```
 
 Nessuna descrizione fornita.
@@ -1520,8 +2113,8 @@ sostituzione del router stabilita) ed espone la prop di callback `onClick`.
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<MenuItemProperties> |             |
 
 ### MenuItemProperties
@@ -1578,8 +2171,8 @@ sostituzione), altrimenti corrisponde ai ruoli/ARIA del markup Vue.
 
 #### Parametri
 
-| Nome      | Digitare                     | Descrizione |
-| --------- | ---------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------ | ----------- |
 | proprietà | Sola lettura<MenuProperties> |             |
 
 ### MenuNode
@@ -1612,6 +2205,76 @@ export interface MenuProperties
 
 Nessuna descrizione fornita.
 
+## `src/components/molecules/forge-metric-card/forge-metric-card`
+
+### ForgeMetricCard
+
+**Tipo:** funzione
+
+```typescript
+function ForgeMetricCard(properties: Readonly<MetricCardProperties>): MpElement;
+```
+
+`ForgeMetricCard`: un riepilogo compatto delle metriche creato una volta in JSX neutro.
+Mantiene il valore, la tendenza, lo stato di caricamento e il contenuto di supporto in uno
+articolo accessibile lasciando i trattamenti visivi al suo modulo CSS.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
+| proprietà | Sola lettura<MetricCardProperties> |             |
+
+### ProprietàMetricCard
+
+**Tipo:** interfaccia
+
+```typescript
+export interface MetricCardProperties
+```
+
+Nessuna descrizione fornita.
+
+### Dimensione scheda metrica
+
+**Genere:** tipo
+
+```typescript
+export type MetricCardSize = 'sm' | 'md' | 'lg';
+```
+
+Gettone di dimensione che controlla la scala della carta metrica.
+
+### Tendenza della scheda metrica
+
+**Tipo:** interfaccia
+
+```typescript
+export interface MetricCardTrend
+```
+
+Indicatore di modifica facoltativo visualizzato sotto il valore della metrica.
+
+### MetricCardTrendDirection
+
+**Genere:** tipo
+
+```typescript
+export type MetricCardTrendDirection = 'up' | 'down' | 'flat';
+```
+
+Direzione del cambiamento rappresentata da un trend metrico.
+
+### MetricCardVariant
+
+**Genere:** tipo
+
+```typescript
+export type MetricCardVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+Tono superficiale della scheda metrica.
+
 ## `src/components/molecules/forge-navbar-item/forge-navbar-item`
 
 ### ForgeNavbarItem
@@ -1628,7 +2291,7 @@ compilato direttamente in React o Vue da `@mission-platform/vite-plugin-forge`.
 Senza `dropdownItems` viene visualizzato un singolo elemento: un collegamento (`<a href>`) quando
 abilitato e `href` è impostato, altrimenti un'attivazione `<button>` attivabile
 `onClick`. Con `dropdownItems` esegue il rendering di un trigger a discesa più un file
-Pannello `role="menu"`; cliccando
+pannello `role="menu"`; cliccando
 esterno o premendo `Escape` lo si chiude. L'etichetta proviene dallo slot predefinito
 (ricadente a `label`) con uno slot `icon` iniziale opzionale. Possiede il suo
 styling attraverso il modulo CSS co-localizzato `forge-navbar-item.module.scss`.
@@ -1641,14 +2304,14 @@ l'elemento viene visualizzato tramite la primitiva neutra `<Dynamic is={tag}>` (
 Tipo di elemento di React/`<component :is>` di Vue), con `tag` che si risolve in `'a'`
 (abilitato + `href`) o `'button'` — e sostituisce un inline,
 menu a discesa in posizione assoluta (stato aperto in `useState`, chiuso tramite
-ascoltatori di documenti `useEffect`), la destinazione `RouterLink` con un semplice `<a>`,
+listener di documenti `useEffect`), la destinazione `RouterLink` con un semplice `<a>`,
 il write-once `@mission-platform/icons` `ForgeIconChevron` (ruotato tramite il suo
 propria prop `direction`) e la prop di callback `onClick`.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<NavbarItemProperties> |             |
 
 ### NavbarItemChild
@@ -1705,12 +2368,12 @@ Possiede il suo stile attraverso il modulo CSS co-localizzato
 `forge-pagination.module.scss`.
 
 L'SFC Vue originale utilizzava `v-model` + un'emissione `change`; la versione neutra
-utilizza la consolidata convenzione controllata `modelValue` + callback-prop.
+utilizza la convenzione `modelValue` + callback-prop controllata stabilita.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<PaginationProperties> |             |
 
 ### PaginationItem
@@ -1776,7 +2439,7 @@ lo stato sopravvive ai cambi di scheda); poiché il dialetto neutro non può esp
 nomi di slot dinamici per ID (`<slot :name="tab.id">`), ciascun pannello richiama a
 `panel` con ambito singolo **render-prop** con `{ tab }` (il consumatore si accende
 `tab.id`). Il render-prop `panel` viene richiamato direttamente (anziché tramite a
-neutral `<Slot>`), quindi rimane un vero sostegno su entrambi i framework e un neutrale
+neutro `<Slot>`), quindi rimane un vero sostegno su entrambi i framework e un neutro
 il consumatore può trasmetterlo come attributo semplice (`panel={({ tab }) => …}`) — a Vue
 Lo slot con nome supportato da `<Slot>` verrebbe eliminato se passato come prop da a
 genitore neutro compilato, lasciando i pannelli vuoti. Utilizza ciò che è stabilito
@@ -1784,8 +2447,8 @@ genitore neutro compilato, lasciando i pannelli vuoti. Utilizza ciò che è stab
 
 #### Parametri
 
-| Nome      | Digitare                     | Descrizione |
-| --------- | ---------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------ | ----------- |
 | proprietà | Sola lettura<TabsProperties> |             |
 
 ### TabItem
@@ -1828,6 +2491,57 @@ export type TabsVariant = 'line' | 'pill';
 
 Trattamento visivo dell'elenco delle schede.
 
+## `src/components/molecules/forge-tag-input/forge-tag-input`
+
+### ForgeTagInput
+
+**Tipo:** funzione
+
+```typescript
+function ForgeTagInput(properties: Readonly<TagInputProperties>): MpElement;
+```
+
+`ForgeTagInput`: un editor di tag controllato e accessibile creato in modo neutrale
+JSX. Invio o virgola confermano una bozza ritagliata, il tasto backspace rimuove l'ultimo tag
+quando la bozza è vuota e le regole di duplicazione/tag massimo vengono applicate prima del file
+viene attivata la richiamata di aggiornamento controllato.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
+| proprietà | Sola lettura<TagInputProperties> |             |
+
+### TagInputProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface TagInputProperties
+```
+
+Nessuna descrizione fornita.
+
+### TagInputSize
+
+**Genere:** tipo
+
+```typescript
+export type TagInputSize = 'sm' | 'md' | 'lg';
+```
+
+Token di dimensione che controlla la scala di input del tag.
+
+### TagInputVariant
+
+**Genere:** tipo
+
+```typescript
+export type TagInputVariant = 'neutral' | 'primary' | 'error';
+```
+
+Tono superficiale dell'input del tag.
+
 ## `src/components/molecules/forge-timeline/forge-timeline`
 
 ### ForgeTimeline
@@ -1856,8 +2570,8 @@ Gli slot `marker`/`time`/`title`/default per articolo diventano quattro slot con
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<TimelineProperties> |             |
 
 ### Allineamento della sequenza temporale
@@ -1870,7 +2584,7 @@ export type TimelineAlign = 'start' | 'alternate';
 
 Come vengono posizionati gli elementi della sequenza temporale verticale rispetto alla linea.
 
-### TimelineItem
+### Elemento sequenza temporale
 
 **Tipo:** interfaccia
 
@@ -1878,7 +2592,7 @@ Come vengono posizionati gli elementi della sequenza temporale verticale rispett
 export interface TimelineItem
 ```
 
-Un singolo descrittore di evento all'interno di un {@link ForgeTimeline}.
+Un singolo descrittore di eventi all'interno di un {@link ForgeTimeline}.
 
 ### TimelineItemScope
 
@@ -1944,7 +2658,7 @@ e smontare la pulizia) su entrambi i framework.
 
 Possiede il suo stile attraverso il `forge-window-popout.module.scss` co-localizzato.
 Rispetto all'originale Vue SFC, nemmeno il dialetto neutro modella
-`<Teleport>`, slot con scope, emette, `useI18n`, né `@mission-platform/icons`, quindi
+`<Teleport>`, slot con ambito, emette, `useI18n`, né `@mission-platform/icons`, quindi
 la finestra visualizzata riceve uno **istantanea HTML statica** del file inline
 contenuto (non un portale framework live), lo slot `controls` con ambito e il file
 le icone pop-in/out vengono eliminate, l'`placeholder` nella pagina è `placeholder`
@@ -1953,8 +2667,8 @@ sono semplici oggetti di scena.
 
 #### Parametri
 
-| Nome      | Digitare                             | Descrizione |
-| --------- | ------------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------------- | ----------- |
 | proprietà | Sola lettura<WindowPopoutProperties> |             |
 
 ### WindowPopoutProperties
@@ -1966,6 +2680,164 @@ export interface WindowPopoutProperties
 ```
 
 Nessuna descrizione fornita.
+
+## `src/components/organisms/forge-activity-feed/forge-activity-feed`
+
+### ActivityFeedItem
+
+**Genere:** tipo
+
+```typescript
+export type ActivityFeedItem = ActivityItem;
+```
+
+Nessuna descrizione fornita.
+
+#### Contrarre
+
+- **@deprecato:** Utilizzare `ActivityItem`.
+
+### ActivityFeedProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface ActivityFeedProperties
+```
+
+Nessuna descrizione fornita.
+
+### Dimensione feed attività
+
+**Genere:** tipo
+
+```typescript
+export type ActivityFeedSize = 'sm' | 'md' | 'lg';
+```
+
+Nessuna descrizione fornita.
+
+### ActivityFeedVariant
+
+**Genere:** tipo
+
+```typescript
+export type ActivityFeedVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+Nessuna descrizione fornita.
+
+### ForgeActivityFeed
+
+**Tipo:** funzione
+
+```typescript
+function ForgeActivityFeed(properties: Readonly<ActivityFeedProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------------- | ----------- |
+| proprietà | Sola lettura<ActivityFeedProperties> |             |
+
+## `src/components/organisms/forge-announcement-bar/forge-announcement-bar`
+
+### AnnuncioBarProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface AnnouncementBarProperties
+```
+
+Nessuna descrizione fornita.
+
+### AnnuncioBarVariant
+
+**Genere:** tipo
+
+```typescript
+export type AnnouncementBarVariant = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+Nessuna descrizione fornita.
+
+### ForgeAnnuncioBar
+
+**Tipo:** funzione
+
+```typescript
+function ForgeAnnouncementBar(properties: Readonly<AnnouncementBarProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------------- | ----------- |
+| proprietà | Sola lettura<AnnouncementBarProperties> |             |
+
+## `src/components/organisms/forge-asset-browser/forge-asset-browser`
+
+### AssetBrowserItem
+
+**Tipo:** interfaccia
+
+```typescript
+export interface AssetBrowserItem
+```
+
+Nessuna descrizione fornita.
+
+### AssetBrowserProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface AssetBrowserProperties
+```
+
+Nessuna descrizione fornita.
+
+### DimensioneBrowserAsset
+
+**Genere:** tipo
+
+```typescript
+export type AssetBrowserSize = 'sm' | 'md' | 'lg';
+```
+
+Nessuna descrizione fornita.
+
+### AssetBrowserValue
+
+**Genere:** tipo
+
+```typescript
+export type AssetBrowserValue = string | string[];
+```
+
+Nessuna descrizione fornita.
+
+### ForgeAssetBrowser
+
+**Tipo:** funzione
+
+```typescript
+function ForgeAssetBrowser(properties: Readonly<AssetBrowserProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------------- | ----------- |
+| proprietà | Sola lettura<AssetBrowserProperties> |             |
 
 ## `src/components/organisms/forge-carousel/forge-carousel`
 
@@ -2029,8 +2901,8 @@ le coordinate iniziali diventano `useRef`; `defineExpose` viene eliminato; e il
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<CarouselProperties> |             |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
@@ -2075,9 +2947,425 @@ lo scorrimento automatico copre il caso comune.
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<ChatAreaProperties> |             |
+
+## `src/components/organisms/forge-command-palette/forge-command-palette`
+
+### CommandPaletteCommand
+
+**Genere:** tipo
+
+```typescript
+export type CommandPaletteCommand = CommandItem;
+```
+
+Nessuna descrizione fornita.
+
+#### Contrarre
+
+- **@deprecato:** Utilizzare `CommandItem`.
+
+### ProprietàPaletteComandi
+
+**Tipo:** interfaccia
+
+```typescript
+export interface CommandPaletteProperties
+```
+
+Nessuna descrizione fornita.
+
+### DimensioniPaletteComandi
+
+**Genere:** tipo
+
+```typescript
+export type CommandPaletteSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Token di dimensione che controlla la scala della tavolozza dei comandi.
+
+### ForgeCommandPalette
+
+**Tipo:** funzione
+
+```typescript
+function ForgeCommandPalette(properties: Readonly<CommandPaletteProperties>): MpElement;
+```
+
+Una tavolozza dei comandi ricercabile, visualizzabile prima tramite tastiera, con sovrapposizione modale. Il neutro
+l'implementazione mantiene il filtraggio e la selezione indipendenti dal framework mentre
+tutelare gli ascoltatori di documenti globali per SSR.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------------- | ----------- |
+| proprietà | Sola lettura<CommandPaletteProperties> |             |
+
+## `src/components/organisms/forge-comment-thread/forge-comment-thread`
+
+### CommentoThreadCommento
+
+**Tipo:** interfaccia
+
+```typescript
+export interface CommentThreadComment
+```
+
+Nessuna descrizione fornita.
+
+### CommentThreadProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface CommentThreadProperties
+```
+
+Nessuna descrizione fornita.
+
+### CommentoThreadSize
+
+**Genere:** tipo
+
+```typescript
+export type CommentThreadSize = 'sm' | 'md' | 'lg';
+```
+
+Nessuna descrizione fornita.
+
+### ForgeCommentThread
+
+**Tipo:** funzione
+
+```typescript
+function ForgeCommentThread(properties: Readonly<CommentThreadProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------------- | ----------- |
+| proprietà | Sola lettura<CommentThreadProperties> |             |
+
+## `src/components/organisms/forge-comparison-table/forge-comparison-table`
+
+### Funzionalità tabella di confronto
+
+**Genere:** tipo
+
+```typescript
+export type ComparisonTableFeature = FeatureRow;
+```
+
+Nessuna descrizione fornita.
+
+#### Contrarre
+
+- **@deprecato:** Utilizzare `FeatureRow`.
+
+### Tabella di confrontoPiano
+
+**Genere:** tipo
+
+```typescript
+export type ComparisonTablePlan = ComparisonItem;
+```
+
+Nessuna descrizione fornita.
+
+#### Contrarre
+
+- **@deprecato:** Utilizzare `ComparisonItem`.
+
+### Proprietà tabella di confronto
+
+**Tipo:** interfaccia
+
+```typescript
+export interface ComparisonTableProperties
+```
+
+Nessuna descrizione fornita.
+
+### Dimensioni tabella di confronto
+
+**Genere:** tipo
+
+```typescript
+export type ComparisonTableSize = 'sm' | 'md' | 'lg';
+```
+
+Nessuna descrizione fornita.
+
+### Valore tabella di confronto
+
+**Genere:** tipo
+
+```typescript
+export type ComparisonTableValue = string | number | boolean;
+```
+
+Nessuna descrizione fornita.
+
+### ForgeComparisonTable
+
+**Tipo:** funzione
+
+```typescript
+function ForgeComparisonTable(properties: Readonly<ComparisonTableProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------------- | ----------- |
+| proprietà | Sola lettura<ComparisonTableProperties> |             |
+
+## `src/components/organisms/forge-cookie-consent/forge-cookie-consent`
+
+### Categoria cookie
+
+**Tipo:** interfaccia
+
+```typescript
+export interface CookieCategory
+```
+
+Una categoria di cookie configurabile dall'utente.
+
+### ProprietàConsensoCookie
+
+**Tipo:** interfaccia
+
+```typescript
+export interface CookieConsentProperties
+```
+
+Nessuna descrizione fornita.
+
+### Dimensione consenso cookie
+
+**Genere:** tipo
+
+```typescript
+export type CookieConsentSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Token di dimensione che controlla la scala della superficie di consenso.
+
+### CookieConsentState
+
+**Tipo:** interfaccia
+
+```typescript
+export interface CookieConsentState
+```
+
+Il payload del consenso emesso all'applicazione host e persistente nell'archiviazione.
+
+### ForgeCookieConsent
+
+**Tipo:** funzione
+
+```typescript
+function ForgeCookieConsent(properties: Readonly<CookieConsentProperties>): MpElement;
+```
+
+Un banner di consenso e una finestra di dialogo delle preferenze accessibile con la categoria richiesta
+applicazione e persistenza dell'archiviazione locale/sessione protetta.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------------- | ----------- |
+| proprietà | Sola lettura<CookieConsentProperties> |             |
+
+## `src/components/organisms/forge-cta-banner/forge-cta-banner`
+
+### CtaBannerAzione
+
+**Tipo:** interfaccia
+
+```typescript
+export interface CtaBannerAction
+```
+
+Nessuna descrizione fornita.
+
+### CtaBannerProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface CtaBannerProperties
+```
+
+Nessuna descrizione fornita.
+
+### CtaBannerVariant
+
+**Genere:** tipo
+
+```typescript
+export type CtaBannerVariant = 'neutral' | 'primary' | 'secondary' | 'success' | 'warning';
+```
+
+Nessuna descrizione fornita.
+
+### ForgeCtaBanner
+
+**Tipo:** funzione
+
+```typescript
+function ForgeCtaBanner(properties: Readonly<CtaBannerProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------- | ----------- |
+| proprietà | Sola lettura<CtaBannerProperties> |             |
+
+## `src/components/organisms/forge-data-card/forge-data-card`
+
+### DatiSchedaDati
+
+**Genere:** tipo
+
+```typescript
+export type DataCardData = VCardData | ICalendarData;
+```
+
+Dati del contatto o del calendario digitati visualizzati da `ForgeDataCard`.
+
+### Proprietà scheda dati
+
+**Tipo:** interfaccia
+
+```typescript
+export interface DataCardProperties
+```
+
+Nessuna descrizione fornita.
+
+### Dimensioni scheda dati
+
+**Genere:** tipo
+
+```typescript
+export type DataCardSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Token di dimensione che controlla la scala della scheda dati.
+
+### DataCardTrend
+
+**Tipo:** interfaccia
+
+```typescript
+export interface DataCardTrend
+```
+
+Nessuna descrizione fornita.
+
+#### Contrarre
+
+- **@deprecato:** Le schede dati ora utilizzano `VCardData` o `ICalendarData`.
+
+### Variante scheda dati
+
+**Genere:** tipo
+
+```typescript
+export type DataCardVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+```
+
+Tonalità di colore della superficie della carta.
+
+### ForgeDataCard
+
+**Tipo:** funzione
+
+```typescript
+function ForgeDataCard(properties: Readonly<DataCardProperties>): MpElement;
+```
+
+Un contatto semantico o una scheda di calendario con download conformi agli standard.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
+| proprietà | Sola lettura<DataCardProperties> |             |
+
+## `src/components/organisms/forge-diff-viewer/forge-diff-viewer`
+
+### DiffLineType
+
+**Genere:** tipo
+
+```typescript
+export type DiffLineType = 'context' | 'addition' | 'deletion';
+```
+
+Nessuna descrizione fornita.
+
+### DiffViewerLine
+
+**Tipo:** interfaccia
+
+```typescript
+export interface DiffViewerLine
+```
+
+Nessuna descrizione fornita.
+
+### Modalità DiffViewer
+
+**Genere:** tipo
+
+```typescript
+export type DiffViewerMode = 'unified' | 'split';
+```
+
+Nessuna descrizione fornita.
+
+### Proprietà DiffViewer
+
+**Tipo:** interfaccia
+
+```typescript
+export interface DiffViewerProperties
+```
+
+Nessuna descrizione fornita.
+
+### ForgeDiffViewer
+
+**Tipo:** funzione
+
+```typescript
+function ForgeDiffViewer(properties: Readonly<DiffViewerProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
+| proprietà | Sola lettura<DiffViewerProperties> |             |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2179,9 +3467,199 @@ helper) e una prop `closeLabel` al posto di i18n.
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------- | ----------- |
 | proprietà | Sola lettura<DrawerProperties> |             |
+
+## `src/components/organisms/forge-error-page/forge-error-page`
+
+### ErrorePageAzione
+
+**Tipo:** interfaccia
+
+```typescript
+export interface ErrorPageAction
+```
+
+Un'azione visualizzata sotto il messaggio di errore.
+
+### ErrorPageData
+
+**Tipo:** interfaccia
+
+```typescript
+export interface ErrorPageData
+```
+
+Informazioni sull'errore strutturato che possono essere passate come un unico oggetto dati pubblico.
+
+### ErrorPageProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface ErrorPageProperties
+```
+
+Nessuna descrizione fornita.
+
+### ErrorePageSize
+
+**Genere:** tipo
+
+```typescript
+export type ErrorPageSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Token di dimensione che controlla la scala della pagina di errore.
+
+### ForgeErrorPage
+
+**Tipo:** funzione
+
+```typescript
+function ForgeErrorPage(properties: Readonly<ErrorPageProperties>): MpElement;
+```
+
+Una pagina di stato degli errori semantica e intuitiva con descrittori di azioni digitate.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------- | ----------- |
+| proprietà | Sola lettura<ErrorPageProperties> |             |
+
+## `src/components/organisms/forge-kanban-board/forge-kanban-board`
+
+### ForgeKanbanBoard
+
+**Tipo:** funzione
+
+```typescript
+function ForgeKanbanBoard(properties: Readonly<KanbanBoardProperties>): MpElement;
+```
+
+Una scheda reattiva per spostare gli elementi tra le colonne.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------- | ----------- |
+| proprietà | Sola lettura<KanbanBoardProperties> |             |
+
+### Proprietà KanbanBoard
+
+**Tipo:** interfaccia
+
+```typescript
+export interface KanbanBoardProperties
+```
+
+Nessuna descrizione fornita.
+
+### Carta Kanban
+
+**Genere:** tipo
+
+```typescript
+export type KanbanCard = KanbanItem;
+```
+
+Nessuna descrizione fornita.
+
+#### Contrarre
+
+- **@deprecato:** Utilizzare `KanbanItem`.
+
+### Colonna Kanban
+
+**Tipo:** interfaccia
+
+```typescript
+export interface KanbanColumn
+```
+
+Nessuna descrizione fornita.
+
+## `src/components/organisms/forge-logo-cloud/forge-logo-cloud`
+
+### ForgeLogoCloud
+
+**Tipo:** funzione
+
+```typescript
+function ForgeLogoCloud(properties: Readonly<LogoCloudProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------- | ----------- |
+| proprietà | Sola lettura<LogoCloudProperties> |             |
+
+### LogoCloudItem
+
+**Genere:** tipo
+
+```typescript
+export type LogoCloudItem = Logo;
+```
+
+Nessuna descrizione fornita.
+
+#### Contrarre
+
+- **@deprecato:** Utilizzare `Logo`.
+
+### LogoCloudProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface LogoCloudProperties
+```
+
+Nessuna descrizione fornita.
+
+## `src/components/organisms/forge-marketing-header/forge-marketing-header`
+
+### ForgeMarketingHeader
+
+**Tipo:** funzione
+
+```typescript
+function ForgeMarketingHeader(properties: Readonly<MarketingHeaderProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------------- | ----------- |
+| proprietà | Sola lettura<MarketingHeaderProperties> |             |
+
+### MarketingHeaderAzione
+
+**Tipo:** interfaccia
+
+```typescript
+export interface MarketingHeaderAction
+```
+
+Nessuna descrizione fornita.
+
+### MarketingHeaderProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface MarketingHeaderProperties
+```
+
+Nessuna descrizione fornita.
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2217,8 +3695,8 @@ sostituzione).
 
 #### Parametri
 
-| Nome      | Digitare                        | Descrizione |
-| --------- | ------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------- | ----------- |
 | proprietà | Sola lettura<MenubarProperties> |             |
 
 ### Proprietà della barra dei menu
@@ -2259,8 +3737,8 @@ non ha ritorno di frammento multi-root).
 
 #### Parametri
 
-| Nome      | Digitare                       | Descrizione |
-| --------- | ------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------- | ----------- |
 | proprietà | Sola lettura<NavbarProperties> |             |
 
 ### NavbarAlign
@@ -2283,7 +3761,7 @@ export type NavbarBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 Punto di interruzione del viewport denominato **sotto il quale** la barra di navigazione si comprime nel suo
 cassetto mobile con attivazione/disattivazione hamburger (e sopra/in corrispondenza del quale l'intero `brand` /
-center / `end` vengono visualizzate in linea).
+center/`end` vengono visualizzate in linea).
 
 ### NavbarProperties
 
@@ -2291,6 +3769,306 @@ center / `end` vengono visualizzate in linea).
 
 ```typescript
 export interface NavbarProperties
+```
+
+Nessuna descrizione fornita.
+
+## `src/components/organisms/forge-notification-panel/forge-notification-panel`
+
+### ForgeNotificationPanel
+
+**Tipo:** funzione
+
+```typescript
+function ForgeNotificationPanel(properties: Readonly<NotificationPanelProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------------- | ----------- |
+| proprietà | Sola lettura<NotificationPanelProperties> |             |
+
+### Articolo di notifica
+
+**Tipo:** interfaccia
+
+```typescript
+export interface NotificationItem
+```
+
+Nessuna descrizione fornita.
+
+### ProprietàPanelNotifiche
+
+**Tipo:** interfaccia
+
+```typescript
+export interface NotificationPanelProperties
+```
+
+Nessuna descrizione fornita.
+
+### Tipo di notifica
+
+**Genere:** tipo
+
+```typescript
+export type NotificationType = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+Nessuna descrizione fornita.
+
+## `src/components/organisms/forge-onboarding-tour/forge-onboarding-tour`
+
+### ForgeOnboardingTour
+
+**Tipo:** funzione
+
+```typescript
+function ForgeOnboardingTour(properties: Readonly<OnboardingTourProperties>): MpElement;
+```
+
+Un tour in evidenza accessibile con navigazione tramite tastiera e persistenza di completamento opzionale.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------------- | ----------- |
+| proprietà | Sola lettura<OnboardingTourProperties> |             |
+
+### Fase di onboarding
+
+**Genere:** tipo
+
+```typescript
+export type OnboardingStep = TourStep;
+```
+
+Nessuna descrizione fornita.
+
+#### Contrarre
+
+- **@deprecato:** Utilizzare `TourStep`.
+
+### OnboardingTourPlacement
+
+**Genere:** tipo
+
+```typescript
+export type OnboardingTourPlacement = 'top' | 'right' | 'bottom' | 'left' | 'center';
+```
+
+Preferenza di posizionamento per una finestra di dialogo del tour ancorata a una destinazione.
+
+### OnboardingTourProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface OnboardingTourProperties
+```
+
+Nessuna descrizione fornita.
+
+### Dimensioni del tour di onboarding
+
+**Genere:** tipo
+
+```typescript
+export type OnboardingTourSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Token di dimensione che controlla la scala della finestra di dialogo del tour.
+
+## `src/components/organisms/forge-pricing-table/forge-pricing-table`
+
+### Tabella dei prezzi Forge
+
+**Tipo:** funzione
+
+```typescript
+function ForgePricingTable(properties: Readonly<PricingTableProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------------- | ----------- |
+| proprietà | Sola lettura<PricingTableProperties> |             |
+
+### Caratteristica dei prezzi
+
+**Tipo:** interfaccia
+
+```typescript
+export interface PricingFeature
+```
+
+Nessuna descrizione fornita.
+
+### Piano prezzi
+
+**Tipo:** interfaccia
+
+```typescript
+export interface PricingPlan
+```
+
+Nessuna descrizione fornita.
+
+### Proprietà tabella prezzi
+
+**Tipo:** interfaccia
+
+```typescript
+export interface PricingTableProperties
+```
+
+Nessuna descrizione fornita.
+
+## `src/components/organisms/forge-profile-card/forge-profile-card`
+
+### ForgeProfileCard
+
+**Tipo:** funzione
+
+```typescript
+function ForgeProfileCard(properties: Readonly<ProfileCardProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------- | ----------- |
+| proprietà | Sola lettura<ProfileCardProperties> |             |
+
+### Proprietà scheda profilo
+
+**Tipo:** interfaccia
+
+```typescript
+export interface ProfileCardProperties
+```
+
+Nessuna descrizione fornita.
+
+## `src/components/organisms/forge-site-footer/forge-site-footer`
+
+### ForgeSiteFooter
+
+**Tipo:** funzione
+
+```typescript
+function ForgeSiteFooter(properties: Readonly<SiteFooterProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
+| proprietà | Sola lettura<SiteFooterProperties> |             |
+
+### SiteFooterColumn
+
+**Tipo:** interfaccia
+
+```typescript
+export interface SiteFooterColumn
+```
+
+Nessuna descrizione fornita.
+
+### SitoFooterLink
+
+**Tipo:** interfaccia
+
+```typescript
+export interface SiteFooterLink
+```
+
+Nessuna descrizione fornita.
+
+### SiteFooterProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface SiteFooterProperties
+```
+
+Nessuna descrizione fornita.
+
+## `src/components/organisms/forge-split-pane/forge-split-pane`
+
+### ForgeSplitPane
+
+**Tipo:** funzione
+
+```typescript
+function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------- | ----------- |
+| proprietà | Sola lettura<SplitPaneProperties> |             |
+
+### Proprietà SplitPane
+
+**Tipo:** interfaccia
+
+```typescript
+export interface SplitPaneProperties
+```
+
+Nessuna descrizione fornita.
+
+## `src/components/organisms/forge-stats-section/forge-stats-section`
+
+### Sezione ForgeStats
+
+**Tipo:** funzione
+
+```typescript
+function ForgeStatsSection(properties: Readonly<StatsSectionProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------------- | ----------- |
+| proprietà | Sola lettura<StatsSectionProperties> |             |
+
+### ArticoloStat
+
+**Tipo:** interfaccia
+
+```typescript
+export interface StatItem
+```
+
+Nessuna descrizione fornita.
+
+### ProprietàSezioneStatistiche
+
+**Tipo:** interfaccia
+
+```typescript
+export interface StatsSectionProperties
 ```
 
 Nessuna descrizione fornita.
@@ -2305,28 +4083,12 @@ Nessuna descrizione fornita.
 function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
-`ForgeTable`: una tabella di dati ordinabile creata una volta nel dialetto JSX neutro
-e compilato direttamente in React o Vue da `@mission-platform/vite-plugin-forge`.
-
-Rende `columns`/`rows` come `<table>` semantico, con clic per ordinare
-intestazioni (ciclicamente asc → desc → unsorted) che attivano il callback `onSort`, un
-didascalia opzionale, una sovrapposizione di caricamento e uno stato vuoto. Viene eseguito il rendering del testo della cella
-attraverso il neutro composto {@link ForgeTypography}; viene mantenuto lo stato di ordinamento
-gli hook neutri {@link useState}/{@link useMemo}. Possiede il suo stile
-attraverso il modulo CSS co-locato `forge-table.module.scss`.
-
-L'SFC Vue originale era generico rispetto al tipo riga, composto
-sottocomponenti `ForgeTableHead`/`ForgeTableBody`, hanno utilizzato un'emissione `sort` ed hanno esposto
-slot `cell-<key>` con ambito per colonna. La versione neutra utilizza
-`Record<string, unknown>` righe, allinea la testa/corpo, utilizza `onSort`
-callback e guida il rendering per cella attraverso gli elementi facoltativi di ciascuna colonna
-Formattatore `render` (gli slot delle celle con ambito vengono eliminati): coerente con come
-gli altri componenti migrati hanno eliminato gli slot con ambito.
+Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome      | Digitare                      | Descrizione |
-| --------- | ----------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------- | ----------- |
 | proprietà | Sola lettura<TableProperties> |             |
 
 ### SortDirection
@@ -2358,6 +4120,104 @@ export interface TableProperties
 ```
 
 Nessuna descrizione fornita.
+
+## `src/components/organisms/forge-testimonials-section/forge-testimonials-section`
+
+### ForgeTestimonianzeSezione
+
+**Tipo:** funzione
+
+```typescript
+function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectionProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------------------- | ----------- |
+| proprietà | Sola lettura<TestimonialsSectionProperties> |             |
+
+### Testimonianza
+
+**Tipo:** interfaccia
+
+```typescript
+export interface Testimonial
+```
+
+Nessuna descrizione fornita.
+
+### TestimonianzeSezioneProprietà
+
+**Tipo:** interfaccia
+
+```typescript
+export interface TestimonialsSectionProperties
+```
+
+Nessuna descrizione fornita.
+
+## `src/components/organisms/forge-transfer-list/forge-transfer-list`
+
+### ForgeTransferList
+
+**Tipo:** funzione
+
+```typescript
+function ForgeTransferList(properties: Readonly<TransferListProperties>): MpElement;
+```
+
+Nessuna descrizione fornita.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------------- | ----------- |
+| proprietà | Sola lettura<TransferListProperties> |             |
+
+### TransferItem
+
+**Tipo:** interfaccia
+
+```typescript
+export interface TransferItem
+```
+
+Nessuna descrizione fornita.
+
+### TransferListProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface TransferListProperties
+```
+
+Nessuna descrizione fornita.
+
+## `src/components/organisms/forge-tree-view/forge-tree-view-item`
+
+### TreeViewLabelScope
+
+**Tipo:** interfaccia
+
+```typescript
+export interface TreeViewLabelScope
+```
+
+L'ambito è passato allo slot `label` (con ambito) di {@link ForgeTreeView} per node.
+
+### TreeViewNode
+
+**Tipo:** interfaccia
+
+```typescript
+export interface TreeViewNode
+```
+
+Un node nell'albero visualizzato da {@link ForgeTreeView}.
 
 ## `src/components/organisms/forge-tree-view/forge-tree-view`
 
@@ -2392,29 +4252,9 @@ altrimenti gli oggetti di richiamata corrispondono.
 
 #### Parametri
 
-| Nome      | Digitare                         | Descrizione |
-| --------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------------------- | ----------- |
 | proprietà | Sola lettura<TreeViewProperties> |             |
-
-### TreeViewLabelScope
-
-**Tipo:** interfaccia
-
-```typescript
-export interface TreeViewLabelScope
-```
-
-L'ambito è passato allo slot `label` (con ambito) di {@link ForgeTreeView} per node.
-
-### TreeViewNode
-
-**Tipo:** interfaccia
-
-```typescript
-export interface TreeViewNode
-```
-
-Un node nell'albero visualizzato da {@link ForgeTreeView}.
 
 ### ProprietàVistaAlbero
 
@@ -2454,8 +4294,8 @@ slot denominati in avanti, ma non predefiniti, come funzioni con ambito).
 
 #### Parametri
 
-| Nome      | Digitare                            | Descrizione |
-| --------- | ----------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------- | ----------- |
 | proprietà | Sola lettura<VirtualListProperties> |             |
 
 ### VirtualListItemScope
@@ -2505,8 +4345,8 @@ la soppressione viene abbandonata.
 
 #### Parametri
 
-| Nome      | Digitare                                 | Descrizione |
-| --------- | ---------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------------ | ----------- |
 | proprietà | Sola lettura<VirtualLogViewerProperties> |             |
 
 ### LogEntry
@@ -2576,8 +4416,8 @@ slot per contenuti cellulari completamente personalizzati (interattivi).
 
 #### Parametri
 
-| Nome      | Digitare                             | Descrizione |
-| --------- | ------------------------------------ | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------------- | ----------- |
 | proprietà | Sola lettura<VirtualTableProperties> |             |
 
 ### VirtualTableCellScope
@@ -2642,8 +4482,8 @@ semplice attributo `panel={({ tab }) => …}`) e utilizza l'attributo stabilito
 
 #### Parametri
 
-| Nome      | Digitare                            | Descrizione |
-| --------- | ----------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------- | ----------- |
 | proprietà | Sola lettura<VirtualTabsProperties> |             |
 
 ### VirtualTabPanelScope
@@ -2694,8 +4534,8 @@ oggetti di scena di richiamata.
 
 #### Parametri
 
-| Nome      | Digitare                                | Descrizione |
-| --------- | --------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------------- | ----------- |
 | proprietà | Sola lettura<VirtualTreeViewProperties> |             |
 
 ### TreeNode
@@ -2757,8 +4597,8 @@ helper) e `eyebrow`/`title`/`subtitle` sono prop di stringa.
 
 #### Parametri
 
-| Nome      | Digitare                     | Descrizione |
-| --------- | ---------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------ | ----------- |
 | proprietà | Sola lettura<HeroProperties> |             |
 
 ### HeroAlign
@@ -2791,6 +4631,281 @@ export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 Scala di riempimento verticale: scala canonica 2xs → 2xl.
 
+## `src/utils/date-time/date-time`
+
+### browserTimezoneLabel
+
+**Tipo:** funzione
+
+```typescript
+function browserTimezoneLabel(): string;
+```
+
+Il nome IANA del fuso orario del browser o `'Local'` quando non disponibile.
+
+### MORSETTO
+
+**Tipo:** funzione
+
+```typescript
+function clamp(value: number, min: number, max: number): number;
+```
+
+Blocca un numero nell'intervallo `[min, max]` inclusivo.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| valore | numero |             |
+| minimo | numero |             |
+| massimo | numero |             |
+
+### Intervallo di date
+
+**Tipo:** interfaccia
+
+```typescript
+export interface DateRange
+```
+
+Un intervallo di date ISO `{ start, end }` (`YYYY-MM-DD`).
+
+### DateTimeRange
+
+**Tipo:** interfaccia
+
+```typescript
+export interface DateTimeRange
+```
+
+Un intervallo data-ora `{ start, end, timezone }` (`YYYY-MM-DD HH:MM[:SS]`).
+
+### displayTime
+
+**Tipo:** funzione
+
+```typescript
+function displayTime(value: string, withSeconds: boolean): string;
+```
+
+Normalizza una stringa temporale memorizzata sulla precisione configurata (il vuoto rimane vuoto).
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ------- | ----------- |
+| valore | stringa |             |
+| conSecondi | booleano |             |
+
+### formatDateRange
+
+**Tipo:** funzione
+
+```typescript
+function formatDateRange(value: DateRange | undefined): string;
+```
+
+Formatta un intervallo di date ISO in un riepilogo `start → end` (le parti vuote vengono compresse).
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ---------------------- | ----------- |
+| valore | Intervallo date \| indefinito |             |
+
+### formatDateTime
+
+**Tipo:** funzione
+
+```typescript
+function formatDateTime(date: string, parts: TimeParts, withSeconds: boolean): string;
+```
+
+Unisci le parti di data e ora `YYYY-MM-DD` in una stringa `YYYY-MM-DD HH:MM[:SS]`.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | --------- | ----------- |
+| data | stringa |             |
+| parti | Parti temporali |             |
+| conSecondi | booleano |             |
+
+### formatTime
+
+**Tipo:** funzione
+
+```typescript
+function formatTime(parts: TimeParts, withSeconds: boolean): string;
+```
+
+Formattare i componenti ora/minuto (/secondo) in `HH:MM` o `HH:MM:SS`.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | --------- | ----------- |
+| parti | Parti temporali |             |
+| conSecondi | booleano |             |
+
+### formatTimeRange
+
+**Tipo:** funzione
+
+```typescript
+function formatTimeRange(value: TimeRange | undefined, withSeconds: boolean): string;
+```
+
+Formattare un intervallo di tempo in un riepilogo `start → end` con la precisione configurata.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ---------------------- | ----------- |
+| valore | Intervallo di tempo \| indefinito |             |
+| conSecondi | booleano |             |
+
+### ORE
+
+**Genere:** costante
+
+```typescript
+export const HOURS: readonly number[];
+```
+
+Gli elenchi selezionabili di ore (0–23), minuti (0–59) e secondi (0–59).
+
+### MINUTI
+
+**Genere:** costante
+
+```typescript
+export const MINUTES: readonly number[];
+```
+
+Nessuna descrizione fornita.
+
+### tampone
+
+**Tipo:** funzione
+
+```typescript
+function pad(value: number): string;
+```
+
+Zero-pad un numero a due cifre.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| valore | numero |             |
+
+### parseDate
+
+**Tipo:** funzione
+
+```typescript
+function parseDate(value: string): Date | undefined;
+```
+
+Analizzare una stringa di data ISO `YYYY-MM-DD` in `Date` (mezzanotte locale) o `undefined`.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| valore | stringa |             |
+
+### parseDateTime
+
+**Tipo:** funzione
+
+```typescript
+function parseDateTime(value: string): { date: string } & TimeParts;
+```
+
+Dividere una stringa `YYYY-MM-DD HH:MM[:SS]` (o ISO `T`/`Z`) in parti di data + ora.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| valore | stringa |             |
+
+### parseTime
+
+**Tipo:** funzione
+
+```typescript
+function parseTime(value: string): TimeParts;
+```
+
+Analizza una stringa `HH:MM[:SS]` nei suoi componenti ora/minuto/secondo.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------ | ----------- |
+| valore | stringa |             |
+
+### allineare
+
+**Tipo:** funzione
+
+```typescript
+function range(length: number): number[];
+```
+
+`[0, 1, …, length - 1]`.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------ | ------ | ----------- |
+| lunghezza | numero |             |
+
+### SECONDI
+
+**Genere:** costante
+
+```typescript
+export const SECONDS: readonly number[];
+```
+
+Nessuna descrizione fornita.
+
+### TimeParts
+
+**Tipo:** interfaccia
+
+```typescript
+export interface TimeParts
+```
+
+I componenti ora/minuto/secondo di un tempo analizzato.
+
+### Intervallo di tempo
+
+**Tipo:** interfaccia
+
+```typescript
+export interface TimeRange
+```
+
+Un intervallo di tempo `{ start, end }` (`HH:MM` o `HH:MM:SS`).
+
+### Modalità fuso orario
+
+**Genere:** tipo
+
+```typescript
+export type TimezoneMode = 'browser' | 'utc';
+```
+
+Indica se un intervallo di date e ore viene interpretato nella zona del browser o nell'ora UTC.
+
 ## `src/utils/pointer-drag/pointer-drag`
 
 ### startPointerDrag
@@ -2809,8 +4924,8 @@ il server (no `window`).
 
 #### Parametri
 
-| Nome    | Digitare            | Descrizione |
-| ------- | ------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| -------- | ------------------- | ----------- |
 | gestori | PointerDragHandlers |             |
 
 ### PointerDragHandlers

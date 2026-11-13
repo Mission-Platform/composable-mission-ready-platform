@@ -5,17 +5,17 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > packages/flint/core/docs/index.md: [packages/flint/core/docs/index.md](../../index.md)
 > Idioma: Español (es)
 
-Forje contratos de lenguaje Web Script v1, analizador de arranque y accesorios de conformidad.
+Contratos de lenguaje Flint v1, analizador de arranque y dispositivos de conformidad.
 Este paquete es propietario del contrato de idiomas y de la documentación para consumidores y
 contribuyentes.
 
 ## Empieza aquí
 
-- [Referencia de lenguaje y ABI](reference/language.md) — gramática, tipos, capacidades,
+- [Referencia de idioma y ABI](reference/language.md): gramática, tipos, capacidades,
   diagnósticos, manifiestos y comportamiento del compilador.
-- [Guía de construcción y prueba](guides/development.md) — comprobaciones locales, accesorios y generados
+- [Guía de compilación y prueba](guides/development.md): comprobaciones locales, accesorios y generados
   artefactos.
-- [`llms.txt`](../../../llms.txt): API concisas y notas de uso para herramientas y asistentes.
+- [`llms.txt`](../../../llms.txt): API concisa y notas de uso para herramientas y asistentes.
 
 El paquete admite coincidencias `Option`/`Result` sin excepciones, exportaciones `iter fn`,
 perfiles de características de destino explícitos y depuración determinista optimizada/no optimizada

@@ -12,13 +12,14 @@
  * `ensureMonacoEnvironment` is idempotent — only the first call wires the
  * environment up; subsequent calls are no-ops.
  */
-import HarperWorker from '@mission-platform/harper/worker?worker';
-import HunspellWorker from '@mission-platform/hunspell/worker?worker';
 import EditorWorker from 'monaco-editor/editor/editor.worker?worker';
 import CssWorker from 'monaco-editor/language/css/css.worker?worker';
 import HtmlWorker from 'monaco-editor/language/html/html.worker?worker';
 import JsonWorker from 'monaco-editor/language/json/json.worker?worker';
 import TsWorker from 'monaco-editor/language/typescript/ts.worker?worker';
+
+import HarperWorker from '@mission-platform/harper/worker?worker';
+import HunspellWorker from '@mission-platform/hunspell/worker?worker';
 
 interface MonacoEnvironmentLike {
   getWorker(workerId: string, label: string): Worker;

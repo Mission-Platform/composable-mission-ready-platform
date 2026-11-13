@@ -32,7 +32,7 @@ Converti opzioni comode in un documento vCard completo e scrivibile.
 **Genere:** costante
 
 ```typescript
-export const parseVCard;
+export const parseVCard: typeof readVCard;
 ```
 
 Alias ​​per i chiamanti che preferiscono la terminologia del parser.
@@ -616,7 +616,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const parseICalendar;
+export const parseICalendar: typeof readICalendar;
 ```
 
 Nessuna descrizione fornita.
@@ -642,7 +642,7 @@ Analizza un flusso iCalendar RFC 5545, preservando ogni componente e proprietà.
 **Genere:** costante
 
 ```typescript
-export const serializeICalendar;
+export const serializeICalendar: typeof writeICalendar;
 ```
 
 Nessuna descrizione fornita.

@@ -50,9 +50,9 @@ via le module CSS colocalisé `forge-matrix-code.module.scss`.
 
 #### Paramètres
 
-| Nom        | Tapez                               | Descriptif |
-| ---------- | ----------------------------------- | ---------- |
-| propriétés | Lecture seule<MatrixCodeProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------ | ----------- |
+| propriétés | Lecture seule<MatrixCodeProperties> |             |
 
 ### ActionsCodeMatrice
 
@@ -103,72 +103,3 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 ```
 
 Forme utilisée pour dessiner chaque module du code.
-
-## `src/encoder/index`
-
-### encodeMatrix
-
-**Genre :** fonction
-
-```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
-```
-
-Encodez `data` dans un code-barres matriciel 2D du `symbology` donné, en chargeant le
-Forgez l'artefact de l'encodeur de manière synchrone lors de la première utilisation.
-
-#### Paramètres
-
-| Nom        | Tapez             | Descriptif |
-| ---------- | ----------------- | ---------- |
-| symbologie | MatriceSymbologie |            |
-| données    | chaîne            |            |
-
-#### Contracter
-
-- **@throws :** si la charge utile n'est pas valide pour la symbologie (vide ou
-  trop grand pour les symboles pris en charge).
-
-### encodeMatrixAsync
-
-**Genre :** fonction
-
-```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
-```
-
-Encodez `data` dans un code-barres matriciel 2D du `symbology` donné, en chargeant le
-Forgez l’artefact de l’encodeur de manière asynchrone lors de la première utilisation.
-
-#### Paramètres
-
-| Nom        | Tapez             | Descriptif |
-| ---------- | ----------------- | ---------- |
-| symbologie | MatriceSymbologie |            |
-| données    | chaîne            |            |
-
-#### Contracter
-
-- **@throws :** si la charge utile n'est pas valide pour la symbologie.
-
-### CodeMatriciel
-
-**Genre :** interface
-
-```typescript
-export interface MatrixCode
-```
-
-Un code-barres matriciel compact : dimensions plus une liste de bits de module par ligne principale
-(`0` = clair, `1` = foncé).
-
-### MatriceSymbologie
-
-**Genre :** type
-
-```typescript
-export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
-```
-
-Les symbologies matricielles 2D prises en charge par cet encodeur. Passé comme premier argument
-vers {@link encodeMatrix} / {@link encodeMatrixAsync}.

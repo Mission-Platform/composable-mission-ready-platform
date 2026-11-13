@@ -6,7 +6,7 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > Taal: Nederlands (nl)
 
 `@mission-platform/phone-number` is een gerichte herimplementatie van de kern van
-Googlen [libtelefoonnummer](https://github.com/google/libphonenumber), geschreven in
+Google [libphonenummer](https://github.com/google/libphonenumber), geschreven in
 [AssemblyScript](https://www.assemblyscript.org/) en gecompileerd naar **WebAssembly**. Het ontleedt, valideert, classificeert en
 formatteert internationale telefoonnummers en is verpakt als een op zichzelf staande ES-module zonder runtime-afhankelijkheden.
 

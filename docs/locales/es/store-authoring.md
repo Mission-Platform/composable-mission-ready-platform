@@ -5,7 +5,7 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > docs/store-authoring.md: [docs/store-authoring.md](../../store-authoring.md)
 > Idioma: Español (es)
 
-Las tiendas se utilizan para gestionar el estado compartido entre componentes dentro de un paquete. A diferencia de las tiendas a nivel de aplicaciones (como Pinia o
+Las tiendas se utilizan para gestionar el estado compartido entre componentes dentro de un paquete. Unlike application-level stores (like Pinia or
 Redux), las tiendas de paquetes en Mission Platform están diseñadas para ser **módulos observables neutrales en cuanto al marco**. Esto permite
 componentes de escritura única para consumirlos a través de ganchos de Forge independientemente del marco del host.
 
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState["theme"]): void {
 
 ## Consumir tiendas en componentes
 
-Para usar una tienda dentro de un componente de escritura única, conéctela usando `useState` y `useEffect` desde `@mission-platform/forge-jsx`:
+Para usar una tienda dentro de un componente de escritura única, conéctela usando `useState` y `useEffect` de `@mission-platform/forge-jsx`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());
@@ -81,9 +81,10 @@ useEffect(() => {
 
 ## Andamio
 
-Utilice la herramienta MCP de Mission Platform Developer para generar un nuevo esqueleto de tienda:
+Utilice la herramienta `scaffold_store` a través de un servidor MCP de Mission Platform Developer conectado para generar una nueva tienda
+esqueleto. Este es un ejemplo de llamada a una herramienta MCP, no un comando de shell:
 
-```bash
+```text
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```

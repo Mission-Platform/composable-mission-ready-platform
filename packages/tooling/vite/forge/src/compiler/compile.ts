@@ -8,9 +8,6 @@
  * natively, so the output never pays for a generic runtime adapter and a new
  * target framework is added simply by writing another emitter.
  */
-import { createCompilerPipeline } from './pipeline.js';
-
-import type { OptimizeOptions } from './optimize.js';
 import type {
   CompilerDiagnostic,
   GeneratedModule,
@@ -19,6 +16,10 @@ import type {
   TargetComponentHost,
 } from '@mission-platform/forge-plugin-api';
 import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
+
+import { createCompilerPipeline } from './pipeline.js';
+
+import type { OptimizeOptions } from './optimize.js';
 
 export { moduleTargetsFramework, readFrameworkDirective } from './directives.js';
 export { analyzeForgeModule, createCompilerPipeline } from './pipeline.js';

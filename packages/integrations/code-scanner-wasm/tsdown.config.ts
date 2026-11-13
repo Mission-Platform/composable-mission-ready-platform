@@ -36,7 +36,8 @@ const scannerFlintOptions = {
   graphCache: scannerFlintGraphCache,
   graphCacheKey: 'code-scanner-static',
   resolveModule: resolveScannerFlintModule,
-  requestedCapabilities: (fileName: string) => (fileName.endsWith('/qr-decoder.flint') || fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
+  requestedCapabilities: (fileName: string) =>
+    fileName.endsWith('/qr-decoder.flint') || fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined,
 };
 
 export default [

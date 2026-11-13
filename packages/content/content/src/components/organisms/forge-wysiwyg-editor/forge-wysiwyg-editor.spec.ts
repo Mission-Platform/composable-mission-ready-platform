@@ -1,10 +1,12 @@
-import { toReactComponent } from '@mission-platform/forge-adapters/react';
-import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
+import type { MpElement } from '@mission-platform/forge-jsx';
 
 import { toHtml } from '../../../builders';
 import { insertHtmlAtSelection, type WysiwygCommand } from '../../../utils/commands';
@@ -12,7 +14,6 @@ import { insertHtmlAtSelection, type WysiwygCommand } from '../../../utils/comma
 import { ForgeWysiwygEditor } from './forge-wysiwyg-editor';
 
 import type { ContentDocument } from '../../../ast';
-import type { MpElement } from '@mission-platform/forge-jsx';
 
 /**
  * Exercises the **neutral** `ForgeWysiwygEditor` authored in this package,

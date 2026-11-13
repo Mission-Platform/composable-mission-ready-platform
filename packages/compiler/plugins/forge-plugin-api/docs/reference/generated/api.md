@@ -649,6 +649,16 @@ export interface GeneratedModule
 
 The source artifact returned by a framework output plugin.
 
+### GeneratedStyleArtifact
+
+**Kind:** interface
+
+```typescript
+export interface GeneratedStyleArtifact
+```
+
+A stylesheet emitted alongside a generated source module.
+
 ### GeneratorContext
 
 **Kind:** type
@@ -782,7 +792,7 @@ Shared context for framework-owned Vite plugin bundles.
 **Kind:** constant
 
 ```typescript
-export const defineForgeFramework;
+export const defineForgeFramework: typeof defineForgeOutputPlugin;
 ```
 
 Alias emphasizing that framework packages register target implementations.
@@ -891,6 +901,38 @@ Read a named attribute's static string value, when it has one.
 | node | GenericRenderNode |             |
 | name | string            |             |
 
+### childSlotName
+
+**Kind:** function
+
+```typescript
+function childSlotName(
+  child: GenericRenderChild,
+  slotAttributeName = "slot",
+  defaultSlotName = "default",
+): string | undefined;
+```
+
+The `slot="…"` name a child is routed into, or `undefined` for default-slot content.
+
+#### Parameters
+
+| Name              | Type               | Description |
+| ----------------- | ------------------ | ----------- |
+| child             | GenericRenderChild |             |
+| slotAttributeName |                    |             |
+| defaultSlotName   |                    |             |
+
+### ComputedSetupValue
+
+**Kind:** interface
+
+```typescript
+export interface ComputedSetupValue
+```
+
+A named value returned from setup and addressable by render/style bindings.
+
 ### DynamicNodeIntention
 
 **Kind:** interface
@@ -977,7 +1019,8 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type GenericAttribute = GenericJsxAttribute | GenericJsxSpreadAttribute;
+export type GenericAttribute =
+  GenericJsxAttribute | GenericJsxSpreadAttribute | GenericSlotAttribute;
 ```
 
 No description provided.
@@ -1079,7 +1122,11 @@ A component parameter, its binding form, and its declared type.
 
 ```typescript
 export type GenericRenderChild =
-  GenericRenderNode | GenericTextNode | GenericExpressionNode;
+  | GenericRenderNode
+  | GenericTextNode
+  | GenericExpressionNode
+  | GenericConditionalNode
+  | GenericForNode;
 ```
 
 No description provided.
@@ -1125,6 +1172,56 @@ export type GenericStatementKind =
 
 Coarse classification of a retained module-level statement.
 
+### GenericStyleAtRule
+
+**Kind:** interface
+
+```typescript
+export interface GenericStyleAtRule
+```
+
+Normalized CSS at-rule carried from a Flint style companion.
+
+### GenericStyleClassMapNode
+
+**Kind:** interface
+
+```typescript
+export interface GenericStyleClassMapNode
+```
+
+One addressable local class in a normalized CSS-module class map.
+
+### GenericStyleCompanion
+
+**Kind:** interface
+
+```typescript
+export interface GenericStyleCompanion
+```
+
+Target-neutral style artifact owned by one Flint module.
+
+### GenericStyleDeclaration
+
+**Kind:** interface
+
+```typescript
+export interface GenericStyleDeclaration
+```
+
+Normalized CSS declaration carried from a Flint style companion.
+
+### GenericStyleRule
+
+**Kind:** interface
+
+```typescript
+export interface GenericStyleRule
+```
+
+Normalized CSS rule carried from a Flint style companion.
+
 ### GenericTagKind
 
 **Kind:** type
@@ -1144,6 +1241,23 @@ export interface GenericTextNode
 ```
 
 Literal text between JSX tags.
+
+### isComponentNode
+
+**Kind:** function
+
+```typescript
+function isComponentNode(node: GenericRenderNode): boolean;
+```
+
+Whether the node's tag names a component (a capitalised identifier, or dynamic/member expression)
+rather than an intrinsic HTML element.
+
+#### Parameters
+
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ### isExpressionNode
 
@@ -1179,6 +1293,23 @@ Whether a render child is a nested element/fragment node.
 | ----- | ------------------ | ----------- |
 | child | GenericRenderChild |             |
 
+### isRenderNodeMarker
+
+**Kind:** function
+
+```typescript
+function isRenderNodeMarker(node: GenericRenderNode, tag: string): boolean;
+```
+
+Whether the node is a named compile-time marker.
+
+#### Parameters
+
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| tag  | string            |             |
+
 ### isTextNode
 
 **Kind:** function
@@ -1205,6 +1336,24 @@ export interface ListKeyIntention
 
 A stable key candidate for a target list renderer.
 
+### meaningfulChildren
+
+**Kind:** function
+
+```typescript
+function meaningfulChildren(
+  node: GenericRenderNode,
+): readonly GenericRenderChild[];
+```
+
+Children that survive to the target (whitespace-only text carries nothing).
+
+#### Parameters
+
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
 ### MemoIntention
 
 **Kind:** interface
@@ -1215,6 +1364,16 @@ export interface MemoIntention
 
 A memoized or derived value.
 
+### ModelContract
+
+**Kind:** interface
+
+```typescript
+export interface ModelContract
+```
+
+A target-neutral controlled value and its typed update event.
+
 ### PropIntention
 
 **Kind:** interface
@@ -1224,6 +1383,16 @@ export interface PropIntention
 ```
 
 A neutral prop declaration inferred from a component signature or props type.
+
+### ReactiveProperty
+
+**Kind:** interface
+
+```typescript
+export interface ReactiveProperty
+```
+
+A reactive component property shared by every target emitter.
 
 ### RefIntention
 
@@ -1251,6 +1420,22 @@ The plain tag name of a render node, or `undefined` for a computed tag.
 | ---- | ----------------- | ----------- |
 | node | GenericRenderNode |             |
 
+### renderNodeTagText
+
+**Kind:** function
+
+```typescript
+function renderNodeTagText(node: GenericRenderNode): string;
+```
+
+The plain tag text of a render node (a computed tag prints its source expression).
+
+#### Parameters
+
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
 ### SemanticIntentions
 
 **Kind:** interface
@@ -1270,6 +1455,36 @@ export interface SemanticModule
 ```
 
 The typed semantic IR consumed by every framework output plugin.
+
+### SetupContract
+
+**Kind:** interface
+
+```typescript
+export interface SetupContract
+```
+
+Canonical setup/event/model contract consumed by all target lowerers.
+
+### SetupEventEmitter
+
+**Kind:** interface
+
+```typescript
+export interface SetupEventEmitter
+```
+
+An event emitter declared outside setup and paired with event configuration.
+
+### SetupEventHandler
+
+**Kind:** interface
+
+```typescript
+export interface SetupEventHandler
+```
+
+An event handler declared outside setup.
 
 ### SlotIntention
 
@@ -1352,6 +1567,461 @@ Walk a render tree depth-first, including nested expression markup.
 | ----- | --------------------------------- | ----------- |
 | nodes | readonly GenericRenderNode[]      |             |
 | visit | (node: GenericRenderNode) => void |             |
+
+### withoutSlotAttribute
+
+**Kind:** function
+
+```typescript
+function withoutSlotAttribute(
+  node: GenericRenderNode,
+  slotAttributeName = "slot",
+): GenericRenderNode;
+```
+
+A copy of the node without its `slot="…"` routing marker.
+
+#### Parameters
+
+| Name              | Type              | Description |
+| ----------------- | ----------------- | ----------- |
+| node              | GenericRenderNode |             |
+| slotAttributeName |                   |             |
+
+## `src/lowering/dynamic`
+
+### lowerDynamicNodes
+
+**Kind:** function
+
+```typescript
+function lowerDynamicNodes(
+  module: SemanticModule,
+): readonly NormalizedDynamicPlan[];
+```
+
+Lowers dynamic node intentions and render tree `<Dynamic>` tags.
+
+#### Parameters
+
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| module | SemanticModule |             |
+
+### lowerListKeys
+
+**Kind:** function
+
+```typescript
+function lowerListKeys(
+  module: SemanticModule,
+): readonly NormalizedListKeyPlan[];
+```
+
+Lowers list key candidates from `SemanticModule`.
+
+#### Parameters
+
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| module | SemanticModule |             |
+
+### lowerStaticSubtrees
+
+**Kind:** function
+
+```typescript
+function lowerStaticSubtrees(
+  module: SemanticModule,
+): readonly NormalizedStaticSubtreePlan[];
+```
+
+Lowers static subtree candidates marked with `mp-static`.
+
+#### Parameters
+
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| module | SemanticModule |             |
+
+### NormalizedDynamicPlan
+
+**Kind:** interface
+
+```typescript
+export interface NormalizedDynamicPlan
+```
+
+Normalized descriptor for a dynamic node `<Dynamic is={...}>`.
+
+### NormalizedListKeyPlan
+
+**Kind:** interface
+
+```typescript
+export interface NormalizedListKeyPlan
+```
+
+Normalized descriptor for a list key binding.
+
+### NormalizedStaticSubtreePlan
+
+**Kind:** interface
+
+```typescript
+export interface NormalizedStaticSubtreePlan
+```
+
+Normalized descriptor for a hoisted static subtree.
+
+## `src/lowering/events`
+
+### canonicalEventName
+
+**Kind:** function
+
+```typescript
+function canonicalEventName(propName: string): string;
+```
+
+Extracts the canonical event name from an `onXxx` prop name (e.g. `onClick` -> `click`, `onKeyDown` -> `keydown`).
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| propName | string |             |
+
+### formatTargetEventName
+
+**Kind:** function
+
+```typescript
+function formatTargetEventName(
+  eventName: string,
+  target: "react" | "solid" | "vue" | "svelte" | "web-components",
+): string;
+```
+
+Formats an event name according to the target framework's conventions.
+
+#### Parameters
+
+| Name      | Type                                                        | Description |
+| --------- | ----------------------------------------------------------- | ----------- |
+| eventName | string                                                      |             |
+| target    | "react" \| "solid" \| "vue" \| "svelte" \| "web-components" |             |
+
+### isEventHandlerProp
+
+**Kind:** function
+
+```typescript
+function isEventHandlerProp(propName: string): boolean;
+```
+
+Determines whether a property name represents an event handler prop (e.g. `onClick`, `onKeyDown`).
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| propName | string |             |
+
+### lowerEventIntentions
+
+**Kind:** function
+
+```typescript
+function lowerEventIntentions(
+  module: SemanticModule,
+): readonly NormalizedEventPlan[];
+```
+
+Extracts all event handler intentions from a `SemanticModule`.
+
+#### Parameters
+
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| module | SemanticModule |             |
+
+### NormalizedEventPlan
+
+**Kind:** interface
+
+```typescript
+export interface NormalizedEventPlan
+```
+
+Normalized descriptor for a lowered component event handler.
+
+## `src/lowering/pipeline`
+
+### BaseLoweredModule
+
+**Kind:** interface
+
+```typescript
+export interface BaseLoweredModule extends TargetLoweredModule
+```
+
+Standard baseline lowered plan that framework plugins can embed or build upon.
+
+### createBaseLoweredModule
+
+**Kind:** function
+
+```typescript
+function createBaseLoweredModule(
+  module: SemanticModule,
+  framework: TargetFrameworkId,
+): BaseLoweredModule;
+```
+
+Creates a base lowered module executing shared prop normalization, slot synthesis,
+event lowering, dynamic node extraction, and list key normalization.
+
+#### Parameters
+
+| Name      | Type              | Description                         |
+| --------- | ----------------- | ----------------------------------- |
+| module    | SemanticModule    | - Semantic module from frontend IR. |
+| framework | TargetFrameworkId | - The target framework ID.          |
+
+#### Contract
+
+- **@param:** - Semantic module from frontend IR.
+- **@param:** - The target framework ID.
+- **@returns:** Standard base lowered module.
+
+### validateLoweredInvariants
+
+**Kind:** function
+
+```typescript
+function validateLoweredInvariants(lowered: TargetLoweredModule): void;
+```
+
+Validates that a lowered module conforms to required structural invariants.
+
+#### Parameters
+
+| Name    | Type                | Description                    |
+| ------- | ------------------- | ------------------------------ |
+| lowered | TargetLoweredModule | - The lowered module to check. |
+
+#### Contract
+
+- **@param:** - The lowered module to check.
+- **@throws:** If invariant contracts are violated.
+
+## `src/lowering/props`
+
+### canonicalizePropsContract
+
+**Kind:** function
+
+```typescript
+function canonicalizePropsContract(
+  module: SemanticModule,
+  defaultParameterName = "props",
+): NormalizedPropsContract;
+```
+
+Canonicalizes the props contract from a `SemanticModule`.
+
+#### Parameters
+
+| Name                 | Type           | Description                                                                   |
+| -------------------- | -------------- | ----------------------------------------------------------------------------- |
+| module               | SemanticModule | - The semantic module to inspect.                                             |
+| defaultParameterName |                | - The fallback props parameter name when none is declared (default: 'props'). |
+
+#### Contract
+
+- **@param:** - The semantic module to inspect.
+- **@param:** - The fallback props parameter name when none is declared (default: 'props').
+- **@returns:** Canonical props contract.
+
+### NormalizedProp
+
+**Kind:** interface
+
+```typescript
+export interface NormalizedProp
+```
+
+A normalized, target-agnostic prop description.
+
+### NormalizedPropsContract
+
+**Kind:** interface
+
+```typescript
+export interface NormalizedPropsContract
+```
+
+The normalized props contract of a component.
+
+### resolvePropTypeText
+
+**Kind:** function
+
+```typescript
+function resolvePropTypeText(prop: PropIntention): string;
+```
+
+Resolves the type string for a prop intention.
+
+#### Parameters
+
+| Name | Type          | Description |
+| ---- | ------------- | ----------- |
+| prop | PropIntention |             |
+
+### UNKNOWN_PROP_TYPE
+
+**Kind:** constant
+
+```typescript
+export const UNKNOWN_PROP_TYPE;
+```
+
+The fallback type string when no declared or inferred type is present.
+
+## `src/lowering/setup`
+
+### EMPTY_SETUP_CONTRACT
+
+**Kind:** constant
+
+```typescript
+export const EMPTY_SETUP_CONTRACT: SetupContract;
+```
+
+Empty setup contract used by legacy-free composable modules without a setup.
+
+### normalizeSetupContract
+
+**Kind:** function
+
+```typescript
+function normalizeSetupContract(module: SemanticModule): SetupContract;
+```
+
+Gets the canonical setup contract attached by the frontend.
+
+#### Parameters
+
+| Name   | Type           | Description |
+| ------ | -------------- | ----------- |
+| module | SemanticModule |             |
+
+### validateSetupContract
+
+**Kind:** function
+
+```typescript
+function validateSetupContract(
+  contract: SetupContract,
+  fileName = "<unknown>",
+): readonly CompilerDiagnostic[];
+```
+
+Validates setup dependencies, names, and model payload compatibility before target lowering.
+
+#### Parameters
+
+| Name     | Type          | Description |
+| -------- | ------------- | ----------- |
+| contract | SetupContract |             |
+| fileName |               |             |
+
+## `src/lowering/slots`
+
+### DEFAULT_SLOT_NAME
+
+**Kind:** constant
+
+```typescript
+export const DEFAULT_SLOT_NAME;
+```
+
+Default slot name across all supported target frameworks.
+
+### isDefaultSlotName
+
+**Kind:** function
+
+```typescript
+function isDefaultSlotName(name: string): boolean;
+```
+
+Determines whether a slot name is the default slot.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| name | string |             |
+
+### isSlotRenderNode
+
+**Kind:** function
+
+```typescript
+function isSlotRenderNode(node: GenericRenderNode): boolean;
+```
+
+Determines if a render node represents a slot placeholder tag (`<Slot>` or `<slot>`).
+
+#### Parameters
+
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
+### NormalizedSlotPlan
+
+**Kind:** interface
+
+```typescript
+export interface NormalizedSlotPlan
+```
+
+Normalized descriptor for a component slot.
+
+### NormalizedSlotsContract
+
+**Kind:** interface
+
+```typescript
+export interface NormalizedSlotsContract
+```
+
+Normalized collection of all slots synthesised for a component.
+
+### synthesizeSlotPlans
+
+**Kind:** function
+
+```typescript
+function synthesizeSlotPlans(module: SemanticModule): NormalizedSlotsContract;
+```
+
+Synthesizes a unified slot contract for a `SemanticModule`.
+
+#### Parameters
+
+| Name   | Type           | Description                       |
+| ------ | -------------- | --------------------------------- |
+| module | SemanticModule | - The semantic module to analyze. |
+
+#### Contract
+
+- **@param:** - The semantic module to analyze.
+- **@returns:** Normalized slot plan contract.
 
 ## `src/schema`
 
@@ -1553,3 +2223,548 @@ Returns structured validation errors and corresponding CompilerDiagnostic object
 | ----------------- | ----------- | ----------- |
 | intentions        | unknown     |             |
 | expectedFramework | FrameworkId |             |
+
+## `src/testing`
+
+### booleanAttribute
+
+**Kind:** function
+
+```typescript
+function booleanAttribute(name: string): GenericJsxAttribute;
+```
+
+A valueless boolean shorthand attribute (`disabled`).
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| name | string |             |
+
+### component
+
+**Kind:** function
+
+```typescript
+function component(parts: {
+  name: string;
+  parameter?: string;
+  parameterType?: string;
+  exported?: boolean;
+  body?: readonly GenericStatement[];
+  returnNode?: GenericRenderNode;
+  returnExpression?: string;
+  returned?: { expression: string; nodes?: readonly GenericRenderNode[] };
+}): GenericComponent;
+```
+
+Build the component record a module is named after.
+
+#### Parameters
+
+| Name  | Type                                                                                                                                                                                                                                                      | Description |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| parts | { name: string; parameter?: string; parameterType?: string; exported?: boolean; body?: readonly GenericStatement[]; returnNode?: GenericRenderNode; returnExpression?: string; returned?: { expression: string; nodes?: readonly GenericRenderNode[] }; } |             |
+
+### dynamicElement
+
+**Kind:** function
+
+```typescript
+function dynamicElement(
+  expression: string,
+  parts: {
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+  } = {},
+): GenericRenderNode;
+```
+
+Build a computed-tag render node.
+
+#### Parameters
+
+| Name       | Type                                                                                                     | Description |
+| ---------- | -------------------------------------------------------------------------------------------------------- | ----------- |
+| expression | string                                                                                                   |             |
+| parts      | { attributes?: readonly GenericAttribute[]; children?: readonly GenericRenderChild[]; source?: string; } |             |
+
+### dynamicNode
+
+**Kind:** function
+
+```typescript
+function dynamicNode(
+  expression: string,
+  span: SourceSpan = EMPTY_SPAN,
+): DynamicNodeIntention;
+```
+
+Build a dynamic-node intention.
+
+#### Parameters
+
+| Name       | Type       | Description |
+| ---------- | ---------- | ----------- |
+| expression | string     |             |
+| span       | SourceSpan |             |
+
+### effect
+
+**Kind:** function
+
+```typescript
+function effect(
+  body: string,
+  second?:
+    | readonly string[]
+    | string
+    | { cleanup?: string; dependencies?: readonly string[] },
+  third?: string | readonly string[],
+): EffectIntention;
+```
+
+Build an effect intention.
+
+#### Parameters
+
+| Name   | Type                                                                                     | Description |
+| ------ | ---------------------------------------------------------------------------------------- | ----------- |
+| body   | string                                                                                   |             |
+| second | \| readonly string[] \| string \| { cleanup?: string; dependencies?: readonly string[] } |             |
+| third  | string \| readonly string[]                                                              |             |
+
+### element
+
+**Kind:** function
+
+```typescript
+function element(
+  tag: string,
+  parts: {
+    tagKind?: GenericTagKind;
+    selfClosing?: boolean;
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+    span?: SourceSpan;
+  } = {},
+): GenericRenderNode;
+```
+
+Build a render node; `source` is the node's own text, used when splicing nested markup.
+
+#### Parameters
+
+| Name  | Type                                                                                                                                                                         | Description |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| tag   | string                                                                                                                                                                       |             |
+| parts | { tagKind?: GenericTagKind; selfClosing?: boolean; attributes?: readonly GenericAttribute[]; children?: readonly GenericRenderChild[]; source?: string; span?: SourceSpan; } |             |
+
+### elementRef
+
+**Kind:** constant
+
+```typescript
+export const elementRef: typeof reference;
+```
+
+Alias for `reference` (used in Web Components specs).
+
+### event
+
+**Kind:** function
+
+```typescript
+function event(name: string, handler: string): EventIntention;
+```
+
+Build an event intention.
+
+#### Parameters
+
+| Name    | Type   | Description |
+| ------- | ------ | ----------- |
+| name    | string |             |
+| handler | string |             |
+
+### expressionAttribute
+
+**Kind:** function
+
+```typescript
+function expressionAttribute(
+  name: string,
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericJsxAttribute;
+```
+
+A `name={expression}` attribute, optionally carrying nested markup.
+
+#### Parameters
+
+| Name   | Type                         | Description |
+| ------ | ---------------------------- | ----------- |
+| name   | string                       |             |
+| text   | string                       |             |
+| nested | readonly GenericRenderNode[] |             |
+
+### expressionChild
+
+**Kind:** function
+
+```typescript
+function expressionChild(
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericExpressionNode;
+```
+
+A `{ … }` interpolation in child position, optionally carrying nested markup.
+
+#### Parameters
+
+| Name   | Type                         | Description |
+| ------ | ---------------------------- | ----------- |
+| text   | string                       |             |
+| nested | readonly GenericRenderNode[] |             |
+
+### FixtureIntentions
+
+**Kind:** type
+
+```typescript
+export type FixtureIntentions = SemanticModuleParts;
+```
+
+Alias for `SemanticModuleParts` compatibility with legacy Vue specs.
+
+### fragment
+
+**Kind:** function
+
+```typescript
+function fragment(
+  children: readonly GenericRenderChild[] = [],
+  source = "<Fragment />",
+): GenericRenderNode;
+```
+
+Build a fragment render node (`<>…</>` or `<Fragment>…</Fragment>`).
+
+#### Parameters
+
+| Name     | Type                          | Description |
+| -------- | ----------------------------- | ----------- |
+| children | readonly GenericRenderChild[] |             |
+| source   |                               |             |
+
+### listKey
+
+**Kind:** function
+
+```typescript
+function listKey(
+  source: string,
+  second?: boolean | string | { key?: string; stable?: boolean },
+  third?: boolean | string,
+): ListKeyIntention;
+```
+
+Build a list-key intention.
+
+#### Parameters
+
+| Name   | Type                                                    | Description |
+| ------ | ------------------------------------------------------- | ----------- |
+| source | string                                                  |             |
+| second | boolean \| string \| { key?: string; stable?: boolean } |             |
+| third  | boolean \| string                                       |             |
+
+### memo
+
+**Kind:** function
+
+```typescript
+function memo(
+  name: string,
+  factory: string,
+  dependencies?: readonly string[],
+): MemoIntention;
+```
+
+Build a memo intention.
+
+#### Parameters
+
+| Name         | Type              | Description |
+| ------------ | ----------------- | ----------- |
+| name         | string            |             |
+| factory      | string            |             |
+| dependencies | readonly string[] |             |
+
+### moduleImport
+
+**Kind:** function
+
+```typescript
+function moduleImport(
+  text: string,
+  source: string,
+  parts: Partial<Omit<GenericImport, "kind" | "text" | "source" | "span">> = {},
+): GenericImport;
+```
+
+Build an import record from its source text and resolved specifier.
+
+#### Parameters
+
+| Name   | Type                                                                 | Description |
+| ------ | -------------------------------------------------------------------- | ----------- |
+| text   | string                                                               |             |
+| source | string                                                               |             |
+| parts  | Partial<Omit<GenericImport, "kind" \| "text" \| "source" \| "span">> |             |
+
+### neutralImport
+
+**Kind:** function
+
+```typescript
+function neutralImport(
+  valueNames: readonly string[],
+  typeNames: readonly string[] = [],
+): GenericImport;
+```
+
+The neutral `@mission-platform/forge-jsx` import, spelled out from its names.
+
+#### Parameters
+
+| Name       | Type              | Description |
+| ---------- | ----------------- | ----------- |
+| valueNames | readonly string[] |             |
+| typeNames  | readonly string[] |             |
+
+### prop
+
+**Kind:** function
+
+```typescript
+function prop(
+  name: string,
+  second?:
+    string | { type?: string; optional?: boolean; defaultValue?: string },
+  third?: boolean | { optional?: boolean; defaultValue?: string },
+  fourth?: string,
+): PropIntention;
+```
+
+Build a prop intention.
+
+#### Parameters
+
+| Name   | Type                                                                   | Description |
+| ------ | ---------------------------------------------------------------------- | ----------- |
+| name   | string                                                                 |             |
+| second | string \| { type?: string; optional?: boolean; defaultValue?: string } |             |
+| third  | boolean \| { optional?: boolean; defaultValue?: string }               |             |
+| fourth | string                                                                 |             |
+
+### reference
+
+**Kind:** function
+
+```typescript
+function reference(
+  name: string,
+  elementType?: string,
+  initializer?: string,
+): RefIntention;
+```
+
+Build a ref intention.
+
+#### Parameters
+
+| Name        | Type   | Description |
+| ----------- | ------ | ----------- |
+| name        | string |             |
+| elementType | string |             |
+| initializer | string |             |
+
+### returnStatement
+
+**Kind:** function
+
+```typescript
+function returnStatement(
+  expression: string,
+  renderNodes: readonly GenericRenderNode[] = [],
+): GenericStatement;
+```
+
+Build the `return …;` statement of a component body.
+
+#### Parameters
+
+| Name        | Type                         | Description |
+| ----------- | ---------------------------- | ----------- |
+| expression  | string                       |             |
+| renderNodes | readonly GenericRenderNode[] |             |
+
+### semanticModule
+
+**Kind:** function
+
+```typescript
+function semanticModule(parts: SemanticModuleParts): SemanticModule;
+```
+
+Assemble a `SemanticModule` from fixture parts.
+
+#### Parameters
+
+| Name  | Type                | Description |
+| ----- | ------------------- | ----------- |
+| parts | SemanticModuleParts |             |
+
+### SemanticModuleParts
+
+**Kind:** interface
+
+```typescript
+export interface SemanticModuleParts
+```
+
+The intention facts a test fixture may declare.
+
+### slot
+
+**Kind:** function
+
+```typescript
+function slot(name: string, fallback?: string): SlotIntention;
+```
+
+Build a slot intention.
+
+#### Parameters
+
+| Name     | Type   | Description |
+| -------- | ------ | ----------- |
+| name     | string |             |
+| fallback | string |             |
+
+### spreadAttribute
+
+**Kind:** function
+
+```typescript
+function spreadAttribute(
+  text: string,
+  span: SourceSpan = EMPTY_SPAN,
+): GenericJsxSpreadAttribute;
+```
+
+A `{...expression}` spread attribute.
+
+#### Parameters
+
+| Name | Type       | Description |
+| ---- | ---------- | ----------- |
+| text | string     |             |
+| span | SourceSpan |             |
+
+### state
+
+**Kind:** function
+
+```typescript
+function state(
+  name: string,
+  setterName?: string,
+  parts: { type?: string; inferredType?: string; initializer?: string } = {},
+): StateIntention;
+```
+
+Build a state intention.
+
+#### Parameters
+
+| Name       | Type                                                           | Description |
+| ---------- | -------------------------------------------------------------- | ----------- |
+| name       | string                                                         |             |
+| setterName | string                                                         |             |
+| parts      | { type?: string; inferredType?: string; initializer?: string } |             |
+
+### statement
+
+**Kind:** function
+
+```typescript
+function statement(
+  text: string,
+  statementKind: GenericStatementKind = "variable",
+  parts: {
+    name?: string;
+    exported?: boolean;
+    renderNodes?: readonly GenericRenderNode[];
+  } = {},
+): GenericStatement;
+```
+
+Build a statement record from its source text.
+
+#### Parameters
+
+| Name          | Type                                                                               | Description |
+| ------------- | ---------------------------------------------------------------------------------- | ----------- |
+| text          | string                                                                             |             |
+| statementKind | GenericStatementKind                                                               |             |
+| parts         | { name?: string; exported?: boolean; renderNodes?: readonly GenericRenderNode[]; } |             |
+
+### stringAttribute
+
+**Kind:** function
+
+```typescript
+function stringAttribute(name: string, value: string): GenericJsxAttribute;
+```
+
+A `name="value"` attribute.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| name  | string |             |
+| value | string |             |
+
+### templateRef
+
+**Kind:** constant
+
+```typescript
+export const templateRef: typeof reference;
+```
+
+Alias for `reference` (used in Vue specs).
+
+### textChild
+
+**Kind:** function
+
+```typescript
+function textChild(text: string): GenericTextNode;
+```
+
+Literal text between tags.
+
+#### Parameters
+
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| text | string |             |

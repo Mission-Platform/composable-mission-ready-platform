@@ -23,10 +23,10 @@ function aliasToCssVariable(alias: string, prefix: string): string;
 
 #### פרמטרים
 
-| שם     | הקלד   | תיאור |
-| ------ | ------ | ----- |
-| כינוי  | מחרוזת |       |
-| קידומת | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------ | ------ | ----------- |
+| כינוי | מחרוזת |             |
+| קידומת | מחרוזת |             |
 
 ### camelCase
 
@@ -40,9 +40,9 @@ camelCase מחרוזת מקווקו (`border-width` → `borderWidth`, `z-index`
 
 #### פרמטרים
 
-| שם     | הקלד   | תיאור |
-| ------ | ------ | ----- |
-| מקווקו | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------ | ------ | ----------- |
+| מקווקו | מחרוזת |             |
 
 ### camelCaseName
 
@@ -94,7 +94,6 @@ export type DtcgGroup = Record<string, unknown>;
 
 קבוצת DTCG node (אובייקט של קבוצות/אסימונים מקוננים בתוספת מטא נתונים של `קבוצת DTCG node (אובייקט של קבוצות/אסימונים מקוננים בתוספת מטא נתונים של ).
  `$`
-
 ### DtcgToken
 
 **סוג:** ממשק
@@ -118,9 +117,9 @@ function flattenTokens(document_: DtcgGroup): TokenRecord[];
 
 #### פרמטרים
 
-| שם    | הקלד      | תיאור |
-| ----- | --------- | ----- |
-| מסמך_ | DtcgGroup |       |
+| שם | הקלד | תיאור |
+| --------- | --------- | ----------- |
+| מסמך_ | DtcgGroup |             |
 
 ### formatColorValue
 
@@ -134,9 +133,9 @@ function formatColorValue(value: DtcgColorValue): string;
 
 #### פרמטרים
 
-| שם  | הקלד           | תיאור |
-| --- | -------------- | ----- |
-| ערך | DtcgColorValue |       |
+| שם | הקלד | תיאור |
+| ----- | -------------- | ----------- |
+| ערך | DtcgColorValue |             |
 
 ### formatCssColor
 
@@ -150,9 +149,9 @@ function formatCssColor(value: DtcgColorValue): string;
 
 #### פרמטרים
 
-| שם  | הקלד           | תיאור |
-| --- | -------------- | ----- |
-| ערך | DtcgColorValue |       |
+| שם | הקלד | תיאור |
+| ----- | -------------- | ----------- |
+| ערך | DtcgColorValue |             |
 
 ### formatCssValue
 
@@ -162,13 +161,13 @@ function formatCssColor(value: DtcgColorValue): string;
 function formatCssValue(value: unknown): string;
 ```
 
-עצב אסימון `$value` בתור CSS/SCSS מילולי (צבעים מעוגלים; כל השאר מילולית).
+עצב אסימון `$value` בתור CSS/SCSS מילולי (צבעים מעוגלים; מערכים הופכים לרשימות מופרדות בפסיקים).
 
 #### פרמטרים
 
-| שם  | הקלד    | תיאור |
-| --- | ------- | ----- |
-| ערך | לא ידוע |       |
+| שם | הקלד | תיאור |
+| ----- | ------- | ----------- |
+| ערך | לא ידוע |             |
 
 ### groupLabel
 
@@ -192,10 +191,10 @@ function resolveAlias(alias: string, document_: DtcgGroup): unknown;
 
 #### פרמטרים
 
-| שם    | הקלד      | תיאור |
-| ----- | --------- | ----- |
-| כינוי | מחרוזת    |       |
-| מסמך_ | DtcgGroup |       |
+| שם | הקלד | תיאור |
+| --------- | --------- | ----------- |
+| כינוי | מחרוזת |             |
+| מסמך_ | DtcgGroup |             |
 
 ### resolveTsValue
 
@@ -207,13 +206,14 @@ function resolveTsValue(value: unknown): string | number;
 
 פתרו DTCG `$value` לערך ה-JavaScript המילולי בשימוש בקובץ שנוצר
 מודול TypeScript: צבעים הופכים למחרוזת `oklab(...)` שלהם, המספרים נשארים
-מספרים, וכל השאר (מידות, ערימות משפחת גופנים,...) נשאר כמחרוזת.
+מספרים, מערכים הופכים לרשימות מופרדות בפסיקים וכל השאר
+(מידות, ערימות משפחת גופנים, ...) נשארת כמחרוזת.
 
 #### פרמטרים
 
-| שם  | הקלד    | תיאור |
-| --- | ------- | ----- |
-| ערך | לא ידוע |       |
+| שם | הקלד | תיאור |
+| ----- | ------- | ----------- |
+| ערך | לא ידוע |             |
 
 ### TokenRecord
 
@@ -246,9 +246,9 @@ function generateTokens(options: TokensPluginOptions): void;
 
 #### פרמטרים
 
-| שם       | הקלד                | תיאור |
-| -------- | ------------------- | ----- |
-| אפשרויות | TokensPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------- | ----------- |
+| אפשרויות | TokensPluginOptions |             |
 
 ### TokensPluginOptions
 
@@ -290,17 +290,17 @@ function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGro
 ישירות, אז ייבוא `scss/tokens` מספיק כדי להצמיד תת-עץ (או את כולו
 מסמך) לתכנית אחת - אין ייבוא נפרד של `scss/themes/{light,dark}`
 נדרש וההתנהגות אינה תלויה עוד בהזמנת הייבוא. כי ה
-אסימוני צבע `light-dark()` לעיל נפתרים כנגד ה-`color-scheme` _משומש_,
+אסימוני צבע `light-dark()` לעיל פותרים נגד ה-_used_ `color-scheme`,
 הגדרת אותו על אלמנט `[data-theme]` ערכות נושא מחדש של האלמנט הזה וכל שלו
 צאצאים מבלי להגדיר מחדש מאפיין מותאם אישית בצבע אחד.
 
 #### פרמטרים
 
-| שם            | הקלד      | תיאור |
-| ------------- | --------- | ----- |
-| lightDocument | DtcgGroup |       |
-| darkDocument  | DtcgGroup |       |
-| קידומת        |           |       |
+| שם | הקלד | תיאור |
+| ------------- | --------- | ----------- |
+| lightDocument | DtcgGroup |             |
+| darkDocument | DtcgGroup |             |
+| קידומת |           |             |
 
 ### buildPropertyRule
 
@@ -316,32 +316,31 @@ function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable 
 משתנה `בנו את הרישום CSS `@property` עבור נכס מותאם אישית יחיד.
 
 כאשר `useScssVariable` מוגדר, ה-`initial-value` מסתדר להתאמה
-משתנה מקומי (`$<token>`) הנפלט באותו קובץ, תוך שמירה על
+משתנה  מקומי (`$<token>`) הנפלט באותו קובץ, תוך שמירה על
 רישום מסונכרן עם מקור האמת המשתנה `בנו את הרישום CSS `@property` עבור נכס מותאם אישית יחיד.
 
 כאשר `useScssVariable` מוגדר, ה-`initial-value` מסתדר להתאמה
 משתנה `בנו את הרישום CSS `@property` עבור נכס מותאם אישית יחיד.
 
 כאשר `useScssVariable` מוגדר, ה-`initial-value` מסתדר להתאמה
-משתנה מקומי (`$<token>`) הנפלט באותו קובץ, תוך שמירה על
+משתנה  מקומי (`$<token>`) הנפלט באותו קובץ, תוך שמירה על
 רישום מסונכרן עם מקור האמת המשתנה ; אחרת את
 מילולי `$value` מוטבע.
 
 `@property` לא אוניברסלי דורש מכשיר בלתי תלוי חישובי
 `initial-value` (ללא `var()`, `light-dark()` או יחידות יחסיות), כך שה
-תחביר `*` אוניברסלי משמיט אותו. כל מה שהערך שלו הוא הפניה `var()`
-(שדות הטיפוגרפיה) או מילולית שאינה ניתנת להקלדה (צללים, עיקולים מקלים,
-font-family stacks) לכן נרשם תחת `*` ללא `initial-value`.
-`$`
-
+תחביר `*` אוניברסלי משמיט אותו. ערכים שהערך שלהם הוא הפניה `var()` (ה
+שדות טיפוגרפיה) או יחידות אורך יחסיות (rem, em, vw וכו') לכן נרשמות
+תחת `*` ללא `initial-value`.
+ `$`
 #### פרמטרים
 
-| שם              | הקלד        | תיאור |
-| --------------- | ----------- | ----- |
-| שיא             | TokenRecord |       |
-| קידומת          | מחרוזת      |       |
-| useScssVariable |             |       |
-| cssNamespace    | מחרוזת      |       |
+| שם | הקלד | תיאור |
+| --------------- | ----------- | ----------- |
+| שיא | TokenRecord |             |
+| קידומת | מחרוזת |             |
+| useScssVariable |             |             |
+| cssNamespace | מחרוזת |             |
 
 ### buildScssVariables
 
@@ -356,16 +355,16 @@ function buildScssVariables(
 ): string;
 ```
 
-לא סופק תיאור.
+בונה בלוקי הצהרת משתנה SCSS סטנדרטיים מקובצים לפי קטגוריית אסימון.
 
 #### פרמטרים
 
-| שם           | הקלד                | תיאור |
-| ------------ | ------------------- | ----- |
-| רשומות       | TokenRecord[]       |       |
-| קידומת       |                     |       |
-| cssNamespace | מחרוזת              |       |
-| מרחבי רכיבים | ReadonlySet<string> |       |
+| שם | הקלד | תיאור |
+| ------------------- | ------------------- | ----------- |
+| רשומות | TokenRecord[] |             |
+| קידומת |                     |             |
+| cssNamespace | מחרוזת |             |
+| מרחבי componentName | ReadonlySet<string> |             |
 
 ### buildScssVariablesScss
 
@@ -381,22 +380,21 @@ function buildScssVariablesScss(
 ```
 
 בנו חלקי `בנו חלקי -variables-only ללא CSS (כותרת + ה-{@link buildScssVariables}
-גוף, ללא `:root`/`@property` CSS). נפלט כ-`scss/_<file>-vars.scss`כל כך פנימי
-צרכנים (למשל`scss/_mixins.scss`) יכולים לקרוא את ערך `בנו חלקי `בנו חלקי -variables-only ללא CSS (כותרת + ה-{@link buildScssVariables}
-גוף, ללא `:root`/`@property` CSS). נפלט כ-`scss/_<file>-vars.scss`כל כך פנימי
-צרכנים (למשל`scss/_mixins.scss`) יכולים לקרוא את ערך  של אסימון בזמן הידור
-בלי `@use`-לבצע את החלק המלא - מה שידלוף את `:root`/`@property`CSS שלו
+גוף, ללא `:root`/`@property` CSS). נפלט כ-`scss/_<file>-vars.scss` כל כך פנימי
+צרכנים (למשל `scss/_mixins.scss`) יכולים לקרוא את ערך `בנו חלקי `בנו חלקי -variables-only ללא CSS (כותרת + ה-{@link buildScssVariables}
+גוף, ללא `:root`/`@property` CSS). נפלט כ-`scss/_<file>-vars.scss` כל כך פנימי
+צרכנים (למשל `scss/_mixins.scss`) יכולים לקרוא את ערך  של אסימון בזמן הידור
+בלי `@use`-לבצע את החלק המלא - מה שידליף את ה-`:root`/`@property` CSS שלו
 לכל גיליון סגנונות צורך.
-`$`
-
+ `$`
 #### פרמטרים
 
-| שם           | הקלד                | תיאור |
-| ------------ | ------------------- | ----- |
-| רשומות       | TokenRecord[]       |       |
-| קידומת       |                     |       |
-| cssNamespace | מחרוזת              |       |
-| מרחבי רכיבים | ReadonlySet<string> |       |
+| שם | הקלד | תיאור |
+| ------------------- | ------------------- | ----------- |
+| רשומות | TokenRecord[] |             |
+| קידומת |                     |             |
+| cssNamespace | מחרוזת |             |
+| מרחבי componentName | ReadonlySet<string> |             |
 
 ### buildStructuralScss
 
@@ -408,34 +406,46 @@ function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', c
 
 בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
 ורישום `@property` תואם לכל אסימון (עם `initial-value`s
-נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`ורישום`@property`תואם לכל אסימון (עם`initial-value`s
-נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`שכבה. משתני`בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
+נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
 ורישום `@property` תואם לכל אסימון (עם `initial-value`s
-נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`ורישום`@property`תואם לכל אסימון (עם`initial-value`s
-נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`שכבה. משתני  עצמם חיים ב-CSS הנלווה ללא`_<file>-vars.scss`חלקי (ראה {@link buildScssVariablesScss}); החלקי הזה`@use`s it (כדי לשלב את הערכים לתוך בלוקים `:root`/`@property`) ו
-`@forward`s זה (כך שצרכנים במורד הזרם של `_<file>.scss`עדיין רואים את`בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
+נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`
+שכבה. משתני `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
 ורישום `@property` תואם לכל אסימון (עם `initial-value`s
-נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`ורישום`@property`תואם לכל אסימון (עם`initial-value`s
-נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`שכבה. משתני`בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
+נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
 ורישום `@property` תואם לכל אסימון (עם `initial-value`s
-נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`ורישום`@property`תואם לכל אסימון (עם`initial-value`s
-נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`שכבה. משתני  עצמם חיים ב-CSS הנלווה ללא`_<file>-vars.scss`חלקי (ראה {@link buildScssVariablesScss}); החלקי הזה`@use`s it (כדי לשלב את הערכים לתוך בלוקים `:root`/`@property`) ו
+נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`
+שכבה. משתני  עצמם חיים ב-CSS הנלווה ללא
+`_<file>-vars.scss` חלקי (ראה {@link buildScssVariablesScss}); החלקי הזה
+`@use`s it (כדי לשלב את הערכים לתוך בלוקים `:root`/`@property`) ו
+`@forward`s זה (כך שצרכנים במורד הזרם של `_<file>.scss` עדיין רואים את
+`בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
+ורישום `@property` תואם לכל אסימון (עם `initial-value`s
+נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
+ורישום `@property` תואם לכל אסימון (עם `initial-value`s
+נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`
+שכבה. משתני `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
+ורישום `@property` תואם לכל אסימון (עם `initial-value`s
+נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
+ורישום `@property` תואם לכל אסימון (עם `initial-value`s
+נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`
+שכבה. משתני  עצמם חיים ב-CSS הנלווה ללא
+`_<file>-vars.scss` חלקי (ראה {@link buildScssVariablesScss}); החלקי הזה
+`@use`s it (כדי לשלב את הערכים לתוך בלוקים `:root`/`@property`) ו
 `@forward`s זה (כך שצרכנים במורד הזרם של `_<file>.scss` עדיין רואים את
 -משתנים). פלטת הצבעים והטיפוגרפיה המרוכבת נפלטים שניהם
 דרך השביל הזה.
 
 `file` הוא שם בסיס המקור/פלט (למשל `'radius'`), המשמש להפניה ל-
 נלווה `'<file>-vars'` חלקי.
-`$`
-
+ `$`
 #### פרמטרים
 
-| שם           | הקלד          | תיאור |
-| ------------ | ------------- | ----- |
-| רשומות       | TokenRecord[] |       |
-| קידומת       |               |       |
-| קובץ         |               |       |
-| cssNamespace | מחרוזת        |       |
+| שם | הקלד | תיאור |
+| ------------ | ------------- | ----------- |
+| רשומות | TokenRecord[] |             |
+| קידומת |               |             |
+| קובץ |               |             |
+| cssNamespace | מחרוזת |             |
 
 ### buildTypographyRecords
 
@@ -455,10 +465,33 @@ function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): Toke
 
 #### פרמטרים
 
-| שם             | הקלד      | תיאור |
-| -------------- | --------- | ----- |
-| טיפוגרפיהקבוצה | DtcgGroup |       |
-| קידומת         |           |       |
+| שם | הקלד | תיאור |
+| --------------- | --------- | ----------- |
+| טיפוגרפיהקבוצה | DtcgGroup |             |
+| קידומת |           |             |
+
+### הוא עצמאי מבחינה חישובית
+
+פונקציה **סוג:**
+
+```typescript
+function isComputationallyIndependent(record: TokenRecord): boolean;
+```
+
+בודק אם ערך אסימון אינו תלוי מבחינה חישובית ותקף כ-
+`initial-value` עבור רישום CSS מוקלד `@property` תחת W3C CSS
+מפרט מאפיינים וערכים API ברמה 1.
+
+ערכים המתייחסים ל-`var()`, `light-dark()`, `env()`, יחידות יחסיות של גופן
+(`rem`, `em` וכו'), יחידות יחסיות של נקודת מבט/מיכל (`vw`, `vh`, `cqw` וכו'),
+או `0` ללא יחידה עבור `<length>` אינם עצמאיים מבחינה חישובית וחייבים
+להשמיט את מתאר `initial-value` על ידי חזרה לתחביר `'*'` האוניברסלי.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ----------- | ----------- |
+| שיא | TokenRecord |             |
 
 ### טיפוגרפיה ערכים
 
@@ -472,9 +505,9 @@ function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>;
 
 #### פרמטרים
 
-| שם    | הקלד      | תיאור |
-| ----- | --------- | ----- |
-| קבוצה | DtcgGroup |       |
+| שם | הקלד | תיאור |
+| ----- | --------- | ----------- |
+| קבוצה | DtcgGroup |             |
 
 ## `src/generators/typescript`
 
@@ -490,9 +523,9 @@ function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): stri
 
 #### פרמטרים
 
-| שם     | הקלד                                  | תיאור |
-| ------ | ------------------------------------- | ----- |
-| מקורות | מערך<string \| TokenModuleDescriptor> |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------------------------- | ----------- |
+| מקורות | מערך<string \| TokenModuleDescriptor> |             |
 
 ### buildTokenModule
 
@@ -503,7 +536,7 @@ function buildTokenModule(
   basename: string,
   document_: DtcgGroup,
   aliasDocument?: DtcgGroup,
-  exportName = camelCase(basename),
+  exportName: string = camelCase(basename),
 ): string;
 ```
 
@@ -518,12 +551,12 @@ function buildTokenModule(
 
 #### פרמטרים
 
-| שם            | הקלד      | תיאור |
-| ------------- | --------- | ----- |
-| basename      | מחרוזת    |       |
-| מסמך_         | DtcgGroup |       |
-| aliasDocument | DtcgGroup |       |
-| ייצואשם       |           |       |
+| שם | הקלד | תיאור |
+| ------------- | --------- | ----------- |
+| basename | מחרוזת |             |
+| מסמך_ | DtcgGroup |             |
+| aliasDocument | DtcgGroup |             |
+| ייצואשם | מחרוזת |             |
 
 ## `src/index`
 
@@ -535,25 +568,25 @@ function buildTokenModule(
 function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
-תוסף Vite שמייצר את חפצי האמנות העיצוביים של פלטפורמת המשימה מה-
+תוסף Vite שמייצר את חפצי אסימון העיצוב של Mission Platform מה-
 מקורות DTCG (https://www.designtokens.org/) תוך שימוש במנהג עצמאי
 מחולל - לא מעורב CLI חיצוני. כל מקור `*.tokens.json` מניב א
-תואם `generated/scss/<file>.scss` (משתני `תוסף Vite שמייצר את חפצי האמנות העיצוביים של פלטפורמת המשימה מה-
+תואם `generated/scss/<file>.scss` (משתני `תוסף Vite שמייצר את חפצי אסימון העיצוב של Mission Platform מה-
 מקורות DTCG (https://www.designtokens.org/) תוך שימוש במנהג עצמאי
-מחולל - לא מעורב CLI חיצוני. כל מקור `_.tokens.json`מניב א
-תואם`generated/scss/<file>.scss`(משתני  עצמאיים,`--mp-_`מאפיינים מותאמים אישית, והרישומים שלהם`@property`) ו-`as const`מקונן
-מודול`generated/ts/<file>.ts`, לצד `generated/_tokens.scss`(SCSS
-חבית) ואגרגטים`generated/tokens.ts` (TypeScript חבית).
+מחולל - לא מעורב CLI חיצוני. כל מקור `*.tokens.json` מניב א
+תואם `generated/scss/<file>.scss` (משתני  עצמאיים, `--mp-*`
+מאפיינים מותאמים אישית, והרישומים שלהם `@property`) ו-`as const` מקונן
+מודול `generated/ts/<file>.ts`, לצד `generated/_tokens.scss` (SCSS
+חבית) ואגרגטים `generated/tokens.ts` (TypeScript חבית).
 
-הדור פועל בהוק `buildStart` הרולאפ, כך שהחפצים מיוצרים
+הדור פועל ב-rollup `buildStart` וו, כך שהחפצים מיוצרים
 עבור `vite build`, `vite build --watch` ושרת הפיתוח כאחד.
-`$`
-
+ `$`
 #### פרמטרים
 
-| שם       | הקלד                | תיאור |
-| -------- | ------------------- | ----- |
-| אפשרויות | TokensPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------- | ----------- |
+| אפשרויות | TokensPluginOptions |             |
 
 ### tokensPlugin
 
@@ -563,25 +596,25 @@ function tokensPlugin(options: TokensPluginOptions): Plugin;
 function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
-תוסף Vite שמייצר את חפצי האמנות העיצוביים של פלטפורמת המשימה מה-
+תוסף Vite שמייצר את חפצי אסימון העיצוב של Mission Platform מה-
 מקורות DTCG (https://www.designtokens.org/) תוך שימוש במנהג עצמאי
 מחולל - לא מעורב CLI חיצוני. כל מקור `*.tokens.json` מניב א
-תואם `generated/scss/<file>.scss` (משתני `תוסף Vite שמייצר את חפצי האמנות העיצוביים של פלטפורמת המשימה מה-
+תואם `generated/scss/<file>.scss` (משתני `תוסף Vite שמייצר את חפצי אסימון העיצוב של Mission Platform מה-
 מקורות DTCG (https://www.designtokens.org/) תוך שימוש במנהג עצמאי
-מחולל - לא מעורב CLI חיצוני. כל מקור `_.tokens.json`מניב א
-תואם`generated/scss/<file>.scss`(משתני  עצמאיים,`--mp-_`מאפיינים מותאמים אישית, והרישומים שלהם`@property`) ו-`as const`מקונן
-מודול`generated/ts/<file>.ts`, לצד `generated/_tokens.scss`(SCSS
-חבית) ואגרגטים`generated/tokens.ts` (TypeScript חבית).
+מחולל - לא מעורב CLI חיצוני. כל מקור `*.tokens.json` מניב א
+תואם `generated/scss/<file>.scss` (משתני  עצמאיים, `--mp-*`
+מאפיינים מותאמים אישית, והרישומים שלהם `@property`) ו-`as const` מקונן
+מודול `generated/ts/<file>.ts`, לצד `generated/_tokens.scss` (SCSS
+חבית) ואגרגטים `generated/tokens.ts` (TypeScript חבית).
 
-הדור פועל בהוק `buildStart` הרולאפ, כך שהחפצים מיוצרים
+הדור פועל ב-rollup `buildStart` וו, כך שהחפצים מיוצרים
 עבור `vite build`, `vite build --watch` ושרת הפיתוח כאחד.
-`$`
-
+ `$`
 #### פרמטרים
 
-| שם       | הקלד                | תיאור |
-| -------- | ------------------- | ----- |
-| אפשרויות | TokensPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------- | ----------- |
+| אפשרויות | TokensPluginOptions |             |
 
 ## `src/reachability`
 
@@ -597,9 +630,9 @@ function collectTokenReachability(options: TokenReachabilityOptions): TokenReach
 
 #### פרמטרים
 
-| שם       | הקלד                     | תיאור |
-| -------- | ------------------------ | ----- |
-| אפשרויות | TokenReachabilityOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------------ | ----------- |
+| אפשרויות | TokenReachabilityOptions |             |
 
 ### TokenAliasEdge
 
@@ -673,7 +706,7 @@ function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath:
 
 #### פרמטרים
 
-| שם       | הקלד                    | תיאור |
-| -------- | ----------------------- | ----- |
-| דיווח    | TokenReachabilityReport |       |
-| filePath | מחרוזת                  |       |
+| שם | הקלד | תיאור |
+| -------- | ----------------------- | ----------- |
+| דיווח | TokenReachabilityReport |             |
+| filePath | מחרוזת |             |

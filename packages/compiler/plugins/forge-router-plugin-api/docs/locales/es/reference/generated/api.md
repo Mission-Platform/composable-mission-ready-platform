@@ -27,8 +27,8 @@ Cree un diagnóstico de origen local para una falla del compilador del enrutador
 
 #### Parámetros
 
-| Nombre      | Tipo                                                                                                | Descripción |
-| ----------- | --------------------------------------------------------------------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------------------------------------------------------------- | ----------- |
 | diagnóstico | Omitir<CompilerDiagnostic, "phase" \| "fileName"> & { nombre de archivo de solo lectura?: cadena; } |             |
 
 ### definirForgeRouterPlugin
@@ -43,9 +43,9 @@ Valide los metadatos del complemento del enrutador antes de que ingrese al proce
 
 #### Parámetros
 
-| Nombre      | Tipo | Descripción |
-| ----------- | ---- | ----------- |
-| complemento | T    |             |
+| Nombre | Tipo | Descripción |
+| ------ | ---- | ----------- |
+| complemento | T |             |
 
 ### definirForgeRouterTarget
 
@@ -67,8 +67,8 @@ enrutadores basados en archivos o solo de servidor.
 
 #### Parámetros
 
-| Nombre   | Tipo                               | Descripción |
-| -------- | ---------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------------ | ----------- |
 | opciones | Opciones de destino de ForgeRouter |             |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
@@ -81,7 +81,7 @@ export const FORGE_ROUTER_RUNTIME_EXPORTS;
 
 Exportaciones de tiempo de ejecución neutrales que preservan el contrato del autor del paquete.
 
-Destinos que no pueden cambiar el nombre de los ganchos nativos 1:1 (por ejemplo, React
+Objetivos que no pueden cambiar el nombre de los ganchos nativos 1:1 (por ejemplo, React
 `useNavigate` vs neutral `useMpRouter().navigate`) debe exponer estos nombres
 desde un módulo de tiempo de ejecución de destino y apunte {@link ForgeRouterTargetOptions.runtimeModule}
 en ese módulo.
@@ -282,10 +282,10 @@ Encuentre un destino de enrutador directo o seleccionado por ID sin acoplarlo a 
 
 #### Parámetros
 
-| Nombre       | Tipo                                                | Descripción |
-| ------------ | --------------------------------------------------- | ----------- |
-| selección    | Selección de complemento de enrutador \| indefinido |             |
-| complementos | Sólo lectura RouterOutputPlugin[]                   |             |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------------------------- | ----------- |
+| selección | Selección de complemento de enrutador \| indefinido |             |
+| complementos | Sólo lectura RouterOutputPlugin[] |             |
 
 ### Capacidades de enrutador no admitidas
 
@@ -302,7 +302,7 @@ Informe las brechas de capacidad antes de que un objetivo tenga la oportunidad d
 
 #### Parámetros
 
-| Nombre      | Tipo                                              | Descripción |
-| ----------- | ------------------------------------------------- | ----------- |
-| ir          | Módulo de capacidad del enrutador                 |             |
+| Nombre | Tipo | Descripción |
+| ------ | ------------------------------- | ----------- |
+| ir | Módulo de capacidad del enrutador |             |
 | complemento | Complemento de salida del enrutador \| indefinido |             |

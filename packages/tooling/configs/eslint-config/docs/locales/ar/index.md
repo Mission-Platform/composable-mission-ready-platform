@@ -5,7 +5,7 @@
 > packages/tooling/configs/eslint-config/docs/index.md: [packages/tooling/configs/eslint-config/docs/index.md](../../index.md)
 > اللغة: العربية (ar)
 
-شقة مشتركة ESLint التكوين لمساحات عمل Mission Platform.
+تكوين ESLint المسطح المشترك لمساحات عمل Mission Platform.
 
 ## التثبيت والاستخدام
 
@@ -22,14 +22,14 @@ import baseConfig from '@mission-platform/eslint-config';
 export default [...baseConfig];
 ```
 
-تتضمن الحزمة TypeScript, Vue 3، إمكانية الوصول، الاستيراد، Turbo، و
+تتضمن الحزمة TypeScript وVue 3 وإمكانية الوصول والاستيراد وTurbo و
 تكامل التنسيق. قم بإضافة قواعد خاصة بمساحة العمل فقط للسلوك الذي
-لا يمكن مشاركتها. انظر [ ESLint مرجع](reference/eslint.md) ل
+لا يمكن مشاركتها. راجع [مرجع ESLint](reference/eslint.md) للتعرف على
 وشملت الإضافات والأوامر.
 
 ## يساهم
 
-يجري `pnpm --filter @mission-platform/eslint-config lint` و
+قم بتشغيل `pnpm --filter @mission-platform/eslint-config lint` و
 `pnpm --filter @mission-platform/eslint-config format` بعد تغيير القواعد.
 إبقاء الحزمة على علم بإطار عمل الحزمة ولكن مع حياد مساحة العمل؛ ينبغي للتطبيقات
 عدم استيراد القواعد من مساحة عمل أخرى.

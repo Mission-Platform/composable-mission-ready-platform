@@ -1,4 +1,4 @@
-# @mission-platform/forge-router-react مرجع واجهة برمجة التطبيقات
+# مرجع @mission-platform/forge-router-react API
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
@@ -24,13 +24,13 @@ function createReactRouterCapabilities(input: {
 }): MpRouterCapabilities;
 ```
 
-بناء قدرات محايدة من React أساسيات جهاز التوجيه (خالية من الخطاف للاختبارات).
+قم ببناء قدرات محايدة من أساسيات جهاز التوجيه React (خالية من الخطاف للاختبارات).
 
 #### حدود
 
-| الاسم   | اكتب                                                                                                                                                        | الوصف |
-| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| الإدخال | { الموقع: { اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة: سلسلة }; المعلمات؟: سجل<string, string \| undefined>; التنقل: NavigateFunction؛ المنفذ؟: غير معروف؛ } |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| الإدخال | { الموقع: { اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة: سلسلة }; المعلمات ؟: Record<string, string \| undefined>; التنقل: NavigateFunction؛ المنفذ؟: غير معروف؛ } |             |
 
 ### ResolveMpLink
 
@@ -44,9 +44,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### حدود
 
-| الاسم | اكتب             | الوصف |
-| ----- | ---------------- | ----- |
-| إلى   | مبرووتلوكيشن راو |       |
+| الاسم | اكتب | الوصف |
+| ---- | ------------------ | ----------- |
+| إلى | مبرووتلوكيشن راو |             |
 
 ### toMpLocationFromReact
 
@@ -55,18 +55,18 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 ```typescript
 function toMpLocationFromReact(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
-بناء موقع محايد من React موقع جهاز التوجيه/لقطات المعلمات.
+أنشئ موقعًا محايدًا من لقطات موقع/معلمات جهاز التوجيه React.
 
 #### حدود
 
-| الاسم    | اكتب                                               | الوصف |
-| -------- | -------------------------------------------------- | ----- |
-| الموقع   | {اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة: سلسلة } |       |
-| المعلمات | سِجِلّ<string, string \| undefined>                |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------------------------- | ----------- |
+| الموقع | {اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة: سلسلة } |             |
+| المعلمات | سجل<string, string \| undefined> |             |
 
 ### toReactHref
 
@@ -80,9 +80,9 @@ function toReactHref(to: MpRouteLocationRaw): string;
 
 #### حدود
 
-| الاسم | اكتب             | الوصف |
-| ----- | ---------------- | ----- |
-| إلى   | مبرووتلوكيشن راو |       |
+| الاسم | اكتب | الوصف |
+| ---- | ------------------ | ----------- |
+| إلى | مبرووتلوكيشن راو |             |
 
 ### toReactTo
 
@@ -92,13 +92,13 @@ function toReactHref(to: MpRouteLocationRaw): string;
 function toReactTo(to: MpRouteLocationRaw): To;
 ```
 
-تحويل هدف محايد إلى أ React جهاز التوجيه `To` قيمة.
+تحويل هدف محايد إلى قيمة جهاز التوجيه React `To`.
 
 #### حدود
 
-| الاسم | اكتب             | الوصف |
-| ----- | ---------------- | ----- |
-| إلى   | مبرووتلوكيشن راو |       |
+| الاسم | اكتب | الوصف |
+| ---- | ------------------ | ----------- |
+| إلى | مبرووتلوكيشن راو |             |
 
 ### useMpNavigation
 
@@ -108,7 +108,7 @@ function toReactTo(to: MpRouteLocationRaw): To;
 function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
-اقرأ فقط إمكانيات التنقل/الحل الضرورية.
+اقرأ فقط قدرات التنقل/الحل الضرورية.
 
 ### useMpRoute
 
@@ -128,7 +128,7 @@ function useMpRoute(): MpResolvedLocation | null;
 function useMpRouter(): MpRouterCapabilities;
 ```
 
-اقرأ كائن القدرة المحايدة المدعوم بـ React جهاز التوجيه.
+اقرأ كائن القدرة المحايدة المدعوم بجهاز التوجيه React.
 
 ## `src/utils/forge-router-react`
 
@@ -140,4 +140,4 @@ function useMpRouter(): MpRouterCapabilities;
 export const forgeRouterReact;
 ```
 
-صياغة هدف جهاز التوجيه لتطبيق مملوك React مثيل جهاز التوجيه.
+قم بتكوين هدف جهاز التوجيه لمثيل جهاز التوجيه React المملوك للتطبيق.

@@ -56,20 +56,21 @@ Mission Platform fornisce diversi livelli di supporto per altri framework tramit
 
 - **SolidJS**: utilizza una reattività a grana fine tramite segnali. Evitare di destrutturare gli oggetti di scena per mantenere la reattività.
 - **Svelte 5**: Sfrutta le rune (`$state`, `$derived`, `$effect`) per una reattività moderna.
-- **Componenti Web (acceso)**: utile per creare componenti altamente portabili che devono essere eseguiti in ambienti legacy o senza un framework.
+- **Componenti Web (acceso)**: utile per creare componenti altamente portabili che devono essere eseguiti in ambienti legacy o senza framework.
 
 ## Modelli di prestazioni e reattività
 
-| Quadro       | Modello di reattività | Aggiorna strategia                                 |
-| :----------- | :-------------------- | :------------------------------------------------- |
-| **Vue 3**    | Basato su proxy       | DOM virtuale con ottimizzazioni del compilatore.   |
-| **React**    | Stato immutabile      | Riconciliazione DOM virtuale.                      |
-| **SolidoJS** | Segnali a grana fine  | Aggiornamenti DOM diretti (no VDOM).               |
-| **Svelte 5** | Rune/Segnali          | Aggiornamenti diretti del DOM tramite compilatore. |
-| **Lit**      | Proprietà reattive    | Aggiornamenti asincroni Shadow DOM.                |
+| Quadro | Modello di reattività | Aggiorna strategia |
+| :----------- | :------------------- | :--------------------------------------- |
+| **Vue 3** | Basato su proxy | DOM virtuale con ottimizzazioni del compilatore. |
+| **React** | Stato immutabile | Riconciliazione DOM virtuale.              |
+| **SolidoJS** | Segnali a grana fine | Aggiornamenti DOM diretti (no VDOM).            |
+| **Svelte 5** | Rune/Segnali | Aggiornamenti diretti del DOM tramite compilatore.         |
+| **Lit** | Proprietà reattive | Aggiornamenti asincroni Shadow DOM.         |
 
 ## Risorse correlate
 
 - [Migliori pratiche](best-practices.md)
 - [Guida al test](testing.md)
-- [@mission-platform/forge-jsx LEGGIMI](../../../packages/core/forge-jsx/README.md)
+- [LEGGIMI @mission-platform/forge-jsx](../../../packages/core/forge-jsx/README.md)
+- [LEGGIMI @mission-platform/forge-adapters](../../../packages/core/forge-adapters/README.md)

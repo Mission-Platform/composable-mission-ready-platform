@@ -58,7 +58,7 @@ Metadatos estables consumidos por los complementos del compilador de enrutadores
 **Tipo:** componente
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor;
+export function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 Marcador de enlace neutro. Los destinos nativos reemplazan esta función durante la compilación.
@@ -154,7 +154,7 @@ Una implementación parcial útil para apuntar a adaptadores y arneses de prueba
 **Tipo:** componente
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
+export function MpRouterView(properties: MpRouterViewProps =
 ```
 
 Salida neutra/marcador de vista. Los destinos nativos reemplazan esta función durante la compilación.
@@ -244,7 +244,11 @@ Lea el objeto de capacidad neutral proporcionado por la aplicación.
 **Tipo:** constante
 
 ```typescript
-export const applicationCompatibilityFixtures;
+export const applicationCompatibilityFixtures: {
+  readonly website: ForgeCompatibilityFixture;
+  readonly myCareNotes: ForgeCompatibilityFixture;
+  readonly guardsAndLazy: ForgeCompatibilityFixture;
+};
 ```
 
 No se proporciona descripción.

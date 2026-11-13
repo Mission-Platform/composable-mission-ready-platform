@@ -34,9 +34,9 @@ callback-prop `onRemove`（Vue `remove` 发出替代品）。
 
 #### 参数
 
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 属性 | 只读<TagProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------- | ----------- |
+|属性 |只读<TagProperties> |             |
 
 ### 标签属性
 
@@ -83,9 +83,9 @@ function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherPropert
 
 #### 参数
 
-| 名称 | 类型                                  | 描述 |
-| ---- | ------------------------------------- | ---- |
-| 属性 | 只读<ForgeLanguageSwitcherProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------------------- | ----------- |
+|属性 |只读<ForgeLanguageSwitcherProperties> |             |
 
 ### Forge语言切换选项
 
@@ -123,7 +123,7 @@ Vue 由 `@mission-platform/vite-plugin-forge` 提供。
 
 选定的值呈现为可移动的{@link ForgeTag}芯片；内联搜索
 输入过滤列表框中显示的其余选项。选择是
-通过已建立的 `modelValue`（`(string | number)[]`）进行控制 +
+通过已建立的 `modelValue`（`(string | number)[]`）+ 进行控制
 `onUpdateModelValue`/`onChange` 回调属性约定，以及直观的
 隐藏的本机 `<select multiple>` 保持自动填充/本机提交工作。
 它通过并置的 CSS 模块拥有自己的样式
@@ -133,22 +133,22 @@ Vue 由 `@mission-platform/vite-plugin-forge` 提供。
 （本身编译为 React/Vue），通过中性命名槽 **passing** 组成
 语法：标签/搜索组合框被传递到下拉列表的 `trigger` 插槽
 (`slot="trigger"`) 并且 `<ul role="listbox">` 成为其默认插槽，因此
-该面板通过 `<Teleport>` 传送并通过 CSS Anchor 锚定
+该面板通过 `<Teleport>` 进行传送并使用 CSS Anchor 进行锚定
 定位而不是就地列表。内部 `useState` 打开标志是
 通过 `onUpdateOpen` 回调与下拉列表保持同步。
 
 原始 Vue SFC 的其他替换：搜索查询变为
 内部 `useState` 字符串； `useId` 可组合项映射到
-框架原生 `useId` 钩子； V 形是一次性写入 `@mission-platform/icons`
+框架原生 `useId` 挂钩； V 形是一次性写入 `@mission-platform/icons`
 `ForgeIconChevron`（通过其 `direction` 属性旋转，本身编译为
 React/Vue); `useI18n` 字符串变为纯文本；并且 `v-model` + 发出
 成为回调道具。
 
 #### 参数
 
-| 名称 | 类型                        | 描述 |
-| ---- | --------------------------- | ---- |
-| 属性 | 只读<MultiselectProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------- | ----------- |
+|属性 |只读<MultiselectProperties> |             |
 
 ### 多选选项
 
@@ -182,6 +182,26 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 ## `src/components/molecules/forge-select/forge-select`
 
+### 锻造组合框
+
+**种类：**常数
+
+```typescript
+export const ForgeCombobox: typeof ForgeSelect;
+```
+
+没有提供描述。
+
+### ForgeCombobox道具
+
+**种类：**类型
+
+```typescript
+export type ForgeComboboxProps = SelectProperties;
+```
+
+没有提供描述。
+
 ### 锻造选择
 
 **种类：**功能
@@ -190,40 +210,24 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
-`ForgeSelect` — 在中性 JSX 中创作一次的自定义组合框/选择
-方言并直接编译为 React 或 Vue
-`@mission-platform/vite-plugin-forge`。
-
-默认情况下（`searchable`，默认值）触发器是一个过滤的文本字段
-用户键入的选项 - 镜像 {@link ForgeMultiselect} - 所以一个值
-可以通过搜索而不是滚动找到；设置 `searchable={false}` 为
-普通按钮触发器。无论哪种方式，列表框都由视觉上隐藏的支持
-本机 `<select>` 因此浏览器自动填充和本机表单提交继续工作。
-使用已建立的 `modelValue` + 控制选择
-`onUpdateModelValue`/`onChange` 回调属性约定。它有它的风格
-通过位于同一位置的 CSS 模块 `forge-select.module.scss`。
-
-浮动列表框通过一次写入 **`ForgeDropdown`** 进行渲染
-（本身编译为 React/Vue），通过中性命名槽 **passing** 组成
-语法：组合框包装器被传递到下拉列表的 `trigger` 插槽
-(`slot="trigger"`) 并且 `<ul role="listbox">` 成为其默认插槽，因此
-该面板通过 `<Teleport>` 传送并通过 CSS Anchor 锚定
-定位而不是就地绝对定位列表。内部
-`useState` 打开标志通过其下拉列表保持同步
-`onUpdateOpen` 回调。
-
-原始 Vue SFC 的其他替换：`useId` 可组合项映射到
-框架原生 `useId` 挂钩； V 形是一次写入
-`@mission-platform/icons` `ForgeIconChevron`（通过其 `direction` 属性旋转，
-本身编译为 React/Vue)； `useI18n` 字符串变为纯文本；和
-`v-model` + 发出成为回调道具。 `start`/`end` 命名插槽是
-保留为中性命名槽。
+ForgeSelect 组件提供了一个可访问的、框架中立的选择控件
+支持实时过滤、异步搜索、键盘导航和自定义插槽。
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 属性 | 只读<SelectProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------- | ----------- |
+|属性 |只读<SelectProperties> |             |
+
+### ForgeSelect道具
+
+**种类：**类型
+
+```typescript
+export type ForgeSelectProps = SelectProperties;
+```
+
+没有提供描述。
 
 ### 选择选项
 

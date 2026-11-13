@@ -63,9 +63,9 @@ helper)، ويرسم رمز الحالة مع الكتابة مرة واحدة
 
 #### حدود
 
-| الاسم | اكتب                               | الوصف |
-| ----- | ---------------------------------- | ----- |
-| خصائص | للقراءة فقط<AlertBannerProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------- | ----------- |
+| خصائص | للقراءة فقط<AlertBannerProperties> |             |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -77,7 +77,7 @@ helper)، ويرسم رمز الحالة مع الكتابة مرة واحدة
 export type DropdownPlacement = 'bottom-start' | 'bottom-end' | 'bottom' | 'top-start' | 'top-end' | 'top';
 ```
 
-الموضع المفضل للوحة المنسدلة بالنسبة إلى مشغلها.
+الموضع المفضل للوحة المنسدلة بالنسبة لمشغلها.
 
 ### خصائص المنسدلة
 
@@ -106,7 +106,7 @@ function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement;
 `@mission-platform/vite-plugin-forge`)، لذلك يتم عرضه في `document.body` و
 يفلت من أي سياق `overflow`/stacking؛ يتم تركيب البوابة فقط في حين
 `open`. ويظل مرتبطًا بمشغله باستخدام CSS Anchor Positioning API
-بدلاً من `@floating-ui`: يعلن المشغل عن `anchor-name` فريد من نوعه،
+بدلاً من `@floating-ui`: يعلن المشغل عن `anchor-name` المضمّن الفريد،
 وترتبط اللوحة المنقولة بها باستخدام `position-anchor` + `position-area`
 (مشتق من `placement`)، مع التقليب عبر `position-try-fallbacks`. متى
 يتم ضبط `matchTriggerWidth` على أحجام اللوحة `min-width` على المشغل باستخدام
@@ -115,8 +115,8 @@ CSS `anchor-size(width)` — لا يوجد قياس JS.
 يتم أيضًا ترقية اللوحة المنقولة فوريًا إلى المتصفح **الطبقة العليا** عبر
 واجهة برمجة تطبيقات Popover الأصلية (`popover="manual"` + `showPopover()`): `z-index` عادي
 لا يمكن أبدًا أن يرتفع فوق مربع حوار/مشروط `<dialog>` أصلي مفتوح (والذي يعيش في
-الطبقة العليا)، لذلك تختار اللوحة الطبقة العليا نفسها لتظل في الأعلى
-`ForgeModal`/`ForgeDialog`. يبقى `z-index` الثابت في CSS هو البديل
+الطبقة العليا)، لذا تختار اللوحة الطبقة العليا نفسها لتظل في الأعلى
+`ForgeModal`/`ForgeDialog`. يظل `z-index` الثابت في CSS هو البديل
 للمتصفحات التي لا تدعم Popover API (توجد السمة `popover`
 يتم تجاهلها ويتم عرض اللوحة بالتدفق الطبيعي).
 
@@ -139,9 +139,9 @@ CSS `anchor-size(width)` — لا يوجد قياس JS.
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<DropdownProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<DropdownProperties> |             |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -162,7 +162,7 @@ function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 `@mission-platform/vite-plugin-forge`)، لذلك يتم عرضه في `document.body` و
 يفلت من أي سياق `overflow`/stacking؛ يتم تركيب البوابة فقط في حين
 `open`. ويظل مرتبطًا بمشغله باستخدام CSS Anchor Positioning API
-بدلاً من `@floating-ui`: يعلن المشغل عن `anchor-name` فريد من نوعه،
+بدلاً من `@floating-ui`: يعلن المشغل عن `anchor-name` المضمّن الفريد،
 وترتبط اللوحة المنقولة بها باستخدام `position-anchor` + `position-area`
 (مشتق من `placement`)، مع التقليب للبقاء على الشاشة عبر
 `position-try-fallbacks` (تضيف ورقة الأنماط الموجودة في نفس الموقع ملفًا مخصصًا
@@ -171,9 +171,9 @@ function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 الأسلاك خارج النقر + فصل `Escape` أثناء الفتح.
 
 يتم أيضًا ترقية اللوحة المنقولة فوريًا إلى المتصفح **الطبقة العليا** عبر
-Popover API الأصلي (`popover="manual"` + `showPopover()`): `z-index` عادي
+واجهة برمجة تطبيقات Popover الأصلية (`popover="manual"` + `showPopover()`): `z-index` عادي
 لا يمكن أبدًا أن يرتفع فوق مربع حوار/مشروط `<dialog>` أصلي مفتوح (والذي يعيش في
-الطبقة العليا)، لذلك تختار اللوحة الطبقة العليا نفسها لتظل في الأعلى
+الطبقة العليا)، لذا تختار اللوحة الطبقة العليا نفسها لتظل في الأعلى
 `ForgeModal`/`ForgeDialog`. يظل `z-index` الثابت في CSS هو البديل
 للمتصفحات التي لا تدعم Popover API.
 
@@ -195,9 +195,9 @@ Popover API الأصلي (`popover="manual"` + `showPopover()`): `z-index` عا�
 
 #### حدود
 
-| الاسم | اكتب                           | الوصف |
-| ----- | ------------------------------ | ----- |
-| خصائص | للقراءة فقط<PopoverProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| خصائص | للقراءة فقط<PopoverProperties> |             |
 
 ### PopoverPlacement
 
@@ -241,7 +241,7 @@ export interface PopoverProperties
 function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
 ```
 
-`ForgeToast` — بطاقة إشعار نخب واحدة يتم تأليفها مرة واحدة في الوضع المحايد
+`ForgeToast` — بطاقة إشعار نخب واحدة تم تأليفها مرة واحدة في الوضع المحايد
 لهجة JSX وتم تجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`.
 
@@ -252,7 +252,7 @@ function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
 `forge-toast.module.scss`، مُجمَّع بإطار محايد
 مساعد {@link classNames}.
 
-استخدم Vue SFC الأصلي فتحة انبعاث `dismiss` وفتحة مسماة `icon`، وتم عرضه
+استخدم Vue SFC الأصلي فتحة انبعاث `dismiss` و`icon`، وتم عرضه
 رمز الهدف باعتباره SVG مضمّنًا؛ يستخدم الإصدار المحايد الإطار المتقاطع
 دعامة رد الاتصال `onDismiss`، الفتحة المسماة `iconContent` (`<Slot>`، مع
 رمز النية كبديل له)، والكتابة مرة واحدة `@mission-platform/icons`
@@ -260,9 +260,9 @@ function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                         | الوصف |
-| ----- | ---------------------------- | ----- |
-| خصائص | للقراءة فقط<ToastProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------- | ----------- |
+| خصائص | للقراءة فقط<ToastProperties> |             |
 
 ### ToastProperties
 
@@ -306,7 +306,7 @@ function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 ```
 
 `ForgeTooltip` - تلميح سياقي قصير مرتبط بمشغله، تم تأليفه مرة واحدة
-بلهجة JSX المحايدة وتم تجميعها مباشرة إلى React أو Vue بواسطة
+بلهجة JSX المحايدة ويتم تجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`.
 
 يتم تقديم التلميح من خلال بوابة **`<Teleport>`** المحايدة للإطار
@@ -314,9 +314,9 @@ function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 `@mission-platform/vite-plugin-forge`)، لذلك يتم عرضه في `document.body` و
 يفلت من أي سياق `overflow`/stacking؛ يتم تركيب البوابة فقط أثناء
 التلميح مرئي. لم يعد تحديد الموضع يعتمد على `@floating-ui`: المشغل
-يعلن عن CSS `anchor-name` فريد (تم تعيينه بشكل مضمن بحيث يكون كل مثيل مميزًا)،
+يعلن عن CSS `anchor-name` فريد (تم تعيينه بشكل مضمّن بحيث يكون كل مثيل مميزًا)،
 وترتبط اللوحة المنقولة بها باستخدام `position-anchor` +
-`position-area` ويقلب ليبقى على الشاشة عبر `position-try-fallbacks`
+`position-area` ويقلب ليظل على الشاشة عبر `position-try-fallbacks`
 (`flip-block`، `flip-inline`، والخيار `@position-try` المخصص في
 ورقة أنماط مشتركة).
 
@@ -324,13 +324,13 @@ function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 واجهة برمجة تطبيقات Popover الأصلية (`popover="manual"` + `showPopover()`): `z-index` عادي
 لا يمكن أبدًا أن يرتفع فوق مربع حوار/مشروط `<dialog>` أصلي مفتوح (والذي يعيش في
 الطبقة العليا)، وبالتالي فإن التلميح يختار نفس الطبقة العليا ليبقى في الأعلى
-`ForgeModal`/`ForgeDialog`. يظل `z-index` الثابت في CSS هو البديل
+`ForgeModal`/`ForgeDialog`. يبقى `z-index` الثابت في CSS هو البديل
 للمتصفحات التي لا تدعم Popover API.
 
 عندما يكون المشغل داخل `<dialog>` مشروطًا مفتوحًا، يتم إدخال التلميح
 **في مربع الحوار هذا** (عبر {@link ResolvePortalTarget}) بدلاً من `body`: أ
 يجعل مربع الحوار المشروط كل شيء خارج الشجرة الفرعية `inert`، لذلك يتم إرسال تلميح إلى
-سيكون `body` خاملًا (غير مرئي) ومكدسًا بشكل خاطئ - وأكثر من ذلك عندما تكون الوسائط مشروطة
+قد يكون `body` خاملًا (غير مرئي) ومكدسًا بشكل خاطئ - وأكثر من ذلك عندما تكون الوسائط مشروطة
 متداخلة. إن الاحتفاظ به داخل أقرب مربع حوار يتيح لـ Popover API تكديسه
 فوق مربع الحوار هذا (ربما يكون مكدسًا).
 
@@ -344,9 +344,9 @@ function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                           | الوصف |
-| ----- | ------------------------------ | ----- |
-| خصائص | للقراءة فقط<TooltipProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| خصائص | للقراءة فقط<TooltipProperties> |             |
 
 ### تلميح الأداة
 
@@ -356,7 +356,7 @@ function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 ```
 
-الموضع المفضل لتلميح الأداة بالنسبة لمشغله.
+الموضع المفضل لتلميح الأداة بالنسبة إلى مشغله.
 
 ### خصائص تلميح الأداة
 
@@ -390,7 +390,7 @@ export interface DialogProperties
 
 لم يتم تقديم أي وصف.
 
-### حجم الحوار
+### DialogSize
 
 **النوع:** النوع
 
@@ -417,7 +417,7 @@ function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 يتم التحكم في الحالة (`open` + `onUpdateOpen`/`onClose`): `useEffect` واحد
 يعكس `open` على العنصر، ويعيد الحدث `close` الأصلي إلى العنصر
 عمليات الاسترجاعات، والنقر في الخلفية يغلقها عند تعيين `closeOnBackdrop`. ال
-الدخول/الخروج يتلاشى في CSS (`@starting-style` + `transition-behavior` على
+يتلاشى الدخول/الخروج في CSS (`@starting-style` + `transition-behavior` على
 `display`/`overlay`)، لتحل محل Vue `<Transition>` الأصلي.
 
 بدائل من Vue SFC الأصلي: `ForgeDialogHeader`/`Body`/`Footer`
@@ -433,9 +433,9 @@ function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                          | الوصف |
-| ----- | ----------------------------- | ----- |
-| خصائص | للقراءة فقط<DialogProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| خصائص | للقراءة فقط<DialogProperties> |             |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -470,9 +470,9 @@ function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                         | الوصف |
-| ----- | ---------------------------- | ----- |
-| خصائص | للقراءة فقط<ModalProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------- | ----------- |
+| خصائص | للقراءة فقط<ModalProperties> |             |
 
 ### ModalProperties
 
@@ -493,6 +493,16 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 ```
 
 خطوة عرض المشروط على الكمبيوتر اللوحي/سطح المكتب (`sm`+)؛ الهاتف المحمول دائمًا بالعرض الكامل.
+
+### ModalVariant
+
+**النوع:** النوع
+
+```typescript
+export type ModalVariant = 'modal' | 'dialog' | 'alert';
+```
+
+البديل البصري والدلالي للتراكب المشروط البدائي.
 
 ## `src/components/organisms/forge-toast-container/forge-toast-container`
 
@@ -525,7 +535,7 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 **`<TransitionGroup>`** بدائي، والذي يتم تجميعه إلى Vue المدمج
 `<TransitionGroup>` ومجموعة فئة `@mission-platform/forge-adapters/react` CSS
 driver. يتم تمرير فئات مرحلة الدخول/المغادرة الأربعة على شكل ** مجزأة
-فئات CSS-Module** (عبر دعائم فئة `<TransitionGroup>`)، وبالتالي فإن
+فئات CSS-Module** (عبر دعائم فئة `<TransitionGroup>`)، لذا فإن
 يظل تصميم الرسوم المتحركة على نطاق المكونات بدلاً من الاعتماد على المستوى العالمي
 قواعد `:global(.forge-toast-*)` - مطابقة `scoped` `<style>` الخاصة بـ
 الأصلي Vue SFC. في Vue، يستقبل جذر النخب هذه الفئات محليًا؛ على
@@ -541,9 +551,9 @@ React يقوم برنامج التشغيل بتنسيق التحميل/إلغا�
 
 #### حدود
 
-| الاسم | اكتب                                  | الوصف |
-| ----- | ------------------------------------- | ----- |
-| خصائص | للقراءة فقط<ToastContainerProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------------- | ----------- |
+| خصائص | للقراءة فقط<ToastContainerProperties> |             |
 
 ### ToastContainerProperties
 
@@ -590,15 +600,15 @@ function dismissToast(id: number): void;
 #### حدود
 
 | الاسم | اكتب | الوصف |
-| ----- | ---- | ----- |
-| معرف  | رقم  |       |
+| ---- | ------ | ----------- |
+| معرف | رقم |             |
 
-### خطأ
+### errorToast
 
 **النوع:** ثابت
 
 ```typescript
-export const errorToast;
+export const errorToast: ReturnType<typeof withVariant>;
 ```
 
 الملاءمة: عرض نخب `error`.
@@ -618,7 +628,7 @@ function getToastsSnapshot(): readonly ToastRecord[];
 **النوع:** ثابت
 
 ```typescript
-export const infoToast;
+export const infoToast: ReturnType<typeof withVariant>;
 ```
 
 الملاءمة: عرض نخب `info`.
@@ -635,9 +645,9 @@ function showToast(options: ToastOptions | string): number;
 
 #### حدود
 
-| الاسم  | اكتب                   | الوصف |
-| ------ | ---------------------- | ----- |
-| خيارات | خيارات التوست \| سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ------- | ---------------------- | ----------- |
+| خيارات | خيارات التوست \| سلسلة |             |
 
 ### com.subscribeToasts
 
@@ -651,16 +661,16 @@ function subscribeToasts(listener: () => void): () => void;
 
 #### حدود
 
-| الاسم | اكتب       | الوصف |
-| ----- | ---------- | ----- |
-| مستمع | () => باطل |       |
+| الاسم | اكتب | الوصف |
+| -------- | ---------- | ----------- |
+| مستمع | () => باطل |             |
 
 ### com.successToast
 
 **النوع:** ثابت
 
 ```typescript
-export const successToast;
+export const successToast: ReturnType<typeof withVariant>;
 ```
 
 الملاءمة: عرض نخب `success`.
@@ -703,7 +713,7 @@ export interface ToastRecord
 function useToast(): UseToastReturn;
 ```
 
-مساعدين ضروريين لإظهار ورفض الخبز المحمص، مما يعكس Vue
+مساعدين حتمية لإظهار ورفض الخبز المحمص، مما يعكس Vue
 `useToast` قابل للتركيب. قم بعرض `ForgeToastContainer` واحد بالقرب من جذر
 التطبيق الخاص بك لعرضها.
 
@@ -722,7 +732,119 @@ export interface UseToastReturn
 **النوع:** ثابت
 
 ```typescript
-export const warningToast;
+export const warningToast: ReturnType<typeof withVariant>;
 ```
 
 الملاءمة: عرض نخب `warning`.
+
+## `src/utils/fallback-position`
+
+### ApplyFallbackPosition
+
+**النوع:** الوظيفة
+
+```typescript
+function applyFallbackPosition(
+  triggerElement: HTMLElement,
+  panelElement: HTMLElement,
+  placement: FallbackPlacement = 'bottom-start',
+  options?: FallbackPositionOptions | number,
+): void;
+```
+
+يطبق الإحداثيات والأنماط الاحتياطية على `panelElement` بالنسبة إلى `triggerElement`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------------- | --------------------------------- | ----------- |
+| عنصر الزناد | HTMLElement |             |
+| عنصر اللوحة | HTMLElement |             |
+| التنسيب | الموضع الاحتياطي |             |
+| خيارات | FallbackPositionOptions \| رقم |             |
+
+### accountFallbackPosition
+
+**النوع:** الوظيفة
+
+```typescript
+function calculateFallbackPosition(
+  triggerRect: TriggerBoundingRect,
+  placement: FallbackPlacement = 'bottom-start',
+  offset = 0,
+): FallbackPositionResult;
+```
+
+حساب خصائص الأعلى واليسار وتحويل CSS لعنصر عائم
+استنادًا إلى المستطيل المحيط بعنصر الزناد والموضع المطلوب والإزاحة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ------------------- | ----------- |
+| تريندريكت | تريجربوندينجريكت |             |
+| التنسيب | موضع احتياطي |             |
+| إزاحة |                     |             |
+
+### FallbackPlacement
+
+**النوع:** النوع
+
+```typescript
+export type FallbackPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
+```
+
+خيارات المواضع المدعومة للارتكاز لتحديد المواقع الاحتياطية.
+
+### خيارات FallbackPosition
+
+**النوع:** الواجهة
+
+```typescript
+export interface FallbackPositionOptions
+```
+
+لم يتم تقديم أي وصف.
+
+### FallbackPositionResult
+
+**النوع:** الواجهة
+
+```typescript
+export interface FallbackPositionResult
+```
+
+لم يتم تقديم أي وصف.
+
+### يتم دعم موقع AnchorPositioning
+
+**النوع:** الوظيفة
+
+```typescript
+function isAnchorPositioningSupported(): boolean;
+```
+
+تحقق ديناميكيًا من دعم تحديد موضع مرساة CSS.
+تم تقييمها كدالة حتى تتمكن اختبارات الوحدة من محاكاة `CSS.supports` أو تبديلها.
+
+### يدعم وضع المرساة
+
+**النوع:** ثابت
+
+```typescript
+export const supportsAnchorPositioning: boolean;
+```
+
+تحقق مما إذا كان CSS Anchor Positioning مدعومًا في البيئة الحالية.

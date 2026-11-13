@@ -24,7 +24,7 @@ function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 
 הוא מעבד את ה-`label` שלו (באמצעות {@link ForgeTypography} הניטרלית) עם
 טון/גודל, וכן - כאשר `removable` ולא `disabled` - כפתור הסרה
-יורה את ההתקשרות חזרה `onRemove`. היא הבעלים של הסטיילינג שלה באמצעות ה-CSS המשותף
+יורה את ההתקשרות חזרה `onRemove`. הוא הבעלים של הסטיילינג שלו באמצעות ה-CSS המשותף
 מודול `forge-tag.module.scss`, מורכב עם המסגרת ניטראלית
 עוזר {@link classNames}.
 
@@ -34,9 +34,9 @@ callback-prop `onRemove` (תחליף פולט Vue `remove`).
 
 #### פרמטרים
 
-| שם    | הקלד                       | תיאור |
-| ----- | -------------------------- | ----- |
-| נכסים | לקריאה בלבד<TagProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------- | ----------- |
+| נכסים | לקריאה בלבד<TagProperties> |             |
 
 ### TagProperties
 
@@ -83,9 +83,9 @@ function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherPropert
 
 #### פרמטרים
 
-| שם    | הקלד                                         | תיאור |
-| ----- | -------------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<ForgeLanguageSwitcherProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ForgeLanguageSwitcherProperties> |             |
 
 ### ForgeLanguageSwitcherOption
 
@@ -146,9 +146,9 @@ React/Vue); המחרוזות `useI18n` הופכות לטקסט רגיל; וה-`v
 
 #### פרמטרים
 
-| שם    | הקלד                               | תיאור |
-| ----- | ---------------------------------- | ----- |
-| נכסים | לקריאה בלבד<MultiselectProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<MultiselectProperties> |             |
 
 ### MultiselectOption
 
@@ -182,6 +182,26 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 ## `src/components/molecules/forge-select/forge-select`
 
+### ForgeCombobox
+
+**סוג:** קבוע
+
+```typescript
+export const ForgeCombobox: typeof ForgeSelect;
+```
+
+לא סופק תיאור.
+
+### ForgeComboboxProps
+
+**סוג:** סוג
+
+```typescript
+export type ForgeComboboxProps = SelectProperties;
+```
+
+לא סופק תיאור.
+
 ### ForgeSelect
 
 פונקציה **סוג:**
@@ -190,40 +210,24 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
-`ForgeSelect` - תיבה משולבת/בחירה מותאמת אישית שנכתבה פעם אחת ב-JSX הנייטרלי
-ניב והורכב ישר ל-React או Vue על ידי
-`@mission-platform/vite-plugin-forge`.
-
-כברירת מחדל (`searchable`, ברירת המחדל) הטריגר הוא שדה טקסט שמסנן
-האפשרויות כשהמשתמש מקליד - שיקוף {@link ForgeMultiselect} - אז ערך
-ניתן למצוא על ידי חיפוש במקום גלילה; הגדר `searchable={false}` עבור a
-הדק כפתור רגיל. כך או כך, תיבת הרשימה מגובה על ידי מוסתר ויזואלי
-`<select>` מקורי, כך שהמילוי האוטומטי של הדפדפן והגשת טופס מקורי ממשיכים לעבוד.
-הבחירה נשלטת עם ה-`modelValue`+ שהוקם
-מוסכמה של `onUpdateModelValue`/`onChange`. הוא הבעלים של הסטיילינג שלו
-באמצעות מודול ה-CSS המשותף `forge-select.module.scss`.
-
-תיבת הרשימה המרחפת מוצגת דרך הכתובת **`ForgeDropdown`**
-(בעצמו הידור ל-React/Vue), המורכב באמצעות המשבצת הנקראת הנייטרלית **עובר**
-תחביר: עטיפת ה-combobox מועברת לחריץ `trigger` של התפריט הנפתח
-(`slot="trigger"`) וה-`<ul role="listbox">` הופך לחריץ ברירת המחדל שלו, אז
-הפאנל עובר פורטל דרך `<Teleport>` ומעוגן ב-CSS Anchor
-מיקום במקום רשימה ממוקמת לחלוטין במקום. הפנימי
-הדגל הפתוח `useState` נשמר מסונכרן עם התפריט הנפתח באמצעותו
-`onUpdateOpen` התקשרות חוזרת.
-
-תחליפים אחרים מה-Vue SFC המקורי: המפות הניתנות לחיבור `useId` ל
-הוק `useId` יליד המסגרת; השברון הוא הכתיבה פעם אחת
-`@mission-platform/icons` `ForgeIconChevron` (מסובב באמצעות משענת `direction` שלו,
-עצמו הידור ל-React/Vue); המחרוזות `useI18n` הופכות לטקסט רגיל; ו
-הפלטות `v-model` + הופכות לאביזרים להתקשרות חוזרת. החריצים עם השם `start`/`end` הם
-נשמר כחריצים בעלי שם ניטרלי.
+רכיב ForgeSelect המספק בקרת בחירה נגישה, ניטראלית במסגרת
+תמיכה בסינון חי, חיפוש אסינכרוני, ניווט במקלדת וחריצים מותאמים אישית.
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| נכסים | לקריאה בלבד<SelectProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<SelectProperties> |             |
+
+### ForgeSelectProps
+
+**סוג:** סוג
+
+```typescript
+export type ForgeSelectProps = SelectProperties;
+```
+
+לא סופק תיאור.
 
 ### בחר באפשרות
 

@@ -1,3 +1,4 @@
+import type { MpElement } from '@mission-platform/forge-jsx';
 import * as iconsNamespace from '@mission-platform/icons';
 import {
   ForgeIconAlert,
@@ -8,8 +9,6 @@ import {
   ForgeIconStar,
   IconSpriteProvider,
 } from '@mission-platform/icons';
-
-import type { MpElement } from '@mission-platform/forge-jsx';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /** Neutral icon component shape used by the gallery grid. */

@@ -19,13 +19,13 @@
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-לא סופק תיאור.
+תוסף Vite לניהול ופתרון משאבי המקום של יישום i18n.
 
 #### פרמטרים
 
-| שם       | הקלד              | תיאור |
-| -------- | ----------------- | ----- |
-| אפשרויות | I18nPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ----------------- | ----------- |
+| אפשרויות | I18nPluginOptions |             |
 
 ### i18nPlugin
 
@@ -35,13 +35,13 @@ function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-לא סופק תיאור.
+תוסף Vite לניהול ופתרון משאבי המקום של יישום i18n.
 
 #### פרמטרים
 
-| שם       | הקלד              | תיאור |
-| -------- | ----------------- | ----- |
-| אפשרויות | I18nPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ----------------- | ----------- |
+| אפשרויות | I18nPluginOptions |             |
 
 ### I18nPluginOptions
 
@@ -64,16 +64,16 @@ function readSupportedLocales(
 ```
 
 גלה את המקומות הנתמכים ב**זמן בנייה/קונפיגורציה**, תוך שימוש זהה בדיוק
-לוגיקה כמודול `virtual:i18n-locales`. קבצי תצורה Vite אינם יכולים לייבא א
+לוגיקה כמודול `virtual:i18n-locales`. Vite קבצי תצורה אינם יכולים לייבא א
 מודול וירטואלי (הוא קיים רק בתוך חבילת האפליקציות), אז זה מאפשר תצורה
 גוזר את רשימת המקומות שלו (למשל עבור מסלולי SSG / מפות אתר) מאותו מקור
 של אמת במקום שמירה על רשימה מקבילה.
 
 #### פרמטרים
 
-| שם       | הקלד                        | תיאור |
-| -------- | --------------------------- | ----- |
-| אפשרויות | ReadSupportedLocalesOptions |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------- | ----------- |
+| אפשרויות | ReadSupportedLocalesOptions |             |
 
 ### ReadSupportedLocalesOptions
 
@@ -83,4 +83,4 @@ function readSupportedLocales(
 export interface ReadSupportedLocalesOptions
 ```
 
-אפשרויות עבור מסייע הבנייה {@link readSupportedLocales}.
+אפשרויות עבור העוזר {@link readSupportedLocales} שהוקם בזמן הבנייה.

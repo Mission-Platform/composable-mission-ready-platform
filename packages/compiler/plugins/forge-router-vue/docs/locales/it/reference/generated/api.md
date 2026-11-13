@@ -23,10 +23,10 @@ Crea funzionalità neutre da un'istanza del router Vue di proprietà dell'app.
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| router   | Router   |             |
-| corrente |          |             |
+| Nome | Digitare | Descrizione |
+| ------- | ------ | ----------- |
+| router | Router |             |
+| corrente |        |             |
 
 ### risolvereMpLink
 
@@ -40,9 +40,9 @@ Risolvi un obiettivo neutrale tramite il router Vue di proprietà dell'app.
 
 #### Parametri
 
-| Nome | Digitare           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---- | ------------------ | ----------- |
-| a    | MpRouteLocationRaw |             |
+| a | MpRouteLocationRaw |             |
 
 ### risolverePathTarget
 
@@ -56,9 +56,9 @@ Fallback di solo percorso utilizzato quando un'istanza del router Vue non è dis
 
 #### Parametri
 
-| Nome | Digitare           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---- | ------------------ | ----------- |
-| a    | MpRouteLocationRaw |             |
+| a | MpRouteLocationRaw |             |
 
 ### toMpLocation
 
@@ -80,8 +80,8 @@ Converte lo stato del percorso Vue nativo nella posizione risolta neutra.
 
 #### Parametri
 
-| Nome     | Digitare                                                                                                                                                                                        | Descrizione |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | percorso | { percorso: stringa; percorso completo: stringa; parametri: Record<string, unknown>; query: LocationQuery; hash: stringa; nome?: stringa \| simbolo \| nullo; meta?: Record<string, unknown>; } |             |
 
 ### toVueLocation
@@ -96,9 +96,9 @@ Traduci un target neutrale in una posizione del router Vue.
 
 #### Parametri
 
-| Nome | Digitare           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---- | ------------------ | ----------- |
-| a    | MpRouteLocationRaw |             |
+| a | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 
@@ -140,4 +140,4 @@ Leggere l'oggetto capacità neutrale supportato dal router Vue.
 export const forgeRouterVue;
 ```
 
-Forgia la destinazione del router per un'istanza del router Vue di proprietà dell'applicazione.
+Forgia destinazione del router per un'istanza del router Vue di proprietà dell'applicazione.

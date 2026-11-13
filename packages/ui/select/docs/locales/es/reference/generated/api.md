@@ -22,7 +22,7 @@ function ForgeTag(properties: Readonly<TagProperties>): MpElement;
 `ForgeTag`: una etiqueta compacta y redondeada creada una vez en el dialecto JSX neutral
 y compilado directamente en React o Vue por `@mission-platform/vite-plugin-forge`.
 
-Representa su `label` (a través del neutro compuesto {@link ForgeTypography}) con
+Representa su `label` (a través del neutral compuesto {@link ForgeTypography}) con
 un tono/tamaño y, cuando `removable` y no `disabled`, un botón de eliminación que
 dispara la devolución de llamada `onRemove`. Posee su estilo a través del CSS ubicado en el mismo lugar.
 Módulo `forge-tag.module.scss`, ensamblado con marco neutro
@@ -34,8 +34,8 @@ callback-prop `onRemove` (el sustituto de emisión Vue `remove`).
 
 #### Parámetros
 
-| Nombre      | Tipo                        | Descripción |
-| ----------- | --------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ----------------------- | ----------- |
 | propiedades | Sólo lectura<TagProperties> |             |
 
 ### Propiedades de etiqueta
@@ -83,8 +83,8 @@ No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre      | Tipo                                          | Descripción |
-| ----------- | --------------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ----------------------------------------- | ----------- |
 | propiedades | Sólo lectura<ForgeLanguageSwitcherProperties> |             |
 
 ### Opción ForgeLanguageSwitcher
@@ -140,14 +140,14 @@ se mantuvo sincronizado con el menú desplegable a través de su devolución de 
 Otras sustituciones del SFC Vue original: la consulta de búsqueda se convierte en un
 cadena interna `useState`; los mapas componibles `useId` al
 gancho `useId` nativo del marco; el galón es el `@mission-platform/icons` de una sola escritura
-`ForgeIconChevron` (girado a través de su accesorio `direction`, compilado a su vez para
+`ForgeIconChevron` (girado a través de su accesorio `direction`, a su vez compilado para
 React/Vue); las cadenas `useI18n` se convierten en texto sin formato; y el `v-model`+ emite
 convertirse en accesorios de devolución de llamada.
 
 #### Parámetros
 
-| Nombre      | Tipo                                | Descripción |
-| ----------- | ----------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------- | ----------- |
 | propiedades | Sólo lectura<MultiselectProperties> |             |
 
 ### Opción de selección múltiple
@@ -182,6 +182,26 @@ Escala de tamaño de control canónico.
 
 ## `src/components/molecules/forge-select/forge-select`
 
+### ForjaCombobox
+
+**Tipo:** constante
+
+```typescript
+export const ForgeCombobox: typeof ForgeSelect;
+```
+
+No se proporciona descripción.
+
+### Accesorios de ForgeCombobox
+
+**Tipo:** tipo
+
+```typescript
+export type ForgeComboboxProps = SelectProperties;
+```
+
+No se proporciona descripción.
+
 ### ForjarSeleccionar
 
 **Tipo:** función
@@ -190,40 +210,24 @@ Escala de tamaño de control canónico.
 function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
-`ForgeSelect`: un cuadro combinado personalizado/selección creado una vez en el JSX neutral
-dialecto y compilado directamente en React o Vue por
-`@mission-platform/vite-plugin-forge`.
-
-De forma predeterminada (`searchable`, el valor predeterminado), el activador es un campo de texto que filtra
-las opciones a medida que el usuario escribe, reflejando {@link ForgeMultiselect}, por lo que un valor
-se puede encontrar buscando en lugar de desplazándose; configure `searchable={false}` para un
-gatillo de botón simple. De cualquier manera, el cuadro de lista está respaldado por un elemento visualmente oculto.
-`<select>` nativo para que el autocompletar del navegador y el envío de formularios nativos sigan funcionando.
-La selección se controla con el `modelValue` + establecido
-`onUpdateModelValue`/`onChange` convención de propiedad de devolución de llamada. Es dueño de su estilo.
-a través del módulo CSS `forge-select.module.scss`, ubicado en el mismo lugar.
-
-El cuadro de lista flotante se representa mediante la escritura única **`ForgeDropdown`**
-(compilado en React/Vue), compuesto a través de la ranura neutral con nombre **pasando**
-sintaxis: el contenedor del cuadro combinado se entrega a la ranura `trigger` del menú desplegable
-(`slot="trigger"`) y `<ul role="listbox">` se convierte en su ranura predeterminada, por lo que
-el panel está portalizado a través de `<Teleport>` y anclado con CSS Anchor
-Posicionamiento en lugar de una lista absolutamente posicionada in situ. el interno
-La bandera abierta `useState` se mantiene sincronizada con el menú desplegable a través de su
-`onUpdateOpen` devolución de llamada.
-
-Otras sustituciones del SFC Vue original: los mapas componibles `useId` para
-el gancho `useId` nativo del marco; el galón es la escritura única
-`@mission-platform/icons` `ForgeIconChevron` (girado a través de su accesorio `direction`,
-mismo compilado en React/Vue); las cadenas `useI18n` se convierten en texto sin formato; y
-Las emisiones `v-model` + se convierten en accesorios de devolución de llamada. Las ranuras con nombre `start`/`end` son
-conservados como espacios con nombre neutrales.
+Componente ForgeSelect que proporciona un control de selección accesible y neutral al marco con
+soporte para filtrado en vivo, búsqueda asincrónica, navegación con teclado y espacios personalizados.
 
 #### Parámetros
 
-| Nombre      | Tipo                           | Descripción |
-| ----------- | ------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------- | ----------- |
 | propiedades | Sólo lectura<SelectProperties> |             |
+
+### ForgeSelectProps
+
+**Tipo:** tipo
+
+```typescript
+export type ForgeSelectProps = SelectProperties;
+```
+
+No se proporciona descripción.
 
 ### Seleccionar opción
 

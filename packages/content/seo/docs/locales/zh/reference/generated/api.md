@@ -96,7 +96,23 @@ Schema.org `ImageObject`。
 **种类：**常数
 
 ```typescript
-export const jsonLd;
+export const jsonLd: {
+  readonly webSite: typeof webSite;
+  readonly organization: typeof organization;
+  readonly localBusiness: typeof localBusiness;
+  readonly person: typeof person;
+  readonly webPage: typeof webPage;
+  readonly breadcrumbList: typeof breadcrumbList;
+  readonly article: typeof article;
+  readonly product: typeof product;
+  readonly faqPage: typeof faqPage;
+  readonly event: typeof event;
+  readonly videoObject: typeof videoObject;
+  readonly imageObject: typeof imageObject;
+  readonly softwareApplication: typeof softwareApplication;
+  readonly recipe: typeof recipe;
+  readonly review: typeof review;
+};
 ```
 
 命名空间重新导出，以便消费者可以执行 `import { jsonLd } from
@@ -524,7 +540,7 @@ function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void;
 **种类：**组件
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 无渲染 `<Seo>` 组件 - {@link useSeo} 的声明性包装器。
@@ -546,7 +562,7 @@ Open Graph，以及 JSON-LD 块作为 props；该组件将反应性地
 **种类：**组件
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 无渲染 `<Seo>` 组件 - {@link useSeo} 的声明性包装器。

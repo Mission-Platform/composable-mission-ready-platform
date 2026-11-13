@@ -23,7 +23,7 @@ Questi componenti condividono la navigazione tramite tastiera, il focus mobile, 
 contratti di interazione orientati alla navigazione. Le loro implementazioni neutre dipendono
 su `@mission-platform/forge-jsx`; utilizzano anche menu e controlli simili a tabelle
 `@mission-platform/icons`, mentre il contenuto breadcrumb/navbar costituisce il file proprietario
-Pacchetto `@mission-platform/typography`. `ForgeNavbar` attualmente compone il file
+Pacchetto `@mission-platform/typography`. `ForgeNavbar` attualmente compone il
 `ForgeDrawer` residuo, quindi per estrarre la navigazione è necessario mantenerlo
 dipendenza esplicita o decisione preliminare del confine del cassetto; non deve introdurre
 una dipendenza da `@mission-platform/components` nuovamente nella navigazione.
@@ -60,7 +60,7 @@ albero di origine del pacchetto di dominio.
 
 I primi tre possiedono la semantica di caricamento/rendering dei media, mentre carosello e dispositivo
 simula l'aggiunta di presentazioni sui media. La loro fonte neutra dipende attualmente da
-`@mission-platform/forge-jsx` e, per i controlli del carosello, `@mission-platform/icons`;
+`@mission-platform/forge-jsx` e, per i controlli carosello, `@mission-platform/icons`;
 non esiste alcuna dipendenza dai pacchetti estratti. Conservare il movimento ridotto e
 CSS per componente come parte di una mossa futura piuttosto che dividere il comportamento dei media
 dai suoi stili.
@@ -92,7 +92,7 @@ canna residua.
 `ForgeDrawer` e `ForgeWindowPopout` non vengono spostati deliberatamente in questa modifica.
 `ForgeDrawer` è sovrapposto/adiacente alla finestra ed è attualmente composto da
 `ForgeNavbar`; `ForgeWindowPopout` possiede il ciclo di vita della finestra del browser e pertanto
-necessita di una decisione separata sul contratto SSR, focalizzazione e su più finestre. Valutali entrambi
+necessita di una decisione separata sul contratto SSR, focus e cross-window. Valutali entrambi
 con i proprietari di navigazione e float prima di creare un pacchetto e non conservarli
 implementazioni duplicate come scorciatoia per la compatibilità.
 
@@ -106,7 +106,7 @@ tipografia da `@mission-platform/typography` e stili/utilità locali del pacchet
 Le storie possono importare il pacchetto barile per esercitare la superficie pubblica; non lo è
 una dipendenza di implementazione o un ciclo del pacchetto.
 
-Ogni componente residuo mantiene il suo `index.ts` co-locato, sorgente neutra, SCSS,
+Ogni componente residuo mantiene la sua co-locazione `index.ts`, fonte neutra, SCSS,
 specifiche e la storia del libro di fiabe. Il manifesto del pacchetto pubblica `dist`, componenti,
 solo stili e utilità; l'albero del negozio estratto non è più incluso.
 
@@ -121,6 +121,6 @@ includere in modo affidabile un modulo CSS di proprietà di `@mission-platform/c
 Il barile di token include `scss/_size.scss` una volta nella cascata `mp.tokens`
 livello, insieme alle proprietà personalizzate del token e alle reimpostazioni di base. Questo preserva
 il contratto di precedenza esistente: gli stili di applicazione senza livelli sovrascrivono il contratto di precedenza esistente
-regole di utilità e ogni voce dell'app/del libro di fiabe interessata importa già il file
+regole di utilità e ogni voce dell'app/Storybook interessata importa già il file
 botte di gettoni. I componenti continuano quindi ad emettere la classe globale stabile
 nomi senza duplicare la scala delle dimensioni in ogni confezione.

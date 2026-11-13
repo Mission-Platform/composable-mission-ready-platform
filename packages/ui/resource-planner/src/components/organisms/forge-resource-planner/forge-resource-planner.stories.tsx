@@ -1,11 +1,11 @@
 import { useArgs } from "storybook/preview-api";
 
 import { ForgeResourcePlanner } from "@mission-platform/resource-planner";
+import type { Meta, StoryObj } from "@mission-platform/storybook-framework";
+import type { VEvent } from "@mission-platform/vcard";
 
 import type { ResourcePlannerProperties } from "./forge-resource-planner";
 import type { PlannerAssignment, PlannerResource } from "../../../types";
-import type { Meta, StoryObj } from "@mission-platform/storybook-framework";
-import type { VEvent } from "@mission-platform/vcard";
 
 const meta = {
   title: "Organisms/Planning/ForgeResourcePlanner",

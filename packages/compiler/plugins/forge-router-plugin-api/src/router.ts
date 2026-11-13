@@ -2,7 +2,6 @@ import {
   rewriteImportsWithCst,
   type ImportRewriteSpec,
 } from "@mission-platform/forge-cst";
-
 import type {
   CompilerDiagnostic,
   GeneratedExtraModule,

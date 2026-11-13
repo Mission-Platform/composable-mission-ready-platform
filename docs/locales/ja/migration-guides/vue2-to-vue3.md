@@ -90,15 +90,15 @@ const increment = () => {
 
 ライフサイクル フックの名前が変更されたため、インポートする必要があります。
 
-| Vue 2                      | Vue 3                                       |
-| :------------------------- | :------------------------------------------ |
+| Vue 2 | Vue 3 |
+| :------------------------- | :---------------------------------------- |
 | `beforeCreate` / `created` | `setup()` / `<script setup>` を直接使用する |
-| `beforeMount`              | `onBeforeMount`                             |
-| `mounted`                  | `onMounted`                                 |
-| `beforeUpdate`             | `onBeforeUpdate`                            |
-| `updated`                  | `onUpdated`                                 |
-| `beforeDestroy`            | `onBeforeUnmount`                           |
-| `destroyed`                | `onUnmounted`                               |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 例：
 
@@ -112,7 +112,7 @@ onMounted(() => {
 
 ## ステップ 4: `<script setup>` を採用する
 
-Mission Platform 内のすべての新規および移行されたコンポーネントは、TypeScript を含む `<script setup>` 構文を使用する必要があります。
+Mission Platform 内のすべての新しいコンポーネントと移行されたコンポーネントは、TypeScript を含む `<script setup>` 構文を使用する必要があります。
 
 ```vue
 <template>

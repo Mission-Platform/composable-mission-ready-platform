@@ -1,7 +1,8 @@
+import type { FlintGraphNode } from '@mission-platform/flint';
+
 import { getFlintRenderWorkerWasm } from './wasm';
 
 import type { FlintCamera, FlintRenderWorkerWasmExports, ViewBounds } from './types';
-import type { FlintGraphNode } from '@mission-platform/flint';
 
 /**
  * Creates a camera viewport configuration with given dimensions, pan offsets, and zoom.

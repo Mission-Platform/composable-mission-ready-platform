@@ -19,11 +19,11 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/vite-plugin-i1
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-Nessuna descrizione fornita.
+Plug-in Vite per la gestione e la risoluzione delle risorse locali dell'applicazione i18n.
 
 #### Parametri
 
-| Nome    | Digitare          | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ----------------- | ----------- |
 | opzioni | I18nPluginOptions |             |
 
@@ -35,11 +35,11 @@ Nessuna descrizione fornita.
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-Nessuna descrizione fornita.
+Plug-in Vite per la gestione e la risoluzione delle risorse locali dell'applicazione i18n.
 
 #### Parametri
 
-| Nome    | Digitare          | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | ----------------- | ----------- |
 | opzioni | I18nPluginOptions |             |
 
@@ -71,8 +71,8 @@ della verità invece di mantenere manualmente un elenco parallelo.
 
 #### Parametri
 
-| Nome    | Digitare                     | Descrizione |
-| ------- | ---------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | --------------------------- | ----------- |
 | opzioni | LeggiSupportedLocalesOptions |             |
 
 ### LeggiSupportedLocalesOptions

@@ -50,9 +50,9 @@ via de naast elkaar geplaatste CSS-module `forge-matrix-code.module.scss`.
 
 #### Parameters
 
-| Naam          | Typ                                | Beschrijving |
-| ------------- | ---------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<MatrixCodeProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------ | ----------- |
+| eigenschappen | Alleen-lezen<MatrixCodeProperties> |             |
 
 ### MatrixCodeActions
 
@@ -103,72 +103,3 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 ```
 
 Vorm die wordt gebruikt om elke module van de code te tekenen.
-
-## `src/encoder/index`
-
-### codeMatrix
-
-**Soort:** functie
-
-```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
-```
-
-Codeer `data` in een 2D-matrixbarcode van de gegeven `symbology`, waarbij de
-Smeed het encoderartefact synchroon bij het eerste gebruik.
-
-#### Parameters
-
-| Naam      | Typ              | Beschrijving |
-| --------- | ---------------- | ------------ |
-| symboliek | MatrixSymbologie |              |
-| gegevens  | tekenreeks       |              |
-
-#### Contract
-
-- **@throws:** als de payload ongeldig is voor de symbologie (leeg of
-  te groot voor de ondersteunde symbolen).
-
-### encodeMatrixAsync
-
-**Soort:** functie
-
-```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
-```
-
-Codeer `data` in een 2D-matrixbarcode van de gegeven `symbology`, waarbij de
-Smeed het encoderartefact asynchroon bij het eerste gebruik.
-
-#### Parameters
-
-| Naam      | Typ              | Beschrijving |
-| --------- | ---------------- | ------------ |
-| symboliek | MatrixSymbologie |              |
-| gegevens  | tekenreeks       |              |
-
-#### Contract
-
-- **@throws:** als de payload ongeldig is voor de symbologie.
-
-### MatrixCode
-
-**Soort:** interface
-
-```typescript
-export interface MatrixCode
-```
-
-Een verpakte matrixbarcode: afmetingen plus een rij-hoofdlijst met modulebits
-(`0` = licht, `1` = donker).
-
-### MatrixSymbologie
-
-**Soort:** type
-
-```typescript
-export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
-```
-
-De 2D-matrixsymbolieken die deze encoder ondersteunt. Doorgegeven als het eerste argument
-naar {@link encodeMatrix} / {@link encodeMatrixAsync}.

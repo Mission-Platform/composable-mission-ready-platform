@@ -11,6 +11,16 @@
 
 ## `src/index`
 
+### 기본
+
+**종류:** 상수
+
+```typescript
+export const handler: ExportedHandler<Env>;
+```
+
+설명이 제공되지 않았습니다.
+
 ### 환경
 
 **종류:** 인터페이스

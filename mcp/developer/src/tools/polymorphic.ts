@@ -9,6 +9,8 @@
  * This dramatically reduces the prompt token footprint of tool definitions.
  */
 
+import { z } from 'zod';
+
 import {
   appFiles,
   componentFiles,
@@ -32,7 +34,6 @@ import {
 } from '@mission-platform/mcp-shared/repo/locales';
 import { resolveRepoPath, type WorkspaceGroup } from '@mission-platform/mcp-shared/repo/paths';
 import { findMember } from '@mission-platform/mcp-shared/repo/scanner';
-import { z } from 'zod';
 
 import { readGitBranches, readGitLsFiles, readGitRemotes, readGitTags, type GitCommandResult } from '../git/index.ts';
 import { validateName, writeIntoPackage, writeScaffold } from '../scaffold/writer.ts';

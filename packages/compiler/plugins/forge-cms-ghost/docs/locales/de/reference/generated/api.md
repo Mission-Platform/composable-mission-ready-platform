@@ -29,7 +29,7 @@ Ein Feldgeist kann sich nicht nativ ausdrücken; es wird zu gerendertem Text deg
 export const FORGE_GHOST_SETTING_LIMIT;
 ```
 
-Mehr `@cmsSetting` Felder wurden projiziert als die von Ghost `config.custom` erlaubt.
+Es wurden mehr `@cmsSetting`-Felder projiziert, als Ghosts `config.custom` zulässt.
 
 ### ghostWarning
 
@@ -47,11 +47,11 @@ Erstellen Sie eine Warnung für die Generierungsphase. Das Ghost-Ziel gibt niema
 
 #### Parameter
 
-| Name      | Geben Sie    | ein Beschreibung |
-| --------- | ------------ | ---------------- |
-| Code      | Zeichenfolge |                  |
-| Nachricht | Zeichenfolge |                  |
-| Dateiname | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------ | ----------- |
+| Code | Zeichenfolge |             |
+| Nachricht | Zeichenfolge |             |
+| Dateiname | Zeichenfolge |             |
 
 ## `src/ghost`
 
@@ -67,9 +67,9 @@ Binden Sie die Ghost-Designprojektion an ein Framework-Ausgabe-Plugin im Besitz 
 
 #### Parameter
 
-| Name     | Geben Sie            | ein Beschreibung |
-| -------- | -------------------- | ---------------- |
-| Optionen | ForgeGhostCmsOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------- | ----------- |
+| Optionen | ForgeGhostCmsOptions |             |
 
 ### ForgeGhostCmsOptions
 
@@ -95,7 +95,7 @@ function buildGhostThemeConfig(
 ): GhostThemeConfig;
 ```
 
-Bauen Sie die `config.custom` Fragment von jedem `@cmsSetting`-getaggtes Feld.
+Erstellen Sie das `config.custom`-Fragment aus jedem mit `@cmsSetting` markierten Feld.
 
 Die Einstellungen gelten für die gesamte Website und werden daher durch die Eigenschaft „snake_cased“ des Felds festgelegt
 Name statt nach Komponente: Zwei Komponenten markieren dieselbe Requisite beschreiben
@@ -103,11 +103,11 @@ den gleichen Knopf, und Ghost hat nur einen Namensraum für sie.
 
 #### Parameter
 
-| Name        | Geben Sie                   | ein Beschreibung |
-| ----------- | --------------------------- | ---------------- |
-| Komponenten | readonly ContentComponent[] |                  |
-| Themenname  | Zeichenfolge                |                  |
-| Diagnose    | CompilerDiagnostic[]        |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | --------------------------- | ----------- |
+| Komponenten | readonly ContentComponent[] |             |
+| Themenname | Zeichenfolge |             |
+| Diagnose | CompilerDiagnostic[] |             |
 
 ### DEFAULT_GHOST_THEME_NAME
 
@@ -133,9 +133,9 @@ Geben Sie den Teilparametervertrag als schön gedrucktes JSON aus.
 
 #### Parameter
 
-| Name        | Geben Sie                   | ein Beschreibung |
-| ----------- | --------------------------- | ---------------- |
-| Komponenten | readonly ContentComponent[] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Komponenten | readonly ContentComponent[] |             |
 
 ### emitGhostThemeConfig
 
@@ -149,15 +149,15 @@ function emitGhostThemeConfig(
 ): string;
 ```
 
-Sende das aus `config.custom` Fragment als hübsch gedrucktes JSON.
+Geben Sie das `config.custom`-Fragment als schön gedrucktes JSON aus.
 
 #### Parameter
 
-| Name        | Geben Sie                   | ein Beschreibung |
-| ----------- | --------------------------- | ---------------- |
-| Komponenten | readonly ContentComponent[] |                  |
-| Themenname  | Zeichenfolge                |                  |
-| Diagnose    | CompilerDiagnostic[]        |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | --------------------------- | ----------- |
+| Komponenten | readonly ContentComponent[] |             |
+| Themenname | Zeichenfolge |             |
+| Diagnose | CompilerDiagnostic[] |             |
 
 ### GHOST_COMPONENTS_MANIFEST
 
@@ -177,7 +177,7 @@ Die Datei, in die der Teilparametervertrag geschrieben wird.
 export const GHOST_SETTING_LIMIT;
 ```
 
-Die maximale Anzahl an Einträgen, die Ghost akzeptiert `config.custom`.
+Die maximale Anzahl von Einträgen, die Ghost in `config.custom` akzeptiert.
 
 Ghost lehnt ein Thema ab, das zum Zeitpunkt des Hochladens darüber hinausgeht, was zu einem Problem führen würde
 Der erfolgreiche Aufbau von Forge wird zu einem Misserfolg, den der Autor erst in Ghost entdeckt
@@ -191,7 +191,7 @@ Admin – daher die Kürzung und die Warnung hier.
 export const GHOST_THEME_CONFIG_MANIFEST;
 ```
 
-Die Datei `config.custom` Fragment, in das geschrieben wird.
+Die Datei, in die das `config.custom`-Fragment geschrieben wird.
 
 ### GhostComponentEntry
 
@@ -231,7 +231,7 @@ Ein Hash-Parameter eines generierten Teils.
 export interface GhostSetting
 ```
 
-Ein Eintrag zu einem Thema `config.custom` Block.
+Ein Eintrag des `config.custom`-Blocks eines Themas.
 
 ### ghostSettingType
 
@@ -243,15 +243,15 @@ function ghostSettingType(field: ContentField): GhostSettingType;
 
 Der Ghost-Einstellungstyp, auf den sich ein neutraler Feldtyp beschränkt.
 
-`color` ist Teil des Ghost-Vokabulars, aber keine neutrale Art ist darauf abgebildet: a
-color ist eine gewöhnliche Zeichenfolge in TypeScript und anhand des Namens einer Requisite zu raten
+`color` ist Teil des Ghost-Vokabulars, aber es gibt keine neutralen Karten darauf: a
+Farbe ist eine gewöhnliche Zeichenfolge in TypeScript und wird anhand des Namens einer Requisite erraten
 würde die Projektion nichtdeterministisch machen.
 
 #### Parameter
 
-| Name | Geben Sie    | ein Beschreibung |
-| ---- | ------------ | ---------------- |
-| Feld | ContentField |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------ | ----------- |
+| Feld | ContentField |             |
 
 ### GhostSettingType
 
@@ -262,7 +262,7 @@ export type GhostSettingType =
   "select" | "boolean" | "color" | "image" | "text";
 ```
 
-Die fünf Einstellungstypen Ghost's `config.custom` Block akzeptiert.
+Der `config.custom`-Block von Ghost akzeptiert die fünf Einstellungstypen.
 
 ### GhostSlot
 
@@ -282,7 +282,7 @@ Ein Slot eines generierten Teils.
 export interface GhostThemeConfig
 ```
 
-Der `config.custom` ein Thema fragmentieren `package.json` verschmilzt mit.
+Das `config.custom`-Fragment, in das `package.json` eines Themas eingefügt wird.
 
 ### toGhostComponentEntry
 
@@ -294,13 +294,13 @@ function toGhostComponentEntry(
 ): GhostComponentEntry;
 ```
 
-Projizieren Sie eine Komponente darauf `forge-components.json` Eintrag.
+Projizieren Sie eine Komponente auf ihren `forge-components.json`-Eintrag.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| Komponente | ContentComponent |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------- | ----------- |
+| Komponente | ContentComponent |             |
 
 ## `src/template`
 
@@ -320,9 +320,9 @@ Die Komponente hat sich geändert.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| Komponente | ContentComponent |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------- | ----------- |
+| Komponente | ContentComponent |             |
 
 ### ghostPartialFileName
 
@@ -336,9 +336,9 @@ Der themenbezogene Pfad, in den der Teil geschrieben wird.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| Komponente | ContentComponent |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------- | ----------- |
+| Komponente | ContentComponent |             |
 
 ### ghostPartialName
 
@@ -352,9 +352,9 @@ Der Teilname, unter dem eine Komponente aufgerufen wird (`{{> forge/badge}}`).
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| Komponente | ContentComponent |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------- | ----------- |
+| Komponente | ContentComponent |             |
 
 ### ghostTemplateDiagnostics
 
@@ -369,13 +369,13 @@ function ghostTemplateDiagnostics(
 
 Die Diagnose gibt den Teil einer Komponente aus.
 
-Nur `number` wird berichtet: Ghost hat nirgendwo in seinem Thema einen numerischen Typ
+Es wird nur `number` gemeldet: Ghost hat nirgendwo in seinem Design einen numerischen Typ
 API, sodass der Wert als gerenderter Text und jede von einem Thema gewünschte Arithmetik erhalten bleibt
 damit zu tun hat, muss geschehen, bevor der Teil aufgerufen wird.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| Komponente | ContentComponent |                  |
-| Dateiname  | Zeichenfolge     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------- | ----------- |
+| Komponente | ContentComponent |             |
+| Dateiname | Zeichenfolge |             |

@@ -11,6 +11,6 @@ Le package fournit une analyse et une écriture sans perte des composants/propri
 `readICalendar`/`writeICalendar` et `readVCard`/`writeVCard`, plus Forge
 moteurs de rendu nommés `ForgeVCard` et `ForgeICalendar`. `ForgeICalendar` accepte le
 résultat normalisé de `calendarEvents(readICalendar(source))` afin que le résultat généré
-Les composants du framework restent indépendants des modules d'exécution de l'analyseur.
+les composants du framework restent indépendants des modules d'exécution de l'analyseur.
 
 Voir `llms.txt` pour l'API publique et des exemples d'utilisation.

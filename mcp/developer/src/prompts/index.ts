@@ -5,10 +5,11 @@
  * of the Mission Platform workflows.
  */
 
+import { z } from 'zod';
+
 import { getGuide, type GuideId } from '@mission-platform/mcp-shared/knowledge/guides';
 import { getComponentUsage, listComponents } from '@mission-platform/mcp-shared/repo/components';
 import { listGroup } from '@mission-platform/mcp-shared/repo/scanner';
-import { z } from 'zod';
 
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 

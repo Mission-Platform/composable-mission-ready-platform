@@ -28,5 +28,5 @@ behoud bij het wisselen van bestuurder.
 
 Het pakket moet bruikbaar blijven vanuit zowel Vite als tsdown. Voeg geen doel toe
 schakel de runtime-afhankelijkheid van de tabel of het raamwerk over naar de neutrale driver. Update de
-[compilerpijplijnreferentie](../reference/compiler.md) wanneer een openbaar podium of
+[referentie van de compilerpijplijn](../reference/compiler.md) wanneer een openbaar podium of
 artefactcontractwijzigingen.

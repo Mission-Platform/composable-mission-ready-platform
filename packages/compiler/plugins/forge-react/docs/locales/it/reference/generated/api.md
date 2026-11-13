@@ -27,11 +27,11 @@ Trasforma l'intero modulo nell'origine di destinazione React.
 
 #### Parametri
 
-| Nome           | Digitare         | Descrizione |
-| -------------- | ---------------- | ----------- |
-| modulo         | Modulo Semantico |             |
-| nomecomponente | stringa          |             |
-| piano          | ReactModulePlan  |             |
+| Nome | Digitare | Descrizione |
+| ------------- | --------------- | ----------- |
+| modulo | Modulo Semantico |             |
+| nomecomponente | stringa |             |
+| piano | ReactModulePlan |             |
 
 ## `src/index`
 
@@ -61,8 +61,8 @@ Restringi un piano di proprietà della destinazione a quello React.
 
 #### Parametri
 
-| Nome      | Digitare                          | Descrizione |
-| --------- | --------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | -------------------------------- | ----------- |
 | abbassato | TargetLoweredModule \| indefinito |             |
 
 ### lowerReactModule
@@ -80,9 +80,9 @@ Abbassa l'IR neutro nel piano React portato da {@link TargetIntentions.lowered}.
 
 #### Parametri
 
-| Nome     | Digitare                 | Descrizione |
-| -------- | ------------------------ | ----------- |
-| io       | Modulo Semantico         |             |
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| io | Modulo Semantico |             |
 | contesto | Contesto di destinazione |             |
 
 ### planReactModule
@@ -100,10 +100,10 @@ Crea il piano React per un modulo.
 
 #### Parametri
 
-| Nome           | Digitare         | Descrizione |
-| -------------- | ---------------- | ----------- |
-| modulo         | Modulo Semantico |             |
-| nomecomponente | stringa          |             |
+| Nome | Digitare | Descrizione |
+| ------------- | -------------- | ----------- |
+| modulo | Modulo Semantico |             |
+| nomecomponente | stringa |             |
 
 ### ReactClientDirectivePlan
 
@@ -153,7 +153,7 @@ Esattamente quali associazioni vengono importate dal modulo generato e da dove.
 export interface ReactLoweredModule extends TargetLoweredModule
 ```
 
-Il contratto `lowered` della destinazione React, discriminato su {@link REACT_FRAMEWORK}.
+IL React bersaglio `lowered` contratto, discriminato su {@link REACT_FRAMEWORK}.
 
 ### ReactModulePlan
 
@@ -163,7 +163,7 @@ Il contratto `lowered` della destinazione React, discriminato su {@link REACT_FR
 export interface ReactModulePlan
 ```
 
-Ogni decisione React presa per un modulo.
+Ogni React decisione presa per un modulo.
 
 ### ReactPropPlan
 
@@ -206,10 +206,10 @@ inline e con `stableKeyInference` disabilitato viene mantenuta ogni chiave dedot
 
 #### Parametri
 
-| Nome       | Digitare              | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---------- | --------------------- | ----------- |
-| intenzioni | Intenzioni target     |             |
-| opzioni    | TargetOptimizeOptions |             |
+| intenzioni | Intenzioni target |             |
+| opzioni | TargetOptimizeOptions |             |
 
 ### REACT_OTTIMIZZAZIONI
 

@@ -17,7 +17,7 @@ pnpm add --save-dev @mission-platform/i18n-config
 ```
 
 Bewaar landinstellingen naast de werkruimte waarvan ze eigenaar zijn. Extractie schrijft
-naamruimtebundels onder de eigen werkruimte `locales/<locale>/` map;
+naamruimtebundels onder de map `locales/<locale>/` van de werkruimte die eigenaar is;
 de opdracht op repositoryniveau orkestreert alle geconfigureerde werkruimten.
 
 ## Bijdragen

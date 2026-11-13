@@ -24,16 +24,15 @@ React 트리에 i18next 인스턴스를 제공합니다(위임).
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 속성 | ForgeI18NProvider속성 |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------- | ----------- |
+| 속성 | ForgeI18NProvider속성 |             |
 
 #### 계약
 
 - **@예:** '@mission-platform/i18n'에서 { createForgeI18N, ForgeI18NProvider } 가져오기
-
-const i18n = createForgeI18N({ 메시지: { en: { hello: '안녕하세요' } } })
-루트.렌더(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)
+  const i18n = createForgeI18N({ 메시지: { en: { hello: '안녕하세요' } } })
+  루트.렌더(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)
 
 ### ForgeI18NProvider속성
 
@@ -52,7 +51,7 @@ export interface ForgeI18NProviderProperties
 **종류:** 기능
 
 ```typescript
-function createForgeI18NVue(i18next: I18nInstance): Plugin;
+function createForgeI18NVue(i18next: ForgeI18nInstance): Plugin;
 ```
 
 i18next 인스턴스를 Vue 플러그인(`i18next-vue`에 위임)으로 래핑하여
@@ -61,16 +60,15 @@ i18next 인스턴스를 Vue 플러그인(`i18next-vue`에 위임)으로 래핑�
 
 #### 매개변수
 
-| 이름    | 유형         | 설명 |
-| ------- | ------------ | ---- |
-| i18다음 | I18n인스턴스 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ----------------- | ----------- |
+| i18다음 | ForgeI18nInstance |             |
 
 #### 계약
 
 - **@예:** '@mission-platform/i18n'에서 { createForgeI18N, createForgeI18NVue } 가져오기
-
-const i18n = createForgeI18N({ 메시지: { en: { hello: '안녕하세요' } } })
-app.use(createForgeI18NVue(i18n))
+  const i18n = createForgeI18N({ 메시지: { en: { hello: '안녕하세요' } } })
+  app.use(createForgeI18NVue(i18n))
 
 ## `src/composables/use-i18n/use-i18n.neutral`
 
@@ -89,9 +87,9 @@ React 및 Vue 빌드에서 사용된 것과 동일한 `useI18n()` 가져오기�
 
 #### 매개변수
 
-| 이름         | 유형   | 설명 |
-| ------------ | ------ | ---- |
-| 네임스페이스 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------ | ----------- |
+| 네임스페이스 | 문자열 |             |
 
 ### 사용I18n반환
 
@@ -113,8 +111,8 @@ export interface UseI18nReturn
 function useI18n(namespace?: string): UseI18nReturn;
 ```
 
-번역 기능, 기본 i18next 인스턴스를 노출하는 후크
-활성 로케일 및 `setLocale` 작업. `react-i18next` 위의 얇은 포장지
+변환 기능, 기본 i18next 인스턴스를 노출하는 후크
+활성 로캘 및 `setLocale` 작업. `react-i18next` 위의 얇은 포장지
 `useTranslation`.
 
 `namespace`(예: `forgeNamespace('breakpoints')`)을 전달하여 `t`를
@@ -123,9 +121,9 @@ function useI18n(namespace?: string): UseI18nReturn;
 
 #### 매개변수
 
-| 이름         | 유형   | 설명 |
-| ------------ | ------ | ---- |
-| 네임스페이스 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------ | ----------- |
+| 네임스페이스 | 문자열 |             |
 
 ### 사용I18n반환
 
@@ -148,7 +146,7 @@ function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 반응형 번역 기능인 active를 노출하는 컴포지션 도우미
-로케일(i18next와 동기화된 쓰기 가능한 참조) 및 `setLocale`
+로캘(i18next와 동기화된 쓰기 가능한 참조) 및 `setLocale`
 행동. `i18next-vue`에 대한 얇고 프레임워크 친화적인 래퍼
 `useTranslation`.
 
@@ -158,9 +156,9 @@ function useI18n(namespace?: string): UseI18nReturn;
 
 #### 매개변수
 
-| 이름         | 유형   | 설명 |
-| ------------ | ------ | ---- |
-| 네임스페이스 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------ | ----------- |
+| 네임스페이스 | 문자열 |             |
 
 ### 사용I18n반환
 
@@ -179,11 +177,11 @@ export interface UseI18nReturn
 **종류:** 기능
 
 ```typescript
-function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance;
+function createForgeI18N(options: CreateForgeI18NOptions = {}): ForgeI18nInstance;
 ```
 
 구성된 프레임워크에 구애받지 않는 [i18next](https://www.i18next.com/)를 생성합니다.
-미션 플랫폼의 예입니다.
+미션 플랫폼의 인스턴스입니다.
 
 반환된 인스턴스는 일반 i18next입니다. 프레임워크 바인딩이 없으므로
 Vue 어댑터(`mp:vue` 빌드)와 페어링할 수 있습니다.
@@ -201,31 +199,28 @@ Vue 어댑터(`mp:vue` 빌드)와 페어링할 수 있습니다.
 
 #### 매개변수
 
-| 이름 | 유형                | 설명 |
-| ---- | ------------------- | ---- |
-| 옵션 | CreateForgeI18N옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ---------------------- | ----------- |
+| 옵션 | CreateForgeI18N옵션 |             |
 
 #### 계약
 
 - **@example:** // 프레임워크 중립적 사용
   '@mission-platform/i18n'에서 { createForgeI18N } 가져오기
-
-const i18n = createForgeI18N({ 메시지: { en: { hello: '안녕하세요 {이름}' } } })
-i18n.t('hello', { name: 'World' }) // → 'Hello World'
-
+  const i18n = createForgeI18N({ 메시지: { en: { hello: '안녕하세요 {이름}' } } })
+  i18n.t('hello', { name: 'World' }) // → 'Hello World'
 - **@example:** // 패키지 문자열을 재정의하는 앱의 네임스페이스 사용
   '@mission-platform/i18n'에서 { createForgeI18N, forgeNamespace } 가져오기
-
-const i18n = createForgeI18N({
-네임스페이스: forgeNamespace('my-care-notes'),
-네임스페이스: {
-[forgeNamespace('my-care-notes')]: { en: { nav: { Notes: 'Notes' } } },
-[forgeNamespace('breakpoints')]: { en: { 중단점: 'breakpoint:' } },
-},
-재정의: {
-[forgeNamespace('breakpoints')]: { en: { 중단점: 'Viewport:' } },
-},
-})
+  const i18n = createForgeI18N({
+  네임스페이스: forgeNamespace('my-care-notes'),
+  네임스페이스: {
+  [forgeNamespace('my-care-notes')]: { en: { nav: { Notes: 'Notes' } } },
+  [forgeNamespace('breakpoints')]: { en: { 중단점: 'breakpoint:' } },
+  },
+  재정의: {
+  [forgeNamespace('breakpoints')]: { en: { 중단점: 'Viewport:' } },
+  },
+  })
 
 ### CreateForgeI18N옵션
 
@@ -260,10 +255,10 @@ function runWithI18n(i18n: I18nInstance, callback: () => T): T;
 
 #### 매개변수
 
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| i18n | I18n인스턴스 |      |
-| 콜백 | () => 티     |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------------ | ----------- |
+| i18n | I18n인스턴스 |             |
+| 콜백 | () => 티 |             |
 
 ### setServerI18n
 
@@ -277,9 +272,9 @@ function setServerI18n(i18n: I18nInstance): void;
 
 #### 매개변수
 
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| i18n | I18n인스턴스 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------------ | ----------- |
+| i18n | I18n인스턴스 |             |
 
 ## `src/utils/merge-locales`
 
@@ -291,16 +286,16 @@ function setServerI18n(i18n: I18nInstance): void;
 function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLocales;
 ```
 
-`source`의 로케일별 메시지 개체를 `target`로 심층 병합합니다.
+`source`의 로캘별 메시지 개체를 `target`로 심층 병합합니다.
 새로운 {@link ForgeLocales} 지도를 반환합니다. 네임스페이스 번들을 계층화하는 데 사용되며
 로케일별로 재정의됩니다.
 
 #### 매개변수
 
-| 이름 | 유형      | 설명 |
-| ---- | --------- | ---- |
-| 목표 | Forge로캘 |      |
-| 출처 | Forge로캘 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------ | ----------- |
+| 목표 | Forge로캘 |             |
+| 출처 | Forge로캘 |             |
 
 ### deepMergeMessages
 
@@ -310,20 +305,20 @@ function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLoca
 function deepMergeMessages(target: ForgeMessageObject, source: ForgeMessageObject): ForgeMessageObject;
 ```
 
-두 개의 메시지 객체를 재귀적으로 심층 병합하여 새 객체를 반환합니다. 평야
+두 개의 메시지 개체를 재귀적으로 심층 병합하여 새 개체를 반환합니다. 평야
 (비배열) 중첩 객체는 키별로 병합됩니다. 다른 모든 값
 `source`의 (문자열, 배열, …)은 `target`의 일치하는 값을 대체합니다.
 
 이는 네임스페이스별 앱 `overrides`를 맨 위에 레이어하는 데 사용되는 병합 전략입니다.
-소수의 재정의된 키만 패키지 자체 문자열로 구성되어야 합니다.
+재정의된 키 중 소수만이 패키지 자체 문자열에 포함되어야 합니다.
 승리하면 나머지 패키지 번들이 보존됩니다.
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 목표 | ForgeMessageObject |      |
-| 출처 | ForgeMessageObject |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------ | ----------- |
+| 목표 | ForgeMessageObject |             |
+| 출처 | ForgeMessageObject |             |
 
 ### 병합로케일
 
@@ -338,9 +333,9 @@ function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessage
 
 #### 매개변수
 
-| 이름 | 유형                | 설명 |
-| ---- | ------------------- | ---- |
-| 모듈 | ForgeLocaleModule[] |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------- | ----------- |
+| 모듈 | ForgeLocaleModule[] |             |
 
 ## `src/utils/namespace`
 
@@ -352,7 +347,7 @@ function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessage
 export const FORGE_DEFAULT_NAMESPACE;
 ```
 
-명시적이지 않은 경우 기본 i18next 네임스페이스 메시지가 등록됩니다.
+기본 i18next 네임스페이스 메시지는 명시적이지 않은 경우 등록됩니다.
 `namespace`이 제공됩니다. 독립 실행형 사용(`createForgeI18N({ messages })`)은
 네임스페이스를 철자하지 않고 중첩된 키(`nav.notes`)를 해결합니다.
 
@@ -384,9 +379,9 @@ function forgeNamespace(name: string): string;
 
 #### 매개변수
 
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 이름 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 이름 | 문자열 |             |
 
 ### 로케일네임스페이스
 
@@ -404,10 +399,10 @@ function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageOb
 
 #### 매개변수
 
-| 이름   | 유형                             | 설명 |
-| ------ | -------------------------------- | ---- |
-| 로케일 | 문자열                           |      |
-| 번들   | 기록<string, ForgeMessageObject> |      |
+| 이름 | 유형 | 설명 |
+| ------- | ---------------------------------- | ----------- |
+| 로케일 | 문자열 |             |
+| 번들 | 기록<string, ForgeMessageObject> |             |
 
 #### 계약
 
@@ -418,6 +413,16 @@ function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageOb
   })
 
 ## `src/utils/types`
+
+### ForgeI18n인스턴스
+
+**종류:** 유형
+
+```typescript
+export type ForgeI18nInstance = Omit<I18nInstance, 't'> &
+```
+
+선택기 가능 번역 기능을 갖춘 i18next 인스턴스 유형.
 
 ### ForgeLocale모듈
 
@@ -469,3 +474,23 @@ export type ForgeNamespaceLocales = Record<string, ForgeLocales>;
 
 i18next 네임스페이스(`mp.<workspace>`)와 해당 로케일별 메시지의 맵입니다.
 `createForgeI18N`의 `namespaces` 및 `overrides` 옵션 모두에서 사용됩니다.
+
+### ForgeTranslation함수
+
+**종류:** 유형
+
+```typescript
+export type ForgeTranslationFunction = TFunction &
+```
+
+패키지 경계를 넘어 선택기 가능을 유지하는 번역 기능 유형입니다.
+
+### Forge번역소스
+
+**종류:** 유형
+
+```typescript
+export type ForgeTranslationSource =
+```
+
+i18next의 선택기 콜백 API에서 사용되는 재귀 소스 유형입니다.

@@ -2,10 +2,10 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> packages/harper/docs/index.md: [packages/harper/docs/index.md](../../index.md)
+> packages/content/harper/docs/index.md: [packages/content/harper/docs/index.md](../../index.md)
 > Langue: Français (fr)
 
-`@mission-platform/harper` fournit une intégration entre le [Harper](https://writewithharper.com) vérificateur de grammaire et
+`@mission-platform/harper` fournit une intégration entre le vérificateur de grammaire [Harper](https://writewithharper.com) et
 l'éditeur de Monaco. Harper est un vérificateur de grammaire anglaise rapide, hors ligne et axé sur la confidentialité, optimisé par WebAssembly et qui s'exécute
 entièrement dans le navigateur.
 

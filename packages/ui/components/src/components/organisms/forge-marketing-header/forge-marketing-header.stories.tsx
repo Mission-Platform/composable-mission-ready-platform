@@ -1,6 +1,6 @@
-import { ForgeMarketingHeader } from './forge-marketing-header';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeMarketingHeader } from './forge-marketing-header';
 
 const meta = {
   title: 'Organisms/Marketing/ForgeMarketingHeader',

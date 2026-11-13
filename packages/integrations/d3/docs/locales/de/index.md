@@ -13,7 +13,7 @@ System.
 Dieses Paket verbindet zwingendes D3-auswahlbasiertes Rendering mit deklarativen reaktiven UI-Bäumen:
 
 - **Neutrale Implementierung**: Basierend auf `@mission-platform/forge-jsx`-Hooks (`useRef`, `useEffect`).
-- **Dual-Framework-Ziel**: Transpiliert von `@mission-platform/vite-plugin-forge` in natives React (`./react`) und Vue 3
+- **Dual-Framework-Ziel**: Transpiliert durch `@mission-platform/vite-plugin-forge` in natives React (`./react`) und Vue 3
   (`./vue`) Zusammensetzbare Elemente.
 - **Selektive Abhängigkeit**: Importiert `d3-selection` direkt, um die Client-Bundle-Größen minimal zu halten.
 

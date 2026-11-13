@@ -1,5 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
 
+import type {
+  GeneratedModule,
+  SemanticModule,
+  TargetContext,
+  TargetIntentions,
+  TargetLoweredModule,
+} from "@mission-platform/forge-plugin-api";
+
 import { createCompilerPipeline } from "../../../../tooling/vite/forge/src/compiler/pipeline.ts";
 
 import {
@@ -20,14 +28,6 @@ import {
   stringAttribute,
   textChild,
 } from "./ir-test-helpers.ts";
-
-import type {
-  GeneratedModule,
-  SemanticModule,
-  TargetContext,
-  TargetIntentions,
-  TargetLoweredModule,
-} from "@mission-platform/forge-plugin-api";
 
 const NEUTRAL_IMPORT = moduleImport(
   "import { HtmlContent, useState, type MpElement } from '@mission-platform/forge-jsx';",

@@ -53,7 +53,7 @@
     "vitest": "catalog:testing"
   },
   "peerDependencies": {
-    "@redwoodjs/router": "*"
+    "@redwoodjs/router": "catalog:redwood"
   },
   "peerDependenciesMeta": {
     "@redwoodjs/router": {

@@ -1,13 +1,13 @@
 // @vitest-environment jsdom
 
-import { createMemoryHistory, registerRouterElements } from '@mission-platform/forge-router-web-components/runtime';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+
+import { createMemoryHistory, registerRouterElements } from '@mission-platform/forge-router-web-components/runtime';
+import type { MpRouterAdapter } from '@mission-platform/router';
 
 import './app/app-shell';
 import { updateRouteMetadata } from './app/metadata';
 import { createDocsRouter } from './app/router';
-
-import type { MpRouterAdapter } from '@mission-platform/router';
 
 interface DocsShell extends HTMLElement {
   setRouter(router: MpRouterAdapter): void;
@@ -289,6 +289,18 @@ describe('docs Web Components application', { timeout: 120_000 }, () => {
     updateRouteMetadata(router.current.value!);
     expect(router.current.value?.path).toBe('/fr/overview');
     expect(shell.querySelector('docs-document-view')?.dataset.locale).toBe('fr');
+  });
+
+  it('localizes missing-document and table-of-contents labels on non-English routes', async () => {
+    const { shell } = await mountDocs('/ar/missing-document');
+    const missing = shell.querySelector('docs-document-view');
+    expect(renderedTextContent(missing ?? document.createTextNode(''))).toContain('الصفحة غير موجودة');
+    expect(renderedTextContent(missing ?? document.createTextNode(''))).toContain('العودة إلى صفحة الوثائق الرئيسية');
+
+    const { shell: documentShell } = await mountDocs('/ar/overview');
+    const toc = documentShell.querySelector('.docs-document__toc');
+    expect(toc?.getAttribute('aria-label')).toBe('في هذه الصفحة');
+    expect(renderedTextContent(toc ?? document.createTextNode(''))).toContain('في هذه الصفحة');
   });
 
   it('keeps the current document visible beneath the loading spinner during SPA navigation', async () => {

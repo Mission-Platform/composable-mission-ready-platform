@@ -28,7 +28,7 @@ src/stores/
 パッケージ ストアはフレームワーク固有の依存関係を回避します。代わりに、それらは単純な観察可能なパターンに従います。
 
 1. **プライベート状態**: 状態をモジュールのスコープ内に保持します (プレーンな TypeScript 値)。
-2. **スナップショット アクセス**: 現在の状態を取得するための `getSnapshot()` 関数を提供します。
+2. **スナップショット アクセス**: 現在の状態を取得する `getSnapshot()` 関数を提供します。
 3. **サブスクリプション**: リストにコールバックを追加し、サブスクライブ解除を返す `subscribe(listener)` 関数を提供します。
    機能。
 4. **ミューテーター**: 状態を更新する関数を提供します。更新後にすべてのリスナーに通知しなければなりません。
@@ -42,7 +42,7 @@ src/stores/
    環境。
 4. **必須テスト**: すべてのストアに `.spec.ts` ファイルが同じ場所に存在する必要があります。
 
-## ストアの例
+## ストア例
 
 ```ts
 export interface ThemeState {
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState["theme"]): void {
 
 ## コンポーネント内のストアの使用
 
-ライトワンスコンポーネント内でストアを使用するには、`@mission-platform/forge-jsx` から `useState` と `useEffect` を使用してストアをブリッジします。
+追記型コンポーネント内でストアを使用するには、`@mission-platform/forge-jsx` から `useState` と `useEffect` を使用してストアをブリッジします。
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());
@@ -81,9 +81,10 @@ useEffect(() => {
 
 ## 足場
 
-Mission Platform Developer MCP ツールを使用して、新しいストア スケルトンを生成します。
+接続された Mission Platform Developer MCP サーバー経由で `scaffold_store` ツールを使用して、新しいストアを生成します
+骸骨。これは MCP ツール呼び出しの例であり、シェル コマンドではありません。
 
-```bash
+```text
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
@@ -91,6 +92,6 @@ scaffold_store(name="auth-store", package="components", apply=true)
 ## 関連ガイド
 
 - [パッケージ開発](package-development.md)
-- [アトミックコンポーネント設計](atomic-component-design.md)
-- [コンポーザブルオーサリング](composable-authoring.md)
-- [ユーティリティオーサリング](util-authoring.md)
+- [原子コンポーネント設計](atomic-component-design.md)
+- [構成可能なオーサリング](composable-authoring.md)
+- [利用オーサリング](util-authoring.md)

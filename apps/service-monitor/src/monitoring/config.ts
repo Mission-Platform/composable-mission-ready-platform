@@ -83,22 +83,6 @@ export const DEFAULT_TARGETS: readonly MonitorTarget[] = [
     intervalSeconds: 60,
   },
   {
-    id: 'udp-example',
-    name: 'UDP · Cloudflare DNS',
-    type: 'udp',
-    host: '1.1.1.1',
-    port: 53,
-    intervalSeconds: 120,
-  },
-  {
-    id: 'ntp-example',
-    name: 'NTP · Cloudflare',
-    type: 'ntp',
-    host: 'time.cloudflare.com',
-    port: 123,
-    intervalSeconds: 120,
-  },
-  {
     id: 'network-example',
     name: 'Network · Cloudflare',
     type: 'network',

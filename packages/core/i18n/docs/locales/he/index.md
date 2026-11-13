@@ -6,7 +6,7 @@
 > שפה: עברית (he)
 
 `@mission-platform/i18n` הוא מעטפת בינלאומיזציה אגנוסטית מסגרת (i18n) שנבנתה
-על [i18הבא](https://www.i18next.com/). הוא מספק דרך אחידה לטפל בתרגומים ברחבי פלטפורמת המשימה,
+ב-[i18next](https://www.i18next.com/). הוא מספק דרך אחידה לטפל בתרגומים ברחבי פלטפורמת המשימה,
 עם מתאמים ייעודיים עבור Vue 3 ו-React.
 
 ## נקודת כניסה
@@ -17,25 +17,25 @@
 `@mission-platform/vite-config`) ו-`customConditions` ב-TypeScript (באמצעות
 `@mission-platform/typescript-config/framework-<name>` הגדרות קבועות מראש). כל ייבוא ​​נשאר חשוף.
 
-| מצב פעיל   | פותר ל              | ייצוא מפתח                                                              |
-| :--------- | :------------------ | :---------------------------------------------------------------------- |
+| מצב פעיל | פותר ל | ייצוא מפתח |
+| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
 | _(אף אחד)_ | ליבה ניטראלית מסגרת | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
-| `mp:vue`   | מתאם Vue 3          | הליבה הנייטרלית בתוספת `createForgeI18NVue`, `useI18n`                  |
-| `mp:react` | מתאם React          | הליבה הנייטרלית בתוספת `ForgeI18NProvider`, `useI18n`                   |
+| `mp:vue` | מתאם Vue 3 | הליבה הנייטרלית בתוספת `createForgeI18NVue`, `useI18n` |
+| `mp:react` | מתאם React | הליבה הנייטרלית בתוספת `ForgeI18NProvider`, `useI18n` |
 
 ## מושגי ליבה
 
 ### מופע i18n
 
-הליבה מספקת `createForgeI18N(options)`, אשר מחזירה מופע של i18next מאותחל באופן סינכרוני.
+The core provides `createForgeI18N(options)`, which returns a synchronously initialized i18next instance.
 
 - **אינטרפולציה**: משתמש במפרידים חד-סוגריים (לדוגמה, `{name}`).
-- **HTML Escaping**: מושבת כברירת מחדל (`escapeValue: false`) כדי לאפשר למסגרות להתמודד עם בריחה לפי
+- **HTML Escaping**: Disabled by default (`escapeValue: false`) to allow frameworks to handle escaping according to
   מודלים אבטחה משלהם.
 
 ### אסטרטגיית ריווח שמות
 
-כדי למנוע התנגשויות ב-monorepo, תרגומים מקובצים למרחבי שמות באמצעות האמנה `mp.<workspace>`:
+כדי למנוע התנגשויות במונורפו, תרגומים מקובצים למרחבי שמות באמצעות האמנה `mp.<workspace>`:
 
 - **חבילות**: השתמש ב-`forgeNamespace('<package_name>')` (לדוגמה, `@mission-platform/breakpoints` משתמש ב-`mp.breakpoints`).
 - **אפליקציות**: השתמש ב-`forgeNamespace('<app_name>')`.
@@ -43,7 +43,7 @@
 #### היררכיה ועקיפות של מרחב שמות
 
 1. **מרחב שמות ברירת מחדל**: יישומים מגדירים מרחב שמות משלהם כברירת המחדל.
-2. **Fallback**: מרחב השמות המוגדר כברירת מחדל נופל בחזרה למרחבי שמות אחרים, ומאפשר לקוד רכיב לפתור את המפתחות שלו.
+2. **Fallback**: מרחב השמות המוגדר כברירת מחדל נופל בחזרה למרחבי שמות אחרים, מה שמאפשר לקוד הרכיבים לפתור את המפתחות שלו.
 3. **עקיפות**: אפליקציות יכולות לספק אובייקט `overrides` בתצורה כדי לתייג מחדש מחרוזות ספציפיות מחבילה
    מבלי להשפיע על אחרים.
 
@@ -120,7 +120,7 @@ function Greeting() {
 
 ### `forgeNamespace(workspace: string)`
 
-מחזירה את מחרוזת מרחב השמות הסטנדרטית עבור סביבת עבודה נתונה (לדוגמה, `'breakpoints'` $\rightarrow$
+Returns the standardized namespace string for a given workspace (e.g., `'breakpoints'` $\rightarrow$
 `'mp.breakpoints'`).
 
 ### `localeNamespaces(locale: string, bundles: any)`

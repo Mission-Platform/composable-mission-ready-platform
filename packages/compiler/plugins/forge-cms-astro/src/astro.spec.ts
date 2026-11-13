@@ -1,6 +1,8 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
+import { describe, expect, it } from "vitest";
+
 import {
   analyzeContentComponent,
   generateCmsArtifacts,
@@ -25,17 +27,15 @@ import {
   layoutNames,
   stubFramework,
 } from "@mission-platform/forge-cms-plugin-api/fixtures";
-import { analyzeForgeModule } from "@mission-platform/vite-plugin-forge";
-import { parseOxcModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
-import { describe, expect, it } from "vitest";
-
-import { forgeAstroCms } from "./astro.js";
-import { emitContentConfig } from "./collections.js";
-
 import type {
   CompilerDiagnostic,
   SemanticModule,
 } from "@mission-platform/forge-plugin-api";
+import { analyzeForgeModule } from "@mission-platform/vite-plugin-forge";
+import { parseOxcModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
+
+import { forgeAstroCms } from "./astro.js";
+import { emitContentConfig } from "./collections.js";
 
 function irFor(
   source: string,

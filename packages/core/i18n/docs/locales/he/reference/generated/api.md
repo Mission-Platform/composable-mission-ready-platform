@@ -24,16 +24,15 @@ function ForgeI18NProvider(properties: ForgeI18NProviderProperties): ReactElemen
 
 #### פרמטרים
 
-| שם    | הקלד                        | תיאור |
-| ----- | --------------------------- | ----- |
-| נכסים | ForgeI18NProviderProperties |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------- | ----------- |
+| נכסים | ForgeI18NProviderProperties |             |
 
 #### חוֹזֶה
 
 - **@example:** ייבוא { createForgeI18N, ForgeI18NProvider } מ-'@mission-platform/i18n'
-
-const i18n = createForgeI18N({ messages: { en: { hello: 'Hello' } } })
-root.render(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)
+  const i18n = createForgeI18N({ messages: { en: { hello: 'Hello' } } })
+  root.render(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)
 
 ### ForgeI18NProviderProperties
 
@@ -52,7 +51,7 @@ export interface ForgeI18NProviderProperties
 פונקציה **סוג:**
 
 ```typescript
-function createForgeI18NVue(i18next: I18nInstance): Plugin;
+function createForgeI18NVue(i18next: ForgeI18nInstance): Plugin;
 ```
 
 עוטף מופע i18next בתוסף Vue (האצלה ל-`i18next-vue`) כך שהוא
@@ -61,16 +60,15 @@ function createForgeI18NVue(i18next: I18nInstance): Plugin;
 
 #### פרמטרים
 
-| שם      | הקלד         | תיאור |
-| ------- | ------------ | ----- |
-| i18next | I18nInstance |       |
+| שם | הקלד | תיאור |
+| ------- | ----------------- | ----------- |
+| i18next | ForgeI18nInstance |             |
 
 #### חוֹזֶה
 
 - **@example:** ייבא { createForgeI18N, createForgeI18NVue } מ-'@mission-platform/i18n'
-
-const i18n = createForgeI18N({ messages: { en: { hello: 'Hello' } } })
-app.use(createForgeI18NVue(i18n))
+  const i18n = createForgeI18N({ messages: { en: { hello: 'Hello' } } })
+  app.use(createForgeI18NVue(i18n))
 
 ## `src/composables/use-i18n/use-i18n.neutral`
 
@@ -89,9 +87,9 @@ function useI18n(namespace?: string): UseI18nReturn;
 
 #### פרמטרים
 
-| שם        | הקלד   | תיאור |
-| --------- | ------ | ----- |
-| מרחב שמות | מחרוזת |       |
+| שם | הקלד | תיאור |
+| --------- | ------ | ----------- |
+| מרחב שמות | מחרוזת |             |
 
 ### השתמש ב18nReturn
 
@@ -114,7 +112,7 @@ function useI18n(namespace?: string): UseI18nReturn;
 ```
 
 הוק חושף את פונקציית התרגום, המופע הבסיסי של i18next, ה
-אזור פעיל, ופעולה `setLocale`. עטיפה דקה מעל `react-i18next`
+אזור פעיל, ופעולה `setLocale`. עטיפה דקה מעל של `react-i18next`
 `useTranslation`.
 
 העבר `namespace` (למשל `forgeNamespace('breakpoints')`) כדי לאגד את `t` ל-
@@ -123,9 +121,9 @@ function useI18n(namespace?: string): UseI18nReturn;
 
 #### פרמטרים
 
-| שם        | הקלד   | תיאור |
-| --------- | ------ | ----- |
-| מרחב שמות | מחרוזת |       |
+| שם | הקלד | תיאור |
+| --------- | ------ | ----------- |
+| מרחב שמות | מחרוזת |             |
 
 ### השתמש ב18nReturn
 
@@ -158,9 +156,9 @@ function useI18n(namespace?: string): UseI18nReturn;
 
 #### פרמטרים
 
-| שם        | הקלד   | תיאור |
-| --------- | ------ | ----- |
-| מרחב שמות | מחרוזת |       |
+| שם | הקלד | תיאור |
+| --------- | ------ | ----------- |
+| מרחב שמות | מחרוזת |             |
 
 ### השתמש ב18nReturn
 
@@ -179,7 +177,7 @@ export interface UseI18nReturn
 פונקציה **סוג:**
 
 ```typescript
-function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance;
+function createForgeI18N(options: CreateForgeI18NOptions = {}): ForgeI18nInstance;
 ```
 
 יוצר תצורה, מסגרת אגנוסטית [i18next](https://www.i18next.com/)
@@ -201,31 +199,28 @@ function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance;
 
 #### פרמטרים
 
-| שם       | הקלד                   | תיאור |
-| -------- | ---------------------- | ----- |
-| אפשרויות | CreateForgeI18NOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ---------------------- | ----------- |
+| אפשרויות | CreateForgeI18NOptions |             |
 
 #### חוֹזֶה
 
 - **@example:** // שימוש נייטרלי במסגרת
-  ייבוא { createForgeI18N } מ-'@mission-platform/i18n'
-
-const i18n = createForgeI18N({ messages: { en: { hello: 'Hello {name}' } } )
-i18n.t('hello', { name: 'World' }) // → 'Hello World'
-
-- **@example:** // שימוש במרחב שמות עם אפליקציה עוקפת מחרוזת של חבילה
+  יבוא { createForgeI18N } מ- '@mission-platform/i18n'
+  const i18n = createForgeI18N({ messages: { en: { hello: 'Hello {name}' } } )
+  i18n.t('hello', { name: 'World' }) // → 'Hello World'
+- **@example:** // שימוש ברווחי שמות עם אפליקציה עוקפת מחרוזת של חבילה
   ייבוא { createForgeI18N, forgeNamespace } מ-'@mission-platform/i18n'
-
-const i18n = createForgeI18N({
-מרחב שמות: forgeNamespace('my-care-notes'),
-מרחבי שמות: {
-[forgeNamespace('my-care-notes')]: { en: { nav: { notes: 'Notes' } } },
-[forgeNamespace('breakpoints')]: { en: { breakpoint: 'breakpoint:' } },
-},
-עוקף: {
-[forgeNamespace('breakpoints')]: { en: { breakpoint: 'Viewport:' } },
-},
-})
+  const i18n = createForgeI18N({
+  מרחב שמות: forgeNamespace('my-care-notes'),
+  מרחבי שמות: {
+  [forgeNamespace('my-care-notes')]: { en: { nav: { notes: 'Notes' } } },
+  [forgeNamespace('breakpoints')]: { en: { breakpoint: 'breakpoint:' } },
+  },
+  עוקף: {
+  [forgeNamespace('breakpoints')]: { iw: { breakpoint: 'Viewport:' } },
+  },
+  })
 
 ### CreateForgeI18NOptions
 
@@ -260,10 +255,10 @@ function runWithI18n(i18n: I18nInstance, callback: () => T): T;
 
 #### פרמטרים
 
-| שם           | הקלד         | תיאור |
-| ------------ | ------------ | ----- |
-| i18n         | I18nInstance |       |
-| התקשרות חזרה | () => T      |       |
+| שם | הקלד | תיאור |
+| -------- | ------------ | ----------- |
+| i18n | I18nInstance |             |
+| התקשרות חזרה | () => T |             |
 
 ### setServerI18n
 
@@ -277,9 +272,9 @@ function setServerI18n(i18n: I18nInstance): void;
 
 #### פרמטרים
 
-| שם   | הקלד         | תיאור |
-| ---- | ------------ | ----- |
-| i18n | I18nInstance |       |
+| שם | הקלד | תיאור |
+| ---- | ------------ | ----------- |
+| i18n | I18nInstance |             |
 
 ## `src/utils/merge-locales`
 
@@ -297,10 +292,10 @@ function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLoca
 
 #### פרמטרים
 
-| שם   | הקלד         | תיאור |
-| ---- | ------------ | ----- |
-| יעד  | ForgeLocales |       |
-| מקור | ForgeLocales |       |
+| שם | הקלד | תיאור |
+| ------ | ------------ | ----------- |
+| יעד | ForgeLocales |             |
+| מקור | ForgeLocales |             |
 
 ### deepMergeMessages
 
@@ -320,10 +315,10 @@ win ושאר חבילת החבילה נשמרת.
 
 #### פרמטרים
 
-| שם   | הקלד               | תיאור |
-| ---- | ------------------ | ----- |
-| יעד  | ForgeMessageObject |       |
-| מקור | ForgeMessageObject |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------ | ----------- |
+| יעד | ForgeMessageObject |             |
+| מקור | ForgeMessageObject |             |
 
 ### MergeLocales
 
@@ -338,9 +333,9 @@ function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessage
 
 #### פרמטרים
 
-| שם      | הקלד                | תיאור |
-| ------- | ------------------- | ----- |
-| מודולים | ForgeLocaleModule[] |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------- | ----------- |
+| מודולים | ForgeLocaleModule[] |             |
 
 ## `src/utils/namespace`
 
@@ -384,9 +379,9 @@ function forgeNamespace(name: string): string;
 
 #### פרמטרים
 
-| שם  | הקלד   | תיאור |
-| --- | ------ | ----- |
-| שם  | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| שם | מחרוזת |             |
 
 ### localeNamespaces
 
@@ -404,10 +399,10 @@ function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageOb
 
 #### פרמטרים
 
-| שם     | הקלד                            | תיאור |
-| ------ | ------------------------------- | ----- |
-| מקומי  | מחרוזת                          |       |
-| צרורות | שיא<string, ForgeMessageObject> |       |
+| שם | הקלד | תיאור |
+| ------- | ---------------------------------- | ----------- |
+| מקומי | מחרוזת |             |
+| צרורות | שיא<string, ForgeMessageObject> |             |
 
 #### חוֹזֶה
 
@@ -418,6 +413,16 @@ function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageOb
   })
 
 ## `src/utils/types`
+
+### ForgeI18nInstance
+
+**סוג:** סוג
+
+```typescript
+export type ForgeI18nInstance = Omit<I18nInstance, 't'> &
+```
+
+סוג מופע i18next עם פונקציית התרגום התומכת בבורר.
 
 ### ForgeLocaleModule
 
@@ -437,7 +442,7 @@ export type ForgeLocaleModule = Record<string, ForgeMessageObject>;
 export type ForgeLocales = Record<string, ForgeMessageObject>;
 ```
 
-עקיפת הודעה לפי אזור הועברו ישירות ל-createForgeI18N.
+עקיפת הודעות לפי אזור הועברו ישירות ל-createForgeI18N.
 
 ### ForgeMessageObject
 
@@ -469,3 +474,23 @@ export type ForgeNamespaceLocales = Record<string, ForgeLocales>;
 
 מפה של מרחבי השמות של i18next (`mp.<workspace>`) להודעות שלהם לפי אזור.
 בשימוש הן על ידי האפשרויות `namespaces` והן `overrides` של `createForgeI18N`.
+
+### ForgeTranslationFunction
+
+**סוג:** סוג
+
+```typescript
+export type ForgeTranslationFunction = TFunction &
+```
+
+סוג פונקציית תרגום שנותר בעל יכולת בורר על פני גבולות החבילה.
+
+### ForgeTranslationSource
+
+**סוג:** סוג
+
+```typescript
+export type ForgeTranslationSource =
+```
+
+סוג מקור רקורסיבי בשימוש על ידי ה-API להתקשרות חוזרת של i18next.

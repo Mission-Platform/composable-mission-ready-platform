@@ -23,8 +23,8 @@ Trasforma un modulo hook neutro nella sua sorgente SolidJS.
 
 #### Parametri
 
-| Nome   | Digitare         | Descrizione |
-| ------ | ---------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------ | -------------- | ----------- |
 | modulo | Modulo Semantico |             |
 
 ## `src/emitters/module`
@@ -44,9 +44,9 @@ Trasforma un modulo componente neutro nella sua sorgente SolidJS.
 
 #### Parametri
 
-| Nome    | Digitare          | Descrizione |
-| ------- | ----------------- | ----------- |
-| modulo  | Modulo Semantico  |             |
+| Nome | Digitare | Descrizione |
+| ------- | ---------------- | ----------- |
+| modulo | Modulo Semantico |             |
 | opzioni | Opzioni SolidEmit |             |
 
 ### Modulo solido generato
@@ -97,8 +97,8 @@ Restringere un piano target a quello Solid; `false` per qualsiasi altro piano di
 
 #### Parametri
 
-| Nome      | Digitare                          | Descrizione |
-| --------- | --------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | -------------------------------- | ----------- |
 | abbassato | TargetLoweredModule \| indefinito |             |
 
 ### lowerSolidModule
@@ -116,9 +116,9 @@ Abbassa l'IR neutro nell'involucro dell'intenzione target di Solid, trasportando
 
 #### Parametri
 
-| Nome     | Digitare                 | Descrizione |
-| -------- | ------------------------ | ----------- |
-| io       | Modulo Semantico         |             |
+| Nome | Digitare | Descrizione |
+| ------- | -------------- | ----------- |
+| io | Modulo Semantico |             |
 | contesto | Contesto di destinazione |             |
 
 ### planSolidImports
@@ -138,10 +138,10 @@ la riesecuzione produce un elenco identico. Ricalcolare questo è ciò che rende
 
 #### Parametri
 
-| Nome         | Digitare                     | Descrizione |
-| ------------ | ---------------------------- | ----------- |
-| piano        | Piano di abbassamento solido |             |
-| condizionale | booleano                     |             |
+| Nome | Digitare | Descrizione |
+| ----------- | ----------------- | ----------- |
+| piano | Piano di abbassamento solido |             |
+| condizionale | booleano |             |
 
 ### planSolidModule
 
@@ -155,9 +155,9 @@ Costruisci il piano Solid per i fatti semantici di un modulo.
 
 #### Parametri
 
-| Nome | Digitare         | Descrizione |
-| ---- | ---------------- | ----------- |
-| io   | Modulo Semantico |             |
+| Nome | Digitare | Descrizione |
+| ---- | -------------- | ----------- |
+| io | Modulo Semantico |             |
 
 ### SOLID_QUADRO
 
@@ -347,10 +347,10 @@ Perfezionare un piano Solid ridotto. Un wrapper di intenzione che non contiene a
 
 #### Parametri
 
-| Nome       | Digitare              | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---------- | --------------------- | ----------- |
-| intenzioni | Intenzioni target     |             |
-| opzioni    | TargetOptimizeOptions |             |
+| intenzioni | Intenzioni target |             |
+| opzioni | TargetOptimizeOptions |             |
 
 ### STABLE_LIST_KEYS
 

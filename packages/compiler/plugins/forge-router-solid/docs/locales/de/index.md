@@ -5,6 +5,6 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > packages/compiler/plugins/forge-router-solid/docs/index.md: [packages/compiler/plugins/forge-router-solid/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
-Forge router target für SolidJS Router
+Forge-Router-Ziel für SolidJS-Router
 
-See `llms.txt` für die public API und usage examples.
+Die öffentliche API und Anwendungsbeispiele finden Sie unter `llms.txt`.

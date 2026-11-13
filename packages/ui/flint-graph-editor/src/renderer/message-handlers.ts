@@ -1,3 +1,5 @@
+import type { FlintGraphEdge, FlintGraphNode } from '@mission-platform/flint';
+
 import { init2dBackend } from './canvas2d-pass';
 import { COORD_OFFSET, NODE_HEADER_HEIGHT, NODE_WIDTH, PORT_ROW_HEIGHT } from './constants';
 import { cleanupGlResources, initWebGLBackend, setupGlFontTexture } from './webgl-pass';
@@ -10,7 +12,6 @@ import type {
   RenderWorkerOutputMessage,
 } from './types';
 import type { RenderWorkerState } from './worker-state';
-import type { FlintGraphEdge, FlintGraphNode } from '@mission-platform/flint';
 
 /**
  * Attempts dispatching reply message via postMessage API.

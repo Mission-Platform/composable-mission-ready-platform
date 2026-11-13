@@ -9,18 +9,19 @@ Esta guía explica cómo consumir paquetes de Mission Platform en proyectos ubic
 
 ## Selección del marco a través de condiciones
 
-Los componentes de Mission Platform se crean una vez usando `@mission-platform/forge-jsx` y se distribuyen como múltiples paquetes específicos del marco (Vue 3, React, Solid y componentes web) dentro de un solo paquete.
+Los componentes de Mission Platform se crean una vez usando `@mission-platform/forge-jsx` y se distribuyen como múltiples paquetes específicos del marco (Vue 3, React, Solid, Svelte y componentes web) dentro de un solo paquete.
 
 Para seleccionar el paquete correcto, debe configurar su herramienta de compilación y TypeScript para usar **Condiciones de exportación personalizadas**.
 
 ### Condiciones marco admitidas
 
-| Marco               | Condición de exportación |
-| :------------------ | :----------------------- |
-| **Vue 3**           | `mp:vue`                 |
-| **React**           | `mp:react`               |
-| **Solid**           | `mp:solid`               |
-| **Componentes web** | `mp:web-component`       |
+| Marco | Condición de exportación |
+| :----------------- | :----------------- |
+| **Vue 3** | `mp:vue` |
+| **React** | `mp:react` |
+| **Solid** | `mp:solid` |
+| **Svelte** | `mp:svelte` |
+| **Componentes web** | `mp:web-component` |
 
 ## Configuración del proyecto
 
@@ -122,7 +123,7 @@ outlet?.setRouter(router);
 
 ### Navegación asíncrona con un control giratorio de carga
 
-Los componentes de ruta asíncronos pueden mantener la página actual visible mientras se abre la siguiente vista.
+Los componentes de ruta asíncronos pueden mantener visible la página actual mientras se abre la siguiente vista.
 cargas. Configure el recurso de salida al crear el enrutador de componentes web;
 `forge-router-link` luego realiza la navegación SPA con `pushState` (o reemplaza
 historial cuando `replace` está habilitado):

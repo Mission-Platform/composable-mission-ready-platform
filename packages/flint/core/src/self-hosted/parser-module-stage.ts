@@ -21,6 +21,8 @@
  * fallback.
  */
 
+import type { FlintAggregateLayout } from '@mission-platform/flint-c-abi';
+
 import {
   createBuilder,
   type BytecodeBuilder,
@@ -28,8 +30,6 @@ import {
   type FlintSelfHostedVmModule,
   type FlintSelfHostedVmValue,
 } from './lex-stage.js';
-
-import type { FlintAggregateLayout } from '../manifest.js';
 
 export const FLINT_PARSER_MODULE_STAGE_ENTRY = 'parse_module_stage';
 const SOURCE_LAYOUT = 'FlintSourceBytes';

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { encodeQr, encodeQrAsync } from './index';
+import { encodeQr, encodeQrAsync } from '.';
 
 // The wasm module is instantiated once in `src/test-setup.ts` (a Vitest
 // `setupFiles` entry) before any spec runs.

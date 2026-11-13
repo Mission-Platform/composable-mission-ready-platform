@@ -33,7 +33,7 @@ Vue 3 es el marco con el que se crean las aplicaciones en `apps/` y el principal
 
 - **Reactividad superficial**: utilice `shallowRef` o `shallowReactive` para conjuntos de datos grandes y complejos para evitar la sobrecarga del proxy.
 - **v-memo**: use `v-memo` en plantillas para omitir costosas actualizaciones de subárbol basadas en cambios de dependencia.
-- **markRaw**: Wrap third-party library instances (e.g., Chart.js, Mapbox) in `markRaw` to prevent Vue from attempting to make them reactive.
+- **markRaw**: envuelve instancias de bibliotecas de terceros (por ejemplo, Chart.js, Mapbox) en `markRaw` para evitar que Vue intente hacerlas reactivas.
 
 ## React
 
@@ -60,16 +60,17 @@ Mission Platform proporciona distintos niveles de soporte para otros marcos a tr
 
 ## Modelos de rendimiento y reactividad
 
-| Marco         | Modelo de reactividad | Estrategia de actualización                              |
-| :------------ | :-------------------- | :------------------------------------------------------- |
-| **Vue 3**     | Basado en proxy       | DOM virtual con optimizaciones del compilador.           |
-| **React**     | Estado inmutable      | Conciliación DOM virtual.                                |
-| **SolidJS**   | Señales detalladas    | Actualizaciones directas de DOM (sin VDOM).              |
-| **Svelte 5**  | Runas / Señales       | Actualizaciones directas de DOM a través del compilador. |
-| **Iluminado** | Propiedades reactivas | Actualizaciones asincrónicas de Shadow DOM.              |
+| Marco | Modelo de reactividad | Estrategia de actualización |
+| :----------- | :------------------- | :--------------------------------------- |
+| **Vue 3** | Basado en proxy | DOM virtual con optimizaciones del compilador. |
+| **React** | Estado inmutable | Conciliación DOM virtual.              |
+| **SolidJS** | Señales detalladas | Actualizaciones directas de DOM (sin VDOM).            |
+| **Svelte 5** | Runas / Señales | Actualizaciones directas de DOM a través del compilador.         |
+| **Iluminado** | Propiedades reactivas | Actualizaciones asincrónicas de Shadow DOM.         |
 
 ## Recursos relacionados
 
 - [Mejores prácticas](best-practices.md)
-- [Guía de prueba](testing.md)
+- [Guía de pruebas](testing.md)
 - [@mission-platform/forge-jsx LÉAME](../../../packages/core/forge-jsx/README.md)
+- [@mission-platform/forge-adapters LÉAME](../../../packages/core/forge-adapters/README.md)

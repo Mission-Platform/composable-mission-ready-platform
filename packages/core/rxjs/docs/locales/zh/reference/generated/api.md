@@ -16,17 +16,17 @@
 **种类：**功能
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined;
+function useObservable(source: Observable<T>, initialValue?: T): T | undefined;
 ```
 
-订阅 `source` 并返回其最新发射作为状态。退货
-`undefined` 直到第一次发射到达。
+没有提供描述。
 
 #### 参数
 
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 来源 | Observable<T> |      |
+|名称 |类型 |描述 |
+| ------------ | ------------- | ----------- |
+|来源 | Observable<T> |             |
+|初始值 | T |             |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -58,11 +58,11 @@ function useSubscribe(
 
 #### 参数
 
-| 名称           | 类型                                     | 描述             |
-| -------------- | ---------------------------------------- | ---------------- |
-| 来源           | Observable<T>                            |                  |
-| 观察者或下一个 | 部分<Observer<T>> \| （（值：T）=>无效） |                  |
-| 依赖关系       | MpDependencyList                         | MpDependencyList |     |
+|名称 |类型 |描述 |
+| -------------- | -------------------------------------------- | ----------- |
+|来源 | Observable<T> |             |
+|观察者或下一个 |部分<Observer<T>> \| （（值：T）=>无效）|             |
+|依赖关系 | MpDependencyList | MpDependencyList |             |
 
 ### 使用订阅
 
@@ -78,7 +78,7 @@ function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDepend
 
 #### 参数
 
-| 名称     | 类型             | 描述             |
-| -------- | ---------------- | ---------------- |
-| 订阅     | () => 取消订阅   |                  |
-| 依赖关系 | MpDependencyList | MpDependencyList |     |
+|名称 |类型 |描述 |
+| ------------ | -------------------- | ----------- |
+|订阅 | () => 取消订阅 |             |
+|依赖关系 | MpDependencyList | MpDependencyList |             |

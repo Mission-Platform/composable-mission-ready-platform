@@ -7,7 +7,6 @@ import {
   type FlintGraphValidationIssue,
   type FlintNodeGraph,
 } from '@mission-platform/flint';
-
 import type { FlintTraceReport } from '@mission-platform/flint-runtime';
 
 export type CompilerWorkerRequest =

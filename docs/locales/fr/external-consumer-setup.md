@@ -9,18 +9,19 @@ Ce guide explique comment utiliser les packages Mission Platform dans des projet
 
 ## Sélection du cadre via les conditions
 
-Les composants de Mission Platform sont créés une seule fois à l'aide de `@mission-platform/forge-jsx` et distribués sous forme de plusieurs ensembles spécifiques au framework (Vue 3, React, Solid et composants Web) au sein d'un seul package.
+Les composants Mission Platform sont créés une seule fois à l'aide de `@mission-platform/forge-jsx` et distribués sous forme de plusieurs ensembles spécifiques au framework (Vue 3, React, Solid, Svelte et composants Web) au sein d'un seul package.
 
 Pour sélectionner le bon bundle, vous devez configurer votre outil de génération et TypeScript pour utiliser les **Conditions d'exportation personnalisées**.
 
 ### Conditions cadres prises en charge
 
-| Cadre              | Conditions d'exportation |
-| :----------------- | :----------------------- |
-| **Vue 3**          | `mp:vue`                 |
-| **React**          | `mp:react`               |
-| **Solid**          | `mp:solid`               |
-| **Composants Web** | `mp:web-component`       |
+| Cadre | Conditions d'exportation |
+| :----------------- | :----------------- |
+| **Vue 3** | `mp:vue` |
+| **React** | `mp:react` |
+| **Solid** | `mp:solid` |
+| **Svelte** | `mp:svelte` |
+| **Composants Web** | `mp:web-component` |
 
 ## Configuration du projet
 
@@ -75,7 +76,7 @@ votre application et la cible Forge correspondante (`@mission-platform/forge-rou
 `-redwood` ou `-web-components`). L'application possède des définitions d'itinéraire, des fournisseurs, des gardes, des chargeurs et le natif
 instance de routeur ; les packages réutilisables importent uniquement les fonctionnalités de `@mission-platform/router`.
 
-## Component Usage
+## Utilisation des composants
 
 Avec les conditions correctement configurées, vous pouvez importer des composants depuis la racine du package. L'outil de construction sélectionnera automatiquement le bundle correspondant à votre condition `mp:*`.
 

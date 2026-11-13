@@ -3,8 +3,9 @@
 // Framework-neutral: authored once against the `@mission-platform/forge-jsx` hooks and
 // compiled to React / Vue by `@mission-platform/vite-plugin-forge`.
 
-import { useEffect, useRef, useState } from '@mission-platform/forge-jsx';
 import { type LngLatLike, type Map, Popup, type PopupOptions } from 'maplibre-gl';
+
+import { useEffect, useRef, useState } from '@mission-platform/forge-jsx';
 
 export interface UsePopupOptions extends PopupOptions {
   /** Longitude/latitude position of the popup. */
@@ -37,7 +38,7 @@ export interface UsePopupReturn {
  */
 export function usePopup(map: Map | undefined, options: UsePopupOptions): UsePopupReturn {
   const { lngLat, content, isText = false, open = true, onClose, ...popupOptions } = options;
-  // eslint-disable-next-line unicorn/no-useless-undefined
+
   const [popup, setPopup] = useState<Popup | undefined>(undefined);
   const popupReference = useRef<Popup | undefined>(undefined);
 

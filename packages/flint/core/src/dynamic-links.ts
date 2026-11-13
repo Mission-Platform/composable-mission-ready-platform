@@ -1,6 +1,6 @@
-import { createDiagnostic, type FlintDiagnostic } from './diagnostics.js';
+import type { FlintAbiFunction, FlintDynamicLinkMetadata } from '@mission-platform/flint-c-abi';
 
-import type { FlintAbiFunction, FlintDynamicLinkMetadata } from './manifest.js';
+import { createDiagnostic, type FlintDiagnostic } from './diagnostics.js';
 
 /**
  * Callable function signature for dynamic module exports accepting numeric handles/arguments.

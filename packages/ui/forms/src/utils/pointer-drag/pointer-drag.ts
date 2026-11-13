@@ -21,7 +21,6 @@
  * `globalThis.window`/`document` and is a no-op on the server.
  */
 
-/** Callbacks invoked across the lifetime of a pointer drag started with {@link beginPointerDrag}. */
 export interface PointerDragHandlers {
   /** Called for every `pointermove` while the drag is active. */
   onMove: (event: PointerEvent) => void;

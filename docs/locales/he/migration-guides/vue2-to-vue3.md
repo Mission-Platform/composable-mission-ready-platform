@@ -10,7 +10,7 @@
 ## סקירה כללית
 
 פלטפורמת המשימה משתמשת ב-Vue 3 עם ה-Composition API ותחביר `<script setup>`. הגירה כרוכה בהתרחקות
-מ-API של Options ועדכון דפוסי מחזור חיים ותגובתיות של רכיבים.
+מה-API של Options ועדכון דפוסי מחזור חיים ותגובתיות של רכיבים.
 
 ## דרישות מוקדמות
 
@@ -38,7 +38,7 @@ export default defineConfig(
 
 ## שלב 2: המר את Options API ל-Composition API
 
-החלף את Vue 2 Options API (`data`, `methods`, `computed`) ב-Vue 3 Composition API.
+החלף את Vue 2 אפשרויות API (`data`, `methods`, `computed`) עם ה Vue 3 קומפוזיציה API.
 
 ### נתונים ל-Refs
 
@@ -90,15 +90,15 @@ const increment = () => {
 
 שמו של ווי מחזור החיים שונה ויש לייבא אותם.
 
-| Vue 2                      | Vue 3                                       |
-| :------------------------- | :------------------------------------------ |
+| Vue 2 | Vue 3 |
+| :------------------------- | :---------------------------------------- |
 | `beforeCreate` / `created` | השתמש ישירות ב-`setup()` / `<script setup>` |
-| `beforeMount`              | `onBeforeMount`                             |
-| `mounted`                  | `onMounted`                                 |
-| `beforeUpdate`             | `onBeforeUpdate`                            |
-| `updated`                  | `onUpdated`                                 |
-| `beforeDestroy`            | `onBeforeUnmount`                           |
-| `destroyed`                | `onUnmounted`                               |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 דוּגמָה:
 
@@ -155,7 +155,7 @@ onMounted(() => {
 
 ## שלב 6: אימות
 
-הפעל את הפקודות הבאות כדי לוודא שההעברה מוצלחת ותעמוד בתקני הפלטפורמה:
+הפעל את הפקודות הבאות כדי להבטיח שההעברה תהיה מוצלחת ותעמוד בתקני הפלטפורמה:
 
 ```bash
 # Type-check the package

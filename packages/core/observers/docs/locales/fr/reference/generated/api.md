@@ -27,16 +27,16 @@ Hook IntersectionObserver indépendant du framework.
 Surveille les changements dans l'intersection d'un élément cible avec un ancêtre
 élément ou avec la fenêtre d'affichage d'un document de niveau supérieur.
 
-SSR-safe : aucune opération lorsque l'API ou le DOM du navigateur n'est pas disponible.
+SSR-safe : aucune opération lorsque l'API du navigateur ou le DOM n'est pas disponible.
 Nettoyage automatique : déconnecte l'observateur au démontage.
 
 #### Paramètres
 
-| Nom     | Tapez                        | Descriptif |
-| ------- | ---------------------------- | ---------- |
-| cible   | MpRef<Element \| null>       |            |
-| rappel  | IntersectionObserverCallback |            |
-| options | IntersectionObservateurInit  |            |
+| Nom | Tapez | Descriptif |
+| -------- | ---------------------------- | ----------- |
+| cible | MpRef<Element \| null> |             |
+| rappel | IntersectionObserverCallback |             |
+| options | IntersectionObservateurInit |             |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -55,16 +55,16 @@ function useMutationObserver(
 Hook MutationObserver indépendant du framework.
 Surveille les modifications apportées à l’arborescence DOM.
 
-SSR-safe : aucune opération lorsque l'API ou le DOM du navigateur n'est pas disponible.
+SSR-safe : aucune opération lorsque l'API du navigateur ou le DOM n'est pas disponible.
 Nettoyage automatique : déconnecte l'observateur au démontage.
 
 #### Paramètres
 
-| Nom     | Tapez                | Descriptif |
-| ------- | -------------------- | ---------- |
-| cible   | MpRef<Node \| null>  |            |
-| rappel  | Rappel de mutation   |            |
-| options | MutationObserverInit |            |
+| Nom | Tapez | Descriptif |
+| -------- | -------------------- | ----------- |
+| cible | MpRef<Node \| null> |             |
+| rappel | Rappel de mutation |             |
+| options | MutationObservateurInit |             |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -85,7 +85,7 @@ Nettoyage automatique : déconnecte l'observateur au démontage.
 
 #### Paramètres
 
-| Nom     | Tapez                       | Descriptif |
-| ------- | --------------------------- | ---------- |
-| rappel  | PerformanceObserverCallback |            |
-| options | PerformanceObserverInit     |            |
+| Nom | Tapez | Descriptif |
+| -------- | --------------------------- | ----------- |
+| rappel | PerformanceObserverCallback |             |
+| options | PerformanceObserverInit |             |

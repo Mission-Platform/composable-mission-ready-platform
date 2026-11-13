@@ -6,3 +6,6 @@ export * from './verifier.js';
 export * from './optimizer.js';
 export * from './sections/custom.js';
 export * from './codegen/abi.js';
+export * from './encoding/leb128.js';
+export * from './encoding/bytes.js';
+export * from './emitter/section-builder.js';

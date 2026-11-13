@@ -35,6 +35,16 @@ export function useI18n(namespace?: string): UseI18nReturn {
   const rawT = namespace ? i18n.getFixedT(null, namespace) : i18n.t.bind(i18n);
   const t = ((...arguments_: Parameters<TFunction>) => {
     const value = rawT(...arguments_);
+    const key = arguments_[0];
+    // When i18next is uninitialized or the key is missing, it may return an empty
+    // string or the key itself. In those cases, fall back to defaultValue or the key.
+    if (typeof value === 'string' && (value === '' || value === key)) {
+      const options = arguments_[1];
+      if (typeof options === 'object' && options !== null && 'defaultValue' in options) {
+        return options.defaultValue;
+      }
+      return typeof key === 'string' ? key : '';
+    }
     if (value !== undefined && value !== null) {
       return value;
     }
@@ -42,7 +52,7 @@ export function useI18n(namespace?: string): UseI18nReturn {
     if (typeof options === 'object' && options !== null && 'defaultValue' in options) {
       return options.defaultValue;
     }
-    return typeof arguments_[0] === 'string' ? arguments_[0] : '';
+    return typeof key === 'string' ? key : '';
   }) as ForgeTranslationFunction;
 
   return {

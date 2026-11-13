@@ -6,7 +6,7 @@
 > 언어: 한국어 (ko)
 
 `@mission-platform/i18n`은 프레임워크에 구애받지 않는 국제화(i18n) 래퍼입니다.
-에 [i18next](https://www.i18next.com/). 미션 플랫폼 전반에 걸쳐 번역을 처리하는 통합된 방법을 제공합니다.
+[i18next](https://www.i18next.com/)에 있습니다. 미션 플랫폼 전반에 걸쳐 번역을 처리하는 통합된 방법을 제공합니다.
 Vue 3 및 React용 전용 어댑터 포함.
 
 ## 진입점
@@ -17,11 +17,11 @@ Vite의 `resolve.conditions`(`defineFrameworkAppConfig`/`frameworkResolveConditi
 `@mission-platform/vite-config`) 및 TypeScript의 `customConditions`(
 `@mission-platform/typescript-config/framework-<name>` 사전 설정). 모든 가져오기는 그대로 유지됩니다.
 
-| 활성 상태  |                      | 주요 수출                                                               |
-| :--------- | :------------------- | :---------------------------------------------------------------------- |
-| _(없음)_   | 프레임워크 중립 코어 | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
-| `mp:vue`   | Vue 3 어댑터         | 중립 코어 플러스 `createForgeI18NVue`, `useI18n`                        |
-| `mp:react` | React 어댑터         | 중성 코어 플러스 `ForgeI18NProvider`, `useI18n`                         |
+| 활성 상태 | | 주요 수출 |
+| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
+| _(없음)_ | 프레임워크 중립 코어 | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
+| `mp:vue` | Vue 3 어댑터 | 중립 코어 플러스 `createForgeI18NVue`, `useI18n` |
+| `mp:react` | React 어댑터 | 중립 코어 플러스 `ForgeI18NProvider`, `useI18n` |
 
 ## 핵심 개념
 
@@ -37,8 +37,8 @@ Vite의 `resolve.conditions`(`defineFrameworkAppConfig`/`frameworkResolveConditi
 
 모노레포에서 충돌을 피하기 위해 번역은 `mp.<workspace>` 규칙을 사용하여 네임스페이스로 그룹화됩니다.
 
-- **패키지**: `forgeNamespace('<package_name>')`을 사용합니다(예: `@mission-platform/breakpoints`은 `mp.breakpoints`를 사용합니다).
-- **앱**: `forgeNamespace('<app_name>')`을 사용하세요.
+- **패키지**: `forgeNamespace('<package_name>')`을 사용합니다(예: `@mission-platform/breakpoints`는 `mp.breakpoints`을 사용합니다).
+- **앱**: `forgeNamespace('<app_name>')`를 사용하세요.
 
 #### 네임스페이스 계층 구조 및 재정의
 

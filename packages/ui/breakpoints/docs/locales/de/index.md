@@ -25,15 +25,15 @@ Wählen Sie das Framework **einmal** aus – `resolve.conditions` über `defineF
 
 Die Plattform verwendet eine siebenstufige Reaktionsskalierung basierend auf den Schwellenwerten für die Breite des Ansichtsfensters:
 
-| Schlüssel | Etikett           | Schwelle      | Häufiges Gerät/Anwendungsfall      |
-| :-------- | :---------------- | :------------ | :--------------------------------- |
-| `2xs`     | Extra-extra-klein | $\ge 0$ px    | Alle Geräte                        |
-| `xs`      | Extraklein        | $\ge 480$ px  | Große Telefone                     |
-| `sm`      | Klein             | $\ge 768$ px  | Tablet-Porträt                     |
-| `md`      | Mittel            | $\ge 1024$ px | Tablet-Querformat / kleiner Laptop |
-| `lg`      | Groß              | $\ge 1920$ px | Full HD / 1080p                    |
-| `xl`      | Extragroß         | $\ge 2560$ px | QHD                                |
-| `2xl`     | Extra-extra-groß  | $\ge 3840$ px | 4K UHD                             |
+| Schlüssel | Etikett | Schwelle | Häufiges Gerät/Anwendungsfall |
+| :---- | :---------------- | :------------ | :------------------------------ |
+| `2xs` | Extra-extra-klein | $\ge 0$ px | Alle Geräte |
+| `xs` | Extraklein | $\ge 480$ px | Große Telefone |
+| `sm` | Klein | $\ge 768$ px | Tablet-Porträt |
+| `md` | Mittel | $\ge 1024$ px | Tablet-Querformat / kleiner Laptop |
+| `lg` | Groß | $\ge 1920$ px | Full HD / 1080p |
+| `xl` | Extragroß | $\ge 2560$ px | QHD |
+| `2xl` | Extra-extra-groß | $\ge 3840$ px | 4K UHD |
 
 ## Kerndienstprogramme (`/core`)
 
@@ -53,7 +53,7 @@ resolveBreakpoint(1024); // → 'md'
 mediaQuery('lg'); // → '(min-width: 1920px)'
 ```
 
-Das nur für Vue gültige Composable `useBreakpoints` wurde entfernt. Bauen Sie für benutzerdefinierte reaktive Ansichtsfensterlogik auf diesen `/core` auf
+Das nur für Vue gültige Composable `useBreakpoints` wurde entfernt. Für eine benutzerdefinierte reaktive Ansichtsfensterlogik bauen Sie auf diesen `/core` auf
 Helfer mit den Hooks Ihres Frameworks (siehe zum Beispiel den Hook React `useCompactViewport` von `apps/service-monitor`).
 aufgebaut auf `maxMediaQuery`).
 
@@ -93,7 +93,7 @@ import { ForgeShowAt } from '@mission-platform/breakpoints';
 
 #### Requisiten
 
-– `min?: BreakpointKey`: Inhalt anzeigen, wenn sich das Ansichtsfenster an oder über diesem Haltepunkt befindet.
+– `min?: BreakpointKey`: Inhalte anzeigen, wenn sich das Ansichtsfenster an oder über diesem Haltepunkt befindet.
 – `max?: BreakpointKey`: Inhalte anzeigen, wenn das Ansichtsfenster strikt unter diesem Haltepunkt liegt.
 
 ### `<ForgeHideAt>`

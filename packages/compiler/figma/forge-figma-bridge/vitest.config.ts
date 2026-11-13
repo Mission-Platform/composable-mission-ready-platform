@@ -1,11 +1,12 @@
-import { defineConfig } from 'vitest/config';
+import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
 
-export default defineConfig({
-  resolve: { tsconfigPaths: false },
-  test: {
-    environment: 'node',
-    include: ['src/**/*.spec.ts'],
-    pool: 'threads',
-    maxWorkers: 1,
+export default defineVitestConfig({
+  environment: 'node',
+  overrides: {
+    resolve: { tsconfigPaths: false },
+    test: {
+      pool: 'threads',
+      maxWorkers: 1,
+    },
   },
 });

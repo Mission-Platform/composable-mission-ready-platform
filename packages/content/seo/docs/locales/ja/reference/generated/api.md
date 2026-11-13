@@ -96,7 +96,23 @@ Schema.org `ImageObject`。
 **種類:** 定数
 
 ```typescript
-export const jsonLd;
+export const jsonLd: {
+  readonly webSite: typeof webSite;
+  readonly organization: typeof organization;
+  readonly localBusiness: typeof localBusiness;
+  readonly person: typeof person;
+  readonly webPage: typeof webPage;
+  readonly breadcrumbList: typeof breadcrumbList;
+  readonly article: typeof article;
+  readonly product: typeof product;
+  readonly faqPage: typeof faqPage;
+  readonly event: typeof event;
+  readonly videoObject: typeof videoObject;
+  readonly imageObject: typeof imageObject;
+  readonly softwareApplication: typeof softwareApplication;
+  readonly recipe: typeof recipe;
+  readonly review: typeof review;
+};
 ```
 
 コンシューマーが `import { jsonLd } から実行できるように、名前空間を再エクスポートします。
@@ -524,7 +540,7 @@ ref、getter、またはプレーンな {@link SeoMetadata} オブジェクト�
 **種類:** コンポーネント
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 レンダリングレス `<Seo>` コンポーネント — {@link useSeo} の宣言ラッパー。
@@ -546,7 +562,7 @@ export const MpSeo;
 **種類:** コンポーネント
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 レンダリングレス `<Seo>` コンポーネント — {@link useSeo} の宣言ラッパー。

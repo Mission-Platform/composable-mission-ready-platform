@@ -1,10 +1,11 @@
 <script lang="ts" setup>
+  import { computed, ref, watch } from 'vue';
+  import { useRoute } from 'vue-router';
+
   import { ForgeButton, ForgeStack } from '@mission-platform/components';
   import { ForgeModal } from '@mission-platform/float';
   import { ForgeSchemaForm, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms';
   import { useI18n } from '@mission-platform/i18n';
-  import { computed, ref, watch } from 'vue';
-  import { useRoute } from 'vue-router';
 
   import { useSnippets } from '../composables/use-snippets';
 

@@ -14,29 +14,29 @@ Antes de clonar el repositorio, asegúrese de que su sistema cumpla con los sigu
 
 ### Requisitos del sistema
 
-| Herramienta   | Versión requerida              | Propósito                                               |
-| :------------ | :----------------------------- | :------------------------------------------------------ |
-| **Node.js**   | `24.19.0`                      | Entorno de ejecución (LTS activo)                       |
-| **pnpm**      | `11.21.0`                      | Gestor de paquetes y orquestador del espacio de trabajo |
-| **Git**       | Último establo                 | Control de versiones                                    |
-| **Óxido**     | Cadena de herramientas estable | Desarrollo de referencia de Rust independiente opcional |
-| **Acoplador** | Último establo                 | Requerido sólo para la compilación Emscripten Hunspell  |
+| Herramienta | Versión requerida | Propósito |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0` | Entorno de ejecución (LTS activo) |
+| **pnpm** | `12.4.2` | Gestor de paquetes y orquestador del espacio de trabajo |
+| **Git** | Último establo | Control de versiones |
+| **Óxido** | Cadena de herramientas estable | Desarrollo de referencia de Rust independiente opcional |
+| **Acoplador** | Último establo | Requerido sólo para la compilación Emscripten Hunspell |
 
 ### Gestión de versiones (recomendado)
 
-Recomendamos usar **nvm** (Node Administrador de versiones) para asegurarse de que está utilizando la versión correcta. NodeVersión .js especificada en el
-raíz `.nvmrc` archivo.
+Recomendamos usar **nvm** (Node Version Manager) para asegurarse de que está utilizando la versión correcta de Node.js especificada en el archivo
+archivo raíz `.nvmrc`.
 
 ```bash
 nvm install
 nvm use
 ```
 
-Permitir **pnpm** usando Corepack:
+Habilite **pnpm** usando Corepack:
 
 ```bash
 corepack enable
-corepack prepare pnpm@11.21.0 --activate
+corepack prepare pnpm@12.4.2 --activate
 ```
 
 ## Configuración inicial
@@ -58,8 +58,24 @@ Instale todas las dependencias del espacio de trabajo y configure los ganchos de
 pnpm install
 ```
 
-Este comando desencadena el `prepare` script, que inicializa **Husky** para confirmar linting y garantiza que todos los internos
+Este comando activa el script `prepare`, que inicializa **Husky** para confirmar linting y garantiza todas las funciones internas.
 Los enlaces del paquete están establecidos correctamente.
+
+### Servidor de idiomas SonarLint
+
+El `agent-lsp.json` del repositorio incluye el servidor de lenguaje oficial SonarLint para JavaScript y TypeScript. el
+El servidor se distribuye como un archivo Java en lugar de un paquete npm, así que instale Java y cree o descargue el
+Archivo `sonarlint-language-server` de [SonarSource](https://github.com/SonarSource/sonarlint-language-server).
+
+Configure el archivo del servidor y el analizador de JavaScript antes de iniciar el LSP:
+
+```bash
+export SONARLINT_LS_JAR=/path/to/sonarlint-language-server.jar
+export SONARLINT_ANALYZERS=/path/to/sonarjs.jar
+```
+
+La variable `SONARLINT_JAVA` opcional puede seleccionar un ejecutable de Java. El iniciador del repositorio valida la configuración
+rutas y reenvía el protocolo stdio del servidor sin requerir un comando instalado globalmente.
 
 ### 3. Verificar la instalación
 
@@ -69,9 +85,9 @@ Ejecute una prueba de humo para garantizar que el sistema de compilación y el e
 pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
-El `...` También construye las dependencias de Forge requeridas por el paquete. el
+El filtro `...` también crea las dependencias de Forge requeridas por el paquete. el
 el escáner de código neutral se compila a partir de su gráfico Flint; no lo hace
-requieren un óxido o `wasm-pack` paso de construcción.
+requieren un paso de compilación de Rust o `wasm-pack`.
 
 ## Flujo de trabajo de desarrollo
 
@@ -108,9 +124,9 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-Los paquetes respaldados por Forge publican coincidencias `mp:vue`, `mp:react`, `mp:svelte`,
-`mp:solid`, y `mp:web-component` condiciones. La condición activa debe ser
-configurado por el paquete consumidor; ver [la referencia del compilador](../../../packages/tooling/vite/forge/docs/locales/es/reference/compiler.md)
+Los paquetes respaldados por Forge publican `mp:vue`, `mp:react`, `mp:svelte`,
+Condiciones `mp:solid` y `mp:web-component`. La condición activa debe ser
+configurado por el paquete consumidor; consulte [la referencia del compilador](../../../packages/tooling/vite/forge/docs/locales/es/reference/compiler.md)
 para el complemento de destino y la canalización de declaración.
 
 ### Desarrollo de aplicaciones
@@ -126,18 +142,18 @@ La aplicación normalmente estará disponible en `http://localhost:5173`.
 
 ### Comandos comunes
 
-| Tarea         | Comando       | Descripción                            |
-| :------------ | :------------ | :------------------------------------- |
-| **Construir** | `pnpm build`  | Cree todas las aplicaciones y paquetes |
-| **Prueba**    | `pnpm test`   | ejecutar todo Vitest suites            |
-| **Pelusa**    | `pnpm lint`   | Correr ESLint a través del monorepo    |
-| **Formato**   | `pnpm format` | Verifique el formato con Prettier      |
+| Tarea | Comando | Descripción |
+| :--------- | :------------ | :----------------------------- |
+| **Construir** | `pnpm build` | Cree todas las aplicaciones y paquetes |
+| **Prueba** | `pnpm test` | Ejecute todas las suites Vitest |
+| **Pelusa** | `pnpm lint` | Ejecute ESLint en todo el monorepo |
+| **Formato** | `pnpm format` | Verifique el formato con Prettier |
 
 ## Solución de problemas
 
 ### Borrar cachés
 
-Si encuentra errores de compilación inesperados, borre Turborepo y Node cachés:
+Si encuentra errores de compilación inesperados, borre las cachés de Turborepo y Node:
 
 ```bash
 # Remove Turborepo cache
@@ -151,6 +167,6 @@ pnpm install
 ### Fallos de compilación de WASM
 
 Si un artefacto de Flint no se puede compilar, inspeccione los diagnósticos del compilador
-y verificar el perfil de enlace estático o dinámico seleccionado. El
+y verificar el perfil de enlace estático o dinámico seleccionado. el
 `@mission-platform/hunspell` La compilación de Emscripten también requiere que Docker
 estar corriendo.

@@ -16,7 +16,7 @@
 **النوع:** ثابت
 
 ```typescript
-export const ALLOWED_METHODS;
+export const ALLOWED_METHODS: Set<string>;
 ```
 
 احتفظ بالوكيل للقراءة فقط ومقتصرًا على مسارات واجهة برمجة التطبيقات الموثقة.
@@ -26,7 +26,17 @@ export const ALLOWED_METHODS;
 **النوع:** ثابت
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES;
+export const ALLOWED_ROUTE_PREFIXES: string[];
+```
+
+لم يتم تقديم أي وصف.
+
+### تقصير
+
+**النوع:** ثابت
+
+```typescript
+export const handler: ExportedHandler;
 ```
 
 لم يتم تقديم أي وصف.
@@ -39,10 +49,15 @@ export const ALLOWED_ROUTE_PREFIXES;
 function isAllowedProxyRequest(request: Request): boolean;
 ```
 
-لم يتم تقديم أي وصف.
+يحدد ما إذا كان طلب العميل الوارد مسموحًا به من خلال سياسة الوكيل.
 
 #### حدود
 
 | الاسم | اكتب | الوصف |
-| ----- | ---- | ----- |
-| طلب   | طلب  |       |
+| ------- | ------- | ------------------------ |
+| طلب | طلب | - طلب HTTP الوارد. |
+
+#### عقد
+
+- **@param:** - طلب HTTP وارد.
+- **@returns:** صحيح إذا كان الأسلوب والمسار ضمن القائمة المسموح بها للوكيل.

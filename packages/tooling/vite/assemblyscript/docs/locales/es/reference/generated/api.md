@@ -38,8 +38,8 @@ binario en línea en lugar de una URL `.wasm`.
 
 #### Parámetros
 
-| Nombre   | Tipo                                      | Descripción |
-| -------- | ----------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ---------------------------- | ----------- |
 | opciones | Opciones de compilación de AssemblyScript |             |
 
 ## `src/generate`
@@ -54,14 +54,14 @@ function buildGeneratedModule(wasmBase64: string, instantiateSource: string): st
 
 Construya el módulo generado autónomo: el binario wasm alineado como base64,
 un decodificador base64 entre entornos, la función `instantiate` extraída
-(más una variante síncrona derivada) y memorizado `loadModule()` /
+(más una variante sincrónica derivada) y `loadModule()` / memorizado
 `loadModuleSync()` fábricas que devuelven las exportaciones de residuos crudos.
 
 #### Parámetros
 
-| Nombre           | Tipo   | Descripción |
-| ---------------- | ------ | ----------- |
-| wasmBase64       | cadena |             |
+| Nombre | Tipo | Descripción |
+| ----------------- | ------ | ----------- |
+| wasmBase64 | cadena |             |
 | instanciarFuente | cadena |             |
 
 ### extraer una instancia
@@ -79,8 +79,8 @@ creación de instancias desde un binario en línea (base64) en lugar de una URL.
 
 #### Parámetros
 
-| Nombre           | Tipo   | Descripción |
-| ---------------- | ------ | ----------- |
+| Nombre | Tipo | Descripción |
+| -------------- | ------ | ----------- |
 | fijacionesFuente | cadena |             |
 
 ## `src/index`
@@ -103,8 +103,8 @@ La compilación se ejecuta en el gancho `buildStart`, por lo que el módulo gene
 
 #### Parámetros
 
-| Nombre   | Tipo                                    | Descripción |
-| -------- | --------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | --------------------------- | ----------- |
 | opciones | Opciones del complemento AssemblyScript |             |
 
 ### Opciones del complemento AssemblyScript
@@ -135,6 +135,6 @@ La compilación se ejecuta en el gancho `buildStart`, por lo que el módulo gene
 
 #### Parámetros
 
-| Nombre   | Tipo                                    | Descripción |
-| -------- | --------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | --------------------------- | ----------- |
 | opciones | Opciones del complemento AssemblyScript |             |

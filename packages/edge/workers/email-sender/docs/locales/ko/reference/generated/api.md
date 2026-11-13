@@ -11,12 +11,22 @@
 
 ## `src/index`
 
+### 기본
+
+**종류:** 상수
+
+```typescript
+export const handler: ExportedHandler<WorkerEnvironment>;
+```
+
+설명이 제공되지 않았습니다.
+
 ### 배달
 
 **종류:** 유형
 
 ```typescript
-export type Delivery = (environment: Env, message: SmtpMessage) => Promise<void>;
+export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -36,15 +46,26 @@ export interface EmailRequest
 **종류:** 기능
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
+function handleRequest(
+  request: Request,
+  environment: WorkerEnvironment,
+  delivery: Delivery = defaultDelivery,
+): Promise<Response>;
 ```
 
-설명이 제공되지 않았습니다.
+수신 이메일 전달 요청을 처리하고 입력을 검증하며 SMTP 서비스로 전달합니다.
 
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| ---- | ---- | ---- |
-| 요청 | 요청 |      |
-| 환경 | 환경 |      |
-| 배달 | 배달 |      |
+| ----------- | ----------------- | -------------------------------------------------- |
+| 요청 | 요청 | - 들어오는 HTTP 요청.                           |
+| 환경 | 작업자 환경 | - 작업자 환경 바인딩.                     |
+| 배달 | 배송 | - 메시지 전송을 처리하는 전달 기능입니다. |
+
+#### 계약
+
+- **@param:** - 들어오는 HTTP 요청입니다.
+- **@param:** - 작업자 환경 바인딩.
+- **@param:** - 메시지 전송을 처리하는 전달 기능입니다.
+- **@returns:** HTTP 응답.

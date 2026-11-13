@@ -13,12 +13,12 @@ Mission Platform 样式表使用的共享 PostCSS 管道。
 pnpm add --save-dev @mission-platform/postcss-config
 ```
 
-从工作区引用包 `postcss.config.mjs` 而不是
+从工作区的 `postcss.config.mjs` 引用包而不是
 复制共享插件管道。本地覆盖属于那个
 工作区配置。
 
 ## 贡献
 
-跑步 `pnpm --filter @mission-platform/postcss-config lint` 和
+运行 `pnpm --filter @mission-platform/postcss-config lint` 并
 `pnpm --filter @mission-platform/postcss-config format`。保留浏览器
 此包中的兼容性行为并避免特定于应用程序的插件。

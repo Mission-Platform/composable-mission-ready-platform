@@ -4,14 +4,14 @@ import path from 'node:path';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
+import type { ForgeRepositoryExportRequest } from '@mission-platform/forge-figma';
+
 import {
   createForgeBridgeServer,
   DEFAULT_ALLOWED_ORIGIN,
   exportForgeRepositoryBundle,
   startForgeBridgeServer,
 } from './bridge.js';
-
-import type { ForgeRepositoryExportRequest } from '@mission-platform/forge-figma';
 
 const temporaryDirectories: string[] = [];
 

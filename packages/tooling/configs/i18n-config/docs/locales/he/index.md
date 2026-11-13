@@ -5,7 +5,7 @@
 > packages/tooling/configs/i18n-config/docs/index.md: [packages/tooling/configs/i18n-config/docs/index.md](../../index.md)
 > שפה: עברית (he)
 
-מיקום משותף ותצורת חילוץ עבור סביבות עבודה של Mission Platform.
+מיקום ותצורת חילוץ משותפת עבור סביבות עבודה של Mission Platform.
 
 ## התקן והשתמש
 
@@ -17,7 +17,7 @@ pnpm add --save-dev @mission-platform/i18n-config
 ```
 
 שמור מקורות מקומיים לצד סביבת העבודה שבבעלותם. מיצוי כותב
-חבילות מרחבי שמות מתחת למרחב העבודה שבבעלותם `locales/<locale>/` מַדרִיך;
+חבילות מרחב שמות תחת ספריית `locales/<locale>/` שבבעלות סביבת העבודה;
 הפקודה ברמת המאגר מתזמרת את כל סביבות העבודה המוגדרות.
 
 ## לִתְרוֹם

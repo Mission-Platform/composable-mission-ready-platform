@@ -1,11 +1,17 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
+import { describe, expect, it } from "vitest";
+
 import {
   analyzeContentComponent,
   generateCmsArtifacts,
   toDisplayName,
   toTechnicalName,
+} from "@mission-platform/forge-cms-plugin-api";
+import type {
+  ContentComponent,
+  ContentComponentNamesInput,
 } from "@mission-platform/forge-cms-plugin-api";
 import {
   BADGE,
@@ -27,16 +33,10 @@ import {
   stubFramework,
 } from "@mission-platform/forge-cms-plugin-api/fixtures";
 import { parseOxcModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
-import { describe, expect, it } from "vitest";
 
 import { analyzeStoryblokComponent, emitStoryblokComponent } from "./fields.js";
 import { forgeStoryblokCms } from "./storyblok.js";
 import { emitBlokDataType, emitStoryblokBlokWrapper } from "./wrappers.js";
-
-import type {
-  ContentComponent,
-  ContentComponentNamesInput,
-} from "@mission-platform/forge-cms-plugin-api";
 
 function analyze(source: string, names: ContentComponentNamesInput) {
   return analyzeStoryblokComponent(

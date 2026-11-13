@@ -33,9 +33,9 @@ Aplique ediciones de fuentes que no se superpongan sin exponer los nodos del ana
 
 #### Parámetros
 
-| Nombre    | Tipo                           | Descripción |
-| --------- | ------------------------------ | ----------- |
-| fuente    | cadena                         |             |
+| Nombre | Tipo | Descripción |
+| ------ | --------------------- | ----------- |
+| fuente | cadena |             |
 | ediciones | FuenteEditar[] de sólo lectura |             |
 
 ### CLASS_NAME_ATTRIBUTE
@@ -60,8 +60,8 @@ Derive el nombre del evento representado por un accesorio `on<Event>` de estilo 
 
 #### Parámetros
 
-| Nombre              | Tipo   | Descripción |
-| ------------------- | ------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------------ | ------ | ----------- |
 | nombre de propiedad | cadena |             |
 
 ### marcoAdaptadorMódulo
@@ -76,9 +76,9 @@ Derive el módulo de tiempo de ejecución/adaptador de Forge para cualquier marc
 
 #### Parámetros
 
-| Nombre | Tipo      | Descripción |
-| ------ | --------- | ----------- |
-| marco  | Marco Jsx |             |
+| Nombre | Tipo | Descripción |
+| --------- | ------------ | ----------- |
+| marco | Marco Jsx |             |
 
 ### marcoParaDirectiva
 
@@ -92,7 +92,7 @@ Resuelva una directiva `use <framework>` principal para cualquier objetivo integ
 
 #### Parámetros
 
-| Nombre    | Tipo   | Descripción |
+| Nombre | Tipo | Descripción |
 | --------- | ------ | ----------- |
 | directiva | cadena |             |
 
@@ -148,9 +148,9 @@ Emita declaraciones primitivas JSX locales del marco sin dependencias del analiz
 
 #### Parámetros
 
-| Nombre | Tipo      | Descripción |
-| ------ | --------- | ----------- |
-| marco  | Marco Jsx |             |
+| Nombre | Tipo | Descripción |
+| --------- | ------------ | ----------- |
+| marco | Marco Jsx |             |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
@@ -296,8 +296,8 @@ Levante los registros de renderizado marcados y devuelva las entradas para el ge
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | ---------------- | ----------- |
 | módulo | Módulo genéricoAst |             |
 
 ### MP_HOIST_PREFIX
@@ -327,9 +327,9 @@ Aplique ediciones de código fuente a un código fuente de módulo sin exponer u
 
 #### Parámetros
 
-| Nombre    | Tipo                           | Descripción |
-| --------- | ------------------------------ | ----------- |
-| módulo    | Módulo genéricoAst             |             |
+| Nombre | Tipo | Descripción |
+| ------ | --------------------- | ----------- |
+| módulo | Módulo genéricoAst |             |
 | ediciones | FuenteEditar[] de sólo lectura |             |
 
 ### constante booleano
@@ -344,8 +344,8 @@ Resuelva un booleano literal sin evaluar el código creado.
 
 #### Parámetros
 
-| Nombre    | Tipo           | Descripción |
-| --------- | -------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------- | ----------- |
 | expresión | Expresión como |             |
 
 ### Resultado de optimización genérico
@@ -370,8 +370,8 @@ Si una lista de atributos JSX genérica contiene una clave.
 
 #### Parámetros
 
-| Nombre    | Tipo                                | Descripción |
-| --------- | ----------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------- | ----------- |
 | atributos | Atributo genérico de sólo lectura[] |             |
 
 ### tieneMpStaticMarker
@@ -386,9 +386,9 @@ Si un JSX node genérico tiene el marcador estático privado.
 
 #### Parámetros
 
-| Nombre | Tipo                         | Descripción |
-| ------ | ---------------------------- | ----------- |
-| node   | Nodo de renderizado genérico |             |
+| Nombre | Tipo | Descripción |
+| ---- | ----------------- | ----------- |
+| node | Nodo de renderizado genérico |             |
 
 ### esCompileTimeConstant
 
@@ -402,8 +402,8 @@ Si el texto fuente es una expresión literal pura en tiempo de compilación.
 
 #### Parámetros
 
-| Nombre    | Tipo           | Descripción |
-| --------- | -------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------- | ----------- |
 | expresión | Expresión como |             |
 
 ### MP_STATIC_ATTR
@@ -431,9 +431,9 @@ Aplique la optimización a nivel de registro y devuelva las ediciones de origen 
 
 #### Parámetros
 
-| Nombre    | Tipo                     | Descripción |
-| --------- | ------------------------ | ----------- |
-| módulo    | Módulo genéricoAst       |             |
+| Nombre | Tipo | Descripción |
+| -------- | ---------------- | ----------- |
+| módulo | Módulo genéricoAst |             |
 | _opciones | Opciones de optimización |             |
 
 ### Opciones de optimización
@@ -460,8 +460,8 @@ Devuelve una lista de atributos genéricos sin marcadores.
 
 #### Parámetros
 
-| Nombre    | Tipo                                | Descripción |
-| --------- | ----------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------- | ----------- |
 | atributos | Atributo genérico de sólo lectura[] |             |
 
 ### tiraMpStaticMarker
@@ -476,9 +476,9 @@ Devuelve un node de renderizado genérico sin marcadores, preservando recursivam
 
 #### Parámetros
 
-| Nombre | Tipo                         | Descripción |
-| ------ | ---------------------------- | ----------- |
-| node   | Nodo de renderizado genérico |             |
+| Nombre | Tipo | Descripción |
+| ---- | ----------------- | ----------- |
+| node | Nodo de renderizado genérico |             |
 
 ## `src/diagnostics`
 
@@ -543,8 +543,8 @@ Cree un diagnóstico sin acoplar los contratos de fase a los nodos TypeScript.
 
 #### Parámetros
 
-| Nombre      | Tipo                                                                | Descripción |
-| ----------- | ------------------------------------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------------------------------------ | ----------- |
 | diagnóstico | Omitir<CompilerDiagnostic, "fileName"> & {nombredearchivo?: cadena} |             |
 
 ### formatoCompilerDiagnostic
@@ -559,8 +559,8 @@ Formatee un diagnóstico para un error del compilador sin perder su ubicación d
 
 #### Parámetros
 
-| Nombre      | Tipo                  | Descripción |
-| ----------- | --------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------ | ----------- |
 | diagnóstico | CompiladorDiagnóstico |             |
 
 ### throwOnCompilerErrors
@@ -577,8 +577,8 @@ Cancelar una canalización del compilador cuando una fase informó uno o más er
 
 #### Parámetros
 
-| Nombre      | Tipo                                            | Descripción |
-| ----------- | ----------------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ----------- | ------------------------------------------ | ----------- |
 | diagnóstico | solo lectura CompilerDiagnostic[] \| indefinido |             |
 
 ## `src/framework`
@@ -653,6 +653,16 @@ export interface GeneratedModule
 ```
 
 El artefacto fuente devuelto por un complemento de salida del marco.
+
+### Artefacto de estilo generado
+
+**Tipo:** interfaz
+
+```typescript
+export interface GeneratedStyleArtifact
+```
+
+Una hoja de estilo emitida junto con un módulo fuente generado.
 
 ### Contextogenerador
 
@@ -787,7 +797,7 @@ Contexto compartido para paquetes de complementos Vite propiedad del marco.
 **Tipo:** constante
 
 ```typescript
-export const defineForgeFramework;
+export const defineForgeFramework: typeof defineForgeOutputPlugin;
 ```
 
 Alias ​​que enfatiza que los paquetes de marco registran implementaciones de destino.
@@ -804,9 +814,9 @@ Validar y devolver un complemento de salida del marco para que los consumidores 
 
 #### Parámetros
 
-| Nombre      | Tipo | Descripción |
-| ----------- | ---- | ----------- |
-| complemento | T    |             |
+| Nombre | Tipo | Descripción |
+| ------ | ---- | ----------- |
+| complemento | T |             |
 
 ### ForgePluginId
 
@@ -832,8 +842,8 @@ Valide los metadatos de destino independientemente de cualquier registro de marc
 
 #### Parámetros
 
-| Nombre      | Tipo        | Descripción |
-| ----------- | ----------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | ------- | ----------- |
 | complemento | desconocido |             |
 
 ### validarForgeOutputPluginSelection
@@ -846,12 +856,12 @@ function validateForgeOutputPluginSelection(
 ): readonly T[];
 ```
 
-Valide una selección de objetivos propiedad de la persona que llama, incluidos ID vacíos y duplicados.
+Valide una selección de objetivos propiedad de la persona que llama, incluidas las identificaciones vacías y duplicadas.
 
 #### Parámetros
 
-| Nombre       | Tipo             | Descripción |
-| ------------ | ---------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------------ | ----------- |
 | complementos | sólo lectura T[] |             |
 
 ## `src/ir`
@@ -871,10 +881,10 @@ Leer el texto de expresión de un atributo con nombre, cuando lo contiene.
 
 #### Parámetros
 
-| Nombre | Tipo                         | Descripción |
-| ------ | ---------------------------- | ----------- |
-| node   | Nodo de renderizado genérico |             |
-| nombre | cadena                       |             |
+| Nombre | Tipo | Descripción |
+| ---- | ----------------- | ----------- |
+| node | Nodo de renderizado genérico |             |
+| nombre | cadena |             |
 
 ### atributoStringValue
 
@@ -891,10 +901,42 @@ Leer el valor de cadena estática de un atributo con nombre, cuando lo tenga.
 
 #### Parámetros
 
-| Nombre | Tipo                         | Descripción |
-| ------ | ---------------------------- | ----------- |
-| node   | Nodo de renderizado genérico |             |
-| nombre | cadena                       |             |
+| Nombre | Tipo | Descripción |
+| ---- | ----------------- | ----------- |
+| node | Nodo de renderizado genérico |             |
+| nombre | cadena |             |
+
+### childSlotName
+
+**Tipo:** función
+
+```typescript
+function childSlotName(
+  child: GenericRenderChild,
+  slotAttributeName = "slot",
+  defaultSlotName = "default",
+): string | undefined;
+```
+
+El nombre `slot="…"` al que se enruta un niño, o `undefined` para el contenido de la ranura predeterminada.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----------------- | ------------------ | ----------- |
+| niño | GenericRenderChild |             |
+| nombreAtributoranura |                    |             |
+| nombrederanurapredeterminado |                    |             |
+
+### Valor de configuración calculado
+
+**Tipo:** interfaz
+
+```typescript
+export interface ComputedSetupValue
+```
+
+Un valor con nombre devuelto desde la configuración y direccionable mediante enlaces de representación/estilo.
 
 ### Intención de nodo dinámico
 
@@ -961,10 +1003,10 @@ Busque el atributo nombrado en un render node.
 
 #### Parámetros
 
-| Nombre | Tipo                         | Descripción |
-| ------ | ---------------------------- | ----------- |
-| node   | Nodo de renderizado genérico |             |
-| nombre | cadena                       |             |
+| Nombre | Tipo | Descripción |
+| ---- | ----------------- | ----------- |
+| node | Nodo de renderizado genérico |             |
+| nombre | cadena |             |
 
 ### GenéricoAstNode
 
@@ -982,7 +1024,8 @@ No se proporciona descripción.
 **Tipo:** tipo
 
 ```typescript
-export type GenericAttribute = GenericJsxAttribute | GenericJsxSpreadAttribute;
+export type GenericAttribute =
+  GenericJsxAttribute | GenericJsxSpreadAttribute | GenericSlotAttribute;
 ```
 
 No se proporciona descripción.
@@ -1084,7 +1127,11 @@ Un parámetro de componente, su forma vinculante y su tipo declarado.
 
 ```typescript
 export type GenericRenderChild =
-  GenericRenderNode | GenericTextNode | GenericExpressionNode;
+  | GenericRenderNode
+  | GenericTextNode
+  | GenericExpressionNode
+  | GenericConditionalNode
+  | GenericForNode;
 ```
 
 No se proporciona descripción.
@@ -1130,6 +1177,56 @@ export type GenericStatementKind =
 
 Clasificación aproximada de una declaración retenida a nivel de módulo.
 
+### Estilo genérico en la regla
+
+**Tipo:** interfaz
+
+```typescript
+export interface GenericStyleAtRule
+```
+
+CSS normalizado en regla procedente de un compañero de estilo Flint.
+
+### GenericStyleClassMapNodo
+
+**Tipo:** interfaz
+
+```typescript
+export interface GenericStyleClassMapNode
+```
+
+Una clase local direccionable en un mapa de clases de módulo CSS normalizado.
+
+### Compañero de estilo genérico
+
+**Tipo:** interfaz
+
+```typescript
+export interface GenericStyleCompanion
+```
+
+Artefacto de estilo objetivo neutral propiedad de un módulo Flint.
+
+### Declaración de estilo genérico
+
+**Tipo:** interfaz
+
+```typescript
+export interface GenericStyleDeclaration
+```
+
+Declaración CSS normalizada procedente de un compañero de estilo Flint.
+
+### Regla de estilo genérico
+
+**Tipo:** interfaz
+
+```typescript
+export interface GenericStyleRule
+```
+
+Regla CSS normalizada procedente de un compañero de estilo Flint.
+
 ### Tipo de etiqueta genérica
 
 **Tipo:** tipo
@@ -1150,6 +1247,23 @@ export interface GenericTextNode
 
 Texto literal entre etiquetas JSX.
 
+### esNodoComponente
+
+**Tipo:** función
+
+```typescript
+function isComponentNode(node: GenericRenderNode): boolean;
+```
+
+Si la etiqueta node nombra un componente (un identificador en mayúscula o una expresión dinámica/de miembro)
+en lugar de un elemento HTML intrínseco.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ----------------- | ----------- |
+| node | Nodo de renderizado genérico |             |
+
 ### esNodoExpresión
 
 **Tipo:** función
@@ -1164,9 +1278,9 @@ Si un hijo renderizado es una interpolación `{ … }`.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| niño   | GenericRenderChild |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------------ | ----------- |
+| niño | GenericRenderChild |             |
 
 ### esRenderNode
 
@@ -1180,9 +1294,26 @@ Si un elemento secundario de renderizado es un elemento/fragmento anidado node.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| niño   | GenericRenderChild |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------------ | ----------- |
+| niño | GenericRenderChild |             |
+
+### esRenderNodeMarker
+
+**Tipo:** función
+
+```typescript
+function isRenderNodeMarker(node: GenericRenderNode, tag: string): boolean;
+```
+
+Si node es un marcador de tiempo de compilación con nombre.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ----------------- | ----------- |
+| node | Nodo de renderizado genérico |             |
+| etiqueta | cadena |             |
 
 ### esNodoDeTexto
 
@@ -1196,9 +1327,9 @@ Si un elemento secundario renderizado es texto JSX literal.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| niño   | GenericRenderChild |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------------ | ----------- |
+| niño | GenericRenderChild |             |
 
 ### ListaClaveIntención
 
@@ -1210,6 +1341,24 @@ export interface ListKeyIntention
 
 Un candidato clave estable para un renderizador de listas de objetivos.
 
+### significativoNiños
+
+**Tipo:** función
+
+```typescript
+function meaningfulChildren(
+  node: GenericRenderNode,
+): readonly GenericRenderChild[];
+```
+
+Niños que sobreviven hasta el objetivo (el texto solo con espacios en blanco no lleva nada).
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ----------------- | ----------- |
+| node | Nodo de renderizado genérico |             |
+
 ### MemoIntención
 
 **Tipo:** interfaz
@@ -1220,6 +1369,16 @@ export interface MemoIntention
 
 Un valor memorizado o derivado.
 
+### ModeloContrato
+
+**Tipo:** interfaz
+
+```typescript
+export interface ModelContract
+```
+
+Un valor controlado neutral al objetivo y su evento de actualización escrito.
+
 ### PropIntención
 
 **Tipo:** interfaz
@@ -1229,6 +1388,16 @@ export interface PropIntention
 ```
 
 Una declaración de accesorios neutral inferida de la firma de un componente o del tipo de accesorios.
+
+### Propiedad reactiva
+
+**Tipo:** interfaz
+
+```typescript
+export interface ReactiveProperty
+```
+
+Una propiedad del componente reactivo compartida por cada emisor de destino.
 
 ### RefIntención
 
@@ -1252,9 +1421,25 @@ El nombre de etiqueta simple de una representación node o `undefined` para una 
 
 #### Parámetros
 
-| Nombre | Tipo                         | Descripción |
-| ------ | ---------------------------- | ----------- |
-| node   | Nodo de renderizado genérico |             |
+| Nombre | Tipo | Descripción |
+| ---- | ----------------- | ----------- |
+| node | Nodo de renderizado genérico |             |
+
+### renderNodeTagText
+
+**Tipo:** función
+
+```typescript
+function renderNodeTagText(node: GenericRenderNode): string;
+```
+
+El texto de etiqueta sin formato de una representación node (una etiqueta calculada imprime su expresión de origen).
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ----------------- | ----------- |
+| node | Nodo de renderizado genérico |             |
 
 ### Intenciones Semánticas
 
@@ -1275,6 +1460,36 @@ export interface SemanticModule
 ```
 
 El IR semántico escrito consumido por cada complemento de salida del marco.
+
+### ConfiguraciónContrato
+
+**Tipo:** interfaz
+
+```typescript
+export interface SetupContract
+```
+
+Contrato de configuración/evento/modelo canónico consumido por todos los reductores de objetivos.
+
+### ConfiguraciónEventEmitter
+
+**Tipo:** interfaz
+
+```typescript
+export interface SetupEventEmitter
+```
+
+Un emisor de eventos declarado fuera de la configuración y emparejado con la configuración de eventos.
+
+### Configuración del controlador de eventos
+
+**Tipo:** interfaz
+
+```typescript
+export interface SetupEventHandler
+```
+
+Un controlador de eventos declarado fuera de la configuración.
 
 ### Intención de ranura
 
@@ -1298,15 +1513,15 @@ function sourceBacked(
 ): SourceBackedExpression;
 ```
 
-Cree una expresión respaldada en código fuente a partir de texto ya impreso.
+Cree una expresión respaldada por código fuente a partir de texto ya impreso.
 
 #### Parámetros
 
-| Nombre   | Tipo                               | Descripción |
-| -------- | ---------------------------------- | ----------- |
-| texto    | cadena                             |             |
+| Nombre | Tipo | Descripción |
+| ------ | -------------------------------- | ----------- |
+| texto | cadena |             |
 | sintaxis | SourceBackedExpression["sintaxis"] |             |
-| lapso    | FuenteSpan                         |             |
+| lapso | FuenteSpan |             |
 
 ### Expresión respaldada por origen
 
@@ -1353,10 +1568,465 @@ Recorra un árbol de renderizado en profundidad, incluido el marcado de expresi�
 
 #### Parámetros
 
-| Nombre  | Tipo                               | Descripción |
-| ------- | ---------------------------------- | ----------- |
-| nodos   | sólo lectura GenericRenderNode[]   |             |
-| visitar | (node: GenericRenderNode) => vacío |             |
+| Nombre | Tipo | Descripción |
+| ----- | --------------------------------- | ----------- |
+| nodos | sólo lectura GenericRenderNode[] |             |
+| visita | (node: GenericRenderNode) => vacío |             |
+
+### sin atributo Slot
+
+**Tipo:** función
+
+```typescript
+function withoutSlotAttribute(
+  node: GenericRenderNode,
+  slotAttributeName = "slot",
+): GenericRenderNode;
+```
+
+Una copia del node sin su marcador de enrutamiento `slot="…"`.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----------------- | ----------------- | ----------- |
+| node | Nodo de renderizado genérico |             |
+| nombreAtributoranura |                   |             |
+
+## `src/lowering/dynamic`
+
+### LowerDynamicNodes
+
+**Tipo:** función
+
+```typescript
+function lowerDynamicNodes(
+  module: SemanticModule,
+): readonly NormalizedDynamicPlan[];
+```
+
+Reduce las intenciones dinámicas de node y las etiquetas `<Dynamic>` del árbol de representación.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | -------------- | ----------- |
+| módulo | Módulo Semántico |             |
+
+### teclas de lista inferior
+
+**Tipo:** función
+
+```typescript
+function lowerListKeys(
+  module: SemanticModule,
+): readonly NormalizedListKeyPlan[];
+```
+
+Lista baja de candidatos clave de `SemanticModule`.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | -------------- | ----------- |
+| módulo | Módulo Semántico |             |
+
+### subárboles estáticos inferiores
+
+**Tipo:** función
+
+```typescript
+function lowerStaticSubtrees(
+  module: SemanticModule,
+): readonly NormalizedStaticSubtreePlan[];
+```
+
+Reduce los candidatos de subárbol estático marcados con `mp-static`.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | -------------- | ----------- |
+| módulo | Módulo Semántico |             |
+
+### Plan Dinámico Normalizado
+
+**Tipo:** interfaz
+
+```typescript
+export interface NormalizedDynamicPlan
+```
+
+Descriptor normalizado para un node `<Dynamic is={...}>` dinámico.
+
+### Plan de claves de lista normalizado
+
+**Tipo:** interfaz
+
+```typescript
+export interface NormalizedListKeyPlan
+```
+
+Descriptor normalizado para un enlace de claves de lista.
+
+### Plan de subárbol estático normalizado
+
+**Tipo:** interfaz
+
+```typescript
+export interface NormalizedStaticSubtreePlan
+```
+
+Descriptor normalizado para un subárbol estático elevado.
+
+## `src/lowering/events`
+
+### canonicalEventName
+
+**Tipo:** función
+
+```typescript
+function canonicalEventName(propName: string): string;
+```
+
+Extrae el nombre del evento canónico de un nombre de propiedad `onXxx` (por ejemplo, `onClick` -> `click`, `onKeyDown` -> `keydown`).
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | ------ | ----------- |
+| nombreprop | cadena |             |
+
+### formatoNombreEventoDestino
+
+**Tipo:** función
+
+```typescript
+function formatTargetEventName(
+  eventName: string,
+  target: "react" | "solid" | "vue" | "svelte" | "web-components",
+): string;
+```
+
+Da formato al nombre de un evento de acuerdo con las convenciones del marco de destino.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| --------- | ----------------------------------------------------------- | ----------- |
+| nombre del evento | cadena |             |
+| objetivo | "react" \| "solid" \| "vue" \| "svelte" \| "componentes web" |             |
+
+### esEventHandlerProp
+
+**Tipo:** función
+
+```typescript
+function isEventHandlerProp(propName: string): boolean;
+```
+
+Determina si el nombre de una propiedad representa una propiedad del controlador de eventos (por ejemplo, `onClick`, `onKeyDown`).
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | ------ | ----------- |
+| nombreprop | cadena |             |
+
+### intenciones de evento inferiores
+
+**Tipo:** función
+
+```typescript
+function lowerEventIntentions(
+  module: SemanticModule,
+): readonly NormalizedEventPlan[];
+```
+
+Extrae todas las intenciones del controlador de eventos de `SemanticModule`.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | -------------- | ----------- |
+| módulo | Módulo Semántico |             |
+
+### Plan de eventos normalizado
+
+**Tipo:** interfaz
+
+```typescript
+export interface NormalizedEventPlan
+```
+
+Descriptor normalizado para un controlador de eventos de componente reducido.
+
+## `src/lowering/pipeline`
+
+### MóduloBajadoBase
+
+**Tipo:** interfaz
+
+```typescript
+export interface BaseLoweredModule extends TargetLoweredModule
+```
+
+Plan estándar reducido de referencia que los complementos del marco pueden integrar o desarrollar.
+
+### crearBaseRebajadoModule
+
+**Tipo:** función
+
+```typescript
+function createBaseLoweredModule(
+  module: SemanticModule,
+  framework: TargetFrameworkId,
+): BaseLoweredModule;
+```
+
+Crea un módulo base rebajado que ejecuta normalización de accesorios compartidos, síntesis de ranuras,
+reducción de eventos, extracción dinámica de node y normalización de claves de lista.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| --------- | ----------------- | ----------------------------------- |
+| módulo | Módulo Semántico | - Módulo semántico del frontend IR. |
+| marco | ID de marco de destino | - El ID del marco de destino.          |
+
+#### Contrato
+
+- **@param:** - Módulo semántico del frontend IR.
+- **@param:** - El ID del marco de destino.
+- **@devoluciones:** Módulo rebajado de base estándar.
+
+### validarInvariantesBajadas
+
+**Tipo:** función
+
+```typescript
+function validateLoweredInvariants(lowered: TargetLoweredModule): void;
+```
+
+Valida que un módulo bajado se ajuste a las invariantes estructurales requeridas.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ------------------- | ------------------------------ |
+| bajado | Módulo objetivo bajado | - El módulo bajado para comprobar. |
+
+#### Contrato
+
+- **@param:** - El módulo bajado para verificar.
+- **@throws:** Si se violan contratos invariantes.
+
+## `src/lowering/props`
+
+### canonicalizePropsContract
+
+**Tipo:** función
+
+```typescript
+function canonicalizePropsContract(
+  module: SemanticModule,
+  defaultParameterName = "props",
+): NormalizedPropsContract;
+```
+
+Canonicaliza el contrato de accesorios de un `SemanticModule`.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------------------- | -------------- | ----------------------------------------------------------------------------- |
+| módulo | Módulo Semántico | - El módulo semántico a inspeccionar.                                             |
+| nombredeparámetropredeterminado |                | - El nombre del parámetro de accesorios de respaldo cuando no se declara ninguno (predeterminado: 'props'). |
+
+#### Contrato
+
+- **@param:** - El módulo semántico a inspeccionar.
+- **@param:** - El nombre del parámetro de accesorios de reserva cuando no se declara ninguno (predeterminado: 'props').
+- **@returns:** Contrato de accesorios canónicos.
+
+### Propiedad normalizada
+
+**Tipo:** interfaz
+
+```typescript
+export interface NormalizedProp
+```
+
+Una descripción de accesorio normalizada e independiente del objetivo.
+
+### Contrato de accesorios normalizados
+
+**Tipo:** interfaz
+
+```typescript
+export interface NormalizedPropsContract
+```
+
+El contrato de accesorios normalizado de un componente.
+
+### resolverPropTypeText
+
+**Tipo:** función
+
+```typescript
+function resolvePropTypeText(prop: PropIntention): string;
+```
+
+Resuelve el tipo de cadena para una intención de utilería.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------------- | ----------- |
+| apoyo | PropIntención |             |
+
+### DESCONOCIDO_PROP_TYPE
+
+**Tipo:** constante
+
+```typescript
+export const UNKNOWN_PROP_TYPE;
+```
+
+La cadena de tipo alternativo cuando no hay ningún tipo declarado o inferido.
+
+## `src/lowering/setup`
+
+### EMPTY_SETUP_CONTRACT
+
+**Tipo:** constante
+
+```typescript
+export const EMPTY_SETUP_CONTRACT: SetupContract;
+```
+
+Contrato de instalación vacío utilizado por módulos componibles heredados sin configuración.
+
+### normalizarSetupContract
+
+**Tipo:** función
+
+```typescript
+function normalizeSetupContract(module: SemanticModule): SetupContract;
+```
+
+Obtiene el contrato de configuración canónico adjunto por la interfaz.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | -------------- | ----------- |
+| módulo | Módulo Semántico |             |
+
+### validarSetupContract
+
+**Tipo:** función
+
+```typescript
+function validateSetupContract(
+  contract: SetupContract,
+  fileName = "<unknown>",
+): readonly CompilerDiagnostic[];
+```
+
+Valida las dependencias de configuración, los nombres y la compatibilidad de la carga útil del modelo antes de reducir el objetivo.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | ------------- | ----------- |
+| contrato | Contrato de configuración |             |
+| nombre de archivo |               |             |
+
+## `src/lowering/slots`
+
+### DEFAULT_SLOT_NAME
+
+**Tipo:** constante
+
+```typescript
+export const DEFAULT_SLOT_NAME;
+```
+
+Nombre de ranura predeterminado en todos los marcos de destino compatibles.
+
+### esDefaultSlotName
+
+**Tipo:** función
+
+```typescript
+function isDefaultSlotName(name: string): boolean;
+```
+
+Determina si el nombre de una ranura es la ranura predeterminada.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| nombre | cadena |             |
+
+### isSlotRenderNode
+
+**Tipo:** función
+
+```typescript
+function isSlotRenderNode(node: GenericRenderNode): boolean;
+```
+
+Determina si una representación node representa una etiqueta de marcador de posición de ranura (`<Slot>` o `<slot>`).
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ----------------- | ----------- |
+| node | Nodo de renderizado genérico |             |
+
+### Plan de ranura normalizado
+
+**Tipo:** interfaz
+
+```typescript
+export interface NormalizedSlotPlan
+```
+
+Descriptor normalizado para una ranura de componente.
+
+### Contrato de ranuras normalizadas
+
+**Tipo:** interfaz
+
+```typescript
+export interface NormalizedSlotsContract
+```
+
+Colección normalizada de todas las ranuras sintetizadas para un componente.
+
+### sintetizarSlotPlans
+
+**Tipo:** función
+
+```typescript
+function synthesizeSlotPlans(module: SemanticModule): NormalizedSlotsContract;
+```
+
+Sintetiza un contrato de slot unificado para un `SemanticModule`.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | -------------- | --------------------------------- |
+| módulo | Módulo Semántico | - El módulo semántico a analizar. |
+
+#### Contrato
+
+- **@param:** - El módulo semántico a analizar.
+- **@returns:** Contrato de plan de slots normalizado.
 
 ## `src/schema`
 
@@ -1377,9 +2047,9 @@ o si el discriminador del plan reducido no coincide con el marco esperado.
 
 #### Parámetros
 
-| Nombre         | Tipo        | Descripción |
-| -------------- | ----------- | ----------- |
-| intenciones    | desconocido |             |
+| Nombre | Tipo | Descripción |
+| ----------------- | ----------- | ----------- |
+| intenciones | desconocido |             |
 | marco esperado | ID de marco |             |
 
 ### Esquema declarativo
@@ -1404,9 +2074,9 @@ Busque recursivamente una fuente procesable dentro de las intenciones o sus hech
 
 #### Parámetros
 
-| Nombre | Tipo        | Descripción |
-| ------ | ----------- | ----------- |
-| valor  | desconocido |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------- | ----------- |
+| valor | desconocido |             |
 
 ### Regla de campo de esquema
 
@@ -1525,10 +2195,10 @@ Valida un objeto de destino frente a un esquema declarativo, recopilando todos l
 
 #### Parámetros
 
-| Nombre   | Tipo                              | Descripción                                            |
-| -------- | --------------------------------- | ------------------------------------------------------ |
-| objetivo | desconocido                       | - Objeto objetivo o registro a validar.                |
-| esquema  | Esquema declarativo               | - Esquema declarativo que define reglas estructurales. |
+| Nombre | Tipo | Descripción |
+| ------- | ----------------------- | ----------------------------------------------- |
+| objetivo | desconocido | - Objeto objetivo o registro a validar.          |
+| esquema | Esquema declarativo | - Esquema declarativo que define reglas estructurales. |
 | opciones | Opciones de validación de esquema | - Opciones de configuración de validación.             |
 
 #### Contrato
@@ -1554,7 +2224,552 @@ Devuelve errores de validación estructurados y los objetos CompilerDiagnostic c
 
 #### Parámetros
 
-| Nombre         | Tipo        | Descripción |
-| -------------- | ----------- | ----------- |
-| intenciones    | desconocido |             |
+| Nombre | Tipo | Descripción |
+| ----------------- | ----------- | ----------- |
+| intenciones | desconocido |             |
 | marco esperado | ID de marco |             |
+
+## `src/testing`
+
+### atributo booleano
+
+**Tipo:** función
+
+```typescript
+function booleanAttribute(name: string): GenericJsxAttribute;
+```
+
+Un atributo taquigráfico booleano sin valor (`disabled`).
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| nombre | cadena |             |
+
+### componente
+
+**Tipo:** función
+
+```typescript
+function component(parts: {
+  name: string;
+  parameter?: string;
+  parameterType?: string;
+  exported?: boolean;
+  body?: readonly GenericStatement[];
+  returnNode?: GenericRenderNode;
+  returnExpression?: string;
+  returned?: { expression: string; nodes?: readonly GenericRenderNode[] };
+}): GenericComponent;
+```
+
+Cree el registro de componente que da nombre a un módulo.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| piezas | { nombre: cadena; parámetro?: cadena; ¿Tipo de parámetro?: cadena; ¿exportado?: booleano; ¿cuerpo?: declaración genérica de solo lectura []; returnNode?: GenericRenderNode; returnExpression?: cadena; ¿devuelto?: { expresión: cadena; ¿nodos?: solo lectura GenericRenderNode[] }; } |             |
+
+### elemento dinámico
+
+**Tipo:** función
+
+```typescript
+function dynamicElement(
+  expression: string,
+  parts: {
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+  } = {},
+): GenericRenderNode;
+```
+
+Cree una representación de etiqueta calculada node.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------------------------------------------------------------------------------------- | ----------- |
+| expresión | cadena |             |
+| piezas | {atributos?: solo lectura GenericAttribute[]; ¿niños?: solo lectura GenericRenderChild[]; ¿fuente?: cadena; } |             |
+
+### nodo dinámico
+
+**Tipo:** función
+
+```typescript
+function dynamicNode(
+  expression: string,
+  span: SourceSpan = EMPTY_SPAN,
+): DynamicNodeIntention;
+```
+
+Cree una intención dinámica-node.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---------- | ---------- | ----------- |
+| expresión | cadena |             |
+| lapso | FuenteSpan |             |
+
+### efecto
+
+**Tipo:** función
+
+```typescript
+function effect(
+  body: string,
+  second?:
+    | readonly string[]
+    | string
+    | { cleanup?: string; dependencies?: readonly string[] },
+  third?: string | readonly string[],
+): EffectIntention;
+```
+
+Construye una intención de efecto.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | ---------------------------------------------------------------------------------------- | ----------- |
+| cuerpo | cadena |             |
+| segundo | \| cadena de solo lectura[] \| cadena \| {limpieza?: cadena; ¿dependencias?: cadena de solo lectura[] } |             |
+| tercero | cadena \| cadena de solo lectura[] |             |
+
+### elemento
+
+**Tipo:** función
+
+```typescript
+function element(
+  tag: string,
+  parts: {
+    tagKind?: GenericTagKind;
+    selfClosing?: boolean;
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+    span?: SourceSpan;
+  } = {},
+): GenericRenderNode;
+```
+
+Construir un render node; `source` es el propio texto de node, que se utiliza al empalmar marcas anidadas.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| etiqueta | cadena |             |
+| piezas | { tipo de etiqueta?: tipo de etiqueta genérica; ¿cierre automático?: booleano; ¿atributos?: solo lectura GenericAttribute[]; ¿niños?: solo lectura GenericRenderChild[]; ¿fuente?: cadena; ¿lapso?: FuenteSpan; } |             |
+
+### elementoRef
+
+**Tipo:** constante
+
+```typescript
+export const elementRef: typeof reference;
+```
+
+Alias ​​de `reference` (utilizado en las especificaciones de componentes web).
+
+### evento
+
+**Tipo:** función
+
+```typescript
+function event(name: string, handler: string): EventIntention;
+```
+
+Construya una intención de evento.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ------ | ----------- |
+| nombre | cadena |             |
+| manejador | cadena |             |
+
+### expresiónAtributo
+
+**Tipo:** función
+
+```typescript
+function expressionAttribute(
+  name: string,
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericJsxAttribute;
+```
+
+Un atributo `name={expression}`, que opcionalmente incluye marcado anidado.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | ---------------------------- | ----------- |
+| nombre | cadena |             |
+| texto | cadena |             |
+| anidado | sólo lectura GenericRenderNode[] |             |
+
+### expresiónniño
+
+**Tipo:** función
+
+```typescript
+function expressionChild(
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericExpressionNode;
+```
+
+Una interpolación `{ … }` en posición secundaria, que opcionalmente lleva marcado anidado.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | ---------------------------- | ----------- |
+| texto | cadena |             |
+| anidado | sólo lectura GenericRenderNode[] |             |
+
+### Intenciones de accesorios
+
+**Tipo:** tipo
+
+```typescript
+export type FixtureIntentions = SemanticModuleParts;
+```
+
+Alias ​​para la compatibilidad de `SemanticModuleParts` con especificaciones heredadas de Vue.
+
+### fragmento
+
+**Tipo:** función
+
+```typescript
+function fragment(
+  children: readonly GenericRenderChild[] = [],
+  source = "<Fragment />",
+): GenericRenderNode;
+```
+
+Cree un fragmento de procesamiento node (`<>…</>` o `<Fragment>…</Fragment>`).
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | ----------------------------- | ----------- |
+| niños | sólo lectura GenericRenderChild[] |             |
+| fuente |                               |             |
+
+### lista de claves
+
+**Tipo:** función
+
+```typescript
+function listKey(
+  source: string,
+  second?: boolean | string | { key?: string; stable?: boolean },
+  third?: boolean | string,
+): ListKeyIntention;
+```
+
+Construya una intención clave de lista.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | ------------------------------------------------------- | ----------- |
+| fuente | cadena |             |
+| segundo | booleano \| cadena \| { clave?: cadena; ¿estable?: booleano } |             |
+| tercero | booleano \| cadena |             |
+
+### memorándum
+
+**Tipo:** función
+
+```typescript
+function memo(
+  name: string,
+  factory: string,
+  dependencies?: readonly string[],
+): MemoIntention;
+```
+
+Construya una intención de memorando.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------------ | ----------------- | ----------- |
+| nombre | cadena |             |
+| fábrica | cadena |             |
+| dependencias | cadena de solo lectura[] |             |
+
+### móduloImportar
+
+**Tipo:** función
+
+```typescript
+function moduleImport(
+  text: string,
+  source: string,
+  parts: Partial<Omit<GenericImport, "kind" | "text" | "source" | "span">> = {},
+): GenericImport;
+```
+
+Cree un registro de importación a partir de su texto fuente y especificador resuelto.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | -------------------------------------------------------------------- | ----------- |
+| texto | cadena |             |
+| fuente | cadena |             |
+| piezas | Parcial<Omit<GenericImport, "kind" \| "text" \| "source" \| "span">> |             |
+
+### neutralImportar
+
+**Tipo:** función
+
+```typescript
+function neutralImport(
+  valueNames: readonly string[],
+  typeNames: readonly string[] = [],
+): GenericImport;
+```
+
+La importación neutral `@mission-platform/forge-jsx`, detallada a partir de sus nombres.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---------- | ----------------- | ----------- |
+| nombres de valores | cadena de solo lectura[] |             |
+| tipos de nombres | cadena de solo lectura[] |             |
+
+### apuntalar
+
+**Tipo:** función
+
+```typescript
+function prop(
+  name: string,
+  second?:
+    string | { type?: string; optional?: boolean; defaultValue?: string },
+  third?: boolean | { optional?: boolean; defaultValue?: string },
+  fourth?: string,
+): PropIntention;
+```
+
+Construye una intención de utilería.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | ---------------------------------------------------------------------- | ----------- |
+| nombre | cadena |             |
+| segundo | cadena \| {tipo?: cadena; ¿opcional?: booleano; valorpredeterminado?: cadena } |             |
+| tercero | booleano \| {¿opcional?: booleano; valorpredeterminado?: cadena } |             |
+| cuarto | cadena |             |
+
+### referencia
+
+**Tipo:** función
+
+```typescript
+function reference(
+  name: string,
+  elementType?: string,
+  initializer?: string,
+): RefIntention;
+```
+
+Construya una intención de árbitro.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----------- | ------ | ----------- |
+| nombre | cadena |             |
+| tipo de elemento | cadena |             |
+| inicializador | cadena |             |
+
+### Declaración de devolución
+
+**Tipo:** función
+
+```typescript
+function returnStatement(
+  expression: string,
+  renderNodes: readonly GenericRenderNode[] = [],
+): GenericStatement;
+```
+
+Cree la declaración `return …;` de un cuerpo de componente.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----------- | ---------------------------- | ----------- |
+| expresión | cadena |             |
+| renderNodos | sólo lectura GenericRenderNode[] |             |
+
+### módulo semántico
+
+**Tipo:** función
+
+```typescript
+function semanticModule(parts: SemanticModuleParts): SemanticModule;
+```
+
+Ensamble un `SemanticModule` a partir de las piezas del accesorio.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------------------- | ----------- |
+| piezas | Partes del módulo semántico |             |
+
+### Partes del módulo semántico
+
+**Tipo:** interfaz
+
+```typescript
+export interface SemanticModuleParts
+```
+
+Los hechos de intención que puede declarar un dispositivo de prueba.
+
+### ranura
+
+**Tipo:** función
+
+```typescript
+function slot(name: string, fallback?: string): SlotIntention;
+```
+
+Construye una intención de tragamonedas.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | ------ | ----------- |
+| nombre | cadena |             |
+| respaldo | cadena |             |
+
+### atributo de propagación
+
+**Tipo:** función
+
+```typescript
+function spreadAttribute(
+  text: string,
+  span: SourceSpan = EMPTY_SPAN,
+): GenericJsxSpreadAttribute;
+```
+
+Un atributo de extensión `{...expression}`.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ---------- | ----------- |
+| texto | cadena |             |
+| lapso | FuenteSpan |             |
+
+### estado
+
+**Tipo:** función
+
+```typescript
+function state(
+  name: string,
+  setterName?: string,
+  parts: { type?: string; inferredType?: string; initializer?: string } = {},
+): StateIntention;
+```
+
+Construir una intención estatal.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------------------------------------------- | ----------- |
+| nombre | cadena |             |
+| nombreSetter | cadena |             |
+| piezas | {tipo?: cadena; ¿Tipo inferido?: cadena; ¿inicializador?: cadena } |             |
+
+### declaración
+
+**Tipo:** función
+
+```typescript
+function statement(
+  text: string,
+  statementKind: GenericStatementKind = "variable",
+  parts: {
+    name?: string;
+    exported?: boolean;
+    renderNodes?: readonly GenericRenderNode[];
+  } = {},
+): GenericStatement;
+```
+
+Cree un registro de declaración a partir de su texto fuente.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------------- | ---------------------------------------------------------------------------------- | ----------- |
+| texto | cadena |             |
+| declaraciónTipo | Tipo de declaración genérica |             |
+| piezas | {nombre?: cadena; ¿exportado?: booleano; renderNodes?: solo lectura GenericRenderNode[]; } |             |
+
+### atributo de cadena
+
+**Tipo:** función
+
+```typescript
+function stringAttribute(name: string, value: string): GenericJsxAttribute;
+```
+
+Un atributo `name="value"`.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| nombre | cadena |             |
+| valor | cadena |             |
+
+### plantillaRef
+
+**Tipo:** constante
+
+```typescript
+export const templateRef: typeof reference;
+```
+
+Alias ​​de `reference` (utilizado en las especificaciones Vue).
+
+### textoNiño
+
+**Tipo:** función
+
+```typescript
+function textChild(text: string): GenericTextNode;
+```
+
+Texto literal entre etiquetas.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| texto | cadena |             |

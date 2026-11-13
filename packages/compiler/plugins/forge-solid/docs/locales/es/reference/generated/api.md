@@ -23,8 +23,8 @@ Transforme un módulo de enlace neutral en su fuente SolidJS.
 
 #### Parámetros
 
-| Nombre | Tipo             | Descripción |
-| ------ | ---------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | -------------- | ----------- |
 | módulo | Módulo Semántico |             |
 
 ## `src/emitters/module`
@@ -40,13 +40,13 @@ function emitSolidModule(
 ): GeneratedSolidModule;
 ```
 
-Transforme un módulo de componente neutro en su fuente SolidJS.
+Transforme un módulo de componente neutral en su fuente SolidJS.
 
 #### Parámetros
 
-| Nombre   | Tipo                       | Descripción |
-| -------- | -------------------------- | ----------- |
-| módulo   | Módulo Semántico           |             |
+| Nombre | Tipo | Descripción |
+| ------- | ---------------- | ----------- |
+| módulo | Módulo Semántico |             |
 | opciones | Opciones de emisión sólida |             |
 
 ### Módulo sólido generado
@@ -97,8 +97,8 @@ Limitar un plan objetivo al Solid; `false` para el plan de cualquier otro marco.
 
 #### Parámetros
 
-| Nombre | Tipo                             | Descripción |
-| ------ | -------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------------------- | ----------- |
 | bajado | TargetLoweredModule\| indefinido |             |
 
 ### módulo sólido inferior
@@ -116,9 +116,9 @@ Baje el IR neutral al envoltorio de intención de objetivo de Solid, llevando el
 
 #### Parámetros
 
-| Nombre   | Tipo              | Descripción |
-| -------- | ----------------- | ----------- |
-| ir       | Módulo Semántico  |             |
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| ir | Módulo Semántico |             |
 | contexto | Contexto objetivo |             |
 
 ### planSolidImports
@@ -138,10 +138,10 @@ volver a ejecutar produce una lista idéntica. Recalcular esto es lo que hace
 
 #### Parámetros
 
-| Nombre      | Tipo                    | Descripción |
-| ----------- | ----------------------- | ----------- |
-| plano       | Plan de descenso sólido |             |
-| condicional | booleano                |             |
+| Nombre | Tipo | Descripción |
+| ----------- | ----------------- | ----------- |
+| plano | Plan de descenso sólido |             |
+| condicional | booleano |             |
 
 ### planSolidModule
 
@@ -155,9 +155,9 @@ Cree el plan Solid para los hechos semánticos de un módulo.
 
 #### Parámetros
 
-| Nombre | Tipo             | Descripción |
-| ------ | ---------------- | ----------- |
-| ir     | Módulo Semántico |             |
+| Nombre | Tipo | Descripción |
+| ---- | -------------- | ----------- |
+| ir | Módulo Semántico |             |
 
 ### SOLID_FRAMEWORK
 
@@ -347,10 +347,10 @@ Refinar un plan Solid reducido. Un contenedor de intención que no incluye ning�
 
 #### Parámetros
 
-| Nombre      | Tipo                                | Descripción |
-| ----------- | ----------------------------------- | ----------- |
-| intenciones | Intenciones objetivo                |             |
-| opciones    | Opciones de optimización de destino |             |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------- | ----------- |
+| intenciones | Intenciones objetivo |             |
+| opciones | Opciones de optimización de destino |             |
 
 ### STABLE_LIST_KEYS
 

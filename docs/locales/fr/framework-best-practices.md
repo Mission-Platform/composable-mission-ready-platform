@@ -48,7 +48,7 @@ React est pris en charge via l'adaptateur d'exécution Forge, principalement pou
 ### Optimisations des performances
 
 - **Mémoisation** : utilisez `React.memo`, `useMemo` et `useCallback` pour conserver l'identité référentielle et éviter les nouveaux rendus inutiles.
-- **Fonctionnalités simultanées** : exploitez `useTransition` ou `useDeferredValue` pour les mises à jour non urgentes de l'interface utilisateur afin de maintenir la réactivité du thread principal.
+- **Fonctionnalités simultanées** : exploitez `useTransition` ou `useDeferredValue` pour les mises à jour non urgentes de l'interface utilisateur afin que le thread principal reste réactif.
 
 ## Autres cadres
 
@@ -60,16 +60,17 @@ Mission Platform fournit différents niveaux de prise en charge pour d'autres fr
 
 ## Modèles de performances et de réactivité
 
-| Cadre        | Modèle de réactivité | Stratégie de mise à jour                         |
-| :----------- | :------------------- | :----------------------------------------------- |
-| **Vue 3**    | Basé sur un proxy    | DOM virtuel avec optimisations du compilateur.   |
-| **React**    | État immuable        | Réconciliation virtuelle du DOM.                 |
-| **SolideJS** | Signaux à grain fin  | Mises à jour directes du DOM (pas de VDOM).      |
-| **Svelte 5** | Runes / Signaux      | Mises à jour directes du DOM via le compilateur. |
-| **Allumé**   | Propriétés réactives | Mises à jour asynchrones du Shadow DOM.          |
+| Cadre | Modèle de réactivité | Stratégie de mise à jour |
+| :----------- | :------------------- | :--------------------------------------- |
+| **Vue 3** | Basé sur un proxy | DOM virtuel avec optimisations du compilateur. |
+| **React** | État immuable | Réconciliation virtuelle du DOM.              |
+| **SolideJS** | Signaux à grain fin | Mises à jour directes du DOM (pas de VDOM).            |
+| **Svelte 5** | Runes / Signaux | Mises à jour directes du DOM via le compilateur.         |
+| **Allumé** | Propriétés réactives | Mises à jour asynchrones du Shadow DOM.         |
 
 ## Ressources connexes
 
 - [Meilleures pratiques](best-practices.md)
 - [Guide de test](testing.md)
 - [@mission-platform/forge-jsx LISEZMOI](../../../packages/core/forge-jsx/README.md)
+- [@mission-platform/forge-adapters LISEZMOI](../../../packages/core/forge-adapters/README.md)

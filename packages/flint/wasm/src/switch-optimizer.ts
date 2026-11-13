@@ -33,7 +33,6 @@ function validateSwitchCaseValues(
   values: readonly (number | undefined)[],
   diagnostics: FlintWasmOptimizationDiagnostic[],
 ): void {
-  // eslint-disable-next-line unicorn/prefer-array-index-of -- indexOf(undefined) is stripped by no-useless-undefined rule.
   const undefinedIndex = values.findIndex((candidate) => candidate === undefined);
   if (undefinedIndex !== -1) {
     diagnostics.push({

@@ -1,6 +1,6 @@
-import { ForgeGauge, type GaugeProperties } from './forge-gauge';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeGauge, type GaugeProperties } from './forge-gauge';
 
 const meta = {
   title: 'Atoms/Feedback/ForgeGauge',

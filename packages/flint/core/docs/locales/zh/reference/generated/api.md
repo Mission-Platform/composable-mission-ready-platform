@@ -9,945 +9,43 @@
 
 根据 `@mission-platform/flint` 中的公共源声明生成。
 
-## `src/analysis/analyze`
-
-### 分析Flint
-
-**种类：**功能
-
-```typescript
-function analyzeFlint(frontend: FlintFrontendResult, options: FlintAnalysisOptions = {}): FlintAnalysisReport;
-```
-
-针对一个前端结果运行注册的源分析规则。
-
-#### 参数
-
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 前端 | FlintFrontendResult |      |
-| 选项 | Flint 分析选项      |      |
-
-## `src/analysis/context`
-
-### 创建FlintAnalysisContext
-
-**种类：**功能
-
-```typescript
-function createFlintAnalysisContext(
-  frontend: FlintFrontendResult,
-  options: FlintAnalysisOptions = {},
-): FlintAnalysisContext;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 前端 | FlintFrontendResult |      |
-| 选项 | Flint 分析选项      |      |
-
-## `src/analysis/contracts`
-
-### FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
-```
-
-为源分析诊断系列保留的稳定前缀。
-
-### FlintAnalysisCallGraphNode
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisCallGraphNode
-```
-
-没有提供描述。
-
-### Flint分析能力事实
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisCapabilityFact
-```
-
-没有提供描述。
-
-### FlintAnalytics类别
-
-**种类：**类型
-
-```typescript
-export type FlintAnalysisCategory = 'type' | 'control-flow' | 'memory' | 'ownership' | 'security' | 'resource';
-```
-
-没有提供描述。
-
-### FlintAnalysisContext
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisContext
-```
-
-没有提供描述。
-
-### Flint分析控制FlowFact
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisControlFlowFact
-```
-
-没有提供描述。
-
-### Flint分析证据
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisEvidence
-```
-
-没有提供描述。
-
-### Flint分析事实
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisFacts
-```
-
-没有提供描述。
-
-### Flint分析查找
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisFinding
-```
-
-没有提供描述。
-
-### Flint 分析限制
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisLimits
-```
-
-没有提供描述。
-
-### Flint 分析选项
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisOptions
-```
-
-没有提供描述。
-
-### Flint分析所有权事实
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisOwnershipFact
-```
-
-没有提供描述。
-
-### Flint 分析策略
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisPolicy
-```
-
-没有提供描述。
-
-### Flint 分析配置文件
-
-**种类：**类型
-
-```typescript
-export type FlintAnalysisProfile = 'development' | 'strict';
-```
-
-没有提供描述。
-
-### Flint分析范围事实
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisRangeFact
-```
-
-没有提供描述。
-
-### Flint 分析报告
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisReport
-```
-
-没有提供描述。
-
-### Flint分析资源事实
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisResourceFact
-```
-
-没有提供描述。
-
-### Flint分析规则
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisRule
-```
-
-没有提供描述。
-
-### Flint 分析严重性
-
-**种类：**类型
-
-```typescript
-export type FlintAnalysisSeverity = FlintDiagnosticSeverity;
-```
-
-没有提供描述。
-
-### Flint分析源文件
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisSourceFile
-```
-
-没有提供描述。
-
-### FlintAnalysisSourceMap
-
-**种类：**类型
-
-```typescript
-export type FlintAnalysisSourceMap = readonly FlintAnalysisSourceMapEntry[];
-```
-
-没有提供描述。
-
-### FlintAnalysisSourceMapEntry
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisSourceMapEntry
-```
-
-没有提供描述。
-
-### Flint分析类型事实
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisTypeFact
-```
-
-没有提供描述。
-
-## `src/analysis/default-rules`
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly FlintAnalysisRule[];
-```
-
-没有提供描述。
-
-## `src/analysis/facts`
-
-### createFlintAnalysisFacts
-
-**种类：**功能
-
-```typescript
-function createFlintAnalysisFacts(frontend: FlintFrontendResult): FlintAnalysisFacts;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 前端 | FlintFrontendResult |      |
-
-## `src/analysis/policy`
-
-### 创建FlintAnalysisPolicy
-
-**种类：**功能
-
-```typescript
-function createFlintAnalysisPolicy(policy: FlintAnalysisOptionsLike = {}): FlintAnalysisPolicy;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型                      | 描述 |
-| ---- | ------------------------- | ---- |
-| 政策 | FlintAnalysisOptions 类似 |      |
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: FlintAnalysisLimits;
-```
-
-没有提供描述。
-
-### FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-没有提供描述。
-
-### FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-没有提供描述。
-
-### FlintAnalysisOptionsLike
-
-**种类：**类型
-
-```typescript
-export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limits'> &
-```
-
-没有提供描述。
-
-### isFlint分析发现阻塞
-
-**种类：**功能
-
-```typescript
-function isFlintAnalysisFindingBlocking(finding: FlintAnalysisFinding, policy: FlintAnalysisPolicy): boolean;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 发现 | Flint 分析查找 |      |
-| 政策 | Flint 分析策略 |      |
-
-## `src/analysis/registry`
-
-### createFlintAnalysisRuleRegistry
-
-**种类：**功能
-
-```typescript
-function createFlintAnalysisRuleRegistry(
-  rules: readonly FlintAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
-): FlintAnalysisRuleRegistry;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型                     | 描述 |
-| ---- | ------------------------ | ---- |
-| 规则 | 只读 FlintAnalysisRule[] |      |
-
-### FlintAnalysisRuleRegistry
-
-**种类：**接口
-
-```typescript
-export interface FlintAnalysisRuleRegistry
-```
-
-没有提供描述。
-
-## `src/analysis/report`
-
-### createFlintAnalysisDiagnostic
-
-**种类：**功能
-
-```typescript
-function createFlintAnalysisDiagnostic(finding: FlintAnalysisFinding): FlintDiagnostic;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 发现 | Flint 分析查找 |      |
-
-## `src/ast`
-
-### FlintArrayLiteralExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintArrayLiteralExpression
-```
-
-没有提供描述。
-
-### FlintAssignment语句
-
-**种类：**接口
-
-```typescript
-export interface FlintAssignmentStatement
-```
-
-没有提供描述。
-
-### FlintBinaryExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintBinaryExpression
-```
-
-没有提供描述。
-
-### FlintBinaryOperator
-
-**种类：**类型
-
-```typescript
-export type FlintBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
-```
-
-没有提供描述。
-
-### FlintCallExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintCallExpression
-```
-
-没有提供描述。
-
-### Flint 功能导入
-
-**种类：**接口
-
-```typescript
-export interface FlintCapabilityImport
-```
-
-没有提供描述。
-
-### Flint文档
-
-**种类：**接口
-
-```typescript
-export interface FlintDocumentation
-```
-
-没有提供描述。
-
-### Flint文档标签
-
-**种类：**接口
-
-```typescript
-export interface FlintDocumentationTag
-```
-
-没有提供描述。
-
-### FlintDoWhileStatement
-
-**种类：**接口
-
-```typescript
-export interface FlintDoWhileStatement
-```
-
-没有提供描述。
-
-### FlintEnum声明
-
-**种类：**接口
-
-```typescript
-export interface FlintEnumDeclaration
-```
-
-没有提供描述。
-
-### FlintEnumValueExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintEnumValueExpression
-```
-
-没有提供描述。
-
-### FlintEnumVariant
-
-**种类：**接口
-
-```typescript
-export interface FlintEnumVariant
-```
-
-没有提供描述。
-
-### FlintExpression
-
-**种类：**类型
-
-```typescript
-export type FlintExpression =
-  | FlintBinaryExpression
-  | FlintCallExpression
-  | FlintIdentifierExpression
-  | FlintLiteralExpression
-  | FlintFunctionValueExpression
-  | FlintStructValueExpression
-  | FlintEnumValueExpression
-  | FlintArrayLiteralExpression
-  | FlintVectorLiteralExpression
-  | FlintIndexExpression
-  | FlintMatchExpression
-  | FlintUnaryExpression;
-```
-
-没有提供描述。
-
-### FlintExpression语句
-
-**种类：**接口
-
-```typescript
-export interface FlintExpressionStatement
-```
-
-没有提供描述。
-
-### FlintForStatement
-
-**种类：**接口
-
-```typescript
-export interface FlintForStatement
-```
-
-没有提供描述。
-
-### Flint函数
-
-**种类：**接口
-
-```typescript
-export interface FlintFunction
-```
-
-没有提供描述。
-
-### FlintFunctionValueExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintFunctionValueExpression
-```
-
-没有提供描述。
-
-### Flint通用参数
-
-**种类：**接口
-
-```typescript
-export interface FlintGenericParameter
-```
-
-没有提供描述。
-
-### FlintIdentifierExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIdentifierExpression
-```
-
-没有提供描述。
-
-### FlintIf 语句
-
-**种类：**接口
-
-```typescript
-export interface FlintIfStatement
-```
-
-没有提供描述。
-
-### FlintIndexExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIndexExpression
-```
-
-没有提供描述。
-
-### FlintInterface声明
-
-**种类：**接口
-
-```typescript
-export interface FlintInterfaceDeclaration
-```
-
-编译时结构合约；它没有运行时表示。
-
-### Flint接口函数
-
-**种类：**接口
-
-```typescript
-export interface FlintInterfaceFunction
-```
-
-没有提供描述。
-
-### FlintIteratorLoopStatement
-
-**种类：**接口
-
-```typescript
-export interface FlintIteratorLoopStatement
-```
-
-没有提供描述。
-
-### FlintLet 语句
-
-**种类：**接口
-
-```typescript
-export interface FlintLetStatement
-```
-
-没有提供描述。
-
-### FlintLiteralExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintLiteralExpression
-```
-
-没有提供描述。
-
-### FlintMatchArm
-
-**种类：**接口
-
-```typescript
-export interface FlintMatchArm
-```
-
-没有提供描述。
-
-### FlintMatchExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintMatchExpression
-```
-
-没有提供描述。
-
-### FlintMatchStatement
-
-**种类：**接口
-
-```typescript
-export interface FlintMatchStatement
-```
-
-没有提供描述。
-
-### Flint模块
-
-**种类：**接口
-
-```typescript
-export interface FlintModule
-```
-
-没有提供描述。
-
-### Flint 所有权
-
-**种类：**类型
-
-```typescript
-export type FlintOwnership = 'borrowed' | 'owned' | 'shared';
-```
-
-没有提供描述。
-
-### Flint参数
-
-**种类：**接口
-
-```typescript
-export interface FlintParameter
-```
-
-没有提供描述。
-
-### 锻造WebScript模式
-
-**种类：**类型
-
-```typescript
-export type FlintPattern = |
-```
-
-没有提供描述。
-
-### FlintPrimitiveType
-
-**种类：**类型
-
-```typescript
-export type FlintPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
-```
-
-没有提供描述。
-
-### FlintReturn语句
-
-**种类：**接口
-
-```typescript
-export interface FlintReturnStatement
-```
-
-没有提供描述。
-
-### FlintSourceModuleImport
-
-**种类：**接口
-
-```typescript
-export interface FlintSourceModuleImport
-```
-
-没有提供描述。
-
-### Flint声明
-
-**种类：**类型
-
-```typescript
-export type FlintStatement =
-  | FlintExpressionStatement
-  | FlintAssignmentStatement
-  | FlintIfStatement
-  | FlintLetStatement
-  | FlintMatchStatement
-  | FlintSwitchStatement
-  | FlintReturnStatement
-  | FlintForStatement
-  | FlintDoWhileStatement
-  | FlintWhileStatement
-  | FlintYieldStatement
-  | FlintIteratorLoopStatement;
-```
-
-没有提供描述。
-
-### FlintStruct声明
-
-**种类：**接口
-
-```typescript
-export interface FlintStructDeclaration
-```
-
-没有提供描述。
-
-### FlintStructField
-
-**种类：**接口
-
-```typescript
-export interface FlintStructField
-```
-
-没有提供描述。
-
-### FlintStructValueExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintStructValueExpression
-```
-
-没有提供描述。
-
-### FlintSwitchCase
-
-**种类：**接口
-
-```typescript
-export interface FlintSwitchCase
-```
-
-没有提供描述。
-
-### FlintSwitch语句
-
-**种类：**接口
-
-```typescript
-export interface FlintSwitchStatement
-```
-
-没有提供描述。
-
-### Flint类型名称
-
-**种类：**接口
-
-```typescript
-export interface FlintTypeName
-```
-
-没有提供描述。
-
-### flintTypeNameToString
-
-**种类：**功能
-
-```typescript
-function flintTypeNameToString(type: FlintTypeName): string;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 类型 | Flint 类型名称 |      |
-
-### FlintUnaryExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintUnaryExpression
-```
-
-没有提供描述。
-
-### FlintVectorLiteralExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintVectorLiteralExpression
-```
-
-没有提供描述。
-
-### FlintWhile语句
-
-**种类：**接口
-
-```typescript
-export interface FlintWhileStatement
-```
-
-没有提供描述。
-
-### FlintYield语句
-
-**种类：**接口
-
-```typescript
-export interface FlintYieldStatement
-```
-
-没有提供描述。
-
 ## `src/cache`
+
+### Flint缓存索引
+
+**种类：**接口
+
+```typescript
+export interface FlintCacheIndex
+```
+
+持久化缓存清单跟踪跨模块的活动工件以启用过时清理。
+
+### FlintCacheIndexEntry
+
+**种类：**接口
+
+```typescript
+export interface FlintCacheIndexEntry
+```
+
+索引条目跟踪特定模块密钥的缓存文件和时间戳。
+
+### flint缓存索引路径
+
+**种类：**功能
+
+```typescript
+function flintCacheIndexPath(cache: FlintWatCache): string;
+```
+
+返回缓存索引文件 `.flint-cache-index.json` 的路径。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|缓存| FlintWatCache |             |
 
 ### FlintCacheLogger
 
@@ -957,7 +55,7 @@ export interface FlintYieldStatement
 export interface FlintCacheLogger
 ```
 
-没有提供描述。
+用于缓存操作和缓存命中/未命中的诊断记录器接口。
 
 ### FlintDebugArtifactPaths
 
@@ -967,7 +65,7 @@ export interface FlintCacheLogger
 export interface FlintDebugArtifactPaths
 ```
 
-没有提供描述。
+编译期间发出的持久调试工件的文件路径。
 
 ### FlintDebugArtifactVariant
 
@@ -977,9 +75,27 @@ export interface FlintDebugArtifactPaths
 export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 ```
 
-没有提供描述。
+发出的调试工件的优化变体标识符。
 
-### FlintWatCache
+### 燧石子路径
+
+**种类：**功能
+
+```typescript
+function flintSoNPath(cache: FlintWatCache, key: string, variant: 'optimized' | 'unoptimized' = 'optimized'): string;
+```
+
+返回给定缓存键和变体的 SonIR JSON 工件的路径。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ---------------------------- | ----------- |
+|缓存| FlintWatCache |             |
+|关键|字符串|             |
+|变体| ‘优化’\| '未优化' |             |
+
+### FlintWat缓存
 
 **种类：**接口
 
@@ -987,7 +103,7 @@ export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 export interface FlintWatCache
 ```
 
-没有提供描述。
+用于编译器工件和 WAT 输出的文件系统或内存中缓存提供程序。
 
 ### flintWatCacheKey
 
@@ -997,13 +113,13 @@ export interface FlintWatCache
 function flintWatCacheKey(input: FlintWatCacheKeyInput): string;
 ```
 
-没有提供描述。
+计算编译请求的确定性缓存键。
 
 #### 参数
 
-| 名称 | 类型                  | 描述 |
-| ---- | --------------------- | ---- |
-| 输入 | FlintWatCacheKeyInput |      |
+|名称 |类型 |描述 |
+| ----- | --------------------- | ----------- |
+|输入 | FlintWatCacheKey输入 |             |
 
 ### FlintWatCacheKeyInput
 
@@ -1013,9 +129,9 @@ function flintWatCacheKey(input: FlintWatCacheKeyInput): string;
 export interface FlintWatCacheKeyInput
 ```
 
-没有提供描述。
+用于计算确定性编译缓存键的输入参数。
 
-### flintWatPath
+### 燧石路
 
 **种类：**功能
 
@@ -1023,14 +139,14 @@ export interface FlintWatCacheKeyInput
 function flintWatPath(cache: FlintWatCache, key: string): string;
 ```
 
-没有提供描述。
+返回给定缓存键的 WAT 文件的路径。
 
 #### 参数
 
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 缓存 | FlintWatCache |      |
-| 关键 | 字符串        |      |
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|缓存| FlintWatCache |             |
+|关键|字符串|             |
 
 ### persistFlintDebugArtifacts
 
@@ -1049,17 +165,41 @@ function persistFlintDebugArtifacts(
 ): FlintDebugArtifactPaths;
 ```
 
-没有提供描述。
+将调试工件（WAT 和 Wasm，优化的和未优化的）保留到磁盘。
 
 #### 参数
 
-| 名称 | 类型                                                                                                                        | 描述 |
-| ---- | --------------------------------------------------------------------------------------------------------------------------- | ---- |
-| 缓存 | FlintWatCache \|未定义                                                                                                      |      |
-| 关键 | 字符串                                                                                                                      |      |
-| 文物 | { 只读optimizedWat?: 字符串; 只读未优化Wat？：字符串； 只读optimizedWasm？：Uint8Array； 只读未优化的Wasm？：Uint8Array； } |      |
+|名称 |类型 |描述 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|缓存| FlintWatCache \|未定义 |             |
+|关键|字符串|             |
+|文物| { 只读optimizedWat?: 字符串;只读未优化Wat？：字符串；只读optimizedWasm？：Uint8Array；只读未优化的Wasm？：Uint8Array； } |             |
 
-### persistFlintWat
+### 坚持弗林特森
+
+**种类：**功能
+
+```typescript
+function persistFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  module: FlintSoNModule,
+  variant: 'optimized' | 'unoptimized' = 'optimized',
+): string | undefined;
+```
+
+将 SonIR 模块保留到磁盘的缓存目录中。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ---------------------------- | ----------- |
+|缓存| FlintWatCache \|未定义 |             |
+|关键|字符串|             |
+|模块| FlintSoN 模块 |             |
+|变体| ‘优化’\| '未优化' |             |
+
+### 坚持弗林特瓦特
 
 **种类：**功能
 
@@ -1067,19 +207,433 @@ function persistFlintDebugArtifacts(
 function persistFlintWat(cache: FlintWatCache | undefined, key: string, wat: string): string | undefined;
 ```
 
-没有提供描述。
+将 WAT 字符串保留到磁盘的缓存目录中。
 
 #### 参数
 
-| 名称   | 类型                   | 描述 |
-| ------ | ---------------------- | ---- |
-| 缓存   | FlintWatCache \|未定义 |      |
-| 关键   | 字符串                 |      |
-| 扫管笏 | 字符串                 |      |
+|名称 |类型 |描述 |
+| ----- | -------------------------- | ----------- |
+|缓存| FlintWatCache \|未定义 |             |
+|关键|字符串|             |
+|扫管笏 |字符串|             |
 
-## `src/compiler`
+### pruneOrphanedFlintCacheFiles
 
-### 编译Flint
+**种类：**功能
+
+```typescript
+function pruneOrphanedFlintCacheFiles(cache: FlintWatCache | undefined): readonly string[];
+```
+
+从缓存目录中删除孤立的临时和未索引的缓存文件。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | -------------------------- | ----------- |
+|缓存| FlintWatCache \|未定义 |             |
+
+### pruneStaleFlintCache
+
+**种类：**功能
+
+```typescript
+function pruneStaleFlintCache(
+  cache: FlintWatCache | undefined,
+  moduleIdOrPath: string,
+  currentKey: string,
+  newFiles: readonly string[],
+): void;
+```
+
+当给定模块 ID 的缓存键发生更改时，修剪陈旧的缓存工件。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------------- | -------------------------- | ----------- |
+|缓存| FlintWatCache \|未定义 |             |
+|模块 ID 或路径 |字符串|             |
+|当前键 |字符串|             |
+|新文件 |只读字符串[] |             |
+
+### 读取FlintCacheIndex
+
+**种类：**功能
+
+```typescript
+function readFlintCacheIndex(cache: FlintWatCache | undefined): FlintCacheIndex | undefined;
+```
+
+从磁盘读取并解析缓存索引，如果丢失或格式错误，则返回未定义。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | -------------------------- | ----------- |
+|缓存| FlintWatCache \|未定义 |             |
+
+### 雷德弗林特森
+
+**种类：**功能
+
+```typescript
+function readFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  expected?: {
+    readonly compilerVersion?: string;
+    readonly languageVersion?: string;
+    readonly abiVersion?: string;
+    readonly sourceHash?: string;
+    readonly graphHash?: string;
+    readonly optimization?: 'debug' | 'release';
+    readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
+    readonly memoryModel?: 'region-arc-checked-linear';
+  },
+): FlintSoNModule | undefined;
+```
+
+从磁盘读取并反序列化 SonIR 模块。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|缓存| FlintWatCache \|未定义 |             |
+|关键|字符串|             |
+|预计| { 只读编译器版本？：字符串；只读语言版本？：字符串；只读 abiVersion？：字符串；只读 sourceHash?: 字符串；只读 graphHash?: 字符串；只读优化？: '调试' \| '发布';只读boundsChecks？：'运行时'\| '已证明安全'\| '按配置文件排除'；只读内存模型？：'区域弧检查线性'； } |             |
+
+## `src/compiler/backend`
+
+### 工件验证诊断
+
+**种类：**功能
+
+```typescript
+function artifactVerificationDiagnostic(diagnostic: FlintWasmArtifactVerificationDiagnostic): FlintDiagnostic;
+```
+
+将 Wasm 工件验证诊断转换为标准编译器诊断。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | --------------------------------------- | ----------- |
+|诊断| FlintWasmArtifact验证诊断|             |
+
+### 动态链接元数据
+
+**种类：**功能
+
+```typescript
+function dynamicLinkMetadata(manifest: FlintAbiManifest, artifactId: string): FlintDynamicLinkMetadata | undefined;
+```
+
+计算清单中标有动态链接模式的模块的动态链接元数据。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ---------------- | ----------- |
+|清单 |弗林特阿比清单 |             |
+|工件 ID |字符串|             |
+
+### 编码器
+
+**种类：**常数
+
+```typescript
+export const encoder;
+```
+
+没有提供描述。
+
+### FlintBackend编译结果
+
+**种类：**接口
+
+```typescript
+export interface FlintBackendCompilationResult
+```
+
+WebAssembly 后端代码生成返回的结果结构。
+
+### 哈希字节
+
+**种类：**功能
+
+```typescript
+function hashBytes(bytes: Uint8Array): string;
+```
+
+计算以十六进制字符串形式返回的给定字节数组的 32 位 FNV-1a 哈希值。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---------- | ----------- |
+|字节| Uint8Array |             |
+
+### 源HashForArtifact
+
+**种类：**功能
+
+```typescript
+function sourceHashForArtifact(source: string, fileName: string): string;
+```
+
+从非评论标记流中计算工件的规范化源哈希。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|来源 |字符串|             |
+|文件名 |字符串|             |
+
+### 验证后端工件
+
+**种类：**功能
+
+```typescript
+function verifyBackendArtifact(input: {
+  readonly wasm: Uint8Array;
+  readonly unoptimizedWasm?: Uint8Array;
+  readonly fileName: string;
+  readonly manifest: FlintAbiManifest;
+  readonly metadata: Parameters<typeof compileFlintWasm>[0]['metadata'];
+  readonly targetFeatures?: Parameters<typeof verifyFlintWasmArtifact>[0]['targetFeatures'];
+  readonly featureRequirements?: FlintWasmFeatureRequirements;
+  readonly iteratorExports?: readonly FlintIteratorExport[];
+  readonly expectedContentHash: string;
+  readonly expectedSourceHash: string;
+  readonly esmSource: string;
+  readonly profile: 'strict' | 'development';
+  readonly allowedCapabilities?: readonly string[];
+}): {
+  readonly verificationDiagnostics: readonly FlintDiagnostic[];
+  readonly artifactVerification: FlintArtifactVerificationReport;
+};
+```
+
+根据策略、目标功能和清单约束验证后端 WebAssembly 工件。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|输入 | { 只读 wasm: Uint8Array;只读未优化的Wasm？：Uint8Array；只读文件名：字符串；只读清单：FlintAbiManifest；只读元数据：Parameters<typeof compileFlintWasm>[0]['metadata'];只读 targetFeatures?: 参数<typeof verifyFlintWasmArtifact>[0]['targetFeatures'];只读功能要求？：FlintWasmFeatureRequirements；只读 iteratorExports?: 只读 FlintIteratorExport[];只读预期内容哈希：字符串；只读预期源哈希：字符串；只读 esmSource：字符串；只读配置文件：'严格'\| '发展';只读允许功能？：只读字符串[]； } |             |
+
+## `src/compiler/declarations`
+
+### 创建声明
+
+**种类：**功能
+
+```typescript
+function createDeclarations(manifest: FlintAbiManifest): string;
+```
+
+为已编译的 Flint 清单生成完整的 TypeScript 声明文件内容。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ---------------- | ----------- |
+|清单 |弗林特阿比清单 |             |
+
+### 声明函数
+
+**种类：**功能
+
+```typescript
+function declarationFunction(
+  declaration: FlintAbiFunction,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+为 ABI 函数声明生成 TypeScript 函数签名。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ------------------- | ----------- |
+|声明| FlintAbi 函数 |             |
+|枚举名称 |只读设置<string> |             |
+|记录名称 |只读设置<string> |             |
+
+### 声明属性
+
+**种类：**功能
+
+```typescript
+function declarationProperty(name: string): string;
+```
+
+将标识符格式化为安全属性名称或 JSON 引用的字符串。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|名称 |字符串|             |
+
+### 申报记录
+
+**种类：**功能
+
+```typescript
+function declarationRecord(
+  declarations: readonly FlintAbiFunction[],
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+发出类型化 ABI 导出记录的 TypeScript 定义。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------ | --------------------------- | ----------- |
+|声明|只读 FlintAbiFunction[] |             |
+|枚举名称 |只读设置<string> |             |
+|记录名称 |只读设置<string> |             |
+
+### 声明类型
+
+**种类：**功能
+
+```typescript
+function declarationType(
+  value: string | FlintAbiParameter,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+将 Flint ABI 参数或类型名称映射到 TypeScript 声明类型。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | --------------------------- | ----------- |
+|价值|字符串\| FlintAbi参数|             |
+|枚举名称 |只读设置<string> |             |
+|记录名称 |只读设置<string> |             |
+
+### 原始声明函数
+
+**种类：**功能
+
+```typescript
+function rawDeclarationFunction(declaration: FlintAbiFunction): string;
+```
+
+生成带有字符串和字节的指针/长度扩展的低级原始函数签名。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ---------------- | ----------- |
+|声明| FlintAbi 函数 |             |
+
+### 原始声明记录
+
+**种类：**功能
+
+```typescript
+function rawDeclarationRecord(declarations: readonly FlintAbiFunction[]): string;
+```
+
+发出原始 WebAssembly 导出记录的 TypeScript 定义。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------ | --------------------------- | ----------- |
+|声明|只读 FlintAbiFunction[] |             |
+
+### 原始声明类型
+
+**种类：**功能
+
+```typescript
+function rawDeclarationType(value: FlintPrimitiveType | FlintAbiParameter): string;
+```
+
+将 ABI 参数或基元类型映射到 TypeScript 中的原始 WebAssembly 参数类型。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | --------------------------------------- | ----------- |
+|价值| FlintPrimitiveType \| FlintAbi参数|             |
+
+## `src/compiler/esm`
+
+### 字节转Base64
+
+**种类：**功能
+
+```typescript
+function bytesToBase64(bytes: Uint8Array): string;
+```
+
+将字节数组编码为标准 Base64 字符串。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---------- | ----------- |
+|字节| Uint8Array |             |
+
+### 创建Esm源
+
+**种类：**功能
+
+```typescript
+function createEsmSource(
+  wasm: Uint8Array,
+  manifest: FlintAbiManifest,
+  iteratorExports: readonly FlintIteratorExport[] = [],
+  dynamicMetadata?: FlintDynamicLinkMetadata,
+): string;
+```
+
+生成包含嵌入式 WebAssembly 和运行时适配器的 ESM 加载器模块字符串。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------------- | ------------------------------ | ----------- |
+|瓦斯姆 | Uint8Array |             |
+|清单 |弗林特阿比清单 |             |
+|迭代器导出 |只读 FlintIteratorExport[] |             |
+|动态元数据 | FlintDynamicLink元数据 |             |
+
+## `src/compiler/module`
+
+### 分析选项
+
+**种类：**功能
+
+```typescript
+function analysisOptions(input: FlintCompileInput): FlintAnalysisOptions;
+```
+
+从编译输入和策略设置解析静态分析选项。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ----------------- | ----------- |
+|输入 | FlintCompile 输入 |             |
+
+### 编译弗林特
 
 **种类：**功能
 
@@ -1087,13 +641,64 @@ function persistFlintWat(cache: FlintWatCache | undefined, key: string, wat: str
 function compileFlint(input: FlintCompileInput): FlintArtifact;
 ```
 
-没有提供描述。
+将 Flint 源字符串编译为 WebAssembly 和运行时工件。
 
 #### 参数
 
-| 名称 | 类型              | 描述              |
-| ---- | ----------------- | ----------------- |
-| 输入 | FlintCompileInput | FlintCompileInput |     |
+|名称 |类型 |描述 |
+| ----- | ----------------- | ----------- |
+|输入 | FlintCompile 输入 |             |
+
+### 编译FlintGraph
+
+**种类：**功能
+
+```typescript
+function compileFlintGraph(input: FlintGraphCompileInput): FlintArtifact;
+```
+
+将多模块 Flint 模块图编译为统一的 WebAssembly 工件。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---------------------- | ----------- |
+|输入 | FlintGraphCompile 输入 |             |
+
+### 编译Flint模块
+
+**种类：**功能
+
+```typescript
+function compileFlintModule(
+  input: FlintCompileInput,
+  frontend: FlintFrontendResult,
+  graphMetadata: Pick<
+    FlintArtifact,
+    'graphHash' | 'linkMode' | 'linkedModules' | 'linkProfile' | 'optimizationProfile'
+  > = {},
+  sourceFiles: readonly string[] = frontend.sourceFiles,
+): FlintArtifact;
+```
+
+将单个分析的 Flint 模块编译到 WebAssembly 并综合 ESM 加载程序工件。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+|输入| FlintCompile 输入 | - 模块编译输入规范。                  |
+|前端 | FlintFrontend结果 | - 准备好的前端编译器结果。                       |
+|图元数据 |选择< FlintArtifact, 'graphHash' \| '链接模式'\| 'linkedModules' \| '链接配置文件' \| '优化配置文件' > | - 从模块图链接传播的可选元数据。  |
+|源文件 |只读字符串[] | - 对该编译单元有贡献的源文件路径。 |
+
+#### 合同
+
+- **@param:** - 模块编译输入规范。
+- **@param:** - 准备好的前端编译器结果。
+- **@param:** - 从模块图链接传播的可选元数据。
+- **@param:** - 贡献于此编译单元的源文件路径。
+- **@returns:** 包含二进制文件、声明和报告的完整编译工件。
 
 ### 编译FlintSeed
 
@@ -1103,14 +708,13 @@ function compileFlint(input: FlintCompileInput): FlintArtifact;
 function compileFlintSeed(input: FlintCompileInput): FlintArtifact;
 ```
 
-自托管引导程序使用的有界 TypeScript 种子，直到修复 -
-点奇偶校验将 FWS 编译器提升为普通前端所有者。
+通过准备前端 AST 并编译生成的模块来编译 Flint 种子输入。
 
 #### 参数
 
-| 名称 | 类型              | 描述              |
-| ---- | ----------------- | ----------------- |
-| 输入 | FlintCompileInput | FlintCompileInput |     |
+|名称 |类型 |描述 |
+| ----- | ----------------- | ----------- |
+|输入 | FlintCompile 输入 |             |
 
 ### 创建Flint编译器
 
@@ -1120,7 +724,76 @@ function compileFlintSeed(input: FlintCompileInput): FlintArtifact;
 function createFlintCompiler(): FlintCompiler;
 ```
 
-没有提供描述。
+创建 Flint 编译器的实例。
+
+#### 合同
+
+- **@returns:** 配置的编译器实例。
+
+### 运行自托管阶段
+
+**种类：**功能
+
+```typescript
+function runSelfHostedStage(
+  input: Pick<FlintCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  options: FlintCompilerServiceOptions,
+): {
+  readonly report?: FlintSelfHostedStageReport;
+  readonly stageReports?: readonly FlintSelfHostedStageReport[];
+  readonly diagnostic?: FlintDiagnostic;
+};
+```
+
+执行自托管编译器阶段并根据预期指纹验证奇偶校验报告。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+|输入 |选择<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+|选项 | FlintCompilerServiceOptions | FlintCompilerServiceOptions | FlintCompilerServiceOptions             |
+
+### 自托管诊断
+
+**种类：**功能
+
+```typescript
+function selfHostedDiagnostic(
+  input: Pick<FlintCompileInput, 'fileName'>,
+  message: string,
+  stage: FlintSelfHostedStageReport['stage'] = 'lex',
+): FlintDiagnostic;
+```
+
+为自托管引导或奇偶校验问题创建诊断。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ----------------------------------- | ----------- |
+|输入 |选择<FlintCompileInput, 'fileName'> |             |
+|留言 |字符串|             |
+|舞台| FlintSelfHostedStageReport['舞台'] | FlintSelfHostedStageReport             |
+
+### 与自托管结果
+
+**种类：**功能
+
+```typescript
+function withSelfHostedResult(artifact: FlintArtifact, result: ReturnType<typeof runSelfHostedStage>): FlintArtifact;
+```
+
+将自托管运行器阶段验证结果合并到最终的编译工件中。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------------------------------------- | ----------- |
+|神器|燧石神器 |             |
+|结果 |返回类型<typeof runSelfHostedStage> |             |
+
+## `src/compiler/service`
 
 ### 创建FlintCompilerService
 
@@ -1130,17 +803,22 @@ function createFlintCompiler(): FlintCompiler;
 function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): FlintCompilerService;
 ```
 
-没有提供描述。
+创建内存缓存编译器服务，用于增量编译和图形构建。
 
 #### 参数
 
-| 名称 | 类型                        | 描述                        |
-| ---- | --------------------------- | --------------------------- |
-| 选项 | FlintCompilerServiceOptions | FlintCompilerServiceOptions | FlintCompilerServiceOptions | FlintCompilerServiceOptions |
+|名称 |类型 |描述 |
+| ------- | --------------------------- | ------------------------------------------------ |
+|选项 | FlintCompilerServiceOptions | FlintCompilerServiceOptions | FlintCompilerServiceOptions可选的编译器服务配置选项。 |
+
+#### 合同
+
+- **@param:** 可选的编译器服务配置选项。
+- **@returns:** 有状态的 FlintCompilerService 实例。
 
 ## `src/contracts`
 
-### FlintArtifact
+### 燧石神器
 
 **种类：**接口
 
@@ -1148,9 +826,9 @@ function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): 
 export interface FlintArtifact
 ```
 
-没有提供描述。
+包含 ABI、源代码、二进制文件和诊断的打包编译器工件。
 
-### FlintArtifactVerificationReport
+### FlintArtifact验证报告
 
 **种类：**接口
 
@@ -1158,9 +836,9 @@ export interface FlintArtifact
 export interface FlintArtifactVerificationReport
 ```
 
-没有提供描述。
+验证发出的工件内容哈希和变体的结果。
 
-### FlintAsyncCapability
+### FlintAsync功能
 
 **种类：**类型
 
@@ -1168,9 +846,9 @@ export interface FlintArtifactVerificationReport
 export type FlintAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-没有提供描述。
+异步编译合约所需的命名异步主机功能。
 
-### FlintAsyncCompilationContract
+### FlintAsync编译合约
 
 **种类：**接口
 
@@ -1190,7 +868,7 @@ export interface FlintBackendInput
 
 前端验证成功后，输入由后端实现拥有。
 
-### FlintBackendResult
+### Flint后端结果
 
 **种类：**接口
 
@@ -1200,7 +878,7 @@ export interface FlintBackendResult
 
 后端输出故意独立于兼容性外观的 ESM 工件。
 
-### FlintCompileInput
+### Flint编译输入
 
 **种类：**接口
 
@@ -1208,7 +886,7 @@ export interface FlintBackendResult
 export interface FlintCompileInput
 ```
 
-没有提供描述。
+前端和编译器服务消耗的单模块编译请求。
 
 ### Flint编译器
 
@@ -1218,9 +896,9 @@ export interface FlintCompileInput
 export interface FlintCompiler
 ```
 
-没有提供描述。
+暴露单模块编译和处置的最小编译器外观。
 
-### Flint 编译器提示
+### Flint编译器提示
 
 **种类：**接口
 
@@ -1228,9 +906,9 @@ export interface FlintCompiler
 export interface FlintCompilerHints
 ```
 
-没有提供描述。
+可选的降低提示，指导专门的后端发射。
 
-### FlintCompilerLogger
+### Flint编译器记录器
 
 **种类：**接口
 
@@ -1238,7 +916,7 @@ export interface FlintCompilerHints
 export interface FlintCompilerLogger
 ```
 
-没有提供描述。
+编译器服务阶段使用的结构化记录器合约。
 
 ### Flint编译器报告
 
@@ -1248,7 +926,7 @@ export interface FlintCompilerLogger
 export interface FlintCompilerReport
 ```
 
-没有提供描述。
+涵盖诊断、缓存统计和分析的聚合服务报告。
 
 ### Flint编译器服务
 
@@ -1258,9 +936,9 @@ export interface FlintCompilerReport
 export interface FlintCompilerService extends FlintCompiler
 ```
 
-没有提供描述。
+支持图编译和失效的增量编译服务。
 
-### FlintCompilerServiceOptions
+### Flint编译器服务选项
 
 **种类：**接口
 
@@ -1268,9 +946,9 @@ export interface FlintCompilerService extends FlintCompiler
 export interface FlintCompilerServiceOptions
 ```
 
-没有提供描述。
+构造编译器服务外观时接受配置包。
 
-### Flint调试工件
+### FlintDebugArtifacts
 
 **种类：**接口
 
@@ -1278,7 +956,7 @@ export interface FlintCompilerServiceOptions
 export interface FlintDebugArtifacts
 ```
 
-没有提供描述。
+保留可选的 WAT/Wasm 快照用于调试和验证。
 
 ### Flint确定性工件元数据
 
@@ -1288,9 +966,9 @@ export interface FlintDebugArtifacts
 export interface FlintDeterministicArtifactMetadata
 ```
 
-没有提供描述。
+确定性身份字段与发出的编译器工件一起记录。
 
-### Flint前端链接元数据
+### FlintFrontendLink元数据
 
 **种类：**接口
 
@@ -1298,9 +976,9 @@ export interface FlintDeterministicArtifactMetadata
 export interface FlintFrontendLinkMetadata
 ```
 
-没有提供描述。
+链接时元数据附加到前端结果以进行后端打包。
 
-### FlintFrontendResult
+### Flint前端结果
 
 **种类：**接口
 
@@ -1310,7 +988,7 @@ export interface FlintFrontendResult
 
 解析、检查和降低模块的稳定的、独立于后端的结果。
 
-### FlintGraphCompileInput
+### FlintGraph编译输入
 
 **种类：**接口
 
@@ -1318,7 +996,7 @@ export interface FlintFrontendResult
 export interface FlintGraphCompileInput
 ```
 
-没有提供描述。
+多模块图编译请求包括条目选择和链接策略。
 
 ### FlintIteratorExport
 
@@ -1328,9 +1006,9 @@ export interface FlintGraphCompileInput
 export interface FlintIteratorExport
 ```
 
-没有提供描述。
+描述导出的迭代器协议表面的 ABI 元数据。
 
-### FlintLinkOptimizationProfile
+### FlintLink优化配置文件
 
 **种类：**类型
 
@@ -1340,17 +1018,7 @@ export type FlintLinkOptimizationProfile = 'standard' | 'static-aggressive' | 'd
 
 链接时策略与普通编译器优化一起记录。
 
-### FlintLinkProfile
-
-**种类：**类型
-
-```typescript
-export type FlintLinkProfile = 'static' | 'dynamic';
-```
-
-具有图形意识的消费者使用的命名跨项目打包配置文件。
-
-### Flint优化
+### 燧石优化
 
 **种类：**类型
 
@@ -1358,9 +1026,9 @@ export type FlintLinkProfile = 'static' | 'dynamic';
 export type FlintOptimization = 'debug' | 'release';
 ```
 
-没有提供描述。
+编译器优化级别选择调试或发布降低。
 
-### FlintSelfHostedStageReport
+### 弗林特自托管舞台报告
 
 **种类：**接口
 
@@ -1368,7 +1036,7 @@ export type FlintOptimization = 'debug' | 'release';
 export interface FlintSelfHostedStageReport
 ```
 
-工具适配器使用的有限 FWS 编写的编译器阶段的结果。
+工具适配器使用的有界 FLINT 创作的编译器阶段的结果。
 
 ### FlintSelfHostedStageRunner
 
@@ -1391,7 +1059,7 @@ VM 入口点由运行时提供，无需将浏览器安全外观耦合到它。
 export interface FlintTargetFeatures
 ```
 
-没有提供描述。
+主机请求的可选 WebAssembly 目标功能标志。
 
 ### FlintVm执行模式
 
@@ -1401,7 +1069,7 @@ export interface FlintTargetFeatures
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-没有提供描述。
+自承载编译器阶段支持的 VM 执行模式。
 
 ## `src/diagnostics`
 
@@ -1422,20 +1090,32 @@ function createDiagnostic(
 ): FlintDiagnostic;
 ```
 
-没有提供描述。
+使用可选提示和安全元数据构造结构化编译器诊断。
 
 #### 参数
 
-| 名称     | 类型                                                                                          | 描述                    |
-| -------- | --------------------------------------------------------------------------------------------- | ----------------------- |
-| 文件名   | 字符串                                                                                        |                         |
-| 相       | FlintDiagnosticPhase                                                                          |                         |
-| 代码     | 字符串                                                                                        |                         |
-| 留言     | 字符串                                                                                        |                         |
-| 跨度     | FlintSourceSpan                                                                               |                         |
-| 严重程度 | FlintDiagnosticSeverity                                                                       | FlintDiagnosticSeverity |     |
-| 提示     | 字符串                                                                                        |                         |
-| 元数据   | 选择<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |                         |
+|名称 |类型 |描述 |
+| -------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+|文件名 |字符串| - 源文件的路径或标识符。                                  |
+|相|弗林特诊断阶段 | - 编译器阶段发出诊断信息。                                 |
+|代码|字符串| - 诊断错误或警告代码。                                       |
+|留言 |字符串| - 人类可读的描述性诊断消息。                          |
+|跨度|燧石来源跨度 | - 诊断位置的源跨度坐标。                    |
+|严重程度 |弗林特诊断严重性 | - 严重级别，默认为“错误”。                                  |
+|提示|字符串| - 可选的补救提示或可行的建议。                         |
+|元数据 |选择<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> | - 可选规则 ID、类别、证据或安全分类标识符。 |
+
+#### 合同
+
+- **@param:** - 源文件的路径或标识符。
+- **@param:** - 编译器阶段发出诊断信息。
+- **@param:** - 诊断错误或警告代码。
+- **@param:** - 描述性的人类可读的诊断消息。
+- **@param:** - 诊断位置的源跨度坐标。
+- **@param:** - 严重级别，默认为“错误”。
+- **@param:** - 可选的修复提示或可操作的建议。
+- **@param:** - 可选规则 ID、类别、证据或安全分类标识符。
+- **@returns:** 结构化的 FlintDiagnostic 实例。
 
 ### 诊断键
 
@@ -1445,15 +1125,50 @@ function createDiagnostic(
 function diagnosticKey(diagnostic: FlintDiagnostic): string;
 ```
 
-没有提供描述。
+计算用于重复数据删除诊断的确定性身份字符串密钥。
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 诊断 | Flint 诊断 |      |
+|名称 |类型 |描述 |
+| ---------- | --------------- | ---------------------------------- |
+|诊断|燧石诊断| - 用于计算密钥的诊断。 |
 
-### Flint诊断
+#### 合同
+
+- **@param:** - 用于计算密钥的诊断。
+- **@returns:** 确定性 JSON 字符串编码文件名、阶段、代码、跨度和消息。
+
+### FLINT_PARSE_STACK_OVERFLOW
+
+**种类：**常数
+
+```typescript
+export const FLINT_PARSE_STACK_OVERFLOW;
+```
+
+解析器递归深度超出配置限制时的诊断错误代码。
+
+### FLINT_PARSE_UNCLOSED_DELIMITER
+
+**种类：**常数
+
+```typescript
+export const FLINT_PARSE_UNCLOSED_DELIMITER;
+```
+
+当分隔符在 EOF 处保持未闭合状态时的诊断错误代码。
+
+### FLINT_SECURITY_SOURCE_TOO_LARGE
+
+**种类：**常数
+
+```typescript
+export const FLINT_SECURITY_SOURCE_TOO_LARGE;
+```
+
+源文件超过 MAX_SOURCE_INPUT_BYTES 时的诊断错误代码。
+
+### 燧石诊断
 
 **种类：**接口
 
@@ -1461,9 +1176,9 @@ function diagnosticKey(diagnostic: FlintDiagnostic): string;
 export interface FlintDiagnostic
 ```
 
-没有提供描述。
+跨编译器阶段或静态分析过程生成的结构化诊断记录。
 
-### Flint诊断证据
+### 弗林特诊断证据
 
 **种类：**接口
 
@@ -1471,20 +1186,20 @@ export interface FlintDiagnostic
 export interface FlintDiagnosticEvidence
 ```
 
-没有提供描述。
+附属于诊断结果的次要证据或相关位置。
 
-### Flint诊断阶段
+### 弗林特诊断阶段
 
 **种类：**类型
 
 ```typescript
 export type FlintDiagnosticPhase =
-  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+  'lex' | 'parse' | 'macro' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
-没有提供描述。
+发出诊断的编译阶段。
 
-### Flint诊断严重性
+### 弗林特诊断严重性
 
 **种类：**类型
 
@@ -1492,9 +1207,9 @@ export type FlintDiagnosticPhase =
 export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 ```
 
-没有提供描述。
+编译器诊断的严重级别。
 
-### FlintSourceSpan
+### 燧石源跨度
 
 **种类：**接口
 
@@ -1502,7 +1217,40 @@ export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 export interface FlintSourceSpan
 ```
 
-没有提供描述。
+定义文件中标记、AST node 或诊断的精确位置的源坐标范围。
+
+### 获取源字节长度
+
+**种类：**功能
+
+```typescript
+function getSourceByteLength(source: string): number;
+```
+
+计算 UTF-8 编码字符串的实际字节大小。
+JavaScript 字符串在内部使用 UTF-16，因此 `.length` 计算的是代码单元，而不是字节。
+该函数编码为 UTF-8 并返回真实的字节数。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------ | --------------------------- |
+|来源 |字符串| - 要测量的源字符串。 |
+
+#### 合同
+
+- **@param:** - 要测量的源字符串。
+- **@returns:** 编码为 UTF-8 时的字节数。
+
+### 最大源输入字节数
+
+**种类：**常数
+
+```typescript
+export const MAX_SOURCE_INPUT_BYTES;
+```
+
+允许的最大 Flint 源文件大小（以字节为单位）(16 MiB)。
 
 ## `src/documentation`
 
@@ -1514,13 +1262,18 @@ export interface FlintSourceSpan
 function parseFlintDocumentation(comment: string): FlintDocumentation;
 ```
 
-没有提供描述。
+将 Flint 文档注释解析为结构化描述和文档标签。
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 评论 | 字符串 |      |
+|名称 |类型 |描述 |
+| ------- | ------ | ------------------------- |
+|评论 |字符串| - 原始文档注释字符串。 |
+
+#### 合同
+
+- **@param:** - 原始文档注释字符串。
+- **@returns:** 具有规范化描述和标签的结构化文档记录。
 
 ### renderFlint文档
 
@@ -1530,13 +1283,18 @@ function parseFlintDocumentation(comment: string): FlintDocumentation;
 function renderFlintDocumentation(documentation: FlintDocumentation): string;
 ```
 
-没有提供描述。
+将结构化的 Flint 文档记录渲染回文档注释 Markdown。
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 文档 | Flint 文档 |      |
+|名称 |类型 |描述 |
+| ------------- | ------------------ | ---------------------------------- |
+|文档 | Flint文档 | - Structured documentation record. |
+
+#### 合同
+
+- **@param:** - 结构化文档记录。
+- **@returns:** 格式化文档 Markdown 文本。
 
 ## `src/dynamic-links`
 
@@ -1545,12 +1303,12 @@ function renderFlintDocumentation(documentation: FlintDocumentation): string;
 **种类：**类型
 
 ```typescript
-export type FlintDynamicCallable = (...args: readonly number[]) => unknown;
+export type FlintDynamicCallable = (...arguments_: readonly number[]) => unknown;
 ```
 
-没有提供描述。
+动态模块导出的可调用函数签名接受数字句柄/参数。
 
-### FlintDynamicLinkCache
+### Flint动态链接缓存
 
 **种类：**类
 
@@ -1569,9 +1327,9 @@ export class FlintDynamicLinkCache
 export interface FlintDynamicLinkIdentity
 ```
 
-没有提供描述。
+动态链接工件和清单对的唯一身份描述符。
 
-### Flint动态模块
+### FlintDynamic模块
 
 **种类：**接口
 
@@ -1579,7 +1337,7 @@ export interface FlintDynamicLinkIdentity
 export interface FlintDynamicModule
 ```
 
-没有提供描述。
+包含可调用导出和可选 ABI 签名的动态链接模块。
 
 ## `src/frontend`
 
@@ -1591,13 +1349,19 @@ export interface FlintDynamicModule
 function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 ```
 
-没有提供描述。
+执行单个 Flint 源文件的前端管道。
+执行词法分析、解析、类型检查、IR 降低和节点海优化。
 
 #### 参数
 
-| 名称 | 类型              | 描述              |
-| ---- | ----------------- | ----------------- |
-| 输入 | FlintCompileInput | FlintCompileInput |     |
+|名称 |类型 |描述 |
+| ----- | ----------------- | ----------------------------------------------------- |
+|输入 | FlintCompile 输入 | - Single-file compiler input options and source code. |
+
+#### 合同
+
+- **@param:** - 单文件编译器输入选项和源代码。
+- **@returns:** 包含 AST、IR 和 ABI 清单的前端编译结果。
 
 ### 准备FlintGraphFrontend
 
@@ -1607,111 +1371,490 @@ function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 function prepareFlintGraphFrontend(input: FlintGraphCompileInput): FlintFrontendResult;
 ```
 
-没有提供描述。
+为链接的多模块图准备编译器前端。
+解决静态依赖闭包，对组合组件进行类型检查，
+并将链接的模块降低到优化的 IR 和 ABI 清单。
 
 #### 参数
 
-| 名称 | 类型                   | 描述                   |
-| ---- | ---------------------- | ---------------------- |
-| 输入 | FlintGraphCompileInput | FlintGraphCompileInput |     |
+|名称 |类型 |描述 |
+| ----- | ---------------------- | ----------------------------------------------------------------------------- |
+|输入 | FlintGraphCompile 输入 | - Multi-module graph compilation input including graph edges and entry point. |
 
-## `src/generics`
+#### 合同
 
-### createFlint通用专业化
+- **@param:** - 多模块图形编译输入，包括图形边缘和入口点。
+- **@returns:** 链接模块图的组合前端编译结果。
+
+## `src/graph-compiler/ast-builder`
+
+### 构建GraphAst
 
 **种类：**功能
 
 ```typescript
-function createFlintGenericSpecialization(request: FlintGenericSpecializationRequest): FlintSpecialization;
+function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult;
 ```
 
-没有提供描述。
+将经过验证的 FlintNodeGraph 降低为内存中的 FlintModule AST 和双向源映射。
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 请求 | FlintGeneric专业化请求 |      |
+|名称 |类型 |描述 |
+| ---------- | -------------- | ----------- |
+|输入图 | FlintNodeGraph |             |
 
-### createFlintIteratorBoundaryDescriptor
-
-**种类：**功能
-
-```typescript
-function createFlintIteratorBoundaryDescriptor(
-  generic: string,
-  elementType: FlintTypeName,
-  nextFunction: string,
-  ownership: FlintOwnership = 'borrowed',
-): FlintIteratorBoundaryDescriptor;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称       | 类型           | 描述 |
-| ---------- | -------------- | ---- |
-| 通用       | 字符串         |      |
-| 元素类型   | Flint 类型名称 |      |
-| 下一个功能 | 字符串         |      |
-| 所有权     | Flint 所有权   |      |
-
-### Flint通用边界
-
-**种类：**类型
-
-```typescript
-export type FlintGenericBoundary = 'value' | 'interface' | 'iterator';
-```
-
-没有提供描述。
-
-### flint通用表示
-
-**种类：**功能
-
-```typescript
-function flintGenericRepresentation(boundary: FlintGenericBoundary = 'value'): FlintSpecialization['representation'];
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型                 | 描述                 |
-| ---- | -------------------- | -------------------- |
-| 边界 | FlintGenericBoundary | FlintGenericBoundary |     |
-
-### FlintGenericSpecializationRequest
+### FlintAst构建结果
 
 **种类：**接口
 
 ```typescript
-export interface FlintGenericSpecializationRequest
+export interface FlintAstBuildResult
 ```
 
 没有提供描述。
 
-### sortFlint专业化
+## `src/graph-compiler/catalog`
+
+### 从定义创建节点
 
 **种类：**功能
 
 ```typescript
-function sortFlintSpecializations(specializations: readonly FlintSpecialization[]): readonly FlintSpecialization[];
+function createNodeFromDefinition(
+  definition: FlintNodeDefinition,
+  id: string,
+  position: { readonly x: number; readonly y: number } = DEFAULT_NODE_POSITION,
+  properties?: Readonly<Record<string, unknown>>,
+): FlintGraphNode;
+```
+
+使用给定的 ID、位置和属性覆盖从目录定义实例化 FlintGraphNode。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------------------------ | ----------- |
+|定义| FlintNode定义 |             |
+|编号 |字符串|             |
+|位置| { 只读 x: 数字;只读 y：数字 } |             |
+|属性 |只读<Record<string, unknown>> |             |
+
+### FlintNode定义
+
+**种类：**接口
+
+```typescript
+export interface FlintNodeDefinition
 ```
 
 没有提供描述。
 
+### 获取所有节点定义
+
+**种类：**功能
+
+```typescript
+function getAllNodeDefinitions(): readonly FlintNodeDefinition[];
+```
+
+返回所有已注册的标准 node 定义。
+
+### 获取节点定义
+
+**种类：**功能
+
+```typescript
+function getNodeDefinition(operation: string): FlintNodeDefinition | undefined;
+```
+
+通过其唯一操作标识符检索标准 node 定义。
+
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 专业 | 只读 FlintSpecialization[] |      |
+|名称 |类型 |描述 |
+| --------- | ------ | ----------- |
+|操作|字符串|             |
+
+### 按类别获取节点定义
+
+**种类：**功能
+
+```typescript
+function getNodeDefinitionsByCategory(category: FlintNodeCategory): readonly FlintNodeDefinition[];
+```
+
+返回按类别过滤的 node 定义。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ----------------- | ----------- |
+|类别 | FlintNode类别 |             |
+
+## `src/graph-compiler/generator`
+
+### 编译GraphToFlint
+
+**种类：**功能
+
+```typescript
+function compileGraphToFlint(graph: FlintNodeGraph): FlintGraphCompilationArtifact;
+```
+
+用于 Flint 视觉 node 图表的双编译器生成器。
+使用双向源映射合成内存中键入的 FlintModule AST 和格式化的 .flint 源文本。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | -------------- | ----------- |
+|图表| FlintNodeGraph |             |
+
+### 编译节点图
+
+**种类：**功能
+
+```typescript
+function compileNodeGraph(graph: FlintNodeGraph, options?: Partial<FlintCompileInput>): FlintCompiledNodeGraphArtifact;
+```
+
+将可视化 FlintNodeGraph 端到端编译为 WebAssembly 二进制文件、ABI 清单和源工件。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | -------------------------- | ----------- |
+|图表| FlintNodeGraph |             |
+|选项 |部分<FlintCompileInput> |             |
+
+### FlintCompiledNodeGraphArtifact
+
+**种类：**接口
+
+```typescript
+export interface FlintCompiledNodeGraphArtifact extends Omit<FlintArtifact, 'sourceMap'>
+```
+
+没有提供描述。
+
+### FlintGraph编译Artifact
+
+**种类：**接口
+
+```typescript
+export interface FlintGraphCompilationArtifact
+```
+
+没有提供描述。
+
+## `src/graph-compiler/source-emitter`
+
+### 发射图源
+
+**种类：**功能
+
+```typescript
+function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmissionResult;
+```
+
+从具有精确双向源映射的经过验证的图表中发出干净、格式化的 Flint 源代码。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | -------------- | ----------- |
+|输入图 | FlintNodeGraph |             |
+
+### 燧石源发射结果
+
+**种类：**接口
+
+```typescript
+export interface FlintSourceEmissionResult
+```
+
+没有提供描述。
+
+## `src/graph-compiler/types`
+
+### 创建容器类型
+
+**种类：**功能
+
+```typescript
+function createContainerType(
+  container: string,
+  typeArguments: readonly FlintTypeName[] = [],
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+创建通用或聚合 FlintTypeName node。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------- | ------------------------ | ----------- |
+|集装箱|字符串|             |
+|类型参数 |只读 FlintTypeName[] |             |
+|跨度|燧石来源跨度 |             |
+
+### 创建基本类型
+
+**种类：**功能
+
+```typescript
+function createPrimitiveType(
+  primitive: FlintPrimitiveType,
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+创建原始 FlintTypeName node。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | ------------------ | ----------- |
+|原始| FlintPrimitiveType |             |
+|跨度|燧石来源跨度 |             |
+
+### 创建合成跨度
+
+**种类：**功能
+
+```typescript
+function createSyntheticSpan(line = 1, column = 1, length = 1): FlintSourceSpan;
+```
+
+为图形生成的 AST 节点创建合成源跨度。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---- | ----------- |
+|线 |      |             |
+|专栏 |      |             |
+|长度|      |             |
+
+### 展平图
+
+**种类：**功能
+
+```typescript
+function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph;
+```
+
+递归地将图中的任何元节点内联并展平为其组成的内部节点和边。
+在验证、AST 生成和源发射期间使用，以无缝编译复合元节点。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | -------------- | ----------- |
+|图表| FlintNodeGraph |             |
+
+### 燧石图边缘
+
+**种类：**接口
+
+```typescript
+export interface FlintGraphEdge
+```
+
+没有提供描述。
+
+### 燧石集团
+
+**种类：**接口
+
+```typescript
+export interface FlintGraphGroup
+```
+
+没有提供描述。
+
+### 燧石图节点
+
+**种类：**接口
+
+```typescript
+export interface FlintGraphNode
+```
+
+没有提供描述。
+
+### 弗林特图形端口
+
+**种类：**接口
+
+```typescript
+export interface FlintGraphPort
+```
+
+没有提供描述。
+
+### FlintGraph验证问题
+
+**种类：**接口
+
+```typescript
+export interface FlintGraphValidationIssue
+```
+
+没有提供描述。
+
+### FlintGraph验证结果
+
+**种类：**接口
+
+```typescript
+export interface FlintGraphValidationResult
+```
+
+没有提供描述。
+
+### FlintGraph验证严重性
+
+**种类：**类型
+
+```typescript
+export type FlintGraphValidationSeverity = 'error' | 'warning' | 'info';
+```
+
+没有提供描述。
+
+### Flint元节点定义
+
+**种类：**接口
+
+```typescript
+export interface FlintMetaNodeDefinition
+```
+
+没有提供描述。
+
+### FlintMetaNode端口映射
+
+**种类：**接口
+
+```typescript
+export interface FlintMetaNodePortMapping
+```
+
+没有提供描述。
+
+### Flint元节点子图
+
+**种类：**接口
+
+```typescript
+export interface FlintMetaNodeSubgraph
+```
+
+没有提供描述。
+
+### FlintNode类别
+
+**种类：**类型
+
+```typescript
+export type FlintNodeCategory = 'math' | 'logic' | 'text' | 'collection' | 'control' | 'capability' | 'custom';
+```
+
+没有提供描述。
+
+### 燧石节点图
+
+**种类：**接口
+
+```typescript
+export interface FlintNodeGraph
+```
+
+没有提供描述。
+
+### 燧石节点种类
+
+**种类：**类型
+
+```typescript
+export type FlintNodeKind =
+  'input' | 'output' | 'constant' | 'operation' | 'stdlib_call' | 'capability_call' | 'custom';
+```
+
+没有提供描述。
+
+### FlintNodeSourceMap
+
+**种类：**接口
+
+```typescript
+export interface FlintNodeSourceMap
+```
+
+没有提供描述。
+
+### 弗林特港方向
+
+**种类：**类型
+
+```typescript
+export type FlintPortDirection = 'input' | 'output';
+```
+
+没有提供描述。
+
+## `src/graph-compiler/validator`
+
+### 类型兼容
+
+**种类：**功能
+
+```typescript
+function areTypesCompatible(source: FlintTypeName, target: FlintTypeName): boolean;
+```
+
+检查源和目标 Flint 类型之间的结构和语义兼容性。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------------- | ----------- |
+|来源 | FlintType名称 |             |
+|目标| FlintType名称 |             |
+
+### 验证图
+
+**种类：**功能
+
+```typescript
+function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult;
+```
+
+验证图形拓扑、边缘连接、端口类型并检测周期。
+如果图是有效的有向无环图 (DAG)，则返回排序的 node ID。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | -------------- | ----------- |
+|图表| FlintNodeGraph |             |
 
 ## `src/graph`
 
-### FlintGraphResult
+### FlintForeignObjectReference
+
+**种类：**接口
+
+```typescript
+export interface FlintForeignObjectReference
+```
+
+提供给链接器的外部可重定位对象引用。
+
+### FlintGraph结果
 
 **种类：**接口
 
@@ -1719,9 +1862,9 @@ function sortFlintSpecializations(specializations: readonly FlintSpecialization[
 export interface FlintGraphResult
 ```
 
-没有提供描述。
+解析模块图的聚合结果，返回模块图结构和诊断。
 
-### FlintLinkConfiguration
+### FlintLink配置
 
 **种类：**接口
 
@@ -1729,14 +1872,25 @@ export interface FlintGraphResult
 export interface FlintLinkConfiguration
 ```
 
-没有提供描述。
+管理跨项目和同一项目模块链接策略的配置选项。
 
-### FlintLinkMode
+### 燧石链接模式
 
 **种类：**类型
 
 ```typescript
 export type FlintLinkMode = 'static' | 'dynamic';
+```
+
+指定是否静态解析依赖关系的链接模式（捆绑
+到单个组件中）或动态地（通过主机级运行时导入）。
+
+### FlintLink简介
+
+**种类：**类型
+
+```typescript
+export type FlintLinkProfile = 'standard' | 'minimal' | 'full' | 'dynamic' | 'static' | 'monolithic' | 'cross-package';
 ```
 
 没有提供描述。
@@ -1749,7 +1903,8 @@ export type FlintLinkMode = 'static' | 'dynamic';
 export interface FlintModuleEdge
 ```
 
-没有提供描述。
+模块图中将导入者链接到导入者的有向依赖边
+具有关联的链接策略和源代码位置范围。
 
 ### FlintModuleGraph
 
@@ -1759,7 +1914,8 @@ export interface FlintModuleEdge
 export interface FlintModuleGraph
 ```
 
-没有提供描述。
+有向模块依赖图捕获已解析的模块、依赖边、
+以及参与项目的边界。
 
 ### FlintModuleResolver
 
@@ -1769,9 +1925,9 @@ export interface FlintModuleGraph
 export interface FlintModuleResolver
 ```
 
-没有提供描述。
+用于解析导入说明符和异步加载模块源文本的接口。
 
-### Flint 项目
+### 燧石计划
 
 **种类：**接口
 
@@ -1779,9 +1935,9 @@ export interface FlintModuleResolver
 export interface FlintProject
 ```
 
-没有提供描述。
+表示包含文件根和派生标识符的项目边界。
 
-### FlintResolvedModule
+### FlintResolved模块
 
 **种类：**接口
 
@@ -1789,7 +1945,18 @@ export interface FlintProject
 export interface FlintResolvedModule
 ```
 
-没有提供描述。
+已解析的 Flint 源模块包含已解析的 AST、源文本、
+项目根关联和内容哈希。
+
+### 外部对象格式
+
+**种类：**类型
+
+```typescript
+export type ForeignObjectFormat = 'wasm-relocatable' | 'elf-object' | 'mach-o';
+```
+
+可重定位的外部对象格式（从 C/C++ clang 或 Rust cargo 编译）。
 
 ### hashFlintModuleGraph
 
@@ -1799,14 +1966,20 @@ export interface FlintResolvedModule
 function hashFlintModuleGraph(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): string;
 ```
 
-没有提供描述。
+计算模块图及其链接配置的确定性 32 位 FNV-1a 十六进制哈希。
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 图表 | FlintModuleGraph |      |
-| 配置 | FlintLink 配置   |      |
+|名称 |类型 |描述 |
+| ------------- | ---------------------- | -------------------------------------------------- |
+|图表| FlintModuleGraph | - 哈希模块依赖关系图。                 |
+|配置| FlintLink 配置 | - 影响图形分辨率的链接配置。 |
+
+#### 合同
+
+- **@param:** - 哈希模块依赖关系图。
+- **@param:** - 影响图形分辨率的链接配置。
+- **@returns:** 8 个字符的小写十六进制哈希字符串。
 
 ### 解析FlintModuleGraph
 
@@ -1820,15 +1993,22 @@ function resolveFlintModuleGraph(
 ): Promise<FlintGraphResult>;
 ```
 
-没有提供描述。
+从一个或多个入口点开始异步解析完整的模块依赖关系图。
 
 #### 参数
 
-| 名称   | 类型                | 描述 |
-| ------ | ------------------- | ---- |
-| 条目   | 只读字符串[]        |      |
-| 解析器 | FlintModuleResolver |      |
-| 配置   | FlintLink 配置      |      |
+|名称 |类型 |描述 |
+| ------------- | ---------------------- | ------------------------------------------------------------------- |
+|条目 |只读字符串[] | - 要解析的根条目模块的文件路径。                      |
+|解析器 | FlintModuleResolver | - 模块解析器负责路径映射和内容加载。 |
+|配置| FlintLink 配置 | - 链接和打包配置选项。                      |
+
+#### 合同
+
+- **@param:** - 要解析的根条目模块的文件路径。
+- **@param:** - 模块解析器负责路径映射和内容加载。
+- **@param:** - 链接和打包配置选项。
+- **@returns:** 包含已解析模块、依赖边、项目和诊断的图形结果。
 
 ## `src/identity`
 
@@ -1840,16 +2020,23 @@ function resolveFlintModuleGraph(
 function deriveFlintModuleId(fileName: string, root?: string): string;
 ```
 
-没有提供描述。
+派生 Flint 源文件的规范模块标识符。
+修剪根路径前缀、前导相对路径标记和 `.flint` 文件扩展名。
 
 #### 参数
 
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
-| 根     | 字符串 |      |
+|名称 |类型 |描述 |
+| -------- | ------ | ------------------------------------------------------------------- |
+|文件名 |字符串| - Flint 源文件的文件名或路径。                       |
+|根 |字符串| - 从模块标识符中剥离的可选根目录路径。 |
 
-### NormalizeFlintFileId
+#### 合同
+
+- **@param:** - Flint 源文件的文件名或路径。
+- **@param:** - 从模块标识符中剥离的可选根目录路径。
+- **@returns:** 规范模块标识符，如果结果标识符为空，则为 `'<input>'`。
+
+### 规范化FlintFileId
 
 **种类：**功能
 
@@ -1857,704 +2044,20 @@ function deriveFlintModuleId(fileName: string, root?: string): string;
 function normalizeFlintFileId(fileName: string): string;
 ```
 
-没有提供描述。
+标准化 Flint 编译的文件标识符。
+剥离查询参数，将 Windows 路径分隔符转换为 POSIX 斜杠，
+并折叠重复的正斜杠。
 
 #### 参数
 
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 文件名 | 字符串 |      |
+|名称 |类型 |描述 |
+| -------- | ------ | ------------------------------- |
+|文件名 |字符串| - 原始文件名或路径字符串。 |
 
-## `src/ir`
+#### 合同
 
-### countFlintIr
-
-**种类：**功能
-
-```typescript
-function countFlintIr(module: FlintIrModule): FlintIrCounts;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 模块 | FlintIrModule |      |
-
-### FlintCollection操作
-
-**种类：**类型
-
-```typescript
-export type FlintCollectionOperation = 'array-iter' | 'iterator-next' | 'array-length';
-```
-
-没有提供描述。
-
-### FlintIrArrayLiteralExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIrArrayLiteralExpression
-```
-
-没有提供描述。
-
-### FlintIrAssignment语句
-
-**种类：**接口
-
-```typescript
-export interface FlintIrAssignmentStatement
-```
-
-没有提供描述。
-
-### FlintIrBinaryExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIrBinaryExpression
-```
-
-没有提供描述。
-
-### FlintIrCallExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIrCallExpression
-```
-
-没有提供描述。
-
-### FlintIrCounts
-
-**种类：**接口
-
-```typescript
-export interface FlintIrCounts
-```
-
-没有提供描述。
-
-### FlintIrDoWhile 语句
-
-**种类：**接口
-
-```typescript
-export interface FlintIrDoWhileStatement
-```
-
-没有提供描述。
-
-### FlintIrEnumValueExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIrEnumValueExpression
-```
-
-没有提供描述。
-
-### FlintIrExpression
-
-**种类：**类型
-
-```typescript
-export type FlintIrExpression =
-  | FlintIrBinaryExpression
-  | FlintIrCallExpression
-  | FlintIrIdentifierExpression
-  | FlintIrLiteralExpression
-  | FlintIrFunctionValueExpression
-  | FlintIrStructValueExpression
-  | FlintIrEnumValueExpression
-  | FlintIrMatchExpression
-  | FlintIrUnaryExpression
-  | FlintIrArrayLiteralExpression
-  | FlintIrIndexExpression;
-```
-
-没有提供描述。
-
-### FlintIrExpression语句
-
-**种类：**接口
-
-```typescript
-export interface FlintIrExpressionStatement
-```
-
-没有提供描述。
-
-### FlintIr函数
-
-**种类：**接口
-
-```typescript
-export interface FlintIrFunction
-```
-
-没有提供描述。
-
-### FlintIr函数分析
-
-**种类：**接口
-
-```typescript
-export interface FlintIrFunctionAnalysis
-```
-
-没有提供描述。
-
-### FlintIrFunctionValueExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIrFunctionValueExpression
-```
-
-没有提供描述。
-
-### FlintIrIdentifierExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIrIdentifierExpression
-```
-
-没有提供描述。
-
-### FlintIrIf语句
-
-**种类：**接口
-
-```typescript
-export interface FlintIrIfStatement
-```
-
-没有提供描述。
-
-### FlintIrIndexExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIrIndexExpression
-```
-
-没有提供描述。
-
-### FlintIrIteratorLoopStatement
-
-**种类：**接口
-
-```typescript
-export interface FlintIrIteratorLoopStatement
-```
-
-没有提供描述。
-
-### FlintIrLet 语句
-
-**种类：**接口
-
-```typescript
-export interface FlintIrLetStatement
-```
-
-没有提供描述。
-
-### FlintIrLiteralExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIrLiteralExpression
-```
-
-没有提供描述。
-
-### FlintIrMatchArm
-
-**种类：**接口
-
-```typescript
-export interface FlintIrMatchArm
-```
-
-没有提供描述。
-
-### FlintIrMatchExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIrMatchExpression
-```
-
-没有提供描述。
-
-### FlintIrMatch语句
-
-**种类：**接口
-
-```typescript
-export interface FlintIrMatchStatement
-```
-
-没有提供描述。
-
-### FlintIr模块
-
-**种类：**接口
-
-```typescript
-export interface FlintIrModule
-```
-
-没有提供描述。
-
-### FlintIrPurity
-
-**种类：**类型
-
-```typescript
-export type FlintIrPurity = 'pure' | 'effectful' | 'unknown';
-```
-
-没有提供描述。
-
-### FlintIrReturn语句
-
-**种类：**接口
-
-```typescript
-export interface FlintIrReturnStatement
-```
-
-没有提供描述。
-
-### FlintIr语句
-
-**种类：**类型
-
-```typescript
-export type FlintIrStatement =
-  | FlintIrExpressionStatement
-  | FlintIrAssignmentStatement
-  | FlintIrIfStatement
-  | FlintIrWhileStatement
-  | FlintIrDoWhileStatement
-  | FlintIrLetStatement
-  | FlintIrReturnStatement
-  | FlintIrMatchStatement
-  | FlintIrSwitchStatement
-  | FlintIrYieldStatement
-  | FlintIrIteratorLoopStatement;
-```
-
-没有提供描述。
-
-### FlintIrStructValueExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIrStructValueExpression
-```
-
-没有提供描述。
-
-### FlintIrSwitch语句
-
-**种类：**接口
-
-```typescript
-export interface FlintIrSwitchStatement
-```
-
-没有提供描述。
-
-### FlintIrUnaryExpression
-
-**种类：**接口
-
-```typescript
-export interface FlintIrUnaryExpression
-```
-
-没有提供描述。
-
-### FlintIrWhile语句
-
-**种类：**接口
-
-```typescript
-export interface FlintIrWhileStatement
-```
-
-没有提供描述。
-
-### FlintIrYieldStatement
-
-**种类：**接口
-
-```typescript
-export interface FlintIrYieldStatement
-```
-
-没有提供描述。
-
-### lowerFlintIrToModule
-
-**种类：**功能
-
-```typescript
-function lowerFlintIrToModule(module: FlintIrModule): FlintModule;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 模块 | FlintIrModule |      |
-
-### lowerFlintToIr
-
-**种类：**功能
-
-```typescript
-function lowerFlintToIr(module: FlintModule): FlintIrModule;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 模块 | Flint 模块 |      |
-
-## `src/lexer`
-
-### FlintLexResult
-
-**种类：**接口
-
-```typescript
-export interface FlintLexResult
-```
-
-没有提供描述。
-
-### 伪造WebScriptToken
-
-**种类：**接口
-
-```typescript
-export interface FlintToken
-```
-
-没有提供描述。
-
-### FlintTokenKind
-
-**种类：**类型
-
-```typescript
-export type FlintTokenKind =
-  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
-```
-
-没有提供描述。
-
-### lexFlint
-
-**种类：**功能
-
-```typescript
-function lexFlint(source: string, fileName = '<input>'): FlintLexResult;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 来源   | 字符串 |      |
-| 文件名 |        |      |
-
-## `src/linker`
-
-### FlintLinkResult
-
-**种类：**接口
-
-```typescript
-export interface FlintLinkResult
-```
-
-没有提供描述。
-
-### validateFlintLinks
-
-**种类：**功能
-
-```typescript
-function validateFlintLinks(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): FlintLinkResult;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 图表 | FlintModuleGraph |      |
-| 配置 | FlintLink 配置   |      |
-
-## `src/manifest`
-
-### createFlintAbiManifest
-
-**种类：**功能
-
-```typescript
-function createFlintAbiManifest(module: FlintModule, options: FlintAbiManifestOptions = {}): FlintAbiManifest;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型                    | 描述                    |
-| ---- | ----------------------- | ----------------------- |
-| 模块 | Flint 模块              |                         |
-| 选项 | FlintAbiManifestOptions | FlintAbiManifestOptions |
-
-### FORGE_WEB_SCRIPT_ABI_VERSION
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-没有提供描述。
-
-### FORGE_WEB_SCRIPT_LANGUAGE_VERSION
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-没有提供描述。
-
-### FlintAbiFunction
-
-**种类：**接口
-
-```typescript
-export interface FlintAbiFunction
-```
-
-没有提供描述。
-
-### FlintAbiManifest
-
-**种类：**接口
-
-```typescript
-export interface FlintAbiManifest
-```
-
-没有提供描述。
-
-### FlintAbiManifestOptions
-
-**种类：**接口
-
-```typescript
-export interface FlintAbiManifestOptions
-```
-
-没有提供描述。
-
-### FlintAbi参数
-
-**种类：**接口
-
-```typescript
-export interface FlintAbiParameter
-```
-
-没有提供描述。
-
-### FlintAbi 版本
-
-**种类：**类型
-
-```typescript
-export type FlintAbiVersion = typeof FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-没有提供描述。
-
-### FlintAggregateFieldLayout
-
-**种类：**接口
-
-```typescript
-export interface FlintAggregateFieldLayout
-```
-
-没有提供描述。
-
-### FlintAggregateLayout
-
-**种类：**接口
-
-```typescript
-export interface FlintAggregateLayout
-```
-
-没有提供描述。
-
-### FlintCollectionLayout
-
-**种类：**接口
-
-```typescript
-export interface FlintCollectionLayout
-```
-
-没有提供描述。
-
-### Flint动态链接元数据
-
-**种类：**接口
-
-```typescript
-export interface FlintDynamicLinkMetadata
-```
-
-动态加载器及其调度缓存消耗的稳定元数据。
-
-### FlintDynamicModuleBinding
-
-**种类：**接口
-
-```typescript
-export interface FlintDynamicModuleBinding
-```
-
-显式动态模块的清单可见绑定信息。
-
-### FlintEnum元数据
-
-**种类：**接口
-
-```typescript
-export interface FlintEnumMetadata
-```
-
-没有提供描述。
-
-### FlintHostImport
-
-**种类：**接口
-
-```typescript
-export interface FlintHostImport
-```
-
-没有提供描述。
-
-### FlintIteratorBoundaryDescriptor
-
-**种类：**接口
-
-```typescript
-export interface FlintIteratorBoundaryDescriptor
-```
-
-没有提供描述。
-
-### Flint语言版本
-
-**种类：**类型
-
-```typescript
-export type FlintLanguageVersion = typeof FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-没有提供描述。
-
-### FlintLinkedExport
-
-**种类：**接口
-
-```typescript
-export interface FlintLinkedExport
-```
-
-没有提供描述。
-
-### Flint内存布局
-
-**种类：**接口
-
-```typescript
-export interface FlintMemoryLayout
-```
-
-没有提供描述。
-
-### FlintSourceImport
-
-**种类：**接口
-
-```typescript
-export interface FlintSourceImport
-```
-
-没有提供描述。
-
-### Flint 专业化
-
-**种类：**接口
-
-```typescript
-export interface FlintSpecialization
-```
-
-没有提供描述。
-
-### FlintValueRepresentation
-
-**种类：**类型
-
-```typescript
-export type FlintValueRepresentation =
-  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
-```
-
-没有提供描述。
+- **@param:** - 原始文件名或路径字符串。
+- **@returns:** 规范化的 POSIX 样式文件路径标识符。
 
 ## `src/module-types`
 
@@ -2566,7 +2069,7 @@ export type FlintValueRepresentation =
 export interface FlintImportTypeEnvironment
 ```
 
-没有提供描述。
+包含导入到模块中的声明的外部类型环境。
 
 ### 解析FlintImportTypeEnvironment
 
@@ -2579,134 +2082,164 @@ function resolveFlintImportTypeEnvironment(
 ): FlintImportTypeEnvironment;
 ```
 
-没有提供描述。
+解析模块图中从上游依赖模块导入的函数签名。
 
 #### 参数
 
-| 名称   | 类型                | 描述 |
-| ------ | ------------------- | ---- |
-| 进口商 | FlintResolvedModule |      |
-| 图表   | FlintModuleGraph    |      |
+|名称 |类型 |描述 |
+| -------- | ------------------- | ------------------------------------------------------------------------ |
+|进口商| FlintResolved 模块 | - 正在检查其导入依赖项的已解决模块。         |
+|图表| FlintModuleGraph | - 包含所有链接模块和边的多模块依赖图。 |
 
-## `src/optimizer`
+#### 合同
 
-### Flint优化决策
+- **@param:** - 正在检查其导入依赖项的已解析模块。
+- **@param:** - 包含所有链接模块和边的多模块依赖图。
+- **@returns:** 包含导出的外部函数（裸函数和别名前缀）的导入类型环境。
 
-**种类：**接口
+## `src/safety`
 
-```typescript
-export interface FlintOptimizationDecision
-```
-
-没有提供描述。
-
-### Flint优化报告
-
-**种类：**接口
-
-```typescript
-export interface FlintOptimizationReport
-```
-
-没有提供描述。
-
-### Flint优化结果
-
-**种类：**接口
-
-```typescript
-export interface FlintOptimizationResult
-```
-
-没有提供描述。
-
-### 优化FlintIr
+### 可以终生逃脱
 
 **种类：**功能
 
 ```typescript
-function optimizeFlintIr(input: FlintIrModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function canLifetimeEscape(source: RegionLifetime, target: RegionLifetime): boolean;
 ```
 
-没有提供描述。
+验证从源生命周期到目标生命周期的赋值或返回不会违反区域安全。
+不允许在没有显式提升/克隆的情况下将较短生命周期的引用存储到较长生命周期的目标中。
 
 #### 参数
 
-| 名称 | 类型            | 描述 |
-| ---- | --------------- | ---- |
-| 输入 | FlintIrModule   |      |
-| 模式 | ‘调试’\| '释放' |      |
+|名称 |类型 |描述 |
+| ------ | -------------- | ----------- |
+|来源 |地区终身|             |
+|目标|地区终身|             |
 
-### 优化FlintModule
+### 检查弗林特安全
 
 **种类：**功能
 
 ```typescript
-function optimizeFlintModule(module: FlintModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function checkFlintSafety(module: FlintModule, fileName: string, diagnostics: FlintDiagnostic[]): void;
 ```
 
-没有提供描述。
+执行无法由旧类型字符串表示的源级别检查。
 
 #### 参数
 
-| 名称 | 类型            | 描述 |
-| ---- | --------------- | ---- |
-| 模块 | Flint 模块      |      |
-| 模式 | ‘调试’\| '释放' |      |
+|名称 |类型 |描述 |
+| ----------- | ----------------- | ------------------------------------ |
+|模块|火石模块 | - 模块 AST 进行验证。            |
+|文件名 |字符串| - 用于诊断的文件名。    |
+|诊断 |燧石诊断[] | - 用于错误诊断的累加器。 |
 
-## `src/parser`
+#### 合同
 
-### FlintParseOptions
+- **@param:** - 要验证的模块 AST。
+- **@param:** - 用于诊断的文件名。
+- **@param:** - 用于错误诊断的累加器。
+
+### 关闭捕获信息
 
 **种类：**接口
 
 ```typescript
-export interface FlintParseOptions
+export interface ClosureCaptureInfo
 ```
 
-没有提供描述。
+闭包捕获的变量的描述符。
 
-### FlintParseResult
+### 移动安全信息
 
 **种类：**接口
 
 ```typescript
-export interface FlintParseResult
+export interface MoveSafetyInfo
 ```
 
-没有提供描述。
+结构移动安全信息描述符。
 
-### parseFlint
-
-**种类：**功能
-
-```typescript
-function parseFlint(source: string, fileName = '<input>', options: FlintParseOptions = {}): FlintParseResult;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称   | 类型              | 描述              |
-| ------ | ----------------- | ----------------- |
-| 来源   | 字符串            |                   |
-| 文件名 |                   |                   |
-| 选项   | FlintParseOptions | FlintParseOptions | FlintParseOptions |
-
-### 原始类型
+### REGION_LIFETIME_ORDER
 
 **种类：**常数
 
 ```typescript
-export const primitiveTypes;
+export const REGION_LIFETIME_ORDER: Readonly<Record<RegionLifetime, number>>;
 ```
 
 没有提供描述。
 
+### REGION_LIFETIMES
+
+**种类：**常数
+
+```typescript
+export const REGION_LIFETIMES;
+```
+
+没有提供描述。
+
+### 区域生命周期
+
+**种类：**类型
+
+```typescript
+export type RegionLifetime = 'local' | 'function' | 'arena' | 'global' | 'Local' | 'Function' | 'Arena' | 'GlobalHeap';
+```
+
+区域生命周期格层次结构：Local < Function < Arena < GlobalHeap。
+
+### validateClosureCaptureSafety
+
+**种类：**功能
+
+```typescript
+function validateClosureCaptureSafety(capture: ClosureCaptureInfo): {
+  readonly safe: boolean;
+  readonly requiresHeapPromotion: boolean;
+  readonly reason?: string;
+};
+```
+
+验证闭包捕获安全性并确定堆栈变量堆提升是否是强制性的。
+当闭包超过捕获的堆栈帧时，防止 Use-After-Scope 内存损坏。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------------------ | -------------------------------------- |
+|捕获|关闭捕获信息| - 闭包捕获元数据描述符。 |
+
+#### 合同
+
+- **@param:** - 关闭捕获元数据描述符。
+- **@returns:** 验证结果，是否需要堆提升，以及不安全时的错误消息。
+
+### 验证移动安全
+
+**种类：**功能
+
+```typescript
+function validateMoveSafety(info: MoveSafetyInfo): {
+  readonly safe: boolean;
+  readonly reason?: string;
+};
+```
+
+验证是否可以安全地按值移动聚合或结构值。
+禁止移动固定或自引用结构，以消除堆栈框架损坏和移动后使用的危险。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | -------------- | ----------- |
+|信息 |移动安全信息 |             |
+
 ## `src/self-hosted`
 
-### createFlintSelfHostedCompilerSourceManifest
+### 创建FlintSelfHostedCompilerSourceManifest
 
 **种类：**功能
 
@@ -2714,7 +2247,11 @@ export const primitiveTypes;
 function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHostedSourceModule[];
 ```
 
-没有提供描述。
+创建自承载编译器源模块的完整清单。
+
+#### 合同
+
+- **@returns:** 自托管源模块的数组。
 
 ### 解码FlintSelfHostedFingerprint
 
@@ -2724,13 +2261,18 @@ function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHosted
 function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
-没有提供描述。
+从 UTF-8 字节数组中解码自托管指纹。
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 字节 | Uint8Array |      |
+|名称 |类型 |描述 |
+| ----- | ---------- | ------------------------------- |
+|字节 | Uint8Array | - UTF-8 编码的字节数组。 |
+
+#### 合同
+
+- **@param:** - UTF-8 编码的字节数组。
+- **@returns:** 解码后的指纹字符串。
 
 ### 编码FlintSelfHostedFingerprint
 
@@ -2740,15 +2282,20 @@ function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
-没有提供描述。
+将自托管指纹字符串编码为 UTF-8 字节数组。
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 指纹 | 字符串 |      |
+|名称 |类型 |描述 |
+| ----------- | ------ | ------------------------- |
+|指纹|字符串| - 指纹字符串。 |
 
-### FlintSelfHostedCompilation
+#### 合同
+
+- **@param:** - 指纹字符串。
+- **@returns:** UTF-8 编码的字节数组。
+
+### FlintSelfHosted编译
 
 **种类：**接口
 
@@ -2756,9 +2303,10 @@ function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 export interface FlintSelfHostedCompilation
 ```
 
-没有提供描述。
+表示有界自托管编译单元，合并 TypeScript 种子引用
+使用有界自托管 lex/token-normalization VM 阶段执行。
 
-### FlintSelfHostedNormalizedOutput
+### FlintSelfHosted标准化输出
 
 **种类：**接口
 
@@ -2766,7 +2314,8 @@ export interface FlintSelfHostedCompilation
 export interface FlintSelfHostedNormalizedOutput
 ```
 
-没有提供描述。
+表示 Flint 编译的标准化、确定性输出表示。
+这确保了可以稳定地比较编译工件（AST、IR、WA、诊断）。
 
 ### FlintSelfHostedVmExecutionMode
 
@@ -2776,7 +2325,7 @@ export interface FlintSelfHostedNormalizedOutput
 export type FlintSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-没有提供描述。
+运行自托管编译时 Flint VM 的执行模式。
 
 ### 准备FlintSelfHostedCompilation
 
@@ -2793,9 +2342,9 @@ VM 模块在输入源上运行真正的 lex/token 标准化阶段。
 
 #### 参数
 
-| 名称 | 类型              | 描述              |
-| ---- | ----------------- | ----------------- |
-| 输入 | FlintCompileInput | FlintCompileInput |     |
+|名称 |类型 |描述 |
+| ----- | ----------------- | ----------- |
+|输入 | FlintCompile 输入 |             |
 
 ### 准备FlintSelfHostedCompilationLegacyFingerprint
 
@@ -2809,9 +2358,9 @@ function prepareFlintSelfHostedCompilationLegacyFingerprint(input: FlintCompileI
 
 #### 参数
 
-| 名称 | 类型              | 描述              |
-| ---- | ----------------- | ----------------- |
-| 输入 | FlintCompileInput | FlintCompileInput |     |
+|名称 |类型 |描述 |
+| ----- | ----------------- | ----------- |
+|输入 | FlintCompile 输入 |             |
 
 #### 合同
 
@@ -2819,7 +2368,7 @@ function prepareFlintSelfHostedCompilationLegacyFingerprint(input: FlintCompileI
 
 ## `src/self-hosted/artifact`
 
-### createFlintSelfHostedStageArtifact
+### 创建FlintSelfHostedStageArtifact
 
 **种类：**功能
 
@@ -2832,16 +2381,24 @@ function createFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-没有提供描述。
+createFlintSelfHostedStageArtifact 实现。
 
 #### 参数
 
-| 名称     | 类型                                 | 描述                                 |
-| -------- | ------------------------------------ | ------------------------------------ |
-| 舞台     | FlintSelfHostedCompilerStage         |                                      |
-| 身份     | FlintSelfHostedStageArtifactIdentity | FlintSelfHostedStageArtifactIdentity |     |
-| 有效载荷 | Uint8Array                           |                                      |
-| 诊断     | 只读 FlintDiagnostic[]               |                                      |
+|名称 |类型 |描述 |
+| ----------- | ------------------------------------ | ---------------------------- |
+|舞台| FlintSelfHostedCompilerStage | FlintSelfHostedCompilerStage | FlintSelfHostedCompilerStage - 阶段参数。       |
+|身份| FlintSelfHostedStageArtifactIdentity | FlintSelfHostedStageArtifactIdentity | - 身份参数。    |
+|有效载荷| Uint8Array | - 有效负载参数。     |
+|诊断 |只读 FlintDiagnostic[] | - 诊断参数。 |
+
+#### 合同
+
+- **@param:** - 阶段参数。
+- **@param:** - 身份参数。
+- **@param:** - 有效负载参数。
+- **@param:** - 诊断参数。
+- **@returns:** FlintSelfHostedStageArtifact 结果。
 
 ### 解码FlintSelfHostedDiagnostics
 
@@ -2851,13 +2408,18 @@ function createFlintSelfHostedStageArtifact(
 function decodeFlintSelfHostedDiagnostics(bytes: Uint8Array): readonly FlintDiagnostic[];
 ```
 
-没有提供描述。
+解码FlintSelfHostedDiagnostics 实现。
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 字节 | Uint8Array |      |
+|名称 |类型 |描述 |
+| ----- | ---------- | ---------------------- |
+|字节 | Uint8Array | - 字节参数。 |
+
+#### 合同
+
+- **@param:** - 字节参数。
+- **@returns:** 只读 FlintDiagnostic[] 结果。
 
 ### 解码FlintSelfHostedStageArtifact
 
@@ -2870,14 +2432,20 @@ function decodeFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-没有提供描述。
+解码FlintSelfHostedStageArtifact 实现。
 
 #### 参数
 
-| 名称 | 类型                                      | 描述                                      |
-| ---- | ----------------------------------------- | ----------------------------------------- |
-| 字节 | Uint8Array                                |                                           |
-| 选项 | FlintSelfHostedStageArtifactDecodeOptions | FlintSelfHostedStageArtifactDecodeOptions | FlintSelfHostedStageArtifactDecodeOptions |
+|名称 |类型 |描述 |
+| ------- | ----------------------------------------- | ------------------------ |
+|字节 | Uint8Array | - 字节参数。   |
+|选项 | FlintSelfHostedStageArtifactDecodeOptions | FlintSelfHostedStageArtifactDecodeOptions | FlintSelfHostedStageArtifactDecodeOptions - 选项参数。 |
+
+#### 合同
+
+- **@param:** - 字节参数。
+- **@param:** - 选项参数。
+- **@returns:** FlintSelfHostedStageArtifact 结果。
 
 ### 编码FlintSelfHostedDiagnostics
 
@@ -2887,13 +2455,18 @@ function decodeFlintSelfHostedStageArtifact(
 function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[]): Uint8Array;
 ```
 
-没有提供描述。
+编码FlintSelfHostedDiagnostics 实现。
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 诊断 | 只读 FlintDiagnostic[] |      |
+|名称 |类型 |描述 |
+| ----------- | -------------------------- | ---------------------------- |
+|诊断 |只读 FlintDiagnostic[] | - 诊断参数。 |
+
+#### 合同
+
+- **@param:** - 诊断参数。
+- **@returns:** Uint8Array 结果。
 
 ### 编码FlintSelfHostedStageArtifact
 
@@ -2903,50 +2476,55 @@ function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[
 function encodeFlintSelfHostedStageArtifact(artifact: FlintSelfHostedStageArtifact): Uint8Array;
 ```
 
-没有提供描述。
+编码FlintSelfHostedStageArtifact 实现。
 
 #### 参数
 
-| 名称 | 类型                         | 描述                         |
-| ---- | ---------------------------- | ---------------------------- |
-| 神器 | FlintSelfHostedStageArtifact | FlintSelfHostedStageArtifact | FlintSelfHostedStageArtifact |
+|名称 |类型 |描述 |
+| -------- | ---------------------------- | ------------------------- |
+|神器| FlintSelfHostedStageArtifact | FlintSelfHostedStageArtifact | - 工件参数。 |
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+#### 合同
+
+- **@param:** - 工件参数。
+- **@returns:** Uint8Array 结果。
+
+### FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
+export const FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 没有提供描述。
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 没有提供描述。
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 没有提供描述。
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
+### FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
+export const FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
 ```
 
 没有提供描述。
@@ -2960,9 +2538,9 @@ export type FlintSelfHostedCompilerStage =
   'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
-没有提供描述。
+FlintSelfHostedCompilerStage 实现。
 
-### FlintSelfHostedStageArtifact
+### 弗林特自托管舞台神器
 
 **种类：**接口
 
@@ -2970,7 +2548,7 @@ export type FlintSelfHostedCompilerStage =
 export interface FlintSelfHostedStageArtifact
 ```
 
-没有提供描述。
+FlintSelfHostedStageArtifact 实现。
 
 ### FlintSelfHostedStageArtifactDecodeOptions
 
@@ -2980,7 +2558,7 @@ export interface FlintSelfHostedStageArtifact
 export interface FlintSelfHostedStageArtifactDecodeOptions
 ```
 
-没有提供描述。
+FlintSelfHostedStageArtifactDecodeOptions 实现。
 
 ### FlintSelfHostedStageArtifactIdentity
 
@@ -2990,7 +2568,7 @@ export interface FlintSelfHostedStageArtifactDecodeOptions
 export interface FlintSelfHostedStageArtifactIdentity
 ```
 
-没有提供描述。
+FlintSelfHostedStageArtifactIdentity 实现。
 
 ### hashFlintSelfHostedBytes
 
@@ -3000,13 +2578,18 @@ export interface FlintSelfHostedStageArtifactIdentity
 function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
-没有提供描述。
+hashFlintSelfHostedBytes 实现。
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 字节 | Uint8Array |      |
+|名称 |类型 |描述 |
+| ----- | ---------- | ---------------------- |
+|字节 | Uint8Array | - 字节参数。 |
+
+#### 合同
+
+- **@param:** - 字节参数。
+- **@returns:** 字符串结果。
 
 ### hashFlintSelfHostedSourceIdentity
 
@@ -3016,21 +2599,28 @@ function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 function hashFlintSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
-没有提供描述。
+hashFlintSelfHostedSourceIdentity 实现。
 
 #### 参数
 
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 来源   | 字符串 |      |
-| 文件名 | 字符串 |      |
-| 图哈希 | 字符串 |      |
+|名称 |类型 |描述 |
+| --------- | ------ | -------------------------- |
+|来源 |字符串| - 源参数。    |
+|文件名 |字符串| - 文件名参数。  |
+|图哈希 |字符串| - graphHash 参数。 |
 
-## `src/self-hosted/fws/lexer`
+#### 合同
+
+- **@param:** - 源参数。
+- **@param:** - 文件名参数。
+- **@param:** - graphHash 参数。
+- **@returns:** 字符串结果。
+
+## `src/self-hosted/flint/lexer`
 
 ### 是_ws
 
-**种类：** fws-export
+**种类：** 火石出口
 
 ```typescript
 export fn is_ws(byte: i32) -> bool
@@ -3040,9 +2630,9 @@ export fn is_ws(byte: i32) -> bool
 
 #### 参数
 
-| 名称 | 类型 | 描述         |
-| ---- | ---- | ------------ |
-| 字节 | i32  | 候选字节值。 |
+|名称 |类型 |描述 |
+| ---- | ---- | --------------------- |
+|字节| i32 |候选字节值。 |
 
 #### 合同
 
@@ -3051,7 +2641,7 @@ export fn is_ws(byte: i32) -> bool
 
 ## `src/self-hosted/lex-stage`
 
-### computeFlintLexStageFingerprint
+### 计算FlintLexStageFingerprint
 
 **种类：**功能
 
@@ -3060,15 +2650,20 @@ function computeFlintLexStageFingerprint(source: string): number;
 ```
 
 自托管 lex 阶段的种子参考。
-行为上必须与 {@link createFlintLexStageVmModule} 保持相同。
+行为必须与 {@link createFlintLexStageVmModule} 保持相同。
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 来源 | 字符串 |      |
+|名称 |类型 |描述 |
+| ------ | ------ | -------------------- |
+|来源 |字符串| - 燧石源文本。 |
 
-### createFlintLexStageVmModule
+#### 合同
+
+- **@param:** - 弗林特源文本。
+- **@returns:** 32 位有符号整数指纹。
+
+### 创建FlintLexStageVmModule
 
 **种类：**功能
 
@@ -3081,9 +2676,9 @@ function createFlintLexStageVmModule(sourceHash: string): FlintSelfHostedVmModul
 
 #### 参数
 
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 源哈希 | 字符串 |      |
+|名称 |类型 |描述 |
+| ---------- | ------ | ----------- |
+|源哈希 |字符串|             |
 
 ### 编码FlintLexStageSource
 
@@ -3092,36 +2687,36 @@ function createFlintLexStageVmModule(sourceHash: string): FlintSelfHostedVmModul
 ```typescript
 function encodeFlintLexStageSource(source: string): {
   readonly kind: 'aggregate';
-  readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+  readonly layout: typeof FLINT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
 };
 ```
 
-没有提供描述。
+将源代码编码为 VM 词法分析器阶段所需的二进制表示形式。
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 来源 | 字符串 |      |
+|名称 |类型 |描述 |
+| ------ | ------ | ----------- |
+|来源 |字符串|             |
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+### FLINT_LEX_STAGE_ENTRY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
+export const FLINT_LEX_STAGE_ENTRY;
 ```
 
 没有提供描述。
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+### FLINT_LEX_STAGE_SOURCE_LAYOUT
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+export const FLINT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 没有提供描述。
@@ -3134,9 +2729,9 @@ export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
 export interface FlintSelfHostedVmFunction
 ```
 
-没有提供描述。
+由自承载虚拟机执行的函数定义。
 
-### FlintSelfHostedVm指令
+### FlintSelfHostedVm 说明
 
 **种类：**类型
 
@@ -3144,7 +2739,7 @@ export interface FlintSelfHostedVmFunction
 export type FlintSelfHostedVmInstruction = |
 ```
 
-没有提供描述。
+在自承载词法分析期间执行的虚拟机指令元组。
 
 ### FlintSelfHostedVmModule
 
@@ -3154,7 +2749,7 @@ export type FlintSelfHostedVmInstruction = |
 export interface FlintSelfHostedVmModule
 ```
 
-没有提供描述。
+自托管编译器VM模块结构包含字节码和常量。
 
 ### FlintSelfHostedVmValue
 
@@ -3164,11 +2759,11 @@ export interface FlintSelfHostedVmModule
 export type FlintSelfHostedVmValue = |
 ```
 
-没有提供描述。
+常量值存储在自托管VM常量池中。
 
 ## `src/self-hosted/parser-module-stage`
 
-### createFlintParserModuleVmModule
+### 创建FlintParserModuleVmModule
 
 **种类：**功能
 
@@ -3181,7 +2776,7 @@ function createFlintParserModuleVmModule(
 ```
 
 用于有界解析器模块阶段的手动降低的 VM 模块。
-条目：parse_module_stage（来源：FlintSourceBytes）->字节信封。
+条目：parse_module_stage（来源：FlintSourceBytes）-> 字节信封。
 
 信封布局（所有 u32 小端）：
 [0]failFlag（1 = 有界 v1 子集之外的语法；模块有效负载不存在）
@@ -3191,11 +2786,11 @@ function createFlintParserModuleVmModule(
 
 #### 参数
 
-| 名称   | 类型                          | 描述                          |
-| ------ | ----------------------------- | ----------------------------- |
-| 源哈希 | 字符串                        |                               |
-| 文件名 | 字符串                        |                               |
-| 选项   | FlintParserModuleStageOptions | FlintParserModuleStageOptions |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------- | ----------- |
+|源哈希 |字符串|             |
+|文件名 |字符串|             |
+|选项 | FlintParserModuleStageOptions | FlintParserModuleStageOptions             |
 
 ### 解码FlintParserModuleEnvelope
 
@@ -3205,20 +2800,25 @@ function createFlintParserModuleVmModule(
 function decodeFlintParserModuleEnvelope(bytes: Uint8Array): FlintParserModuleEnvelope;
 ```
 
-没有提供描述。
+解码FlintParserModuleEnvelope 实现。
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 字节 | Uint8Array |      |
+|名称 |类型 |描述 |
+| ----- | ---------- | ---------------------- |
+|字节 | Uint8Array | - 字节参数。 |
 
-### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+#### 合同
+
+- **@param:** - 字节参数。
+- **@returns:** FlintParserModuleEnvelope 结果。
+
+### FLINT_PARSER_MODULE_STAGE_ENTRY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
+export const FLINT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 没有提供描述。
@@ -3231,7 +2831,7 @@ export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
 export interface FlintParserModuleEnvelope
 ```
 
-由 {@link FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY} 返回的已解码信封。
+由 {@link FLINT_PARSER_MODULE_STAGE_ENTRY} 返回的已解码信封。
 
 ### FlintParserModuleStageOptions
 
@@ -3241,11 +2841,11 @@ export interface FlintParserModuleEnvelope
 export interface FlintParserModuleStageOptions
 ```
 
-没有提供描述。
+FlintParserModuleStageOptions 实现。
 
 ## `src/self-hosted/parser-stage`
 
-### computeFlintParserStageFingerprint
+### 计算FlintParserStageFingerprint
 
 **种类：**功能
 
@@ -3253,16 +2853,20 @@ export interface FlintParserModuleStageOptions
 function computeFlintParserStageFingerprint(source: string): number;
 ```
 
-自托管解析器阶段的种子参考。
-行为上必须与 {@link createFlintParserStageVmModule} 保持相同。
+为自托管解析器阶段计算确定性 32 位 FNV 指纹。
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 来源 | 字符串 |      |
+|名称 |类型 |描述 |
+| ------ | ------ | --------------------------- |
+|来源 |字符串| - Flint 源代码字符串。 |
 
-### createFlintParserStageVmModule
+#### 合同
+
+- **@param:** - Flint 源代码字符串。
+- **@returns:** 确定性 32 位有符号整数指纹。
+
+### 创建FlintParserStageVmModule
 
 **种类：**功能
 
@@ -3278,17 +2882,17 @@ function createFlintParserStageVmModule(
 
 #### 参数
 
-| 名称   | 类型                            | 描述                            |
-| ------ | ------------------------------- | ------------------------------- |
-| 源哈希 | 字符串                          |                                 |
-| 选项   | FlintParserStageVmModuleOptions | FlintParserStageVmModuleOptions |     |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------- | ----------- |
+|源哈希 |字符串|             |
+|选项 | FlintParserStageVmModuleOptions | FlintParserStageVmModuleOptions             |
 
-### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+### FLINT_PARSER_STAGE_ENTRY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
+export const FLINT_PARSER_STAGE_ENTRY;
 ```
 
 没有提供描述。
@@ -3305,7 +2909,7 @@ export interface FlintParserStageVmModuleOptions
 
 ## `src/self-hosted/stage-codec`
 
-### createFlintSelfHostedParserArtifact
+### 创建FlintSelfHostedParserArtifact
 
 **种类：**功能
 
@@ -3319,19 +2923,28 @@ function createFlintSelfHostedParserArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-没有提供描述。
+createFlintSelfHostedParserArtifact 实现。
 
 #### 参数
 
-| 名称   | 类型                   | 描述 |
-| ------ | ---------------------- | ---- |
-| 来源   | 字符串                 |      |
-| 文件名 | 字符串                 |      |
-| 模块   | Flint 模块             |      |
-| 诊断   | 只读 FlintDiagnostic[] |      |
-| 图哈希 | 字符串                 |      |
+|名称 |类型 |描述 |
+| ----------- | -------------------------- | ---------------------------- |
+|来源 |字符串| - 源参数。      |
+|文件名 |字符串| - 文件名参数。    |
+|模块|火石模块 | - 模块参数。      |
+|诊断 |只读 FlintDiagnostic[] | - 诊断参数。 |
+|图哈希 |字符串| - graphHash 参数。   |
 
-### createFlintSelfHostedTokenArtifact
+#### 合同
+
+- **@param:** - 源参数。
+- **@param:** - 文件名参数。
+- **@param:** - 模块参数。
+- **@param:** - 诊断参数。
+- **@param:** - graphHash 参数。
+- **@returns:** FlintSelfHostedStageArtifact 结果。
+
+### 创建FlintSelfHostedTokenArtifact
 
 **种类：**功能
 
@@ -3345,17 +2958,26 @@ function createFlintSelfHostedTokenArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-没有提供描述。
+createFlintSelfHostedTokenArtifact 实现。
 
 #### 参数
 
-| 名称   | 类型                   | 描述 |
-| ------ | ---------------------- | ---- |
-| 来源   | 字符串                 |      |
-| 文件名 | 字符串                 |      |
-| 代币   | 只读 FlintToken[]      |      |
-| 诊断   | 只读 FlintDiagnostic[] |      |
-| 图哈希 | 字符串                 |      |
+|名称 |类型 |描述 |
+| ----------- | -------------------------- | ---------------------------- |
+|来源 |字符串| - 源参数。      |
+|文件名 |字符串| - 文件名参数。    |
+|代币 |只读 FlintToken[] | - 令牌参数。      |
+|诊断 |只读 FlintDiagnostic[] | - 诊断参数。 |
+|图哈希 |字符串| - graphHash 参数。   |
+
+#### 合同
+
+- **@param:** - 源参数。
+- **@param:** - 文件名参数。
+- **@param:** - 令牌参数。
+- **@param:** - 诊断参数。
+- **@param:** - graphHash 参数。
+- **@returns:** FlintSelfHostedStageArtifact 结果。
 
 ### 解码FlintSelfHostedModule
 
@@ -3365,13 +2987,18 @@ function createFlintSelfHostedTokenArtifact(
 function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 ```
 
-没有提供描述。
+解码自托管解析器模块有效负载。
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 字节 | Uint8Array |      |
+|名称 |类型 |描述 |
+| ----- | ---------- | ------------------------ |
+|字节 | Uint8Array | - 二进制模块有效负载。 |
+
+#### 合同
+
+- **@param:** - 二进制模块有效负载。
+- **@returns:** 解码后的模块 AST。
 
 ### 解码FlintSelfHostedTokens
 
@@ -3381,13 +3008,18 @@ function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 ```
 
-没有提供描述。
+解码自托管令牌流有效负载。
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 字节 | Uint8Array |      |
+|名称 |类型 |描述 |
+| ----- | ---------- | ----------------------- |
+|字节 | Uint8Array | - 二进制令牌有效负载。 |
+
+#### 合同
+
+- **@param:** - 二进制令牌有效负载。
+- **@returns:** 解码后的令牌流。
 
 ### 编码FlintSelfHostedModule
 
@@ -3397,13 +3029,18 @@ function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 ```
 
-没有提供描述。
+对自托管解析器模块有效负载进行编码。
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 模块 | Flint 模块 |      |
+|名称 |类型 |描述 |
+| ------ | ----------- | -------------------------- |
+|模块|火石模块 | - 要序列化的模块 AST。 |
+
+#### 合同
+
+- **@param:** - 要序列化的模块 AST。
+- **@returns:** 二进制模块有效负载。
 
 ### 编码FlintSelfHostedTokens
 
@@ -3413,13 +3050,18 @@ function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 ```
 
-没有提供描述。
+对自托管令牌流有效负载进行编码。
 
 #### 参数
 
-| 名称 | 类型              | 描述 |
-| ---- | ----------------- | ---- |
-| 代币 | 只读 FlintToken[] |      |
+|名称 |类型 |描述 |
+| ------ | --------------------- | ---------------------------- |
+|代币 |只读 FlintToken[] | - 要序列化的令牌流。 |
+
+#### 合同
+
+- **@param:** - 要序列化的令牌流。
+- **@returns:** 二进制令牌有效负载。
 
 ### hashFlintSelfHostedStagePayload
 
@@ -3429,13 +3071,18 @@ function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 function hashFlintSelfHostedStagePayload(artifact: FlintSelfHostedStageArtifact): string;
 ```
 
-没有提供描述。
+hashFlintSelfHostedStagePayload 实现。
 
 #### 参数
 
-| 名称 | 类型                         | 描述                         |
-| ---- | ---------------------------- | ---------------------------- |
-| 神器 | FlintSelfHostedStageArtifact | FlintSelfHostedStageArtifact | FlintSelfHostedStageArtifact |
+|名称 |类型 |描述 |
+| -------- | ---------------------------- | ------------------------- |
+|神器| FlintSelfHostedStageArtifact | FlintSelfHostedStageArtifact | - 工件参数。 |
+
+#### 合同
+
+- **@param:** - 工件参数。
+- **@returns:** 字符串结果。
 
 ### validateFlintSelfHostedStageArtifact
 
@@ -3451,279 +3098,30 @@ function validateFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-没有提供描述。
+validateFlintSelfHostedStageArtifact 实现。
 
 #### 参数
 
-| 名称   | 类型                         | 描述                         |
-| ------ | ---------------------------- | ---------------------------- |
-| 神器   | FlintSelfHostedStageArtifact | FlintSelfHostedStageArtifact | FlintSelfHostedStageArtifact |
-| 舞台   | FlintSelfHostedCompilerStage |                              |
-| 来源   | 字符串                       |                              |
-| 文件名 | 字符串                       |                              |
-| 图哈希 | 字符串                       |                              |
-
-## `src/stdlib/memory`
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
-```
-
-没有提供描述。
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly FlintMemoryFunction[];
-```
-
-没有提供描述。
-
-### FlintMemoryFunction
-
-**种类：**接口
-
-```typescript
-export interface FlintMemoryFunction
-```
-
-没有提供描述。
-
-### Flint内存操作
-
-**种类：**类型
-
-```typescript
-export type FlintMemoryOperation =
-  | 'memory-alloc'
-  | 'memory-dealloc'
-  | 'memory-realloc'
-  | 'memory-load-u32'
-  | 'memory-store-u32'
-  | 'memory-load-f64'
-  | 'memory-store-f64'
-  | 'f64-from-u32';
-```
-
-检查编译器保留的来宾线性内存操作。
-
-## `src/stdlib/regex`
-
-### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
-
-**种类：**常数
-
-```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
-```
-
-没有提供描述。
-
-### FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
-```
-
-没有提供描述。
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
-```
-
-没有提供描述。
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTIONS
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly FlintStandardLibraryFunction[];
-```
-
-编译器拥有的调用。它们是保留的源名称，而不是主机导入，并且
-在后端阶段降低到 Forge Web Script WASM 运行时。
-对于未设置的组或不存在匹配项，捕获操作将返回 `-1`。
-
-### FORGE_WEB_SCRIPT_REGEX_VERSION
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION;
-```
-
-没有提供描述。
-
-### FlintRegex操作
-
-**种类：**类型
-
-```typescript
-export type FlintRegexOperation =
-  | 'full-match'
-  | 'prefix-match'
-  | 'search'
-  | 'full-capture-start'
-  | 'full-capture-end'
-  | 'prefix-capture-start'
-  | 'prefix-capture-end'
-  | 'search-capture-start'
-  | 'search-capture-end';
-```
-
-没有提供描述。
-
-### Flint标准库函数
-
-**种类：**接口
-
-```typescript
-export interface FlintStandardLibraryFunction
-```
-
-没有提供描述。
-
-### flintStandardLibraryIdentity
-
-**种类：**功能
-
-```typescript
-function flintStandardLibraryIdentity(
-  overrides: Partial<FlintStandardLibraryIdentity> = {},
-): FlintStandardLibraryIdentity;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称 | 类型                               | 描述 |
-| ---- | ---------------------------------- | ---- |
-| 覆盖 | 部分<FlintStandardLibraryIdentity> |      |
-
-### FlintStandardLibraryIdentity
-
-**种类：**接口
-
-```typescript
-export interface FlintStandardLibraryIdentity
-```
-
-影响正则表达式编译和生成工件的稳定身份输入。
-
-## `src/stdlib/string`
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
-```
-
-没有提供描述。
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTIONS
-
-**种类：**常数
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly FlintStringFunction[];
-```
-
-没有提供描述。
-
-### FlintString 函数
-
-**种类：**接口
-
-```typescript
-export interface FlintStringFunction
-```
-
-没有提供描述。
-
-### FlintStringOperation
-
-**种类：**类型
-
-```typescript
-export type FlintStringOperation =
-  | 'string-concat'
-  | 'string-length'
-  | 'string-byte-at'
-  | 'string-starts-with'
-  | 'string-slice'
-  | 'string-to-i32'
-  | 'bytes-length'
-  | 'bytes-length-u32'
-  | 'bytes-byte-at'
-  | 'bytes-byte-at-u32'
-  | 'bytes-slice';
-```
-
-编译器拥有的确定性字符串和字节操作。
-
-## `src/type-checker`
-
-### 检查Flint
-
-**种类：**功能
-
-```typescript
-function checkFlint(
-  module: FlintModule,
-  fileName = '<input>',
-  options: FlintTypeCheckOptions = {},
-): FlintTypeCheckResult;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称   | 类型                  | 描述                  |
-| ------ | --------------------- | --------------------- |
-| 模块   | Flint 模块            |                       |
-| 文件名 |                       |                       |
-| 选项   | FlintTypeCheckOptions | FlintTypeCheckOptions | FlintTypeCheckOptions | FlintTypeCheckOptions |
-
-### FlintTypeCheckOptions
-
-**种类：**接口
-
-```typescript
-export interface FlintTypeCheckOptions
-```
-
-没有提供描述。
-
-### FlintTypeCheckResult
-
-**种类：**接口
-
-```typescript
-export interface FlintTypeCheckResult
-```
-
-没有提供描述。
+|名称 |类型 |描述 |
+| --------- | ---------------------------- | -------------------------- |
+|神器| FlintSelfHostedStageArtifact | FlintSelfHostedStageArtifact | - 工件参数。  |
+|舞台| FlintSelfHostedCompilerStage | FlintSelfHostedCompilerStage | FlintSelfHostedCompilerStage - 阶段参数。     |
+|来源 |字符串| - 源参数。    |
+|文件名 |字符串| - 文件名参数。  |
+|图哈希 |字符串| - graphHash 参数。 |
+
+#### 合同
+
+- **@param:** - 工件参数。
+- **@param:** - 阶段参数。
+- **@param:** - 源参数。
+- **@param:** - 文件名参数。
+- **@param:** - graphHash 参数。
+- **@returns:** FlintSelfHostedStageArtifact 结果。
 
 ## `src/validate`
 
-### FlintValidationResult
+### Flint验证结果
 
 **种类：**接口
 
@@ -3731,9 +3129,9 @@ export interface FlintTypeCheckResult
 export interface FlintValidationResult
 ```
 
-没有提供描述。
+通过解析和类型检查验证 Flint 源文件的结果。
 
-### validateFlint
+### 验证弗林特
 
 **种类：**功能
 
@@ -3745,41 +3143,20 @@ function validateFlint(
 ): FlintValidationResult;
 ```
 
-没有提供描述。
+通过运行解析器和类型检查器来验证 Flint 源文本。
+收集并删除重复的语法和语义诊断。
 
 #### 参数
 
-| 名称   | 类型                  | 描述                  |
-| ------ | --------------------- | --------------------- |
-| 来源   | 字符串                |                       |
-| 文件名 |                       |                       |
-| 选项   | FlintTypeCheckOptions | FlintTypeCheckOptions | FlintTypeCheckOptions | FlintTypeCheckOptions |
+|名称 |类型 |描述 |
+| -------- | --------------------- | -------------------------------------------------------------------------------- |
+|来源 |字符串| - 火石源代码文本。                                                        |
+|文件名 |                       | - 诊断范围中使用的可选文件路径或名称（默认为 `'<input>'`）。 |
+|选项 | FlintTypeCheck 选项 | - 可选的类型检查器配置标志和外部符号表。          |
 
-## `src/wat`
+#### 合同
 
-### FlintWat元数据
-
-**种类：**接口
-
-```typescript
-export interface FlintWatMetadata
-```
-
-没有提供描述。
-
-### renderFlintWat
-
-**种类：**功能
-
-```typescript
-function renderFlintWat(module: FlintModule, metadata: FlintWatMetadata = {}): string;
-```
-
-没有提供描述。
-
-#### 参数
-
-| 名称   | 类型             | 描述 |
-| ------ | ---------------- | ---- |
-| 模块   | Flint 模块       |      |
-| 元数据 | FlintWatMetadata |      |
+- **@param:** - Flint 源代码文本。
+- **@param:** - 诊断范围中使用的可选文件路径或名称（默认为 `'<input>'`）。
+- **@param:** - 可选的类型检查器配置标志和外部符号表。
+- **@returns:** 将验证结果与解析的模块（如果可用）、诊断和有效标志相结合。

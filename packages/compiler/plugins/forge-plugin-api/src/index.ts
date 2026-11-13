@@ -7,6 +7,7 @@ export type {
   FrameworkSourceMetadata,
   GeneratedExtraModule,
   GeneratedModule,
+  GeneratedStyleArtifact,
   GeneratorContext,
   JsxFramework,
   NeutralOptimizeOptions,
@@ -70,12 +71,23 @@ export type {
   GenericRenderNode,
   GenericStatement,
   GenericStatementKind,
+  GenericStyleAtRule,
+  GenericStyleClassMapNode,
+  GenericStyleCompanion,
+  GenericStyleDeclaration,
+  GenericStyleRule,
   GenericTagKind,
   GenericTextNode,
   ListKeyIntention,
   MemoIntention,
   PropIntention,
   RefIntention,
+  ReactiveProperty,
+  ComputedSetupValue,
+  SetupEventHandler,
+  SetupEventEmitter,
+  ModelContract,
+  SetupContract,
   SemanticIntentions,
   SemanticModule,
   SourceBackedExpression,
@@ -86,15 +98,21 @@ export type {
 export {
   attributeExpressionText,
   attributeStringValue,
+  childSlotName,
   EMPTY_SEMANTIC_INTENTIONS,
   EMPTY_SPAN,
   findAttribute,
+  isComponentNode,
   isExpressionNode,
   isRenderNode,
+  isRenderNodeMarker,
   isTextNode,
+  meaningfulChildren,
   renderNodeTagName,
+  renderNodeTagText,
   sourceBacked,
   walkRenderNodes,
+  withoutSlotAttribute,
 } from "./ir.js";
 
 export type ForgePluginId = FrameworkOutputPlugin["id"];
@@ -103,6 +121,13 @@ export {
   frameworkAdapterModule,
   frameworkForDirective,
 } from "./compiler/ast.js";
+
+export * from "./lowering/dynamic.js";
+export * from "./lowering/events.js";
+export * from "./lowering/pipeline.js";
+export * from "./lowering/props.js";
+export * from "./lowering/slots.js";
+export * from "./lowering/setup.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -216,4 +241,5 @@ export function defineForgeOutputPlugin<T extends FrameworkOutputPlugin>(
 }
 
 /** Alias emphasizing that framework packages register target implementations. */
-export const defineForgeFramework = defineForgeOutputPlugin;
+export const defineForgeFramework: typeof defineForgeOutputPlugin =
+  defineForgeOutputPlugin;

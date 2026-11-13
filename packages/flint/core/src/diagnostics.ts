@@ -1,3 +1,27 @@
+/** Maximum allowed Flint source file size in bytes (16 MiB). */
+export const MAX_SOURCE_INPUT_BYTES = 16_777_216;
+
+/** Diagnostic error code when source file exceeds MAX_SOURCE_INPUT_BYTES. */
+export const FLINT_SECURITY_SOURCE_TOO_LARGE = 'FLINT-SECURITY-001';
+
+/** Diagnostic error code when delimiters remain unclosed at EOF. */
+export const FLINT_PARSE_UNCLOSED_DELIMITER = 'FLINT-PARSE-004';
+
+/** Diagnostic error code when parser recursion depth exceeds configured limit. */
+export const FLINT_PARSE_STACK_OVERFLOW = 'FLINT-PARSE-092';
+
+/**
+ * Computes the actual byte size of a UTF-8 encoded string.
+ * JavaScript strings use UTF-16 internally, so `.length` counts code units, not bytes.
+ * This function encodes to UTF-8 and returns the true byte count.
+ *
+ * @param source - Source string to measure.
+ * @returns Byte count when encoded as UTF-8.
+ */
+export function getSourceByteLength(source: string): number {
+  return new TextEncoder().encode(source).length;
+}
+
 /**
  * Severity level for compiler diagnostics.
  */
@@ -7,7 +31,7 @@ export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
  * Compilation phase in which a diagnostic was emitted.
  */
 export type FlintDiagnosticPhase =
-  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+  'lex' | 'parse' | 'macro' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 
 /**
  * Source coordinate span defining the precise location of a token, AST node, or diagnostic in a file.

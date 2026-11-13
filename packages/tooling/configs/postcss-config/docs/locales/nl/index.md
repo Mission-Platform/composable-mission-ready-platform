@@ -13,12 +13,12 @@ Gedeelde PostCSS-pijplijn gebruikt door Mission Platform-stylesheets.
 pnpm add --save-dev @mission-platform/postcss-config
 ```
 
-Verwijs naar het pakket vanuit de werkruimte `postcss.config.mjs` in plaats van
+Verwijs naar het pakket vanuit de `postcss.config.mjs` van de werkruimte in plaats van
 het dupliceren van de gedeelde plug-inpijplijn. Lokale overrides horen daarbij
 configuratie van de werkruimte.
 
 ## Bijdragen
 
-Loop `pnpm --filter @mission-platform/postcss-config lint` En
+Voer `pnpm --filter @mission-platform/postcss-config lint` uit en
 `pnpm --filter @mission-platform/postcss-config format`. Browser behouden
 compatibiliteitsgedrag in dit pakket en vermijd applicatiespecifieke plug-ins.

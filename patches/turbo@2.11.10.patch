@@ -1,0 +1,42 @@
+diff --git a/bin/turbo b/bin/turbo
+index bc37f53f66f2f79352b5d7c16adf3702dc0a9f74..62879d245f3ce30b9bd6683fb06253cf59ee06d5 100755
+--- a/bin/turbo
++++ b/bin/turbo
+@@ -468,6 +468,37 @@ function selectsExec(args) {
+ }
+ 
+ function runTurbo() {
++  const rawArgs = process.argv.slice(2);
++  if (rawArgs[0] === 'gen' || rawArgs[0] === 'generate') {
++    try {
++      const genPkg = require.resolve('@turbo/gen/package.json');
++      const cliPath = path.join(path.dirname(genPkg), 'dist', 'cli.js');
++      const subArgs = rawArgs.slice(1);
++      const isTopLevelHelpOrVersion =
++        subArgs.length === 1 &&
++        (subArgs[0] === '-h' ||
++          subArgs[0] === '--help' ||
++          subArgs[0] === '-v' ||
++          subArgs[0] === '--version');
++      const genArgs =
++        isTopLevelHelpOrVersion ||
++        subArgs[0] === 'run' ||
++        subArgs[0] === 'r' ||
++        subArgs[0] === 'workspace' ||
++        subArgs[0] === 'w' ||
++        subArgs[0] === 'help'
++          ? subArgs
++          : ['run', ...subArgs];
++      const result = child_process.spawnSync(process.execPath, [cliPath, ...genArgs], {
++        stdio: 'inherit',
++        env: process.env,
++      });
++      process.exit(result.status ?? 0);
++    } catch (error) {
++      // Fall back to native Turbo if @turbo/gen is not installed
++    }
++  }
++
+   if (shouldOwnWindowsCtrlC()) {
+     return runTurboChild(
+       {

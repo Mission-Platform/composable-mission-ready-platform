@@ -17,7 +17,7 @@ pnpm add --save-dev @mission-platform/i18n-config
 ```
 
 Conservez les sources locales à côté de l’espace de travail qui les possède. L'extraction écrit
-bundles d'espaces de noms sous l'espace de travail propriétaire `locales/<locale>/` annuaire;
+les bundles d'espaces de noms sous le répertoire `locales/<locale>/` de l'espace de travail propriétaire ;
 la commande au niveau du référentiel orchestre tous les espaces de travail configurés.
 
 ## Contribuer

@@ -16,6 +16,7 @@
  * {@link buildPropsMacro}, {@link buildEmitsMacro} and {@link buildModelsMacro}
  * render the `<script setup>` compiler macros from the derived props surface.
  */
+import type { GenericImport } from "@mission-platform/forge-plugin-api";
 import {
   frameworkAdapterModule,
   LOCAL_JSX_TYPES_MODULE,
@@ -29,7 +30,6 @@ import type {
   VueModelSignature,
   VuePropertySignature,
 } from "../transformers/props-interface.js";
-import type { GenericImport } from "@mission-platform/forge-plugin-api";
 
 const ADAPTER_MODULE = frameworkAdapterModule("vue");
 
@@ -158,6 +158,17 @@ function wrapDefault(expression: string): string {
   return isFactoryValue ? `() => (${trimmed})` : trimmed;
 }
 
+/** Whether a prop's declared type is the Boolean runtime type Vue casts when absent. */
+function isBooleanType(typeText: string): boolean {
+  return typeText
+    .replaceAll(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g, "")
+    .split("|")
+    .every((part) => {
+      const type = part.trim();
+      return type === "boolean" || type === "undefined";
+    });
+}
+
 /**
  * Build the `<script setup>` props declaration — a **type-based**
  * `const <param> = defineProps<{ … }>()` (wrapped in `withDefaults(…)` when the
@@ -180,10 +191,25 @@ export function buildPropsMacro(
     )
     .join("\n");
   const typeLiteral = `{\n${members}\n}`;
-  if (defaults.size === 0) {
+  // Vue applies Boolean's absent-prop casting before the type-only macro can
+  // preserve the authored optionality: an omitted `open?: boolean` otherwise
+  // arrives as `false`, making an uncontrolled component look controlled.
+  // Supplying an explicit undefined default disables that cast while keeping
+  // explicit Boolean values and authored defaults unchanged.
+  const effectiveDefaults = new Map(defaults);
+  for (const property of properties) {
+    if (
+      property.optional &&
+      isBooleanType(property.typeText) &&
+      !effectiveDefaults.has(property.name)
+    ) {
+      effectiveDefaults.set(property.name, "undefined");
+    }
+  }
+  if (effectiveDefaults.size === 0) {
     return `const ${parameterName} = defineProps<${typeLiteral}>();`;
   }
-  const entries = [...defaults].map(
+  const entries = [...effectiveDefaults].map(
     ([name, fallback]) => `  ${name}: ${wrapDefault(fallback)}`,
   );
   return `const ${parameterName} = withDefaults(defineProps<${typeLiteral}>(), {\n${entries.join(",\n")}\n});`;
@@ -223,8 +249,15 @@ export function buildModelsMacro(
       const nameArgument =
         model.modelName === undefined ? "" : `'${model.modelName}'`;
       const fallback = defaults.get(model.propName);
+      const effectiveFallback =
+        fallback ??
+        (model.optional && isBooleanType(model.typeText)
+          ? "undefined"
+          : undefined);
       const optionsArgument =
-        fallback === undefined ? "" : `{ default: ${wrapDefault(fallback)} }`;
+        effectiveFallback === undefined
+          ? ""
+          : `{ default: ${wrapDefault(effectiveFallback)} }`;
       const arguments_ = [nameArgument, optionsArgument]
         .filter((part) => part.length > 0)
         .join(", ");

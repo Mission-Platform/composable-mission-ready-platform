@@ -27,11 +27,11 @@ Transforme todo el módulo en la fuente de destino React.
 
 #### Parámetros
 
-| Nombre              | Tipo                       | Descripción |
-| ------------------- | -------------------------- | ----------- |
-| módulo              | Módulo Semántico           |             |
-| nombredelcomponente | cadena                     |             |
-| plano               | Plan de módulo de reacción |             |
+| Nombre | Tipo | Descripción |
+| ------------- | --------------- | ----------- |
+| módulo | Módulo Semántico |             |
+| nombredelcomponente | cadena |             |
+| plano | Plan de módulo de reacción |             |
 
 ## `src/index`
 
@@ -61,8 +61,8 @@ Limite un plan propiedad del objetivo al React.
 
 #### Parámetros
 
-| Nombre | Tipo                             | Descripción |
-| ------ | -------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------------------- | ----------- |
 | bajado | TargetLoweredModule\| indefinido |             |
 
 ### módulo de reacción inferior
@@ -80,9 +80,9 @@ Baje el IR neutral al plan React de {@link TargetIntentions.lowered}.
 
 #### Parámetros
 
-| Nombre   | Tipo              | Descripción |
-| -------- | ----------------- | ----------- |
-| ir       | Módulo Semántico  |             |
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| ir | Módulo Semántico |             |
 | contexto | Contexto objetivo |             |
 
 ### planReactMódulo
@@ -100,10 +100,10 @@ Cree el plan React para un módulo.
 
 #### Parámetros
 
-| Nombre              | Tipo             | Descripción |
-| ------------------- | ---------------- | ----------- |
-| módulo              | Módulo Semántico |             |
-| nombredelcomponente | cadena           |             |
+| Nombre | Tipo | Descripción |
+| ------------- | -------------- | ----------- |
+| módulo | Módulo Semántico |             |
+| nombredelcomponente | cadena |             |
 
 ### ReactClientDirectivePlan
 
@@ -206,10 +206,10 @@ en línea, y con `stableKeyInference` deshabilitado se mantienen todas las clave
 
 #### Parámetros
 
-| Nombre      | Tipo                                | Descripción |
-| ----------- | ----------------------------------- | ----------- |
-| intenciones | Intenciones objetivo                |             |
-| opciones    | Opciones de optimización de destino |             |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------- | ----------- |
+| intenciones | Intenciones objetivo |             |
+| opciones | Opciones de optimización de destino |             |
 
 ### REACT_OPTIMIZACIONES
 

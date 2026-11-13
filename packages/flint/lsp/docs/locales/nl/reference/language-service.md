@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> packages/flint-lsp/docs/reference/language-service.md: [packages/flint-lsp/docs/reference/language-service.md](../../../reference/language-service.md)
+> packages/flint/lsp/docs/reference/language-service.md: [packages/flint/lsp/docs/reference/language-service.md](../../../reference/language-service.md)
 > Taal: Nederlands (nl)
 
 Flint (`.flint`) heeft een editor-neutrale taalservice, een stdio
@@ -15,7 +15,7 @@ validator.
 Het ondersteunde taalcontract is **versie 1.0** en het ABI-contract is
 **versie 1.2**. De tooling wel
 verander de grammatica, compileruitvoer, ABI of de bestaande Rust en
-AssemblyScript-integraties. Zien [Forge WebScript v1](../../../../../flint/docs/locales/nl/reference/language.md)
+AssemblyScript-integraties. Zie [Flint v1](../../../../../flint/docs/reference/language.md)
 voor de taal en ABI-referentie.
 
 ## Kenmerken en grenzen
@@ -28,7 +28,7 @@ De taaldienst biedt momenteel:
   aliassen, aggregatietypen, velden, enumvarianten, interfacemethoden, algemeen
   parameters, iteratorbindingen, matchbindingen en primitieve typen;
 - voltooiing voor Forge-trefwoorden, primitieve typen, declaraties, lokale waarden,
-  aggregatietypen, algemene typen, functies, tekenreeksen die eigendom zijn van de compiler en regex
+  aggregatietypen, generieke typen, functies, tekenreeksen die eigendom zijn van de compiler en regex
   functies, capaciteitaliassen en door de host geïnventariseerde capaciteitsnamen;
 - zweefinformatie voor declaraties, parameters, locals, oproepen en
   mogelijkheid wordt geïmporteerd wanneer de AST het symbool identificeert, inclusief aggregatie
@@ -39,7 +39,7 @@ De taaldienst biedt momenteel:
 
 De LSP-server biedt diagnostiek, voltooiing, hover en volledige semantiek
 tokens. Ga naar definitie, referenties, hernoemen, opmaak, codeacties,
-invoer van meerdere bestanden op bronniveau en een door een browser gehost LSP-transport
+import van meerdere bestanden op bronniveau en een door een browser gehost LSP-transport
 worden niet geïmplementeerd. Monaco gebruikt in plaats daarvan de lokale taalserviceadapter
 om verbinding te maken met de Node-server.
 
@@ -110,7 +110,7 @@ Bij voltooiing voor `add` wordt dezelfde documentatiereeks naast de
 detail/handtekening. Beschrijvingsparagrafen en tags worden gescheiden door lege regels;
 tagvolgorde, dubbele tags en onbekende tags blijven behouden. De kernsyntaxis en
 normalisatieregels, inclusief functieassociatie en het ondersteunde onderwerp
-formulieren, zijn gespecificeerd in [de FWS-taalreferentie](../../../../../flint/docs/locales/nl/reference/language.md).
+formulieren, worden gespecificeerd in [de FWS-taalreferentie](../../../../../flint/docs/reference/language.md).
 
 Documentatie bestaat uitsluitend uit informatieve metadata. Het verandert niets aan de diagnostiek,
 typecontrole, functieresolutie, gegenereerde aangiften, ABI-handtekeningen,
@@ -139,7 +139,7 @@ providers gebruikt door `ForgeMonacoEditor`:
 
 - Monaco hover `contents` bevat de handtekening en weergegeven documentatie als
   afzonderlijke Markdown-compatibele waarden;
-- het veld `documentation` van een bronfunctiesuggestie bevat hetzelfde
+- het `documentation`-veld van een bronfunctiesuggestie bevat hetzelfde
   weergegeven tekenreeks als LSP-voltooiing;
 - de lexicale tokenclassificatie `comment` blijft voor beide ongewijzigd
   gewone opmerkingen en opmerkingen over documentatieblokken.
@@ -224,7 +224,7 @@ Deze repository biedt first-party clients voor VS Code en IntelliJ IDEA.
 Beide clients gebruiken deze stdio-server voor diagnostiek, voltooiing, hover en
 volledige semantische tokens; geen van beide clients bevat een parser, PSI-model of semantiek
 analyse implementatie. De server vereist Node.js **24 of nieuwer**. EEN
-platformspecifieke Node-runtime wordt niet gebundeld met editorintegratie.
+platformspecifieke Node-runtime is niet gebundeld met editorintegratie.
 
 ### VS-code
 
@@ -235,7 +235,7 @@ het standaard opstartpad is de server die in de VSIX is gebundeld, en de extensi
 start het met het geconfigureerde uitvoerbare bestand Node via stdio.
 
 De extensie draagt de `fws` taal-ID, `.flint` bestandsnaamassociatie bij,
-basisopmerkingen/haakjes/lexicale markering en een LSP-bestandswatcher. De
+basislijnopmerkingen/haakjes/lexicale markering en een LSP-bestandswatcher. De
 server blijft verantwoordelijk voor semantische tokens en al het taalgedrag.
 Werkruimtemappen worden in `initialize` verzonden als `file:` URI's, waarbij de
 het werkruimte-root- en pad-isolatiecontract van de server.
@@ -256,7 +256,7 @@ nieuwer. Laat `flint.serverPath` leeg om de pakketserver te gebruiken;
 stel het in op een absoluut pad of een pad relatief ten opzichte van de eerste werkruimtemap
 om een lokaal gebouwde of door een project geleverde `dist/main.js` te testen. Extra
 argumenten worden doorgegeven na het serveringangspunt. Gebruik `messages` of `verbose`
-voor LSP-tracering; opstartfouten worden naar het **Flint geschreven
+voor LSP-tracering; opstartfouten worden naar **Flint geschreven
 Language Server**-uitvoerkanaal en weergegeven als een editorfout.
 
 Voor lokale ontwikkeling vanuit deze repository:
@@ -291,17 +291,17 @@ LSP4IJ-integratie. De plug-in compileert tegen de IntelliJ IDEA Community
 2024.3.3 (build 243), behoudt een open compatibiliteitsbereik vanaf build
 243 en hoger, en is geverifieerd tegen WebStorm 2026.2.1 (tak 262, inclusief
 `WS-262.9437.145`). Het pint LSP4IJ 0.20.1 en bundelt Node.js of de
-taal server. Start de IDE opnieuw op na de installatie als dit niet onmiddellijk gebeurt
+taalserver. Start de IDE opnieuw op na de installatie als dit niet onmiddellijk gebeurt
 herkent `.flint`-bestanden.
 
-De plug-in wijst `*.flint` toe aan taal-ID `fws` en start een gedeelde stdio
+De plug-in wijst `*.flint` toe aan taal-ID `fws` en start één gedeelde stdio
 server voor het project. IntelliJ-configuratie wordt exclusief geleverd door
-**Instellingen | Gereedschap | Webscript smeden**; er is geen projectscript of Flora
+**Instellingen | Gereedschap | Vuursteen**; er is geen projectscript of Flora
 configuratie pad. Configureer:
 
 - **Node.js uitvoerbaar** — Node 24 of nieuwer; standaard ingesteld op `node`.
 - **Taalserveropdracht/pad** — standaard ingesteld op `flint-lsp` en
-  lost een project `node_modules/.bin`-installatie op (inclusief parent
+  lost een project-`node_modules/.bin`-installatie op (inclusief parent
   werkruimtewortels) of `PATH`. Een expliciet JavaScript-ingangspunt zoals
   `node_modules/@mission-platform/flint-lsp/dist/main.js` is dat ook
   ondersteund.
@@ -317,7 +317,7 @@ pnpm add -D @mission-platform/flint-lsp
 
 De plug-in gebruikt de IntelliJ-projectroot als proceswerkmap.
 LSP4IJ levert de documentlevenscyclus en werkruimtemeldingen; de
-de root-begrensde host van de server voert bestandsopsomming uit, bewaakt bestand
+De root-begrensde host van de server voert bestandsopsomming uit, bewaakt bestand
 invalidatie en alle taalanalyses. Dezelfde verpakte instellingenstatus is
 gebruikt door zowel het LSP-opstartprogramma als de generieke stdio DAP-adapter.
 
@@ -378,8 +378,8 @@ niet ondersteund.
   editorspecifiek gedrag toevoegen.
 
 De client moet werkruimtemappen verzenden als `file:`-URI's, indien ondersteund. De
-server gebruikt eerst werkruimtemappen en valt terug op `rootUri`; als geen van beide dat is
-op voorwaarde dat de host van het bestandssysteem geen wortels heeft en alleen al geopend kan zijn
+server gebruikt eerst werkruimtemappen en valt terug naar `rootUri`; als geen van beide dat is
+op voorwaarde dat de host van het bestandssysteem geen wortels heeft en alleen al open kan dienen
 documenten.
 
 ## Gedrag en beveiliging van de werkruimte
@@ -459,12 +459,12 @@ De LSP-server publiceert `source: "flint"`. De fase en hint zijn
 ook opgenomen in het diagnostische `data`-object. Typische stabiele codefamilies
 zijn:
 
-| Codeer familie  | Fase         | Betekenis                                                                                                       |
-| --------------- | ------------ | --------------------------------------------------------------------------------------------------------------- |
-| `FLINT-LEX-*`   | `lex`        | Ongeldige tekens/escapes, onbewerkte tekenreeksregelbeëindigers of niet-afgesloten tekenreeksen/blokopmerkingen |
-| `FLINT-PARSE-*` | `parse`      | Ongeldige syntaxis van module, declaratie, instructie of expressie                                              |
-| `FLINT-TYPE-*`  | `type-check` | Ongeldige typen, namen, operators, argumenten of retourneert                                                    |
-| `FLINT-ABI-*`   | `abi`        | Dubbele namen, geweigerde mogelijkheden, export of import                                                       |
+| Codeer familie | Fase | Betekenis |
+| --------------- | ------------ | ----------------------------------------------------------------------------------------------- |
+| `FLINT-LEX-*` | `lex` | Ongeldige tekens/escapes, onbewerkte tekenreeksregelbeëindigers of niet-afgesloten tekenreeksen/blokopmerkingen |
+| `FLINT-PARSE-*` | `parse` | Ongeldige syntaxis van module, declaratie, instructie of expressie |
+| `FLINT-TYPE-*` | `type-check` | Ongeldige typen, namen, operators, argumenten of retourneert |
+| `FLINT-ABI-*` | `abi` | Dubbele namen, geweigerde mogelijkheden, export of import |
 
 Misvormde invoer wordt nog steeds getokeniseerd en geanalyseerd waar parserherstel dit mogelijk maakt
 het. Een verkeerd opgemaakte bron kan bijvoorbeeld `FLINT-PARSE-017` produceren terwijl deze behouden blijft
@@ -529,7 +529,7 @@ const workspaceHost: FlintWorkspaceHost = {
 />;
 ```
 
-De host wordt opzettelijk geïnjecteerd: browserconsumenten moeten lees-,
+De host wordt doelbewust geïnjecteerd: browserconsumenten moeten lees-,
 bestandsopsomming, projectopties en optionele wijzigingsmeldingen van
 hun eigen opslag- of applicatiestatus. De adapter gaat nooit uit van Node
 bestandssysteem-API's en maakt geen verbinding met de stdio-server. Gooi het geretourneerde weg
@@ -557,10 +557,10 @@ markers en het eigen taalservice-exemplaar.
 
 ## LSP versus browserwerkruimten
 
-| Consument       | Implementatie van de werkplek                     | Root-/beveiligingsgrens                                                                              | Vervoer          |
-| --------------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------- |
-| Node LSP-client | `RootBoundedFlintWorkspaceHost`                   | Gecanoniseerde geconfigureerde bestandssysteemwortels; externe lezingen worden afgewezen             | stdio LSP        |
-| Monaco/browser  | Door de applicatie geleverde `FlintWorkspaceHost` | De host beslist welke URI's/bestanden/opties beschikbaar worden gesteld; geen bestandssysteemaanname | In-procesadapter |
+| Consument | Implementatie van de werkruimte | Root-/beveiligingsgrens | Vervoer |
+| --------------- | ----------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
+| Node LSP-client | `RootBoundedFlintWorkspaceHost` | Gecanoniseerde geconfigureerde bestandssysteemwortels; externe lezingen worden afgewezen | stdio LSP |
+| Monaco/browser | Door de applicatie geleverde `FlintWorkspaceHost` | De host beslist welke URI's/bestanden/opties beschikbaar worden gesteld; geen bestandssysteemaanname | In-procesadapter |
 
 Beide adapters gebruiken dezelfde taalservicecontracten en analysesemantiek,
 maar ze delen geen documentenopslag of -transport. Een browserhost mag dat niet
@@ -599,4 +599,4 @@ Lint- en formaatopdrachten voor inhoud voor het hele pakket inspecteren ook niet
 bestanden; een fout die beperkt is tot die bestaande bestanden is geen Flint
 taal-tooling regressie. De gezaghebbende taal is een vast onderdeel van de verwachtingen
 blijven in `../../../flint/src/fixtures/bootstrap.ts` en de
-[taalreferentie](../../../../../flint/docs/locales/nl/reference/language.md).
+[taalreferentie](../../../../../flint/docs/reference/language.md).

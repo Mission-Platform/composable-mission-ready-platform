@@ -1,4 +1,5 @@
 import markdown from '@eslint/markdown';
+
 import baseConfig from '@mission-platform/eslint-config';
 
 const generatedReferenceMarkdown = '**/docs/reference/generated/**/*.md';

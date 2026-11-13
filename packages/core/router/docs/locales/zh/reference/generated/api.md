@@ -58,7 +58,7 @@ Forge 路由器编译器插件使用的稳定元数据。
 **种类：**组件
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor;
+export function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 中性链接标记。本机目标在编译期间替换此函数。
@@ -154,7 +154,7 @@ export type MpRouterCapabilityOverrides = Partial<MpRouterCapabilities>;
 **种类：**组件
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
+export function MpRouterView(properties: MpRouterViewProps =
 ```
 
 中性插座/视图标记。本机目标在编译期间替换此函数。
@@ -244,7 +244,11 @@ function useMpRouter(): MpRouterCapabilities;
 **种类：**常数
 
 ```typescript
-export const applicationCompatibilityFixtures;
+export const applicationCompatibilityFixtures: {
+  readonly website: ForgeCompatibilityFixture;
+  readonly myCareNotes: ForgeCompatibilityFixture;
+  readonly guardsAndLazy: ForgeCompatibilityFixture;
+};
 ```
 
 没有提供描述。

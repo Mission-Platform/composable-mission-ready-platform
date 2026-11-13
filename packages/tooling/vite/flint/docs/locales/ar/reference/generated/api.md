@@ -20,9 +20,10 @@ function compileFlintFile(
   fileName: string,
   options: FlintPluginOptions,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): FlintCompiledModule;
 ```
@@ -31,11 +32,11 @@ function compileFlintFile(
 
 #### حدود
 
-| الاسم     | اكتب                 | الوصف |
-| --------- | -------------------- | ----- |
-| اسم الملف | سلسلة                |       |
-| خيارات    | خيارات FlintPlugin   |       |
-| خدمة      | FlintCompilerService |       |
+| الاسم | اكتب | الوصف |
+| -------- | -------------------- | ----------- |
+| اسم الملف | سلسلة |             |
+| خيارات | خيارات فلينتبلوجين |             |
+| خدمة | خدمة فلينتكومبيلر |             |
 
 ### compileFlintGraph
 
@@ -47,9 +48,10 @@ function compileFlintGraph(
   options: FlintPluginOptions,
   resolver: FlintModuleResolver,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): Promise<FlintCompiledModule>;
 ```
@@ -58,12 +60,31 @@ function compileFlintGraph(
 
 #### حدود
 
-| الاسم     | اكتب                 | الوصف |
-| --------- | -------------------- | ----- |
-| اسم الملف | سلسلة                |       |
-| خيارات    | خيارات FlintPlugin   |       |
-| محلل      | FlintModuleResolver  |       |
-| خدمة      | FlintCompilerService |       |
+| الاسم | اكتب | الوصف |
+| -------- | -------------------- | ----------- |
+| اسم الملف | سلسلة |             |
+| خيارات | خيارات فلينتبلوجين |             |
+| محلل | فلينتمودولريسولفير |             |
+| خدمة | خدمة فلينتكومبيلر |             |
+
+### createFlintGraphCache
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintGraphCache(options?: {
+  readonly compilerService?: FlintCompilerService;
+  readonly selfHostedVmMode?: FlintVmExecutionMode;
+}): FlintGraphCache;
+```
+
+قم بإنشاء ذاكرة تخزين مؤقت للرسم البياني تعمل على إلغاء تكرار دقة الرسم البياني التسلسلية والمتزامنة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+| خيارات | { خدمة الترجمة للقراءة فقط؟: FlintCompilerService؛ readonly selfHostedVmMode ؟: FlintVmExecutionMode; } |             |
 
 ### FlintCompiledModule
 
@@ -75,6 +96,16 @@ export interface FlintCompiledModule
 
 المصدر المجمع، وبيانات تعريف العناصر، وخريطة المصدر، وتقارير الرسم البياني الاختيارية.
 
+### FlintGraphCache
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintGraphCache
+```
+
+نتائج الرسم البياني المشتركة في الذاكرة المستخدمة من قبل أهداف فلينت المتعددة.
+
 ### FlintPluginOptions
 
 **النوع:** الواجهة
@@ -85,7 +116,7 @@ export interface FlintPluginOptions
 
 لم يتم تقديم أي وصف.
 
-### حل FlintPath
+### ResolveFlintPath
 
 **النوع:** الوظيفة
 
@@ -97,12 +128,28 @@ function resolveFlintPath(root: string, value: string): string;
 
 #### حدود
 
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| الجذر  | سلسلة |       |
-| القيمة | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| الجذر | سلسلة |             |
+| القيمة | سلسلة |             |
 
 ## `src/generate`
+
+### createFlintArtifactSource
+
+**النوع:** الوظيفة
+
+```typescript
+function createFlintArtifactSource(compiled: FlintCompiledModule): string;
+```
+
+قم بإنشاء وحدة واحدة قائمة بذاتها لتضمين القطع الأثرية في وقت البناء.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------------------- | ----------- |
+| مجمعة | فلينتكومبيليدمودول |             |
 
 ### createFlintDeclarationsSource
 
@@ -117,9 +164,9 @@ function createFlintDeclarationsSource(compiled: FlintCompiledModule): string;
 
 #### حدود
 
-| الاسم | اكتب                | الوصف |
-| ----- | ------------------- | ----- |
-| مجمعة | FlintCompiledModule |       |
+| الاسم | اكتب | الوصف |
+| -------- | ------------------- | ----------- |
+| مجمعة | فلينتكومبيليدمودول |             |
 
 ### createFlintManifestSource
 
@@ -133,9 +180,9 @@ function createFlintManifestSource(compiled: FlintCompiledModule): string;
 
 #### حدود
 
-| الاسم | اكتب                | الوصف |
-| ----- | ------------------- | ----- |
-| مجمعة | FlintCompiledModule |       |
+| الاسم | اكتب | الوصف |
+| -------- | ------------------- | ----------- |
+| مجمعة | فلينتكومبيليدمودول |             |
 
 ### createFlintModuleSource
 
@@ -146,13 +193,14 @@ function createFlintModuleSource(compiled: FlintCompiledModule): string;
 ```
 
 إنشاء وحدة المستهلك العادية. تقوم الوحدة التي تم إنشاؤها بإعادة تصدير ملف
-وظائف مجمعة ويكشف نفس بيان ABI من خلال `abiManifest`.
+الوظائف المترجمة، تعرض نفس بيان ABI من خلال `abiManifest`، و
+يوفر محمل مكتبة متزامن كتصدير افتراضي له.
 
 #### حدود
 
-| الاسم | اكتب                | الوصف |
-| ----- | ------------------- | ----- |
-| مجمعة | FlintCompiledModule |       |
+| الاسم | اكتب | الوصف |
+| -------- | ------------------- | ----------- |
+| مجمعة | فلينتكومبيليدمودول |             |
 
 ### createFlintSourceMapSource
 
@@ -166,9 +214,9 @@ function createFlintSourceMapSource(compiled: FlintCompiledModule): string;
 
 #### حدود
 
-| الاسم | اكتب                | الوصف |
-| ----- | ------------------- | ----- |
-| مجمعة | FlintCompiledModule |       |
+| الاسم | اكتب | الوصف |
+| -------- | ------------------- | ----------- |
+| مجمعة | فلينتكومبيليدمودول |             |
 
 ### createFlintWasmSource
 
@@ -182,9 +230,9 @@ function createFlintWasmSource(compiled: FlintCompiledModule): string;
 
 #### حدود
 
-| الاسم | اكتب                | الوصف |
-| ----- | ------------------- | ----- |
-| مجمعة | FlintCompiledModule |       |
+| الاسم | اكتب | الوصف |
+| -------- | ------------------- | ----------- |
+| مجمعة | فلينتكومبيليدمودول |             |
 
 ### createFlintWatSource
 
@@ -195,60 +243,70 @@ function createFlintWatSource(compiled: FlintCompiledModule): string;
 ```
 
 قم بإنشاء وحدة نمطية يكون تصديرها الافتراضي هو نص WAT المترجم. هذا هو
-مخصص للتفتيش وتأكيد المطابقة، وليس للتنفيذ.
+مخصص للتفتيش وتأكيدات المطابقة، وليس للتنفيذ.
 
 #### حدود
 
-| الاسم | اكتب                | الوصف |
-| ----- | ------------------- | ----- |
-| مجمعة | FlintCompiledModule |       |
+| الاسم | اكتب | الوصف |
+| -------- | ------------------- | ----------- |
+| مجمعة | فلينتكومبيليدمودول |             |
 
-### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+### FLINT_ARTIFACT_QUERY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
+export const FLINT_ARTIFACT_QUERY;
+```
+
+استعلام يقوم بإرجاع كافة البيانات الاصطناعية المجمعة من تجميع رسم بياني واحد.
+
+### FLINT_DECLARATIONS_QUERY
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_DECLARATIONS_QUERY;
 ```
 
 الاستعلام الذي يُرجع الإعلانات المرتبطة وبيانات تعريف الرسم البياني كوحدة ES.
 
-### FORGE_WEB_SCRIPT_MANIFEST_QUERY
+### FLINT_MANIFEST_QUERY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
+export const FLINT_MANIFEST_QUERY;
 ```
 
-استعلام يقوم بإرجاع بيان ABI المترجم كوحدة ES.
+الاستعلام الذي يُرجع بيان ABI المترجم كوحدة ES.
 
-### FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+### FLINT_SOURCE_MAP_QUERY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
+export const FLINT_SOURCE_MAP_QUERY;
 ```
 
 استعلام يقوم بإرجاع الخريطة المصدر التي تم إنشاؤها كوحدة التصدير الافتراضية.
 
-### FORGE_WEB_SCRIPT_WASM_QUERY
+### FLINT_WASM_QUERY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY;
+export const FLINT_WASM_QUERY;
 ```
 
 الاستعلام الذي يقوم بإرجاع بايتات Wasm المترجمة كوحدة التصدير الافتراضية.
 
-### FORGE_WEB_SCRIPT_WAT_QUERY
+### FLINT_WAT_QUERY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY;
+export const FLINT_WAT_QUERY;
 ```
 
 الاستعلام الذي يُرجع WAT المُنشأ، بما في ذلك خفض الجدول الفرعي، كسلسلة.
@@ -263,15 +321,15 @@ export const FORGE_WEB_SCRIPT_WAT_QUERY;
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-قم بتثبيت مجموعة Forge Web Script واستعلامات القطع الأثرية الافتراضية في Vite.
-يحافظ البرنامج المساعد على واجهة برمجة تطبيقات تصدير Wasm العددية أثناء الكشف عن البيان،
+قم بتثبيت تجميع Flint واستعلامات القطع الأثرية الافتراضية في Vite.
+يحافظ البرنامج الإضافي على واجهة برمجة تطبيقات تصدير Wasm العددية أثناء الكشف عن البيان،
 الإعلانات، Wasm، WAT، واستعلامات خريطة المصدر للأدوات والتركيبات.
 
 #### حدود
 
-| الاسم  | اكتب               | الوصف |
-| ------ | ------------------ | ----- |
-| خيارات | خيارات FlintPlugin |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------ | ----------- |
+| خيارات | خيارات فلينتبلوجين |             |
 
 ### flintPlugin
 
@@ -281,15 +339,15 @@ function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-قم بتثبيت مجموعة Forge Web Script واستعلامات القطع الأثرية الافتراضية في Vite.
-يحافظ البرنامج المساعد على واجهة برمجة تطبيقات تصدير Wasm العددية أثناء الكشف عن البيان،
+قم بتثبيت تجميع Flint واستعلامات القطع الأثرية الافتراضية في Vite.
+يحافظ البرنامج الإضافي على واجهة برمجة تطبيقات تصدير Wasm العددية أثناء الكشف عن البيان،
 الإعلانات، Wasm، WAT، واستعلامات خريطة المصدر للأدوات والتركيبات.
 
 #### حدود
 
-| الاسم  | اكتب               | الوصف |
-| ------ | ------------------ | ----- |
-| خيارات | خيارات FlintPlugin |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------------ | ----------- |
+| خيارات | خيارات فلينتبلوجين |             |
 
 ### FlintViteError
 
@@ -299,4 +357,4 @@ function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 export class FlintViteError extends Error
 ```
 
-تشخيص واجهة Vite يحافظ على رمز المحول البرمجي وموقع المصدر والمرحلة.
+تشخيص واجهة Vite يحافظ على كود المترجم وموقع المصدر والمرحلة.

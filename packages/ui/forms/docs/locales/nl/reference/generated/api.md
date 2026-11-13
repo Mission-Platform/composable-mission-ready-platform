@@ -48,9 +48,9 @@ touwtje; en de `v-model` + `change`-uitzending wordt de gevestigde orde
 
 #### Parameters
 
-| Naam          | Typ                              | Beschrijving |
-| ------------- | -------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<CheckboxProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<CheckboxProperties> |             |
 
 ## `src/components/atoms/forge-input/forge-input`
 
@@ -66,7 +66,7 @@ function ForgeInput(properties: Readonly<InputProperties>): MpElement;
 rechtstreeks gecompileerd naar React of Vue door `@mission-platform/vite-plugin-forge`.
 
 Ondersteunt de canonieke `2xs … 2xl`-grootteschaal, een label/hint/error-trio, een
-optionele `<datalist>` (van `list`) en inhoud van de leidende/aflopende extensies.
+optionele `<datalist>` (van `list`) en inhoud van leidende/aflopende extensies.
 Het is eigenaar van de stijl via de naast elkaar geplaatste CSS-module `forge-input.module.scss`
 en stelt de neutrale {@link ForgeTypography} samen voor het label/hint/fouttekst.
 
@@ -79,9 +79,9 @@ de `v-model` + `change`/`blur`/`focus` wordt de
 
 #### Parameters
 
-| Naam          | Typ                           | Beschrijving |
-| ------------- | ----------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<InputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<InputProperties> |             |
 
 ### InvoerAutomatisch hoofdlettergebruik
 
@@ -133,7 +133,7 @@ Ondersteunde native invoertypen.
 function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 ```
 
-`ForgeRadio` — radiobesturing eenmaal geschreven in het neutrale JSX-dialect en
+`ForgeRadio` - radiobesturing eenmaal geschreven in het neutrale JSX-dialect en
 rechtstreeks gecompileerd naar React of Vue door `@mission-platform/vite-plugin-forge`.
 
 Er wordt één enkele radio geselecteerd als de `value` ervan gelijk is aan de `modelValue` van de groep.
@@ -147,9 +147,9 @@ De originele Vue SFC's `v-model` + `change` worden de gevestigde naam
 
 #### Parameters
 
-| Naam          | Typ                           | Beschrijving |
-| ------------- | ----------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<RadioProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<RadioProperties> |             |
 
 ### Radio-eigenschappen
 
@@ -193,9 +193,9 @@ rekwisieten.
 
 #### Parameters
 
-| Naam          | Typ                                | Beschrijving |
-| ------------- | ---------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<RangeInputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------ | ----------- |
+| eigenschappen | Alleen-lezen<RangeInputProperties> |             |
 
 ### BereikInvoereigenschappen
 
@@ -254,9 +254,9 @@ gebruikt de neutrale `useState` haak; en de `v-model` + `change`-uitzending word
 
 #### Parameters
 
-| Naam          | Typ                            | Beschrijving |
-| ------------- | ------------------------------ | ------------ |
-| eigenschappen | Alleen-lezen<RatingProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<RatingProperties> |             |
 
 ### BeoordelingEigenschappen
 
@@ -307,9 +307,9 @@ mede-gelocaliseerde `pointer-drag`-helper; de originele Composition-API `ref`s w
 
 #### Parameters
 
-| Naam          | Typ                            | Beschrijving |
-| ------------- | ------------------------------ | ------------ |
-| eigenschappen | Alleen-lezen<SliderProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<SliderProperties> |             |
 
 ### SliderEigenschappen
 
@@ -356,9 +356,9 @@ rekwisieten.
 
 #### Parameters
 
-| Naam          | Typ                            | Beschrijving |
-| ------------- | ------------------------------ | ------------ |
-| eigenschappen | Alleen-lezen<SwitchProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<SwitchProperties> |             |
 
 ### Schakeleigenschappen
 
@@ -408,9 +408,9 @@ via de raamwerkneutrale {@link hasSlot}-helper; en de `v-model`+
 
 #### Parameters
 
-| Naam          | Typ                              | Beschrijving |
-| ------------- | -------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<TextareaProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<TextareaProperties> |             |
 
 ### TekstgebiedAutomatisch hoofdlettergebruik
 
@@ -487,7 +487,7 @@ dialect en rechtstreeks gecompileerd naar React of Vue door
 `@mission-platform/vite-plugin-forge`.
 
 Het geeft een navigeerbaar maandraster weer (eerste zondag) van selecteerbare dagen, ter ere van
-`min`/`max`-grenzen en een expliciete `disabledDates`-lijst, met IANA-tijdzone
+`min`/`max` grenzen en een expliciete `disabledDates`-lijst, met IANA-tijdzone
 bewuste weergave via `luxon`. Als u op het maandlabel klikt, wordt het dagraster vervangen door een
 raster van twaalf maanden, en als u op het jaar klikt, wordt het omgewisseld voor een raster van tien jaar
 pagina's in groepen van tien (2026 → 2020–2029), dus verre data zijn een paar
@@ -507,9 +507,9 @@ external-sync `watch` wordt een {@link useEffect}; de
 
 #### Parameters
 
-| Naam          | Typ                              | Beschrijving |
-| ------------- | -------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<CalendarProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<CalendarProperties> |             |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
 
@@ -558,9 +558,9 @@ een {@link useEffect}; en de `v-model` + `change`-uitzending wordt de
 
 #### Parameters
 
-| Naam          | Typ                                | Beschrijving |
-| ------------- | ---------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<ColorInputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------ | ----------- |
+| eigenschappen | Alleen-lezen<ColorInputProperties> |             |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
 
@@ -602,7 +602,7 @@ bezit zijn stijl via de co-located CSS-module `forge-date-input.module.scss`.
 Vervangingen van de originele Vue SFC: de pop-up `@floating-ui/vue` wordt
 de write-once {@link ForgeDropdown} (die eigenaar is van de geteleporteerde, CSS-verankerde
 paneel plus de buitenklik/`Escape`-afwijzing), ter vervanging van `useZIndex`; de
-inline maandraster is gedelegeerd aan `ForgeCalendar`; de `useId` composable
+inline maandraster is gedelegeerd aan `ForgeCalendar`; de `useId` composeerbaar
 wordt toegewezen aan de framework-native `useId`-hook; de
 kalenderglyph is de eenmalige schrijfwijze `@mission-platform/icons` `ForgeIconCalendar`
 (zelf samengesteld naar React/Vue); de regio's `start`/`end` zijn geschreven als
@@ -612,9 +612,9 @@ word de `onUpdateModelValue`/`onChange` callback-rekwisieten.
 
 #### Parameters
 
-| Naam          | Typ                               | Beschrijving |
-| ------------- | --------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<DateInputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<DateInputProperties> |             |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
 
@@ -672,9 +672,9 @@ framework-native `useId`-haak; de kalenderglyph is de eenmalige beschrijfbare `@
 
 #### Parameters
 
-| Naam          | Typ                                    | Beschrijving |
-| ------------- | -------------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<DateRangeInputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<DateRangeInputProperties> |             |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
 
@@ -709,14 +709,14 @@ CSS-module `forge-field-set.module.scss` en stelt de neutrale samen
 {@link ForgeTypography} voor de legenda/beschrijvingstekst.
 
 Vervangingen van de originele Vue SFC: de `ForgeStack`-inhoudsverpakking
-wordt een gewone flex `<div>`, en de genoemde `legend`-sleuf wordt gereduceerd tot de
-`legend` prop (het neutrale dialect kan de aanwezigheid van een benoemd slot niet introspecteren).
+wordt een gewone flex `<div>`, en het genoemde slot `legend` wordt gereduceerd tot de
+`legend` prop (het neutrale dialect kan de aanwezigheid van een benoemde slot niet introspecteren).
 
 #### Parameters
 
-| Naam          | Typ                              | Beschrijving |
-| ------------- | -------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<FieldSetProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<FieldSetProperties> |             |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
 
@@ -738,7 +738,7 @@ Geen beschrijving opgegeven.
 export type FileInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-Veldgroottetoken - canonieke 2xs → 2xl schaal.
+Token voor veldgrootte — canonieke 2xs → 2xl schaal.
 
 ### ForgeFileInvoer
 
@@ -765,9 +765,9 @@ word de `onUpdateModelValue`/`onChange` callback rekwisieten.
 
 #### Parameters
 
-| Naam          | Typ                               | Beschrijving |
-| ------------- | --------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<FileInputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<FileInputProperties> |             |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
 
@@ -804,9 +804,9 @@ componenten.
 
 #### Parameters
 
-| Naam          | Typ                                   | Beschrijving |
-| ------------- | ------------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<LocationInputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<LocationInputProperties> |             |
 
 ### LocatieInvoereigenschappen
 
@@ -871,17 +871,17 @@ via de co-located CSS-module `forge-number-stepper.module.scss` en
 stelt de neutrale {@link ForgeTypography} samen voor het label/hint/fouttekst.
 
 Vervangingen van de originele Vue SFC: de `useId` samenstelbare kaarten rechtstreeks
-naar de framework-native `useId` hook; de `ForgeStack`
-wikkel wordt een gewone flex `<div>`; de verlaging/verhoging glyphs zijn de
+naar de framework-native `useId`-hook; de `ForgeStack`
+de wikkel wordt een gewone flex `<div>`; de verlaging/verhoging glyphs zijn de
 eenmaal schrijven `@mission-platform/icons` `ForgeIconMinus`/`ForgeIconPlus`; en de
 `v-model` + `change` zenden uit worden de gevestigde `onUpdateModelValue`/`onChange`
 terugroep rekwisieten.
 
 #### Parameters
 
-| Naam          | Typ                                   | Beschrijving |
-| ------------- | ------------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<NumberStepperProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<NumberStepperProperties> |             |
 
 ### AantalStepperProperties
 
@@ -932,9 +932,9 @@ en de `v-model` + `complete`-uitzending worden de `onUpdateModelValue`/
 
 #### Parameters
 
-| Naam          | Typ                              | Beschrijving |
-| ------------- | -------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<OtpInputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<OtpInputProperties> |             |
 
 ### OtpInputProperties
 
@@ -985,7 +985,7 @@ kiescode, zodat een regio kan worden gevonden door te typen - staat naast a
 `type="tel"`-veld. Terwijl de gebruiker typt, wordt de invoer opgemaakt zoals u typt
 het geselecteerde land (framework-agnostisch van `@mission-platform/components`).
 `phone.ts` helper, gebouwd op **`@mission-platform/phone-number`**), en de canonieke
-E.164-vorm + geldigheid worden bij elke render afgeleid. De nationale tekst wordt gecontroleerd
+E.164-vorm + geldigheid worden bij elke weergave afgeleid. De nationale tekst wordt gecontroleerd
 via `modelValue`/`onUpdateModelValue` en de regio via `country`/
 `onUpdateCountry`; `onChange` rapporteert het volledige geparseerde resultaat en een verborgen
 `name`-invoer verzendt de E.164-waarde. Het bezit zijn styling via de
@@ -1002,9 +1002,9 @@ haak; de geldigheidsmarkering is de eenmalige beschrijfbare `@mission-platform/i
 
 #### Parameters
 
-| Naam          | Typ                                | Beschrijving |
-| ------------- | ---------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<PhoneInputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------ | ----------- |
+| eigenschappen | Alleen-lezen<PhoneInputProperties> |             |
 
 ### TelefoonWijzigen
 
@@ -1078,9 +1078,9 @@ opties.
 
 #### Parameters
 
-| Naam          | Typ                                | Beschrijving |
-| ------------- | ---------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<RadioGroupProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------ | ----------- |
+| eigenschappen | Alleen-lezen<RadioGroupProperties> |             |
 
 ### RadioGroepRichting
 
@@ -1139,9 +1139,9 @@ rekwisieten; en de `v-model` + `search`/`clear`-uitzendingen worden de
 
 #### Parameters
 
-| Naam          | Typ                                 | Beschrijving |
-| ------------- | ----------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<SearchInputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<SearchInputProperties> |             |
 
 ### Zoekinvoereigenschappen
 
@@ -1191,9 +1191,9 @@ enkelvoudige elementreferenties, geen ref-arrays). De `v-model` + `change`-uitze
 
 #### Parameters
 
-| Naam          | Typ                                    | Beschrijving |
-| ------------- | -------------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<SegmentControlProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<SegmentControlProperties> |             |
 
 ### SegmentControlEigenschappen
 
@@ -1256,9 +1256,9 @@ slots (`<Slot>`) waarbij hun aanwezigheid wordt gedetecteerd via het raamwerk-ne
 
 #### Parameters
 
-| Naam          | Typ                               | Beschrijving |
-| ------------- | --------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<TimeInputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<TimeInputProperties> |             |
 
 ### TijdInvoerEigenschappen
 
@@ -1313,9 +1313,9 @@ aanwezigheid gedetecteerd met de raamwerkneutrale {@link hasSlot}-helper; de
 
 #### Parameters
 
-| Naam          | Typ                                    | Beschrijving |
-| ------------- | -------------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<TimeRangeInputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<TimeRangeInputProperties> |             |
 
 ### TimeRangeInputEigenschappen
 
@@ -1371,7 +1371,7 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 neutraal JSX-dialect en rechtstreeks gecompileerd naar React of Vue door
 `@mission-platform/vite-plugin-forge`.
 
-Een triggerknop toont het `start → end (timezone)`-overzicht en opent een
+Een triggerknop toont de samenvatting van `start → end (timezone)` en opent een
 popover met een browser/UTC-schakelaar boven een tweestaps-{@link ForgeFormWizard}
 (**Datum**, dan **Tijd**): met de stap **Datum** worden de begin-/einddatums van het bereik gekozen
 op twee {@link ForgeCalendar}s, en de stap **Tijd** kiest de begin-/eindtijden
@@ -1383,8 +1383,8 @@ Vervangingen van de originele Vue SFC: de pop-up `@floating-ui/vue` wordt
 de write-once {@link ForgeDropdown} (die eigenaar is van de geteleporteerde, CSS-verankerde
 paneel plus de buitenklik/`Escape`-afwijzing), ter vervanging van `useZIndex`; de
 op maat gemaakte hover-aangedreven
-raster van twee maanden wordt vervangen door **samengestelde `ForgeCalendar`s** per eindpunt;
-de logica voor inline parseren/formatteren/tijdzone wordt gedelegeerd aan de co-located
+het tweemaandelijkse raster wordt vervangen door **samengestelde `ForgeCalendar`s** per eindpunt;
+de inline-logica voor parseren/formatteren/tijdzone wordt gedelegeerd aan de co-located
 raamwerk-agnostisch `date-time.ts`; de `useId` samenstelbare kaarten naar de
 framework-native `useId`-haak; de kalender-/tijdzone-glyphs zijn eenmalig te schrijven
 `@mission-platform/icons` `ForgeIconCalendar`/`ForgeIconGlobe`; de `start`/`end` SFC
@@ -1395,9 +1395,9 @@ gedetecteerd met de raamwerk-neutrale {@link hasSlot} helper); en de `v-model`
 
 #### Parameters
 
-| Naam          | Typ                                        | Beschrijving |
-| ------------- | ------------------------------------------ | ------------ |
-| eigenschappen | Alleen-lezen<DateTimeRangeInputProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<DateTimeRangeInputProperties> |             |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
@@ -1434,9 +1434,9 @@ container), aangestuurd door een `dropIndicator` insert-target bijgewerkt op `dr
 
 #### Parameters
 
-| Naam          | Typ                                 | Beschrijving |
-| ------------- | ----------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<FormBuilderProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<FormBuilderProperties> |             |
 
 ### FormBuilderEigenschappen
 
@@ -1483,9 +1483,9 @@ rekwisieten. De actieve index blijft **gecontroleerd** (`modelValue`).
 
 #### Parameters
 
-| Naam          | Typ                                | Beschrijving |
-| ------------- | ---------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<FormWizardProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------ | ----------- |
+| eigenschappen | Alleen-lezen<FormWizardProperties> |             |
 
 ### FormWizardEigenschappen
 
@@ -1506,6 +1506,85 @@ export interface WizardStep
 ```
 
 Eén enkele wizardstap.
+
+## `src/components/organisms/forge-form/forge-form`
+
+### standaardFormContext
+
+**Soort:** constant
+
+```typescript
+export const defaultFormContext: FormContextValue;
+```
+
+Basislijn standaardformuliercontext die wordt verstrekt wanneer useFormContext buiten een ForgeForm wordt aangeroepen.
+
+### Forgeformulier
+
+**Soort:** functie
+
+```typescript
+function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement;
+```
+
+Contextgestuurde vormcomponent die gecontroleerde en ongecontroleerde status ondersteunt,
+Standaard Schema / Zod / Yup-validatie, toegankelijk foutenoverzicht en framework-adapters.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------ | ----------- |
+| eigenschappen | Alleen-lezen<ForgeFormProps> |             |
+
+### ForgeFormProperties
+
+**Soort:** type
+
+```typescript
+export type ForgeFormProperties = ForgeFormProps;
+```
+
+Geen beschrijving opgegeven.
+
+### ForgeFormProps
+
+**Soort:** interface
+
+```typescript
+export interface ForgeFormProps
+```
+
+Geen beschrijving opgegeven.
+
+### FormulierContext
+
+**Soort:** constant
+
+```typescript
+export const FormContext: MpContext<FormContextValue | undefined>;
+```
+
+Geen beschrijving opgegeven.
+
+### FormContextWaarde
+
+**Soort:** interface
+
+```typescript
+export interface FormContextValue
+```
+
+Geen beschrijving opgegeven.
+
+### gebruikFormContext
+
+**Soort:** functie
+
+```typescript
+function useFormContext(): FormContextValue;
+```
+
+Hook voor toegang tot de formuliercontext in onderliggende velden of geneste componenten.
 
 ## `src/components/organisms/forge-schema-form-dialog/forge-schema-form-dialog`
 
@@ -1531,9 +1610,9 @@ of er moet worden afgesloten met een geldige indiening.
 
 #### Parameters
 
-| Naam          | Typ                                      | Beschrijving |
-| ------------- | ---------------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<SchemaFormDialogProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------------ | ----------- |
+| eigenschappen | Alleen-lezen<SchemaFormDialogProperties> |             |
 
 ### SchemaFormDialogEigenschappen
 
@@ -1577,9 +1656,9 @@ een overschrijfbaar `actions`-slot.
 
 #### Parameters
 
-| Naam          | Typ                                | Beschrijving |
-| ------------- | ---------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<SchemaFormProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------ | ----------- |
+| eigenschappen | Alleen-lezen<SchemaFormProperties> |             |
 
 ### SchemaFormFieldRenderer
 
@@ -1610,45 +1689,3 @@ export interface SchemaFormProperties
 ```
 
 Geen beschrijving opgegeven.
-
-## `src/utils/date-time/date-time`
-
-### Datumbereik
-
-**Soort:** interface
-
-```typescript
-export interface DateRange
-```
-
-A `{ start, end }` ISO-datumbereik (`YYYY-MM-DD`).
-
-### DatumTijdbereik
-
-**Soort:** interface
-
-```typescript
-export interface DateTimeRange
-```
-
-Een datum-tijdbereik `{ start, end, timezone }` (`YYYY-MM-DD HH:MM[:SS]`).
-
-### Tijdbereik
-
-**Soort:** interface
-
-```typescript
-export interface TimeRange
-```
-
-Een `{ start, end }`-tijdsbereik (`HH:MM` of `HH:MM:SS`).
-
-### TijdzoneModus
-
-**Soort:** type
-
-```typescript
-export type TimezoneMode = 'browser' | 'utc';
-```
-
-Of een datum-tijdbereik wordt geïnterpreteerd in de browserzone of UTC.

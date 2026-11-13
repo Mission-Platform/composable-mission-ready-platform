@@ -23,9 +23,9 @@ function synthesiseElementClass(plan: WebComponentsLoweredModule): string;
 
 #### 参数
 
-| 名称 | 类型                       | 描述                       |
-| ---- | -------------------------- | -------------------------- |
-| 计划 | WebComponentsLoweredModule | WebComponentsLoweredModule |
+|名称 |类型 |描述 |
+| ---- | -------------------------- | ----------- |
+|计划| WebComponentsLoweredModule | WebComponentsLoweredModule             |
 
 ## `src/emitters/module`
 
@@ -42,16 +42,16 @@ function emitWebComponentModule(
 ): EmittedWebComponentModule;
 ```
 
-将整个模块转换为本机 Web 组件目标源。
+将整个模块转换为本机 Web-Components 目标源。
 
 #### 参数
 
-| 名称       | 类型                       | 描述                       |
-| ---------- | -------------------------- | -------------------------- |
-| 模块       | 语义模块                   |                            |
-| 组件名称   | 字符串                     |                            |
-| 组件文件夹 | 只读设置<string>           |                            |
-| 降低       | WebComponentsLoweredModule | WebComponentsLoweredModule |
+|名称 |类型 |描述 |
+| ---------------- | -------------------------- | ----------- |
+|模块|语义模块 |             |
+|组件名称 |字符串|             |
+|组件文件夹 |只读设置<string> |             |
+|降低| WebComponentsLoweredModule | WebComponentsLoweredModule             |
 
 ## `src/index`
 
@@ -66,6 +66,74 @@ function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 创建仅 TypeScript Web 组件输出插件。
 
 ## `src/lower`
+
+### 下Web组件模块
+
+**种类：**功能
+
+```typescript
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
+```
+
+将中性 IR 降低到 Web 组件目标意图中。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | -------------- | ----------- |
+|模块|语义模块 |             |
+|背景 |目标上下文 |             |
+
+### 下层Web组件计划
+
+**种类：**功能
+
+```typescript
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
+```
+
+为中立模块构建 Web 组件目标计划。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | -------------- | ----------- |
+|模块|语义模块 |             |
+|背景 |目标上下文 |             |
+
+## `src/lower/host-plan`
+
+### 推断Web组件主机
+
+**种类：**功能
+
+```typescript
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+  component?: GenericComponent,
+): WebComponentsHostPlan;
+```
+
+仅从单个静态内在根推断定制的内置主机。
+
+允许名单有意保守：内在标签有效
+HTML 不保证它是安全或有用的定制内置
+跨受支持的 DOM 实现的基础。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|返回节点 |通用渲染节点 \|未定义 |             |
+|组件|通用组件 |             |
+
+## `src/lower/types`
 
 ### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
 
@@ -87,28 +155,6 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 
 为生成的组件保留兼容性默认值。
 
-### 推断Web组件主机
-
-**种类：**功能
-
-```typescript
-function inferWebComponentsHost(
-  returnNode: GenericRenderNode | undefined,
-): WebComponentsHostPlan;
-```
-
-仅从单个静态内在根推断定制的内置主机。
-
-允许名单有意保守：内在标签有效
-HTML 不保证它是安全或有用的定制内置
-跨受支持的 DOM 实现的基础。
-
-#### 参数
-
-| 名称     | 类型                  | 描述 |
-| -------- | --------------------- | ---- |
-| 返回节点 | 通用渲染节点 \|未定义 |      |
-
 ### isWebComponentsLowered
 
 **种类：**功能
@@ -123,49 +169,9 @@ function isWebComponentsLowered(
 
 #### 参数
 
-| 名称 | 类型                         | 描述 |
-| ---- | ---------------------------- | ---- |
-| 降低 | TargetLoweredModule \|未定义 |      |
-
-### 下Web组件模块
-
-**种类：**功能
-
-```typescript
-function lowerWebComponentsModule(
-  module: SemanticModule,
-  context: TargetContext,
-): TargetIntentions;
-```
-
-将中性 IR 降低到 Web 组件目标意图中。
-
-#### 参数
-
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 模块 | 语义模块   |      |
-| 背景 | 目标上下文 |      |
-
-### 下层Web组件计划
-
-**种类：**功能
-
-```typescript
-function lowerWebComponentsPlan(
-  module: SemanticModule,
-  context: TargetContext,
-): WebComponentsLoweredModule;
-```
-
-为中立模块构建 Web 组件目标计划。
-
-#### 参数
-
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 模块 | 语义模块   |      |
-| 背景 | 目标上下文 |      |
+|名称 |类型 |描述 |
+| ------- | -------------------------------- | ----------- |
+|降低| TargetLoweredModule \|未定义 |             |
 
 ### 未知类型
 
@@ -192,7 +198,7 @@ export const WEB_COMPONENTS_FRAMEWORK;
 **种类：**常数
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS;
+export const WEBCOMPONENTS_NATIVE_HOSTS: Readonly<Record<string, string>>;
 ```
 
 可以安全地定制内置的根的兼容性表。
@@ -227,7 +233,7 @@ export type WebComponentsDerivedBody = |
 export interface WebComponentsDerivedValue
 ```
 
-一个记忆值，降低为读取时重新计算的 getter。
+一个记忆值，降低为由可选实例缓存支持的 getter。
 
 ### WebComponentElementRef
 
@@ -264,7 +270,7 @@ export type WebComponentsHostFallbackReason =
   | "unsupported-root";
 ```
 
-组件不能使用自定义内置主机的稳定原因。
+组件无法使用自定义内置主机的稳定原因。
 
 ### WebComponentHostKind
 
@@ -325,7 +331,7 @@ export interface WebComponentsLifecycleHook
 export interface WebComponentsListKey
 ```
 
-为目标列表输出保留的列表渲染关键候选者。
+为目标列表输出保留的列表呈现关键候选者。
 
 ### WebComponentsLoweredModule
 
@@ -348,12 +354,9 @@ export interface WebComponentsPromotedLocal
 渲染头常量**提升**为元素成员。
 
 备忘录 getter、生命周期回调和字段初始值设定项均已发出
-_外部_ `render()`，因此渲染头声明的本地不存在
+_outside_ `render()`，因此渲染头声明的本地不存在
 他们。向会员宣传该声明是造成这种阅读的原因
 可解析 — 通过 `this.<name>` — 而不是悬空。
-
-仅提倡可证明无影响的声明（参见
-{@link PromotionHeadLocals});其他任何内容都保留在 `render()` 中。
 
 ### Web组件属性声明
 
@@ -404,28 +407,6 @@ export interface WebComponentsSetupPhase
 ```
 
 元素的一次性**设置**阶段。
-
-诸如 `useState(parseTime(modelValue))` 之类的种子读取反应性属性，并且
-属性仅在主机的属性被采用后才保留值 -
-这发生在连接上，在构造函数运行很久之后。更糟糕的是，
-值通常通过渲染头常量（`const initial =
-parseTime(modelValue);`) 无法证明无效果，因此
-保留在 `render()` 中，因此构造函数种子将引用一个名称
-那里根本不存在。
-
-这样的种子被推迟到 `ForgeElement.setup()`，运行时调用它
-在属性采用之后和第一次渲染之前，每个元素恰好一次
-— 重新连接不得重新播种并丢弃用户此后更改的内容。
-种子需要的 head 语句首先按 head 顺序重播，
-传递性关闭，**仅**那些。
-
-重播而不是缓存是有意为之的。在中性源头
-*是*组件主体，因此 `const initial = parseTime(modelValue);` 已经
-在每个渲染上运行；在设置过程中再次评估它不会执行任何调用
-编写的组件尚未在每次传递中执行。将其缓存在
-字段会“减少”评估次数并给出值
-消息来源从未承诺过身份。只有一个普通的 `const` （或一个函数）
-声明会被重播——参见{@link headReplay}。
 
 ### WebComponentShadowPolicy
 
@@ -484,10 +465,10 @@ function optimizeWebComponentsModule(
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| 意向 | 目标意图     |      |
-| 选项 | 目标优化选项 |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------- | ----------- |
+|意向 |目标意图|             |
+|选项 |目标优化选项 |             |
 
 ### 优化Web组件计划
 
@@ -504,10 +485,10 @@ function optimizeWebComponentsPlan(
 
 #### 参数
 
-| 名称 | 类型                       | 描述                       |
-| ---- | -------------------------- | -------------------------- |
-| 计划 | WebComponentsLoweredModule | WebComponentsLoweredModule |
-| 选项 | 目标优化选项               |                            |
+|名称 |类型 |描述 |
+| ------- | -------------------------- | ----------- |
+|计划| WebComponentsLoweredModule | WebComponentsLoweredModule             |
+|选项 |目标优化选项 |             |
 
 ### WEB_COMPONENTS_OPTIMIZATIONS
 
@@ -517,7 +498,7 @@ function optimizeWebComponentsPlan(
 export const WEB_COMPONENTS_OPTIMIZATIONS;
 ```
 
-标识符记录在{@link WebComponentsLoweredModule.appliedOptimizations}中。
+标识符记录在 {@link WebComponentsLoweredModule.appliedOptimizations} 中。
 
 ### Web组件优化
 
@@ -544,9 +525,9 @@ function emitWebComponentHookModule(module: SemanticModule): string;
 
 #### 参数
 
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 模块 | 语义模块 |      |
+|名称 |类型 |描述 |
+| ------ | -------------- | ----------- |
+|模块|语义模块 |             |
 
 ## `src/transformers/expression`
 
@@ -577,9 +558,9 @@ function isFunctionExpressionText(text: string): boolean;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 文字 | 字符串 |      |
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|文字|字符串|             |
 
 ### isPureExpressionText
 
@@ -599,9 +580,9 @@ function isPureExpressionText(text: string): boolean;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 文字 | 字符串 |      |
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|文字|字符串|             |
 
 ## `src/transformers/props-binding`
 
@@ -613,16 +594,16 @@ function isPureExpressionText(text: string): boolean;
 function leadingObjectPattern(text: string): string | undefined;
 ```
 
-_开始_ `text` 的对象模式，丢弃后面的任何内容。
+_starts_ `text` 的对象模式，丢弃后面的任何内容。
 
 参数的源文本带有其注释（`{ a, b }: Readonly<P>`），
 所以在分解之前必须先将图案剪掉。
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 文字 | 字符串 |      |
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|文字|字符串|             |
 
 ### parsePropsBinding
 
@@ -640,9 +621,9 @@ function parsePropsBinding(patternText: string): PropsBinding | undefined;
 
 #### 参数
 
-| 名称     | 类型   | 描述 |
-| -------- | ------ | ---- |
-| 图案文本 | 字符串 |      |
+|名称 |类型 |描述 |
+| ----------- | ------ | ----------- |
+|图案文本|字符串|             |
 
 ### 道具绑定
 
@@ -678,16 +659,16 @@ function propsBindingStatement(
 将 props 模式重播为 `const { … } = this;`，仅限于条目
 目标范围实际读取其局部变量。
 
-限制它可以使提升的作用域免受它从不使用的绑定的影响（这是一个
+限制它可以使提升的范围免受它从未使用的绑定的影响（这是一个
 `noUnusedLocals` 构建将拒绝），同时保留每个保留条目 - 并且
 所以它的默认值——字节与编写的字节相同。
 
 #### 参数
 
-| 名称     | 类型                      | 描述 |
-| -------- | ------------------------- | ---- |
-| 绑定     | 道具绑定                  |      |
-| 正在阅读 | （名称：字符串）=> 布尔值 |      |
+|名称 |类型 |描述 |
+| ------- | ------------------------- | ----------- |
+|绑定|道具绑定 |             |
+|正在阅读 | （名称：字符串）=> 布尔值 |             |
 
 ## `src/transformers/props-type`
 
@@ -704,7 +685,7 @@ function indexedAccessType(
 
 props 类型的成员的索引访问注释被发出。
 
-成员自己的可选性被完全保留：必需的成员是*不是*
+成员自己的可选性被完全保留：必需的成员是_not_
 使用 `| undefined` 进行加宽。该元素的字段仅填充一次
 运行时采用它的属性，因此它在构造函数中真正未设置 -
 但这是通过将字段发出为 `declare` 来表示的（运行时拥有
@@ -713,10 +694,10 @@ props 类型的成员的索引访问注释被发出。
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| 参考 | 道具类型参考 |      |
-| 会员 | 字符串       |      |
+|名称 |类型 |描述 |
+| --------- | ------------------ | ----------- |
+|参考|道具类型参考 |             |
+|会员|字符串|             |
 
 ### Props类型参考
 
@@ -747,10 +728,10 @@ function resolvePropsTypeReference(
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 注释 | 字符串\|未定义 |      |
-| 声明 | 只读通用语句[] |      |
+|名称 |类型 |描述 |
+| ------------ | --------------------------- | ----------- |
+|注释|字符串\|未定义 |             |
+|声明|只读通用语句[] |             |
 
 ### 类型成员
 
@@ -765,15 +746,15 @@ function typeMembers(declarationText: string): ReadonlyMap<string, boolean>;
 
 仅收集第一个 `{…}` 主体的顶层成员，并且仅收集
 成员可以合法开始的位置（紧接在左大括号之后，`;`
-或 `,`）。因此，`extends`/`&` 基地贡献的成员*不是*
+或 `,`）。因此，由 `extends`/`&` 基地贡献的成员_不_
 报告 - 呼叫者将他们视为未知并回退，这就是
 安全方向。
 
 #### 参数
 
-| 名称     | 类型   | 描述 |
-| -------- | ------ | ---- |
-| 声明文本 | 字符串 |      |
+|名称 |类型 |描述 |
+| --------------- | ------ | ----------- |
+|声明文本 |字符串|             |
 
 ### unwrapProps类型名称
 
@@ -788,6 +769,6 @@ function unwrapPropsTypeName(text: string | undefined): string | undefined;
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 文字 | 字符串\|未定义 |      |
+|名称 |类型 |描述 |
+| ---- | ------------------- | ----------- |
+|文字|字符串\|未定义 |             |

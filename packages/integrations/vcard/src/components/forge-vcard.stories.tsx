@@ -1,6 +1,6 @@
-import { ForgeVCard } from './forge-vcard';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeVCard } from './forge-vcard';
 
 const meta = {
   title: 'VCard/ForgeVCard',

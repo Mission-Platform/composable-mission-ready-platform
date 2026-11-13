@@ -1,3 +1,5 @@
+import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
+
 import { forgeReactFramework } from '../../../../../compiler/plugins/forge-react/src';
 import { forgeSolidFramework } from '../../../../../compiler/plugins/forge-solid/src';
 import { forgeSvelteFramework } from '../../../../../compiler/plugins/forge-svelte/src';
@@ -10,7 +12,6 @@ import {
 } from './compile.js';
 
 import type { CompileHookOptions, CompileOptions } from './compile.js';
-import type { FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
 
 const FRAMEWORK_PLUGINS: Readonly<Record<JsxFramework, () => FrameworkOutputPlugin>> = {
   react: forgeReactFramework,

@@ -2,7 +2,7 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> packages/email-renderer/docs/index.md: [packages/email-renderer/docs/index.md](../../index.md)
+> packages/content/email-renderer/docs/index.md: [packages/content/email-renderer/docs/index.md](../../index.md)
 > 언어: 한국어 (ko)
 
 `@mission-platform/email-renderer`은 미션 플랫폼 이메일 트리에 대한 프레임워크 중립 렌더링 경계를 소유합니다. 루트 항목은 서버 측 이메일 생성에 안전합니다. 브라우저 어댑터는 명시적인 하위 경로 뒤에 격리됩니다.
@@ -20,7 +20,7 @@ Markdown은 공유 Forge 트리로 변환되므로 직렬화 전에 링크, 이�
 
 ## 브라우저 어댑터
 
-브라우저 미리보기 또는 애플리케이션에 필요한 어댑터 하위 경로만 사용하십시오.
+브라우저 미리보기 또는 애플리케이션에 필요한 어댑터 하위 경로만 사용하세요.
 
 - `@mission-platform/email-renderer/vue` → `renderToEmailVue`, `toEmailVueComponent`.
 - `@mission-platform/email-renderer/react` → `renderToEmailReact`, `toEmailReactComponent`.

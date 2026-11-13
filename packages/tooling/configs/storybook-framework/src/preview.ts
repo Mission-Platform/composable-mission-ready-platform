@@ -33,7 +33,17 @@ type PreviewFramework = 'vue' | 'react' | 'solid' | 'svelte' | 'web-component';
 /**
  * Shared Storybook parameters for all frameworks.
  */
-export const sharedPreviewParameters = {
+export const sharedPreviewParameters: {
+  readonly controls: {
+    readonly matchers: {
+      readonly color: RegExp;
+      readonly date: RegExp;
+    };
+  };
+  readonly a11y: {
+    readonly test: 'error';
+  };
+} = {
   // viewport: {
   //   options: mpViewports,
   // },
@@ -61,7 +71,15 @@ export const sharedPreviewParameters = {
  * avoids the out-of-context re-invoke. CSF still exposes `originalSource` for the
  * source panel.
  */
-export function sharedPreviewParametersFor(framework?: PreviewFramework) {
+export function sharedPreviewParametersFor(framework?: PreviewFramework):
+  | typeof sharedPreviewParameters
+  | (typeof sharedPreviewParameters & {
+      readonly docs: {
+        readonly source: {
+          readonly type: 'code';
+        };
+      };
+    }) {
   if (framework !== 'svelte') {
     return sharedPreviewParameters;
   }
@@ -79,7 +97,9 @@ export function sharedPreviewParametersFor(framework?: PreviewFramework) {
 /**
  * Shared Storybook decorators for all frameworks.
  */
-export function sharedPreviewDecorators<TRenderer extends Renderer>() {
+export function sharedPreviewDecorators<TRenderer extends Renderer>(): Array<
+  ReturnType<typeof withThemeByDataAttribute<TRenderer>>
+> {
   return [
     withThemeByDataAttribute<TRenderer>({
       themes: {

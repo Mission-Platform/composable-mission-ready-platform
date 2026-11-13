@@ -59,9 +59,10 @@ export function useEventListener(
 
 ## Scaffolding
 
-The fastest way to create a new composable is via the Mission Platform Developer MCP tool:
+The fastest way to create a new composable is via the `scaffold_composable` tool on a connected Mission Platform
+Developer MCP server. This is an MCP tool-call example, not a shell command:
 
-```bash
+```text
 # Example: Creating a new 'use-click-outside' composable in the 'observers' package
 scaffold_composable(name="use-click-outside", package="observers", apply=true)
 ```

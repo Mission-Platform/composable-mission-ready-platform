@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flint.dev/schemas/sonir-module.v1.json",
+  "title": "FlintSoNModule",
+  "description": "Schema definition for serialized Flint Sea-of-Nodes intermediate representation modules.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "compilerVersion",
+    "languageVersion",
+    "abiVersion",
+    "sourceHash",
+    "graphHash",
+    "optimization",
+    "boundsChecks",
+    "memoryModel",
+    "functions",
+    "nodes",
+    "regions",
+    "sourceMap"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "compilerVersion": {
+      "type": "string"
+    },
+    "languageVersion": {
+      "type": "string"
+    },
+    "abiVersion": {
+      "type": "string"
+    },
+    "sourceHash": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8,64}$"
+    },
+    "graphHash": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8,64}$"
+    },
+    "optimization": {
+      "type": "string",
+      "enum": ["debug", "release"]
+    },
+    "boundsChecks": {
+      "type": "string",
+      "enum": ["runtime", "proven-safe", "excluded-by-profile"]
+    },
+    "memoryModel": {
+      "type": "string",
+      "const": "region-arc-checked-linear"
+    },
+    "functions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/FlintSoNFunction"
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/FlintSoNNode"
+      }
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/FlintSoNControlRegion"
+      }
+    },
+    "sourceMap": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/FlintSoNSourceMapEntry"
+      }
+    },
+    "optimizationReport": {
+      "$ref": "#/$defs/FlintSoNOptimizationReport"
+    }
+  },
+  "$defs": {
+    "FlintSourceSpan": {
+      "type": "object",
+      "required": ["start", "end", "line", "column", "endLine", "endColumn"],
+      "additionalProperties": false,
+      "properties": {
+        "start": { "type": "integer", "minimum": 0 },
+        "end": { "type": "integer", "minimum": 0 },
+        "line": { "type": "integer", "minimum": 1 },
+        "column": { "type": "integer", "minimum": 1 },
+        "endLine": { "type": "integer", "minimum": 1 },
+        "endColumn": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "FlintSoNFunction": {
+      "type": "object",
+      "required": ["name", "entry", "exported"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "entry": { "type": "integer", "minimum": 0 },
+        "exported": { "type": "boolean" }
+      }
+    },
+    "FlintSoNEffect": {
+      "type": "string",
+      "enum": [
+        "pure",
+        "read",
+        "write",
+        "call",
+        "control",
+        "allocation",
+        "unknown"
+      ]
+    },
+    "FlintSoNAliasFact": {
+      "type": "string",
+      "enum": ["none", "local", "borrowed", "mutable", "unknown"]
+    },
+    "FlintSoNOwnershipFact": {
+      "type": "string",
+      "enum": ["value", "borrowed", "owned", "shared", "unknown"]
+    },
+    "FlintSoNNode": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "functionName",
+        "inputs",
+        "effects",
+        "alias",
+        "ownership"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "integer", "minimum": 0 },
+        "kind": { "type": "string" },
+        "functionName": { "type": "string" },
+        "inputs": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0 }
+        },
+        "effects": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/FlintSoNEffect" }
+        },
+        "alias": { "$ref": "#/$defs/FlintSoNAliasFact" },
+        "ownership": { "$ref": "#/$defs/FlintSoNOwnershipFact" },
+        "type": { "type": "string" },
+        "value": {
+          "type": ["boolean", "number", "string"]
+        },
+        "callee": { "type": "string" },
+        "span": { "$ref": "#/$defs/FlintSourceSpan" }
+      }
+    },
+    "FlintSoNControlRegion": {
+      "type": "object",
+      "required": ["id", "functionName", "kind", "nodes"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "integer", "minimum": 0 },
+        "functionName": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": ["function", "block", "branch", "loop", "switch"]
+        },
+        "parent": { "type": "integer", "minimum": 0 },
+        "nodes": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "FlintSoNSourceMapEntry": {
+      "type": "object",
+      "required": ["node", "span"],
+      "additionalProperties": false,
+      "properties": {
+        "node": { "type": "integer", "minimum": 0 },
+        "span": { "$ref": "#/$defs/FlintSourceSpan" }
+      }
+    },
+    "FlintSoNPassReport": {
+      "type": "object",
+      "required": ["name", "applied", "skipped"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "constant-propagation",
+            "copy-propagation",
+            "global-value-numbering",
+            "cfg-simplification",
+            "dead-node-elimination",
+            "reachability-pruning",
+            "purity-analysis",
+            "inlining",
+            "escape-analysis",
+            "switch-density",
+            "bounds-proof"
+          ]
+        },
+        "applied": { "type": "integer", "minimum": 0 },
+        "skipped": { "type": "integer", "minimum": 0 },
+        "reason": { "type": "string" }
+      }
+    },
+    "FlintSoNOptimizationReport": {
+      "type": "object",
+      "required": [
+        "mode",
+        "passes",
+        "nodesBefore",
+        "nodesAfter",
+        "graphHashBefore",
+        "graphHashAfter"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["debug", "release"]
+        },
+        "passes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/FlintSoNPassReport" }
+        },
+        "nodesBefore": { "type": "integer", "minimum": 0 },
+        "nodesAfter": { "type": "integer", "minimum": 0 },
+        "graphHashBefore": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{8,64}$"
+        },
+        "graphHashAfter": { "type": "string", "pattern": "^[0-9a-fA-F]{8,64}$" }
+      }
+    }
+  }
+}

@@ -2,7 +2,7 @@
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> packages/forge-figma/docs/index.md: [packages/forge-figma/docs/index.md](../../index.md)
+> packages/compiler/figma/forge-figma/docs/index.md: [packages/compiler/figma/forge-figma/docs/index.md](../../index.md)
 > اللغة: العربية (ar)
 
 نموذج تصميم Figma المحايد للإطار، وتعيينات مكونات Forge، ودقة الرمز المميز، وعقود التصدير.

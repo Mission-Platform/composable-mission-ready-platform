@@ -27,16 +27,16 @@ Gancho IntersectionObserver neutral en el marco de trabajo.
 Observa cambios en la intersección de un elemento objetivo con un antepasado
 elemento o con la ventana gráfica de un documento de nivel superior.
 
-Seguro para SSR: no funciona cuando la API o DOM del navegador no están disponibles.
+Seguro para SSR: no funciona cuando la API o DOM del navegador no está disponible.
 Limpieza automática: desconecta el observador al desmontar.
 
 #### Parámetros
 
-| Nombre                | Tipo                         | Descripción |
-| --------------------- | ---------------------------- | ----------- |
-| objetivo              | MpRef<Element \| null>       |             |
+| Nombre | Tipo | Descripción |
+| -------- | ---------------------------- | ----------- |
+| objetivo | MpRef<Element \| null> |             |
 | devolución de llamada | IntersecciónObserverCallback |             |
-| opciones              | IntersecciónObserverInit     |             |
+| opciones | IntersecciónObserverInit |             |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -55,16 +55,16 @@ function useMutationObserver(
 Gancho MutationObserver neutral en el marco de trabajo.
 Vigila los cambios que se realizan en el árbol DOM.
 
-Seguro para SSR: no funciona cuando la API o DOM del navegador no están disponibles.
+Seguro para SSR: no funciona cuando la API o DOM del navegador no está disponible.
 Limpieza automática: desconecta el observador al desmontar.
 
 #### Parámetros
 
-| Nombre                | Tipo                              | Descripción |
-| --------------------- | --------------------------------- | ----------- |
-| objetivo              | MpRef<Node \| null>               |             |
+| Nombre | Tipo | Descripción |
+| -------- | -------------------- | ----------- |
+| objetivo | MpRef<Node \| null> |             |
 | devolución de llamada | Devolución de llamada de mutación |             |
-| opciones              | MutaciónObserverInit              |             |
+| opciones | MutaciónObserverInit |             |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -85,7 +85,7 @@ Limpieza automática: desconecta el observador al desmontar.
 
 #### Parámetros
 
-| Nombre                | Tipo                        | Descripción |
-| --------------------- | --------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| -------- | --------------------------- | ----------- |
 | devolución de llamada | PerformanceObserverCallback |             |
-| opciones              | PerformanceObserverInit     |             |
+| opciones | PerformanceObserverInit |             |

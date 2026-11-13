@@ -3,10 +3,7 @@ import { dirname, join, resolve } from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import {
-  createFlintCompilerService,
-  resolveFlintModuleGraph,
-} from '../../../../flint/core/dist/index.js';
+import { createFlintCompilerService, resolveFlintModuleGraph } from '../../../../flint/core/dist/index.js';
 
 type RawString = readonly [pointer: number, length: number];
 
@@ -25,7 +22,8 @@ function loadTree(directory: string, files: Record<string, string>): void {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     const fileName = join(directory, entry.name);
     if (entry.isDirectory()) loadTree(fileName, files);
-    else if (entry.name.endsWith('.fws') || entry.name.endsWith('.flint')) files[resolve(fileName)] = readFileSync(fileName, 'utf8');
+    else if (entry.name.endsWith('.fws') || entry.name.endsWith('.flint'))
+      files[resolve(fileName)] = readFileSync(fileName, 'utf8');
   }
 }
 

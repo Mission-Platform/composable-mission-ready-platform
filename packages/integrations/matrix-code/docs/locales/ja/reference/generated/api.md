@@ -19,7 +19,8 @@
 function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 ```
 
-`ForgeMatrixCode` — スキャン可能な 2D マトリックス バーコード (データ マトリックス ECC) をレンダリングします。200)、中立的な JSX 方言で一度作成され、React に直接コンパイルされます。
+`ForgeMatrixCode` — スキャン可能な 2D マトリックス バーコード (データ マトリックス ECC) をレンダリングします。
+200)、中立的な JSX 方言で一度作成され、React に直接コンパイルされます。
 または `@mission-platform/vite-plugin-forge` による Vue。
 
 ペイロード (`value`) は、クライアント上で完全にエンコードされます。
@@ -49,9 +50,9 @@ Rust で書かれ、WebAssembly にコンパイルされた依存関係のない
 
 #### パラメータ
 
-| 名前       | タイプ                             | 説明 |
-| ---------- | ---------------------------------- | ---- |
-| プロパティ | 読み取り専用<MatrixCodeProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<MatrixCodeProperties> |             |
 
 ### マトリックスコードアクション
 
@@ -102,72 +103,3 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 ```
 
 コードの各モジュールを描画するために使用される形状。
-
-## `src/encoder/index`
-
-### エンコードマトリックス
-
-**種類:** 関数
-
-```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
-```
-
-`data` を指定された `symbology` の 2D マトリックス バーコードにエンコードし、
-最初の使用時にエンコーダ アーティファクトを同期的に鍛造します。
-
-#### パラメータ
-
-| 名前   | タイプ     | 説明 |
-| ------ | ---------- | ---- |
-| 記号論 | 行列記号学 |      |
-| データ | 文字列     |      |
-
-#### 契約
-
-- **@throws:** ペイロードがシンボルに対して無効な場合 (空、または
-  サポートされているシンボルに対して大きすぎます)。
-
-### encodeMatrixAsync
-
-**種類:** 関数
-
-```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
-```
-
-`data` を指定された `symbology` の 2D マトリックス バーコードにエンコードし、
-最初の使用時にエンコーダ アーティファクトを非同期的に鍛造します。
-
-#### パラメータ
-
-| 名前   | タイプ     | 説明 |
-| ------ | ---------- | ---- |
-| 記号論 | 行列記号学 |      |
-| データ | 文字列     |      |
-
-#### 契約
-
-- **@throws:** ペイロードがシンボルに対して無効な場合。
-
-### マトリックスコード
-
-**種類:** インターフェース
-
-```typescript
-export interface MatrixCode
-```
-
-パックされたマトリックス バーコード: 次元とモジュール ビットの行優先リスト
-(`0` = 明るい、`1` = 暗い)。
-
-### 行列記号学
-
-**種類：**タイプ
-
-```typescript
-export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
-```
-
-このエンコーダがサポートする 2D マトリックス シンボル。最初の引数として渡されます
-{@link encodeMatrix} / {@link encodeMatrixAsync} に。

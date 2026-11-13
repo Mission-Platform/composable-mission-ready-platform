@@ -24,8 +24,8 @@ y gestiona un contexto WebGL Three.js a través de `useThree`.
 
 #### Parámetros
 
-| Nombre      | Tipo                                     | Descripción |
-| ----------- | ---------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------------ | ----------- |
 | propiedades | Sólo lectura<ForgeThreeCanvasProperties> |             |
 
 ### ForgeThreeCanvasProperties
@@ -69,7 +69,7 @@ Limpieza automática: elimina el renderizador y cancela el cuadro de animación 
 
 #### Parámetros
 
-| Nombre           | Tipo                                              | Descripción |
-| ---------------- | ------------------------------------------------- | ----------- |
-| lienzoReferencia | ReferenciaMe gusta<HTMLCanvasElement \| null>     |             |
-| listo            | (contexto: ThreeContext) => vacío \| (() => nulo) |             |
+| Nombre | Tipo | Descripción |
+| --------------- | ----------------------------------------------- | ----------- |
+| lienzoReferencia | ReferenciaMe gusta<HTMLCanvasElement \| null> |             |
+| listo | (contexto: ThreeContext) => vacío \| (() => nulo) |             |

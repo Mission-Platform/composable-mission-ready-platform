@@ -32,7 +32,7 @@ function createVCard(options: VCardOptions): VCard;
 **النوع:** ثابت
 
 ```typescript
-export const parseVCard;
+export const parseVCard: typeof readVCard;
 ```
 
 الاسم المستعار للمتصلين الذين يفضلون مصطلحات المحلل اللغوي.
@@ -616,7 +616,7 @@ export interface ICalendarProperty
 **النوع:** ثابت
 
 ```typescript
-export const parseICalendar;
+export const parseICalendar: typeof readICalendar;
 ```
 
 لم يتم تقديم أي وصف.
@@ -642,7 +642,7 @@ function readICalendar(source: string): ICalendar;
 **النوع:** ثابت
 
 ```typescript
-export const serializeICalendar;
+export const serializeICalendar: typeof writeICalendar;
 ```
 
 لم يتم تقديم أي وصف.

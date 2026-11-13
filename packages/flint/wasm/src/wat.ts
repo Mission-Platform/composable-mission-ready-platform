@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/prefer-switch, unicorn/prefer-single-call */
-
 import type {
   FlintWasmExpression,
   FlintWasmModule,

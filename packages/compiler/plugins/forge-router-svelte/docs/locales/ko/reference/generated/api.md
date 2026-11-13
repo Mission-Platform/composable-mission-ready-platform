@@ -27,16 +27,16 @@ SvelteKit 기본 요소에서 중립 기능을 구축합니다(테스트용 프�
 
 #### 매개변수
 
-| 이름 | 유형                                                                                                                                                                          | 설명 |
-| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| 입력 | { 페이지: { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; 해결 경로?: (경로: 문자열) => 문자열; } |      |
+| 이름 | 유형 | 설명 |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| 입력 | { 페이지: { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; 해결 경로?: (경로: 문자열) => 문자열; } |             |
 
 ### MP링크
 
 **종류:** 구성요소
 
 ```typescript
-export const MpLink;
+export MpLink = 'a'
 ```
 
 SvelteKit은 링크에 일반 앵커를 사용합니다. 컴파일러는 이 마커를 다음과 같이 유지합니다.
@@ -47,7 +47,7 @@ Svelte 출력은 패키지 작성자의 중립 `MpLink` 사용을 유형 확인�
 **종류:** 구성요소
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Outlet은 SvelteKit에서 애플리케이션 소유입니다. 기능 진단에서는 `view`을 거부합니다.
@@ -64,9 +64,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 에   | MpRouteLocationRaw |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------------------ | ----------- |
+| 에 | MpRouteLocationRaw |             |
 
 ### setForgeSvelteKitRouter
 
@@ -81,9 +81,9 @@ function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void;
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 표면 | SvelteKitRouterSurface |      |
+| 이름 | 유형 | 설명 |
+| ------- | ---------------------- | ----------- |
+| 표면 | SvelteKitRouterSurface |             |
 
 ### SvelteKitRouterSurface
 
@@ -110,9 +110,9 @@ SvelteKit 페이지 스냅샷에서 중립 위치를 구축하세요.
 
 #### 매개변수
 
-| 이름   | 유형                                                                                    | 설명 |
-| ------ | --------------------------------------------------------------------------------------- | ---- |
-| 페이지 | { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>; 매개변수: Record<string, string>; } |      |
+| 이름 | Type                                                                                  | 설명 |
+| ---- | ------------------------------------------------------------------------------------- | ----------- |
+| 페이지 | { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>; 매개변수: Record<string, string>; } |             |
 
 ### toSvelteHref
 
@@ -126,10 +126,10 @@ SvelteKit 탐색을 위한 중립 대상을 직렬화합니다.
 
 #### 매개변수
 
-| 이름      | 유형                     | 설명 |
-| --------- | ------------------------ | ---- |
-| 에        | MpRouteLocationRaw       |      |
-| 해결 경로 | (경로: 문자열) => 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ----------- | ------------------------ | ----------- |
+| 에 | MpRouteLocationRaw |             |
+| 해결 경로 | (경로: 문자열) => 문자열 |             |
 
 ### useMpNavigation
 

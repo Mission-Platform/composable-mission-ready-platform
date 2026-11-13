@@ -2,10 +2,10 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> packages/flint-lsp/docs/reference/language-service.md: [packages/flint-lsp/docs/reference/language-service.md](../../../reference/language-service.md)
+> packages/flint/lsp/docs/reference/language-service.md: [packages/flint/lsp/docs/reference/language-service.md](../../../reference/language-service.md)
 > Lingua: Italiano (it)
 
-Flint (`.flint`) dispone di un servizio linguistico indipendente dall'editor, un stdio
+Flint (`.flint`) dispone di un servizio linguistico indipendente dall'editor, stdio
 Server Language Server Protocol (LSP) e un adattatore Monaco rivolto al browser.
 Tutti e tre utilizzano il contratto eseguibile Flint v1 da
 `@mission-platform/flint`, quindi diagnostica, intervalli di origine, simboli,
@@ -15,7 +15,7 @@ validatore.
 Il contratto linguistico supportato è la **versione 1.0** e il contratto ABI lo è
 **versione 1.2**. Gli strumenti lo fanno
 non modificare la grammatica, l'output del compilatore, l'ABI o il Rust and
-Integrazioni AssemblyScript. Vedere [Forgia WebScript v1](../../../../../flint/docs/locales/it/reference/language.md)
+Integrazioni AssemblyScript. Vedere [Flint v1](../../../../../flint/docs/reference/language.md)
 per la lingua e riferimento ABI.
 
 ## Caratteristiche e confini
@@ -30,7 +30,7 @@ Il servizio linguistico attualmente prevede:
 - completamento per parole chiave Forge, tipi primitivi, dichiarazioni, locali,
   tipi aggregati, tipi generici, funzioni, stringhe di proprietà del compilatore e espressioni regolari
   funzioni, alias di capacità e nomi di capacità inventariati dall'host;
-- passa il mouse sulle informazioni per dichiarazioni, parametri, locali, chiamate e
+- informazioni al passaggio del mouse per dichiarazioni, parametri, locali, chiamate e
   la capacità viene importata quando l'AST identifica il simbolo, incluso l'aggregato
   tipi, tipi generici, chiamate alla libreria standard di proprietà del compilatore e rendering
   documentazione per funzioni definite dal codice sorgente; e
@@ -107,10 +107,10 @@ Adds one to a value.
 ```
 
 Il completamento per `add` porta con sé la stessa stringa di documentazione
-dettaglio/firma. I paragrafi e i tag descrittivi sono separati da righe vuote;
+dettaglio/firma. I paragrafi descrittivi e i tag sono separati da righe vuote;
 l'ordine dei tag, i tag duplicati e i tag sconosciuti vengono conservati. La sintassi principale e
 regole di normalizzazione, inclusa l'associazione della funzione e il soggetto supportato
-moduli, sono specificati in [il riferimento del linguaggio FWS](../../../../../flint/docs/locales/it/reference/language.md).
+moduli, sono specificati nel [riferimento del linguaggio FWS](../../../../../flint/docs/reference/language.md).
 
 La documentazione è costituita solo da metadati informativi. Non modifica la diagnostica,
 controllo del tipo, risoluzione delle funzioni, dichiarazioni generate, firme ABI,
@@ -240,7 +240,7 @@ il server rimane responsabile dei token semantici e di tutto il comportamento de
 Le cartelle dell'area di lavoro vengono inviate in `initialize` come URI `file:`, preservando
 contratto di root dell'area di lavoro e di isolamento del percorso del server.
 
-Configura l'interno nelle impostazioni VS Code (o `settings.json`):
+Configura l'estensione nelle impostazioni VS Code (o `settings.json`):
 
 ```json
 {
@@ -256,7 +256,7 @@ più recente. Lasciare vuoto `flint.serverPath` per utilizzare il server in pacc
 impostarlo su un percorso assoluto o su un percorso relativo alla prima cartella dell'area di lavoro
 per testare un `dist/main.js` creato localmente o fornito dal progetto. Ulteriori
 gli argomenti vengono passati dopo il punto di ingresso del server. Utilizzare `messages` o `verbose`
-per il tracciamento LSP; gli errori di avvio vengono scritti nel **Flint
+per il tracciamento LSP; gli errori di avvio vengono scritti nel file **Flint
 Canale di output del Language Server** e visualizzato come errore dell'editor.
 
 Per lo sviluppo locale da questo repository:
@@ -296,7 +296,7 @@ riconoscere i file `.flint`.
 
 Il plugin mappa `*.flint` sull'ID lingua `fws` e avvia uno stdio condiviso
 server per il progetto. La configurazione di IntelliJ è fornita esclusivamente da
-**Impostazioni | Strumenti | Forgia script web**; non esiste una sceneggiatura del progetto o Flora
+**Impostazioni | Strumenti | Selce**; non esiste una sceneggiatura del progetto o Flora
 percorso di configurazione. Configura:
 
 - **Node.js eseguibile** — Node 24 o successivo; il valore predefinito è `node`.
@@ -378,7 +378,7 @@ non supportato.
   aggiungendo un comportamento specifico dell'editor.
 
 Il client deve inviare le cartelle dell'area di lavoro come URI `file:` quando supportato. Il
-il server utilizza prima le cartelle dell'area di lavoro e poi ritorna a `rootUri`; se nessuno dei due lo è
+il server utilizza prima le cartelle dell'area di lavoro e poi ricorre a `rootUri`; se nessuno dei due lo è
 a condizione che l'host del filesystem non abbia root e possa servire solo già aperto
 documenti.
 
@@ -459,19 +459,19 @@ Il server LSP pubblica `source: "flint"`. La fase e il suggerimento sono
 incluso anche nell'oggetto diagnostico `data`. Tipiche famiglie di codici stabili
 sono:
 
-| Famiglia di codici | Fase         | Significato                                                                                                                 |
-| ------------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| `FLINT-LEX-*`      | `lex`        | Caratteri/escape non validi, terminatori di riga di stringhe non elaborate o stringhe/commenti di blocco senza terminazione |
-| `FLINT-PARSE-*`    | `parse`      | Sintassi di modulo, dichiarazione, istruzione o espressione non valida                                                      |
-| `FLINT-TYPE-*`     | `type-check` | Tipi, nomi, operatori, argomenti o risultati non validi                                                                     |
-| `FLINT-ABI-*`      | `abi`        | Nomi duplicati, funzionalità, esportazioni o importazioni negate                                                            |
+| Famiglia di codici | Fase | Significato |
+| --------------- | ------------ | ----------------------------------------------------------------------------------------------- |
+| `FLINT-LEX-*` | `lex` | Caratteri/escape non validi, terminatori di riga di stringhe non elaborate o stringhe/commenti di blocco senza terminazione |
+| `FLINT-PARSE-*` | `parse` | Sintassi di modulo, dichiarazione, istruzione o espressione non valida |
+| `FLINT-TYPE-*` | `type-check` | Tipi, nomi, operatori, argomenti o risultati non validi |
+| `FLINT-ABI-*` | `abi` | Nomi duplicati, funzionalità, esportazioni o importazioni negate |
 
 L'input non valido viene ancora tokenizzato e analizzato laddove consentito dal ripristino del parser
 esso. Ad esempio, un'origine non valida può produrre `FLINT-PARSE-017` pur conservando
 token lessicali utilizzabili e informazioni parziali sui simboli. I client dovrebbero visualizzare
 l'intervallo e il codice forniti anziché il testo diagnostico corrispondente.
 
-La lessificazione di stringhe accetta solo escape compatibili con JSON (`\\`, `\"`, `\/`, `\b`,
+Il lessing delle stringhe accetta solo escape compatibili con JSON (`\\`, `\"`, `\/`, `\b`,
 `\f`, `\n`, `\r`, `\t` e `\uXXXX`). Terminatori di riga non elaborati, escape non validi,
 e le barre rovesciate finali producono diagnosi lessicali (`FLINT-LEX-004` o
 `FLINT-LEX-005`). Gli intervalli lexer e diagnostici sono limitati dalla lunghezza dell'origine;
@@ -557,10 +557,10 @@ marcatori e la relativa istanza del servizio linguistico di proprietà.
 
 ## LSP rispetto agli spazi di lavoro del browser
 
-| Consumatore     | Implementazione dell'area di lavoro       | Limite root/sicurezza                                                               | Trasporti             |
-| --------------- | ----------------------------------------- | ----------------------------------------------------------------------------------- | --------------------- |
-| Node Client LSP | `RootBoundedFlintWorkspaceHost`           | Root del filesystem configurato canonicamente; le letture esterne vengono rifiutate | stdio LSP             |
-| Monaco/browser  | Applicazione fornita `FlintWorkspaceHost` | L'host decide quali URI/file/opzioni esporre; nessun presupposto sul filesystem     | Adattatore in-process |
+| Consumatore | Implementazione dell'area di lavoro | Limite root/sicurezza | Trasporti |
+| --------------- | ----------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
+| Node Client LSP | `RootBoundedFlintWorkspaceHost` | Root del filesystem configurato canonicamente; le letture esterne vengono rifiutate | stdio LSP |
+| Monaco/browser | Applicazione fornita `FlintWorkspaceHost` | L'host decide quali URI/file/opzioni esporre; nessun presupposto sul filesystem | Adattatore in-process |
 
 Entrambi gli adattatori utilizzano gli stessi contratti di servizio linguistico e la stessa semantica di analisi,
 ma non condividono un archivio o un trasporto di documenti. Un host del browser non deve
@@ -596,7 +596,7 @@ pnpm --filter @mission-platform/content build:check
 ```
 
 I comandi lint e format del contenuto a livello di pacchetto controllano anche CSS/SCSS non correlati
-file; un errore limitato a quei file esistenti non è uno script Web Forge
+file; un errore limitato ai file esistenti non è un problema di Flint
 regressione degli strumenti linguistici. Le aspettative del dispositivo linguistico autorevole
 rimangono in `../../../flint/src/fixtures/bootstrap.ts` e il
-[riferimento linguistico](../../../../../flint/docs/locales/it/reference/language.md).
+[riferimento linguistico](../../../../../flint/docs/reference/language.md).

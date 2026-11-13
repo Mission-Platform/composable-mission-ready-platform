@@ -9,188 +9,71 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/qr-code`.
 
-## `src/encoder/index`
+## `src/components/molecules/forge-qr-code/forge-qr-code`
 
-### coderenMicroQr
-
-**Soort:** functie
-
-```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-Codeer `text` in een **Micro QR Code**-matrix (ISO/IEC 18004), waardoor
-de WebAssembly-encoder synchroon bij het eerste gebruik.
-
-De kleinste montageversie (M1–M4, 11×11 tot 17×17) wordt automatisch gekozen.
-Micro QR ondersteunt alleen foutcorrectieniveaus `L`, `M` en `Q`; verzoeken
-`H` gooit altijd (geen enkele Micro QR-versie biedt dit).
-
-#### Parameters
-
-| Naam          | Typ              | Beschrijving |
-| ------------- | ---------------- | ------------ |
-| tekst         | tekenreeks       |              |
-| foutCorrectie | QrErrorCorrectie |              |
-
-#### Contract
-
-- **@throws:** als de tekst te lang is voor een Micro QR-versie op de
-  gekozen niveau (inclusief eventuele aanvragen voor niveau `H`).
-
-### coderenMicroQrAsync
+### ForgeQrCode
 
 **Soort:** functie
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
+function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement;
 ```
 
-Codeer `text` in een **Micro QR Code**-matrix, waardoor de WebAssembly wordt geïnstantieerd
-encoder asynchroon bij het eerste gebruik. Zie {@link encodeMicroQr}.
+`ForgeQrCode` — geeft een scanbare QR-code weer, één keer geschreven in de neutrale JSX
+dialect en rechtstreeks gecompileerd naar React of Vue door
+`@mission-platform/vite-plugin-forge`.
+
+De payload (`value`) wordt volledig op de client gecodeerd door de
+`@mission-platform/qr-code`-encoders — afhankelijkheidsvrije encoders geschreven
+Roest en gecompileerd naar WebAssembly (automatische versieselectie, laagste straf
+datamasker) — en getekend als een scherpe, resolutie-onafhankelijke SVG. De `variant`
+prop kiest de symboliek: een standaard vierkante QR-code ({@link encodeQr},
+`'qr'`, de standaard), een compacte vierkante Micro QR-code
+({@link encodeMicroQr}, `'micro'`), of een brede rechthoekige Micro QR/rMQR-code
+({@link encodeRmqr}, `'rmqr'`). Voor al het donker wordt een enkele `<path>` uitgezonden
+modules, zodat de opmaak compact blijft, zelfs voor grote codes. Voor betrouwbaar
+het scannen van de donkere/lichte kleuren is standaard solid zwart op wit in plaats van
+thematokens, maar beide kunnen worden overschreven via `color` / `background`.
+
+Modules en zoeker(oog)patronen kunnen worden getekend als vierkanten, afgeronde vierkanten,
+of punten (`moduleShape` / `finderShape`); de donkere vulling accepteert een twee-stop
+lineair of radiaal `gradient`; en een optioneel midden `logo` wordt over a heen gelegd
+achterplaat (koppel deze met `errorCorrection: 'H'` zodat de code nog steeds wordt gescand).
+
+Een optionele actiewerkbalk (ingeschakeld via `showActions` — `true` voor elke
+knop, of een {@link QrCodeActions}-object om ze afzonderlijk te kiezen) let
+gebruikers **sla de code op als een PNG-afbeelding**, **kopieer de afbeelding naar het klembord**,
+en **kopieer de gecodeerde waarde naar het klembord**. De PNG wordt gerasterd op de
+client door de gerenderde SVG op een canvas te tekenen.
+
+Vervangingen van de originele Vue SFC: de `computed`-weergave wordt de
+neutraal {@link useMemo}; de `error`-uitzending wordt de `onError`-callback-prop
+(wordt aangeroepen wanneer de codering mislukt, waarbij de uitzending van het origineel vanuit de
+berekend). Het is eigenaar van de stijl via de naast elkaar geplaatste CSS-module
+`forge-qr-code.module.scss`.
 
 #### Parameters
 
-| Naam          | Typ              | Beschrijving |
-| ------------- | ---------------- | ------------ |
-| tekst         | tekenreeks       |              |
-| foutCorrectie | QrErrorCorrectie |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<QrCodeProperties> |             |
 
-#### Contract
-
-- **@throws:** als de tekst te lang is voor een Micro QR-versie op de
-  gekozen niveau (inclusief eventuele aanvragen voor niveau `H`).
-
-### coderenQr
-
-**Soort:** functie
-
-```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
-```
-
-Codeer `text` in een QR-codematrix op het gegeven foutcorrectieniveau,
-het synchroon instantiëren van de WebAssembly-encoder bij het eerste gebruik.
-
-#### Parameters
-
-| Naam          | Typ              | Beschrijving |
-| ------------- | ---------------- | ------------ |
-| tekst         | tekenreeks       |              |
-| foutCorrectie | QrErrorCorrectie |              |
-
-#### Contract
-
-- **@throws:** als de tekst te lang is om in de grootste (versie
-
-40. QR-code op het gekozen foutcorrectieniveau.
-
-### codeerQrAsync
-
-**Soort:** functie
-
-```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
-```
-
-Codeer `text` in een QR-codematrix op het gegeven foutcorrectieniveau,
-het asynchroon instantiëren van de WebAssembly-encoder bij het eerste gebruik.
-
-#### Parameters
-
-| Naam          | Typ              | Beschrijving |
-| ------------- | ---------------- | ------------ |
-| tekst         | tekenreeks       |              |
-| foutCorrectie | QrErrorCorrectie |              |
-
-#### Contract
-
-- **@throws:** als de tekst te lang is om in de grootste (versie
-
-40. QR-code op het gekozen foutcorrectieniveau.
-
-### coderenRmqr
-
-**Soort:** functie
-
-```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-Codeer `text` in een **Rechthoekige Micro QR (rMQR) Code**-matrix
-(ISO/IEC 23941), waarbij de WebAssembly-encoder eerst synchroon wordt geïnstantieerd
-gebruik.
-
-Er wordt gekozen voor de kleinste pasversie (van de 32 maten van R7×43 t/m R17×139)
-automatisch. rMQR ondersteunt alleen de foutcorrectieniveaus `M` en `H`, dus
-`L`/`M` wordt toegewezen aan `M` en `Q`/`H` wordt toegewezen aan `H`.
-
-#### Parameters
-
-| Naam          | Typ              | Beschrijving |
-| ------------- | ---------------- | ------------ |
-| tekst         | tekenreeks       |              |
-| foutCorrectie | QrErrorCorrectie |              |
-
-#### Contract
-
-- **@throws:** als de tekst te lang is voor een rMQR-versie op de
-  gekozen niveau.
-
-### coderenRmqrAsync
-
-**Soort:** functie
-
-```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
-```
-
-Codeer `text` in een **Rechthoekige Micro QR (rMQR) Code**-matrix,
-het asynchroon instantiëren van de WebAssembly-encoder bij het eerste gebruik. Zie
-{@link encodeRmqr}.
-
-#### Parameters
-
-| Naam          | Typ              | Beschrijving |
-| ------------- | ---------------- | ------------ |
-| tekst         | tekenreeks       |              |
-| foutCorrectie | QrErrorCorrectie |              |
-
-#### Contract
-
-- **@throws:** als de tekst te lang is voor een rMQR-versie op de
-  gekozen niveau.
-
-## `src/types`
-
-### CompactQrMatrix
+### QrCodeActies
 
 **Soort:** interface
 
 ```typescript
-export interface CompactQrMatrix
+export interface QrCodeActions
 ```
 
-Een gecodeerde compacte QR-variant - een Micro QR of Rectangular Micro QR (rMQR)
-Codeer. In tegenstelling tot {@link QrMatrix} kunnen deze rechthoekig zijn, dus het raster is dat ook
-beschreven door expliciete `width`/`height` in plaats van een enkele `size`.
+Welke actieknoppen de werkbalk toont. `true` maakt ze allemaal mogelijk.
 
-### QrErrorCorrectie
-
-**Soort:** type
-
-```typescript
-export type QrErrorCorrection = 'L' | 'M' | 'Q' | 'H';
-```
-
-Foutcorrectieniveau: hogere niveaus tolereren meer schade, maar bevatten minder gegevens.
-
-### QRMatrix
+### QrCode-eigenschappen
 
 **Soort:** interface
 
 ```typescript
-export interface QrMatrix
+export interface QrCodeProperties
 ```
 
-Een gedecodeerde/gecodeerde QR-code: een vierkant raster van donkere (`true`) modules.
+Geen beschrijving opgegeven.

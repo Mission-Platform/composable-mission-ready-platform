@@ -9,18 +9,19 @@ Questa guida spiega come utilizzare i pacchetti Mission Platform in progetti sit
 
 ## Selezione del quadro tramite condizioni
 
-I componenti Mission Platform vengono creati una volta utilizzando `@mission-platform/forge-jsx` e distribuiti come più bundle specifici del framework (Vue 3, React, Solid e componenti Web) all'interno di un singolo pacchetto.
+I componenti Mission Platform vengono creati una volta utilizzando `@mission-platform/forge-jsx` e distribuiti come più bundle specifici del framework (Vue 3, React, Solid, Svelte e componenti Web) all'interno di un singolo pacchetto.
 
 Per selezionare il pacchetto corretto, è necessario configurare lo strumento di creazione e TypeScript per utilizzare le **Condizioni di esportazione personalizzate**.
 
 ### Condizioni quadro supportate
 
-| Quadro             | Condizione di esportazione |
-| :----------------- | :------------------------- |
-| **Vue 3**          | `mp:vue`                   |
-| **React**          | `mp:react`                 |
-| **Solid**          | `mp:solid`                 |
-| **Componenti Web** | `mp:web-component`         |
+| Quadro | Condizione di esportazione |
+| :----------------- | :----------------- |
+| **Vue 3** | `mp:vue` |
+| **React** | `mp:react` |
+| **Solid** | `mp:solid` |
+| **Svelte** | `mp:svelte` |
+| **Componenti Web** | `mp:web-component` |
 
 ## Configurazione del progetto
 
@@ -183,4 +184,4 @@ Mission Platform utilizza le proprietà personalizzate CSS (variabili) per i tok
 }
 ```
 
-Tutti i componenti di Mission Platform utilizzano queste variabili, quindi le modifiche a livello `:root` si propagheranno all'intera interfaccia utente.
+Tutti i componenti di Mission Platform utilizzano queste variabili, quindi le modifiche a livello `:root` si propagheranno nell'intera interfaccia utente.

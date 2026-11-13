@@ -17,7 +17,7 @@ pnpm add --save-dev @mission-platform/i18n-config
 ```
 
 로케일 소스를 소유한 작업공간 옆에 보관하세요. 추출 쓰기
-소유 작업공간 아래의 네임스페이스 번들 `locales/<locale>/` 예배 규칙서;
+소유 작업공간의 `locales/<locale>/` 디렉토리 아래 네임스페이스 번들
 저장소 수준 명령은 구성된 모든 작업 영역을 조정합니다.
 
 ## 기여하다

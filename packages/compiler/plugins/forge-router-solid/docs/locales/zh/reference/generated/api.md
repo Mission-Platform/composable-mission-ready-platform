@@ -24,36 +24,36 @@ function createSolidRouterCapabilities(input: {
 }): MpRouterCapabilities;
 ```
 
-从 Solid 路由器原语构建中立功能（无需框架进行测试）。
+从 Solid 路由器原语构建中立功能（无框架测试）。
 
 #### 参数
 
-| 名称 | 类型                                                                                                                                          | 描述 |
-| ---- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| 输入 | { 位置：{ 路径名：字符串；搜索：字符串；哈希：字符串}； 参数？：Record<string, string \| undefined>； 导航：SolidNavigate； 出口？： 未知； } |      |
+|名称 |类型 |描述 |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|输入 | { 位置：{ 路径名：字符串；搜索：字符串；哈希：字符串}；参数？：Record<string, string \| undefined>；导航：SolidNavigate；出口？： 未知； } |             |
 
 ### 普联
 
 **种类：**组件
 
 ```typescript
-function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
+export function MpLink(properties:
 ```
 
 Solid 通过 {@link setForgeSolidRouter} 绑定锚组件代理。
 
 #### 参数
 
-| 名称 | 类型                                                                           | 描述 |
-| ---- | ------------------------------------------------------------------------------ | ---- |
-| 属性 | { href?: 字符串; 到？：MpRouteLocationRaw； 孩子？： 未知； 替换？：布尔值； } |      |
+|名称 |类型 |描述 |
+| ---------- | ---------------------------------------------------------------------------------- | ----------- |
+|属性 | { href?: 字符串;到？：MpRouteLocationRaw；孩子？： 未知；替换？：布尔值； } |             |
 
 ### MpRouterView
 
 **种类：**组件
 
 ```typescript
-function MpRouterView(): unknown;
+export function MpRouterView(): unknown;
 ```
 
 Solid 出口代理通过 {@link setForgeSolidRouter} 绑定。
@@ -70,9 +70,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### 参数
 
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 至   | MpRouteLocation原始 |      |
+|名称 |类型 |描述 |
+| ---- | ------------------ | ----------- |
+|至 | MpRouteLocation原始|             |
 
 ### setForgeSolidRouter
 
@@ -87,9 +87,9 @@ function setForgeSolidRouter(surface: SolidRouterSurface): void;
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 表面 | 实体路由器表面 |      |
+|名称 |类型 |描述 |
+| ------- | ------------------ | ----------- |
+|表面|实体路由器表面 |             |
 
 ### 实体路由器表面
 
@@ -108,7 +108,7 @@ export interface SolidRouterSurface
 ```typescript
 function toMpLocationFromSolid(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
@@ -116,10 +116,10 @@ function toMpLocationFromSolid(
 
 #### 参数
 
-| 名称 | 类型                                           | 描述 |
-| ---- | ---------------------------------------------- | ---- |
-| 地点 | { 路径名：字符串；搜索：字符串；哈希：字符串 } |      |
-| 参数 | 记录<string, string \| undefined>              |      |
+|名称 |类型 |描述 |
+| ---------- | -------------------------------------------------- | ----------- |
+|地点 | { 路径名：字符串；搜索：字符串；哈希：字符串 } |             |
+|参数|记录<string, string \| undefined> |             |
 
 ### 到SolidHref
 
@@ -133,9 +133,9 @@ function toSolidHref(to: MpRouteLocationRaw): string;
 
 #### 参数
 
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 至   | MpRouteLocation原始 |      |
+|名称 |类型 |描述 |
+| ---- | ------------------ | ----------- |
+|至 | MpRouteLocation原始|             |
 
 ### 使用Mp导航
 

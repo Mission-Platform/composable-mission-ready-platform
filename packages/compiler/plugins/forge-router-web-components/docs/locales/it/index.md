@@ -72,5 +72,5 @@ all'implementazione nativa del target:
 ```
 
 Per i componenti Web, utilizzare il contratto `loadingFallback` della presa del router
-transizioni di percorso; non lo è alcun runtime del framework o intercettazione dell'ancora globale
+transizioni di percorso; nessun runtime del framework o intercettazione dell'ancora globale lo è
 richiesto.

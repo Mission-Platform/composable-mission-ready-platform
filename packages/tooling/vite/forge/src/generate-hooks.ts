@@ -10,6 +10,9 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 
+import type { CompilerDiagnostic, FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
+import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
+
 import { createForgeGenerationContext, type ForgeGenerationContext } from './compiler/generation-context.js';
 import { readNeutralImports } from './compiler/imports.js';
 
@@ -22,8 +25,6 @@ import type {
   ForgePathAliases,
 } from './compiler/graph.js';
 import type { ForgeCompilerService } from './compiler/service.js';
-import type { CompilerDiagnostic, FrameworkOutputPlugin, JsxFramework } from '@mission-platform/forge-plugin-api';
-import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 import type { Plugin } from 'vite';
 
 /** Options for {@link generateHookLibrarySources}. */

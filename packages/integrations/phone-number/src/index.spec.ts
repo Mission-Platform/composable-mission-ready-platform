@@ -6,7 +6,7 @@ import {
   PhoneNumberFormat,
   PhoneNumberType,
   type PhoneNumberUtil,
-} from './index';
+} from '.';
 
 let util: PhoneNumberUtil;
 

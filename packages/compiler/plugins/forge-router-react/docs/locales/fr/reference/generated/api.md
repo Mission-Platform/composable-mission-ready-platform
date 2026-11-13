@@ -28,9 +28,9 @@ Créez des capacités neutres à partir des primitives du routeur React (sans cr
 
 #### Paramètres
 
-| Nom    | Tapez                                                                                                                                                                                           | Descriptif |
-| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| entrée | { emplacement : { chemin : chaîne ; recherche : chaîne ; hachage : chaîne } ; paramètres ? : Record<string, string \| undefined> ; naviguer : NavigateFunction ; point de vente ? : inconnu ; } |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| entrée | { emplacement : { chemin : chaîne ; recherche : chaîne ; hachage : chaîne } ; paramètres ? : Record<string, string \| undefined> ; naviguer : NavigateFunction ; point de vente ? : inconnu ; } |             |
 
 ### résoudreMpLink
 
@@ -44,9 +44,9 @@ Résolvez une cible neutre en une chaîne href.
 
 #### Paramètres
 
-| Nom | Tapez              | Descriptif |
-| --- | ------------------ | ---------- |
-| à   | MpRouteLocationRaw |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
 
 ### versMpLocationFromReact
 
@@ -55,7 +55,7 @@ Résolvez une cible neutre en une chaîne href.
 ```typescript
 function toMpLocationFromReact(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
@@ -63,10 +63,10 @@ Créez un emplacement neutre à partir des instantanés d'emplacement/paramètre
 
 #### Paramètres
 
-| Nom         | Tapez                                                       | Descriptif |
-| ----------- | ----------------------------------------------------------- | ---------- |
-| emplacement | { chemin : chaîne ; recherche : chaîne ; hachage : chaîne } |            |
-| paramètres  | Enregistrement<string, string \| undefined>                 |            |
+| Nom | Tapez | Descriptif |
+| ---------- | -------------------------------------------------- | ----------- |
+| emplacement | { chemin : chaîne ; recherche : chaîne ; hachage : chaîne } |             |
+| paramètres | Enregistrement<string, string \| undefined> |             |
 
 ### toReactHref
 
@@ -80,9 +80,9 @@ Sérialisez une cible neutre dans une chaîne href.
 
 #### Paramètres
 
-| Nom | Tapez              | Descriptif |
-| --- | ------------------ | ---------- |
-| à   | MpRouteLocationRaw |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
 
 ### àRéagirÀ
 
@@ -96,9 +96,9 @@ Convertissez une cible neutre en une valeur `To` du routeur React.
 
 #### Paramètres
 
-| Nom | Tapez              | Descriptif |
-| --- | ------------------ | ---------- |
-| à   | MpRouteLocationRaw |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 

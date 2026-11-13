@@ -58,7 +58,7 @@ export const MP_ROUTER_COMPILER_MARKER;
 **النوع:** مكون
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor;
+export function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 علامة الارتباط المحايدة. تحل الأهداف الأصلية محل هذه الوظيفة أثناء الترجمة.
@@ -154,7 +154,7 @@ export type MpRouterCapabilityOverrides = Partial<MpRouterCapabilities>;
 **النوع:** مكون
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
+export function MpRouterView(properties: MpRouterViewProps =
 ```
 
 مخرج/علامة عرض محايدة. تحل الأهداف الأصلية محل هذه الوظيفة أثناء الترجمة.
@@ -244,7 +244,11 @@ function useMpRouter(): MpRouterCapabilities;
 **النوع:** ثابت
 
 ```typescript
-export const applicationCompatibilityFixtures;
+export const applicationCompatibilityFixtures: {
+  readonly website: ForgeCompatibilityFixture;
+  readonly myCareNotes: ForgeCompatibilityFixture;
+  readonly guardsAndLazy: ForgeCompatibilityFixture;
+};
 ```
 
 لم يتم تقديم أي وصف.

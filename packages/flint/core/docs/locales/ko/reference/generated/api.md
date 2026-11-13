@@ -9,947 +9,45 @@
 
 `@mission-platform/flint`의 공개 소스 선언에서 생성됩니다.
 
-## `src/analysis/analyze`
-
-### analyzeFlint
-
-**종류:** 기능
-
-```typescript
-function analyzeFlint(frontend: FlintFrontendResult, options: FlintAnalysisOptions = {}): FlintAnalysisReport;
-```
-
-하나의 프런트엔드 결과에 대해 등록된 소스 분석 규칙을 실행합니다.
-
-#### 매개변수
-
-| 이름       | 유형                | 설명 |
-| ---------- | ------------------- | ---- |
-| 프론트엔드 | FlintFrontendResult |      |
-| 옵션       | FlintAnalytic옵션   |      |
-
-## `src/analysis/context`
-
-### createFlintAnalyticContext
-
-**종류:** 기능
-
-```typescript
-function createFlintAnalysisContext(
-  frontend: FlintFrontendResult,
-  options: FlintAnalysisOptions = {},
-): FlintAnalysisContext;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름       | 유형                | 설명 |
-| ---------- | ------------------- | ---- |
-| 프론트엔드 | FlintFrontendResult |      |
-| 옵션       | FlintAnalytic옵션   |      |
-
-## `src/analysis/contracts`
-
-### FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
-```
-
-소스 분석 진단 제품군을 위해 예약된 안정적인 접두사입니다.
-
-### Flint분석CallGraphNode
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisCallGraphNode
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석능력사실
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisCapabilityFact
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석범주
-
-**종류:** 유형
-
-```typescript
-export type FlintAnalysisCategory = 'type' | 'control-flow' | 'memory' | 'ownership' | 'security' | 'resource';
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintAnalyticContext
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisContext
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석ControlFlowFact
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisControlFlowFact
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석증거
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisEvidence
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석사실
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisFacts
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석찾기
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisFinding
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석한계
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisLimits
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석옵션
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisOptions
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석소유권사실
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisOwnershipFact
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석정책
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisPolicy
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석 프로필
-
-**종류:** 유형
-
-```typescript
-export type FlintAnalysisProfile = 'development' | 'strict';
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석RangeFact
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisRangeFact
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석보고서
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisReport
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석자원사실
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisResourceFact
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석규칙
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisRule
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석심각도
-
-**종류:** 유형
-
-```typescript
-export type FlintAnalysisSeverity = FlintDiagnosticSeverity;
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석소스파일
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisSourceFile
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석소스맵
-
-**종류:** 유형
-
-```typescript
-export type FlintAnalysisSourceMap = readonly FlintAnalysisSourceMapEntry[];
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintAnalyticSourceMapEntry
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisSourceMapEntry
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintAnalyticTypeFact
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisTypeFact
-```
-
-설명이 제공되지 않았습니다.
-
-## `src/analysis/default-rules`
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly FlintAnalysisRule[];
-```
-
-설명이 제공되지 않았습니다.
-
-## `src/analysis/facts`
-
-### createFlintAnalyticFacts
-
-**종류:** 기능
-
-```typescript
-function createFlintAnalysisFacts(frontend: FlintFrontendResult): FlintAnalysisFacts;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름       | 유형                | 설명 |
-| ---------- | ------------------- | ---- |
-| 프론트엔드 | FlintFrontendResult |      |
-
-## `src/analysis/policy`
-
-### createFlintAnalyticPolicy
-
-**종류:** 기능
-
-```typescript
-function createFlintAnalysisPolicy(policy: FlintAnalysisOptionsLike = {}): FlintAnalysisPolicy;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름 | 유형                     | 설명 |
-| ---- | ------------------------ | ---- |
-| 정책 | FlintAnalyticOptionsLike |      |
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: FlintAnalysisLimits;
-```
-
-설명이 제공되지 않았습니다.
-
-### FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-설명이 제공되지 않았습니다.
-
-### FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint분석옵션좋아요
-
-**종류:** 유형
-
-```typescript
-export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limits'> &
-```
-
-설명이 제공되지 않았습니다.
-
-### isFlint분석찾기차단
-
-**종류:** 기능
-
-```typescript
-function isFlintAnalysisFindingBlocking(finding: FlintAnalysisFinding, policy: FlintAnalysisPolicy): boolean;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름 | 유형                | 설명 |
-| ---- | ------------------- | ---- |
-| 찾기 | Flint분석찾기       |      |
-| 정책 | FlintAnalyticPolicy |      |
-
-## `src/analysis/registry`
-
-### createFlintAnalyticRuleRegistry
-
-**종류:** 기능
-
-```typescript
-function createFlintAnalysisRuleRegistry(
-  rules: readonly FlintAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
-): FlintAnalysisRuleRegistry;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 규칙 | 읽기 전용 FlintAnalyticRule[] |      |
-
-### Flint분석규칙레지스트리
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAnalysisRuleRegistry
-```
-
-설명이 제공되지 않았습니다.
-
-## `src/analysis/report`
-
-### createFlint분석진단
-
-**종류:** 기능
-
-```typescript
-function createFlintAnalysisDiagnostic(finding: FlintAnalysisFinding): FlintDiagnostic;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름 | 유형          | 설명 |
-| ---- | ------------- | ---- |
-| 찾기 | Flint분석찾기 |      |
-
-## `src/ast`
-
-### FlintArrayLiteralExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintArrayLiteralExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintAssignmentStatement
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAssignmentStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintBinaryExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintBinaryExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintBinaryOperator
-
-**종류:** 유형
-
-```typescript
-export type FlintBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintCallExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintCallExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint기능가져오기
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintCapabilityImport
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint문서화
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintDocumentation
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint설명서태그
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintDocumentationTag
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintDoWhile문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintDoWhileStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintEnum선언
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintEnumDeclaration
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintEnumValueExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintEnumValueExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintEnumVariant
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintEnumVariant
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintExpression
-
-**종류:** 유형
-
-```typescript
-export type FlintExpression =
-  | FlintBinaryExpression
-  | FlintCallExpression
-  | FlintIdentifierExpression
-  | FlintLiteralExpression
-  | FlintFunctionValueExpression
-  | FlintStructValueExpression
-  | FlintEnumValueExpression
-  | FlintArrayLiteralExpression
-  | FlintVectorLiteralExpression
-  | FlintIndexExpression
-  | FlintMatchExpression
-  | FlintUnaryExpression;
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintExpression문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintExpressionStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintForStatement
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintForStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint 함수
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintFunction
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintFunctionValueExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintFunctionValueExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint일반 매개변수
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintGenericParameter
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIdentifierExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIdentifierExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIf문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIfStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIndexExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIndexExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint인터페이스선언
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintInterfaceDeclaration
-```
-
-컴파일 타임 구조 계약 런타임 표현이 없습니다.
-
-### Flint인터페이스함수
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintInterfaceFunction
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIteratorLoop문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIteratorLoopStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintLet문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintLetStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintLiteralExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintLiteralExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintMatchArm
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintMatchArm
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintMatchExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintMatchExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintMatchStatement
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintMatchStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint모듈
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintModule
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint소유권
-
-**종류:** 유형
-
-```typescript
-export type FlintOwnership = 'borrowed' | 'owned' | 'shared';
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint매개변수
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintParameter
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint패턴
-
-**종류:** 유형
-
-```typescript
-export type FlintPattern = |
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintPrimitiveType
-
-**종류:** 유형
-
-```typescript
-export type FlintPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintReturn문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintReturnStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintSource모듈가져오기
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintSourceModuleImport
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint문
-
-**종류:** 유형
-
-```typescript
-export type FlintStatement =
-  | FlintExpressionStatement
-  | FlintAssignmentStatement
-  | FlintIfStatement
-  | FlintLetStatement
-  | FlintMatchStatement
-  | FlintSwitchStatement
-  | FlintReturnStatement
-  | FlintForStatement
-  | FlintDoWhileStatement
-  | FlintWhileStatement
-  | FlintYieldStatement
-  | FlintIteratorLoopStatement;
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintStruct선언
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintStructDeclaration
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintStructField
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintStructField
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintStructValueExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintStructValueExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintSwitchCase
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintSwitchCase
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintSwitch문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintSwitchStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint유형이름
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintTypeName
-```
-
-설명이 제공되지 않았습니다.
-
-### flintTypeNameToString
-
-**종류:** 기능
-
-```typescript
-function flintTypeNameToString(type: FlintTypeName): string;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름 | 유형          | 설명 |
-| ---- | ------------- | ---- |
-| 유형 | Flint유형이름 |      |
-
-### FlintUnaryExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintUnaryExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintVectorLiteralExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintVectorLiteralExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintWhile문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintWhileStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintYield문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintYieldStatement
-```
-
-설명이 제공되지 않았습니다.
-
 ## `src/cache`
 
-### FlintCacheLogger
+### 플린트캐시인덱스
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintCacheIndex
+```
+
+오래된 정리를 활성화하기 위해 모듈 전체에서 활성 아티팩트를 추적하는 지속적인 캐시 매니페스트입니다.
+
+### 플린트캐시인덱스항목
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintCacheIndexEntry
+```
+
+특정 모듈 키에 대한 캐시된 파일 및 타임스탬프를 추적하는 인덱스 항목입니다.
+
+### flintCacheIndexPath
+
+**종류:** 기능
+
+```typescript
+function flintCacheIndexPath(cache: FlintWatCache): string;
+```
+
+캐시 인덱스 파일 `.flint-cache-index.json`에 대한 경로를 반환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 캐시 | 플린트왓캐시 |             |
+
+### 플린트캐시로거
 
 **종류:** 인터페이스
 
@@ -957,7 +55,7 @@ export interface FlintYieldStatement
 export interface FlintCacheLogger
 ```
 
-설명이 제공되지 않았습니다.
+캐싱 작업 및 캐시 적중/실패를 위한 진단 로거 인터페이스입니다.
 
 ### FlintDebugArtifactPaths
 
@@ -967,7 +65,7 @@ export interface FlintCacheLogger
 export interface FlintDebugArtifactPaths
 ```
 
-설명이 제공되지 않았습니다.
+컴파일 중에 생성된 지속형 디버그 아티팩트에 대한 파일 경로입니다.
 
 ### FlintDebugArtifactVariant
 
@@ -977,9 +75,27 @@ export interface FlintDebugArtifactPaths
 export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 ```
 
-설명이 제공되지 않았습니다.
+내보낸 디버그 아티팩트에 대한 최적화 변형 식별자입니다.
 
-### FlintWatCache
+### flintSoNPath
+
+**종류:** 기능
+
+```typescript
+function flintSoNPath(cache: FlintWatCache, key: string, variant: 'optimized' | 'unoptimized' = 'optimized'): string;
+```
+
+지정된 캐시 키 및 변형에 대한 SonIR JSON 아티팩트의 경로를 반환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ---------------------------- | ----------- |
+| 캐시 | 플린트왓캐시 |             |
+| 키 | 문자열 |             |
+| 변형 | '최적화' \| '최적화되지 않음' |             |
+
+### 플린트왓캐시
 
 **종류:** 인터페이스
 
@@ -987,9 +103,9 @@ export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 export interface FlintWatCache
 ```
 
-설명이 제공되지 않았습니다.
+컴파일러 아티팩트 및 WAT 출력을 위한 파일 시스템 또는 메모리 내 캐시 제공자입니다.
 
-### flintWatCacheKey
+### 부싯돌Wat캐시키
 
 **종류:** 기능
 
@@ -997,15 +113,15 @@ export interface FlintWatCache
 function flintWatCacheKey(input: FlintWatCacheKeyInput): string;
 ```
 
-설명이 제공되지 않았습니다.
+컴파일 요청에 대한 결정적 캐시 키를 계산합니다.
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 입력 | FlintWatCacheKeyInput |      |
+| 이름 | 유형 | 설명 |
+| ----- | --------------------- | ----------- |
+| 입력 | FlintWatCacheKeyInput |             |
 
-### FlintWatCacheKey입력
+### 플린트Wat캐시키입력
 
 **종류:** 인터페이스
 
@@ -1013,9 +129,9 @@ function flintWatCacheKey(input: FlintWatCacheKeyInput): string;
 export interface FlintWatCacheKeyInput
 ```
 
-설명이 제공되지 않았습니다.
+결정적 컴파일 캐시 키를 계산하는 데 사용되는 입력 매개변수입니다.
 
-### flintWatPath
+### 부싯돌WatPath
 
 **종류:** 기능
 
@@ -1023,16 +139,16 @@ export interface FlintWatCacheKeyInput
 function flintWatPath(cache: FlintWatCache, key: string): string;
 ```
 
-설명이 제공되지 않았습니다.
+지정된 캐시 키에 대한 WAT 파일의 경로를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형          | 설명 |
-| ---- | ------------- | ---- |
-| 캐시 | FlintWatCache |      |
-| 키   | 문자열        |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 캐시 | 플린트왓캐시 |             |
+| 키 | 문자열 |             |
 
-### persistFlintDebugArtifacts
+### 지속플린트디버그아티팩트
 
 **종류:** 기능
 
@@ -1049,17 +165,41 @@ function persistFlintDebugArtifacts(
 ): FlintDebugArtifactPaths;
 ```
 
-설명이 제공되지 않았습니다.
+디버그 아티팩트(최적화 및 최적화되지 않은 WAT 및 Wasm)를 디스크에 유지합니다.
 
 #### 매개변수
 
-| 이름 | 유형                                                                                                                                                    | 설명 |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| 캐시 | FlintWatCache \| 정의되지 않음                                                                                                                          |      |
-| 키   | 문자열                                                                                                                                                  |      |
-| 유물 | { 읽기 전용 OptimizeWat?: 문자열; 읽기 전용 최적화되지 않은Wat?: 문자열; 읽기 전용optimizedWasm?: Uint8Array; 읽기 전용 unoptimizedWasm?: Uint8Array; } |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| 캐시 | FlintWatCache \| 정의되지 않음 |             |
+| 키 | 문자열 |             |
+| 유물 | { 읽기 전용 OptimizeWat?: 문자열; 읽기 전용 최적화되지 않은Wat?: 문자열; 읽기 전용optimizedWasm?: Uint8Array; 읽기 전용 unoptimizedWasm?: Uint8Array; } |             |
 
-### persistFlintWat
+### 지속플린트SoN
+
+**종류:** 기능
+
+```typescript
+function persistFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  module: FlintSoNModule,
+  variant: 'optimized' | 'unoptimized' = 'optimized',
+): string | undefined;
+```
+
+캐시 디렉터리의 디스크에 SonIR 모듈을 유지합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ---------------------------- | ----------- |
+| 캐시 | FlintWatCache \| 정의되지 않음 |             |
+| 키 | 문자열 |             |
+| 모듈 | 플린트소N모듈 |             |
+| 변형 | '최적화' \| '최적화되지 않음' |             |
+
+### 지속플린트와트
 
 **종류:** 기능
 
@@ -1067,19 +207,433 @@ function persistFlintDebugArtifacts(
 function persistFlintWat(cache: FlintWatCache | undefined, key: string, wat: string): string | undefined;
 ```
 
-설명이 제공되지 않았습니다.
+캐시 디렉터리의 디스크에 WAT 문자열을 유지합니다.
 
 #### 매개변수
 
-| 이름 | 유형                           | 설명 |
-| ---- | ------------------------------ | ---- |
-| 캐시 | FlintWatCache \| 정의되지 않음 |      |
-| 키   | 문자열                         |      |
-| 와트 | 문자열                         |      |
+| 이름 | 유형 | 설명 |
+| ----- | -------------------------- | ----------- |
+| 캐시 | FlintWatCache \| 정의되지 않음 |             |
+| 키 | 문자열 |             |
+| 와트 | 문자열 |             |
 
-## `src/compiler`
+### 가지치기고아플린트캐시파일
 
-### 컴파일Flint
+**종류:** 기능
+
+```typescript
+function pruneOrphanedFlintCacheFiles(cache: FlintWatCache | undefined): readonly string[];
+```
+
+캐시 디렉터리에서 분리된 임시 및 색인화되지 않은 캐시 파일을 정리합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | -------------------------- | ----------- |
+| 캐시 | FlintWatCache \| 정의되지 않음 |             |
+
+### 가지치기부실플린트캐시
+
+**종류:** 기능
+
+```typescript
+function pruneStaleFlintCache(
+  cache: FlintWatCache | undefined,
+  moduleIdOrPath: string,
+  currentKey: string,
+  newFiles: readonly string[],
+): void;
+```
+
+캐시 키가 변경되면 지정된 모듈 ID에 대해 오래되고 캐시된 아티팩트를 정리합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------------- | -------------------------- | ----------- |
+| 캐시 | FlintWatCache \| 정의되지 않음 |             |
+| 모듈 ID 또는 경로 | 문자열 |             |
+| 현재키 | 문자열 |             |
+| 새파일 | 읽기 전용 문자열[] |             |
+
+### 읽기플린트캐시 인덱스
+
+**종류:** 기능
+
+```typescript
+function readFlintCacheIndex(cache: FlintWatCache | undefined): FlintCacheIndex | undefined;
+```
+
+디스크에서 캐시 인덱스를 읽고 구문 분석하며, 누락되거나 형식이 잘못된 경우 정의되지 않은 값을 반환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | -------------------------- | ----------- |
+| 캐시 | FlintWatCache \| 정의되지 않음 |             |
+
+### 읽기플린트SoN
+
+**종류:** 기능
+
+```typescript
+function readFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  expected?: {
+    readonly compilerVersion?: string;
+    readonly languageVersion?: string;
+    readonly abiVersion?: string;
+    readonly sourceHash?: string;
+    readonly graphHash?: string;
+    readonly optimization?: 'debug' | 'release';
+    readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
+    readonly memoryModel?: 'region-arc-checked-linear';
+  },
+): FlintSoNModule | undefined;
+```
+
+디스크에서 SonIR 모듈을 읽고 역직렬화합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| 캐시 | FlintWatCache \| 정의되지 않음 |             |
+| 키 | 문자열 |             |
+| 예상 | { 읽기 전용 컴파일러 버전?: 문자열; 읽기 전용 언어 버전?: 문자열; 읽기 전용 abiVersion?: 문자열; 읽기 전용 sourceHash?: 문자열; 읽기 전용 graphHash?: 문자열; 읽기 전용 최적화?: '디버그' \| '풀어 주다'; 읽기 전용boundsChecks?: '런타임' \| '안전성이 입증된' \| '프로필에 의해 제외됨'; 읽기 전용 memoryModel?: 'region-arc-checked-linear'; } |             |
+
+## `src/compiler/backend`
+
+### 유물검증진단
+
+**종류:** 기능
+
+```typescript
+function artifactVerificationDiagnostic(diagnostic: FlintWasmArtifactVerificationDiagnostic): FlintDiagnostic;
+```
+
+Wasm 아티팩트 확인 진단을 표준 컴파일러 진단으로 변환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------------------- | ----------- |
+| 진단 | FlintWasmArtifact검증진단 |             |
+
+### 동적링크메타데이터
+
+**종류:** 기능
+
+```typescript
+function dynamicLinkMetadata(manifest: FlintAbiManifest, artifactId: string): FlintDynamicLinkMetadata | undefined;
+```
+
+매니페스트에 동적 링크 모드로 표시된 모듈에 대한 동적 링크 메타데이터를 계산합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------- | ----------- |
+| 매니페스트 | FlintAbi매니페스트 |             |
+| 인공물 ID | 문자열 |             |
+
+### 인코더
+
+**종류:** 상수
+
+```typescript
+export const encoder;
+```
+
+설명이 제공되지 않았습니다.
+
+### FlintBackend컴파일 결과
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintBackendCompilationResult
+```
+
+WebAssembly 백엔드 코드 생성에서 반환된 결과 구조입니다.
+
+### 해시바이트
+
+**종류:** 기능
+
+```typescript
+function hashBytes(bytes: Uint8Array): string;
+```
+
+16진수 문자열로 반환된 지정된 바이트 배열의 32비트 FNV-1a 해시를 계산합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---------- | ----------- |
+| 바이트 | Uint8Array |             |
+
+### 소스HashForArtifact
+
+**종류:** 기능
+
+```typescript
+function sourceHashForArtifact(source: string, fileName: string): string;
+```
+
+주석이 아닌 토큰 스트림에서 아티팩트에 대한 정규화된 소스 해시를 계산합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 출처 | 문자열 |             |
+| 파일 이름 | 문자열 |             |
+
+### verifyBackendArtifact
+
+**종류:** 기능
+
+```typescript
+function verifyBackendArtifact(input: {
+  readonly wasm: Uint8Array;
+  readonly unoptimizedWasm?: Uint8Array;
+  readonly fileName: string;
+  readonly manifest: FlintAbiManifest;
+  readonly metadata: Parameters<typeof compileFlintWasm>[0]['metadata'];
+  readonly targetFeatures?: Parameters<typeof verifyFlintWasmArtifact>[0]['targetFeatures'];
+  readonly featureRequirements?: FlintWasmFeatureRequirements;
+  readonly iteratorExports?: readonly FlintIteratorExport[];
+  readonly expectedContentHash: string;
+  readonly expectedSourceHash: string;
+  readonly esmSource: string;
+  readonly profile: 'strict' | 'development';
+  readonly allowedCapabilities?: readonly string[];
+}): {
+  readonly verificationDiagnostics: readonly FlintDiagnostic[];
+  readonly artifactVerification: FlintArtifactVerificationReport;
+};
+```
+
+정책, 대상 기능 및 매니페스트 제약 조건에 대해 백엔드 WebAssembly 아티팩트를 확인합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| 입력 | { 읽기 전용 wasm: Uint8Array; 읽기 전용 unoptimizedWasm?: Uint8Array; 읽기 전용 파일 이름: 문자열; 읽기 전용 매니페스트: FlintAbiManifest; 읽기 전용 메타데이터: 매개변수<typeof compileFlintWasm>[0]['metadata']; 읽기 전용 targetFeatures?: 매개변수<typeof verifyFlintWasmArtifact>[0]['targetFeatures']; 읽기 전용 featureRequirements?: FlintWasmFeatureRequirements; 읽기 전용 iteratorExports?: 읽기 전용 FlintIteratorExport[]; 읽기 전용 예상ContentHash: 문자열; 읽기 전용 예상SourceHash: 문자열; 읽기 전용 esmSource: 문자열; 읽기 전용 프로필: 'strict' \| '개발'; 읽기 전용 allowedCapability?: 읽기 전용 문자열[]; } |             |
+
+## `src/compiler/declarations`
+
+### create선언
+
+**종류:** 기능
+
+```typescript
+function createDeclarations(manifest: FlintAbiManifest): string;
+```
+
+컴파일된 Flint 매니페스트에 대한 전체 TypeScript 선언 파일 콘텐츠를 생성합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ---------------- | ----------- |
+| 매니페스트 | FlintAbi매니페스트 |             |
+
+### 선언함수
+
+**종류:** 기능
+
+```typescript
+function declarationFunction(
+  declaration: FlintAbiFunction,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+ABI 함수 선언에 대한 TypeScript 함수 서명을 생성합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ------------------- | ----------- |
+| 선언 | 플린트Abi기능 |             |
+| 열거형 이름 | 읽기전용Set<string> |             |
+| 레코드이름 | 읽기전용Set<string> |             |
+
+### 선언속성
+
+**종류:** 기능
+
+```typescript
+function declarationProperty(name: string): string;
+```
+
+식별자를 안전한 속성 이름 또는 JSON 인용 문자열로 형식화합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 이름 | 문자열 |             |
+
+### 선언기록
+
+**종류:** 기능
+
+```typescript
+function declarationRecord(
+  declarations: readonly FlintAbiFunction[],
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+입력된 ABI 내보내기 레코드에 대해 TypeScript 정의를 내보냅니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------ | --------------------------- | ----------- |
+| 선언 | 읽기 전용 FlintAbiFunction[] |             |
+| 열거형 이름 | 읽기전용Set<string> |             |
+| 레코드이름 | 읽기전용Set<string> |             |
+
+### 선언 유형
+
+**종류:** 기능
+
+```typescript
+function declarationType(
+  value: string | FlintAbiParameter,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+Flint ABI 매개변수 또는 유형 이름을 TypeScript 선언 유형에 매핑합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | --------------------------- | ----------- |
+| 가치 | 문자열 \| FlintAbi매개변수 |             |
+| 열거형 이름 | 읽기전용Set<string> |             |
+| 레코드이름 | 읽기전용Set<string> |             |
+
+### rawDeclaration함수
+
+**종류:** 기능
+
+```typescript
+function rawDeclarationFunction(declaration: FlintAbiFunction): string;
+```
+
+문자열 및 바이트에 대한 포인터/길이 확장을 사용하여 하위 수준 원시 함수 서명을 생성합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ---------------- | ----------- |
+| 선언 | 플린트Abi기능 |             |
+
+### rawDeclaration레코드
+
+**종류:** 기능
+
+```typescript
+function rawDeclarationRecord(declarations: readonly FlintAbiFunction[]): string;
+```
+
+원시 WebAssembly 내보내기 레코드에 대한 TypeScript 정의를 내보냅니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------ | --------------------------- | ----------- |
+| 선언 | 읽기 전용 FlintAbiFunction[] |             |
+
+### rawDeclarationType
+
+**종류:** 기능
+
+```typescript
+function rawDeclarationType(value: FlintPrimitiveType | FlintAbiParameter): string;
+```
+
+ABI 매개변수 또는 기본 유형을 TypeScript의 원시 WebAssembly 매개변수 유형에 매핑합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | --------------------------------------- | ----------- |
+| 가치 | FlintPrimitiveType \| FlintAbi매개변수 |             |
+
+## `src/compiler/esm`
+
+### bytesToBase64
+
+**종류:** 기능
+
+```typescript
+function bytesToBase64(bytes: Uint8Array): string;
+```
+
+바이트 배열을 표준 Base64 문자열로 인코딩합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---------- | ----------- |
+| 바이트 | Uint8Array |             |
+
+### createEsmSource
+
+**종류:** 기능
+
+```typescript
+function createEsmSource(
+  wasm: Uint8Array,
+  manifest: FlintAbiManifest,
+  iteratorExports: readonly FlintIteratorExport[] = [],
+  dynamicMetadata?: FlintDynamicLinkMetadata,
+): string;
+```
+
+내장된 WebAssembly 및 런타임 어댑터가 포함된 ESM 로더 모듈 문자열을 생성합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------------- | ------------------------------ | ----------- |
+| 와즘 | Uint8Array |             |
+| 매니페스트 | FlintAbi매니페스트 |             |
+| iteratorExports | 읽기 전용 FlintIteratorExport[] |             |
+| 동적메타데이터 | FlintDynamicLink메타데이터 |             |
+
+## `src/compiler/module`
+
+### 분석옵션
+
+**종류:** 기능
+
+```typescript
+function analysisOptions(input: FlintCompileInput): FlintAnalysisOptions;
+```
+
+컴파일 입력 및 정책 설정에서 정적 분석 옵션을 확인합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ----------------- | ----------- |
+| 입력 | 플린트컴파일입력 |             |
+
+### 컴파일플린트
 
 **종류:** 기능
 
@@ -1087,15 +641,66 @@ function persistFlintWat(cache: FlintWatCache | undefined, key: string, wat: str
 function compileFlint(input: FlintCompileInput): FlintArtifact;
 ```
 
-설명이 제공되지 않았습니다.
+Flint 소스 문자열을 WebAssembly 및 런타임 아티팩트로 컴파일합니다.
 
 #### 매개변수
 
-| 이름 | 유형             | 설명 |
-| ---- | ---------------- | ---- |
-| 입력 | Flint컴파일 입력 |      |
+| 이름 | 유형 | 설명 |
+| ----- | ----------------- | ----------- |
+| 입력 | 플린트컴파일입력 |             |
 
-### compileFlintSeed
+### 컴파일플린트그래프
+
+**종류:** 기능
+
+```typescript
+function compileFlintGraph(input: FlintGraphCompileInput): FlintArtifact;
+```
+
+다중 모듈 Flint 모듈 그래프를 통합 WebAssembly 아티팩트로 컴파일합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---------------------- | ----------- |
+| 입력 | 플린트그래프컴파일입력 |             |
+
+### 컴파일플린트모듈
+
+**종류:** 기능
+
+```typescript
+function compileFlintModule(
+  input: FlintCompileInput,
+  frontend: FlintFrontendResult,
+  graphMetadata: Pick<
+    FlintArtifact,
+    'graphHash' | 'linkMode' | 'linkedModules' | 'linkProfile' | 'optimizationProfile'
+  > = {},
+  sourceFiles: readonly string[] = frontend.sourceFiles,
+): FlintArtifact;
+```
+
+분석된 단일 Flint 모듈을 WebAssembly로 컴파일하고 ESM 로더 아티팩트를 합성합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| 입력 | 플린트컴파일입력 | - 모듈 컴파일 입력 사양.                  |
+| 프론트엔드 | 플린트프런트엔드결과 | - 프론트엔드 컴파일러 결과를 준비했습니다.                       |
+| 그래프메타데이터 | 선택< FlintArtifact, 'graphHash' \| '링크모드' \| '링크된 모듈' \| '링크프로필' \| '최적화 프로필' > | - 모듈 그래프 연결에서 전파되는 선택적 메타데이터.  |
+| 소스파일 | 읽기 전용 문자열[] | - 이 컴파일 단위에 기여하는 소스 파일 경로입니다. |
+
+#### 계약
+
+- **@param:** - 모듈 컴파일 입력 사양입니다.
+- **@param:** - 준비된 프런트엔드 컴파일러 결과입니다.
+- **@param:** - 모듈 그래프 연결에서 전파되는 선택적 메타데이터입니다.
+- **@param:** - 이 컴파일 단위에 기여하는 소스 파일 경로입니다.
+- **@returns:** 바이너리, 선언 및 보고서를 포함하는 완전한 컴파일된 아티팩트입니다.
+
+### 컴파일FlintSeed
 
 **종류:** 기능
 
@@ -1103,14 +708,13 @@ function compileFlint(input: FlintCompileInput): FlintArtifact;
 function compileFlintSeed(input: FlintCompileInput): FlintArtifact;
 ```
 
-고정될 때까지 자체 호스팅 부트스트랩에서 사용되는 제한된 TypeScript 시드
-포인트 패리티는 FWS 컴파일러를 일반 프런트엔드 소유자로 승격시킵니다.
+프런트엔드 AST를 준비하고 결과 모듈을 컴파일하여 Flint 시드 입력을 컴파일합니다.
 
 #### 매개변수
 
-| 이름 | 유형             | 설명 |
-| ---- | ---------------- | ---- |
-| 입력 | Flint컴파일 입력 |      |
+| 이름 | 유형 | 설명 |
+| ----- | ----------------- | ----------- |
+| 입력 | 플린트컴파일입력 |             |
 
 ### createFlint컴파일러
 
@@ -1120,7 +724,76 @@ function compileFlintSeed(input: FlintCompileInput): FlintArtifact;
 function createFlintCompiler(): FlintCompiler;
 ```
 
-설명이 제공되지 않았습니다.
+Flint 컴파일러의 인스턴스를 만듭니다.
+
+#### 계약
+
+- **@returns:** 구성된 컴파일러 인스턴스입니다.
+
+### runSelfHostedStage
+
+**종류:** 기능
+
+```typescript
+function runSelfHostedStage(
+  input: Pick<FlintCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  options: FlintCompilerServiceOptions,
+): {
+  readonly report?: FlintSelfHostedStageReport;
+  readonly stageReports?: readonly FlintSelfHostedStageReport[];
+  readonly diagnostic?: FlintDiagnostic;
+};
+```
+
+자체 호스팅 컴파일러 단계를 실행하고 예상 지문에 대해 패리티 보고서의 유효성을 검사합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+| 입력 | Pick<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+| 옵션 | 플린트컴파일러서비스옵션 |             |
+
+### selfHosted진단
+
+**종류:** 기능
+
+```typescript
+function selfHostedDiagnostic(
+  input: Pick<FlintCompileInput, 'fileName'>,
+  message: string,
+  stage: FlintSelfHostedStageReport['stage'] = 'lex',
+): FlintDiagnostic;
+```
+
+자체 호스팅 부트스트랩 또는 패리티 확인 문제에 대한 진단을 만듭니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------------------- | ----------- |
+| 입력 | Pick<FlintCompileInput, 'fileName'> |             |
+| 메시지 | 문자열 |             |
+| 무대 | FlintSelfHostedStageReport['단계'] |             |
+
+### withSelfHostedResult
+
+**종류:** 기능
+
+```typescript
+function withSelfHostedResult(artifact: FlintArtifact, result: ReturnType<typeof runSelfHostedStage>): FlintArtifact;
+```
+
+자체 호스팅 실행기 단계 검증 결과를 최종 컴파일 아티팩트에 병합합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------------------------------------- | ----------- |
+| 유물 | 플린트아티팩트 |             |
+| 결과 | 반환 유형<typeof runSelfHostedStage> |             |
+
+## `src/compiler/service`
 
 ### createFlintCompilerService
 
@@ -1130,17 +803,22 @@ function createFlintCompiler(): FlintCompiler;
 function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): FlintCompilerService;
 ```
 
-설명이 제공되지 않았습니다.
+증분 컴파일 및 그래프 빌드를 위한 메모리 내 캐싱 컴파일러 서비스를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 옵션 | FlintCompilerServiceOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------------- | ------------------------------------------------ |
+| 옵션 | 플린트컴파일러서비스옵션 | 선택적 컴파일러 서비스 구성 옵션입니다. |
+
+#### 계약
+
+- **@param:** 선택적 컴파일러 서비스 구성 옵션입니다.
+- **@returns:** 상태 저장 FlintCompilerService 인스턴스.
 
 ## `src/contracts`
 
-### Flint아티팩트
+### 플린트아티팩트
 
 **종류:** 인터페이스
 
@@ -1148,9 +826,9 @@ function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): 
 export interface FlintArtifact
 ```
 
-설명이 제공되지 않았습니다.
+ABI, 소스, 바이너리 및 진단을 포함하는 패키지된 컴파일러 아티팩트입니다.
 
-### FlintArtifact검증보고서
+### FlintArtifact검증신고
 
 **종류:** 인터페이스
 
@@ -1158,7 +836,7 @@ export interface FlintArtifact
 export interface FlintArtifactVerificationReport
 ```
 
-설명이 제공되지 않았습니다.
+방출된 아티팩트 콘텐츠 해시 및 변형을 확인한 결과입니다.
 
 ### FlintAsync 기능
 
@@ -1168,7 +846,7 @@ export interface FlintArtifactVerificationReport
 export type FlintAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-설명이 제공되지 않았습니다.
+비동기 컴파일 계약에 필요한 명명된 비동기 호스트 기능입니다.
 
 ### FlintAsyncCompilation계약
 
@@ -1180,7 +858,7 @@ export interface FlintAsyncCompilationContract
 
 VM, Wasm 및 호스트 어댑터가 공유하는 명시적인 비동기 경계입니다.
 
-### FlintBackendInput
+### 플린트백엔드 입력
 
 **종류:** 인터페이스
 
@@ -1190,7 +868,7 @@ export interface FlintBackendInput
 
 프런트엔드 검증이 성공한 후 백엔드 구현이 소유한 입력입니다.
 
-### FlintBackendResult
+### 플린트백엔드 결과
 
 **종류:** 인터페이스
 
@@ -1200,7 +878,7 @@ export interface FlintBackendResult
 
 백엔드 출력은 호환성 Facade의 ESM 아티팩트와 의도적으로 독립적입니다.
 
-### Flint컴파일 입력
+### 플린트컴파일 입력
 
 **종류:** 인터페이스
 
@@ -1208,9 +886,9 @@ export interface FlintBackendResult
 export interface FlintCompileInput
 ```
 
-설명이 제공되지 않았습니다.
+프런트엔드 및 컴파일러 서비스에서 사용되는 단일 모듈 컴파일 요청입니다.
 
-### Flint컴파일러
+### 플린트컴파일러
 
 **종류:** 인터페이스
 
@@ -1218,9 +896,9 @@ export interface FlintCompileInput
 export interface FlintCompiler
 ```
 
-설명이 제공되지 않았습니다.
+단일 모듈 컴파일 및 삭제를 노출하는 최소한의 컴파일러 외관입니다.
 
-### Flint컴파일러힌트
+### 플린트컴파일러힌트
 
 **종류:** 인터페이스
 
@@ -1228,9 +906,9 @@ export interface FlintCompiler
 export interface FlintCompilerHints
 ```
 
-설명이 제공되지 않았습니다.
+특수한 백엔드 방출을 안내하는 선택적 낮추기 힌트입니다.
 
-### FlintCompilerLogger
+### 플린트컴파일러로거
 
 **종류:** 인터페이스
 
@@ -1238,9 +916,9 @@ export interface FlintCompilerHints
 export interface FlintCompilerLogger
 ```
 
-설명이 제공되지 않았습니다.
+컴파일러 서비스 단계에서 사용되는 구조화된 로거 계약입니다.
 
-### Flint컴파일러보고서
+### 플린트컴파일러보고서
 
 **종류:** 인터페이스
 
@@ -1248,9 +926,9 @@ export interface FlintCompilerLogger
 export interface FlintCompilerReport
 ```
 
-설명이 제공되지 않았습니다.
+진단, 캐시 통계 및 분석을 다루는 종합 서비스 보고서입니다.
 
-### FlintCompilerService
+### 플린트컴파일러서비스
 
 **종류:** 인터페이스
 
@@ -1258,7 +936,7 @@ export interface FlintCompilerReport
 export interface FlintCompilerService extends FlintCompiler
 ```
 
-설명이 제공되지 않았습니다.
+그래프 컴파일 및 무효화를 지원하는 증분 컴파일러 서비스입니다.
 
 ### FlintCompilerService옵션
 
@@ -1268,9 +946,9 @@ export interface FlintCompilerService extends FlintCompiler
 export interface FlintCompilerServiceOptions
 ```
 
-설명이 제공되지 않았습니다.
+컴파일러 서비스 파사드를 구성할 때 구성 백이 허용됩니다.
 
-### Flint디버그아티팩트
+### 플린트디버그아티팩트
 
 **종류:** 인터페이스
 
@@ -1278,7 +956,7 @@ export interface FlintCompilerServiceOptions
 export interface FlintDebugArtifacts
 ```
 
-설명이 제공되지 않았습니다.
+디버깅 및 검증을 위해 선택적으로 WAT/Wasm 스냅샷을 보관합니다.
 
 ### Flint결정적Artifact메타데이터
 
@@ -1288,7 +966,7 @@ export interface FlintDebugArtifacts
 export interface FlintDeterministicArtifactMetadata
 ```
 
-설명이 제공되지 않았습니다.
+방출된 컴파일러 아티팩트와 함께 기록된 결정적 ID 필드입니다.
 
 ### FlintFrontendLink메타데이터
 
@@ -1298,9 +976,9 @@ export interface FlintDeterministicArtifactMetadata
 export interface FlintFrontendLinkMetadata
 ```
 
-설명이 제공되지 않았습니다.
+백엔드 패키징을 위한 프런트엔드 결과에 첨부된 링크 타임 메타데이터입니다.
 
-### FlintFrontendResult
+### 플린트프런트엔드결과
 
 **종류:** 인터페이스
 
@@ -1310,7 +988,7 @@ export interface FlintFrontendResult
 
 모듈 구문 분석, 확인 및 낮추기에 대한 안정적이고 백엔드 독립적인 결과입니다.
 
-### Flint그래프컴파일 입력
+### FlintGraph컴파일 입력
 
 **종류:** 인터페이스
 
@@ -1318,7 +996,7 @@ export interface FlintFrontendResult
 export interface FlintGraphCompileInput
 ```
 
-설명이 제공되지 않았습니다.
+항목 선택 및 링크 정책을 포함한 다중 모듈 그래프 컴파일 요청입니다.
 
 ### FlintIterator내보내기
 
@@ -1328,7 +1006,7 @@ export interface FlintGraphCompileInput
 export interface FlintIteratorExport
 ```
 
-설명이 제공되지 않았습니다.
+내보낸 반복기 프로토콜 표면을 설명하는 ABI 메타데이터입니다.
 
 ### FlintLinkOptimizationProfile
 
@@ -1340,17 +1018,7 @@ export type FlintLinkOptimizationProfile = 'standard' | 'static-aggressive' | 'd
 
 일반적인 컴파일러 최적화와 함께 기록된 링크 타임 정책입니다.
 
-### FlintLink프로필
-
-**종류:** 유형
-
-```typescript
-export type FlintLinkProfile = 'static' | 'dynamic';
-```
-
-그래프 인식 소비자가 사용하는 명명된 프로젝트 간 패키징 프로필입니다.
-
-### Flint최적화
+### 플린트 최적화
 
 **종류:** 유형
 
@@ -1358,7 +1026,7 @@ export type FlintLinkProfile = 'static' | 'dynamic';
 export type FlintOptimization = 'debug' | 'release';
 ```
 
-설명이 제공되지 않았습니다.
+디버그 또는 릴리스 낮추기를 선택하는 컴파일러 최적화 수준입니다.
 
 ### FlintSelfHostedStageReport
 
@@ -1368,7 +1036,7 @@ export type FlintOptimization = 'debug' | 'release';
 export interface FlintSelfHostedStageReport
 ```
 
-도구 어댑터에서 사용하는 제한된 FWS 작성 컴파일러 단계의 결과입니다.
+툴링 어댑터에서 사용하는 제한된 FLINT 작성 컴파일러 단계의 결과입니다.
 
 ### FlintSelfHostedStageRunner
 
@@ -1383,7 +1051,7 @@ export type FlintSelfHostedStageRunner = (
 
 브라우저 안전 외관을 결합하지 않고 런타임에서 제공하는 VM 진입점입니다.
 
-### FlintTarget기능
+### 플린트타겟특징
 
 **종류:** 인터페이스
 
@@ -1391,9 +1059,9 @@ export type FlintSelfHostedStageRunner = (
 export interface FlintTargetFeatures
 ```
 
-설명이 제공되지 않았습니다.
+호스트가 요청한 선택적 WebAssembly 대상 기능 플래그입니다.
 
-### FlintVmExecutionMode
+### FlintVm실행 모드
 
 **종류:** 유형
 
@@ -1401,7 +1069,7 @@ export interface FlintTargetFeatures
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-설명이 제공되지 않았습니다.
+자체 호스팅 컴파일러 단계에 대해 지원되는 VM 실행 모드입니다.
 
 ## `src/diagnostics`
 
@@ -1422,20 +1090,32 @@ function createDiagnostic(
 ): FlintDiagnostic;
 ```
 
-설명이 제공되지 않았습니다.
+선택적 힌트 및 보안 메타데이터를 사용하여 구조화된 컴파일러 진단을 구성합니다.
 
 #### 매개변수
 
-| 이름       | 유형                                                                                          | 설명 |
-| ---------- | --------------------------------------------------------------------------------------------- | ---- |
-| 파일 이름  | 문자열                                                                                        |      |
-| 단계       | FlintDiagnosticPhase                                                                          |      |
-| 코드       | 문자열                                                                                        |      |
-| 메시지     | 문자열                                                                                        |      |
-| 범위       | FlintSourceSpan                                                                               |      |
-| 심각도     | Flint진단심각도                                                                               |      |
-| 힌트       | 문자열                                                                                        |      |
-| 메타데이터 | Pick<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |      |
+| 이름 | 유형 | 설명 |
+| -------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| 파일 이름 | 문자열 | - 소스 파일의 경로 또는 식별자입니다.                                  |
+| 단계 | 플린트진단단계 | - 진단을 내보내는 컴파일러 단계.                                 |
+| 코드 | 문자열 | - 진단 오류 또는 경고 코드.                                       |
+| 메시지 | 문자열 | - 사람이 읽을 수 있는 설명적인 진단 메시지입니다.                          |
+| 범위 | 플린트소스스팬 | - 진단 위치에 대한 소스 범위 좌표입니다.                    |
+| 심각도 | 플린트진단심각도 | - 심각도 수준, 기본값은 '오류'입니다.                                  |
+| 힌트 | 문자열 | - 선택적인 해결 힌트 또는 실행 가능한 조언.                         |
+| 메타데이터 | Pick<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> | - 선택적 규칙 ID, 범주, 증거 또는 보안 분류 식별자. |
+
+#### 계약
+
+- **@param:** - 소스 파일의 경로 또는 식별자입니다.
+- **@param:** - 진단을 내보내는 컴파일러 단계입니다.
+- **@param:** - 진단 오류 또는 경고 코드입니다.
+- **@param:** - 사람이 읽을 수 있는 설명적인 진단 메시지입니다.
+- **@param:** - 진단 위치에 대한 소스 범위 좌표입니다.
+- **@param:** - 심각도 수준, 기본값은 '오류'입니다.
+- **@param:** - 선택적인 해결 힌트 또는 실행 가능한 조언.
+- **@param:** - 선택적 규칙 ID, 범주, 증거 또는 보안 분류 식별자입니다.
+- **@returns:** 구조화된 FlintDiagnostic 인스턴스입니다.
 
 ### 진단키
 
@@ -1445,15 +1125,50 @@ function createDiagnostic(
 function diagnosticKey(diagnostic: FlintDiagnostic): string;
 ```
 
-설명이 제공되지 않았습니다.
+진단 중복 제거를 위한 결정적 ID 문자열 키를 계산합니다.
 
 #### 매개변수
 
-| 이름 | 유형      | 설명 |
-| ---- | --------- | ---- |
-| 진단 | Flint진단 |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------- | ---------------------------------- |
+| 진단 | 플린트 진단 | - 키를 계산하기 위한 진단입니다. |
 
-### Flint진단
+#### 계약
+
+- **@param:** - 키를 계산하기 위한 진단입니다.
+- **@returns:** 파일 이름, 단계, 코드, 범위 및 메시지를 인코딩하는 결정적 JSON 문자열입니다.
+
+### FLINT_PARSE_STACK_OVERFLOW
+
+**종류:** 상수
+
+```typescript
+export const FLINT_PARSE_STACK_OVERFLOW;
+```
+
+파서 재귀 깊이가 구성된 제한을 초과하는 경우 진단 오류 코드입니다.
+
+### FLINT_PARSE_UNCLOSED_DELIMITER
+
+**종류:** 상수
+
+```typescript
+export const FLINT_PARSE_UNCLOSED_DELIMITER;
+```
+
+EOF에서 구분 기호가 닫히지 않은 상태로 유지되는 경우 진단 오류 코드입니다.
+
+### FLINT_SECURITY_SOURCE_TOO_LARGE
+
+**종류:** 상수
+
+```typescript
+export const FLINT_SECURITY_SOURCE_TOO_LARGE;
+```
+
+소스 파일이 MAX_SOURCE_INPUT_BYTES를 초과하는 경우 진단 오류 코드입니다.
+
+### 플린트진단
 
 **종류:** 인터페이스
 
@@ -1461,9 +1176,9 @@ function diagnosticKey(diagnostic: FlintDiagnostic): string;
 export interface FlintDiagnostic
 ```
 
-설명이 제공되지 않았습니다.
+컴파일러 단계 또는 정적 분석 통과 전반에 걸쳐 생성된 구조화된 진단 기록입니다.
 
-### Flint진단증거
+### 부싯돌진단적 증거
 
 **종류:** 인터페이스
 
@@ -1471,20 +1186,20 @@ export interface FlintDiagnostic
 export interface FlintDiagnosticEvidence
 ```
 
-설명이 제공되지 않았습니다.
+진단 결과에 첨부된 2차 증거 또는 관련 위치.
 
-### Flint진단 단계
+### 플린트진단단계
 
 **종류:** 유형
 
 ```typescript
 export type FlintDiagnosticPhase =
-  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+  'lex' | 'parse' | 'macro' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
-설명이 제공되지 않았습니다.
+진단이 내보내진 컴파일 단계입니다.
 
-### Flint진단심각도
+### 플린트진단심각도
 
 **종류:** 유형
 
@@ -1492,9 +1207,9 @@ export type FlintDiagnosticPhase =
 export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 ```
 
-설명이 제공되지 않았습니다.
+컴파일러 진단의 심각도 수준입니다.
 
-### FlintSourceSpan
+### 플린트소스스팬
 
 **종류:** 인터페이스
 
@@ -1502,11 +1217,44 @@ export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 export interface FlintSourceSpan
 ```
 
-설명이 제공되지 않았습니다.
+토큰, AST node 또는 파일의 진단의 정확한 위치를 정의하는 소스 좌표 범위입니다.
+
+### getSourceByteLength
+
+**종류:** 기능
+
+```typescript
+function getSourceByteLength(source: string): number;
+```
+
+UTF-8로 인코딩된 문자열의 실제 바이트 크기를 계산합니다.
+JavaScript 문자열은 내부적으로 UTF-16을 사용하므로 `.length`은 바이트가 아닌 코드 단위를 계산합니다.
+이 함수는 UTF-8로 인코딩하고 실제 바이트 수를 반환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------ | --------------------------- |
+| 출처 | 문자열 | - 측정할 소스 문자열입니다. |
+
+#### 계약
+
+- **@param:** - 측정할 소스 문자열입니다.
+- **@returns:** UTF-8로 인코딩된 경우 바이트 수입니다.
+
+### MAX_SOURCE_INPUT_BYTES
+
+**종류:** 상수
+
+```typescript
+export const MAX_SOURCE_INPUT_BYTES;
+```
+
+허용되는 최대 Flint 소스 파일 크기(바이트)(16MiB)
 
 ## `src/documentation`
 
-### parseFlint문서화
+### 파싱플린트문서화
 
 **종류:** 기능
 
@@ -1514,13 +1262,18 @@ export interface FlintSourceSpan
 function parseFlintDocumentation(comment: string): FlintDocumentation;
 ```
 
-설명이 제공되지 않았습니다.
+Flint 문서 주석을 구조화된 설명 및 문서 태그로 구문 분석합니다.
 
 #### 매개변수
 
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 댓글 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ------------------------- |
+| 댓글 | 문자열 | - 원시 문서 주석 문자열. |
+
+#### 계약
+
+- **@param:** - 원시 문서 주석 문자열입니다.
+- **@returns:** 정규화된 설명과 태그가 포함된 구조화된 문서 기록입니다.
 
 ### renderFlint문서화
 
@@ -1530,25 +1283,30 @@ function parseFlintDocumentation(comment: string): FlintDocumentation;
 function renderFlintDocumentation(documentation: FlintDocumentation): string;
 ```
 
-설명이 제공되지 않았습니다.
+구조화된 Flint 문서 기록을 문서 주석 마크다운으로 다시 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형        | 설명 |
-| ---- | ----------- | ---- |
-| 문서 | Flint문서화 |      |
+| 이름 | 유형 | 설명 |
+| ------------- | ------------------ | ---------------------------------- |
+| 문서 | 플린트문서화 | - 구조화된 문서 기록. |
+
+#### 계약
+
+- **@param:** - 구조화된 문서 기록입니다.
+- **@returns:** 서식이 지정된 문서 마크다운 텍스트입니다.
 
 ## `src/dynamic-links`
 
-### FlintDynamic호출 가능
+### FlintDynamicCallable
 
 **종류:** 유형
 
 ```typescript
-export type FlintDynamicCallable = (...args: readonly number[]) => unknown;
+export type FlintDynamicCallable = (...arguments_: readonly number[]) => unknown;
 ```
 
-설명이 제공되지 않았습니다.
+숫자 핸들/인수를 허용하는 동적 모듈 내보내기를 위한 호출 가능한 함수 서명입니다.
 
 ### FlintDynamicLink캐시
 
@@ -1569,9 +1327,9 @@ ID 구성 요소 중 하나를 바꾸면 이전 호출 가능 핸들이 무효�
 export interface FlintDynamicLinkIdentity
 ```
 
-설명이 제공되지 않았습니다.
+동적 링크 아티팩트 및 매니페스트 쌍에 대한 고유 ID 설명자입니다.
 
-### FlintDynamic모듈
+### 플린트다이내믹모듈
 
 **종류:** 인터페이스
 
@@ -1579,11 +1337,11 @@ export interface FlintDynamicLinkIdentity
 export interface FlintDynamicModule
 ```
 
-설명이 제공되지 않았습니다.
+호출 가능한 내보내기 및 선택적 ABI 서명이 포함된 동적으로 연결된 모듈입니다.
 
 ## `src/frontend`
 
-### prepareFlint프런트엔드
+### 준비플린트프런트엔드
 
 **종류:** 기능
 
@@ -1591,13 +1349,19 @@ export interface FlintDynamicModule
 function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 ```
 
-설명이 제공되지 않았습니다.
+단일 Flint 소스 파일에 대한 프런트엔드 파이프라인을 실행합니다.
+어휘 분석, 구문 분석, 유형 확인, IR 낮추기 및 Sea-of-Nodes 최적화를 수행합니다.
 
 #### 매개변수
 
-| 이름 | 유형             | 설명 |
-| ---- | ---------------- | ---- |
-| 입력 | Flint컴파일 입력 |      |
+| 이름 | 유형 | 설명 |
+| ----- | ----------------- | ----------------------------------------------------- |
+| 입력 | 플린트컴파일입력 | - 단일 파일 컴파일러 입력 옵션 및 소스 코드. |
+
+#### 계약
+
+- **@param:** - 단일 파일 컴파일러 입력 옵션 및 소스 코드입니다.
+- **@returns:** AST, IR 및 ABI 매니페스트를 포함하는 프런트엔드 컴파일 결과입니다.
 
 ### prepareFlintGraph프런트엔드
 
@@ -1607,111 +1371,490 @@ function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 function prepareFlintGraphFrontend(input: FlintGraphCompileInput): FlintFrontendResult;
 ```
 
-설명이 제공되지 않았습니다.
+연결된 다중 모듈 그래프에 대한 컴파일러 프런트엔드를 준비합니다.
+정적 종속성 클로저를 해결하고, 결합된 구성 요소의 유형을 확인하고,
+연결된 모듈을 최적화된 IR 및 ABI 매니페스트로 낮춥니다.
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 입력 | FlintGraphCompileInput |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------------------- | ----------------------------------------------------------------------------- |
+| 입력 | 플린트그래프컴파일입력 | - 그래프 가장자리 및 진입점을 포함한 다중 모듈 그래프 컴파일 입력. |
 
-## `src/generics`
+#### 계약
 
-### createFlintGenericSpecialization
+- **@param:** - 그래프 가장자리 및 진입점을 포함한 다중 모듈 그래프 컴파일 입력입니다.
+- **@returns:** 연결된 모듈 그래프에 대한 결합된 프런트엔드 컴파일 결과입니다.
+
+## `src/graph-compiler/ast-builder`
+
+### buildGraphAst
 
 **종류:** 기능
 
 ```typescript
-function createFlintGenericSpecialization(request: FlintGenericSpecializationRequest): FlintSpecialization;
+function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult;
 ```
 
-설명이 제공되지 않았습니다.
+검증된 FlintNodeGraph를 메모리 내 FlintModule AST 및 양방향 소스 맵으로 낮춥니다.
 
 #### 매개변수
 
-| 이름 | 유형                              | 설명 |
-| ---- | --------------------------------- | ---- |
-| 요청 | FlintGenericSpecializationRequest |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------- | ----------- |
+| 입력그래프 | 플린트노드 그래프 |             |
 
-### createFlintIteratorBoundaryDescriptor
-
-**종류:** 기능
-
-```typescript
-function createFlintIteratorBoundaryDescriptor(
-  generic: string,
-  elementType: FlintTypeName,
-  nextFunction: string,
-  ownership: FlintOwnership = 'borrowed',
-): FlintIteratorBoundaryDescriptor;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름      | 유형          | 설명 |
-| --------- | ------------- | ---- |
-| 일반      | 문자열        |      |
-| 요소 유형 | Flint유형이름 |      |
-| next함수  | 문자열        |      |
-| 소유권    | Flint소유권   |      |
-
-### Flint일반 경계
-
-**종류:** 유형
-
-```typescript
-export type FlintGenericBoundary = 'value' | 'interface' | 'iterator';
-```
-
-설명이 제공되지 않았습니다.
-
-### flint일반 표현
-
-**종류:** 기능
-
-```typescript
-function flintGenericRepresentation(boundary: FlintGenericBoundary = 'value'): FlintSpecialization['representation'];
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름 | 유형                 | 설명 |
-| ---- | -------------------- | ---- |
-| 경계 | FlintGenericBoundary |      |
-
-### FlintGenericSpecializationRequest
+### FlintAstBuildResult
 
 **종류:** 인터페이스
 
 ```typescript
-export interface FlintGenericSpecializationRequest
+export interface FlintAstBuildResult
 ```
 
 설명이 제공되지 않았습니다.
 
-### sortFlint전문화
+## `src/graph-compiler/catalog`
+
+### createNodeFromDefinition
 
 **종류:** 기능
 
 ```typescript
-function sortFlintSpecializations(specializations: readonly FlintSpecialization[]): readonly FlintSpecialization[];
+function createNodeFromDefinition(
+  definition: FlintNodeDefinition,
+  id: string,
+  position: { readonly x: number; readonly y: number } = DEFAULT_NODE_POSITION,
+  properties?: Readonly<Record<string, unknown>>,
+): FlintGraphNode;
+```
+
+지정된 ID, 위치 및 속성 재정의를 사용하여 카탈로그 정의에서 FlintGraphNode를 인스턴스화합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------------------ | ----------- |
+| 정의 | 플린트노드 정의 |             |
+| 아이디 | 문자열 |             |
+| 위치 | { 읽기 전용 x: 숫자; 읽기 전용 y: 숫자 } |             |
+| 속성 | 읽기전용<Record<string, unknown>> |             |
+
+### FlintNode정의
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintNodeDefinition
 ```
 
 설명이 제공되지 않았습니다.
 
+### getAllNodeDefinitions
+
+**종류:** 기능
+
+```typescript
+function getAllNodeDefinitions(): readonly FlintNodeDefinition[];
+```
+
+등록된 모든 표준 node 정의를 반환합니다.
+
+### getNodeDefinition
+
+**종류:** 기능
+
+```typescript
+function getNodeDefinition(operation: string): FlintNodeDefinition | undefined;
+```
+
+고유 작업 식별자로 표준 node 정의를 검색합니다.
+
 #### 매개변수
 
-| 이름      | 유형                            | 설명 |
-| --------- | ------------------------------- | ---- |
-| 전문 분야 | 읽기 전용 FlintSpecialization[] |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------ | ----------- |
+| 운영 | 문자열 |             |
+
+### getNodeDefinitionsByCategory
+
+**종류:** 기능
+
+```typescript
+function getNodeDefinitionsByCategory(category: FlintNodeCategory): readonly FlintNodeDefinition[];
+```
+
+범주별로 필터링된 node 정의를 반환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ----------------- | ----------- |
+| 카테고리 | FlintNode범주 |             |
+
+## `src/graph-compiler/generator`
+
+### compileGraphToFlint
+
+**종류:** 기능
+
+```typescript
+function compileGraphToFlint(graph: FlintNodeGraph): FlintGraphCompilationArtifact;
+```
+
+Flint 시각적 node 그래프용 이중 컴파일러 생성기입니다.
+양방향 소스 맵을 사용하여 입력된 메모리 내 FlintModule AST와 형식화된 .flint 소스 텍스트를 합성합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | -------------- | ----------- |
+| 그래프 | 플린트노드 그래프 |             |
+
+### compileNodeGraph
+
+**종류:** 기능
+
+```typescript
+function compileNodeGraph(graph: FlintNodeGraph, options?: Partial<FlintCompileInput>): FlintCompiledNodeGraphArtifact;
+```
+
+시각적 FlintNodeGraph 엔드투엔드를 WebAssembly 바이너리, ABI 매니페스트 및 소스 아티팩트로 컴파일합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | -------------------------- | ----------- |
+| 그래프 | 플린트노드그래프 |             |
+| 옵션 | 부분<FlintCompileInput> |             |
+
+### 플린트컴파일된노드그래프아티팩트
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintCompiledNodeGraphArtifact extends Omit<FlintArtifact, 'sourceMap'>
+```
+
+설명이 제공되지 않았습니다.
+
+### 부싯돌그래프편집유물
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintGraphCompilationArtifact
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/graph-compiler/source-emitter`
+
+### 방출 그래프 소스
+
+**종류:** 기능
+
+```typescript
+function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmissionResult;
+```
+
+정확한 양방향 소스 맵을 사용하여 검증된 그래프에서 깔끔하고 형식화된 Flint 소스 코드를 내보냅니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | -------------- | ----------- |
+| 입력그래프 | 플린트노드 그래프 |             |
+
+### 플린트 소스 방출 결과
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintSourceEmissionResult
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/graph-compiler/types`
+
+### createContainerType
+
+**종류:** 기능
+
+```typescript
+function createContainerType(
+  container: string,
+  typeArguments: readonly FlintTypeName[] = [],
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+일반 또는 집계 FlintTypeName node을 만듭니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------- | ------------------------ | ----------- |
+| 컨테이너 | 문자열 |             |
+| 유형인수 | 읽기 전용 FlintTypeName[] |             |
+| 범위 | 플린트소스스팬 |             |
+
+### createPrimitiveType
+
+**종류:** 기능
+
+```typescript
+function createPrimitiveType(
+  primitive: FlintPrimitiveType,
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+기본 FlintTypeName node을 생성합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | ------------------ | ----------- |
+| 원시적 | 플린트프리미티브타입 |             |
+| 범위 | 플린트소스스팬 |             |
+
+### createSyntheticSpan
+
+**종류:** 기능
+
+```typescript
+function createSyntheticSpan(line = 1, column = 1, length = 1): FlintSourceSpan;
+```
+
+그래프 생성 AST 노드에 대한 합성 소스 범위를 만듭니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---- | ----------- |
+| 라인 |      |             |
+| 열 |      |             |
+| 길이 |      |             |
+
+### flattenGraph
+
+**종류:** 기능
+
+```typescript
+function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph;
+```
+
+그래프의 모든 메타 노드를 구성 내부 노드 및 가장자리로 재귀적으로 인라인하고 평면화합니다.
+복합 메타 노드를 원활하게 컴파일하기 위해 검증, AST 생성 및 소스 방출 중에 사용됩니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | -------------- | ----------- |
+| 그래프 | 플린트노드 그래프 |             |
+
+### FlintGraphEdge
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintGraphEdge
+```
+
+설명이 제공되지 않았습니다.
+
+### 플린트그래프그룹
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintGraphGroup
+```
+
+설명이 제공되지 않았습니다.
+
+### 플린트그래프노드
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintGraphNode
+```
+
+설명이 제공되지 않았습니다.
+
+### 플린트그래프포트
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintGraphPort
+```
+
+설명이 제공되지 않았습니다.
+
+### FlintGraph검증 문제
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintGraphValidationIssue
+```
+
+설명이 제공되지 않았습니다.
+
+### FlintGraphValidationResult
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintGraphValidationResult
+```
+
+설명이 제공되지 않았습니다.
+
+### FlintGraph검증심각도
+
+**종류:** 유형
+
+```typescript
+export type FlintGraphValidationSeverity = 'error' | 'warning' | 'info';
+```
+
+설명이 제공되지 않았습니다.
+
+### FlintMetaNode정의
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintMetaNodeDefinition
+```
+
+설명이 제공되지 않았습니다.
+
+### FlintMetaNode포트매핑
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintMetaNodePortMapping
+```
+
+설명이 제공되지 않았습니다.
+
+### FlintMetaNode하위 그래프
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintMetaNodeSubgraph
+```
+
+설명이 제공되지 않았습니다.
+
+### FlintNode범주
+
+**종류:** 유형
+
+```typescript
+export type FlintNodeCategory = 'math' | 'logic' | 'text' | 'collection' | 'control' | 'capability' | 'custom';
+```
+
+설명이 제공되지 않았습니다.
+
+### FlintNode그래프
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintNodeGraph
+```
+
+설명이 제공되지 않았습니다.
+
+### 플린트노드 종류
+
+**종류:** 유형
+
+```typescript
+export type FlintNodeKind =
+  'input' | 'output' | 'constant' | 'operation' | 'stdlib_call' | 'capability_call' | 'custom';
+```
+
+설명이 제공되지 않았습니다.
+
+### FlintNodeSourceMap
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintNodeSourceMap
+```
+
+설명이 제공되지 않았습니다.
+
+### 플린트항방향
+
+**종류:** 유형
+
+```typescript
+export type FlintPortDirection = 'input' | 'output';
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/graph-compiler/validator`
+
+### areTypes호환 가능
+
+**종류:** 기능
+
+```typescript
+function areTypesCompatible(source: FlintTypeName, target: FlintTypeName): boolean;
+```
+
+소스 및 대상 Flint 유형 간의 구조적 및 의미적 호환성을 확인합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------------- | ----------- |
+| 출처 | 플린트유형이름 |             |
+| 목표 | 플린트유형이름 |             |
+
+### 그래프 검증
+
+**종류:** 기능
+
+```typescript
+function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult;
+```
+
+그래프 토폴로지, 에지 연결, 포트 유형을 검증하고 주기를 감지합니다.
+그래프가 유효한 DAG(방향성 비순환 그래프)인 경우 정렬된 node ID를 반환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | -------------- | ----------- |
+| 그래프 | 플린트노드 그래프 |             |
 
 ## `src/graph`
 
-### Flint그래프결과
+### FlintForeignObjectReference
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintForeignObjectReference
+```
+
+링커에 제공된 외부 재배치 가능 개체 참조입니다.
+
+### 플린트그래프결과
 
 **종류:** 인터페이스
 
@@ -1719,7 +1862,7 @@ function sortFlintSpecializations(specializations: readonly FlintSpecialization[
 export interface FlintGraphResult
 ```
 
-설명이 제공되지 않았습니다.
+모듈 그래프 해결의 집계 결과, 모듈 그래프 구조 및 진단 반환.
 
 ### FlintLink구성
 
@@ -1729,9 +1872,9 @@ export interface FlintGraphResult
 export interface FlintLinkConfiguration
 ```
 
-설명이 제공되지 않았습니다.
+프로젝트 간 및 동일한 프로젝트 모듈 연결 정책을 관리하는 구성 옵션입니다.
 
-### FlintLinkMode
+### 플린트링크모드
 
 **종류:** 유형
 
@@ -1739,9 +1882,20 @@ export interface FlintLinkConfiguration
 export type FlintLinkMode = 'static' | 'dynamic';
 ```
 
+종속성이 정적으로 해결되는지 여부를 지정하는 연결 모드(번들됨)
+단일 구성 요소로) 또는 동적으로(호스트 수준 런타임 가져오기를 통해)
+
+### FlintLink프로필
+
+**종류:** 유형
+
+```typescript
+export type FlintLinkProfile = 'standard' | 'minimal' | 'full' | 'dynamic' | 'static' | 'monolithic' | 'cross-package';
+```
+
 설명이 제공되지 않았습니다.
 
-### FlintModuleEdge
+### 플린트모듈엣지
 
 **종류:** 인터페이스
 
@@ -1749,9 +1903,10 @@ export type FlintLinkMode = 'static' | 'dynamic';
 export interface FlintModuleEdge
 ```
 
-설명이 제공되지 않았습니다.
+수입자와 수입자를 연결하는 모듈 그래프의 방향성 종속성 가장자리
+관련 연결 전략 및 소스 코드 위치 범위가 있습니다.
 
-### Flint모듈그래프
+### 플린트모듈그래프
 
 **종류:** 인터페이스
 
@@ -1759,9 +1914,10 @@ export interface FlintModuleEdge
 export interface FlintModuleGraph
 ```
 
-설명이 제공되지 않았습니다.
+해결된 모듈, 종속성 가장자리를 캡처하는 방향성 모듈 종속성 그래프,
+참여 프로젝트 경계.
 
-### FlintModuleResolver
+### 플린트모듈리졸버
 
 **종류:** 인터페이스
 
@@ -1769,9 +1925,9 @@ export interface FlintModuleGraph
 export interface FlintModuleResolver
 ```
 
-설명이 제공되지 않았습니다.
+가져오기 지정자를 확인하고 모듈 소스 텍스트를 비동기적으로 로드하기 위한 인터페이스입니다.
 
-### Flint프로젝트
+### 플린트프로젝트
 
 **종류:** 인터페이스
 
@@ -1779,9 +1935,9 @@ export interface FlintModuleResolver
 export interface FlintProject
 ```
 
-설명이 제공되지 않았습니다.
+파일 루트와 파생 식별자를 포함하는 프로젝트 경계를 나타냅니다.
 
-### FlintResolvedModule
+### 플린트해결모듈
 
 **종류:** 인터페이스
 
@@ -1789,9 +1945,20 @@ export interface FlintProject
 export interface FlintResolvedModule
 ```
 
-설명이 제공되지 않았습니다.
+구문 분석된 AST, 소스 텍스트,
+프로젝트 루트 연결 및 콘텐츠 해시.
 
-### hashFlint모듈그래프
+### ForeignObjectFormat
+
+**종류:** 유형
+
+```typescript
+export type ForeignObjectFormat = 'wasm-relocatable' | 'elf-object' | 'mach-o';
+```
+
+재배치 가능한 외부 개체 형식(C/C++ clang 또는 Rust cargo에서 컴파일됨).
+
+### 해시플린트모듈그래프
 
 **종류:** 기능
 
@@ -1799,16 +1966,22 @@ export interface FlintResolvedModule
 function hashFlintModuleGraph(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): string;
 ```
 
-설명이 제공되지 않았습니다.
+모듈 그래프와 해당 링크 구성의 결정적 32비트 FNV-1a 16진수 해시를 계산합니다.
 
 #### 매개변수
 
-| 이름   | 유형            | 설명 |
-| ------ | --------------- | ---- |
-| 그래프 | Flint모듈그래프 |      |
-| 구성   | FlintLink구성   |      |
+| 이름 | 유형 | 설명 |
+| ------------- | ---------------------- | -------------------------------------------------- |
+| 그래프 | 플린트모듈그래프 | - 해시에 대한 모듈 종속성 그래프.                 |
+| 구성 | FlintLink구성 | - 그래프 해상도에 영향을 미치는 링크 구성. |
 
-### 해결FlintModuleGraph
+#### 계약
+
+- **@param:** - 해시할 모듈 종속성 그래프입니다.
+- **@param:** - 그래프 해상도에 영향을 미치는 링크 구성입니다.
+- **@returns:** 8자리 소문자 16진수 해시 문자열입니다.
+
+### 해결플린트모듈그래프
 
 **종류:** 기능
 
@@ -1820,19 +1993,26 @@ function resolveFlintModuleGraph(
 ): Promise<FlintGraphResult>;
 ```
 
-설명이 제공되지 않았습니다.
+하나 이상의 진입점에서 시작하여 전체 모듈 종속성 그래프를 비동기적으로 해결합니다.
 
 #### 매개변수
 
-| 이름   | 유형                | 설명 |
-| ------ | ------------------- | ---- |
-| 항목   | 읽기 전용 문자열[]  |      |
-| 리졸버 | FlintModuleResolver |      |
-| 구성   | FlintLink구성       |      |
+| 이름 | 유형 | 설명 |
+| ------------- | ---------------------- | ------------------------------------------------------------------- |
+| 항목 | 읽기 전용 문자열[] | - 확인할 루트 항목 모듈의 파일 경로입니다.                      |
+| 리졸버 | 플린트모듈리졸버 | - 경로 매핑 및 콘텐츠 로딩을 담당하는 모듈 확인자입니다. |
+| 구성 | FlintLink구성 | - 연결 및 패키징 구성 옵션.                      |
+
+#### 계약
+
+- **@param:** - 확인할 루트 항목 모듈의 파일 경로입니다.
+- **@param:** - 경로 매핑 및 콘텐츠 로딩을 담당하는 모듈 확인자입니다.
+- **@param:** - 연결 및 패키징 구성 옵션입니다.
+- **@returns:** 해결된 모듈, 종속성 가장자리, 프로젝트 및 진단을 포함하는 그래프 결과입니다.
 
 ## `src/identity`
 
-### 파생FlintModuleId
+### 파생플린트모듈 ID
 
 **종류:** 기능
 
@@ -1840,16 +2020,23 @@ function resolveFlintModuleGraph(
 function deriveFlintModuleId(fileName: string, root?: string): string;
 ```
 
-설명이 제공되지 않았습니다.
+Flint 소스 파일에 대한 표준 모듈 식별자를 파생합니다.
+루트 경로 접두사, 선행 상대 경로 표시자 및 `.flint` 파일 확장자를 자릅니다.
 
 #### 매개변수
 
-| 이름      | 유형   | 설명 |
-| --------- | ------ | ---- |
-| 파일 이름 | 문자열 |      |
-| 루트      | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ------------------------------------------------------------------- |
+| 파일 이름 | 문자열 | - Flint 소스 파일의 파일 이름 또는 경로입니다.                       |
+| 루트 | 문자열 | - 모듈 식별자에서 제거할 선택적 루트 디렉터리 경로입니다. |
 
-### NormalizeFlintFileId
+#### 계약
+
+- **@param:** - Flint 소스 파일의 파일 이름 또는 경로입니다.
+- **@param:** - 모듈 식별자에서 제거할 선택적 루트 디렉터리 경로입니다.
+- **@returns:** 정식 모듈 식별자 또는 결과 식별자가 비어 있는 경우 `'<input>'`입니다.
+
+### 정규화플린트파일 ID
 
 **종류:** 기능
 
@@ -1857,704 +2044,20 @@ function deriveFlintModuleId(fileName: string, root?: string): string;
 function normalizeFlintFileId(fileName: string): string;
 ```
 
-설명이 제공되지 않았습니다.
+Flint 컴파일을 위한 파일 식별자를 정규화합니다.
+쿼리 매개변수를 제거하고 Windows 경로 구분 기호를 POSIX 슬래시로 변환합니다.
+중복된 슬래시를 축소합니다.
 
 #### 매개변수
 
-| 이름      | 유형   | 설명 |
-| --------- | ------ | ---- |
-| 파일 이름 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ------------------------------- |
+| 파일 이름 | 문자열 | - 원시 파일 이름 또는 경로 문자열. |
 
-## `src/ir`
+#### 계약
 
-### countFlintIr
-
-**종류:** 기능
-
-```typescript
-function countFlintIr(module: FlintIrModule): FlintIrCounts;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름 | 유형        | 설명 |
-| ---- | ----------- | ---- |
-| 모듈 | FlintIr모듈 |      |
-
-### FlintCollection작업
-
-**종류:** 유형
-
-```typescript
-export type FlintCollectionOperation = 'array-iter' | 'iterator-next' | 'array-length';
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrArrayLiteralExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrArrayLiteralExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrAssignmentStatement
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrAssignmentStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrBinaryExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrBinaryExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrCallExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrCallExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrCounts
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrCounts
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrDoWhile문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrDoWhileStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrEnumValueExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrEnumValueExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrExpression
-
-**종류:** 유형
-
-```typescript
-export type FlintIrExpression =
-  | FlintIrBinaryExpression
-  | FlintIrCallExpression
-  | FlintIrIdentifierExpression
-  | FlintIrLiteralExpression
-  | FlintIrFunctionValueExpression
-  | FlintIrStructValueExpression
-  | FlintIrEnumValueExpression
-  | FlintIrMatchExpression
-  | FlintIrUnaryExpression
-  | FlintIrArrayLiteralExpression
-  | FlintIrIndexExpression;
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrExpressionStatement
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrExpressionStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIr함수
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrFunction
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrFunction분석
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrFunctionAnalysis
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrFunctionValueExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrFunctionValueExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrIdentifierExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrIdentifierExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrIf문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrIfStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrIndexExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrIndexExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrIteratorLoop문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrIteratorLoopStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrLet문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrLetStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrLiteralExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrLiteralExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrMatchArm
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrMatchArm
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrMatchExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrMatchExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrMatchStatement
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrMatchStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIr모듈
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrModule
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrPurity
-
-**종류:** 유형
-
-```typescript
-export type FlintIrPurity = 'pure' | 'effectful' | 'unknown';
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrReturnStatement
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrReturnStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIr문
-
-**종류:** 유형
-
-```typescript
-export type FlintIrStatement =
-  | FlintIrExpressionStatement
-  | FlintIrAssignmentStatement
-  | FlintIrIfStatement
-  | FlintIrWhileStatement
-  | FlintIrDoWhileStatement
-  | FlintIrLetStatement
-  | FlintIrReturnStatement
-  | FlintIrMatchStatement
-  | FlintIrSwitchStatement
-  | FlintIrYieldStatement
-  | FlintIrIteratorLoopStatement;
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrStructValueExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrStructValueExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrSwitch문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrSwitchStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrUnaryExpression
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrUnaryExpression
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrWhile문
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrWhileStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIrYieldStatement
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIrYieldStatement
-```
-
-설명이 제공되지 않았습니다.
-
-### lowerFlintIrToModule
-
-**종류:** 기능
-
-```typescript
-function lowerFlintIrToModule(module: FlintIrModule): FlintModule;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름 | 유형        | 설명 |
-| ---- | ----------- | ---- |
-| 모듈 | FlintIr모듈 |      |
-
-### lowerFlintToIr
-
-**종류:** 기능
-
-```typescript
-function lowerFlintToIr(module: FlintModule): FlintIrModule;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름 | 유형      | 설명 |
-| ---- | --------- | ---- |
-| 모듈 | Flint모듈 |      |
-
-## `src/lexer`
-
-### FlintLexResult
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintLexResult
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintToken
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintToken
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint토큰 종류
-
-**종류:** 유형
-
-```typescript
-export type FlintTokenKind =
-  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
-```
-
-설명이 제공되지 않았습니다.
-
-### lexFlint
-
-**종류:** 기능
-
-```typescript
-function lexFlint(source: string, fileName = '<input>'): FlintLexResult;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름      | 유형   | 설명 |
-| --------- | ------ | ---- |
-| 출처      | 문자열 |      |
-| 파일 이름 |        |      |
-
-## `src/linker`
-
-### FlintLinkResult
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintLinkResult
-```
-
-설명이 제공되지 않았습니다.
-
-### verifyFlint링크
-
-**종류:** 기능
-
-```typescript
-function validateFlintLinks(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): FlintLinkResult;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름   | 유형            | 설명 |
-| ------ | --------------- | ---- |
-| 그래프 | Flint모듈그래프 |      |
-| 구성   | FlintLink구성   |      |
-
-## `src/manifest`
-
-### createFlintAbiManifest
-
-**종류:** 기능
-
-```typescript
-function createFlintAbiManifest(module: FlintModule, options: FlintAbiManifestOptions = {}): FlintAbiManifest;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름 | 유형                    | 설명 |
-| ---- | ----------------------- | ---- |
-| 모듈 | Flint모듈               |      |
-| 옵션 | FlintAbiManifestOptions |      |
-
-### FORGE_WEB_SCRIPT_ABI_VERSION
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-설명이 제공되지 않았습니다.
-
-### FORGE_WEB_SCRIPT_LANGUAGE_VERSION
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintAbi함수
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAbiFunction
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintAbi매니페스트
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAbiManifest
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintAbiManifest옵션
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAbiManifestOptions
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintAbi매개변수
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAbiParameter
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintAbi버전
-
-**종류:** 유형
-
-```typescript
-export type FlintAbiVersion = typeof FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintAggregateFieldLayout
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAggregateFieldLayout
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintAggregateLayout
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintAggregateLayout
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintCollection레이아웃
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintCollectionLayout
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintDynamicLink메타데이터
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintDynamicLinkMetadata
-```
-
-동적 로더 및 해당 디스패치 캐시에서 사용되는 안정적인 메타데이터입니다.
-
-### FlintDynamicModuleBinding
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintDynamicModuleBinding
-```
-
-명시적으로 동적 모듈에 대한 매니페스트에 표시되는 바인딩 정보입니다.
-
-### FlintEnumMetadata
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintEnumMetadata
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintHost가져오기
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintHostImport
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintIteratorBoundaryDescriptor
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintIteratorBoundaryDescriptor
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint언어버전
-
-**종류:** 유형
-
-```typescript
-export type FlintLanguageVersion = typeof FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintLinkedExport
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintLinkedExport
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint메모리 레이아웃
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintMemoryLayout
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint소스가져오기
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintSourceImport
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint전문화
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintSpecialization
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint값 표현
-
-**종류:** 유형
-
-```typescript
-export type FlintValueRepresentation =
-  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
-```
-
-설명이 제공되지 않았습니다.
+- **@param:** - 원시 파일 이름 또는 경로 문자열입니다.
+- **@returns:** 정규화된 POSIX 스타일 파일 경로 식별자입니다.
 
 ## `src/module-types`
 
@@ -2566,7 +2069,7 @@ export type FlintValueRepresentation =
 export interface FlintImportTypeEnvironment
 ```
 
-설명이 제공되지 않았습니다.
+모듈로 가져온 선언을 포함하는 외부 유형 환경입니다.
 
 ### 해결FlintImportTypeEnvironment
 
@@ -2579,130 +2082,160 @@ function resolveFlintImportTypeEnvironment(
 ): FlintImportTypeEnvironment;
 ```
 
-설명이 제공되지 않았습니다.
+모듈 그래프의 업스트림 종속성 모듈에서 가져온 함수 서명을 확인합니다.
 
 #### 매개변수
 
-| 이름     | 유형                | 설명 |
-| -------- | ------------------- | ---- |
-| 수입업자 | FlintResolvedModule |      |
-| 그래프   | Flint모듈그래프     |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------------------- | ------------------------------------------------------------------------ |
+| 수입업자 | 플린트ResolvedModule | - 가져오기 종속성을 검사 중인 모듈이 해결되었습니다.         |
+| 그래프 | 플린트모듈그래프 | - 연결된 모든 모듈과 에지를 포함하는 다중 모듈 종속성 그래프. |
 
-## `src/optimizer`
+#### 계약
 
-### Flint최적화결정
+- **@param:** - 가져오기 종속성을 검사 중인 모듈이 해결되었습니다.
+- **@param:** - 연결된 모든 모듈과 에지를 포함하는 다중 모듈 종속성 그래프입니다.
+- **@returns:** 내보낸 외부 기능(기본 및 별칭 접두사 모두)을 포함하는 가져오기 유형 환경입니다.
 
-**종류:** 인터페이스
+## `src/safety`
 
-```typescript
-export interface FlintOptimizationDecision
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint최적화보고서
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintOptimizationReport
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintOptimizationResult
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintOptimizationResult
-```
-
-설명이 제공되지 않았습니다.
-
-### 최적화FlintIr
+### 평생 탈출 가능
 
 **종류:** 기능
 
 ```typescript
-function optimizeFlintIr(input: FlintIrModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function canLifetimeEscape(source: RegionLifetime, target: RegionLifetime): boolean;
 ```
 
-설명이 제공되지 않았습니다.
+원본 수명에서 대상 수명으로의 할당 또는 반환이 지역 안전을 위반하지 않는지 확인합니다.
+명시적인 승격/복제 없이 수명이 짧은 참조를 수명이 긴 대상에 저장하는 것은 허용되지 않습니다.
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 입력 | FlintIr모듈        |      |
-| 모드 | '디버그' \| '출시' |      |
+| 이름 | 유형 | 설명 |
+| ------ | -------------- | ----------- |
+| 출처 | 지역수명 |             |
+| 목표 | 지역수명 |             |
 
-### 최적화Flint모듈
+### 플린트안전 확인
 
 **종류:** 기능
 
 ```typescript
-function optimizeFlintModule(module: FlintModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function checkFlintSafety(module: FlintModule, fileName: string, diagnostics: FlintDiagnostic[]): void;
 ```
 
-설명이 제공되지 않았습니다.
+레거시 유형 문자열로 표현할 수 없는 소스 수준 검사를 수행합니다.
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 모듈 | Flint모듈          |      |
-| 모드 | '디버그' \| '출시' |      |
+| 이름 | 유형 | 설명 |
+| ----------- | ----------------- | ------------------------------------ |
+| 모듈 | 플린트모듈 | - 검증할 모듈 AST.            |
+| 파일 이름 | 문자열 | - 진단에 사용되는 파일 이름입니다.    |
+| 진단 | 플린트진단[] | - 오류 진단용 누산기. |
 
-## `src/parser`
+#### 계약
 
-### FlintParse옵션
+- **@param:** - 검증할 모듈 AST입니다.
+- **@param:** - 진단에 사용되는 파일 이름입니다.
+- **@param:** - 오류 진단용 누산기입니다.
+
+### 폐쇄캡처정보
 
 **종류:** 인터페이스
 
 ```typescript
-export interface FlintParseOptions
+export interface ClosureCaptureInfo
 ```
 
-설명이 제공되지 않았습니다.
+클로저에 의해 캡처된 변수의 설명자입니다.
 
-### FlintParseResult
+### 이동안전정보
 
 **종류:** 인터페이스
 
 ```typescript
-export interface FlintParseResult
+export interface MoveSafetyInfo
 ```
 
-설명이 제공되지 않았습니다.
+구조체 이동 안전 정보 설명자입니다.
 
-### 파싱포지웹스크립트
-
-**종류:** 기능
-
-```typescript
-function parseFlint(source: string, fileName = '<input>', options: FlintParseOptions = {}): FlintParseResult;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름      | 유형           | 설명 |
-| --------- | -------------- | ---- |
-| 출처      | 문자열         |      |
-| 파일 이름 |                |      |
-| 옵션      | FlintParse옵션 |      |
-
-### 기본 유형
+### REGION_LIFETIME_ORDER
 
 **종류:** 상수
 
 ```typescript
-export const primitiveTypes;
+export const REGION_LIFETIME_ORDER: Readonly<Record<RegionLifetime, number>>;
 ```
 
 설명이 제공되지 않았습니다.
+
+### REGION_LIFETIMES
+
+**종류:** 상수
+
+```typescript
+export const REGION_LIFETIMES;
+```
+
+설명이 제공되지 않았습니다.
+
+### 지역수명
+
+**종류:** 유형
+
+```typescript
+export type RegionLifetime = 'local' | 'function' | 'arena' | 'global' | 'Local' | 'Function' | 'Arena' | 'GlobalHeap';
+```
+
+지역 수명 격자 계층 구조: Local < Function < Arena < GlobalHeap.
+
+### verifyClosureCaptureSafety
+
+**종류:** 기능
+
+```typescript
+function validateClosureCaptureSafety(capture: ClosureCaptureInfo): {
+  readonly safe: boolean;
+  readonly requiresHeapPromotion: boolean;
+  readonly reason?: string;
+};
+```
+
+클로저 캡처 안전성을 검증하고 스택 변수 힙 승격이 필수인지 결정합니다.
+클로저가 캡처된 스택 프레임보다 오래 지속되는 경우 Use-After-Scope 메모리 손상을 방지합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------------------ | -------------------------------------- |
+| 캡처 | 폐쇄캡처정보 | - 클로저 캡처 메타데이터 설명자. |
+
+#### 계약
+
+- **@param:** - 클로저 캡처 메타데이터 설명자입니다.
+- **@returns:** 유효성 검사 결과, 힙 승격이 필요한지 여부, 안전하지 않은 경우 오류 메시지.
+
+### 검증이동안전
+
+**종류:** 기능
+
+```typescript
+function validateMoveSafety(info: MoveSafetyInfo): {
+  readonly safe: boolean;
+  readonly reason?: string;
+};
+```
+
+집계 또는 구조체 값을 값별로 안전하게 이동할 수 있는지 확인합니다.
+스택 프레임 스매싱 및 이동 후 사용 위험을 제거하기 위해 고정된 구조 또는 자체 참조 구조 이동을 금지합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | -------------- | ----------- |
+| 정보 | 이동안전정보 |             |
 
 ## `src/self-hosted`
 
@@ -2714,9 +2247,13 @@ export const primitiveTypes;
 function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHostedSourceModule[];
 ```
 
-설명이 제공되지 않았습니다.
+자체 호스팅 컴파일러 소스 모듈의 전체 매니페스트를 만듭니다.
 
-### decodeFlintSelfHostedFingerprint
+#### 계약
+
+- **@returns:** 자체 호스팅 소스 모듈의 배열입니다.
+
+### 디코드FlintSelfHosted지문
 
 **종류:** 기능
 
@@ -2724,13 +2261,18 @@ function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHosted
 function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
-설명이 제공되지 않았습니다.
+UTF-8 바이트 배열에서 자체 호스팅 지문을 디코딩합니다.
 
 #### 매개변수
 
-| 이름   | 유형       | 설명 |
-| ------ | ---------- | ---- |
-| 바이트 | Uint8Array |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------- | ------------------------------- |
+| 바이트 | Uint8Array | - UTF-8로 인코딩된 바이트 배열입니다. |
+
+#### 계약
+
+- **@param:** - UTF-8로 인코딩된 바이트 배열입니다.
+- **@returns:** 디코딩된 지문 문자열입니다.
 
 ### encodeFlintSelfHostedFingerprint
 
@@ -2740,15 +2282,20 @@ function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
-설명이 제공되지 않았습니다.
+자체 호스팅 지문 문자열을 UTF-8 바이트 배열로 인코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 지문 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ----------- | ------ | ------------------------- |
+| 지문 | 문자열 | - 지문 문자열. |
 
-### FlintSelfHosted컴파일
+#### 계약
+
+- **@param:** - 지문 문자열입니다.
+- **@returns:** UTF-8로 인코딩된 바이트 배열입니다.
+
+### FlintSelfHosted편집
 
 **종류:** 인터페이스
 
@@ -2756,7 +2303,8 @@ function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 export interface FlintSelfHostedCompilation
 ```
 
-설명이 제공되지 않았습니다.
+TypeScript 시드 참조를 병합하여 제한된 자체 호스팅 컴파일 단위를 나타냅니다.
+제한된 자체 호스팅 lex/token-normalization VM 단계를 사용한 실행.
 
 ### FlintSelfHostedNormalizedOutput
 
@@ -2766,7 +2314,8 @@ export interface FlintSelfHostedCompilation
 export interface FlintSelfHostedNormalizedOutput
 ```
 
-설명이 제공되지 않았습니다.
+Flint 컴파일의 정규화된 결정론적 출력 표현을 나타냅니다.
+이렇게 하면 컴파일 아티팩트(AST, IR, WA, 진단)를 안정적으로 비교할 수 있습니다.
 
 ### FlintSelfHostedVmExecutionMode
 
@@ -2776,9 +2325,9 @@ export interface FlintSelfHostedNormalizedOutput
 export type FlintSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-설명이 제공되지 않았습니다.
+자체 호스팅 컴파일을 실행할 때 Flint VM의 실행 모드입니다.
 
-### prepareFlintSelfHosted컴파일
+### prepareFlintSelfHosted편집
 
 **종류:** 기능
 
@@ -2793,11 +2342,11 @@ VM 모듈은 입력 소스에서 실제 lex/token-normalization 단계를 실행
 
 #### 매개변수
 
-| 이름 | 유형             | 설명 |
-| ---- | ---------------- | ---- |
-| 입력 | Flint컴파일 입력 |      |
+| 이름 | 유형 | 설명 |
+| ----- | ----------------- | ----------- |
+| 입력 | 플린트컴파일입력 |             |
 
-### prepareFlintSelfHostedCompilation레거시지문
+### prepareFlintSelfHosted편집레거시지문인식
 
 **종류:** 기능
 
@@ -2809,9 +2358,9 @@ function prepareFlintSelfHostedCompilationLegacyFingerprint(input: FlintCompileI
 
 #### 매개변수
 
-| 이름 | 유형             | 설명 |
-| ---- | ---------------- | ---- |
-| 입력 | Flint컴파일 입력 |      |
+| 이름 | 유형 | 설명 |
+| ----- | ----------------- | ----------- |
+| 입력 | 플린트컴파일입력 |             |
 
 #### 계약
 
@@ -2832,16 +2381,24 @@ function createFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-설명이 제공되지 않았습니다.
+createFlintSelfHostedStageArtifact 구현.
 
 #### 매개변수
 
-| 이름     | 유형                                 | 설명 |
-| -------- | ------------------------------------ | ---- |
-| 무대     | FlintSelfHostedCompilerStage         |      |
-| 정체성   | FlintSelfHostedStageArtifactIdentity |      |
-| 페이로드 | Uint8Array                           |      |
-| 진단     | 읽기 전용 FlintDiagnostic[]          |      |
+| 이름 | 유형 | 설명 |
+| ----------- | ------------------------------------ | ---------------------------- |
+| 무대 | FlintSelfHostedCompilerStage | - 스테이지 매개변수입니다.       |
+| 정체성 | FlintSelfHostedStageArtifactIdentity | - ID 매개변수입니다.    |
+| 페이로드 | Uint8Array | - 페이로드 매개변수.     |
+| 진단 | 읽기 전용 FlintDiagnostic[] | - 진단 매개변수. |
+
+#### 계약
+
+- **@param:** - 스테이지 매개변수입니다.
+- **@param:** - ID 매개변수입니다.
+- **@param:** - 페이로드 매개변수입니다.
+- **@param:** - 진단 매개변수입니다.
+- **@returns:** FlintSelfHostedStageArtifact 결과입니다.
 
 ### decodeFlintSelfHostedDiagnostics
 
@@ -2851,15 +2408,20 @@ function createFlintSelfHostedStageArtifact(
 function decodeFlintSelfHostedDiagnostics(bytes: Uint8Array): readonly FlintDiagnostic[];
 ```
 
-설명이 제공되지 않았습니다.
+decodeFlintSelfHostedDiagnostics 구현.
 
 #### 매개변수
 
-| 이름   | 유형       | 설명 |
-| ------ | ---------- | ---- |
-| 바이트 | Uint8Array |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------- | ---------------------- |
+| 바이트 | Uint8Array | - 바이트 매개변수입니다. |
 
-### decodeFlintSelfHostedStageArtifact
+#### 계약
+
+- **@param:** - 바이트 매개변수입니다.
+- **@returns:** 읽기 전용 FlintDiagnostic[] 결과입니다.
+
+### 디코드플린트SelfHostedStageArtifact
 
 **종류:** 기능
 
@@ -2870,14 +2432,20 @@ function decodeFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-설명이 제공되지 않았습니다.
+decodeFlintSelfHostedStageArtifact 구현.
 
 #### 매개변수
 
-| 이름   | 유형                                   | 설명 |
-| ------ | -------------------------------------- | ---- |
-| 바이트 | Uint8Array                             |      |
-| 옵션   | FlintSelfHostedStageArtifactDecode옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------------------------- | ------------------------ |
+| 바이트 | Uint8Array | - 바이트 매개변수입니다.   |
+| 옵션 | FlintSelfHostedStageArtifactDecode옵션 | - 옵션 매개변수입니다. |
+
+#### 계약
+
+- **@param:** - 바이트 매개변수입니다.
+- **@param:** - 옵션 매개변수입니다.
+- **@returns:** FlintSelfHostedStageArtifact 결과입니다.
 
 ### encodeFlintSelfHostedDiagnostics
 
@@ -2887,13 +2455,18 @@ function decodeFlintSelfHostedStageArtifact(
 function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[]): Uint8Array;
 ```
 
-설명이 제공되지 않았습니다.
+encodeFlintSelfHostedDiagnostics 구현.
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 진단 | 읽기 전용 FlintDiagnostic[] |      |
+| 이름 | 유형 | 설명 |
+| ----------- | -------------------------- | ---------------------------- |
+| 진단 | 읽기 전용 FlintDiagnostic[] | - 진단 매개변수. |
+
+#### 계약
+
+- **@param:** - 진단 매개변수입니다.
+- **@returns:** Uint8Array 결과입니다.
 
 ### encodeFlintSelfHostedStageArtifact
 
@@ -2903,50 +2476,55 @@ function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[
 function encodeFlintSelfHostedStageArtifact(artifact: FlintSelfHostedStageArtifact): Uint8Array;
 ```
 
-설명이 제공되지 않았습니다.
+encodeFlintSelfHostedStageArtifact 구현.
 
 #### 매개변수
 
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 유물 | FlintSelfHostedStageArtifact |      |
+| 이름 | 유형 | 설명 |
+| -------- | ---------------------------- | ------------------------- |
+| 유물 | FlintSelfHostedStageArtifact | - 아티팩트 매개변수입니다. |
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+#### 계약
+
+- **@param:** - 아티팩트 매개변수입니다.
+- **@returns:** Uint8Array 결과입니다.
+
+### FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
+export const FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 설명이 제공되지 않았습니다.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 설명이 제공되지 않았습니다.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 설명이 제공되지 않았습니다.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
+### FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
+export const FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2960,7 +2538,7 @@ export type FlintSelfHostedCompilerStage =
   'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
-설명이 제공되지 않았습니다.
+FlintSelfHostedCompilerStage 구현.
 
 ### FlintSelfHostedStageArtifact
 
@@ -2970,7 +2548,7 @@ export type FlintSelfHostedCompilerStage =
 export interface FlintSelfHostedStageArtifact
 ```
 
-설명이 제공되지 않았습니다.
+FlintSelfHostedStageArtifact 구현.
 
 ### FlintSelfHostedStageArtifactDecode옵션
 
@@ -2980,7 +2558,7 @@ export interface FlintSelfHostedStageArtifact
 export interface FlintSelfHostedStageArtifactDecodeOptions
 ```
 
-설명이 제공되지 않았습니다.
+FlintSelfHostedStageArtifactDecodeOptions 구현.
 
 ### FlintSelfHostedStageArtifactID
 
@@ -2990,7 +2568,7 @@ export interface FlintSelfHostedStageArtifactDecodeOptions
 export interface FlintSelfHostedStageArtifactIdentity
 ```
 
-설명이 제공되지 않았습니다.
+FlintSelfHostedStageArtifactIdentity 구현.
 
 ### hashFlintSelfHostedBytes
 
@@ -3000,13 +2578,18 @@ export interface FlintSelfHostedStageArtifactIdentity
 function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
-설명이 제공되지 않았습니다.
+hashFlintSelfHostedBytes 구현.
 
 #### 매개변수
 
-| 이름   | 유형       | 설명 |
-| ------ | ---------- | ---- |
-| 바이트 | Uint8Array |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------- | ---------------------- |
+| 바이트 | Uint8Array | - 바이트 매개변수입니다. |
+
+#### 계약
+
+- **@param:** - 바이트 매개변수입니다.
+- **@returns:** 문자열 결과입니다.
 
 ### hashFlintSelfHostedSourceIdentity
 
@@ -3016,21 +2599,28 @@ function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 function hashFlintSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
-설명이 제공되지 않았습니다.
+hashFlintSelfHostedSourceIdentity 구현.
 
 #### 매개변수
 
-| 이름       | 유형   | 설명 |
-| ---------- | ------ | ---- |
-| 출처       | 문자열 |      |
-| 파일 이름  | 문자열 |      |
-| 그래프해시 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------ | -------------------------- |
+| 출처 | 문자열 | - 소스 매개변수입니다.    |
+| 파일이름 | 문자열 | - fileName 매개변수입니다.  |
+| 그래프해시 | 문자열 | - graphHash 매개변수입니다. |
 
-## `src/self-hosted/fws/lexer`
+#### 계약
+
+- **@param:** - 소스 매개변수입니다.
+- **@param:** - fileName 매개변수입니다.
+- **@param:** - graphHash 매개변수입니다.
+- **@returns:** 문자열 결과입니다.
+
+## `src/self-hosted/flint/lexer`
 
 ### is_ws
 
-**종류:** fws-export
+**종류:** 부싯돌 수출
 
 ```typescript
 export fn is_ws(byte: i32) -> bool
@@ -3040,9 +2630,9 @@ export fn is_ws(byte: i32) -> bool
 
 #### 매개변수
 
-| 이름   | 유형 | 설명            |
-| ------ | ---- | --------------- |
-| 바이트 | i32  | 후보 바이트 값. |
+| 이름 | 유형 | 설명 |
+| ---- | ---- | --------------------- |
+| 바이트 | i32 | 후보 바이트 값. |
 
 #### 계약
 
@@ -3064,9 +2654,14 @@ function computeFlintLexStageFingerprint(source: string): number;
 
 #### 매개변수
 
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 출처 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------ | -------------------- |
+| 출처 | 문자열 | - 플린트 소스 텍스트. |
+
+#### 계약
+
+- **@param:** - 플린트 소스 텍스트.
+- **@returns:** 32비트 부호 있는 정수 지문입니다.
 
 ### createFlintLexStageVmModule
 
@@ -3081,47 +2676,47 @@ lex 지문 단계를 위한 손으로 내리는 VM 모듈입니다.
 
 #### 매개변수
 
-| 이름     | 유형   | 설명 |
-| -------- | ------ | ---- |
-| 소스해시 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------ | ----------- |
+| 소스해시 | 문자열 |             |
 
-### encodeFlintLexStageSource
+### 인코딩FlintLexStageSource
 
 **종류:** 기능
 
 ```typescript
 function encodeFlintLexStageSource(source: string): {
   readonly kind: 'aggregate';
-  readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+  readonly layout: typeof FLINT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
 };
 ```
 
-설명이 제공되지 않았습니다.
+VM 어휘분석기 단계에서 예상하는 바이너리 표현으로 소스 코드를 인코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 출처 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------ | ----------- |
+| 출처 | 문자열 |             |
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+### FLINT_LEX_STAGE_ENTRY
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
+export const FLINT_LEX_STAGE_ENTRY;
 ```
 
 설명이 제공되지 않았습니다.
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+### FLINT_LEX_STAGE_SOURCE_LAYOUT
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+export const FLINT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3134,7 +2729,7 @@ export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
 export interface FlintSelfHostedVmFunction
 ```
 
-설명이 제공되지 않았습니다.
+자체 호스팅 가상 머신에 의해 실행되는 기능 정의입니다.
 
 ### FlintSelfHostedVm명령
 
@@ -3144,9 +2739,9 @@ export interface FlintSelfHostedVmFunction
 export type FlintSelfHostedVmInstruction = |
 ```
 
-설명이 제공되지 않았습니다.
+자체 호스팅 렉싱 중에 실행되는 가상 머신 명령 튜플입니다.
 
-### FlintSelfHostedVmModule
+### FlintSelfHostedVm모듈
 
 **종류:** 인터페이스
 
@@ -3154,9 +2749,9 @@ export type FlintSelfHostedVmInstruction = |
 export interface FlintSelfHostedVmModule
 ```
 
-설명이 제공되지 않았습니다.
+바이트코드와 상수를 포함하는 자체 호스팅 컴파일러 VM 모듈 구조입니다.
 
-### FlintSelfHostedVmValue
+### FlintSelfHostedVm값
 
 **종류:** 유형
 
@@ -3164,7 +2759,7 @@ export interface FlintSelfHostedVmModule
 export type FlintSelfHostedVmValue = |
 ```
 
-설명이 제공되지 않았습니다.
+자체 호스팅 VM 상수 풀에 저장된 상수 값입니다.
 
 ## `src/self-hosted/parser-module-stage`
 
@@ -3191,13 +2786,13 @@ function createFlintParserModuleVmModule(
 
 #### 매개변수
 
-| 이름      | 유형                          | 설명 |
-| --------- | ----------------------------- | ---- |
-| 소스해시  | 문자열                        |      |
-| 파일 이름 | 문자열                        |      |
-| 옵션      | FlintParserModuleStageOptions |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------- | ----------- |
+| 소스해시 | 문자열 |             |
+| 파일이름 | 문자열 |             |
+| 옵션 | FlintParserModuleStage옵션 |             |
 
-### decodeFlintParserModuleEnvelope
+### 디코드플린트파서모듈봉투
 
 **종류:** 기능
 
@@ -3205,20 +2800,25 @@ function createFlintParserModuleVmModule(
 function decodeFlintParserModuleEnvelope(bytes: Uint8Array): FlintParserModuleEnvelope;
 ```
 
-설명이 제공되지 않았습니다.
+decodeFlintParserModuleEnvelope 구현.
 
 #### 매개변수
 
-| 이름   | 유형       | 설명 |
-| ------ | ---------- | ---- |
-| 바이트 | Uint8Array |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------- | ---------------------- |
+| 바이트 | Uint8Array | - 바이트 매개변수입니다. |
 
-### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+#### 계약
+
+- **@param:** - 바이트 매개변수입니다.
+- **@returns:** FlintParserModuleEnvelope 결과입니다.
+
+### FLINT_PARSER_MODULE_STAGE_ENTRY
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
+export const FLINT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3231,7 +2831,7 @@ export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
 export interface FlintParserModuleEnvelope
 ```
 
-{@link FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY}에서 반환된 디코딩된 봉투입니다.
+{@link FLINT_PARSER_MODULE_STAGE_ENTRY}에서 반환된 디코딩된 봉투입니다.
 
 ### FlintParserModuleStage옵션
 
@@ -3241,7 +2841,7 @@ export interface FlintParserModuleEnvelope
 export interface FlintParserModuleStageOptions
 ```
 
-설명이 제공되지 않았습니다.
+FlintParserModuleStageOptions 구현.
 
 ## `src/self-hosted/parser-stage`
 
@@ -3253,14 +2853,18 @@ export interface FlintParserModuleStageOptions
 function computeFlintParserStageFingerprint(source: string): number;
 ```
 
-자체 호스팅 파서 단계에 대한 시드 참조입니다.
-{@link createFlintParserStageVmModule}과 동작이 동일하게 유지되어야 합니다.
+자체 호스팅 파서 단계에 대한 결정적 32비트 FNV 지문을 계산합니다.
 
 #### 매개변수
 
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 출처 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------ | --------------------------- |
+| 출처 | 문자열 | - 플린트 소스 코드 문자열. |
+
+#### 계약
+
+- **@param:** - Flint 소스 코드 문자열입니다.
+- **@returns:** 결정적 32비트 부호 있는 정수 지문입니다.
 
 ### createFlintParserStageVmModule
 
@@ -3278,17 +2882,17 @@ function createFlintParserStageVmModule(
 
 #### 매개변수
 
-| 이름     | 유형                            | 설명 |
-| -------- | ------------------------------- | ---- |
-| 소스해시 | 문자열                          |      |
-| 옵션     | FlintParserStageVmModuleOptions |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------- | ----------- |
+| 소스해시 | 문자열 |             |
+| 옵션 | FlintParserStageVmModuleOptions |             |
 
-### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+### FLINT_PARSER_STAGE_ENTRY
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
+export const FLINT_PARSER_STAGE_ENTRY;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3319,17 +2923,26 @@ function createFlintSelfHostedParserArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-설명이 제공되지 않았습니다.
+createFlintSelfHostedParserArtifact 구현.
 
 #### 매개변수
 
-| 이름       | 유형                        | 설명 |
-| ---------- | --------------------------- | ---- |
-| 출처       | 문자열                      |      |
-| 파일 이름  | 문자열                      |      |
-| 모듈       | Flint모듈                   |      |
-| 진단       | 읽기 전용 FlintDiagnostic[] |      |
-| 그래프해시 | 문자열                      |      |
+| 이름 | 유형 | 설명 |
+| ----------- | -------------------------- | ---------------------------- |
+| 출처 | 문자열 | - 소스 매개변수입니다.      |
+| 파일 이름 | 문자열 | - fileName 매개변수입니다.    |
+| 모듈 | 플린트모듈 | - 모듈 매개변수.      |
+| 진단 | 읽기 전용 FlintDiagnostic[] | - 진단 매개변수. |
+| 그래프해시 | 문자열 | - graphHash 매개변수입니다.   |
+
+#### 계약
+
+- **@param:** - 소스 매개변수입니다.
+- **@param:** - fileName 매개변수입니다.
+- **@param:** - 모듈 매개변수입니다.
+- **@param:** - 진단 매개변수입니다.
+- **@param:** - graphHash 매개변수입니다.
+- **@returns:** FlintSelfHostedStageArtifact 결과입니다.
 
 ### createFlintSelfHostedTokenArtifact
 
@@ -3345,17 +2958,26 @@ function createFlintSelfHostedTokenArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-설명이 제공되지 않았습니다.
+createFlintSelfHostedTokenArtifact 구현.
 
 #### 매개변수
 
-| 이름       | 유형                        | 설명 |
-| ---------- | --------------------------- | ---- |
-| 출처       | 문자열                      |      |
-| 파일 이름  | 문자열                      |      |
-| 토큰       | 읽기 전용 FlintToken[]      |      |
-| 진단       | 읽기 전용 FlintDiagnostic[] |      |
-| 그래프해시 | 문자열                      |      |
+| 이름 | 유형 | 설명 |
+| ----------- | -------------------------- | ---------------------------- |
+| 출처 | 문자열 | - 소스 매개변수입니다.      |
+| 파일 이름 | 문자열 | - fileName 매개변수입니다.    |
+| 토큰 | 읽기 전용 FlintToken[] | - 토큰 매개변수입니다.      |
+| 진단 | 읽기 전용 FlintDiagnostic[] | - 진단 매개변수. |
+| 그래프해시 | 문자열 | - graphHash 매개변수입니다.   |
+
+#### 계약
+
+- **@param:** - 소스 매개변수입니다.
+- **@param:** - fileName 매개변수입니다.
+- **@param:** - 토큰 매개변수입니다.
+- **@param:** - 진단 매개변수입니다.
+- **@param:** - graphHash 매개변수입니다.
+- **@returns:** FlintSelfHostedStageArtifact 결과입니다.
 
 ### decodeFlintSelfHostedModule
 
@@ -3365,15 +2987,20 @@ function createFlintSelfHostedTokenArtifact(
 function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 ```
 
-설명이 제공되지 않았습니다.
+자체 호스팅 파서 모듈 페이로드를 디코딩합니다.
 
 #### 매개변수
 
-| 이름   | 유형       | 설명 |
-| ------ | ---------- | ---- |
-| 바이트 | Uint8Array |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------- | ------------------------ |
+| 바이트 | Uint8Array | - 바이너리 모듈 페이로드. |
 
-### decodeFlintSelfHostedTokens
+#### 계약
+
+- **@param:** - 바이너리 모듈 페이로드.
+- **@returns:** 디코딩된 모듈 AST.
+
+### 디코드FlintSelfHostedTokens
 
 **종류:** 기능
 
@@ -3381,13 +3008,18 @@ function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 ```
 
-설명이 제공되지 않았습니다.
+자체 호스팅 토큰 스트림 페이로드를 디코딩합니다.
 
 #### 매개변수
 
-| 이름   | 유형       | 설명 |
-| ------ | ---------- | ---- |
-| 바이트 | Uint8Array |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------- | ----------------------- |
+| 바이트 | Uint8Array | - 바이너리 토큰 페이로드. |
+
+#### 계약
+
+- **@param:** - 바이너리 토큰 페이로드.
+- **@returns:** 디코딩된 토큰 스트림입니다.
 
 ### encodeFlintSelfHostedModule
 
@@ -3397,13 +3029,18 @@ function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 ```
 
-설명이 제공되지 않았습니다.
+자체 호스팅 파서 모듈 페이로드를 인코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형      | 설명 |
-| ---- | --------- | ---- |
-| 모듈 | Flint모듈 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ----------- | -------------------------- |
+| 모듈 | 플린트모듈 | - 직렬화할 모듈 AST. |
+
+#### 계약
+
+- **@param:** - 직렬화할 모듈 AST입니다.
+- **@returns:** 바이너리 모듈 페이로드.
 
 ### encodeFlintSelfHostedTokens
 
@@ -3413,15 +3050,20 @@ function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 ```
 
-설명이 제공되지 않았습니다.
+자체 호스팅 토큰 스트림 페이로드를 인코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 토큰 | 읽기 전용 FlintToken[] |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------------- | ---------------------------- |
+| 토큰 | 읽기 전용 FlintToken[] | - 직렬화할 토큰 스트림입니다. |
 
-### hashFlintSelfHostedStagePayload
+#### 계약
+
+- **@param:** - 직렬화할 토큰 스트림입니다.
+- **@returns:** 바이너리 토큰 페이로드.
+
+### hashFlintSelfHostedStage페이로드
 
 **종류:** 기능
 
@@ -3429,13 +3071,18 @@ function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 function hashFlintSelfHostedStagePayload(artifact: FlintSelfHostedStageArtifact): string;
 ```
 
-설명이 제공되지 않았습니다.
+hashFlintSelfHostedStagePayload 구현.
 
 #### 매개변수
 
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 유물 | FlintSelfHostedStageArtifact |      |
+| 이름 | 유형 | 설명 |
+| -------- | ---------------------------- | ------------------------- |
+| 유물 | FlintSelfHostedStageArtifact | - 아티팩트 매개변수입니다. |
+
+#### 계약
+
+- **@param:** - 아티팩트 매개변수입니다.
+- **@returns:** 문자열 결과입니다.
 
 ### verifyFlintSelfHostedStageArtifact
 
@@ -3451,279 +3098,30 @@ function validateFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-설명이 제공되지 않았습니다.
+verifyFlintSelfHostedStageArtifact 구현.
 
 #### 매개변수
 
-| 이름       | 유형                         | 설명 |
-| ---------- | ---------------------------- | ---- |
-| 유물       | FlintSelfHostedStageArtifact |      |
-| 무대       | FlintSelfHostedCompilerStage |      |
-| 출처       | 문자열                       |      |
-| 파일 이름  | 문자열                       |      |
-| 그래프해시 | 문자열                       |      |
-
-## `src/stdlib/memory`
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
-```
-
-설명이 제공되지 않았습니다.
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly FlintMemoryFunction[];
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintMemory함수
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintMemoryFunction
-```
-
-설명이 제공되지 않았습니다.
-
-### Flint메모리 작업
-
-**종류:** 유형
-
-```typescript
-export type FlintMemoryOperation =
-  | 'memory-alloc'
-  | 'memory-dealloc'
-  | 'memory-realloc'
-  | 'memory-load-u32'
-  | 'memory-store-u32'
-  | 'memory-load-f64'
-  | 'memory-store-f64'
-  | 'f64-from-u32';
-```
-
-컴파일러에서 예약한 게스트 선형 메모리 작업을 확인했습니다.
-
-## `src/stdlib/regex`
-
-### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
-
-**종류:** 상수
-
-```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
-```
-
-설명이 제공되지 않았습니다.
-
-### FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
-```
-
-설명이 제공되지 않았습니다.
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
-```
-
-설명이 제공되지 않았습니다.
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTIONS
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly FlintStandardLibraryFunction[];
-```
-
-컴파일러 소유 호출. 호스트 가져오기가 아닌 예약된 소스 이름입니다.
-백엔드 단계에서 Forge Web Script WASM 런타임으로 낮아졌습니다.
-캡처 작업은 설정되지 않은 그룹에 대해 또는 일치 항목이 없는 경우 `-1`을 반환합니다.
-
-### FORGE_WEB_SCRIPT_REGEX_VERSION
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION;
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintRegexOperation
-
-**종류:** 유형
-
-```typescript
-export type FlintRegexOperation =
-  | 'full-match'
-  | 'prefix-match'
-  | 'search'
-  | 'full-capture-start'
-  | 'full-capture-end'
-  | 'prefix-capture-start'
-  | 'prefix-capture-end'
-  | 'search-capture-start'
-  | 'search-capture-end';
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintStandardLibrary함수
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintStandardLibraryFunction
-```
-
-설명이 제공되지 않았습니다.
-
-### flintStandardLibraryIdentity
-
-**종류:** 기능
-
-```typescript
-function flintStandardLibraryIdentity(
-  overrides: Partial<FlintStandardLibraryIdentity> = {},
-): FlintStandardLibraryIdentity;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름   | 유형                               | 설명 |
-| ------ | ---------------------------------- | ---- |
-| 재정의 | 부분<FlintStandardLibraryIdentity> |      |
-
-### FlintStandardLibraryIdentity
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintStandardLibraryIdentity
-```
-
-정규식 컴파일 및 생성된 아티팩트에 영향을 미치는 안정적인 ID 입력입니다.
-
-## `src/stdlib/string`
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
-```
-
-설명이 제공되지 않았습니다.
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTIONS
-
-**종류:** 상수
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly FlintStringFunction[];
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintStringFunction
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintStringFunction
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintStringOperation
-
-**종류:** 유형
-
-```typescript
-export type FlintStringOperation =
-  | 'string-concat'
-  | 'string-length'
-  | 'string-byte-at'
-  | 'string-starts-with'
-  | 'string-slice'
-  | 'string-to-i32'
-  | 'bytes-length'
-  | 'bytes-length-u32'
-  | 'bytes-byte-at'
-  | 'bytes-byte-at-u32'
-  | 'bytes-slice';
-```
-
-컴파일러 소유의 결정적 문자열 및 바이트 작업.
-
-## `src/type-checker`
-
-### checkFlint
-
-**종류:** 기능
-
-```typescript
-function checkFlint(
-  module: FlintModule,
-  fileName = '<input>',
-  options: FlintTypeCheckOptions = {},
-): FlintTypeCheckResult;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름      | 유형                  | 설명 |
-| --------- | --------------------- | ---- |
-| 모듈      | Flint모듈             |      |
-| 파일 이름 |                       |      |
-| 옵션      | FlintTypeCheckOptions |      |
-
-### FlintTypeCheck옵션
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintTypeCheckOptions
-```
-
-설명이 제공되지 않았습니다.
-
-### FlintTypeCheckResult
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintTypeCheckResult
-```
-
-설명이 제공되지 않았습니다.
+| 이름 | 유형 | 설명 |
+| --------- | ---------------------------- | -------------------------- |
+| 유물 | FlintSelfHostedStageArtifact | - 아티팩트 매개변수입니다.  |
+| 무대 | FlintSelfHostedCompilerStage | - 스테이지 매개변수입니다.     |
+| 출처 | 문자열 | - 소스 매개변수입니다.    |
+| 파일이름 | 문자열 | - fileName 매개변수입니다.  |
+| 그래프해시 | 문자열 | - graphHash 매개변수입니다. |
+
+#### 계약
+
+- **@param:** - 아티팩트 매개변수입니다.
+- **@param:** - 스테이지 매개변수입니다.
+- **@param:** - 소스 매개변수입니다.
+- **@param:** - fileName 매개변수입니다.
+- **@param:** - graphHash 매개변수입니다.
+- **@returns:** FlintSelfHostedStageArtifact 결과입니다.
 
 ## `src/validate`
 
-### Flint검증 결과
+### 플린트검증결과
 
 **종류:** 인터페이스
 
@@ -3731,9 +3129,9 @@ export interface FlintTypeCheckResult
 export interface FlintValidationResult
 ```
 
-설명이 제공되지 않았습니다.
+구문 분석 및 유형 검사를 통해 Flint 소스 파일의 유효성을 검사한 결과입니다.
 
-### verifyFlint
+### 검증플린트
 
 **종류:** 기능
 
@@ -3745,41 +3143,20 @@ function validateFlint(
 ): FlintValidationResult;
 ```
 
-설명이 제공되지 않았습니다.
+파서 및 유형 검사기를 실행하여 Flint 소스 텍스트의 유효성을 검사합니다.
+구문 및 의미 진단을 수집하고 중복을 제거합니다.
 
 #### 매개변수
 
-| 이름      | 유형                  | 설명 |
-| --------- | --------------------- | ---- |
-| 출처      | 문자열                |      |
-| 파일 이름 |                       |      |
-| 옵션      | FlintTypeCheckOptions |      |
+| 이름 | 유형 | 설명 |
+| -------- | --------------------- | -------------------------------------------------------------------------------- |
+| 출처 | 문자열 | - 플린트 소스 코드 텍스트.                                                        |
+| 파일 이름 |                       | - 진단 범위에 사용되는 선택적 파일 경로 또는 이름(기본값: `'<input>'`). |
+| 옵션 | FlintTypeCheck옵션 | - 선택적인 유형 검사기 구성 플래그 및 외부 기호 테이블.          |
 
-## `src/wat`
+#### 계약
 
-### FlintWat메타데이터
-
-**종류:** 인터페이스
-
-```typescript
-export interface FlintWatMetadata
-```
-
-설명이 제공되지 않았습니다.
-
-### renderFlintWat
-
-**종류:** 기능
-
-```typescript
-function renderFlintWat(module: FlintModule, metadata: FlintWatMetadata = {}): string;
-```
-
-설명이 제공되지 않았습니다.
-
-#### 매개변수
-
-| 이름       | 유형               | 설명 |
-| ---------- | ------------------ | ---- |
-| 모듈       | Flint모듈          |      |
-| 메타데이터 | FlintWat메타데이터 |      |
+- **@param:** - Flint 소스 코드 텍스트입니다.
+- **@param:** - 진단 범위에 사용되는 선택적 파일 경로 또는 이름(기본값: `'<input>'`).
+- **@param:** - 선택적 유형 검사기 구성 플래그 및 외부 기호 테이블입니다.
+- **@returns:** 구문 분석된 모듈(사용 가능한 경우), 진단 및 유효한 플래그와 결합된 검증 결과입니다.

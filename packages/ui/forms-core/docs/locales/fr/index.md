@@ -38,7 +38,7 @@ Fournit au moteur d'évaluer si un champ doit être visible en fonction des vale
   - `allOf` : ET logique (toutes les conditions doivent être vraies).
   - `anyOf` : OU logique (au moins une condition doit être vraie).
   - `oneOf` : logique XOR (exactement une condition doit être vraie).
-- `isFieldVisible(field, values)` : une aide pour déterminer si la propriété `visibleWhen` d'un champ spécifique est satisfaite.
+- `isFieldVisible(field, values)` : une aide pour déterminer si la propriété `visibleWhen` d'un champ spécifique est satisfaite.
 
 ### 3. Intégration du schéma JSON (`src/json-schema.ts`)
 

@@ -11,12 +11,22 @@
 
 ## `src/index`
 
+### בְּרִירַת מֶחדָל
+
+**סוג:** קבוע
+
+```typescript
+export const handler: ExportedHandler<WorkerEnvironment>;
+```
+
+לא סופק תיאור.
+
 ### מְסִירָה
 
 **סוג:** סוג
 
 ```typescript
-export type Delivery = (environment: Env, message: SmtpMessage) => Promise<void>;
+export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 ```
 
 לא סופק תיאור.
@@ -36,15 +46,26 @@ export interface EmailRequest
 פונקציה **סוג:**
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
+function handleRequest(
+  request: Request,
+  environment: WorkerEnvironment,
+  delivery: Delivery = defaultDelivery,
+): Promise<Response>;
 ```
 
-לא סופק תיאור.
+מטפל בבקשות משלוח דואר אלקטרוני נכנסות, אימות קלט ומשלוח לשירות SMTP.
 
 #### פרמטרים
 
-| שם    | הקלד  | תיאור |
-| ----- | ----- | ----- |
-| בקשה  | בקשה  |       |
-| סביבה | Env   |       |
-| משלוח | משלוח |       |
+| שם | הקלד | תיאור |
+| ----------- | ----------------- | -------------------------------------------------- |
+| בקשה | בקשה | - בקשת HTTP נכנסת.                           |
+| סביבה | סביבת עובדים | - כריכות סביבת עובדים.                     |
+| משלוח | משלוח | - פונקציית משלוח טיפול בהעברת הודעות. |
+
+#### חוֹזֶה
+
+- **@param:** - בקשת HTTP נכנסת.
+- **@param:** - כריכות סביבת עובדים.
+- **@param:** - פונקציית מסירה לטיפול בהעברת הודעות.
+- **@returns:** תגובת HTTP.

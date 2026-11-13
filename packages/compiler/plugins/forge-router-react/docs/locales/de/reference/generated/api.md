@@ -28,9 +28,9 @@ Erstellen Sie neutrale Funktionen aus React-Router-Primitiven (ohne Hook für Te
 
 #### Parameter
 
-| Name    | Geben Sie                                                                                                                                                                  | ein Beschreibung |
-| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| Eingabe | { Ort: { Pfadname: Zeichenfolge; Suche: Zeichenfolge; Hash: string }; params?: Record<string, string \| undefined>; navigieren: NavigateFunction; Steckdose?: unbekannt; } |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Eingabe | { Ort: { Pfadname: Zeichenfolge; Suche: Zeichenfolge; Hash: Zeichenfolge }; params?: Record<string, string \| undefined>; navigieren: NavigateFunction; Steckdose?: unbekannt; } |             |
 
 ### auflösenMpLink
 
@@ -44,9 +44,9 @@ Ein neutrales Ziel in eine href-Zeichenfolge auflösen.
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| zu   | MpRouteLocationRaw |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
 
 ### toMpLocationFromReact
 
@@ -55,7 +55,7 @@ Ein neutrales Ziel in eine href-Zeichenfolge auflösen.
 ```typescript
 function toMpLocationFromReact(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
@@ -63,10 +63,10 @@ Erstellen Sie einen neutralen Standort aus React Router-Standort-/Parameter-Snap
 
 #### Parameter
 
-| Name      | Geben Sie                                               | ein Beschreibung |
-| --------- | ------------------------------------------------------- | ---------------- |
-| Standort  | { Pfadname: string; Suche: Zeichenfolge; Hash: string } |                  |
-| Parameter | Record<string, string \| undefined>                     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------------------------- | ----------- |
+| Standort | { Pfadname: string; Suche: Zeichenfolge; Hash: string } |             |
+| Parameter | Record<string, string \| undefined> |             |
 
 ### toReactHref
 
@@ -80,9 +80,9 @@ Serialisieren Sie ein neutrales Ziel in einen href-String.
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| zu   | MpRouteLocationRaw |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
 
 ### toReactTo
 
@@ -96,9 +96,9 @@ Konvertieren Sie ein neutrales Ziel in einen React Router `To`-Wert.
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| zu   | MpRouteLocationRaw |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 

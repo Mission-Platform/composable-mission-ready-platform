@@ -27,9 +27,9 @@ function createRouterDiagnostic(
 
 #### パラメータ
 
-| 名前 | タイプ                                                                            | 説明 |
-| ---- | --------------------------------------------------------------------------------- | ---- |
-| 診断 | Omit<CompilerDiagnostic, "phase" \| "fileName"> & { readonly fileName?: string; } |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------------------------------------------------------------------------- | ----------- |
+|診断 | Omit<CompilerDiagnostic, "phase" \| "fileName"> & { readonly fileName?: string; } |             |
 
 ### 定義ForgeRouterプラグイン
 
@@ -43,9 +43,9 @@ function defineForgeRouterPlugin(plugin: T): T;
 
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| プラグイン | た     |      |
+|名前 |タイプ |説明 |
+| ------ | ---- | ----------- |
+|プラグイン |た |             |
 
 ### 定義ForgeRouterTarget
 
@@ -62,14 +62,14 @@ function defineForgeRouterTarget(
 {@link ForgeRouterTargetOptions.runtimeModule} を優先します: 呼び出しサイトを維持します
 (`useMpRouter().navigate`、`useMpRoute().query`、…) による形状互換性
 異なるネイティブ フックではなく、ターゲット ランタイム ヘルパーをインポートします。
-署名。ターゲットは引き続き、カスタムの下位フェーズ/生成フェーズを提供する可能性があります。
+署名。ターゲットは引き続き、カスタムの下位/生成フェーズを提供する可能性があります。
 ファイルベースまたはサーバー専用ルーター。
 
 #### パラメータ
 
-| 名前       | タイプ                   | 説明 |
-| ---------- | ------------------------ | ---- |
-| オプション | ForgeRouterTargetOptions |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------------ | ----------- |
+|オプション | ForgeRouterTargetOptions |             |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
@@ -165,7 +165,7 @@ export type RouterCapability =
 export interface RouterCapabilityImport
 ```
 
-選択されたルーター ターゲットによって書き換えられる可能性のある中立的なインポート。
+選択したルーター ターゲットによって書き換えられる可能性のある中立的なインポート。
 
 ### ルーター機能モジュール
 
@@ -282,10 +282,10 @@ UI プラグインに結合せずに、直接または ID で選択されたル�
 
 #### パラメータ
 
-| 名前       | タイプ                            | 説明 |
-| ---------- | --------------------------------- | ---- |
-| 選択       | RouterPluginSelection \|未定義    |      |
-| プラグイン | 読み取り専用 RouterOutputPlugin[] |      |
+|名前 |タイプ |説明 |
+| --------- | ---------------------------------- | ----------- |
+|選択 | RouterPluginSelection \|未定義 |             |
+|プラグイン |読み取り専用 RouterOutputPlugin[] |             |
 
 ### サポートされていないルーター機能
 
@@ -302,7 +302,7 @@ function unsupportedRouterCapabilities(
 
 #### パラメータ
 
-| 名前       | タイプ                      | 説明 |
-| ---------- | --------------------------- | ---- |
-| 赤外線     | ルーター機能モジュール      |      |
-| プラグイン | RouterOutputPlugin \|未定義 |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------------------- | ----------- |
+|赤外線 |ルーター機能モジュール |             |
+|プラグイン | RouterOutputPlugin \|未定義 |             |

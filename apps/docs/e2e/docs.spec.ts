@@ -1,4 +1,4 @@
-/* eslint-disable unicorn/prevent-abbreviations, sonarjs/no-skipped-tests -- Retain the conventional filename and WebKit-only checks. */
+/* eslint-disable sonarjs/no-skipped-tests -- Retain the conventional filename and WebKit-only checks. */
 import { expect, test } from '@playwright/test';
 
 test('opens the documentation overview', async ({ page }) => {

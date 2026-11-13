@@ -2,10 +2,10 @@
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> packages/email-components/docs/index.md: [packages/email-components/docs/index.md](../../index.md)
+> packages/content/email-components/docs/index.md: [packages/content/email-components/docs/index.md](../../index.md)
 > שפה: עברית (he)
 
-`@mission-platform/email-components` מכיל רכיבי Forge JSX מודפסים, ניטרליים למסגרת ליצירת עצים בטוחים בדוא"ל. השתמש ב-`@mission-platform/email-renderer` כדי לבצע סדרת עצים בשרת; אין צורך ב-Vue, React, Svelte, Solid, זמן ריצה של רכיבי אינטרנט, DOM של דפדפן או JavaScript לפי נתיב הדוא"ל.
+`@mission-platform/email-components` מכיל רכיבי Forge JSX מודפסים, ניטרליים במסגרת מסגרת ליצירת עצים בטוחים בדוא"ל. השתמש ב-`@mission-platform/email-renderer` כדי לבצע סדרת עצים בשרת; אין צורך ב-Vue, React, Svelte, Solid, זמן ריצה של רכיבי אינטרנט, DOM של דפדפן או JavaScript לפי נתיב הדוא"ל.
 
 ## נוֹהָג
 
@@ -48,7 +48,7 @@ React, Svelte, Solid ורכיבי אינטרנט משתמשים במעבד המ�
 - אורגניזמים: `EmailPreheader`, `EmailHeader`, `EmailFooter`.
 - תבניות: `EmailDocument`, `EmailContainer`, `EmailSection`.
 
-`EmailTypography` הוא אטום הטקסט הבודד, המשקף את אוצר המילים של הרשת `ForgeTypography`: `as` בוחר את האלמנט המעובד (`p` כברירת מחדל, `a` כאשר `href` מוגדר), `variant` בוחר בקנה המידה של הסוג heading006 `as` הוא `h1`–`h6`, אחרת `body-md`), ו-`color`, `align`, `target` ו-`underline` מכוונים את ההצהרות המוטבעות.
+`EmailTypography` הוא אטום הטקסט הבודד, המשקף את אוצר המילים של האינטרנט `ForgeTypography`: `as` בוחר את האלמנט המעובד (`p` כברירת מחדל, `a` כאשר `href` מוגדר), `as` בוחר את האלמנט המעובד (`p` כברירת מחדל, `a` כאשר `href` מוגדר), `variant` מתאים לסוג קנה מידה `as` הוא `h1`–`h6`, אחרת `body-md`), ו-`color`, `align`, `target` ו-`underline` כוונו את ההצהרות המוטבעות.
 
 ```ts
 EmailTypography({ as: 'h1', children: 'Welcome' });
@@ -58,8 +58,8 @@ EmailTypography({ href: 'https://example.com', target: '_blank', children: 'Read
 
 כל הפריסה מבוססת על `table`, `tbody`, `tr` ו-`td`. לחצנים הם קישורים רגילים בתוך טבלאות, תמונות דורשות טקסט `alt` שאינו ריק, כתובות אתרים מאומתות וסגנונות נפתרים להצהרות מילוליות מ-`@mission-platform/tokens`.
 
-## מדיניות תאימות
+## Compatibility policy
 
-קו הבסיס עוקב אחר ה [האם אוכל לשלוח קטלוג תכונות בדוא"ל](https://www.caniemail.com/features), נבדק ב-`2026-08-08`. היישום מסתמך על [טבלאות HTML](https://www.caniemail.com/features/html-tables), [סגנונות מוטבעים](https://www.caniemail.com/features/css-inline-styles), [רוחב מקסימלי](https://www.caniemail.com/features/css-max-width), ואופציונלי [שאילתות מדיה](https://www.caniemail.com/features/css-at-media). הפלט הסטטי אינו מסתמך על flexbox, grid, מאפייני CSS מותאמים אישית, מאפיינים לוגיים, סקריפטים, מטפלי אירועים או סמני הידרציה של מסגרת.
+קו הבסיס עוקב אחר [קטלוג התכונות של Can I Email](https://www.caniemail.com/features), שנבדק ב-`2026-08-08`. היישום מסתמך על [טבלאות HTML](https://www.caniemail.com/features/html-tables), [סגנונות מוטבעים](https://www.caniemail.com/features/css-inline-styles), [max-width](https://www.caniemail.com/features/css-max-width) ואופציונליים [שאילתות מדיה](https://www.caniemail.com/features/css-at-media). הפלט הסטטי אינו מסתמך על flexbox, grid, מאפייני CSS מותאמים אישית, מאפיינים לוגיים, סקריפטים, מטפלי אירועים או סמני הידרציה של מסגרת.
 
 CSS רספונסיבי הוא שיפור פרוגרסיבי בלבד: פריסת הטבלה המוטבעת נשארת שמישה כאשר בלוק `<style>` מוסר או מתעלמים ממנו. השתמש ב-`assertCompatibleEmailHtml` בבדיקות יישומים בעת הוספת צמתים מותאמים אישית.

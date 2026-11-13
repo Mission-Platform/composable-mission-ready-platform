@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/forg
 **Tipo:** constante
 
 ```typescript
-export const BADGE;
+export const BADGE: readonly string[];
 ```
 
 Opciones de unión literal, descripciones de JSDoc y valores predeterminados de `?? literal`.
@@ -36,7 +36,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const BUTTON;
+export const BUTTON: readonly string[];
 ```
 
 Una unión que se degrada al texto más un accesorio de devolución de llamada eliminado.
@@ -56,7 +56,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const COUNTER;
+export const COUNTER: readonly string[];
 ```
 
 Un componente interactivo: el estado y un controlador de eventos fuerzan una isla hidratada.
@@ -76,12 +76,12 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const EMPTY;
+export const EMPTY: readonly string[];
 ```
 
 Un componente sin ningún accesorio.
 
-### nombres vacíos
+### Nombres vacíos
 
 **Tipo:** constante
 
@@ -96,7 +96,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const GRID;
+export const GRID: readonly string[];
 ```
 
 Un accesorio numérico con un valor numérico predeterminado.
@@ -116,7 +116,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const LAYOUT;
+export const LAYOUT: readonly string[];
 ```
 
 Una ranura con nombre junto a la ranura predeterminada.
@@ -136,7 +136,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const REQUIRED;
+export const REQUIRED: readonly string[];
 ```
 
 Un accesorio obligatorio (no opcional) junto con uno opcional.
@@ -156,7 +156,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const SITE_HEADER;
+export const SITE_HEADER: readonly string[];
 ```
 
 Un componente con un accesorio de configuración para todo el sitio.
@@ -185,9 +185,99 @@ Cree un complemento de marco auxiliar con una identificación reemplazable.
 
 #### Parámetros
 
-| Nombre         | Tipo | Descripción |
-| -------------- | ---- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---- | ---- | ----------- |
 | identificación |      |             |
+
+## `src/__fixtures__/workspace`
+
+### BADGE_COMPONENT
+
+**Tipo:** constante
+
+```typescript
+export const BADGE_COMPONENT: WorkspaceComponentDefinition;
+```
+
+No se proporciona descripción.
+
+### Espacio de trabajo cms
+
+**Tipo:** interfaz
+
+```typescript
+export interface CmsWorkspace
+```
+
+No se proporciona descripción.
+
+### CONTADOR_COMPONENTE
+
+**Tipo:** constante
+
+```typescript
+export const COUNTER_COMPONENT: WorkspaceComponentDefinition;
+```
+
+No se proporciona descripción.
+
+### crearCmsWorkspace
+
+**Tipo:** función
+
+```typescript
+function createCmsWorkspace(
+  components: readonly WorkspaceComponentDefinition[],
+): CmsWorkspace;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------------------- | ----------- |
+| componentes | solo lectura WorkspaceComponentDefinition[] |             |
+
+### GRID_COMPONENT
+
+**Tipo:** constante
+
+```typescript
+export const GRID_COMPONENT: WorkspaceComponentDefinition;
+```
+
+No se proporciona descripción.
+
+### DISEÑO_COMPONENT
+
+**Tipo:** constante
+
+```typescript
+export const LAYOUT_COMPONENT: WorkspaceComponentDefinition;
+```
+
+No se proporciona descripción.
+
+### NESTED_BADGE_COMPONENT
+
+**Tipo:** constante
+
+```typescript
+export const NESTED_BADGE_COMPONENT: WorkspaceComponentDefinition;
+```
+
+No se proporciona descripción.
+
+### Definición de componente del espacio de trabajo
+
+**Tipo:** interfaz
+
+```typescript
+export interface WorkspaceComponentDefinition
+```
+
+No se proporciona descripción.
 
 ## `src/analyze`
 
@@ -197,7 +287,7 @@ Cree un complemento de marco auxiliar con una identificación reemplazable.
 
 ```typescript
 function analyzeContentComponent(
-  sourceFile: ts.SourceFile,
+  sourceFile: OxcParsedModule,
   names: ContentComponentNamesInput,
   semantic?: SemanticModule,
 ): ContentComponent;
@@ -209,11 +299,11 @@ un tiempo de ejecución hidratado.
 
 #### Parámetros
 
-| Nombre         | Tipo                         | Descripción |
-| -------------- | ---------------------------- | ----------- |
-| archivo fuente | ts.SourceFile                |             |
-| nombres        | ContentComponentNamesEntrada |             |
-| semántico      | Módulo Semántico             |             |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------- | ----------- |
+| archivo fuente | Módulo OxcParsed |             |
+| nombres | ContentComponentNamesEntrada |             |
+| semántico | Módulo Semántico |             |
 
 ### CMS_COLOR_TAG
 
@@ -253,7 +343,7 @@ Las etiquetas JSDoc para metadatos del editor de nivel de componente opcional.
 export const CMS_SETTING_TAG;
 ```
 
-La etiqueta JSDoc que promueve un accesorio en una configuración de CMS para todo el sitio.
+La etiqueta JSDoc que promueve un accesorio a una configuración de CMS para todo el sitio.
 
 ### CMS_TAB_TAG
 
@@ -273,7 +363,7 @@ La etiqueta JSDoc que asigna un accesorio a una pestaña del editor.
 export const DEFAULT_SLOT_FIELD;
 ```
 
-La clave de campo bajo la cual se expone la ranura predeterminada (`children` de un componente).
+La clave de campo bajo la que se expone la ranura predeterminada (`children` de un componente).
 
 ### derivar nombres de componentes de contenido
 
@@ -289,8 +379,8 @@ Derive el conjunto de nombres completo del subconjunto proporcionado por la pers
 
 #### Parámetros
 
-| Nombre  | Tipo                         | Descripción |
-| ------- | ---------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ----- | -------------------------- | ----------- |
 | nombres | ContentComponentNamesEntrada |             |
 
 ### es un módulo interactivo
@@ -305,9 +395,69 @@ Es cierto cuando el IR neutral tiene un comportamiento que solo un tiempo de eje
 
 #### Parámetros
 
-| Nombre    | Tipo                           | Descripción |
-| --------- | ------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| -------- | --------------------------- | ----------- |
 | semántico | Módulo semántico \| indefinido |             |
+
+## `src/assets`
+
+### copiarAndPruneAssets
+
+**Tipo:** función
+
+```typescript
+function copyAndPruneAssets(
+  safeCacheDirectory: string,
+  destinationRoot: string,
+  assets: readonly CmsArtifact[],
+  preservedDirectories: ReadonlySet<string> = new Set(),
+): void;
+```
+
+Sincronice activos de `safeCacheDirectory` a `destinationRoot`,
+poda de activos obsoletos o eliminados de compilaciones anteriores.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------------------- | ---------------------- | ----------- |
+| DirectorioCacheSegura | cadena |             |
+| destinoRaíz | cadena |             |
+| activos | sólo lectura CmsArtifact[] |             |
+| directorios conservados | Sólo lecturaSet<string> |             |
+
+### KNOWN_FRAMEWORKS
+
+**Tipo:** constante
+
+```typescript
+export const KNOWN_FRAMEWORKS: ReadonlySet<string>;
+```
+
+No se proporciona descripción.
+
+### podarEstaleAssets
+
+**Tipo:** función
+
+```typescript
+function pruneStaleAssets(
+  destinationRoot: string,
+  activeAssetNames: ReadonlySet<string>,
+  preservedDirectories: ReadonlySet<string> = new Set(),
+): void;
+```
+
+Elimine archivos obsoletos y directorios vacíos en `destinationRoot` que no
+corresponden a activos activos, preservando directorios marco y árboles no activos.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------------------- | ------------------- | ----------- |
+| destinoRaíz | cadena |             |
+| nombres de activos activos | Sólo lecturaSet<string> |             |
+| directorios conservados | Sólo lecturaSet<string> |             |
 
 ## `src/classify`
 
@@ -337,8 +487,8 @@ El resultado de clasificar un accesorio (`undefined` → soltar el accesorio).
 
 ```typescript
 function classifyType(
-  node: ts.TypeNode,
-  aliases: Map<string, ts.TypeNode>,
+  node: CmsTypeNode,
+  aliases: Map<string, CmsTypeNode>,
   seen: Set<string> = new Set(),
 ): ClassifiedFieldKind;
 ```
@@ -347,11 +497,11 @@ Clasifique el tipo de accesorio node en un tipo de contenido neutral, resolviend
 
 #### Parámetros
 
-| Nombre | Tipo                      | Descripción |
-| ------ | ------------------------- | ----------- |
-| node   | ts.TypeNode               |             |
-| alias  | Mapa<string, ts.TypeNode> |             |
-| visto  | Establecer<string>        |             |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------------ | ----------- |
+| node | CmsTypeNodo |             |
+| alias | Mapa<string, CmsTypeNode> |             |
+| visto | Establecer<string> |             |
 
 ### recopilarTipoAliases
 
@@ -359,17 +509,17 @@ Clasifique el tipo de accesorio node en un tipo de contenido neutral, resolviend
 
 ```typescript
 function collectTypeAliases(
-  sourceFile: ts.SourceFile,
-): Map<string, ts.TypeNode>;
+  sourceFile: OxcParsedModule,
+): Map<string, CmsTypeNode>;
 ```
 
 Asigne cada alias `type X = …` de nivel superior a su tipo node, para resolución de unión.
 
 #### Parámetros
 
-| Nombre         | Tipo          | Descripción |
-| -------------- | ------------- | ----------- |
-| archivo fuente | ts.SourceFile |             |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------- | ----------- |
+| archivo fuente | Módulo OxcParsed |             |
 
 ### LINK_TYPE_REFERENCES
 
@@ -403,7 +553,7 @@ Referencias de tipo cuyos accesorios se tratan como contenido anidado (`children
 
 ## `src/cms`
 
-### CmsArtifact
+### CmsArtefacto
 
 **Tipo:** interfaz
 
@@ -466,8 +616,8 @@ El segmento de directorio en el que se escribe la salida por marco de un objetiv
 
 #### Parámetros
 
-| Nombre      | Tipo                  | Descripción |
-| ----------- | --------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | --------------- | ----------- |
 | complemento | Complemento CmsOutput |             |
 
 ### CmsTargetId
@@ -495,11 +645,47 @@ Llega al conductor y emite silenciosamente un árbol parcial.
 
 #### Parámetros
 
-| Nombre      | Tipo | Descripción |
-| ----------- | ---- | ----------- |
-| complemento | T    |             |
+| Nombre | Tipo | Descripción |
+| ------ | ---- | ----------- |
+| complemento | T |             |
 
 ## `src/config`
+
+### cmsAssetsPlugin
+
+**Tipo:** función
+
+```typescript
+function cmsAssetsPlugin(
+  rootDir: string,
+  cacheDirectory: string,
+  targetOrTargetId: string | CmsOutputPlugin,
+  getAssets: () => readonly CmsArtifact[],
+  options?: CmsAssetsPluginOptions,
+): Plugin;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---------------- | ---------------------------- | ----------- |
+| raízDir | cadena |             |
+| directoriocaché | cadena |             |
+| targetOrTargetId | cadena \| Complemento CmsOutput |             |
+| obtener activos | () => solo lectura CmsArtifact[] |             |
+| opciones | CmsAssetsPluginOptions |             |
+
+### CmsAssetsPluginOptions
+
+**Tipo:** interfaz
+
+```typescript
+export interface CmsAssetsPluginOptions
+```
+
+No se proporciona descripción.
 
 ### definirViteForgeCmsLibrary
 
@@ -515,8 +701,8 @@ Cree una configuración de biblioteca Vite para un destino CMS.
 
 #### Parámetros
 
-| Nombre   | Tipo                                   | Descripción |
-| -------- | -------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------------- | ----------- |
 | opciones | Opciones de biblioteca de ViteForgeCms |             |
 
 ### Opciones de biblioteca de ViteForgeCms
@@ -633,8 +819,8 @@ Los campos de un componente que no son espacios (escalar, contenido autorable).
 
 #### Parámetros
 
-| Nombre     | Tipo                    | Descripción |
-| ---------- | ----------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------- | ----------- |
 | componente | Componente de contenido |             |
 
 ### campos de ranura
@@ -649,8 +835,8 @@ Los campos de un componente que llevan contenido anidado.
 
 #### Parámetros
 
-| Nombre     | Tipo                    | Descripción |
-| ---------- | ----------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------- | ----------- |
 | componente | Componente de contenido |             |
 
 ## `src/driver`
@@ -670,8 +856,8 @@ target, devolviendo la ruta del módulo de entrada y todo lo que se escribió.
 
 #### Parámetros
 
-| Nombre   | Tipo                       | Descripción |
-| -------- | -------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | --------------------------- | ----------- |
 | opciones | GenerarCmsArtifactsOptions |             |
 
 ### Generar CmsArtifactsOptions
@@ -717,12 +903,13 @@ function generateIsland(
 ```
 
 Cogenerar el árbol de la isla marco para un objetivo y devolver el especificador.
-una plantilla emitida debe importarla por.
+una plantilla emitida debe importarla por. Esta es sólo la etapa generacional: la
+El controlador/sesión CMS es propietario cuando se ejecuta.
 
 #### Parámetros
 
-| Nombre   | Tipo                     | Descripción |
-| -------- | ------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | --------------------- | ----------- |
 | opciones | Generar opciones de isla |             |
 
 ### Generar opciones de isla
@@ -759,8 +946,8 @@ Convierta un nombre público a su nombre para mostrar (`InView` → `In View`).
 
 #### Parámetros
 
-| Nombre        | Tipo   | Descripción |
-| ------------- | ------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------ | ----------- |
 | nombrepúblico | cadena |             |
 
 ### aKebabName
@@ -771,12 +958,12 @@ Convierta un nombre público a su nombre para mostrar (`InView` → `In View`).
 function toKebabName(publicName: string): string;
 ```
 
-Convierta un nombre público en un nombre con formato kebab (`InView` → `in-view`).
+Convierta un nombre público en un nombre en formato kebab (`InView` → `in-view`).
 
 #### Parámetros
 
-| Nombre        | Tipo   | Descripción |
-| ------------- | ------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------ | ----------- |
 | nombrepúblico | cadena |             |
 
 ### al nombre técnico
@@ -791,113 +978,68 @@ Convierta un nombre público a su nombre técnico (`InView` → `in_view`).
 
 #### Parámetros
 
-| Nombre        | Tipo   | Descripción |
-| ------------- | ------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------ | ----------- |
 | nombrepúblico | cadena |             |
 
 ## `src/tsdown`
 
-### cmsCacheDirectory
+### definirTsdownForgeCmsTargetConfigs
 
 **Tipo:** función
 
 ```typescript
-function cmsCacheDirectory(rootDir: string, target: CmsOutputPlugin): string;
-```
-
-El directorio de caché en el que se escribe el árbol generado por un objetivo.
-
-#### Parámetros
-
-| Nombre   | Tipo                  | Descripción |
-| -------- | --------------------- | ----------- |
-| raízDir  | cadena                |             |
-| objetivo | Complemento CmsOutput |             |
-
-### cmsDirectorioSalida
-
-**Tipo:** función
-
-```typescript
-function cmsOutputDirectory(rootDir: string, target: CmsOutputPlugin): string;
-```
-
-El directorio de distribución al que se emiten los módulos por marco de un destino.
-
-#### Parámetros
-
-| Nombre   | Tipo                  | Descripción |
-| -------- | --------------------- | ----------- |
-| raízDir  | cadena                |             |
-| objetivo | Complemento CmsOutput |             |
-
-### definirTsdownForgeCms
-
-**Tipo:** función
-
-```typescript
-function defineTsdownForgeCms(options: TsdownForgeCmsOptions): UserConfig;
-```
-
-Cree una configuración tsdown para un destino CMS.
-
-#### Parámetros
-
-| Nombre   | Tipo                  | Descripción |
-| -------- | --------------------- | ----------- |
-| opciones | TsdownForgeCmsOptions |             |
-
-### definirTsdownForgeCmsAll
-
-**Tipo:** función
-
-```typescript
-function defineTsdownForgeCmsAll(
-  options: TsdownForgeCmsAllOptions,
+function defineTsdownForgeCmsTargetConfigs(
+  options: TsdownForgeCmsPluginsOptions,
 ): UserConfig[];
 ```
 
-Cree configuraciones de tsdown para cada destino de CMS solicitado.
+Devuelve configuraciones nativas de tsdown `UserConfig[]` para los destinos CMS seleccionados.
+Cada configuración compila directamente su propio objetivo y proyecciones de CMS,
+permitiendo que tsdown/Rolldown ejecute objetivos simultáneamente sin entradas de disco ficticias
+o bucles de ejecución anidados.
 
 #### Parámetros
 
-| Nombre   | Tipo                     | Descripción |
-| -------- | ------------------------ | ----------- |
-| opciones | TsdownForgeCmsAllOptions |             |
+| Nombre | Tipo | Descripción |
+| ------- | ---------------------------- | ----------- |
+| opciones | Opciones de TsdownForgeCmsPlugins |             |
 
-### resolverComponentesMódulo
+### Complemento ForgeCmsTsdown
+
+**Tipo:** tipo
+
+```typescript
+export type ForgeCmsTsdownPlugin = TsdownPlugin &
+```
+
+Complemento devuelto por {@link tsdownForgeCmsPlugins}, incluidas las configuraciones de destino para las pruebas.
+
+### tsdownForgeCmsPlugins
 
 **Tipo:** función
 
 ```typescript
-function resolveComponentsModule(rootDir: string, explicit?: string): string;
+function tsdownForgeCmsPlugins(
+  options: TsdownForgeCmsPluginsOptions,
+): TsdownPlugin[];
 ```
 
-Localice el cilindro de componentes neutros de un paquete.
+Forma nativa de complemento tsdown del adaptador CMS para uso en un solo objetivo.
+Para la generación de múltiples objetivos, prefiera {@link defineTsdownForgeCmsTargetConfigs}.
 
 #### Parámetros
 
-| Nombre    | Tipo   | Descripción |
-| --------- | ------ | ----------- |
-| raízDir   | cadena |             |
-| explícito | cadena |             |
+| Nombre | Tipo | Descripción |
+| ------- | ---------------------------- | ----------- |
+| opciones | Opciones de TsdownForgeCmsPlugins |             |
 
-### TsdownForgeCmsAllOptions
-
-**Tipo:** interfaz
-
-```typescript
-export interface TsdownForgeCmsAllOptions
-```
-
-Opciones para {@link defineTsdownForgeCmsAll}.
-
-### Opciones de TsdownForgeCms
+### Opciones de TsdownForgeCmsPlugins
 
 **Tipo:** interfaz
 
 ```typescript
-export interface TsdownForgeCmsOptions
+export interface TsdownForgeCmsPluginsOptions
 ```
 
-Opciones para {@link defineTsdownForgeCms}.
+Opciones aceptadas por {@link tsdownForgeCmsPlugins}.

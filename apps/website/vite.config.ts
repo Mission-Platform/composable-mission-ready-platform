@@ -1,14 +1,14 @@
 /// <reference types="vitest/config" />
 import { fileURLToPath } from 'node:url';
 
-import postcssConfig from '@mission-platform/postcss-config';
-import { frameworkResolveConditions, ignoreVueI18nBlocksPlugin } from '@mission-platform/vite-config';
-import i18nPlugin, { readSupportedLocales } from '@mission-platform/vite-plugin-i18n';
-import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig, type UserConfig } from 'vite';
 
+import postcssConfig from '@mission-platform/postcss-config';
 import type { SitemapAlternate, SitemapUrl } from '@mission-platform/seo';
+import { frameworkResolveConditions, ignoreVueI18nBlocksPlugin } from '@mission-platform/vite-config';
+import i18nPlugin, { readSupportedLocales } from '@mission-platform/vite-plugin-i18n';
+import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 
 // `vite-ssg` reads `ssgOptions` off the resolved Vite config but does not
 // ship a module augmentation for Vite's own `UserConfig` type, so we cast

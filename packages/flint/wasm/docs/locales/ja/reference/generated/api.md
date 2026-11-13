@@ -9,9 +9,209 @@
 
 `@mission-platform/flint-wasm` のパブリック ソース宣言から生成されます。
 
+## `src/codegen/abi`
+
+### 集約フィールド記述子
+
+**種類:** インターフェース
+
+```typescript
+export interface AggregateFieldDescriptor
+```
+
+集約フィールドのレイアウト記述子。
+
+### 集約レイアウト記述子
+
+**種類:** インターフェース
+
+```typescript
+export interface AggregateLayoutDescriptor
+```
+
+集約構造体レイアウト記述子。
+
+### canonicalizeSliceCallingConvention
+
+**種類:** 関数
+
+```typescript
+function canonicalizeSliceCallingConvention(type: FlintWasmPrimitiveType): readonly FlintWasmPrimitiveType[];
+```
+
+スライスまたはバイト型をアンパックされた WebAssembly レジスタ型に降格します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---- | ---------------------- | ----------- |
+|タイプ | FlintWasmPrimitiveType | フリントワズムプリミティブタイプ             |
+
+### computeArrayAllocationSize
+
+**種類:** 関数
+
+```typescript
+function computeArrayAllocationSize(
+  count: number,
+  elementSize: number,
+  maxBytes: number = MAX_ARRAY_ALLOCATION_BYTES,
+): number;
+```
+
+count * elementSize の配列割り当てに必要な合計バイト サイズを計算します。
+チェックされた乗算を強制し、整数のオーバーフローまたは境界違反が発生した場合に RangeError をスローします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ------ | ----------- |
+|カウント |番号 |             |
+|要素サイズ |番号 |             |
+|最大バイト数 |番号 |             |
+
+### スライス容量を計算する
+
+**種類:** 関数
+
+```typescript
+function computeSliceCapacity(bufferBytes: number, elementSize: number): number;
+```
+
+合計バッファー バイト サイズと要素バイト サイズを指定して、スライス記述子の容量を計算します。
+ゼロで除算せずに無限/無制限の容量を返すことにより、サイズがゼロの型 (e​​lementSize === 0) を安全に処理します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ------ | ----------- |
+|バッファバイト数 |番号 |             |
+|要素サイズ |番号 |             |
+
+### デコードスライスレジスタトリプレット
+
+**種類:** 関数
+
+```typescript
+function decodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+境界を越えて受信した、アンパックされた `(ptr: i32, len: i32, cap: i32)` レジスタ トリプレットをデコードして検証します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|ポインタ |番号 |             |
+|長さ |番号 |             |
+|容量 |番号 |             |
+
+### encodeSliceRegisterTriplet
+
+**種類:** 関数
+
+```typescript
+function encodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+スライス メタデータを、アンパックされた `(ptr: i32, len: i32, cap: i32)` レジスタ トリプレットにパックします。
+ラップアラウンドエクスプロイトを防ぐために、符号なし境界と非オーバーフロー不変式を強制します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|ポインタ |番号 |             |
+|長さ |番号 |             |
+|容量 |番号 |             |
+
+### MAX_ARRAY_ALLOCATION_BYTES
+
+**種類:** 定数
+
+```typescript
+export const MAX_ARRAY_ALLOCATION_BYTES;
+```
+
+説明はありません。
+
+### MAX_SLICE_ADDRESS
+
+**種類:** 定数
+
+```typescript
+export const MAX_SLICE_ADDRESS;
+```
+
+説明はありません。
+
+### サニタイズ集約パディング
+
+**種類:** 関数
+
+```typescript
+function sanitizeAggregatePadding(buffer: Uint8Array, layout: AggregateLayoutDescriptor, baseOffset = 0): Uint8Array;
+```
+
+ABI 送信前に、集約構造体バッファ内のすべてのパディング バイトをゼロで初期化します。
+初期化されていないメモリや信頼境界を越えた機密データの漏洩を防ぎます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------- | ---------------------------------------------------- |
+|バッファ | Uint8Array | - シリアル化された集計を含む生のバッファー。        |
+|レイアウト |集約レイアウト記述子 | - 集約レイアウト記述子。                       |
+|ベースオフセット |                           | - バッファ内の開始オフセット (デフォルトは 0)。 |
+
+#### 契約
+
+- **@param:** - シリアル化された集計を含む生のバッファー。
+- **@param:** - 集約レイアウト記述子。
+- **@param:** - バッファ内の開始オフセット (デフォルトは 0)。
+- **@returns:** ゼロ詰めされたバッファをクリーンアップしました。
+
+### スライスレジスタトリプレット
+
+**種類:** インターフェース
+
+```typescript
+export interface SliceRegisterTriplet
+```
+
+WebAssembly 境界を越えて直接渡される、アンパックされたスライスのレジスタ表現。
+
+### スライス境界を検証する
+
+**種類:** 関数
+
+```typescript
+function validateSliceBounds(pointer: number, length: number, capacity: number): boolean;
+```
+
+スライス レジスタのトリプレットが空間境界と符号なし算術非ラッピング不変条件を満たしていることを検証します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|ポインタ |番号 |             |
+|長さ |番号 |             |
+|容量 |番号 |             |
+
+### ZERO_SIZED_TYPE_SENTINEL_POINTER
+
+**種類:** 定数
+
+```typescript
+export const ZERO_SIZED_TYPE_SENTINEL_POINTER;
+```
+
+説明はありません。
+
 ## `src/collection-runtime`
 
-### buildFlintWasmCollectionRuntimeBodies
+### buildFlintWasmCollectionRuntimeBodys
 
 **種類:** 関数
 
@@ -19,7 +219,11 @@
 function buildFlintWasmCollectionRuntimeBodies(): readonly FlintWasmRuntimeBody[];
 ```
 
-説明はありません。
+コレクションおよび非同期ランタイム ヘルパー関数のメタデータ記述子を返します。
+
+#### 契約
+
+- **@returns:** ランタイム関数記述子の配列。
 
 ### buildFlintWasmCollectionRuntimeWasmBodies
 
@@ -36,11 +240,11 @@ function buildFlintWasmCollectionRuntimeWasmBodies(allocatorIndex: number): read
 
 #### パラメータ
 
-| 名前                   | タイプ | 説明 |
-| ---------------------- | ------ | ---- |
-| アロケータインデックス | 番号   |      |
+|名前 |タイプ |説明 |
+| -------------- | ------ | ----------- |
+|アロケータインデックス |番号 |             |
 
-### FlintWasmRuntimeBody
+### フリントワズムランタイムボディ
 
 **種類:** インターフェース
 
@@ -48,11 +252,11 @@ function buildFlintWasmCollectionRuntimeWasmBodies(allocatorIndex: number): read
 export interface FlintWasmRuntimeBody
 ```
 
-説明はありません。
+WebAssembly に埋め込まれた標準ライブラリ ランタイム ヘルパー関数のコントラクト記述子。
 
 ## `src/contracts`
 
-### FlintTarget機能
+### フリントターゲットの特徴
 
 **種類:** インターフェース
 
@@ -60,9 +264,19 @@ export interface FlintWasmRuntimeBody
 export interface FlintTargetFeatures
 ```
 
-説明はありません。
+コード発行中に有効になるターゲット WebAssembly プロポーザル機能。
 
-### FlintWasmArtifactMetadata
+### FlintWasmAggregateレイアウト
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintWasmAggregateLayout
+```
+
+リニア メモリにレイアウトされた集合構造のメモリ レイアウト記述子。
+
+### FlintWasmアーティファクトメタデータ
 
 **種類:** インターフェース
 
@@ -70,9 +284,9 @@ export interface FlintTargetFeatures
 export interface FlintWasmArtifactMetadata
 ```
 
-説明はありません。
+発行された WebAssembly アーティファクトのメモリ レイアウト、機能要件、および関数シグネチャを記述するメタデータ。
 
-### FlintWasmAsyncCapability
+### FlintWasmAsync機能
 
 **種類：**タイプ
 
@@ -80,7 +294,7 @@ export interface FlintWasmArtifactMetadata
 export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-説明はありません。
+WebAssembly モジュールによって要求される非同期ランタイム機能。
 
 ### FlintWasmAsyncContract
 
@@ -90,9 +304,9 @@ export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker
 export interface FlintWasmAsyncContract
 ```
 
-説明はありません。
+WebAssembly での非同期実行とメッセージングを管理するコントラクト仕様。
 
-### FlintWasmBackendInput
+### FlintWasmバックエンド入力
 
 **種類:** インターフェース
 
@@ -100,7 +314,7 @@ export interface FlintWasmAsyncContract
 export interface FlintWasmBackendInput
 ```
 
-説明はありません。
+WebAssembly バックエンド コンパイル パイプラインに渡される完全な入力ペイロード。
 
 ### FlintWasmBackendResult
 
@@ -110,7 +324,7 @@ export interface FlintWasmBackendInput
 export interface FlintWasmBackendResult
 ```
 
-説明はありません。
+WebAssembly バックエンド エミッターから返された結果。バイナリ アーティファクトとレポートが含まれます。
 
 ### FlintWasmBinaryOperator
 
@@ -120,7 +334,7 @@ export interface FlintWasmBackendResult
 export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
-説明はありません。
+WebAssembly でバイナリ算術演算子、論理演算子、比較演算子がサポートされました。
 
 ### FlintWasmCapabilityImport
 
@@ -130,9 +344,9 @@ export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' 
 export interface FlintWasmCapabilityImport
 ```
 
-説明はありません。
+WebAssembly モジュールで必要なホスト機能のインポート。
 
-### FlintWasmCollectionLayout
+### フリントワズムコレクションレイアウト
 
 **種類:** インターフェース
 
@@ -140,9 +354,9 @@ export interface FlintWasmCapabilityImport
 export interface FlintWasmCollectionLayout
 ```
 
-説明はありません。
+リニア メモリ内のコレクション型のレイアウトと戦略の構成。
 
-### FlintWasmCompilerヒント
+### FlintWasmコンパイラヒント
 
 **種類:** インターフェース
 
@@ -150,9 +364,9 @@ export interface FlintWasmCollectionLayout
 export interface FlintWasmCompilerHints
 ```
 
-説明はありません。
+WebAssembly コンパイラー バックエンドに提供される最適化ヒント。
 
-### FlintWasmDiagnostic
+### FlintWasm診断
 
 **種類:** インターフェース
 
@@ -160,7 +374,7 @@ export interface FlintWasmCompilerHints
 export interface FlintWasmDiagnostic
 ```
 
-説明はありません。
+WebAssembly の低下、検証、または検証中に発行されるコンパイラ診断。
 
 ### FlintWasmEnum宣言
 
@@ -170,9 +384,9 @@ export interface FlintWasmDiagnostic
 export interface FlintWasmEnumDeclaration
 ```
 
-説明はありません。
+WebAssembly メモリ レイアウトで表現されるタグ付き Union enum 宣言。
 
-### FlintWasmExpression
+### フリントワズム式
 
 **種類：**タイプ
 
@@ -180,7 +394,7 @@ export interface FlintWasmEnumDeclaration
 export type FlintWasmExpression = |
 ```
 
-説明はありません。
+中間表現式を WebAssembly 命令に落とし込みました。
 
 ### FlintWasm機能要件
 
@@ -190,9 +404,29 @@ export type FlintWasmExpression = |
 export interface FlintWasmFeatureRequirements
 ```
 
-説明はありません。
+コード生成中に発見された WebAssembly の機能要件。
 
-### FlintWasmFunction
+### フリントワズム外国人能力
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintWasmForeignCapability
+```
+
+WebAssembly 発行のための外部 C 機能モジュールのインポート契約を引き下げました。
+
+### FlintWasmForeignFunction
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintWasmForeignFunction
+```
+
+WebAssembly 発行のための外部 C 関数のインポート契約が引き下げられました。
+
+### フリントワズム機能
 
 **種類:** インターフェース
 
@@ -200,9 +434,9 @@ export interface FlintWasmFeatureRequirements
 export interface FlintWasmFunction
 ```
 
-説明はありません。
+関数の中間表現を WebAssembly 関数定義に落とし込みました。
 
-### FlintWasmGeneric専門化
+### FlintWasm汎用専門分野
 
 **種類:** インターフェース
 
@@ -210,7 +444,7 @@ export interface FlintWasmFunction
 export interface FlintWasmGenericSpecialization
 ```
 
-説明はありません。
+WebAssembly に出力される単形化されたジェネリック関数の特殊化。
 
 ### FlintWasmIteratorBoundaryDescriptor
 
@@ -220,7 +454,7 @@ export interface FlintWasmGenericSpecialization
 export interface FlintWasmIteratorBoundaryDescriptor
 ```
 
-説明はありません。
+イテレータ ステート マシンの遷移とエクスポートを定義する境界記述子。
 
 ### FlintWasmIterator機能
 
@@ -230,7 +464,7 @@ export interface FlintWasmIteratorBoundaryDescriptor
 export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 ```
 
-説明はありません。
+実行時イテレータによってサポートされるイテレータ機能カテゴリ。
 
 ### FlintWasmIteratorCapabilityDescriptor
 
@@ -240,9 +474,9 @@ export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 export interface FlintWasmIteratorCapabilityDescriptor
 ```
 
-説明はありません。
+イテレータの反復戦略と要素の境界を定義する記述子。
 
-### FlintWasmIteratorExport
+### FlintWasmIteratorエクスポート
 
 **種類:** インターフェース
 
@@ -250,9 +484,9 @@ export interface FlintWasmIteratorCapabilityDescriptor
 export interface FlintWasmIteratorExport
 ```
 
-説明はありません。
+ホスト ランタイムにアクセスできる、エクスポートされたイテレータ ステート マシン シンボル。
 
-### FlintWasmLogger
+### フリントワズムロガー
 
 **種類:** インターフェース
 
@@ -260,9 +494,9 @@ export interface FlintWasmIteratorExport
 export interface FlintWasmLogger
 ```
 
-説明はありません。
+WebAssembly コンパイル イベントの構造化ロガー インターフェイス。
 
-### FlintWasmモジュール
+### フリントワズムモジュール
 
 **種類:** インターフェース
 
@@ -270,9 +504,9 @@ export interface FlintWasmLogger
 export interface FlintWasmModule
 ```
 
-説明はありません。
+WebAssembly 出力用の関数、レイアウト、インポートを含むモジュール中間表現。
 
-### FlintWasmParameter
+### FlintWasmパラメータ
 
 **種類:** インターフェース
 
@@ -280,7 +514,7 @@ export interface FlintWasmModule
 export interface FlintWasmParameter
 ```
 
-説明はありません。
+WebAssembly 関数シグネチャで使用される関数パラメーター定義。
 
 ### FlintWasmPrimitiveType
 
@@ -288,12 +522,12 @@ export interface FlintWasmParameter
 
 ```typescript
 export type FlintWasmPrimitiveType =
-  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | 'v128';
 ```
 
-説明はありません。
+WebAssembly バックエンドのパスを下げることでサポートされるプリミティブ データ型。
 
-### FlintWasmSourceImport
+### FlintWasmソースインポート
 
 **種類:** インターフェース
 
@@ -301,9 +535,9 @@ export type FlintWasmPrimitiveType =
 export interface FlintWasmSourceImport
 ```
 
-説明はありません。
+リンクされたソース モジュールの依存関係が WebAssembly モジュールにインポートされました。
 
-### FlintWasmSourceSpan
+### フリントワズムソーススパン
 
 **種類:** インターフェース
 
@@ -311,9 +545,9 @@ export interface FlintWasmSourceImport
 export interface FlintWasmSourceSpan
 ```
 
-説明はありません。
+デバッグ シンボル生成のための WebAssembly 命令にマップされたソースの場所のスパン。
 
-### FlintWasmStandardLibraryOperation
+### FlintWasm標準ライブラリ操作
 
 **種類：**タイプ
 
@@ -344,6 +578,8 @@ export type FlintWasmStandardLibraryOperation =
   | 'memory-realloc'
   | 'memory-load-u32'
   | 'memory-store-u32'
+  | 'memory-load-u8'
+  | 'memory-store-u8'
   | 'memory-load-f64'
   | 'memory-store-f64'
   | 'f64-from-u32'
@@ -366,12 +602,23 @@ export type FlintWasmStandardLibraryOperation =
   | 'signal-schedule'
   | 'async-schedule-microtask'
   | 'async-worker-post'
-  | 'async-worker-receive';
+  | 'async-worker-receive'
+  | 'memory-copy'
+  | 'memory-fill'
+  | 'simd-binarize'
+  | 'simd-i8x16-splat'
+  | 'simd-i8x16-eq'
+  | 'simd-i8x16-lt-u'
+  | 'simd-i8x16-bitmask'
+  | 'simd-i32x4-splat'
+  | 'simd-i32x4-add'
+  | 'simd-v128-load'
+  | 'simd-v128-store';
 ```
 
-説明はありません。
+WebAssembly 標準ライブラリの組み込み操作は、バックエンド コンパイラによって低下します。
 
-### FlintWasmStatement
+### フリントワズム声明
 
 **種類：**タイプ
 
@@ -379,9 +626,9 @@ export type FlintWasmStandardLibraryOperation =
 export type FlintWasmStatement = |
 ```
 
-説明はありません。
+中間表現ステートメントは WebAssembly 構造化制御フローに引き下げられました。
 
-### FlintWasmTypeName
+### フリントワズムの種類名
 
 **種類:** インターフェース
 
@@ -389,11 +636,11 @@ export type FlintWasmStatement = |
 export interface FlintWasmTypeName
 ```
 
-説明はありません。
+WebAssembly の降下中に使用される抽象型名の表現。
 
 ## `src/emitter`
 
-### コンパイルフォージWebScriptWasm
+### コンパイルFlintWasm
 
 **種類:** 関数
 
@@ -401,18 +648,309 @@ export interface FlintWasmTypeName
 function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<input>'): FlintWasmBackendResult;
 ```
 
-説明はありません。
+Flint IR モジュールを WebAssembly バイナリおよびテキスト形式にコンパイルするメイン エントリ ポイント。
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| 入力       | FlintWasmBackendInput |      |
-| ファイル名 |                       |      |
+|名前 |タイプ |説明 |
+| -------- | --------------------- | ----------- |
+|入力 | FlintWasmバックエンド入力 |             |
+|ファイル名 |                       |             |
+
+## `src/emitter/section-builder`
+
+### SECTION_IDS
+
+**種類:** 定数
+
+```typescript
+export const SECTION_IDS;
+```
+
+説明はありません。
+
+### セクション
+
+**種類:** 関数
+
+```typescript
+function section(id: number, contents: readonly number[]): number[];
+```
+
+セクション ID と長さのプレフィックスを使用して、ペイロード バイトを WebAssembly セクションにパッケージ化します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ----------------- | ----------- |
+| ID |番号 |             |
+|内容 |読み取り専用番号[] |             |
+
+### Wasmセクションビルダー
+
+**種類:** クラス
+
+```typescript
+export class WasmSectionBuilder
+```
+
+型指定された WebAssembly セクション ビルダーを作成します。
+
+## `src/encoding/bytes`
+
+### アペンドF32
+
+**種類:** 関数
+
+```typescript
+function appendF32(value: number): number[];
+```
+
+32 ビット浮動小数点数をリトル エンディアン バイナリ形式で追加し、NaN を正規化します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |番号 |             |
+
+### アペンドF64
+
+**種類:** 関数
+
+```typescript
+function appendF64(value: number): number[];
+```
+
+64 ビット浮動小数点数をリトル エンディアン バイナリ形式で追加し、NaN を正規化します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |番号 |             |
+
+### CANONICAL_F32_NAN_BYTES
+
+**種類:** 定数
+
+```typescript
+export const CANONICAL_F32_NAN_BYTES;
+```
+
+32 ビット浮動小数点の正規の Quiet NaN ビット パターン (リトル エンディアンでは 0x7fc00000)。
+
+### CANONICAL_F64_NAN_BYTES
+
+**種類:** 定数
+
+```typescript
+export const CANONICAL_F64_NAN_BYTES;
+```
+
+64 ビット浮動小数点の正規の Quiet NaN ビット パターン (リトル エンディアンでは 0x7ff8000000000000)。
+
+### ベクター
+
+**種類:** 関数
+
+```typescript
+function vector(values: readonly number[]): number[];
+```
+
+バイトコード要素の配列に LEB128 エンコードのカウントを接頭辞として付けます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ----------------- | ----------- |
+|値 |読み取り専用番号[] |             |
+
+### wasm文字列
+
+**種類:** 関数
+
+```typescript
+function wasmString(value: string): number[];
+```
+
+WebAssembly 形式でバイト長を接頭辞として付けた UTF-8 文字列をエンコードします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |文字列 |             |
+
+## `src/encoding/leb128`
+
+### 署名済みレブ
+
+**種類:** 関数
+
+```typescript
+function signedLeb(value: number | bigint): number[];
+```
+
+符号付き 32 ビットまたは 64 ビット整数を WebAssembly LEB128 バイト配列にエンコードします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---------------- | ----------- |
+|値 |数値 \|ビッグイント |             |
+
+### 署名済みLeb128
+
+**種類:** 関数
+
+```typescript
+function signedLeb128(value: number | bigint): number[];
+```
+
+signedLeb のエイリアス。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---------------- | ----------- |
+|値 |数値 \|ビッグイント |             |
+
+### 無署名レブ
+
+**種類:** 関数
+
+```typescript
+function unsignedLeb(value: number): number[];
+```
+
+符号なし 32 ビット整数を WebAssembly LEB128 バイト配列にエンコードします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |番号 |             |
+
+### unsignedLeb128
+
+**種類:** 関数
+
+```typescript
+function unsignedLeb128(value: number): number[];
+```
+
+unsignedLeb のエイリアス。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |番号 |             |
+
+## `src/optimizer`
+
+### FlintWasm最適化診断
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintWasmOptimizationDiagnostic
+```
+
+WebAssembly 最適化パスによって発行された診断。
+
+### FlintWasm最適化パス
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintWasmOptimizationPass
+```
+
+個々の最適化パスとそのメトリクスを説明するメタデータ。
+
+### FlintWasm最適化レポート
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintWasmOptimizationReport
+```
+
+適用されたすべての WebAssembly 最適化パスと診断を追跡する概要レポート。
+
+### フリントワズムステージIr
+
+**種類:** インターフェース
+
+```typescript
+export interface FlintWasmStageIr
+```
+
+最適化段階でのモジュール状態の中間表現スナップショット。
+
+### FlintWasmSwitch頭脳系
+
+**種類：**タイプ
+
+```typescript
+export type FlintWasmSwitchStrategy = 'br-table' | 'sparse' | 'constant';
+```
+
+switch ステートメントを下げるためのコード生成戦略。
+
+### FlintWasmModule の最適化
+
+**種類:** 関数
+
+```typescript
+function optimizeFlintWasmModule(
+  module: FlintWasmModule,
+  optimization: 'debug' | 'release' = 'release',
+): FlintWasmStageIr;
+```
+
+IR モジュールで WebAssembly 最適化パスの完全なスイートを実行します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------------ | -------------------- | ----------- |
+|モジュール |フリントワズムモジュール |             |
+|最適化 | 'デバッグ' \| 'リリース' |             |
+
+## `src/sections/custom`
+
+### encodeFlintAbiCustomSection
+
+**種類:** 関数
+
+```typescript
+function encodeFlintAbiCustomSection(manifest: FlintCAbiManifest | object): number[];
+```
+
+コンパクトな CBOR ABI マニフェスト (`flint.abi.v2`) を含むバイナリ WebAssembly カスタム セクションを生成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | --------------------------- | ----------- |
+|マニフェスト | FlintCAbiManifest \|オブジェクト |             |
+
+### FLINT_ABI_V2_CUSTOM_SECTION
+
+**種類:** 定数
+
+```typescript
+export const FLINT_ABI_V2_CUSTOM_SECTION;
+```
+
+埋め込みバイナリ CBOR ABI マニフェストの標準 WebAssembly カスタム セクション名。
 
 ## `src/verifier`
 
-### FlintWasmArtifactManifest
+### フリントワズムアーティファクトマニフェスト
 
 **種類:** インターフェース
 
@@ -422,7 +960,7 @@ export interface FlintWasmArtifactManifest
 
 検証者は、パッケージ サイクルを回避するために構造マニフェストを意図的に消費します。
 
-### FlintWasmArtifact検証診断
+### フリントワズムアーティファクト検証診断
 
 **種類:** インターフェース
 
@@ -430,9 +968,9 @@ export interface FlintWasmArtifactManifest
 export interface FlintWasmArtifactVerificationDiagnostic
 ```
 
-説明はありません。
+WebAssembly バイナリ検証中に出力される診断結果。
 
-### FlintWasmArtifact検証入力
+### FlintWasmアーティファクト検証入力
 
 **種類:** インターフェース
 
@@ -440,9 +978,9 @@ export interface FlintWasmArtifactVerificationDiagnostic
 export interface FlintWasmArtifactVerificationInput
 ```
 
-説明はありません。
+アーティファクト検証に渡される入力パラメーターと期待値。
 
-### FlintWasmArtifact検証ポリシー
+### フリントワズムアーティファクト検証ポリシー
 
 **種類:** インターフェース
 
@@ -450,9 +988,9 @@ export interface FlintWasmArtifactVerificationInput
 export interface FlintWasmArtifactVerificationPolicy
 ```
 
-説明はありません。
+アーティファクト検証の実施を管理するポリシー ルール。
 
-### FlintWasmArtifact検証結果
+### フリントワズムアーティファクト検証結果
 
 **種類:** インターフェース
 
@@ -460,9 +998,9 @@ export interface FlintWasmArtifactVerificationPolicy
 export interface FlintWasmArtifactVerificationResult
 ```
 
-説明はありません。
+検証状況を示す包括的な検証結果レポート。
 
-### FlintWasmArtifact検証重大度
+### フリントワズムアーティファクト検証重大度
 
 **種類：**タイプ
 
@@ -470,7 +1008,7 @@ export interface FlintWasmArtifactVerificationResult
 export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info';
 ```
 
-説明はありません。
+アーティファクトの検証中に発行される診断重大度レベル。
 
 ### FlintWasmManifest関数
 
@@ -480,9 +1018,9 @@ export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info'
 export interface FlintWasmManifestFunction
 ```
 
-説明はありません。
+検証のために ABI マニフェストから抽出された関数メタデータ。
 
-### FlintWasmManifestImport
+### FlintWasmManifestインポート
 
 **種類:** インターフェース
 
@@ -490,7 +1028,7 @@ export interface FlintWasmManifestFunction
 export interface FlintWasmManifestImport
 ```
 
-説明はありません。
+ABI マニフェストから抽出された宣言メタデータをインポートします。
 
 ### FlintWasmManifestパラメータ
 
@@ -500,9 +1038,9 @@ export interface FlintWasmManifestImport
 export interface FlintWasmManifestParameter
 ```
 
-説明はありません。
+マニフェスト関数定義のパラメーター タイプのメタデータ。
 
-### FlintWasmメモリレイアウト
+### フリントワズムメモリレイアウト
 
 **種類:** インターフェース
 
@@ -510,7 +1048,7 @@ export interface FlintWasmManifestParameter
 export interface FlintWasmMemoryLayout
 ```
 
-説明はありません。
+メモリ レイアウトの期待値は WebAssembly バイナリに対して検証されました。
 
 ### verifyFlintWasmArtifact
 
@@ -520,17 +1058,17 @@ export interface FlintWasmMemoryLayout
 function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): FlintWasmArtifactVerificationResult;
 ```
 
-説明はありません。
+WebAssembly バイナリおよびアダプター アーティファクトを検証する完全な検証エントリ ポイント。
 
 #### パラメータ
 
-| 名前 | タイプ                            | 説明 |
-| ---- | --------------------------------- | ---- |
-| 入力 | FlintWasmArtifactVerification入力 |      |
+|名前 |タイプ |説明 |
+| ----- | ---------------------------------- | ----------- |
+|入力 | FlintWasmArtifactVerification入力 |             |
 
 ## `src/wat`
 
-### FlintWasmWatMetadata
+### FlintWasmWatメタデータ
 
 **種類:** インターフェース
 
@@ -538,9 +1076,9 @@ function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): Fli
 export interface FlintWasmWatMetadata
 ```
 
-説明はありません。
+WebAssembly テキスト形式 (WAT) のコメントとヘッダーに出力されるメタデータ。
 
-### renderFlintWasmWat
+### レンダリングフリントワズムワット
 
 **種類:** 関数
 
@@ -548,11 +1086,37 @@ export interface FlintWasmWatMetadata
 function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmWatMetadata = {}): string;
 ```
 
-説明はありません。
+完全な Flint WebAssembly モジュールの中間表現をテキストの WAT 形式に変換します。
 
 #### パラメータ
 
-| 名前       | タイプ                 | 説明 |
-| ---------- | ---------------------- | ---- |
-| モジュール | FlintWasmモジュール    |      |
-| メタデータ | FlintWasmWatメタデータ |      |
+|名前 |タイプ |説明 |
+| -------- | -------------------- | -------------------------------------------------------- |
+|モジュール |フリントワズムモジュール | - コンパイルされたモジュールの中間表現。           |
+|メタデータ | FlintWasmWatメタデータ | - コンパイルのメタデータとターゲット機能の構成。 |
+
+#### 契約
+
+- **@param:** - コンパイルされたモジュールの中間表現。
+- **@param:** - コンパイル メタデータとターゲット機能の構成。
+- **@returns:** WebAssembly テキスト表現文字列。
+
+### toWatType
+
+**種類:** 関数
+
+```typescript
+function toWatType(
+  type: string | { readonly name?: string; readonly reference?: string } | undefined,
+  memory64 = false,
+): string;
+```
+
+Flint または C の型表現文字列を WebAssembly WAT 値型にマップします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------- | ------------------------------------------------------------------------------ | ----------- |
+|タイプ |文字列 \| { 読み取り専用の名前?: 文字列;読み取り専用参照?: 文字列 } \|未定義 |             |
+|メモリ64 |                                                                                |             |

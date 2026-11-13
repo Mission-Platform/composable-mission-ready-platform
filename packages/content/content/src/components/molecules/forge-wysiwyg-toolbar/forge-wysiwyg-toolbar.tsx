@@ -155,7 +155,7 @@ export function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarPropertie
   const isActive = (command: WysiwygCommand): boolean => active.includes(command);
   const run = (command: WysiwygCommand): void => properties.onCommand?.(command);
   // This handler intentionally captures the component-local event contract.
-  // eslint-disable-next-line unicorn/consistent-function-scoping
+
   const preventFocusLoss = (event: MouseEvent): void => event.preventDefault();
 
   // Custom `items` fully replace the built-ins (including the block dropdown);

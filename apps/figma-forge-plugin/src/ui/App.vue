@@ -1,6 +1,9 @@
 <script setup lang="ts">
   import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 
+  import type { ForgeDiagnostic, ForgeExportBundle, ForgeExportFile } from '@mission-platform/forge-figma';
+  import type { ForgeBridgeFileResult } from '@mission-platform/forge-figma-bridge/protocol';
+
   import { copyForgeFile, downloadForgeFile, fileForPath, fileText, sendBundleToBridge } from './delivery';
   import {
     FORGE_FIGMA_UI_ORIGIN,
@@ -12,9 +15,6 @@
     type ForgePluginUiMessage,
     unwrapForgePluginMessage,
   } from './messages';
-
-  import type { ForgeDiagnostic, ForgeExportBundle, ForgeExportFile } from '@mission-platform/forge-figma';
-  import type { ForgeBridgeFileResult } from '@mission-platform/forge-figma-bridge/protocol';
 
   const selectionCount = ref(0);
   const selectionError = ref('');

@@ -28,32 +28,32 @@ Solid ルーター プリミティブから中立的な機能を構築します 
 
 #### パラメータ
 
-| 名前 | タイプ                                                                                                                                                         | 説明 |
-| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| 入力 | { 場所: { パス名: 文字列;検索: 文字列;ハッシュ: 文字列 }; パラメータ?: Record<string, string \| undefined>; ナビゲート: SolidNavigate; アウトレット?: 不明。 } |      |
+|名前 |タイプ |説明 |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|入力 | { 場所: { パス名: 文字列;検索: 文字列;ハッシュ: 文字列 };パラメータ?: Record<string, string \| undefined>;ナビゲート: SolidNavigate;アウトレット?: 不明。 } |             |
 
 ### エムピーリンク
 
 **種類:** コンポーネント
 
 ```typescript
-function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
+export function MpLink(properties:
 ```
 
 Solid アンカー コンポーネント プロキシは、{@link setForgeSolidRouter} を通じてバインドされています。
 
 #### パラメータ
 
-| 名前       | タイプ                                                                              | 説明 |
-| ---------- | ----------------------------------------------------------------------------------- | ---- |
-| プロパティ | { href?: 文字列; へ?:MpRouteLocationRaw; 子供?: 不明。 置き換えますか?: ブール値; } |      |
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------------------------------------------------------------- | ----------- |
+|プロパティ | { href?: 文字列;へ?: MpRouteLocationRaw;子供?: 不明。置き換えますか?: ブール値; } |             |
 
 ### MpRouterView
 
 **種類:** コンポーネント
 
 ```typescript
-function MpRouterView(): unknown;
+export function MpRouterView(): unknown;
 ```
 
 Solid アウトレット プロキシは、{@link setForgeSolidRouter} を通じてバインドされています。
@@ -70,9 +70,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### パラメータ
 
-| 名前 | タイプ             | 説明 |
-| ---- | ------------------ | ---- |
-| へ   | MpRouteLocationRaw |      |
+|名前 |タイプ |説明 |
+| ---- | ------------------ | ----------- |
+|へ | MpRouteLocationRaw |             |
 
 ### setForgeSolidRouter
 
@@ -87,9 +87,9 @@ function setForgeSolidRouter(surface: SolidRouterSurface): void;
 
 #### パラメータ
 
-| 名前 | タイプ                     | 説明 |
-| ---- | -------------------------- | ---- |
-| 表面 | ソリッドルーターサーフェス |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------ | ----------- |
+|表面 |ソリッドルーターサーフェス |             |
 
 ### ソリッドルーターサーフェス
 
@@ -108,7 +108,7 @@ export interface SolidRouterSurface
 ```typescript
 function toMpLocationFromSolid(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
@@ -116,10 +116,10 @@ Solid ルーターの場所/パラメーターのスナップショットから�
 
 #### パラメータ
 
-| 名前       | タイプ                                           | 説明 |
-| ---------- | ------------------------------------------------ | ---- |
-| 場所       | { パス名: 文字列;検索: 文字列;ハッシュ: 文字列 } |      |
-| パラメータ | レコード<string, string \| undefined>            |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------------------------------- | ----------- |
+|場所 | { パス名: 文字列;検索: 文字列;ハッシュ: 文字列 } |             |
+|パラメータ |レコード<string, string \| undefined> |             |
 
 ### toSolidHref
 
@@ -133,9 +133,9 @@ Solid ルーター ナビゲーションのニュートラル ターゲットを
 
 #### パラメータ
 
-| 名前 | タイプ             | 説明 |
-| ---- | ------------------ | ---- |
-| へ   | MpRouteLocationRaw |      |
+|名前 |タイプ |説明 |
+| ---- | ------------------ | ----------- |
+|へ | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 

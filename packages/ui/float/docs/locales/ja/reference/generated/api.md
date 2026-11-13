@@ -63,9 +63,9 @@ function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElemen
 
 #### パラメータ
 
-| 名前       | タイプ                              | 説明 |
-| ---------- | ----------------------------------- | ---- |
-| プロパティ | 読み取り専用<AlertBannerProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------- | ----------- |
+|プロパティ |読み取り専用<AlertBannerProperties> |             |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -98,12 +98,12 @@ function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement;
 ```
 
 `ForgeDropdown` — トリガーに固定された、作成されたフローティング メニュー/リスト パネル
-一度ニュートラルな JSX 方言で変換し、直接 React または Vue にコンパイルします。
+一度はニュートラルな JSX 方言で、直接 React または Vue にコンパイルされます。
 `@mission-platform/vite-plugin-forge`。
 
 パネルは、フレームワークに依存しない **`<Teleport>`** ポータルを通じてレンダリングされます
 (React の `createPortal` / Vue の組み込み `<Teleport>` にコンパイル
-`@mission-platform/vite-plugin-forge`)、`document.body` にレンダリングされ、
+`@mission-platform/vite-plugin-forge`) なので、`document.body` にレンダリングされ、
 `overflow`/スタッキング コンテキストをエスケープします。ポータルはその間にのみマウントされます
 `open`。 CSS Anchor Positioning API を使用してトリガーに固定されたままになります
 `@floating-ui` ではなく: トリガーは一意のインライン `anchor-name` を宣言します。
@@ -112,7 +112,7 @@ function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement;
 `matchTriggerWidth` は、パネル サイズをその `min-width` を使用してトリガーに設定します。
 CSS `anchor-size(width)` — JS 測定なし。
 
-テレポートされたパネルは、
+テレポートされたパネルも、
 ネイティブ Popover API (`popover="manual"` + `showPopover()`): プレーン `z-index`
 開いているネイティブ `<dialog>` モーダル/ダイアログ (
 最上層)、パネルは同じ最上層を選択してその上に留まります
@@ -123,7 +123,7 @@ Popover API サポートのないブラウザの場合 (`popover` 属性は
 トリガーが開いたモーダル `<dialog>` 内にある場合、パネルはポータル化されます
 `body` ではなく **そのダイアログに** ({@linksolvePortalTarget} 経由):
 モーダル ダイアログはサブツリーの外側のすべてを `inert` にするため、パネルは
-`body` は不活性 (非表示/クリック不可) で、誤ってスタックされる可能性があり、さらにその可能性が高くなります。
+`body` は不活性 (非表示/クリック不可) で、誤ってスタックされます (さらにその可能性が高くなります)。
 モーダルがネストされている場合。最も近いダイアログ内に保持すると、ポップオーバーが可能になります
 API はそれをその (おそらくは積み重ねられた) ダイアログの上に積み重ねます。
 
@@ -139,9 +139,9 @@ API はそれをその (おそらくは積み重ねられた) ダイアログの
 
 #### パラメータ
 
-| 名前       | タイプ                           | 説明 |
-| ---------- | -------------------------------- | ---- |
-| プロパティ | 読み取り専用<DropdownProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------- | ----------- |
+|プロパティ |読み取り専用<DropdownProperties> |             |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -159,7 +159,7 @@ function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 
 パネルは、フレームワークに依存しない **`<Teleport>`** ポータルを通じてレンダリングされます
 (React の `createPortal` / Vue の組み込み `<Teleport>` にコンパイル
-`@mission-platform/vite-plugin-forge`)、`document.body` にレンダリングされ、
+`@mission-platform/vite-plugin-forge`) なので、`document.body` にレンダリングされ、
 `overflow`/スタッキング コンテキストをエスケープします。ポータルはその間にのみマウントされます
 `open`。 CSS Anchor Positioning API を使用してトリガーに固定されたままになります
 `@floating-ui` ではなく: トリガーは一意のインライン `anchor-name` を宣言します。
@@ -168,9 +168,9 @@ function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 `position-try-fallbacks` (同じ場所にあるスタイルシートにより、カスタム
 `@position-try` オプション)。オープン状態を制御 (`open` +
 `onUpdateOpen`/`onClose`): パネルは `open` と `useEffect` でゲートされます。
-ワイヤーの外側クリック + `Escape` が開いている間に解除されます。
+ワイヤの外側クリック + `Escape` が開いている間に解除されます。
 
-テレポートされたパネルは、
+テレポートされたパネルも、
 ネイティブ ポップオーバー API (`popover="manual"` + `showPopover()`): プレーンな `z-index`
 開いているネイティブ `<dialog>` モーダル/ダイアログ (
 最上層)、パネルは同じ最上層を選択してその上に留まります
@@ -195,9 +195,9 @@ API はそれをその (おそらくは積み重ねられた) ダイアログの
 
 #### パラメータ
 
-| 名前       | タイプ                          | 説明 |
-| ---------- | ------------------------------- | ---- |
-| プロパティ | 読み取り専用<PopoverProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------------------- | ----------- |
+|プロパティ |読み取り専用<PopoverProperties> |             |
 
 ### ポップオーバーの配置
 
@@ -260,9 +260,9 @@ callback-prop `onDismiss`、`iconContent` 名前付きスロット (`<Slot>`、
 
 #### パラメータ
 
-| 名前       | タイプ                        | 説明 |
-| ---------- | ----------------------------- | ---- |
-| プロパティ | 読み取り専用<ToastProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------- | ----------- |
+|プロパティ |読み取り専用<ToastProperties> |             |
 
 ### トーストのプロパティ
 
@@ -311,7 +311,7 @@ function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 
 ヒントは、フレームワークに依存しない **`<Teleport>`** ポータルを通じて表示されます
 (React の `createPortal` / Vue の組み込み `<Teleport>` にコンパイル
-`@mission-platform/vite-plugin-forge`)、`document.body` にレンダリングされ、
+`@mission-platform/vite-plugin-forge`) なので、`document.body` にレンダリングされ、
 `overflow`/スタッキング コンテキストをエスケープします。ポータルは、
 ヒントが見えてきます。位置決めは `@floating-ui`: トリガーに依存しなくなりました
 一意の CSS `anchor-name` を宣言します (各インスタンスが異なるようにインラインで設定されます)。
@@ -320,7 +320,7 @@ function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 (`flip-block`、`flip-inline`、およびカスタム `@position-try` オプション
 同じ場所に配置されたスタイルシート)。
 
-テレポートされたパネルは、
+テレポートされたパネルも、
 ネイティブ ポップオーバー API (`popover="manual"` + `showPopover()`): プレーンな `z-index`
 開いているネイティブ `<dialog>` モーダル/ダイアログ (
 最上位レイヤー) なので、ヒントは同じ最上位レイヤーを選択してその上に留まります
@@ -344,9 +344,9 @@ Popover API をサポートしていないブラウザの場合。
 
 #### パラメータ
 
-| 名前       | タイプ                          | 説明 |
-| ---------- | ------------------------------- | ---- |
-| プロパティ | 読み取り専用<TooltipProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------------------- | ----------- |
+|プロパティ |読み取り専用<TooltipProperties> |             |
 
 ### ツールチップの配置
 
@@ -408,7 +408,7 @@ export type DialogSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 ```
 
-`ForgeDialog` — 中立的な JSX 方言で一度作成されたモーダル ダイアログ
+`ForgeDialog` — ニュートラルな JSX 方言で一度作成されたモーダル ダイアログ
 `@mission-platform/vite-plugin-forge` によって React または Vue に直接コンパイルされます。
 
 `showModal()`/`close()` で駆動される **ネイティブ `<dialog>`** をレンダリングします。
@@ -427,15 +427,15 @@ Enter/Exit フェードは CSS に存在します (`@starting-style` + `transiti
 `closeLabel` 小道具;
 `useZIndex('modal')` → ダイアログのネイティブ最上位層。 `useRouterClose`
 (`closeOnRouteChange`) はドロップされます (中立方言ではルータがありません)。そして
-`update:open`/`close` が発行すると、`onUpdateOpen`/`onClose` コールバックになります。
+`update:open`/`close` は `onUpdateOpen`/`onClose` コールバックを発行します
 小道具。同じ場所に配置された CSS モジュールを通じてスタイルを所有します。
 `forge-dialog.module.scss`。
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| プロパティ | 読み取り専用<DialogProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------- | ----------- |
+|プロパティ |読み取り専用<DialogProperties> |             |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -462,17 +462,17 @@ function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 `ForgeModalHeader`/`Body`/`Footer` はインライン化され、`header`/`footer` はインライン化されます。
 領域は名前付きスロット (`<Slot>`) として作成され、その存在が検出されます。
 フレームワークに依存しない {@link hasSlot} ヘルパーを介して。 `useI18n`
-ラベルは `closeLabel` プロップになります。 `useZIndex('modal')` → ダイアログの
+ラベルは `closeLabel` prop になります。 `useZIndex('modal')` → ダイアログの
 ネイティブの最上層。 `useRouterClose` (`closeOnRouteChange`) は削除されます (いいえ)
 中立方言のルーター);そして、`update:open`/`close` が出力するものは、
 `onUpdateOpen`/`onClose` コールバック小道具。スタイルを確立するのは、
-CSS モジュール `forge-modal.module.scss` と同じ場所に配置されています。
+CSS モジュール `forge-modal.module.scss` と同じ場所にあります。
 
 #### パラメータ
 
-| 名前       | タイプ                        | 説明 |
-| ---------- | ----------------------------- | ---- |
-| プロパティ | 読み取り専用<ModalProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------- | ----------- |
+|プロパティ |読み取り専用<ModalProperties> |             |
 
 ### モーダルプロパティ
 
@@ -493,6 +493,16 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 ```
 
 タブレット/デスクトップ上のモーダルの幅ステップ (`sm`+)。モバイルは常に全角です。
+
+### モーダルバリアント
+
+**種類：**タイプ
+
+```typescript
+export type ModalVariant = 'modal' | 'dialog' | 'alert';
+```
+
+モーダル オーバーレイ プリミティブの視覚的および意味論的なバリアント。
 
 ## `src/components/organisms/forge-toast-container/forge-toast-container`
 
@@ -526,10 +536,10 @@ function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): Mp
 `<TransitionGroup>` および `@mission-platform/forge-adapters/react` CSS クラス グループ
 運転手。 4 つのスタイル付き開始/終了フェーズ クラスは、** ハッシュとして渡されます。
 CSS モジュール クラス** (`<TransitionGroup>` クラス プロパティ経由)、
-アニメーションのスタイル設定はグローバルに依存するのではなく、コンポーネント スコープのままになります。
+アニメーションのスタイル設定はグローバルに依存するのではなく、コンポーネント スコープのままです。
 `:global(.forge-toast-*)` ルール — `scoped` `<style>` と一致します。
 オリジナル Vue SFC。 Vue では、トースト ルートはこれらのクラスをネイティブに受け取ります。に
-React ドライバーは、離脱フェーズ (
+React ドライバーは、離脱フェーズを通じてマウント/アンマウントを調整します (
 クラスは DOM 要素の子に適用されます。`ForgeToast` はコンポーネントであり、
 React ビルドは、クラス切り替えの SSR インプレース ベースラインに低下します。
 シングル `<Transition>` など）。
@@ -537,13 +547,13 @@ React ビルドは、クラス切り替えの SSR インプレース ベース�
 オリジナルの Vue SFC からの代替: リアクティブ `useToast` ストア →
 共有監視可能な `toast-store` シングルトン。 `<Teleport to="body">` →
 中立 `<Teleport>` ポータル プリミティブ。 `useZIndex('notification')`
-コンポーザブル → CSS に適用される静的な `notification` z-index レイヤー。
+コンポーザブル → CSS に適用される静的 `notification` z-index レイヤー。
 
 #### パラメータ
 
-| 名前       | タイプ                                 | 説明 |
-| ---------- | -------------------------------------- | ---- |
-| プロパティ | 読み取り専用<ToastContainerProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------------- | ----------- |
+|プロパティ |読み取り専用<ToastContainerProperties> |             |
 
 ### トーストコンテナのプロパティ
 
@@ -589,16 +599,16 @@ ID でトーストを終了します。
 
 #### パラメータ
 
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| ID   | 番号   |      |
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+| ID |番号 |             |
 
 ### エラートースト
 
 **種類:** 定数
 
 ```typescript
-export const errorToast;
+export const errorToast: ReturnType<typeof withVariant>;
 ```
 
 利便性: `error` トーストを表示します。
@@ -618,7 +628,7 @@ function getToastsSnapshot(): readonly ToastRecord[];
 **種類:** 定数
 
 ```typescript
-export const infoToast;
+export const infoToast: ReturnType<typeof withVariant>;
 ```
 
 利便性: `info` トーストを表示します。
@@ -635,9 +645,9 @@ function showToast(options: ToastOptions | string): number;
 
 #### パラメータ
 
-| 名前       | タイプ                      | 説明 |
-| ---------- | --------------------------- | ---- |
-| オプション | トーストオプション \|文字列 |      |
+|名前 |タイプ |説明 |
+| ------- | ---------------------- | ----------- |
+|オプション |トーストオプション \|文字列 |             |
 
 ### 購読乾杯
 
@@ -651,16 +661,16 @@ function subscribeToasts(listener: () => void): () => void;
 
 #### パラメータ
 
-| 名前     | タイプ     | 説明 |
-| -------- | ---------- | ---- |
-| リスナー | () => 無効 |      |
+|名前 |タイプ |説明 |
+| -------- | ---------- | ----------- |
+|リスナー | () => 無効 |             |
 
 ### 成功乾杯
 
 **種類:** 定数
 
 ```typescript
-export const successToast;
+export const successToast: ReturnType<typeof withVariant>;
 ```
 
 利便性: `success` トーストを表示します。
@@ -703,7 +713,7 @@ export interface ToastRecord
 function useToast(): UseToastReturn;
 ```
 
-Vue をミラーリングして、トーストを表示および非表示にする命令型ヘルパー
+Vue をミラーリングして、トーストを表示および閉じるための命令型ヘルパー
 `useToast` コンポーザブル。のルート付近に単一の `ForgeToastContainer` をレンダリングします。
 アプリを使用してそれらを表示します。
 
@@ -722,7 +732,119 @@ export interface UseToastReturn
 **種類:** 定数
 
 ```typescript
-export const warningToast;
+export const warningToast: ReturnType<typeof withVariant>;
 ```
 
 利便性: `warning` トーストを表示します。
+
+## `src/utils/fallback-position`
+
+### applyFallbackPosition
+
+**種類:** 関数
+
+```typescript
+function applyFallbackPosition(
+  triggerElement: HTMLElement,
+  panelElement: HTMLElement,
+  placement: FallbackPlacement = 'bottom-start',
+  options?: FallbackPositionOptions | number,
+): void;
+```
+
+`triggerElement` を基準にして、フォールバック座標とスタイルを `panelElement` に適用します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| -------------- | --------------------------------- | ----------- |
+|トリガー要素 | HTML要素 |             |
+|パネル要素 | HTML要素 |             |
+|配置 |フォールバック配置 |             |
+|オプション | FallbackPositionOptions \|番号 |             |
+
+### 計算フォールバック位置
+
+**種類:** 関数
+
+```typescript
+function calculateFallbackPosition(
+  triggerRect: TriggerBoundingRect,
+  placement: FallbackPlacement = 'bottom-start',
+  offset = 0,
+): FallbackPositionResult;
+```
+
+フローティング要素の上、左、および変換 CSS プロパティを計算します。
+トリガー要素の境界四角形、目的の配置、およびオフセットに基づいて。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ------------------- | ----------- |
+|トリガーRect |トリガー境界Rect |             |
+|配置 |フォールバック配置 |             |
+|オフセット |                     |             |
+
+### フォールバック配置
+
+**種類：**タイプ
+
+```typescript
+export type FallbackPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
+```
+
+アンカー位置フォールバックの配置オプションがサポートされています。
+
+### フォールバック位置オプション
+
+**種類:** インターフェース
+
+```typescript
+export interface FallbackPositionOptions
+```
+
+説明はありません。
+
+### フォールバック位置結果
+
+**種類:** インターフェース
+
+```typescript
+export interface FallbackPositionResult
+```
+
+説明はありません。
+
+### isAnchorPositioningSupported
+
+**種類:** 関数
+
+```typescript
+function isAnchorPositioningSupported(): boolean;
+```
+
+CSS アンカーの配置がサポートされているかどうかを動的に確認します。
+単体テストで `CSS.supports` をモックまたは切り替えできるように関数として評価されます。
+
+### アンカーの位置決めをサポート
+
+**種類:** 定数
+
+```typescript
+export const supportsAnchorPositioning: boolean;
+```
+
+CSS アンカーの配置が現在の環境でサポートされているかどうかを確認します。

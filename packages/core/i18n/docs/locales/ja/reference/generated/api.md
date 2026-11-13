@@ -24,16 +24,15 @@ i18next インスタンスを React ツリーに提供します (委任)
 
 #### パラメータ
 
-| 名前       | タイプ                            | 説明 |
-| ---------- | --------------------------------- | ---- |
-| プロパティ | ForgeI18Nプロバイダーのプロパティ |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------------------- | ----------- |
+|プロパティ | ForgeI18Nプロバイダーのプロパティ |             |
 
 #### 契約
 
 - **@example:** import { createForgeI18N, ForgeI18NProvider } から '@mission-platform/i18n'
-
-const i18n = createForgeI18N({ メッセージ: { en: { hello: 'Hello' } } })
-root.render(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)
+  const i18n = createForgeI18N({ メッセージ: { en: { hello: 'Hello' } } })
+  root.render(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)
 
 ### ForgeI18Nプロバイダーのプロパティ
 
@@ -52,7 +51,7 @@ export interface ForgeI18NProviderProperties
 **種類:** 関数
 
 ```typescript
-function createForgeI18NVue(i18next: I18nInstance): Plugin;
+function createForgeI18NVue(i18next: ForgeI18nInstance): Plugin;
 ```
 
 i18next インスタンスを Vue プラグイン (`i18next-vue` に委任) でラップします。
@@ -61,16 +60,15 @@ i18next インスタンスを Vue プラグイン (`i18next-vue` に委任) で�
 
 #### パラメータ
 
-| 名前        | タイプ           | 説明 |
-| ----------- | ---------------- | ---- |
-| i18ネクスト | I18nインスタンス |      |
+|名前 |タイプ |説明 |
+| ------- | ----------------- | ----------- |
+| i18ネクスト | ForgeI18nインスタンス |             |
 
 #### 契約
 
 - **@example:** '@mission-platform/i18n' から { createForgeI18N, createForgeI18NVue } をインポートします
-
-const i18n = createForgeI18N({ メッセージ: { en: { hello: 'Hello' } } })
-app.use(createForgeI18NVue(i18n))
+  const i18n = createForgeI18N({ メッセージ: { en: { hello: 'Hello' } } })
+  app.use(createForgeI18NVue(i18n))
 
 ## `src/composables/use-i18n/use-i18n.neutral`
 
@@ -89,9 +87,9 @@ React および Vue ビルドで使用される同じ `useI18n()` インポー�
 
 #### パラメータ
 
-| 名前     | タイプ | 説明 |
-| -------- | ------ | ---- |
-| 名前空間 | 文字列 |      |
+|名前 |タイプ |説明 |
+| --------- | ------ | ----------- |
+|名前空間 |文字列 |             |
 
 ### UseI18nReturn
 
@@ -123,9 +121,9 @@ function useI18n(namespace?: string): UseI18nReturn;
 
 #### パラメータ
 
-| 名前     | タイプ | 説明 |
-| -------- | ------ | ---- |
-| 名前空間 | 文字列 |      |
+|名前 |タイプ |説明 |
+| --------- | ------ | ----------- |
+|名前空間 |文字列 |             |
 
 ### UseI18nReturn
 
@@ -158,9 +156,9 @@ function useI18n(namespace?: string): UseI18nReturn;
 
 #### パラメータ
 
-| 名前     | タイプ | 説明 |
-| -------- | ------ | ---- |
-| 名前空間 | 文字列 |      |
+|名前 |タイプ |説明 |
+| --------- | ------ | ----------- |
+|名前空間 |文字列 |             |
 
 ### UseI18nReturn
 
@@ -179,53 +177,50 @@ export interface UseI18nReturn
 **種類:** 関数
 
 ```typescript
-function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance;
+function createForgeI18N(options: CreateForgeI18NOptions = {}): ForgeI18nInstance;
 ```
 
-Creates a configured, framework-agnostic [i18next](https://www.i18next.com/)
+構成された、フレームワークに依存しない [i18next](https://www.i18next.com/) を作成します。
 ミッションプラットフォームのインスタンス。
 
-The returned instance is plain i18next — it carries no framework binding, so
-it can be paired with the Vue adapter (the `mp:vue` build of
-`@mission-platform/i18n`), the React adapter (`mp:react`), or used directly.
+返されたインスタンスはプレーンな i18next です。フレームワーク バインディングを持たないため、
+Vue アダプター (`mp:vue` ビルド) と組み合わせることができます。
+`@mission-platform/i18n`)、React アダプター (`mp:react`)、または直接使用されます。
 
-Interpolation is configured with single-brace delimiters (`{name}`) to match
-the locale strings authored across the platform, and HTML escaping is left to
+補間は、一致する単一中括弧区切り文字 (`{name}`) で構成されます。
+プラットフォーム全体で作成されたロケール文字列、および HTML エスケープは残ります。
 レンダリング フレームワーク (`escapeValue: false`)。
 
-Strings are grouped into i18next namespaces: each package and app owns a
-`mp.<workspace>` namespace (see {@link forgeNamespace}).デフォルトの名前空間
-(an app's own `mp.<app>`) falls back to every other registered namespace, so
-component code resolves keys it owns without spelling out a namespace, while
-apps can deep-merge per-namespace `overrides` on top of a package's strings.
+文字列は i18next 名前空間にグループ化されます。各パッケージとアプリは、
+`mp.<workspace>` 名前空間 ({@link forgeNamespace} を参照)。デフォルトの名前空間
+(アプリ自身の `mp.<app>`) は、登録されている他のすべての名前空間にフォールバックします。
+コンポーネントコードは、名前空間を詳しく説明せずに、それが所有するキーを解決します。
+アプリは、名前空間ごとの `overrides` をパッケージの文字列の上にディープマージできます。
 
 #### パラメータ
 
-| 名前       | タイプ                     | 説明 |
-| ---------- | -------------------------- | ---- |
-| オプション | CreateForgeI18NOオプション |      |
+|名前 |タイプ |説明 |
+| ------- | ---------------------- | ----------- |
+|オプション | CreateForgeI18NOオプション |             |
 
 #### 契約
 
 - **@example:** // フレームワークに依存しない使用法
   '@mission-platform/i18n' から { createForgeI18N } をインポートします
-
-const i18n = createForgeI18N({ メッセージ: { en: { hello: 'Hello {name}' } } })
-i18n.t('hello', { name: 'World' }) // → 'Hello World'
-
+  const i18n = createForgeI18N({ メッセージ: { en: { hello: 'Hello {name}' } } })
+  i18n.t('hello', { name: 'World' }) // → 'Hello World'
 - **@example:** // パッケージの文字列をオーバーライドするアプリによる名前空間の使用
   import { createForgeI18N, forgeNamespace } から '@mission-platform/i18n'
-
-const i18n = createForgeI18N({
-名前空間: forgeNamespace('my-care-notes')、
-名前空間: {
-[forgeNamespace('my-care-notes')]: { en: { nav: { Notes: 'Notes' } } },
-[forgeNamespace('breakpoints')]: { en: { ブレークポイント: 'ブレークポイント:' } },
-}、
-オーバーライド: {
-[forgeNamespace('breakpoints')]: { en: { ブレークポイント: 'ビューポート:' } },
-}、
-})
+  const i18n = createForgeI18N({
+  名前空間: forgeNamespace('my-care-notes')、
+  名前空間: {
+  [forgeNamespace('my-care-notes')]: { en: { nav: { Notes: 'Notes' } } },
+  [forgeNamespace('breakpoints')]: { en: { ブレークポイント: 'ブレークポイント:' } },
+  }、
+  オーバーライド: {
+  [forgeNamespace('breakpoints')]: { en: { ブレークポイント: 'ビューポート:' } },
+  }、
+  })
 
 ### CreateForgeI18NOオプション
 
@@ -260,10 +255,10 @@ function runWithI18n(i18n: I18nInstance, callback: () => T): T;
 
 #### パラメータ
 
-| 名前         | タイプ           | 説明 |
-| ------------ | ---------------- | ---- |
-| i18n         | I18nインスタンス |      |
-| コールバック | () => T          |      |
+|名前 |タイプ |説明 |
+| -------- | ------------ | ----------- |
+| i18n | I18nインスタンス |             |
+|コールバック | () => T |             |
 
 ### setServerI18n
 
@@ -277,9 +272,9 @@ function setServerI18n(i18n: I18nInstance): void;
 
 #### パラメータ
 
-| 名前 | タイプ           | 説明 |
-| ---- | ---------------- | ---- |
-| i18n | I18nインスタンス |      |
+|名前 |タイプ |説明 |
+| ---- | ------------ | ----------- |
+| i18n | I18nインスタンス |             |
 
 ## `src/utils/merge-locales`
 
@@ -297,10 +292,10 @@ function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLoca
 
 #### パラメータ
 
-| 名前       | タイプ           | 説明 |
-| ---------- | ---------------- | ---- |
-| ターゲット | フォージロケール |      |
-| ソース     | フォージロケール |      |
+|名前 |タイプ |説明 |
+| ------ | ------------ | ----------- |
+|ターゲット |フォージロケール |             |
+|ソース |フォージロケール |             |
 
 ### ディープマージメッセージ
 
@@ -310,8 +305,8 @@ function deepMergeLocales(target: ForgeLocales, source: ForgeLocales): ForgeLoca
 function deepMergeMessages(target: ForgeMessageObject, source: ForgeMessageObject): ForgeMessageObject;
 ```
 
-2 つのメッセージ オブジェクトを再帰的にディープ マージし、新しいオブジェクトを返します。 Plain
-(非配列) ネストされたオブジェクトはキーごとにマージされます。 every other value
+2 つのメッセージ オブジェクトを再帰的にディープ マージし、新しいオブジェクトを返します。プレーン
+(非配列) ネストされたオブジェクトはキーごとにマージされます。 1つおきの値
 `source` の (文字列、配列など) は、`target` の一致する値を置き換えます。
 
 これは、名前空間ごとのアプリ `overrides` を最上位に重ねるために使用されるマージ戦略です。
@@ -320,10 +315,10 @@ win とパッケージ バンドルの残りの部分は保持されます。
 
 #### パラメータ
 
-| 名前       | タイプ               | 説明 |
-| ---------- | -------------------- | ---- |
-| ターゲット | ForgeMes​​sageObject |      |
-| ソース     | ForgeMes​​sageObject |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------ | ----------- |
+|ターゲット | ForgeMes​​sageObject |             |
+|ソース | ForgeMes​​sageObject |             |
 
 ### マージロケール
 
@@ -338,9 +333,9 @@ function mergeLocales(modules: ForgeLocaleModule[]): Record<string, ForgeMessage
 
 #### パラメータ
 
-| 名前       | タイプ              | 説明 |
-| ---------- | ------------------- | ---- |
-| モジュール | ForgeLocaleModule[] |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------- | ----------- |
+|モジュール | ForgeLocaleModule[] |             |
 
 ## `src/utils/namespace`
 
@@ -384,9 +379,9 @@ function forgeNamespace(name: string): string;
 
 #### パラメータ
 
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 名前 | 文字列 |      |
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|名前 |文字列 |             |
 
 ### ロケール名前空間
 
@@ -404,20 +399,30 @@ function localeNamespaces(locale: string, bundles: Record<string, ForgeMessageOb
 
 #### パラメータ
 
-| 名前     | タイプ                               | 説明 |
-| -------- | ------------------------------------ | ---- |
-| ロケール | 文字列                               |      |
-| バンドル | レコード<string, ForgeMessageObject> |      |
+|名前 |タイプ |説明 |
+| ------- | ---------------------------------- | ----------- |
+|ロケール |文字列 |             |
+|バンドル |レコード<string, ForgeMessageObject> |             |
 
 #### 契約
 
 - **@example:** const enBundles = yaml.load(enLocaleSource) // { 'mp.breakpoints': {...}, 'mp.my-care-notes': {...} }
   createForgeI18N({
   名前空間: forgeNamespace('my-care-notes')、
-  名前空間: localeNamespaces('en', enBundles),
+  namespaces: localeNamespaces('en', enBundles),
   })
 
 ## `src/utils/types`
+
+### ForgeI18nインスタンス
+
+**種類：**タイプ
+
+```typescript
+export type ForgeI18nInstance = Omit<I18nInstance, 't'> &
+```
+
+セレクター対応の変換機能を備えた i18next インスタンス タイプ。
 
 ### ForgeLocaleモジュール
 
@@ -469,3 +474,23 @@ export type ForgeNamespaceLocales = Record<string, ForgeLocales>;
 
 i18next 名前空間 (`mp.<workspace>`) のロケールごとのメッセージへのマップ。
 `createForgeI18N` の `namespaces` オプションと `overrides` オプションの両方で使用されます。
+
+### Forge翻訳関数
+
+**種類：**タイプ
+
+```typescript
+export type ForgeTranslationFunction = TFunction &
+```
+
+パッケージの境界を超えてセレクター機能を維持できる変換関数タイプ。
+
+### Forge翻訳ソース
+
+**種類：**タイプ
+
+```typescript
+export type ForgeTranslationSource =
+```
+
+i18next のセレクター コールバック API で使用される再帰的ソース タイプ。

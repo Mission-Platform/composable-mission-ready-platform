@@ -9,896 +9,6 @@
 
 根据 `@mission-platform/forge-jsx` 中的公共源声明生成。
 
-## `src/adapters/react`
-
-### HTML内容
-
-**种类：**功能
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement;
-```
-
-使用 `dangerouslySetInnerHTML` 将受信任的 HTML 渲染到 React 主机中。
-
-#### 参数
-
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 属性 | Html 内容属性 |      |
-
-### 渲染到反应
-
-**种类：**功能
-
-```typescript
-function renderToReact(element: MpElement): ReactElement;
-```
-
-将中性的 {@link MpElement} 树渲染为 React 元素。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 元素 | Mp元素 |      |
-
-### 传送
-
-**种类：**功能
-
-```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
-```
-
-中性 `<Teleport>` 原语的 React 构建 - 一个薄包装
-`react-dom` 的 {@link createPortal}。 `@mission-platform/vite-plugin-forge`
-将组件的 `import { Teleport } from '@mission-platform/forge-jsx'` 重写为
-导入此组件，因此一次写入 `<Teleport to="body">…</Teleport>`
-编译为本机 React 门户。
-
-当 `to` 已经是 DOM **元素**时（常见的客户端情况 - 例如
-解决了调用者提交的 `<dialog>` 或 `document.body`）孩子们是
-在渲染期间**同步进入其中**，因此它们安装在同一个中
-打开它们的提交。这与 Vue 的 `<Teleport>` 匹配（解析其
-同步目标），并且是正确性所必需的：一个门户面板，
-使用 Popover API 将自身提升到浏览器顶层
-（下一帧上的 `popover="manual"` + `showPopover()`）必须已经是
-当该帧运行时安装 - 通过渲染延迟门户会丢失
-race，离开面板 `display:none`（未显示的 UA 默认值
-弹出窗口），因此不可见。
-
-只有选择器 **string** 需要后安装 `document.querySelector`，其中
-保持组件 SSR 安全：在服务器渲染期间以及第一个客户端
-渲染字符串目标 — 它不渲染任何内容（或者，当 `disabled` 时，
-子项到位），并且 `createPortal` 仅在 DOM 目标存在时运行。
-
-#### 参数
-
-| 名称                                | 类型     | 描述 |
-| ----------------------------------- | -------- | ---- |
-| { to = 'body', 禁用 = false, 儿童 } | 传送属性 |      |
-
-### 传送属性
-
-**种类：**接口
-
-```typescript
-export interface TeleportProperties
-```
-
-React {@link Teleport} 组件接受的属性。
-
-### 反应组件
-
-**种类：**功能
-
-```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
-```
-
-将中性组件包装为一级React功能组件，准备
-由 `react-dom` 呈现或在其他 React 组件内组成。
-
-#### 参数
-
-| 名称     | 类型           | 描述 |
-| -------- | -------------- | ---- |
-| 组件     | MpComponent<P> |      |
-| 显示名称 | 字符串         |      |
-
-### 过渡
-
-**种类：**功能
-
-```typescript
-function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
-```
-
-中性 `<Transition>` 原语的 React 构建 - 一个小型 CSS 类
-镜像 Vue 内置 `<Transition>` 的驱动程序。它为单个
-通过切换 `<name>-enter-*` / `<name>-leave-*` 有条件渲染的子级
-类（因此相同的样式表驱动两个框架）并保留子项
-通过其离开动画安装。 `@mission-platform/vite-plugin-forge`
-将组件的 `import { Transition } from '@mission-platform/forge-jsx'` 重写为
-将此组件导入 React 目标。
-
-它是 SSR 安全的：服务器渲染（和第一个客户端绘制）渲染子级
-就位 - 匹配 Vue 的 SSR 输出 - 并且动画仅在之后运行。
-
-#### 参数
-
-| 名称                                                    | 类型     | 描述 |
-| ------------------------------------------------------- | -------- | ---- |
-| { name = 'v'，appear = false，持续时间，子项，...覆盖 } | 过渡属性 |      |
-
-### 过渡集团
-
-**种类：**功能
-
-```typescript
-function TransitionGroup({
-  name = 'v',
-  tag,
-  moveClass,
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionGroupProperties): ReactNode;
-```
-
-中性 `<TransitionGroup>` 原语的 React 构建 — CSS 类
-镜像 Vue 内置 `<TransitionGroup>` 的驱动程序。它为**键控设置动画
-列表**：输入子项获取 `<name>-enter-*`，让子项保持安装状态
-通过他们的 `<name>-leave-*` 动画，以及幸存的孩子发生了变化
-位置使用 `<name>-move` 进行 FLIP 动画（相同的样式表驱动两个
-框架）。 `@mission-platform/vite-plugin-forge` 重写组件的
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` 将其导入到
-React 目标。
-
-它是 SSR 安全的：服务器渲染（和第一个客户端绘制）渲染
-孩子就位 - 匹配 Vue 的 SSR 输出 - 并且动画仅运行
-之后。转换类应用于每个子级的 DOM node，因此 —
-就像单个 {@link Transition} ——它们对 DOM 元素子元素生效；
-本身就是（非引用转发）组件的子组件仍然可以安装/卸载
-正确但没有收到任何类别（与中性 SSR 就地基线匹配）。
-
-#### 参数
-
-| 名称                                                                             | 类型       | 描述 |
-| -------------------------------------------------------------------------------- | ---------- | ---- |
-| { name = 'v'、tag、moveClass、appear = false、duration、children、...overrides } | 过渡组属性 |      |
-
-### 过渡组属性
-
-**种类：**接口
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-React {@link TransitionGroup} 组件接受的属性。
-
-### 过渡属性
-
-**种类：**接口
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-React {@link Transition} 组件接受的属性。
-
-## `src/adapters/solid`
-
-### HTML内容
-
-**种类：**功能
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element;
-```
-
-中性 `<HtmlContent>` 原语的 Solid 版本。 Solid 的
-`innerHTML` 属性是本机基于替换的原始内容操作。
-
-#### 参数
-
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 属性 | Html 内容属性 |      |
-
-### 传送
-
-**种类：**功能
-
-```typescript
-function Teleport(properties: TeleportProperties): JSX.Element;
-```
-
-中性 `<Teleport>` 原语的 Solid 构建 - 一个薄包装
-Solid 的{@link 门户}。 `@mission-platform/vite-plugin-forge` 重写
-组件的 `import { Teleport } from '@mission-platform/forge-jsx'` 来导入它
-组件，因此一次写入的 `<Teleport to="body">…</Teleport>` 编译为
-本机 Solid 门户。
-
-门户目标在客户端上解析，因此该组件是 SSR 安全的：
-在服务器渲染期间 - 并且在 DOM 目标存在之前 - 它会渲染
-什么都没有（或者，当 `disabled` 时，孩子就位），并且仅 {@link Portal}
-一旦真正的目标可用，就会安装。
-
-#### 参数
-
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 属性 | 传送属性 |      |
-
-### 传送属性
-
-**种类：**接口
-
-```typescript
-export interface TeleportProperties
-```
-
-Solid {@link Teleport} 组件接受的属性。
-
-### 过渡
-
-**种类：**功能
-
-```typescript
-function Transition(properties: TransitionProperties): JSX.Element;
-```
-
-中性 `<Transition>` 原语的 Solid 版本。最小正确
-将子项呈现**到位**的实现 - 与 React 匹配
-适配器的 SSR / 适配器奇偶校验路径和中性运行时基线 - 所以
-一次写入组件类型检查和安装，无需引入第三方
-Solid 转换库。进入/离开课堂动画可以稍后分层；
-道具表面已匹配 Vue/React（`name`、`appear`、`duration` 和
-每相类覆盖）。
-
-`@mission-platform/vite-plugin-forge` 重写组件的
-`import { Transition } from '@mission-platform/forge-jsx'` 将其导入到
-Solid 目标。
-
-#### 参数
-
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 属性 | 过渡属性 |      |
-
-### 过渡集团
-
-**种类：**功能
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
-```
-
-中性 `<TransitionGroup>` 原语的 Solid 版本。喜欢
-{@link Transition}，这是一个最小的正确实现，可以呈现
-子项**到位**（React 适配器的 SSR/适配器奇偶校验基线），因此
-生成 Solid 组件类型检查，无需第三方列表转换
-图书馆。道具表面匹配 Vue/React（`name`、`tag`、`moveClass`、
-`appear`、`duration` 和每相类覆盖）用于一次写入
-平价。
-
-`@mission-platform/vite-plugin-forge` 重写组件的
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` 将其导入到
-Solid 目标。
-
-#### 参数
-
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 属性 | 过渡组属性 |      |
-
-### 过渡组属性
-
-**种类：**接口
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-Solid {@link TransitionGroup} 组件接受的属性。
-
-### 过渡属性
-
-**种类：**接口
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-Solid {@link Transition} 组件接受的属性。
-
-## `src/adapters/svelte`
-
-### HTML内容
-
-**种类：**功能
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet;
-```
-
-Svelte 适配器的原始内容实现。 `createRawSnippet` 是
-Svelte 的 `{@html}` 操作的运行时形式及其设置回调保留
-手写适配器使用的主机引用和事件转发。
-
-#### 参数
-
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 属性 | Html 内容属性 |      |
-
-### 传送
-
-**种类：**功能
-
-```typescript
-function Teleport(properties: TeleportProperties): Snippet;
-```
-
-为 Svelte SSR 和客户端奇偶校验渲染 Forge 子代码片段。
-
-#### 参数
-
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 属性 | 传送属性 |      |
-
-### 传送属性
-
-**种类：**接口
-
-```typescript
-export interface TeleportProperties
-```
-
-Svelte {@link Teleport} 原语接受的属性。
-
-### 过渡
-
-**种类：**功能
-
-```typescript
-function Transition(properties: TransitionProperties): Snippet;
-```
-
-渲染单个过渡子项；动画由本机 Svelte 标记提供。
-
-#### 参数
-
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 属性 | 过渡属性 |      |
-
-### 过渡集团
-
-**种类：**功能
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet;
-```
-
-为原生 Svelte 键控块渲染过渡组子级。
-
-#### 参数
-
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 属性 | 过渡组属性 |      |
-
-### 过渡组属性
-
-**种类：**接口
-
-```typescript
-export interface TransitionGroupProperties extends TransitionProperties
-```
-
-Svelte {@link TransitionGroup} 原语接受的属性。
-
-### 过渡属性
-
-**种类：**接口
-
-```typescript
-export interface TransitionProperties
-```
-
-Svelte {@link Transition} 原语接受的属性。
-
-## `src/adapters/vue`
-
-### 创建上下文
-
-**种类：**功能
-
-```typescript
-function createContext(defaultValue: T): VueContext<T>;
-```
-
-中性 `createContext` 原语的 Vue 版本。返回一个句柄，其
-`Provider` 是一个真实组件，`provide()` 将其 `value` 设为默认值
-插槽，因此一次性写入 `<Ctx.Provider value={…}><Slot /></Ctx.Provider>`
-编译为本机 Vue 提供。 `@mission-platform/vite-plugin-forge` 重写
-组件的 `import { createContext, useContext } from '@mission-platform/forge-jsx'`
-将它们导入 Vue 目标。
-
-#### 参数
-
-| 名称   | 类型 | 描述 |
-| ------ | ---- | ---- |
-| 默认值 | T    |      |
-
-### HTML内容
-
-**种类：**功能
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode;
-```
-
-使用渲染函数 `innerHTML` 绑定将可信 HTML 渲染到 Vue 主机中。
-
-#### 参数
-
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 属性 | Html 内容属性 |      |
-
-### 渲染到Vue
-
-**种类：**功能
-
-```typescript
-function renderToVue(element: MpElement): VNode;
-```
-
-将中性 {@link MpElement} 树渲染为 Vue `VNode`。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 元素 | Mp元素 |      |
-
-### 到Vue组件
-
-**种类：**功能
-
-```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
-```
-
-将中性组件包装为 Vue 功能组件。传入属性
-成为中立道具，默认插槽（如果有）将作为中立转发
-`children`，并且每个命名槽都以其名称转发（作为作用域槽
-函数），因此组件中的 `<Slot name="…" />` 会针对它进行解析，并且
-结果可以像任何其他 Vue 组件一样使用。
-
-#### 参数
-
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 组件 | MpComponent<P> |      |
-| 名称 | 字符串         |      |
-
-### 使用上下文
-
-**种类：**功能
-
-```typescript
-function useContext(context: VueContext<T>): T;
-```
-
-中性 `useContext` 原语的 Vue 构建 - 一个薄包装
-`inject()` 在没有封闭时回退到上下文的默认值
-提供商提供了一份。
-
-#### 参数
-
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 背景 | VueContext<T> |      |
-
-### Vue上下文
-
-**种类：**接口
-
-```typescript
-export interface VueContext<T>
-```
-
-Vue 上下文句柄：`provide()` 支持的 `Provider` 加上 `inject()` 密钥​​。
-
-## `src/adapters/web-components`
-
-### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
-
-**种类：**常数
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
-```
-
-内部是无害的能力门控；表单关联仍处于选择加入状态。
-
-### DEFAULT_WEBCOMPONENTS_SHADOW_POLICY
-
-**种类：**常数
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
-```
-
-当生成的类不覆盖策略时使用兼容性默认值。
-
-### Dom模板结果
-
-**种类：**类
-
-```typescript
-export class DomTemplateResult
-```
-
-具有稳定定义标识的直接 DOM 生成结果。
-
-### 动态元素
-
-**种类：**功能
-
-```typescript
-function dynamicElement(
-  tag: unknown,
-  properties: Readonly<Record<string, unknown>>,
-  ...children: readonly unknown[]
-): DynamicElementResult;
-```
-
-构建一个本机 Web 组件元素，其标签在运行时选择。
-
-#### 参数
-
-| 名称 | 类型                          | 描述 |
-| ---- | ----------------------------- | ---- |
-| 标签 | 未知                          |      |
-| 属性 | 只读<Record<string, unknown>> |      |
-| 儿童 | 只读未知[]                    |      |
-
-### 动态元素结果
-
-**种类：**类
-
-```typescript
-export class DynamicElementResult
-```
-
-计算 JSX 标记的运行时选择元素及其子元素。
-
-### 锻造元素
-
-**种类：**类
-
-```typescript
-export class ForgeElement extends ForgeHTMLElement
-```
-
-用于生成的自定义元素的本机 `HTMLElement` 基类 — a
-`LitElement` 的无依赖性替代品。
-
-子类通过 `static properties` 声明其反应表面（镜像
-Lit)：每个键都成为一个原型访问器，其设置器安排一个
-微任务重新渲染，每个非 `state` 键都会观察其小写字母
-属性。 `render()` 返回元素的 {@link html}`…` 模板（已渲染）
-进入开放的影子根。反应式提交更新现有模板
-增量：位置列表重用兼容的条目和插槽出口
-保留其原始投影节点，而无关部分发生变化。
-
-### ForgeElement构造函数
-
-**种类：**接口
-
-```typescript
-export interface ForgeElementConstructor
-```
-
-由生成的 Forge 元素实现的静态样式表合约。
-
-URL 保存在元素类上而不是文档中，因此存在阴影
-root 可以加载文档级样式无法到达的已编译 sidecar。
-
-### ForgeElementHostConstructor
-
-**种类：**类型
-
-```typescript
-export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
-```
-
-{@link ForgeElementMixin} 接受的可构造原生元素类。
-
-### ForgeElementMixin
-
-**种类：**功能
-
-```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
-```
-
-将 Forge 的独立于主机的运行时添加到本机元素构造函数中。
-定制内置程序不能同时扩展 `ForgeElement` 和 `HTMLDivElement`；
-这个 mixin 复制行为，同时保留本机原型链。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 基地 | 数据库 |      |
-
-### ForgeSlotMarker
-
-**种类：**接口
-
-```typescript
-export interface ForgeSlotMarker extends HTMLElement
-```
-
-Web 组件编译器针对不明确的槽发出的运行时标记。
-
-### 有槽内容
-
-**种类：**功能
-
-```typescript
-function hasSlotContent(host: Element, name?: string): boolean;
-```
-
-是否为 `host` 提供了其插槽之一的内容 - 本机目标的
-替代中性 `hasSlot('x')` 标记。
-
-`hasSlot` 是编译时词汇表：Vue 将其降低为 `!!slots.x`，React 将其降低为
-`properties.x != null`，而自定义元素两者都没有，因此进行检查
-相反，针对 DOM。生成的元素渲染成 **开放阴影
-root**，这意味着消费者项目的内容保留在主机中
-**light** DOM 作为其子级 - 命名槽由携带的子级填充
-`slot="<name>"`，以及任何不携带任何子项的默认插槽。仅
-考虑直接子代，就像插槽分配本身一样，并且
-仅空白文本 node 不算作内容。
-
-孩子们被步行而不是用 `[slot="…"]` 查询，所以插槽名称
-不需要 CSS 转义，因此是一个裸文本子项（没有选择器可以匹配）
-仍然填充默认槽。
-
-请注意，只有当主机的子节点存在时，槽才可被观察到：
-解析器对用初始 HTML 编写的元素的升级，`connectedCallback`
-在附加它们之前运行。稍后投影的内容会重新渲染元素
-通过通常的反应路径。
-
-#### 参数
-
-| 名称   | 类型   | 描述 |
-| ------ | ------ | ---- |
-| 主持人 | 元素   |      |
-| 名称   | 字符串 |      |
-
-### html
-
-**种类：**功能
-
-```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
-```
-
-标记模板工厂。捕获调用站点的静态字符串和动态字符串
-值转化为 {@link TemplateResult} 以便 {@link render} 实现为 DOM。
-
-#### 参数
-
-| 名称   | 类型           | 描述 |
-| ------ | -------------- | ---- |
-| 字符串 | 模板字符串数组 |      |
-| 价值观 | 只读未知[]     |      |
-
-### HTML内容
-
-**种类：**功能
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
-```
-
-构建本机 Web 组件原始内容结果，无需转义 `html`。
-
-#### 参数
-
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 属性 | Html 内容属性 |      |
-
-### Html内容属性
-
-**种类：**接口
-
-```typescript
-export interface HtmlContentProperties
-```
-
-本机 Web 组件 HtmlContent 帮助器接受的属性。
-
-### Html内容结果
-
-**种类：**类
-
-```typescript
-export class HtmlContentResult
-```
-
-本机主机加上受信任的原始子标记，由 {@link render} 呈现。
-
-### 没有什么
-
-**种类：**常数
-
-```typescript
-export const nothing: unique symbol;
-```
-
-Sentinel 呈现为“无值”：在子位置它不产生任何内容，在
-属性位置它删除属性 - 本地等效项
-lit-html 的 `nothing`。
-
-### 财产声明
-
-**种类：**接口
-
-```typescript
-export interface PropertyDeclaration
-```
-
-{@link ForgeElement} 子类上的反应式属性声明。
-
-### 原始HTML
-
-**种类：**类
-
-```typescript
-export class RawHtml
-```
-
-本机 Web 组件适配器使用的可信原始 HTML 值。
-
-### 使成为
-
-**种类：**功能
-
-```typescript
-function render(
-  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
-  container: ParentNode,
-): void;
-```
-
-使用持久模板实例将结果渲染到 `container` 中。静态
-保留 DOM 和本机表单状态，而仅更改绑定范围
-更新；不兼容的模板类​​型会替换渲染器拥有的内容。
-
-#### 参数
-
-| 名称   | 类型                                                         | 描述 |
-| ------ | ------------------------------------------------------------ | ---- |
-| 结果   | 模板结果 \| DomTemplateResult \|动态元素结果 \| Html内容结果 |      |
-| 集装箱 | 父节点                                                       |      |
-
-### 解析ForgeSlotMarkers
-
-**种类：**功能
-
-```typescript
-function resolveForgeSlotMarkers(
-  root: ParentNode,
-  owner: ForgeElement,
-  sourceChildren: readonly Node[],
-  destinationRoot: ShadowRoot,
-): void;
-```
-
-解析渲染片段中编译器发出的运行时槽标记。
-
-没有内容属性的标记成为本机插槽，保留
-浏览器的后备和赋值语义，除非相同的插槽
-在渲染树中重复。重复出口实现了克隆
-原始的 light-DOM 子级，因此每个出口都会接收确定性内容。
-当内容标记的值是所有者的时，内容标记将降低到本机插槽
-原来的light-DOMchildren和outlet不重复；否则他们的
-价值的实现是最后的手段。
-
-#### 参数
-
-| 名称     | 类型        | 描述 |
-| -------- | ----------- | ---- |
-| 根       | 父节点      |      |
-| 业主     | 锻造元素    |      |
-| 来源儿童 | 只读 Node[] |      |
-| 目的地根 | 影子根      |      |
-
-### 模板结果
-
-**种类：**类
-
-```typescript
-export class TemplateResult
-```
-
-解析后的 `html\`…\`` 结果：静态字符串加上插值。
-
-### 不安全的HTML
-
-**种类：**功能
-
-```typescript
-function unsafeHtml(value: string): RawHtml;
-```
-
-将字符串标记为本机 Web 组件路径的受信任子标记。
-
-#### 参数
-
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 价值 | 字符串 |      |
-
-### 用户ID
-
-**种类：**功能
-
-```typescript
-function useId(): string;
-```
-
-本机目标替换 React 的 `useId`。
-
-中性词汇表为将控件与其关联的 ID 提供 `useId()`
-`<label for>` / `aria-describedby`； React 将其映射到自己的 `useId` 和 Solid
-到 `createUniqueId`，但自定义元素没有可以借用的框架运行时
-一个来自——所以就是这样。
-
-模块级计数器在这里就足够了，并且故意比
-随机/散列生成器：ID 只需要在**文档中**是唯一的，
-编译器将 `const x = useId()` 从 `render()` 提升为
-实例字段，因此每个元素实例只调用一次，然后
-在其整个生命周期中保留其 id。因此，连续调用永远不会
-碰撞，不需要依赖项（nanoid，`crypto.randomUUID`），并且
-结果稳定且可调试（`forge-1`、`forge-2`，...）。该值为
-有效的 HTML `id` 和有效的 CSS 标识符，因此可以在选择器中使用
-没有逃脱。
-
-### WebComponentsInternalsPolicy
-
-**种类：**接口
-
-```typescript
-export interface WebComponentsInternalsPolicy
-```
-
-针对平台的 {@link ElementInternals} API 的功能请求。
-
-### WebComponentShadowPolicy
-
-**种类：**接口
-
-```typescript
-export interface WebComponentsShadowPolicy
-```
-
-生成的 Forge 元素接受类型化的影子根选项。
-
 ## `src/runtime/class-names`
 
 ### 类名
@@ -915,9 +25,9 @@ function classNames(...values: readonly ClassValue[]): string;
 
 #### 参数
 
-| 名称   | 类型              | 描述 |
-| ------ | ----------------- | ---- |
-| 价值观 | 只读 ClassValue[] |      |
+|名称 |类型 |描述 |
+| ------ | --------------------- | ----------- |
+|价值观 |只读 ClassValue[] |             |
 
 ### 类值
 
@@ -945,9 +55,9 @@ function createContext(defaultValue: T): MpContext<T>;
 
 #### 参数
 
-| 名称   | 类型 | 描述 |
-| ------ | ---- | ---- |
-| 默认值 | T    |      |
+|名称 |类型 |描述 |
+| ------------ | ---- | ----------- |
+|默认值 | T |             |
 
 ### isContextProvider
 
@@ -957,13 +67,13 @@ function createContext(defaultValue: T): MpContext<T>;
 function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 ```
 
-值是否是上下文{@link MpContext.Provider}函数。
+值是否是上下文 {@link MpContext.Provider} 函数。
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 价值 | 未知 |      |
+|名称 |类型 |描述 |
+| ----- | ------- | ----------- |
+|价值|未知 |             |
 
 ### MP_上下文
 
@@ -1019,9 +129,9 @@ function useContext(context: MpContext<T>): T;
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| 背景 | MpContext<T> |      |
+|名称 |类型 |描述 |
+| ------- | ------------ | ----------- |
+|背景 | MpContext<T> |             |
 
 ## `src/runtime/dynamic`
 
@@ -1042,7 +152,7 @@ export const Dynamic: MpComponent<MpDynamicProperties>;
 转发的属性/子项），编译器将其重写为目标
 框架的动态组件形式。
 
-### Mp动态属性
+### MpDynamicProperties
 
 **种类：**组件
 
@@ -1055,7 +165,7 @@ export interface MpDynamicProperties extends MpPropertyBag
 这是合法保留 **开袋** 的少数声明之一：
 除 `is` 之外的每个属性都将逐字转发到元素 `is`
 解析为，并且该元素仅在运行时才知道，因此它的属性
-此处无法枚举 Accepts。组件 props 接口必须*不*
+此处无法枚举 Accepts。组件 props 接口必须_不_
 遵循这种模式 - 请参阅{@link MpPropertyBag}。
 
 ## `src/runtime/h`
@@ -1081,11 +191,11 @@ function h(
 
 #### 参数
 
-| 名称 | 类型                                      | 描述 |
-| ---- | ----------------------------------------- | ---- |
-| 类型 | MpElementType \| ((属性：P) => MpElement) |      |
-| 属性 | P                                         | 空   |     |
-| 儿童 | MpChild[]                                 |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------------------------- | ----------- |
+|类型 | MpElementType \| ((属性：P) => MpElement) |             |
+|属性 | P |空 |             |
+|儿童 | MpChild[]|             |
 
 ## `src/runtime/hooks`
 
@@ -1104,7 +214,7 @@ export type MpDependencyList = readonly unknown[];
 **种类：**组件
 
 ```typescript
-export type MpEffectCallback = () => void | MpEffectCleanup;
+export type MpEffectCallback = () => MpEffectCleanup | void;
 ```
 
 由 {@link useEffect} 运行的效果回调。
@@ -1134,7 +244,7 @@ export interface MpRef<T>
 **种类：**组件
 
 ```typescript
-export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
+export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 ```
 
 将一段状态更新为新值或通过更新器函数。
@@ -1151,10 +261,10 @@ function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 
 #### 参数
 
-| 名称      | 类型             | 描述             |
-| --------- | ---------------- | ---------------- |
-| 回调      | T                |                  |
-| _依赖关系 | MpDependencyList | MpDependencyList |     |
+|名称 |类型 |描述 |
+| ------------- | ---------------- | ----------- |
+|回调 | T |             |
+| _依赖关系 | MpDependencyList | MpDependencyList |             |
 
 ### 使用效果
 
@@ -1169,10 +279,10 @@ function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList):
 
 #### 参数
 
-| 名称      | 类型             | 描述             |
-| --------- | ---------------- | ---------------- |
-| _效果     | MpEffectCallback | MpEffectCallback |     |
-| _依赖关系 | MpDependencyList | MpDependencyList |     |
+|名称 |类型 |描述 |
+| ------------- | ---------------- | ----------- |
+| _效果 | MpEffectCallback | MpEffectCallback |             |
+| _依赖关系 | MpDependencyList | MpDependencyList |             |
 
 ### 用户ID
 
@@ -1202,17 +312,17 @@ function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 
 #### 参数
 
-| 名称      | 类型             | 描述             |
-| --------- | ---------------- | ---------------- |
-| 工厂      | () => T          |                  |
-| _依赖关系 | MpDependencyList | MpDependencyList |     |
+|名称 |类型 |描述 |
+| ------------- | ---------------- | ----------- |
+|工厂 | () => T |             |
+| _依赖关系 | MpDependencyList | MpDependencyList |             |
 
 ### 使用引用
 
 **种类：**功能
 
 ```typescript
-function useRef(initial: T): MpRef<T>;
+function useRef(initial?: T): MpRef<T>;
 ```
 
 中立 `useRef`。返回单个的新 `{ current }` 容器
@@ -1220,16 +330,16 @@ function useRef(initial: T): MpRef<T>;
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 初始 | T    |      |
+|名称 |类型 |描述 |
+| ------- | ---- | ----------- |
+|初始| T |             |
 
 ### 使用状态
 
 **种类：**功能
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>];
+function useState(initial?: T | (() => T)): [T, MpSetState<T>];
 ```
 
 中立 `useState`。基线实现返回初始值并
@@ -1238,9 +348,9 @@ function useState(initial: T | (() => T)): [T, MpSetState<T>];
 
 #### 参数
 
-| 名称 | 类型 | 描述      |
-| ---- | ---- | --------- |
-| 初始 | T    | (() => T) |     |
+|名称 |类型 |描述 |
+| ------- | -------------- | ----------- |
+|初始| T | (() => T) |             |
 
 ## `src/runtime/html-content`
 
@@ -1273,6 +383,29 @@ bag 而不是枚举整个 DOM 属性表面。
 
 ## `src/runtime/slots`
 
+### 收集时隙儿童
+
+**种类：**功能
+
+```typescript
+function collectSlottedChildren(children: readonly MpChild[]): SlottedChildren;
+```
+
+通过 `slot="…"` 标记对父组件的子组件进行分区，以便
+一次写入组件可以将内容**传递**到子组件的命名槽中
+（`<ForgeDropdown><button slot="trigger" />…</ForgeDropdown>`）。孩子们背着
+`slot` 属性分组在该名称下（剥离了标记，因此
+解析的内容永远不会发出杂散的 `slot` 属性）；其他一切
+保留在 {@link SlottedChildren.defaultChildren} 中。适配器折叠命名的
+分组到子级的 props 中，完全反映了编译器如何路由
+`slot="…"` 标记与 Vue `<template #name>` / React `name` 属性相同。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------------------ | ----------- |
+|儿童 |只读 MpChild[] |             |
+
 ### 有槽位
 
 **种类：**功能
@@ -1304,16 +437,16 @@ Vue 的 `$slots.x` / React `properties.x != null` 检查的对应项。安
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 名称 | 字符串 |      |
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|名称 |字符串|             |
 
 ### Mp渲染属性
 
 **种类：**组件
 
 ```typescript
-export type MpRenderProperty<S = MpPropertyBag> = (scope: S) => MpChild | readonly MpChild[];
+export type MpRenderProperty<S = MpPropertyBag, R = MpChild | readonly MpChild[]> = (scope: S) => R;
 ```
 
 **render-prop /scoped-slot** 函数：给定它返回的插槽范围
@@ -1371,9 +504,9 @@ function pushSlotScope(properties: MpPropertyBag): void;
 
 #### 参数
 
-| 名称 | 类型          | 描述          |
-| ---- | ------------- | ------------- |
-| 属性 | MpPropertyBag | MpPropertyBag |     |
+|名称 |类型 |描述 |
+| ---------- | ------------- | ----------- |
+|属性 | MpPropertyBag | MpPropertyBag |             |
 
 ### 解析槽位
 
@@ -1390,10 +523,39 @@ slot 元素的剩余（非 `name`）属性。
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 属性 | MpSlot 属性    |      |
-| 后备 | 只读 MpChild[] |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------ | ----------- |
+|属性 | MpSlot 属性 |             |
+|后备|只读 MpChild[] |             |
+
+### 解决槽标记
+
+**种类：**功能
+
+```typescript
+function resolveSlotMarkers(children: readonly MpChild[]): MpChild[];
+```
+
+深刻解决每一个 `<Slot name="…" />` 家长创作的**标记**
+针对**当前**（父）范围的子树，返回具体的树
+内容。这就是让一次写入组件**转发**它自己的组件之一的原因
+命名插槽到子组件的插槽中 -
+`<ForgeDrawer><div slot="header"><Slot name="startHeader" /></div></ForgeDrawer>`
+- 并让它准确地从词法上解析（针对转发组件）
+就像编译的输出一样（React 捕获 `properties.startHeader` 在
+父母的渲染； Vue 转发槽通过 `<template #header>`）。
+
+适配器在组件元素的子元素**在**推送之前调用此方法
+子范围，因此标记可以看到创作它们的父范围；标记
+孩子本身返回未受影响（稍后在
+孩子自己的范围）。非槽元素递归遍历，因此嵌套标记
+（在一个 `slot="…"` 包装器）也解决了。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------------------ | ----------- |
+|儿童 |只读 MpChild[] |             |
 
 ## `src/runtime/teleport`
 
@@ -1482,6 +644,467 @@ SSR 的孩子就位）和 `@mission-platform/vite-plugin-forge` 重新映射其
 
 ## `src/runtime/types`
 
+### 骆驼烤肉串
+
+**种类：**类型
+
+```typescript
+export type CamelToKebab<S extends string> = S extends `$
+```
+
+将驼峰式字符串类型转换为短横线大小写。
+
+### 创建AvatarContainerStyle
+
+**种类：**功能
+
+```typescript
+function createAvatarContainerStyle(): Record<string, string>;
+```
+
+没有提供描述。
+
+### 创建AvatarImageImgStyle
+
+**种类：**功能
+
+```typescript
+function createAvatarImageImgStyle(): Record<string, string>;
+```
+
+没有提供描述。
+
+### 创建AvatarInlineStyle
+
+**种类：**功能
+
+```typescript
+function createAvatarInlineStyle(
+  size: string = 'md',
+  shape: string = 'circle',
+  src?: string,
+  variant: string = 'primary',
+  color?: string,
+): Record<string, string>;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|尺寸|字符串|             |
+|形状|字符串|             |
+|来源 |字符串|             |
+|变体|字符串|             |
+|颜色 |字符串|             |
+
+### 创建AvatarStatusInlineStyle
+
+**种类：**功能
+
+```typescript
+function createAvatarStatusInlineStyle(size: string = 'md', status?: string): Record<string, string> | undefined;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------ | ----------- |
+|尺寸|字符串|             |
+|状态 |字符串|             |
+
+### 创建背景视频内联样式
+
+**种类：**功能
+
+```typescript
+function createBackgroundVideoInlineStyle(minHeight: string = '24rem'): Record<string, string>;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | ------ | ----------- |
+|最小高度 |字符串|             |
+
+### 创建CodeScanner样式
+
+**种类：**功能
+
+```typescript
+function createCodeScannerStyle(): Record<string, string>;
+```
+
+没有提供描述。
+
+### 创建ContainerInlineStyle
+
+**种类：**功能
+
+```typescript
+function createContainerInlineStyle(
+  variant: string = 'responsive',
+  maxWidth: string = 'lg',
+  gutter: string = 'md',
+  center: boolean = true,
+): Record<string, string>;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------- | ----------- |
+|变体|字符串|             |
+|最大宽度|字符串|             |
+|天沟|字符串|             |
+|中心 |布尔 |             |
+
+### 创建覆盖对象适合样式
+
+**种类：**功能
+
+```typescript
+function createCoverObjectFitStyle(): Record<string, string>;
+```
+
+没有提供描述。
+
+### 创建ForgeComponentStyle
+
+**种类：**功能
+
+```typescript
+function createForgeComponentStyle(
+  prefix: string,
+  properties?: T,
+  style?: Record<string, string>,
+): Record<string, string> | undefined;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ---------------------- | ----------- |
+|前缀 |字符串|             |
+|属性 | T |             |
+|风格|记录<string, string> |             |
+
+### 创建ForgeStyle
+
+**种类：**功能
+
+```typescript
+function createForgeStyle(style: T): DefinedForgeStyle<T> | undefined;
+```
+
+从定义的自定义属性值构建中性 `style` 映射。
+
+值为 `undefined` 的条目被省略，因此 SCSS
+`var(--forge-*, <token fallback>)` 链保持活动状态。返回 `undefined`
+当不存在覆盖时。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---- | ----------- |
+|风格| T |             |
+
+### 创建量规内联数学
+
+**种类：**功能
+
+```typescript
+function createGaugeInlineMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): {
+  clampedValue: number;
+  percentage: number;
+  displayValue: string;
+  dashOffset: number;
+};
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|数量 |             |
+|分钟 |数量 |             |
+|最大|数量 |             |
+
+### 创建GridLayoutInlineStyle
+
+**种类：**功能
+
+```typescript
+function createGridLayoutInlineStyle(rows: number = 1, columns: number = 1, gap: string = 'md'): Record<string, string>;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|行 |数量 |             |
+|专栏 |数量 |             |
+|差距|字符串|             |
+
+### 创建突出显示样式
+
+**种类：**功能
+
+```typescript
+function createHighlightStyle(left: string = '0%', width: string = '100%'): Record<string, string>;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|左|字符串|             |
+|宽度|字符串|             |
+
+### 创建LeftPositionStyle
+
+**种类：**功能
+
+```typescript
+function createLeftPositionStyle(left: string = '0%'): Record<string, string>;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|左|字符串|             |
+
+### 创建对象适合样式
+
+**种类：**功能
+
+```typescript
+function createObjectFitStyle(fit: string = 'cover'): Record<string, string>;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|适合 |字符串|             |
+
+### 创建预览文本样式
+
+**种类：**功能
+
+```typescript
+function createPreviewTextStyle(): Record<string, string>;
+```
+
+没有提供描述。
+
+### 创建进度条百分比
+
+**种类：**功能
+
+```typescript
+function createProgressBarPercent(
+  value: number = 0,
+  max: number = 100,
+  indeterminate: boolean = false,
+): { percent: number; percentLabel: string };
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------- | ------- | ----------- |
+|价值|数量 |             |
+|最大|数量 |             |
+|不确定|布尔 |             |
+
+### 创建范围输入数学
+
+**种类：**功能
+
+```typescript
+function createRangeInputMath(
+  modelValue: [number, number] = [0, 100],
+  min: number = 0,
+  max: number = 100,
+): {
+  minPercent: number;
+  maxPercent: number;
+  highlightLeft: string;
+  highlightWidth: string;
+  minLeft: string;
+  maxLeft: string;
+};
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ---------------- | ----------- |
+|型号值 | [数量，数量] |             |
+|分钟 |数量 |             |
+|最大|数量 |             |
+
+### 创建响应式图像内联样式
+
+**种类：**功能
+
+```typescript
+function createResponsiveImageInlineStyle(aspectRatio?: string): Record<string, string> | undefined;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ------ | ----------- |
+|纵横比 |字符串|             |
+
+### 创建响应式视频内联样式
+
+**种类：**功能
+
+```typescript
+function createResponsiveVideoInlineStyle(
+  aspectRatio: string = '16 / 9',
+  fit: string = 'contain',
+): Record<string, string>;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ------ | ----------- |
+|纵横比 |字符串|             |
+|适合 |字符串|             |
+
+### 创建SkeletonInlineStyle
+
+**种类：**功能
+
+```typescript
+function createSkeletonInlineStyle(width?: string, height?: string): Record<string, string>;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------ | ----------- |
+|宽度|字符串|             |
+|高度|字符串|             |
+
+### 创建滑块数学
+
+**种类：**功能
+
+```typescript
+function createSliderMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): { percent: number; fillWidth: string; thumbLeft: string };
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|数量 |             |
+|分钟 |数量 |             |
+|最大|数量 |             |
+
+### 创建VerticalLayoutInlineStyle
+
+**种类：**功能
+
+```typescript
+function createVerticalLayoutInlineStyle(gap: string = 'var(--mp-spacing-4)'): Record<string, string>;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|差距|字符串|             |
+
+### 创建宽度样式
+
+**种类：**功能
+
+```typescript
+function createWidthStyle(width: string = '0%'): Record<string, string>;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|宽度|字符串|             |
+
+### CSS样式属性
+
+**种类：**类型
+
+```typescript
+export type CSSStyleProperties =
+```
+
+JSX `style` 属性使用的框架中立 CSS 样式对象。
+
+组件拥有的自定义属性应该使用显式扩展此类型
+`--forge-*` 密钥（例如 `CSSStyleProperties & { '--forge-button-radius'?: string | undefined }`）
+而不是引入无类型样式字典或非 DOM `styles` 包。
+
+### 锻造财产袋
+
+**种类：**类型
+
+```typescript
+export type ForgePropertyBag<T extends Record<string, string | undefined> = Record<string, string | undefined>> =
+```
+
+允许的属性覆盖包接受 kebab-case 或 CamelCase 属性键。
+
 ### 分段
 
 **种类：**常数
@@ -1515,9 +1138,19 @@ function isMpElement(value: unknown): value is MpElement;
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 价值 | 未知 |      |
+|名称 |类型 |描述 |
+| ----- | ------- | ----------- |
+|价值|未知 |             |
+
+### 烤肉串骆驼
+
+**种类：**类型
+
+```typescript
+export type KebabToCamel<S extends string> = S extends `$
+```
+
+将短横线大小写字符串类型转换为驼峰大小写。
 
 ### 儿童MP
 
@@ -1576,8 +1209,8 @@ export type MpPropertyBag = Record<string, unknown>;
 由 {@link MpElement} 携带的 **运行时** 属性/道具包。
 
 这是故意的一个简单的、无类型的记录：这就是 JSX 工厂的内容
-构建以及在遍历中性树时适配器索引到的内容。它是
-*不是*组件 props 的基类型——组件准确地声明了
+构建以及在遍历中立树时适配器索引到的内容。它是
+_不是_组件 props 的基类型——组件准确地声明了
 它接受的属性（包括 `children?: MpChild | readonly MpChild[]`
 当它渲染它们时），以便多余的属性检查和 `keyof` 保留
 对每个编译目标都有意义。每个元素的少数属性
@@ -1592,7 +1225,7 @@ export interface MpReservedProperties
 ```
 
 每个 JSX 元素在属性之上接受的**保留**属性
-它声明自己，通过选择加入连接为 `JSX.IntrinsicAttributes`
+它声明自己，通过选择连接为 `JSX.IntrinsicAttributes`
 `@mission-platform/forge-jsx/jsx-globals` 打字。
 
 - `key` 标识渲染列表中的条目，以便目标框架可以
@@ -1604,9 +1237,837 @@ export interface MpReservedProperties
   `"default"`) 表示默认插槽。
 
 两者都不是组件自己的 props 合约的一部分——两者都由组件读取
-_父级_（协调器、槽路由器），绝不是由组件本身 -
-所以这里的每个元素都接受它们，而不是在每个元素上声明它们
+_parent_（协调器、槽路由器），绝不是由组件本身 -
+因此这里的每个元素都接受它们，而不是在每个元素上声明它们
 道具界面。
+
+### Mp悬念儿童
+
+**种类：**组件
+
+```typescript
+export type MpSuspenseChild = MpChild | PromiseLike<MpSuspenseChild> | readonly MpSuspenseChild[];
+```
+
+Suspense 接受的同步或递归异步内容。
+
+### MpSuspense 属性
+
+**种类：**组件
+
+```typescript
+export interface MpSuspenseProperties
+```
+
+框架中性悬念标记携带的道具。
+
+### 渲染手风琴项目
+
+**种类：**功能
+
+```typescript
+function renderAccordionItems(
+  items: readonly any[] = [],
+  _exclusive: boolean = true,
+  defaultOpen: readonly string[] = [],
+  _properties?: any,
+): any;
+```
+
+从camelCase或kebab-case属性包构建组件范围的CSS自定义属性样式映射。
+
+自动将camelCase键转换为kebab-case，确保组件命名空间
+应用前缀 `--forge-<prefix>-`，并忽略未定义的条目，以便 CSS 令牌回退
+连锁店仍然活跃。当不存在定义的覆盖时，返回 `undefined`。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ----------------- | ----------- |
+|项目 |只读任何[] |             |
+| _独家 |布尔 |             |
+|默认打开 |只读字符串[] |             |
+| _属性 |任何|             |
+
+### 渲染活动提要项目
+
+**种类：**功能
+
+```typescript
+function renderActivityFeedItems(items: readonly any[] = [], maxItems?: number, onItemClick?: (item: any) => void): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ------------------- | ----------- |
+|项目 |只读任何[] |             |
+|最大项目数 |数量 |             |
+|项目点击 | （项目：任意）=> 无效 |             |
+
+### 渲染资源浏览器网格
+
+**种类：**功能
+
+```typescript
+function renderAssetBrowserGrid(
+  assets: readonly any[] = [],
+  selected: readonly string[] = [],
+  onSelect?: (asset: any) => void,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | -------------------- | ----------- |
+|资产|只读任何[] |             |
+|已选择 |只读字符串[] |             |
+| onSelect | （资产：任意）=> 无效 |             |
+
+### 渲染BarcodeSvg
+
+**种类：**功能
+
+```typescript
+function renderBarcodeSvg(
+  value: string = '',
+  symbology: string = 'code128',
+  color: string = '#000000',
+  background: string = '#ffffff',
+  displayValue: boolean = false,
+  ariaLabel?: string,
+  onError?: (err: Error) => void,
+  showActions?: any,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------ | -------------------- | ----------- |
+|价值|字符串|             |
+|符号学|字符串|             |
+|颜色 |字符串|             |
+|背景|字符串|             |
+|显示值 |布尔 |             |
+|咏叹调标签 |字符串|             |
+|错误 | （错误：错误）=> 无效 |             |
+|显示动作 |任何|             |
+
+### 渲染面包屑条目
+
+**种类：**功能
+
+```typescript
+function renderBreadcrumbItems(items: readonly any[] = [], separator: string = '/'): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | -------------- | ----------- |
+|项目 |只读任何[] |             |
+|分隔符 |字符串|             |
+
+### renderCarouselIndicatorItems
+
+**种类：**功能
+
+```typescript
+function renderCarouselIndicatorItems(
+  total: number = 0,
+  current: number = 0,
+  clickable: boolean = true,
+  variant: string = 'dots',
+  onSelect?: (index: number) => void,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | ----------------------- | ----------- |
+|总计 |数量 |             |
+|当前|数量 |             |
+|可点击 |布尔 |             |
+|变体|字符串|             |
+| onSelect | （索引：数字）=> void |             |
+
+### 渲染轮播幻灯片
+
+**种类：**功能
+
+```typescript
+function renderCarouselSlides(
+  slides: readonly any[] = [],
+  current: number = 0,
+  _orientation: string = 'horizontal',
+  slideWidth: number = 100,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------ | -------------- | ----------- |
+|幻灯片|只读任何[] |             |
+|当前|数量 |             |
+| _方向 |字符串|             |
+|幻灯片宽度 |数量 |             |
+
+### 渲染目录图标
+
+**种类：**功能
+
+```typescript
+function renderCatalogIcon(name: string, size: number = 20, color: string = 'currentColor'): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|名称 |字符串|             |
+|尺寸|数量 |             |
+|颜色 |字符串|             |
+
+### 渲染代码块行编号
+
+**种类：**功能
+
+```typescript
+function renderCodeBlockLineNumbers(code: string = ''): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|代码|字符串|             |
+
+### 渲染命令面板组
+
+**种类：**功能
+
+```typescript
+function renderCommandPaletteGroups(
+  commands: readonly any[] = [],
+  _groups: readonly string[] = [],
+  activeIndex: number = 0,
+  onSelect?: (command: any) => void,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ---------------------- | ----------- |
+|命令 |只读任何[] |             |
+| _组 |只读字符串[] |             |
+|活动索引 |数量 |             |
+| onSelect | （命令：任意）=> void |             |
+
+### 渲染注释树
+
+**种类：**功能
+
+```typescript
+function renderCommentTree(
+  comments: readonly any[] = [],
+  onReply?: (comment: any) => void,
+  onResolve?: (comment: any) => void,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | ---------------------- | ----------- |
+|评论 |只读任何[] |             |
+|回复 | （评论：任意）=> 无效 |             |
+|解决 | （评论：任意）=> 无效 |             |
+
+### 渲染比较表主体
+
+**种类：**功能
+
+```typescript
+function renderComparisonTableBody(items: readonly any[] = [], features: readonly any[] = []): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | -------------- | ----------- |
+|项目 |只读任何[] |             |
+|特点|只读任何[] |             |
+
+### 渲染比较表头
+
+**种类：**功能
+
+```typescript
+function renderComparisonTableHeaders(items: readonly any[] = []): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | -------------- | ----------- |
+|项目 |只读任何[] |             |
+
+### 渲染CtaBannerActions
+
+**种类：**功能
+
+```typescript
+function renderCtaBannerActions(actions: readonly any[] = []): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | -------------- | ----------- |
+|行动|只读任何[] |             |
+
+### 渲染数据卡指标
+
+**种类：**功能
+
+```typescript
+function renderDataCardMetrics(metrics: readonly any[] = []): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | -------------- | ----------- |
+|指标|只读任何[] |             |
+
+### 渲染下拉项目
+
+**种类：**功能
+
+```typescript
+function renderDropdownItems(items: readonly any[] = [], onSelect?: (item: any) => void): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------------------- | ----------- |
+|项目 |只读任何[] |             |
+| onSelect | （项目：任意）=> 无效 |             |
+
+### 渲染图像源
+
+**种类：**功能
+
+```typescript
+function renderImageSources(sources?: readonly any[]): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | -------------- | ----------- |
+|来源 |只读任何[] |             |
+
+### renderMarketingHeaderActions
+
+**种类：**功能
+
+```typescript
+function renderMarketingHeaderActions(actions: readonly any[] = []): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | -------------- | ----------- |
+|行动|只读任何[] |             |
+
+### 渲染导航栏项目
+
+**种类：**功能
+
+```typescript
+function renderNavbarItems(items: readonly any[] = []): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | -------------- | ----------- |
+|项目 |只读任何[] |             |
+
+### 渲染通知面板项
+
+**种类：**功能
+
+```typescript
+function renderNotificationPanelItems(
+  notifications: readonly any[] = [],
+  onDismiss?: (id: string) => void,
+  _onRead?: (id: string) => void,
+  onActionClick?: (item: any) => void,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------- | -------------------- | ----------- |
+|通知 |只读任何[] |             |
+|关闭| (id: 字符串) => void |             |
+| _onRead | (id: 字符串) => void |             |
+| onActionClick| （项目：任意）=> 无效 |             |
+
+### 渲染分页控件
+
+**种类：**功能
+
+```typescript
+function renderPaginationControls(
+  currentPage: number = 1,
+  totalPages: number = 1,
+  maxVisiblePages: number = 7,
+  showEdges: boolean = false,
+  onPageChange?: (page: number) => void,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------------- | ---------------------- | ----------- |
+|当前页 |数量 |             |
+|总页数 |数量 |             |
+|最大可见页数 |数量 |             |
+|显示边缘 |布尔 |             |
+|页面更改 | （页数：页码）=> 无效 |             |
+
+### 渲染评级星星
+
+**种类：**功能
+
+```typescript
+function renderRatingStars(
+  max: number = 5,
+  modelValue: number = 0,
+  disabled: boolean = false,
+  isReadonly: boolean = false,
+  onUpdateModelValue?: (val: number) => void,
+  onChange?: (val: number) => void,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------------ | --------------------- | ----------- |
+|最大|数量 |             |
+|型号值 |数量 |             |
+|已禁用 |布尔 |             |
+|只读 |布尔 |             |
+| onUpdateModelValue | (val: 数字) => void |             |
+|改变| (val: 数字) => void |             |
+
+### 渲染资源规划器行
+
+**种类：**功能
+
+```typescript
+function renderResourcePlannerRows(
+  resources: readonly any[] = [],
+  segments: readonly any[] = [],
+  _assignments: readonly any[] = [],
+  _availability: readonly any[] = [],
+  _onEventClick?: (assignment: any) => void,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------- | ------------------------- | ----------- |
+|资源 |只读任何[] |             |
+|细分 |只读任何[] |             |
+| _作业 |只读任何[] |             |
+| _可用性 |只读任何[] |             |
+| _onEventClick | （赋值：任意）=> void |             |
+
+### 渲染段控制选项
+
+**种类：**功能
+
+```typescript
+function renderSegmentControlOptions(
+  options: readonly any[] = [],
+  modelValue?: string,
+  onSelect?: (value: string) => void,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ----------------------- | ----------- |
+|选项 |只读任意[] |             |
+|型号值 |字符串|             |
+| onSelect | （值：字符串）=> void |             |
+
+### 渲染站点页脚部分
+
+**种类：**功能
+
+```typescript
+function renderSiteFooterSections(sections: readonly any[] = []): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | -------------- | ----------- |
+|部分|只读任何[] |             |
+
+### 渲染步骤项
+
+**种类：**功能
+
+```typescript
+function renderStepsItems(
+  steps: readonly any[] = [],
+  currentStep: number = 0,
+  onStepClick?: (step: number) => void,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ---------------------- | ----------- |
+|步骤|只读任何[] |             |
+|当前步骤 |数量 |             |
+| onStepClick | （步骤：数字）=> void |             |
+
+### 渲染表列
+
+**种类：**功能
+
+```typescript
+function renderTableColumns(columns: readonly any[] = []): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | -------------- | ----------- |
+|专栏 |只读任何[] |             |
+
+### 渲染表行
+
+**种类：**功能
+
+```typescript
+function renderTableRows(data: readonly any[] = [], columns: readonly any[] = []): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | -------------- | ----------- |
+|数据|只读任何[] |             |
+|专栏 |只读任何[] |             |
+
+### 渲染选项卡列表
+
+**种类：**功能
+
+```typescript
+function renderTabsList(
+  tabs: readonly any[] = [],
+  activeId?: string,
+  variant: string = 'line',
+  closable: boolean = false,
+  onSelect?: (id: string) => void,
+  onClose?: (id: string) => void,
+  addable: boolean = false,
+  addLabel: string = 'Add tab',
+  onAdd?: () => void,
+): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | -------------------- | ----------- |
+|标签 |只读任何[] |             |
+|活动ID |字符串|             |
+|变体|字符串|             |
+|可关闭|布尔 |             |
+| onSelect | (id: 字符串) => void |             |
+|关闭| (id: 字符串) => void |             |
+|可添加|布尔 |             |
+|添加标签 |字符串|             |
+|上添加 | () => 无效 |             |
+
+### 渲染时间线项目
+
+**种类：**功能
+
+```typescript
+function renderTimelineItems(items: readonly any[] = [], align: string = 'start'): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | -------------- | ----------- |
+|项目 |只读任何[] |             |
+|对齐|字符串|             |
+
+### 渲染树视图节点
+
+**种类：**功能
+
+```typescript
+function renderTreeViewNodes(nodes: readonly any[] = [], onSelect?: (node: any) => void): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------------------- | ----------- |
+|节点 |只读任何[] |             |
+| onSelect | (node: 任意) => void |             |
+
+### 渲染未读徽章
+
+**种类：**功能
+
+```typescript
+function renderUnreadBadge(unreadCount: number = 0): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ------ | ----------- |
+|未读计数 |数量 |             |
+
+### 渲染视频源
+
+**种类：**功能
+
+```typescript
+function renderVideoSources(sources?: readonly any[]): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | -------------- | ----------- |
+|来源 |只读任何[] |             |
+
+### 解析目录图标
+
+**种类：**功能
+
+```typescript
+function resolveCatalogIcon(catalog: Record<string, any>, name: string): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------------------- | ----------- |
+|目录 |记录<string, any> |             |
+|名称 |字符串|             |
+
+### 解析电子邮件版式标签
+
+**种类：**功能
+
+```typescript
+function resolveEmailTypographyTag(asTag?: string, variant?: string): string;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|标签 |字符串|             |
+|变体|字符串|             |
+
+### 解析图标像素大小
+
+**种类：**功能
+
+```typescript
+function resolveIconPixelSize(size: string = 'md'): number;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|尺寸|字符串|             |
+
+### 解析状态图标
+
+**种类：**功能
+
+```typescript
+function resolveStatusIcon(catalog: Record<string, any>, status: string = 'neutral'): any;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------------------- | ----------- |
+|目录 |记录<string, any> |             |
+|状态 |字符串|             |
+
+### 解析同步状态标签
+
+**种类：**功能
+
+```typescript
+function resolveSyncStatusLabel(status: string = 'synced', label?: string): string;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------ | ----------- |
+|状态 |字符串|             |
+|标签|字符串|             |
+
+### 解析文本变体引用
+
+**种类：**功能
+
+```typescript
+function resolveTextVariantForQuote(size: string = 'md'): string;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|尺寸|字符串|             |
+
+### 解决TypographyScaleVariant
+
+**种类：**功能
+
+```typescript
+function resolveTypographyScaleVariant(variant?: string): string;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|变体|字符串|             |
+
+### 解析版式标签
+
+**种类：**功能
+
+```typescript
+function resolveTypographyTag(asTag?: string, href?: string, variant?: string): string;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|标签 |字符串|             |
+|链接 |字符串|             |
+|变体|字符串|             |
 
 ### 投币口
 
@@ -1624,3 +2085,13 @@ export const Slot: MpComponent;
 (`@mission-platform/vite-plugin-forge`) 将每个 `<Slot>` 重写到目标
 框架自己的槽机制，运行时适配器通过以下方式拦截它
 任何调用之前的身份 (`type === Slot`)。直接调用是一个bug。
+
+### 悬念
+
+**种类：**常数
+
+```typescript
+export const Suspense: MpComponent<MpSuspenseProperties>;
+```
+
+每个框架编译器都会降低本机异步边界标记。

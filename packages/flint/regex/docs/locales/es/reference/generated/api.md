@@ -21,6 +21,16 @@ export interface CompiledRegex
 
 Representación determinista integrada por un backend de Forge.
 
+### FLINT_REGEX_BYTECODE_VERSION
+
+**Tipo:** constante
+
+```typescript
+export const FLINT_REGEX_BYTECODE_VERSION;
+```
+
+Versión estable del contrato de código de bytes de expresión regular de Flint compartido.
+
 ### FORGE_REGEX_BYTECODE_VERSION
 
 **Tipo:** constante
@@ -29,7 +39,7 @@ Representación determinista integrada por un backend de Forge.
 export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
-Versión estable del contrato de código de bytes de expresiones regulares de Forge compartido.
+No se proporciona descripción.
 
 ### INSTR_WIDTH
 
@@ -59,7 +69,7 @@ Códigos de operación consumidos por el backend de Forge y reflejados por el or
 export type Opcode = (typeof Op)[keyof typeof Op];
 ```
 
-No se proporciona descripción.
+Identificador de código de operación de instrucción binaria para la ejecución de código de bytes de expresiones regulares.
 
 ## `src/compiler`
 
@@ -75,9 +85,29 @@ Compile el subconjunto de expresiones regulares deterministas admitidos en el c�
 
 #### Parámetros
 
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------ | ----------- |
 | patrón | cadena |             |
+
+### MAX_REGEX_PATTERN_LENGTH
+
+**Tipo:** constante
+
+```typescript
+export const MAX_REGEX_PATTERN_LENGTH;
+```
+
+No se proporciona descripción.
+
+### MAX_REGEX_REPEAT_BOUND
+
+**Tipo:** constante
+
+```typescript
+export const MAX_REGEX_REPEAT_BOUND;
+```
+
+No se proporciona descripción.
 
 ### Error de sintaxis de expresiones regulares
 
@@ -88,6 +118,46 @@ export class RegexSyntaxError extends Error
 ```
 
 Error de sintaxis propiedad del compilador con mensajes deterministas relativos al origen.
+
+## `src/index`
+
+### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
+
+**Tipo:** constante
+
+```typescript
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+```
+
+No se proporciona descripción.
+
+### pedernalEstándarBibliotecaIdentidad
+
+**Tipo:** función
+
+```typescript
+function flintStandardLibraryIdentity(
+  identity?: FlintStandardLibraryIdentity,
+): FlintStandardLibraryIdentity;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | ---------------------------- | ----------- |
+| identidad | FlintStandardLibraryIdentidad |             |
+
+### FlintEstándarBibliotecaIdentidad
+
+**Tipo:** interfaz
+
+```typescript
+export interface FlintStandardLibraryIdentity
+```
+
+No se proporciona descripción.
 
 ## `src/reference-vm`
 
@@ -103,10 +173,10 @@ Lea el final de una captura sin exponer el diseño de la ranura del código de b
 
 #### Parámetros
 
-| Nombre   | Tipo             | Descripción |
+| Nombre | Tipo | Descripción |
 | -------- | ---------------- | ----------- |
 | capturas | Capturas \| nulo |             |
-| grupo    | número           |             |
+| grupo | número |             |
 
 ### Capturas
 
@@ -130,10 +200,10 @@ Lea el inicio de una captura sin exponer el diseño de la ranura del código de 
 
 #### Parámetros
 
-| Nombre   | Tipo             | Descripción |
+| Nombre | Tipo | Descripción |
 | -------- | ---------------- | ----------- |
 | capturas | Capturas \| nulo |             |
-| grupo    | número           |             |
+| grupo | número |             |
 
 ### partido completo
 
@@ -143,14 +213,64 @@ Lea el inicio de una captura sin exponer el diseño de la ranura del código de 
 function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-Coincidencia de cuerda entera, anclada en la posición cero.
+Coincidencia de cadena completa, anclada en la posición cero (utiliza PikeVM de tiempo lineal de forma predeterminada).
 
 #### Parámetros
 
-| Nombre  | Tipo           | Descripción |
-| ------- | -------------- | ----------- |
-| re      | CompiladoRegex |             |
-| entrada | cadena         |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------- | ----------- |
+| re | CompiladoRegex |             |
+| entrada | cadena |             |
+
+### fullMatchBacktracking
+
+**Tipo:** función
+
+```typescript
+function fullMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Oráculo de referencia de coincidencia de cadena completa hacia atrás.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------------- | ----------- |
+| re | CompiladoRegex |             |
+| entrada | cadena |             |
+
+### coincidencia completalineal
+
+**Tipo:** función
+
+```typescript
+function fullMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+Coincidencia de cadenas completas utilizando el motor PikeVM de tiempo lineal.
+Garantiza la ejecución O(M * N) y la inmunidad al retroceso de ReDoS.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------------- | ----------- |
+| re | CompiladoRegex |             |
+| entrada | cadena |             |
+
+### corredor de picas
+
+**Tipo:** clase
+
+```typescript
+export class PikeRunner extends BaseRunner
+```
+
+Motor de ejecución PikeVM en tiempo lineal y sin retroceso.
+Garantiza una complejidad temporal O (M * N), donde M es el recuento de instrucciones y N es la longitud de entrada,
+completamente inmune a ReDoS (Denegación de servicio de expresión regular).
 
 ### prefijoCoincidencia
 
@@ -160,14 +280,62 @@ Coincidencia de cuerda entera, anclada en la posición cero.
 function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-Coincidencia de prefijo, anclado en la posición cero pero no al final.
+Coincidencia de prefijo, anclado en la posición cero pero no al final (utiliza PikeVM de tiempo lineal de forma predeterminada).
 
 #### Parámetros
 
-| Nombre  | Tipo           | Descripción |
-| ------- | -------------- | ----------- |
-| re      | CompiladoRegex |             |
-| entrada | cadena         |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------- | ----------- |
+| re | CompiladoRegex |             |
+| entrada | cadena |             |
+
+### prefijoCoincidenciaRetroceso
+
+**Tipo:** función
+
+```typescript
+function prefixMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Oráculo de referencia de coincidencia de prefijo de retroceso.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------------- | ----------- |
+| re | CompiladoRegex |             |
+| entrada | cadena |             |
+
+### prefijoCoincidenciaLineal
+
+**Tipo:** función
+
+```typescript
+function prefixMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+Coincidencia de prefijos utilizando el motor PikeVM de tiempo lineal.
+Garantiza la ejecución O(M * N) y la inmunidad al retroceso de ReDoS.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------------- | ----------- |
+| re | CompiladoRegex |             |
+| entrada | cadena |             |
+
+### Corredor
+
+**Tipo:** clase
+
+```typescript
+export class Runner extends BaseRunner
+```
+
+Ejecución de referencia de retroceso para la verificación de instrucciones de código de bytes.
 
 ### buscar
 
@@ -177,15 +345,60 @@ Coincidencia de prefijo, anclado en la posición cero pero no al final.
 function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
-Coincidencia más a la izquierda en `start` o después.
+Coincidencia más a la izquierda en `start` o después (utiliza PikeVM de tiempo lineal de forma predeterminada).
 
 #### Parámetros
 
-| Nombre  | Tipo           | Descripción |
-| ------- | -------------- | ----------- |
-| re      | CompiladoRegex |             |
-| entrada | cadena         |             |
-| inicio  |                |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------- | ----------- |
+| re | CompiladoRegex |             |
+| entrada | cadena |             |
+| inicio |               |             |
+
+### buscarRetroceso
+
+**Tipo:** función
+
+```typescript
+function searchBacktracking(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+Oráculo de referencia de búsqueda de retroceso.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------------- | ----------- |
+| re | CompiladoRegex |             |
+| entrada | cadena |             |
+| inicio |               |             |
+
+### buscarLineal
+
+**Tipo:** función
+
+```typescript
+function searchLinear(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+Coincidencia más a la izquierda en `start` o después usando el motor PikeVM de tiempo lineal.
+Inmune a retrocesos catastróficos en patrones de búsqueda no anclados.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------------- | ----------- |
+| re | CompiladoRegex |             |
+| entrada | cadena |             |
+| inicio |               |             |
 
 ### prueba
 
@@ -195,11 +408,46 @@ Coincidencia más a la izquierda en `start` o después.
 function test(re: CompiledRegex, input: string): boolean;
 ```
 
-Coincidencia booleana de cadena completa.
+Coincidencia booleana de cadena completa (utiliza PikeVM de tiempo lineal de forma predeterminada).
 
 #### Parámetros
 
-| Nombre  | Tipo           | Descripción |
-| ------- | -------------- | ----------- |
-| re      | CompiladoRegex |             |
-| entrada | cadena         |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------- | ----------- |
+| re | CompiladoRegex |             |
+| entrada | cadena |             |
+
+### pruebaRetroceso
+
+**Tipo:** función
+
+```typescript
+function testBacktracking(re: CompiledRegex, input: string): boolean;
+```
+
+Oráculo de referencia de coincidencia booleana de retroceso.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------------- | ----------- |
+| re | CompiladoRegex |             |
+| entrada | cadena |             |
+
+### pruebaLineal
+
+**Tipo:** función
+
+```typescript
+function testLinear(re: CompiledRegex, input: string): boolean;
+```
+
+Coincidencia booleana de cadena completa utilizando el motor PikeVM de tiempo lineal.
+Inmune a retrocesos catastróficos en expresiones regulares patológicas.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------------- | ----------- |
+| re | CompiladoRegex |             |
+| entrada | cadena |             |

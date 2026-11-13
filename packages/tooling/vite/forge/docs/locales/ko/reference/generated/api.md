@@ -25,9 +25,9 @@ Forge와 동일한 매니페스트 트랜잭션을 통해 모든 기본 출력�
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 옵션 | ForgeArtifactPublishOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------------- | ----------- |
+| 옵션 | ForgeArtifactPublishOptions |             |
 
 ### forgeBuildLifecycle플러그인
 
@@ -42,9 +42,9 @@ function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): Plugin;
 
 #### 매개변수
 
-| 이름 | 유형                    | 설명 |
-| ---- | ----------------------- | ---- |
-| 옵션 | ForgeBuildLifecycle옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------------------- | ----------- |
+| 옵션 | ForgeBuildLifecycle옵션 |             |
 
 ### forgeVirtualEntry
 
@@ -58,9 +58,9 @@ buildStart에 의해 대상이 준비될 때까지 사용되는 안정적인 가
 
 #### 매개변수
 
-| 이름   | 유형   | 설명 |
-| ------ | ------ | ---- |
-| 타겟ID | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 타겟ID | 문자열 |             |
 
 ## `src/compiler/artifact-manifest`
 
@@ -80,11 +80,11 @@ function createForgeArtifactManifest(
 
 #### 매개변수
 
-| 이름   | 유형                            | 설명 |
-| ------ | ------------------------------- | ---- |
-| 타겟ID | 문자열                          |      |
-| 유물   | 읽기 전용 ForgeArtifactRecord[] |      |
-| 완료   |                                 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------------------------------ | ----------- |
+| 타겟ID | 문자열 |             |
+| 유물 | 읽기 전용 ForgeArtifactRecord[] |             |
+| 완료 |                                |             |
 
 ### ForgeArtifact종류
 
@@ -131,9 +131,9 @@ function assertForgeArtifactRoot(root: string): string;
 
 #### 매개변수
 
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 루트 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 루트 | 문자열 |             |
 
 ### verifyForgeArtifact디렉터리
 
@@ -147,10 +147,10 @@ function ensureForgeArtifactDirectory(root: string, directory: string): string;
 
 #### 매개변수
 
-| 이름     | 유형   | 설명 |
-| -------- | ------ | ---- |
-| 루트     | 문자열 |      |
-| 디렉토리 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------ | ----------- |
+| 루트 | 문자열 |             |
+| 디렉토리 | 문자열 |             |
 
 ### 해결ForgeArtifact경로
 
@@ -164,10 +164,10 @@ function resolveForgeArtifactPath(root: string, relativeName: string): string;
 
 #### 매개변수
 
-| 이름     | 유형   | 설명 |
-| -------- | ------ | ---- |
-| 루트     | 문자열 |      |
-| 상대이름 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ------------ | ------ | ----------- |
+| 루트 | 문자열 |             |
+| 상대이름 | 문자열 |             |
 
 ### verifyForgeArtifactName
 
@@ -181,9 +181,9 @@ function validateForgeArtifactName(relativeName: string): string;
 
 #### 매개변수
 
-| 이름     | 유형   | 설명 |
-| -------- | ------ | ---- |
-| 상대이름 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ------------ | ------ | ----------- |
+| 상대이름 | 문자열 |             |
 
 ### verifyForgeArtifactSegment
 
@@ -197,9 +197,9 @@ function validateForgeArtifactSegment(segment: string): string;
 
 #### 매개변수
 
-| 이름     | 유형   | 설명 |
-| -------- | ------ | ---- |
-| 세그먼트 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 세그먼트 | 문자열 |             |
 
 ## `src/compiler/artifact-writer`
 
@@ -215,15 +215,15 @@ function createForgeArtifactWriter(
 ): ForgeArtifactWriter;
 ```
 
-설명이 제공되지 않았습니다.
+Forge 아티팩트를 준비하고 커밋하기 위한 원자 아티팩트 작성자를 만듭니다.
 
 #### 매개변수
 
-| 이름       | 유형                    | 설명 |
-| ---------- | ----------------------- | ---- |
-| 아웃디렉터 | 문자열                  |      |
-| 타겟ID     | 문자열                  |      |
-| 옵션       | ForgeArtifactWriter옵션 |      |
+| 이름 | 유형 | 설명 |
+| -------- | -------------------------- | ----------- |
+| 아웃디렉터 | 문자열 |             |
+| 타겟ID | 문자열 |             |
+| 옵션 | ForgeArtifactWriter옵션 |             |
 
 ### forgeArtifactAtempt디렉토리
 
@@ -237,10 +237,10 @@ function forgeArtifactAttemptDirectory(outDir: string, targetId: string): string
 
 #### 매개변수
 
-| 이름       | 유형   | 설명 |
-| ---------- | ------ | ---- |
-| 아웃디렉터 | 문자열 |      |
-| 타겟ID     | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 아웃디렉터 | 문자열 |             |
+| 타겟ID | 문자열 |             |
 
 ### ForgeArtifactWriter
 
@@ -274,7 +274,7 @@ export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>;
 
 설명이 제공되지 않았습니다.
 
-### Forge캐시 제한
+### Forge캐시 한도
 
 **종류:** 인터페이스
 
@@ -307,17 +307,17 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 하나의 중립(또는 프레임워크 게이트) 구성 요소 모듈을 프레임워크별로 컴파일합니다.
 소스(1단계).
 
-주요 `"use <framework>";` 지시문은 방출하기 전에 제거됩니다.
+주요 `"use <framework>";` 지시어는 방출하기 전에 제거됩니다.
 따라서 마커는 출력으로 누출되지 않습니다. 모듈을 밖으로 게이팅
 일치하지 않는 프레임워크의 빌드는 검색 단계에서 업스트림으로 처리됩니다.
 ({@link moduleTargetsFramework} 참조)
 
 #### 매개변수
 
-| 이름 | 유형       | 설명 |
-| ---- | ---------- | ---- |
-| 출처 | 문자열     |      |
-| 옵션 | 컴파일옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------- | ----------- |
+| 출처 | 문자열 |             |
+| 옵션 | 컴파일옵션 |             |
 
 ### 컴파일된 모듈
 
@@ -343,10 +343,10 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 
 #### 매개변수
 
-| 이름 | 유형            | 설명 |
-| ---- | --------------- | ---- |
-| 출처 | 문자열          |      |
-| 옵션 | CompileHook옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------ | ----------- |
+| 출처 | 문자열 |             |
+| 옵션 | CompileHook옵션 |             |
 
 ### CompileHook옵션
 
@@ -374,10 +374,10 @@ Astro와 같은 독립형 대상 패키지에서 사용되는 공유 이음새�
 
 #### 매개변수
 
-| 이름 | 유형            | 설명 |
-| ---- | --------------- | ---- |
-| 출처 | 문자열          |      |
-| 옵션 | 컴파일모듈 옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------------- | ----------- |
+| 출처 | 문자열 |             |
+| 옵션 | 컴파일모듈 옵션 |             |
 
 ### 컴파일모듈 옵션
 
@@ -413,10 +413,10 @@ function findComponentFunction(sourceFile: OxcParsedModule, name: string): OxcNo
 
 #### 매개변수
 
-| 이름     | 유형          | 설명 |
-| -------- | ------------- | ---- |
-| 소스파일 | OxcParsed모듈 |      |
-| 이름     | 문자열        |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------- | ----------- |
+| 소스파일 | OxcParsed모듈 |             |
+| 이름 | 문자열 |             |
 
 ### isSlot요소
 
@@ -426,13 +426,13 @@ function findComponentFunction(sourceFile: OxcParsedModule, name: string): OxcNo
 function isSlotElement(node: OxcNode): boolean;
 ```
 
-Oxc node이 중립 명명된 슬롯 요소인지 여부입니다.
+Oxc node이 중립 명명된 슬롯 요소인지 여부.
 
 #### 매개변수
 
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | Oxc노드 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------- | ----------- |
+| node | Oxc노드 |             |
 
 ### 읽기슬롯 이름
 
@@ -446,9 +446,9 @@ Oxc `<Slot>` 요소의 정적 `name="…"`을 읽습니다.
 
 #### 매개변수
 
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | Oxc노드 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------- | ----------- |
+| node | Oxc노드 |             |
 
 ## `src/compiler/constants`
 
@@ -484,9 +484,9 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 
 #### 매개변수
 
-| 이름       | 유형          | 설명 |
-| ---------- | ------------- | ---- |
-| 프레임워크 | Jsx프레임워크 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------------ | ----------- |
+| 프레임워크 | Jsx프레임워크 |             |
 
 ### 중립_모듈
 
@@ -512,11 +512,11 @@ function moduleTargetsFramework(fileName: string, source: string, framework: str
 
 #### 매개변수
 
-| 이름       | 유형   | 설명 |
-| ---------- | ------ | ---- |
-| 파일이름   | 문자열 |      |
-| 출처       | 문자열 |      |
-| 프레임워크 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------ | ----------- |
+| 파일이름 | 문자열 |             |
+| 출처 | 문자열 |             |
+| 프레임워크 | 문자열 |             |
 
 ### readFramework 지시어
 
@@ -530,10 +530,10 @@ Oxc 모듈에서 주요 `"use <framework>"` 지시문을 읽습니다.
 
 #### 매개변수
 
-| 이름     | 유형   | 설명 |
-| -------- | ------ | ---- |
-| 파일이름 | 문자열 |      |
-| 출처     | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 파일 이름 | 문자열 |             |
+| 출처 | 문자열 |             |
 
 ## `src/compiler/discover`
 
@@ -552,10 +552,10 @@ in(재내보내기의 모듈 기본 이름).
 
 #### 매개변수
 
-| 이름         | 유형   | 설명 |
-| ------------ | ------ | ---- |
-| 배럴소스     | 문자열 |      |
-| 스트립접두사 |        |      |
+| 이름 | 유형 | 설명 |
+| ------------ | ------ | ----------- |
+| 배럴소스 | 문자열 |             |
+| 스트립접두사 |        |             |
 
 ### discoverComponentsFromGraph
 
@@ -573,11 +573,11 @@ function discoverComponentsFromGraph(
 
 #### 매개변수
 
-| 이름         | 유형             | 설명 |
-| ------------ | ---------------- | ---- |
-| 그래프       | Forge파일 그래프 |      |
-| 스트립접두어 |                  |      |
-| 진단         | 컴파일러진단[]   |      |
+| 이름 | 유형 | 설명 |
+| ----------- | -------------------- | ----------- |
+| 그래프 | Forge파일그래프 |             |
+| 스트립접두사 |                      |             |
+| 진단 | 컴파일러진단[] |             |
 
 ### 발견된 구성요소
 
@@ -618,10 +618,10 @@ Vue 패키지의 `useToast` 컴포저블)을 생성된 항목을 통해
 
 #### 매개변수
 
-| 이름         | 유형                | 설명 |
-| ------------ | ------------------- | ---- |
-| 배럴소스     | 문자열              |      |
-| 구성요소폴더 | 읽기전용Set<string> |      |
+| 이름 | 유형 | 설명 |
+| ---------------- | ------------------- | ----------- |
+| 배럴소스 | 문자열 |             |
+| 구성요소폴더 | 읽기전용Set<string> |             |
 
 ### discoverHelperExportsFromGraph
 
@@ -639,11 +639,11 @@ function discoverHelperExportsFromGraph(
 
 #### 매개변수
 
-| 이름             | 유형                            | 설명 |
-| ---------------- | ------------------------------- | ---- |
-| 그래프           | Forge파일그래프                 |      |
-| 구성요소폴더     | 읽기전용Set<string>             |      |
-| 발견된 구성 요소 | 읽기 전용 DiscoveredComponent[] |      |
+| 이름 | 유형 | 설명 |
+| -------------------- | ------------------------------ | ----------- |
+| 그래프 | Forge파일그래프 |             |
+| 구성요소폴더 | 읽기전용Set<string> |             |
+| 발견된 구성 요소 | 읽기 전용 DiscoveredComponent[] |             |
 
 ## `src/compiler/facts`
 
@@ -699,10 +699,10 @@ function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
 
 #### 매개변수
 
-| 이름     | 유형   | 설명 |
-| -------- | ------ | ---- |
-| 파일이름 | 문자열 |      |
-| 출처     | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 파일 이름 | 문자열 |             |
+| 출처 | 문자열 |             |
 
 ## `src/compiler/frontends`
 
@@ -720,10 +720,10 @@ Oxc를 통해 Forge 소스를 중립 모듈로 구문 분석합니다.
 
 #### 매개변수
 
-| 이름     | 유형   | 설명 |
-| -------- | ------ | ---- |
-| 파일이름 | 문자열 |      |
-| 출처     | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 파일 이름 | 문자열 |             |
+| 출처 | 문자열 |             |
 
 ### 파싱프런트엔드모듈
 
@@ -742,12 +742,12 @@ function parseFrontendModule(
 
 #### 매개변수
 
-| 이름           | 유형                      | 설명 |
-| -------------- | ------------------------- | ---- |
-| 파일 이름      | 문자열                    |      |
-| 출처           | 문자열                    |      |
-| 모듈 종류      | '구성요소' \| '구성 가능' |      |
-| 구성 요소 이름 | 문자열                    |      |
+| 이름 | 유형 | 설명 |
+| ------------- | --------------------------- | ----------- |
+| 파일 이름 | 문자열 |             |
+| 출처 | 문자열 |             |
+| 모듈 종류 | '구성요소' \| '구성 가능' |             |
+| 구성 요소 이름 | 문자열 |             |
 
 ## `src/compiler/generation-context`
 
@@ -763,9 +763,9 @@ function createForgeGenerationContext(options: ForgeGenerationContextOptions): F
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 옵션 | ForgeGenerationContextOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------------- | ----------- |
+| 옵션 | ForgeGenerationContextOptions |             |
 
 ### ForgeGenerationContext
 
@@ -789,7 +789,7 @@ export interface ForgeGenerationContextOptions
 
 ## `src/compiler/graph`
 
-### buildForge파일 그래프
+### buildForge파일그래프
 
 **종류:** 기능
 
@@ -797,13 +797,13 @@ export interface ForgeGenerationContextOptions
 function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph;
 ```
 
-구성된 하나의 입력 모듈에서 표준 소스 그래프를 빌드합니다.
+구성된 하나의 입력 모듈에서 정식 소스 그래프를 빌드합니다.
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 옵션 | ForgeFileGraph옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------- | ----------- |
+| 옵션 | ForgeFileGraph옵션 |             |
 
 ### ForgeFileEdge
 
@@ -902,11 +902,11 @@ function hoistStaticJsx(
 
 #### 매개변수
 
-| 이름           | 유형                      | 설명 |
-| -------------- | ------------------------- | ---- |
-| 모듈           | OxcParsed모듈             |      |
-| 모듈 종류      | '구성요소' \| '구성 가능' |      |
-| 구성 요소 이름 | 문자열                    |      |
+| 이름 | 유형 | 설명 |
+| ------------- | --------------------------- | ----------- |
+| 모듈 | OxcParsed모듈 |             |
+| 모듈 종류 | '구성요소' \| '구성 가능' |             |
+| 구성 요소 이름 | 문자열 |             |
 
 ## `src/compiler/imports`
 
@@ -932,10 +932,10 @@ function readExternalImports(fileName: string, source: string): string[];
 
 #### 매개변수
 
-| 이름     | 유형   | 설명 |
-| -------- | ------ | ---- |
-| 파일이름 | 문자열 |      |
-| 출처     | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 파일 이름 | 문자열 |             |
+| 출처 | 문자열 |             |
 
 ### 읽기NeutralImports
 
@@ -949,10 +949,10 @@ function readNeutralImports(fileName: string, source: string): NeutralImports;
 
 #### 매개변수
 
-| 이름     | 유형   | 설명 |
-| -------- | ------ | ---- |
-| 파일이름 | 문자열 |      |
-| 출처     | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 파일 이름 | 문자열 |             |
+| 출처 | 문자열 |             |
 
 ### readStyleImports
 
@@ -966,11 +966,11 @@ function readStyleImports(fileName: string, source: string, sourceRoot?: string)
 
 #### 매개변수
 
-| 이름      | 유형   | 설명 |
-| --------- | ------ | ---- |
-| 파일 이름 | 문자열 |      |
-| 출처      | 문자열 |      |
-| 소스루트  | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------ | ----------- |
+| 파일이름 | 문자열 |             |
+| 출처 | 문자열 |             |
+| 소스루트 | 문자열 |             |
 
 ### 해결WorkspaceLocalImport
 
@@ -988,11 +988,11 @@ function resolveWorkspaceLocalImport(
 
 #### 매개변수
 
-| 이름         | 유형                    | 설명 |
-| ------------ | ----------------------- | ---- |
-| 지정자       | 문자열                  |      |
-| 소스파일이름 | 문자열                  |      |
-| 소스루트     | 문자열 \| 정의되지 않음 |      |
+| 이름 | 유형 | 설명 |
+| -------------- | ------------------- | ----------- |
+| 지정자 | 문자열 |             |
+| 소스파일이름 | 문자열 |             |
+| 소스루트 | 문자열 \| 정의되지 않음 |             |
 
 ### 스타일가져오기
 
@@ -1016,9 +1016,9 @@ Oxc 모듈 또는 node이 `i18next.t(...)`을 호출하는지 여부.
 
 #### 매개변수
 
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | Oxc노드 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------- | ----------- |
+| node | Oxc노드 |             |
 
 ## `src/compiler/optimize`
 
@@ -1030,26 +1030,26 @@ Oxc 모듈 또는 node이 `i18next.t(...)`을 호출하는지 여부.
 function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule;
 ```
 
-소스 수준의 1단계 최적화 패스(죽은 가지 가지치기 및
+소스 수준 Stage-1 최적화 패스 실행(죽은 가지 가지치기 및
 Oxc 구문 분석 모듈에 대한 안정적인 키 추론), 다시 구문 분석된 모듈 반환
 그 소스는 적용된 편집 내용을 반영합니다. Static-node 마킹은 순수
-{@linkoptimGenericModule}에 의해 처리되는 레코드 수준 변환입니다.
+{@link OptimizeGenericModule}에 의해 처리되는 레코드 수준 변환입니다.
 
 모든 패스가 기본값으로 설정됩니다. 비활성화하려면 `{ deadBranchPruning: false, … }`을 전달하세요.
 
 #### 매개변수
 
-| 이름 | 유형          | 설명 |
-| ---- | ------------- | ---- |
-| 모듈 | OxcParsed모듈 |      |
-| 옵션 | 최적화 옵션   |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------- | ----------- |
+| 모듈 | OxcParsed모듈 |             |
+| 옵션 | 최적화 옵션 |             |
 
 ### 최적화소스파일
 
 **종류:** 상수
 
 ```typescript
-export const optimizeSourceFile;
+export const optimizeSourceFile: typeof optimizeForgeModule;
 ```
 
 이전 이름을 사용하는 컴파일러 통합을 위해 호환성 별칭이 유지됩니다.
@@ -1068,9 +1068,9 @@ function buildOxcParentMap(root: OxcNode): Map<OxcNode, OxcNode>;
 
 #### 매개변수
 
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| 루트 | Oxc노드 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------- | ----------- |
+| 루트 | Oxc노드 |             |
 
 ### isOxcJsxRoot
 
@@ -1084,9 +1084,9 @@ node이 JSX 요소, 자체 닫는 요소 또는 단편인 경우 참입니다.
 
 #### 매개변수
 
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | Oxc노드 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------- | ----------- |
+| node | Oxc노드 |             |
 
 ### isOxcNode
 
@@ -1100,9 +1100,9 @@ function isOxcNode(value: unknown): value is OxcNode;
 
 #### 매개변수
 
-| 이름 | 유형       | 설명 |
-| ---- | ---------- | ---- |
-| 가치 | 알 수 없음 |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------- | ----------- |
+| 가치 | 알 수 없음 |             |
 
 ### oxcArray
 
@@ -1116,10 +1116,10 @@ function oxcArray(node: OxcNode, key: string): OxcNode[];
 
 #### 매개변수
 
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | Oxc노드 |      |
-| 키   | 문자열  |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------- | ----------- |
+| node | Oxc노드 |             |
+| 키 | 문자열 |             |
 
 ### oxc아이들
 
@@ -1133,9 +1133,9 @@ function oxcChildren(node: OxcNode): OxcNode[];
 
 #### 매개변수
 
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | Oxc노드 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------- | ----------- |
+| node | Oxc노드 |             |
 
 ### Oxc댓글
 
@@ -1159,9 +1159,9 @@ function oxcIdentifierName(node: OxcNode | undefined): string | undefined;
 
 #### 매개변수
 
-| 이름 | 유형                     | 설명 |
-| ---- | ------------------------ | ---- |
-| node | Oxc노드 \| 정의되지 않음 |      |
+| 이름 | 유형 | 설명 |
+| ---- | -------------------- | ----------- |
+| node | Oxc노드 \| 정의되지 않음 |             |
 
 ### oxcLiteral값
 
@@ -1175,9 +1175,9 @@ function oxcLiteralValue(node: OxcNode | undefined): unknown;
 
 #### 매개변수
 
-| 이름 | 유형                     | 설명 |
-| ---- | ------------------------ | ---- |
-| node | Oxc노드 \| 정의되지 않음 |      |
+| 이름 | 유형 | 설명 |
+| ---- | -------------------- | ----------- |
+| node | Oxc노드 \| 정의되지 않음 |             |
 
 ### Oxc노드
 
@@ -1201,10 +1201,10 @@ function oxcNodeText(source: string, node: OxcNode | undefined): string;
 
 #### 매개변수
 
-| 이름 | 유형                     | 설명 |
-| ---- | ------------------------ | ---- |
-| 출처 | 문자열                   |      |
-| node | Oxc노드 \| 정의되지 않음 |      |
+| 이름 | 유형 | 설명 |
+| ------ | -------------------- | ----------- |
+| 출처 | 문자열 |             |
+| node | Oxc노드 \| 정의되지 않음 |             |
 
 ### oxcObject
 
@@ -1218,10 +1218,10 @@ function oxcObject(node: OxcNode, key: string): OxcNode | undefined;
 
 #### 매개변수
 
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| node | Oxc노드 |      |
-| 키   | 문자열  |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------- | ----------- |
+| node | Oxc노드 |             |
+| 키 | 문자열 |             |
 
 ### OxcParentMap
 
@@ -1265,9 +1265,9 @@ function oxcProgramBody(program: OxcNode): OxcNode[];
 
 #### 매개변수
 
-| 이름     | 유형    | 설명 |
-| -------- | ------- | ---- |
-| 프로그램 | Oxc노드 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------- | ----------- |
+| 프로그램 | Oxc노드 |             |
 
 ### oxcSourceExpression
 
@@ -1285,11 +1285,11 @@ function oxcSourceExpression(
 
 #### 매개변수
 
-| 이름 | 유형                           | 설명 |
-| ---- | ------------------------------ | ---- |
-| 출처 | 문자열                         |      |
-| node | Oxc노드                        |      |
-| 구문 | SourceBackedExpression['구문'] |      |
+| 이름 | 유형 | 설명 |
+| ------ | -------------------------------- | ----------- |
+| 출처 | 문자열 |             |
+| node | Oxc노드 |             |
+| 구문 | SourceBackedExpression['구문'] |             |
 
 ### oxcSourceSpan
 
@@ -1303,10 +1303,10 @@ function oxcSourceSpan(source: string, node: OxcNode): SourceSpan;
 
 #### 매개변수
 
-| 이름 | 유형    | 설명 |
-| ---- | ------- | ---- |
-| 출처 | 문자열  |      |
-| node | Oxc노드 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------- | ----------- |
+| 출처 | 문자열 |             |
+| node | Oxc노드 |             |
 
 ### oxcString
 
@@ -1320,10 +1320,10 @@ function oxcString(node: OxcNode | undefined, key: 'name' | 'value' | 'directive
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| node | Oxc노드 \| 정의되지 않음   |      |
-| 키   | '이름' \| '값' \| '지시문' |      |
+| 이름 | 유형 | 설명 |
+| ---- | -------------------------------- | ----------- |
+| node | Oxc노드 \| 정의되지 않음 |             |
+| 키 | '이름' \| '값' \| '지시문' |             |
 
 ### oxcTypeNode
 
@@ -1337,9 +1337,9 @@ function oxcTypeNode(node: OxcNode | undefined): OxcNode | undefined;
 
 #### 매개변수
 
-| 이름 | 유형                     | 설명 |
-| ---- | ------------------------ | ---- |
-| node | Oxc노드 \| 정의되지 않음 |      |
+| 이름 | 유형 | 설명 |
+| ---- | -------------------- | ----------- |
+| node | Oxc노드 \| 정의되지 않음 |             |
 
 ### oxcUnwrapModuleStatement
 
@@ -1357,9 +1357,9 @@ function oxcUnwrapModuleStatement(statement: OxcNode): {
 
 #### 매개변수
 
-| 이름   | 유형    | 설명 |
-| ------ | ------- | ---- |
-| 성명서 | Oxc노드 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------- | ----------- |
+| 성명서 | Oxc노드 |             |
 
 ### 파싱Oxc모듈
 
@@ -1373,10 +1373,10 @@ function parseOxcModule(fileName: string, source: string): OxcParsedModule;
 
 #### 매개변수
 
-| 이름     | 유형   | 설명 |
-| -------- | ------ | ---- |
-| 파일이름 | 문자열 |      |
-| 출처     | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 파일 이름 | 문자열 |             |
+| 출처 | 문자열 |             |
 
 ### StripOxcFramework 지시어
 
@@ -1390,9 +1390,9 @@ function stripOxcFrameworkDirective(module: OxcParsedModule): OxcParsedModule;
 
 #### 매개변수
 
-| 이름 | 유형          | 설명 |
-| ---- | ------------- | ---- |
-| 모듈 | OxcParsed모듈 |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------- | ----------- |
+| 모듈 | OxcParsed모듈 |             |
 
 ### 방문Oxc
 
@@ -1406,10 +1406,10 @@ function visitOxc(node: OxcNode, visitor: (node: OxcNode) => void | boolean): vo
 
 #### 매개변수
 
-| 이름   | 유형                            | 설명 |
-| ------ | ------------------------------- | ---- |
-| node   | Oxc노드                         |      |
-| 방문객 | (node: OxcNode) => 무효 \| 부울 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ---------------------------------- | ----------- |
+| node | Oxc노드 |             |
+| 방문자 | (node: OxcNode) => 무효 \| 부울 |             |
 
 ## `src/compiler/pipeline`
 
@@ -1424,19 +1424,19 @@ function analyzeForgeModule(
 ): SemanticModule;
 ```
 
-대상 중립 의미 체계 모듈을 구문 분석하고 정규화하고 추론합니다.
+대상 중립 의미 모듈을 구문 분석하고 정규화하고 추론합니다.
 
 이는 프레임워크가 아닌 모든 소비자(특히 CMS)의 중립 이음매입니다.
 프로젝션 드라이버)는 대상 플러그인을 선택하지 않고 IR을 얻기 위해 사용합니다.
-결과는 프레임워크 파이프라인이 사용하는 것과 동일한 캐시를 통해 공유됩니다.
+결과는 프레임워크 파이프라인이 사용하는 것과 동일한 캐시를 통해 공유되므로
 하나의 빌드에서 여러 대상에 대해 분석된 구성 요소는 한 번만 추론됩니다.
 
 #### 매개변수
 
-| 이름   | 유형                | 설명 |
-| ------ | ------------------- | ---- |
-| 입력   | 컴파일러 입력       |      |
-| 서비스 | Forge컴파일러서비스 |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------------- | ----------- |
+| 입력 | 컴파일러 입력 |             |
+| 서비스 | Forge컴파일러서비스 |             |
 
 ### 컴파일러 입력
 
@@ -1470,9 +1470,9 @@ function createCompilerPipeline(service: ForgeCompilerService = createForgeCompi
 
 #### 매개변수
 
-| 이름   | 유형                | 설명 |
-| ------ | ------------------- | ---- |
-| 서비스 | Forge컴파일러서비스 |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------------- | ----------- |
+| 서비스 | Forge컴파일러서비스 |             |
 
 ## `src/compiler/report`
 
@@ -1502,9 +1502,9 @@ function analyzeRouterCapabilities(
 
 #### 매개변수
 
-| 이름 | 유형                                                              | 설명 |
-| ---- | ----------------------------------------------------------------- | ---- |
-| 입력 | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |      |
+| 이름 | 유형 | 설명 |
+| ----- | ----------------------------------------------------------------- | ----------- |
+| 입력 | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |             |
 
 ### 컴파일라우터모듈
 
@@ -1518,16 +1518,16 @@ function compileRouterModule(input: RouterCompilerInput): RouterCompilationResul
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 입력 | 라우터컴파일러입력 |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------------- | ----------- |
+| 입력 | 라우터컴파일러입력 |             |
 
 ### createRouter컴파일러파이프라인
 
 **종류:** 기능
 
 ```typescript
-function createRouterCompilerPipeline();
+function createRouterCompilerPipeline(): { readonly compile: typeof compileRouterModule };
 ```
 
 Forge 컴파일러와 독립형 대상 고정 장치에서 사용되는 디스패처 형식입니다.
@@ -1556,9 +1556,9 @@ function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompile
 
 #### 매개변수
 
-| 이름 | 유형             | 설명 |
-| ---- | ---------------- | ---- |
-| 한도 | ForgeCacheLimits |      |
+| 이름 | 유형 | 설명 |
+| ------ | ---------------- | ----------- |
+| 한도 | ForgeCacheLimits |             |
 
 ### Forge컴파일 요청
 
@@ -1636,9 +1636,9 @@ Vite 및 tsdown 어댑터에서 사용하는 명시적인 수명 주기 소유�
 
 #### 매개변수
 
-| 이름 | 유형                           | 설명 |
-| ---- | ------------------------------ | ---- |
-| 옵션 | CreateForgeBuildSessionOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------------------ | ----------- |
+| 옵션 | CreateForgeBuildSessionOptions |             |
 
 ### CreateForgeBuildSession옵션
 
@@ -1734,9 +1734,9 @@ function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserC
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 옵션 | JsxHookLibraryConfigOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------------- | ----------- |
+| 옵션 | JsxHookLibraryConfigOptions |             |
 
 ### 정의JsxLibraryConfig
 
@@ -1750,9 +1750,9 @@ function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig;
 
 #### 매개변수
 
-| 이름 | 유형                    | 설명 |
-| ---- | ----------------------- | ---- |
-| 옵션 | JsxLibraryConfigOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------- | ----------- |
+| 옵션 | JsxLibraryConfigOptions |             |
 
 ### JsxHookLibraryConfigOptions
 
@@ -1832,9 +1832,9 @@ Vite의 해결된 구성이 필요합니다.
 
 #### 매개변수
 
-| 이름     | 유형                   | 설명 |
-| -------- | ---------------------- | ---- |
-| 플러그인 | 프레임워크출력플러그인 |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------------- | ----------- |
+| 플러그인 | 프레임워크출력플러그인 |             |
 
 ### svelte플러그인
 
@@ -1873,9 +1873,9 @@ function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions):
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 옵션 | 생성HookLibrarySources옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------------------- | ----------- |
+| 옵션 | 생성HookLibrarySources옵션 |             |
 
 ### 생성HookLibrarySources옵션
 
@@ -1901,9 +1901,9 @@ function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSo
 
 #### 매개변수
 
-| 이름     | 유형                   | 설명 |
-| -------- | ---------------------- | ---- |
-| 플러그인 | 프레임워크출력플러그인 |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------------- | ----------- |
+| 플러그인 | 프레임워크출력플러그인 |             |
 
 ### FrameworkSourceTarget
 
@@ -1928,9 +1928,9 @@ function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): str
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 옵션 | 생성프레임워크소스옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------------------- | ----------- |
+| 옵션 | 생성프레임워크소스옵션 |             |
 
 ### 프레임워크 소스 생성옵션
 
@@ -1966,9 +1966,9 @@ function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOpti
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 옵션 | TsdownForgeComponentPlugins옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ---------------------------------- | ----------- |
+| 옵션 | TsdownForgeComponentPlugins옵션 |             |
 
 ### 정의TsdownForgeEmailComponents
 
@@ -1985,9 +1985,26 @@ function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOpt
 
 #### 매개변수
 
-| 이름 | 유형                           | 설명 |
-| ---- | ------------------------------ | ---- |
-| 옵션 | TsdownForgeEmailComponents옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------------------- | ----------- |
+| 옵션 | TsdownForgeEmailComponents옵션 |             |
+
+### 정의TsdownForgeHooks
+
+**종류:** 기능
+
+```typescript
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
+```
+
+단일 Forge 프레임워크 후크 빌드에 대해 하나의 tsdown 구성을 빌드합니다.
+대상 프레임워크 배포 디렉터리에 코드와 유형을 내보냅니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------- | ----------- |
+| 옵션 | TsdownForgeHooks옵션 |             |
 
 ### 정의TsdownForgeHooks모두
 
@@ -2003,9 +2020,9 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 옵션 | TsdownForgeHooksAllOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------------------- | ----------- |
+| 옵션 | TsdownForgeHooksAllOptions |             |
 
 ### 해결표준청크이름
 
@@ -2021,9 +2038,9 @@ Vue 가상 스크립트 모듈을 `${component}.script.js`로 변환합니다.
 
 #### 매개변수
 
-| 이름     | 유형                    | 설명 |
-| -------- | ----------------------- | ---- |
-| 청크정보 | CanonicalChunkCandidate |      |
+| 이름 | 유형 | 설명 |
+| --------- | ----------------------- | ----------- |
+| 청크정보 | CanonicalChunkCandidate |             |
 
 ### 해결CanonicalEntryName
 
@@ -2039,9 +2056,9 @@ function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string;
 
 #### 매개변수
 
-| 이름     | 유형                    | 설명 |
-| -------- | ----------------------- | ---- |
-| 청크정보 | CanonicalChunkCandidate |      |
+| 이름 | 유형 | 설명 |
+| --------- | ----------------------- | ----------- |
+| 청크정보 | CanonicalChunkCandidate |             |
 
 ### tsdownForgeComponent플러그인
 
@@ -2057,9 +2074,9 @@ tsdown에서 하나의 Archetype-C **컴포넌트** 프레임워크 빌드를 �
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 옵션 | TsdownForgeComponentPlugins옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ---------------------------------- | ----------- |
+| 옵션 | TsdownForgeComponentPlugins옵션 |             |
 
 ### TsdownForgeComponentPlugins옵션
 
@@ -2089,15 +2106,13 @@ export interface TsdownForgeEmailComponentsOptions
 function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
 ```
 
-후크 어댑터의 기본 tsdown-플러그인 형식입니다. 반환된 플러그인은 주입됩니다.
-`tsdownConfig`의 대상 구성을 사용하여 후크 빌드를 구성할 수 있습니다.
-하나의 호출자가 소유한 `defineTsdownLibrary` 구성을 사용합니다.
+구성된 모든 프레임워크 대상에 대한 tsdown 후크 플러그인을 생성합니다.
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 옵션 | TsdownForgeHooksAllOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------------------- | ----------- |
+| 옵션 | TsdownForgeHooksAllOptions |             |
 
 ### TsdownForgeHooksAllOptions
 
@@ -2105,6 +2120,16 @@ function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlug
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
+```
+
+설명이 제공되지 않았습니다.
+
+### TsdownForgeHooks옵션
+
+**종류:** 인터페이스
+
+```typescript
+export interface TsdownForgeHooksOptions
 ```
 
 설명이 제공되지 않았습니다.

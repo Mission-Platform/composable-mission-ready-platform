@@ -6,7 +6,7 @@
 > 言語: 日本語 (ja)
 
 ユーティリティ (utils) は、純粋なフレームワークに依存しないヘルパー関数です。 UI フレームワークのインポートがないようにする必要があります。
-明示的に必要と文書化されており、DOM API は不要です。これにより、次のようなあらゆるコンテキストで使用できるようになります。
+明示的に要求され文書化されており、DOM API は不要です。これにより、次のようなあらゆるコンテキストで使用できるようになります。
 サーバー側のロジックとワーカー。
 
 ## ディレクトリのレイアウト
@@ -28,7 +28,7 @@ src/utils/
 1. **純度**: 副作用のない純粋な関数を優先します。同じ入力が与えられた場合、常に次の値を返す必要があります。
    同じ出力です。
 2. **UI フックなし**: `vue`、`react`、または `@mission-platform/forge-jsx` フックをユーティリティにインポートしないでください。ロジックが必要
-   反応性は以下に属します [コンポーザブル](composable-authoring.md)。
+   反応性は [コンポーザブル](composable-authoring.md) に属します。
 3. **明示的な型指定**: すべての引数と戻り値に完全な TypeScript 型を提供します。
 4. **必須テスト**: すべてのユーティリティには、同じ場所に `.spec.ts` ファイルが必要です。
 5. **単一の責任**: 各ユーティリティ フォルダーは、特定の狭いタスクに焦点を当てる必要があります。
@@ -46,9 +46,10 @@ export function clamp(value: number, min: number, max: number): number {
 
 ## 足場
 
-Mission Platform Developer MCP ツールを使用して、新しいユーティリティ スケルトンを生成します。
+接続された Mission Platform Developer MCP サーバーを通じて `scaffold_util` ツールを使用して、新しいユーティリティを生成します
+骸骨。これは MCP ツール呼び出しの例であり、シェル コマンドではありません。
 
-```bash
+```text
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```
@@ -56,6 +57,6 @@ scaffold_util(name="string-utils", package="i18n", apply=true)
 ## 関連ガイド
 
 - [パッケージ開発](package-development.md)
-- [アトミックコンポーネント設計](atomic-component-design.md)
-- [コンポーザブルオーサリング](composable-authoring.md)
+- [原子コンポーネント設計](atomic-component-design.md)
+- [構成可能なオーサリング](composable-authoring.md)
 - [ストアオーサリング](store-authoring.md)

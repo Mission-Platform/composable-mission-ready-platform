@@ -1,0 +1,14 @@
+// Flint Standard Representation & Layout Macro Library (std::repr)
+// Provides standard typed representation macros for C ABI alignment and packing.
+
+macro repr_c(target: Type) {
+  return target;
+}
+
+macro repr_packed(target: Type, alignment: u32) {
+  return target;
+}
+
+macro repr_align(target: Type, alignment: u32) {
+  return target;
+}

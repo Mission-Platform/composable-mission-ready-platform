@@ -96,7 +96,23 @@ Schema.org `ImageObject`.
 **종류:** 상수
 
 ```typescript
-export const jsonLd;
+export const jsonLd: {
+  readonly webSite: typeof webSite;
+  readonly organization: typeof organization;
+  readonly localBusiness: typeof localBusiness;
+  readonly person: typeof person;
+  readonly webPage: typeof webPage;
+  readonly breadcrumbList: typeof breadcrumbList;
+  readonly article: typeof article;
+  readonly product: typeof product;
+  readonly faqPage: typeof faqPage;
+  readonly event: typeof event;
+  readonly videoObject: typeof videoObject;
+  readonly imageObject: typeof imageObject;
+  readonly softwareApplication: typeof softwareApplication;
+  readonly recipe: typeof recipe;
+  readonly review: typeof review;
+};
 ```
 
 소비자가 다음에서 `import { jsonLd }를 수행할 수 있도록 네임스페이스 다시 내보내기
@@ -524,7 +540,7 @@ ref, getter 또는 일반 {@link SeoMetadata} 개체를 허용하여 다음을 �
 **종류:** 구성요소
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 렌더리스 `<Seo>` 구성요소 — {@link useSeo} 주위의 선언적 래퍼입니다.
@@ -546,7 +562,7 @@ Open Graph 및 JSON-LD 블록을 소품으로 사용합니다. 구성 요소는 
 **종류:** 구성요소
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 렌더리스 `<Seo>` 구성요소 — {@link useSeo} 주위의 선언적 래퍼입니다.

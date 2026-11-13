@@ -1,6 +1,3 @@
-import { createForgeCompilerService, type ForgeCompilerService } from './service.js';
-
-import type { OptimizeOptions } from './optimize.js';
 import type {
   FrameworkOutputPlugin,
   GeneratedModule,
@@ -8,6 +5,10 @@ import type {
   TargetComponentHost,
 } from '@mission-platform/forge-plugin-api';
 import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
+
+import { createForgeCompilerService, type ForgeCompilerService } from './service.js';
+
+import type { OptimizeOptions } from './optimize.js';
 
 /** Neutral source input accepted by the compiler pipeline. */
 export interface CompilerInput {

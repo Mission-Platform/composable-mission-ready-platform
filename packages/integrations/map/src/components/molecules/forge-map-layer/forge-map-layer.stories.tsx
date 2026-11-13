@@ -1,6 +1,6 @@
 import { ForgeMapLayer, ForgeMapLibre, ForgeMapSource } from '@mission-platform/map';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
 import type { FeatureCollection } from 'geojson';
 
 // ─── Shared fixtures ────────────────────────────────────────────────────────

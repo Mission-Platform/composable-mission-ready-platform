@@ -24,7 +24,7 @@ export default defineConfig({
   ],
   format: ['esm'],
   platform: 'node',
-  dts: { build: true },
+  dts: { generator: 'oxc', compilerOptions: { isolatedDeclarations: true } },
   tsconfig: path.resolve(rootDirectory, 'tsconfig.build.json'),
   clean: true,
   sourcemap: false,

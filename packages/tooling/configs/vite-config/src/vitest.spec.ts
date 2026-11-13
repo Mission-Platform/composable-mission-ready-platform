@@ -8,10 +8,10 @@ import { detectTestEnvironment, defineVitestConfig } from './vitest';
 import { defineAppConfig, defineFrameworkAppConfig, defineWebComponentAppConfig } from './index';
 
 describe('defineVitestConfig', () => {
-  it('defaults testTimeout and hookTimeout to 30,000 ms', () => {
+  it('defaults testTimeout and hookTimeout to 60,000 ms', () => {
     const config = defineVitestConfig();
-    expect(config.test?.testTimeout).toBe(30_000);
-    expect(config.test?.hookTimeout).toBe(30_000);
+    expect(config.test?.testTimeout).toBe(60_000);
+    expect(config.test?.hookTimeout).toBe(60_000);
   });
 
   it('allows overriding testTimeout and hookTimeout', () => {
@@ -34,11 +34,11 @@ describe('defineVitestConfig', () => {
     }>;
     expect(projects).toHaveLength(2);
     expect(projects[0].test?.name).toBe('neutral');
-    expect(projects[0].test?.testTimeout).toBe(30_000);
-    expect(projects[0].test?.hookTimeout).toBe(30_000);
+    expect(projects[0].test?.testTimeout).toBe(60_000);
+    expect(projects[0].test?.hookTimeout).toBe(60_000);
     expect(projects[1].test?.name).toBe('mp:vue');
-    expect(projects[1].test?.testTimeout).toBe(30_000);
-    expect(projects[1].test?.hookTimeout).toBe(30_000);
+    expect(projects[1].test?.testTimeout).toBe(60_000);
+    expect(projects[1].test?.hookTimeout).toBe(60_000);
   });
 
   it('supports happy-dom and node environments via options', () => {

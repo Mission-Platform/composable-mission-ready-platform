@@ -20,8 +20,8 @@ function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 ```
 
 `ForgeMatrixCode` – rendert einen scannbaren 2D-Matrix-Barcode (Data Matrix ECC).
-200), einmal im neutralen JSX-Dialekt verfasst und direkt nach React kompiliert
-oder Vue durch `@mission-platform/vite-plugin-forge`.
+200), einmal im neutralen JSX-Dialekt verfasst und direkt zu React kompiliert
+oder Vue von `@mission-platform/vite-plugin-forge`.
 
 Die Nutzlast (`value`) wird vom Client vollständig auf dem Client codiert
 {@link encodeMatrix}-Encoder von `@mission-platform/matrix-code` – a
@@ -29,19 +29,19 @@ Abhängigkeitsfreier Encoder, der in Rust geschrieben und in WebAssembly kompili
 Symbolgröße und Reed-Solomon-Fehlerkorrektur) – und als gestochen scharfes,
 Auflösungsunabhängiges SVG. Für alle Dark-Module wird ein einziger `<path>` ausgegeben,
 So bleibt das Markup auch bei großen Codes kompakt. Für ein zuverlässiges Scannen der
-Dunkle/helle Farben sind standardmäßig solid, Schwarz auf Weiß, und nicht Thementoken.
+Dunkle/helle Farben sind standardmäßig solid Schwarz auf Weiß und nicht Thementoken.
 aber beide sind über `color` / `background` überschreibbar.
 
 Datenmodule können als Quadrate, abgerundete Quadrate oder Punkte gezeichnet werden
-(`moduleShape`); Die dunkle Füllung akzeptiert ein zweistufiges lineares oder radiales `gradient`;
-und ein optionales Zentrum `logo` wird auf eine Trägerplatte gelegt (halten Sie es also klein).
+(`moduleShape`); Die dunkle Füllung akzeptiert einen zweistufigen linearen oder radialen `gradient`;
+und ein optionales Zentrum `logo` wird auf einer Trägerplatte überlagert (halten Sie es also klein).
 Das Symbol scannt weiterhin, da Data Matrix über keine einstellbare Fehlerkorrektur verfügt
 Ebene).
 
 Eine optionale Aktionssymbolleiste (aktiviert über `showActions` – `true` für jeden
 Schaltfläche oder ein {@link MatrixCodeActions}-Objekt, um sie einzeln auszuwählen).
 Benutzer **speichern den Code als PNG-Bild**, **kopieren das Bild in die Zwischenablage**,
-und **den codierten Wert in die Zwischenablage kopieren**. Das PNG ist auf dem gerastert
+und **den codierten Wert in die Zwischenablage kopieren**. Das PNG ist auf der gerastert
 Client durch Zeichnen der gerenderten SVG-Datei auf eine Leinwand.
 
 Das `computed`-Rendering ist das neutrale {@link useMemo}; Der Fall `error` wird
@@ -50,9 +50,9 @@ die Callback-Requisite `onError` (wird aufgerufen, wenn die Codierung fehlschlä
 
 #### Parameter
 
-| Name          | Geben Sie                              | ein Beschreibung |
-| ------------- | -------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<MatrixCodeProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<MatrixCodeProperties> |             |
 
 ### MatrixCodeAktionen
 
@@ -103,72 +103,3 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 ```
 
 Form, die zum Zeichnen jedes Moduls des Codes verwendet wird.
-
-## `src/encoder/index`
-
-### encodeMatrix
-
-**Art:** Funktion
-
-```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
-```
-
-Codieren Sie `data` in einen 2D-Matrix-Barcode des angegebenen `symbology` und laden Sie den
-Encoder-Artefakt synchron bei der ersten Verwendung fälschen.
-
-#### Parameter
-
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| Symbologie | MatrixSymbologie |                  |
-| Daten      | Zeichenfolge     |                  |
-
-#### Vertrag
-
-- **@throws:** wenn die Nutzlast für die Symbologie ungültig ist (leer oder
-  zu groß für die unterstützten Symbole).
-
-### encodeMatrixAsync
-
-**Art:** Funktion
-
-```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
-```
-
-Codieren Sie `data` in einen 2D-Matrix-Barcode des angegebenen `symbology` und laden Sie den
-Encoder-Artefakt asynchron bei der ersten Verwendung fälschen.
-
-#### Parameter
-
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| Symbologie | MatrixSymbologie |                  |
-| Daten      | Zeichenfolge     |                  |
-
-#### Vertrag
-
-- **@throws:** wenn die Nutzlast für die Symbologie ungültig ist.
-
-### MatrixCode
-
-**Art:** Schnittstelle
-
-```typescript
-export interface MatrixCode
-```
-
-Ein gepackter Matrix-Barcode: Abmessungen plus eine zeilenweise Liste von Modulbits
-(`0` = hell, `1` = dunkel).
-
-### MatrixSymbologie
-
-**Art:** Typ
-
-```typescript
-export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
-```
-
-Die 2D-Matrixsymbologien, die dieser Encoder unterstützt. Als erstes Argument übergeben
-zu {@link encodeMatrix} / {@link encodeMatrixAsync}.

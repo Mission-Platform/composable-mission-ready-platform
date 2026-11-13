@@ -13,7 +13,7 @@ Mitwirkende.
 
 - [Sprach- und ABI-Referenz](reference/language.md) – Grammatik, Typen, Fähigkeiten,
   Diagnose, Manifeste und Compilerverhalten.
-- [Build- und Testanleitung](guides/development.md) – lokale Prüfungen, Vorrichtungen und generiert
+– [Build- und Testanleitung](guides/development.md) – lokale Prüfungen, Vorrichtungen und generiert
   Artefakte.
 - [`llms.txt`](../../../llms.txt) – prägnante API- und Nutzungshinweise für Tools und Assistenten.
 

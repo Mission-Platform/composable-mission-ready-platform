@@ -5,6 +5,6 @@
 > packages/compiler/plugins/forge-router-react/docs/index.md: [packages/compiler/plugins/forge-router-react/docs/index.md](../../index.md)
 > 言語: 日本語 (ja)
 
-ルーターターゲットを鍛造する React ルーター
+React ルーターのルーター ターゲットを鍛造する
 
-見る `llms.txt`
+パブリック API と使用例については、`llms.txt` を参照してください。

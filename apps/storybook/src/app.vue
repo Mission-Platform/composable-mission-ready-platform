@@ -1,6 +1,8 @@
 <script lang="ts" setup>
   import type {} from './locales/types';
 
+  import { computed, ref } from 'vue';
+
   import { ForgeButton, ForgeCollapse } from '@mission-platform/components';
   import { ForgeCodeBlock } from '@mission-platform/content';
   import { ForgeTooltip } from '@mission-platform/float';
@@ -21,8 +23,6 @@
     ForgeIconTrash,
   } from '@mission-platform/icons';
   import { ForgeMapDraw, ForgeMapLibre } from '@mission-platform/map';
-  import { computed, ref } from 'vue';
-
   import type { DrawMode, FeatureId, UseDrawingReturn } from '@mission-platform/map';
 
   defineOptions({ name: 'MapShowcase' });
@@ -225,7 +225,7 @@
                   @click="drawing.scaleSelected(1.5)"
                 >
                   <ForgeIconScaleUp
-                    :size="16"
+                    size="sm"
                     :aria-label="ariaScaleUp"
                   />
                 </ForgeButton>
@@ -242,7 +242,7 @@
                   @click="drawing.scaleSelected(0.75)"
                 >
                   <ForgeIconScaleDown
-                    :size="16"
+                    size="sm"
                     :aria-label="ariaScaleDown"
                   />
                 </ForgeButton>
@@ -259,7 +259,7 @@
                   @click="drawing.rotateSelected(45)"
                 >
                   <ForgeIconRotateCw
-                    :size="16"
+                    size="sm"
                     :aria-label="ariaRotateCw"
                   />
                 </ForgeButton>
@@ -276,7 +276,7 @@
                   @click="drawing.rotateSelected(-45)"
                 >
                   <ForgeIconRotateCcw
-                    :size="16"
+                    size="sm"
                     :aria-label="ariaRotateCcw"
                   />
                 </ForgeButton>
@@ -293,7 +293,7 @@
                   @click="drawing.splitSelected()"
                 >
                   <ForgeIconSplit
-                    :size="16"
+                    size="sm"
                     :aria-label="ariaSplit"
                   />
                 </ForgeButton>
@@ -310,7 +310,7 @@
                   @click="startJoin(drawing)"
                 >
                   <ForgeIconJoin
-                    :size="16"
+                    size="sm"
                     :aria-label="ariaJoin"
                   />
                 </ForgeButton>
@@ -327,7 +327,7 @@
                   @click="deleteSelected(drawing)"
                 >
                   <ForgeIconTrash
-                    :size="16"
+                    size="sm"
                     :aria-label="ariaDelete"
                   />
                 </ForgeButton>
@@ -343,7 +343,7 @@
                   @click="toggleGeodesic(drawing)"
                 >
                   <ForgeIconGeodesic
-                    :size="16"
+                    size="sm"
                     :aria-label="ariaGeodesic"
                   />
                   {{ drawing.geodesic ? modeGeodesic : modeFlat }}

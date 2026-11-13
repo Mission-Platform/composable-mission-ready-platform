@@ -23,7 +23,7 @@ function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElemen
 중립 JSX 방언으로 한 번 작성하고 바로 컴파일하여 React 또는 Vue
 ~에 의해 `@mission-platform/vite-plugin-forge`.
 
-공유된 관찰 가능한 테마 저장소(`../theme-store`): 클릭
+공유된 관찰 가능한 테마 스토어(`../theme-store`): 클릭
 그것은 동일한 싱글톤을 구동합니다 `ForgeThemeProvider` 구성하므로
 기본 설정 유지, 핀 `data-theme`/`color-scheme` 문서 루트에
 (그리고 동기화된 `<meta name="color-scheme">`)와 동기화를 유지합니다.
@@ -39,9 +39,9 @@ function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElemen
 
 #### 매개변수
 
-| 이름 | 유형                             | 설명 |
-| ---- | -------------------------------- | ---- |
-| 속성 | 읽기 전용<ThemeToggleProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------- | ----------- |
+| 속성 | 읽기 전용<ThemeToggleProperties> |             |
 
 ### ThemeToggle속성
 
@@ -73,7 +73,7 @@ export type ThemeToggleSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpElement;
 ```
 
-`ForgeThemeComposer` — 런타임 `--mp-*` 디자인 토큰 재정의를 구성합니다(브랜드
+`ForgeThemeComposer` — 런타임 `--mp-*` 디자인 토큰 재정의(브랜드)를 구성합니다.
 색상, 텍스트/표면/테두리 색상, 글꼴, 기본 크기/반경 및 원시
 토큰 탈출 해치)를 해당 범위에 적용합니다. 에서 한 번 작성됨
 중립 JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
@@ -84,7 +84,7 @@ function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpEl
 중립적인 {@link useState} 후크(에서 시드됨)에 구성을 보유합니다.
 `modelValue`), 순수 도우미를 사용하여 CSS 사용자 정의 속성으로 해결합니다.
 `../theme-composer-store`, `display: contents` 래퍼에 적용
-(`<div>`) — 또는 `global`인 경우 `document.documentElement`에 — 그리고
+(`<div>`) — 또는 `global`인 경우 `document.documentElement`에 — 그리고 매
 `onUpdateModelValue` 콜백 소품을 통해 변경합니다(대체
 `v-model`). 기본 범위 슬롯은 `{ config, cssVariables,
 styleString, setConfig, setAttribute, setToken, RemoveToken, 재설정 }`.
@@ -96,9 +96,9 @@ styleString, setConfig, setAttribute, setToken, RemoveToken, 재설정 }`.
 
 #### 매개변수
 
-| 이름 | 유형                               | 설명 |
-| ---- | ---------------------------------- | ---- |
-| 속성 | 읽기 전용<ThemeComposerProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------------- | ----------- |
+| 속성 | 읽기 전용<ThemeComposerProperties> |             |
 
 ### ThemeComposer속성
 
@@ -132,7 +132,7 @@ function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpEl
 
 `ForgeThemeProvider` — props에서 공유 테마 저장소를 구성하고
 현재 테마 상태와 변경자를 기본(범위가 지정된) 슬롯에 노출합니다.
-중립 JSX 언어로 한 번 작성되었으며 React 또는 Vue로 바로 컴파일되었습니다.
+중립 JSX 방언으로 한 번 작성되었으며 React 또는 Vue로 바로 컴파일되었습니다.
 `@mission-platform/vite-plugin-forge`로.
 
 원래 Vue SFC는 반응 저장소를 생성하고 이를 하위 항목과 공유했습니다.
@@ -146,14 +146,14 @@ function ForgeThemeProvider(properties: Readonly<ThemeProviderProperties>): MpEl
 ToggleTheme, CycleTheme }`를 범위로 지정합니다.
 
 하위 트리당 `global={false}` 모드, 구성 가능한 래퍼 태그(`as`) 및
-독립형(싱글톤이 아닌) 저장소는 의도적으로 단일 저장소로 축소됩니다.
+독립 실행형(싱글톤이 아닌) 저장소는 의도적으로 단일 저장소로 축소됩니다.
 고정된 `<div>` 래퍼가 있는 문서 수준 저장소입니다.
 
 #### 매개변수
 
-| 이름 | 유형                               | 설명 |
-| ---- | ---------------------------------- | ---- |
-| 속성 | 읽기 전용<ThemeProviderProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------------- | ----------- |
+| 속성 | 읽기 전용<ThemeProviderProperties> |             |
 
 ### ThemeProvider속성
 
@@ -173,7 +173,7 @@ export interface ThemeProviderProperties
 export type ThemeProviderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-크기 토큰 — 표준 2xs → 2xl 배율(렌더리스 래퍼를 통해 상속됨)
+크기 토큰 - 표준 2xs → 2xl 배율(렌더리스 래퍼를 통해 상속됨)
 
 ## `src/stores/theme-composer-store/theme-composer-store`
 
@@ -201,9 +201,9 @@ function configToCssVariables(config: ThemeComposerConfig): Record<string, strin
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 구성 | ThemeComposer구성 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------- | ----------- |
+| 구성 | ThemeComposer구성 |             |
 
 ### configToStyleString
 
@@ -217,9 +217,9 @@ function configToStyleString(config: ThemeComposerConfig): string;
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 구성 | ThemeComposer구성 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------- | ----------- |
+| 구성 | ThemeComposer구성 |             |
 
 ### cssVariablesToString
 
@@ -233,9 +233,9 @@ CSS 사용자 정의 속성 맵을 인라인 `style` 문자열로 직렬화합�
 
 #### 매개변수
 
-| 이름 | 유형                 | 설명 |
-| ---- | -------------------- | ---- |
-| 변수 | 기록<string, string> |      |
+| 이름 | 유형 | 설명 |
+| --------- | ---------------------- | ----------- |
+| 변수 | 기록<string, string> |             |
 
 ### 병합 구성
 
@@ -249,10 +249,10 @@ function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig):
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 구성 | ThemeComposer구성 |      |
-| 부분 | ThemeComposer구성 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------- | ----------- |
+| 구성 | ThemeComposer구성 |             |
+| 부분 | ThemeComposer구성 |             |
 
 ### 제거구성토큰
 
@@ -266,10 +266,10 @@ function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeCompo
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 구성 | ThemeComposer구성 |      |
-| 키   | 문자열            |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------- | ----------- |
+| 구성 | ThemeComposer구성 |             |
+| 키 | 문자열 |             |
 
 ### setConfigAttribute
 
@@ -287,11 +287,11 @@ function setConfigAttribute(
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 구성 | ThemeComposer구성      |      |
-| 속성 | 케이                   |      |
-| 가치 | ThemeComposerConfig[K] |      |
+| 이름 | 유형 | 설명 |
+| --------- | ---------------------- | ----------- |
+| 구성 | ThemeComposer구성 |             |
+| 속성 | 케이 |             |
+| 가치 | ThemeComposerConfig[K] |             |
 
 ### setConfigToken
 
@@ -305,11 +305,33 @@ function setConfigToken(config: ThemeComposerConfig, key: string, value: string)
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 구성 | ThemeComposer구성 |      |
-| 키   | 문자열            |      |
-| 가치 | 문자열            |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------- | ----------- |
+| 구성 | ThemeComposer구성 |             |
+| 키 | 문자열 |             |
+| 가치 | 문자열 |             |
+
+### ThemeComposer속성
+
+**종류:** 유형
+
+```typescript
+export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens' | 'colorScheme'>;
+```
+
+`--mp-*` 사용자 정의 특성에 매핑되는 친숙한 속성 키입니다.
+
+### ThemeComposerConfig
+
+**종류:** 인터페이스
+
+```typescript
+export interface ThemeComposerConfig
+```
+
+소비자가 구성할 수 있는 테마 속성에 대한 상위 수준의 입력된 설명입니다.
+런타임에. 모든 속성은 플랫폼의 `--mp-*` 중 하나에 매핑됩니다.
+디자인 토큰 CSS 맞춤 속성({@link ATTRIBUTE_TO_CSS_VAR} 참조)
 
 ## `src/stores/theme-store/theme-store`
 
@@ -327,9 +349,9 @@ function configureTheme(config: ThemeConfig): void;
 
 #### 매개변수
 
-| 이름 | 유형      | 설명 |
-| ---- | --------- | ---- |
-| 구성 | 테마 구성 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ----------- | ----------- |
+| 구성 | 테마 구성 |             |
 
 ### 사이클테마
 
@@ -374,8 +396,8 @@ function setTheme(next: Theme): void;
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| ---- | ---- | ---- |
-| 다음 | 테마 |      |
+| ---- | ----- | ----------- |
+| 다음 | 테마 |             |
 
 ### 구독테마
 
@@ -389,9 +411,9 @@ function subscribeTheme(listener: () => void): () => void;
 
 #### 매개변수
 
-| 이름   | 유형       | 설명 |
-| ------ | ---------- | ---- |
-| 청취자 | () => 무효 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ---------- | ----------- |
+| 청취자 | () => 무효 |             |
 
 ### 주제
 

@@ -27,9 +27,9 @@ function createRouterDiagnostic(
 
 #### 参数
 
-| 名称 | 类型                                                                         | 描述 |
-| ---- | ---------------------------------------------------------------------------- | ---- |
-| 诊断 | 省略<CompilerDiagnostic, "phase" \| "fileName"> & { 只读文件名？：字符串； } |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------------------------------------------------------------- | ----------- |
+|诊断|省略<CompilerDiagnostic, "phase" \| "fileName"> & { 只读文件名？：字符串； } |             |
 
 ### 定义ForgeRouterPlugin
 
@@ -43,9 +43,9 @@ function defineForgeRouterPlugin(plugin: T): T;
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 插件 | T    |      |
+|名称 |类型 |描述 |
+| ------ | ---- | ----------- |
+|插件 | T |             |
 
 ### 定义ForgeRouterTarget
 
@@ -67,9 +67,9 @@ function defineForgeRouterTarget(
 
 #### 参数
 
-| 名称 | 类型                     | 描述                     |
-| ---- | ------------------------ | ------------------------ |
-| 选项 | ForgeRouterTargetOptions | ForgeRouterTargetOptions |     |
+|名称 |类型 |描述 |
+| ------- | ------------------------ | ----------- |
+|选项 | ForgeRouterTargetOptions | ForgeRouterTargetOptions |             |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
@@ -79,12 +79,12 @@ function defineForgeRouterTarget(
 export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```
 
-保留包作者契约的中立运行时导出。
+Neutral runtime exports that preserve the package-author contract.
 
 无法重命名本机挂钩 1:1 的目标（例如 React 的
 `useNavigate` 与中性 `useMpRouter().navigate`）必须公开这些名称
-从目标运行时模块并指向 {@link ForgeRouterTargetOptions.runtimeModule}
-在那个模块。
+from a target runtime module and point {@link ForgeRouterTargetOptions.runtimeModule}
+at that module.
 
 ### 伪造路由器扩展合约
 
@@ -93,8 +93,6 @@ export const FORGE_ROUTER_RUNTIME_EXPORTS;
 ```typescript
 export const forgeRouterExtensionContracts: readonly RouterTargetExtensionContract[];
 ```
-
-为其第一方适配器不属于此里程碑的路由器保留的目标合同。
 
 ### ForgeRouterTargetOptions
 
@@ -282,10 +280,10 @@ function selectForgeRouterPlugin(
 
 #### 参数
 
-| 名称 | 类型                           | 描述 |
-| ---- | ------------------------------ | ---- |
-| 选择 | RouterPluginSelection \|未定义 |      |
-| 插件 | 只读 RouterOutputPlugin[]      |      |
+|名称 |类型 |描述 |
+| --------- | ---------------------------------- | ----------- |
+|选择| RouterPluginSelection \|未定义 |             |
+|插件 |只读 RouterOutputPlugin[] |             |
 
 ### 不支持的路由器功能
 
@@ -302,7 +300,7 @@ function unsupportedRouterCapabilities(
 
 #### 参数
 
-| 名称 | 类型                   | 描述 |
-| ---- | ---------------------- | ---- |
-| 红外 | 路由器功能模块         |      |
-| 插件 | 路由器输出插件\|未定义 |      |
+|名称 |类型 |描述 |
+| ------ | ------------------------------- | ----------- |
+|红外|路由器功能模块 |             |
+|插件 |路由器输出插件\|未定义 |             |

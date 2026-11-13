@@ -6,7 +6,7 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 > Langue: Français (fr)
 
 `@mission-platform/i18n` est un wrapper d'internationalisation indépendant du framework (i18n) construit
-sur [i18suivant](https://www.i18next.com/). Il fournit un moyen unifié de gérer les traductions sur la plateforme de mission,
+le [i18suivant](https://www.i18next.com/). Il fournit un moyen unifié de gérer les traductions sur la plateforme de mission,
 avec des adaptateurs dédiés pour Vue 3 et React.
 
 ## Point d'entrée
@@ -17,11 +17,11 @@ la condition d'export `mp:<framework>` active, que vous sélectionnez **une fois
 `@mission-platform/vite-config`) et `customConditions` dans TypeScript (via le
 `@mission-platform/typescript-config/framework-<name>` préréglages). Chaque importation reste nue.
 
-| État actif | Décide de         | Exportations clés                                                       |
-| :--------- | :---------------- | :---------------------------------------------------------------------- |
-| _(aucun)_  | Noyau neutre      | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
-| `mp:vue`   | Vue 3 adaptateurs | le noyau neutre plus `createForgeI18NVue`, `useI18n`                    |
-| `mp:react` | Adaptateur React  | le noyau neutre plus `ForgeI18NProvider`, `useI18n`                     |
+| État actif | Décide de | Exportations clés |
+| :--------------- | :--------------------- | :---------------------------------------------------------------------- |
+| _(aucun)_ | Noyau neutre | `createForgeI18N`, `forgeNamespace`, `localeNamespaces`, `mergeLocales` |
+| `mp:vue` | Vue 3 adaptateurs | le noyau neutre plus `createForgeI18NVue`, `useI18n` |
+| `mp:react` | Adaptateur React | le noyau neutre plus `ForgeI18NProvider`, `useI18n` |
 
 ## Concepts de base
 

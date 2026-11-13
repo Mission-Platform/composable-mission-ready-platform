@@ -497,7 +497,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const MapContext;
+export const MapContext: MpContext<Map | undefined>;
 ```
 
 Contexte portant l’instance MapLibre `Map` de l’ancêtre `<MapLibre>` le plus proche.

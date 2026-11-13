@@ -6,7 +6,7 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > Sprache: Deutsch (de)
 
 `@mission-platform/icons` ist eine Sammlung Framework-neutraler SVG-Symbolkomponenten für die Mission Platform. Jedes Symbol ist
-Einmal erstellt und zur Erstellungszeit in die nativen Builds Vue 3, React, Solid, Svelte und Webkomponenten kompiliert.
+Einmal erstellt und zur Build-Zeit in die nativen Builds Vue 3, React, Solid, Svelte und Webkomponenten kompiliert.
 
 ## Architektur & Vertrieb
 
@@ -90,14 +90,14 @@ export function Toolbar() {
 ```
 
 Für ein externes, zwischenspeicherbares Asset verwenden Sie `src="/assets/icons.svg"` mit `inline={false}`. Externe SVG-Fragmentverweise
-erfordern Zugriff auf denselben Ursprung oder eine kompatible CORS-Richtlinie; Der Inline-Modus ist der Fallback für SSR, restriktives CSP oder Browser
+erfordern Zugriff mit demselben Ursprung oder eine kompatible CORS-Richtlinie; Der Inline-Modus ist der Fallback für SSR, restriktives CSP oder Browser
 das externe Fragmente nicht auflösen kann. Der Paketbuild gibt `dist/icons.svg` aus, auch verfügbar als
 `@mission-platform/icons/icons.svg`.
 
 ## Länder- und Zusammensetzungs-APIs
 
 `ForgeIconFlag` und `ForgeIconCountryGlobe` akzeptieren ISO-Codes in Großbuchstaben von `SUPPORTED_COUNTRY_CODES`, einschließlich
-`US`, `CA`, `JP`, `GB` und `ZA`. Nicht unterstützte Laufzeitwerte lösen einen beschreibenden Fehler aus. Ländergloben, Route/Wegpunkt
+`US`, `CA`, `JP`, `GB` und `ZA`. Nicht unterstützte Laufzeitwerte führen zu einem beschreibenden Fehler. Ländergloben, Route/Wegpunkt
 Muster und zukünftige Überlagerungen sind typisierte Symbolzusammensetzungen: Sie verweisen mit Transformationen auf vorhandene IDs und werden überprüft
 für fehlende Referenzen und Zyklen vor der Sprite-Generierung.
 
@@ -108,21 +108,21 @@ Alle Symbole basieren auf einer Viewbox von $24 \times 24$.
 
 ### Universelle Requisiten
 
-| Stütze      | Geben Sie          | ein Standard              | Beschreibung                                                                                                                  |
-| :---------- | :----------------- | :------------------------ | :---------------------------------------------------------------------------------------------------------------------------- |
-| `size`      | `number \| string` | `'md'`                    | Breite und Höhe. Unterstützt benannte Token (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) oder eine Pixelnummer. |
-| `color`     | `string`           | `'currentColor'`          | Strichfarbe (und Füllung für ausgefüllte Markierungssymbole).                                                                 |
-| `ariaLabel` | `string`           | _Standardwert pro Symbol_ | Zugänglicher Name. Wenn es weggelassen wird, wird das Symbol als `aria-hidden` markiert.                                      |
+| Stütze | Geben Sie | ein Standard | Beschreibung |
+| :---------- | :----------------- | :----------------- | :-------------------------------------------------------------------------------------------------------------------- |
+| `size` | `number \| string` | `'md'` | Breite und Höhe. Unterstützt benannte Token (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) oder eine Pixelnummer. |
+| `color` | `string` | `'currentColor'` | Strichfarbe (und Füllung für ausgefüllte Markierungssymbole).                                                                     |
+| `ariaLabel` | `string` | _Standardwert pro Symbol_ | Zugänglicher Name. Wenn es weggelassen wird, wird das Symbol als `aria-hidden` markiert.                                                     |
 
 ### Verhaltenssymbole
 
 Bestimmte Symbole enthalten zusätzliche Requisiten, um ihr Aussehen zu steuern:
 
-| Symbol             | Zusätzliche Requisiten                                                 | Beschreibung                                                         |
-| :----------------- | :--------------------------------------------------------------------- | :------------------------------------------------------------------- |
-| `ForgeIconArrow`   | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (Standard `'up'`)   | Dreht den Pfeil über eine Inline-Transformation.                     |
-| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (Standard `'down'`) | Dreht das Chevron über eine Inline-Transformation.                   |
-| `ForgeIconSort`    | `active`: `boolean`, `direction`: `'asc' \| 'desc' \| undefined`       | Hebt den Chevron hervor, der der aktiven Sortierrichtung entspricht. |
+| Symbol | Zusätzliche Requisiten | Beschreibung |
+| :----------------- | :-------------------------------------------------------------------- | :--------------------------------------------------------- |
+| `ForgeIconArrow` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (Standard `'up'`) | Dreht den Pfeil über eine Inline-Transformation.                 |
+| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (Standard `'down'`) | Dreht das Chevron über eine Inline-Transformation.               |
+| `ForgeIconSort` | `active`: `boolean`, `direction`: `'asc' \| 'desc' \| undefined` | Hebt den Chevron hervor, der der aktiven Sortierrichtung entspricht. |
 
 ## Symbolbibliothek
 

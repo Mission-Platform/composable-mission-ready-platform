@@ -30,12 +30,12 @@ gesenkt, so dass der Emittent immer von demselben Vertrag gesteuert wird.
 
 #### Parameter
 
-| Name              | Geben Sie           | ein Beschreibung |
-| ----------------- | ------------------- | ---------------- |
-| Modul             | SemanticModule      |                  |
-| Komponentenname   | Zeichenfolge        |                  |
-| Komponentenordner | ReadonlySet<string> |                  |
-| planen            | SvelteLoweredModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------------- | ------------------- | ----------- |
+| Modul | SemanticModule |             |
+| Komponentenname | Zeichenfolge |             |
+| Komponentenordner | ReadonlySet<string> |             |
+| planen | SvelteLoweredModule |             |
 
 ### SvelteModuleOutput
 
@@ -61,9 +61,9 @@ Drucken Sie ein neutrales Hook-/zusammensetzbares Modul als Svelte-Ziel-`.ts`-Qu
 
 #### Parameter
 
-| Name  | Geben Sie      | ein Beschreibung |
-| ----- | -------------- | ---------------- |
-| Modul | SemanticModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------- | ----------- |
+| Modul | SemanticModule |             |
 
 ## `src/index`
 
@@ -93,9 +93,9 @@ Ob es sich bei einem Zielplan um den Svelte-Plan handelt – der Unterscheidungs
 
 #### Parameter
 
-| Name      | Geben Sie                          | ein Beschreibung |
-| --------- | ---------------------------------- | ---------------- |
-| abgesenkt | TargetLoweredModule \| undefiniert |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------------------- | ----------- |
+| abgesenkt | TargetLoweredModule \| undefiniert |             |
 
 ### LowerSvelteModule
 
@@ -112,10 +112,10 @@ Erstellen Sie den Svelte-Plan für ein neutrales Modul.
 
 #### Parameter
 
-| Name    | Geben Sie      | ein Beschreibung |
-| ------- | -------------- | ---------------- |
-| ir      | SemanticModule |                  |
-| Kontext | Zielkontext    |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------- | ----------- |
+| ir | SemanticModule |             |
+| Kontext | Zielkontext |             |
 
 ### SvelteBindingPlan
 
@@ -215,7 +215,7 @@ Der Svelte-eigene Senkungsplan unterscheidet sich von `framework`.
 export interface SveltePropPlan
 ```
 
-Der `$props()`-Destrukturierungseintritt, auf den eine neutrale Stütze abgesenkt wird.
+Der `$props()`-Destrukturierungseintrag, auf den eine neutrale Stütze abgesenkt wird.
 
 ### SvelteRenderHelperPlan
 
@@ -302,10 +302,10 @@ Ziel oder ein Aufrufer, der `lower` übersprungen hat) werden unverändert zurü
 
 #### Parameter
 
-| Name      | Geben Sie             | ein Beschreibung |
-| --------- | --------------------- | ---------------- |
-| Absichten | Zielabsichten         |                  |
-| Optionen  | TargetOptimizeOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------- | ----------- |
+| Absichten | Zielabsichten |             |
+| Optionen | TargetOptimizeOptions |             |
 
 ### SVELTE_OPTIMIZATIONS
 

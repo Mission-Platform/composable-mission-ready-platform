@@ -1,0 +1,48 @@
+{
+  "name": "@mission-platform/flint-analysis",
+  "version": "1.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "Flint static analysis, affine borrow checking, comptime evaluation, query engine, and capability security audits",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "type-check": "tsc --project tsconfig.build.json --noEmit",
+    "build": "node --experimental-strip-types ../../../scripts/build-package.ts",
+    "build:bundle": "vite build",
+    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --check ."
+  },
+  "dependencies": {
+    "@mission-platform/flint-ast": "workspace:*",
+    "@mission-platform/flint-parser": "workspace:*",
+    "@mission-platform/flint-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "@vitest/coverage-v8": "catalog:testing",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing"
+  }
+}

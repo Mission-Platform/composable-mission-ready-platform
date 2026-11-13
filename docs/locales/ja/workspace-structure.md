@@ -5,7 +5,7 @@
 > docs/workspace-structure.md: [docs/workspace-structure.md](../../workspace-structure.md)
 > 言語: 日本語 (ja)
 
-このドキュメントは、Mission Platform モノリポジトリのレイアウト、ディレクトリの目的、および内部的なリポジトリに関する技術リファレンスを提供します。
+このドキュメントは、Mission Platform のモノリポジトリのレイアウト、ディレクトリの目的、および内部的なリポジトリに関する技術リファレンスを提供します。
 パッケージの規約。
 
 ## モノリポジトリのレイアウト リファレンス
@@ -16,11 +16,13 @@ Mission Platform は、pnpm ワークスペースと Turborepo を使用して�
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── packages/tooling/configs/                # Shared tooling and base configurations
-├── packages/               # Reusable libraries and building blocks
-├── packages/tooling/vite/           # Build-time extensions and compilers
-├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
-├── crates/                 # Rust crates (including Wasm-compiled ones)
+├── packages/core/          # Framework-neutral runtime, Forge JSX/adapters, routing, i18n, and scheduling
+├── packages/ui/            # Components, forms, layouts, themes, and design tokens
+├── packages/content/       # Content, email, search, and SEO pipelines
+├── packages/integrations/  # Barcode, maps, media, 3D, and interoperability adapters
+├── packages/compiler/      # Figma bridges and Forge compiler plugins
+├── packages/tooling/       # Shared configs and Vite/build-time extensions
+├── packages/edge/          # Reusable Cloudflare Worker edge functions
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
@@ -35,6 +37,7 @@ composable_mission_ready_platform/
 レジストリに公開されることはありません。
 
 - **`docs/`**: Markdown コーパスの Vite + Vue ドキュメント サイト。
+- **`figma-forge-plugin/`**: Forge で作成されたコンポーネントを Figma ワークフローと統合する Figma プラグイン。
 - **`my-care-notes/`**: 主力のケアノート アプリケーション。
 - **`service-monitor/`**: Durable Object によってサポートされる RedwoodSDK サービス健全性ダッシュボード。
 - **`website/`**: Mission Platform のマーケティングおよび製品 Web サイト。
@@ -42,7 +45,15 @@ composable_mission_ready_platform/
 
 ### 2. `packages/` (ビルディングブロック)
 
-アプリによって使用される、再利用可能なバージョン管理されたライブラリ。これらは、可能な限りフレームワークに依存しないように設計されています。
+アプリによって使用される、再利用可能なバージョン管理されたライブラリ。ドメイン ディレクトリは、パッケージ名やインポートを変更せずに所有権を明示します。
+
+- **`core/`**: フレームワーク中立のランタイム、Forge JSX/アダプター、ルーティング、ローカリゼーション、可観測性、RxJS、およびスケジューラー サービス。
+- **`ui/`**: コンポーネント、ブレークポイント、フォーム、レイアウト、選択、テーマ、トークン、およびタイポグラフィ。
+- **`content/`**: コンテンツ モデル、電子メール コンポーネント/レンダリング、言語ツール、および SEO。
+- **`integrations/`**: バーコード、コード スキャン、D3、マップ、QR/マトリックス コード、音声、Three.js、および vCards。
+- **`compiler/`**: Figma ブリッジおよびフレームワーク/ルーター/CMS コンパイラ プラグイン。
+- **`tooling/`**: 共有構成パッケージと Vite プラグイン。
+- **`edge/`**: アプリケーションおよびローカルの例で使用されるワーカー パッケージ。
 
 - **`@mission-platform/forge-jsx`**: フレームワークに依存しない JSX ランタイムとアダプター。
 - **`@mission-platform/components`**: マルチフレームワーク コンポーネント ライブラリ。
@@ -53,7 +64,7 @@ composable_mission_ready_platform/
 - **`@mission-platform/barcode`**、**`@mission-platform/code-scanner`**、**`@mission-platform/matrix-code`**、および
   **`@mission-platform/qr-code`**: Wasm 支援のスキャンおよびエンコード パッケージ。
 
-### 3. `packages/tooling/configs/` (ツール財団)
+### 3. `packages/tooling/configs/` (ツーリング財団)
 
 すべてのワークスペース間で一貫性を確保する共有構成。このディレクトリ内のパッケージは通常、次のように使用されます。
 `devDependencies`。
@@ -83,6 +94,16 @@ Vite ビルド プロセスを拡張するカスタム プラグイン。
 `apps/my-care-notes/wrangler.jsonc`、`apps/service-monitor/wrangler.jsonc`。の
 `api-proxy` および `forge-spa` パッケージは、スタンドアロンの Wrangler 展開ではなく、バンドルされた依存関係です。
 
+### 6. `packages/compiler/plugins/` (Forge コンパイラ プラグイン)
+
+Forge コンパイラー用のフレームワーク固有の出力プラグインおよびアダプター。
+
+- **`forge-cms-plugin-api/`**: CMS アーティファクトの生成と Vite/tsdown アダプターの統合。
+- **`forge-cms-astro/`**、**`forge-cms-ghost/`**、**`forge-cms-jekyll/`**、**`forge-cms-storyblok/`**、**`forge-cms-webflow/`**: CMS 固有の統合アダプター。
+- **`forge-plugin-api/`**: 共有 Forge コンパイラ プラグイン インターフェイス。
+- **`forge-vue/`**、**`forge-react/`**、**`forge-solid/`**、**`forge-svelte/`**、**`forge-web-components/`**: フレームワーク固有のコード生成およびランタイム アダプター。
+- **`forge-router-plugin-api/`**、**`forge-router-vue/`**、**`forge-router-react/`**、**`forge-router-solid/`**、**`forge-router-svelte/`**、**`forge-router-web-components/`**、**`forge-router-redwood/`**: ルーター フレームワーク固有の統合アダプター。
+
 ## パッケージの内部規約
 
 予測可能な環境を維持するために、すべてのパッケージとアプリは標準の内部レイアウトに従います。
@@ -101,19 +122,19 @@ Vite ビルド プロセスを拡張するカスタム プラグイン。
 
 `src/` 内のすべてのディレクトリには `index.ts` (バレル ファイル) が含まれている必要があります。
 
-- サブディレクトリは、ローカルの `index.ts` を介して内部シンボルをエクスポートします。
+- サブディレクトリは、ローカルの `index.ts` 経由で内部シンボルをエクスポートします。
 - ルート `src/index.ts` は、ワークスペース メンバー全体のパブリック エントリ ポイントとして機能します。
 
 ## ルート構成レジストリ
 
 リポジトリ ルートにあるキー ファイルは、モノリポジトリの動作を制御します。
 
-| ファイル                | 目的                                                                      |
-| :---------------------- | :------------------------------------------------------------------------ |
-| `pnpm-workspace.yaml`   | ワークスペース境界、メンバー グロブ、および依存関係カタログを定義します。 |
-| `turbo.json`            | ビルド パイプラインとタスク キャッシュを調整します。                      |
-| `package.json`          | ルートレベルのスクリプトとモノリポジトリ全体の devDependency。            |
-| `commitlint.config.mjs` | 従来のコミット仕様を強制します。                                          |
+|ファイル |目的 |
+| :---------------------- | :------------------------------------------------------------------- |
+| `pnpm-workspace.yaml` |ワークスペース境界、メンバー グロブ、および依存関係カタログを定義します。 |
+| `turbo.json` |ビルド パイプラインとタスク キャッシュを調整します。                    |
+| `package.json` |ルートレベルのスクリプトとモノリポジトリ全体の devDependency。                |
+| `commitlint.config.mjs` |従来のコミット仕様を強制します。                     |
 
 ## 依存関係とワークスペースの管理
 

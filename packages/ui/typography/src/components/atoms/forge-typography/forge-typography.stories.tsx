@@ -1,6 +1,5 @@
-import { ForgeTypography } from '@mission-platform/typography';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+import { ForgeTypography } from '@mission-platform/typography';
 
 /**
  * `ForgeTypography` is the write-once `ForgeTypography` component of `@mission-platform/typography`. It renders its default-slot content in the

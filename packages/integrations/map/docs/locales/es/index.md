@@ -5,19 +5,19 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > packages/integrations/map/docs/index.md: [packages/integrations/map/docs/index.md](../../index.md)
 > Idioma: Español (es)
 
-Un contenedor Vue 3 para MapLibre GL que proporciona soporte de reactividad total y una integración perfecta con Mission Platform
+Un contenedor Vue 3 para MapLibre GL que brinda soporte de reactividad total y una integración perfecta con Mission Platform
 ecosistema.
 
 ## Descripción general
 
-El paquete `@mission-platform/map` proporciona un envoltorio reactivo y componible alrededor [MapaLibre GL](https://maplibre.org/),
+El paquete `@mission-platform/map` proporciona un contenedor reactivo y componible alrededor de [MapLibre GL](https://maplibre.org/),
 permitiendo a los desarrolladores crear mapas interactivos con la API de composición de Vue 3. Abstrae la complejidad de
 administrar instancias de MapLibre mientras mantiene el acceso completo a las potentes funciones de MapLibre.
 
 ## Características clave
 
 - **Reactividad completa**: el estado del mapa y los eventos se sincronizan automáticamente con el sistema de reactividad de Vue
-- **Soporte TypeScript**: definiciones de tipos completas para todas las API de MapLibre GL
+- **Soporte TypeScript**: Definiciones de tipos completas para todas las API de MapLibre GL
 - **API componible**: use Vue 3 elementos componibles para administrar el estado del mapa y las interacciones
 - **Núcleo independiente del marco**: construido sobre la arquitectura neutral del marco de Mission Platform
 - **Rendimiento optimizado**: actualizaciones eficientes y re-renderizaciones mínimas
@@ -157,7 +157,7 @@ pnpm add @mission-platform/map
 </style>
 ```
 
-### Uso avanzado
+### Advanced Usage
 
 #### Marcadores personalizados
 

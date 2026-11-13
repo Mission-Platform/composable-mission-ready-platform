@@ -30,7 +30,7 @@ export type AlertBannerVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
-배너의 의도/색상 처리 — 표준 색상 세트.
+배너의 의도/색상 처리 - 표준 색상 세트.
 
 ### ForgeAlert배너
 
@@ -63,9 +63,9 @@ function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElemen
 
 #### 매개변수
 
-| 이름 | 유형                             | 설명 |
-| ---- | -------------------------------- | ---- |
-| 속성 | 읽기 전용<AlertBannerProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------- | ----------- |
+| 속성 | 읽기 전용<AlertBannerProperties> |             |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -121,7 +121,7 @@ Popover API를 지원하지 않는 브라우저의 경우(`popover` 속성은
 무시되고 패널은 일반 흐름으로 렌더링됩니다.
 
 트리거가 개방형 모달 `<dialog>` 내부에 있으면 패널이 포털됩니다.
-`body` 대신 **해당 대화상자로**({@linksolvePortalTarget}을 통해):
+`body` 대신 **해당 대화상자로**({@link 해결PortalTarget}을 통해):
 모달 대화 상자는 하위 트리 `inert` 외부의 모든 것을 만듭니다. 따라서 패널은
 `body`는 비활성(보이지 않거나 클릭할 수 없음)이고 잘못 스택됩니다. 더욱 그렇습니다.
 모달이 중첩된 경우. 가장 가까운 대화 상자 안에 보관하면 Popover가
@@ -139,9 +139,9 @@ API는 해당(아마도 쌓인) 대화 상자 위에 스택됩니다.
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<DropdownProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<DropdownProperties> |             |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -165,10 +165,10 @@ function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 `@floating-ui` 대신: 트리거는 고유한 인라인 `anchor-name`을 선언합니다.
 `position-anchor` + `position-area`를 사용하여 순간 이동된 패널을 여기에 연결합니다.
 (`placement`에서 파생됨), 다음을 통해 화면에 유지되도록 뒤집습니다.
-`position-try-fallbacks`(공치된 스타일시트는 사용자 정의 스타일을 추가합니다)
+`position-try-fallbacks`(같은 위치에 있는 스타일시트에 사용자 정의 스타일 추가)
 `@position-try` 옵션). 개방 상태가 제어됩니다(`open` +
 `onUpdateOpen`/`onClose`): 패널은 `open` 및 `useEffect`에 게이트되어 있습니다.
-전선 외부 클릭 + `Escape` 열려 있는 동안 해제됩니다.
+와이어 외부 클릭 + `Escape` 열려 있는 동안 해제됩니다.
 
 순간 이동된 패널은 또한 다음을 통해 브라우저 **최상위 레이어**로 승격됩니다.
 기본 Popover API(`popover="manual"` + `showPopover()`): 일반 `z-index`
@@ -178,7 +178,7 @@ function ForgePopover(properties: Readonly<PopoverProperties>): MpElement;
 Popover API를 지원하지 않는 브라우저의 경우.
 
 트리거가 개방형 모달 `<dialog>` 내부에 있으면 패널이 포털됩니다.
-`body` 대신 **해당 대화상자로**({@link 해결PortalTarget}을 통해):
+`body` 대신 **해당 대화상자로**({@linksolvePortalTarget}을 통해):
 모달 대화 상자는 하위 트리 외부의 모든 것을 `inert`로 만듭니다. 따라서 패널은
 `body`는 비활성(보이지 않거나 클릭할 수 없음)이고 잘못 스택됩니다. 더욱 그렇습니다.
 모달이 중첩된 경우. 가장 가까운 대화 상자 안에 보관하면 Popover가
@@ -195,9 +195,9 @@ API는 해당(아마도 쌓인) 대화 상자 위에 스택됩니다.
 
 #### 매개변수
 
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 속성 | 읽기 전용<PopoverProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------- | ----------- |
+| 속성 | 읽기 전용<PopoverProperties> |             |
 
 ### 팝오버 배치
 
@@ -249,20 +249,20 @@ JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
 `message` 소품을 재정의함) 및 선택적인 해제 버튼을 사용하여 렌더링
 `error`/`warning` 및 `role="status"`(정중)에 대한 `role="alert"`(단언적)
 그렇지 않으면. 함께 배치된 CSS 모듈을 통해 스타일을 소유합니다.
-`forge-toast.module.scss`, 프레임워크 중립으로 조립됨
+프레임워크 중립으로 조립된 `forge-toast.module.scss`
 {@link classNames} 도우미.
 
 원래 Vue SFC는 `dismiss` 방출 및 `icon` 명명된 슬롯을 사용하고 렌더링되었습니다.
 인라인 SVG로서의 인텐트 아이콘 중립 버전은 크로스 프레임워크를 사용합니다.
 callback-prop `onDismiss`, `iconContent` 명명된 슬롯(`<Slot>`,
-의도 아이콘을 대체) 및 1회 쓰기 `@mission-platform/icons`
+대체 목적 아이콘) 및 1회 쓰기 `@mission-platform/icons`
 (`ForgeIconCheck`/`ForgeIconError`/`ForgeIconWarning`/`ForgeIconInfo`)을 설정합니다.
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 속성 | 읽기 전용<ToastProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------- | ----------- |
+| 속성 | 읽기 전용<ToastProperties> |             |
 
 ### 토스트속성
 
@@ -293,7 +293,7 @@ export type ToastVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
-토스트의 의도/색상 처리 — 표준 색상 세트.
+토스트의 의도/색상 처리 - 표준 색상 세트입니다.
 
 ## `src/components/molecules/forge-tooltip/forge-tooltip`
 
@@ -327,7 +327,7 @@ function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement;
 `ForgeModal`/`ForgeDialog`. CSS의 정적 `z-index`는 대체 항목으로 남아 있습니다.
 Popover API를 지원하지 않는 브라우저의 경우.
 
-트리거가 열린 모달 `<dialog>` 내부에 있으면 힌트가 포탈됩니다.
+트리거가 개방형 모달 `<dialog>` 내부에 있으면 힌트가 포탈됩니다.
 `body` 대신 **해당 대화상자로**({@linksolvePortalTarget}을 통해):
 모달 대화 상자는 하위 트리 `inert` 외부의 모든 것을 만듭니다. 따라서 다음으로 힌트가 전송됩니다.
 `body`은 비활성(보이지 않음)이고 잘못 스택됩니다. 모달인 경우 더욱 그렇습니다.
@@ -344,9 +344,9 @@ Popover API를 지원하지 않는 브라우저의 경우.
 
 #### 매개변수
 
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 속성 | 읽기 전용<TooltipProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------- | ----------- |
+| 속성 | 읽기 전용<TooltipProperties> |             |
 
 ### 도구 설명 배치
 
@@ -433,9 +433,9 @@ function ForgeDialog(properties: Readonly<DialogProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 속성 | 읽기 전용<DialogProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<DialogProperties> |             |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -470,9 +470,9 @@ function ForgeModal(properties: Readonly<ModalProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 속성 | 읽기 전용<ModalProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------- | ----------- |
+| 속성 | 읽기 전용<ModalProperties> |             |
 
 ### 모달속성
 
@@ -493,6 +493,16 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 ```
 
 태블릿/데스크탑의 모달 너비 단계(`sm`+) 모바일은 항상 전체 너비입니다.
+
+### 모달 변형
+
+**종류:** 유형
+
+```typescript
+export type ModalVariant = 'modal' | 'dialog' | 'alert';
+```
+
+모달 오버레이 프리미티브의 시각적 및 의미적 변형입니다.
 
 ## `src/components/organisms/forge-toast-container/forge-toast-container`
 
@@ -534,16 +544,16 @@ React 드라이버는 탈퇴 단계를 통해 마운트/마운트 해제를 조�
 React 빌드는 클래스 토글을 위한 SSR-in-place 기준으로 저하됩니다.
 단일 `<Transition>`와 같습니다).
 
-원래 Vue SFC의 대체: 반응성 `useToast` 저장소 →
+원래 Vue SFC의 대체: 반응형 `useToast` 저장소 →
 공유된 관찰 가능한 `toast-store` 싱글톤; `<Teleport to="body">` →
 중립 `<Teleport>` 포털 프리미티브; `useZIndex('notification')`
 컴포저블 → CSS에 적용된 정적 `notification` Z-색인 레이어.
 
 #### 매개변수
 
-| 이름 | 유형                                | 설명 |
-| ---- | ----------------------------------- | ---- |
-| 속성 | 읽기 전용<ToastContainerProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------------- | ----------- |
+| 속성 | 읽기 전용<ToastContainerProperties> |             |
 
 ### ToastContainer속성
 
@@ -589,16 +599,16 @@ ID로 토스트를 닫습니다.
 
 #### 매개변수
 
-| 이름   | 유형 | 설명 |
-| ------ | ---- | ---- |
-| 아이디 | 번호 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 아이디 | 번호 |             |
 
 ### 오류토스트
 
 **종류:** 상수
 
 ```typescript
-export const errorToast;
+export const errorToast: ReturnType<typeof withVariant>;
 ```
 
 편의성: `error` 토스트를 표시합니다.
@@ -618,7 +628,7 @@ function getToastsSnapshot(): readonly ToastRecord[];
 **종류:** 상수
 
 ```typescript
-export const infoToast;
+export const infoToast: ReturnType<typeof withVariant>;
 ```
 
 편의성: `info` 토스트를 표시합니다.
@@ -635,9 +645,9 @@ function showToast(options: ToastOptions | string): number;
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 옵션 | 토스트 옵션 \| 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ---------------------- | ----------- |
+| 옵션 | 토스트 옵션 \| 문자열 |             |
 
 ### 구독토스트
 
@@ -651,16 +661,16 @@ function subscribeToasts(listener: () => void): () => void;
 
 #### 매개변수
 
-| 이름   | 유형       | 설명 |
-| ------ | ---------- | ---- |
-| 청취자 | () => 무효 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ---------- | ----------- |
+| 청취자 | () => 무효 |             |
 
 ### 성공토스트
 
 **종류:** 상수
 
 ```typescript
-export const successToast;
+export const successToast: ReturnType<typeof withVariant>;
 ```
 
 편의성: `success` 토스트를 표시합니다.
@@ -722,7 +732,119 @@ export interface UseToastReturn
 **종류:** 상수
 
 ```typescript
-export const warningToast;
+export const warningToast: ReturnType<typeof withVariant>;
 ```
 
 편의성: `warning` 토스트를 표시합니다.
+
+## `src/utils/fallback-position`
+
+### ApplyFallbackPosition
+
+**종류:** 기능
+
+```typescript
+function applyFallbackPosition(
+  triggerElement: HTMLElement,
+  panelElement: HTMLElement,
+  placement: FallbackPlacement = 'bottom-start',
+  options?: FallbackPositionOptions | number,
+): void;
+```
+
+`triggerElement`을 기준으로 `panelElement`에 대체 좌표 및 스타일을 적용합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------------- | --------------------------------- | ----------- |
+| 트리거요소 | HTML요소 |             |
+| 패널요소 | HTML요소 |             |
+| 배치 | 대체 배치 |             |
+| 옵션 | FallbackPositionOptions \| 번호 |             |
+
+### 계산FallbackPosition
+
+**종류:** 기능
+
+```typescript
+function calculateFallbackPosition(
+  triggerRect: TriggerBoundingRect,
+  placement: FallbackPlacement = 'bottom-start',
+  offset = 0,
+): FallbackPositionResult;
+```
+
+부동 요소의 위쪽, 왼쪽 및 변형 CSS 속성을 계산합니다.
+트리거 요소의 경계 사각형, 원하는 배치 및 오프셋을 기반으로 합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ------------------- | ----------- |
+| 트리거렉트 | TriggerBoundingRect |             |
+| 배치 | 대체 배치 |             |
+| 오프셋 |                     |             |
+
+### 대체 배치
+
+**종류:** 유형
+
+```typescript
+export type FallbackPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
+```
+
+앵커 위치 대체를 위해 지원되는 배치 옵션입니다.
+
+### FallbackPosition옵션
+
+**종류:** 인터페이스
+
+```typescript
+export interface FallbackPositionOptions
+```
+
+설명이 제공되지 않았습니다.
+
+### 대체위치결과
+
+**종류:** 인터페이스
+
+```typescript
+export interface FallbackPositionResult
+```
+
+설명이 제공되지 않았습니다.
+
+### isAnchorPositioning지원됨
+
+**종류:** 기능
+
+```typescript
+function isAnchorPositioningSupported(): boolean;
+```
+
+CSS 앵커 위치 지정이 지원되는지 동적으로 확인합니다.
+단위 테스트가 `CSS.supports`을 모의하거나 전환할 수 있도록 함수로 평가됩니다.
+
+### 앵커 위치 지정 지원
+
+**종류:** 상수
+
+```typescript
+export const supportsAnchorPositioning: boolean;
+```
+
+현재 환경에서 CSS Anchor Positioning이 지원되는지 확인하세요.

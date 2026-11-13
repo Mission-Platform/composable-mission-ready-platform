@@ -3,8 +3,9 @@
 // Framework-neutral: authored once against the `@mission-platform/forge-jsx` hooks and
 // compiled to React / Vue by `@mission-platform/vite-plugin-forge`.
 
-import { useEffect, useRef, useState } from '@mission-platform/forge-jsx';
 import { type LngLatLike, type Map, Marker, type MarkerOptions } from 'maplibre-gl';
+
+import { useEffect, useRef, useState } from '@mission-platform/forge-jsx';
 
 export interface UseMarkerOptions extends MarkerOptions {
   /** Longitude/latitude position of the marker. */

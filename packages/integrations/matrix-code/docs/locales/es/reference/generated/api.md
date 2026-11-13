@@ -44,14 +44,14 @@ los usuarios **guardan el código como una imagen PNG**, **copian la imagen al p
 y **copie el valor codificado al portapapeles**. El PNG está rasterizado en la
 cliente dibujando el SVG renderizado en un lienzo.
 
-El render `computed` es el neutral {@link useMemo}; el caso `error` se convierte
-la propiedad de devolución de llamada `onError` (invocada cuando falla la codificación). Es dueño de su estilo.
+El renderizado `computed` es neutro {@link useMemo}; el caso `error` se convierte
+el accesorio de devolución de llamada `onError` (invocado cuando falla la codificación). Es dueño de su estilo.
 a través del módulo CSS `forge-matrix-code.module.scss`, ubicado en el mismo lugar.
 
 #### Parámetros
 
-| Nombre      | Tipo                               | Descripción |
-| ----------- | ---------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------------------ | ----------- |
 | propiedades | Sólo lectura<MatrixCodeProperties> |             |
 
 ### MatrixCodeAcciones
@@ -103,72 +103,3 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 ```
 
 Forma utilizada para dibujar cada módulo del código.
-
-## `src/encoder/index`
-
-### codificarMatriz
-
-**Tipo:** función
-
-```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
-```
-
-Codifique `data` en un código de barras de matriz 2D del `symbology` dado, cargando el
-Forge el artefacto del codificador de forma sincrónica en el primer uso.
-
-#### Parámetros
-
-| Nombre     | Tipo                 | Descripción |
-| ---------- | -------------------- | ----------- |
-| simbología | Simbología Matricial |             |
-| datos      | cadena               |             |
-
-#### Contrato
-
-- **@throws:** si la carga útil no es válida para la simbología (vacía o
-  demasiado grande para los símbolos admitidos).
-
-### codificarMatrixAsync
-
-**Tipo:** función
-
-```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
-```
-
-Codifique `data` en un código de barras de matriz 2D del `symbology` dado, cargando el
-Forge el artefacto del codificador de forma asincrónica en el primer uso.
-
-#### Parámetros
-
-| Nombre     | Tipo                 | Descripción |
-| ---------- | -------------------- | ----------- |
-| simbología | Simbología Matricial |             |
-| datos      | cadena               |             |
-
-#### Contrato
-
-- **@throws:** si la carga útil no es válida para la simbología.
-
-### Código Matriz
-
-**Tipo:** interfaz
-
-```typescript
-export interface MatrixCode
-```
-
-Un código de barras de matriz empaquetado: dimensiones más una lista de filas principales de bits de módulo
-(`0` = claro, `1` = oscuro).
-
-### MatrizSimbología
-
-**Tipo:** tipo
-
-```typescript
-export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
-```
-
-Las simbologías de matriz 2D que admite este codificador. Aprobado como primer argumento.
-a {@link encodeMatrix} / {@link encodeMatrixAsync}.

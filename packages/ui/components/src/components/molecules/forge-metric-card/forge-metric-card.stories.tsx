@@ -1,6 +1,6 @@
-import { ForgeMetricCard, type MetricCardProperties } from './forge-metric-card';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeMetricCard, type MetricCardProperties } from './forge-metric-card';
 
 const meta = {
   title: 'Molecules/Display/ForgeMetricCard',

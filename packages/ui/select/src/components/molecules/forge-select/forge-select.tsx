@@ -26,7 +26,7 @@ export interface SelectOption {
   /** The value chosen when the option is selected. */
   value: string | number;
   /** Optional visual content shown before the label. */
-  icon?: MpChild;
+  icon?: MpElement;
   /** Disable just this option. */
   disabled?: boolean;
 }
@@ -425,119 +425,6 @@ function getAdjacentOptionValue(
   return enabled[nextIndex]?.value;
 }
 
-/** Builds option elements for hidden native select element. */
-function buildNativeSelectOptions(
-  options: readonly SelectOption[],
-  placeholder: string | undefined,
-  selectedOption: SelectOption | undefined,
-): MpChild[] {
-  const nativeOptions: MpChild[] = [
-    <option
-      key="__placeholder__"
-      value=""
-    >
-      {placeholder}
-    </option>,
-    ...options.map((option) => (
-      <option
-        key={option.value}
-        disabled={option.disabled}
-        value={option.value}
-      >
-        {option.label}
-      </option>
-    )),
-  ];
-
-  if (selectedOption && !options.some((o) => o.value === selectedOption.value)) {
-    nativeOptions.push(
-      <option
-        key={selectedOption.value}
-        disabled={selectedOption.disabled}
-        value={selectedOption.value}
-      >
-        {selectedOption.label}
-      </option>,
-    );
-  }
-  return nativeOptions;
-}
-
-/** Builds list item elements for the dropdown listbox. */
-// skipcq: JS-R1005
-function buildSelectListItems(
-  visibleOptions: readonly SelectOption[],
-  modelValue: string | number,
-  isLoading: boolean,
-  searchQuery: string,
-  selectOption: (option: SelectOption) => void,
-): MpChild[] {
-  const listItems: MpChild[] = [];
-
-  if (isLoading) {
-    listItems.push(
-      <li
-        key="__loading__"
-        aria-disabled="true"
-        aria-selected="false"
-        className={[styles['forge-select__empty'], styles['forge-select__loading-item']]}
-        role="option"
-        tabindex={-1}
-      >
-        <span
-          aria-hidden="true"
-          className={styles['forge-select__loading']}
-        />
-        <span>Loading…</span>
-      </li>,
-    );
-  }
-
-  for (const option of visibleOptions) {
-    listItems.push(
-      <li
-        key={option.value}
-        aria-disabled={option.disabled || undefined}
-        aria-selected={option.value === modelValue}
-        className={[
-          styles['forge-select__option'],
-          {
-            [styles['forge-select__option--selected']]: option.value === modelValue,
-            [styles['forge-select__option--disabled']]: option.disabled,
-          },
-        ]}
-        role="option"
-        tabindex={-1}
-        onMousedown={(event: MouseEvent) => {
-          event.preventDefault();
-          selectOption(option);
-        }}
-      >
-        <span className={styles['forge-select__option-content']}>
-          {option.icon}
-          <span>{option.label}</span>
-        </span>
-      </li>,
-    );
-  }
-
-  if (!isLoading && visibleOptions.length === 0) {
-    listItems.push(
-      <li
-        aria-disabled="true"
-        aria-selected="false"
-        className={styles['forge-select__empty']}
-        role="option"
-        tabindex={-1}
-      >
-        {searchQuery ? `No results for "${searchQuery}"` : 'No options available'}
-      </li>,
-    );
-  }
-
-  return listItems;
-}
-
 /** Filters the visible options based on search query when local filtering is active. */
 function filterVisibleOptions(
   currentOptions: readonly SelectOption[],
@@ -552,6 +439,8 @@ function filterVisibleOptions(
 }
 
 interface SelectTriggerProps {
+  fieldClass: string;
+  placeholderClass: string;
   searchable: boolean;
   searchReference: { current: HTMLInputElement | null };
   triggerReference: { current: HTMLButtonElement | null };
@@ -593,9 +482,9 @@ function renderSelectTrigger(config: SelectTriggerProps): MpChild {
         aria-required={config.required || undefined}
         autocomplete="off"
         className={[
-          styles['forge-select__field'],
+          config.fieldClass,
           {
-            [styles['forge-select__field--placeholder']]: config.hasPlaceholder && !config.searchValue,
+            [config.placeholderClass]: config.hasPlaceholder && !config.searchValue,
           },
         ]}
         disabled={config.disabled}
@@ -625,9 +514,9 @@ function renderSelectTrigger(config: SelectTriggerProps): MpChild {
       aria-labelledby={config.label ? `${config.resolvedId}-label` : undefined}
       aria-required={config.required || undefined}
       className={[
-        styles['forge-select__field'],
+        config.fieldClass,
         {
-          [styles['forge-select__field--placeholder']]: config.hasPlaceholder,
+          [config.placeholderClass]: config.hasPlaceholder,
         },
       ]}
       disabled={config.disabled}
@@ -836,16 +725,43 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
 
   const describedBy = error ? `${resolvedId}-error` : hint ? `${resolvedId}-hint` : undefined;
 
-  const nativeOptions = buildNativeSelectOptions(options, placeholder, selectedOption);
-  const listItems = buildSelectListItems(visibleOptions, modelValue, isLoading, searchQuery, selectOption);
-
   // Text shown/typed in the search trigger: the live query while open,
   // otherwise the selected option's label (never the placeholder text).
   const searchValue = isDropdownOpen ? searchQuery : selectedOption ? selectedOption.label : '';
   // While open, keep the current selection visible as the input placeholder.
   const searchPlaceholder = isDropdownOpen && selectedOption ? selectedOption.label : (placeholder ?? '');
 
+  const renderSelectOptionIcon = (icon: MpElement): MpElement => icon;
+
+  const renderSelectOption = (option: SelectOption): MpElement => (
+    <li
+      key={option.value}
+      aria-disabled={option.disabled || undefined}
+      aria-selected={option.value === modelValue}
+      className={[
+        styles['forge-select__option'],
+        {
+          [styles['forge-select__option--selected']]: option.value === modelValue,
+          [styles['forge-select__option--disabled']]: option.disabled,
+        },
+      ]}
+      role="option"
+      tabindex={-1}
+      onMousedown={(event: MouseEvent) => {
+        event.preventDefault();
+        selectOption(option);
+      }}
+    >
+      <span className={styles['forge-select__option-content']}>
+        {option.icon === undefined ? undefined : renderSelectOptionIcon(option.icon)}
+        <span>{option.label}</span>
+      </span>
+    </li>
+  );
+
   const triggerControl = renderSelectTrigger({
+    fieldClass: styles['forge-select__field'],
+    placeholderClass: styles['forge-select__field--placeholder'],
     searchable,
     searchReference,
     triggerReference,
@@ -924,13 +840,30 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
         value={modelValue}
         onChange={handleNativeChange}
       >
-        {nativeOptions}
+        <option value="">{placeholder}</option>
+        {options.map((option) => (
+          <option
+            key={option.value}
+            disabled={option.disabled}
+            value={option.value}
+          >
+            {option.label}
+          </option>
+        ))}
+        {selectedOption && !options.some((option) => option.value === selectedOption.value) ? (
+          <option
+            disabled={selectedOption.disabled}
+            value={selectedOption.value}
+          >
+            {selectedOption.label}
+          </option>
+        ) : undefined}
       </select>
       <ForgeDropdown
         matchTriggerWidth={true}
         open={isDropdownOpen}
-        onUpdateOpen={(open: boolean) => {
-          if (open) {
+        onUpdateOpen={(nextOpen) => {
+          if (nextOpen) {
             setIsOpen(true);
             onUpdateOpen?.(true);
           } else {
@@ -978,7 +911,33 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
           className={styles['forge-select__listbox']}
           role="listbox"
         >
-          {listItems}
+          {isLoading ? (
+            <li
+              aria-disabled="true"
+              aria-selected="false"
+              className={[styles['forge-select__empty'], styles['forge-select__loading-item']]}
+              role="option"
+              tabindex={-1}
+            >
+              <span
+                aria-hidden="true"
+                className={styles['forge-select__loading']}
+              />
+              <span>Loading…</span>
+            </li>
+          ) : undefined}
+          {visibleOptions.map(renderSelectOption)}
+          {!isLoading && visibleOptions.length === 0 ? (
+            <li
+              aria-disabled="true"
+              aria-selected="false"
+              className={styles['forge-select__empty']}
+              role="option"
+              tabindex={-1}
+            >
+              {searchQuery ? `No results for "${searchQuery}"` : 'No options available'}
+            </li>
+          ) : undefined}
         </ul>
       </ForgeDropdown>
       {error ? (

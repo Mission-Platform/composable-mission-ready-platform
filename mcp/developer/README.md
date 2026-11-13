@@ -45,10 +45,10 @@ To conserve context tokens and prevent model distraction, `@mission-platform/mcp
 | `coding` / `lsp`   | Full LSP code intelligence: diagnostics, symbols, definitions, callers, references, edits, formatting, plus `run_test_file`, `turbo_run`, `repo_prime_dependencies`, and `review_changes`.                                          |
 | `security`         | Auditing & compliance suite: `security_scan_secrets`, `security_analyze_code`, `security_audit_dependencies`, `security_audit_supply_chain`, `security_collect_compliance_evidence`, `security_audit_compliance`, `review_changes`. |
 | `git`              | Version control & commits: `git_status`, `git_changed_files`, `git_diff`, `git_log`, `git_show`, `git_blame`, `git_grep`, `git_metadata`, `git_commit_plan`, `git_commit_apply`.                                                    |
-| `fws`              | Flint compiler & runtime: `flint_analyze_source`, `flint_analyze_workspace`, `flint_inspect_manifest`, `flint_inspect_sonir`, `flint_verify_artifact`, `flint_run_trace`.                                                           |
+| `flint`            | Flint compiler & runtime: `flint_analyze_source`, `flint_analyze_workspace`, `flint_inspect_manifest`, `flint_inspect_sonir`, `flint_verify_artifact`, `flint_run_trace`.                                                           |
 | `full`             | Complete catalog of all 100+ registered tools (default when no profile is specified).                                                                                                                                               |
 
-Task-specific server configurations are pre-registered in `.ai/mcp/mcp.json` (`mission-core`, `mission-security`, `mission-frontend`, `mission-coding`, `mission-git`, `mission-fws`), allowing assistants to activate only the required tool profile.
+Task-specific server configurations are pre-registered in `.ai/mcp/mcp.json` (`mission-core`, `mission-security`, `mission-frontend`, `mission-coding`, `mission-git`, `mission-flint`), allowing assistants to activate only the required tool profile.
 
 ## Polymorphic Dispatchers
 
@@ -71,7 +71,7 @@ Individual legacy tools (e.g. `scaffold_component`, `list_locales`, `git_branche
 > During development you can run the raw TypeScript source with `pnpm dev`
 > (`node --watch src/index.ts`), which relies on Node's native type-stripping.
 > Published installations use the compiled `dist/index.js`; repository-local
-> MCP configuration can use the tracked source entry point shown below.
+> MCP configuration uses the tracked launcher shown below.
 
 The server speaks JSON-RPC 2.0 over **stdio** (newline-delimited). Diagnostics go
 to `stderr`; only protocol messages are written to `stdout`.
@@ -95,30 +95,23 @@ Most MCP clients accept a command + args. Point them at this entry file:
 }
 ```
 
-For repository-local configuration, prefer the tracked source entry point so a
-fresh checkout does not depend on the ignored `dist/` directory being built.
-Use an absolute path and set `MISSION_REPO_ROOT` when the MCP client does not
-guarantee the server's working directory:
+For repository-local configuration, prefer the tracked launcher so the MCP
+client does not depend on its working directory. The launcher resolves the
+repository root, sets `MISSION_REPO_ROOT`, and starts the compiled server:
 
 ```jsonc
 {
   "command": "node",
-  "args": [
-    "--experimental-strip-types",
-    "--no-warnings",
-    "/absolute/path/to/composable_mission_ready_platform/mcp/developer/src/index.ts",
-  ],
-  "env": {
-    "MISSION_REPO_ROOT": "/absolute/path/to/composable_mission_ready_platform",
-  },
+  "args": ["/absolute/path/to/composable_mission_ready_platform/scripts/launch-mcp.mjs"],
 }
 ```
 
-The repository-local configuration in `.ai/mcp/mcp.json` uses this form so it
-does not depend on the MCP client's working directory and requires the
-repository's supported Node.js 24 runtime. Replace the absolute paths with the
-paths for the local checkout. Use the compiled `dist/index.js` entry point for
-published or otherwise prebuilt installations.
+The repository-local configuration in `.ai/mcp/mcp.json` uses the launcher with
+profile arguments so it does not depend on the MCP client's working directory
+and requires the repository's supported Node.js 24 runtime. Use the direct
+`dist/index.js` entry point for published or otherwise prebuilt installations;
+use the source entry point only when running an explicitly configured local
+development server with Node's type stripping enabled.
 
 ## Tools
 

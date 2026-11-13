@@ -5,7 +5,7 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > packages/tooling/configs/vite-config/docs/index.md: [packages/tooling/configs/vite-config/docs/index.md](../../index.md)
 > Idioma: Español (es)
 
-Compartido Vite y Vitest asistentes de configuración para paquetes de Mission Platform y
+Ayudantes de configuración Vite y Vitest compartidos para paquetes de Mission Platform y
 aplicaciones.
 
 ## Instalar y usar
@@ -14,13 +14,13 @@ aplicaciones.
 pnpm add --save-dev @mission-platform/vite-config
 ```
 
-Usar `defineLibraryConfig` para paquetes, `defineAppConfig` para aplicaciones, y
-`defineVitestConfig` desde `/vitest` subruta. Las aplicaciones marco deben
-seleccione uno `defineFrameworkAppConfig` condición y luego importar paquetes compartidos
+Utilice `defineLibraryConfig` para paquetes, `defineAppConfig` para aplicaciones y
+`defineVitestConfig` de la subruta `/vitest`. Las aplicaciones marco deben
+seleccione una condición `defineFrameworkAppConfig` y luego importe paquetes compartidos
 a través de sus especificadores de paquetes básicos.
 
 ## Contribuir
 
-Correr `pnpm --filter @mission-platform/vite-config lint` y comprobaciones de formato. mantener
-Los valores predeterminados del ayudante son reutilizables y preservan el compartido. Vite, PostCSS y
+Ejecute `pnpm --filter @mission-platform/vite-config lint` y verifique el formato. mantener
+Los valores predeterminados del asistente son reutilizables y preservan el Vite, PostCSS y
 Comportamiento de externalización descrito en el paquete README.

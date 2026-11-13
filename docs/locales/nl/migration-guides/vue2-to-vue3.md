@@ -90,15 +90,15 @@ const increment = () => {
 
 Lifecycle-hooks hebben een nieuwe naam gekregen en moeten worden geïmporteerd.
 
-| Vue 2                      | Vue 3                                       |
-| :------------------------- | :------------------------------------------ |
+| Vue 2 | Vue 3 |
+| :------------------------- | :---------------------------------------- |
 | `beforeCreate` / `created` | Gebruik `setup()` / `<script setup>` direct |
-| `beforeMount`              | `onBeforeMount`                             |
-| `mounted`                  | `onMounted`                                 |
-| `beforeUpdate`             | `onBeforeUpdate`                            |
-| `updated`                  | `onUpdated`                                 |
-| `beforeDestroy`            | `onBeforeUnmount`                           |
-| `destroyed`                | `onUnmounted`                               |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 Voorbeeld:
 

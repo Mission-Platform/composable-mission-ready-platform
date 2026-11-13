@@ -11,14 +11,6 @@
 import { cpSync } from "node:fs";
 
 import { defineForgeCmsPlugin } from "@mission-platform/forge-cms-plugin-api";
-
-import { emitContentConfig } from "./collections.js";
-import {
-  astroDiagnostics,
-  emitIslandAstroTemplate,
-  emitStaticAstroTemplate,
-} from "./template.js";
-
 import type {
   CmsArtifact,
   CmsOutputPlugin,
@@ -29,6 +21,14 @@ import type {
   FrameworkOutputPlugin,
   SemanticModule,
 } from "@mission-platform/forge-plugin-api";
+
+import { emitContentConfig } from "./collections.js";
+import {
+  astroDiagnostics,
+  emitIslandAstroTemplate,
+  emitStaticAstroTemplate,
+} from "./template.js";
+
 import type { TsdownPlugin } from "tsdown";
 
 /**
@@ -46,7 +46,7 @@ function astroTsdownPlugin(
       if (source.split("?", 1)[0]?.endsWith(".astro") === true) {
         return { id: source, external: true };
       }
-      // eslint-disable-next-line unicorn/no-null -- Rollup's resolveId contract requires `null` to defer to the next plugin.
+
       return null;
     },
     writeBundle() {

@@ -145,7 +145,7 @@ export function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuPrope
   const [open, setOpen] = useState<boolean>(false);
 
   // This handler intentionally captures the component-local event contract.
-  // eslint-disable-next-line unicorn/consistent-function-scoping
+
   const preventFocusLoss = (event: MouseEvent): void => event.preventDefault();
 
   const choose = (command: WysiwygCommand): void => {

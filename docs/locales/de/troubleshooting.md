@@ -69,15 +69,14 @@ rm -rf .turbo
 2. Stellen Sie sicher, dass die Version übereinstimmt (`workspace:*` wird empfohlen).
 3. Führen Sie `pnpm install` aus, um symbolische Links zu aktualisieren.
 4. Wenn die Probleme weiterhin bestehen, versuchen Sie es mit einer gründlichen Reinigung:
-
-```bash
+   ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-```
+   ```
 
 ### Geben Sie Fehler in CI ein, aber nicht in „Lokal“.
 
-**Problem**: Build schlägt in CI mit TypeScript-Fehlern fehl, die nicht in Ihrer IDE angezeigt werden.
+**Problem**: Build schlägt in CI mit TypeScript-Fehlern fehl, die in Ihrer IDE nicht angezeigt werden.
 
 **Lösung**: Führen Sie die Typprüfung lokal im gesamten Arbeitsbereich aus.
 
@@ -101,7 +100,6 @@ Dadurch wird sichergestellt, dass alle Paketgrenzen korrekt berücksichtigt werd
 **Lösungen**:
 
 – Stellen Sie sicher, dass Sie den absoluten Pfad zur node-Binärdatei und zum Skript in Ihrer Client-Konfiguration verwenden.
-
 - Überprüfen Sie die MCP-Serverprotokolle auf bestimmte Fehlermeldungen (z. B. fehlende Umgebungsvariablen).
 
 ## Häufige Fehlermuster
@@ -134,5 +132,5 @@ try {
 ## Verwandte Ressourcen
 
 - [Best Practices](best-practices.md)
-- [Entwicklungs-Setup](development-setup.md)
+- [Entwicklungssetup](development-setup.md)
 - [Testleitfaden](testing.md)

@@ -13,6 +13,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
+
 import { forgeReactFramework } from '../../../../compiler/plugins/forge-react/src';
 import { forgeSolidFramework } from '../../../../compiler/plugins/forge-solid/src';
 import { forgeSvelteFramework } from '../../../../compiler/plugins/forge-svelte/src';
@@ -30,7 +32,6 @@ import {
 import { generateEntryDeclaration } from './generate/declaration-plugins';
 
 import type { DiscoveredComponent, DiscoveredExternalExport, DiscoveredHelperExport } from './compiler/discover';
-import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
 
 /**
  * Minimal stand-in for a Rollup output chunk, carrying only the fields the

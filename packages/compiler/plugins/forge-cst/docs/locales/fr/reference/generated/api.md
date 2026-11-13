@@ -23,9 +23,9 @@ Extrayez toutes les déclarations d'importation de niveau supérieur d'un progra
 
 #### Paramètres
 
-| Nom       | Tapez     | Descriptif |
-| --------- | --------- | ---------- |
-| programme | Programme |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------- | ----------- |
+| programme | Programme |             |
 
 ### parseCst
 
@@ -43,9 +43,9 @@ avec les positions des jetons, les commentaires et les métadonnées AST complè
 
 #### Paramètres
 
-| Nom     | Tapez                     | Descriptif                                 |
-| ------- | ------------------------- | ------------------------------------------ |
-| source  | chaîne                    | - Code source à analyser.                  |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------------- | ----------------------------------- |
+| source | chaîne | - Code source à analyser.             |
 | options | ParseCstOptions \| chaîne | - Options d'analyse CST ou nom de fichier. |
 
 #### Contracter
@@ -103,10 +103,10 @@ Préserve les commentaires, le formatage multiligne et l’intégrité AST sans 
 
 #### Paramètres
 
-| Nom     | Tapez                    | Descriptif |
-| ------- | ------------------------ | ---------- |
-| source  | chaîne                   |            |
-| options | RéécritureImportsOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | --------------------- | ----------- |
+| source | chaîne |             |
+| options | RéécritureImportsOptions |             |
 
 ### Réécrire le résultat
 
@@ -117,3 +117,426 @@ export interface RewriteResult
 ```
 
 Résultat d’une transformation de réécriture d’importation CST.
+
+## `src/text`
+
+### Régions vierges
+
+**Genre :** fonction
+
+```typescript
+function blankRegions(text: string, regions: readonly string[]): string;
+```
+
+Supprimez chaque occurrence de chaque région, en préservant les indices de caractères.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | ----------------- | ----------- |
+| texte | chaîne |             |
+| régions | chaîne en lecture seule[] |             |
+
+### réduireEspaces blancs
+
+**Genre :** fonction
+
+```typescript
+function collapseWhitespace(text: string): string;
+```
+
+Réduisez toutes les séquences d'espaces en espaces simples et coupez le résultat.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| texte | chaîne |             |
+
+### finDeTypeArguments
+
+**Genre :** fonction
+
+```typescript
+function endOfTypeArguments(text: string, start: number): number;
+```
+
+L'index juste après le `>` fermant la liste d'arguments de type ouverte à `start`,
+ou `-1` lorsque la liste ne se ferme jamais.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| texte | chaîne |             |
+| démarrer | numéro |             |
+
+### escapeAttribute
+
+**Genre :** fonction
+
+```typescript
+function escapeAttribute(value: string): string;
+```
+
+Échappez une valeur d'attribut HTML entre guillemets doubles.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| valeur | chaîne |             |
+
+### évasionReliure
+
+**Genre :** fonction
+
+```typescript
+function escapeBinding(expression: string): string;
+```
+
+Échappez une expression à utiliser dans une liaison Vue entre guillemets doubles.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---------- | ------ | ----------- |
+| expressions | chaîne |             |
+
+### indexDeTopLevel
+
+**Genre :** fonction
+
+```typescript
+function indexOfTopLevel(text: string, token: string, from = 0): number;
+```
+
+Index de la première occurrence de niveau supérieur de `token` dans `text` (en dehors
+crochets, chaînes et commentaires), ou `-1`.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| texte | chaîne |             |
+| jeton | chaîne |             |
+| de |        |             |
+
+### isIdentifierName
+
+**Genre :** fonction
+
+```typescript
+function isIdentifierName(name: string): boolean;
+```
+
+Alias ​​pour isPlainIdentifier.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| nom | chaîne |             |
+
+### isIdentifierPart
+
+**Genre :** fonction
+
+```typescript
+function isIdentifierPart(character: string | undefined): boolean;
+```
+
+Indique si le personnage peut continuer un identifiant JavaScript.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| --------- | ------------------- | ----------- |
+| personnage | chaîne \| indéfini |             |
+
+### isIdentifierStart
+
+**Genre :** fonction
+
+```typescript
+function isIdentifierStart(character: string | undefined): boolean;
+```
+
+Indique si le personnage peut démarrer un identifiant JavaScript.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| --------- | ------------------- | ----------- |
+| personnage | chaîne \| indéfini |             |
+
+### isPlainIdentifier
+
+**Genre :** fonction
+
+```typescript
+function isPlainIdentifier(name: string): boolean;
+```
+
+Indique si une chaîne est un nom d'identifiant JavaScript simple et valide.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| nom | chaîne |             |
+
+### masqueLittéraux
+
+**Genre :** fonction
+
+```typescript
+function maskLiterals(text: string): boolean[];
+```
+
+Calculez un masque booléen marquant chaque index dans `text` qui se trouve à l'intérieur d'une chaîne littérale,
+modèle littéral ou commentaire. Les positions marquées `true` sont un contenu littéral et ne doivent jamais
+être réécrit structurellement.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| texte | chaîne |             |
+
+### matchBracket
+
+**Genre :** fonction
+
+```typescript
+function matchBracket(text: string, start: number): number;
+```
+
+Index de la parenthèse correspondant à la parenthèse ouvrante à `start`, ou `-1` lorsque le
+le texte est déséquilibré. Les régions littérales et de commentaires sont ignorées.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| texte | chaîne |             |
+| démarrer | numéro |             |
+
+### Accèsmembre
+
+**Genre :** fonction
+
+```typescript
+function memberAccess(object: string, key: string): string;
+```
+
+Renvoie `<object>.<key>` pour les identifiants simples, ou `<object>["<key>"]` (notation entre crochets) dans le cas contraire.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------ | ------ | ----------- |
+| objet | chaîne |             |
+| clé | chaîne |             |
+
+### tampon
+
+**Genre :** fonction
+
+```typescript
+function pad(depth: number): string;
+```
+
+Indentation pour une profondeur de modèle (deux espaces par niveau).
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| profondeur | numéro |             |
+
+### citation
+
+**Genre :** fonction
+
+```typescript
+function quote(value: string): string;
+```
+
+Alias ​​pour quoteString.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| valeur | chaîne |             |
+
+### quoteAttributeValue
+
+**Genre :** fonction
+
+```typescript
+function quoteAttributeValue(value: string): string;
+```
+
+Citez une chaîne comme valeur d'attribut JSX.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| valeur | chaîne |             |
+
+### chaîne de citation
+
+**Genre :** fonction
+
+```typescript
+function quoteString(value: string): string;
+```
+
+Littéral de chaîne entre guillemets doubles pour le code émis (codé en JSON).
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| valeur | chaîne |             |
+
+### remplacerPremier
+
+**Genre :** fonction
+
+```typescript
+function replaceFirst(
+  text: string,
+  search: string,
+  replacement: string,
+): string;
+```
+
+Remplacez la première occurrence de `search` dans `text` par `replacement`.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----------- | ------ | ----------- |
+| texte | chaîne |             |
+| recherche | chaîne |             |
+| remplacement | chaîne |             |
+
+### sauterAtomicToken
+
+**Genre :** fonction
+
+```typescript
+function skipAtomicToken(text: string, index: number): number;
+```
+
+Avancez au-delà du jeton commençant à `index` lorsqu'il ouvre une chaîne, un modèle ou un commentaire.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| texte | chaîne |             |
+| indice | numéro |             |
+
+### sauterTrivia
+
+**Genre :** fonction
+
+```typescript
+function skipTrivia(text: string, index: number): number;
+```
+
+Ignorer les espaces et les commentaires, renvoyant le décalage du prochain caractère significatif.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| texte | chaîne |             |
+| indice | numéro |             |
+
+### splitTopLevel
+
+**Genre :** fonction
+
+```typescript
+function splitTopLevel(text: string, separator: string): string[];
+```
+
+Divisez `text` sur chaque occurrence de niveau supérieur de `separator` (une seule
+caractère), en ignorant les séparateurs imbriqués entre crochets, chaînes ou commentaires.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| --------- | ------ | ----------- |
+| texte | chaîne |             |
+| séparateur | chaîne |             |
+
+### stripOuterParenthèses
+
+**Genre :** fonction
+
+```typescript
+function stripOuterParentheses(text: string): string;
+```
+
+Alias ​​pour unwrapParentheses.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| texte | chaîne |             |
+
+### stripTypeAssertion
+
+**Genre :** fonction
+
+```typescript
+function stripTypeAssertion(text: string): string;
+```
+
+Supprimez une assertion `as T` / `satisfies T` de fin.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| texte | chaîne |             |
+
+### fin de citation
+
+**Genre :** fonction
+
+```typescript
+function unquote(text: string): string | undefined;
+```
+
+Supprime une chaîne littérale si elle est entourée de guillemets simples, doubles ou inversés, ou indéfinie dans le cas contraire.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| texte | chaîne |             |
+
+### déballerParenthèses
+
+**Genre :** fonction
+
+```typescript
+function unwrapParentheses(text: string): string;
+```
+
+Supprimez une couche de parenthèses d'habillage redondantes (`(x)` -> `x`), à plusieurs reprises.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| texte | chaîne |             |

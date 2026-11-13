@@ -10,14 +10,14 @@ ecosysteem.
 
 ## Overzicht
 
-Het `@mission-platform/map`-pakket biedt een samenstelbare, reactieve verpakking eromheen [MapLibre GL](https://maplibre.org/),
+Het `@mission-platform/map`-pakket biedt een samenstelbare, reactieve verpakking rond [MapLibre GL](https://maplibre.org/),
 waardoor ontwikkelaars interactieve kaarten kunnen maken met de Composition API van Vue 3. Het abstraheert de complexiteit van
 het beheren van MapLibre-instanties terwijl u volledige toegang behoudt tot de krachtige functies van MapLibre.
 
 ## Belangrijkste kenmerken
 
 - **Volledige reactiviteit**: kaartstatus en gebeurtenissen worden automatisch gesynchroniseerd met het reactiviteitssysteem van Vue
-- **TypeScript Ondersteuning**: volledige typedefinities voor alle MapLibre GL API's
+- **TypeScript-ondersteuning**: volledige typedefinities voor alle MapLibre GL API's
 - **Composable API**: gebruik Vue 3 composables om de kaartstatus en interacties te beheren
 - **Framework-Agnostic Core**: gebouwd bovenop de raamwerk-neutrale architectuur van Mission Platform
 - **Prestatie-geoptimaliseerd**: efficiënte updates en minimale herweergave
@@ -28,7 +28,7 @@ het beheren van MapLibre-instanties terwijl u volledige toegang behoudt tot de k
 
 Het primaire onderdeel voor het weergeven van interactieve kaarten.
 
-**Rekwisieten:**
+** Rekwisieten: **
 
 - `style`: URL of object in MapLibre-stijl (vereist)
 - `center`: Initieel kaartcentrum als `[lng, lat]`

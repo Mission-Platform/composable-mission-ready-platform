@@ -1,7 +1,7 @@
 import { ForgeSurface } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { SurfaceProperties } from './forge-surface';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const meta = {
   title: 'Atoms/Layout/ForgeSurface',

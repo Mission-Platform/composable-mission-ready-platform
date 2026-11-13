@@ -9,945 +9,43 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 
 Generato da dichiarazioni di fonte pubblica in `@mission-platform/flint`.
 
-## `src/analysis/analyze`
-
-### analyzeFlint
-
-**Tipo:** funzione
-
-```typescript
-function analyzeFlint(frontend: FlintFrontendResult, options: FlintAnalysisOptions = {}): FlintAnalysisReport;
-```
-
-Esegui le regole di analisi dell'origine registrata rispetto a un risultato del frontend.
-
-#### Parametri
-
-| Nome     | Digitare             | Descrizione |
-| -------- | -------------------- | ----------- |
-| frontend | FlintFrontendResult  |             |
-| opzioni  | FlintAnalysisOptions |             |
-
-## `src/analysis/context`
-
-### createFlintAnalysisContext
-
-**Tipo:** funzione
-
-```typescript
-function createFlintAnalysisContext(
-  frontend: FlintFrontendResult,
-  options: FlintAnalysisOptions = {},
-): FlintAnalysisContext;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome     | Digitare             | Descrizione |
-| -------- | -------------------- | ----------- |
-| frontend | FlintFrontendResult  |             |
-| opzioni  | FlintAnalysisOptions |             |
-
-## `src/analysis/contracts`
-
-### FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
-```
-
-Prefissi stabili riservati alle famiglie diagnostiche dell'analisi della fonte.
-
-### FlintAnalysisCallGraphNode
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisCallGraphNode
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisCapabilityFact
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisCapabilityFact
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisCategoria
-
-**Genere:** tipo
-
-```typescript
-export type FlintAnalysisCategory = 'type' | 'control-flow' | 'memory' | 'ownership' | 'security' | 'resource';
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisContext
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisContext
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisControlFlowFact
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisControlFlowFact
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisEvidence
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisEvidence
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisFacts
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisFacts
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisFinding
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisFinding
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisLimits
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisLimits
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisOptions
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisOptions
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisOwnershipFact
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisOwnershipFact
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisPolicy
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisPolicy
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisProfile
-
-**Genere:** tipo
-
-```typescript
-export type FlintAnalysisProfile = 'development' | 'strict';
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisRangeFact
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisRangeFact
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisReport
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisReport
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisResourceFact
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisResourceFact
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisRule
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisRule
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisSeverity
-
-**Genere:** tipo
-
-```typescript
-export type FlintAnalysisSeverity = FlintDiagnosticSeverity;
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisSourceFile
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisSourceFile
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisSourceMap
-
-**Genere:** tipo
-
-```typescript
-export type FlintAnalysisSourceMap = readonly FlintAnalysisSourceMapEntry[];
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisSourceMapEntry
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisSourceMapEntry
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisTypeFact
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisTypeFact
-```
-
-Nessuna descrizione fornita.
-
-## `src/analysis/default-rules`
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly FlintAnalysisRule[];
-```
-
-Nessuna descrizione fornita.
-
-## `src/analysis/facts`
-
-### createFlintAnalysisFacts
-
-**Tipo:** funzione
-
-```typescript
-function createFlintAnalysisFacts(frontend: FlintFrontendResult): FlintAnalysisFacts;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome     | Digitare            | Descrizione |
-| -------- | ------------------- | ----------- |
-| frontend | FlintFrontendResult |             |
-
-## `src/analysis/policy`
-
-### createFlintAnalysisPolicy
-
-**Tipo:** funzione
-
-```typescript
-function createFlintAnalysisPolicy(policy: FlintAnalysisOptionsLike = {}): FlintAnalysisPolicy;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome     | Digitare                     | Descrizione |
-| -------- | ---------------------------- | ----------- |
-| politica | FlintAnalysisOptionsMi piace |             |
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: FlintAnalysisLimits;
-```
-
-Nessuna descrizione fornita.
-
-### FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-Nessuna descrizione fornita.
-
-### FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-Nessuna descrizione fornita.
-
-### FlintAnalysisOptionsMi piace
-
-**Genere:** tipo
-
-```typescript
-export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limits'> &
-```
-
-Nessuna descrizione fornita.
-
-### isFlintAnalysisFindingBlocking
-
-**Tipo:** funzione
-
-```typescript
-function isFlintAnalysisFindingBlocking(finding: FlintAnalysisFinding, policy: FlintAnalysisPolicy): boolean;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome     | Digitare             | Descrizione |
-| -------- | -------------------- | ----------- |
-| trovare  | FlintAnalysisFinding |             |
-| politica | FlintAnalysisPolicy  |             |
-
-## `src/analysis/registry`
-
-### createFlintAnalysisRuleRegistry
-
-**Tipo:** funzione
-
-```typescript
-function createFlintAnalysisRuleRegistry(
-  rules: readonly FlintAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
-): FlintAnalysisRuleRegistry;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome   | Digitare                         | Descrizione |
-| ------ | -------------------------------- | ----------- |
-| regole | sola lettura FlintAnalysisRule[] |             |
-
-### FlintAnalysisRuleRegistry
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAnalysisRuleRegistry
-```
-
-Nessuna descrizione fornita.
-
-## `src/analysis/report`
-
-### createFlintAnalysisDiagnostic
-
-**Tipo:** funzione
-
-```typescript
-function createFlintAnalysisDiagnostic(finding: FlintAnalysisFinding): FlintDiagnostic;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome    | Digitare             | Descrizione |
-| ------- | -------------------- | ----------- |
-| trovare | FlintAnalysisFinding |             |
-
-## `src/ast`
-
-### FlintArrayLiteralExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintArrayLiteralExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintAssignmentStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAssignmentStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintBinaryExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintBinaryExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintBinaryOperator
-
-**Genere:** tipo
-
-```typescript
-export type FlintBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
-```
-
-Nessuna descrizione fornita.
-
-### FlintCallExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintCallExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintCapabilityImport
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintCapabilityImport
-```
-
-Nessuna descrizione fornita.
-
-### FlintDocumentation
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintDocumentation
-```
-
-Nessuna descrizione fornita.
-
-### FlintDocumentationTag
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintDocumentationTag
-```
-
-Nessuna descrizione fornita.
-
-### FlintDoWhileStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintDoWhileStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintEnumDeclaration
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintEnumDeclaration
-```
-
-Nessuna descrizione fornita.
-
-### FlintEnumValueExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintEnumValueExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintEnumVariant
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintEnumVariant
-```
-
-Nessuna descrizione fornita.
-
-### FlintExpression
-
-**Genere:** tipo
-
-```typescript
-export type FlintExpression =
-  | FlintBinaryExpression
-  | FlintCallExpression
-  | FlintIdentifierExpression
-  | FlintLiteralExpression
-  | FlintFunctionValueExpression
-  | FlintStructValueExpression
-  | FlintEnumValueExpression
-  | FlintArrayLiteralExpression
-  | FlintVectorLiteralExpression
-  | FlintIndexExpression
-  | FlintMatchExpression
-  | FlintUnaryExpression;
-```
-
-Nessuna descrizione fornita.
-
-### FlintExpressionStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintExpressionStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintForStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintForStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintFunction
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintFunction
-```
-
-Nessuna descrizione fornita.
-
-### FlintFunctionValueExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintFunctionValueExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintGenericParameter
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintGenericParameter
-```
-
-Nessuna descrizione fornita.
-
-### FlintIdentifierExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIdentifierExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintIfStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIfStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintIndexExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIndexExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintInterfaceDeclaration
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintInterfaceDeclaration
-```
-
-Un contratto strutturale in fase di compilazione; non ha alcuna rappresentazione di runtime.
-
-### FlintInterfaceFunction
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintInterfaceFunction
-```
-
-Nessuna descrizione fornita.
-
-### FlintIteratorLoopStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIteratorLoopStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintLetStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintLetStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintLiteralExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintLiteralExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintMatchArm
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintMatchArm
-```
-
-Nessuna descrizione fornita.
-
-### FlintMatchExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintMatchExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintMatchStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintMatchStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintModule
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintModule
-```
-
-Nessuna descrizione fornita.
-
-### FlintProprietà
-
-**Genere:** tipo
-
-```typescript
-export type FlintOwnership = 'borrowed' | 'owned' | 'shared';
-```
-
-Nessuna descrizione fornita.
-
-### FlintParametro
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintParameter
-```
-
-Nessuna descrizione fornita.
-
-### FlintPattern
-
-**Genere:** tipo
-
-```typescript
-export type FlintPattern = |
-```
-
-Nessuna descrizione fornita.
-
-### FlintPrimitiveType
-
-**Genere:** tipo
-
-```typescript
-export type FlintPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
-```
-
-Nessuna descrizione fornita.
-
-### FlintReturnStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintReturnStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintSourceModuleImport
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintSourceModuleImport
-```
-
-Nessuna descrizione fornita.
-
-### FlintStatement
-
-**Genere:** tipo
-
-```typescript
-export type FlintStatement =
-  | FlintExpressionStatement
-  | FlintAssignmentStatement
-  | FlintIfStatement
-  | FlintLetStatement
-  | FlintMatchStatement
-  | FlintSwitchStatement
-  | FlintReturnStatement
-  | FlintForStatement
-  | FlintDoWhileStatement
-  | FlintWhileStatement
-  | FlintYieldStatement
-  | FlintIteratorLoopStatement;
-```
-
-Nessuna descrizione fornita.
-
-### FlintStructDeclaration
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintStructDeclaration
-```
-
-Nessuna descrizione fornita.
-
-### FlintStructField
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintStructField
-```
-
-Nessuna descrizione fornita.
-
-### FlintStructValueExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintStructValueExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintSwitchCase
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintSwitchCase
-```
-
-Nessuna descrizione fornita.
-
-### FlintSwitchStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintSwitchStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintTypeName
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintTypeName
-```
-
-Nessuna descrizione fornita.
-
-### flintTypeNameToString
-
-**Tipo:** funzione
-
-```typescript
-function flintTypeNameToString(type: FlintTypeName): string;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome     | Digitare      | Descrizione |
-| -------- | ------------- | ----------- |
-| digitare | FlintTypeName |             |
-
-### FlintUnaryExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintUnaryExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintVectorLiteralExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintVectorLiteralExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintWhileStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintWhileStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintYieldStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintYieldStatement
-```
-
-Nessuna descrizione fornita.
-
 ## `src/cache`
+
+### FlintCacheIndex
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintCacheIndex
+```
+
+Manifest della cache persistente che tiene traccia degli artefatti attivi tra i moduli per consentire la pulizia obsoleta.
+
+### FlintCacheIndexEntry
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintCacheIndexEntry
+```
+
+Voce di indice che tiene traccia dei file memorizzati nella cache e del timestamp per una chiave del modulo specifica.
+
+### flintCacheIndexPath
+
+**Tipo:** funzione
+
+```typescript
+function flintCacheIndexPath(cache: FlintWatCache): string;
+```
+
+Restituisce il percorso del file di indice della cache `.flint-cache-index.json`.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| cache | FlintWatCache |             |
 
 ### FlintCacheLogger
 
@@ -957,7 +55,7 @@ Nessuna descrizione fornita.
 export interface FlintCacheLogger
 ```
 
-Nessuna descrizione fornita.
+Interfaccia del logger diagnostico per le operazioni di memorizzazione nella cache e gli hit/mancati cache.
 
 ### FlintDebugArtifactPaths
 
@@ -967,7 +65,7 @@ Nessuna descrizione fornita.
 export interface FlintDebugArtifactPaths
 ```
 
-Nessuna descrizione fornita.
+Percorsi dei file per gli artefatti di debug persistenti emessi durante la compilazione.
 
 ### FlintDebugArtifactVariant
 
@@ -977,7 +75,25 @@ Nessuna descrizione fornita.
 export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 ```
 
-Nessuna descrizione fornita.
+Identificatore della variante di ottimizzazione per gli artefatti di debug emessi.
+
+### selceSoNPath
+
+**Tipo:** funzione
+
+```typescript
+function flintSoNPath(cache: FlintWatCache, key: string, variant: 'optimized' | 'unoptimized' = 'optimized'): string;
+```
+
+Restituisce il percorso dell'artefatto SonIR JSON per una determinata chiave di cache e variante.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ---------------------------- | ----------- |
+| cache | FlintWatCache |             |
+| chiave | stringa |             |
+| variante | 'ottimizzato' \| 'non ottimizzato' |             |
 
 ### FlintWatCache
 
@@ -987,7 +103,7 @@ Nessuna descrizione fornita.
 export interface FlintWatCache
 ```
 
-Nessuna descrizione fornita.
+Provider di file system o cache in memoria per artefatti del compilatore e output WAT.
 
 ### flintWatCacheKey
 
@@ -997,12 +113,12 @@ Nessuna descrizione fornita.
 function flintWatCacheKey(input: FlintWatCacheKeyInput): string;
 ```
 
-Nessuna descrizione fornita.
+Calcola una chiave di cache deterministica per una richiesta di compilazione.
 
 #### Parametri
 
-| Nome     | Digitare              | Descrizione |
-| -------- | --------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | --------------------- | ----------- |
 | ingresso | FlintWatCacheKeyInput |             |
 
 ### FlintWatCacheKeyInput
@@ -1013,9 +129,9 @@ Nessuna descrizione fornita.
 export interface FlintWatCacheKeyInput
 ```
 
-Nessuna descrizione fornita.
+Parametri di input utilizzati per calcolare una chiave di cache di compilazione deterministica.
 
-### flintWatPath
+### selceWatPath
 
 **Tipo:** funzione
 
@@ -1023,14 +139,14 @@ Nessuna descrizione fornita.
 function flintWatPath(cache: FlintWatCache, key: string): string;
 ```
 
-Nessuna descrizione fornita.
+Restituisce il percorso del file WAT per una determinata chiave di cache.
 
 #### Parametri
 
-| Nome   | Digitare      | Descrizione |
-| ------ | ------------- | ----------- |
-| cache  | FlintWatCache |             |
-| chiave | stringa       |             |
+| Nome | Digitare | Descrizione |
+| ----- | ------------- | ----------- |
+| cache | FlintWatCache |             |
+| chiave | stringa |             |
 
 ### persistFlintDebugArtifacts
 
@@ -1049,17 +165,41 @@ function persistFlintDebugArtifacts(
 ): FlintDebugArtifactPaths;
 ```
 
-Nessuna descrizione fornita.
+Persiste gli artefatti di debug (WAT e Wasm, sia ottimizzati che non ottimizzati) su disco.
 
 #### Parametri
 
-| Nome      | Digitare                                                                                                                                                                  | Descrizione |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| cache     | FlintWatCache \| indefinito                                                                                                                                               |             |
-| chiave    | stringa                                                                                                                                                                   |             |
+| Nome | Digitare | Descrizione |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| cache | FlintWatCache \| indefinito |             |
+| chiave | stringa |             |
 | artefatti | { readonly ottimizzatoWat?: string; sola lettura non ottimizzatoWat?: string; sola lettura ottimizzatoWasm?: Uint8Array; sola lettura non ottimizzatoWasm?: Uint8Array; } |             |
 
-### persistFlintWat
+### persistFlintSoN
+
+**Tipo:** funzione
+
+```typescript
+function persistFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  module: FlintSoNModule,
+  variant: 'optimized' | 'unoptimized' = 'optimized',
+): string | undefined;
+```
+
+Permane un modulo SonIR sul disco nella directory della cache.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ---------------------------- | ----------- |
+| cache | FlintWatCache \| indefinito |             |
+| chiave | stringa |             |
+| modulo | FlintSoNModule |             |
+| variante | 'ottimizzato' \| 'non ottimizzato' |             |
+
+### persistereFlintWat
 
 **Tipo:** funzione
 
@@ -1067,17 +207,431 @@ Nessuna descrizione fornita.
 function persistFlintWat(cache: FlintWatCache | undefined, key: string, wat: string): string | undefined;
 ```
 
-Nessuna descrizione fornita.
+Mantiene una stringa WAT ​​sul disco nella directory della cache.
 
 #### Parametri
 
-| Nome   | Digitare                    | Descrizione |
-| ------ | --------------------------- | ----------- |
-| cache  | FlintWatCache \| indefinito |             |
-| chiave | stringa                     |             |
-| cosa   | stringa                     |             |
+| Nome | Digitare | Descrizione |
+| ----- | -------------------------- | ----------- |
+| cache | FlintWatCache \| indefinito |             |
+| chiave | stringa |             |
+| cosa | stringa |             |
 
-## `src/compiler`
+### pruneOrphanedFlintCacheFiles
+
+**Tipo:** funzione
+
+```typescript
+function pruneOrphanedFlintCacheFiles(cache: FlintWatCache | undefined): readonly string[];
+```
+
+Elimina i file di cache temporanei e non indicizzati orfani dalla directory della cache.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | -------------------------- | ----------- |
+| cache | FlintWatCache \| indefinito |             |
+
+### pruneStaleFlintCache
+
+**Tipo:** funzione
+
+```typescript
+function pruneStaleFlintCache(
+  cache: FlintWatCache | undefined,
+  moduleIdOrPath: string,
+  currentKey: string,
+  newFiles: readonly string[],
+): void;
+```
+
+Elimina gli artefatti memorizzati nella cache obsoleti per un determinato ID modulo quando la relativa chiave di cache è cambiata.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------------- | -------------------------- | ----------- |
+| cache | FlintWatCache \| indefinito |             |
+| moduleIdOrPath | stringa |             |
+| chiavecorrente | stringa |             |
+| nuoviFile | stringa di sola lettura[] |             |
+
+### leggiFlintCacheIndex
+
+**Tipo:** funzione
+
+```typescript
+function readFlintCacheIndex(cache: FlintWatCache | undefined): FlintCacheIndex | undefined;
+```
+
+Legge e analizza l'indice della cache dal disco, restituendo undefinito se mancante o non corretto.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | -------------------------- | ----------- |
+| cache | FlintWatCache \| indefinito |             |
+
+### leggiFlintSoN
+
+**Tipo:** funzione
+
+```typescript
+function readFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  expected?: {
+    readonly compilerVersion?: string;
+    readonly languageVersion?: string;
+    readonly abiVersion?: string;
+    readonly sourceHash?: string;
+    readonly graphHash?: string;
+    readonly optimization?: 'debug' | 'release';
+    readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
+    readonly memoryModel?: 'region-arc-checked-linear';
+  },
+): FlintSoNModule | undefined;
+```
+
+Legge e deserializza un modulo SonIR dal disco.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| cache | FlintWatCache \| indefinito |             |
+| chiave | stringa |             |
+| previsto | { compilerVersion di sola lettura?: string; sola lettura linguaVersione?: stringa; sola lettura abiVersion?: string; sola lettura sourceHash?: stringa; sola lettura graphHash?: stringa; ottimizzazione in sola lettura?: 'debug' \| 'pubblicazione'; readonly boundsChecks?: 'runtime' \| 'comprovato sicuro' \| 'escluso-per-profilo'; memoryModel di sola lettura?: 'region-arc-checked-linear'; } |             |
+
+## `src/compiler/backend`
+
+### artifactVerificationDiagnostic
+
+**Tipo:** funzione
+
+```typescript
+function artifactVerificationDiagnostic(diagnostic: FlintWasmArtifactVerificationDiagnostic): FlintDiagnostic;
+```
+
+Converte una diagnostica di verifica degli artefatti Wasm in una diagnostica del compilatore standard.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------------------- | ----------- |
+| diagnostico | FlintWasmArtifactVerificationDiagnostica |             |
+
+### DynamicLinkMetadata
+
+**Tipo:** funzione
+
+```typescript
+function dynamicLinkMetadata(manifest: FlintAbiManifest, artifactId: string): FlintDynamicLinkMetadata | undefined;
+```
+
+Calcola i metadati del collegamento dinamico per i moduli contrassegnati con la modalità di collegamento dinamico nel manifest.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ---------------- | ----------- |
+| manifesto | FlintAbiManifest |             |
+| ID artefatto | stringa |             |
+
+### codificatore
+
+**Genere:** costante
+
+```typescript
+export const encoder;
+```
+
+Nessuna descrizione fornita.
+
+### FlintBackendCompilationResult
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintBackendCompilationResult
+```
+
+Struttura dei risultati restituita dalla generazione del codice back-end WebAssembly.
+
+### hashBytes
+
+**Tipo:** funzione
+
+```typescript
+function hashBytes(bytes: Uint8Array): string;
+```
+
+Calcola un hash FNV-1a a 32 bit dell'array di byte specificato restituito come stringa esadecimale.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ---------- | ----------- |
+| byte | Uint8Array |             |
+
+### sourceHashForArtifact
+
+**Tipo:** funzione
+
+```typescript
+function sourceHashForArtifact(source: string, fileName: string): string;
+```
+
+Calcola un hash di origine normalizzato per un artefatto dal relativo flusso di token non di commento.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | ------ | ----------- |
+| fonte | stringa |             |
+| nomefile | stringa |             |
+
+### verificareBackendArtifact
+
+**Tipo:** funzione
+
+```typescript
+function verifyBackendArtifact(input: {
+  readonly wasm: Uint8Array;
+  readonly unoptimizedWasm?: Uint8Array;
+  readonly fileName: string;
+  readonly manifest: FlintAbiManifest;
+  readonly metadata: Parameters<typeof compileFlintWasm>[0]['metadata'];
+  readonly targetFeatures?: Parameters<typeof verifyFlintWasmArtifact>[0]['targetFeatures'];
+  readonly featureRequirements?: FlintWasmFeatureRequirements;
+  readonly iteratorExports?: readonly FlintIteratorExport[];
+  readonly expectedContentHash: string;
+  readonly expectedSourceHash: string;
+  readonly esmSource: string;
+  readonly profile: 'strict' | 'development';
+  readonly allowedCapabilities?: readonly string[];
+}): {
+  readonly verificationDiagnostics: readonly FlintDiagnostic[];
+  readonly artifactVerification: FlintArtifactVerificationReport;
+};
+```
+
+Verifica gli artefatti WebAssembly di backend rispetto a policy, funzionalità di destinazione e vincoli manifest.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| ingresso | { sola lettura wasm: Uint8Array; sola lettura non ottimizzatoWasm?: Uint8Array; nomefile di sola lettura: stringa; manifesto di sola lettura: FlintAbiManifest; metadati di sola lettura: Parametri<typeof compileFlintWasm>[0]['metadati']; targetFeatures in sola lettura?: Parametri<typeof verifyFlintWasmArtifact>[0]['targetFeatures']; Requisiti di funzionalità in sola lettura?: FlintWasmFeatureRequirements; readonly iteratorExports?: readonly FlintIteratorExport[]; sola lettura previstoContentHash: stringa; sola lettura attesoSourceHash: stringa; sola lettura esmSource: stringa; profilo di sola lettura: 'strict' \| 'sviluppo'; readonly consentitiCapabilities?: readonly string[]; } |             |
+
+## `src/compiler/declarations`
+
+### createDichiarazioni
+
+**Tipo:** funzione
+
+```typescript
+function createDeclarations(manifest: FlintAbiManifest): string;
+```
+
+Genera il contenuto completo del file di dichiarazione TypeScript per un manifest Flint compilato.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | ---------------- | ----------- |
+| manifesto | FlintAbiManifest |             |
+
+### dichiarazioneFunzione
+
+**Tipo:** funzione
+
+```typescript
+function declarationFunction(
+  declaration: FlintAbiFunction,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+Genera la firma della funzione TypeScript per una dichiarazione di funzione ABI.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ------------------- | ----------- |
+| dichiarazione | FlintAbiFunzione |             |
+| enumNomi | Sola letturaSet<string> |             |
+| recordNomi | Sola letturaSet<string> |             |
+
+### dichiarazioneProprietà
+
+**Tipo:** funzione
+
+```typescript
+function declarationProperty(name: string): string;
+```
+
+Formatta un identificatore come nome di proprietà sicura o stringa tra virgolette JSON.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | ------ | ----------- |
+| nome | stringa |             |
+
+### dichiarazioneRecord
+
+**Tipo:** funzione
+
+```typescript
+function declarationRecord(
+  declarations: readonly FlintAbiFunction[],
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+Emette le definizioni TypeScript per i record di esportazione ABI digitati.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------------ | --------------------------- | ----------- |
+| dichiarazioni | sola lettura FlintAbiFunction[] |             |
+| enumNomi | Sola letturaSet<string> |             |
+| recordNomi | Sola letturaSet<string> |             |
+
+### tipodi dichiarazione
+
+**Tipo:** funzione
+
+```typescript
+function declarationType(
+  value: string | FlintAbiParameter,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+Associa un parametro ABI Flint o un nome di tipo a un tipo di dichiarazione TypeScript.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | --------------------------- | ----------- |
+| valore | stringa \| FlintAbiParametro |             |
+| enumNomi | Sola letturaSet<string> |             |
+| recordNomi | Sola letturaSet<string> |             |
+
+### rawDeclarationFunction
+
+**Tipo:** funzione
+
+```typescript
+function rawDeclarationFunction(declaration: FlintAbiFunction): string;
+```
+
+Genera la firma della funzione grezza di basso livello con espansione del puntatore/lunghezza per stringhe e byte.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----------- | ---------------- | ----------- |
+| dichiarazione | FlintAbiFunzione |             |
+
+### rawDeclarationRecord
+
+**Tipo:** funzione
+
+```typescript
+function rawDeclarationRecord(declarations: readonly FlintAbiFunction[]): string;
+```
+
+Genera le definizioni TypeScript per i record di esportazione WebAssembly non elaborati.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------------ | --------------------------- | ----------- |
+| dichiarazioni | sola lettura FlintAbiFunction[] |             |
+
+### rawDeclarationType
+
+**Tipo:** funzione
+
+```typescript
+function rawDeclarationType(value: FlintPrimitiveType | FlintAbiParameter): string;
+```
+
+Esegue il mapping di un parametro ABI o di un tipo primitivo al relativo tipo di parametro WebAssembly non elaborato in TypeScript.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | --------------------------------------- | ----------- |
+| valore | FlintPrimitiveType \| FlintAbiParametro |             |
+
+## `src/compiler/esm`
+
+### bytesToBase64
+
+**Tipo:** funzione
+
+```typescript
+function bytesToBase64(bytes: Uint8Array): string;
+```
+
+Codifica una matrice di byte in una stringa Base64 standard.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ---------- | ----------- |
+| byte | Uint8Array |             |
+
+### createEsmSource
+
+**Tipo:** funzione
+
+```typescript
+function createEsmSource(
+  wasm: Uint8Array,
+  manifest: FlintAbiManifest,
+  iteratorExports: readonly FlintIteratorExport[] = [],
+  dynamicMetadata?: FlintDynamicLinkMetadata,
+): string;
+```
+
+Genera una stringa del modulo del caricatore ESM contenente WebAssembly incorporato e adattatori runtime.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| --------------- | ------------------------------ | ----------- |
+| era | Uint8Array |             |
+| manifesto | FlintAbiManifest |             |
+| iteratorExport | sola lettura FlintIteratorExport[] |             |
+| metadati dinamici | FlintDynamicLinkMetadati |             |
+
+## `src/compiler/module`
+
+### analisiOpzioni
+
+**Tipo:** funzione
+
+```typescript
+function analysisOptions(input: FlintCompileInput): FlintAnalysisOptions;
+```
+
+Risolve le opzioni di analisi statica dall'input di compilazione e dalle impostazioni dei criteri.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ----------------- | ----------- |
+| ingresso | FlintCompileInput |             |
 
 ### compileFlint
 
@@ -1087,13 +641,64 @@ Nessuna descrizione fornita.
 function compileFlint(input: FlintCompileInput): FlintArtifact;
 ```
 
-Nessuna descrizione fornita.
+Compila una stringa di origine Flint in WebAssembly e negli artefatti di runtime.
 
 #### Parametri
 
-| Nome     | Digitare          | Descrizione |
-| -------- | ----------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ----------------- | ----------- |
 | ingresso | FlintCompileInput |             |
+
+### compileFlintGraph
+
+**Tipo:** funzione
+
+```typescript
+function compileFlintGraph(input: FlintGraphCompileInput): FlintArtifact;
+```
+
+Compila un grafico del modulo Flint multimodulo in un artefatto WebAssembly unificato.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | ---------------------- | ----------- |
+| ingresso | FlintGraphCompileInput |             |
+
+### compilareFlintModule
+
+**Tipo:** funzione
+
+```typescript
+function compileFlintModule(
+  input: FlintCompileInput,
+  frontend: FlintFrontendResult,
+  graphMetadata: Pick<
+    FlintArtifact,
+    'graphHash' | 'linkMode' | 'linkedModules' | 'linkProfile' | 'optimizationProfile'
+  > = {},
+  sourceFiles: readonly string[] = frontend.sourceFiles,
+): FlintArtifact;
+```
+
+Compila un singolo modulo Flint analizzato in WebAssembly e sintetizza gli artefatti del caricatore ESM.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| ingresso | FlintCompileInput | - Specifica di input per la compilazione del modulo.                  |
+| frontend | FlintFrontendRisultato | - Risultato preparato del compilatore frontend.                       |
+| graficoMetadati | Scegli< FlintArtifact, 'graphHash' \| 'linkMode' \| 'Moduli collegati' \| 'linkProfilo' \| 'profilo di ottimizzazione' > | - Metadati opzionali propagati dal collegamento del grafico del modulo.  |
+| file sorgente | stringa di sola lettura[] | - Percorsi dei file di origine che contribuiscono a questa unità di compilazione. |
+
+#### Contrarre
+
+- **@param:** - Specifica di input per la compilazione del modulo.
+- **@param:** - Risultato preparato del compilatore frontend.
+- **@param:** - Metadati opzionali propagati dal collegamento del grafico del modulo.
+- **@param:** - Percorsi dei file di origine che contribuiscono a questa unità di compilazione.
+- **@returns:** Artefatto compilato completo contenente file binari, dichiarazioni e report.
 
 ### compileFlintSeed
 
@@ -1103,13 +708,12 @@ Nessuna descrizione fornita.
 function compileFlintSeed(input: FlintCompileInput): FlintArtifact;
 ```
 
-Il seed TypeScript delimitato utilizzato dal bootstrap self-hosted fino alla correzione
-la parità dei punti promuove il compilatore FWS al normale proprietario del frontend.
+Compila un input seed Flint preparando AST frontend e compilando il modulo risultante.
 
 #### Parametri
 
-| Nome     | Digitare          | Descrizione |
-| -------- | ----------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ----------------- | ----------- |
 | ingresso | FlintCompileInput |             |
 
 ### createFlintCompiler
@@ -1120,7 +724,76 @@ la parità dei punti promuove il compilatore FWS al normale proprietario del fro
 function createFlintCompiler(): FlintCompiler;
 ```
 
-Nessuna descrizione fornita.
+Crea un'istanza del compilatore Flint.
+
+#### Contrarre
+
+- **@returns:** Istanza del compilatore configurata.
+
+### eseguireSelfHostedStage
+
+**Tipo:** funzione
+
+```typescript
+function runSelfHostedStage(
+  input: Pick<FlintCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  options: FlintCompilerServiceOptions,
+): {
+  readonly report?: FlintSelfHostedStageReport;
+  readonly stageReports?: readonly FlintSelfHostedStageReport[];
+  readonly diagnostic?: FlintDiagnostic;
+};
+```
+
+Esegue una fase del compilatore self-hosted e convalida i report di parità rispetto alle impronte digitali previste.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+| ingresso | Scegli<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+| opzioni | FlintCompilerServiceOptions |             |
+
+### selfHostedDiagnostic
+
+**Tipo:** funzione
+
+```typescript
+function selfHostedDiagnostic(
+  input: Pick<FlintCompileInput, 'fileName'>,
+  message: string,
+  stage: FlintSelfHostedStageReport['stage'] = 'lex',
+): FlintDiagnostic;
+```
+
+Crea una diagnostica per i problemi di bootstrap self-hosted o di verifica della parità.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ----------------------------------- | ----------- |
+| ingresso | Scegli<FlintCompileInput, 'fileName'> |             |
+| messaggio | stringa |             |
+| fase | FlintSelfHostedStageReport['stage'] |             |
+
+### conSelfHostedResult
+
+**Tipo:** funzione
+
+```typescript
+function withSelfHostedResult(artifact: FlintArtifact, result: ReturnType<typeof runSelfHostedStage>): FlintArtifact;
+```
+
+Unisce i risultati della verifica della fase del runner self-hosted nell'artefatto di compilazione finale.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | ------------------------------------- | ----------- |
+| artefatto | Artefatto di selce |             |
+| risultato | ReturnType<typeof runSelfHostedStage> |             |
+
+## `src/compiler/service`
 
 ### createFlintCompilerService
 
@@ -1130,17 +803,22 @@ Nessuna descrizione fornita.
 function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): FlintCompilerService;
 ```
 
-Nessuna descrizione fornita.
+Crea un servizio compilatore di memorizzazione nella cache in memoria per la compilazione incrementale e le build di grafici.
 
 #### Parametri
 
-| Nome    | Digitare                    | Descrizione |
-| ------- | --------------------------- | ----------- |
-| opzioni | FlintCompilerServiceOptions |             |
+| Nome | Digitare | Descrizione |
+| ------- | --------------------------- | ------------------------------------------------ |
+| opzioni | FlintCompilerServiceOptions | Opzioni facoltative di configurazione del servizio del compilatore. |
+
+#### Contrarre
+
+- **@param:** Opzioni facoltative di configurazione del servizio compilatore.
+- **@returns:** Istanza FlintCompilerService con stato.
 
 ## `src/contracts`
 
-### FlintArtifact
+### FlintArtefatto
 
 **Tipo:** interfaccia
 
@@ -1148,7 +826,7 @@ Nessuna descrizione fornita.
 export interface FlintArtifact
 ```
 
-Nessuna descrizione fornita.
+Artefatto del compilatore in pacchetto contenente ABI, origini, file binari e diagnostica.
 
 ### FlintArtifactVerificationReport
 
@@ -1158,7 +836,7 @@ Nessuna descrizione fornita.
 export interface FlintArtifactVerificationReport
 ```
 
-Nessuna descrizione fornita.
+Risultato della verifica degli hash e delle varianti del contenuto degli artefatti emessi.
 
 ### FlintAsyncCapability
 
@@ -1168,7 +846,7 @@ Nessuna descrizione fornita.
 export type FlintAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-Nessuna descrizione fornita.
+Funzionalità host asincrona denominata richiesta dai contratti di compilazione asincrona.
 
 ### FlintAsyncCompilationContract
 
@@ -1208,7 +886,7 @@ L'output del backend è deliberatamente indipendente dall'artefatto ESM della fa
 export interface FlintCompileInput
 ```
 
-Nessuna descrizione fornita.
+Richiesta di compilazione a modulo singolo utilizzata dal servizio front-end e compilatore.
 
 ### FlintCompiler
 
@@ -1218,7 +896,7 @@ Nessuna descrizione fornita.
 export interface FlintCompiler
 ```
 
-Nessuna descrizione fornita.
+Facciata minima del compilatore che espone la compilazione e lo smaltimento di un singolo modulo.
 
 ### FlintCompilerHints
 
@@ -1228,7 +906,7 @@ Nessuna descrizione fornita.
 export interface FlintCompilerHints
 ```
 
-Nessuna descrizione fornita.
+Suggerimenti di abbassamento opzionali che guidano l'emissione di backend specializzata.
 
 ### FlintCompilerLogger
 
@@ -1238,7 +916,7 @@ Nessuna descrizione fornita.
 export interface FlintCompilerLogger
 ```
 
-Nessuna descrizione fornita.
+Contratto di logger strutturato utilizzato dalle fasi del servizio del compilatore.
 
 ### FlintCompilerReport
 
@@ -1248,7 +926,7 @@ Nessuna descrizione fornita.
 export interface FlintCompilerReport
 ```
 
-Nessuna descrizione fornita.
+Report di servizio aggregato che copre diagnostica, statistiche della cache e analisi.
 
 ### FlintCompilerService
 
@@ -1258,7 +936,7 @@ Nessuna descrizione fornita.
 export interface FlintCompilerService extends FlintCompiler
 ```
 
-Nessuna descrizione fornita.
+Servizio di compilazione incrementale che supporta compilazioni di grafici e invalidazione.
 
 ### FlintCompilerServiceOptions
 
@@ -1268,7 +946,7 @@ Nessuna descrizione fornita.
 export interface FlintCompilerServiceOptions
 ```
 
-Nessuna descrizione fornita.
+Contenitore di configurazione accettato durante la costruzione di una facciata del servizio del compilatore.
 
 ### FlintDebugArtifacts
 
@@ -1278,7 +956,7 @@ Nessuna descrizione fornita.
 export interface FlintDebugArtifacts
 ```
 
-Nessuna descrizione fornita.
+Istantanee WAT/Wasm opzionali conservate per il debug e la verifica.
 
 ### FlintDeterministicArtifactMetadata
 
@@ -1288,7 +966,7 @@ Nessuna descrizione fornita.
 export interface FlintDeterministicArtifactMetadata
 ```
 
-Nessuna descrizione fornita.
+Campi di identità deterministici registrati insieme agli artefatti del compilatore emessi.
 
 ### FlintFrontendLinkMetadata
 
@@ -1298,7 +976,7 @@ Nessuna descrizione fornita.
 export interface FlintFrontendLinkMetadata
 ```
 
-Nessuna descrizione fornita.
+Metadati del tempo di collegamento allegati a un risultato frontend per il pacchetto backend.
 
 ### FlintFrontendResult
 
@@ -1318,7 +996,7 @@ Il risultato stabile e indipendente dal backend dell'analisi, del controllo e de
 export interface FlintGraphCompileInput
 ```
 
-Nessuna descrizione fornita.
+Richiesta di compilazione di grafici multi-modulo inclusa la selezione della voce e la politica di collegamento.
 
 ### FlintIteratorExport
 
@@ -1328,7 +1006,7 @@ Nessuna descrizione fornita.
 export interface FlintIteratorExport
 ```
 
-Nessuna descrizione fornita.
+Metadati ABI che descrivono una superficie del protocollo iteratore esportato.
 
 ### FlintLinkOptimizationProfile
 
@@ -1340,16 +1018,6 @@ export type FlintLinkOptimizationProfile = 'standard' | 'static-aggressive' | 'd
 
 Politica di collegamento temporale registrata insieme all'ottimizzazione ordinaria del compilatore.
 
-### FlintLinkProfile
-
-**Genere:** tipo
-
-```typescript
-export type FlintLinkProfile = 'static' | 'dynamic';
-```
-
-Profilo di packaging multiprogetto denominato utilizzato dai consumatori consapevoli dei grafici.
-
 ### FlintOptimization
 
 **Genere:** tipo
@@ -1358,7 +1026,7 @@ Profilo di packaging multiprogetto denominato utilizzato dai consumatori consape
 export type FlintOptimization = 'debug' | 'release';
 ```
 
-Nessuna descrizione fornita.
+Livello di ottimizzazione del compilatore selezionando il debug o l'abbassamento del rilascio.
 
 ### FlintSelfHostedStageReport
 
@@ -1368,7 +1036,7 @@ Nessuna descrizione fornita.
 export interface FlintSelfHostedStageReport
 ```
 
-Risultato della fase limitata del compilatore creato da FWS utilizzata dagli adattatori degli strumenti.
+Risultato della fase limitata del compilatore creato da FLINT utilizzata dagli adattatori degli strumenti.
 
 ### FlintSelfHostedStageRunner
 
@@ -1383,7 +1051,7 @@ export type FlintSelfHostedStageRunner = (
 
 Punto di ingresso della VM fornito dal runtime senza associarvi la facciata sicura per il browser.
 
-### Funzionalità di FlintTarget
+### Caratteristiche di FlintTarget
 
 **Tipo:** interfaccia
 
@@ -1391,7 +1059,7 @@ Punto di ingresso della VM fornito dal runtime senza associarvi la facciata sicu
 export interface FlintTargetFeatures
 ```
 
-Nessuna descrizione fornita.
+Flag di funzionalità di destinazione WebAssembly facoltativi richiesti dall'host.
 
 ### FlintVmExecutionMode
 
@@ -1401,7 +1069,7 @@ Nessuna descrizione fornita.
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-Nessuna descrizione fornita.
+Modalità di esecuzione della macchina virtuale supportate per le fasi del compilatore self-hosted.
 
 ## `src/diagnostics`
 
@@ -1422,20 +1090,32 @@ function createDiagnostic(
 ): FlintDiagnostic;
 ```
 
-Nessuna descrizione fornita.
+Costruisce una diagnostica strutturata del compilatore con suggerimento facoltativo e metadati di sicurezza.
 
 #### Parametri
 
-| Nome         | Digitare                                                                                        | Descrizione |
-| ------------ | ----------------------------------------------------------------------------------------------- | ----------- |
-| nomefile     | stringa                                                                                         |             |
-| fase         | FlintDiagnosticPhase                                                                            |             |
-| codice       | stringa                                                                                         |             |
-| messaggio    | stringa                                                                                         |             |
-| arco         | FlintSourceSpan                                                                                 |             |
-| gravità      | FlintDiagnosticSeverity                                                                         |             |
-| suggerimento | stringa                                                                                         |             |
-| metadati     | Scegli<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |             |
+| Nome | Digitare | Descrizione |
+| -------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| nomefile | stringa | - Percorso o identificatore del file di origine.                                  |
+| fase | FlintDiagnosticPhase | - Fase del compilatore che emette la diagnostica.                                 |
+| codice | stringa | - Errore diagnostico o codice di avviso.                                       |
+| messaggio | stringa | - Messaggio diagnostico descrittivo leggibile dall'uomo.                          |
+| arco | FlintSourceSpan | - Coordinate dell'intervallo di origine per la posizione diagnostica.                    |
+| gravità | FlintDiagnosticSeverity | - Livello di gravità, per impostazione predefinita "errore".                                  |
+| suggerimento | stringa | - Suggerimento di riparazione facoltativo o consigli attuabili.                         |
+| metadati | Scegli<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> | - ID regola facoltativo, categoria, prova o identificatori di tassonomia di sicurezza. |
+
+#### Contrarre
+
+- **@param:** - Percorso o identificatore del file di origine.
+- **@param:** - Fase del compilatore che emette la diagnostica.
+- **@param:** - Errore diagnostico o codice di avviso.
+- **@param:** - Messaggio diagnostico descrittivo leggibile dall'uomo.
+- **@param:** - Coordinate dell'intervallo di origine per la posizione diagnostica.
+- **@param:** - Livello di gravità, per impostazione predefinita è "errore".
+- **@param:** - Suggerimento di correzione facoltativo o consigli attuabili.
+- **@param:** - ID regola facoltativo, categoria, prova o identificatori di tassonomia di sicurezza.
+- **@returns:** Un'istanza strutturata di FlintDiagnostic.
 
 ### diagnosticKey
 
@@ -1445,13 +1125,48 @@ Nessuna descrizione fornita.
 function diagnosticKey(diagnostic: FlintDiagnostic): string;
 ```
 
-Nessuna descrizione fornita.
+Calcola una chiave di stringa di identità deterministica per la deduplicazione della diagnostica.
 
 #### Parametri
 
-| Nome        | Digitare         | Descrizione |
-| ----------- | ---------------- | ----------- |
-| diagnostico | FlintDiagnostica |             |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------- | ---------------------------------- |
+| diagnostico | FlintDiagnostica | - Diagnostica per calcolare una chiave. |
+
+#### Contrarre
+
+- **@param:** - Diagnostica per cui calcolare una chiave.
+- **@returns:** Nome file, fase, codice, intervallo e messaggio di codifica deterministica della stringa JSON.
+
+### FLINT_PARSE_STACK_OVERFLOW
+
+**Genere:** costante
+
+```typescript
+export const FLINT_PARSE_STACK_OVERFLOW;
+```
+
+Codice di errore diagnostico quando la profondità di ricorsione del parser supera il limite configurato.
+
+### FLINT_PARSE_UNCLOSED_DELIMITER
+
+**Genere:** costante
+
+```typescript
+export const FLINT_PARSE_UNCLOSED_DELIMITER;
+```
+
+Codice di errore diagnostico quando i delimitatori rimangono aperti su EOF.
+
+### FLINT_SECURITY_SOURCE_TOO_LARGE
+
+**Genere:** costante
+
+```typescript
+export const FLINT_SECURITY_SOURCE_TOO_LARGE;
+```
+
+Codice di errore diagnostico quando il file di origine supera MAX_SOURCE_INPUT_BYTES.
 
 ### FlintDiagnostic
 
@@ -1461,9 +1176,9 @@ Nessuna descrizione fornita.
 export interface FlintDiagnostic
 ```
 
-Nessuna descrizione fornita.
+Record diagnostico strutturato prodotto attraverso le fasi del compilatore o i passaggi di analisi statica.
 
-### FlintDiagnosticEvidence
+### Prova diagnostica Flint
 
 **Tipo:** interfaccia
 
@@ -1471,18 +1186,18 @@ Nessuna descrizione fornita.
 export interface FlintDiagnosticEvidence
 ```
 
-Nessuna descrizione fornita.
+Evidenza secondaria o posizione correlata collegata a un reperto diagnostico.
 
-### FlintDiagnosticPhase
+### Fase diagnostica Flint
 
 **Genere:** tipo
 
 ```typescript
 export type FlintDiagnosticPhase =
-  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+  'lex' | 'parse' | 'macro' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
-Nessuna descrizione fornita.
+Fase di compilazione in cui è stata emessa una diagnostica.
 
 ### FlintDiagnosticSeverity
 
@@ -1492,7 +1207,7 @@ Nessuna descrizione fornita.
 export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 ```
 
-Nessuna descrizione fornita.
+Livello di gravità per la diagnostica del compilatore.
 
 ### FlintSourceSpan
 
@@ -1502,7 +1217,40 @@ Nessuna descrizione fornita.
 export interface FlintSourceSpan
 ```
 
-Nessuna descrizione fornita.
+Intervallo di coordinate di origine che definisce la posizione precisa di un token, AST node o diagnostica in un file.
+
+### getSourceByteLength
+
+**Tipo:** funzione
+
+```typescript
+function getSourceByteLength(source: string): number;
+```
+
+Calcola la dimensione effettiva in byte di una stringa con codifica UTF-8.
+Le stringhe JavaScript utilizzano UTF-16 internamente, quindi `.length` conta le unità di codice, non i byte.
+Questa funzione codifica in UTF-8 e restituisce il conteggio dei byte reali.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------ | ------ | --------------------------- |
+| fonte | stringa | - Stringa sorgente da misurare. |
+
+#### Contrarre
+
+- **@param:** - Stringa di origine da misurare.
+- **@returns:** Conteggio byte se codificato come UTF-8.
+
+### MAX_SOURCE_INPUT_BYTES
+
+**Genere:** costante
+
+```typescript
+export const MAX_SOURCE_INPUT_BYTES;
+```
+
+Dimensione massima consentita del file sorgente Flint in byte (16 MiB).
 
 ## `src/documentation`
 
@@ -1514,13 +1262,18 @@ Nessuna descrizione fornita.
 function parseFlintDocumentation(comment: string): FlintDocumentation;
 ```
 
-Nessuna descrizione fornita.
+Analizza un commento di un documento Flint in descrizione strutturata e tag di documentazione.
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| commento | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ------- | ------ | ------------------------- |
+| commento | stringa | - Stringa di commento del documento non elaborata. |
+
+#### Contrarre
+
+- **@param:** - Stringa di commento del documento non elaborata.
+- **@returns:** Record di documentazione strutturata con descrizione e tag normalizzati.
 
 ### renderFlintDocumentation
 
@@ -1530,13 +1283,18 @@ Nessuna descrizione fornita.
 function renderFlintDocumentation(documentation: FlintDocumentation): string;
 ```
 
-Nessuna descrizione fornita.
+Restituisce un record di documentazione strutturata di Flint al markdown dei commenti del documento.
 
 #### Parametri
 
-| Nome           | Digitare            | Descrizione |
-| -------------- | ------------------- | ----------- |
-| documentazione | FlintDocumentazione |             |
+| Nome | Digitare | Descrizione |
+| ------------- | ------------------ | ---------------------------------- |
+| documentazione | Documentazione Flint | - Documentazione strutturata. |
+
+#### Contrarre
+
+- **@param:** - Record di documentazione strutturata.
+- **@returns:** Testo di markdown della documentazione formattato.
 
 ## `src/dynamic-links`
 
@@ -1545,10 +1303,10 @@ Nessuna descrizione fornita.
 **Genere:** tipo
 
 ```typescript
-export type FlintDynamicCallable = (...args: readonly number[]) => unknown;
+export type FlintDynamicCallable = (...arguments_: readonly number[]) => unknown;
 ```
 
-Nessuna descrizione fornita.
+Firma di funzione richiamabile per esportazioni di moduli dinamici che accettano maniglie/argomenti numerici.
 
 ### FlintDynamicLinkCache
 
@@ -1569,7 +1327,7 @@ La sostituzione di uno dei componenti di identità invalida i vecchi handle rich
 export interface FlintDynamicLinkIdentity
 ```
 
-Nessuna descrizione fornita.
+Descrittore di identità univoco per un artefatto di collegamento dinamico e una coppia manifest.
 
 ### FlintDynamicModule
 
@@ -1579,11 +1337,11 @@ Nessuna descrizione fornita.
 export interface FlintDynamicModule
 ```
 
-Nessuna descrizione fornita.
+Modulo collegato dinamicamente contenente esportazioni richiamabili e firme ABI opzionali.
 
 ## `src/frontend`
 
-### prepareFlintFrontend
+### preparareFlintFrontend
 
 **Tipo:** funzione
 
@@ -1591,13 +1349,19 @@ Nessuna descrizione fornita.
 function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 ```
 
-Nessuna descrizione fornita.
+Esegue la pipeline frontend per un singolo file sorgente Flint.
+Esegue lexing, analisi, controllo del tipo, riduzione IR e ottimizzazione Sea-of-Nodes.
 
 #### Parametri
 
-| Nome     | Digitare          | Descrizione |
-| -------- | ----------------- | ----------- |
-| ingresso | FlintCompileInput |             |
+| Nome | Digitare | Descrizione |
+| ----- | ----------------- | ----------------------------------------------------- |
+| ingresso | FlintCompileInput | - Opzioni di input del compilatore a file singolo e codice sorgente. |
+
+#### Contrarre
+
+- **@param:** - Opzioni di input del compilatore a file singolo e codice sorgente.
+- **@returns:** Risultato della compilazione del frontend contenente manifest AST, IR e ABI.
 
 ### prepareFlintGraphFrontend
 
@@ -1607,111 +1371,490 @@ Nessuna descrizione fornita.
 function prepareFlintGraphFrontend(input: FlintGraphCompileInput): FlintFrontendResult;
 ```
 
-Nessuna descrizione fornita.
+Prepara il frontend del compilatore per un grafico multimodulo collegato.
+Risolve le chiusure di dipendenze statiche, controlla il tipo del componente combinato,
+e riduce il modulo collegato a manifest IR e ABI ottimizzati.
 
 #### Parametri
 
-| Nome     | Digitare               | Descrizione |
-| -------- | ---------------------- | ----------- |
-| ingresso | FlintGraphCompileInput |             |
+| Nome | Digitare | Descrizione |
+| ----- | ---------------------- | ----------------------------------------------------------------------------- |
+| ingresso | FlintGraphCompileInput | - Ingresso per la compilazione di grafici multi-modulo, compresi i bordi del grafico e il punto di ingresso. |
 
-## `src/generics`
+#### Contrarre
 
-### createFlintGenericSpecialization
+- **@param:** - Ingresso per la compilazione di grafici multi-modulo inclusi i bordi del grafico e il punto di ingresso.
+- **@returns:** Risultato combinato della compilazione frontend per il grafico del modulo collegato.
+
+## `src/graph-compiler/ast-builder`
+
+### buildGraphAst
 
 **Tipo:** funzione
 
 ```typescript
-function createFlintGenericSpecialization(request: FlintGenericSpecializationRequest): FlintSpecialization;
+function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult;
 ```
 
-Nessuna descrizione fornita.
+Riduce un FlintNodeGraph convalidato in un FlintModule AST in memoria e una mappa sorgente bidirezionale.
 
 #### Parametri
 
-| Nome      | Digitare                          | Descrizione |
-| --------- | --------------------------------- | ----------- |
-| richiesta | FlintGenericSpecializationRequest |             |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------- | ----------- |
+| inputGrafico | FlintNodeGraph |             |
 
-### createFlintIteratorBoundaryDescriptor
-
-**Tipo:** funzione
-
-```typescript
-function createFlintIteratorBoundaryDescriptor(
-  generic: string,
-  elementType: FlintTypeName,
-  nextFunction: string,
-  ownership: FlintOwnership = 'borrowed',
-): FlintIteratorBoundaryDescriptor;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome             | Digitare       | Descrizione |
-| ---------------- | -------------- | ----------- |
-| generico         | stringa        |             |
-| tipoelemento     | FlintTypeName  |             |
-| prossimaFunzione | stringa        |             |
-| proprietà        | FlintProprietà |             |
-
-### FlintGenericBoundary
-
-**Genere:** tipo
-
-```typescript
-export type FlintGenericBoundary = 'value' | 'interface' | 'iterator';
-```
-
-Nessuna descrizione fornita.
-
-### flintGenericRepresentation
-
-**Tipo:** funzione
-
-```typescript
-function flintGenericRepresentation(boundary: FlintGenericBoundary = 'value'): FlintSpecialization['representation'];
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome    | Digitare             | Descrizione |
-| ------- | -------------------- | ----------- |
-| confine | FlintGenericBoundary |             |
-
-### FlintGenericSpecializationRequest
+### FlintAstBuildResult
 
 **Tipo:** interfaccia
 
 ```typescript
-export interface FlintGenericSpecializationRequest
+export interface FlintAstBuildResult
 ```
 
 Nessuna descrizione fornita.
 
-### sortFlintSpecializzazioni
+## `src/graph-compiler/catalog`
+
+### createNodeFromDefinition
 
 **Tipo:** funzione
 
 ```typescript
-function sortFlintSpecializations(specializations: readonly FlintSpecialization[]): readonly FlintSpecialization[];
+function createNodeFromDefinition(
+  definition: FlintNodeDefinition,
+  id: string,
+  position: { readonly x: number; readonly y: number } = DEFAULT_NODE_POSITION,
+  properties?: Readonly<Record<string, unknown>>,
+): FlintGraphNode;
+```
+
+Crea un'istanza di un FlintGraphNode da una definizione di catalogo con ID, posizione e sostituzioni di proprietà specificati.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------------------ | ----------- |
+| definizione | FlintNodeDefinizione |             |
+| id | stringa |             |
+| posizione | { sola lettura x: numero; sola lettura y: numero } |             |
+| proprietà | Sola lettura<Record<string, unknown>> |             |
+
+### FlintNodeDefinition
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintNodeDefinition
 ```
 
 Nessuna descrizione fornita.
 
+### getAllNodeDefinitions
+
+**Tipo:** funzione
+
+```typescript
+function getAllNodeDefinitions(): readonly FlintNodeDefinition[];
+```
+
+Restituisce tutte le definizioni node standard registrate.
+
+### getNodeDefinition
+
+**Tipo:** funzione
+
+```typescript
+function getNodeDefinition(operation: string): FlintNodeDefinition | undefined;
+```
+
+Recupera una definizione node standard tramite il relativo identificatore univoco dell'operazione.
+
 #### Parametri
 
-| Nome             | Digitare                           | Descrizione |
-| ---------------- | ---------------------------------- | ----------- |
-| specializzazioni | sola lettura FlintSpecialization[] |             |
+| Nome | Digitare | Descrizione |
+| --------- | ------ | ----------- |
+| operazione | stringa |             |
+
+### getNodeDefinitionsByCategory
+
+**Tipo:** funzione
+
+```typescript
+function getNodeDefinitionsByCategory(category: FlintNodeCategory): readonly FlintNodeDefinition[];
+```
+
+Restituisce le definizioni node filtrate per categoria.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| -------- | ----------------- | ----------- |
+| categoria | Categoria FlintNode |             |
+
+## `src/graph-compiler/generator`
+
+### compileGraphToFlint
+
+**Tipo:** funzione
+
+```typescript
+function compileGraphToFlint(graph: FlintNodeGraph): FlintGraphCompilationArtifact;
+```
+
+Generatore a doppio compilatore per grafici visivi Flint node.
+Sintetizza il testo sorgente digitato in memoria FlintModule AST e formattato .flint con mappe sorgente bidirezionali.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | -------------- | ----------- |
+| grafico | FlintNodeGraph |             |
+
+### compileNodeGraph
+
+**Tipo:** funzione
+
+```typescript
+function compileNodeGraph(graph: FlintNodeGraph, options?: Partial<FlintCompileInput>): FlintCompiledNodeGraphArtifact;
+```
+
+Compila un FlintNodeGraph visivo end-to-end in file binari WebAssembly, manifest ABI e artefatti di origine.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | -------------------------- | ----------- |
+| grafico | FlintNodeGraph |             |
+| opzioni | Parziale<FlintCompileInput> |             |
+
+### FlintCompiledNodeGraphArtifact
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintCompiledNodeGraphArtifact extends Omit<FlintArtifact, 'sourceMap'>
+```
+
+Nessuna descrizione fornita.
+
+### FlintGraphCompilationArtifact
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintGraphCompilationArtifact
+```
+
+Nessuna descrizione fornita.
+
+## `src/graph-compiler/source-emitter`
+
+### emitGraphSource
+
+**Tipo:** funzione
+
+```typescript
+function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmissionResult;
+```
+
+Emette codice sorgente Flint pulito e formattato da un grafico convalidato con mappe sorgente bidirezionali esatte.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---------- | -------------- | ----------- |
+| inputGrafico | FlintNodeGraph |             |
+
+### FlintSourceEmissionResult
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintSourceEmissionResult
+```
+
+Nessuna descrizione fornita.
+
+## `src/graph-compiler/types`
+
+### createContainerType
+
+**Tipo:** funzione
+
+```typescript
+function createContainerType(
+  container: string,
+  typeArguments: readonly FlintTypeName[] = [],
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+Crea un FlintTypeName generico o aggregato node.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------------- | ------------------------ | ----------- |
+| contenitore | stringa |             |
+| tipoArgomenti | sola lettura FlintTypeName[] |             |
+| arco | FlintSourceSpan |             |
+
+### createPrimitiveType
+
+**Tipo:** funzione
+
+```typescript
+function createPrimitiveType(
+  primitive: FlintPrimitiveType,
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+Crea un FlintTypeName primitivo node.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| --------- | ------------------ | ----------- |
+| primitivo | FlintPrimitiveType |             |
+| arco | FlintSourceSpan |             |
+
+### createSyntheticSpan
+
+**Tipo:** funzione
+
+```typescript
+function createSyntheticSpan(line = 1, column = 1, length = 1): FlintSourceSpan;
+```
+
+Crea un intervallo di origine sintetico per i nodi AST generati dal grafico.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------ | ---- | ----------- |
+| linea |      |             |
+| colonna |      |             |
+| lunghezza |      |             |
+
+### flattenGraph
+
+**Tipo:** funzione
+
+```typescript
+function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph;
+```
+
+Inlinea e appiattisce ricorsivamente qualsiasi metanodo in un grafico nei suoi nodi e bordi interni costituenti.
+Utilizzato durante la convalida, la generazione di AST e l'emissione della sorgente per compilare senza problemi metanodi compositi.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | -------------- | ----------- |
+| grafico | FlintNodeGraph |             |
+
+### FlintGraphEdge
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintGraphEdge
+```
+
+Nessuna descrizione fornita.
+
+### FlintGraphGroup
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintGraphGroup
+```
+
+Nessuna descrizione fornita.
+
+### FlintGraphNode
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintGraphNode
+```
+
+Nessuna descrizione fornita.
+
+### FlintGraphPort
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintGraphPort
+```
+
+Nessuna descrizione fornita.
+
+### FlintGraphValidationIssue
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintGraphValidationIssue
+```
+
+Nessuna descrizione fornita.
+
+### FlintGraphValidationResult
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintGraphValidationResult
+```
+
+Nessuna descrizione fornita.
+
+### FlintGraphValidationSeverity
+
+**Genere:** tipo
+
+```typescript
+export type FlintGraphValidationSeverity = 'error' | 'warning' | 'info';
+```
+
+Nessuna descrizione fornita.
+
+### FlintMetaNodeDefinition
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintMetaNodeDefinition
+```
+
+Nessuna descrizione fornita.
+
+### FlintMetaNodePortMapping
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintMetaNodePortMapping
+```
+
+Nessuna descrizione fornita.
+
+### FlintMetaNodeSubgraph
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintMetaNodeSubgraph
+```
+
+Nessuna descrizione fornita.
+
+### FlintNodeCategoria
+
+**Genere:** tipo
+
+```typescript
+export type FlintNodeCategory = 'math' | 'logic' | 'text' | 'collection' | 'control' | 'capability' | 'custom';
+```
+
+Nessuna descrizione fornita.
+
+### FlintNodeGraph
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintNodeGraph
+```
+
+Nessuna descrizione fornita.
+
+### FlintNodeKind
+
+**Genere:** tipo
+
+```typescript
+export type FlintNodeKind =
+  'input' | 'output' | 'constant' | 'operation' | 'stdlib_call' | 'capability_call' | 'custom';
+```
+
+Nessuna descrizione fornita.
+
+### FlintNodeSourceMap
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintNodeSourceMap
+```
+
+Nessuna descrizione fornita.
+
+### Direzione FlintPort
+
+**Genere:** tipo
+
+```typescript
+export type FlintPortDirection = 'input' | 'output';
+```
+
+Nessuna descrizione fornita.
+
+## `src/graph-compiler/validator`
+
+### areTypesCompatible
+
+**Tipo:** funzione
+
+```typescript
+function areTypesCompatible(source: FlintTypeName, target: FlintTypeName): boolean;
+```
+
+Verifica la compatibilità strutturale e semantica tra i tipi Flint di origine e di destinazione.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------ | ------------- | ----------- |
+| fonte | FlintTypeName |             |
+| obiettivo | FlintTypeName |             |
+
+### validateGraph
+
+**Tipo:** funzione
+
+```typescript
+function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult;
+```
+
+Convalida la topologia del grafico, le connessioni edge, i tipi di porta e rileva i cicli.
+Restituisce gli ID node ordinati se il grafico è un grafico aciclico diretto (DAG) valido.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ----- | -------------- | ----------- |
+| grafico | FlintNodeGraph |             |
 
 ## `src/graph`
 
-### FlintGraphResult
+### FlintForeignObjectReference
+
+**Tipo:** interfaccia
+
+```typescript
+export interface FlintForeignObjectReference
+```
+
+Riferimento a un oggetto rilocabile esterno fornito al linker.
+
+### Risultato FlintGraph
 
 **Tipo:** interfaccia
 
@@ -1719,9 +1862,9 @@ Nessuna descrizione fornita.
 export interface FlintGraphResult
 ```
 
-Nessuna descrizione fornita.
+Risultato aggregato della risoluzione di un grafico del modulo, restituendo la struttura e la diagnostica del grafico del modulo.
 
-### FlintLinkConfigurazione
+### FlintLink Configurazione
 
 **Tipo:** interfaccia
 
@@ -1729,14 +1872,25 @@ Nessuna descrizione fornita.
 export interface FlintLinkConfiguration
 ```
 
-Nessuna descrizione fornita.
+Opzioni di configurazione che regolano le policy di collegamento dei moduli tra progetti diversi e dello stesso progetto.
 
-### FlintLinkMode
+### Modalità FlintLink
 
 **Genere:** tipo
 
 ```typescript
 export type FlintLinkMode = 'static' | 'dynamic';
+```
+
+Modalità di collegamento che specifica se le dipendenze vengono risolte staticamente (bundled
+in un singolo componente) o dinamicamente (tramite importazioni di runtime a livello di host).
+
+### FlintLinkProfile
+
+**Genere:** tipo
+
+```typescript
+export type FlintLinkProfile = 'standard' | 'minimal' | 'full' | 'dynamic' | 'static' | 'monolithic' | 'cross-package';
 ```
 
 Nessuna descrizione fornita.
@@ -1749,7 +1903,8 @@ Nessuna descrizione fornita.
 export interface FlintModuleEdge
 ```
 
-Nessuna descrizione fornita.
+Bordo di dipendenza diretta nel grafico del modulo che collega un importatore a un importato
+con una strategia di collegamento associata e un intervallo di posizione del codice sorgente.
 
 ### FlintModuleGraph
 
@@ -1759,7 +1914,8 @@ Nessuna descrizione fornita.
 export interface FlintModuleGraph
 ```
 
-Nessuna descrizione fornita.
+Grafico delle dipendenze dei moduli diretto che cattura i moduli risolti, i bordi delle dipendenze,
+e i confini del progetto partecipante.
 
 ### FlintModuleResolver
 
@@ -1769,9 +1925,9 @@ Nessuna descrizione fornita.
 export interface FlintModuleResolver
 ```
 
-Nessuna descrizione fornita.
+Interfaccia per la risoluzione degli specificatori di importazione e il caricamento asincrono del testo sorgente del modulo.
 
-### FlintProject
+### Progetto Flint
 
 **Tipo:** interfaccia
 
@@ -1779,7 +1935,7 @@ Nessuna descrizione fornita.
 export interface FlintProject
 ```
 
-Nessuna descrizione fornita.
+Rappresenta un confine del progetto contenente una radice del file e un identificatore derivato.
 
 ### FlintResolvedModule
 
@@ -1789,7 +1945,18 @@ Nessuna descrizione fornita.
 export interface FlintResolvedModule
 ```
 
-Nessuna descrizione fornita.
+Risolto il problema con il modulo sorgente Flint contenente AST analizzato, testo sorgente,
+associazione root del progetto e hash del contenuto.
+
+### ForeignObjectFormat
+
+**Genere:** tipo
+
+```typescript
+export type ForeignObjectFormat = 'wasm-relocatable' | 'elf-object' | 'mach-o';
+```
+
+Formato oggetto estraneo riposizionabile (compilato da C/C++ clang o Rust cargo).
 
 ### hashFlintModuleGraph
 
@@ -1799,14 +1966,20 @@ Nessuna descrizione fornita.
 function hashFlintModuleGraph(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): string;
 ```
 
-Nessuna descrizione fornita.
+Calcola un hash esadecimale FNV-1a deterministico a 32 bit di un grafico del modulo e la relativa configurazione di collegamento.
 
 #### Parametri
 
-| Nome           | Digitare                | Descrizione |
-| -------------- | ----------------------- | ----------- |
-| grafico        | FlintModuleGraph        |             |
-| configurazione | FlintLinkConfigurazione |             |
+| Nome | Digitare | Descrizione |
+| ------------- | ---------------------- | -------------------------------------------------- |
+| grafico | FlintModuleGraph | - Grafico delle dipendenze del modulo dall'hash.                 |
+| configurazione | FlintLinkConfigurazione | - Configurazione del collegamento che influenza la risoluzione del grafico. |
+
+#### Contrarre
+
+- **@param:** - Grafico delle dipendenze del modulo nell'hash.
+- **@param:** - Configurazione del collegamento che influenza la risoluzione del grafico.
+- **@returns:** Una stringa hash esadecimale minuscola di 8 caratteri.
 
 ### risolvereFlintModuleGraph
 
@@ -1820,15 +1993,22 @@ function resolveFlintModuleGraph(
 ): Promise<FlintGraphResult>;
 ```
 
-Nessuna descrizione fornita.
+Risolve in modo asincrono l'intero grafico delle dipendenze del modulo a partire da uno o più punti di ingresso.
 
 #### Parametri
 
-| Nome           | Digitare                  | Descrizione |
-| -------------- | ------------------------- | ----------- |
-| voci           | stringa di sola lettura[] |             |
-| risolutore     | FlintModuleResolver       |             |
-| configurazione | FlintLinkConfigurazione   |             |
+| Nome | Digitare | Descrizione |
+| ------------- | ---------------------- | ------------------------------------------------------------------- |
+| voci | stringa di sola lettura[] | - Percorsi dei file dei moduli di ingresso root da risolvere.                      |
+| risolutore | FlintModuleResolver | - Risoltore del modulo responsabile della mappatura del percorso e del caricamento del contenuto. |
+| configurazione | FlintLinkConfigurazione | - Opzioni di configurazione del collegamento e del confezionamento.                      |
+
+#### Contrarre
+
+- **@param:** - Percorsi dei file dei moduli di ingresso root da risolvere.
+- **@param:** - Risoltore di moduli responsabile della mappatura dei percorsi e del caricamento dei contenuti.
+- **@param:** - Opzioni di configurazione del collegamento e del packaging.
+- **@returns:** Risultato del grafico contenente moduli risolti, limiti di dipendenza, progetti e diagnostica.
 
 ## `src/identity`
 
@@ -1840,16 +2020,23 @@ Nessuna descrizione fornita.
 function deriveFlintModuleId(fileName: string, root?: string): string;
 ```
 
-Nessuna descrizione fornita.
+Deriva un identificatore di modulo canonico per un file sorgente Flint.
+Elimina i prefissi del percorso radice, gli indicatori di percorso relativi iniziali e l'estensione del file `.flint`.
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| nomefile | stringa  |             |
-| radice   | stringa  |             |
+| Nome | Digitare | Descrizione |
+| -------- | ------ | ------------------------------------------------------------------- |
+| nomefile | stringa | - Nome file o percorso del file sorgente Flint.                       |
+| radice | stringa | - Percorso della directory root opzionale da rimuovere dall'identificatore del modulo. |
 
-### normalizeFlintFileId
+#### Contrarre
+
+- **@param:** - Nome file o percorso del file sorgente Flint.
+- **@param:** - Percorso della directory root opzionale da rimuovere dall'identificatore del modulo.
+- **@returns:** Identificatore del modulo canonico o `'<input>'` se l'identificatore risultante è vuoto.
+
+### normalizzaFlintFileId
 
 **Tipo:** funzione
 
@@ -1857,700 +2044,20 @@ Nessuna descrizione fornita.
 function normalizeFlintFileId(fileName: string): string;
 ```
 
-Nessuna descrizione fornita.
+Normalizza un identificatore di file per la compilazione Flint.
+Elimina i parametri di query, converte i separatori di percorso di Windows in barre POSIX,
+e comprime le barre duplicate.
 
 #### Parametri
 
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| nomefile | stringa  |             |
+| Nome | Digitare | Descrizione |
+| -------- | ------ | ------------------------------- |
+| nomefile | stringa | - Nome del file non elaborato o stringa del percorso. |
 
-## `src/ir`
+#### Contrarre
 
-### countFlintIr
-
-**Tipo:** funzione
-
-```typescript
-function countFlintIr(module: FlintIrModule): FlintIrCounts;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome   | Digitare      | Descrizione |
-| ------ | ------------- | ----------- |
-| modulo | FlintIrModule |             |
-
-### FlintCollectionOperazione
-
-**Genere:** tipo
-
-```typescript
-export type FlintCollectionOperation = 'array-iter' | 'iterator-next' | 'array-length';
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrArrayLiteralExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrArrayLiteralExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrAssignmentStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrAssignmentStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrBinaryExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrBinaryExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrCallExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrCallExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrCounts
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrCounts
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrDoWhileStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrDoWhileStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrEnumValueExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrEnumValueExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrExpression
-
-**Genere:** tipo
-
-```typescript
-export type FlintIrExpression =
-  | FlintIrBinaryExpression
-  | FlintIrCallExpression
-  | FlintIrIdentifierExpression
-  | FlintIrLiteralExpression
-  | FlintIrFunctionValueExpression
-  | FlintIrStructValueExpression
-  | FlintIrEnumValueExpression
-  | FlintIrMatchExpression
-  | FlintIrUnaryExpression
-  | FlintIrArrayLiteralExpression
-  | FlintIrIndexExpression;
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrExpressionStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrExpressionStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrFunction
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrFunction
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrFunctionAnalysis
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrFunctionAnalysis
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrFunctionValueExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrFunctionValueExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrIdentifierExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrIdentifierExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrIfStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrIfStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrIndexExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrIndexExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrIteratorLoopStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrIteratorLoopStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrLetStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrLetStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrLiteralExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrLiteralExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrMatchArm
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrMatchArm
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrMatchExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrMatchExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrMatchStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrMatchStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrModule
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrModule
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrPurity
-
-**Genere:** tipo
-
-```typescript
-export type FlintIrPurity = 'pure' | 'effectful' | 'unknown';
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrReturnStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrReturnStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrStatement
-
-**Genere:** tipo
-
-```typescript
-export type FlintIrStatement =
-  | FlintIrExpressionStatement
-  | FlintIrAssignmentStatement
-  | FlintIrIfStatement
-  | FlintIrWhileStatement
-  | FlintIrDoWhileStatement
-  | FlintIrLetStatement
-  | FlintIrReturnStatement
-  | FlintIrMatchStatement
-  | FlintIrSwitchStatement
-  | FlintIrYieldStatement
-  | FlintIrIteratorLoopStatement;
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrStructValueExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrStructValueExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrSwitchStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrSwitchStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrUnaryExpression
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrUnaryExpression
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrWhileStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrWhileStatement
-```
-
-Nessuna descrizione fornita.
-
-### FlintIrYieldStatement
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIrYieldStatement
-```
-
-Nessuna descrizione fornita.
-
-### lowerFlintIrToModule
-
-**Tipo:** funzione
-
-```typescript
-function lowerFlintIrToModule(module: FlintIrModule): FlintModule;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome   | Digitare      | Descrizione |
-| ------ | ------------- | ----------- |
-| modulo | FlintIrModule |             |
-
-### lowerFlintToIr
-
-**Tipo:** funzione
-
-```typescript
-function lowerFlintToIr(module: FlintModule): FlintIrModule;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome   | Digitare    | Descrizione |
-| ------ | ----------- | ----------- |
-| modulo | FlintModule |             |
-
-## `src/lexer`
-
-### FlintLexResult
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintLexResult
-```
-
-Nessuna descrizione fornita.
-
-### FlintToken
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintToken
-```
-
-Nessuna descrizione fornita.
-
-### FlintTokenKind
-
-**Genere:** tipo
-
-```typescript
-export type FlintTokenKind =
-  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
-```
-
-Nessuna descrizione fornita.
-
-### lexFlint
-
-**Tipo:** funzione
-
-```typescript
-function lexFlint(source: string, fileName = '<input>'): FlintLexResult;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome     | Digitare | Descrizione |
-| -------- | -------- | ----------- |
-| fonte    | stringa  |             |
-| nomefile |          |             |
-
-## `src/linker`
-
-### FlintLinkResult
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintLinkResult
-```
-
-Nessuna descrizione fornita.
-
-### validateFlintLinks
-
-**Tipo:** funzione
-
-```typescript
-function validateFlintLinks(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): FlintLinkResult;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome           | Digitare                | Descrizione |
-| -------------- | ----------------------- | ----------- |
-| grafico        | FlintModuleGraph        |             |
-| configurazione | FlintLinkConfigurazione |             |
-
-## `src/manifest`
-
-### createFlintAbiManifest
-
-**Tipo:** funzione
-
-```typescript
-function createFlintAbiManifest(module: FlintModule, options: FlintAbiManifestOptions = {}): FlintAbiManifest;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome    | Digitare                | Descrizione |
-| ------- | ----------------------- | ----------- |
-| modulo  | FlintModule             |             |
-| opzioni | FlintAbiManifestOptions |             |
-
-### FORGE_WEB_SCRIPT_ABI_VERSION
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-Nessuna descrizione fornita.
-
-### FORGE_WEB_SCRIPT_LANGUAGE_VERSION
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-Nessuna descrizione fornita.
-
-### FlintAbiFunction
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAbiFunction
-```
-
-Nessuna descrizione fornita.
-
-### FlintAbiManifest
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAbiManifest
-```
-
-Nessuna descrizione fornita.
-
-### FlintAbiManifestOptions
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAbiManifestOptions
-```
-
-Nessuna descrizione fornita.
-
-### FlintAbiParametro
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAbiParameter
-```
-
-Nessuna descrizione fornita.
-
-### FlintAbiVersion
-
-**Genere:** tipo
-
-```typescript
-export type FlintAbiVersion = typeof FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-Nessuna descrizione fornita.
-
-### FlintAggregateFieldLayout
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAggregateFieldLayout
-```
-
-Nessuna descrizione fornita.
-
-### FlintAggregateLayout
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintAggregateLayout
-```
-
-Nessuna descrizione fornita.
-
-### FlintCollectionLayout
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintCollectionLayout
-```
-
-Nessuna descrizione fornita.
-
-### FlintDynamicLinkMetadata
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintDynamicLinkMetadata
-```
-
-### FlintDynamicModuleBinding
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintDynamicModuleBinding
-```
-
-### FlintEnumMetadata
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintEnumMetadata
-```
-
-Nessuna descrizione fornita.
-
-### FlintHostImport
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintHostImport
-```
-
-Nessuna descrizione fornita.
-
-### FlintIteratorBoundaryDescriptor
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintIteratorBoundaryDescriptor
-```
-
-Nessuna descrizione fornita.
-
-### FlintLanguageVersion
-
-**Genere:** tipo
-
-```typescript
-export type FlintLanguageVersion = typeof FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-Nessuna descrizione fornita.
-
-### FlintLinkedExport
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintLinkedExport
-```
-
-Nessuna descrizione fornita.
-
-### FlintMemoryLayout
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintMemoryLayout
-```
-
-Nessuna descrizione fornita.
-
-### FlintSourceImport
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintSourceImport
-```
-
-Nessuna descrizione fornita.
-
-### FlintSpecializzazione
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintSpecialization
-```
-
-Nessuna descrizione fornita.
-
-### FlintValueRepresentation
-
-**Genere:** tipo
-
-```typescript
-export type FlintValueRepresentation =
-  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
-```
-
-Nessuna descrizione fornita.
+- **@param:** - Nome del file non elaborato o stringa del percorso.
+- **@returns:** Identificatore del percorso del file in stile POSIX normalizzato.
 
 ## `src/module-types`
 
@@ -2562,7 +2069,7 @@ Nessuna descrizione fornita.
 export interface FlintImportTypeEnvironment
 ```
 
-Nessuna descrizione fornita.
+Ambiente di tipo esterno contenente dichiarazioni importate in un modulo.
 
 ### risolvereFlintImportTypeEnvironment
 
@@ -2575,130 +2082,160 @@ function resolveFlintImportTypeEnvironment(
 ): FlintImportTypeEnvironment;
 ```
 
-Nessuna descrizione fornita.
+Risolve le firme delle funzioni importate dai moduli di dipendenza upstream in un grafico del modulo.
 
 #### Parametri
 
-| Nome        | Digitare            | Descrizione |
-| ----------- | ------------------- | ----------- |
-| importatore | FlintResolvedModule |             |
-| grafico     | FlintModuleGraph    |             |
+| Nome | Digitare | Descrizione |
+| -------- | ------------------- | ------------------------------------------------------------------------ |
+| importatore | Modulo FlintResolved | - Risolto il modulo le cui dipendenze di importazione vengono ispezionate.         |
+| grafico | FlintModuleGraph | - Grafico delle dipendenze multi-modulo contenente tutti i moduli e i bordi collegati. |
 
-## `src/optimizer`
+#### Contrarre
 
-### FlintOptimizationDecision
+- **@param:** - Risolto il modulo le cui dipendenze di importazione vengono ispezionate.
+- **@param:** - Grafico delle dipendenze multi-modulo contenente tutti i moduli e i bordi collegati.
+- **@returns:** Un ambiente di tipo import contenente funzioni esterne esportate (sia semplici che con prefisso alias).
 
-**Tipo:** interfaccia
+## `src/safety`
 
-```typescript
-export interface FlintOptimizationDecision
-```
-
-Nessuna descrizione fornita.
-
-### FlintOptimizationReport
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintOptimizationReport
-```
-
-Nessuna descrizione fornita.
-
-### FlintOptimizationResult
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintOptimizationResult
-```
-
-Nessuna descrizione fornita.
-
-### ottimizzareFlintIr
+### canLifetimeEscape
 
 **Tipo:** funzione
 
 ```typescript
-function optimizeFlintIr(input: FlintIrModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function canLifetimeEscape(source: RegionLifetime, target: RegionLifetime): boolean;
 ```
 
-Nessuna descrizione fornita.
+Verifica che un'assegnazione o un ritorno dalla durata di origine alla durata di destinazione non violi la sicurezza della regione.
+Non è consentita la memorizzazione di un riferimento di breve durata in un target di lunga durata senza promozione/clonazione esplicita.
 
 #### Parametri
 
-| Nome     | Digitare              | Descrizione |
-| -------- | --------------------- | ----------- |
-| ingresso | FlintIrModule         |             |
-| modalità | 'debug' \| 'rilascio' |             |
+| Nome | Digitare | Descrizione |
+| ------ | -------------- | ----------- |
+| fonte | RegioneDurata |             |
+| obiettivo | RegioneDurata |             |
 
-### ottimizzareFlintModule
+### controllaFlintSafety
 
 **Tipo:** funzione
 
 ```typescript
-function optimizeFlintModule(module: FlintModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function checkFlintSafety(module: FlintModule, fileName: string, diagnostics: FlintDiagnostic[]): void;
 ```
 
-Nessuna descrizione fornita.
+Esegue controlli a livello di origine che non possono essere rappresentati dalle stringhe di tipo legacy.
 
 #### Parametri
 
-| Nome     | Digitare              | Descrizione |
-| -------- | --------------------- | ----------- |
-| modulo   | FlintModule           |             |
-| modalità | 'debug' \| 'rilascio' |             |
+| Nome | Digitare | Descrizione |
+| ----------- | ----------------- | ------------------------------------ |
+| modulo | Modulo Flint | - Modulo AST da convalidare.            |
+| nomefile | stringa | - Nome del file utilizzato per la diagnostica.    |
+| diagnostica | FlintDiagnostic[] | - Accumulatore per la diagnostica degli errori. |
 
-## `src/parser`
+#### Contrarre
 
-### FlintParseOptions
+- **@param:** - Modulo AST da convalidare.
+- **@param:** - Nome file utilizzato per la diagnostica.
+- **@param:** - Accumulatore per la diagnostica degli errori.
+
+### ChiusuraCaptureInfo
 
 **Tipo:** interfaccia
 
 ```typescript
-export interface FlintParseOptions
+export interface ClosureCaptureInfo
 ```
 
-Nessuna descrizione fornita.
+Descrittore di una variabile catturata da una chiusura.
 
-### FlintParseResult
+### MoveSafetyInfo
 
 **Tipo:** interfaccia
 
 ```typescript
-export interface FlintParseResult
+export interface MoveSafetyInfo
 ```
 
-Nessuna descrizione fornita.
+Struttura del descrittore delle informazioni di sicurezza sullo spostamento.
 
-### parseFlint
-
-**Tipo:** funzione
-
-```typescript
-function parseFlint(source: string, fileName = '<input>', options: FlintParseOptions = {}): FlintParseResult;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome     | Digitare          | Descrizione |
-| -------- | ----------------- | ----------- |
-| fonte    | stringa           |             |
-| nomefile |                   |             |
-| opzioni  | FlintParseOptions |             |
-
-### tipiprimitivi
+### REGIONE_LIFETIME_ORDER
 
 **Genere:** costante
 
 ```typescript
-export const primitiveTypes;
+export const REGION_LIFETIME_ORDER: Readonly<Record<RegionLifetime, number>>;
 ```
 
 Nessuna descrizione fornita.
+
+### REGIONE_LIFETIMES
+
+**Genere:** costante
+
+```typescript
+export const REGION_LIFETIMES;
+```
+
+Nessuna descrizione fornita.
+
+### RegioneLifetime
+
+**Genere:** tipo
+
+```typescript
+export type RegionLifetime = 'local' | 'function' | 'arena' | 'global' | 'Local' | 'Function' | 'Arena' | 'GlobalHeap';
+```
+
+Gerarchia reticolare della durata regionale: Locale <Funzione <Arena <GlobalHeap.
+
+### validateClosureCaptureSafety
+
+**Tipo:** funzione
+
+```typescript
+function validateClosureCaptureSafety(capture: ClosureCaptureInfo): {
+  readonly safe: boolean;
+  readonly requiresHeapPromotion: boolean;
+  readonly reason?: string;
+};
+```
+
+Convalida la sicurezza dell'acquisizione della chiusura e determina se la promozione dell'heap variabile dello stack è obbligatoria.
+Previene il danneggiamento della memoria Use-After-Scope quando le chiusure sopravvivono agli stack frame acquisiti.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ------------------ | -------------------------------------- |
+| catturare | ChiusuraCaptureInfo | - Descrittore di metadati di acquisizione di chiusura. |
+
+#### Contrarre
+
+- **@param:** - Descrittore di metadati di acquisizione di chiusura.
+- **@returns:** Risultato della convalida, se è richiesta la promozione dell'heap e messaggio di errore se non sicuro.
+
+### convalidaMoveSafety
+
+**Tipo:** funzione
+
+```typescript
+function validateMoveSafety(info: MoveSafetyInfo): {
+  readonly safe: boolean;
+  readonly reason?: string;
+};
+```
+
+Verifica se un valore aggregato o struttura può essere spostato in modo sicuro in base al valore.
+Impedisce lo spostamento di strutture bloccate o autoreferenziali per eliminare la rottura dello stack frame e i rischi di tipo Use-After-Move.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ---- | -------------- | ----------- |
+| informazioni | MoveSafetyInfo |             |
 
 ## `src/self-hosted`
 
@@ -2710,9 +2247,13 @@ Nessuna descrizione fornita.
 function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHostedSourceModule[];
 ```
 
-Nessuna descrizione fornita.
+Crea il manifesto completo dei moduli di origine del compilatore self-hosted.
 
-### decodeFlintSelfHostedFingerprint
+#### Contrarre
+
+- **@returns:** Un array di moduli sorgente self-hosted.
+
+### decodificareFlintSelfHostedFingerprint
 
 **Tipo:** funzione
 
@@ -2720,15 +2261,20 @@ Nessuna descrizione fornita.
 function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
-Nessuna descrizione fornita.
+Decodifica un'impronta digitale ospitata autonomamente da un array di byte UTF-8.
 
 #### Parametri
 
-| Nome | Digitare   | Descrizione |
-| ---- | ---------- | ----------- |
-| byte | Uint8Array |             |
+| Nome | Digitare | Descrizione |
+| ----- | ---------- | ------------------------------- |
+| byte | Uint8Array | - L'array di byte codificato UTF-8. |
 
-### encodeFlintSelfHostedFingerprint
+#### Contrarre
+
+- **@param:** - Array di byte con codifica UTF-8.
+- **@returns:** La stringa dell'impronta digitale decodificata.
+
+### codificareFlintSelfHostedFingerprint
 
 **Tipo:** funzione
 
@@ -2736,13 +2282,18 @@ Nessuna descrizione fornita.
 function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
-Nessuna descrizione fornita.
+Codifica una stringa di impronte digitali ospitata autonomamente in un array di byte UTF-8.
 
 #### Parametri
 
-| Nome              | Digitare | Descrizione |
-| ----------------- | -------- | ----------- |
-| impronta digitale | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ----------- | ------ | ------------------------- |
+| impronta digitale | stringa | - La stringa dell'impronta digitale. |
+
+#### Contrarre
+
+- **@param:** - La stringa dell'impronta digitale.
+- **@returns:** L'array di byte codificato UTF-8.
 
 ### FlintSelfHostedCompilation
 
@@ -2752,7 +2303,8 @@ Nessuna descrizione fornita.
 export interface FlintSelfHostedCompilation
 ```
 
-Nessuna descrizione fornita.
+Rappresenta l'unità di compilazione self-hosted limitata, unendo il riferimento seed TypeScript
+esecuzione con la fase VM lex/normalizzazione token self-hosted limitata.
 
 ### FlintSelfHostedNormalizedOutput
 
@@ -2762,7 +2314,8 @@ Nessuna descrizione fornita.
 export interface FlintSelfHostedNormalizedOutput
 ```
 
-Nessuna descrizione fornita.
+Rappresenta la rappresentazione dell'output normalizzata e deterministica di una compilazione Flint.
+Ciò garantisce che gli artefatti di compilazione (AST, IR, WA, diagnostica) possano essere confrontati in modo stabile.
 
 ### FlintSelfHostedVmExecutionMode
 
@@ -2772,9 +2325,9 @@ Nessuna descrizione fornita.
 export type FlintSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-Nessuna descrizione fornita.
+La modalità di esecuzione per la VM Flint durante l'esecuzione di una compilazione self-hosted.
 
-### prepareFlintSelfHostedCompilation
+### preparareFlintSelfHostedCompilation
 
 **Tipo:** funzione
 
@@ -2784,13 +2337,13 @@ function prepareFlintSelfHostedCompilation(input: FlintCompileInput): FlintSelfH
 
 Preparare un'unità di compilazione limitata ospitata autonomamente.
 
-The VM module runs the real lex/token-normalization stage on the input source.
-Full frontend/backend compilation remains on the TypeScript seed until later cutover.
+Il modulo VM esegue la fase di normalizzazione lex/token reale sulla sorgente di input.
+La compilazione completa del frontend/backend rimane nel seed TypeScript fino al cutover successivo.
 
 #### Parametri
 
-| Nome     | Digitare          | Descrizione |
-| -------- | ----------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ----------------- | ----------- |
 | ingresso | FlintCompileInput |             |
 
 ### prepareFlintSelfHostedCompilationLegacyFingerprint
@@ -2805,8 +2358,8 @@ Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome     | Digitare          | Descrizione |
-| -------- | ----------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ----------------- | ----------- |
 | ingresso | FlintCompileInput |             |
 
 #### Contrarre
@@ -2828,18 +2381,26 @@ function createFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-Nessuna descrizione fornita.
+Implementazione createFlintSelfHostedStageArtifact.
 
 #### Parametri
 
-| Nome         | Digitare                             | Descrizione |
-| ------------ | ------------------------------------ | ----------- |
-| fase         | FlintSelfHostedCompilerStage         |             |
-| identità     | FlintSelfHostedStageArtifactIdentity |             |
-| carico utile | Uint8Array                           |             |
-| diagnostica  | sola lettura FlintDiagnostic[]       |             |
+| Nome | Digitare | Descrizione |
+| ----------- | ------------------------------------ | ---------------------------- |
+| fase | FlintSelfHostedCompilerStage | - Il parametro dello stadio.       |
+| identità | FlintSelfHostedStageArtifactIdentity | - Il parametro identità.    |
+| carico utile | Uint8Array | - Il parametro del carico utile.     |
+| diagnostica | sola lettura FlintDiagnostic[] | - Il parametro di diagnostica. |
 
-### decodeFlintSelfHostedDiagnostics
+#### Contrarre
+
+- **@param:** - Il parametro dello stage.
+- **@param:** - Il parametro identità.
+- **@param:** - Il parametro del carico utile.
+- **@param:** - Il parametro di diagnostica.
+- **@returns:** Il risultato FlintSelfHostedStageArtifact.
+
+### decodificareFlintSelfHostedDiagnostics
 
 **Tipo:** funzione
 
@@ -2847,15 +2408,20 @@ Nessuna descrizione fornita.
 function decodeFlintSelfHostedDiagnostics(bytes: Uint8Array): readonly FlintDiagnostic[];
 ```
 
-Nessuna descrizione fornita.
+decodificare l'implementazione di FlintSelfHostedDiagnostics.
 
 #### Parametri
 
-| Nome | Digitare   | Descrizione |
-| ---- | ---------- | ----------- |
-| byte | Uint8Array |             |
+| Nome | Digitare | Descrizione |
+| ----- | ---------- | ---------------------- |
+| byte | Uint8Array | - Il parametro byte. |
 
-### decodeFlintSelfHostedStageArtifact
+#### Contrarre
+
+- **@param:** - Il parametro byte.
+- **@returns:** Il risultato FlintDiagnostic[] di sola lettura.
+
+### decodificareFlintSelfHostedStageArtifact
 
 **Tipo:** funzione
 
@@ -2866,14 +2432,20 @@ function decodeFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-Nessuna descrizione fornita.
+decodificare l'implementazione di FlintSelfHostedStageArtifact.
 
 #### Parametri
 
-| Nome    | Digitare                                  | Descrizione |
-| ------- | ----------------------------------------- | ----------- |
-| byte    | Uint8Array                                |             |
-| opzioni | FlintSelfHostedStageArtifactDecodeOptions |             |
+| Nome | Digitare | Descrizione |
+| ------- | ----------------------------------------- | ------------------------ |
+| byte | Uint8Array | - Il parametro byte.   |
+| opzioni | FlintSelfHostedStageArtifactDecodeOptions | - Il parametro delle opzioni. |
+
+#### Contrarre
+
+- **@param:** - Il parametro byte.
+- **@param:** - Il parametro delle opzioni.
+- **@returns:** Il risultato FlintSelfHostedStageArtifact.
 
 ### codificaFlintSelfHostedDiagnostics
 
@@ -2883,15 +2455,20 @@ Nessuna descrizione fornita.
 function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[]): Uint8Array;
 ```
 
-Nessuna descrizione fornita.
+codificare l'implementazione di FlintSelfHostedDiagnostics.
 
 #### Parametri
 
-| Nome        | Digitare                       | Descrizione |
-| ----------- | ------------------------------ | ----------- |
-| diagnostica | sola lettura FlintDiagnostic[] |             |
+| Nome | Digitare | Descrizione |
+| ----------- | -------------------------- | ---------------------------- |
+| diagnostica | sola lettura FlintDiagnostic[] | - Il parametro di diagnostica. |
 
-### encodeFlintSelfHostedStageArtifact
+#### Contrarre
+
+- **@param:** - Il parametro di diagnostica.
+- **@returns:** Il risultato Uint8Array.
+
+### codificareFlintSelfHostedStageArtifact
 
 **Tipo:** funzione
 
@@ -2899,50 +2476,55 @@ Nessuna descrizione fornita.
 function encodeFlintSelfHostedStageArtifact(artifact: FlintSelfHostedStageArtifact): Uint8Array;
 ```
 
-Nessuna descrizione fornita.
+codificare l'implementazione di FlintSelfHostedStageArtifact.
 
 #### Parametri
 
-| Nome      | Digitare                     | Descrizione |
-| --------- | ---------------------------- | ----------- |
-| artefatto | FlintSelfHostedStageArtifact |             |
+| Nome | Digitare | Descrizione |
+| -------- | ---------------------------- | ------------------------- |
+| artefatto | FlintSelfHostedStageArtifact | - Il parametro artefatto. |
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+#### Contrarre
+
+- **@param:** - Il parametro dell'artefatto.
+- **@returns:** Il risultato Uint8Array.
+
+### FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **Genere:** costante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
+export const FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 Nessuna descrizione fornita.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
 
 **Genere:** costante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 Nessuna descrizione fornita.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
 
 **Genere:** costante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 Nessuna descrizione fornita.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
+### FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
 
 **Genere:** costante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
+export const FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
 ```
 
 Nessuna descrizione fornita.
@@ -2956,7 +2538,7 @@ export type FlintSelfHostedCompilerStage =
   'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
-Nessuna descrizione fornita.
+Implementazione di FlintSelfHostedCompilerStage.
 
 ### FlintSelfHostedStageArtifact
 
@@ -2966,7 +2548,7 @@ Nessuna descrizione fornita.
 export interface FlintSelfHostedStageArtifact
 ```
 
-Nessuna descrizione fornita.
+Implementazione di FlintSelfHostedStageArtifact.
 
 ### FlintSelfHostedStageArtifactDecodeOptions
 
@@ -2976,7 +2558,7 @@ Nessuna descrizione fornita.
 export interface FlintSelfHostedStageArtifactDecodeOptions
 ```
 
-Nessuna descrizione fornita.
+Implementazione di FlintSelfHostedStageArtifactDecodeOptions.
 
 ### FlintSelfHostedStageArtifactIdentity
 
@@ -2986,7 +2568,7 @@ Nessuna descrizione fornita.
 export interface FlintSelfHostedStageArtifactIdentity
 ```
 
-Nessuna descrizione fornita.
+Implementazione di FlintSelfHostedStageArtifactIdentity.
 
 ### hashFlintSelfHostedBytes
 
@@ -2996,13 +2578,18 @@ Nessuna descrizione fornita.
 function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
-Nessuna descrizione fornita.
+Implementazione di hashFlintSelfHostedBytes.
 
 #### Parametri
 
-| Nome | Digitare   | Descrizione |
-| ---- | ---------- | ----------- |
-| byte | Uint8Array |             |
+| Nome | Digitare | Descrizione |
+| ----- | ---------- | ---------------------- |
+| byte | Uint8Array | - Il parametro byte. |
+
+#### Contrarre
+
+- **@param:** - Il parametro byte.
+- **@returns:** Il risultato della stringa.
 
 ### hashFlintSelfHostedSourceIdentity
 
@@ -3012,21 +2599,28 @@ Nessuna descrizione fornita.
 function hashFlintSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
-Nessuna descrizione fornita.
+Implementazione di hashFlintSelfHostedSourceIdentity.
 
 #### Parametri
 
-| Nome      | Digitare | Descrizione |
-| --------- | -------- | ----------- |
-| fonte     | stringa  |             |
-| nomefile  | stringa  |             |
-| graphHash | stringa  |             |
+| Nome | Digitare | Descrizione |
+| --------- | ------ | -------------------------- |
+| fonte | stringa | - Il parametro di origine.    |
+| nomefile | stringa | - Il parametro nomefile.  |
+| graphHash | stringa | - Il parametro graphHash. |
 
-## `src/self-hosted/fws/lexer`
+#### Contrarre
+
+- **@param:** - Il parametro di origine.
+- **@param:** - Il parametro fileName.
+- **@param:** - Il parametro graphHash.
+- **@returns:** Il risultato della stringa.
+
+## `src/self-hosted/flint/lexer`
 
 ### is_ws
 
-**Tipo:** fws-export
+**Tipo:** esportazione di selce
 
 ```typescript
 export fn is_ws(byte: i32) -> bool
@@ -3036,9 +2630,9 @@ Restituisce vero quando il byte è uno spazio bianco ASCII.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione                |
-| ---- | -------- | -------------------------- |
-| byte | i32      | Valore del byte candidato. |
+| Nome | Digitare | Descrizione |
+| ---- | ---- | --------------------- |
+| byte | i32 | Valore del byte candidato. |
 
 #### Contrarre
 
@@ -3047,7 +2641,7 @@ Restituisce vero quando il byte è uno spazio bianco ASCII.
 
 ## `src/self-hosted/lex-stage`
 
-### computeFlintLexStageFingerprint
+### computaFlintLexStageFingerprint
 
 **Tipo:** funzione
 
@@ -3060,9 +2654,14 @@ Deve rimanere identico dal punto di vista comportamentale a {@link createFlintLe
 
 #### Parametri
 
-| Nome  | Digitare | Descrizione |
-| ----- | -------- | ----------- |
-| fonte | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ------ | ------ | -------------------- |
+| fonte | stringa | - Testo sorgente Flint. |
+
+#### Contrarre
+
+- **@param:** - Testo sorgente Flint.
+- **@returns:** Impronta digitale intera con segno a 32 bit.
 
 ### createFlintLexStageVmModule
 
@@ -3077,47 +2676,47 @@ Voce: lex_fingerprint(fonte: FlintSourceBytes) -> i32
 
 #### Parametri
 
-| Nome      | Digitare | Descrizione |
-| --------- | -------- | ----------- |
-| fonteHash | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ---------- | ------ | ----------- |
+| fonteHash | stringa |             |
 
-### codificaFlintLexStageSource
+### codificareFlintLexStageSource
 
 **Tipo:** funzione
 
 ```typescript
 function encodeFlintLexStageSource(source: string): {
   readonly kind: 'aggregate';
-  readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+  readonly layout: typeof FLINT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
 };
 ```
 
-Nessuna descrizione fornita.
+Codifica il codice sorgente nella rappresentazione binaria prevista dallo stadio lexer VM.
 
 #### Parametri
 
-| Nome  | Digitare | Descrizione |
-| ----- | -------- | ----------- |
-| fonte | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ------ | ------ | ----------- |
+| fonte | stringa |             |
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+### FLINT_LEX_STAGE_ENTRY
 
 **Genere:** costante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
+export const FLINT_LEX_STAGE_ENTRY;
 ```
 
 Nessuna descrizione fornita.
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+### FLINT_LEX_STAGE_SOURCE_LAYOUT
 
 **Genere:** costante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+export const FLINT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 Nessuna descrizione fornita.
@@ -3130,7 +2729,7 @@ Nessuna descrizione fornita.
 export interface FlintSelfHostedVmFunction
 ```
 
-Nessuna descrizione fornita.
+Definizione della funzione eseguita dalla macchina virtuale self-hosted.
 
 ### FlintSelfHostedVmIstruzione
 
@@ -3140,7 +2739,7 @@ Nessuna descrizione fornita.
 export type FlintSelfHostedVmInstruction = |
 ```
 
-Nessuna descrizione fornita.
+Tupla di istruzioni della macchina virtuale eseguita durante il lexing self-hosted.
 
 ### FlintSelfHostedVmModule
 
@@ -3150,7 +2749,7 @@ Nessuna descrizione fornita.
 export interface FlintSelfHostedVmModule
 ```
 
-Nessuna descrizione fornita.
+Struttura del modulo VM del compilatore self-hosted contenente bytecode e costanti.
 
 ### FlintSelfHostedVmValue
 
@@ -3160,7 +2759,7 @@ Nessuna descrizione fornita.
 export type FlintSelfHostedVmValue = |
 ```
 
-Nessuna descrizione fornita.
+Valore costante archiviato nel pool costante di VM self-hosted.
 
 ## `src/self-hosted/parser-module-stage`
 
@@ -3177,23 +2776,23 @@ function createFlintParserModuleVmModule(
 ```
 
 Il modulo VM abbassato a mano per la fase del modulo parser limitato.
-Voce: parse_module_stage (fonte: FlintSourceBytes) -> busta di byte.
+Voce: parse_module_stage(fonte: FlintSourceBytes) -> busta di byte.
 
-Envelope layout (all u32 little-endian):
+Layout della busta (tutti gli u32 little-endian):
 [0] failFlag (1 = grammatica esterna al sottoinsieme v1 limitato; carico utile del modulo assente)
-[4] diagFlag (1 = è stata registrata una singola diagnostica FLINT-PARSE-052 delimitata)
+[4] diagFlag (1 = è stata registrata una diagnostica FLINT-PARSE-052 delimitata singola)
 [8..32) intervallo diagnostico (inizio,fine,riga,colonna,fineriga,finecolonna)
 [32..) byte di payload del modulo (significativo solo quando failFlag = 0)
 
 #### Parametri
 
-| Nome      | Digitare                      | Descrizione |
-| --------- | ----------------------------- | ----------- |
-| fonteHash | stringa                       |             |
-| nomefile  | stringa                       |             |
-| opzioni   | FlintParserModuleStageOptions |             |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------- | ----------- |
+| fonteHash | stringa |             |
+| nomefile | stringa |             |
+| opzioni | FlintParserModuleStageOptions |             |
 
-### decodeFlintParserModuleEnvelope
+### decodificareFlintParserModuleEnvelope
 
 **Tipo:** funzione
 
@@ -3201,20 +2800,25 @@ Envelope layout (all u32 little-endian):
 function decodeFlintParserModuleEnvelope(bytes: Uint8Array): FlintParserModuleEnvelope;
 ```
 
-Nessuna descrizione fornita.
+decodificare l'implementazione di FlintParserModuleEnvelope.
 
 #### Parametri
 
-| Nome | Digitare   | Descrizione |
-| ---- | ---------- | ----------- |
-| byte | Uint8Array |             |
+| Nome | Digitare | Descrizione |
+| ----- | ---------- | ---------------------- |
+| byte | Uint8Array | - Il parametro byte. |
 
-### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+#### Contrarre
+
+- **@param:** - Il parametro byte.
+- **@returns:** Il risultato FlintParserModuleEnvelope.
+
+### FLINT_PARSER_MODULE_STAGE_ENTRY
 
 **Genere:** costante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
+export const FLINT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 Nessuna descrizione fornita.
@@ -3227,6 +2831,8 @@ Nessuna descrizione fornita.
 export interface FlintParserModuleEnvelope
 ```
 
+Busta decodificata restituita da {@link FLINT_PARSER_MODULE_STAGE_ENTRY}.
+
 ### FlintParserModuleStageOptions
 
 **Tipo:** interfaccia
@@ -3235,7 +2841,7 @@ export interface FlintParserModuleEnvelope
 export interface FlintParserModuleStageOptions
 ```
 
-Nessuna descrizione fornita.
+Implementazione di FlintParserModuleStageOptions.
 
 ## `src/self-hosted/parser-stage`
 
@@ -3247,14 +2853,18 @@ Nessuna descrizione fornita.
 function computeFlintParserStageFingerprint(source: string): number;
 ```
 
-Riferimento seed per la fase del parser self-hosted.
-Must stay behaviorally identical to {@link createFlintParserStageVmModule}.
+Calcola un'impronta deterministica FNV a 32 bit per la fase del parser self-hosted.
 
 #### Parametri
 
-| Nome  | Digitare | Descrizione |
-| ----- | -------- | ----------- |
-| fonte | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ------ | ------ | --------------------------- |
+| fonte | stringa | - Stringa del codice sorgente Flint. |
+
+#### Contrarre
+
+- **@param:** - Stringa del codice sorgente Flint.
+- **@returns:** Impronta digitale deterministica intera con segno a 32 bit.
 
 ### createFlintParserStageVmModule
 
@@ -3272,17 +2882,17 @@ Voce: parse_stage (fonte: FlintSourceBytes) -> i32
 
 #### Parametri
 
-| Nome      | Digitare                        | Descrizione |
-| --------- | ------------------------------- | ----------- |
-| fonteHash | stringa                         |             |
-| opzioni   | FlintParserStageVmModuleOptions |             |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------- | ----------- |
+| fonteHash | stringa |             |
+| opzioni | FlintParserStageVmModuleOptions |             |
 
-### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+### FLINT_PARSER_STAGE_ENTRY
 
 **Genere:** costante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
+export const FLINT_PARSER_STAGE_ENTRY;
 ```
 
 Nessuna descrizione fornita.
@@ -3295,7 +2905,7 @@ Nessuna descrizione fornita.
 export interface FlintParserStageVmModuleOptions
 ```
 
-Manopole di fabbrica opzionali utilizzate dai test di divergenza deliberata.
+Manopole di fabbrica opzionali utilizzate dai test di divergenza intenzionali.
 
 ## `src/self-hosted/stage-codec`
 
@@ -3313,17 +2923,26 @@ function createFlintSelfHostedParserArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-Nessuna descrizione fornita.
+Implementazione createFlintSelfHostedParserArtifact.
 
 #### Parametri
 
-| Nome        | Digitare                       | Descrizione |
-| ----------- | ------------------------------ | ----------- |
-| fonte       | stringa                        |             |
-| nomefile    | stringa                        |             |
-| modulo      | FlintModule                    |             |
-| diagnostica | sola lettura FlintDiagnostic[] |             |
-| graphHash   | stringa                        |             |
+| Nome | Digitare | Descrizione |
+| ----------- | -------------------------- | ---------------------------- |
+| fonte | stringa | - Il parametro di origine.      |
+| nomefile | stringa | - Il parametro nomefile.    |
+| modulo | Modulo Flint | - Il parametro del modulo.      |
+| diagnostica | sola lettura FlintDiagnostic[] | - Il parametro di diagnostica. |
+| graphHash | stringa | - Il parametro graphHash.   |
+
+#### Contrarre
+
+- **@param:** - Il parametro di origine.
+- **@param:** - Il parametro fileName.
+- **@param:** - Il parametro del modulo.
+- **@param:** - Il parametro di diagnostica.
+- **@param:** - Il parametro graphHash.
+- **@returns:** Il risultato FlintSelfHostedStageArtifact.
 
 ### createFlintSelfHostedTokenArtifact
 
@@ -3339,19 +2958,28 @@ function createFlintSelfHostedTokenArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-Nessuna descrizione fornita.
+Implementazione createFlintSelfHostedTokenArtifact.
 
 #### Parametri
 
-| Nome        | Digitare                       | Descrizione |
-| ----------- | ------------------------------ | ----------- |
-| fonte       | stringa                        |             |
-| nomefile    | stringa                        |             |
-| gettoni     | sola lettura FlintToken[]      |             |
-| diagnostica | sola lettura FlintDiagnostic[] |             |
-| graphHash   | stringa                        |             |
+| Nome | Digitare | Descrizione |
+| ----------- | -------------------------- | ---------------------------- |
+| fonte | stringa | - Il parametro di origine.      |
+| nomefile | stringa | - Il parametro nomefile.    |
+| gettoni | sola lettura FlintToken[] | - Il parametro token.      |
+| diagnostica | sola lettura FlintDiagnostic[] | - Il parametro di diagnostica. |
+| graphHash | stringa | - Il parametro graphHash.   |
 
-### decodeFlintSelfHostedModule
+#### Contrarre
+
+- **@param:** - Il parametro di origine.
+- **@param:** - Il parametro fileName.
+- **@param:** - Il parametro token.
+- **@param:** - Il parametro di diagnostica.
+- **@param:** - Il parametro graphHash.
+- **@returns:** Il risultato FlintSelfHostedStageArtifact.
+
+### decodificareFlintSelfHostedModule
 
 **Tipo:** funzione
 
@@ -3359,15 +2987,20 @@ Nessuna descrizione fornita.
 function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 ```
 
-Nessuna descrizione fornita.
+Decodifica un payload del modulo parser self-hosted.
 
 #### Parametri
 
-| Nome | Digitare   | Descrizione |
-| ---- | ---------- | ----------- |
-| byte | Uint8Array |             |
+| Nome | Digitare | Descrizione |
+| ----- | ---------- | ------------------------ |
+| byte | Uint8Array | - Carico utile del modulo binario. |
 
-### decodeFlintSelfHostedTokens
+#### Contrarre
+
+- **@param:** - Payload del modulo binario.
+- **@returns:** Modulo decodificato AST.
+
+### decodificareFlintSelfHostedTokens
 
 **Tipo:** funzione
 
@@ -3375,13 +3008,18 @@ Nessuna descrizione fornita.
 function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 ```
 
-Nessuna descrizione fornita.
+Decodifica un payload del flusso di token self-hosted.
 
 #### Parametri
 
-| Nome | Digitare   | Descrizione |
-| ---- | ---------- | ----------- |
-| byte | Uint8Array |             |
+| Nome | Digitare | Descrizione |
+| ----- | ---------- | ----------------------- |
+| byte | Uint8Array | - Carico utile del token binario. |
+
+#### Contrarre
+
+- **@param:** - Carico utile del token binario.
+- **@returns:** Flusso di token decodificato.
 
 ### codificaFlintSelfHostedModule
 
@@ -3391,15 +3029,20 @@ Nessuna descrizione fornita.
 function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 ```
 
-Nessuna descrizione fornita.
+Codifica un payload del modulo parser self-hosted.
 
 #### Parametri
 
-| Nome   | Digitare    | Descrizione |
-| ------ | ----------- | ----------- |
-| modulo | FlintModule |             |
+| Nome | Digitare | Descrizione |
+| ------ | ----------- | -------------------------- |
+| modulo | Modulo Flint | - Modulo AST da serializzare. |
 
-### codificaFlintSelfHostedTokens
+#### Contrarre
+
+- **@param:** - Modulo AST da serializzare.
+- **@returns:** Payload del modulo binario.
+
+### codificareFlintSelfHostedTokens
 
 **Tipo:** funzione
 
@@ -3407,13 +3050,18 @@ Nessuna descrizione fornita.
 function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 ```
 
-Nessuna descrizione fornita.
+Codifica un payload del flusso di token self-hosted.
 
 #### Parametri
 
-| Nome    | Digitare                  | Descrizione |
-| ------- | ------------------------- | ----------- |
-| gettoni | sola lettura FlintToken[] |             |
+| Nome | Digitare | Descrizione |
+| ------ | --------------------- | ---------------------------- |
+| gettoni | sola lettura FlintToken[] | - Flusso di token da serializzare. |
+
+#### Contrarre
+
+- **@param:** - Flusso token da serializzare.
+- **@returns:** Payload del token binario.
 
 ### hashFlintSelfHostedStagePayload
 
@@ -3423,13 +3071,18 @@ Nessuna descrizione fornita.
 function hashFlintSelfHostedStagePayload(artifact: FlintSelfHostedStageArtifact): string;
 ```
 
-Nessuna descrizione fornita.
+Implementazione di hashFlintSelfHostedStagePayload.
 
 #### Parametri
 
-| Nome      | Digitare                     | Descrizione |
-| --------- | ---------------------------- | ----------- |
-| artefatto | FlintSelfHostedStageArtifact |             |
+| Nome | Digitare | Descrizione |
+| -------- | ---------------------------- | ------------------------- |
+| artefatto | FlintSelfHostedStageArtifact | - Il parametro artefatto. |
+
+#### Contrarre
+
+- **@param:** - Il parametro dell'artefatto.
+- **@returns:** Il risultato della stringa.
 
 ### validateFlintSelfHostedStageArtifact
 
@@ -3445,275 +3098,26 @@ function validateFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-Nessuna descrizione fornita.
+convalidare l'implementazione di FlintSelfHostedStageArtifact.
 
 #### Parametri
 
-| Nome      | Digitare                     | Descrizione |
-| --------- | ---------------------------- | ----------- |
-| artefatto | FlintSelfHostedStageArtifact |             |
-| fase      | FlintSelfHostedCompilerStage |             |
-| fonte     | stringa                      |             |
-| nomefile  | stringa                      |             |
-| graphHash | stringa                      |             |
-
-## `src/stdlib/memory`
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
-```
-
-Nessuna descrizione fornita.
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly FlintMemoryFunction[];
-```
-
-Nessuna descrizione fornita.
-
-### FlintMemoryFunction
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintMemoryFunction
-```
-
-Nessuna descrizione fornita.
-
-### FlintMemoryOperation
-
-**Genere:** tipo
-
-```typescript
-export type FlintMemoryOperation =
-  | 'memory-alloc'
-  | 'memory-dealloc'
-  | 'memory-realloc'
-  | 'memory-load-u32'
-  | 'memory-store-u32'
-  | 'memory-load-f64'
-  | 'memory-store-f64'
-  | 'f64-from-u32';
-```
-
-Controllate le operazioni di memoria lineare guest riservate dal compilatore.
-
-## `src/stdlib/regex`
-
-### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
-
-**Genere:** costante
-
-```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
-```
-
-Nessuna descrizione fornita.
-
-### FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
-```
-
-Nessuna descrizione fornita.
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
-```
-
-Nessuna descrizione fornita.
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTIONS
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly FlintStandardLibraryFunction[];
-```
-
-Chiamate di proprietà del compilatore. Sono nomi di origine riservati, non importazioni di host e
-vengono ridotti al runtime WASM di Forge Web Script nella fase di backend.
-Le operazioni di acquisizione restituiscono `-1` per un gruppo non impostato o quando non esiste alcuna corrispondenza.
-
-### FORGE_WEB_SCRIPT_REGEX_VERSION
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION;
-```
-
-Nessuna descrizione fornita.
-
-### FlintRegexOperazione
-
-**Genere:** tipo
-
-```typescript
-export type FlintRegexOperation =
-  | 'full-match'
-  | 'prefix-match'
-  | 'search'
-  | 'full-capture-start'
-  | 'full-capture-end'
-  | 'prefix-capture-start'
-  | 'prefix-capture-end'
-  | 'search-capture-start'
-  | 'search-capture-end';
-```
-
-Nessuna descrizione fornita.
-
-### FlintStandardLibraryFunction
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintStandardLibraryFunction
-```
-
-Nessuna descrizione fornita.
-
-### flintStandardLibraryIdentity
-
-**Tipo:** funzione
-
-```typescript
-function flintStandardLibraryIdentity(
-  overrides: Partial<FlintStandardLibraryIdentity> = {},
-): FlintStandardLibraryIdentity;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome        | Digitare                               | Descrizione |
-| ----------- | -------------------------------------- | ----------- |
-| sovrascrive | Parziale<FlintStandardLibraryIdentity> |             |
-
-### FlintStandardLibraryIdentity
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintStandardLibraryIdentity
-```
-
-Input di identità stabili che influiscono sulla compilazione di espressioni regolari e sugli artefatti generati.
-
-## `src/stdlib/string`
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
-```
-
-Nessuna descrizione fornita.
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTIONS
-
-**Genere:** costante
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly FlintStringFunction[];
-```
-
-Nessuna descrizione fornita.
-
-### FlintStringFunction
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintStringFunction
-```
-
-Nessuna descrizione fornita.
-
-### FlintStringOperation
-
-**Genere:** tipo
-
-```typescript
-export type FlintStringOperation =
-  | 'string-concat'
-  | 'string-length'
-  | 'string-byte-at'
-  | 'string-starts-with'
-  | 'string-slice'
-  | 'string-to-i32'
-  | 'bytes-length'
-  | 'bytes-length-u32'
-  | 'bytes-byte-at'
-  | 'bytes-byte-at-u32'
-  | 'bytes-slice';
-```
-
-Operazioni deterministiche su stringhe e byte di proprietà del compilatore.
-
-## `src/type-checker`
-
-### controllaFlint
-
-**Tipo:** funzione
-
-```typescript
-function checkFlint(
-  module: FlintModule,
-  fileName = '<input>',
-  options: FlintTypeCheckOptions = {},
-): FlintTypeCheckResult;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome     | Digitare              | Descrizione |
-| -------- | --------------------- | ----------- |
-| modulo   | FlintModule           |             |
-| nomefile |                       |             |
-| opzioni  | FlintTypeCheckOptions |             |
-
-### FlintTypeCheckOptions
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintTypeCheckOptions
-```
-
-Nessuna descrizione fornita.
-
-### FlintTypeCheckResult
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintTypeCheckResult
-```
-
-Nessuna descrizione fornita.
+| Nome | Digitare | Descrizione |
+| --------- | ---------------------------- | -------------------------- |
+| artefatto | FlintSelfHostedStageArtifact | - Il parametro artefatto.  |
+| fase | FlintSelfHostedCompilerStage | - Il parametro dello stadio.     |
+| fonte | stringa | - Il parametro di origine.    |
+| nomefile | stringa | - Il parametro nomefile.  |
+| graphHash | stringa | - Il parametro graphHash. |
+
+#### Contrarre
+
+- **@param:** - Il parametro dell'artefatto.
+- **@param:** - Il parametro dello stage.
+- **@param:** - Il parametro di origine.
+- **@param:** - Il parametro fileName.
+- **@param:** - Il parametro graphHash.
+- **@returns:** Il risultato FlintSelfHostedStageArtifact.
 
 ## `src/validate`
 
@@ -3725,9 +3129,9 @@ Nessuna descrizione fornita.
 export interface FlintValidationResult
 ```
 
-Nessuna descrizione fornita.
+Risultato della convalida di un file sorgente Flint tramite l'analisi e il controllo del tipo.
 
-### validateFlint
+### validareFlint
 
 **Tipo:** funzione
 
@@ -3739,41 +3143,20 @@ function validateFlint(
 ): FlintValidationResult;
 ```
 
-Nessuna descrizione fornita.
+Convalida il testo sorgente di Flint eseguendo il parser e il controllo del tipo.
+Raccoglie e deduplica la diagnostica sintattica e semantica.
 
 #### Parametri
 
-| Nome     | Digitare              | Descrizione |
-| -------- | --------------------- | ----------- |
-| fonte    | stringa               |             |
-| nomefile |                       |             |
-| opzioni  | FlintTypeCheckOptions |             |
+| Nome | Digitare | Descrizione |
+| -------- | --------------------- | -------------------------------------------------------------------------------- |
+| fonte | stringa | - Testo del codice sorgente Flint.                                                        |
+| nomefile |                       | - Percorso o nome file facoltativo utilizzato negli intervalli diagnostici (il valore predefinito è `'<input>'`). |
+| opzioni | FlintTypeCheckOptions | - Flag di configurazione del controllo del tipo opzionali e tabelle di simboli esterni.          |
 
-## `src/wat`
+#### Contrarre
 
-### FlintWatMetadata
-
-**Tipo:** interfaccia
-
-```typescript
-export interface FlintWatMetadata
-```
-
-Nessuna descrizione fornita.
-
-### renderFlintWat
-
-**Tipo:** funzione
-
-```typescript
-function renderFlintWat(module: FlintModule, metadata: FlintWatMetadata = {}): string;
-```
-
-Nessuna descrizione fornita.
-
-#### Parametri
-
-| Nome     | Digitare         | Descrizione |
-| -------- | ---------------- | ----------- |
-| modulo   | FlintModule      |             |
-| metadati | FlintWatMetadata |             |
+- **@param:** - Testo del codice sorgente Flint.
+- **@param:** - Percorso o nome file facoltativo utilizzato negli intervalli diagnostici (il valore predefinito è `'<input>'`).
+- **@param:** - Flag di configurazione del controllo del tipo opzionali e tabelle di simboli esterne.
+- **@returns:** Risultato della convalida combinato con modulo analizzato (se disponibile), diagnostica e flag valido.

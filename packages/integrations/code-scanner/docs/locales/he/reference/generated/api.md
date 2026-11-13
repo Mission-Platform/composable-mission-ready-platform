@@ -9,317 +9,44 @@
 
 נוצר מהצהרות מקור ציבורי ב-`@mission-platform/code-scanner`.
 
-## `src/capture`
+## `src/components/organisms/forge-code-scanner/forge-code-scanner`
 
-### blobToImageData
-
-פונקציה **סוג:**
-
-```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
-```
-
-פענוח תמונה `Blob`/`File` ל-{@link ImageLike} (פיקסלים RGBA). שימושים
-`createImageBitmap` אז זה עובד מחוץ לשרשור הראשי היכן שהוא נתמך.
-
-#### פרמטרים
-
-| שם   | הקלד | תיאור |
-| ---- | ---- | ----- |
-| כתם  | כתם  |       |
-| רועי |      |       |
-
-### scanFile
-
-פונקציה **סוג:**
-
-```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>;
-```
-
-פענח `file` וסרוק אותו לאיתור קוד, תוך הפעלת WebAssembly באופן סינכרוני
-סורק (שמאתחל את עצמו מהבינארי המוטבע שלו בבניית ייצור).
-
-#### פרמטרים
-
-| שם   | הקלד | תיאור |
-| ---- | ---- | ----- |
-| קובץ | כתם  |       |
-
-### scanFileAsync
-
-פונקציה **סוג:**
-
-```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>;
-```
-
-פענח `file` וסרוק אותו לאיתור קוד, אתחול הסורק והמפענחים
-באופן אסינכרוני - בטוח בכל סביבה (לא נדרש בינארי מובנה).
-
-#### פרמטרים
-
-| שם   | הקלד | תיאור |
-| ---- | ---- | ----- |
-| קובץ | כתם  |       |
-
-### videoFrameToImageData
-
-פונקציה **סוג:**
-
-```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
-```
-
-ללכוד את המסגרת הנוכחית של רכיב `<video>` שמתנגן כ-
-{@link ImageLike}, חיתוך אופציונלי לשבר `roi` המרכזי (ראה
-{@link DEFAULT_ROI}). חיתוך חשוב במיוחד כאן: פריימים חיים
-מלא בלאגן, מאתרי הקופסה התוחמת דיו לא יכולים לסבול, אז מעבירים את
-גודל הרשת שממשק המשתמש מראה שהמשתמש מעלה מאוד את שיעור הפגיעה.
-
-#### פרמטרים
-
-| שם    | הקלד             | תיאור |
-| ----- | ---------------- | ----- |
-| וידאו | HTMLVideoElement |       |
-| רועי  |                  |       |
-
-## `src/debug`
-
-### isCodeScannerDebugEnabled
-
-פונקציה **סוג:**
-
-```typescript
-function isCodeScannerDebugEnabled(): boolean;
-```
-
-האם רישום אבחון של סורק מופעל כעת.
-
-### setCodeScannerDebug
-
-פונקציה **סוג:**
-
-```typescript
-function setCodeScannerDebug(value: boolean): void;
-```
-
-הפעל או השבת את רישום האבחון בצד ה-JS של הסורק בזמן ריצה.
-
-#### פרמטרים
-
-| שם  | הקלד    | תיאור |
-| --- | ------- | ----- |
-| ערך | בוליאני |       |
-
-#### חוֹזֶה
-
-- **@param:** - `true` כדי לרשום כל שלב סריקה לקונסולה, `false` כדי להשתיק אותו.
-
-## `src/image`
-
-### contrastStretchLuma
-
-פונקציה **סוג:**
-
-```typescript
-function contrastStretchLuma(
-  luma: LumaImage,
-  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
-  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
-): LumaImage;
-```
-
-למתוח ניגודיות של {@link LumaImage}, מיפוי `lowPercentile`..`highPercentile` שלו
-טווח העצימות על כל טווח `0..255` (ערכים מחוץ לטווח הם
-מהודק). מחזיר תמונה **חדשה**; הקלט נותר ללא נגיעה.
-
-ה-wasm binariser בוחר סף Otsu עולמי יחיד, המפריד בין a
-היסטוגרמה נקייה, בימודאלית הטובה ביותר. תמונות שהועלו בדרך כלל הן; מצלמה חיה
-מסגרות לעתים קרובות אינן - בוהק, תאורה לא אחידה וניגודיות נמוכה מעכו את העין
-היסטוגרמה כך שהמודולים הכהים והרקע הבהיר מדממים יחד. מתיחה
-הטווח הדינמי הראשון מפריד אותם מחדש מבלי לגעת בסף
-לוגיקה, וזה בדיוק מה שמאתרי ברקוד 1D ומטריצת נתונים (זה
-להסתמך על תיבת הדיו התוחמת) צריך.
-
-מסגרת מנוונת (שטוחה) - שבה שני האחוזונים קורסים לאותו דבר
-ערך - מוחזר ללא שינוי, מכיוון שאין מה למתוח.
-
-#### פרמטרים
-
-| שם           | הקלד      | תיאור |
-| ------------ | --------- | ----- |
-| לומה         | LumaImage |       |
-| נמוך באחוזון | מספר      |       |
-| גבוה באחוזון | מספר      |       |
-
-### imageDataToLuma
-
-פונקציה **סוג:**
-
-```typescript
-function imageDataToLuma(image: ImageLike): LumaImage;
-```
-
-המר RGBA {@link ImageLike} (לדוגמה, `ImageData` בד קנבס) ל-
-ערוץ יחיד {@link LumaImage} באמצעות ה-Rec. 601 משקלי לומה
-(`0.299 R + 0.587 G + 0.114 B`). מתעלמים מערוץ האלפא.
-
-#### פרמטרים
-
-| שם    | הקלד      | תיאור |
-| ----- | --------- | ----- |
-| תמונה | ImageLike |       |
-
-### LumaImage
+### CodeScannerProperties
 
 **סוג:** ממשק
 
 ```typescript
-export interface LumaImage
+export interface CodeScannerProperties
 ```
 
-תמונה בגווני אפור חד ערוצית: `width * height` לומה בייט.
+לא סופק תיאור.
 
-## `src/scanner/index`
-
-### scanImageData
+### ForgeCodeScanner
 
 פונקציה **סוג:**
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
+function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): MpElement;
 ```
 
-אתר ופענח את הקוד הנתמך הראשון ב-`image`, תוך מופע של
-גרף הסורק באופן סינכרוני בשימוש הראשון.
+`ForgeCodeScanner` - מאתר ומפענח קוד QR, מטריצת נתונים או ברקוד 1D
+מ**תמונה שהועלתה** או מ**סטרימינג בשידור חי** של מצלמה, שנכתב פעם אחת
+בניב JSX הנייטרלי והורכב ישר ל-React או Vue על-ידי
+`@mission-platform/vite-plugin-forge`.
+
+איתור פועל כולו על הלקוח ב-Rust/WebAssembly ללא תלות
+סורק מ-`@mission-platform/code-scanner` (בינאר ← אתר את המאתר
+דפוסים ← לדגום את רשת המודול); כל סמל ממוקם נמסר ל-
+מפענח תואם (`@mission-platform/qr-code` / `-/matrix-code` / `-/barcode`).
+
+העלאות מפוענחות באמצעות `createImageBitmap` + בד; הזרם החי הוא
+נפתח עם `getUserMedia` והמסגרות שלו נבדקות במרווח. שניהם
+נתיבים מציגים את התוצאות שלהם דרך {@link CodeScannerProperties.onResult}
+התקשרות חוזרת (וקריאת תוצאה מוטבעת קטנה). הוא הבעלים של הסטיילינג שלו דרך
+מודול CSS משותף `forge-code-scanner.module.scss`.
 
 #### פרמטרים
 
-| שם    | הקלד      | תיאור |
-| ----- | --------- | ----- |
-| תמונה | ImageLike |       |
-| רועי  | רועי      |       |
-
-#### חוֹזֶה
-
-- **@param:** אזור עניין אופציונלי (פיקסלים של תמונה) להגבלת הסריקה
-- חתוך לפני בינאריזציה, כך שמתעלמים מהעומס שמסביב.
-- **@returns:** ה-{@link ScanResult}, או `null` כאשר לא נמצא קוד. כאשר קוד
-  נמצא אך לא ניתן לפענח את המטען שלו, `result.value` הוא `null`.
-
-### scanImageDataAll
-
-פונקציה **סוג:**
-
-```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[];
-```
-
-אתר ופענח _כל_ קוד מובחן ב-`image` (לא רק הראשון),
-יצירת גרף הסורק באופן סינכרוני בשימוש הראשון.
-
-#### פרמטרים
-
-| שם    | הקלד      | תיאור |
-| ----- | --------- | ----- |
-| תמונה | ImageLike |       |
-
-#### חוֹזֶה
-
-- **@returns:** ה-{@link ScanResult} המפוענחים לפי סדר גילוי, משוכפל;
-  ריק כששום דבר לא מפוענח.
-
-### scanImageDataAllAsync
-
-פונקציה **סוג:**
-
-```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
-```
-
-אתר ופענח _כל_ קוד מובחן ב-`image`, טעינת גרף הסורק
-באופן אסינכרוני בשימוש ראשון. כשלי אתחול וסריקה הם
-חזר כדחיות הבטחה.
-
-#### פרמטרים
-
-| שם    | הקלד      | תיאור |
-| ----- | --------- | ----- |
-| תמונה | ImageLike |       |
-
-#### חוֹזֶה
-
-- **@returns:** ה-{@link ScanResult} המפוענחים לפי סדר גילוי, ללא כפילות.
-
-### scanImageDataAsync
-
-פונקציה **סוג:**
-
-```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
-```
-
-אתר ופענח את הקוד הנתמך הראשון ב-`image`, טעינת הסורק
-גרף באופן אסינכרוני בשימוש הראשון. אתחול וסריקה
-כשלים מוחזרים כדחיות של הבטחות.
-
-#### פרמטרים
-
-| שם    | הקלד      | תיאור |
-| ----- | --------- | ----- |
-| תמונה | ImageLike |       |
-| רועי  | רועי      |       |
-
-#### חוֹזֶה
-
-- **@param:** אזור עניין אופציונלי - ראה {@link scanImageData}.
-- **@returns:** ה-{@link ScanResult}, או `null` כאשר לא נמצא קוד.
-
-## `src/types`
-
-### תמונה כמו
-
-**סוג:** ממשק
-
-```typescript
-export interface ImageLike
-```
-
-הצורה המינימלית של `ImageData` זקוקה לחבילה הזו: RGBA גולמי בשורה מרכזית
-חיץ פיקסלים עם המידות שלו. ה-DOM `ImageData` מספק אותו, וכך גם
-כל אובייקט `{ width, height, data }` שנבנה בעבודת יד (שימושי לבדיקות / SSR).
-
-### רועי
-
-**סוג:** ממשק
-
-```typescript
-export interface Roi
-```
-
-אזור מלבני של עניין, בפיקסלים של תמונה, כדי להגביל סריקה ל(למשל.
-רשת ממשק משתמש של מצלמה חיה מצייר על המסגרת). היבול מתרחש ב- wasm
-_לפני_ בינאריזציה, כך שהעומס מסביב לעולם לא מגיע לאיתורים. א
-אזור התלוי על קצה הוא מהודק; מוצא אחד לגמרי מחוץ למסגרת
-כלום.
-
-### ScanFormat
-
-**סוג:** סוג
-
-```typescript
-export type ScanFormat = 'qr' | 'datamatrix' | 'barcode' | 'aztec' | 'pdf417' | 'databar' | 'maxicode';
-```
-
-משפחות הקוד שהסורק יכול לאתר ולפענח.
-
-### ScanResult
-
-**סוג:** ממשק
-
-```typescript
-export interface ScanResult
-```
-
-התוצאה של _זיהוי_ מוצלח.
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<CodeScannerProperties> |             |

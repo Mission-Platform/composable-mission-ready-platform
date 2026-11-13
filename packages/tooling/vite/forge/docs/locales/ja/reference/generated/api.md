@@ -25,9 +25,9 @@ Forge と同じマニフェスト トランザクションを通じてすべて�
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| オプション | ForgeArtifactPublishオプション |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------------- | ----------- |
+|オプション | ForgeArtifactPublishオプション |             |
 
 ### forgeBuildLifecycleプラグイン
 
@@ -42,9 +42,9 @@ function forgeBuildLifecyclePlugin(options: ForgeBuildLifecycleOptions): Plugin;
 
 #### パラメータ
 
-| 名前       | タイプ                        | 説明 |
-| ---------- | ----------------------------- | ---- |
-| オプション | ForgeBuildLifecycleオプション |      |
+|名前 |タイプ |説明 |
+| ------- | -------------------------- | ----------- |
+|オプション | ForgeBuildLifecycleオプション |             |
 
 ### forgeVirtualEntry
 
@@ -58,9 +58,9 @@ buildStart によってターゲットが準備されるまで使用される安
 
 #### パラメータ
 
-| 名前         | タイプ | 説明 |
-| ------------ | ------ | ---- |
-| ターゲットID | 文字列 |      |
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|ターゲットID |文字列 |             |
 
 ## `src/compiler/artifact-manifest`
 
@@ -80,11 +80,11 @@ function createForgeArtifactManifest(
 
 #### パラメータ
 
-| 名前             | タイプ                             | 説明 |
-| ---------------- | ---------------------------------- | ---- |
-| ターゲットID     | 文字列                             |      |
-| アーティファクト | 読み取り専用 ForgeArtifactRecord[] |      |
-| 完了             |                                    |      |
+|名前 |タイプ |説明 |
+| --------- | ------------------------------ | ----------- |
+|ターゲットID |文字列 |             |
+|アーティファクト |読み取り専用 ForgeArtifactRecord[] |             |
+|完了 |                                |             |
 
 ### 鍛造アーティファクトの種類
 
@@ -114,7 +114,7 @@ export interface ForgeArtifactManifest
 export interface ForgeArtifactRecord
 ```
 
-ターゲット スコープのアーティファクト マニフェストによって記録される 1 つの決定的な出力。
+ターゲット スコープのアーティファクト マニフェストによって記録される 1 つの決定論的な出力。
 
 ## `src/compiler/artifact-path`
 
@@ -131,9 +131,9 @@ function assertForgeArtifactRoot(root: string): string;
 
 #### パラメータ
 
-| 名前   | タイプ | 説明 |
-| ------ | ------ | ---- |
-| ルート | 文字列 |      |
+|名前 |タイプ |説明 |
+| ---- | ------ | ----------- |
+|ルート |文字列 |             |
 
 ### ensureForgeArtifactDirectory
 
@@ -147,10 +147,10 @@ function ensureForgeArtifactDirectory(root: string, directory: string): string;
 
 #### パラメータ
 
-| 名前         | タイプ | 説明 |
-| ------------ | ------ | ---- |
-| ルート       | 文字列 |      |
-| ディレクトリ | 文字列 |      |
+|名前 |タイプ |説明 |
+| --------- | ------ | ----------- |
+|ルート |文字列 |             |
+|ディレクトリ |文字列 |             |
 
 ### 解決フォージアーティファクトパス
 
@@ -164,10 +164,10 @@ function resolveForgeArtifactPath(root: string, relativeName: string): string;
 
 #### パラメータ
 
-| 名前   | タイプ | 説明 |
-| ------ | ------ | ---- |
-| ルート | 文字列 |      |
-| 相対名 | 文字列 |      |
+|名前 |タイプ |説明 |
+| ------------ | ------ | ----------- |
+|ルート |文字列 |             |
+|相対名 |文字列 |             |
 
 ### validateForgeArtifactName
 
@@ -181,9 +181,9 @@ function validateForgeArtifactName(relativeName: string): string;
 
 #### パラメータ
 
-| 名前   | タイプ | 説明 |
-| ------ | ------ | ---- |
-| 相対名 | 文字列 |      |
+|名前 |タイプ |説明 |
+| ------------ | ------ | ----------- |
+|相対名 |文字列 |             |
 
 ### validateForgeArtifactSegment
 
@@ -197,9 +197,9 @@ function validateForgeArtifactSegment(segment: string): string;
 
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| セグメント | 文字列 |      |
+|名前 |タイプ |説明 |
+| ------- | ------ | ----------- |
+|セグメント |文字列 |             |
 
 ## `src/compiler/artifact-writer`
 
@@ -215,15 +215,15 @@ function createForgeArtifactWriter(
 ): ForgeArtifactWriter;
 ```
 
-説明はありません。
+Forge アーティファクトをステージングおよびコミットするためのアトミック アーティファクト ライターを作成します。
 
 #### パラメータ
 
-| 名前               | タイプ                        | 説明 |
-| ------------------ | ----------------------------- | ---- |
-| アウトディレクトリ | 文字列                        |      |
-| ターゲットID       | 文字列                        |      |
-| オプション         | ForgeArtifactWriterオプション |      |
+|名前 |タイプ |説明 |
+| -------- | -------------------------- | ----------- |
+|アウトディレクトリ |文字列 |             |
+|ターゲットID |文字列 |             |
+|オプション | ForgeArtifactWriterオプション |             |
 
 ### forgeArtifactAttemptディレクトリ
 
@@ -237,10 +237,10 @@ function forgeArtifactAttemptDirectory(outDir: string, targetId: string): string
 
 #### パラメータ
 
-| 名前               | タイプ | 説明 |
-| ------------------ | ------ | ---- |
-| アウトディレクトリ | 文字列 |      |
-| ターゲットID       | 文字列 |      |
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|アウトディレクトリ |文字列 |             |
+|ターゲットID |文字列 |             |
 
 ### フォージアーティファクトライター
 
@@ -304,20 +304,20 @@ export interface ForgeCacheStats
 function compileComponentModule(source: string, options: CompileOptions): CompiledModule;
 ```
 
-1 つのニュートラル (またはフレームワークゲート型) コンポーネント モジュールをフレームワークごとにコンパイルします。
+1 つのニュートラル (またはフレームワークゲート型) コンポーネント モジュールをフレームワークごとにコンパイルします
 ソース (ステージ 1)。
 
 先頭の `"use <framework>";` ディレクティブは発行前に削除されます
-そのため、マーカーが出力に漏れることはありません。モジュールをゲートから外す
+したがって、マーカーが出力に漏れることはありません。モジュールをゲートから外します
 一致しないフレームワークのビルドは検出ステップによって上流で処理されます
 ({@link moduleTargetsFramework} を参照)。
 
 #### パラメータ
 
-| 名前       | タイプ               | 説明 |
-| ---------- | -------------------- | ---- |
-| ソース     | 文字列               |      |
-| オプション | コンパイルオプション |      |
+|名前 |タイプ |説明 |
+| ------- | -------------- | ----------- |
+|ソース |文字列 |             |
+|オプション |コンパイルオプション |             |
 
 ### コンパイル済みモジュール
 
@@ -343,10 +343,10 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 
 #### パラメータ
 
-| 名前       | タイプ                     | 説明 |
-| ---------- | -------------------------- | ---- |
-| ソース     | 文字列                     |      |
-| オプション | コンパイルフックオプション |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------ | ----------- |
+|ソース |文字列 |             |
+|オプション |コンパイルフックオプション |             |
 
 ### コンパイルフックオプション
 
@@ -374,10 +374,10 @@ Astro などのスタンドアロン ターゲット パッケージで使用さ
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| ソース     | 文字列                         |      |
-| オプション | コンパイルモジュールオプション |      |
+|名前 |タイプ |説明 |
+| ------- | -------------------- | ----------- |
+|ソース |文字列 |             |
+|オプション |コンパイルモジュールオプション |             |
 
 ### コンパイルモジュールオプション
 
@@ -413,10 +413,10 @@ function findComponentFunction(sourceFile: OxcParsedModule, name: string): OxcNo
 
 #### パラメータ
 
-| 名前           | タイプ              | 説明 |
-| -------------- | ------------------- | ---- |
-| ソースファイル | OxcParsedモジュール |      |
-| 名前           | 文字列              |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------- | ----------- |
+|ソースファイル | OxcParsedモジュール |             |
+|名前 |文字列 |             |
 
 ### isSlotElement
 
@@ -430,9 +430,9 @@ Oxc node が中立の名前付きスロット要素であるかどうか。
 
 #### パラメータ
 
-| 名前 | タイプ  | 説明 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
+|名前 |タイプ |説明 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ### 読み取りスロット名
 
@@ -446,9 +446,9 @@ Oxc `<Slot>` 要素の静的 `name="…"` を読み取ります。
 
 #### パラメータ
 
-| 名前 | タイプ  | 説明 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
+|名前 |タイプ |説明 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ## `src/compiler/constants`
 
@@ -484,9 +484,9 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 
 #### パラメータ
 
-| 名前           | タイプ            | 説明 |
-| -------------- | ----------------- | ---- |
-| フレームワーク | Jsxフレームワーク |      |
+|名前 |タイプ |説明 |
+| --------- | ------------ | ----------- |
+|フレームワーク | Jsxフレームワーク |             |
 
 ### ニュートラル_モジュール
 
@@ -512,11 +512,11 @@ function moduleTargetsFramework(fileName: string, source: string, framework: str
 
 #### パラメータ
 
-| 名前           | タイプ | 説明 |
-| -------------- | ------ | ---- |
-| ファイル名     | 文字列 |      |
-| ソース         | 文字列 |      |
-| フレームワーク | 文字列 |      |
+|名前 |タイプ |説明 |
+| --------- | ------ | ----------- |
+|ファイル名 |文字列 |             |
+|ソース |文字列 |             |
+|フレームワーク |文字列 |             |
 
 ### readFrameworkディレクティブ
 
@@ -530,10 +530,10 @@ Oxc モジュールから先頭の `"use <framework>"` ディレクティブを�
 
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| ファイル名 | 文字列 |      |
-| ソース     | 文字列 |      |
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|ファイル名 |文字列 |             |
+|ソース |文字列 |             |
 
 ## `src/compiler/discover`
 
@@ -552,10 +552,10 @@ in (再エクスポートのモジュールベース名)。
 
 #### パラメータ
 
-| 名前                     | タイプ | 説明 |
-| ------------------------ | ------ | ---- |
-| バレルソース             | 文字列 |      |
-| ストリッププレフィックス |        |      |
+|名前 |タイプ |説明 |
+| ------------ | ------ | ----------- |
+|バレルソース |文字列 |             |
+|ストリッププレフィックス |        |             |
 
 ### グラフからコンポーネントを発見する
 
@@ -573,11 +573,11 @@ function discoverComponentsFromGraph(
 
 #### パラメータ
 
-| 名前                     | タイプ                 | 説明 |
-| ------------------------ | ---------------------- | ---- |
-| グラフ                   | フォージファイルグラフ |      |
-| ストリッププレフィックス |                        |      |
-| 診断                     | コンパイラ診断[]       |      |
+|名前 |タイプ |説明 |
+| ----------- | -------------------- | ----------- |
+|グラフ |フォージファイルグラフ |             |
+|ストリッププレフィックス |                      |             |
+|診断 |コンパイラ診断[] |             |
 
 ### 発見されたコンポーネント
 
@@ -618,10 +618,10 @@ Vue パッケージの `useToast` コンポーザブルの）生成されたエ�
 
 #### パラメータ
 
-| 名前                     | タイプ              | 説明 |
-| ------------------------ | ------------------- | ---- |
-| バレルソース             | 文字列              |      |
-| コンポーネントフォルダー | ReadonlySet<string> |      |
+|名前 |タイプ |説明 |
+| ---------------- | ------------------- | ----------- |
+|バレルソース |文字列 |             |
+|コンポーネントフォルダー | ReadonlySet<string> |             |
 
 ### DiscoverHelperExportsFromGraph
 
@@ -639,11 +639,11 @@ function discoverHelperExportsFromGraph(
 
 #### パラメータ
 
-| 名前                     | タイプ                 | 説明 |
-| ------------------------ | ---------------------- | ---- |
-| グラフ                   | フォージファイルグラフ |      |
-| コンポーネントフォルダー | ReadonlySet<string>    |      |
-| 発見されたコンポーネント | 読み取り専用           |
+|名前 |タイプ |説明 |
+| -------------------- | ------------------------------ | ----------- |
+|グラフ |フォージファイルグラフ |             |
+|コンポーネントフォルダー | ReadonlySet<string> |             |
+|発見されたコンポーネント |読み取り専用             |
 
 ## `src/compiler/facts`
 
@@ -699,10 +699,10 @@ function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
 
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| ファイル名 | 文字列 |      |
-| ソース     | 文字列 |      |
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|ファイル名 |文字列 |             |
+|ソース |文字列 |             |
 
 ## `src/compiler/frontends`
 
@@ -720,10 +720,10 @@ Oxc を介して Forge ソースをシリアル化可能なモジュールに解
 
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| ファイル名 | 文字列 |      |
-| ソース     | 文字列 |      |
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|ファイル名 |文字列 |             |
+|ソース |文字列 |             |
 
 ### フロントエンドモジュールの解析
 
@@ -742,12 +742,12 @@ function parseFrontendModule(
 
 #### パラメータ
 
-| 名前             | タイプ                               | 説明 |
-| ---------------- | ------------------------------------ | ---- |
-| ファイル名       | 文字列                               |      |
-| ソース           | 文字列                               |      |
-| モジュールの種類 | 'コンポーネント' \| 'コンポーザブル' |      |
-| コンポーネント名 | 文字列                               |      |
+|名前 |タイプ |説明 |
+| ------------- | --------------------------- | ----------- |
+|ファイル名 |文字列 |             |
+|ソース |文字列 |             |
+|モジュールの種類 | 'コンポーネント' \| 'コンポーザブル' |             |
+|コンポーネント名 |文字列 |             |
 
 ## `src/compiler/generation-context`
 
@@ -763,9 +763,9 @@ function createForgeGenerationContext(options: ForgeGenerationContextOptions): F
 
 #### パラメータ
 
-| 名前       | タイプ                        | 説明 |
-| ---------- | ----------------------------- | ---- |
-| オプション | ForgeGenerationContextOptions |      |
+|名前 |タイプ |説明 |
+| ------- | ----------------------------- | ----------- |
+|オプション | ForgeGenerationContextOptions |             |
 
 ### ForgeGenerationContext
 
@@ -801,9 +801,9 @@ function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph;
 
 #### パラメータ
 
-| 名前       | タイプ                | 説明 |
-| ---------- | --------------------- | ---- |
-| オプション | ForgeFileGraphOptions |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------- | ----------- |
+|オプション | ForgeFileGraphOptions |             |
 
 ### フォージファイルエッジ
 
@@ -902,11 +902,11 @@ function hoistStaticJsx(
 
 #### パラメータ
 
-| 名前             | タイプ                               | 説明 |
-| ---------------- | ------------------------------------ | ---- |
-| モジュール       | OxcParsedモジュール                  |      |
-| モジュールの種類 | 'コンポーネント' \| 'コンポーザブル' |      |
-| コンポーネント名 | 文字列                               |      |
+|名前 |タイプ |説明 |
+| ------------- | --------------------------- | ----------- |
+|モジュール | OxcParsedモジュール |             |
+|モジュールの種類 | 'コンポーネント' \| 'コンポーザブル' |             |
+|コンポーネント名 |文字列 |             |
 
 ## `src/compiler/imports`
 
@@ -932,10 +932,10 @@ function readExternalImports(fileName: string, source: string): string[];
 
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| ファイル名 | 文字列 |      |
-| ソース     | 文字列 |      |
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|ファイル名 |文字列 |             |
+|ソース |文字列 |             |
 
 ### readNeutralImports
 
@@ -949,10 +949,10 @@ function readNeutralImports(fileName: string, source: string): NeutralImports;
 
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| ファイル名 | 文字列 |      |
-| ソース     | 文字列 |      |
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|ファイル名 |文字列 |             |
+|ソース |文字列 |             |
 
 ### readStyleImports
 
@@ -966,11 +966,11 @@ function readStyleImports(fileName: string, source: string, sourceRoot?: string)
 
 #### パラメータ
 
-| 名前         | タイプ | 説明 |
-| ------------ | ------ | ---- |
-| ファイル名   | 文字列 |      |
-| ソース       | 文字列 |      |
-| ソースルート | 文字列 |      |
+|名前 |タイプ |説明 |
+| ---------- | ------ | ----------- |
+|ファイル名 |文字列 |             |
+|ソース |文字列 |             |
+|ソースルート |文字列 |             |
 
 ### 解決ワークスペースローカルインポート
 
@@ -984,15 +984,15 @@ function resolveWorkspaceLocalImport(
 ): string | undefined;
 ```
 
-ワークスペース ローカルの `@/` インポートをソース ファイルに関連して解決します。
+ソース ファイルを基準にして、ワークスペース ローカルの `@/` インポートを解決します。
 
 #### パラメータ
 
-| 名前             | タイプ          | 説明 |
-| ---------------- | --------------- | ---- |
-| 指定子           | 文字列          |      |
-| ソースファイル名 | 文字列          |      |
-| ソースルート     | 文字列 \|未定義 |      |
+|名前 |タイプ |説明 |
+| -------------- | ------------------- | ----------- |
+|指定子 |文字列 |             |
+|ソースファイル名 |文字列 |             |
+|ソースルート |文字列 \|未定義 |             |
 
 ### スタイルインポート
 
@@ -1016,9 +1016,9 @@ Oxc モジュールまたは node が `i18next.t(...)` を呼び出すかどう�
 
 #### パラメータ
 
-| 名前 | タイプ  | 説明 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
+|名前 |タイプ |説明 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ## `src/compiler/optimize`
 
@@ -1039,20 +1039,20 @@ function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions =
 
 #### パラメータ
 
-| 名前       | タイプ              | 説明 |
-| ---------- | ------------------- | ---- |
-| モジュール | OxcParsedモジュール |      |
-| オプション | 最適化オプション    |      |
+|名前 |タイプ |説明 |
+| ------- | --------------- | ----------- |
+|モジュール | OxcParsedモジュール |             |
+|オプション |最適化オプション |             |
 
 ### ソースファイルの最適化
 
 **種類:** 定数
 
 ```typescript
-export const optimizeSourceFile;
+export const optimizeSourceFile: typeof optimizeForgeModule;
 ```
 
-互換性エイリアスは、古い名前を使用してコンパイラ統合のために保持されます。
+互換性エイリアスは、古い名前を使用したコンパイラ統合のために保持されます。
 
 ## `src/compiler/oxc`
 
@@ -1068,9 +1068,9 @@ function buildOxcParentMap(root: OxcNode): Map<OxcNode, OxcNode>;
 
 #### パラメータ
 
-| 名前   | タイプ  | 説明 |
-| ------ | ------- | ---- |
-| ルート | OxcNode |      |
+|名前 |タイプ |説明 |
+| ---- | ------- | ----------- |
+|ルート | OxcNode |             |
 
 ### isOxcJsxRoot
 
@@ -1084,9 +1084,9 @@ node が JSX 要素、自己終了要素、またはフラグメントの場合�
 
 #### パラメータ
 
-| 名前 | タイプ  | 説明 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
+|名前 |タイプ |説明 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ### isOxcNode
 
@@ -1100,9 +1100,9 @@ function isOxcNode(value: unknown): value is OxcNode;
 
 #### パラメータ
 
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 値   | 不明   |      |
+|名前 |タイプ |説明 |
+| ----- | ------- | ----------- |
+|値 |不明 |             |
 
 ### oxcArray
 
@@ -1116,10 +1116,10 @@ function oxcArray(node: OxcNode, key: string): OxcNode[];
 
 #### パラメータ
 
-| 名前 | タイプ  | 説明 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
-| キー | 文字列  |      |
+|名前 |タイプ |説明 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
+|キー |文字列 |             |
 
 ### oxc子供たち
 
@@ -1133,9 +1133,9 @@ function oxcChildren(node: OxcNode): OxcNode[];
 
 #### パラメータ
 
-| 名前 | タイプ  | 説明 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
+|名前 |タイプ |説明 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ### Oxcコメント
 
@@ -1159,9 +1159,9 @@ function oxcIdentifierName(node: OxcNode | undefined): string | undefined;
 
 #### パラメータ
 
-| 名前 | タイプ           | 説明 |
-| ---- | ---------------- | ---- |
-| node | OxcNode \|未定義 |      |
+|名前 |タイプ |説明 |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \|未定義 |             |
 
 ### oxcLiteralValue
 
@@ -1175,9 +1175,9 @@ function oxcLiteralValue(node: OxcNode | undefined): unknown;
 
 #### パラメータ
 
-| 名前 | タイプ           | 説明 |
-| ---- | ---------------- | ---- |
-| node | OxcNode \|未定義 |      |
+|名前 |タイプ |説明 |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \|未定義 |             |
 
 ### OxcNode
 
@@ -1201,10 +1201,10 @@ function oxcNodeText(source: string, node: OxcNode | undefined): string;
 
 #### パラメータ
 
-| 名前   | タイプ           | 説明 |
-| ------ | ---------------- | ---- |
-| ソース | 文字列           |      |
-| node   | OxcNode \|未定義 |      |
+|名前 |タイプ |説明 |
+| ------ | -------------------- | ----------- |
+|ソース |文字列 |             |
+| node | OxcNode \|未定義 |             |
 
 ### oxcオブジェクト
 
@@ -1218,10 +1218,10 @@ function oxcObject(node: OxcNode, key: string): OxcNode | undefined;
 
 #### パラメータ
 
-| 名前 | タイプ  | 説明 |
-| ---- | ------- | ---- |
-| node | OxcNode |      |
-| キー | 文字列  |      |
+|名前 |タイプ |説明 |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
+|キー |文字列 |             |
 
 ### OxcParentMap
 
@@ -1265,9 +1265,9 @@ function oxcProgramBody(program: OxcNode): OxcNode[];
 
 #### パラメータ
 
-| 名前       | タイプ  | 説明 |
-| ---------- | ------- | ---- |
-| プログラム | OxcNode |      |
+|名前 |タイプ |説明 |
+| ------- | ------- | ----------- |
+|プログラム | OxcNode |             |
 
 ### oxcSourceExpression
 
@@ -1285,11 +1285,11 @@ function oxcSourceExpression(
 
 #### パラメータ
 
-| 名前   | タイプ                           | 説明 |
-| ------ | -------------------------------- | ---- |
-| ソース | 文字列                           |      |
-| node   | OxcNode                          |      |
-| 構文   | SourceBackedExpression['syntax'] |      |
+|名前 |タイプ |説明 |
+| ------ | -------------------------------- | ----------- |
+|ソース |文字列 |             |
+| node | OxcNode |             |
+|構文 | SourceBackedExpression['syntax'] |             |
 
 ### oxcソーススパン
 
@@ -1303,10 +1303,10 @@ function oxcSourceSpan(source: string, node: OxcNode): SourceSpan;
 
 #### パラメータ
 
-| 名前   | タイプ  | 説明 |
-| ------ | ------- | ---- |
-| ソース | string  |      |
-| node   | OxcNode |      |
+|名前 |タイプ |説明 |
+| ------ | ------- | ----------- |
+|ソース |文字列 |             |
+| node | OxcNode |             |
 
 ### oxcString
 
@@ -1320,10 +1320,10 @@ function oxcString(node: OxcNode | undefined, key: 'name' | 'value' | 'directive
 
 #### パラメータ
 
-| 名前 | タイプ                             | 説明 |
-| ---- | ---------------------------------- | ---- |
-| node | OxcNode \|未定義                   |      |
-| キー | '名前' \| '値' \| 'ディレクティブ' |      |
+|名前 |タイプ |説明 |
+| ---- | -------------------------------- | ----------- |
+| node | OxcNode \|未定義 |             |
+|キー | '名前' \| '値' \| 'ディレクティブ' |             |
 
 ### oxcTypeNode
 
@@ -1337,9 +1337,9 @@ function oxcTypeNode(node: OxcNode | undefined): OxcNode | undefined;
 
 #### パラメータ
 
-| 名前 | タイプ           | 説明 |
-| ---- | ---------------- | ---- |
-| node | OxcNode \|未定義 |      |
+|名前 |タイプ |説明 |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \|未定義 |             |
 
 ### oxcUnwrapModuleStatement
 
@@ -1357,9 +1357,9 @@ function oxcUnwrapModuleStatement(statement: OxcNode): {
 
 #### パラメータ
 
-| 名前           | タイプ  | 説明 |
-| -------------- | ------- | ---- |
-| ステートメント | OxcNode |      |
+|名前 |タイプ |説明 |
+| --------- | ------- | ----------- |
+|ステートメント | OxcNode |             |
 
 ### parseOxcModule
 
@@ -1373,10 +1373,10 @@ function parseOxcModule(fileName: string, source: string): OxcParsedModule;
 
 #### パラメータ
 
-| 名前       | タイプ | 説明 |
-| ---------- | ------ | ---- |
-| ファイル名 | 文字列 |      |
-| ソース     | 文字列 |      |
+|名前 |タイプ |説明 |
+| -------- | ------ | ----------- |
+|ファイル名 |文字列 |             |
+|ソース |文字列 |             |
 
 ### ストリップOxcフレームワークディレクティブ
 
@@ -1390,9 +1390,9 @@ function stripOxcFrameworkDirective(module: OxcParsedModule): OxcParsedModule;
 
 #### パラメータ
 
-| 名前       | タイプ              | 説明 |
-| ---------- | ------------------- | ---- |
-| モジュール | OxcParsedモジュール |      |
+|名前 |タイプ |説明 |
+| ------ | --------------- | ----------- |
+|モジュール | OxcParsedモジュール |             |
 
 ### 訪問Oxc
 
@@ -1406,10 +1406,10 @@ function visitOxc(node: OxcNode, visitor: (node: OxcNode) => void | boolean): vo
 
 #### パラメータ
 
-| 名前   | タイプ                             | 説明 |
-| ------ | ---------------------------------- | ---- |
-| node   | OxcNode                            |      |
-| 訪問者 | (node: OxcNode) => void \|ブール値 |      |
+|名前 |タイプ |説明 |
+| ------- | ---------------------------------- | ----------- |
+| node | OxcNode |             |
+|訪問者 | (node: OxcNode) => void \|ブール値 |             |
 
 ## `src/compiler/pipeline`
 
@@ -1433,10 +1433,10 @@ function analyzeForgeModule(
 
 #### パラメータ
 
-| 名前     | タイプ               | 説明 |
-| -------- | -------------------- | ---- |
-| 入力     | コンパイラ入力       |      |
-| サービス | ForgeCompilerService |      |
+|名前 |タイプ |説明 |
+| ------- | -------------------- | ----------- |
+|入力 |コンパイラ入力 |             |
+|サービス | ForgeCompilerService |             |
 
 ### コンパイラ入力
 
@@ -1470,9 +1470,9 @@ function createCompilerPipeline(service: ForgeCompilerService = createForgeCompi
 
 #### パラメータ
 
-| 名前     | タイプ               | 説明 |
-| -------- | -------------------- | ---- |
-| サービス | ForgeCompilerService |      |
+|名前 |タイプ |説明 |
+| ------- | -------------------- | ----------- |
+|サービス | ForgeCompilerService |             |
 
 ## `src/compiler/report`
 
@@ -1502,9 +1502,9 @@ function analyzeRouterCapabilities(
 
 #### パラメータ
 
-| 名前 | タイプ                                                            | 説明 |
-| ---- | ----------------------------------------------------------------- | ---- |
-| 入力 | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |      |
+|名前 |タイプ |説明 |
+| ----- | ----------------------------------------------------------------- | ----------- |
+|入力 | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |             |
 
 ### コンパイルルーターモジュール
 
@@ -1518,16 +1518,16 @@ function compileRouterModule(input: RouterCompilerInput): RouterCompilationResul
 
 #### パラメータ
 
-| 名前 | タイプ             | 説明 |
-| ---- | ------------------ | ---- |
-| 入力 | RouterCompiler入力 |      |
+|名前 |タイプ |説明 |
+| ----- | ------------------- | ----------- |
+|入力 | RouterCompiler入力 |             |
 
 ### createRouterCompilerPipeline
 
 **種類:** 関数
 
 ```typescript
-function createRouterCompilerPipeline();
+function createRouterCompilerPipeline(): { readonly compile: typeof compileRouterModule };
 ```
 
 Forge コンパイラおよびスタンドアロン ターゲット フィクスチャによって使用されるディスパッチャ フォーム。
@@ -1556,9 +1556,9 @@ function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompile
 
 #### パラメータ
 
-| 名前 | タイプ           | 説明 |
-| ---- | ---------------- | ---- |
-| 限界 | ForgeCacheLimits |      |
+|名前 |タイプ |説明 |
+| ------ | ---------------- | ----------- |
+|限界 | ForgeCacheLimits |             |
 
 ### ForgeCompileRequest
 
@@ -1636,9 +1636,9 @@ Vite および tsdown アダプターによって使用される明示的なラ�
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| オプション | CreateForgeBuildSessionOptions |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------------------ | ----------- |
+|オプション | CreateForgeBuildSessionOptions |             |
 
 ### CreateForgeBuildSessionOptions
 
@@ -1734,9 +1734,9 @@ function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserC
 
 #### パラメータ
 
-| 名前       | タイプ                      | 説明 |
-| ---------- | --------------------------- | ---- |
-| オプション | JsxHookLibraryConfigOptions |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------------- | ----------- |
+|オプション | JsxHookLibraryConfigOptions |             |
 
 ### 定義JsxLibraryConfig
 
@@ -1750,9 +1750,9 @@ function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig;
 
 #### パラメータ
 
-| 名前       | タイプ                  | 説明 |
-| ---------- | ----------------------- | ---- |
-| オプション | JsxLibraryConfigOptions |      |
+|名前 |タイプ |説明 |
+| ------- | ----------------------- | ----------- |
+|オプション | JsxLibraryConfigOptions |             |
 
 ### JsxHookLibraryConfigOptions
 
@@ -1832,9 +1832,9 @@ Vite の解決された構成が必要です。
 
 #### パラメータ
 
-| 名前       | タイプ                       | 説明 |
-| ---------- | ---------------------------- | ---- |
-| プラグイン | フレームワーク出力プラグイン |      |
+|名前 |タイプ |説明 |
+| ------ | --------------------- | ----------- |
+|プラグイン |フレームワーク出力プラグイン |             |
 
 ### svelteプラグイン
 
@@ -1873,9 +1873,9 @@ function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions):
 
 #### パラメータ
 
-| 名前       | タイプ                            | 説明 |
-| ---------- | --------------------------------- | ---- |
-| オプション | GenerateHookLibrarySourcesOptions |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------------------- | ----------- |
+|オプション | GenerateHookLibrarySourcesOptions |             |
 
 ### フックライブラリの生成ソースオプション
 
@@ -1901,9 +1901,9 @@ function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSo
 
 #### パラメータ
 
-| 名前       | タイプ                       | 説明 |
-| ---------- | ---------------------------- | ---- |
-| プラグイン | フレームワーク出力プラグイン |      |
+|名前 |タイプ |説明 |
+| ------ | --------------------- | ----------- |
+|プラグイン |フレームワーク出力プラグイン |             |
 
 ### フレームワークソースターゲット
 
@@ -1928,9 +1928,9 @@ function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): str
 
 #### パラメータ
 
-| 名前       | タイプ                             | 説明 |
-| ---------- | ---------------------------------- | ---- |
-| オプション | GenerateFrameworkSourcesオプション |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------------------- | ----------- |
+|オプション | GenerateFrameworkSourcesオプション |             |
 
 ### GenerateFrameworkSourcesオプション
 
@@ -1966,9 +1966,9 @@ function defineTsdownForgeComponentsAll(options: TsdownForgeComponentPluginsOpti
 
 #### パラメータ
 
-| 名前       | タイプ                                        | 説明 |
-| ---------- | --------------------------------------------- | ---- |
-| オプション | TsdownForgeコンポーネントプラグインオプション |      |
+|名前 |タイプ |説明 |
+| ------- | ---------------------------------- | ----------- |
+|オプション | TsdownForgeコンポーネントプラグインオプション |             |
 
 ### 定義TsdownForgeEmailコンポーネント
 
@@ -1985,9 +1985,26 @@ Forge ツリーを保存するので、
 
 #### パラメータ
 
-| 名前       | タイプ                                   | 説明 |
-| ---------- | ---------------------------------------- | ---- |
-| オプション | TsdownForgeEmailコンポーネントオプション |      |
+|名前 |タイプ |説明 |
+| ------- | --------------------------------- | ----------- |
+|オプション | TsdownForgeEmailコンポーネントオプション |             |
+
+### 定義TsdownForgeフック
+
+**種類:** 関数
+
+```typescript
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
+```
+
+単一の Forge フレームワーク フック ビルドに対して 1 つの tsdown 構成をビルドします。
+コードを出力し、ターゲット フレームワーク配布ディレクトリに入力します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------- | ----------------------- | ----------- |
+|オプション | TsdownForgeHooksオプション |             |
 
 ### 定義TsdownForgeHooksAll
 
@@ -2003,9 +2020,9 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 
 #### パラメータ
 
-| 名前       | タイプ                     | 説明 |
-| ---------- | -------------------------- | ---- |
-| オプション | TsdownForgeHooksAllOptions |      |
+|名前 |タイプ |説明 |
+| ------- | -------------------------- | ----------- |
+|オプション | TsdownForgeHooksAllOptions |             |
 
 ### 解決正規チャンク名
 
@@ -2015,15 +2032,15 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 function resolveCanonicalChunkName(chunkInfo: CanonicalChunkCandidate): string;
 ```
 
-チャンクに対して正規に出力されるチャンク ファイル名を決定します。
+チャンクの正規の出力チャンク ファイル名を決定します。
 衝突やマップを発生させずに正規の `[name].js` パスを保持します
-Vue 仮想スクリプト モジュールを `${component}.script.js` に変換します。
+Vue 仮想スクリプト モジュールを `${component}.script.js` に。
 
 #### パラメータ
 
-| 名前         | タイプ             | 説明 |
-| ------------ | ------------------ | ---- |
-| チャンク情報 | CanonicalChunk候補 |      |
+|名前 |タイプ |説明 |
+| --------- | ----------------------- | ----------- |
+|チャンク情報 | CanonicalChunk候補 |             |
 
 ### 解決CanonicalEntryName
 
@@ -2039,9 +2056,9 @@ function resolveCanonicalEntryName(chunkInfo: CanonicalChunkCandidate): string;
 
 #### パラメータ
 
-| 名前         | タイプ             | 説明 |
-| ------------ | ------------------ | ---- |
-| チャンク情報 | CanonicalChunk候補 |      |
+|名前 |タイプ |説明 |
+| --------- | ----------------------- | ----------- |
+|チャンク情報 | CanonicalChunk候補 |             |
 
 ### tsdownForgeコンポーネントプラグイン
 
@@ -2057,9 +2074,9 @@ tsdown で構築された 1 つの Archetype-C **コンポーネント** フレ�
 
 #### パラメータ
 
-| 名前       | タイプ                                        | 説明 |
-| ---------- | --------------------------------------------- | ---- |
-| オプション | TsdownForgeコンポーネントプラグインオプション |      |
+|名前 |タイプ |説明 |
+| ------- | ---------------------------------- | ----------- |
+|オプション | TsdownForgeコンポーネントプラグインオプション |             |
 
 ### TsdownForgeコンポーネントプラグインオプション
 
@@ -2089,15 +2106,13 @@ export interface TsdownForgeEmailComponentsOptions
 function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
 ```
 
-フック アダプターのネイティブ tsdown-plugin 形式。返されたプラグインインジェクション
-`tsdownConfig` からのターゲット設定により、フック ビルドを構成できるようになります
-呼び出し元所有の `defineTsdownLibrary` 構成が 1 つあります。
+構成されているすべてのフレームワーク ターゲットに対して tsdown フック プラグインを作成します。
 
 #### パラメータ
 
-| 名前       | タイプ                     | 説明 |
-| ---------- | -------------------------- | ---- |
-| オプション | TsdownForgeHooksAllOptions |      |
+|名前 |タイプ |説明 |
+| ------- | -------------------------- | ----------- |
+|オプション | TsdownForgeHooksAllOptions |             |
 
 ### TsdownForgeフックすべてのオプション
 
@@ -2105,6 +2120,16 @@ function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlug
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
+```
+
+説明はありません。
+
+### TsdownForgeフックオプション
+
+**種類:** インターフェース
+
+```typescript
+export interface TsdownForgeHooksOptions
 ```
 
 説明はありません。

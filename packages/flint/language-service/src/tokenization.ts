@@ -1,4 +1,5 @@
-import { lexFlint, type FlintToken, type FlintTokenKind } from '@mission-platform/flint';
+import type { FlintToken, FlintTokenKind } from '@mission-platform/flint-ast';
+import { lexFlint } from '@mission-platform/flint-parser';
 
 import { rangeFromOffsets } from './positions.js';
 
@@ -22,12 +23,22 @@ const primitiveTypes = new Set([
   'iterResult',
 ]);
 
+interface EmbeddedTokenRange {
+  readonly start: number;
+  readonly end: number;
+  readonly kind: Extract<
+    FlintTokenClassification['kind'],
+    'component-region' | 'css-property' | 'css-selector' | 'css-value' | 'html-attribute' | 'html-tag'
+  >;
+}
+
 /** Lexes a Flint source string and assigns semantic classifications to each token. */
 export function tokenizeFlint(source: string, fileName = '<input>'): readonly FlintTokenClassification[] {
   const lexed = lexFlint(source, fileName);
+  const embeddedRanges = collectEmbeddedTokenRanges(source);
   const classifications = lexed.tokens
     .filter((token) => token.kind !== 'eof')
-    .map((token, index, tokens) => classifyToken(source, token, index, tokens, lexed.diagnostics));
+    .map((token, index, tokens) => classifyToken(source, token, index, tokens, lexed.diagnostics, embeddedRanges));
   return classifications;
 }
 
@@ -46,6 +57,7 @@ function classifyToken(
   index: number,
   tokens: readonly FlintToken[],
   diagnostics: ReturnType<typeof lexFlint>['diagnostics'],
+  embeddedRanges: readonly EmbeddedTokenRange[],
 ): FlintTokenClassification {
   let kind: FlintTokenClassification['kind'] = token.kind as FlintTokenClassification['kind'];
   if (token.kind === 'identifier' && primitiveTypes.has(token.text)) kind = 'type';
@@ -56,7 +68,63 @@ function classifyToken(
     diagnostics.some((diagnostic) => diagnostic.code === 'FLINT-LEX-001' && diagnostic.span.start === token.span.start)
   )
     kind = 'invalid';
+  const embeddedRange = embeddedRanges.find((range) => token.span.start >= range.start && token.span.end <= range.end);
+  if (embeddedRange !== undefined) kind = embeddedRange.kind;
   return { kind, text: token.text, range: rangeFromOffsets(source, token.span.start, token.span.end), token };
+}
+
+function collectEmbeddedTokenRanges(source: string): readonly EmbeddedTokenRange[] {
+  const ranges: EmbeddedTokenRange[] = [];
+  const regionPattern = /<(template|style)>([\s\S]*?)<\/\1>/giu;
+  let regionMatch: RegExpExecArray | null;
+  while ((regionMatch = regionPattern.exec(source)) !== null) {
+    const region = regionMatch[1]?.toLowerCase();
+    const content = regionMatch[2] ?? '';
+    const contentStart = regionMatch.index + (regionMatch[0]?.indexOf('>') ?? 0) + 1;
+    const regionName = regionMatch[1] ?? '';
+    const openingNameStart = regionMatch.index + 1;
+    const closingNameStart = regionMatch.index + (regionMatch[0]?.lastIndexOf(`</${regionName}>`) ?? 0) + 2;
+    ranges.push(
+      { start: openingNameStart, end: openingNameStart + regionName.length, kind: 'component-region' },
+      { start: closingNameStart, end: closingNameStart + regionName.length, kind: 'component-region' },
+    );
+    if (region === 'template') collectTemplateRanges(content, contentStart, ranges);
+    if (region === 'style') collectStyleRanges(content, contentStart, ranges);
+  }
+  return ranges;
+}
+
+function collectTemplateRanges(content: string, offset: number, ranges: EmbeddedTokenRange[]): void {
+  for (const match of content.matchAll(/<\/?([A-Za-z][\w:.-]*)/gu)) {
+    const start = offset + (match.index ?? 0) + (match[0]?.lastIndexOf(match[1] ?? '') ?? 0);
+    ranges.push({ start, end: start + (match[1]?.length ?? 0), kind: 'html-tag' });
+  }
+  for (const match of content.matchAll(/\s([:@A-Za-z_][\w:.-]*)(?=\s*=)/gu)) {
+    const start = offset + (match.index ?? 0) + 1;
+    ranges.push({ start, end: start + (match[1]?.length ?? 0), kind: 'html-attribute' });
+  }
+}
+
+function collectStyleRanges(content: string, offset: number, ranges: EmbeddedTokenRange[]): void {
+  for (const match of content.matchAll(/(^|[{};])\s*([^{}]+?)\s*\{/gmu)) {
+    const selector = match[2] ?? '';
+    const selectorStart = offset + (match.index ?? 0) + (match[0]?.indexOf(selector) ?? 0);
+    ranges.push({ start: selectorStart, end: selectorStart + selector.length, kind: 'css-selector' });
+  }
+  for (const match of content.matchAll(/([\w-]+)\s*:/gu)) {
+    const start = offset + (match.index ?? 0);
+    ranges.push({ start, end: start + (match[1]?.length ?? 0), kind: 'css-property' });
+    const valueStart = start + (match[0]?.length ?? 0);
+    const valueEndOffset = content.slice((match.index ?? 0) + (match[0]?.length ?? 0)).search(/[;}]/u);
+    const valueEnd = (match.index ?? 0) + (match[0]?.length ?? 0) + valueEndOffset;
+    if (valueEndOffset >= 0 && valueEnd > (match.index ?? 0) + (match[0]?.length ?? 0)) {
+      ranges.push({
+        start: valueStart,
+        end: offset + valueEnd,
+        kind: 'css-value',
+      });
+    }
+  }
 }
 
 /** Evaluates whether a keyword introduces a function or variable declaration. */

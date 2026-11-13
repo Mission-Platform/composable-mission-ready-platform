@@ -1,10 +1,11 @@
+import type { FlintAnalysisReport } from '@mission-platform/flint-analysis';
+import { flintStandardLibraryIdentity } from '@mission-platform/flint-regex';
+
 import { prepareFlintGraphFrontend } from '../frontend.js';
 import { hashFlintModuleGraph } from '../graph.js';
-import { flintStandardLibraryIdentity } from '../stdlib/regex.js';
 
 import { compileFlintGraph, createFlintCompiler, runSelfHostedStage, withSelfHostedResult } from './module.js';
 
-import type { FlintAnalysisReport } from '../analysis/contracts.js';
 import type {
   FlintArtifact,
   FlintCompileInput,

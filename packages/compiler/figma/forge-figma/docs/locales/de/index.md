@@ -2,9 +2,9 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> packages/forge-figma/docs/index.md: [packages/forge-figma/docs/index.md](../../index.md)
+> packages/compiler/figma/forge-figma/docs/index.md: [packages/compiler/figma/forge-figma/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
-Framework-neutral Figma design model, Forge component mappings, token resolution, und export contracts.
+Framework-neutrales Figma-Designmodell, Forge-Komponentenzuordnungen, Token-Auflösung und Exportverträge.
 
-See `llms.txt` für die public API und usage examples.
+Die öffentliche API und Anwendungsbeispiele finden Sie unter `llms.txt`.

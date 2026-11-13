@@ -323,10 +323,8 @@ class AttributePart {
       return;
     }
     if (typeof this.reference === 'function') {
-      // eslint-disable-next-line unicorn/no-null -- DOM ref callbacks use null to signal detachment.
       this.reference(null);
     } else if (typeof this.reference === 'object' && this.reference !== null && 'current' in this.reference) {
-      // eslint-disable-next-line unicorn/no-null -- DOM refs use null to signal detachment.
       (this.reference as { current: Element | null }).current = null;
     }
     this.reference = value;

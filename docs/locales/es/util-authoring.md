@@ -6,7 +6,7 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > Idioma: Español (es)
 
 Las utilidades (utils) son funciones auxiliares puras e independientes del marco. Deben estar libres de importaciones de marcos de UI y, a menos que
-explícitamente requerido y documentado, libre de API DOM. Esto garantiza que puedan utilizarse en cualquier contexto, incluido
+explícitamente requerido y documentado, libre de API DOM. Esto garantiza que se puedan utilizar en cualquier contexto, incluido
 Lógica y trabajadores del lado del servidor.
 
 ## Diseño del directorio
@@ -28,7 +28,7 @@ src/utils/
 1. **Pureza**: Prefiere funciones puras que no tengan efectos secundarios. Dada la misma entrada, siempre deben devolver el
    misma salida.
 2. **Sin ganchos de interfaz de usuario**: nunca importe ganchos `vue`, `react` o `@mission-platform/forge-jsx` en una utilidad. Lógica que requiere
-   la reactividad pertenece a [Componibles](composable-authoring.md).
+   la reactividad pertenece a [Composables](composable-authoring.md).
 3. **Escritura explícita**: proporcione tipos TypeScript completos para todos los argumentos y valores de retorno.
 4. **Pruebas obligatorias**: cada utilidad debe tener un archivo `.spec.ts` ubicado en el mismo lugar.
 5. **Responsabilidad única**: cada carpeta de utilidades debe centrarse en una tarea específica y específica.
@@ -46,9 +46,10 @@ export function clamp(value: number, min: number, max: number): number {
 
 ## Andamio
 
-Utilice la herramienta MCP de Mission Platform Developer para generar un nuevo esqueleto de utilidad:
+Utilice la herramienta `scaffold_util` a través de un servidor MCP de Mission Platform Developer conectado para generar una nueva utilidad
+esqueleto. Este es un ejemplo de llamada a una herramienta MCP, no un comando de shell:
 
-```bash
+```text
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```
@@ -58,4 +59,4 @@ scaffold_util(name="string-utils", package="i18n", apply=true)
 - [Desarrollo de paquetes](package-development.md)
 - [Diseño de componentes atómicos](atomic-component-design.md)
 - [Autoría componible](composable-authoring.md)
-- [Creación de tiendas](store-authoring.md)
+- [Autoría de tienda](store-authoring.md)

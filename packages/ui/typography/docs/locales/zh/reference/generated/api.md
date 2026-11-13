@@ -23,19 +23,19 @@ function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 方言并直接编译为 React 或 Vue
 `@mission-platform/vite-plugin-forge`。
 
-它在所选内容的语义标签中呈现其默认插槽内容
+它在所选内容的语义标签中呈现其默认槽内容
 `variant`（可使用 `as` 覆盖），应用变体的类型范围加上
 可选的 `weight`、`color`、`horizontalAlign`、`verticalAlign` 和 `truncate` 修饰符。
 
-链接也来自这里，有两种方式： `variant="link"` 用于独立链接文本，
-和 `href` 在**任何**变体上，因此标题或标题可以是链接，而不需要
+链接也来自这里，有两种方式：`variant="link"` 用于独立链接文本，
+和 `href` 上**任何**变体，因此标题或标题可以是链接，而不需要
 留下自己的字体比例。无论哪种方式，该元素都会呈现为 `<a>` 并带有
 链接颜色、悬停/活动和 `:visited` 处理、可见对焦环
 以及选择的 `underline` 模式（默认为 `'always'`）； `target="_blank"` 获取
 自动 `rel="noopener noreferrer"`。它拥有它的
 通过位于同一位置的 CSS 模块 `forge-typography.module.scss` 进行样式设置
 （由两阶段编译器带入每个框架，因此组件
-附带其自己的 `@layer mp.typography` CSS)；散列类名是
+附带其自己的 `@layer mp.typography` CSS）；散列类名是
 使用框架中立的 {@link classNames} 帮助器组装。
 
 原来的Vue SFC的`@floating-ui` truncate-popup在这里通过恢复
@@ -46,9 +46,9 @@ function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<TypographyProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<TypographyProperties> |             |
 
 ### 版式颜色
 
@@ -114,6 +114,26 @@ export type TypographySize = SizeScale;
 ```
 
 可选大小标记 — 规范 2xs → 2xl 比例（设置时覆盖变体的字体大小）。
+
+### 版式风格
+
+**种类：**类型
+
+```typescript
+export type TypographyStyle = CSSStyleProperties &
+```
+
+没有提供描述。
+
+### 版式样式属性
+
+**种类：**接口
+
+```typescript
+export interface TypographyStyleProperties
+```
+
+组件拥有的 CSS 值由版式后代和弹出内容继承。
 
 ### 版式目标
 

@@ -5,7 +5,7 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 > packages/tooling/configs/stylelint-config/docs/index.md: [packages/tooling/configs/stylelint-config/docs/index.md](../../index.md)
 > Lingua: Italiano (it)
 
-Condiviso Stylelint regole per CSS e SCSS in Mission Platform.
+Regole Stylelint condivise per CSS e SCSS in Mission Platform.
 
 ## Installare e utilizzare
 
@@ -14,7 +14,9 @@ pnpm add --save-dev @mission-platform/stylelint-config postcss-html postcss-scss
   stylelint stylelint-config-recommended-vue stylelint-config-standard-scss
 ```
 
-I workspace con stili usano un file ESM locale `stylelint.config.mjs`. Importate e distribuite la configurazione condivisa invece di duplicare le voci `extends`:
+Le aree di lavoro con stile utilizzano un `stylelint.config.mjs` locale dell'area di lavoro in ESM
+formato. Importa e diffondi la configurazione condivisa invece di duplicarla
+Voci `extends`:
 
 ```js
 // stylelint.config.mjs
@@ -23,7 +25,16 @@ import baseConfig from '@mission-platform/stylelint-config';
 export default { ...baseConfig };
 ```
 
-La configurazione condivisa estende `stylelint-config-standard-scss` e `stylelint-config-recommended-vue`. Usa `postcss-html` per impostazione predefinita, `postcss-scss` per `**/*.scss` e `postcss-html` per i blocchi di stile Vue. Aggiungete le dipendenze dirette di supporto con versioni `catalog:stylelint` e il pacchetto di configurazione condivisa con `workspace:*` in `devDependencies`.
+La configurazione condivisa estende `stylelint-config-standard-scss` e
+`stylelint-config-recommended-vue`. Per impostazione predefinita utilizza `postcss-html`
+`postcss-scss` per `**/*.scss` e utilizza `postcss-html` per lo stile SFC Vue
+blocchi. Supporta gli stili CSS, SCSS e Vue senza specifici dell'area di lavoro
+configurazione della sintassi.
+
+Aggiungi le dipendenze del supporto diretto riportate sopra a quelle dell'area di lavoro
+`devDependencies` utilizzando le versioni `catalog:stylelint`, insieme a
+pacchetto di configurazione condiviso utilizzando `workspace:*`. Aggiungi script che coprano il file
+origini di stile dell'area di lavoro, ad esempio:
 
 ```json
 {
@@ -34,12 +45,11 @@ La configurazione condivisa estende `stylelint-config-standard-scss` e `stylelin
 }
 ```
 
-Estendi il pacchetto dall'area di lavoro `stylelint.config.mjs`. Conserva il componente
-stili vicini al loro componente e utilizzano sostituzioni locali solo per un documento documentato
-vincolo dello spazio di lavoro.
+Mantieni gli stili dei componenti vicini al componente e utilizza le sostituzioni locali solo per
+un vincolo documentato dello spazio di lavoro.
 
 ## Contribuire
 
-Correre `pnpm --filter @mission-platform/stylelint-config lint` E
+Esegui `pnpm --filter @mission-platform/stylelint-config lint` e
 `pnpm --filter @mission-platform/stylelint-config format`. Testare le modifiche alle regole
 rispetto sia al pacchetto SCSS che agli stili dell'applicazione.

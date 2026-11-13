@@ -11,11 +11,11 @@ contratti consumati da applicazioni e componenti condivisi.
 
 ## Inizia qui
 
-- [Riferimento al token componente](reference/component-tokens.md) — l'inventario,
+- [Riferimento token componente](reference/component-tokens.md) — l'inventario,
   Percorsi DTCG, output generato e contratto di trasferimento Figma.
-- [Guida alla creazione e al test](guides/development.md) — origine, generazione e generazione del token
+- [Guida alla creazione e al test](guides/development.md): origine, generazione e
   controlli del foglio di stile.
 - [`README.md`](../../../README.md): esportazioni di pacchetti e configurazione di base.
 
-Importare i sottopercorsi `.` o SCSS pubblici del pacchetto da `package.json`; non farlo
+Importare i sottopercorsi pubblici `.` o SCSS del pacchetto da `package.json`; non farlo
 copiare i file token generati in un'applicazione.

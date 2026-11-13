@@ -1,4 +1,4 @@
-import { flintTypeNameToString, type FlintTypeName } from '../ast.js';
+import { flintTypeNameToString, type FlintTypeName } from '@mission-platform/flint-ast';
 
 import type {
   FlintGraphEdge,

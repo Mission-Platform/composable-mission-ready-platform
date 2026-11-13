@@ -23,10 +23,10 @@ Convertissez un alias DTCG (`{font.size.4xl}`) en référence `var(--<prefix>-fo
 
 #### Paramètres
 
-| Nom        | Tapez  | Descriptif |
-| ---------- | ------ | ---------- |
-| pseudonyme | chaîne |            |
-| préfixe    | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------ | ----------- |
+| pseudonyme | chaîne |             |
+| préfixe | chaîne |             |
 
 ### chameauCas
 
@@ -40,9 +40,9 @@ camelCase une chaîne en pointillés (`border-width` → `borderWidth`, `z-index
 
 #### Paramètres
 
-| Nom           | Tapez  | Descriptif |
-| ------------- | ------ | ---------- |
-| en pointillés | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------ | ----------- |
+| en pointillés | chaîne |             |
 
 ### camelCaseName
 
@@ -94,7 +94,6 @@ export type DtcgGroup = Record<string, unknown>;
 
 Un groupe DTCG node (un objet de groupes/jetons imbriqués plus des métadonnées `Un groupe DTCG node (un objet de groupes/jetons imbriqués plus des métadonnées ).
  `$`
-
 ### Jeton Dtcg
 
 **Genre :** interface
@@ -118,9 +117,9 @@ l'ancêtre le plus proche `$type` jusqu'à chaque jeton feuille.
 
 #### Paramètres
 
-| Nom       | Tapez       | Descriptif |
-| --------- | ----------- | ---------- |
-| document_ | Groupe Dtcg |            |
+| Nom | Tapez | Descriptif |
+| --------- | --------- | ----------- |
+| document_ | Groupe Dtcg |             |
 
 ### formatCouleurValeur
 
@@ -134,9 +133,9 @@ Formatez une valeur de couleur DTCG sous forme de chaîne CSS `oklab()` (ou autr
 
 #### Paramètres
 
-| Nom    | Tapez          | Descriptif |
-| ------ | -------------- | ---------- |
-| valeur | DtcgColorValue |            |
+| Nom | Tapez | Descriptif |
+| ----- | -------------- | ----------- |
+| valeur | DtcgColorValue |             |
 
 ### formatCssCouleur
 
@@ -150,9 +149,9 @@ Arrondissez une valeur OKLab/autre espace colorimétrique à quatre chiffres sig
 
 #### Paramètres
 
-| Nom    | Tapez          | Descriptif |
-| ------ | -------------- | ---------- |
-| valeur | DtcgColorValue |            |
+| Nom | Tapez | Descriptif |
+| ----- | -------------- | ----------- |
+| valeur | DtcgColorValue |             |
 
 ### formatCssValeur
 
@@ -162,13 +161,13 @@ Arrondissez une valeur OKLab/autre espace colorimétrique à quatre chiffres sig
 function formatCssValue(value: unknown): string;
 ```
 
-Formatez un jeton `$value` en tant que littéral CSS/SCSS (couleurs arrondies ; tout le reste textuellement).
+Formatez un jeton `$value` en tant que littéral CSS/SCSS (couleurs arrondies ; les tableaux deviennent des listes séparées par des virgules).
 
 #### Paramètres
 
-| Nom    | Tapez   | Descriptif |
-| ------ | ------- | ---------- |
-| valeur | inconnu |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------- | ----------- |
+| valeur | inconnu |             |
 
 ### groupeLabel
 
@@ -192,10 +191,10 @@ Résolvez un alias DTCG (`{font.size.4xl}`) en son littéral `$value` dans un do
 
 #### Paramètres
 
-| Nom        | Tapez       | Descriptif |
-| ---------- | ----------- | ---------- |
-| pseudonyme | chaîne      |            |
-| document_  | Groupe Dtcg |            |
+| Nom | Tapez | Descriptif |
+| --------- | --------- | ----------- |
+| pseudonyme | chaîne |             |
+| document_ | Groupe Dtcg |             |
 
 ### résoudreTsValue
 
@@ -207,13 +206,14 @@ function resolveTsValue(value: unknown): string | number;
 
 Résolvez un DTCG `$value` en valeur JavaScript littérale utilisée dans le
 Module TypeScript : les couleurs deviennent leur chaîne `oklab(...)`, les nombres restent
-les nombres, et tout le reste (dimensions, piles de familles de polices, …) reste une chaîne.
+les nombres, les tableaux deviennent des listes séparées par des virgules, et tout le reste
+(dimensions, piles de familles de polices, …) reste une chaîne.
 
 #### Paramètres
 
-| Nom    | Tapez   | Descriptif |
-| ------ | ------- | ---------- |
-| valeur | inconnu |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------- | ----------- |
+| valeur | inconnu |             |
 
 ### Enregistrement de jeton
 
@@ -246,9 +246,9 @@ Tout est produit par les émetteurs personnalisés ; il n'y a pas de CLI externe
 
 #### Paramètres
 
-| Nom     | Tapez                       | Descriptif |
-| ------- | --------------------------- | ---------- |
-| options | Options du plugin de jetons |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------- | ----------- |
+| options | Options du plugin de jetons |             |
 
 ### Options du plugin de jetons
 
@@ -283,7 +283,7 @@ Construisez le partiel de thème combiné unique. La couleur sémantique claire 
 les sources (dont les `$value` sont des alias de palette) sont fusionnées en une seule
 `:root { color-scheme: light dark; --<prefix>-color-*: light-dark(<light>, <dark>); }`
 bloc où chaque valeur claire/sombre est une référence `var(--<prefix>-*)` au
-propriété personnalisée de la palette correspondante. Aucune inscription `@property` n'est émise —
+propriété personnalisée de palette correspondante. Aucune inscription `@property` n'est émise —
 `light-dark()`/`var()` ne sont pas des `initial-value` indépendants du point de vue informatique.
 
 Le partiel émet également les broches du schéma opt-in `[data-theme]`/`.theme-*`.
@@ -296,11 +296,11 @@ descendants sans redéfinir une propriété personnalisée d’une seule couleur
 
 #### Paramètres
 
-| Nom           | Tapez       | Descriptif |
-| ------------- | ----------- | ---------- |
-| lightDocument | Groupe Dtcg |            |
-| darkDocument  | Groupe Dtcg |            |
-| préfixe       |             |            |
+| Nom | Tapez | Descriptif |
+| ------------- | --------- | ----------- |
+| lightDocument | Groupe Dtcg |             |
+| darkDocument | Groupe Dtcg |             |
+| préfixe |           |             |
 
 ### buildPropertyRule
 
@@ -316,32 +316,31 @@ Lorsque `useScssVariable` est défini, `initial-value` est résolu en correspond
 variable locale `Créez l'enregistrement CSS `@property` pour une seule propriété personnalisée.
 
 Lorsque `useScssVariable` est défini, `initial-value` est résolu en correspondant
-variable locale (`$<token>`) émise dans le même fichier, en conservant la
+variable locale  (`$<token>`) émise dans le même fichier, en conservant la
 enregistrement synchronisé avec la source de vérité de la variable `Créez l'enregistrement CSS `@property` pour une seule propriété personnalisée.
 
 Lorsque `useScssVariable` est défini, `initial-value` est résolu en correspondant
 variable locale `Créez l'enregistrement CSS `@property` pour une seule propriété personnalisée.
 
 Lorsque `useScssVariable` est défini, `initial-value` est résolu en correspondant
-variable locale (`$<token>`) émise dans le même fichier, en conservant la
+variable locale  (`$<token>`) émise dans le même fichier, en conservant la
 enregistrement synchronisé avec la source de vérité de la variable  ; sinon le
 le littéral `$value` est intégré.
 
 Un `@property` non universel nécessite un calcul indépendant
 `initial-value` (pas de `var()`, `light-dark()` ou unités relatives), donc le
-La syntaxe universelle `*` l'omet. Tout ce dont la valeur est une référence `var()`
-(les champs de typographie) ou un littéral non typable (ombres, courbes d'atténuation,
-piles de polices) s'enregistre donc sous `*` sans `initial-value`.
-`$`
-
+La syntaxe universelle `*` l'omet. Valeurs dont la valeur est une référence `var()` (la
+champs de typographie) ou des unités de longueur relative (rem, em, vw, etc.) donc inscrivez-vous
+sous `*` sans `initial-value`.
+ `$`
 #### Paramètres
 
-| Nom                  | Tapez                    | Descriptif |
-| -------------------- | ------------------------ | ---------- |
-| enregistrement       | Enregistrement de jetons |            |
-| préfixe              | chaîne                   |            |
-| utiliserScssVariable |                          |            |
-| cssEspace de noms    | chaîne                   |            |
+| Nom | Tapez | Descriptif |
+| --------------- | ----------- | ----------- |
+| enregistrement | Enregistrement de jetons |             |
+| préfixe | chaîne |             |
+| utiliserScssVariable |             |             |
+| cssEspace de noms | chaîne |             |
 
 ### buildScssVariables
 
@@ -356,16 +355,16 @@ function buildScssVariables(
 ): string;
 ```
 
-Aucune description fournie.
+Construit des blocs de déclaration de variable $ SCSS standard regroupés par catégorie de jeton.
 
 #### Paramètres
 
-| Nom                           | Tapez                 | Descriptif |
-| ----------------------------- | --------------------- | ---------- |
-| enregistrements               | JetonEnregistrement[] |            |
-| préfixe                       |                       |            |
-| cssEspace de noms             | chaîne                |            |
-| Espaces de noms de composants | ReadonlySet<string>   |            |
+| Nom | Tapez | Descriptif |
+| ------------------- | ------------------- | ----------- |
+| enregistrements | JetonEnregistrement[] |             |
+| préfixe |                     |             |
+| cssEspace de noms | chaîne |             |
+| Espaces de noms de composants | ReadonlySet<string> |             |
 
 ### buildScssVariablesScss
 
@@ -381,21 +380,21 @@ function buildScssVariablesScss(
 ```
 
 Créez un partiel `Créez un partiel -variables-only sans CSS (en-tête + {@link buildScssVariables}
-corps, pas de CSS `:root`/`@property`). Émis sous la forme `scss/_<file>-vars.scss`donc interne
-les consommateurs (par exemple`scss/_mixins.scss`) peuvent lire la valeur `Créez un partiel `Créez un partiel -variables-only sans CSS (en-tête + {@link buildScssVariables}
-corps, pas de CSS `:root`/`@property`). Émis sous la forme `scss/_<file>-vars.scss`donc interne
-les consommateurs (par exemple`scss/_mixins.scss`) peuvent lire la valeur  d'un jeton au moment de la compilation
-sans `@use`-ing le partiel complet - ce qui entraînerait une fuite de son CSS `:root`/`@property`dans chaque feuille de style consommatrice.
-`$`
-
+corps, pas de CSS `:root`/`@property`). Émis sous la forme `scss/_<file>-vars.scss` donc interne
+les consommateurs (par exemple `scss/_mixins.scss`) peuvent lire la valeur `Créez un partiel `Créez un partiel -variables-only sans CSS (en-tête + {@link buildScssVariables}
+corps, pas de CSS `:root`/`@property`). Émis sous la forme `scss/_<file>-vars.scss` donc interne
+les consommateurs (par exemple `scss/_mixins.scss`) peuvent lire la valeur  d'un jeton au moment de la compilation
+sans `@use`-ing le partiel complet - ce qui entraînerait une fuite de son CSS `:root`/`@property`
+dans chaque feuille de style consommatrice.
+ `$`
 #### Paramètres
 
-| Nom                           | Tapez                 | Descriptif |
-| ----------------------------- | --------------------- | ---------- |
-| enregistrements               | JetonEnregistrement[] |            |
-| préfixe                       |                       |            |
-| cssEspace de noms             | chaîne                |            |
-| Espaces de noms de composants | ReadonlySet<string>   |            |
+| Nom | Tapez | Descriptif |
+| ------------------- | ------------------- | ----------- |
+| enregistrements | JetonEnregistrement[] |             |
+| préfixe |                     |             |
+| cssEspace de noms | chaîne |             |
+| Espaces de noms de composants | ReadonlySet<string> |             |
 
 ### buildStructuralScss
 
@@ -407,34 +406,46 @@ function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', c
 
 Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`
 et un enregistrement `@property` correspondant pour chaque jeton (avec `initial-value`s
-résolu à la variable `Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`et un enregistrement`@property`correspondant pour chaque jeton (avec`initial-value`s
-résolu à la variable  correspondante), tous deux enveloppés dans la cascade `mp.tokens`couche. Les variables`Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`
+résolu à la variable `Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`
 et un enregistrement `@property` correspondant pour chaque jeton (avec `initial-value`s
-résolu à la variable `Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`et un enregistrement`@property`correspondant pour chaque jeton (avec`initial-value`s
-résolu à la variable  correspondante), tous deux enveloppés dans la cascade `mp.tokens`couche. Les variables  elles-mêmes vivent dans le compagnon sans CSS`_<file>-vars.scss`partiel (voir {@link buildScssVariablesScss}) ; ce partiel`@use`s (pour interpoler les valeurs dans les blocs `:root`/`@property`) et
-`@forward`s (de sorte que les consommateurs en aval de `_<file>.scss`voient toujours le`Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`
+résolu à la variable  correspondante), tous deux enveloppés dans la cascade `mp.tokens`
+couche. Les variables `Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`
 et un enregistrement `@property` correspondant pour chaque jeton (avec `initial-value`s
-résolu à la variable `Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`et un enregistrement`@property`correspondant pour chaque jeton (avec`initial-value`s
-résolu à la variable  correspondante), tous deux enveloppés dans la cascade `mp.tokens`couche. Les variables`Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`
+résolu à la variable `Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`
 et un enregistrement `@property` correspondant pour chaque jeton (avec `initial-value`s
-résolu à la variable `Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`et un enregistrement`@property`correspondant pour chaque jeton (avec`initial-value`s
-résolu à la variable  correspondante), tous deux enveloppés dans la cascade `mp.tokens`couche. Les variables  elles-mêmes vivent dans le compagnon sans CSS`_<file>-vars.scss`partiel (voir {@link buildScssVariablesScss}) ; ce partiel`@use`s (pour interpoler les valeurs dans les blocs `:root`/`@property`) et
+résolu à la variable  correspondante), tous deux enveloppés dans la cascade `mp.tokens`
+couche. Les variables  elles-mêmes vivent dans le compagnon sans CSS
+`_<file>-vars.scss` partiel (voir {@link buildScssVariablesScss}) ; ce partiel
+`@use`s (pour interpoler les valeurs dans les blocs `:root`/`@property`) et
+`@forward`s (de sorte que les consommateurs en aval de `_<file>.scss` voient toujours le
+`Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`
+et un enregistrement `@property` correspondant pour chaque jeton (avec `initial-value`s
+résolu à la variable `Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`
+et un enregistrement `@property` correspondant pour chaque jeton (avec `initial-value`s
+résolu à la variable  correspondante), tous deux enveloppés dans la cascade `mp.tokens`
+couche. Les variables `Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`
+et un enregistrement `@property` correspondant pour chaque jeton (avec `initial-value`s
+résolu à la variable `Construire un partiel SCSS structurel : les propriétés personnalisées `:root { --<prefix>-* }`
+et un enregistrement `@property` correspondant pour chaque jeton (avec `initial-value`s
+résolu à la variable  correspondante), tous deux enveloppés dans la cascade `mp.tokens`
+couche. Les variables  elles-mêmes vivent dans le compagnon sans CSS
+`_<file>-vars.scss` partiel (voir {@link buildScssVariablesScss}) ; ce partiel
+`@use`s (pour interpoler les valeurs dans les blocs `:root`/`@property`) et
 `@forward`s (de sorte que les consommateurs en aval de `_<file>.scss` voient toujours le
 -variables). La palette de couleurs et la typographie composite sont toutes deux émises
 par ce chemin.
 
 `file` est le nom de base source/sortie (par exemple `'radius'`), utilisé pour référencer le
 compagnon `'<file>-vars'` partiel.
-`$`
-
+ `$`
 #### Paramètres
 
-| Nom               | Tapez                 | Descriptif |
-| ----------------- | --------------------- | ---------- |
-| enregistrements   | JetonEnregistrement[] |            |
-| préfixe           |                       |            |
-| fichier           |                       |            |
-| cssEspace de noms | chaîne                |            |
+| Nom | Tapez | Descriptif |
+| ------------ | ------------- | ----------- |
+| enregistrements | JetonEnregistrement[] |             |
+| préfixe |               |             |
+| fichier |               |             |
+| cssEspace de noms | chaîne |             |
 
 ### buildTypographyRecords
 
@@ -454,10 +465,33 @@ Chaque champ devient un jeton `typography-<variant>-<field>` dont la valeur est 
 
 #### Paramètres
 
-| Nom               | Tapez       | Descriptif |
-| ----------------- | ----------- | ---------- |
-| typographieGroupe | Groupe Dtcg |            |
-| préfixe           |             |            |
+| Nom | Tapez | Descriptif |
+| --------------- | --------- | ----------- |
+| typographieGroupe | Groupe Dtcg |             |
+| préfixe |           |             |
+
+### estComputationallyIndependent
+
+**Genre :** fonction
+
+```typescript
+function isComputationallyIndependent(record: TokenRecord): boolean;
+```
+
+Vérifie si une valeur de jeton est indépendante du point de vue du calcul et valide en tant que valeur de jeton.
+`initial-value` pour un enregistrement CSS typé `@property` sous le CSS W3C
+Propriétés et valeurs Spécification API niveau 1.
+
+Valeurs faisant référence à `var()`, `light-dark()`, `env()`, unités relatives à la police
+(`rem`, `em`, etc.), unités relatives à la fenêtre/au conteneur (`vw`, `vh`, `cqw`, etc.),
+ou sans unité `0` pour `<length>` ne sont pas indépendants du point de vue du calcul et doivent
+omettez le descripteur `initial-value` en revenant à la syntaxe universelle `'*'`.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------ | ----------- | ----------- |
+| enregistrement | Enregistrement de jetons |             |
 
 ### typographieEntries
 
@@ -471,9 +505,9 @@ Renvoie les entrées `[variant, value]` pour un groupe de typographie composite 
 
 #### Paramètres
 
-| Nom    | Tapez       | Descriptif |
-| ------ | ----------- | ---------- |
-| groupe | Groupe Dtcg |            |
+| Nom | Tapez | Descriptif |
+| ----- | --------- | ----------- |
+| groupe | Groupe Dtcg |             |
 
 ## `src/generators/typescript`
 
@@ -489,9 +523,9 @@ Aucune description fournie.
 
 #### Paramètres
 
-| Nom     | Tapez                                    | Descriptif |
-| ------- | ---------------------------------------- | ---------- |
-| sources | Tableau<string \| TokenModuleDescriptor> |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------------------------- | ----------- |
+| sources | Tableau<string \| TokenModuleDescriptor> |             |
 
 ### buildTokenModule
 
@@ -502,7 +536,7 @@ function buildTokenModule(
   basename: string,
   document_: DtcgGroup,
   aliasDocument?: DtcgGroup,
-  exportName = camelCase(basename),
+  exportName: string = camelCase(basename),
 ): string;
 ```
 
@@ -517,12 +551,12 @@ la source composite `typography` résout ses références `{font.*}` par rapport
 
 #### Paramètres
 
-| Nom           | Tapez       | Descriptif |
-| ------------- | ----------- | ---------- |
-| nom de base   | chaîne      |            |
-| document_     | Groupe Dtcg |            |
-| aliasDocument | Groupe Dtcg |            |
-| exportName    |             |            |
+| Nom | Tapez | Descriptif |
+| ------------- | --------- | ----------- |
+| nom de base | chaîne |             |
+| document_ | Groupe Dtcg |             |
+| aliasDocument | Groupe Dtcg |             |
+| exportName | chaîne |             |
 
 ## `src/index`
 
@@ -539,20 +573,20 @@ Sources DTCG (https://www.designtokens.org/) utilisant un système personnalisé
 générateur - aucune CLI externe n'est impliquée. Chaque source `*.tokens.json` génère un
 correspondant à `generated/scss/<file>.scss` (variables `Plugin Vite qui génère les artefacts de jeton de conception Mission Platform à partir du
 Sources DTCG (https://www.designtokens.org/) utilisant un système personnalisé autonome
-générateur - aucune CLI externe n'est impliquée. Chaque source `_.tokens.json`génère un
-correspondant à`generated/scss/<file>.scss`(variables  autonomes,`--mp-_`propriétés personnalisées et leurs enregistrements`@property`) et un `as const`imbriqué
-Module`generated/ts/<file>.ts`, aux côtés du module `generated/_tokens.scss`(SCSS
-baril) et les agrégats`generated/tokens.ts` (baril TypeScript).
+générateur - aucune CLI externe n'est impliquée. Chaque source `*.tokens.json` génère un
+correspondant à `generated/scss/<file>.scss` (variables  autonomes, `--mp-*`
+propriétés personnalisées et leurs enregistrements `@property`) et un `as const` imbriqué
+Module `generated/ts/<file>.ts`, aux côtés du module `generated/_tokens.scss` (SCSS
+baril) et les agrégats `generated/tokens.ts` (baril TypeScript).
 
 La génération s'exécute dans le hook de cumul `buildStart`, de sorte que les artefacts sont produits
 pour `vite build`, `vite build --watch` et le serveur de développement.
-`$`
-
+ `$`
 #### Paramètres
 
-| Nom     | Tapez                       | Descriptif |
-| ------- | --------------------------- | ---------- |
-| options | Options du plugin de jetons |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------- | ----------- |
+| options | Options du plugin de jetons |             |
 
 ### jetonsPlugin
 
@@ -567,20 +601,20 @@ Sources DTCG (https://www.designtokens.org/) utilisant un système personnalisé
 générateur - aucune CLI externe n'est impliquée. Chaque source `*.tokens.json` génère un
 correspondant à `generated/scss/<file>.scss` (variables `Plugin Vite qui génère les artefacts de jeton de conception Mission Platform à partir du
 Sources DTCG (https://www.designtokens.org/) utilisant un système personnalisé autonome
-générateur - aucune CLI externe n'est impliquée. Chaque source `_.tokens.json`génère un
-correspondant à`generated/scss/<file>.scss`(variables  autonomes,`--mp-_`propriétés personnalisées et leurs enregistrements`@property`) et un `as const`imbriqué
-Module`generated/ts/<file>.ts`, aux côtés du module `generated/_tokens.scss`(SCSS
-baril) et les agrégats`generated/tokens.ts` (baril TypeScript).
+générateur - aucune CLI externe n'est impliquée. Chaque source `*.tokens.json` génère un
+correspondant à `generated/scss/<file>.scss` (variables  autonomes, `--mp-*`
+propriétés personnalisées et leurs enregistrements `@property`) et un `as const` imbriqué
+Module `generated/ts/<file>.ts`, aux côtés du module `generated/_tokens.scss` (SCSS
+baril) et les agrégats `generated/tokens.ts` (baril TypeScript).
 
 La génération s'exécute dans le hook de cumul `buildStart`, de sorte que les artefacts sont produits
 pour `vite build`, `vite build --watch` et le serveur de développement.
-`$`
-
+ `$`
 #### Paramètres
 
-| Nom     | Tapez                       | Descriptif |
-| ------- | --------------------------- | ---------- |
-| options | Options du plugin de jetons |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------- | ----------- |
+| options | Options du plugin de jetons |             |
 
 ## `src/reachability`
 
@@ -596,9 +630,9 @@ Collectez un rapport d'accessibilité déterministe et conservateur sans modifie
 
 #### Paramètres
 
-| Nom     | Tapez                              | Descriptif |
-| ------- | ---------------------------------- | ---------- |
-| options | Options d'accessibilité aux jetons |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------------ | ----------- |
+| options | Options d'accessibilité aux jetons |             |
 
 ### TokenAliasEdge
 
@@ -672,7 +706,7 @@ Rédigez un rapport avec un format stable adapté à la révision et au contrôl
 
 #### Paramètres
 
-| Nom               | Tapez                     | Descriptif |
-| ----------------- | ------------------------- | ---------- |
-| rapport           | Rapport TokenReachability |            |
-| chemin du fichier | chaîne                    |            |
+| Nom | Tapez | Descriptif |
+| -------- | ----------------------- | ----------- |
+| rapport | Rapport TokenReachability |             |
+| chemin du fichier | chaîne |             |

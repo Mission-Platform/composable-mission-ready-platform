@@ -16,17 +16,17 @@
 פונקציה **סוג:**
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined;
+function useObservable(source: Observable<T>, initialValue?: T): T | undefined;
 ```
 
-הירשם ל-`source` והחזר את הפליטה האחרונה שלו כמדינה. מחזיר
-`undefined` עד הגעת הפליטה הראשונה.
+לא סופק תיאור.
 
 #### פרמטרים
 
-| שם   | הקלד      | תיאור |
-| ---- | --------- | ----- |
-| מקור | לצפייה<T> |       |
+| שם | הקלד | תיאור |
+| ------------ | ------------- | ----------- |
+| מקור | לצפייה<T> |             |
+| initialValue | T |             |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -58,11 +58,11 @@ function useSubscribe(
 
 #### פרמטרים
 
-| שם             | הקלד                                   | תיאור |
-| -------------- | -------------------------------------- | ----- |
-| מקור           | לצפייה<T>                              |       |
-| observerOrNext | חלקי<Observer<T>> \| ((ערך: T) => ריק) |       |
-| תלות           | MpDependencyList                       |       |
+| שם | הקלד | תיאור |
+| -------------- | -------------------------------------------- | ----------- |
+| מקור | לצפייה<T> |             |
+| observerOrNext | חלקי<Observer<T>> \| ((ערך: T) => ריק) |             |
+| תלות | MpDependencyList |             |
 
 ### השתמש במנוי
 
@@ -78,7 +78,7 @@ function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDepend
 
 #### פרמטרים
 
-| שם    | הקלד                 | תיאור |
-| ----- | -------------------- | ----- |
-| הירשם | () => לא ניתן להירשם |       |
-| תלות  | MpDependencyList     |       |
+| שם | הקלד | תיאור |
+| ------------ | -------------------- | ----------- |
+| הירשם | () => לא ניתן להירשם |             |
+| תלות | MpDependencyList |             |

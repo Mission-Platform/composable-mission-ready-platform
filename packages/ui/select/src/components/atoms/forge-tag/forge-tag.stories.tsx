@@ -1,6 +1,6 @@
-import { ForgeTag } from './forge-tag';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeTag } from './forge-tag';
 
 /**
  * `ForgeTag` is the write-once `ForgeTag` component of `@mission-platform/select` — a toned, rounded label (text via the composed

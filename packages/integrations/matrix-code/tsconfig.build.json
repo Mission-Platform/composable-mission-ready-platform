@@ -3,7 +3,7 @@
   "compilerOptions": {
     "paths": { "@/*": ["./src/*"] },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.build.tsbuildinfo",
-    "types": ["vite/client"],
+    "types": ["vite/client", "@mission-platform/typescript-config/client"],
     "outDir": "./dist",
     "rootDir": "./src"
   },

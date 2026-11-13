@@ -1,6 +1,7 @@
 export * from './analysis.js';
 export * from './completion.js';
 export * from './documents.js';
+export * from './embedded-css.js';
 export * from './features.js';
 export * from './hover.js';
 export * from './lsif.js';

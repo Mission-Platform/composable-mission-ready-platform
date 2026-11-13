@@ -6,7 +6,7 @@ each package live beside that package under its full `packages/**/docs/` path. G
 package rather than this page.
 
 > **Imports are always bare.** Framework-shipping `@mission-platform/*` packages expose a single `.`
-> entry guarded by the `mp:vue`, `mp:react`, `mp:solid`, and `mp:web-component` export
+> entry guarded by the `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, and `mp:web-component` export
 > conditions. Select the framework **once** — via `resolve.conditions` (see `defineFrameworkAppConfig` /
 > `frameworkResolveConditions` from `@mission-platform/vite-config`) and `customConditions` (via the
 > `@mission-platform/typescript-config/framework-<name>` presets) — then import everything with the bare
@@ -381,10 +381,10 @@ These live in `packages/flint/` and `packages/tooling/vite/flint`.
 
 | Package                                    | Purpose                                                  |
 | :----------------------------------------- | :------------------------------------------------------- |
-| `@mission-platform/flint`                  | Core AST, TypeChecker, SonIR, and compiler pipeline.    |
+| `@mission-platform/flint`                  | Core AST, TypeChecker, SonIR, and compiler pipeline.     |
 | `@mission-platform/flint-cli`              | Standalone `flint` executable compiler and checker CLI.  |
 | `@mission-platform/flint-wasm`             | WebAssembly binary emitter and bytecode verifier.        |
-| `@mission-platform/flint-runtime`          | Memory sandbox and execution runtime.                   |
+| `@mission-platform/flint-runtime`          | Memory sandbox and execution runtime.                    |
 | `@mission-platform/flint-stdlib`           | Standard library collections and builtins.               |
 | `@mission-platform/flint-regex`            | Linear-time PikeVM regular expression engine.            |
 | `@mission-platform/flint-lsp`              | Stdio Language Server Protocol server (`flint-lsp`).     |

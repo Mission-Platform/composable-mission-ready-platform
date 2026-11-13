@@ -12,6 +12,7 @@
  * component is *interactive* — i.e. whether a target must hydrate it with a
  * real framework island rather than render it statically.
  */
+import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 import {
   isOxcNode,
   oxcArray,
@@ -38,7 +39,6 @@ import type {
   ContentField,
   ContentFieldKind,
 } from "./content-model.js";
-import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 
 function isSlotNode(node: OxcNode): boolean {
   const opening =

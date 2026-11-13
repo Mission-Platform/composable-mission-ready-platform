@@ -11,11 +11,11 @@ contratos consumidos por aplicaciones y componentes compartidos.
 
 ## Empieza aquí
 
-- [Referencia de token de componente](reference/component-tokens.md) — el inventario,
+- [Referencia del token de componente](reference/component-tokens.md) — el inventario,
   Rutas DTCG, producción generada y contrato de transferencia Figma.
-- [Guía de construcción y prueba](guides/development.md): fuente de token, generación y
+- [Guía de compilación y prueba](guides/development.md): fuente, generación y
   comprobaciones de hojas de estilo.
-- [`README.md`](../../../README.md) — exportaciones de paquetes y configuración básica.
+- [`README.md`](../../../README.md): exportaciones de paquetes y configuración básica.
 
 Importe las subrutas públicas `.` o SCSS del paquete desde `package.json`; no
 Copie los archivos de token generados en una aplicación.

@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> packages/hunspell/docs/index.md: [packages/hunspell/docs/index.md](../../index.md)
+> packages/content/hunspell/docs/index.md: [packages/content/hunspell/docs/index.md](../../index.md)
 > Taal: Nederlands (nl)
 
 `@mission-platform/hunspell` biedt een krachtige spellingcontrole-engine gebaseerd op Hunspell, samengesteld
@@ -19,7 +19,7 @@ Het pakket maakt gebruik van een gespecialiseerde build-pijplijn om ervoor te zo
 
 ### Het WASM-artefact opnieuw opbouwen
 
-Voor wederopbouw is vereist [Dokwerker](https://www.docker.com/). Gebruik het volgende commando vanuit de root:
+Voor het opnieuw opbouwen is [Docker](https://www.docker.com/) vereist. Use the following command from the root:
 
 ```bash
 pnpm --filter @mission-platform/hunspell build:wasm

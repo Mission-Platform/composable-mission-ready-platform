@@ -19,7 +19,6 @@ import {
   type FlintSelfHostedVmRun,
 } from '@mission-platform/flint-runtime';
 import { compileFlintFile, compileFlintGraph } from '@mission-platform/vite-plugin-flint';
-
 import type { FlintCompiledModule, FlintPluginOptions } from '@mission-platform/vite-plugin-flint';
 
 /** Compiler and fixture-root options shared by the conformance harness helpers. */

@@ -17,7 +17,12 @@ export default defineVitestConfig({
         optimization: 'release',
         targetFeatures: { simd: true },
         requireExports: false,
-        requestedCapabilities: (fileName) => (fileName.endsWith('/qr-decoder.flint') || fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
+        requestedCapabilities: (fileName) =>
+          fileName.endsWith('/qr-decoder.flint') ||
+          fileName.endsWith('/qr-decoder.fws') ||
+          fileName.endsWith('/decoders.flint')
+            ? ['qr.decode.utf8']
+            : undefined,
       }),
     ],
     oxc: {

@@ -21,7 +21,7 @@ export interface EmittedExtraModule
 
 Un SFC auxiliaire que l'émetteur Vue génère à côté du module principal.
 
-### ModuleVueEmis
+### ModuleEmisVue
 
 **Genre :** interface
 
@@ -48,12 +48,12 @@ Transformez un module de composants neutres en un SFC Vue (plus tous les SFC aux
 
 #### Paramètres
 
-| Nom                    | Tapez               | Descriptif |
-| ---------------------- | ------------------- | ---------- |
-| modules                | Module Sémantique   |            |
-| Nom du composant       | chaîne              |            |
-| dossiers de composants | ReadonlySet<string> |            |
-| planifier              | VueLoweredModule    |            |
+| Nom | Tapez | Descriptif |
+| ---------------- | ------------------- | ----------- |
+| modules | Module Sémantique |             |
+| Nom du composant | chaîne |             |
+| dossiers de composants | ReadonlySet<string> |             |
+| planifier | VueLoweredModule |             |
 
 ## `src/emitters/hook-module`
 
@@ -69,9 +69,9 @@ Compilez un module hook neutre sur sa source composable Vue (`.ts`).
 
 #### Paramètres
 
-| Nom     | Tapez             | Descriptif |
-| ------- | ----------------- | ---------- |
-| modules | Module Sémantique |            |
+| Nom | Tapez | Descriptif |
+| ------ | -------------- | ----------- |
+| modules | Module Sémantique |             |
 
 ## `src/index`
 
@@ -101,9 +101,9 @@ Affinez un plan cible au plan Vue sans lancer de diffusion.
 
 #### Paramètres
 
-| Nom     | Tapez                          | Descriptif |
-| ------- | ------------------------------ | ---------- |
-| abaissé | CibleLoweredModule \| indéfini |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------------------- | ----------- |
+| abaissé | CibleLoweredModule \| indéfini |             |
 
 ### LowerVueModule
 
@@ -121,10 +121,10 @@ reste intact afin que les phases ultérieures conservent un accès complet à l'
 
 #### Paramètres
 
-| Nom      | Tapez             | Descriptif |
-| -------- | ----------------- | ---------- |
-| ir       | Module Sémantique |            |
-| contexte | Contexte cible    |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| ir | Module Sémantique |             |
+| contexte | Contexte cible |             |
 
 ### VueComputedPlan
 
@@ -314,10 +314,10 @@ est revenu intact, de sorte que l'optimiseur peut s'exécuter en toute sécurit�
 
 #### Paramètres
 
-| Nom        | Tapez                        | Descriptif |
-| ---------- | ---------------------------- | ---------- |
-| intentions | Intentions cibles            |            |
-| options    | Options d'optimisation cible |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------- | ----------- |
+| intentions | Intentions cibles |             |
+| options | Options d'optimisation cible |             |
 
 ### STABLE_LIST_KEYS
 

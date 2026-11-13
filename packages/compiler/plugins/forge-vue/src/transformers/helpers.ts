@@ -17,6 +17,8 @@
  * Everything here works on the recorded source text with the literal-aware
  * scanners from `./text.js` — no parsing.
  */
+import type { GenericRenderNode } from "@mission-platform/forge-plugin-api";
+
 import { readVariableStatement, splitStatements } from "./statements.js";
 import {
   indexOfTopLevel,
@@ -25,8 +27,6 @@ import {
   splitTopLevel,
   unwrapParentheses,
 } from "./text.js";
-
-import type { GenericRenderNode } from "@mission-platform/forge-plugin-api";
 
 /** A function-valued const whose body is a single markup-producing expression. */
 export interface InlinableHelper {

@@ -39,7 +39,7 @@ Keine Beschreibung angegeben.
 export const breakpoints: Record<BreakpointKey, number>;
 ```
 
-Pixelschwellenwerte für die Mindestbreite für jeden Haltepunktschritt.
+Minimale Pixelschwellenwerte für jeden Haltepunktschritt.
 
 - `2xs` – extra-extra-klein: < 480 px (effektiv 0)
 - `xs` – extraklein: ≥ 480 px
@@ -71,9 +71,9 @@ Gibt den Pixelwert für einen bestimmten Haltepunktschlüssel zurück.
 
 #### Parameter
 
-| Name      | Geben Sie           | ein Beschreibung |
-| --------- | ------------------- | ---------------- |
-| Schlüssel | Haltepunktschlüssel |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------- | ----------- |
+| Schlüssel | Haltepunktschlüssel |             |
 
 ### maxMediaQuery
 
@@ -88,9 +88,9 @@ Haltepunkt – d. h. „kleiner als der nächste Schritt nach oben“.
 
 #### Parameter
 
-| Name      | Geben Sie           | ein Beschreibung |
-| --------- | ------------------- | ---------------- |
-| Schlüssel | Haltepunktschlüssel |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------- | ----------- |
+| Schlüssel | Haltepunktschlüssel |             |
 
 #### Vertrag
 
@@ -108,9 +108,9 @@ Gibt eine `min-width`-Medienabfragezeichenfolge für den angegebenen Haltepunkt 
 
 #### Parameter
 
-| Name      | Geben Sie           | ein Beschreibung |
-| --------- | ------------------- | ---------------- |
-| Schlüssel | Haltepunktschlüssel |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------- | ----------- |
+| Schlüssel | Haltepunktschlüssel |             |
 
 #### Vertrag
 
@@ -129,9 +129,9 @@ Gibt bei gegebener Pixelbreite den aktuell aktiven Haltepunktschlüssel zurück.
 
 #### Parameter
 
-| Name   | Geben Sie | ein Beschreibung |
-| ------ | --------- | ---------------- |
-| Breite | Zahl      |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Breite | Nummer |             |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -155,9 +155,9 @@ Die reaktive Breite des Ansichtsfensters wird durch die neutralen Haken verfolgt
 
 #### Parameter
 
-| Name          | Geben Sie                          | ein Beschreibung |
-| ------------- | ---------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<HideAtProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<HideAtProperties> |             |
 
 ### HideAtProperties
 
@@ -192,9 +192,9 @@ umschalten, ohne ein zusätzliches Layoutfeld einzuführen.
 
 #### Parameter
 
-| Name          | Geben Sie                          | ein Beschreibung |
-| ------------- | ---------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ShowAtProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ShowAtProperties> |             |
 
 ### ShowAtProperties
 
@@ -240,9 +240,9 @@ sowohl React als auch Vue.
 
 #### Parameter
 
-| Name        | Geben Sie                                   | ein Beschreibung |
-| ----------- | ------------------------------------------- | ---------------- |
-| _properties | Schreibgeschützt<BreakpointDebugProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ----------------------------------- | ----------- |
+| _properties | Schreibgeschützt<BreakpointDebugProperties> |             |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 
@@ -255,5 +255,5 @@ function useBreakpoints(): { active: BreakpointKey; matches: BreakpointValues; w
 ```
 
 Reaktiver Haltepunktstatus basierend auf der Breite des Dokumentelements.
-Verwendet ResizeObserver, falls verfügbar, und greift auf Ereignisse zur Fenstergrößenänderung zurück.
+Verwendet ResizeObserver, sofern verfügbar, und greift auf Fenstergrößenänderungsereignisse zurück.
 SSR-sicher: Gibt ein „2xs“-Band mit der Breite 0 auf dem Server zurück.

@@ -25,9 +25,9 @@ binnen `attemptDirectory`; die map is nooit het gepubliceerde doel.
 
 #### Parameters
 
-| Naam   | Typ                         | Beschrijving |
-| ------ | --------------------------- | ------------ |
-| opties | ForgeArtifactPublishOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------- | ----------- |
+| opties | ForgeArtifactPublishOptions |             |
 
 ### forgeBuildLifecyclePlugin
 
@@ -42,9 +42,9 @@ doelbewust afgewacht door lifecycle-hooks, nooit terwijl er een configuratie is 
 
 #### Parameters
 
-| Naam   | Typ                        | Beschrijving |
-| ------ | -------------------------- | ------------ |
-| opties | ForgeBuildLifecycleOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------- | ----------- |
+| opties | ForgeBuildLifecycleOptions |             |
 
 ### forgeVirtualEntry
 
@@ -58,9 +58,9 @@ Stabiele virtuele invoer gebruikt totdat het doel is voorbereid door buildStart.
 
 #### Parameters
 
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| doelID | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| doelID | tekenreeks |             |
 
 ## `src/compiler/artifact-manifest`
 
@@ -80,11 +80,11 @@ Bouw een stabiel manifest zonder tijdstempels in de gegenereerde uitvoer te intr
 
 #### Parameters
 
-| Naam       | Typ                                | Beschrijving |
-| ---------- | ---------------------------------- | ------------ |
-| doelID     | tekenreeks                         |              |
-| artefacten | alleen-lezen ForgeArtifactRecord[] |              |
-| compleet   |                                    |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------------------------------ | ----------- |
+| doelID | tekenreeks |             |
+| artefacten | alleen-lezen ForgeArtifactRecord[] |             |
+| compleet |                                |             |
 
 ### ForgeArtefactSoort
 
@@ -131,9 +131,9 @@ Descendantcomponenten worden vóór gebruik gecontroleerd door de artefactoploss
 
 #### Parameters
 
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| wortel | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| wortel | tekenreeks |             |
 
 ### sureForgeArtifactDirectory
 
@@ -147,10 +147,10 @@ Maak een uitvoermap per component, zonder koppelingen te volgen.
 
 #### Parameters
 
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| wortel | tekenreeks |              |
-| map    | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------ | ----------- |
+| wortel | tekenreeks |             |
+| map | tekenreeks |             |
 
 ### solveForgeArtifactPath
 
@@ -164,10 +164,10 @@ Los een artefactnaam op en controleer of bestaande padcomponenten veilig zijn.
 
 #### Parameters
 
-| Naam          | Typ        | Beschrijving |
-| ------------- | ---------- | ------------ |
-| wortel        | tekenreeks |              |
-| relatieveNaam | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------------ | ------ | ----------- |
+| wortel | tekenreeks |             |
+| relatieveNaam | tekenreeks |             |
 
 ### validateForgeArtifactName
 
@@ -181,9 +181,9 @@ Valideer een artefactnaam zonder onveilige padsegmenten weg te normaliseren.
 
 #### Parameters
 
-| Naam          | Typ        | Beschrijving |
-| ------------- | ---------- | ------------ |
-| relatieveNaam | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------------ | ------ | ----------- |
+| relatieveNaam | tekenreeks |             |
 
 ### validateForgeArtifactSegment
 
@@ -197,9 +197,9 @@ Valideer een enkele padcomponent die wordt gebruikt om een ​​artefactwortel 
 
 #### Parameters
 
-| Naam        | Typ        | Beschrijving |
-| ----------- | ---------- | ------------ |
-| segmenteren | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| segmenteren | tekenreeks |             |
 
 ## `src/compiler/artifact-writer`
 
@@ -215,15 +215,15 @@ function createForgeArtifactWriter(
 ): ForgeArtifactWriter;
 ```
 
-Geen beschrijving opgegeven.
+Creëer een atomaire artefactschrijver voor het ensceneren en vastleggen van Forge-artefacten.
 
 #### Parameters
 
-| Naam   | Typ                        | Beschrijving |
-| ------ | -------------------------- | ------------ |
-| uitDir | tekenreeks                 |              |
-| doelID | tekenreeks                 |              |
-| opties | ForgeArtifactWriterOptions |              |
+| Naam | Typ | Beschrijving |
+| -------- | -------------------------- | ----------- |
+| uitDir | tekenreeks |             |
+| doelID | tekenreeks |             |
+| opties | ForgeArtifactWriterOptions |             |
 
 ### forgeArtifactAttemptDirectory
 
@@ -237,10 +237,10 @@ Wijs een eigen directory toe voor een poging tot het bouwen van een native doel.
 
 #### Parameters
 
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| uitDir | tekenreeks |              |
-| doelID | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| uitDir | tekenreeks |             |
+| doelID | tekenreeks |             |
 
 ### ForgeArtefactWriter
 
@@ -314,10 +314,10 @@ De build van een niet-overeenkomend raamwerk wordt stroomopwaarts afgehandeld do
 
 #### Parameters
 
-| Naam   | Typ           | Beschrijving |
-| ------ | ------------- | ------------ |
-| bron   | tekenreeks    |              |
-| opties | CompileOpties |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| bron | tekenreeks |             |
+| opties | CompileOpties |             |
 
 ### Gecompileerde module
 
@@ -343,10 +343,10 @@ bron per raamwerk (fase 1).
 
 #### Parameters
 
-| Naam   | Typ                | Beschrijving |
-| ------ | ------------------ | ------------ |
-| bron   | tekenreeks         |              |
-| opties | CompileHookOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------ | ----------- |
+| bron | tekenreeks |             |
+| opties | CompileHookOptions |             |
 
 ### CompileHookOptions
 
@@ -374,10 +374,10 @@ gedeelde naad gebruikt door zelfstandige doelpakketten zoals Astro.
 
 #### Parameters
 
-| Naam   | Typ                  | Beschrijving |
-| ------ | -------------------- | ------------ |
-| bron   | tekenreeks           |              |
-| opties | CompileModuleOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------- | ----------- |
+| bron | tekenreeks |             |
+| opties | CompileModuleOptions |             |
 
 ### CompileModuleOptions
 
@@ -413,10 +413,10 @@ Zoek een geëxporteerde Oxc-functiedeclaratie voor een neutrale component op naa
 
 #### Parameters
 
-| Naam        | Typ             | Beschrijving |
-| ----------- | --------------- | ------------ |
-| bronbestand | OxcParsedModule |              |
-| naam        | tekenreeks      |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------- | ----------- |
+| bronbestand | OxcParsedModule |             |
+| naam | tekenreeks |             |
 
 ### isSlotElement
 
@@ -430,9 +430,9 @@ Of een Oxc node een neutraal benoemd-slot-element is.
 
 #### Parameters
 
-| Naam | Typ     | Beschrijving |
-| ---- | ------- | ------------ |
-| node | OxcNode |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ### leesSlotName
 
@@ -446,9 +446,9 @@ Lees de statische `name="…"` van een Oxc `<Slot>`-element.
 
 #### Parameters
 
-| Naam | Typ     | Beschrijving |
-| ---- | ------- | ------------ |
-| node | OxcNode |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ## `src/compiler/constants`
 
@@ -484,9 +484,9 @@ Genereer de co-located framework-specifieke JSX-typeverklaringen.
 
 #### Parameters
 
-| Naam  | Typ          | Beschrijving |
-| ----- | ------------ | ------------ |
-| kader | JsxFramework |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------------ | ----------- |
+| kader | JsxFramework |             |
 
 ### NEUTRALE_MODULE
 
@@ -512,11 +512,11 @@ Of een neutrale of raamwerkspecifieke module thuishoort in een doelbuild.
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| bestandsnaam | tekenreeks |              |
-| bron         | tekenreeks |              |
-| kader        | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------ | ----------- |
+| bestandsnaam | tekenreeks |             |
+| bron | tekenreeks |             |
+| kader | tekenreeks |             |
 
 ### leesFrameworkDirective
 
@@ -530,10 +530,10 @@ Lees de toonaangevende `"use <framework>"`-richtlijn van een Oxc-module.
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| bestandsnaam | tekenreeks |              |
-| bron         | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| bestandsnaam | tekenreeks |             |
+| bron | tekenreeks |             |
 
 ## `src/compiler/discover`
 
@@ -552,10 +552,10 @@ in (de modulebasisnaam van de wederexport).
 
 #### Parameters
 
-| Naam             | Typ        | Beschrijving |
-| ---------------- | ---------- | ------------ |
-| vatBron          | tekenreeks |              |
-| stripVoorvoegsel |            |              |
+| Naam | Typ | Beschrijving |
+| ------------ | ------ | ----------- |
+| vatBron | tekenreeks |             |
+| stripVoorvoegsel |        |             |
 
 ### ontdekComponentsFromGraph
 
@@ -573,11 +573,11 @@ Projecteer publieke componentexports vanuit de canonieke grafiek terwijl de oude
 
 #### Parameters
 
-| Naam             | Typ                    | Beschrijving |
-| ---------------- | ---------------------- | ------------ |
-| grafiek          | ForgeFileGraph         |              |
-| stripVoorvoegsel |                        |              |
-| diagnostiek      | CompilerDiagnostisch[] |              |
+| Naam | Typ | Beschrijving |
+| ----------- | -------------------- | ----------- |
+| grafiek | ForgeFileGraph |             |
+| stripVoorvoegsel |                      |             |
+| diagnostiek | CompilerDiagnostisch[] |             |
 
 ### OntdektComponent
 
@@ -618,10 +618,10 @@ Consumenten besturen precies hetzelfde per raamwerk, singleton de componenten ge
 
 #### Parameters
 
-| Naam            | Typ                     | Beschrijving |
-| --------------- | ----------------------- | ------------ |
-| vatBron         | tekenreeks              |              |
-| componentMappen | Alleen-lezenSet<string> |              |
+| Naam | Typ | Beschrijving |
+| ---------------- | ------------------- | ----------- |
+| vatBron | tekenreeks |             |
+| componentMappen | Alleen-lezenSet<string> |             |
 
 ### ontdekHelperExportsFromGraph
 
@@ -639,11 +639,11 @@ Projecteer niet-component publieke exporten uit de canonieke grafiek.
 
 #### Parameters
 
-| Naam                | Typ                                | Beschrijving |
-| ------------------- | ---------------------------------- | ------------ |
-| grafiek             | ForgeFileGraph                     |              |
-| componentMappen     | Alleen-lezenSet<string>            |              |
-| ontdekteComponenten | alleen-lezen DiscoveredComponent[] |              |
+| Naam | Typ | Beschrijving |
+| -------------------- | ------------------------------ | ----------- |
+| grafiek | ForgeFileGraph |             |
+| componentMappen | Alleen-lezenSet<string> |             |
+| ontdekteComponenten | alleen-lezen DiscoveredComponent[] |             |
 
 ## `src/compiler/facts`
 
@@ -699,10 +699,10 @@ Extraheer statische import, export, type-only randen en raamwerkfeiten uit een g
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| bestandsnaam | tekenreeks |              |
-| bron         | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| bestandsnaam | tekenreeks |             |
+| bron | tekenreeks |             |
 
 ## `src/compiler/frontends`
 
@@ -720,10 +720,10 @@ gecreëerd; de geretourneerde module is de enkele, door parser ondersteunde weer
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| bestandsnaam | tekenreeks |              |
-| bron         | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| bestandsnaam | tekenreeks |             |
+| bron | tekenreeks |             |
 
 ### parseFrontendModule
 
@@ -742,12 +742,12 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam          | Typ                            | Beschrijving |
-| ------------- | ------------------------------ | ------------ |
-| bestandsnaam  | tekenreeks                     |              |
-| bron          | tekenreeks                     |              |
-| moduleKind    | 'onderdeel' \| 'componeerbaar' |              |
-| componentnaam | tekenreeks                     |              |
+| Naam | Typ | Beschrijving |
+| ------------- | --------------------------- | ----------- |
+| bestandsnaam | tekenreeks |             |
+| bron | tekenreeks |             |
+| moduleKind | 'onderdeel' \| 'componeerbaar' |             |
+| componentnaam | tekenreeks |             |
 
 ## `src/compiler/generation-context`
 
@@ -763,9 +763,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam   | Typ                           | Beschrijving |
-| ------ | ----------------------------- | ------------ |
-| opties | ForgeGenerationContextOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------------- | ----------- |
+| opties | ForgeGenerationContextOptions |             |
 
 ### ForgeGenerationContext
 
@@ -801,9 +801,9 @@ Bouw de canonieke brongrafiek op basis van één geconfigureerde invoermodule.
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| opties | ForgeFileGraphOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------- | ----------- |
+| opties | ForgeFileGraphOptions |             |
 
 ### ForgeFileEdge
 
@@ -902,11 +902,11 @@ Fase 1 statische markeringspassage gevolgd door algemeen hijsen.
 
 #### Parameters
 
-| Naam          | Typ                            | Beschrijving |
-| ------------- | ------------------------------ | ------------ |
-| module        | OxcParsedModule                |              |
-| moduleKind    | 'onderdeel' \| 'componeerbaar' |              |
-| componentnaam | tekenreeks                     |              |
+| Naam | Typ | Beschrijving |
+| ------------- | --------------------------- | ----------- |
+| module | OxcParsedModule |             |
+| moduleKind | 'onderdeel' \| 'componeerbaar' |             |
+| componentnaam | tekenreeks |             |
 
 ## `src/compiler/imports`
 
@@ -932,10 +932,10 @@ Verzamel geïmporteerde pakketten die letterlijk in gegenereerde raamwerkbronnen
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| bestandsnaam | tekenreeks |              |
-| bron         | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| bestandsnaam | tekenreeks |             |
+| bron | tekenreeks |             |
 
 ### lees NeutralImports
 
@@ -949,10 +949,10 @@ Inspecteer de neutrale pakketimport van een module.
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| bestandsnaam | tekenreeks |              |
-| bron         | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| bestandsnaam | tekenreeks |             |
+| bron | tekenreeks |             |
 
 ### leesStyleImports
 
@@ -966,11 +966,11 @@ Verzamel relatieve stylesheet-importen uit een neutrale module.
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| bestandsnaam | tekenreeks |              |
-| bron         | tekenreeks |              |
-| bronRoot     | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------ | ----------- |
+| bestandsnaam | tekenreeks |             |
+| bron | tekenreeks |             |
+| bronRoot | tekenreeks |             |
 
 ### solveWorkspaceLocalImport
 
@@ -988,11 +988,11 @@ Los een werkruimte-lokale `@/`-import op ten opzichte van het bronbestand.
 
 #### Parameters
 
-| Naam             | Typ                          | Beschrijving |
-| ---------------- | ---------------------------- | ------------ |
-| specificatie     | tekenreeks                   |              |
-| bronBestandsnaam | tekenreeks                   |              |
-| bronRoot         | tekenreeks \| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| -------------- | ------------------- | ----------- |
+| specificatie | tekenreeks |             |
+| bronBestandsnaam | tekenreeks |             |
+| bronRoot | tekenreeks \| ongedefinieerd |             |
 
 ### StijlImporteren
 
@@ -1016,9 +1016,9 @@ Of een Oxc-module of node `i18next.t(...)` aanroept.
 
 #### Parameters
 
-| Naam | Typ     | Beschrijving |
-| ---- | ------- | ------------ |
-| node | OxcNode |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ## `src/compiler/optimize`
 
@@ -1039,17 +1039,17 @@ Standaard elke doorgang AAN; geef `{ deadBranchPruning: false, … }` door om ui
 
 #### Parameters
 
-| Naam   | Typ                 | Beschrijving |
-| ------ | ------------------- | ------------ |
-| module | OxcParsedModule     |              |
-| opties | Optimalisatieopties |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------- | ----------- |
+| module | OxcParsedModule |             |
+| opties | Optimaliseer Opties |             |
 
 ### optimizeSourceFile
 
 **Soort:** constant
 
 ```typescript
-export const optimizeSourceFile;
+export const optimizeSourceFile: typeof optimizeForgeModule;
 ```
 
 Compatibiliteitsalias behouden voor compilerintegraties met de oude naam.
@@ -1068,9 +1068,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam   | Typ     | Beschrijving |
-| ------ | ------- | ------------ |
-| wortel | OxcNode |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------- | ----------- |
+| wortel | OxcNode |             |
 
 ### isOxcJsxRoot
 
@@ -1084,9 +1084,9 @@ Waar als de node een JSX-element, zelfsluitend element of fragment is.
 
 #### Parameters
 
-| Naam | Typ     | Beschrijving |
-| ---- | ------- | ------------ |
-| node | OxcNode |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ### isOxcNode
 
@@ -1100,9 +1100,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam   | Typ      | Beschrijving |
-| ------ | -------- | ------------ |
-| waarde | onbekend |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------- | ----------- |
+| waarde | onbekend |             |
 
 ### oxcArray
 
@@ -1116,10 +1116,10 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam    | Typ        | Beschrijving |
-| ------- | ---------- | ------------ |
-| node    | OxcNode    |              |
-| sleutel | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
+| sleutel | tekenreeks |             |
 
 ### oxcKinderen
 
@@ -1133,9 +1133,9 @@ Diepte-eerste kindwandeling over talloze eigendommen met node-waarde.
 
 #### Parameters
 
-| Naam | Typ     | Beschrijving |
-| ---- | ------- | ------------ |
-| node | OxcNode |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
 
 ### OxcCommentaar
 
@@ -1159,9 +1159,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ                       | Beschrijving |
-| ---- | ------------------------- | ------------ |
-| node | OxcNode \| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \| ongedefinieerd |             |
 
 ### oxcLiteraleWaarde
 
@@ -1175,9 +1175,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ                       | Beschrijving |
-| ---- | ------------------------- | ------------ |
-| node | OxcNode \| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \| ongedefinieerd |             |
 
 ### OxcNode
 
@@ -1201,10 +1201,10 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ                       | Beschrijving |
-| ---- | ------------------------- | ------------ |
-| bron | tekenreeks                |              |
-| node | OxcNode \| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| ------ | -------------------- | ----------- |
+| bron | tekenreeks |             |
+| node | OxcNode \| ongedefinieerd |             |
 
 ### oxcObject
 
@@ -1218,10 +1218,10 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam    | Typ        | Beschrijving |
-| ------- | ---------- | ------------ |
-| node    | OxcNode    |              |
-| sleutel | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------- | ----------- |
+| node | OxcNode |             |
+| sleutel | tekenreeks |             |
 
 ### OxcParentMap
 
@@ -1265,9 +1265,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam      | Typ     | Beschrijving |
-| --------- | ------- | ------------ |
-| programma | OxcNode |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------- | ----------- |
+| programma | OxcNode |             |
 
 ### oxcSourceExpressie
 
@@ -1285,11 +1285,11 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam     | Typ                                | Beschrijving |
-| -------- | ---------------------------------- | ------------ |
-| bron     | tekenreeks                         |              |
-| node     | OxcNode                            |              |
-| syntaxis | SourceBackedExpression['syntaxis'] |              |
+| Naam | Typ | Beschrijving |
+| ------ | -------------------------------- | ----------- |
+| bron | tekenreeks |             |
+| node | OxcNode |             |
+| syntaxis | SourceBackedExpression['syntaxis'] |             |
 
 ### oxcBronSpan
 
@@ -1303,10 +1303,10 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ        | Beschrijving |
-| ---- | ---------- | ------------ |
-| bron | tekenreeks |              |
-| node | OxcNode    |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------- | ----------- |
+| bron | tekenreeks |             |
+| node | OxcNode |             |
 
 ### oxcString
 
@@ -1320,10 +1320,10 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam    | Typ                               | Beschrijving |
-| ------- | --------------------------------- | ------------ |
-| node    | OxcNode \| ongedefinieerd         |              |
-| sleutel | 'naam' \| 'waarde' \| 'richtlijn' |              |
+| Naam | Typ | Beschrijving |
+| ---- | -------------------------------- | ----------- |
+| node | OxcNode \| ongedefinieerd |             |
+| sleutel | 'naam' \| 'waarde' \| 'richtlijn' |             |
 
 ### oxcTypeNode
 
@@ -1337,9 +1337,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ                       | Beschrijving |
-| ---- | ------------------------- | ------------ |
-| node | OxcNode \| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| ---- | -------------------- | ----------- |
+| node | OxcNode \| ongedefinieerd |             |
 
 ### oxcUnwrapModuleStatement
 
@@ -1357,9 +1357,9 @@ Pak `export …`-wrappers uit, zodat bellers de onderliggende declaratie zien.
 
 #### Parameters
 
-| Naam       | Typ     | Beschrijving |
-| ---------- | ------- | ------------ |
-| verklaring | OxcNode |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------- | ----------- |
+| verklaring | OxcNode |             |
 
 ### parseOxcModule
 
@@ -1373,10 +1373,10 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam         | Typ        | Beschrijving |
-| ------------ | ---------- | ------------ |
-| bestandsnaam | tekenreeks |              |
-| bron         | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| bestandsnaam | tekenreeks |             |
+| bron | tekenreeks |             |
 
 ### stripOxcFrameworkDirective
 
@@ -1390,9 +1390,9 @@ Verwijder leidende `"use <framework>"`-proloogrichtlijnen uit een geparseerde mo
 
 #### Parameters
 
-| Naam   | Typ             | Beschrijving |
-| ------ | --------------- | ------------ |
-| module | OxcParsedModule |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------- | ----------- |
+| module | OxcParsedModule |             |
 
 ### bezoekOxc
 
@@ -1406,10 +1406,10 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam     | Typ                                      | Beschrijving |
-| -------- | ---------------------------------------- | ------------ |
-| node     | OxcNode                                  |              |
-| bezoeker | (node: OxcNode) => ongeldig \| booleaans |              |
+| Naam | Typ | Beschrijving |
+| ------- | ---------------------------------- | ----------- |
+| node | OxcNode |             |
+| bezoeker | (node: OxcNode) => ongeldig \| booleaans |             |
 
 ## `src/compiler/pipeline`
 
@@ -1433,10 +1433,10 @@ component die voor meerdere doelen in één build wordt geanalyseerd, wordt slec
 
 #### Parameters
 
-| Naam   | Typ                  | Beschrijving |
-| ------ | -------------------- | ------------ |
-| invoer | CompilerInvoer       |              |
-| dienst | ForgeCompilerService |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------- | ----------- |
+| invoer | CompilerInvoer |             |
+| dienst | ForgeCompilerService |             |
 
 ### CompilerInvoer
 
@@ -1470,9 +1470,9 @@ Maak de faseverzender die wordt gebruikt door de ingangspunten van de compiler.
 
 #### Parameters
 
-| Naam   | Typ                  | Beschrijving |
-| ------ | -------------------- | ------------ |
-| dienst | ForgeCompilerService |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------- | ----------- |
+| dienst | ForgeCompilerService |             |
 
 ## `src/compiler/report`
 
@@ -1502,9 +1502,9 @@ Parseer de import en het gebruik van neutrale routers zonder een native router t
 
 #### Parameters
 
-| Naam   | Typ                                                               | Beschrijving |
-| ------ | ----------------------------------------------------------------- | ------------ |
-| invoer | Kies<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |              |
+| Naam | Typ | Beschrijving |
+| ----- | ----------------------------------------------------------------- | ----------- |
+| invoer | Kies<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |             |
 
 ### compileRouterModule
 
@@ -1518,16 +1518,16 @@ Compileer neutraal routergebruik via een geselecteerde native doeladapter.
 
 #### Parameters
 
-| Naam   | Typ                  | Beschrijving |
-| ------ | -------------------- | ------------ |
-| invoer | RouterCompilerInvoer |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------------- | ----------- |
+| invoer | RouterCompilerInvoer |             |
 
 ### createRouterCompilerPipeline
 
 **Soort:** functie
 
 ```typescript
-function createRouterCompilerPipeline();
+function createRouterCompilerPipeline(): { readonly compile: typeof compileRouterModule };
 ```
 
 Dispatcher-formulier gebruikt door de Forge-compiler en door zelfstandige doelarmaturen.
@@ -1556,9 +1556,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam    | Typ              | Beschrijving |
-| ------- | ---------------- | ------------ |
-| grenzen | ForgeCacheLimits |              |
+| Naam | Typ | Beschrijving |
+| ------ | ---------------- | ----------- |
+| grenzen | ForgeCacheLimits |             |
 
 ### ForgeCompileRequest
 
@@ -1636,9 +1636,9 @@ De bouw registreert alleen het eigendom van diensten; Het ontdekken van grafieke
 
 #### Parameters
 
-| Naam   | Typ                            | Beschrijving |
-| ------ | ------------------------------ | ------------ |
-| opties | CreateForgeBuildSessionOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------------ | ----------- |
+| opties | CreateForgeBuildSessionOptions |             |
 
 ### CreateForgeBuildSessionOptions
 
@@ -1688,7 +1688,7 @@ Geen beschrijving opgegeven.
 export interface ForgeTargetGenerationContext
 ```
 
-Context doorgegeven aan een callback voor het genereren van doelgroepen na projectvoorbereiding.
+Context doorgegeven aan een callback voor doelgeneratie na projectvoorbereiding.
 
 ### ForgeTargetGenerationResultaat
 
@@ -1735,7 +1735,8 @@ Geen beschrijving opgegeven.
 #### Parameters
 
 | Naam | Typ | Beschrijving |
-| ---- | --- | ------------ |
+| ------- | --------------------------- | ----------- |
+| opties | JsxHookLibraryConfigOptions |             |
 
 ### definieerJsxLibraryConfig
 
@@ -1749,9 +1750,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam   | Typ                     | Beschrijving |
-| ------ | ----------------------- | ------------ |
-| opties | JsxLibraryConfigOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------- | ----------- |
+| opties | JsxLibraryConfigOptions |             |
 
 ### JsxHookLibraryConfigOptions
 
@@ -1831,9 +1832,9 @@ ze hebben de opgeloste configuratie van Vite nodig.
 
 #### Parameters
 
-| Naam    | Typ                   | Beschrijving |
-| ------- | --------------------- | ------------ |
-| plug-in | FrameworkOutputPlugin |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------------- | ----------- |
+| plug-in | FrameworkOutputPlugin |             |
 
 ### sveltePlugin
 
@@ -1867,14 +1868,14 @@ Geef de voorkeur aan dit (of {@link stagePluginsForTsdown}) bij het bouwen met t
 function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string;
 ```
 
-Compileer een neutrale hook-bibliotheek naar de bronboom per raamwerk (fase 1),
-retourneert het gegenereerde invoermodulepad.
+Compileer een neutrale hook-bibliotheek naar de bronboom per frame (fase 1),
+het gegenereerde invoermodulepad retourneren.
 
 #### Parameters
 
-| Naam   | Typ                               | Beschrijving |
-| ------ | --------------------------------- | ------------ |
-| opties | GenereerHookLibrarySourcesOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------------- | ----------- |
+| opties | GenereerHookLibrarySourcesOptions |             |
 
 ### GenereerHookLibrarySourcesOptions
 
@@ -1900,9 +1901,9 @@ Maak een bronboomdescriptor op basis van een expliciete uitvoerplug-in.
 
 #### Parameters
 
-| Naam    | Typ                   | Beschrijving |
-| ------- | --------------------- | ------------ |
-| plug-in | FrameworkOutputPlugin |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------------- | ----------- |
+| plug-in | FrameworkOutputPlugin |             |
 
 ### FrameworkSourceTarget
 
@@ -1922,14 +1923,14 @@ Doelspecifieke bronboomconventies die worden gebruikt door het generieke pakkets
 function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string;
 ```
 
-Compileer een neutraal componentenpakket naar de bronstructuur per raamwerk (fase 1),
-retourneert het gegenereerde invoermodulepad.
+Compileer een neutraal componentenpakket naar de bronboom per raamwerk (fase 1),
+het gegenereerde invoermodulepad retourneren.
 
 #### Parameters
 
-| Naam   | Typ                             | Beschrijving |
-| ------ | ------------------------------- | ------------ |
-| opties | GenereerFrameworkSourcesOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------------- | ----------- |
+| opties | GenereerFrameworkSourcesOptions |             |
 
 ### GenereerFrameworkSourcesOptions
 
@@ -1965,9 +1966,9 @@ Bouw onafhankelijke tsdown-configuraties voor elk aangevraagd Forge-componentfra
 
 #### Parameters
 
-| Naam   | Typ                                | Beschrijving |
-| ------ | ---------------------------------- | ------------ |
-| opties | TsdownForgeComponentPluginsOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ---------------------------------- | ----------- |
+| opties | TsdownForgeComponentPluginsOptions |             |
 
 ### definieerTsdownForgeEmailComponents
 
@@ -1979,14 +1980,31 @@ function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOpt
 
 Bouw het neutrale Forge-e-mailcomponentitem voor alleen de server.
 
-Het bewaart de Forge-boom zo
+Het behoudt de Forge-boom zo
 `@mission-platform/email-renderer` kan het op de server serialiseren.
 
 #### Parameters
 
-| Naam   | Typ                               | Beschrijving |
-| ------ | --------------------------------- | ------------ |
-| opties | TsdownForgeEmailComponentsOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------------- | ----------- |
+| opties | TsdownForgeEmailComponentsOptions |             |
+
+### definieerTsdownForgeHooks
+
+**Soort:** functie
+
+```typescript
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
+```
+
+Bouw één tsdown-configuratie voor een enkele Forge-framework hooks-build.
+Zendt code en typen uit naar de distributiemap van het doelframework.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------- | ----------- |
+| opties | TsdownForgeHooksOptions |             |
 
 ### definieerTsdownForgeHooksAll
 
@@ -2002,9 +2020,9 @@ Bouw een reeks tsdown-configuraties voor elk aangevraagd forge hooks-framework
 
 #### Parameters
 
-| Naam   | Typ                        | Beschrijving |
-| ------ | -------------------------- | ------------ |
-| opties | TsdownForgeHooksAllOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------- | ----------- |
+| opties | TsdownForgeHooksAllOptions |             |
 
 ### solveCanonicalChunkName
 
@@ -2020,9 +2038,9 @@ Vue virtuele scriptmodules naar `${component}.script.js`.
 
 #### Parameters
 
-| Naam      | Typ                     | Beschrijving |
-| --------- | ----------------------- | ------------ |
-| chunkInfo | CanonicalChunkCandidate |              |
+| Naam | Typ | Beschrijving |
+| --------- | ----------------------- | ----------- |
+| chunkInfo | CanonicalChunkCandidate |             |
 
 ### solveCanonicalEntryName
 
@@ -2038,9 +2056,9 @@ modules delegeren naar chunk-naamomzetting.
 
 #### Parameters
 
-| Naam      | Typ                     | Beschrijving |
-| --------- | ----------------------- | ------------ |
-| chunkInfo | CanonicalChunkCandidate |              |
+| Naam | Typ | Beschrijving |
+| --------- | ----------------------- | ----------- |
+| chunkInfo | CanonicalChunkCandidate |             |
 
 ### tsdownForgeComponentPlugins
 
@@ -2056,9 +2074,9 @@ uitzenden naar `dist/<framework>/`.
 
 #### Parameters
 
-| Naam   | Typ                                | Beschrijving |
-| ------ | ---------------------------------- | ------------ |
-| opties | TsdownForgeComponentPluginsOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ---------------------------------- | ----------- |
+| opties | TsdownForgeComponentPluginsOptions |             |
 
 ### TsdownForgeComponentPluginsOptions
 
@@ -2088,15 +2106,13 @@ Geen beschrijving opgegeven.
 function tsdownForgeHookPlugins(options: TsdownForgeHooksAllOptions): TsdownPlugin[];
 ```
 
-Native tsdown-plugin-vorm van de hook-adapter. De geretourneerde plug-ins injecteren
-hun doelconfiguratie van `tsdownConfig`, waardoor hook-builds kunnen worden samengesteld
-met één `defineTsdownLibrary`-configuratie die eigendom is van de beller.
+Creëert tsdown hook-plug-ins voor alle geconfigureerde raamwerkdoelen.
 
 #### Parameters
 
-| Naam   | Typ                        | Beschrijving |
-| ------ | -------------------------- | ------------ |
-| opties | TsdownForgeHooksAllOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------- | ----------- |
+| opties | TsdownForgeHooksAllOptions |             |
 
 ### TsdownForgeHooksAllOptions
 
@@ -2104,6 +2120,16 @@ met één `defineTsdownLibrary`-configuratie die eigendom is van de beller.
 
 ```typescript
 export interface TsdownForgeHooksAllOptions
+```
+
+Geen beschrijving opgegeven.
+
+### TsdownForgeHooksOptions
+
+**Soort:** interface
+
+```typescript
+export interface TsdownForgeHooksOptions
 ```
 
 Geen beschrijving opgegeven.

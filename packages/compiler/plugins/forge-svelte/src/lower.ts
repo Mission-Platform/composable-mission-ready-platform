@@ -27,10 +27,23 @@
  * is taken from generic records and their exact source texts.
  */
 
+import { parseSync } from "oxc-parser";
+
 import {
   attributeStringValue,
   findAttribute,
   walkRenderNodes,
+} from "@mission-platform/forge-plugin-api";
+import type {
+  CompilerDiagnostic,
+  GenericRenderNode,
+  GenericStatement,
+  SemanticModule,
+  SourceBackedExpression,
+  SourceSpan,
+  TargetContext,
+  TargetIntentions,
+  TargetLoweredModule,
 } from "@mission-platform/forge-plugin-api";
 import {
   LOCAL_JSX_TYPE_NAMES,
@@ -39,7 +52,6 @@ import {
   NEUTRAL_RUNTIME_VALUES,
 } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
-import { parseSync } from "oxc-parser";
 
 import {
   CHILDREN_SNIPPET,
@@ -88,17 +100,6 @@ import type {
   HoistedStaticEntry,
   JsxConstant,
 } from "./transformers/template.js";
-import type {
-  CompilerDiagnostic,
-  GenericRenderNode,
-  GenericStatement,
-  SemanticModule,
-  SourceBackedExpression,
-  SourceSpan,
-  TargetContext,
-  TargetIntentions,
-  TargetLoweredModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** The Svelte package every lifecycle import resolves to. */
 export const SVELTE_RUNTIME_MODULE = "svelte";

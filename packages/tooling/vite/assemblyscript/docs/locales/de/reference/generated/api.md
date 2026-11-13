@@ -38,9 +38,9 @@ Inline-Binärdatei anstelle einer `.wasm`-URL.
 
 #### Parameter
 
-| Name     | Geben Sie                    | ein Beschreibung |
-| -------- | ---------------------------- | ---------------- |
-| Optionen | AssemblyScriptCompileOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------------------- | ----------- |
+| Optionen | AssemblyScriptCompileOptions |             |
 
 ## `src/generate`
 
@@ -59,10 +59,10 @@ ein umgebungsübergreifender Base64-Decoder, die extrahierte `instantiate`-Funkt
 
 #### Parameter
 
-| Name                | Geben Sie    | ein Beschreibung |
-| ------------------- | ------------ | ---------------- |
-| wasmBase64          | Zeichenfolge |                  |
-| instanziierteQuelle | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------------- | ------ | ----------- |
+| wasmBase64 | Zeichenfolge |             |
+| instanziierteQuelle | Zeichenfolge |             |
 
 ### extractInstantiate
 
@@ -79,9 +79,9 @@ Instanziierung aus einer Inline-Binärdatei (Base64) anstelle einer URL.
 
 #### Parameter
 
-| Name           | Geben Sie    | ein Beschreibung |
-| -------------- | ------------ | ---------------- |
-| bindingsSource | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------------- | ------ | ----------- |
+| bindingsSource | Zeichenfolge |             |
 
 ## `src/index`
 
@@ -103,9 +103,9 @@ Die Kompilierung wird im Rollup-Hook `buildStart` ausgeführt, also das generier
 
 #### Parameter
 
-| Name     | Geben Sie                   | ein Beschreibung |
-| -------- | --------------------------- | ---------------- |
-| Optionen | AssemblyScriptPluginOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------------- | ----------- |
+| Optionen | AssemblyScriptPluginOptions |             |
 
 ### AssemblyScriptPluginOptions
 
@@ -135,6 +135,6 @@ Die Kompilierung wird im Rollup-Hook `buildStart` ausgeführt, also das generier
 
 #### Parameter
 
-| Name     | Geben Sie                   | ein Beschreibung |
-| -------- | --------------------------- | ---------------- |
-| Optionen | AssemblyScriptPluginOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------------- | ----------- |
+| Optionen | AssemblyScriptPluginOptions |             |

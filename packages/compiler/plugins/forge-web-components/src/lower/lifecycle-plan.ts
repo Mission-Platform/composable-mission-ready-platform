@@ -1,3 +1,5 @@
+import type { SemanticModule } from "@mission-platform/forge-plugin-api";
+
 import {
   type ElementScope,
   rewriteExpressionText,
@@ -14,7 +16,6 @@ import type {
   WebComponentsCleanupField,
   WebComponentsLifecycleHook,
 } from "./types.js";
-import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 
 export const CLEANUP_FIELD_PREFIX = "__mpCleanup";
 export const CLEANUP_FIELD_TYPE = "(() => void) | undefined";

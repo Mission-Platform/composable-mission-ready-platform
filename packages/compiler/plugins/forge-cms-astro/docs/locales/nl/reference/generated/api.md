@@ -23,9 +23,9 @@ Bind Astro-projectie aan een framework-uitvoerplug-in die eigendom is van de bel
 
 #### Parameters
 
-| Naam   | Typ                  | Beschrijving |
-| ------ | -------------------- | ------------ |
-| opties | ForgeAstroCmsOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------- | ----------- |
+| opties | ForgeAstroCmsOptions |             |
 
 ### ForgeAstroCmsOpties
 
@@ -47,13 +47,13 @@ Opties voor {@link forgeAstroCms}.
 function emitContentConfig(components: readonly ContentComponent[]): string;
 ```
 
-Zend een Astro uit `content.config.ts` met één collectie per onderdeel.
+Zend een Astro `content.config.ts` uit met één verzameling per component.
 
 #### Parameters
 
-| Naam        | Typ                             | Beschrijving |
-| ----------- | ------------------------------- | ------------ |
-| componenten | alleen-lezen ContentComponent[] |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------- | ----------- |
+| componenten | alleen-lezen ContentComponent[] |             |
 
 ### veldToZod
 
@@ -63,13 +63,13 @@ Zend een Astro uit `content.config.ts` met één collectie per onderdeel.
 function fieldToZod(field: ContentField): string;
 ```
 
-De zod (of `image()`) validator waarop een neutraal veldsoort wordt toegepast.
+De zod (of `image()`) validator waarop een neutraal veldtype wordt toegepast.
 
 #### Parameters
 
-| Naam | Typ        | Beschrijving |
-| ---- | ---------- | ------------ |
-| veld | InhoudVeld |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------ | ----------- |
+| veld | InhoudVeld |             |
 
 ## `src/template`
 
@@ -88,10 +88,10 @@ Verzamel de diagnosegegevens die de Astro-daalrapporten voor een module rapporte
 
 #### Parameters
 
-| Naam        | Typ               | Beschrijving |
-| ----------- | ----------------- | ------------ |
-| ir          | SemantischeModule |              |
-| bestanddeel | InhoudComponent   |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------- | ----------- |
+| ir | SemantischeModule |             |
+| bestanddeel | InhoudComponent |             |
 
 ### astroMarkup
 
@@ -105,9 +105,9 @@ Herschrijf alleen JSX-attribuutnamen en verwijder het buitenste fragment.
 
 #### Parameters
 
-| Naam        | Typ        | Beschrijving |
-| ----------- | ---------- | ------------ |
-| uitdrukking | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------ | ----------- |
+| expressie | tekenreeks |             |
 
 ### emitIslandAstro-sjabloon
 
@@ -120,7 +120,7 @@ function emitIslandAstroTemplate(
 ): string;
 ```
 
-Zend de eiland-backed uit `.astro` sjabloon voor een interactief onderdeel.
+Verzend de op het eiland gebaseerde `.astro`-sjabloon voor een interactief onderdeel.
 
 De component wordt geïmporteerd uit de gezamenlijk gegenereerde eilandboom – hetzelfde
 neutrale IR samengesteld door de gebonden framework-plug-in - en gehydrateerd met
@@ -128,10 +128,10 @@ neutrale IR samengesteld door de gebonden framework-plug-in - en gehydrateerd me
 
 #### Parameters
 
-| Naam        | Typ             | Beschrijving |
-| ----------- | --------------- | ------------ |
-| bestanddeel | InhoudComponent |              |
-| eilandEntry | tekenreeks      |              |
+| Naam | Typ | Beschrijving |
+| ----------- | ---------------- | ----------- |
+| bestanddeel | InhoudComponent |             |
+| eilandEntry | tekenreeks |             |
 
 ### emitStaticAstro-sjabloon
 
@@ -141,10 +141,10 @@ neutrale IR samengesteld door de gebonden framework-plug-in - en gehydrateerd me
 function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
-Zend de statische elektriciteit uit `.astro` sjabloon voor een presentatiecomponent.
+Verzend de statische `.astro`-sjabloon voor een presentatiecomponent.
 
 #### Parameters
 
-| Naam | Typ               | Beschrijving |
-| ---- | ----------------- | ------------ |
-| ir   | SemantischeModule |              |
+| Naam | Typ | Beschrijving |
+| ---- | -------------- | ----------- |
+| ir | SemantischeModule |             |

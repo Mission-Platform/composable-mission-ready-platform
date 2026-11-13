@@ -108,7 +108,7 @@ Vue 专用适配器提供与 `vue-router` 的集成。
 - **`useMpRoute`**：可组合以访问当前路线信息
 - **`MpRouterLink`**：框架中立的路由器链接组件
 
-**例子：**
+**示例：**
 
 ```vue
 <template>
@@ -151,7 +151,7 @@ RedwoodSDK 不是 `mp:*` 框架之一，因此它保留了专用的子路径。�
 
 **主要出口产品：**
 
-- **`toRedwoodRoutes`**：将中性 `MpRoute` 树转换为 `rwsdk` 路由定义的平面列表（嵌套
+- **`toRedwoodRoutes`**：将中性 `MpRoute` 树转换为 `rwsdk` 路由定义的平面列表（嵌套）
   路线被扁平化为绝对路径）。
 - **`renderRoutes`**：将翻译后的路由包装在文档中，镜像
   `rwsdk` 的 `render(Document, routes, options)`。

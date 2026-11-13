@@ -1,6 +1,7 @@
+import { mergeConfig, type Plugin } from 'vite';
+
 import { defineVitestConfig, type VitestConfigOptions } from '@mission-platform/vite-config/vitest';
 import { flintPlugin, type FlintPluginOptions } from '@mission-platform/vite-plugin-flint';
-import { mergeConfig, type Plugin } from 'vite';
 
 import type { ViteUserConfig } from 'vitest/config';
 

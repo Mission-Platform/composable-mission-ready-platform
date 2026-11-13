@@ -1,3 +1,5 @@
+import type { FlintGraphEdge, FlintGraphNode } from '@mission-platform/flint';
+
 import { getNodeBounds } from './camera';
 import { computeWebGpuNodeGlowAndBorder, getCategoryRgba, getPortTypeRgba, parseColorToRgba } from './color';
 import { NODE_HEADER_HEIGHT, NODE_WIDTH, PORT_ROW_HEIGHT } from './constants';
@@ -17,7 +19,6 @@ import type {
   WebGpuNavigator,
 } from './types';
 import type { RenderWorkerState } from './worker-state';
-import type { FlintGraphEdge, FlintGraphNode } from '@mission-platform/flint';
 
 /**
  * Enqueues an instanced WebGPU node rectangle with position, size, borders, and glow.

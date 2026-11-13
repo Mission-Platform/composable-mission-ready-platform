@@ -1,4 +1,5 @@
 import { validateUrl } from '@mission-platform/email-renderer';
+import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
 
 import {
   borderWidthValue,
@@ -11,7 +12,6 @@ import {
 } from '../../../tokens';
 
 import type { EmailColor, EmailSizeScale } from '../../../tokens';
-import type { MpChild, MpElement } from '@mission-platform/forge-jsx';
 
 export type EmailButtonVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical' | 'ghost';

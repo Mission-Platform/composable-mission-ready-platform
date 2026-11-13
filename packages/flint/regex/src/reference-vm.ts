@@ -90,12 +90,11 @@ export class PikeRunner extends BaseRunner {
   public run(start: number, initialSaves: number[]): Captures | null {
     const instructionCount = Math.floor(this.program.length / INSTR_WIDTH);
     if (instructionCount === 0) {
-      // eslint-disable-next-line unicorn/no-null -- null represents no match in reference VM contract.
       return null;
     }
 
     const visited = new Int32Array(instructionCount).fill(-1);
-    // eslint-disable-next-line unicorn/no-null -- null represents no match in reference VM contract.
+
     let matchedSaves: Captures | null = null;
     let currentThreads: Thread[] = [];
 
@@ -197,7 +196,6 @@ export class PikeRunner extends BaseRunner {
       currentThreads = [];
       visited.fill(-1);
 
-      // eslint-disable-next-line unicorn/prefer-code-point -- VM mirrors the UTF-16 bytecode contract.
       const code = this.input.charCodeAt(sp);
       let matchedAtThisSp = false;
 
@@ -266,12 +264,11 @@ export class PikeRunner extends BaseRunner {
   public search(start: number, initialSaves: number[]): Captures | null {
     const instructionCount = Math.floor(this.program.length / INSTR_WIDTH);
     if (instructionCount === 0) {
-      // eslint-disable-next-line unicorn/no-null -- null represents no match in reference VM contract.
       return null;
     }
 
     const visited = new Int32Array(instructionCount).fill(-1);
-    // eslint-disable-next-line unicorn/no-null -- null represents no match in reference VM contract.
+
     let matchedSaves: Captures | null = null;
     let currentThreads: Thread[] = [];
 
@@ -359,7 +356,6 @@ export class PikeRunner extends BaseRunner {
       currentThreads = [];
       visited.fill(-1);
 
-      // eslint-disable-next-line unicorn/prefer-code-point -- VM mirrors the UTF-16 bytecode contract.
       const code = this.input.charCodeAt(sp);
       let matchedAtThisSp = false;
 
@@ -451,7 +447,6 @@ export class Runner extends BaseRunner {
         case Op.CHAR: {
           if (
             sp < this.input.length &&
-            // eslint-disable-next-line unicorn/prefer-code-point -- VM mirrors the UTF-16 bytecode contract.
             this.input.charCodeAt(sp) === operandA
           ) {
             pc += 1;
@@ -471,7 +466,6 @@ export class Runner extends BaseRunner {
         case Op.CLASS: {
           if (sp >= this.input.length) return false;
           if (
-            // eslint-disable-next-line unicorn/prefer-code-point -- VM mirrors the UTF-16 bytecode contract.
             classMatches(this.classes, operandA, this.input.charCodeAt(sp)) ===
             (operandB === 0)
           ) {
@@ -542,8 +536,7 @@ function attempt(
     saves,
   )
     ? saves
-    : // eslint-disable-next-line unicorn/no-null -- failed attempts are part of the reference VM contract.
-      null;
+    : null;
 }
 
 /**
@@ -645,7 +638,7 @@ export function searchBacktracking(
     const captures = attempt(re, input, position, false);
     if (captures !== null) return captures;
   }
-  // eslint-disable-next-line unicorn/no-null -- failed searches are part of the reference VM contract.
+
   return null;
 }
 

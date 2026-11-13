@@ -26,16 +26,16 @@ function emitSvelteModule(
 
 הדפס מודול רכיב ניטרלי כ-Svelte 5 SFC. מתקשר שכבר רץ
 שלבי היעד עוברים את ה-`plan` המעודן; מתקשר ישיר מקבל טרי
-הוריד אחד, כך שהפולט תמיד מונע על ידי אותו חוזה.
+הוריד אחד, כך שהפולט מונע תמיד על ידי אותו חוזה.
 
 #### פרמטרים
 
-| שם               | הקלד                | תיאור |
-| ---------------- | ------------------- | ----- |
-| מודול            | SemanticModule      |       |
-| שם רכיב          | מחרוזת              |       |
-| componentFolders | ReadonlySet<string> |       |
-| תוכנית           | SvelteLoweredModule |       |
+| שם | הקלד | תיאור |
+| ---------------- | ------------------- | ----------- |
+| מודול | מודול סמנטי |             |
+| שם רכיב | מחרוזת |             |
+| componentFolders | ReadonlySet<string> |             |
+| תוכנית | SvelteLoweredModule |             |
 
 ### SvelteModuleOutput
 
@@ -45,7 +45,7 @@ function emitSvelteModule(
 export interface SvelteModuleOutput
 ```
 
-מודול `.svelte` שנוצר וכל מודולי עזר שנכתבו לצדו.
+מודול `.svelte` שנוצר וכל מודולי עזר שנכתבו לידו.
 
 ## `src/emitters/hook`
 
@@ -61,9 +61,9 @@ function emitSvelteHookModule(module: SemanticModule): string;
 
 #### פרמטרים
 
-| שם    | הקלד           | תיאור |
-| ----- | -------------- | ----- |
-| מודול | SemanticModule |       |
+| שם | הקלד | תיאור |
+| ------ | -------------- | ----------- |
+| מודול | מודול סמנטי |             |
 
 ## `src/index`
 
@@ -89,13 +89,13 @@ function isSvelteLowered(
 ): lowered is SvelteLoweredModule;
 ```
 
-בין אם תוכנית היעד היא תוכנית Svelte - האפליה שכל צרכן מצמצם עליו.
+בין אם תוכנית היעד היא תוכנית Svelte - המאפליה שכל צרכן מצמצם עליו.
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| הוריד | TargetLoweredModule \| לא מוגדר |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------------------- | ----------- |
+| הוריד | TargetLoweredModule \| לא מוגדר |             |
 
 ### lowerSvelteModule
 
@@ -112,10 +112,10 @@ function lowerSvelteModule(
 
 #### פרמטרים
 
-| שם   | הקלד           | תיאור |
-| ---- | -------------- | ----- |
-| ir   | SemanticModule |       |
-| הקשר | היעד הקשר      |       |
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| ir | מודול סמנטי |             |
+| הקשר | היעד הקשר |             |
 
 ### SvelteBindingPlan
 
@@ -125,7 +125,7 @@ function lowerSvelteModule(
 export interface SvelteBindingPlan
 ```
 
-תא `$state` שאליו אלמנט נקשר באמצעות `bind:this`.
+תא `$state` שאליו אלמנט קשור דרך `bind:this`.
 
 ### SvelteDerivedPlan
 
@@ -185,7 +185,7 @@ export interface SvelteImportPlan
 export type SvelteInitializationPlan = |
 ```
 
-מאתחל רכיב-script בסדר שבו הופיע במקור ניטרלי.
+מאתחל רכיב-script בסדר הופיע במקור ניטרלי.
 
 ### SvelteListKeyPlan
 
@@ -225,7 +225,7 @@ export interface SveltePropPlan
 export interface SvelteRenderHelperPlan
 ```
 
-עוזר מקומי חוזר JSX (`const renderX = (a, b) => (<div/>)`) הוריד ל
+עוזר מקומי חוזר מ-JSX (`const renderX = (a, b) => (<div/>)`) ירד ל
 a Svelte `{#snippet}`.
 
 עוזר עיבוד ניטרלי הוא פונקציה בעלת פרמטרים, פונקציה בעלת ערך תבנית, כלומר
@@ -302,10 +302,10 @@ function optimizeSvelteModule(
 
 #### פרמטרים
 
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| כוונות   | כוונות יעד            |       |
-| אפשרויות | TargetOptimizeOptions |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------- | ----------- |
+| כוונות | כוונות יעד |             |
+| אפשרויות | TargetOptimizeOptions |             |
 
 ### SVELTE_OPTIMIZATIONS
 

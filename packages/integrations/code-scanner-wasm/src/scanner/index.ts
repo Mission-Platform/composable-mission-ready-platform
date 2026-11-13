@@ -425,16 +425,7 @@ function locateAndDecodeAdapted(
   const options = normalizeScanOptions(optionsOrRoi);
   scannerLog('scan: locating and decoding luma image', { width, height, roi: options.roi, formats: options.formats });
   for (const possibleFormat of possibleFormatIds(options)) {
-    const encoded = executeAdaptedScan(
-      artifact,
-      width,
-      height,
-      luma,
-      scratch,
-      options.roi,
-      possibleFormat,
-      options,
-    );
+    const encoded = executeAdaptedScan(artifact, width, height, luma, scratch, options.roi, possibleFormat, options);
     const result = resultFromWire(encoded);
     if (result !== null) return logScanResult(result);
   }

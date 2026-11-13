@@ -14,11 +14,22 @@ pnpm-werkruimten en Turborepo.
 De aanbevolen manier om een pakket te maken is met behulp van de Mission Platform Developer MCP-tool, die zorgt voor alles
 configuraties, scripts en mapstructuren volgen de standaarden van het platform.
 
+### Forge-pakketbuilds
+
+Forge-component-, hook- en CMS-pakketten gebruiken één `defineTsdownLibrary`-aanroep. Toevoegen
+de native plug-ins geretourneerd door `tsdownForgeComponentPlugins`,
+`tsdownForgeHookPlugins`, of `tsdownForgeCmsPlugins` naar de optie `plugins`;
+deze plug-ins bereiden en publiceren doelen van tsdown-levenscyclushaken in plaats van
+het uitvoeren van grafiekdetectie terwijl de configuratie wordt geëvalueerd. Houd kader en
+CMS-uitvoerplug-ins zijn eigendom van de beller en expliciet, zodat de doelselectie blijft bestaan
+componeerbaar en geïsoleerd.
+
 ### 1. Steiger met MCP
 
-Gebruik de tool `scaffold_package` om het skelet te genereren.
+Gebruik de `scaffold_package`-tool via een aangesloten Mission Platform Developer MCP-server om het skelet te genereren.
+Het volgende is een voorbeeld van een MCP-toolaanroep, geen shell-opdracht; gebruik het handmatige installatiegedeelte als MCP niet beschikbaar is.
 
-```bash
+```text
 # Example: Creating a new 'date-utils' package
 # The tool defaults to a dry-run; set apply=true to write files
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
@@ -34,7 +45,7 @@ Dit genereert een conventie-compatibele `packages/date-utils/`-map met:
 
 ### 2. Handmatige installatie (optioneel)
 
-Als u de MCP-tool niet gebruikt, zorg er dan voor dat uw `package.json` deze gebruikt [pnpm-catalogi](https://pnpm.io/catalogs) voor
+Als u de MCP-tool niet gebruikt, zorg er dan voor dat uw `package.json` [pnpm catalogi](https://pnpm.io/catalogs) gebruikt voor
 afhankelijkheidsbeheer en volgt de naamgevingsconventie:
 
 ```json
@@ -87,9 +98,9 @@ packages/<name>/
 └── README.md
 ```
 
-## Stylelint voor pakketten met stijlen
+## Stylelint voor stijldragende pakketten
 
-Pakketten met `CSS`, `SCSS` of `Vue`-stijlblokken moeten een vindbare Stylelint-configuratie en lintscripts bevatten:
+Pakketten die CSS-, SCSS- of Vue-stijlblokken bevatten, moeten een detecteerbare Stylelint-configuratie en lintscripts behouden:
 
 ```text
 packages/<name>/
@@ -99,7 +110,7 @@ packages/<name>/
 └── package.json                    # Stylelint scripts and devDependencies
 ```
 
-Voeg de gedeelde configuratie en de directe syntax- en configuratieafhankelijkheden toe aan `devDependencies`:
+Voeg de gedeelde configuratie en de directe syntaxis/configuratie-afhankelijkheden ervan toe aan `devDependencies`:
 
 ```json
 {
@@ -114,7 +125,7 @@ Voeg de gedeelde configuratie en de directe syntax- en configuratieafhankelijkhe
 }
 ```
 
-Gebruik de gedeelde configuratie vanuit `stylelint.config.mjs` in plaats van `extends`-items te dupliceren:
+Gebruik de gedeelde configuratie van `stylelint.config.mjs` in plaats van de `extends`-vermeldingen te dupliceren:
 
 ```js
 // stylelint.config.mjs
@@ -123,7 +134,7 @@ import baseConfig from "@mission-platform/stylelint-config";
 export default { ...baseConfig };
 ```
 
-Voeg scripts toe voor de werkelijke stijlbronnen van de workspace en voer de controle uit vóór publicatie:
+Voeg scripts toe die de daadwerkelijke stijlbronnen van de werkruimte bestrijken en voer vervolgens de controle uit voordat u deze publiceert:
 
 ```json
 {
@@ -151,7 +162,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 Voor gedetailleerde auteursinstructies, zie:
 
 - [Ontwerp van atomaire componenten](atomic-component-design.md)
-- [Composeerbaar schrijven](composable-authoring.md)
+- [Composable Authoring](composable-authoring.md)
 - [Winkelontwerp](store-authoring.md)
 - [Util Authoring](util-authoring.md)
 
@@ -174,7 +185,7 @@ pnpm exec turbo run test --filter @mission-platform/<name>
 ### Routerpakketten en webcomponentendoelen
 
 Gebruik `@mission-platform/router` voor gestructureerde routedoelen, pure URL-helpers en neutrale compilermarkeringen. Gedeeld
-pakketten mogen geen applicatieroutes definiëren of registreren. Applicaties selecteren onafhankelijk één Forge-routerdoel
+pakketten mogen geen applicatieroutes definiëren of registreren. Toepassingen selecteren onafhankelijk één Forge-routerdoel
 hun UI-doel, behoudt het eigendom van native routerecords en routerinstanties en bindt elke doelspecifieke runtime
 context tijdens het opstarten. De initiële doelen zijn `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
 `-redwood` en `-web-components`; niet-ondersteunde mogelijkhedencombinaties moeten compilerdiagnostiek blijven.
@@ -217,16 +228,15 @@ extractor beschreven in de docs-app README.
 
 ## Publiceren
 
-Het Mission Platform maakt gebruik van [Wijzigingssets](https://github.com/changesets/changesets) voor versiebeheer en publicatie.
+Het Mission Platform gebruikt [Changesets](https://github.com/changesets/changesets) voor versiebeheer en publicatie.
 
 1. **Een wijzigingenset toevoegen**: Voer na het aanbrengen van de wijzigingen het volgende uit:
-
-```bash
+   ```bash
    pnpm changeset
-```
-
-Selecteer het pakket en het type wijziging (patch, minor, major). 2. **De wijzigingenset vastleggen**: voer het gegenereerde `.changeset/*.md`-bestand door. 3. **Versie en publicatie**: CI/CD zorgt voor de daadwerkelijke publicatie, maar u kunt lokaal voorbeelden van versies bekijken met:
-
-```bash
+   ```
+   Selecteer het pakket en het type wijziging (patch, minor, major).
+2. **De wijzigingenset vastleggen**: voer het gegenereerde `.changeset/*.md`-bestand door.
+3. **Versie en publicatie**: CI/CD zorgt voor de daadwerkelijke publicatie, maar u kunt lokaal voorbeelden van versies bekijken met:
+   ```bash
    pnpm changeset version
-```
+   ```

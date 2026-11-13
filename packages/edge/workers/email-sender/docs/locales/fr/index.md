@@ -7,7 +7,7 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 
 Un Cloudflare Worker local uniquement qui accepte le HTML complété et l'envoie à
 MailPit sur SMTP. Cet espace de travail est propriétaire du contrat `/api/email/send` et de son
-Configuration du développement de MailPit.
+Configuration du développement MailPit.
 
 ## Utiliser localement
 

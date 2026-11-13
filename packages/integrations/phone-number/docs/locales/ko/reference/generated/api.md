@@ -33,23 +33,23 @@ function getPhoneNumberUtilSync(): PhoneNumberUtil;
 
 ### 전화번호형식
 
-**종류:** 상수
+**종류:** 유형
 
 ```typescript
-export const PhoneNumberFormat;
+export type PhoneNumberFormat = (typeof PhoneNumberFormat)[keyof typeof PhoneNumberFormat];
 ```
 
-libphonenumber의 `PhoneNumberFormat`을 미러링하는 출력 형식입니다.
+설명이 제공되지 않았습니다.
 
 ### 전화번호 유형
 
-**종류:** 상수
+**종류:** 유형
 
 ```typescript
-export const PhoneNumberType;
+export type PhoneNumberType = (typeof PhoneNumberType)[keyof typeof PhoneNumberType];
 ```
 
-libphonenumber의 `PhoneNumberType`을 미러링하는 전화번호의 회선 유형입니다.
+설명이 제공되지 않았습니다.
 
 ### 전화번호사용
 
@@ -76,7 +76,7 @@ export type RegionCode = string;
 
 ### country_code_for_region
 
-**종류:** fws-export
+**종류:** 부싯돌 수출
 
 ```typescript
 export fn country_code_for_region(region: string) -> i32
@@ -86,8 +86,8 @@ export fn country_code_for_region(region: string) -> i32
 
 #### 매개변수
 
-| 이름 | 유형   | 설명                                       |
-| ---- | ------ | ------------------------------------------ |
+| 이름 | 유형 | 설명 |
+| ------ | ------ | ------------------------------------- |
 | 지역 | 문자열 | "US" 또는 "GB"와 같은 ISO 지역 코드입니다. |
 
 #### 계약
@@ -97,7 +97,7 @@ export fn country_code_for_region(region: string) -> i32
 
 ### national_prefix
 
-**종류:** fws-export
+**종류:** 부싯돌 수출
 
 ```typescript
 export fn national_prefix(region: string) -> string
@@ -107,8 +107,8 @@ export fn national_prefix(region: string) -> string
 
 #### 매개변수
 
-| 이름 | 유형   | 설명           |
-| ---- | ------ | -------------- |
+| 이름 | 유형 | 설명 |
+| ------ | ------ | ---------------- |
 | 지역 | 문자열 | ISO 지역 코드. |
 
 #### 계약
@@ -118,7 +118,7 @@ export fn national_prefix(region: string) -> string
 
 ### 지역_국가_코드
 
-**종류:** fws-export
+**종류:** 부싯돌 수출
 
 ```typescript
 export fn region_for_country_code(code: i32) -> string
@@ -128,9 +128,9 @@ export fn region_for_country_code(code: i32) -> string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명                            |
-| ---- | ---- | ------------------------------- |
-| 코드 | i32  | 국제 전화 걸기 국가 코드입니다. |
+| 이름 | 유형 | 설명 |
+| ---- | ---- | ----------------------------------- |
+| 코드 | i32 | 국제 전화 걸기 국가 코드입니다. |
 
 #### 계약
 
@@ -139,7 +139,7 @@ export fn region_for_country_code(code: i32) -> string
 
 ### 지역_is
 
-**종류:** fws-export
+**종류:** 부싯돌 수출
 
 ```typescript
 export fn region_is(region: string, expected: string) -> bool
@@ -149,13 +149,13 @@ export fn region_is(region: string, expected: string) -> bool
 
 #### 매개변수
 
-| 이름 | 유형   | 설명                        |
-| ---- | ------ | --------------------------- |
-| 지역 | 문자열 | 후보 ISO 지역 코드.         |
-| 예상 | 문자열 | ISO 지역 코드가 필요합니다. |
+| 이름 | 유형 | 설명 |
+| -------- | ------ | -------------------------- |
+| 지역 | 문자열 | 후보 ISO 지역 코드. |
+| 예상 | 문자열 | ISO 지역 코드가 필요합니다.  |
 
 #### 계약
 
 - **@param:** 지역 후보 ISO 지역 코드입니다.
 - **@param:** 예상됨 예상되는 ISO 지역 코드입니다.
-- **@returns:** 두 코드가 모두 일치하고 영역의 길이가 2인 경우 true입니다.
+- **@returns:** 두 코드가 모두 일치하고 영역 길이가 2인 경우 true입니다.

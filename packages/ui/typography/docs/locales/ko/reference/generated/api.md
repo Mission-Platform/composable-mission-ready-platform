@@ -24,21 +24,21 @@ function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 `@mission-platform/vite-plugin-forge`.
 
 선택한 의미 태그에 기본 슬롯 콘텐츠를 렌더링합니다.
-`variant`(`as`로 재정의 가능), 변형의 유형 척도와
+`variant`(`as`으로 재정의 가능), 변형의 유형 척도와
 선택적 `weight`, `color`, `horizontalAlign`, `verticalAlign` 및 `truncate` 수정자.
 
 링크는 여기에서도 두 가지 방법으로 제공됩니다. 독립형 링크 텍스트의 경우 `variant="link"`,
 **모든** 변형에 대한 `href`이므로 제목이나 캡션은 없이 링크가 될 수 있습니다.
 자체 유형 스케일을 남겨 둡니다. 어느 쪽이든 요소는 `<a>`로 렌더링됩니다.
 링크 색상, 호버/활성 및 `:visited` 처리, 눈에 보이는 초점 링
-선택한 `underline` 모드(기본적으로 `'always'`) `target="_blank"`이 가져옵니다.
+선택한 `underline` 모드(기본적으로 `'always'`) `target="_blank"`가 가져옵니다.
 `rel="noopener noreferrer"` 자동으로. 그것은 그것을 소유하고 있다
 함께 배치된 CSS 모듈 `forge-typography.module.scss`을 통한 스타일링
 (2단계 컴파일러에 의해 모든 프레임워크에 수행되므로 구성 요소는
 자체 `@layer mp.typography` CSS를 제공합니다) 해시된 클래스 이름은 다음과 같습니다.
 프레임워크 중립적인 {@link classNames} 도우미로 조립되었습니다.
 
-원래 Vue SFC의 `@floating-ui` 잘린 팝업은 여기에서 다음을 통해 복원됩니다.
+원본 Vue SFC의 `@floating-ui` 잘린 팝업은 여기에서 다음을 통해 복원됩니다.
 `truncatePopup` 소품: 켜져 있으면 잘린 텍스트가
 부동 `role="tooltip"` 팝업(텍스트가
 실제로 오버플로됨) 대신 **CSS Anchor Positioning**을 사용하여 배치됩니다.
@@ -46,9 +46,9 @@ function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<TypographyProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<TypographyProperties> |             |
 
 ### 타이포그래피색
 
@@ -114,6 +114,26 @@ export type TypographySize = SizeScale;
 ```
 
 선택적 크기 토큰 — 표준 2xs → 2xl 배율(설정 시 변형의 글꼴 크기를 재정의함)
+
+### 타이포그래피스타일
+
+**종류:** 유형
+
+```typescript
+export type TypographyStyle = CSSStyleProperties &
+```
+
+설명이 제공되지 않았습니다.
+
+### 타이포그래피스타일속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface TypographyStyleProperties
+```
+
+타이포그래피 하위 요소 및 팝업 콘텐츠에 상속된 구성 요소 소유 CSS 값입니다.
 
 ### 타이포그래피타겟
 

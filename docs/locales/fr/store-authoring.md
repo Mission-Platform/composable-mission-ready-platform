@@ -81,9 +81,10 @@ useEffect(() => {
 
 ## Échafaudage
 
-Utilisez l'outil MCP Mission Platform Developer pour générer un nouveau squelette de magasin :
+Utilisez l'outil `scaffold_store` via un serveur MCP Mission Platform Developer connecté pour générer un nouveau magasin
+squelette. Il s'agit d'un exemple d'appel d'outil MCP, pas d'une commande shell :
 
-```bash
+```text
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
@@ -93,4 +94,4 @@ scaffold_store(name="auth-store", package="components", apply=true)
 - [Développement de packages](package-development.md)
 - [Conception de composants atomiques](atomic-component-design.md)
 - [Création composable](composable-authoring.md)
-- [Création utilitaire](util-authoring.md)
+- [Création util](util-authoring.md)

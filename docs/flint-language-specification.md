@@ -36,8 +36,8 @@ This document specifies the formal grammar and architectural semantics of Flint 
 ### 2.1 Lexical Elements
 
 - **Identifiers:** `[a-zA-Z_][a-zA-Z0-9_]*`
-- **Keywords:** `fn`, `let`, `mut`, `struct`, `record`, `enum`, `interface`, `trait`, `impl`, `if`, `else`, `match`, `case`, `loop`, `while`, `do`, `return`, `yield`, `export`, `import`, `capability`, `module`, `as`, `iter`, `inline`, `noinline`, `type`, `const`
-- **Primitive Types:** `i32`, `i64`, `u32`, `u64`, `f32`, `f64`, `bool`, `unit`, `string`, `bytes`
+- **Keywords:** `fn`, `let`, `mut`, `struct`, `record`, `enum`, `interface`, `trait`, `impl`, `if`, `else`, `match`, `case`, `loop`, `while`, `do`, `return`, `yield`, `export`, `import`, `capability`, `module`, `as`, `iter`, `inline`, `noinline`, `type`, `const`, `macro`, `derive`, `comptime`
+- **Primitive Types:** `i8`, `i32`, `i64`, `u8`, `u32`, `u64`, `f32`, `f64`, `bool`, `unit`, `string`, `bytes`
 - **Literals:**
   - Integer: `0 | [1-9][0-9]* | 0x[0-9a-fA-F]+ | 0b[01]+`
   - Float: `[0-9]+\.[0-9]+([eE][+-]?[0-9]+)?`
@@ -61,22 +61,30 @@ TopLevelDecl        ::= FunctionDecl
                       | InterfaceDecl
                       | TraitDecl
                       | TypeAliasDecl
-                      | ConstDecl ;
+                      | ConstDecl
+                      | MacroDecl
+                      | ComptimeStmt ;
+
+MacroDecl           ::= ( "macro" | "derive" ) Identifier "(" ParamList? ")" Block ;
+AttributeAnnotation ::= ( "@" Identifier ( "(" ExprList? ")" )? )
+                      | ( "#" "[" Identifier ( "(" AttributeArgList? ")" )? "]" ) ;
+AttributeArgList    ::= AttributeArg ( "," AttributeArg )* ;
+AttributeArg        ::= Identifier | IntegerLiteral | StringLiteral | Expr ;
 
 (* Baseline Declarations (Compiler v1.0) *)
-FunctionDecl        ::= ( "export" )? ( "iter" )? ( "inline" | "noinline" )? "fn" Identifier ( "<" TypeParamList ">" )? "(" ParamList? ")" ( "->" TypeExpr )? ( Block | ";" ) ;
+FunctionDecl        ::= AttributeAnnotation* ( "export" )? ( "iter" )? ( "inline" | "noinline" )? "fn" Identifier ( "<" TypeParamList ">" )? "(" ParamList? ")" ( "->" TypeExpr )? ( Block | ";" ) ;
 ParamList           ::= Param ( "," Param )* ;
 Param               ::= ( "mut" )? Identifier ":" TypeExpr ;
 
-StructDecl          ::= ( "struct" | "record" ) Identifier ( "<" TypeParamList ">" )? "{" ( StructField ( ( "," | ";" ) StructField )* ( "," | ";" )? )? "}" ;
+StructDecl          ::= AttributeAnnotation* ( "struct" | "record" ) Identifier ( "<" TypeParamList ">" )? "{" ( StructField ( ( "," | ";" ) StructField )* ( "," | ";" )? )? "}" ;
 StructField         ::= Identifier ":" TypeExpr ;
 
-EnumDecl            ::= ( "export" )? "enum" Identifier ( "<" TypeParamList ">" )? "{" ( EnumVariant ( "," EnumVariant )* ","? )? "}" ;
+EnumDecl            ::= AttributeAnnotation* ( "export" )? "enum" Identifier ( "<" TypeParamList ">" )? "{" ( EnumVariant ( "," EnumVariant )* ","? )? "}" ;
 EnumVariant         ::= Identifier ( "(" VariantFieldList ")" )? ( "=" ( "-" )? IntegerLiteral )? ;
 VariantFieldList    ::= VariantField ( "," VariantField )* ;
 VariantField        ::= ( Identifier ":" )? TypeExpr ;
 
-InterfaceDecl       ::= "interface" Identifier ( "<" TypeParamList ">" )? "{" ( MethodSignature ";" )* "}" ;
+InterfaceDecl       ::= AttributeAnnotation* "interface" Identifier ( "<" TypeParamList ">" )? "{" ( MethodSignature ";" )* "}" ;
 MethodSignature     ::= "fn" Identifier ( "<" TypeParamList ">" )? "(" ParamList? ")" ( "->" TypeExpr )? ;
 
 (* Target Roadmap Declarations (v2.0 Proposal) *)
@@ -92,7 +100,7 @@ TypeExpr            ::= PrimitiveType
                       | FunctionType
                       | TupleType ;
 
-PrimitiveType       ::= "i32" | "i64" | "u32" | "u64" | "f32" | "f64" | "bool" | "unit" | "string" | "bytes" ;
+PrimitiveType       ::= "i8" | "i32" | "i64" | "u8" | "u32" | "u64" | "f32" | "f64" | "bool" | "unit" | "string" | "bytes" ;
 NominalType         ::= Identifier ( "<" TypeArgumentList ">" )? ;
 ArrayType           ::= "[" TypeExpr ";" IntegerLiteral "]" ;
 ReferenceType       ::= ( "&" | "&mut" ) TypeExpr ;
@@ -116,12 +124,14 @@ Statement           ::= LetStmt
                       | WhileStmt
                       | DoWhileStmt
                       | SwitchStmt
+                      | ComptimeStmt
                       | ExprStmt ;
 
 LetStmt             ::= "let" ( "mut" )? Identifier ( ":" TypeExpr )? ( "=" Expr )? ";" ;
 AssignStmt          ::= TargetExpr "=" Expr ";" ;
 ReturnStmt          ::= "return" Expr? ";" ;
 YieldStmt           ::= "yield" Expr ";" ;
+ComptimeStmt        ::= "comptime" Block ;
 ExprStmt            ::= Expr ";" ;
 
 TargetExpr          ::= Identifier ( "[" Expr "]" )? ;
@@ -195,8 +205,10 @@ Identifier          ::= [a-zA-Z_][a-zA-Z0-9_]* ;
 
 | Type     | Semantics                                        | Wasm Value Representation |
 | :------- | :----------------------------------------------- | :------------------------ |
+| `i8`     | 8-bit signed two's complement integer            | `i32`                     |
 | `i32`    | 32-bit signed two's complement integer           | `i32`                     |
 | `i64`    | 64-bit signed two's complement integer           | `i64`                     |
+| `u8`     | 8-bit unsigned integer                           | `i32`                     |
 | `u32`    | 32-bit unsigned integer                          | `i32`                     |
 | `u64`    | 64-bit unsigned integer                          | `i64`                     |
 | `f32`    | 32-bit IEEE 754 single-precision float           | `f32`                     |

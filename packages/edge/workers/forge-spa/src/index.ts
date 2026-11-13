@@ -5,8 +5,10 @@ export interface Env {
   ASSETS: Fetcher;
 }
 
-export default withSecurityHeaders({
+const handler: ExportedHandler<Env> = withSecurityHeaders({
   fetch(request: Request, environment: Env): Promise<Response> {
     return environment.ASSETS.fetch(request);
   },
-}) satisfies ExportedHandler<Env>;
+});
+
+export default handler;

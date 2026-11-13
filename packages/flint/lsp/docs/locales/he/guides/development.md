@@ -1,8 +1,8 @@
-# פתח את שרת השפה Flint
+# פתח את שרת השפה פלינט
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> packages/flint-lsp/docs/guides/development.md: [packages/flint-lsp/docs/guides/development.md](../../../guides/development.md)
+> packages/flint/lsp/docs/guides/development.md: [packages/flint/lsp/docs/guides/development.md](../../../guides/development.md)
 > שפה: עברית (he)
 
 ## התקן ואמת

@@ -20,9 +20,10 @@ function compileFlintFile(
   fileName: string,
   options: FlintPluginOptions,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): FlintCompiledModule;
 ```
@@ -31,11 +32,11 @@ function compileFlintFile(
 
 #### פרמטרים
 
-| שם       | הקלד                 | תיאור |
-| -------- | -------------------- | ----- |
-| שם קובץ  | מחרוזת               |       |
-| אפשרויות | FlintPluginOptions   |       |
-| שירות    | FlintCompilerService |       |
+| שם | הקלד | תיאור |
+| -------- | -------------------- | ----------- |
+| שם קובץ | מחרוזת |             |
+| אפשרויות | FlintPluginOptions |             |
+| שירות | FlintCompilerService |             |
 
 ### compileFlintGraph
 
@@ -47,9 +48,10 @@ function compileFlintGraph(
   options: FlintPluginOptions,
   resolver: FlintModuleResolver,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): Promise<FlintCompiledModule>;
 ```
@@ -58,12 +60,31 @@ function compileFlintGraph(
 
 #### פרמטרים
 
-| שם       | הקלד                 | תיאור |
-| -------- | -------------------- | ----- |
-| שם קובץ  | מחרוזת               |       |
-| אפשרויות | FlintPluginOptions   |       |
-| פותר     | FlintModuleResolver  |       |
-| שירות    | FlintCompilerService |       |
+| שם | הקלד | תיאור |
+| -------- | -------------------- | ----------- |
+| שם קובץ | מחרוזת |             |
+| אפשרויות | FlintPluginOptions |             |
+| פותר | FlintModuleResolver |             |
+| שירות | FlintCompilerService |             |
+
+### createFlintGraphCache
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintGraphCache(options?: {
+  readonly compilerService?: FlintCompilerService;
+  readonly selfHostedVmMode?: FlintVmExecutionMode;
+}): FlintGraphCache;
+```
+
+צור מטמון גרפים המבטל כפילות ברזולוציית גרף ברצף ובמקביל.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+| אפשרויות | { לקריאה בלבד compilerService?: FlintCompilerService; readonly selfHostedVmMode?: FlintVmExecutionMode; } |             |
 
 ### FlintCompiledModule
 
@@ -74,6 +95,16 @@ export interface FlintCompiledModule
 ```
 
 הידור מקור, מטא נתונים של חפצים, מפת מקור ודוחות גרפים אופציונליים.
+
+### FlintGraphCache
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintGraphCache
+```
+
+תוצאות גרפים משותפות בזיכרון בשימוש על ידי יעדי פלינט מרובים.
 
 ### FlintPluginOptions
 
@@ -97,12 +128,28 @@ function resolveFlintPath(root: string, value: string): string;
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור |
-| ---- | ------ | ----- |
-| שורש | מחרוזת |       |
-| ערך  | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| שורש | מחרוזת |             |
+| ערך | מחרוזת |             |
 
 ## `src/generate`
+
+### createFlintArtifactSource
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintArtifactSource(compiled: FlintCompiledModule): string;
+```
+
+צור מודול עצמאי אחד להטמעת חפצים בזמן הבנייה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------------------- | ----------- |
+| הידור | FlintCompiledModule |             |
 
 ### createFlintDeclarationsSource
 
@@ -117,9 +164,9 @@ function createFlintDeclarationsSource(compiled: FlintCompiledModule): string;
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| הידור | FlintCompiledModule |       |
+| שם | הקלד | תיאור |
+| -------- | ------------------- | ----------- |
+| הידור | FlintCompiledModule |             |
 
 ### createFlintManifestSource
 
@@ -133,9 +180,9 @@ function createFlintManifestSource(compiled: FlintCompiledModule): string;
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| הידור | FlintCompiledModule |       |
+| שם | הקלד | תיאור |
+| -------- | ------------------- | ----------- |
+| הידור | FlintCompiledModule |             |
 
 ### createFlintModuleSource
 
@@ -146,13 +193,14 @@ function createFlintModuleSource(compiled: FlintCompiledModule): string;
 ```
 
 צור את מודול הצרכן הרגיל. המודול שנוצר מייצא מחדש את
-הידור פונקציות וחושף את אותו מניפסט ABI דרך `abiManifest`.
+פונקציות הידור, חושף את אותו מניפסט ABI דרך `abiManifest`, ו
+מספק מטעין ספרייה סינכרונית כיצוא ברירת המחדל שלו.
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| הידור | FlintCompiledModule |       |
+| שם | הקלד | תיאור |
+| -------- | ------------------- | ----------- |
+| הידור | FlintCompiledModule |             |
 
 ### createFlintSourceMapSource
 
@@ -166,9 +214,9 @@ function createFlintSourceMapSource(compiled: FlintCompiledModule): string;
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| הידור | FlintCompiledModule |       |
+| שם | הקלד | תיאור |
+| -------- | ------------------- | ----------- |
+| הידור | FlintCompiledModule |             |
 
 ### createFlintWasmSource
 
@@ -182,9 +230,9 @@ function createFlintWasmSource(compiled: FlintCompiledModule): string;
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| הידור | FlintCompiledModule |       |
+| שם | הקלד | תיאור |
+| -------- | ------------------- | ----------- |
+| הידור | FlintCompiledModule |             |
 
 ### createFlintWatSource
 
@@ -199,56 +247,66 @@ function createFlintWatSource(compiled: FlintCompiledModule): string;
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| הידור | FlintCompiledModule |       |
+| שם | הקלד | תיאור |
+| -------- | ------------------- | ----------- |
+| הידור | FlintCompiledModule |             |
 
-### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+### FLINT_ARTIFACT_QUERY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
+export const FLINT_ARTIFACT_QUERY;
 ```
 
-שאילתה שמחזירה הצהרות מקושרות ומטא נתונים גרפים כמודול ES.
+שאילתה שמחזירה את כל נתוני החפצים שהורכבו מהידור גרף אחד.
 
-### FORGE_WEB_SCRIPT_MANIFEST_QUERY
+### FLINT_DECLARATIONS_QUERY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
+export const FLINT_DECLARATIONS_QUERY;
 ```
 
-שאילתה שמחזירה את מניפסט ה-ABI המהודר כמודול ES.
+שאילתה שמחזירה הצהרות מקושרות ומטא נתונים של גרפים כמודול ES.
 
-### FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+### FLINT_MANIFEST_QUERY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
+export const FLINT_MANIFEST_QUERY;
+```
+
+שאילתה שמחזירה את המניפסט של ABI המהודר כמודול ES.
+
+### FLINT_SOURCE_MAP_QUERY
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_SOURCE_MAP_QUERY;
 ```
 
 שאילתה שמחזירה את מפת המקור שנוצרה כייצוא ברירת המחדל של המודול.
 
-### FORGE_WEB_SCRIPT_WASM_QUERY
+### FLINT_WASM_QUERY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY;
+export const FLINT_WASM_QUERY;
 ```
 
-שאילתה שמחזירה את ה- Wasm בתים שהורכבו כייצוא ברירת המחדל של המודול.
+שאילתה שמחזירה את בתים Wasm שהורכבו כייצוא ברירת המחדל של המודול.
 
-### FORGE_WEB_SCRIPT_WAT_QUERY
+### FLINT_WAT_QUERY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY;
+export const FLINT_WAT_QUERY;
 ```
 
 שאילתה שמחזירה WAT שנוצר, כולל הורדת טבלת ענפים, כמחרוזת.
@@ -263,15 +321,15 @@ export const FORGE_WEB_SCRIPT_WAT_QUERY;
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-התקן את הידור של Forge Web Script ושאילתות חפצים וירטואליים ב-Vite.
+התקן את הידור פלינט ושאילתות חפצים וירטואליים ב-Vite.
 התוסף שומר על ה-ABI הסקלרי של Wasm ייצוא תוך חשיפת מניפסט,
 הצהרות, שאילתות Wasm, WAT ומפת מקור עבור כלי עבודה ומתקנים.
 
 #### פרמטרים
 
-| שם       | הקלד               | תיאור |
-| -------- | ------------------ | ----- |
-| אפשרויות | FlintPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------ | ----------- |
+| אפשרויות | FlintPluginOptions |             |
 
 ### flintPlugin
 
@@ -281,15 +339,15 @@ function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-התקן את הידור של Forge Web Script ושאילתות חפצים וירטואליים ב-Vite.
+התקן את הידור פלינט ושאילתות חפצים וירטואליים ב-Vite.
 התוסף שומר על ה-ABI הסקלרי של Wasm ייצוא תוך חשיפת מניפסט,
 הצהרות, שאילתות Wasm, WAT ומפת מקור עבור כלי עבודה ומתקנים.
 
 #### פרמטרים
 
-| שם       | הקלד               | תיאור |
-| -------- | ------------------ | ----- |
-| אפשרויות | FlintPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------ | ----------- |
+| אפשרויות | FlintPluginOptions |             |
 
 ### FlintViteError
 

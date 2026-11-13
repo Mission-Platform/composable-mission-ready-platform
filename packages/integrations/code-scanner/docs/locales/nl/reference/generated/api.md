@@ -9,317 +9,44 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/code-scanner`.
 
-## `src/capture`
+## `src/components/organisms/forge-code-scanner/forge-code-scanner`
 
-### blobToImageData
-
-**Soort:** functie
-
-```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
-```
-
-Decodeer een afbeelding `Blob`/`File` in een {@link ImageLike} (RGBA-pixels). Gebruik
-`createImageBitmap`, zodat het buiten de hoofdthread werkt waar dit wordt ondersteund.
-
-#### Parameters
-
-| Naam    | Typ  | Beschrijving |
-| ------- | ---- | ------------ |
-| klodder | Blob |              |
-| roi     |      |              |
-
-### scanBestand
-
-**Soort:** functie
-
-```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>;
-```
-
-Decodeer `file` en scan het op code, waarbij de WebAssembly synchroon wordt uitgevoerd
-scanner (die zichzelf initialiseert vanuit zijn inline binaire bestand in een productiebuild).
-
-#### Parameters
-
-| Naam    | Typ  | Beschrijving |
-| ------- | ---- | ------------ |
-| bestand | Blob |              |
-
-### scanFileAsync
-
-**Soort:** functie
-
-```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>;
-```
-
-Decodeer `file` en scan het op een code, waarbij de scanner en de decoders worden geïnitialiseerd
-asynchroon — veilig in elke omgeving (geen inline binair bestand vereist).
-
-#### Parameters
-
-| Naam    | Typ  | Beschrijving |
-| ------- | ---- | ------------ |
-| bestand | Blob |              |
-
-### videoFrameToImageData
-
-**Soort:** functie
-
-```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
-```
-
-Leg het huidige frame van een spelend `<video>`-element vast als een
-{@link ImageLike}, optioneel bijsnijden tot de centrale `roi`-fractie (zie
-{@link DEFAULT_ROI}). Bijsnijden is hier vooral waardevol: live frames zijn dat ook
-vol rommel die de plaatsbepalers van de inktvakken niet kunnen verdragen, dus passeer de
-draadkruisgrootte, de gebruikersinterface laat zien dat de gebruiker het aantal treffers aanzienlijk verhoogt.
-
-#### Parameters
-
-| Naam    | Typ              | Beschrijving |
-| ------- | ---------------- | ------------ |
-| filmpje | HTMLVideoElement |              |
-| roi     |                  |              |
-
-## `src/debug`
-
-### isCodeScannerDebugEnabled
-
-**Soort:** functie
-
-```typescript
-function isCodeScannerDebugEnabled(): boolean;
-```
-
-Of diagnostische logboekregistratie van de scanner momenteel is ingeschakeld.
-
-### setCodeScannerDebug
-
-**Soort:** functie
-
-```typescript
-function setCodeScannerDebug(value: boolean): void;
-```
-
-Schakel de diagnostische logboekregistratie aan de JS-zijde van de scanner tijdens runtime in of uit.
-
-#### Parameters
-
-| Naam   | Typ       | Beschrijving |
-| ------ | --------- | ------------ |
-| waarde | booleaans |              |
-
-#### Contract
-
-- **@param:** - `true` om elke scanfase in de console te loggen, `false` om deze uit te zetten.
-
-## `src/image`
-
-### contrastStretchLuma
-
-**Soort:** functie
-
-```typescript
-function contrastStretchLuma(
-  luma: LumaImage,
-  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
-  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
-): LumaImage;
-```
-
-Rek een {@link LumaImage} met contrast uit en breng de `lowPercentile`..`highPercentile` in kaart
-intensiteitsbereik over het volledige `0..255`-bereik (waarden buiten het bereik zijn
-vastgeklemd). Retourneert een **nieuwe** afbeelding; de ingang blijft onaangeroerd.
-
-De wasm-binariser kiest een enkele globale Otsu-drempel, die a scheidt
-schoon, bimodaal histogram het beste. Geüploade afbeeldingen zijn meestal; live-camera
-Frames zijn dat vaak niet: verblinding, ongelijkmatige verlichting en een laag contrast verpletteren de beelden
-histogram zodat de donkere modules en de lichte achtergrond samenvloeien. Rekken
-het dynamische bereik scheidt ze eerst opnieuw zonder de drempel te raken
-logica, en dat is precies wat de 1D-barcode- en Data Matrix-locators (dat
-vertrouw op de inktgrens die nodig is.
-
-Een gedegenereerd (plat) frame – waar de twee percentielen samenvallen tot hetzelfde
-waarde — wordt onveranderd geretourneerd, omdat er niets is om uit te rekken.
-
-#### Parameters
-
-| Naam           | Typ            | Beschrijving |
-| -------------- | -------------- | ------------ |
-| luma           | LumaAfbeelding |              |
-| laagPercentiel | nummer         |              |
-| hoogPercentiel | nummer         |              |
-
-### imageDataToLuma
-
-**Soort:** functie
-
-```typescript
-function imageDataToLuma(image: ImageLike): LumaImage;
-```
-
-Converteer een RGBA {@link ImageLike} (bijvoorbeeld een canvas `ImageData`) naar een
-enkelkanaals {@link LumaImage} met behulp van de Rec. 601 lumagewichten
-(`0.299 R + 0.587 G + 0.114 B`). Het alfakanaal wordt genegeerd.
-
-#### Parameters
-
-| Naam       | Typ                    | Beschrijving |
-| ---------- | ---------------------- | ------------ |
-| afbeelding | AfbeeldingVind ik leuk |              |
-
-### LumaAfbeelding
+### CodeScannereigenschappen
 
 **Soort:** interface
 
 ```typescript
-export interface LumaImage
+export interface CodeScannerProperties
 ```
 
-Een grijswaardenafbeelding met één kanaal: `width * height` lumabytes.
+Geen beschrijving opgegeven.
 
-## `src/scanner/index`
-
-### scanImageData
+### ForgeCodeScanner
 
 **Soort:** functie
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
+function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): MpElement;
 ```
 
-Lokaliseer en decodeer de eerste ondersteunde code in `image`, waarbij u de
-scannergrafiek synchroon bij het eerste gebruik.
+`ForgeCodeScanner` — lokaliseert en decodeert een QR-code, datamatrix of 1D-barcode
+van een **geüploade afbeelding** of een **live camerastream**, één keer geschreven
+in het neutrale JSX-dialect en rechtstreeks gecompileerd naar React of Vue door
+`@mission-platform/vite-plugin-forge`.
+
+Detectie draait volledig op de client in de afhankelijkheidsvrije Rust/WebAssembly
+scanner van `@mission-platform/code-scanner` (binariseren → zoek de vinder
+patronen → bemonster het moduleraster); elk gevonden symbool wordt overhandigd aan de
+bijpassende decoder (`@mission-platform/qr-code` / `-/matrix-code` / `-/barcode`).
+
+Uploads worden gedecodeerd via `createImageBitmap` + een canvas; de livestream is
+geopend met `getUserMedia` en de frames ervan worden met een interval opgevraagd. Beide
+paden laten hun uitkomst zien via de {@link CodeScannerProperties.onResult}
+terugbellen (en een kleine inline resultaatuitlezing). Het bezit zijn styling via de
+co-located CSS-module `forge-code-scanner.module.scss`.
 
 #### Parameters
 
-| Naam       | Typ                    | Beschrijving |
-| ---------- | ---------------------- | ------------ |
-| afbeelding | AfbeeldingVind ik leuk |              |
-| roi        | Roi                    |              |
-
-#### Contract
-
-- **@param:** optioneel interessegebied (beeldpixels) waartoe de scan kan worden beperkt
-  — bijgesneden vóór binarisering, zodat omringende rommel wordt genegeerd.
-- **@returns:** de {@link ScanResult}, of `null` als er geen code is gevonden. Wanneer een code
-  is gelokaliseerd, maar de payload kan niet worden gedecodeerd, `result.value` is `null`.
-
-### scanImageDataAll
-
-**Soort:** functie
-
-```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[];
-```
-
-Lokaliseer en decodeer _elke_ afzonderlijke code in `image` (niet alleen de eerste),
-het synchroon instantiëren van de scannergrafiek bij het eerste gebruik.
-
-#### Parameters
-
-| Naam       | Typ                    | Beschrijving |
-| ---------- | ---------------------- | ------------ |
-| afbeelding | AfbeeldingVind ik leuk |              |
-
-#### Contract
-
-- **@returns:** de gedecodeerde {@link ScanResult}s in ontdekkingsvolgorde, ontdubbeld;
-  leeg als er niets is gedecodeerd.
-
-### scanImageDataAllAsync
-
-**Soort:** functie
-
-```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
-```
-
-Lokaliseer en decodeer _elke_ afzonderlijke code in `image` en laad de scannergrafiek
-asynchroon bij het eerste gebruik. Initialisatie- en scanfouten zijn dat wel
-geretourneerd als belofte-afwijzingen.
-
-#### Parameters
-
-| Naam       | Typ                    | Beschrijving |
-| ---------- | ---------------------- | ------------ |
-| afbeelding | AfbeeldingVind ik leuk |              |
-
-#### Contract
-
-- **@returns:** de gedecodeerde {@link ScanResult}s in ontdekkingsvolgorde, ontdubbeld.
-
-### scanImageDataAsync
-
-**Soort:** functie
-
-```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
-```
-
-Zoek en decodeer de eerste ondersteunde code in `image` en laad de scanner
-grafiek asynchroon bij het eerste gebruik. Initialisatie en scannen
-mislukkingen worden geretourneerd als afwijzingen van beloften.
-
-#### Parameters
-
-| Naam       | Typ                    | Beschrijving |
-| ---------- | ---------------------- | ------------ |
-| afbeelding | AfbeeldingVind ik leuk |              |
-| roi        | Roi                    |              |
-
-#### Contract
-
-- **@param:** optioneel interessegebied — zie {@link scanImageData}.
-- **@returns:** de {@link ScanResult}, of `null` als er geen code is gevonden.
-
-## `src/types`
-
-### Afbeelding zoals
-
-**Soort:** interface
-
-```typescript
-export interface ImageLike
-```
-
-De minimale vorm van een `ImageData` die dit pakket nodig heeft: een rauwe, row-major RGBA
-pixelbuffer met zijn afmetingen. De DOM `ImageData` voldoet er net zo aan
-elk handgebouwd `{ width, height, data }`-object (handig voor tests / SSR).
-
-### Roi
-
-**Soort:** interface
-
-```typescript
-export interface Roi
-```
-
-Een rechthoekig interessegebied, in beeldpixels, om een scan te beperken tot (bijv.
-een dradenkruis dat een live camera-UI over het frame tekent). De teelt gebeurt in was
-_voor_ binarisatie, zodat omringende rommel nooit de locators bereikt. EEN
-het gebied dat over een rand hangt, wordt vastgeklemd; men vindt het geheel buiten het kader
-niets.
-
-### Scanformaat
-
-**Soort:** type
-
-```typescript
-export type ScanFormat = 'qr' | 'datamatrix' | 'barcode' | 'aztec' | 'pdf417' | 'databar' | 'maxicode';
-```
-
-De codefamilies die de scanner kan lokaliseren en decoderen.
-
-### Scanresultaat
-
-**Soort:** interface
-
-```typescript
-export interface ScanResult
-```
-
-Het resultaat van een succesvolle _detectie_.
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<CodeScannerProperties> |             |

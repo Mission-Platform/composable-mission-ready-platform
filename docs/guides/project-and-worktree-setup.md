@@ -6,6 +6,10 @@
 
 - Milestone #1: Flint Architecture & Runtime Enhancements
 - Milestone #2: UI Component Platform Improvements & Polish
+- Milestone #3: Fabrica Rebrand & Multi-Framework Modernization
+
+The worktree and board tables below are a repository snapshot, not live status. Verify branch, issue, and pull-request
+state in GitHub before relying on them.
 
 ---
 
@@ -42,6 +46,9 @@ In a high-throughput, multi-framework TypeScript monorepo with extensive compile
 ## 3. Git Worktree Management Commands
 
 Automated worktree lifecycle tooling is provided via `scripts/worktree-manager.ts` and root `package.json` scripts:
+
+The `pnpm worktree:*` commands below are convenience aliases for the corresponding `scripts/worktree-manager.ts`
+commands. The direct script form is the canonical fallback when a package-manager alias is unavailable.
 
 ```bash
 # 1. List all active worktrees and their readiness state (LSP, dependencies, clean status)
@@ -114,25 +121,47 @@ Milestone 1 issues (#41 through #50) track the compiler core, SonIR 2.0, standar
 
 ---
 
-## 6. GitHub Project & Board CLI Automation
+## 6. Milestone 3: Fabrica Rebrand & Multi-Framework Modernization
+
+Milestone 3 issues (#109 through #118) track the 4-phase migration to the Fabrica platform architecture (`Fabrica`, `Lathe`, `Scribe`):
+
+| Issue    | Title                                                                                                          | Track                | Priority      | Complexity | Board Stage |
+| :------- | :------------------------------------------------------------------------------------------------------------- | :------------------- | :------------ | :--------- | :---------- |
+| **#109** | `refactor(tooling): rename root configs and workspace scopes to @fabrica`                                      | Foundation & Tooling | P0 - Critical | M          | `Ready`     |
+| **#110** | `refactor(tokens): migrate custom properties from --mp-* to --fb-* and publish @fabrica/tokens`                | Design Tokens & UI   | P0 - Critical | M          | `Backlog`   |
+| **#111** | `refactor(core): rename @mission-platform/i18n and @mission-platform/core to @fabrica/*`                       | Design Tokens & UI   | P0 - Critical | M          | `Backlog`   |
+| **#112** | `refactor(components): rename @mission-platform/components to @fabrica/components and bind to @fabrica/tokens` | Design Tokens & UI   | P0 - Critical | L          | `Backlog`   |
+| **#113** | `refactor(lathe): migrate Forge multi-framework compiler and target adapters to @fabrica/lathe-*`              | Compiler & Adapters  | P1 - High     | XL         | `Backlog`   |
+| **#114** | `refactor(scribe): migrate Flint scanner, SonIR, and Wasm execution engine to @fabrica/scribe-*`               | Scanner & Runtime    | P1 - High     | XL         | `Backlog`   |
+| **#115** | `refactor(extensions): migrate VS Code tooling to Scribe`                                                      | Scanner & Runtime    | P2 - Medium   | M          | `Backlog`   |
+| **#116** | `refactor(apps): update applications and Storybook workbench to consume @fabrica/* packages`                   | Applications & MCP   | P1 - High     | L          | `Backlog`   |
+| **#117** | `refactor(mcp): rebrand MCP developer and consumer servers to @fabrica/mcp-*`                                  | Applications & MCP   | P1 - High     | M          | `Backlog`   |
+| **#118** | `docs(rebrand): update documentation, AGENTS.md, architectural guides, and website content to Fabrica`         | Documentation        | P2 - Medium   | L          | `Backlog`   |
+
+The rebrand issue specifications are maintained in the GitHub project referenced by the `project:*` commands below;
+this document does not contain a live copy of that backlog.
+
+---
+
+## 7. GitHub Project & Board CLI Automation
 
 Project management is coordinated via `scripts/github-project-manager.ts` and root `package.json` scripts:
 
 ```bash
 # 1. View current project status and board stage mapping
-pnpm project:status [components|flint|all]
+pnpm project:status [components|flint|fabrica|all]
 
-# 2. Export deterministic project plans (docs/ui-components-project-plan.json & docs/flint-project-plan.json)
+# 2. Export deterministic project plans (docs/ui-components-project-plan.json, docs/flint-project-plan.json & docs/fabrica-project-plan.json)
 pnpm project:plan
 
 # 3. Synchronize items and column transitions on "The Board"
 pnpm project:board "The Board"
 
 # 4. Provision or configure GitHub Project v2 via GraphQL
-pnpm project:setup [components|flint]
+pnpm project:setup [components|flint|fabrica]
 ```
 
-### 6.1 GitHub Authentication Scope Setup
+### 7.1 GitHub Authentication Scope Setup
 
 To update GitHub Projects v2 boards (`The Board`) via the CLI, the GitHub OAuth token must include the `project` or `read:project` permission scope.
 

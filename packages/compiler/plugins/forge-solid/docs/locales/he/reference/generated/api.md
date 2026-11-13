@@ -23,9 +23,9 @@ function emitSolidHookModule(module: SemanticModule): string;
 
 #### פרמטרים
 
-| שם    | הקלד           | תיאור |
-| ----- | -------------- | ----- |
-| מודול | SemanticModule |       |
+| שם | הקלד | תיאור |
+| ------ | -------------- | ----------- |
+| מודול | מודול סמנטי |             |
 
 ## `src/emitters/module`
 
@@ -44,10 +44,10 @@ function emitSolidModule(
 
 #### פרמטרים
 
-| שם       | הקלד             | תיאור |
-| -------- | ---------------- | ----- |
-| מודול    | SemanticModule   |       |
-| אפשרויות | SolidEmitOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ---------------- | ----------- |
+| מודול | מודול סמנטי |             |
+| אפשרויות | SolidEmitOptions |             |
 
 ### GeneratedSolidModule
 
@@ -97,9 +97,9 @@ function isSolidLowered(
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| הוריד | TargetLoweredModule \| לא מוגדר |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------------------- | ----------- |
+| הוריד | TargetLoweredModule \| לא מוגדר |             |
 
 ### lowerSolidModule
 
@@ -116,10 +116,10 @@ function lowerSolidModule(
 
 #### פרמטרים
 
-| שם   | הקלד           | תיאור |
-| ---- | -------------- | ----- |
-| ir   | SemanticModule |       |
-| הקשר | היעד הקשר      |       |
+| שם | הקלד | תיאור |
+| ------- | -------------- | ----------- |
+| ir | מודול סמנטי |             |
+| הקשר | היעד הקשר |             |
 
 ### planSolidImports
 
@@ -132,16 +132,16 @@ function planSolidImports(
 ): string[];
 ```
 
-שמות הערך המדויקים של `solid-js` שתוכנית דורשת, בסדר אלפביתי כך א
+השמות המדויקים של הערך `solid-js` שתוכנית דורשת, בסדר אלפביתי כך א
 הפעלה מחדש מייצרת רשימה זהה. חישוב מחדש זה מה שעושה
 `solid:drop-unused-imports` פונקציה טהורה של התוכנית.
 
 #### פרמטרים
 
-| שם     | הקלד              | תיאור |
-| ------ | ----------------- | ----- |
-| תוכנית | SolidLoweringPlan |       |
-| מותנה  | בוליאני           |       |
+| שם | הקלד | תיאור |
+| ----------- | ----------------- | ----------- |
+| תוכנית | SolidLoweringPlan |             |
+| מותנה | בוליאני |             |
 
 ### planSolidModule
 
@@ -155,9 +155,9 @@ function planSolidModule(ir: SemanticModule): SolidLoweringPlan;
 
 #### פרמטרים
 
-| שם  | הקלד           | תיאור |
-| --- | -------------- | ----- |
-| ir  | SemanticModule |       |
+| שם | הקלד | תיאור |
+| ---- | -------------- | ----------- |
+| ir | מודול סמנטי |             |
 
 ### SOLID_FRAMEWORK
 
@@ -177,7 +177,7 @@ export const SOLID_FRAMEWORK;
 export interface SolidDynamicPlan
 ```
 
-`<Dynamic is={…}>` node ירד לכתב היפר של Solid.
+`<Dynamic is={…}>` node ירד להיפר-כתב של Solid.
 
 ### SolidEffectPlan
 
@@ -227,7 +227,7 @@ export interface SolidLoweringPlan
 export interface SolidMemoizedExpression
 ```
 
-ביטוי דינמי חוזר של ילד מקודם לתזכיר משלו.
+ביטוי ילד דינמי חוזר ומקודם לתזכיר משלו.
 
 ### SolidMemoPlan
 
@@ -309,7 +309,7 @@ export const DROP_UNUSED_IMPORTS;
 export const HOIST_STATIC_SUBTREES;
 ```
 
-קדם את תתי העצים `__mpStatic` לקבועים ברמת המודול.
+קדם תתי-עצים `__mpStatic` לקבועים ברמת המודול.
 
 ### MEMOIZE_DYNAMIC_EXPRESSIONS
 
@@ -319,7 +319,7 @@ export const HOIST_STATIC_SUBTREES;
 export const MEMOIZE_DYNAMIC_EXPRESSIONS;
 ```
 
-קדם ביטוי ילד דינמי חוזר לתזכיר בודד.
+קדם ביטוי ילד דינמי חוזר לתזכיר יחיד.
 
 ### MP_MEMO_PREFIX
 
@@ -342,15 +342,15 @@ function optimizeSolidModule(
 ): TargetIntentions;
 ```
 
-חידד תוכנית Solid מופחתת. מעטפת כוונות שאינה נושאת תוכנית Solid
+חדד תוכנית Solid מופחתת. מעטפת כוונות שאינה נושאת תוכנית Solid
 (קריאה ישירה, או של יעד אחר) מוחזרת ללא נגיעה.
 
 #### פרמטרים
 
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| כוונות   | כוונות יעד            |       |
-| אפשרויות | TargetOptimizeOptions |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------- | ----------- |
+| כוונות | כוונות יעד |             |
+| אפשרויות | TargetOptimizeOptions |             |
 
 ### STABLE_LIST_KEYS
 

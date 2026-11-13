@@ -18,7 +18,7 @@ Er is sprake van een circulaire afhankelijkheid wanneer twee of meer pakketten d
 
 In een monorepo zijn deze cycli bijzonder schadelijk omdat ze het volgende kunnen veroorzaken:
 
-- **Buildfouten**: resolutie van de afhankelijkheidsgrafiek (bijvoorbeeld door Turborepo of pnpm) kan vastlopen of mislukken.
+- **Buildfouten**: de resolutie van de afhankelijkheidsgrafiek (bijvoorbeeld door Turborepo of pnpm) kan vastlopen of mislukken.
 - **Runtimefouten**: de ene module wordt mogelijk gedeeltelijk geïnitialiseerd wanneer de andere de export probeert te gebruiken.
 - **Verbeterde koppeling**: pakketten kunnen onmogelijk afzonderlijk worden gebruikt of getest.
 
@@ -28,7 +28,7 @@ Mission Platform maakt gebruik van verschillende geautomatiseerde tools om circu
 
 ### ESLint `no-restricted-paths`
 
-Onze gedeelde ESLint configuratie dwingt de eenrichtingsafhankelijkheidsstroom af. Als u probeert te importeren uit een pakket dat
+Onze gedeelde ESLint-configuratie dwingt de eenrichtingsafhankelijkheidsstroom af. Als u probeert te importeren uit een pakket dat
 moet "boven" de jouwe zijn in de hiërarchie, dan zal de linter een foutmelding geven.
 
 Voer de linter uit om te controleren op overtredingen:
@@ -39,7 +39,7 @@ pnpm lint
 
 ### Handmatige audit met Madge
 
-Voor complexe cycli die meerdere bestanden bestrijken, kunt u gebruik maken van `madge` (indien geïnstalleerd) of vergelijkbare visualisaties om de
+Voor complexe cycli die meerdere bestanden bestrijken, kunt u `madge` (indien geïnstalleerd) of soortgelijke visualisatieprogramma's gebruiken om de
 afhankelijkheidsgrafiek.
 
 ## How-to: circulaire afhankelijkheden oplossen
@@ -66,8 +66,8 @@ In plaats van dat Pakket B rechtstreeks uit Pakket A importeert, kunt u Pakket B
 configuratieobject of via een gebeurtenisbus.
 
 **Voorbeeld**:
-In plaats van `AuthService` importeren `UserService` een profiel bijwerken, `AuthService` kan een uitzenden `AUTH_SUCCESS` evenement
-dat `UserService` luistert naar.
+In plaats van dat `AuthService` `UserService` importeert om een profiel bij te werken, kan `AuthService` een `AUTH_SUCCESS`-gebeurtenis uitzenden
+waar `UserService` naar luistert.
 
 ### Strategie 3: Consolidatie
 
@@ -76,9 +76,9 @@ Als twee pakketten zo nauw met elkaar verbonden zijn dat ze voortdurend elkaars 
 
 ## Beste praktijken op het gebied van preventie
 
-1. **Volg de eenrichtingsverkeer**: houd u strikt aan de `Apps → Packages → Configs` afhankelijkheid richting.
-2. **Auteur Framework-neutrale logica**: gebruik `@mission-platform/forge-jsx` voor kernlogica om raamwerkspecifieke cycli te vermijden.
-3. **Gebruik werkruimteprotocollen**: altijd gebruiken `workspace:*` om de interne afhankelijkheden te waarborgen pnpm correct kan oplossen
+1. **Volg de eenrichtingsstroom**: houd u strikt aan de `Apps → Packages → Configs`-afhankelijkheidsrichting.
+2. **Auteur Framework-Neutrale Logica**: Gebruik `@mission-platform/forge-jsx` voor kernlogica om raamwerkspecifieke cycli te vermijden.
+3. **Gebruik werkruimteprotocollen**: gebruik altijd `workspace:*` voor interne afhankelijkheden om ervoor te zorgen dat pnpm correct kan worden opgelost
    de grafiek.
 4. **Controleer imports regelmatig**: let op de suggesties voor automatisch importeren in uw IDE, aangezien deze soms
    onbedoelde afhankelijkheden tussen pakketten.
@@ -86,5 +86,5 @@ Als twee pakketten zo nauw met elkaar verbonden zijn dat ze voortdurend elkaars 
 ## Gerelateerde documentatie
 
 - [Beste praktijken](best-practices.md)
-- [Structuur van de werkruimte](workspace-structure.md)
-- [Gids voor probleemoplossing](troubleshooting.md)
+- [Werkruimtestructuur](workspace-structure.md)
+- [Handleiding voor het oplossen van problemen](troubleshooting.md)

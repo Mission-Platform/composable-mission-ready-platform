@@ -58,7 +58,7 @@ Stabiele metadata die worden gebruikt door Forge-routercompilerplug-ins.
 **Soort:** component
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor;
+export function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 Neutrale linkmarkering. Native doelen vervangen deze functie tijdens compilatie.
@@ -154,7 +154,7 @@ Een gedeeltelijke implementatie die nuttig is voor het richten op adapters en SS
 **Soort:** component
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
+export function MpRouterView(properties: MpRouterViewProps =
 ```
 
 Neutrale uitlaat/zichtmarkering. Native doelen vervangen deze functie tijdens compilatie.
@@ -244,7 +244,11 @@ Lees het door de app geleverde neutrale capaciteitsobject.
 **Soort:** constant
 
 ```typescript
-export const applicationCompatibilityFixtures;
+export const applicationCompatibilityFixtures: {
+  readonly website: ForgeCompatibilityFixture;
+  readonly myCareNotes: ForgeCompatibilityFixture;
+  readonly guardsAndLazy: ForgeCompatibilityFixture;
+};
 ```
 
 Geen beschrijving opgegeven.

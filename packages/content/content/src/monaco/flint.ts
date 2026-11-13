@@ -44,7 +44,7 @@ export function registerFlintLanguage(
   if (!languageAlreadyRegistered) {
     monacoRuntime.languages.register({
       id: languageId,
-      extensions: ['.flint', '.flt'],
+      extensions: ['.flint', '.flt', '.flintc'],
       aliases: ['Flint', 'flint'],
     });
   }
@@ -317,10 +317,24 @@ function modelForUri(monacoRuntime: MonacoRuntime, uri: monaco.Uri | null): mona
 function tokenizeFlintLine(line: string): monaco.languages.IToken[] {
   // The core tokenizer uses UTF-16 offsets, which are also Monaco token offsets.
   // Map Flint token kinds to standard Monaco token names that built-in themes color.
-  return tokenizeFlint(line).map((token) => ({
+  const tokens = tokenizeFlint(line).map((token) => ({
     startIndex: token.range.start.character,
     scopes: tokenKindToMonacoScope(token.kind),
   }));
+  const cssProperties =
+    /\b(?:align-items|background(?:-color)?|border(?:-radius)?|color|display|flex(?:-direction|-wrap)?|font-size|gap|height|justify-content|margin|opacity|padding|position|width)\b(?=\s*:)/gu;
+  for (const match of line.matchAll(cssProperties))
+    tokens.push({ startIndex: match.index ?? 0, scopes: 'css-property' });
+  for (const match of line.matchAll(/(?:^|\s)([.#][\w-]+|&:[\w-]+)(?=\s*\{)/gu)) {
+    tokens.push({ startIndex: (match.index ?? 0) + match[0].length - (match[1]?.length ?? 0), scopes: 'css-selector' });
+  }
+  for (const match of line.matchAll(/\b(?:auto|block|center|flex|grid|none|relative|row|transparent)\b/gu)) {
+    tokens.push({ startIndex: match.index ?? 0, scopes: 'css-value' });
+  }
+  for (const match of line.matchAll(/<\/?([A-Za-z][\w-]*)/gu)) {
+    tokens.push({ startIndex: (match.index ?? 0) + (match[0].startsWith('</') ? 2 : 1), scopes: 'html-tag' });
+  }
+  return tokens.sort((left, right) => left.startIndex - right.startIndex);
 }
 
 const MONACO_SCOPE_BY_TOKEN_KIND: Readonly<Record<string, string>> = {
@@ -333,6 +347,14 @@ const MONACO_SCOPE_BY_TOKEN_KIND: Readonly<Record<string, string>> = {
   operator: 'operator',
   punctuation: 'delimiter',
   declaration: 'type',
+  'css-property': 'property',
+  'css-selector': 'selector',
+  'css-value': 'value',
+  'html-tag': 'tag',
+  'html-attribute': 'attribute.name',
+  'markup-directive': 'keyword',
+  'markup-interpolation': 'delimiter.bracket',
+  'markup-slot': 'tag',
 };
 
 /**

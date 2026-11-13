@@ -39,9 +39,9 @@ function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElemen
 
 #### パラメータ
 
-| 名前       | タイプ                              | 説明 |
-| ---------- | ----------------------------------- | ---- |
-| プロパティ | 読み取り専用<ThemeToggleProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------- | ----------- |
+|プロパティ |読み取り専用<ThemeToggleProperties> |             |
 
 ### テーマトグルプロパティ
 
@@ -76,7 +76,7 @@ function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpEl
 `ForgeThemeComposer` — ランタイム `--mp-*` デザイン トークン オーバーライド (ブランド) を構成します
 色、テキスト/表面/境界線の色、フォント、ベースのサイズ/半径、および生の
 トークンエスケープハッチ）を作成し、それらをそのスコープに適用します。で一度執筆されました
-中立的な JSX 方言であり、React または Vue に直接コンパイルされます。
+中立的な JSX 方言であり、直接 React または Vue にコンパイルされます。
 `@mission-platform/vite-plugin-forge`。
 
 元の Vue SFC は、`provide`/`inject` および `v-model` を介してリアクティブ ストアを共有しました。
@@ -84,7 +84,7 @@ function ForgeThemeComposer(properties: Readonly<ThemeComposerProperties>): MpEl
 設定をニュートラルな {@link useState} フック (からシードされる) に保持します。
 `modelValue`)、純粋なヘルパーを使用して CSS カスタム プロパティに解決します。
 `../theme-composer-store`、`display: contents` ラッパーに適用します。
-(`<div>`) — または、`global` の場合は `document.documentElement` に — およびすべての
+(`<div>`) — または、`global` の場合は `document.documentElement` に — およびすべてのメッセージを発行します
 `onUpdateModelValue` コールバック プロパティを介して変更します (
 `v-model`)。デフォルトのスコープ付きスロットは `{ config, cssVariables,
 styleString、setConfig、setAttribute、setToken、removeToken、reset }`。
@@ -96,9 +96,9 @@ styleString、setConfig、setAttribute、setToken、removeToken、reset }`。
 
 #### パラメータ
 
-| 名前       | タイプ                                | 説明 |
-| ---------- | ------------------------------------- | ---- |
-| プロパティ | 読み取り専用<ThemeComposerProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------------------------- | ----------- |
+|プロパティ |読み取り専用<ThemeComposerProperties> |             |
 
 ### テーマ作曲家のプロパティ
 
@@ -151,9 +151,9 @@ toggleTheme、cycleTheme }` をスコープとして使用します。
 
 #### パラメータ
 
-| 名前       | タイプ                                | 説明 |
-| ---------- | ------------------------------------- | ---- |
-| プロパティ | 読み取り専用<ThemeProviderProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------------------------- | ----------- |
+|プロパティ |読み取り専用<ThemeProviderProperties> |             |
 
 ### テーマプロバイダーのプロパティ
 
@@ -201,9 +201,9 @@ function configToCssVariables(config: ThemeComposerConfig): Record<string, strin
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 設定 | テーマコンポーザー構成 |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------- | ----------- |
+|設定 |テーマコンポーザー構成 |             |
 
 ### configToStyleString
 
@@ -217,9 +217,9 @@ function configToStyleString(config: ThemeComposerConfig): string;
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 設定 | テーマコンポーザー構成 |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------- | ----------- |
+|設定 |テーマコンポーザー構成 |             |
 
 ### css変数ToString
 
@@ -233,9 +233,9 @@ CSS カスタム プロパティ マップをインライン `style` 文字列�
 
 #### パラメータ
 
-| 名前 | タイプ                   | 説明 |
-| ---- | ------------------------ | ---- |
-| 変数 | レコード<string, string> |      |
+|名前 |タイプ |説明 |
+| --------- | ---------------------- | ----------- |
+|変数 |レコード<string, string> |             |
 
 ### マージ構成
 
@@ -249,10 +249,10 @@ function mergeConfig(config: ThemeComposerConfig, partial: ThemeComposerConfig):
 
 #### パラメータ
 
-| 名前   | タイプ                 | 説明 |
-| ------ | ---------------------- | ---- |
-| 設定   | テーマコンポーザー構成 |      |
-| 部分的 | テーマコンポーザー構成 |      |
+|名前 |タイプ |説明 |
+| ------- | ------------------- | ----------- |
+|設定 |テーマコンポーザー構成 |             |
+|部分的 |テーマコンポーザー構成 |             |
 
 ### RemoveConfigToken
 
@@ -266,10 +266,10 @@ function removeConfigToken(config: ThemeComposerConfig, key: string): ThemeCompo
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 設定 | テーマコンポーザー構成 |      |
-| キー | 文字列                 |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------- | ----------- |
+|設定 |テーマコンポーザー構成 |             |
+|キー |文字列 |             |
 
 ### setConfigAttribute
 
@@ -287,11 +287,11 @@ function setConfigAttribute(
 
 #### パラメータ
 
-| 名前 | タイプ                    | 説明 |
-| ---- | ------------------------- | ---- |
-| 設定 | テーマコンポーザー構成    |      |
-| 属性 | K                         |      |
-| 値   | テーマコンポーザー構成[K] |      |
+|名前 |タイプ |説明 |
+| --------- | ---------------------- | ----------- |
+|設定 |テーマコンポーザー構成 |             |
+|属性 | K |             |
+|値 |テーマコンポーザー構成[K] |             |
 
 ### setConfigToken
 
@@ -305,11 +305,33 @@ function setConfigToken(config: ThemeComposerConfig, key: string, value: string)
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 設定 | テーマコンポーザー構成 |      |
-| キー | 文字列                 |      |
-| 値   | 文字列                 |      |
+|名前 |タイプ |説明 |
+| ------ | ------------------- | ----------- |
+|設定 |テーマコンポーザー構成 |             |
+|キー |文字列 |             |
+|値 |文字列 |             |
+
+### テーマ作曲者属性
+
+**種類：**タイプ
+
+```typescript
+export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens' | 'colorScheme'>;
+```
+
+`--mp-*` カスタム プロパティにマップされるフレンドリ属性キー。
+
+### テーマ作曲者構成
+
+**種類:** インターフェース
+
+```typescript
+export interface ThemeComposerConfig
+```
+
+消費者が作成できるテーマ属性の高レベルの型付き説明
+実行時。すべての属性は、プラットフォームの `--mp-*` の 1 つにマッピングされます。
+design-token CSS カスタム プロパティ ({@link ATTRIBUTE_TO_CSS_VAR} を参照)。
 
 ## `src/stores/theme-store/theme-store`
 
@@ -327,9 +349,9 @@ function configureTheme(config: ThemeConfig): void;
 
 #### パラメータ
 
-| 名前 | タイプ     | 説明 |
-| ---- | ---------- | ---- |
-| 設定 | テーマ設定 |      |
+|名前 |タイプ |説明 |
+| ------ | ----------- | ----------- |
+|設定 |テーマ設定 |             |
 
 ### サイクルテーマ
 
@@ -373,9 +395,9 @@ function setTheme(next: Theme): void;
 
 #### パラメータ
 
-| 名前 | タイプ | 説明 |
-| ---- | ------ | ---- |
-| 次へ | テーマ |      |
+|名前 |タイプ |説明 |
+| ---- | ----- | ----------- |
+|次へ |テーマ |             |
 
 ### 購読テーマ
 
@@ -389,9 +411,9 @@ function subscribeTheme(listener: () => void): () => void;
 
 #### パラメータ
 
-| 名前     | タイプ     | 説明 |
-| -------- | ---------- | ---- |
-| リスナー | () => 無効 |      |
+|名前 |タイプ |説明 |
+| -------- | ---------- | ----------- |
+|リスナー | () => 無効 |             |
 
 ### テーマ
 

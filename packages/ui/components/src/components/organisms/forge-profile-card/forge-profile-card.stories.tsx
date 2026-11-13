@@ -1,6 +1,6 @@
-import { ForgeProfileCard } from './forge-profile-card';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeProfileCard } from './forge-profile-card';
 
 const meta = {
   title: 'Organisms/People/ForgeProfileCard',

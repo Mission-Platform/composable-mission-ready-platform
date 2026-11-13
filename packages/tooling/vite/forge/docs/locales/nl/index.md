@@ -12,7 +12,7 @@ pakketten zijn eigenaar van hun doelspecifieke verlaging en generatie.
 
 ## Begin hier
 
-- [Referentie voor compilerpijplijn](reference/compiler.md) — fasecontracten,
+- [Referentie van de compilatiepijplijn](reference/compiler.md) — fasecontracten,
   doeleigendom, caching, diagnostiek en gegenereerde artefacten.
 - [Bouw- en testhandleiding](guides/development.md) — lokale ontwikkeling en
   integratiecontroles.

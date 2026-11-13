@@ -130,7 +130,6 @@ function arithmeticCases(size: BenchmarkSize): readonly BenchmarkCase[] {
   const seed = ARITHMETIC_SEEDS[size];
   return [
     createCase("arithmetic", size, "standard", {
-      // eslint-disable-next-line id-length -- ArithmeticInput contract property name
       n: count,
       multiplier: 3,
       offset: -7,
@@ -139,14 +138,12 @@ function arithmeticCases(size: BenchmarkSize): readonly BenchmarkCase[] {
     ...(size === "small"
       ? [
           createCase("arithmetic", size, "empty", {
-            // eslint-disable-next-line id-length -- ArithmeticInput contract property name
             n: 0,
             multiplier: 3,
             offset: -7,
             seed,
           }),
           createCase("arithmetic", size, "singleton", {
-            // eslint-disable-next-line id-length -- ArithmeticInput contract property name
             n: 1,
             multiplier: 3,
             offset: -7,

@@ -24,16 +24,15 @@ Fournit une instance i18next à l'arborescence React (déléguant à
 
 #### Paramètres
 
-| Nom        | Tapez                       | Descriptif |
-| ---------- | --------------------------- | ---------- |
-| propriétés | ForgeI18NProviderPropriétés |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------- | ----------- |
+| propriétés | ForgeI18NProviderPropriétés |             |
 
 #### Contracter
 
 - **@exemple :** import { createForgeI18N, ForgeI18NProvider } depuis '@mission-platform/i18n'
-
-const i18n = createForgeI18N({ messages : { fr : { bonjour : 'Bonjour' } } })
-root.render(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)
+  const i18n = createForgeI18N({ messages : { fr : { bonjour : 'Bonjour' } } })
+  root.render(<ForgeI18NProvider i18n={i18n}><App /></ForgeI18NProvider>)
 
 ### ForgeI18NProviderPropriétés
 
@@ -52,7 +51,7 @@ Accessoires pour {@link ForgeI18NProvider}.
 **Genre :** fonction
 
 ```typescript
-function createForgeI18NVue(i18next: I18nInstance): Plugin;
+function createForgeI18NVue(i18next: ForgeI18nInstance): Plugin;
 ```
 
 Encapsule une instance i18next dans un plugin Vue (déléguant à `i18next-vue`) afin qu'elle
@@ -61,16 +60,15 @@ l'assistant de modèle `$t` ou le composable `useI18n`.
 
 #### Paramètres
 
-| Nom        | Tapez        | Descriptif |
-| ---------- | ------------ | ---------- |
-| i18suivant | I18nInstance |            |
+| Nom | Tapez | Descriptif |
+| ------- | ----------------- | ----------- |
+| i18suivant | ForgeI18nInstance |             |
 
 #### Contracter
 
 - **@exemple :** import { createForgeI18N, createForgeI18NVue } depuis '@mission-platform/i18n'
-
-const i18n = createForgeI18N({ messages : { fr : { bonjour : 'Bonjour' } } })
-app.use(createForgeI18NVue(i18n))
+  const i18n = createForgeI18N({ messages : { fr : { bonjour : 'Bonjour' } } })
+  app.use(createForgeI18NVue(i18n))
 
 ## `src/composables/use-i18n/use-i18n.neutral`
 
@@ -89,9 +87,9 @@ le framework d'exécution dans leur solution de repli neutre.
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| espace de noms | chaîne |            |
+| Nom | Tapez | Descriptif |
+| --------- | ------ | ----------- |
+| espace de noms | chaîne |             |
 
 ### UtiliserI18nRetour
 
@@ -123,9 +121,9 @@ espace de noms (le propre `mp.<app>` d'une application, qui revient à tous les 
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| espace de noms | chaîne |            |
+| Nom | Tapez | Descriptif |
+| --------- | ------ | ----------- |
+| espace de noms | chaîne |             |
 
 ### UtiliserI18nRetour
 
@@ -158,9 +156,9 @@ espace de noms (le propre `mp.<app>` d'une application, qui revient à tous les 
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| espace de noms | chaîne |            |
+| Nom | Tapez | Descriptif |
+| --------- | ------ | ----------- |
+| espace de noms | chaîne |             |
 
 ### UtiliserI18nRetour
 
@@ -179,7 +177,7 @@ Renvoie la forme de {@link useI18n}.
 **Genre :** fonction
 
 ```typescript
-function createForgeI18N(options: CreateForgeI18NOptions = {}): I18nInstance;
+function createForgeI18N(options: CreateForgeI18NOptions = {}): ForgeI18nInstance;
 ```
 
 Crée un [i18next] configuré et indépendant du framework (https://www.i18next.com/)
@@ -201,31 +199,28 @@ les applications peuvent fusionner en profondeur `overrides` par espace de noms 
 
 #### Paramètres
 
-| Nom     | Tapez                 | Descriptif |
-| ------- | --------------------- | ---------- |
-| options | CréerForgeI18NOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---------------------- | ----------- |
+| options | CréerForgeI18NOptions |             |
 
 #### Contracter
 
 - **@example :** // Utilisation neutre du framework
   importer { createForgeI18N } depuis '@mission-platform/i18n'
-
-const i18n = createForgeI18N({ messages : { fr : { bonjour : 'Bonjour {nom}' } } })
-i18n.t('bonjour', { nom : 'Monde' }) // → 'Bonjour tout le monde'
-
+  const i18n = createForgeI18N({ messages : { fr : { bonjour : 'Bonjour {nom}' } } })
+  i18n.t('bonjour', { nom : 'Monde' }) // → 'Bonjour tout le monde'
 - **@example :** // Utilisation d'un espace de noms avec une application remplaçant la chaîne d'un package
   importer { createForgeI18N, forgeNamespace } depuis '@mission-platform/i18n'
-
-const i18n = créerForgeI18N({
-espace de noms : forgeNamespace('my-care-notes'),
-espaces de noms : {
-[forgeNamespace('my-care-notes')] : { fr : { nav : { notes : 'Notes' } } },
-[forgeNamespace('breakpoints')] : { fr: { breakpoint: 'breakpoint:' } },
-},
-remplacements : {
-[forgeNamespace('breakpoints')] : { fr : { point d'arrêt : 'Viewport:' } },
-},
-})
+  const i18n = créerForgeI18N({
+  espace de noms : forgeNamespace('my-care-notes'),
+  espaces de noms : {
+  [forgeNamespace('my-care-notes')] : { fr : { nav : { notes : 'Notes' } } },
+  [forgeNamespace('breakpoints')] : { fr: { breakpoint: 'breakpoint:' } },
+  },
+  remplacements : {
+  [forgeNamespace('breakpoints')] : { fr : { point d'arrêt : 'Viewport:' } },
+  },
+  })
 
 ### CreateForgeI18NOptions
 
@@ -260,10 +255,10 @@ Exécute un rappel dans un contexte i18n de portée requête sur le serveur.
 
 #### Paramètres
 
-| Nom    | Tapez        | Descriptif |
-| ------ | ------------ | ---------- |
-| i18n   | I18nInstance |            |
-| rappel | () => T      |            |
+| Nom | Tapez | Descriptif |
+| -------- | ------------ | ----------- |
+| i18n | I18nInstance |             |
+| rappel | () => T |             |
 
 ### setServeurI18n
 
@@ -277,9 +272,9 @@ Configure l’instance i18n de secours globale côté serveur.
 
 #### Paramètres
 
-| Nom  | Tapez        | Descriptif |
-| ---- | ------------ | ---------- |
-| i18n | I18nInstance |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------ | ----------- |
+| i18n | I18nInstance |             |
 
 ## `src/utils/merge-locales`
 
@@ -297,10 +292,10 @@ remplace locale par locale.
 
 #### Paramètres
 
-| Nom    | Tapez        | Descriptif |
-| ------ | ------------ | ---------- |
-| cible  | ForgeLocales |            |
-| source | ForgeLocales |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------------ | ----------- |
+| cible | ForgeLocales |             |
+| source | ForgeLocales |             |
 
 ### DeepMergeMessages
 
@@ -320,10 +315,10 @@ win et le reste du package est préservé.
 
 #### Paramètres
 
-| Nom    | Tapez              | Descriptif |
-| ------ | ------------------ | ---------- |
-| cible  | ForgeMessageObject |            |
-| source | ForgeMessageObject |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------------------ | ----------- |
+| cible | ForgeMessageObject |             |
+| source | ForgeMessageObject |             |
 
 ### fusionner les paramètres locaux
 
@@ -338,9 +333,9 @@ Les modules sont traités de gauche à droite ; les entrées ultérieures rempl
 
 #### Paramètres
 
-| Nom     | Tapez               | Descriptif |
-| ------- | ------------------- | ---------- |
-| modules | ForgeLocaleModule[] |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------- | ----------- |
+| modules | ForgeLocaleModule[] |             |
 
 ## `src/utils/namespace`
 
@@ -384,9 +379,9 @@ Crée un espace de noms Mission Platform i18next pour un espace de travail, par 
 
 #### Paramètres
 
-| Nom | Tapez  | Descriptif |
-| --- | ------ | ---------- |
-| nom | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| nom | chaîne |             |
 
 ### espaces de noms locaux
 
@@ -404,10 +399,10 @@ l'option {@link CreateForgeI18NOptions.namespaces} (et `overrides`) attend
 
 #### Paramètres
 
-| Nom     | Tapez                                      | Descriptif |
-| ------- | ------------------------------------------ | ---------- |
-| locale  | chaîne                                     |            |
-| paquets | Enregistrement<string, ForgeMessageObject> |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---------------------------------- | ----------- |
+| locale | chaîne |             |
+| paquets | Enregistrement<string, ForgeMessageObject> |             |
 
 #### Contracter
 
@@ -418,6 +413,16 @@ l'option {@link CreateForgeI18NOptions.namespaces} (et `overrides`) attend
   })
 
 ## `src/utils/types`
+
+### ForgeI18nInstance
+
+**Genre :** type
+
+```typescript
+export type ForgeI18nInstance = Omit<I18nInstance, 't'> &
+```
+
+Type d'instance i18next avec la fonction de traduction compatible avec le sélecteur.
 
 ### ForgeLocaleModule
 
@@ -469,3 +474,23 @@ export type ForgeNamespaceLocales = Record<string, ForgeLocales>;
 
 Un mappage des espaces de noms i18next (`mp.<workspace>`) avec leurs messages par langue.
 Utilisé par les options `namespaces` et `overrides` de `createForgeI18N`.
+
+### ForgeTranslationFonction
+
+**Genre :** type
+
+```typescript
+export type ForgeTranslationFunction = TFunction &
+```
+
+Type de fonction de traduction qui reste compatible avec le sélecteur au-delà des limites du package.
+
+### ForgeTraductionSource
+
+**Genre :** type
+
+```typescript
+export type ForgeTranslationSource =
+```
+
+Type de source récursif utilisé par l'API de rappel du sélecteur d'i18next.

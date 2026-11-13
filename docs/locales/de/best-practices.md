@@ -5,38 +5,37 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > docs/best-practices.md: [docs/best-practices.md](../../best-practices.md)
 > Sprache: Deutsch (de)
 
-Dieses Dokument beschreibt die Kernprinzipien, Architektur und Codierungsstandards für das Mission Platform Monorepo. Es
-dient als **Erklärung** dafür, warum wir bestimmten Mustern folgen, und als **Leitlinie** für die tägliche Entwicklung.
+Dieses Dokument beschreibt die Grundprinzipien, Architektur und Codierungsstandards für das Mission Platform Monorepo. Es
+dient als **Erklärung**, warum wir bestimmten Mustern folgen, und als **Leitlinie** für die tägliche Entwicklung.
 
 ## Grundprinzipien
 
 ### Zusammensetzbare Architektur
 
-Mission Platform folgt einer paketgesteuerten, zusammensetzbaren Architektur. Wiederverwendbare Bausteine (UI-Komponenten,
-Composables, Dienstprogramme) leben in `packages/`, während aus diesen Blöcken bereitstellbare Anwendungen zusammengestellt werden `apps/`.
+Mission Platform folgt einer paketgesteuerten, zusammensetzbaren Architektur. Reusable building blocks (UI components,
+Composables, Dienstprogramme) befinden sich in `packages/`, während bereitstellbare Anwendungen aus diesen Blöcken in `apps/` zusammengestellt werden.
 
 ### Abhängigkeitsdisziplin
 
 Um ein wartbares Monorepo aufrechtzuerhalten, erzwingen wir einen strikten einseitigen Abhängigkeitsfluss:
 
-- **`apps`** → **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`**
-- **`packages`** / **`packages/tooling/vite`** / **`packages/edge/workers`** → **`packages/tooling/configs`**
-- **`apps`** → **`packages/tooling/configs`** (Direkt für Tooling/Build-Konfiguration)
+- **`apps`** → **`packages`**
+- **`packages`** → Domänenpakete auf niedrigerer Ebene wie **`core`**, **`tooling`** und **`compiler`**
 
-**Regel:** Code eingeben `packages/` darf **niemals** aus importieren `apps/`. Dies verhindert zirkuläre Abhängigkeiten und stellt sicher
+**Regel:** Code in `packages/` darf **niemals** aus `apps/` importiert werden. Dies verhindert zirkuläre Abhängigkeiten und stellt sicher
 Pakete bleiben wirklich wiederverwendbar.
 
 ### Bilderbuch als Werkbank
 
-Beim Hinzufügen oder Ändern von Komponenten in `packages/`, verwenden Sie die Storybook-App (`apps/storybook`) als Ihre primäre Entwicklung
-Umgebung. Der `apps/storybook` Die App enthält nicht die Storys selbst – sie ist die Aggregations-Workbench
+Wenn Sie Komponenten in `packages/` hinzufügen oder ändern, verwenden Sie die Storybook-App (`apps/storybook`) als primäre Entwicklung
+Umgebung. Die `apps/storybook`-App enthält nicht die Storys selbst – sie ist die Aggregations-Workbench
 entdeckt und gibt die Geschichten wieder, die neben ihren Komponenten leben.
 
-- Ordnen Sie alle gemeinsam an `.stories.tsx` Datei mit ihrer Komponente im Paketverzeichnis dieser Komponente (z. B.
+- Platzieren Sie jede `.stories.tsx`-Datei zusammen mit ihrer Komponente im Paketverzeichnis dieser Komponente (z. B.
   `packages/ui/components/src/components/**/<component>/<component>.stories.tsx`), nicht unter `apps/storybook`. Das passt
-  die Konvention in [Atomares Komponentendesign](atomic-component-design.md).
-- Überprüfen Sie das Verhalten der Komponenten übergreifend Vue, React, Svelte, Solidund Webkomponenten durch Umschalten der
-  `STORYBOOK_FRAMEWORK` Umgebungsvariable. Jeder Modus muss das gleiche neutrale Story-Inventar verbrauchen; ein Vermisster
+  die Konvention in [Atomic Component Design](atomic-component-design.md).
+- Überprüfen Sie das Komponentenverhalten in Vue, React, Svelte, Solid und Webkomponenten, indem Sie die umschalten
+  Umgebungsvariable `STORYBOOK_FRAMEWORK`. Jeder Modus muss das gleiche neutrale Story-Inventar verbrauchen; ein Vermisster
   Framework-Artefakt ist ein Paket-/Exportfehler und kein Grund, diese Geschichte herauszufiltern.
 
 Die vollständige statische Validierungsschleife ist:
@@ -51,46 +50,83 @@ done
 
 ### TypeScript Überall
 
-Der gesamte neue Quellcode muss eingeschrieben werden TypeScript (`.ts`) oder Vue SFCs mit `<script setup lang="ts">`.
+Der gesamte neue Quellcode muss in den SFCs TypeScript (`.ts`) oder Vue mit `<script setup lang="ts">` geschrieben werden.
 
-- **Strenger Modus**: `strict: true` wird überall durchgesetzt `tsconfig.json` Dateien.
+- **Strenger Modus**: `strict: true` wird für alle `tsconfig.json`-Dateien erzwungen.
 - **Explizite Typen**: Stellen Sie explizite Typen für alle öffentlichen APIs, exportierten Funktionen und Composables bereit.
-- **Vermeiden `any`**: Verwenden Sie präzise Typen oder Generika. Wenn ein Typ wirklich unbekannt ist, verwenden Sie `unknown` und führen Sie eine Typeingrenzung durch.
+- **`any` vermeiden**: Verwenden Sie präzise Typen oder Generika. Wenn ein Typ wirklich unbekannt ist, verwenden Sie `unknown` und führen Sie eine Typeingrenzung durch.
 
 ### Framework-neutrale Komponenten
 
-Wenn möglich, erstellen Sie UI-Komponenten mithilfe von `@mission-platform/forge-jsx` Dialekt. Dadurch können Komponenten sein
-zusammengestellt und verwendet Vue, React, Svelte, Solidund Webkomponenten, ohne die Kernlogik neu zu schreiben. Konfigurieren Sie die
-Consumer-Resolver mit dem Matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, oder `mp:web-component` Zustand.
+Erstellen Sie UI-Komponenten nach Möglichkeit mit dem `@mission-platform/forge-jsx`-Dialekt. Dadurch können Komponenten sein
+kompiliert und in Vue, React, Svelte, Solid und Webkomponenten verwendet, ohne die Kernlogik neu zu schreiben. Konfigurieren Sie die
+Verbraucher-Resolver mit der passenden Bedingung `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid` oder `mp:web-component`.
 
 ### Reaktivitätsmuster (Vue 3)
 
 - Verwenden Sie ausschließlich die **Composition API**.
-- Bevorzugen `ref()` für die meisten Staaten, um die Konsistenz aufrechtzuerhalten.
+– Bevorzugen Sie `ref()` für die meisten Staaten, um die Konsistenz zu wahren.
 - Extrahieren Sie komplexe Zustandslogik in **Composables** (`useXxx`).
-  – Stellen Sie sicher, dass alle Nebenwirkungen (Beobachter, Intervalle, Ereignis-Listener) ordnungsgemäß bereinigt werden `onUnmounted`.
+– Stellen Sie sicher, dass alle Nebenwirkungen (Beobachter, Intervalle, Ereignis-Listener) in `onUnmounted` ordnungsgemäß bereinigt werden.
 
 ## Monorepo-Workflow
 
 ### Isolierung von Bedenken
 
-- **Neue UI-Komponenten**: Gehören dazu `packages/`.
-- **Shared Utilities**: Gehören dazu `packages/`.
-- **Lint/Format/Build Tooling**: Gemeinsam genutzte Konfigurationen gehören dazu `packages/tooling/configs/`.
+- **Neue UI-Komponenten**: Gehören zu `packages/`.
+- **Gemeinsame Dienstprogramme**: Gehören zu `packages/`.
+- **Lint/Format/Build Tooling**: Freigegebene Konfigurationen gehören in `packages/tooling/configs/`.
 
 ### Linting und Formatierung
 
-Ein konsistenter Codestil wird durch erzwungen ESLint Und Prettier.
+Ein konsistenter Codestil wird über ESLint und Prettier erzwungen.
 
-- Laufen `pnpm lint` um auf Verstöße zu prüfen.
-- Laufen `pnpm format:write` um Formatierungsprobleme automatisch zu beheben.
+– Führen Sie `pnpm lint` aus, um nach Verstößen zu suchen.
+– Führen Sie `pnpm format:write` aus, um Formatierungsprobleme automatisch zu beheben.
 - Commit-Nachrichten müssen der **Conventional Commits**-Spezifikation entsprechen.
+
+### Upstream-Abhängigkeitspriming und Pakettests
+
+In einem modularen Monorepo importieren Downstream-Pakete häufig Build-Ausgaben (`dist/`) von Upstream-Paketen. So vermeiden Sie Fehler bei Clean-State-Tests und vermeiden die manuelle Verfolgung der Build-Reihenfolge mehrerer Pakete:
+
+1. **Automatisiertes Upstream-Build-Priming (`^build`)**:
+   `turbo.json`-Aufgabendiagramme definieren `test`, `build:check` und Verifizierungsaufgaben mit `"dependsOn": ["^build"]`. Beim Ausführen einer beliebigen Test- oder Typprüfungsaufgabe über Turborepo werden zunächst automatisch alle Upstream-Arbeitsbereichsabhängigkeiten erstellt.
+
+2. **Paketbezogene Ausführung**:
+   So testen oder erstellen Sie ein einzelnes Paket, ohne die Voraussetzungen manuell zu kompilieren:
+   - Führen Sie Tests mit Grundierung durch:
+     ```bash
+     pnpm test:package <package-name>
+     ```
+     oder direkt über Turborepo:
+     ```bash
+     pnpm exec turbo run test --filter <package-name>
+     ```
+   - Erstellen Sie ein Paket mit seinen Abhängigkeiten:
+     ```bash
+     pnpm build:package <package-name>
+     ```
+     oder direkt über Turborepo:
+     ```bash
+     pnpm exec turbo run build --filter <package-name>
+     ```
+
+   In Turbo-Filtern wählt `<package-name>...` das Paket UND seinen Upstream aus
+   Abhängigkeiten, `...<package-name>` wählt das Paket UND seinen Downstream aus
+   Abhängige, und `<package-name>^...` wählt nur den Upstream des Pakets aus
+   Abhängigkeiten (mit Ausnahme des Pakets selbst). Die Pakethilfsprogramme werden explizit ausgeführt
+   das Upstream-Formular (`<package-name>^...`) zuerst, um Paket-Workflows direkt zu steuern
+   ein vorhersehbares, gut kalkulierbares Aufwärmen haben; die `^build`-Abhängigkeit des Aufgabendiagramms
+   bleibt das Sicherheitsnetz für direkte Turborepo-Aufrufe.
+
+3. **Worktree-Bereitstellung**:
+   Wenn neue Git-Arbeitsbäume über `pnpm worktree:create` bereitgestellt oder über `pnpm worktree:setup` initialisiert werden, werden Upstream-Abhängigkeiten automatisch vorbereitet, bevor Validierungsprüfungen ausgeführt werden, um sicherzustellen, dass neu erstellte Arbeitsbäume sofort betriebsbereit sind.
 
 ## Leistungsoptimierung
 
-- **Code-Splitting**: Dynamisch verwenden `import()` für unkritische Funktionen und große Bibliotheken.
+- **Code-Splitting**: Verwenden Sie dynamisches `import()` für unkritische Funktionen und große Bibliotheken.
 - **Asset-Optimierung**: Bevorzugen Sie moderne Bildformate (WebP/AVIF) und stellen Sie sicher, dass alle statischen Assets komprimiert sind.
-- **Reaktivitätsaufwand**: Verwenden `shallowRef` für große Objekte, die keine tiefe Reaktivität erfordern.
+- **Reaktivitätsaufwand**: Verwenden Sie `shallowRef` für große Objekte, die keine tiefe Reaktivität erfordern.
 
 ## Prüfung und Dokumentation
 

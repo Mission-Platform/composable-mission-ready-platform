@@ -13,12 +13,12 @@ Paramètres par défaut de formatage du référentiel partagés par les packages
 pnpm add --save-dev @mission-platform/prettier-config
 ```
 
-Exportez la configuration partagée depuis l'espace de travail `prettier.config.js`.
-Utilisez les remplacements locaux avec parcimonie afin que Markdown, TypeScript, Vueet configuration
+Exportez la configuration partagée depuis le `prettier.config.js` de l'espace de travail.
+Utilisez les remplacements locaux avec parcimonie afin que Markdown, TypeScript, Vue et la configuration
 les fichiers restent cohérents dans tout le monorepo.
 
 ## Contribuer
 
-Courir `pnpm --filter @mission-platform/prettier-config format` après avoir changé le
+Exécutez `pnpm --filter @mission-platform/prettier-config format` après avoir modifié le
 configuration. Les modifications doivent s'appliquer de manière cohérente à chaque espace de travail qui utilise
 le colis.

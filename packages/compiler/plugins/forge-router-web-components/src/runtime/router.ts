@@ -1,7 +1,4 @@
 import { createRouteResolver, parseLocation, stringifyLocation } from '@mission-platform/router';
-
-import { createWebHistory } from './history';
-
 import type {
   MpHistory,
   MpNavigationFailure,
@@ -18,6 +15,8 @@ import type {
   MpScrollBehavior,
   MpScrollPosition,
 } from '@mission-platform/router';
+
+import { createWebHistory } from './history';
 
 class RouteSignal implements MpReadonlySignal<MpResolvedLocation | null> {
   private listeners = new Set<(value: MpResolvedLocation | null) => void>();
@@ -202,13 +201,11 @@ export function createWebComponentsRouter<View = unknown>(
   const resolveView = (route: MpResolvedLocation, depth?: number): Promise<View | undefined> => {
     const match = resolver.match(route.path);
     if (!match) {
-      // eslint-disable-next-line unicorn/no-useless-undefined
       return Promise.resolve<View | undefined>(undefined);
     }
     const branch = [...match.flat.parents, match.flat.route] as MpRoute<View>[];
     const targetRoute = depth === undefined ? (match.flat.route as MpRoute<View>) : branch[depth];
     if (!targetRoute) {
-      // eslint-disable-next-line unicorn/no-useless-undefined
       return Promise.resolve<View | undefined>(undefined);
     }
     return Promise.resolve(loadViewForDefinition(targetRoute, route));
@@ -388,7 +385,7 @@ export function createWebComponentsRouter<View = unknown>(
           ok: true as const,
           to: signal.value as MpResolvedLocation,
           // The neutral contract uses null for the absence of an initial route.
-          // eslint-disable-next-line unicorn/no-null
+
           from: null,
         });
 

@@ -5,7 +5,6 @@ import {
   EmailSection,
   EmailTypography,
 } from '@mission-platform/email-components';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const meta = {

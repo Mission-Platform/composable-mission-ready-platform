@@ -58,6 +58,18 @@ optimization mode, bounds policy, effects, ownership metadata, source spans,
 and ordered pass reports. Stale, malformed, oversized, or policy-mismatched
 artifacts are ignored and can be safely removed.
 
+## Strict static typing and absence of dynamic types
+
+Flint is a statically-typed language with deterministic memory layout and zero runtime reflection overhead. The language does not support dynamic top types like `any` or `unknown`.
+
+Attempting to annotate types with `any` or `unknown` produces compile-time diagnostic `FLINT-TYPE-020`. To migrate code from dynamic environments:
+
+- Replace dynamic values with concrete primitives (`i32`, `u32`, `f64`, `bool`, `string`, `bytes`).
+- Use parametric polymorphism / generics (`Vector<T>`, `Option<T>`, `Result<T, E>`) for reusable container algorithms.
+- Use tagged algebraic data types (`enum`) for polymorphic domain representations.
+- For C ABI pointers and opaque host handles, declare `opaque foreign type Handle;` rather than untyped pointers.
+- In Web IDL bridges and bindings, provide explicit type mappings via `FlintBindingOptions.customTypeMappings`.
+
 ## Memory and release behavior
 
 Scoped values use checked regions. Values that outlive a region use explicit

@@ -5,6 +5,6 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > packages/compiler/plugins/forge-router-redwood/docs/index.md: [packages/compiler/plugins/forge-router-redwood/docs/index.md](../../index.md)
 > Idioma: Español (es)
 
-Forge router target para RedwoodSDK
+Destino del enrutador Forge para RedwoodSDK
 
-See `llms.txt` para el public API y usage examples.
+Consulte `llms.txt` para conocer la API pública y ejemplos de uso.

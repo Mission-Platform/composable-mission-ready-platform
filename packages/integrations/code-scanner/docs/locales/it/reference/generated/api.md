@@ -9,317 +9,44 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 
 Generato da dichiarazioni di fonte pubblica in `@mission-platform/code-scanner`.
 
-## `src/capture`
+## `src/components/organisms/forge-code-scanner/forge-code-scanner`
 
-### blobToImageData
+### ProprietàCodeScanner
+
+**Tipo:** interfaccia
+
+```typescript
+export interface CodeScannerProperties
+```
+
+Nessuna descrizione fornita.
+
+### ForgeCodeScanner
 
 **Tipo:** funzione
 
 ```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
+function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): MpElement;
 ```
 
-Decodifica un'immagine `Blob`/`File` in un {@link ImageLike} (pixel RGBA). Usi
-`createImageBitmap` in modo che funzioni fuori dal thread principale dove supportato.
+`ForgeCodeScanner`: individua e decodifica un codice QR, Data Matrix o codice a barre 1D
+da un'**immagine caricata** o da un **streaming live della telecamera**, creato una sola volta
+nel dialetto JSX neutro e compilato direttamente in React o Vue da
+`@mission-platform/vite-plugin-forge`.
 
-#### Parametri
+Il rilevamento viene eseguito interamente sul client in Rust/WebAssembly privo di dipendenze
+scanner da `@mission-platform/code-scanner` (binarise → individua il finder
+pattern → campiona la griglia del modulo); ogni simbolo individuato viene consegnato al
+decodificatore corrispondente (`@mission-platform/qr-code` / `-/matrix-code` / `-/barcode`).
 
-| Nome    | Digitare | Descrizione |
-| ------- | -------- | ----------- |
-| macchia | Macchia  |             |
-| roi     |          |             |
-
-### scanFile
-
-**Tipo:** funzione
-
-```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>;
-```
-
-Decodifica `file` ed esegui la scansione per un codice, eseguendo in modo sincrono WebAssembly
-scanner (che si autoinizializza dal suo binario incorporato in una build di produzione).
+I caricamenti vengono decodificati tramite `createImageBitmap` + un canvas; lo streaming live è
+aperto con `getUserMedia` e i suoi frame vengono interrogati a intervalli. Entrambi
+i percorsi mostrano il loro risultato tramite {@link CodeScannerProperties.onResult}
+callback (e una piccola lettura del risultato in linea). Possiede il suo stile attraverso il
+Modulo CSS co-localizzato `forge-code-scanner.module.scss`.
 
 #### Parametri
 
 | Nome | Digitare | Descrizione |
-| ---- | -------- | ----------- |
-| file | Macchia  |             |
-
-### scanFileAsync
-
-**Tipo:** funzione
-
-```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>;
-```
-
-Decodificare `file` e scansionarlo per un codice, inizializzando scanner e decodificatori
-in modo asincrono: sicuro in qualsiasi ambiente (non è richiesto il binario inline).
-
-#### Parametri
-
-| Nome | Digitare | Descrizione |
-| ---- | -------- | ----------- |
-| file | Macchia  |             |
-
-### videoFrameToImageData
-
-**Tipo:** funzione
-
-```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
-```
-
-Cattura il fotogramma corrente di un elemento `<video>` in riproduzione come file
-{@link ImageLike}, eventualmente ritagliando nella frazione centrale `roi` (vedi
-{@link DEFAULT_ROI}). Il ritaglio è particolarmente prezioso qui: i fotogrammi live lo sono
-pieno di confusione che i localizzatori del riquadro di delimitazione dell'inchiostro non possono tollerare, quindi passando il file
-la dimensione del reticolo mostrata dall'interfaccia utente aumenta notevolmente la percentuale di successo.
-
-#### Parametri
-
-| Nome  | Digitare          | Descrizione |
-| ----- | ----------------- | ----------- |
-| video | ElementoVideoHTML |             |
-| roi   |                   |             |
-
-## `src/debug`
-
-### isCodeScannerDebugEnabled
-
-**Tipo:** funzione
-
-```typescript
-function isCodeScannerDebugEnabled(): boolean;
-```
-
-Se la registrazione diagnostica dello scanner è attualmente abilitata.
-
-### setCodeScannerDebug
-
-**Tipo:** funzione
-
-```typescript
-function setCodeScannerDebug(value: boolean): void;
-```
-
-Abilita o disabilita la registrazione diagnostica lato JS dello scanner in fase di esecuzione.
-
-#### Parametri
-
-| Nome   | Digitare | Descrizione |
-| ------ | -------- | ----------- |
-| valore | booleano |             |
-
-#### Contrarre
-
-- **@param:** - `true` per registrare ogni fase di scansione sulla console, `false` per silenziarla.
-
-## `src/image`
-
-### contrastoStretchLuma
-
-**Tipo:** funzione
-
-```typescript
-function contrastStretchLuma(
-  luma: LumaImage,
-  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
-  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
-): LumaImage;
-```
-
-Estendi tramite contrasto una {@link LumaImage}, mappandone `lowPercentile`..`highPercentile`
-intervallo di intensità sull'intero intervallo `0..255` (i valori fuori intervallo sono
-bloccato). Restituisce una **nuova** immagine; l'input viene lasciato intatto.
-
-Il binarizzatore wasm seleziona un'unica soglia Otsu globale, che separa a
-l'istogramma pulito e bimodale è il migliore. Le immagini caricate di solito sono; telecamera dal vivo
-le montature spesso non lo sono: abbagliamento, illuminazione non uniforme e basso contrasto schiacciano il tutto
-istogramma in modo che i moduli scuri e lo sfondo chiaro confluiscano insieme. Allungamento
-la gamma dinamica li ri-separa prima senza toccare la soglia
-logica, che è esattamente ciò che i localizzatori di codici a barre 1D e Data Matrix (che
-fare affidamento sul riquadro di delimitazione dell'inchiostro) necessario.
-
-Un fotogramma degenerato (piatto), in cui i due percentili collassano nello stesso
-valore - viene restituito invariato, poiché non c'è nulla da allungare.
-
-#### Parametri
-
-| Nome            | Digitare     | Descrizione |
-| --------------- | ------------ | ----------- |
-| luma            | LumaImmagine |             |
-| bassoPercentile | numero       |             |
-| altoPercentile  | numero       |             |
-
-### imageDataToLuma
-
-**Tipo:** funzione
-
-```typescript
-function imageDataToLuma(image: ImageLike): LumaImage;
-```
-
-Converti un RGBA {@link ImageLike} (ad esempio una tela `ImageData`) in un
-{@link LumaImage} a canale singolo utilizzando Rec. 601 pesi luma
-(`0.299 R + 0.587 G + 0.114 B`). Il canale alfa viene ignorato.
-
-#### Parametri
-
-| Nome     | Digitare         | Descrizione |
-| -------- | ---------------- | ----------- |
-| immagine | ImmagineMi piace |             |
-
-### LumaImage
-
-**Tipo:** interfaccia
-
-```typescript
-export interface LumaImage
-```
-
-Un'immagine in scala di grigi a canale singolo: `width * height` byte luma.
-
-## `src/scanner/index`
-
-### scanImageData
-
-**Tipo:** funzione
-
-```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
-```
-
-Individua e decodifica il primo codice supportato in `image`, istanziando il file
-grafico dello scanner in modo sincrono al primo utilizzo.
-
-#### Parametri
-
-| Nome     | Digitare         | Descrizione |
-| -------- | ---------------- | ----------- |
-| immagine | ImmagineMi piace |             |
-| roi      | Roi              |             |
-
-#### Contrarre
-
-- **@param:** regione di interesse opzionale (pixel dell'immagine) a cui limitare la scansione
-  — ritagliato prima della binarizzazione, quindi il disordine circostante viene ignorato.
-- **@returns:** il {@link ScanResult} o `null` quando non viene trovato alcun codice. Quando un codice
-  si trova ma il relativo payload non può essere decodificato, `result.value` è `null`.
-
-### scanImageDataAll
-
-**Tipo:** funzione
-
-```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[];
-```
-
-Individua e decodifica _ogni_ codice distinto in `image` (non solo il primo),
-istanziando il grafico dello scanner in modo sincrono al primo utilizzo.
-
-#### Parametri
-
-| Nome     | Digitare         | Descrizione |
-| -------- | ---------------- | ----------- |
-| immagine | ImmagineMi piace |             |
-
-#### Contrarre
-
-- **@returns:** i {@link ScanResult} decodificati in ordine di rilevamento, deduplicati;
-  vuoto quando non viene decodificato nulla.
-
-### scanImageDataAllAsync
-
-**Tipo:** funzione
-
-```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
-```
-
-Individua e decodifica _ogni_ codice distinto in `image`, caricando il grafico dello scanner
-in modo asincrono al primo utilizzo. Gli errori di inizializzazione e di scansione lo sono
-restituito come rifiuto della Promessa.
-
-#### Parametri
-
-| Nome     | Digitare         | Descrizione |
-| -------- | ---------------- | ----------- |
-| immagine | ImmagineMi piace |             |
-
-#### Contrarre
-
-- **@returns:** i {@link ScanResult} decodificati in ordine di rilevamento, deduplicati.
-
-### scanImageDataAsync
-
-**Tipo:** funzione
-
-```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
-```
-
-Individua e decodifica il primo codice supportato in `image`, caricando lo scanner
-grafico in modo asincrono al primo utilizzo. Inizializzazione e scansione
-gli errori vengono restituiti come rifiuti Promise.
-
-#### Parametri
-
-| Nome     | Digitare         | Descrizione |
-| -------- | ---------------- | ----------- |
-| immagine | ImmagineMi piace |             |
-| roi      | Roi              |             |
-
-#### Contrarre
-
-- **@param:** regione di interesse opzionale: vedi {@link scanImageData}.
-- **@returns:** il {@link ScanResult} o `null` quando non viene trovato alcun codice.
-
-## `src/types`
-
-### ImageLike
-
-**Tipo:** interfaccia
-
-```typescript
-export interface ImageLike
-```
-
-La forma minima di un `ImageData` di cui questo pacchetto ha bisogno: un RGBA grezzo, con riga principale
-buffer di pixel con le sue dimensioni. Il DOM `ImageData` lo soddisfa, così come
-qualsiasi oggetto `{ width, height, data }` costruito a mano (utile per test/SSR).
-
-### Roi
-
-**Tipo:** interfaccia
-
-```typescript
-export interface Roi
-```
-
-Una regione di interesse rettangolare, in pixel di immagine, a cui limitare una scansione (ad es.
-un reticolo che l'interfaccia utente della telecamera live disegna sull'inquadratura). Il raccolto avviene in wasm
-_prima_ della binarizzazione, quindi il disordine circostante non raggiunge mai i localizzatori. A
-la regione sovrastante un bordo è bloccata; ne trova uno completamente fuori cornice
-niente.
-
-### ScanFormat
-
-**Genere:** tipo
-
-```typescript
-export type ScanFormat = 'qr' | 'datamatrix' | 'barcode' | 'aztec' | 'pdf417' | 'databar' | 'maxicode';
-```
-
-Le famiglie di codici che lo scanner può individuare e decodificare.
-
-### Risultato scansione
-
-**Tipo:** interfaccia
-
-```typescript
-export interface ScanResult
-```
-
-Il risultato di un _rilevamento_ riuscito.
+| ---------- | ------------------------------- | ----------- |
+| proprietà | Sola lettura<CodeScannerProperties> |             |

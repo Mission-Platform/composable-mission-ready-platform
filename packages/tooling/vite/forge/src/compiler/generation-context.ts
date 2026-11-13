@@ -1,10 +1,5 @@
 import path from 'node:path';
 
-import { createForgeArtifactWriter, type ForgeArtifactWriter } from './artifact-writer.js';
-import { createForgeCompilerService, type ForgeCompilerService, type ForgeProjectSnapshot } from './service.js';
-
-import type { ForgeFileGraph, ForgeFileGraphOptions } from './graph.js';
-import type { OptimizeOptions } from './optimize.js';
 import type {
   CompilerDiagnostic,
   FrameworkOutputPlugin,
@@ -12,6 +7,12 @@ import type {
   TargetComponentHost,
 } from '@mission-platform/forge-plugin-api';
 import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
+
+import { createForgeArtifactWriter, type ForgeArtifactWriter } from './artifact-writer.js';
+import { createForgeCompilerService, type ForgeCompilerService, type ForgeProjectSnapshot } from './service.js';
+
+import type { ForgeFileGraph, ForgeFileGraphOptions } from './graph.js';
+import type { OptimizeOptions } from './optimize.js';
 
 const TEST_FIXTURE_PLACEHOLDER = 'export const fixture = true;';
 

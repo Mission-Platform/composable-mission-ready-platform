@@ -5,6 +5,6 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > packages/compiler/plugins/forge-router-redwood/docs/index.md: [packages/compiler/plugins/forge-router-redwood/docs/index.md](../../index.md)
 > Taal: Nederlands (nl)
 
-Forge router target voor RedwoodSDK
+Forge routerdoel voor RedwoodSDK
 
-See `llms.txt` voor de public API en usage examples.
+Zie `llms.txt` voor de openbare API en gebruiksvoorbeelden.

@@ -10,9 +10,10 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { createFlintCompilerService } from "@mission-platform/flint";
 import { build } from "vite";
 import { afterEach, describe, expect, it } from "vitest";
+
+import { createFlintCompilerService } from "@mission-platform/flint";
 
 import { FlintViteError, createFlintGraphCache, flintPlugin } from ".";
 

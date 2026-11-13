@@ -58,7 +58,7 @@ Métadonnées stables consommées par les plugins du compilateur de routeur Forg
 **Genre :** composant
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor;
+export function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 Marqueur de lien neutre. Les cibles natives remplacent cette fonction lors de la compilation.
@@ -154,7 +154,7 @@ Une implémentation partielle utile pour cibler les adaptateurs et les harnais S
 **Genre :** composant
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
+export function MpRouterView(properties: MpRouterViewProps =
 ```
 
 Marqueur de sortie/vue neutre. Les cibles natives remplacent cette fonction lors de la compilation.
@@ -244,7 +244,11 @@ Lisez l’objet de capacité neutre fourni par l’application.
 **Genre :** constante
 
 ```typescript
-export const applicationCompatibilityFixtures;
+export const applicationCompatibilityFixtures: {
+  readonly website: ForgeCompatibilityFixture;
+  readonly myCareNotes: ForgeCompatibilityFixture;
+  readonly guardsAndLazy: ForgeCompatibilityFixture;
+};
 ```
 
 Aucune description fournie.

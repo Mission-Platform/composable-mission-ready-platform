@@ -19,13 +19,13 @@
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-没有提供描述。
+Vite 插件，用于管理和解析应用程序 i18n 语言环境资源。
 
 #### 参数
 
-| 名称 | 类型              | 描述              |
-| ---- | ----------------- | ----------------- |
-| 选项 | I18nPluginOptions | I18nPluginOptions |     |
+|名称 |类型 |描述 |
+| ------- | ----------------- | ----------- |
+|选项 | I18nPluginOptions | I18nPluginOptions |             |
 
 ### i18n插件
 
@@ -35,13 +35,13 @@ function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
-没有提供描述。
+Vite 插件，用于管理和解析应用程序 i18n 语言环境资源。
 
 #### 参数
 
-| 名称 | 类型              | 描述              |
-| ---- | ----------------- | ----------------- |
-| 选项 | I18nPluginOptions | I18nPluginOptions |     |
+|名称 |类型 |描述 |
+| ------- | ----------------- | ----------- |
+|选项 | I18nPluginOptions | I18nPluginOptions |             |
 
 ### I18n插件选项
 
@@ -71,9 +71,9 @@ function readSupportedLocales(
 
 #### 参数
 
-| 名称 | 类型                        | 描述 |
-| ---- | --------------------------- | ---- |
-| 选项 | 阅读SupportedLocalesOptions |      |
+|名称 |类型 |描述 |
+| ------- | --------------------------- | ----------- |
+|选项 |阅读SupportedLocalesOptions |             |
 
 ### 读取SupportedLocalesOptions
 

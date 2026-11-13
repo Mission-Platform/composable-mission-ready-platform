@@ -13,12 +13,12 @@
 pnpm add --save-dev @mission-platform/prettier-config
 ```
 
-قم بتصدير التكوين المشترك من مساحة العمل `prettier.config.js`.
-استخدم التجاوزات المحلية بشكل مقتصد حتى يتم تخفيض السعر، TypeScript, Vue، والتكوين
+قم بتصدير التكوين المشترك من `prettier.config.js` لمساحة العمل.
+استخدم التجاوزات المحلية بشكل مقتصد، مثل Markdown وTypeScript وVue والتكوين
 تظل الملفات متسقة عبر monorepo.
 
 ## يساهم
 
-يجري `pnpm --filter @mission-platform/prettier-config format` بعد تغيير
+قم بتشغيل `pnpm --filter @mission-platform/prettier-config format` بعد تغيير ملف
 التكوين. يجب أن تنطبق التغييرات باستمرار على كل مساحة عمل تستخدمها
 الحزمة.

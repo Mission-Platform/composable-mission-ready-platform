@@ -14,17 +14,17 @@ adapters bouwen.
 
 Forge-compilatie omvat verschillende pakketten, elk met een opzettelijk beperkte verantwoordelijkheid:
 
-| Laag                                                    | Eigenaar                                                                                                                                                   | Is geen eigenaar van                                                |
-| :------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------ |
-| `@mission-platform/vite-plugin-forge`                   | Parsing, normalisatie, neutrale analyse, semantische IR, gedeelde optimalisatie, cache/ontdekking, verzending en generieke Vite/tsdown-orkestratie         | React, Vue, Solid, Svelte, webcomponenten of CMS-bronzenders        |
-| `@mission-platform/forge-plugin-api`                    | `FrameworkOutputPlugin`, semantische doelcontracten, gegenereerde moduletypen, doelmetagegevens en Vite/tsdown-adaptertypen                                | Een raamwerkimplementatie of doelselectieregister                   |
-| Ingebouwde `@mission-platform/forge-plugin-*`-pakketten | Doelverlaging, doeloptimalisatie, brongeneratie, doeldiagnostiek, runtime-metagegevens en native build-adapters                                            | Neutrale parsering en cross-target-orkestratie                      |
-| `@mission-platform/forge-cms-plugin-api`                | `CmsOutputPlugin`, het neutrale inhoudsmodel, de driver voor ontdekken → analyseren → uitzenden → schrijven, eiland-cogeneratie en de CMS-bouwhulpmiddelen | Elk platformspecifiek schema, sjabloon of manifestvorm              |
-| `@mission-platform/forge-cms-*`-pakketten               | Elk één inhoudsplatform: de veldtoewijzing, het sjabloondialect, de manifestvorm en de platformdiagnostiek                                                 | Neutrale propclassificatie of cross-target-orkestratie              |
-| `tsdown.config.ts`-bestanden verpakken                  | Selecteren van de doelplug-ins en pakketspecifieke overschrijvingen                                                                                        | Opnieuw implementeren van compilerfasen of framework-switchtabellen |
+| Laag | Eigenaar | Is geen eigenaar van |
+| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------- |
+| `@mission-platform/vite-plugin-forge` | Parsing, normalisatie, neutrale analyse, semantische IR, gedeelde optimalisatie, cache/ontdekking, verzending en generieke Vite/tsdown-orkestratie | React, Vue, Solid, Svelte, webcomponenten of CMS-bronzenders |
+| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin`, semantische doelcontracten, gegenereerde moduletypen, doelmetagegevens en Vite/tsdown-adaptertypen | Een raamwerkimplementatie of doelselectieregister |
+| Ingebouwde `@mission-platform/forge-plugin-*`-pakketten | Doelverlaging, doeloptimalisatie, brongeneratie, doeldiagnostiek, runtime-metagegevens en native build-adapters | Neutrale parsering en cross-target-orkestratie |
+| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin`, het neutrale inhoudsmodel, de driver voor ontdekken → analyseren → uitzenden → schrijven, eiland-cogeneratie en de CMS-bouwhulpmiddelen | Elk platformspecifiek schema, sjabloon of manifestvorm |
+| `@mission-platform/forge-cms-*`-pakketten | Elk één inhoudsplatform: de veldtoewijzing, het sjabloondialect, de manifestvorm en de platformdiagnostiek | Neutrale propclassificatie of cross-target-orkestratie |
+| `tsdown.config.ts`-bestanden verpakken | Selecteren van de doelplugin-instanties en pakketspecifieke overschrijvingen | Opnieuw implementeren van compilerfasen of framework-switchtabellen |
 
 De afhankelijkheidsrichting is expliciet: een pakket importeert de gewenste doelplug-in en geeft die instantie door aan de neutrale
-driver, en ontvangt een doelspecifieke buildconfiguratie. De driver construeert nooit een doel uit een string of importeert
+driver, en ontvangt een doelspecifieke buildconfiguratie. De driver construeert nooit een doel uit een string of importeert deze
 elk raamwerkpakket voor het geval dat nodig is.
 
 ## De strikte pijplijn
@@ -57,27 +57,33 @@ Neutrale passen werken voordat er een raamwerk bij betrokken is. Ze kunnen compo
 compilerrichtlijnen, stabiele sleutels afleiden, neutrale dode takken snoeien en herbruikbare analyses in de cache opslaan. Het resultaat is een
 `SemanticModule`: een expliciete weergave van het component- of samenstelbare gedrag van de module en de neutrale feiten ervan.
 
-De semantische IR is het contract tussen de generieke compiler en een doelplug-in. De frontend behoudt ook het origineel
-TypeScript `SourceFile` geparseerd als een niet-opsombaar runtimedetail op de semantische module. Doelzenders kunnen consumeren
-die gedeelde geparseerde boom voor door de bron ondersteunde bladeren, maar ze mogen nooit meer `parseTsx` op de modulebron aanroepen. Dit
-houdt de cache serialiseerbaar en zorgt ervoor dat de bron slechts één keer wordt geparseerd.
+De semantische IR is het contract tussen de generieke compiler en een doelplug-in. De frontend ontleedt de neutrale bron
+Oxc gebruiken in generieke AST-structuren en brongebaseerde expressies/spans zonder TypeScript te produceren of te transformeren
+AST-knooppunten. Doelverlagers en -zenders gebruiken `SemanticModule`-records, diagnostische gegevens en bronbewerkingen zonder directe wijzigingen
+koppeling met parser AST-knooppunten, waardoor de cache serialiseerbaar blijft en tegelijkertijd wordt gegarandeerd dat de bron slechts één keer wordt geparseerd.
 
 ### Doelverlaging en optimalisatie
 
 De aanroeper levert een exemplaar `FrameworkOutputPlugin`. Het stuurprogramma roept zijn functie `lower` aan met de semantische module
-en een `TargetContext`, die `TargetIntentions` produceert. Verlagen brengt neutrale concepten in kaart met doelconcepten: bijvoorbeeld
-neutrale hooks en slots worden de status/levenscyclus en slotrepresentatie van het doelwit, terwijl neutrale elementen de
-het element- of componentenmodel van het doelwit.
+en een `TargetContext`, die `TargetIntentions` produceert met een vereist `lowered`-plan. Verlagen brengt neutrale concepten in kaart
+doelconcepten: neutrale hooks en slots worden bijvoorbeeld de status/levenscyclus en slotrepresentatie van het doel, terwijl
+neutrale elementen worden het element- of componentenmodel van het doelwit.
 
-De `optimize`-functie van de plug-in voert vervolgens doelspecifieke vereenvoudiging uit. Het ontvangt de gedeelde neutrale opties
-naast een uitbreidingspunt voor doelopties. Dit houdt raamwerkregels buiten de neutrale optimizer, terwijl a
-doel om de eigen gegenereerde representatie te optimaliseren vóór het genereren van de bron.
+De `optimize`-functie van de plug-in voert vervolgens doelspecifieke vereenvoudiging uit op het verlaagde plan. Het ontvangt het gedeelde
+neutrale opties naast een uitbreidingspunt voor doelopties. Dit houdt raamwerkregels buiten de neutrale optimizer
+terwijl een doel zijn eigen gegenereerde representatie kan optimaliseren voordat de bron wordt gegenereerd.
+
+De compiler vereist strikt dat het wordt verlaagd vóór het genereren: `service.ts` en de compilerpijplijn beweren dat
+`intentions.lowered` bestaat en dat de raamwerkdiscriminator overeenkomt met de doel-ID via
+`assertTargetIntentionsLowered`. Directe opwekking zonder verlaging wordt afgewezen; doelplug-ins niet langer stilletjes lager
+op aanvraag.
 
 ### Brongeneratie en native compilatie
 
-De functie `generate` van de plug-in retourneert een `GeneratedModule`. Het kan de primaire bron, hulpmodules en
-doeldiagnostiek. De gegenereerde broncode is opzettelijk een tussenproduct dat eigendom is van het doelpakket: React,
-Vue, Solid, Svelte en Web Components kunnen elk de bronvorm kiezen die hun eigen toolchain verwacht.
+De functie `generate` van de plug-in ontvangt de verlaagde en geoptimaliseerde `TargetIntentions` en retourneert een `GeneratedModule`.
+Het kan de primaire bron, hulpmodules en doeldiagnostiek omvatten. De gegenereerde bron is opzettelijk een
+tussenliggend artefact dat eigendom is van het doelpakket: React, Vue, Solid, Svelte en Web Components kunnen elk de
+bronvorm die hun eigen toolchain verwacht.
 
 De laatste fase is niet nog een Forge-zender. De `build.vite`- of `build.tsdown`-adapter van de plug-in levert de native
 framework-plug-ins en build-instellingen voor de gegenereerde boom. Native Vite/Rolldown-compilatie, genereren van declaraties,
@@ -95,12 +101,12 @@ module voor elk geselecteerd raamwerk, terwijl doelverlaging en optimalisatie on
 Vite- en tsdown-helpers gebruiken één in-process `ForgeCompilerService` voor de levensduur van een buildsessie. De dienst is eigenaar
 de bronmomentopname, grafiek, geparseerde frontend, neutrale optimalisatie, semantische IR en doelartefactcaches. Het is veilig om
 meerdere expliciete doelen na elkaar of gelijktijdig bedienen; doelartefacten worden gecodeerd op doel-ID en delen nooit een
-gegenereerde map. One-shot-helpers verwijderen de service na de build, terwijl wachthelpers deze behouden tot de Vite
+gegenereerde map. One-shot-helpers verwijderen de service na de bouw, terwijl wachthelpers deze behouden tot de Vite
 server sluit.
 
 Een effectieve cachesleutel omvat de bronvingerafdruk, het moduletype, de compiler- en routeropties, source-root/config
 vingerafdrukken, doel-ID en plug-invingerafdruk, en relevante voorwaarden. Een gewijzigd bestand maakt de omgekeerde grafiek ongeldig
-afhankelijke items, inclusief transitieve componenten en hook-invoeren, in plaats van niet-gerelateerde doelen op te ruimen. `tsconfig.json`
+afhankelijke items, inclusief transitieve componenten en hook-ingangen, in plaats van niet-gerelateerde doelen te wissen. `tsconfig.json`
 `baseUrl` en `paths` zijn opgenomen in de grafiekvoorbereiding, zodat aliassen consistent worden opgelost in Vite en tsdown-builds.
 Bel `invalidate(changedFiles)` vanuit aangepaste watch-integraties en bel `dispose()` wanneer een service niet langer nodig is.
 
@@ -119,11 +125,16 @@ framework-register en is niet vereist voor de huidige Vite/tsdown-workflow.
 
 ## Expliciet doeleigendom
 
-De centrale contracten staan ​​in `packages/compiler/plugins/forge-plugin-api/src/framework.ts`:
+De centrale contracten staan in `packages/compiler/plugins/forge-plugin-api/src/framework.ts`:
 
-- `FrameworkOutputPlugin` identificeert een doelwit en is eigenaar van `lower`, `optimize`, `generate` en `build`.
+- `FrameworkOutputPlugin` identificeert een doelwit via `id: FrameworkId` en is eigenaar van `lower`, `optimize`, `generate` en `build`.
+- `FrameworkId` (`JsxFramework | (string & {})`) biedt een open raamwerkidentificatiealias voor doelplug-ins, waardoor
+  elk aangepast doel om een unieke tekenreeks-ID te definiëren terwijl de automatische aanvulling van IDE voor bekende ingebouwde doelen behouden blijft.
+- `JsxFramework` vertegenwoordigt de gesloten unie van ingebouwde raamwerken (`react`, `vue`, `solid`, `svelte`, `web-components`),
+  gebruikt waar ingebouwde gemakken en richtlijnen (`use react`, `use vue`, etc.) expliciet zijn bedoeld.
 - `TargetContext` bevat een generieke bouwcontext, zoals modulesoort, componentnaam en ontdekte componentmappen.
-- `TargetIntentions` verpakt de semantische module na het verlagen van het doel, terwijl de diagnostiek behouden blijft.
+- `TargetLoweredModule` vertegenwoordigt het verlaagde plan van het doeleigendom, gediscrimineerd op `framework: FrameworkId`.
+- `TargetIntentions<TLowered>` verpakt de semantische module met een vereist `lowered: TLowered`-plan, waarbij de diagnostische gegevens behouden blijven.
 - `GeneratedModule` beschrijft de gegenereerde bron, de uitvoertaal, hulpmodules en diagnostiek.
 - `ForgeBuildAdapters` biedt onafhankelijk getypeerde Vite- en tsdown-adapters.
 - `FrameworkSourceMetadata`, externe runtime-instellingen en metagegevens van de weergavenaam zorgen ervoor dat generieke orkestratie uitvoerdetails kan afleiden
@@ -134,24 +145,29 @@ Ingebouwde doelen worden geconstrueerd door hun eigen pakketten, bijvoorbeeld `f
 doelstellingen die het publiceert:
 
 ```ts
-import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { tsdownForgeComponentPlugins } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
 import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
-export default defineTsdownForgeComponents({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  frameworks: [
-    forgeVueFramework(),
-    forgeReactFramework(),
-    forgeSvelteFramework(),
-    forgeSolidFramework(),
-    forgeWebComponentsFramework(),
-  ],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: 'MissionPlatformComponents',
+  entry: 'src/index.ts',
+  plugins: tsdownForgeComponentPlugins({
+    rootDir: import.meta.dirname,
+    frameworks: [
+      forgeVueFramework(),
+      forgeReactFramework(),
+      forgeSvelteFramework(),
+      forgeSolidFramework(),
+      forgeWebComponentsFramework(),
+    ],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+    name: 'MissionPlatformComponents',
+  }),
 });
 ```
 
@@ -193,13 +209,14 @@ flowchart LR
   Driver --> Native["Target-owned native adapters"]
 ```
 
-De pijlen van een consument naar zowel het driver- als het doelpakket zijn opzettelijk. De consument is eigenaar van de doelgroepselectie;
+De pijlen van een consument naar zowel het driver- als het doelpakket zijn opzettelijk. De consument is eigenaar van de doelselectie;
 de bestuurder is eigenaar van generieke orkestratie; en elk doelpakket is eigenaar van de raamwerkimplementatie.
 
 ## Componenten bouwen
 
 Componentpakketten schrijven neutrale modules tegen `@mission-platform/forge-jsx`, meestal via een neutraal componentenvat.
-`defineTsdownForgeComponents` maakt één doelbuild voor elke meegeleverde plug-in. Voor elk doel geldt het volgende:
+`tsdownForgeComponentPlugins` retourneert native tsdown-plug-ins voor elk opgegeven doel. Consumenten voegen deze plug-ins toe aan één
+`defineTsdownLibrary` oproep; generatie blijft lui totdat tsdown zijn levenscyclushaken aanroept. Voor elk doel geldt het volgende:
 
 1. parseert, normaliseert en analyseert de neutrale componentmodules;
 2. voert neutrale passen uit en creëert semantische modules;
@@ -216,8 +233,9 @@ zorgen in de generieke compiler.
 ## Hook- en composable builds
 
 Hooks zijn neutrale composables in plaats van UI-componenten, maar gebruiken dezelfde expliciete doeleigendomsgrens. Een haak
-De consument geeft één `FrameworkOutputPlugin` door aan `defineTsdownForgeHooks`. De generieke bestuurder analyseert de neutrale invoer,
-behoudt waar mogelijk raamwerk-agnostische modules en verzendt doelafhankelijke modules via de strikte plug-in
+consument geeft één `FrameworkOutputPlugin` door aan `tsdownForgeHookPlugins` en voegt de geretourneerde plug-in toe aan
+`defineTsdownLibrary`. De generieke driver parseert de neutrale invoer,
+behoudt waar mogelijk raamwerk-agnostische modules en verzendt doelafhankelijke modules via de strict
 pad verlagen/optimaliseren/genereren.
 
 De geselecteerde plug-in bestuurt de hook-uitvoertaal en de native adapter. Hierdoor kan bijvoorbeeld een React hook worden gebouwd
@@ -227,51 +245,56 @@ alle raamwerkconsumenten hebben dezelfde haaktypes.
 
 ## CMS-projectie
 
-Het projecteren van componenten op een _contentplatform_ is een as loodrecht op het verlagen van het raamwerk, niet een raamwerk
+Het projecteren van componenten op een contentplatform is een as loodrecht op het verlagen van het raamwerk, en niet een raamwerk
 implementatie verborgen in de hoofddriver. Een component wordt een Storyblok-blok, een Astro-eiland, een Ghost-gedeelte, een
 Jekyll bevat, of een Webflow-codecomponent - en elk daarvan kan worden gecombineerd met **elke** framework-uitvoerplug-in.
 `storyblok × vue`, `astro × solid` en `ghost × web-components` zijn daarom configuratie in plaats van nieuwe code.
 
-`@mission-platform/forge-cms-plugin-api` is eigenaar van die naad. Het draagt ​​drie dingen bij:
+`@mission-platform/forge-cms-plugin-api` is eigenaar van die naad. Het draagt drie dingen bij:
 
 1. **Een neutraal inhoudsmodel.** `analyzeContentComponent` wijst de rekwisieteninterface van een component toe aan bestelde
    `ContentField`s met een soort (`text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`), een JSDoc
-   beschrijving, een vereiste vlag, een letterlijke standaard, slotmetagegevens en een `@cmsSetting`-vlag. Callback-props worden verwijderd
+   beschrijving, een vereiste vlag, een letterlijke standaard, slot-metagegevens en een `@cmsSetting`-vlag. Callback-props worden verwijderd
    en een unie die letterlijke tekenreeksen mengt met `string`/`number` degradeert naar `text` - één keer besloten, dus elk platform
    is het daarmee eens. Wanneer de semantische IR wordt geleverd, rapporteert `ContentComponent.interactive` of de component de status draagt,
    refs, effecten of gebeurtenissen.
-2. **Een doelcontract.** `CmsOutputPlugin` _stelt_ een `FrameworkOutputPlugin` samen in plaats van er één te zijn, en verklaart de
+2. **Een doelcontract.** `CmsOutputPlugin` _componeert_ een `FrameworkOutputPlugin` in plaats van er één te zijn, en verklaart de
    zenders `emitSchema`, `emitTemplate`, `emitManifest` en `emitEntry`. `defineForgeCmsPlugin` valideert het op
    configuratietijd, inclusief de `supportedFrameworks`-beperking van een doel.
 3. **Een generieke driver en bouwhulpjes.** `generateCmsArtifacts` ontdekt de neutrale loop, verkrijgt de
    IR via `analyzeForgeModule`, analyseert het inhoudsmodel, roept de zenders van het doel op en schrijft elke geretourneerde
-   `CmsArtifact`. `defineTsdownForgeCms(All)` voert het uit in een cache per doel en verzendt het
+   `CmsArtifact`. `tsdownForgeCmsPlugins` injecteert het in een tsdown-configuratie van de beller en verzendt het
    `dist/cms/<cms>/<framework>/**`, waarbij `asset: true`-artefacten worden gespiegeld in `dist/cms/<cms>/`.
 
 Het stuurprogramma koppelt nooit een string-ID aan een doel; consumenten construeren en geven instances door, precies zoals zij dat doen
 framework-plug-ins:
 
 ```ts
-import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { tsdownForgeCmsPlugins } from '@mission-platform/forge-cms-plugin-api';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
-export default defineTsdownForgeCmsAll({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  targets: [
-    forgeStoryblokCms({
-      packageName: '@mission-platform/components',
-      plugin: forgeReactFramework(),
-      storyblokRuntime: '@storyblok/react',
-    }),
-    forgeStoryblokCms({
-      packageName: '@mission-platform/components',
-      plugin: forgeVueFramework(),
-      storyblokRuntime: '@storyblok/vue',
-    }),
-  ],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  entry: 'src/index.ts',
+  plugins: tsdownForgeCmsPlugins({
+    rootDir: import.meta.dirname,
+    targets: [
+      forgeStoryblokCms({
+        packageName: '@mission-platform/components',
+        plugin: forgeReactFramework(),
+        storyblokRuntime: '@storyblok/react',
+      }),
+      forgeStoryblokCms({
+        packageName: '@mission-platform/components',
+        plugin: forgeVueFramework(),
+        storyblokRuntime: '@storyblok/vue',
+      }),
+    ],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  }),
 });
 ```
 
@@ -290,13 +313,13 @@ flowchart TD
 
 ### De doelen
 
-| Pakket                                  | Fabriek             | Zendt uit                                                                                          |
-| :-------------------------------------- | :------------------ | :------------------------------------------------------------------------------------------------- |
+| Pakket | Fabriek | Zendt uit |
+| :-------------------------------------- | :------------------ | :------------------------------------------------------------------------------------------- |
 | `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | een componentobject per component, een frameworkblok-wrapper, `components.json`, een getypte entry |
-| `@mission-platform/forge-cms-astro`     | `forgeAstroCms`     | statisch `.astro` of een `client:load` eiland, plus een zod `content.config.ts`                    |
-| `@mission-platform/forge-cms-ghost`     | `forgeGhostCms`     | Stuurgedeelten plus een `config.custom`-themafragment                                              |
-| `@mission-platform/forge-cms-jekyll`    | `forgeJekyllCms`    | Vloeistof bevat plus `_data/forge-components.yml` en een `_config.yml`-fragment                    |
-| `@mission-platform/forge-cms-webflow`   | `forgeWebflowCms`   | `declareComponent`-codecomponentdeclaraties plus een `webflow.json`-bibliotheekfragment            |
+| `@mission-platform/forge-cms-astro` | `forgeAstroCms` | statisch `.astro` of een `client:load` eiland, plus een zod `content.config.ts` |
+| `@mission-platform/forge-cms-ghost` | `forgeGhostCms` | Stuurgedeelten plus een `config.custom`-themafragment |
+| `@mission-platform/forge-cms-jekyll` | `forgeJekyllCms` | Vloeistof bevat plus `_data/forge-components.yml` en een `_config.yml`-fragment |
+| `@mission-platform/forge-cms-webflow` | `forgeWebflowCms` | `declareComponent`-codecomponentdeclaraties plus een `webflow.json`-bibliotheekfragment |
 
 Elke niet-ondersteunde mapping produceert een `CompilerDiagnostic` met een fase, een code en een bruikbare reden in plaats van een
 stille weglating — Ghost waarschuwt voor numerieke velden en bij het overschrijden van de limiet van ~20, Webflow waarschuwt wanneer een getal
@@ -307,7 +330,7 @@ de bouw.
 
 Een doel dat `island: 'framework'` (Astro, Webflow) declareert, heeft een echte runtime-component nodig om te hydrateren. In plaats van
 het importeren van het reeds gebouwde `./vue`- of `./react`-subpad van het hostpakket - waardoor de CMS-uitvoer afhankelijk zou zijn van een ander
-build eerst uitgevoerd: de driver voert de **gebonden framework-plug-in** over hetzelfde neutrale vat uit naar een broer of zus
+build eerst uitgevoerd: de driver voert de **gebonden framework-plug-in** uit over hetzelfde neutrale vat in een broer of zus
 `island/` map, en de verzonden sjabloon importeert een bestand waarvan het eigenaar is. Het eiland wordt samengesteld door de eigen tsdown van die plug-in
 stage-plug-ins in dezelfde build.
 
@@ -329,7 +352,7 @@ Traceer een build eerst op verantwoordelijkheid in plaats van op gegenereerd bes
    helpers, en vervolgens het specifieke `packages/compiler/plugins/forge-cms-*`-doel voor de zenders en platformtoewijzing.
 5. **Pakketselectie:** inspecteer de `tsdown.config.ts` van het verbruikende pakket en directe `forge-plugin-*`-afhankelijkheden.
 
-Voor een herhaalde of bekeken build, inspecteer eerst de `ForgeCompilationReport`: een laag trefferpercentage wijst naar bron/configuratie of doel
+Voor een herhaalde of watch-build inspecteer je eerst de `ForgeCompilationReport`: een laag hitpercentage wijst naar source/config of target
 vingerafdrukken, terwijl een groot getroffen bestand verwijst naar grafiekranden of aliasconfiguratie. Controleer het doelmanifest
 voordat de oorspronkelijke bundeluitvoer wordt geïnspecteerd; het onderscheidt een ontbrekend gegenereerd artefact van een native compilatiefout.
 
@@ -339,7 +362,7 @@ maar het bundelen mislukt, inspecteer dan de Vite/tsdown-adapter of de consument
 
 ## Forge uitbreiden met een doelwit
 
-Om een ​​kaderdoel toe te voegen zonder centraal eigenaarschap opnieuw in te voeren:
+Om een raamwerkdoel toe te voegen zonder centraal eigenaarschap opnieuw in te voeren:
 
 1. maak een `forge-plugin-*`-pakket met een door de fabriek geretourneerde `FrameworkOutputPlugin`;
 2. verlaging implementeren van `SemanticModule` naar doelintenties;
@@ -349,7 +372,7 @@ Om een ​​kaderdoel toe te voegen zonder centraal eigenaarschap opnieuw in te
 6. voeg de plug-in toe als een directe afhankelijkheid in elk pakket dat het doel publiceert;
 7. nieuwe plugin-instances doorgeven in de build-configuratie van dat pakket.
 
-Voeg geen raamwerk-ID toe aan een register in `vite-plugin-forge`, importeer geen raamwerkpakket van het neutrale stuurprogramma en voeg geen
+Voeg geen raamwerk-ID toe aan een register in `vite-plugin-forge`, importeer geen raamwerkpakket van het neutrale stuurprogramma, of voeg geen
 een doelspecifieke aftakking naar generieke parsering en uitvoerorkestratie. Het contract is opzettelijk open, dus doelwit
 pakketten kunnen hun bronrepresentatie evolueren terwijl de neutrale pijplijn stabiel blijft.
 
@@ -370,10 +393,38 @@ Het toevoegen van een inhoudsplatform volgt dezelfde additieve vorm, één laag 
 6. voeg een specificatie toe over de gedeelde armaturen die zijn geëxporteerd vanuit `@mission-platform/forge-cms-plugin-api/fixtures`, dus het nieuwe
    doel wordt uitgeoefend tegen precies dezelfde input als alle andere;
 7. voeg het pakket toe als een directe afhankelijkheid van elke consument die het doel publiceert en geef er een nieuw exemplaar aan door
-   `defineTsdownForgeCms`.
+   `tsdownForgeCmsPlugins`.
 
 Voeg geen prop-classificatielogica toe aan het doel: een oplossing voor union-, JSDoc-, standaard- of slotafhandeling hoort thuis in de
 gedeeld contentmodel, zodat elk platform er meteen van profiteert.
 
-Zie voor het overzicht van het buildsysteem en de platformbrede afhankelijkheidsrichting [Bouw systeem](../../../../../../docs/locales/nl/build-system.md) en
-[Missieplatformarchitectuur](../../../../../../docs/locales/nl/architecture.md).
+## Begeleiding bij migratie
+
+### Migratie van verouderde TypeScript AST-exports
+
+De verouderde TypeScript AST-compatibiliteitslaag in `packages/tooling/vite/forge/src/compiler/ast.ts` is verwijderd.
+Oxc is nu het enige compiler-AST-pad over het Forge-stuurprogramma:
+
+- Er worden niet langer oudere AST-fabrieken, bezoekers, transformatoren en `@ts-nocheck`-compatibiliteitsshims meegeleverd.
+- Als uw code helpers van `compiler/ast.ts` verbruikt, migreer dan naar de gerichte zustermodules:
+  - `compiler/components.js`: Componentgrens en declaratiefeiten.
+  - `compiler/constants.js`: Neutrale module- en runtime-markeringsconstanten.
+  - `compiler/directives.js`: Richtlijninspectie en kaderresolutie.
+  - `compiler/facts.js`: AST-feiten, -bereiken en inspectiehulpprogramma's.
+  - `compiler/imports.js`: Invoeraangifte en specificatie-inspectie.
+
+### Migratie voor directe doelgroepbellers
+
+Alle ingebouwde plug-ins (`forge-vue`, `forge-web-components`, `forge-react`, `forge-solid`, `forge-svelte`) zijn verwijderd
+terugvalverlaging door directe generatie:
+
+- Het aanroepen van `plugin.generate(intentions)` met niet-verlaagde intenties (of intenties zonder `lowered`) levert nu een
+  `TypeError`.
+- Directe bellers en testsuites moeten `plugin.lower(module, context)` en `plugin.optimize(loweredIntentions, options)` aanroepen
+  voordat u `generate()` aanroept, of compilatie uitvoert via de standaard compilerservice:
+  `createForgeCompilerService().compile(request, plugin)`.
+- Auteurs van aangepaste plug-ins moeten ervoor zorgen dat `lower()` een niet-lege `lowered`-plan instelt met een overeenkomende `framework`
+  discriminator op de geretourneerde `TargetIntentions`.
+
+Voor het overzicht van het buildsysteem en de platformbrede afhankelijkheidsrichting, zie [Build System](../../../../../../docs/build-system.md) en
+[Missieplatformarchitectuur](../../../../../../docs/architecture.md).

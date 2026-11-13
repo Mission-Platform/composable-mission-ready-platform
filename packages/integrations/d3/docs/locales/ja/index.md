@@ -36,7 +36,7 @@ DOM/SVG 要素 ref にアタッチし、D3 選択 (`D3Selection<E>`) を渡す `
 
 #### `innerDimensions(outerWidth: number, outerHeight: number, marginInput?: MarginInput): InnerDimensions`
 
-SVG ビューボックスの計算のために、`innerWidth`、`innerHeight`、および解決された `margin` を計算します。
+SVG ビューボックスの計算用に、`innerWidth`、`innerHeight`、および解決された `margin` を計算します。
 
 ```ts
 interface InnerDimensions {

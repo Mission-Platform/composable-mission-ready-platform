@@ -10,15 +10,15 @@ ecosistema.
 
 ## Panoramica
 
-Il pacchetto `@mission-platform/map` fornisce un wrapper reattivo e componibile [MapLibre GL](https://maplibre.org/),
-consentendo agli sviluppatori di creare mappe interattive con l'API di composizione di Vue 3. Astrae la complessità di
+Il pacchetto `@mission-platform/map` fornisce un wrapper reattivo e componibile attorno a [MapLibre GL](https://maplibre.org/),
+consentendo agli sviluppatori di creare mappe interattive con l'API di composizione di Vue 3. Astrae via la complessità di
 gestire le istanze di MapLibre mantenendo l'accesso completo alle potenti funzionalità di MapLibre.
 
 ## Caratteristiche principali
 
 - **Reattività completa**: lo stato della mappa e gli eventi vengono automaticamente sincronizzati con il sistema di reattività di Vue
 - **Supporto TypeScript**: definizioni di tipo complete per tutte le API MapLibre GL
-- **API componibili**: utilizza i componenti componibili Vue 3 per gestire lo stato e le interazioni della mappa
+- **API componibili**: utilizza i componenti componibili Vue 3 per gestire lo stato della mappa e le interazioni
 - **Core indipendente dal framework**: costruito sull'architettura indipendente dal framework di Mission Platform
 - **Prestazioni ottimizzate**: aggiornamenti efficienti e re-render minimi
 
@@ -55,13 +55,13 @@ Il componente principale per il rendering di mappe interattive.
 
 ### `useMap` Componibile
 
-Fornisce l'accesso all'istanza MapLibre e allo stato della mappa.
+Provides access to the MapLibre instance and map state.
 
 **Resi:**
 
 - `map`: l'istanza MapLibre GL
-- `isReady`: booleano che indica se la mappa è completamente inizializzata
-- `loadingProgress`: numero compreso tra 0 e 1 che indica l'avanzamento del caricamento
+- `isReady`: Boolean indicating if the map is fully initialized
+- `loadingProgress`: Number between 0 and 1 indicating load progress
 
 **Esempio:**
 

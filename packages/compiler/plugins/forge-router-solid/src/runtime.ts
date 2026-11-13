@@ -1,5 +1,4 @@
 import { parseLocation, parseQuery, stringifyLocation } from '@mission-platform/router';
-
 import type {
   MpLinkOptions,
   MpNavigationOptions,

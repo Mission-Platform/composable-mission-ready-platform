@@ -1,8 +1,7 @@
+import type { MpElement } from '@mission-platform/forge-jsx';
 import { ForgeIconFlag, ForgeIconLanguage, type IconCountryCode } from '@mission-platform/icons';
 
 import { ForgeSelect } from '../forge-select';
-
-import type { MpElement } from '@mission-platform/forge-jsx';
 
 export interface ForgeLanguageSwitcherOption {
   code: string;

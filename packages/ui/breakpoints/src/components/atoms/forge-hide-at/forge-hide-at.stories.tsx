@@ -1,5 +1,4 @@
 import { ForgeHideAt } from '@mission-platform/breakpoints';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**

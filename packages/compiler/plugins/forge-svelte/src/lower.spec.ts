@@ -1,5 +1,10 @@
-import { sourceBacked } from "@mission-platform/forge-plugin-api";
 import { describe, expect, it } from "vitest";
+
+import { sourceBacked } from "@mission-platform/forge-plugin-api";
+import type {
+  SemanticModule,
+  TargetContext,
+} from "@mission-platform/forge-plugin-api";
 
 import { emitSvelteModule } from "./emitters/component.js";
 import {
@@ -21,10 +26,6 @@ import {
 import { isSvelteLowered, lowerSvelteModule } from "./lower.js";
 
 import type { SvelteLoweredModule } from "./lower.js";
-import type {
-  SemanticModule,
-  TargetContext,
-} from "@mission-platform/forge-plugin-api";
 
 const CONTEXT: TargetContext = {
   framework: "svelte",

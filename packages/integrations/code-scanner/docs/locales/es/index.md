@@ -6,22 +6,24 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > Idioma: Español (es)
 
 Un **escáner de código de imagen/cámara** libre de dependencias compilado a partir de un enlace estático
-Forge el gráfico de Web Script en WebAssembly. Localiza y decodifica códigos QR, Datos
-Matrix, Aztec, códigos de barras 1D, PDF417, GS1 DataBar y MaxiCode a partir de archivos de imagen
-o transmisiones de cámara en vivo. También está disponible un perfil de módulo fuente dinámico para
-implementaciones que necesitan módulos decodificadores que se puedan almacenar en caché de forma independiente.
+Gráfico de Flint para WebAssembly. El artefacto vinculado actualmente decodifica datos.
+Lectores Matrix, Aztec compacto, 1D/RSS, PDF417 y MaxiCode a partir de archivos de imagen o
+transmisiones de cámara en vivo. El gráfico QR emite de forma independiente pero permanece fuera del
+artefacto combinado mientras se investiga la limitación del emisor de Forge.
 
 ## Descripción general de la API
 
 ### Escáner central (`@mission-platform/code-scanner`)
 
 ```ts
-import { scanFile, scanImageData, scanImageDataAll } from '@mission-platform/code-scanner';
+import { scanFile, scanImageData, scanImageDataAll, type ScanOptions } from '@mission-platform/code-scanner';
 
 // Scan ImageData directly
-const result = scanImageData(imageData);
+const options: ScanOptions = { formats: ['DATA_MATRIX'], tryHarder: true };
+const result = scanImageData(imageData, options);
 
-// Scan all codes in frame
+// Scan the package's all-results entry point. The current linked reduced graph
+// returns at most its first validated result until multi-symbol detection lands.
 const allResults = scanImageDataAll(imageData);
 
 // Scan a File / Blob
@@ -44,7 +46,7 @@ de `@mission-platform/vite-config`) y `customConditions` (a través del
 </script>
 
 <template>
-  <ForgeCodeScanner @result="(res) => console.log(res.value)" />
+  <ForgeCodeScanner @result="(res) => console.log(res.text, res.format)" />
 </template>
 ```
 
@@ -54,6 +56,6 @@ de `@mission-platform/vite-config`) y `customConditions` (a través del
 import { ForgeCodeScanner } from '@mission-platform/code-scanner';
 
 export function CameraScanner() {
-  return <ForgeCodeScanner onResult={(result) => console.log(result.value)} />;
+  return <ForgeCodeScanner onResult={(result) => console.log(result.text, result.format)} />;
 }
 ```

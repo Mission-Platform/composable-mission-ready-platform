@@ -784,12 +784,22 @@ Renders an individual node card, header, categories, and port pins on 2D canvas.
 
 ## `src/renderer/color`
 
+### C2dNodeStroke
+
+**Kind:** interface
+
+```typescript
+export interface C2dNodeStroke
+```
+
+No description provided.
+
 ### computeC2dNodeStroke
 
 **Kind:** function
 
 ```typescript
-function computeC2dNodeStroke(isSelected: number, isActive: number, isTrapped: number, isDark: boolean);
+function computeC2dNodeStroke(isSelected: number, isActive: number, isTrapped: number, isDark: boolean): C2dNodeStroke;
 ```
 
 Computes 2D Canvas node stroke styling properties.
@@ -826,7 +836,7 @@ Computes 2D Canvas pin circle fill color string.
 **Kind:** function
 
 ```typescript
-function computeGlNodeBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean);
+function computeGlNodeBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean): GlNodeBorder;
 ```
 
 Computes WebGL node border RGB color channels.
@@ -845,7 +855,7 @@ Computes WebGL node border RGB color channels.
 **Kind:** function
 
 ```typescript
-function computeWebGpuEdgeColorAndWidth(isSelected: number, isActive: number, isDark: boolean);
+function computeWebGpuEdgeColorAndWidth(isSelected: number, isActive: number, isDark: boolean): WebGpuEdgeColorAndWidth;
 ```
 
 Computes WebGPU edge instance color channels and cable stroke width.
@@ -863,7 +873,12 @@ Computes WebGPU edge instance color channels and cable stroke width.
 **Kind:** function
 
 ```typescript
-function computeWebGpuNodeGlowAndBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean);
+function computeWebGpuNodeGlowAndBorder(
+  isSelected: number,
+  isActive: number,
+  isTrapped: number,
+  isDark: boolean,
+): WebGpuNodeGlowAndBorder;
 ```
 
 Computes WebGPU node instance fill and border styling tuples.
@@ -882,7 +897,7 @@ Computes WebGPU node instance fill and border styling tuples.
 **Kind:** function
 
 ```typescript
-function computeWebGpuPinColorAndWidth(isHovered: number, isActive: number, isDark: boolean);
+function computeWebGpuPinColorAndWidth(isHovered: number, isActive: number, isDark: boolean): WebGpuPinColorAndWidth;
 ```
 
 Computes WebGPU pin instance color and halo glow attributes.
@@ -946,6 +961,16 @@ Maps a port data type to an RGBA color tuple adapted to light or dark themes.
 | type   | string \| unknown |             |
 | isDark |                   |             |
 
+### GlNodeBorder
+
+**Kind:** interface
+
+```typescript
+export interface GlNodeBorder
+```
+
+No description provided.
+
 ### parseColorToRgba
 
 **Kind:** function
@@ -997,6 +1022,36 @@ Parses functional rgb() and rgba() color strings into normalized RGBA tuples.
 | Name   | Type   | Description |
 | ------ | ------ | ----------- |
 | rgbStr | string |             |
+
+### WebGpuEdgeColorAndWidth
+
+**Kind:** interface
+
+```typescript
+export interface WebGpuEdgeColorAndWidth
+```
+
+No description provided.
+
+### WebGpuNodeGlowAndBorder
+
+**Kind:** interface
+
+```typescript
+export interface WebGpuNodeGlowAndBorder
+```
+
+No description provided.
+
+### WebGpuPinColorAndWidth
+
+**Kind:** interface
+
+```typescript
+export interface WebGpuPinColorAndWidth
+```
+
+No description provided.
 
 ## `src/renderer/constants`
 

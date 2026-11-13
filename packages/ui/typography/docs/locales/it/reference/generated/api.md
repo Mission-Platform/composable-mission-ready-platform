@@ -35,7 +35,7 @@ e la modalità `underline` scelta (`'always'` per impostazione predefinita); `ta
 `rel="noopener noreferrer"` automaticamente. Possiede il suo
 styling attraverso il modulo CSS co-localizzato `forge-typography.module.scss`
 (portato su ogni framework dal compilatore a due fasi, quindi il componente
-spedisce il proprio CSS `@layer mp.typography`); i nomi delle classi con hash sono
+viene fornito il proprio CSS `@layer mp.typography`); i nomi delle classi con hash sono
 assemblato con l'helper {@link classNames} indipendente dal framework.
 
 Il popup troncato `@floating-ui` dell'SFC Vue originale viene ripristinato qui tramite
@@ -46,8 +46,8 @@ effettivamente trabocca), posizionato con **CSS Anchor Positioning** invece di
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<TypographyProperties> |             |
 
 ### TipografiaColore
@@ -114,6 +114,26 @@ export type TypographySize = SizeScale;
 ```
 
 Token di dimensione opzionale: scala canonica 2xs → 2xl (sostituisce la dimensione del carattere della variante quando impostata).
+
+### TipografiaStile
+
+**Genere:** tipo
+
+```typescript
+export type TypographyStyle = CSSStyleProperties &
+```
+
+Nessuna descrizione fornita.
+
+### TipografiaStyleProperties
+
+**Tipo:** interfaccia
+
+```typescript
+export interface TypographyStyleProperties
+```
+
+Valori CSS di proprietà del componente ereditati dai discendenti della tipografia e dal contenuto popup.
 
 ### TipografiaTarget
 

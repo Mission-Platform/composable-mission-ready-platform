@@ -1,8 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { checkFlint, parseFlint } from '@mission-platform/flint';
 import { afterEach, describe, expect, it } from 'vitest';
+
+import { checkFlint, parseFlint } from '@mission-platform/flint';
 
 import { assertFlintDiagnostic, assertFlintNoDiagnostics } from './diagnostics.js';
 import {

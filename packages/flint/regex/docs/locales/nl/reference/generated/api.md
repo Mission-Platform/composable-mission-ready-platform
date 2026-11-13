@@ -21,6 +21,16 @@ export interface CompiledRegex
 
 Deterministische representatie ingebed door een Forge-backend.
 
+### FLINT_REGEX_BYTECODE_VERSION
+
+**Soort:** constant
+
+```typescript
+export const FLINT_REGEX_BYTECODE_VERSION;
+```
+
+Stabiele versie van het gedeelde Flint regex-bytecodecontract.
+
 ### FORGE_REGEX_BYTECODE_VERSION
 
 **Soort:** constant
@@ -29,7 +39,7 @@ Deterministische representatie ingebed door een Forge-backend.
 export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
-Stabiele versie van het gedeelde Forge regex bytecode-contract.
+Geen beschrijving opgegeven.
 
 ### INSTR_WIDTH
 
@@ -59,7 +69,7 @@ Opcodes die worden gebruikt door de Forge-backend en gespiegeld door het referen
 export type Opcode = (typeof Op)[keyof typeof Op];
 ```
 
-Geen beschrijving opgegeven.
+Binaire instructie-opcode-ID voor uitvoering van regex-bytecode.
 
 ## `src/compiler`
 
@@ -75,9 +85,29 @@ Compileer de ondersteunde deterministische regex-subset in Forge-bytecode.
 
 #### Parameters
 
-| Naam    | Typ        | Beschrijving |
-| ------- | ---------- | ------------ |
-| patroon | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| patroon | tekenreeks |             |
+
+### MAX_REGEX_PATTERN_LENGTH
+
+**Soort:** constant
+
+```typescript
+export const MAX_REGEX_PATTERN_LENGTH;
+```
+
+Geen beschrijving opgegeven.
+
+### MAX_REGEX_REPEAT_BOUND
+
+**Soort:** constant
+
+```typescript
+export const MAX_REGEX_REPEAT_BOUND;
+```
+
+Geen beschrijving opgegeven.
 
 ### RegexSyntaxError
 
@@ -88,6 +118,46 @@ export class RegexSyntaxError extends Error
 ```
 
 Syntaxisfout van de compiler met deterministische bron-relatieve berichten.
+
+## `src/index`
+
+### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
+
+**Soort:** constant
+
+```typescript
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+```
+
+Geen beschrijving opgegeven.
+
+### flintStandardLibraryIdentity
+
+**Soort:** functie
+
+```typescript
+function flintStandardLibraryIdentity(
+  identity?: FlintStandardLibraryIdentity,
+): FlintStandardLibraryIdentity;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ---------------------------- | ----------- |
+| identiteit | FlintStandardLibraryIdentity |             |
+
+### FlintStandardLibraryIdentity
+
+**Soort:** interface
+
+```typescript
+export interface FlintStandardLibraryIdentity
+```
+
+Geen beschrijving opgegeven.
 
 ## `src/reference-vm`
 
@@ -103,10 +173,10 @@ Lees een opname-einde zonder de bytecode-slotindeling aan bellers bloot te stell
 
 #### Parameters
 
-| Naam  | Typ          | Beschrijving |
-| ----- | ------------ | ------------ |
-| vangt | Vangt \| nul |              |
-| groep | nummer       |              |
+| Naam | Typ | Beschrijving |
+| -------- | ---------------- | ----------- |
+| vangt | Vangt \| nul |             |
+| groep | nummer |             |
 
 ### Opnames
 
@@ -130,10 +200,10 @@ Lees een opnamestart zonder de lay-out van de bytecodeslot aan bellers bloot te 
 
 #### Parameters
 
-| Naam  | Typ          | Beschrijving |
-| ----- | ------------ | ------------ |
-| vangt | Vangt \| nul |              |
-| groep | nummer       |              |
+| Naam | Typ | Beschrijving |
+| -------- | ---------------- | ----------- |
+| vangt | Vangt \| nul |             |
+| groep | nummer |             |
 
 ### volledige Match
 
@@ -143,14 +213,64 @@ Lees een opnamestart zonder de lay-out van de bytecodeslot aan bellers bloot te 
 function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-Hele string-match, verankerd op positie nul.
+Match van hele reeks, verankerd op positie nul (maakt standaard gebruik van lineaire tijd PikeVM).
 
 #### Parameters
 
-| Naam    | Typ                | Beschrijving |
-| ------- | ------------------ | ------------ |
-| opnieuw | GecompileerdeRegex |              |
-| invoer  | tekenreeks         |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| opnieuw | GecompileerdeRegex |             |
+| invoer | tekenreeks |             |
+
+### fullMatchBacktracking
+
+**Soort:** functie
+
+```typescript
+function fullMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Backtracking van referentie-orakel voor hele reeksen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| opnieuw | GecompileerdeRegex |             |
+| invoer | tekenreeks |             |
+
+### volledigeMatchLinear
+
+**Soort:** functie
+
+```typescript
+function fullMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+Matching van hele reeksen met behulp van de lineaire PikeVM-engine.
+Garandeert O(M * N)-uitvoering en immuniteit tegen ReDoS-backtracking.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| opnieuw | GecompileerdeRegex |             |
+| invoer | tekenreeks |             |
+
+### PikeRunner
+
+**Soort:** klasse
+
+```typescript
+export class PikeRunner extends BaseRunner
+```
+
+Lineaire tijd niet-backtracking PikeVM-uitvoeringsengine.
+Garandeert O(M * N) tijdcomplexiteit waarbij M het aantal instructies is en N de invoerlengte is,
+volledig immuun voor ReDoS (Regular Expression Denial of Service).
 
 ### voorvoegselMatch
 
@@ -160,14 +280,62 @@ Hele string-match, verankerd op positie nul.
 function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-Voorvoegselmatch, verankerd op positie nul maar niet aan het einde.
+Voorvoegselovereenkomst, verankerd op positie nul maar niet aan het einde (maakt standaard gebruik van lineaire tijd PikeVM).
 
 #### Parameters
 
-| Naam    | Typ                | Beschrijving |
-| ------- | ------------------ | ------------ |
-| opnieuw | GecompileerdeRegex |              |
-| invoer  | tekenreeks         |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| opnieuw | GecompileerdeRegex |             |
+| invoer | tekenreeks |             |
+
+### voorvoegselMatchBacktracking
+
+**Soort:** functie
+
+```typescript
+function prefixMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+Backtracking-voorvoegsel komt overeen met referentie-orakel.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| opnieuw | GecompileerdeRegex |             |
+| invoer | tekenreeks |             |
+
+### voorvoegselMatchLinear
+
+**Soort:** functie
+
+```typescript
+function prefixMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+Voorvoegselmatch met behulp van de lineaire PikeVM-engine.
+Garandeert O(M * N)-uitvoering en immuniteit tegen ReDoS-backtracking.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| opnieuw | GecompileerdeRegex |             |
+| invoer | tekenreeks |             |
+
+### Loper
+
+**Soort:** klasse
+
+```typescript
+export class Runner extends BaseRunner
+```
+
+Backtracking referentie-uitvoeringsrunner voor bytecode-instructieverificatie.
 
 ### zoekopdracht
 
@@ -177,15 +345,60 @@ Voorvoegselmatch, verankerd op positie nul maar niet aan het einde.
 function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
-Meest linkse overeenkomst op of na `start`.
+Meest linkse overeenkomst op of na `start` (gebruikt standaard lineaire tijd PikeVM).
 
 #### Parameters
 
-| Naam    | Typ                | Beschrijving |
-| ------- | ------------------ | ------------ |
-| opnieuw | GecompileerdeRegex |              |
-| invoer  | tekenreeks         |              |
-| begin   |                    |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| opnieuw | GecompileerdeRegex |             |
+| invoer | tekenreeks |             |
+| begin |               |             |
+
+### zoekenBacktracking
+
+**Soort:** functie
+
+```typescript
+function searchBacktracking(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+Backtracking zoekreferentie orakel.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| opnieuw | GecompileerdeRegex |             |
+| invoer | tekenreeks |             |
+| begin |               |             |
+
+### zoekenLineair
+
+**Soort:** functie
+
+```typescript
+function searchLinear(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+Meest linkse match op of na `start` met behulp van de lineaire PikeVM-engine.
+Immuun voor catastrofaal teruggrijpen op niet-verankerde zoekpatronen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| opnieuw | GecompileerdeRegex |             |
+| invoer | tekenreeks |             |
+| begin |               |             |
 
 ### test
 
@@ -195,11 +408,46 @@ Meest linkse overeenkomst op of na `start`.
 function test(re: CompiledRegex, input: string): boolean;
 ```
 
-Booleaanse overeenkomst voor hele reeks.
+Booleaanse match voor hele tekenreeks (gebruikt standaard lineaire tijd PikeVM).
 
 #### Parameters
 
-| Naam    | Typ                | Beschrijving |
-| ------- | ------------------ | ------------ |
-| opnieuw | GecompileerdeRegex |              |
-| invoer  | tekenreeks         |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| opnieuw | GecompileerdeRegex |             |
+| invoer | tekenreeks |             |
+
+### testBacktracking
+
+**Soort:** functie
+
+```typescript
+function testBacktracking(re: CompiledRegex, input: string): boolean;
+```
+
+Backtracking van Booleaanse matchreferentie-orakel.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| opnieuw | GecompileerdeRegex |             |
+| invoer | tekenreeks |             |
+
+### testLineair
+
+**Soort:** functie
+
+```typescript
+function testLinear(re: CompiledRegex, input: string): boolean;
+```
+
+Booleaanse match van hele reeks met behulp van de lineaire PikeVM-engine.
+Immuun voor catastrofaal teruggrijpen op pathologische reguliere expressies.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------------- | ----------- |
+| opnieuw | GecompileerdeRegex |             |
+| invoer | tekenreeks |             |

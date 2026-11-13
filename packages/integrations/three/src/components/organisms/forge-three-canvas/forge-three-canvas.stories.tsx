@@ -1,6 +1,7 @@
+import { BoxGeometry, Color, Mesh, MeshBasicMaterial } from 'three';
+
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 import { ForgeThreeCanvas, type ThreeContext } from '@mission-platform/three';
-import { BoxGeometry, Color, Mesh, MeshBasicMaterial } from 'three';
 
 /**
  * A small Three.js scene demonstrating `@mission-platform/three`. A single cube

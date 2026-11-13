@@ -7,6 +7,8 @@
  */
 import { describe, expect, it } from 'vitest';
 
+import type { GenericRenderNode } from '@mission-platform/forge-plugin-api';
+
 import {
   compileComponentModule,
   compileHookModule,
@@ -18,7 +20,6 @@ import {
 import { createGenericAst, parseForgeSource } from './frontends.js';
 
 import type { JsxFramework } from './compiler-test-helpers';
-import type { GenericRenderNode } from '@mission-platform/forge-plugin-api';
 
 // ─── fixtures ───────────────────────────────────────────────────────────────
 

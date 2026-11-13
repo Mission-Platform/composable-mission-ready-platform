@@ -23,9 +23,9 @@ Transformeer een neutrale haakmodule in zijn SolidJS-bron.
 
 #### Parameters
 
-| Naam   | Typ               | Beschrijving |
-| ------ | ----------------- | ------------ |
-| module | SemantischeModule |              |
+| Naam | Typ | Beschrijving |
+| ------ | -------------- | ----------- |
+| module | SemantischeModule |             |
 
 ## `src/emitters/module`
 
@@ -44,10 +44,10 @@ Transformeer een neutrale componentmodule in zijn SolidJS-bron.
 
 #### Parameters
 
-| Naam   | Typ               | Beschrijving |
-| ------ | ----------------- | ------------ |
-| module | SemantischeModule |              |
-| opties | SolidEmitOpties   |              |
+| Naam | Typ | Beschrijving |
+| ------- | ---------------- | ----------- |
+| module | SemantischeModule |             |
+| opties | SolidEmitOpties |             |
 
 ### GegenereerdeSolidModule
 
@@ -97,9 +97,9 @@ Beperk een doelplan tot het Solid-plan; `false` voor elk ander raamwerkplan.
 
 #### Parameters
 
-| Naam     | Typ                                   | Beschrijving |
-| -------- | ------------------------------------- | ------------ |
-| verlaagd | TargetLoweredModule \| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------------- | ----------- |
+| verlaagd | TargetLoweredModule \| ongedefinieerd |             |
 
 ### lagereSolidModule
 
@@ -116,10 +116,10 @@ Laat de neutrale IR in de doelintentieverpakking van Solid zakken, met daarin he
 
 #### Parameters
 
-| Naam    | Typ               | Beschrijving |
-| ------- | ----------------- | ------------ |
-| ir      | SemantischeModule |              |
-| context | DoelContext       |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| ir | SemantischeModule |             |
+| context | DoelContext |             |
 
 ### planSolidImports
 
@@ -138,10 +138,10 @@ opnieuw uitvoeren levert een identieke lijst op. Dit opnieuw berekenen is wat ma
 
 #### Parameters
 
-| Naam           | Typ                  | Beschrijving |
-| -------------- | -------------------- | ------------ |
-| plannen        | SolideVerlagingsplan |              |
-| voorwaardelijk | booleaans            |              |
+| Naam | Typ | Beschrijving |
+| ----------- | ----------------- | ----------- |
+| plannen | SolideVerlagingsplan |             |
+| voorwaardelijk | booleaans |             |
 
 ### planSolidModule
 
@@ -155,9 +155,9 @@ Bouw het Solid-plan voor de semantische feiten van een module.
 
 #### Parameters
 
-| Naam | Typ               | Beschrijving |
-| ---- | ----------------- | ------------ |
-| ir   | SemantischeModule |              |
+| Naam | Typ | Beschrijving |
+| ---- | -------------- | ----------- |
+| ir | SemantischeModule |             |
 
 ### SOLID_KADER
 
@@ -209,7 +209,7 @@ export interface SolidLoweredModule extends TargetLoweredModule
 
 De Solid-uitbreiding van het gedeelde doelplancontract.
 
-### SolideVerlaagplan
+### SolideVerlagingPlan
 
 **Soort:** interface
 
@@ -277,7 +277,7 @@ Een `useState`-cel verlaagd tot een Solid-signaal.
 export interface SolidSlotPlan
 ```
 
-Een slotlezing, uitgedrukt zoals het propslid Solid het voorleest.
+Een slotlezing, uitgedrukt zoals het rekwisietenlid Solid het voorleest.
 
 ## `src/optimize`
 
@@ -347,10 +347,10 @@ Verfijn een verlaagd Solid-abonnement. Een intentieverpakking die geen Solid-pla
 
 #### Parameters
 
-| Naam        | Typ                   | Beschrijving |
-| ----------- | --------------------- | ------------ |
-| bedoelingen | DoelIntenties         |              |
-| opties      | TargetOptimizeOptions |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------- | ----------- |
+| bedoelingen | DoelIntenties |             |
+| opties | TargetOptimizeOptions |             |
 
 ### STABLE_LIST_KEYS
 

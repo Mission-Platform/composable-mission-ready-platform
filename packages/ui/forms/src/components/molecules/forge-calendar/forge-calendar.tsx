@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 import {
   useEffect,
   useMemo,
@@ -9,7 +11,6 @@ import {
 } from '@mission-platform/forge-jsx';
 import { ForgeIconChevron } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
-import { DateTime } from 'luxon';
 
 import styles from './forge-calendar.module.scss';
 

@@ -32,15 +32,15 @@ SSR 安全：当浏览器 API 或 DOM 不可用时，不执行任何操作。
 
 #### 参数
 
-| 名称 | 类型                     | 描述                     |
-| ---- | ------------------------ | ------------------------ |
-| 目标 | MpRef<Element \| null>   | MpRef<Element \| null>   |     |
-| 回调 | 路口观察者回调           |                          |
-| 选项 | IntersectionObserverInit | IntersectionObserverInit |     |
+|名称 |类型 |描述 |
+| -------- | ---------------------------- | ----------- |
+|目标| MpRef<Element \| null> | MpRef<Element \| null> |             |
+|回调 |路口观察者回调 |             |
+|选项 | IntersectionObserverInit | IntersectionObserverInit |             |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
-### 使用MutationObserver
+### useMutationObserver
 
 **种类：**功能
 
@@ -60,15 +60,15 @@ SSR 安全：当浏览器 API 或 DOM 不可用时，不执行任何操作。
 
 #### 参数
 
-| 名称 | 类型                | 描述                |
-| ---- | ------------------- | ------------------- |
-| 目标 | MpRef<Node \| null> | MpRef<Node \| null> |     |
-| 回调 | 突变回调            |                     |
-| 选项 | 突变观察者初始化    |                     |
+|名称 |类型 |描述 |
+| -------- | -------------------- | ----------- |
+|目标| MpRef<Node \| null> | MpRef<Node \| null> |             |
+|回调 |突变回调 |             |
+|选项 |突变观察者初始化 |             |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
-### 使用性能观察者
+### usePerformanceObserver
 
 **种类：**功能
 
@@ -85,7 +85,7 @@ SSR 安全：当浏览器 API 不可用时不执行任何操作。
 
 #### 参数
 
-| 名称 | 类型             | 描述 |
-| ---- | ---------------- | ---- |
-| 回调 | 性能观察者回调   |      |
-| 选项 | 性能观察者初始化 |      |
+|名称 |类型 |描述 |
+| -------- | --------------------------- | ----------- |
+|回调 |性能观察者回调|             |
+|选项 |性能观察者初始化 |             |

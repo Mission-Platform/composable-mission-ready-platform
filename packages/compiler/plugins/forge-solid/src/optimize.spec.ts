@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
 
+import type {
+  TargetContext,
+  TargetIntentions,
+  TargetOptimizeOptions,
+} from "@mission-platform/forge-plugin-api";
+
 import { emitSolidModule } from "./emitters/module.js";
 import {
   component,
@@ -23,11 +29,6 @@ import {
 
 import type { SemanticModuleParts } from "./ir-test-helpers.js";
 import type { SolidLoweredModule } from "./lower.js";
-import type {
-  TargetContext,
-  TargetIntentions,
-  TargetOptimizeOptions,
-} from "@mission-platform/forge-plugin-api";
 
 const CONTEXT: TargetContext = {
   framework: SOLID_FRAMEWORK,

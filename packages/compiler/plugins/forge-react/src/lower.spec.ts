@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import type { TargetContext } from "@mission-platform/forge-plugin-api";
+
 import {
   component,
   dynamicNode,
@@ -27,8 +29,6 @@ import {
   planReactModule,
   type ReactModulePlan,
 } from "./lower.ts";
-
-import type { TargetContext } from "@mission-platform/forge-plugin-api";
 
 const CONTEXT: TargetContext = {
   framework: "react",

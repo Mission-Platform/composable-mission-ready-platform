@@ -1,5 +1,4 @@
 import { ForgeCodeScanner } from '@mission-platform/code-scanner';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**

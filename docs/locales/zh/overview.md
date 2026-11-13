@@ -23,50 +23,50 @@ Mission Platform 的核心是建立在**组合优于继承**的原则之上。�
 
 ### 多框架设计
 
-任务平台引入了框架中立的开发范例。使用 `@mission-platform/forge-jsx` JSX方言，
-开发人员可以编写一次组件并将其编译为本机输出 Vue 3, React, Solid, Svelte，和网络
+任务平台引入了框架中立的开发范例。使用 `@mission-platform/forge-jsx` JSX 方言，
+开发人员可以编写一次组件并将其编译为 Vue 3、React、Solid、Svelte 和 Web 的本机输出
 组件。这使代码库面向未来，并允许无缝集成到不同的前端环境中。
 
 ### 类型安全基础
 
-整个平台的作者是**TypeScript**，提供强大的、自记录的开发人员体验。显式的
+整个平台是在 **TypeScript** 中编写的，提供了强大的、自记录的开发人员体验。显式的
 跨所有公共 API 进行输入可确保在编译时捕获错误，从而显着提高开发速度
 速度和代码质量。
 
 ## 主要特点
 
-| 特色                 | 描述                                                                                           |
-| :------------------- | :--------------------------------------------------------------------------------------------- |
-| **Forge JSX 运行时** | 框架中立的 JSX 方言：编写一次并构建 Vue 3, React, Svelte, Solid，以及零运行时开销的 Web 组件。 |
-| **组件库**           | 为多个框架一次性编写的一套全面的布局、排版和交互式组件。                                       |
-| **设计代币**         | 符合 DTCG 的令牌系统，可生成 SCSS 和 TypeScript 一致主题的工件。                               |
-| **不可知路由**       | 独立于 UI 框架工作的类型安全路由系统。                                                         |
-| **通用 I18n**        | 基于 i18next 的与框架无关的国际化包装器，具有专用的 Vue 和 React 适配器。                      |
-| **Wasm 实用程序**    | 由 WebAssembly 提供支持的高性能实用程序，用于条形码扫描、拼写检查等。                          |
+|特色 |描述 |
+| :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| **Forge JSX 运行时** |框架中立的 JSX 方言：一次编写并构建 Vue 3、React、Svelte、Solid 和 Web 组件，运行时开销为零。 |
+| **组件库** |为多个框架一次性编写的一套全面的布局、排版和交互式组件。                           |
+| **设计代币** |符合 DTCG 的令牌系统，可生成 SCSS 和 TypeScript 工件以实现一致的主题。                                     |
+| **不可知路由** |独立于 UI 框架工作的类型安全路由系统。                                                               |
+| **通用 I18n** |基于 i18next 的与框架无关的国际化包装器，具有专用的 Vue 和 React 适配器。                              |
+| **Wasm 实用程序** |由 WebAssembly 提供支持的高性能实用程序，用于条形码扫描、拼写检查等。                                     |
 
 ## 技术栈
 
 Mission Platform 建立在现代化的高性能堆栈之上：
 
-- **锻造 JSX (`@mission-platform/forge-jsx`)**：主要 UI 框架 — 一个框架中立的 JSX 运行时，其中所有
-  共享组件（除应用程序之外的所有组件）都是创作的。
-- **Vue 3**：应用程序的框架 `apps/` 是用几个本机渲染目标之一构建的
-  锻造组件。
+- **Forge JSX (`@mission-platform/forge-jsx`)**：主要 UI 框架 — 一个框架中立的 JSX 运行时，其中所有
+  shared components (everything except the apps) are authored.
+- **Vue 3**: Used by several applications and one of several native render targets for Forge components.的
+  `service-monitor` application uses RedwoodSDK/React instead.
 - **TypeScript**：所有源代码的标准。
-- **Vite**：构建工具为快速 HMR 和优化的生产包提供支持。
-- **pnpm 工作区**：使用共享锁定文件进行高效的依赖管理。
-- **Turborepo**：高性能任务编排和缓存。
-- **Cloudflare Workers/Pages**：应用程序和 API 的主要部署目标。
-- **故事书**：组件开发和可视化测试的工作台。
+- **Vite**: The build tool powering fast HMR and optimised production bundles.
+- **pnpm Workspaces**: Efficient dependency management with shared lockfiles.
+- **Turborepo**: High-performance task orchestration and caching.
+- **Cloudflare Workers/Pages**: The primary deployment target for applications and APIs.
+- **Storybook**: The workbench for component development and visual testing.
 
 ## 生态系统结构
 
 该存储库分为几个不同的区域：
 
-- **`apps/`**：可部署的应用程序（例如， `my-care-notes`, `website`) 将包组合成产品。
-- **`packages/`**：核心构建块，包括 `@mission-platform/components`, `@mission-platform/router`， 和
-  `@mission-platform/i18n`.
-- **`packages/tooling/configs/`**：共享配置 ESLint, Prettier, TypeScript， 和 Vite.
+- **`apps/`**：将包组成产品的可部署应用程序（例如 `my-care-notes`、`website`）。
+- **`packages/`**：核心构建块，包括 `@mission-platform/components`、`@mission-platform/router` 和
+  `@mission-platform/i18n`。
+- **`packages/tooling/configs/`**：ESLint、Prettier、TypeScript 和 Vite 的共享配置。
 - **`packages/tooling/vite/`**：用于设计令牌、Forge 编译和 SEO 的自定义构建时工具。
 - **`packages/edge/workers/`**：Cloudflare Workers 提供后端逻辑和 SPA 服务功能。
 
@@ -74,7 +74,7 @@ Mission Platform 建立在现代化的高性能堆栈之上：
 
 要开始在 Mission Platform 上进行开发，请参阅以下指南：
 
-- **[开发设置](development-setup.md)**：准备好您的环境并安装依赖项。
-- **[建筑学](architecture.md)**：深入了解平台的设计原则和依赖流程。
-- **[工作区结构](workspace-structure.md)**：了解目录布局和包约定。
+- **[开发设置](development-setup.md)**：准备好环境并安装依赖项。
+- **[架构](architecture.md)**：深入探讨平台的设计原则和依赖流程。
+- **[工作空间结构](workspace-structure.md)**：了解目录布局和包约定。
 - **[测试](testing.md)**：了解我们的测试策略和工具。

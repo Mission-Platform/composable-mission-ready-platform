@@ -22,6 +22,14 @@
  *   the refined plan, so a value an earlier pass removed the need for is not
  *   imported.
  */
+import type {
+  GenericRenderChild,
+  GenericRenderNode,
+  SemanticModule,
+  TargetIntentions,
+  TargetOptimizeOptions,
+} from "@mission-platform/forge-plugin-api";
+
 import {
   isSolidLowered,
   needsShow,
@@ -34,13 +42,6 @@ import type {
   SolidLoweringPlan,
   SolidMemoizedExpression,
 } from "./lower.js";
-import type {
-  GenericRenderChild,
-  GenericRenderNode,
-  SemanticModule,
-  TargetIntentions,
-  TargetOptimizeOptions,
-} from "@mission-platform/forge-plugin-api";
 
 /** Promote `__mpStatic` subtrees to module-level constants. */
 export const HOIST_STATIC_SUBTREES = "solid:hoist-static-subtrees";

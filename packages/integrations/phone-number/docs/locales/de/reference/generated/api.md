@@ -19,7 +19,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/phone-numbe
 function getPhoneNumberUtil(): Promise<PhoneNumberUtil>;
 ```
 
-Komfort-Accessor für die gemeinsam genutzte {@link PhoneNumberUtil}-Instanz.
+Praktischer Accessor für die gemeinsam genutzte {@link PhoneNumberUtil}-Instanz.
 
 ### getPhoneNumberUtilSync
 
@@ -33,23 +33,23 @@ Praktischer Accessor für die gemeinsam genutzte, synchrone {@link PhoneNumberUt
 
 ### PhoneNumberFormat
 
-**Art:** konstant
+**Art:** Typ
 
 ```typescript
-export const PhoneNumberFormat;
+export type PhoneNumberFormat = (typeof PhoneNumberFormat)[keyof typeof PhoneNumberFormat];
 ```
 
-Ausgabeformat, das `PhoneNumberFormat` von libphonenumber widerspiegelt.
+Keine Beschreibung angegeben.
 
 ### PhoneNumberType
 
-**Art:** konstant
+**Art:** Typ
 
 ```typescript
-export const PhoneNumberType;
+export type PhoneNumberType = (typeof PhoneNumberType)[keyof typeof PhoneNumberType];
 ```
 
-Leitungstyp einer Telefonnummer, der `PhoneNumberType` von libphonenumber widerspiegelt.
+Keine Beschreibung angegeben.
 
 ### PhoneNumberUtil
 
@@ -76,7 +76,7 @@ Ein zweibuchstabiger ISO 3166-1-Regionalcode, z. B. `"US"`, `"GB"`.
 
 ### Ländercode_für_Region
 
-**Art:** fws-export
+**Art:** flint-export
 
 ```typescript
 export fn country_code_for_region(region: string) -> i32
@@ -86,8 +86,8 @@ Ordnet eine unterstützte Regionalvorwahl der entsprechenden internationalen Lan
 
 #### Parameter
 
-| Name   | Geben Sie    | ein Beschreibung                     |
-| ------ | ------------ | ------------------------------------ |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------ | ------------------------------------- |
 | Region | Zeichenfolge | ISO-Regionalcode wie „US“ oder „GB“. |
 
 #### Vertrag
@@ -97,7 +97,7 @@ Ordnet eine unterstützte Regionalvorwahl der entsprechenden internationalen Lan
 
 ### nationales_Präfix
 
-**Art:** fws-export
+**Art:** flint-export
 
 ```typescript
 export fn national_prefix(region: string) -> string
@@ -107,8 +107,8 @@ Gibt das nationale Amtspräfix zurück, das beim Wählen innerhalb einer Region 
 
 #### Parameter
 
-| Name   | Geben Sie    | ein Beschreibung  |
-| ------ | ------------ | ----------------- |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------ | ---------------- |
 | Region | Zeichenfolge | ISO-Regionalcode. |
 
 #### Vertrag
@@ -118,7 +118,7 @@ Gibt das nationale Amtspräfix zurück, das beim Wählen innerhalb einer Region 
 
 ### region_for_country_code
 
-**Art:** fws-export
+**Art:** flint-export
 
 ```typescript
 export fn region_for_country_code(code: i32) -> string
@@ -128,9 +128,9 @@ Ordnet eine Landesvorwahl einer repräsentativen ISO-Region zu.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung              |
-| ---- | --------- | ----------------------------- |
-| Code | i32       | Internationale Landesvorwahl. |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ---- | ----------------------------------- |
+| Code | i32 | Internationale Landesvorwahl. |
 
 #### Vertrag
 
@@ -139,7 +139,7 @@ Ordnet eine Landesvorwahl einer repräsentativen ISO-Region zu.
 
 ### region_is
 
-**Art:** fws-export
+**Art:** flint-export
 
 ```typescript
 export fn region_is(region: string, expected: string) -> bool
@@ -149,10 +149,10 @@ Gibt „true“ zurück, wenn der Regionalcode dem erwarteten Wert entspricht.
 
 #### Parameter
 
-| Name     | Geben Sie    | ein Beschreibung                 |
-| -------- | ------------ | -------------------------------- |
-| Region   | Zeichenfolge | ISO-Regionalcode des Kandidaten. |
-| erwartet | Zeichenfolge | Erwarteter ISO-Regionalcode.     |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------ | -------------------------- |
+| Region | Zeichenfolge | ISO-Regionalcode des Kandidaten. |
+| erwartet | Zeichenfolge | Erwarteter ISO-Regionalcode.  |
 
 #### Vertrag
 

@@ -16,21 +16,21 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/rxjs`.
 **Art:** Funktion
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined;
+function useObservable(source: Observable<T>, initialValue?: T): T | undefined;
 ```
 
-Abonnieren Sie `source` und geben Sie die neueste Ausgabe als Status zurück. Rückgaben
-`undefined` bis die erste Emission eintrifft.
+Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name   | Geben Sie     | ein Beschreibung |
-| ------ | ------------- | ---------------- |
-| Quelle | Observable<T> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | ------------- | ----------- |
+| Quelle | Observable<T> |             |
+| Anfangswert | T |             |
 
 ## `src/composables/use-subscription/use-subscription`
 
-### Abbestellbar
+### Abmeldebar
 
 **Art:** Schnittstelle
 
@@ -58,11 +58,11 @@ Lebensdauer der Komponente, erneutes Abonnieren bei `source` (oder einem anderen
 
 #### Parameter
 
-| Name           | Geben Sie                                     | ein Beschreibung |
-| -------------- | --------------------------------------------- | ---------------- |
-| Quelle         | Observable<T>                                 |                  |
-| ObserverOrNext | Teilweise<Observer<T>> \| ((Wert: T) => void) |                  |
-| Abhängigkeiten | MpDependencyList                              |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------------- | -------------------------------------------- | ----------- |
+| Quelle | Observable<T> |             |
+| ObserverOrNext | Teilweise<Observer<T>> \| ((Wert: T) => void) |             |
+| Abhängigkeiten | MpDependencyList |             |
 
 ### useSubscription
 
@@ -78,7 +78,7 @@ Es kann einen bloßen `source.subscribe(...)`-Aufruf oder eine ganze Pipeline um
 
 #### Parameter
 
-| Name           | Geben Sie          | ein Beschreibung |
-| -------------- | ------------------ | ---------------- |
-| abonnieren     | () => Abbestellbar |                  |
-| Abhängigkeiten | MpDependencyList   |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | -------------------- | ----------- |
+| abonnieren | () => Abbestellbar |             |
+| Abhängigkeiten | MpDependencyList |             |

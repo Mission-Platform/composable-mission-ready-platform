@@ -19,16 +19,17 @@
 function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 ```
 
-`ForgeMatrixCode` — 呈现可扫描的 2D 矩阵条形码（数据矩阵 ECC 200)，用中立的 JSX 方言编写一次并直接编译为 React
-或 Vue by `@mission-platform/vite-plugin-forge`。
+`ForgeMatrixCode` — 呈现可扫描的 2D 矩阵条形码（数据矩阵 ECC
+200)，用中立的 JSX 方言编写一次并直接编译为 React
+或 `@mission-platform/vite-plugin-forge` 的 Vue。
 
 有效负载 (`value`) 完全由客户端在客户端上编码
-来自 `@mission-platform/matrix-code` 的 {@linkencodeMatrix} 编码器 — a
+来自 `@mission-platform/matrix-code` 的 {@linkencodeMatrix} 编码器 — 一个
 用 Rust 编写并编译为 WebAssembly 的无依赖编码器（自动
 符号大小调整和 Reed-Solomon 纠错） - 并绘制为清晰、
 与分辨率无关的 SVG。所有暗模块都会发出一个 `<path>`，
 因此，即使对于大型代码，标记也保持紧凑。为了可靠地扫描
-深色/浅色默认为 solid 白底黑字而不是主题标记，
+深色/浅色默认为 solid 白底黑字，而不是主题标记，
 但两者都可以通过 `color` / `background` 覆盖。
 
 数据模块可以绘制为正方形、圆角正方形或点
@@ -49,9 +50,9 @@ function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 
 #### 参数
 
-| 名称 | 类型                       | 描述 |
-| ---- | -------------------------- | ---- |
-| 属性 | 只读<MatrixCodeProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------ | ----------- |
+|属性 |只读<MatrixCodeProperties> |             |
 
 ### 矩阵代码动作
 
@@ -102,72 +103,3 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 ```
 
 用于绘制代码各模块的形状。
-
-## `src/encoder/index`
-
-### 编码矩阵
-
-**种类：**功能
-
-```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
-```
-
-将 `data` 编码为给定 `symbology` 的二维矩阵条形码，加载
-首次使用时同步锻造编码器工件。
-
-#### 参数
-
-| 名称   | 类型     | 描述 |
-| ------ | -------- | ---- |
-| 符号学 | 矩阵符号 |      |
-| 数据   | 字符串   |      |
-
-#### 合同
-
-- **@throws:** 如果有效负载对于符号系统无效（空，或
-  对于支持的符号来说太大）。
-
-### 编码矩阵异步
-
-**种类：**功能
-
-```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
-```
-
-将 `data` 编码为给定 `symbology` 的二维矩阵条形码，加载
-首次使用时异步伪造编码器工件。
-
-#### 参数
-
-| 名称   | 类型     | 描述 |
-| ------ | -------- | ---- |
-| 符号学 | 矩阵符号 |      |
-| 数据   | 字符串   |      |
-
-#### 合同
-
-- **@throws:** 如果有效负载对于符号系统无效。
-
-### 矩阵码
-
-**种类：**接口
-
-```typescript
-export interface MatrixCode
-```
-
-打包矩阵条形码：尺寸加上模块位的行主列表
-（`0` = 浅色，`1` = 深色）。
-
-### 矩阵符号学
-
-**种类：**类型
-
-```typescript
-export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
-```
-
-该编码器支持的 2D 矩阵符号体系。作为第一个参数传递
-到{@linkencodeMatrix}/{@linkencodeMatrixAsync}。

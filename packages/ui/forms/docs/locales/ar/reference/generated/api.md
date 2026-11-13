@@ -29,7 +29,7 @@ export interface CheckboxProperties
 function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement;
 ```
 
-`ForgeCheckbox` - يتم تأليف عنصر التحكم في مربع الاختيار مرة واحدة بلهجة JSX المحايدة و
+`ForgeCheckbox` — يتم تأليف عنصر التحكم في مربع الاختيار مرة واحدة بلهجة JSX المحايدة و
 تم تجميعها مباشرة إلى React أو Vue بواسطة `@mission-platform/vite-plugin-forge`.
 
 يدعم كلاً من القيمة المنطقية المستقلة ومجموعة `string[]` (تبديل ملفات
@@ -41,16 +41,16 @@ function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement;
 إلى الخطاف `useId` الأصلي للإطار؛ غير المحدد
 يتم تعيين خاصية DOM من خلال زوج `useRef` + `useEffect` (المحايد
 أي ما يعادل SFC `watch`)؛ علامات الاختيار/غير المحددة هي
-الكتابة مرة واحدة `@mission-platform/icons` `ForgeIconCheck`/`ForgeIconMinus`؛ `useI18n`
+الكتابة مرة واحدة `@mission-platform/icons` `ForgeIconCheck`/`ForgeIconMinus`; `useI18n`
 يصبح العنوان "المطلوب" عاديًا
 سلسلة؛ وأصبح انبعاث `v-model` + `change` هو المعيار
 `onUpdateModelValue`/`onChange` دعائم رد الاتصال.
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<CheckboxProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<CheckboxProperties> |             |
 
 ## `src/components/atoms/forge-input/forge-input`
 
@@ -79,9 +79,9 @@ function ForgeInput(properties: Readonly<InputProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                         | الوصف |
-| ----- | ---------------------------- | ----- |
-| خصائص | للقراءة فقط<InputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------- | ----------- |
+| خصائص | للقراءة فقط<InputProperties> |             |
 
 ### الإدخال التلقائي للأحرف الكبيرة
 
@@ -147,9 +147,9 @@ function ForgeRadio(properties: Readonly<RadioProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                         | الوصف |
-| ----- | ---------------------------- | ----- |
-| خصائص | للقراءة فقط<RadioProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------- | ----------- |
+| خصائص | للقراءة فقط<RadioProperties> |             |
 
 ### خصائص الراديو
 
@@ -180,7 +180,7 @@ function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement;
 `@mission-platform/components` SFC: يتم التحكم في الاختيار عبر
 `modelValue` كمجموعة `[lower, upper]`، يتم الاحتفاظ بالقيمتين بالترتيب و
 لا تتقاطع أبدًا (مع `minDistance` اختياري)، ويكشف كل إبهام
-`role="slider"` مع `aria-valuemin`/`aria-valuemax` يعكس الحدود
+`role="slider"` مع `aria-valuemin`/`aria-valuemax` يعكس حدودها
 قد يتحرك داخل. إنها تمتلك تصميمها من خلال وحدة CSS الموجودة في نفس الموقع
 `forge-range-input.module.scss`.
 
@@ -193,9 +193,9 @@ function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<RangeInputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<RangeInputProperties> |             |
 
 ### خصائص نطاق الإدخال
 
@@ -254,9 +254,9 @@ function ForgeRating(properties: Readonly<RatingProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                          | الوصف |
-| ----- | ----------------------------- | ----- |
-| خصائص | للقراءة فقط<RatingProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| خصائص | للقراءة فقط<RatingProperties> |             |
 
 ### خصائص التقييم
 
@@ -301,15 +301,15 @@ function ForgeSlider(properties: Readonly<SliderProperties>): MpElement;
 
 سحب المؤشر — `pointerdown` على المسار، ثم `pointermove`/`pointerup`
 المتتبعة على `window` - تتم مشاركتها مع مكونات التفاعل الأخرى عبر
-المساعد `pointer-drag` الموجود في مكان مشترك؛ أصبح التكوين الأصلي-API `ref`s
+المساعد `pointer-drag` الموجود في مكان مشترك؛ يصبح التكوين الأصلي-API `ref`s
 `useRef`s و`v-model` + `change` يصبحان
 `onUpdateModelValue`/`onChange` دعائم رد الاتصال.
 
 #### حدود
 
-| الاسم | اكتب                          | الوصف |
-| ----- | ----------------------------- | ----- |
-| خصائص | للقراءة فقط<SliderProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| خصائص | للقراءة فقط<SliderProperties> |             |
 
 ### خصائص المنزلق
 
@@ -356,9 +356,9 @@ function ForgeSwitch(properties: Readonly<SwitchProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                          | الوصف |
-| ----- | ----------------------------- | ----- |
-| خصائص | للقراءة فقط<SwitchProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------- | ----------- |
+| خصائص | للقراءة فقط<SwitchProperties> |             |
 
 ### خصائص التبديل
 
@@ -408,9 +408,9 @@ function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<TextareaProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<TextareaProperties> |             |
 
 ### TextareaAutocapitalize
 
@@ -507,9 +507,9 @@ function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<CalendarProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<CalendarProperties> |             |
 
 ## `src/components/molecules/forge-color-input/forge-color-input`
 
@@ -545,7 +545,7 @@ function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement;
 تم تجميعها مباشرة إلى React أو Vue بواسطة `@mission-platform/vite-plugin-forge`.
 
 يقرن `<input type="color">` الأصلي (المقدم كعينة) بنص سداسي عشري
-المجال. يتم التحكم في اللون عبر `modelValue`؛ العينة والعرافة
+المجال. يتم التحكم في اللون عبر `modelValue`؛ الحامل والعرافة
 يظل الحقل متزامنًا، ويتم نشر قيم `#rrggbb` الصالحة فقط. انها تمتلك
 تصميمه من خلال وحدة CSS المشتركة `forge-color-input.module.scss`
 وينشئ {@link ForgeTypography} المحايد لنص التصنيف/التلميح/الخطأ.
@@ -558,9 +558,9 @@ function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<ColorInputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<ColorInputProperties> |             |
 
 ## `src/components/molecules/forge-date-input/forge-date-input`
 
@@ -612,9 +612,9 @@ function ForgeDateInput(properties: Readonly<DateInputProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                             | الوصف |
-| ----- | -------------------------------- | ----- |
-| خصائص | للقراءة فقط<DateInputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------- | ----------- |
+| خصائص | للقراءة فقط<DateInputProperties> |             |
 
 ## `src/components/molecules/forge-date-range-input/forge-date-range-input`
 
@@ -646,7 +646,7 @@ export type DateRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl
 function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): MpElement;
 ```
 
-`ForgeDateRangeInput` — منتقي النطاق الزمني الذي تم تأليفه مرة واحدة في JSX المحايدة
+`ForgeDateRangeInput` — منتقي النطاق الزمني تم تأليفه مرة واحدة في JSX المحايدة
 لهجة وتجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`.
 
@@ -672,9 +672,9 @@ function ForgeDateRangeInput(properties: Readonly<DateRangeInputProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب                                  | الوصف |
-| ----- | ------------------------------------- | ----- |
-| خصائص | للقراءة فقط<DateRangeInputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------------- | ----------- |
+| خصائص | للقراءة فقط<DateRangeInputProperties> |             |
 
 ## `src/components/molecules/forge-field-set/forge-field-set`
 
@@ -705,7 +705,7 @@ function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement;
 العرض التقديمي فقط والمحتوى الحيادي - قم بتمرير الحقول المجمعة أو بشكل تعسفي
 الترميز من خلال الفتحة الافتراضية. يستخدم إعداد `disabled` النسخة الأصلية
 سلوك `<fieldset disabled>`. وتمتلك التصميم الخاص بها من خلال الموقع المشترك
-وحدة CSS `forge-field-set.module.scss` وتتكون من ملف محايد
+وحدة CSS `forge-field-set.module.scss` وتؤلف الصيغة المحايدة
 {@link ForgeTypography} لنص وسيلة الإيضاح/الوصف.
 
 البدائل من Vue SFC الأصلي: برنامج تضمين المحتوى `ForgeStack`
@@ -714,9 +714,9 @@ function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<FieldSetProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<FieldSetProperties> |             |
 
 ## `src/components/molecules/forge-file-input/forge-file-input`
 
@@ -765,9 +765,9 @@ function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                             | الوصف |
-| ----- | -------------------------------- | ----- |
-| خصائص | للقراءة فقط<FileInputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------- | ----------- |
+| خصائص | للقراءة فقط<FileInputProperties> |             |
 
 ## `src/components/molecules/forge-location-input/forge-location-input`
 
@@ -793,21 +793,20 @@ function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpEl
 وحدة CSS `forge-location-input.module.scss`. منطق التحويل/التحليل
 يأتي مع هذه الحزمة باعتبارها الملف `location.ts` غير المتوافق مع إطار العمل.
 
-البدائل من Vue SFC الأصلي: يقوم `useId` بالتخطيط مباشرة إلى
+بدائل من Vue SFC الأصلي: `useId` يعين مباشرة إلى
 خطاف `useId` الأصلي للإطار؛ المخازن المؤقتة للنص المحلي
 (`latText`/`lngText`) يصبح غير كسول {@link useState} (وبالتالي فإن العرض الأولي
-
 - بما في ذلك SSR - يعرض بالفعل الإحداثيات المنسقة) التي تمت إعادة مزامنتها من
-  نموذج ذو {@link useEffect}; ويصبح انبعاث `v-model` + `change` هو
-  `onUpdateModelValue`/`onChange` دعائم رد الاتصال. فئات تخطيط الطفل هي
-  يتم تطبيقه على الغلاف `<div>`s بدلاً من تمريره إلى الملف المؤلف
-  مكونات.
+نموذج ذو {@link useEffect}; ويصبح انبعاث `v-model` + `change` هو
+`onUpdateModelValue`/`onChange` دعائم رد الاتصال. فئات تخطيط الطفل هي
+يتم تطبيقه على الغلاف `<div>`s بدلاً من تمريره إلى الملف المؤلف
+مكونات.
 
 #### حدود
 
-| الاسم | اكتب                                 | الوصف |
-| ----- | ------------------------------------ | ----- |
-| خصائص | للقراءة فقط<LocationInputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------------- | ----------- |
+| خصائص | للقراءة فقط<LocationInputProperties> |             |
 
 ### خصائص إدخال الموقع
 
@@ -819,7 +818,7 @@ export interface LocationInputProperties
 
 لم يتم تقديم أي وصف.
 
-### حجم الإدخال الموقع
+### حجم الإدخال
 
 **النوع:** النوع
 
@@ -880,9 +879,9 @@ function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpEl
 
 #### حدود
 
-| الاسم | اكتب                                 | الوصف |
-| ----- | ------------------------------------ | ----- |
-| خصائص | للقراءة فقط<NumberStepperProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------------- | ----------- |
+| خصائص | للقراءة فقط<NumberStepperProperties> |             |
 
 ### NumberStepperProperties
 
@@ -914,11 +913,11 @@ export type NumberStepperSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 ```
 
-`ForgeOtpInput` - إدخال كلمة مرور مجزأة لمرة واحدة تم تأليفه مرة واحدة في
+`ForgeOtpInput` - إدخال كلمة مرور مجزأة لمرة واحدة تم تأليفه مرة واحدة في ملف
 لهجة JSX المحايدة وتم تجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`.
 
-يعرض الخلايا ذات الحرف المفرد `length` المرتبطة بسلسلة واحدة
+يعرض خلايا `length` ذات حرف واحد مرتبطة بسلسلة واحدة
 `modelValue`. تقدم الكتابة التركيز، ويتراجع `Backspace` إلى الخلف، وتتحرك مفاتيح الأسهم
 بين الخلايا، واللصق يوزع التعليمات البرمجية. انها تمتلك التصميم من خلال
 وحدة CSS الموجودة في نفس الموقع `forge-otp-input.module.scss`.
@@ -927,15 +926,15 @@ function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement;
 نماذج اللهجة المحايدة (مراجع عنصر واحد فقط) تصبح حاوية واحدة
 `useRef` بالإضافة إلى `querySelectorAll('input')` لإدارة التركيز (مثل
 `ForgeSegmentControl` يفعل)؛ تم إسقاط `nextTick` (الخلايا موجودة بالفعل، لذلك
-يتحرك التركيز بشكل متزامن)؛ يصبح التركيز التلقائي `onMounted` `useEffect`؛
+يتحرك التركيز بشكل متزامن)؛ يصبح التركيز البؤري التلقائي `onMounted` `useEffect`؛
 ويصبح الانبعاث `v-model` + `complete` هو `onUpdateModelValue`/
 الدعائم رد الاتصال `onComplete`.
 
 #### حدود
 
-| الاسم | اكتب                            | الوصف |
-| ----- | ------------------------------- | ----- |
-| خصائص | للقراءة فقط<OtpInputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------- | ----------- |
+| خصائص | للقراءة فقط<OtpInputProperties> |             |
 
 ### OtpInputProperties
 
@@ -1003,9 +1002,9 @@ SFC: يقوم `useId` بتعيين الخرائط القابلة للتركيب 
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<PhoneInputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<PhoneInputProperties> |             |
 
 ### تغيير الهاتف
 
@@ -1079,9 +1078,9 @@ primitives ويمتلك تصميمه من خلال وحدة CSS الموجودة
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<RadioGroupProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<RadioGroupProperties> |             |
 
 ### RadioGroupDirection
 
@@ -1140,9 +1139,9 @@ function ForgeSearchInput(properties: Readonly<SearchInputProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب                               | الوصف |
-| ----- | ---------------------------------- | ----- |
-| خصائص | للقراءة فقط<SearchInputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------- | ----------- |
+| خصائص | للقراءة فقط<SearchInputProperties> |             |
 
 ### SearchInputProperties
 
@@ -1192,9 +1191,9 @@ function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب                                  | الوصف |
-| ----- | ------------------------------------- | ----- |
-| خصائص | للقراءة فقط<SegmentControlProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------------- | ----------- |
+| خصائص | للقراءة فقط<SegmentControlProperties> |             |
 
 ### خصائص التحكم بالقطاعات
 
@@ -1239,7 +1238,7 @@ function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement;
 `ForgeTimeInput` — منتقي الوقت تم تأليفه مرة واحدة بلهجة JSX المحايدة و
 تم تجميعها مباشرة إلى React أو Vue بواسطة `@mission-platform/vite-plugin-forge`.
 
-يعرض زر التشغيل الوقت المحدد `HH:MM[:SS]` ويفتح نافذة منبثقة به
+يعرض زر التشغيل الوقت `HH:MM[:SS]` المحدد ويفتح نافذة منبثقة به
 قوائم الساعة/الدقيقة(/الثانية) القابلة للتمرير. وتمتلك التصميم الخاص بها من خلال
 وحدة CSS المشتركة في الموقع `forge-time-input.module.scss`.
 
@@ -1252,14 +1251,14 @@ function ForgeTimeInput(properties: Readonly<TimeInputProperties>): MpElement;
 {@link useEffect}; يقوم `useId` بتعيين الخطاف `useId` الأصلي للإطار؛ المضمنة
 الساعة SVG تصبح حرفًا رسوميًا `🕒`؛ يتم تأليف المناطق `start`/`end` على النحو المسمى
 فتحات (`<Slot>`) مع اكتشاف وجودها من خلال الإطار المحايد
-مساعد {@link hasSlot}؛ ويصبح الانبعاث `v-model` + `change` هو
+مساعد {@link hasSlot}؛ ويصبح انبعاث `v-model` + `change` هو
 `onUpdateModelValue`/`onChange` دعائم رد الاتصال.
 
 #### حدود
 
-| الاسم | اكتب                             | الوصف |
-| ----- | -------------------------------- | ----- |
-| خصائص | للقراءة فقط<TimeInputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------- | ----------- |
+| خصائص | للقراءة فقط<TimeInputProperties> |             |
 
 ### خصائص إدخال الوقت
 
@@ -1314,9 +1313,9 @@ function ForgeTimeRangeInput(properties: Readonly<TimeRangeInputProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب                                  | الوصف |
-| ----- | ------------------------------------- | ----- |
-| خصائص | للقراءة فقط<TimeRangeInputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------------------- | ----------- |
+| خصائص | للقراءة فقط<TimeRangeInputProperties> |             |
 
 ### خصائص TimeRangeInput
 
@@ -1368,7 +1367,7 @@ export type DateTimeRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 
 function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement;
 ```
 
-`ForgeDateTimeRangeInput` - منتقي النطاق الزمني والتاريخي تم تأليفه مرة واحدة في ملف
+`ForgeDateTimeRangeInput` — منتقي النطاق الزمني والتاريخي تم تأليفه مرة واحدة في ملف
 لهجة JSX المحايدة وتم تجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`.
 
@@ -1392,17 +1391,17 @@ function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperti
 تصبح الفتحات هي الفتحات المسماة `startContent`/`endContent` (`<Slot>`، وجود
 تم اكتشافه باستخدام المساعد {@link hasSlot} المحايد للإطار)؛ و`v-model`
 
-- يصبح إصدار `change` بمثابة دعائم رد الاتصال `onUpdateModelValue`/`onChange`.
+- يصبح إصدار `change` هو دعائم رد الاتصال `onUpdateModelValue`/`onChange`.
 
 #### حدود
 
-| الاسم | اكتب                                      | الوصف |
-| ----- | ----------------------------------------- | ----- |
-| خصائص | للقراءة فقط<DateTimeRangeInputProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------------------------------- | ----------- |
+| خصائص | للقراءة فقط<DateTimeRangeInputProperties> |             |
 
 ## `src/components/organisms/forge-form-builder/forge-form-builder`
 
-### ForgeFormBuilder
+### فورجيفورمبويلدر
 
 **النوع:** الوظيفة
 
@@ -1416,7 +1415,7 @@ function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElemen
 `@mission-platform/vite-plugin-forge`.
 
 تم تصميمه على شكل `ForgeVerticalLayout` مكون من ثلاثة أعمدة: حقل **لوحة**، وعلامة تبويب
-المركز (**لوحة عمل المحرر**، وعلامة تبويب **الخطوات** للمعالج فقط، و**معاينة** مباشرة
+المركز (**لوحة عمل المحرر**، علامة تبويب **الخطوات** للمعالج فقط، **معاينة** مباشرة
 تم تقديمه باستخدام `ForgeSchemaForm` وعلامة تبويب **المخطط** JSON) و**المفتش**
 (خصائص الحقل المحدد + محرر الرؤية المشروطة، أو
 إعدادات النموذج عند عدم تحديد أي شيء). تنبعث شجرة الحقل بأكملها على شكل ملف
@@ -1425,7 +1424,7 @@ function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElemen
 
 البدائل من Vue SFC: تم استبدال `@dnd-kit/vue` بـ **الأصلي
 دعائم حدث عنصر السحب والإفلات ** لـ HTML5 (`draggable`/`onDragStart`/
-`onDragOver`/`onDrop`) - يسقط إدخال اللوحة لإضافة حقل، صف قماش
+`onDragOver`/`onDrop`) - يسقط إدخال اللوحة لإضافة حقل، صف قماشي
 يسقط لإعادة الترتيب، وتنخفض مجموعة الحقول إلى التداخل؛ ال
 لوحة/قماش/خصائص/حالة/خطوات المكونات الفرعية مضمنة؛ و
 `v-model`/emits تصبح دعائم رد اتصال. بينما يحوم السحب على القماش أ
@@ -1435,9 +1434,9 @@ function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElemen
 
 #### حدود
 
-| الاسم | اكتب                               | الوصف |
-| ----- | ---------------------------------- | ----- |
-| خصائص | للقراءة فقط<FormBuilderProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------- | ----------- |
+| خصائص | للقراءة فقط<FormBuilderProperties> |             |
 
 ### FormBuilderProperties
 
@@ -1463,8 +1462,8 @@ function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement;
 لهجة وتجميعها مباشرة إلى React أو Vue بواسطة
 `@mission-platform/vite-plugin-forge`.
 
-فهو يعرض مؤشر خطوة قابل للنقر عليه، ونص الخطوة النشطة، و
-رجوع/التالي/إنهاء التذييل. إنها تمتلك تصميمها من خلال وحدة CSS الموجودة في نفس الموقع
+يعرض مؤشر خطوة قابل للنقر، ونص الخطوة النشطة، و
+الرجوع/التالي/الانتهاء من التذييل. إنها تمتلك تصميمها من خلال وحدة CSS الموجودة في نفس الموقع
 `forge-form-wizard.module.scss`.
 
 يمكن أن تكون الخطوات ** مشروطة ** (يزيل `step.when === false` خطوة من ملف
@@ -1484,9 +1483,9 @@ function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<FormWizardProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<FormWizardProperties> |             |
 
 ### خصائص معالج النماذج
 
@@ -1507,6 +1506,85 @@ export interface WizardStep
 ```
 
 خطوة معالج واحدة.
+
+## `src/components/organisms/forge-form/forge-form`
+
+### defaultFormContext
+
+**النوع:** ثابت
+
+```typescript
+export const defaultFormContext: FormContextValue;
+```
+
+يتم توفير سياق النموذج الافتراضي الأساسي عند استدعاء useFormContext خارج ForgeForm.
+
+### فورجيفورم
+
+**النوع:** الوظيفة
+
+```typescript
+function ForgeForm(properties: Readonly<ForgeFormProps>): MpElement;
+```
+
+مكون النموذج الذي يحركه السياق يدعم الحالة الخاضعة للرقابة وغير الخاضعة للرقابة،
+التحقق من صحة المخطط القياسي / Zod / Yup، وملخص الأخطاء الذي يمكن الوصول إليه، ومحولات إطار العمل.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------ | ----------- |
+| خصائص | للقراءة فقط<ForgeFormProps> |             |
+
+### ForgeFormProperties
+
+**النوع:** النوع
+
+```typescript
+export type ForgeFormProperties = ForgeFormProps;
+```
+
+لم يتم تقديم أي وصف.
+
+### com.ForgeFormProps
+
+**النوع:** الواجهة
+
+```typescript
+export interface ForgeFormProps
+```
+
+لم يتم تقديم أي وصف.
+
+### FormContext
+
+**النوع:** ثابت
+
+```typescript
+export const FormContext: MpContext<FormContextValue | undefined>;
+```
+
+لم يتم تقديم أي وصف.
+
+### FormContextValue
+
+**النوع:** الواجهة
+
+```typescript
+export interface FormContextValue
+```
+
+لم يتم تقديم أي وصف.
+
+### useFormContext
+
+**النوع:** الوظيفة
+
+```typescript
+function useFormContext(): FormContextValue;
+```
+
+ربط للوصول إلى سياق النموذج في الحقول الفرعية أو المكونات المتداخلة.
 
 ## `src/components/organisms/forge-schema-form-dialog/forge-schema-form-dialog`
 
@@ -1532,9 +1610,9 @@ function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>)
 
 #### حدود
 
-| الاسم | اكتب                                    | الوصف |
-| ----- | --------------------------------------- | ----- |
-| خصائص | للقراءة فقط<SchemaFormDialogProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------------ | ----------- |
+| خصائص | للقراءة فقط<SchemaFormDialogProperties> |             |
 
 ### خصائص SchemaFormDialog
 
@@ -1578,9 +1656,9 @@ function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement;
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| خصائص | للقراءة فقط<SchemaFormProperties> |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------ | ----------- |
+| خصائص | للقراءة فقط<SchemaFormProperties> |             |
 
 ### SchemaFormFieldRenderer
 
@@ -1611,45 +1689,3 @@ export interface SchemaFormProperties
 ```
 
 لم يتم تقديم أي وصف.
-
-## `src/utils/date-time/date-time`
-
-### نطاق التاريخ
-
-**النوع:** الواجهة
-
-```typescript
-export interface DateRange
-```
-
-نطاق تاريخ ISO `{ start, end }` (`YYYY-MM-DD`).
-
-### DateTimeRange
-
-**النوع:** الواجهة
-
-```typescript
-export interface DateTimeRange
-```
-
-نطاق التاريخ والوقت `{ start, end, timezone }` (`YYYY-MM-DD HH:MM[:SS]`).
-
-### النطاق الزمني
-
-**النوع:** الواجهة
-
-```typescript
-export interface TimeRange
-```
-
-النطاق الزمني `{ start, end }` (`HH:MM` أو `HH:MM:SS`).
-
-### وضع المنطقة الزمنية
-
-**النوع:** النوع
-
-```typescript
-export type TimezoneMode = 'browser' | 'utc';
-```
-
-ما إذا كان يتم تفسير نطاق التاريخ والوقت في منطقة المتصفح أو التوقيت العالمي المنسق (UTC).

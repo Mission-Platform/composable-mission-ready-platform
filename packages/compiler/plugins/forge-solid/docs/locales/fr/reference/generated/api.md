@@ -23,9 +23,9 @@ Transformez un module hook neutre en sa source SolidJS.
 
 #### Paramètres
 
-| Nom     | Tapez             | Descriptif |
-| ------- | ----------------- | ---------- |
-| modules | Module Sémantique |            |
+| Nom | Tapez | Descriptif |
+| ------ | -------------- | ----------- |
+| modules | Module Sémantique |             |
 
 ## `src/emitters/module`
 
@@ -44,10 +44,10 @@ Transformez un module de composant neutre en sa source SolidJS.
 
 #### Paramètres
 
-| Nom     | Tapez             | Descriptif |
-| ------- | ----------------- | ---------- |
-| modules | Module Sémantique |            |
-| options | SolidEmitOptions  |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---------------- | ----------- |
+| modules | Module Sémantique |             |
+| options | SolidEmitOptions |             |
 
 ### ModuleSolideGénéré
 
@@ -97,9 +97,9 @@ Affinez un plan cible à celui Solid ; `false` pour tout autre plan de framewor
 
 #### Paramètres
 
-| Nom     | Tapez                          | Descriptif |
-| ------- | ------------------------------ | ---------- |
-| abaissé | CibleLoweredModule \| indéfini |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------------------- | ----------- |
+| abaissé | CibleLoweredModule \| indéfini |             |
 
 ### modulesolideinférieur
 
@@ -116,10 +116,10 @@ Abaissez l'IR neutre dans le wrapper d'intention de cible de Solid, contenant le
 
 #### Paramètres
 
-| Nom      | Tapez             | Descriptif |
-| -------- | ----------------- | ---------- |
-| ir       | Module Sémantique |            |
-| contexte | Contexte cible    |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| ir | Module Sémantique |             |
+| contexte | Contexte cible |             |
 
 ### planSolidImports
 
@@ -138,10 +138,10 @@ la réexécution produit une liste identique. Recalculer c'est ce qui fait
 
 #### Paramètres
 
-| Nom          | Tapez                    | Descriptif |
-| ------------ | ------------------------ | ---------- |
-| planifier    | Plan de réduction solide |            |
-| conditionnel | booléen                  |            |
+| Nom | Tapez | Descriptif |
+| ----------- | ----------------- | ----------- |
+| planifier | Plan de réduction solide |             |
+| conditionnel | booléen |             |
 
 ### planSolideModule
 
@@ -155,9 +155,9 @@ Créez le plan Solid pour les faits sémantiques d'un module.
 
 #### Paramètres
 
-| Nom | Tapez             | Descriptif |
-| --- | ----------------- | ---------- |
-| ir  | Module Sémantique |            |
+| Nom | Tapez | Descriptif |
+| ---- | -------------- | ----------- |
+| ir | Module Sémantique |             |
 
 ### SOLID_FRAMEWORK
 
@@ -207,7 +207,7 @@ Une projection de liste et la clé Solid qui lui est réservée.
 export interface SolidLoweredModule extends TargetLoweredModule
 ```
 
-L'extension Solid du contrat du plan cible partagé.
+L'extension Solid du contrat du plan d'objectif partagé.
 
 ### Plan d'abaissement solide
 
@@ -347,10 +347,10 @@ Affiner un plan Solid réduit. Un wrapper d'intention qui ne comporte aucun plan
 
 #### Paramètres
 
-| Nom        | Tapez                        | Descriptif |
-| ---------- | ---------------------------- | ---------- |
-| intentions | Intentions cibles            |            |
-| options    | Options d'optimisation cible |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------- | ----------- |
+| intentions | Intentions cibles |             |
+| options | Options d'optimisation cible |             |
 
 ### STABLE_LIST_KEYS
 

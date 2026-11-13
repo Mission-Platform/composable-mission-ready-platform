@@ -43,8 +43,8 @@ Vincule la proyección Jekyll (Liquid) a un complemento de salida del marco prop
 
 #### Parámetros
 
-| Nombre   | Tipo                  | Descripción |
-| -------- | --------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | --------------------- | ----------- |
 | opciones | ForgeJekyllCmsOptions |             |
 
 ### Opciones de ForgeJekyllCms
@@ -78,10 +78,10 @@ La página de documentación generada debe enumerarlos.
 
 #### Parámetros
 
-| Nombre             | Tipo                                      | Descripción |
-| ------------------ | ----------------------------------------- | ----------- |
-| componentes        | Componente de contenido de sólo lectura[] |             |
-| espacio de nombres | cadena                                    |             |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------- | ----------- |
+| componentes | Componente de contenido de sólo lectura[] |             |
+| espacio de nombres | cadena |             |
 
 ### emitirJekyllConfig
 
@@ -105,10 +105,10 @@ filtros y, de lo contrario, vería valores vacíos.
 
 #### Parámetros
 
-| Nombre             | Tipo                                      | Descripción |
-| ------------------ | ----------------------------------------- | ----------- |
-| componentes        | Componente de contenido de sólo lectura[] |             |
-| espacio de nombres | cadena                                    |             |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------------- | ----------- |
+| componentes | Componente de contenido de sólo lectura[] |             |
+| espacio de nombres | cadena |             |
 
 ### campoAJekyllType
 
@@ -122,9 +122,9 @@ El tipo de datos Jekyll como se publica un campo neutral.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| campo  | Campo de contenido |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------ | ----------- |
+| campo | Campo de contenido |             |
 
 ### Tipo de campo Jekyll
 
@@ -148,9 +148,9 @@ Un escalar YAML para un valor predeterminado neutral.
 
 #### Parámetros
 
-| Nombre | Tipo                  | Descripción |
-| ------ | --------------------- | ----------- |
-| valor  | ContenidoDefaultValue |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------------- | ----------- |
+| valor | ContenidoDefaultValue |             |
 
 ## `src/template`
 
@@ -179,10 +179,10 @@ Emite el líquido incluido para un componente.
 
 #### Parámetros
 
-| Nombre             | Tipo                    | Descripción |
-| ------------------ | ----------------------- | ----------- |
-| componente         | Componente de contenido |             |
-| espacio de nombres | cadena                  |             |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------- | ----------- |
+| componente | Componente de contenido |             |
+| espacio de nombres | cadena |             |
 
 ### incluir nombre de archivo
 
@@ -199,10 +199,10 @@ El nombre del archivo de artefacto de inclusión de un componente.
 
 #### Parámetros
 
-| Nombre             | Tipo                    | Descripción |
-| ------------------ | ----------------------- | ----------- |
-| componente         | Componente de contenido |             |
-| espacio de nombres | cadena                  |             |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------- | ----------- |
+| componente | Componente de contenido |             |
+| espacio de nombres | cadena |             |
 
 ### incluir ruta
 
@@ -219,10 +219,10 @@ La ruta de inclusión por la que se dirige un componente, en relación con `_inc
 
 #### Parámetros
 
-| Nombre             | Tipo                    | Descripción |
-| ------------------ | ----------------------- | ----------- |
-| componente         | Componente de contenido |             |
-| espacio de nombres | cadena                  |             |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------- | ----------- |
+| componente | Componente de contenido |             |
+| espacio de nombres | cadena |             |
 
 ### jekyllDiagnóstico
 
@@ -245,9 +245,9 @@ renderizado donde se esperaba su marcado.
 
 #### Parámetros
 
-| Nombre     | Tipo                    | Descripción |
-| ---------- | ----------------------- | ----------- |
-| ir         | Módulo Semántico        |             |
+| Nombre | Tipo | Descripción |
+| --------- | ---------------- | ----------- |
+| ir | Módulo Semántico |             |
 | componente | Componente de contenido |             |
 
 ### líquidoLiteral
@@ -266,6 +266,6 @@ que forzar el valor predeterminado a una cadena.
 
 #### Parámetros
 
-| Nombre | Tipo                  | Descripción |
-| ------ | --------------------- | ----------- |
-| valor  | ContenidoDefaultValue |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------------------- | ----------- |
+| valor | ContenidoDefaultValue |             |

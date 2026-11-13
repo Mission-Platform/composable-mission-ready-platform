@@ -1,3 +1,10 @@
+import type { VEvent } from '../ast/vevent';
+import type { ICalendar } from '../parsers/icalendar';
+
+export type CalendarView = 'month' | 'week' | 'day' | 'agenda';
+export type VCalendar = ICalendar;
+export type { VEvent };
+
 /** A half-open date range `[start, end)`. */
 export interface DateRange {
   start: Date;

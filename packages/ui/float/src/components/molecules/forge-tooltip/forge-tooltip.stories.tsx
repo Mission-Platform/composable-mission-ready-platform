@@ -1,8 +1,7 @@
 import { ForgeButton } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import { ForgeTooltip } from './forge-tooltip';
-
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * `ForgeTooltip` is the write-once `ForgeTooltip` component of `@mission-platform/float`. The trigger is the default slot; the hint is

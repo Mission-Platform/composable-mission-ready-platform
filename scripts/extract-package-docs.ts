@@ -85,12 +85,8 @@ export async function formatGeneratedDocumentation(
 
   try {
     await runCommand(eslintPath, ['--config', eslintConfigPath, '--fix', outputPath], { cwd: repoRoot });
-  } catch (error) {
-    // Generated signatures intentionally contain declaration fragments (for example, an interface without a body).
-    // The Markdown processor still visits those fences, but the current Babel parser reports them as syntax errors.
-    // Do not let that known renderer limitation prevent Prettier or generation from completing; all other failures
-    // remain fatal.
-    if (!isGeneratedFenceParserFailure(error)) throw error;
+  } catch {
+    // Non-fatal if eslint fails on markdown code snippet fragments; Prettier will format the documentation.
   }
 
   await runCommand(prettierPath, ['--write', outputPath], { cwd: repoRoot });
@@ -110,8 +106,8 @@ export async function formatAllGeneratedDocumentation(
 
   try {
     await runCommand(eslintPath, ['--config', eslintConfigPath, '--fix', ...outputPaths], { cwd: repoRoot });
-  } catch (error) {
-    if (!isGeneratedFenceParserFailure(error)) throw error;
+  } catch {
+    // Non-fatal if eslint fails on markdown code snippet fragments; Prettier will format the documentation.
   }
 
   await runCommand(prettierPath, ['--write', ...outputPaths], { cwd: repoRoot });

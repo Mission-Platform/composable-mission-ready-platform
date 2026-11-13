@@ -6,12 +6,12 @@
 > 语言: 简体中文 (zh)
 
 可组合性是在任务平台中封装和重用反应式逻辑的主要方式。为了保证这些
-逻辑单元可跨所有受支持的 UI 框架移植，它们使用以下方式编写为 **一次写入** 模块
-框架中立的钩子由 `@mission-platform/forge-jsx`.
+逻辑单元可跨所有受支持的 UI 框架移植，它们使用以下方法编写为 **一次写入** 模块
+`@mission-platform/forge-jsx` 提供的框架中立挂钩。
 
 ## 目录布局
 
-每个可组合项必须驻留在其自己的命名子目录中 `src/composables/`，伴随同地测试
+每个可组合项必须驻留在 `src/composables/` 内其自己命名的子目录中，并附有位于同一位置的测试
 文件和本地桶。
 
 ```text
@@ -25,14 +25,14 @@ src/composables/
 
 ## 创作规则
 
-1. **使用 Forge Hooks**：仅导入反应原语（例如， `useState`, `useEffect`, `useMemo`, `useRef`) 从
-   `@mission-platform/forge-jsx`。切勿直接从 `vue` 或者 `react`。
-2. **命名约定**：可组合名称必须使用短横线大小写并带有前缀 `use-` (e.g., `use-media-query`)。
-3. **SSR 安全**：确保服务器端渲染的逻辑是安全的。保护对仅限浏览器的 API 的任何访问，例如 `window`,
-   `document`， 或者 `localStorage`。
+1. **使用 Forge Hooks**：仅从以下位置导入反应式原语（例如 `useState`、`useEffect`、`useMemo`、`useRef`）
+   `@mission-platform/forge-jsx`。切勿直接从 `vue` 或 `react` 导入。
+2. **命名约定**：可组合名称必须使用短横线大小写并以 `use-` 为前缀（例如 `use-media-query`）。
+3. **SSR 安全**：确保服务器端渲染的逻辑是安全的。保护对仅限浏览器的 API（例如 `window`、
+   `document` 或 `localStorage`。
 4. **没有 UI 组件**：可组合项应该专注于逻辑。不要直接返回或操作UI组件；相反，
    返回状态、引用或回调。
-5. **强制测试**：每个可组合项都必须有一个共同定位的 `.spec.ts` 文件使用 Vitest.
+5. **强制测试**：每个可组合项都必须有一个使用 Vitest 的共置 `.spec.ts` 文件。
 
 ## 基本示例
 
@@ -64,16 +64,17 @@ export function useEventListener(
 
 ## 脚手架
 
-创建新可组合项的最快方法是通过 Mission Platform Developer MCP 工具：
+创建新可组合项的最快方法是通过连接的任务平台上的 `scaffold_composable` 工具
+开发者 MCP 服务器。这是 MCP 工具调用示例，而不是 shell 命令：
 
-```bash
+```text
 # Example: Creating a new 'use-click-outside' composable in the 'observers' package
 scaffold_composable(name="use-click-outside", package="observers", apply=true)
 ```
 
 ## 相关指南
 
-- [封装开发](package-development.md)
+- [软件包开发](package-development.md)
 - [原子组件设计](atomic-component-design.md)
 - [商店创作](store-authoring.md)
 - [实用程序创作](util-authoring.md)

@@ -5,6 +5,8 @@ import path from 'node:path';
 
 import { emitDts } from 'svelte2tsx';
 
+import type { JsxFramework } from '@mission-platform/forge-plugin-api';
+
 import {
   discoverComponentsFromGraph,
   discoverExternalExportsFromGraph,
@@ -18,7 +20,6 @@ import { oxcNodeText, parseOxcModule, type OxcParsedModule } from '../compiler/o
 
 import { externalReExportLine, helperBindingReExportName } from './entry-synthesis.js';
 
-import type { JsxFramework } from '@mission-platform/forge-plugin-api';
 import type { Plugin } from 'vite';
 
 /** Options for {@link jsxComponentsEntryDtsPlugin}. */
@@ -280,9 +281,9 @@ export function generateEntryDeclaration(
 /** Discovers all components, helper modules, and external exports from module graphs. */
 export function discoverGeneratedEntrySources(
   componentsModule: string,
-  publicEntryModule = componentsModule,
-  stripPrefix = 'Forge',
-  sourceRoot = path.dirname(path.dirname(componentsModule)),
+  publicEntryModule: string = componentsModule,
+  stripPrefix: string = 'Forge',
+  sourceRoot: string = path.dirname(path.dirname(componentsModule)),
 ): {
   components: DiscoveredComponent[];
   helpers: DiscoveredHelperExport[];

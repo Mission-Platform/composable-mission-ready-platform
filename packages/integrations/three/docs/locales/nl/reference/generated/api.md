@@ -24,9 +24,9 @@ en beheert een Three.js WebGL-context via `useThree`.
 
 #### Parameters
 
-| Naam          | Typ                                      | Beschrijving |
-| ------------- | ---------------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<ForgeThreeCanvasProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------------ | ----------- |
+| eigenschappen | Alleen-lezen<ForgeThreeCanvasProperties> |             |
 
 ### ForgeThreeCanvasEigenschappen
 
@@ -69,7 +69,7 @@ Automatisch opschonen: verwijdert de renderer en annuleert het animatieframe bij
 
 #### Parameters
 
-| Naam             | Typ                                                 | Beschrijving |
-| ---------------- | --------------------------------------------------- | ------------ |
-| canvasReferentie | ReferentieLike<HTMLCanvasElement \| null>           |              |
-| opReady          | (context: ThreeContext) => void \| (() => ongeldig) |              |
+| Naam | Typ | Beschrijving |
+| --------------- | ----------------------------------------------- | ----------- |
+| canvasReferentie | ReferentieLike<HTMLCanvasElement \| null> |             |
+| opReady | (context: ThreeContext) => void \| (() => ongeldig) |             |

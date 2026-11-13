@@ -1,6 +1,6 @@
-import { ForgeNotificationPanel } from './forge-notification-panel';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeNotificationPanel } from './forge-notification-panel';
 
 const meta = {
   title: 'Organisms/Feedback/ForgeNotificationPanel',

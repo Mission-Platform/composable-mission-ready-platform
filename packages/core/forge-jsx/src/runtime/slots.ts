@@ -42,7 +42,7 @@ export { Slot } from './types';
  * compiler maps to a Vue scoped slot (`slots.x?.(scope)`) and a React
  * render-prop call (`props.x?.(scope)`).
  */
-export type MpRenderProperty<S = MpPropertyBag> = (scope: S) => MpChild | readonly MpChild[];
+export type MpRenderProperty<S = MpPropertyBag, R = MpChild | readonly MpChild[]> = (scope: S) => R;
 
 /**
  * The content provided for a slot — either renderable children, or a function

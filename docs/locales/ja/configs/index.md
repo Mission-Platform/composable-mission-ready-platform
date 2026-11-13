@@ -2,10 +2,10 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> docs/packages/tooling/configs/index.md: [docs/packages/tooling/configs/index.md](../../../packages/tooling/configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > 言語: 日本語 (ja)
 
-Mission Platform は、集中管理された構成パッケージを使用します。 `packages/tooling/configs/` ディレクトリ間で一貫性を確保する
+Mission Platform は、`packages/tooling/configs/` ディレクトリ内の集中構成パッケージを使用して、複数のシステム間の一貫性を確保します。
 モノレポ。
 
 ## 概要
@@ -19,25 +19,25 @@ Mission Platform は、集中管理された構成パッケージを使用しま
 現在はリポジトリ ファイル リンクであり、パッケージ名前空間ルートになります。
 ドキュメントサイト:
 
-| パッケージ                                                                                                                   | 目的                                                          | 一次構成面             |
-| :--------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------ | :--------------------- |
-| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/ja/index.md)             | フラット ESLint JS/TS のルールと Vue.                         | `eslint.config.js`     |
-| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/ja/index.md)         | リポジトリのフォーマットのデフォルト。                        | `prettier.config.js`   |
-| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/ja/index.md)     | TypeScript コンパイラのプリセット。                           | `tsconfig.json`        |
-| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/ja/index.md)       | CSS および SCSS リンティング。                                | `stylelint.config.mjs` |
-| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/ja/index.md)                 | Vite そして Vitest 構成ヘルパー。                             | `vite.config.ts`       |
-| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/ja/index.md)             | ライブラリのバンドル ヘルパー。                               | `tsdown.config.ts`     |
-| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/ja/index.md)           | 共有PostCSSパイプライン。                                     | `postcss.config.mjs`   |
-| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/ja/index.md)                 | 共有ロケールと抽出設定。                                      | `i18next.config.ts`    |
-| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/ja/index.md) | 環境によって選択された Storybook フレームワークのプリセット。 | `.storybook/main.ts`   |
-| [ワーカーの構成](workers-config.md)                                                                                          | クロスワークスペースの Cloudflare Worker 規約。               | `wrangler.jsonc`       |
+|パッケージ |目的 |一次構成面 |
+| :---------------------------------------------------------------------------------------------------------- | :----------------------------------------------- | :---------------------------- |
+| [`@mission-platform/eslint-config`](../../../../packages/tooling/configs/eslint-config/docs/locales/ja/index.md) | JS/TS および Vue のフラットな ESLint ルール。             | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../packages/tooling/configs/prettier-config/docs/locales/ja/index.md) |リポジトリのフォーマットのデフォルト。                  | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../packages/tooling/configs/typescript-config/docs/locales/ja/index.md) | TypeScript コンパイラ プリセット。                     | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../packages/tooling/configs/stylelint-config/docs/locales/ja/index.md) | CSS および SCSS リンティング。                            | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../packages/tooling/configs/vite-config/docs/locales/ja/index.md) | Vite および Vitest 構成ヘルパー。           | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../packages/tooling/configs/tsdown-config/docs/locales/ja/index.md) |ライブラリのバンドル ヘルパー。                        | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../packages/tooling/configs/postcss-config/docs/locales/ja/index.md) |共有PostCSSパイプライン。                         | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../packages/tooling/configs/i18n-config/docs/locales/ja/index.md) |共有ロケールと抽出設定。           | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../packages/tooling/configs/storybook-framework/docs/locales/ja/index.md) |環境によって選択された Storybook フレームワークのプリセット。 | `.storybook/main.ts` |
+| [ワーカー構成](workers-config.md) |クロスワークスペースの Cloudflare Worker 規約。   | `wrangler.jsonc` |
 
-## コアツーリング
+## コアツール
 
 ### ESLint (`@mission-platform/eslint-config`)
 
 すべてのワークスペースにわたってコード品質ルールを標準化します。 Flat Config 形式を使用しており、次のサポートが含まれています。
-TypeScript, Vue 3、そしてアクセシビリティ。
+TypeScript、Vue 3、およびアクセシビリティ。
 
 ### Prettier (`@mission-platform/prettier-config`)
 
@@ -45,18 +45,18 @@ TypeScript, Vue 3、そしてアクセシビリティ。
 
 ### TypeScript (`@mission-platform/typescript-config`)
 
-ベースを提供します `tsconfig` さまざまなターゲットのプリセット:
+さまざまなターゲットにベースの `tsconfig` プリセットを提供します。
 
 - `base`: 一般的なデフォルト。
-- `vue`: に最適化 Vue SFCは3つ。
-- `node`: に最適化 Node.js 環境。
-- `framework-<name>`: マッチングを追加します `mp:<framework>` 外部消費者向けの輸出条件。
+- `vue`: Vue 3 SFC 用に最適化されています。
+- `node`: Node.js 環境用に最適化されています。
+- `framework-<name>`: 外部コンシューマー向けに一致する `mp:<framework>` エクスポート条件を追加します。
 
 ## ビルドシステム
 
 ### Vite (`@mission-platform/vite-config`)
 
-作成するためのファクトリー関数を提供します Vite アプリケーションとライブラリの両方の構成。
+アプリケーションとライブラリの両方に Vite 構成を作成するためのファクトリ関数を提供します。
 
 ```ts
 import {
@@ -66,7 +66,7 @@ import {
 ```
 
 - `defineAppConfig`: 最上位アプリケーション (SPA、ワーカー) 用。
-- `defineLibraryConfig`: 最適なバンドルとツリーシェイキングを備えた共有パッケージ用。
+- `defineLibraryConfig`: 最適なバンドルとツリーシェーキングを備えた共有パッケージ用。
 
 ### PostCSS (`@mission-platform/postcss-config`)
 
@@ -77,8 +77,8 @@ PostCSS プラグイン パイプライン (Autoprefixer を含む) を共有し
 
 ワークスペースで構成を使用するには:
 
-1. 構成パッケージを `devDependency` で `package.json`。
-2. ローカル構成ファイルを作成します (例: `eslint.config.js`)。
+1. 構成パッケージを `devDependency` として `package.json` に追加します。
+2. ローカル構成ファイルを作成します (Stylelint、`stylelint.config.mjs` 用)。
 3. 基本構成をインポートおよびエクスポート/拡張します。
 
 ```js
@@ -91,7 +91,7 @@ export default [
 ];
 ```
 
-Stylelint では、`stylelint.config.mjs` で同じ ESM の import/spread パターンを使用します。
+Stylelint の場合、`stylelint.config.mjs` と同じ ESM インポート/スプレッド パターンを使用します。
 
 ```js
 // stylelint.config.mjs
@@ -103,7 +103,7 @@ export default { ...baseConfig };
 ## 構成の選択
 
 ルールをワークスペースにコピーするのではなく、懸念事項を所有するパッケージを使用します。アプリケーションとライブラリのビルド ファイル
-ローカルオーバーライドを追加することはできますが、共有デフォルトはそのままにしておく必要があります。 `packages/tooling/configs/`。新しいパッケージの場合は、パッケージから開始します
+ローカルオーバーライドを追加できますが、共有デフォルトは `packages/tooling/configs/` のままにする必要があります。新しいパッケージの場合は、パッケージから開始します
 scaffold を作成してから、ワークスペース チェックを実行します。
 
 ```bash

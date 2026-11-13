@@ -33,6 +33,16 @@ Router-Ausgang, der die neutrale DOM-Ansicht einer Route bereitstellt. Bewerbung
 `viewAdapter` an den Router, wenn Ansichten einen benutzerdefinierten Lebenszyklus benötigen; sonst a
 Node, String oder DOM-Factory in `route.component` wird direkt gerendert.
 
+### MpRouterViewElement
+
+**Art:** Komponente
+
+```typescript
+export class MpRouterViewElement extends MpRouterOutletElement
+```
+
+Keine Beschreibung angegeben.
+
 ### registerRouterElements
 
 **Art:** Funktion
@@ -45,9 +55,9 @@ Registrieren Sie die Router-Grundelemente einmal. sicher, vor Flüssigkeitszufuh
 
 #### Parameter
 
-| Name     | Geben Sie                     | ein Beschreibung |
-| -------- | ----------------------------- | ---------------- |
-| Optionen | RegisterRouterElementsOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ----------------------------- | ----------- |
+| Optionen | RegisterRouterElementsOptions |             |
 
 ## `src/runtime/history`
 
@@ -63,9 +73,9 @@ Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name     | Geben Sie | ein Beschreibung |
-| -------- | --------- | ---------------- |
-| gewinnen | Fenster   |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| gewinnen | Fenster |             |
 
 ### createMemoryHistory
 
@@ -79,9 +89,9 @@ Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name       | Geben Sie | ein Beschreibung |
-| ---------- | --------- | ---------------- |
-| initialUrl |           |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---- | ----------- |
+| initialUrl |      |             |
 
 ### createWebHistory
 
@@ -189,9 +199,9 @@ Lösen Sie ein neutrales Ziel über den gebundenen Web Components-Router auf.
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| zu   | MpRouteLocationRaw |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
 
 ### setForgeRouter
 
@@ -205,9 +215,9 @@ Binden Sie den App-eigenen Router für kompilierte Framework-freie Paketfunktion
 
 #### Parameter
 
-| Name   | Geben Sie                   | ein Beschreibung |
-| ------ | --------------------------- | ---------------- |
-| Router | MpWebComponentsRouter<View> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------------------------- | ----------- |
+| Router | MpWebComponentsRouter<View> |             |
 
 ### Verwenden Sie ForgeNavigation
 
@@ -297,9 +307,19 @@ Verlauf, Wächter, Weiterleitungen, Abonnements und Browser-Scroll-Verhalten.
 
 #### Parameter
 
-| Name     | Geben Sie                          | ein Beschreibung |
-| -------- | ---------------------------------- | ---------------- |
-| Optionen | MpWebComponentsRouterOptions<View> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------------------------- | ----------- |
+| Optionen | MpWebComponentsRouterOptions<View> |             |
+
+### getActiveRouter
+
+**Art:** Funktion
+
+```typescript
+function getActiveRouter(): MpWebComponentsRouter<unknown> | undefined;
+```
+
+Keine Beschreibung angegeben.
 
 ### MpRouterLoadingFallback
 
@@ -343,10 +363,26 @@ Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name   | Geben Sie          | ein Beschreibung |
-| ------ | ------------------ | ---------------- |
-| Router | MpRouterAdapter    |                  |
-| zu     | MpRouteLocationRaw |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------ | ----------- |
+| Router | MpRouterAdapter |             |
+| zu | MpRouteLocationRaw |             |
+
+### setActiveRouter
+
+**Art:** Funktion
+
+```typescript
+function setActiveRouter(router: MpWebComponentsRouter<View> | undefined): void;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---------------------------------------- | ----------- |
+| Router | MpWebComponentsRouter<View> \| undefiniert |             |
 
 ## `src/utils/forge-router-web-components`
 

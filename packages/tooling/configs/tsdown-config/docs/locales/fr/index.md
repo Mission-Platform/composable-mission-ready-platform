@@ -13,12 +13,12 @@ Aides à la création de bibliothèques tsdown partagées pour les espaces de tr
 pnpm add --save-dev @mission-platform/tsdown-config
 ```
 
-Utiliser le package depuis un espace de travail `tsdown.config.ts` et garder les points d'entrée,
+Utiliser le package depuis un espace de travail `tsdown.config.ts` et conserver les points d'entrée,
 les dépendances externes et les contraintes de sortie locales au package en cours de construction.
-Les déclarations et les bundles générés appartiennent au package de ce package. `dist/` annuaire.
+Les déclarations et les bundles générés appartiennent au répertoire `dist/` de ce package.
 
 ## Contribuer
 
-Courir `pnpm --filter @mission-platform/tsdown-config lint` et sa vérification de format.
-Préserver la sortie déterministe et n’ajouter pas de branches cibles spécifiques au framework
+Exécutez `pnpm --filter @mission-platform/tsdown-config lint` et sa vérification de format.
+Préserver la sortie déterministe et ne pas ajouter de branches cibles spécifiques au framework
 à l'assistant de construction neutre.

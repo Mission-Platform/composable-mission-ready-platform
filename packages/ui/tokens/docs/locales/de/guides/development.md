@@ -16,17 +16,17 @@ pnpm --filter @mission-platform/tokens lint:style
 pnpm --filter @mission-platform/tokens build
 ```
 
-Der Build erzeugt JavaScript und eine Deklarationsausgabe in `dist/`. Generiert
-SCSS und TypeScript Quellen unten `src/generated/` sind abgeleitete Artefakte und
+Der Build erzeugt JavaScript- und Deklarationsausgaben in `dist/`. Generiert
+SCSS- und TypeScript-Quellen unter `src/generated/` sind abgeleitete Artefakte und
 muss deterministisch bleiben.
 
 ## Ändern Sie einen Token
 
-Bearbeiten Sie den Quell-JSON unter `tokens/` und seinen DTCG-Pfad stabil halten, es sei denn, der
+Bearbeiten Sie den Quell-JSON unter `tokens/` und halten Sie seinen DTCG-Pfad stabil, es sei denn
 Die Änderung ist beabsichtigt und dokumentiert. Komponentenverträge leben unter
 `tokens/component/<atomic-level>/`; Komponentenquellen sollten nicht dupliziert werden
 Gemeinsame Token-Pfade. Verwenden Sie die vorhandenen Skripts zur Token-Generierung und überprüfen Sie beide
-SCSS und TypeScript Ausgabe vor der Veröffentlichung.
+SCSS- und TypeScript-Ausgabe vor der Veröffentlichung.
 
 Das Paket ist Framework-neutral. Das Themenverhalten wird vom Konsumierenden ausgewählt
 Stylesheet durch die exportierten SCSS-Einstiegspunkte; Dieses Paket gehört nicht

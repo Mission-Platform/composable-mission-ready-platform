@@ -5,6 +5,6 @@
 > packages/compiler/plugins/forge-router-react/docs/index.md: [packages/compiler/plugins/forge-router-react/docs/index.md](../../index.md)
 > שפה: עברית (he)
 
-לזייף יעד נתב עבור React נתב
+זיוף יעד נתב עבור נתב React
 
-לִרְאוֹת `llms.txt` עבור ה-API הציבורי ודוגמאות שימוש.
+ראה `llms.txt` עבור ה-API הציבורי ודוגמאות שימוש.

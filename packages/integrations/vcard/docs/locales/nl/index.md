@@ -7,7 +7,7 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 Gedeelde RFC 6350 vCard- en RFC 5545 iCalendar-gegevens-API's voor Mission Platform.
 
-Het pakket biedt verliesvrije parsering en doorschrijving van componenten/eigendommen
+Het pakket biedt verliesvrije parsering en doorschrijving van componenten/eigenschappen
 `readICalendar`/`writeICalendar` en `readVCard`/`writeVCard`, plus Forge
 renderers genaamd `ForgeVCard` en `ForgeICalendar`. `ForgeICalendar` accepteert de
 genormaliseerd resultaat van `calendarEvents(readICalendar(source))`, dus het gegenereerde

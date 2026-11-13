@@ -11,11 +11,11 @@ Verträge, die von Anwendungen und gemeinsam genutzten Komponenten genutzt werde
 
 ## Beginnen Sie hier
 
-- [Komponenten-Token-Referenz](reference/component-tokens.md) — das Inventar,
+- [Komponenten-Token-Referenz](reference/component-tokens.md) – das Inventar,
   DTCG-Pfade, generierte Ausgabe und Figma-Übergabevertrag.
-- [Build- und Testanleitung](guides/development.md) – Token-Quelle, -Generierung und
+– [Build- und Testanleitung](guides/development.md) – Token-Quelle, Generierung und
   Stylesheet-Prüfungen.
-- [`README.md`](../../../README.md) — Paketexporte und Grundeinrichtung.
+- [`README.md`](../../../README.md) – Paketexporte und Grundeinrichtung.
 
-Importieren Sie die öffentliche Datei des Pakets `.` oder SCSS-Unterpfade von `package.json`; nicht
+Importieren Sie die öffentlichen `.`- oder SCSS-Unterpfade des Pakets aus `package.json`. nicht
 Kopieren Sie generierte Tokendateien in eine Anwendung.

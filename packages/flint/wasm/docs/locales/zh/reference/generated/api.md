@@ -9,9 +9,209 @@
 
 根据 `@mission-platform/flint-wasm` 中的公共源声明生成。
 
+## `src/codegen/abi`
+
+### 聚合字段描述符
+
+**种类：**接口
+
+```typescript
+export interface AggregateFieldDescriptor
+```
+
+聚合字段布局描述符。
+
+### 聚合布局描述符
+
+**种类：**接口
+
+```typescript
+export interface AggregateLayoutDescriptor
+```
+
+聚合结构布局描述符。
+
+### 规范化切片调用约定
+
+**种类：**功能
+
+```typescript
+function canonicalizeSliceCallingConvention(type: FlintWasmPrimitiveType): readonly FlintWasmPrimitiveType[];
+```
+
+将切片或字节类型降低为未打包的 WebAssembly 寄存器类型。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ---------------------- | ----------- |
+|类型 | FlintWasmPrimitiveType |             |
+
+### 计算数组分配大小
+
+**种类：**功能
+
+```typescript
+function computeArrayAllocationSize(
+  count: number,
+  elementSize: number,
+  maxBytes: number = MAX_ARRAY_ALLOCATION_BYTES,
+): number;
+```
+
+计算 count * elementSize 的数组分配所需的总字节大小。
+强制执行检查乘法，并在整数溢出或越界时引发 RangeError。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ------ | ----------- |
+|计数|数量 |             |
+|元素大小 |数量 |             |
+|最大字节数 |数量 |             |
+
+### 计算切片容量
+
+**种类：**功能
+
+```typescript
+function computeSliceCapacity(bufferBytes: number, elementSize: number): number;
+```
+
+在给定总缓冲区字节大小和元素字节大小的情况下计算切片描述符的容量。
+通过返回无限/无界容量而不除以零来安全地处理零大小类型 (elementSize === 0)。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ------ | ----------- |
+|缓冲区字节 |数量 |             |
+|元素大小 |数量 |             |
+
+### 解码切片寄存器三元组
+
+**种类：**功能
+
+```typescript
+function decodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+解码并验证解压的 `(ptr: i32, len: i32, cap: i32)` 跨边界接收的寄存器三元组。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|指针|数量 |             |
+|长度|数量 |             |
+|容量|数量 |             |
+
+### 编码切片注册三元组
+
+**种类：**功能
+
+```typescript
+function encodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+将切片元数据打包到解包的 `(ptr: i32, len: i32, cap: i32)` 寄存器三元组中。
+强制执行无符号边界和非溢出不变量以防止环绕攻击。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|指针|数量 |             |
+|长度|数量 |             |
+|容量|数量 |             |
+
+### MAX_ARRAY_ALLOCATION_BYTES
+
+**种类：**常数
+
+```typescript
+export const MAX_ARRAY_ALLOCATION_BYTES;
+```
+
+没有提供描述。
+
+### 最大切片地址
+
+**种类：**常数
+
+```typescript
+export const MAX_SLICE_ADDRESS;
+```
+
+没有提供描述。
+
+### 清理聚合填充
+
+**种类：**功能
+
+```typescript
+function sanitizeAggregatePadding(buffer: Uint8Array, layout: AggregateLayoutDescriptor, baseOffset = 0): Uint8Array;
+```
+
+在 ABI 传输之前，将聚合结构缓冲区内的所有填充字节初始化为零。
+防止未初始化的内存和机密数据跨信任边界泄漏。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ------------------------- | ---------------------------------------------------- |
+|缓冲| Uint8Array | - 包含序列化聚合的原始缓冲区。        |
+|布局|聚合布局描述符 | - 聚合布局描述符。                       |
+|基偏移量 |                           | - 缓冲区内的起始偏移量（默认为 0）。 |
+
+#### 合同
+
+- **@param:** - 包含序列化聚合的原始缓冲区。
+- **@param:** - 聚合布局描述符。
+- **@param:** - 缓冲区内的起始偏移量（默认为 0）。
+- **@returns:** 使用零填充清理缓冲区。
+
+### 切片寄存器三元组
+
+**种类：**接口
+
+```typescript
+export interface SliceRegisterTriplet
+```
+
+直接跨 WebAssembly 边界传递的未打包切片的寄存器表示。
+
+### 验证切片边界
+
+**种类：**功能
+
+```typescript
+function validateSliceBounds(pointer: number, length: number, capacity: number): boolean;
+```
+
+验证切片寄存器三元组满足空间边界和无符号算术非包装不变量。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|指针|数量 |             |
+|长度|数量 |             |
+|容量|数量 |             |
+
+### ZERO_SIZED_TYPE_SENTINEL_POINTER
+
+**种类：**常数
+
+```typescript
+export const ZERO_SIZED_TYPE_SENTINEL_POINTER;
+```
+
+没有提供描述。
+
 ## `src/collection-runtime`
 
-### buildFlintWasmCollectionRuntimeBodies
+### 构建FlintWasmCollectionRuntimeBodies
 
 **种类：**功能
 
@@ -19,9 +219,13 @@
 function buildFlintWasmCollectionRuntimeBodies(): readonly FlintWasmRuntimeBody[];
 ```
 
-没有提供描述。
+返回集合和异步运行时辅助函数的元数据描述符。
 
-### buildFlintWasmCollectionRuntimeWasmBodies
+#### 合同
+
+- **@returns:** 运行时函数描述符数组。
+
+### 构建FlintWasmCollectionRuntimeWasmBodies
 
 **种类：**功能
 
@@ -36,11 +240,11 @@ function buildFlintWasmCollectionRuntimeWasmBodies(allocatorIndex: number): read
 
 #### 参数
 
-| 名称       | 类型 | 描述 |
-| ---------- | ---- | ---- |
-| 分配器索引 | 数量 |      |
+|名称 |类型 |描述 |
+| -------------- | ------ | ----------- |
+|分配器索引 |数量 |             |
 
-### FlintWasmRuntimeBody
+### FlintWasm运行时主体
 
 **种类：**接口
 
@@ -48,7 +252,7 @@ function buildFlintWasmCollectionRuntimeWasmBodies(allocatorIndex: number): read
 export interface FlintWasmRuntimeBody
 ```
 
-没有提供描述。
+WebAssembly 中嵌入的标准库运行时辅助函数的合约描述符。
 
 ## `src/contracts`
 
@@ -60,7 +264,17 @@ export interface FlintWasmRuntimeBody
 export interface FlintTargetFeatures
 ```
 
-没有提供描述。
+在代码发布期间启用目标 WebAssembly 提案功能。
+
+### FlintWasmAggregateLayout
+
+**种类：**接口
+
+```typescript
+export interface FlintWasmAggregateLayout
+```
+
+线性内存中布局的聚合结构的内存布局描述符。
 
 ### FlintWasmArtifact元数据
 
@@ -70,9 +284,9 @@ export interface FlintTargetFeatures
 export interface FlintWasmArtifactMetadata
 ```
 
-没有提供描述。
+描述所发出的 WebAssembly 工件的内存布局、功能要求和功能签名的元数据。
 
-### FlintWasmAsyncCapability
+### 弗林特瓦斯同步能力
 
 **种类：**类型
 
@@ -80,9 +294,9 @@ export interface FlintWasmArtifactMetadata
 export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-没有提供描述。
+WebAssembly 模块请求的异步运行时功能。
 
-### FlintWasmAsyncContract
+### 弗林特瓦斯同步契约
 
 **种类：**接口
 
@@ -90,9 +304,9 @@ export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker
 export interface FlintWasmAsyncContract
 ```
 
-没有提供描述。
+管理 WebAssembly 中的异步执行和消息传递的契约规范。
 
-### FlintWasmBackendInput
+### FlintWasm后端输入
 
 **种类：**接口
 
@@ -100,9 +314,9 @@ export interface FlintWasmAsyncContract
 export interface FlintWasmBackendInput
 ```
 
-没有提供描述。
+传递到 WebAssembly 后端编译管道的完整输入负载。
 
-### FlintWasmBackendResult
+### FlintWasm后端结果
 
 **种类：**接口
 
@@ -110,9 +324,9 @@ export interface FlintWasmBackendInput
 export interface FlintWasmBackendResult
 ```
 
-没有提供描述。
+WebAssembly 后端发射器返回的结果包含二进制工件和报告。
 
-### FlintWasmBinaryOperator
+### FlintWasm二元运算符
 
 **种类：**类型
 
@@ -120,9 +334,9 @@ export interface FlintWasmBackendResult
 export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
-没有提供描述。
+WebAssembly 支持二进制算术、逻辑和比较运算符。
 
-### FlintWasmCapabilityImport
+### 弗林特瓦斯姆能力导入
 
 **种类：**接口
 
@@ -130,7 +344,7 @@ export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' 
 export interface FlintWasmCapabilityImport
 ```
 
-没有提供描述。
+WebAssembly 模块所需的主机功能导入。
 
 ### FlintWasmCollectionLayout
 
@@ -140,7 +354,7 @@ export interface FlintWasmCapabilityImport
 export interface FlintWasmCollectionLayout
 ```
 
-没有提供描述。
+线性内存中集合类型的布局和策略配置。
 
 ### FlintWasm编译器提示
 
@@ -150,9 +364,9 @@ export interface FlintWasmCollectionLayout
 export interface FlintWasmCompilerHints
 ```
 
-没有提供描述。
+向 WebAssembly 编译器后端提供优化提示。
 
-### FlintWasm诊断
+### 弗林特瓦斯姆诊断
 
 **种类：**接口
 
@@ -160,9 +374,9 @@ export interface FlintWasmCompilerHints
 export interface FlintWasmDiagnostic
 ```
 
-没有提供描述。
+在 WebAssembly 降低、验证或验证期间发出编译器诊断信息。
 
-### FlintWasmEnumDeclaration
+### FlintWasmEnum声明
 
 **种类：**接口
 
@@ -170,9 +384,9 @@ export interface FlintWasmDiagnostic
 export interface FlintWasmEnumDeclaration
 ```
 
-没有提供描述。
+WebAssembly 内存布局中表示的标记联合枚举声明。
 
-### FlintWasmExpression
+### 弗林特瓦斯表达
 
 **种类：**类型
 
@@ -180,9 +394,9 @@ export interface FlintWasmEnumDeclaration
 export type FlintWasmExpression = |
 ```
 
-没有提供描述。
+中间表示表达式降低为 WebAssembly 指令。
 
-### FlintWasmFeatureRequirements
+### FlintWasm功能要求
 
 **种类：**接口
 
@@ -190,9 +404,29 @@ export type FlintWasmExpression = |
 export interface FlintWasmFeatureRequirements
 ```
 
-没有提供描述。
+在代码生成过程中发现的 WebAssembly 功能需求。
 
-### FlintWasmFunction
+### 弗林特瓦斯姆外国能力公司
+
+**种类：**接口
+
+```typescript
+export interface FlintWasmForeignCapability
+```
+
+降低了 WebAssembly 排放的国外 C 功能模块导入合同。
+
+### 弗林特瓦斯姆外交机构
+
+**种类：**接口
+
+```typescript
+export interface FlintWasmForeignFunction
+```
+
+降低了 WebAssembly 排放的外部 C 函数导入合同。
+
+### FlintWasm函数
 
 **种类：**接口
 
@@ -200,7 +434,7 @@ export interface FlintWasmFeatureRequirements
 export interface FlintWasmFunction
 ```
 
-没有提供描述。
+函数中间表示降低为 WebAssembly 函数定义。
 
 ### FlintWasm通用专业化
 
@@ -210,9 +444,9 @@ export interface FlintWasmFunction
 export interface FlintWasmGenericSpecialization
 ```
 
-没有提供描述。
+发送到 WebAssembly 的单态泛型函数专门化。
 
-### FlintWasmIteratorBoundaryDescriptor
+### FlintWasm迭代器边界描述符
 
 **种类：**接口
 
@@ -220,9 +454,9 @@ export interface FlintWasmGenericSpecialization
 export interface FlintWasmIteratorBoundaryDescriptor
 ```
 
-没有提供描述。
+定义迭代器状态机转换和导出的边界描述符。
 
-### FlintWasmIteratorCapability
+### FlintWasm迭代器能力
 
 **种类：**类型
 
@@ -230,9 +464,9 @@ export interface FlintWasmIteratorBoundaryDescriptor
 export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 ```
 
-没有提供描述。
+运行时迭代器支持的迭代器功能类别。
 
-### FlintWasmIteratorCapabilityDescriptor
+### FlintWasm迭代器能力描述符
 
 **种类：**接口
 
@@ -240,7 +474,7 @@ export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 export interface FlintWasmIteratorCapabilityDescriptor
 ```
 
-没有提供描述。
+定义迭代器迭代策略和元素边界的描述符。
 
 ### FlintWasmIteratorExport
 
@@ -250,9 +484,9 @@ export interface FlintWasmIteratorCapabilityDescriptor
 export interface FlintWasmIteratorExport
 ```
 
-没有提供描述。
+导出的迭代器状态机符号可供主机运行时访问。
 
-### FlintWasmLogger
+### 燧石瓦斯姆记录仪
 
 **种类：**接口
 
@@ -260,9 +494,9 @@ export interface FlintWasmIteratorExport
 export interface FlintWasmLogger
 ```
 
-没有提供描述。
+WebAssembly 编译事件的结构化记录器接口。
 
-### FlintWasm 模块
+### 弗林特瓦斯模块
 
 **种类：**接口
 
@@ -270,7 +504,7 @@ export interface FlintWasmLogger
 export interface FlintWasmModule
 ```
 
-没有提供描述。
+模块中间表示，包含用于 WebAssembly 发射的函数、布局和导入。
 
 ### FlintWasm参数
 
@@ -280,7 +514,7 @@ export interface FlintWasmModule
 export interface FlintWasmParameter
 ```
 
-没有提供描述。
+WebAssembly 函数签名中使用的函数参数定义。
 
 ### FlintWasmPrimitiveType
 
@@ -288,10 +522,10 @@ export interface FlintWasmParameter
 
 ```typescript
 export type FlintWasmPrimitiveType =
-  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | 'v128';
 ```
 
-没有提供描述。
+WebAssembly 后端降低通道支持的原始数据类型。
 
 ### FlintWasmSourceImport
 
@@ -301,9 +535,9 @@ export type FlintWasmPrimitiveType =
 export interface FlintWasmSourceImport
 ```
 
-没有提供描述。
+导入到 WebAssembly 模块中的链接源模块依赖项。
 
-### FlintWasmSourceSpan
+### 弗林特瓦斯源跨度
 
 **种类：**接口
 
@@ -311,9 +545,9 @@ export interface FlintWasmSourceImport
 export interface FlintWasmSourceSpan
 ```
 
-没有提供描述。
+源位置跨度映射到 WebAssembly 指令以生成调试符号。
 
-### FlintWasm标准库操作
+### 弗林特瓦斯姆标准库操作
 
 **种类：**类型
 
@@ -344,6 +578,8 @@ export type FlintWasmStandardLibraryOperation =
   | 'memory-realloc'
   | 'memory-load-u32'
   | 'memory-store-u32'
+  | 'memory-load-u8'
+  | 'memory-store-u8'
   | 'memory-load-f64'
   | 'memory-store-f64'
   | 'f64-from-u32'
@@ -366,12 +602,23 @@ export type FlintWasmStandardLibraryOperation =
   | 'signal-schedule'
   | 'async-schedule-microtask'
   | 'async-worker-post'
-  | 'async-worker-receive';
+  | 'async-worker-receive'
+  | 'memory-copy'
+  | 'memory-fill'
+  | 'simd-binarize'
+  | 'simd-i8x16-splat'
+  | 'simd-i8x16-eq'
+  | 'simd-i8x16-lt-u'
+  | 'simd-i8x16-bitmask'
+  | 'simd-i32x4-splat'
+  | 'simd-i32x4-add'
+  | 'simd-v128-load'
+  | 'simd-v128-store';
 ```
 
-没有提供描述。
+WebAssembly 标准库内部操作由后端编译器降低。
 
-### FlintWasm语句
+### 弗林特瓦斯声明
 
 **种类：**类型
 
@@ -379,9 +626,9 @@ export type FlintWasmStandardLibraryOperation =
 export type FlintWasmStatement = |
 ```
 
-没有提供描述。
+中间表示语句降低为 WebAssembly 结构化控制流。
 
-### FlintWasmTypeName
+### FlintWasm类型名称
 
 **种类：**接口
 
@@ -389,7 +636,7 @@ export type FlintWasmStatement = |
 export interface FlintWasmTypeName
 ```
 
-没有提供描述。
+WebAssembly 降低期间使用的抽象类型名称表示。
 
 ## `src/emitter`
 
@@ -401,18 +648,309 @@ export interface FlintWasmTypeName
 function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<input>'): FlintWasmBackendResult;
 ```
 
-没有提供描述。
+将 Flint IR 模块编译为 WebAssembly 二进制和文本格式的主入口点。
 
 #### 参数
 
-| 名称   | 类型                  | 描述 |
-| ------ | --------------------- | ---- |
-| 输入   | FlintWasmBackendInput |      |
-| 文件名 |                       |      |
+|名称 |类型 |描述 |
+| -------- | --------------------- | ----------- |
+|输入 | FlintWasm后端输入 |             |
+|文件名 |                       |             |
+
+## `src/emitter/section-builder`
+
+### SECTION_IDS
+
+**种类：**常数
+
+```typescript
+export const SECTION_IDS;
+```
+
+没有提供描述。
+
+### 部分
+
+**种类：**功能
+
+```typescript
+function section(id: number, contents: readonly number[]): number[];
+```
+
+将有效负载字节打包到具有节 ID 和长度前缀的 WebAssembly 节中。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ----------------- | ----------- |
+|编号 |数量 |             |
+|内容 |只读数字[] |             |
+
+### WasmSectionBuilder
+
+**种类：**类
+
+```typescript
+export class WasmSectionBuilder
+```
+
+创建类型化的 WebAssembly 节生成器。
+
+## `src/encoding/bytes`
+
+### 附加F32
+
+**种类：**功能
+
+```typescript
+function appendF32(value: number): number[];
+```
+
+以小端二进制格式附加 32 位浮点数，规范化 NaN。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|数量 |             |
+
+### 附加F64
+
+**种类：**功能
+
+```typescript
+function appendF64(value: number): number[];
+```
+
+以小端二进制格式附加 64 位浮点数，规范化 NaN。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|数量 |             |
+
+### CANONICAL_F32_NAN_BYTES
+
+**种类：**常数
+
+```typescript
+export const CANONICAL_F32_NAN_BYTES;
+```
+
+32 位浮点数的规范安静 NaN 位模式（小端字节序中为 0x7fc00000）。
+
+### CANONICAL_F64_NAN_BYTES
+
+**种类：**常数
+
+```typescript
+export const CANONICAL_F64_NAN_BYTES;
+```
+
+64 位浮点数的规范安静 NaN 位模式（小端字节序为 0x7ff8000000000000）。
+
+### 向量
+
+**种类：**功能
+
+```typescript
+function vector(values: readonly number[]): number[];
+```
+
+使用 LEB128 编码中的计数作为字节码元素数组的前缀。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ----------------- | ----------- |
+|价值观 |只读数字[] |             |
+
+### wasm字符串
+
+**种类：**功能
+
+```typescript
+function wasmString(value: string): number[];
+```
+
+以 WebAssembly 格式对以其字节长度为前缀的 UTF-8 字符串进行编码。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|字符串|             |
+
+## `src/encoding/leb128`
+
+### 签名Leb
+
+**种类：**功能
+
+```typescript
+function signedLeb(value: number | bigint): number[];
+```
+
+将带符号的 32 位或 64 位整数编码为 WebAssembly LEB128 字节数组。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---------------- | ----------- |
+|价值|数字\|大整数 |             |
+
+### 签名Leb128
+
+**种类：**功能
+
+```typescript
+function signedLeb128(value: number | bigint): number[];
+```
+
+signedLeb 的别名。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---------------- | ----------- |
+|价值|数字\|大整数 |             |
+
+### 无符号Leb
+
+**种类：**功能
+
+```typescript
+function unsignedLeb(value: number): number[];
+```
+
+将无符号 32 位整数编码为 WebAssembly LEB128 字节数组。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|数量 |             |
+
+### 无符号Leb128
+
+**种类：**功能
+
+```typescript
+function unsignedLeb128(value: number): number[];
+```
+
+unsignedLeb 的别名。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|价值|数量 |             |
+
+## `src/optimizer`
+
+### FlintWasm优化诊断
+
+**种类：**接口
+
+```typescript
+export interface FlintWasmOptimizationDiagnostic
+```
+
+WebAssembly 优化过程发出的诊断。
+
+### FlintWasm优化通行证
+
+**种类：**接口
+
+```typescript
+export interface FlintWasmOptimizationPass
+```
+
+描述单个优化过程及其指标的元数据。
+
+### FlintWasm优化报告
+
+**种类：**接口
+
+```typescript
+export interface FlintWasmOptimizationReport
+```
+
+摘要报告跟踪所有应用的 WebAssembly 优化过程和诊断。
+
+### 弗林特瓦斯舞台Ir
+
+**种类：**接口
+
+```typescript
+export interface FlintWasmStageIr
+```
+
+优化阶段模块状态的中间表示快照。
+
+### FlintWasmSwitch策略
+
+**种类：**类型
+
+```typescript
+export type FlintWasmSwitchStrategy = 'br-table' | 'sparse' | 'constant';
+```
+
+减少 switch 语句的代码生成策略。
+
+### 优化FlintWasm模块
+
+**种类：**功能
+
+```typescript
+function optimizeFlintWasmModule(
+  module: FlintWasmModule,
+  optimization: 'debug' | 'release' = 'release',
+): FlintWasmStageIr;
+```
+
+在 IR 模块上执行全套 WebAssembly 优化传递。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------ | -------------------- | ----------- |
+|模块| FlintWasm 模块 |             |
+|优化| ‘调试’\| '释放' |             |
+
+## `src/sections/custom`
+
+### 编码FlintAbiCustomSection
+
+**种类：**功能
+
+```typescript
+function encodeFlintAbiCustomSection(manifest: FlintCAbiManifest | object): number[];
+```
+
+发出一个二进制 WebAssembly 自定义部分，其中包含紧凑的 CBOR ABI 清单 (`flint.abi.v2`)。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | --------------------------- | ----------- |
+|清单 | FlintCAbiManifest \|对象|             |
+
+### FLINT_ABI_V2_CUSTOM_SECTION
+
+**种类：**常数
+
+```typescript
+export const FLINT_ABI_V2_CUSTOM_SECTION;
+```
+
+嵌入式二进制 CBOR ABI 清单的标准 WebAssembly 自定义部分名称。
 
 ## `src/verifier`
 
-### FlintWasmArtifactManifest
+### 弗林特瓦斯姆ArtifactManifest
 
 **种类：**接口
 
@@ -422,7 +960,7 @@ export interface FlintWasmArtifactManifest
 
 验证者有意使用结构清单以避免包循环。
 
-### FlintWasmArtifactVerificationDiagnostic
+### FlintWasmArtifact验证诊断
 
 **种类：**接口
 
@@ -430,7 +968,7 @@ export interface FlintWasmArtifactManifest
 export interface FlintWasmArtifactVerificationDiagnostic
 ```
 
-没有提供描述。
+WebAssembly 二进制验证期间发出的诊断结果。
 
 ### FlintWasmArtifactVerificationInput
 
@@ -440,7 +978,7 @@ export interface FlintWasmArtifactVerificationDiagnostic
 export interface FlintWasmArtifactVerificationInput
 ```
 
-没有提供描述。
+输入参数和期望传递给工件验证。
 
 ### FlintWasmArtifactVerificationPolicy
 
@@ -450,9 +988,9 @@ export interface FlintWasmArtifactVerificationInput
 export interface FlintWasmArtifactVerificationPolicy
 ```
 
-没有提供描述。
+管理工件验证实施的策略规则。
 
-### FlintWasmArtifactVerificationResult
+### FlintWasmArtifact验证结果
 
 **种类：**接口
 
@@ -460,7 +998,7 @@ export interface FlintWasmArtifactVerificationPolicy
 export interface FlintWasmArtifactVerificationResult
 ```
 
-没有提供描述。
+综合验证结果报告表明验证状态。
 
 ### FlintWasmArtifactVerificationSeverity
 
@@ -470,9 +1008,9 @@ export interface FlintWasmArtifactVerificationResult
 export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info';
 ```
 
-没有提供描述。
+工件验证期间发出的诊断严重性级别。
 
-### FlintWasmManifestFunction
+### FlintWasmManifest函数
 
 **种类：**接口
 
@@ -480,7 +1018,7 @@ export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info'
 export interface FlintWasmManifestFunction
 ```
 
-没有提供描述。
+从 ABI 清单中提取的函数元数据以进行验证。
 
 ### FlintWasmManifestImport
 
@@ -490,9 +1028,9 @@ export interface FlintWasmManifestFunction
 export interface FlintWasmManifestImport
 ```
 
-没有提供描述。
+导入从 ABI 清单中提取的声明元数据。
 
-### FlintWasmManifestParameter
+### FlintWasmManifest参数
 
 **种类：**接口
 
@@ -500,9 +1038,9 @@ export interface FlintWasmManifestImport
 export interface FlintWasmManifestParameter
 ```
 
-没有提供描述。
+清单函数定义中的参数类型元数据。
 
-### FlintWasmMemoryLayout
+### FlintWasm内存布局
 
 **种类：**接口
 
@@ -510,9 +1048,9 @@ export interface FlintWasmManifestParameter
 export interface FlintWasmMemoryLayout
 ```
 
-没有提供描述。
+内存布局预期已根据 WebAssembly 二进制文件进行验证。
 
-### verifyFlintWasmArtifact
+### 验证FlintWasmArtifact
 
 **种类：**功能
 
@@ -520,17 +1058,17 @@ export interface FlintWasmMemoryLayout
 function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): FlintWasmArtifactVerificationResult;
 ```
 
-没有提供描述。
+验证 WebAssembly 二进制文件和适配器工件的完整验证入口点。
 
 #### 参数
 
-| 名称 | 类型                               | 描述                               |
-| ---- | ---------------------------------- | ---------------------------------- |
-| 输入 | FlintWasmArtifactVerificationInput | FlintWasmArtifactVerificationInput |     |
+|名称 |类型 |描述 |
+| ----- | ---------------------------------- | ----------- |
+|输入 | FlintWasmArtifactVerificationInput | FlintWasmArtifactVerificationInput |             |
 
 ## `src/wat`
 
-### FlintWasmWatMetadata
+### FlintWasmWat元数据
 
 **种类：**接口
 
@@ -538,9 +1076,9 @@ function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): Fli
 export interface FlintWasmWatMetadata
 ```
 
-没有提供描述。
+元数据发送到 WebAssembly 文本格式 (WAT) 注释和标题中。
 
-### renderFlintWasmWat
+### 渲染弗林特瓦斯姆瓦特
 
 **种类：**功能
 
@@ -548,11 +1086,37 @@ export interface FlintWasmWatMetadata
 function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmWatMetadata = {}): string;
 ```
 
-没有提供描述。
+将完整的 Flint WebAssembly 模块中间表示形式降低为文本 WAT 格式。
 
 #### 参数
 
-| 名称   | 类型                 | 描述 |
-| ------ | -------------------- | ---- |
-| 模块   | FlintWasmModule      |      |
-| 元数据 | FlintWasmWatMetadata |      |
+|名称 |类型 |描述 |
+| -------- | -------------------- | -------------------------------------------------------- |
+|模块| FlintWasm 模块 | - 编译模块中间表示。           |
+|元数据 | FlintWasmWat元数据 | - 编译元数据和目标功能配置。 |
+
+#### 合同
+
+- **@param:** - 编译的模块中间表示。
+- **@param:** - 编译元数据和目标功能配置。
+- **@returns:** WebAssembly 文本表示字符串。
+
+### 至Wat类型
+
+**种类：**功能
+
+```typescript
+function toWatType(
+  type: string | { readonly name?: string; readonly reference?: string } | undefined,
+  memory64 = false,
+): string;
+```
+
+将 Flint 或 C 类型表示字符串映射到 WebAssembly WAT 值类型。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------------------------------------------------------------------------------ | ----------- |
+|类型 |字符串\| { 只读名称？：字符串；只读参考？：字符串} \|未定义 |             |
+|内存64 |                                                                                |             |

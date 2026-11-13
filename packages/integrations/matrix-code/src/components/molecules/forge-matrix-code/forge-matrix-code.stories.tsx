@@ -1,5 +1,4 @@
 import { ForgeMatrixCode } from '@mission-platform/matrix-code';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**

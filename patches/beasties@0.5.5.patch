@@ -1,0 +1,50 @@
+diff --git a/dist/index.cjs b/dist/index.cjs
+--- a/dist/index.cjs
++++ b/dist/index.cjs
+@@ -47,8 +47,8 @@
+ * @private
+ */
+ function parseStylesheet(stylesheet, options) {
+-	if (options?.safeParser) return (0, postcss_safe_parser.default)(stylesheet);
+-	return (0, postcss.parse)(stylesheet);
++	if (options?.safeParser) return (0, postcss_safe_parser.default)(stylesheet, { from: options.from });
++	return (0, postcss.parse)(stylesheet, { from: options?.from });
+ }
+ /**
+ * Serialize a postcss Stylesheet to a String of CSS.
+@@ -1210,8 +1210,8 @@
+ 		let sheet = style.textContent;
+ 		const before = sheet;
+ 		if (!sheet) return;
+-		const ast = parseStylesheet(sheet, { safeParser: this.options.safeParser !== false });
+-		const astInverse = options.pruneSource ? parseStylesheet(sheet, { safeParser: this.options.safeParser !== false }) : null;
++		const ast = parseStylesheet(sheet, { from: name, safeParser: this.options.safeParser !== false });
++		const astInverse = options.pruneSource ? parseStylesheet(sheet, { from: name, safeParser: this.options.safeParser !== false }) : null;
+ 		const criticalFonts = /* @__PURE__ */ new Set();
+ 		const unparseableSelectors = [];
+ 		const criticalKeyframeNames = /* @__PURE__ */ new Set();
+diff --git a/dist/index.mjs b/dist/index.mjs
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -20,8 +20,8 @@
+ * @private
+ */
+ function parseStylesheet(stylesheet, options) {
+-	if (options?.safeParser) return safeParser(stylesheet);
+-	return parse(stylesheet);
++	if (options?.safeParser) return safeParser(stylesheet, { from: options.from });
++	return parse(stylesheet, { from: options?.from });
+ }
+ /**
+ * Serialize a postcss Stylesheet to a String of CSS.
+@@ -1183,8 +1183,8 @@
+ 		let sheet = style.textContent;
+ 		const before = sheet;
+ 		if (!sheet) return;
+-		const ast = parseStylesheet(sheet, { safeParser: this.options.safeParser !== false });
+-		const astInverse = options.pruneSource ? parseStylesheet(sheet, { safeParser: this.options.safeParser !== false }) : null;
++		const ast = parseStylesheet(sheet, { from: name, safeParser: this.options.safeParser !== false });
++		const astInverse = options.pruneSource ? parseStylesheet(sheet, { from: name, safeParser: this.options.safeParser !== false }) : null;
+ 		const criticalFonts = /* @__PURE__ */ new Set();
+ 		const unparseableSelectors = [];
+ 		const criticalKeyframeNames = /* @__PURE__ */ new Set();

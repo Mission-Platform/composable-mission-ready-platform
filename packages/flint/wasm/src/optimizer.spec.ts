@@ -249,7 +249,6 @@ describe('Forge Web Script Wasm-stage optimizer', () => {
     );
 
     expect(firstFunction(optimized.module).body).toMatchObject([
-      // eslint-disable-next-line unicorn/prefer-math-trunc -- Assertion models WebAssembly i32 wrapping.
       { kind: 'return', value: { kind: 'literal', value: (Math.imul(216_613_626, 16_777_619) + 1) | 0 } },
     ]);
   });

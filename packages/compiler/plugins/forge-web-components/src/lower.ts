@@ -10,6 +10,11 @@
  *
  * This module coordinates subplans extracted into focused modules under `./lower/`.
  */
+import type {
+  SemanticModule,
+  TargetContext,
+  TargetIntentions,
+} from "@mission-platform/forge-plugin-api";
 import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
 
 import {
@@ -74,12 +79,6 @@ import {
   renderNodeToTemplate,
   type TemplateContext,
 } from "./transformers/template.js";
-
-import type {
-  SemanticModule,
-  TargetContext,
-  TargetIntentions,
-} from "@mission-platform/forge-plugin-api";
 
 // Re-export all types and discriminator
 export * from "./lower/types.js";

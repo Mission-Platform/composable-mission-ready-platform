@@ -6,10 +6,10 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > Idioma: Español (es)
 
 Un plan para aumentar la tasa de lectura de `@mission-platform/code-scanner` en capturas del mundo real (cargas y cámara en vivo).
-marcos), y para mantener la canalización de escaneo dentro de un artefacto Flint/WebAssembly vinculado estáticamente.
+frames), y para mantener la canalización de escaneo dentro de un artefacto Flint/WebAssembly vinculado estáticamente.
 
 > **Implementación actual:** El escáner se envía como un dispositivo vinculado estáticamente
-> Gráfico Flint en `src/fws`, con un perfil de módulo fuente dinámico
+> Gráfico Flint bajo `src/fws`, con un perfil dinámico de módulo fuente
 > disponible para módulos decodificadores que se pueden almacenar en caché de forma independiente. El óxido y la caja
 > las referencias que se conservan a continuación son únicamente de procedencia migratoria histórica; ellos son
 > no empaquetar dependencias de tiempo de ejecución ni generar entradas.
@@ -22,6 +22,15 @@ marcos), y para mantener la canalización de escaneo dentro de un artefacto Flin
 > (elemento 4), el localizador azteca (elemento 6) y escaneo de múltiples símbolos + ROI (elemento 7)
 > todos han aterrizado.
 
+> **Estado del puerto ZXing (2026-09-12):** El gráfico Flint propiedad del escáner ahora contiene
+> base acotada en forma de ZXing, 1D/RSS, Data Matrix, compacto Aztec, PDF417,
+> y rutas MaxiCode. El modelo TypeScript expone texto, bytes, recuento de bits,
+> puntos, metadatos y marca de tiempo, mientras que el formato actual de Flint wire solo
+> serializa el formato, el recuento de bits y la carga útil; los puntos y los metadatos permanecen
+> vacío hasta que llegue la migración del sobre binario. Los gráficos del decodificador QR emiten
+> de forma independiente, pero Flint bloquea el enlace QR combinado
+> `FLINT-WASM-001`; las rutas 2D reducidas no reclaman la paridad ZXing total.
+
 La implementación original dividió el proceso:
 
 - **Locate + sample** se ejecutó en una canalización nativa/wasm heredada: `binarize` → localizadores por simbología. Su punto de entrada `scan`
@@ -30,7 +39,7 @@ La implementación original dividió el proceso:
 
 La fase 1 reemplazó eso con una única llamada Flint `scan_and_decode` (ver §1); el
 La motivación histórica a continuación se mantiene como justificación, mientras que la fuente actual de
-La verdad es el gráfico Flint y su conjunto de conformidad Vitest.
+La verdad es el gráfico de Flint y su conjunto de conformidad Vitest.
 
 ## 1. El problema estructural central: el oleoducto cruzó el límite wasm↔JS dos veces
 
@@ -44,7 +53,7 @@ image (JS)
   → payload string (JS)
 ```
 
-Cada símbolo ubicado se copia de wasm, se remodela en JS y luego se copia en una segunda instancia de wasm para decodificarlo. esto es
+Cada símbolo ubicado se copia de wasm, se reforma en JS y luego se copia en una segunda instancia de wasm para decodificarlo. esto es
 el viaje de ida y vuelta que pide el tema. Perjudica tanto el rendimiento como, lo que es más importante para este plan, la **precisión**, porque
 el localizador y el decodificador no pueden cooperar:
 
@@ -60,10 +69,10 @@ el localizador y el decodificador no pueden cooperar:
   reportado como EAN-13 (verificado por el nuevo conjunto de pruebas). La decodificación en Rust permite que el localizador contenga sugerencias estructurales (elemento
   recuento, patrones de guardia) para elegir la simbología correcta.
 
-### Arquitectura de destino: una llamada FWS, entrada de imagen, salida de carga
+### Arquitectura de destino: una llamada de Flint, entrada de imagen, salida de carga
 
 > **Estado: implementado.** El escáner exporta `scan_and_decode`, vincula el
-> el decodificador Flint grafica directamente, y la fachada JS decodifica a través de ese único
+> decodificador Flint grafica directamente, y la fachada JS decodifica a través de ese único
 > llamar. Los detalles a continuación registran el motivo de la migración.
 
 ```
@@ -73,9 +82,9 @@ image (JS)
 ```
 
 `scan_and_decode(width, height, luma) -> Option<ScanOutcome>` ejecuta todo el proceso dentro de `src/fws/scanner.flint` y
-devuelve la **carga útil decodificada** directamente (`value` está vacío cuando se encuentra un símbolo pero no se puede decodificar). La fachada JS
-(`scanner/index.ts`) es una capa de clasificación delgada que vincula las fuentes Flint de códigos de barras, matrices y QR en el momento de la compilación;
-esos paquetes siguen siendo publicables de forma independiente.
+devuelve la **carga útil decodificada** directamente (`value` está vacío cuando se encuentra un símbolo pero no se puede codificar). La fachada JS
+(`scanner/index.ts`) es una fina capa de clasificación sobre las fuentes Flint del decodificador propiedad del escáner;
+Los paquetes del codificador siguen siendo publicables de forma independiente y no exponen ninguna fachada del decodificador.
 
 #### ¿Por qué esto es manejable ahora?
 
@@ -113,7 +122,7 @@ comentado a continuación.
    (`SAMPLE_OFFSETS`), y decodificación ciega y con reconocimiento de borrado, aceptando el primer candidato que pase la prueba del símbolo.
    propia corrección de errores. Esto ataca directamente las fallas _ubicadas-pero-no codificables_.
 2. **Binarización local/adaptativa. _(hecho — Fase 2.)_** `image::binarize` (global **Otsu**) se mantiene como el primero rápido
-   intento; `image::binarize_adaptive` agrega un umbral de ventana **media C** local (a través de una imagen integral) para que deslumbre,
+   intento; `image::binarize_adaptive` agrega un umbral **media C** local en ventana (a través de una imagen integral) para que deslumbre,
    Los degradados y la iluminación desigual ya no fusionan los módulos oscuros con el fondo. El ciclo de reintento intenta ambos.
 3. **Muestreo de módulo de nivel de grises (subpíxeles). _(hecho - Fase 2.)_** `qr` y
    `datamatrix` obtuvo `scan_with_confidence`, que muestra los centros de los módulos de la imagen _gris_ con bilineal
@@ -141,7 +150,7 @@ comentado a continuación.
    para que las personas que llaman puedan restringirlo.
 6. **Apoyo azteca. _(hecho - Fase 3.)_** El `@mission-platform/matrix-code`
    El codificador ya producía Aztec, pero el escáner no tenía _localizador_ Aztec. Se agregó un localizador de diana azteca compacto
-   (`crates/code-scan/src/aztec.rs`): encuentra la diana central mediante su firma de buscador `1:1:1:1:1:1:1:1:1` de nueve carreras
+   (`crates/code-scan/src/aztec.rs`): encuentra la diana central mediante su firma de buscador `1:1:1:1:1:1:1:1:1` de nueve corridas
    (siete ejecuciones internas confiables, dos externas solo se requieren presentes ya que tocan el anillo de modo), lo verifica en ambos ejes,
    recupera el tamaño del módulo, toma muestras de cada tamaño compacto plausible (15/19/23/27) en una copia limpia y enruta cada uno
    a la ruta de decodificación azteca existente, cuyas comprobaciones de modo-mensaje + Reed-Solomon rechazan los tamaños incorrectos. `scan_and_decode`
@@ -238,7 +247,7 @@ abrumadoramente _ubicados-pero-no-decodificados_, no _no-ubicados_.
 - **Guardia de falso positivo ITF.** Intercalado-2-de-5 no tiene dígito de control y tiene un inicio/parada trivial, por lo que se cruza una línea de exploración
   un símbolo no relacionado (un QR, otras barras) trivialmente "decodificado" a un valor falso de 2 o 4 dígitos. `itf::decode` ahora
   rechaza cargas útiles de menos de **seis dígitos**, que coinciden con el límite inferior de `ITFReader::DEFAULT_ALLOWED_LENGTHS` de ZXing
-  (`{6,8,10,12,14}`). Esto llevó a que los falsos positivos en `falsepositives`, `falsepositives-2` y `unsupported`
+  (`{6,8,10,12,14}`). Esto llevó a los falsos positivos en `falsepositives`, `falsepositives-2` y `unsupported` a
   **cero** y, al eliminar esas lecturas cortas que estaban provocando un cortocircuito en el orden de precedencia, se eliminaron varias lecturas positivas.
   carpetas (por ejemplo, `qrcode-4`, `qrcode-5`). Cubierto por una nueva prueba de regresión (`barcode-decode`:
   `itf_rejects_runs_shorter_than_six_digits`) y la actualización de referencia.
@@ -248,7 +257,7 @@ abrumadoramente _ubicados-pero-no-decodificados_, no _no-ubicados_.
 - **Decodificación de filas 1D por dígito (mayor oportunidad).** Las carpetas UPC/EAN ubican cientos de líneas de escaneo pero decodifican casi
   ninguna de las fotos de la cámara dura (`upca-2` 206 ubicada / 0 decodificada, `upce-2` 160/0, `ean13-3` 204/6). La causa raíz
   es que el localizador cuantifica cada línea de exploración en una **unidad de módulo global única** antes de entregar los bits del módulo al
-  decodificador; bajo perspectiva, el ancho real del módulo varía a lo largo del símbolo, por lo que la cuadrícula global se desplaza
+  decodificador; bajo perspectiva, el escorzo real del módulo varía a lo largo del símbolo, por lo que la cuadrícula global se desplaza
   y una rígida cuadrícula de celdas EAN/UPC lo rechaza. La solución es un decodificador de fila **por dígito** estilo ZXing que coincide con el de cada dígito.
   relaciones de longitud de ejecución localmente (varianza de coincidencia de patrón) en lugar de una cuantificación global: un cambio mayor en el
   interfaz localizador↔decodificador, rastreada como la siguiente iteración del Paso 2.
@@ -277,11 +286,11 @@ Un nuevo trío de cajas refleja la división `*-common`/`*-encode`/`*-decode` de
   Debido a que los caracteres de DataBar se decodifican a partir de _ratios_ de ancho de elemento (no una cuadrícula de glifos fija), las lecturas del decodificador de fila se ejecutan
   longitudes directamente de una línea de escaneo, por lo que tolera el ancho de módulo variable de una captura en escorzo que anula
   la ruta 1D de cuantificación global (§2).
-- **`gs1-databar-encode`** — el valor→módulo-bit inverso. Su disposición física (barra de guardia, elemento exterior/buscador/interior
-  orden y el par interior/derecho invertido) se definió comparando los anchos de elementos medidos por el decodificador desde un
+- **`gs1-databar-encode`** — el valor→módulo-bit inverso. Su disposición física (barra de protección, elemento exterior/buscador/interior
+  orden y el par invertido interior/derecho) se definió comparando los anchos de elementos medidos por el decodificador desde un
   símbolo de corpus real contra los caracteres calculados del codificador, luego confirmado mediante un viaje de ida y vuelta de codificación → decodificación.
 
-El escáner obtuvo `crates/code-scan/src/gs1_databar.rs`, un localizador delgado que genera líneas de escaneo prometedoras
+El escáner obtuvo `crates/code-scan/src/gs1_databar.rs`, un localizador delgado que genera líneas de escaneo prometedoras.
 (filas de transición más ocupadas, luego columnas para capturas de 90°/270°) al decodificador de filas; la fuerte suma de comprobación RSS-14 hace un
 coincidencia autorizada, por lo que informa solo un valor decodificado o nada (manteniendo limpia la protección de falsos positivos). esta cableado
 en `scan_and_decode` como nuevo
@@ -302,7 +311,7 @@ Conjunto de dos filas en el localizador.
 Un nuevo trío de cajas refleja la división `*-common` / `*-encode` / `*-decode` del repositorio, trasladando `com.google.zxing.pdf417.*`
 (Apache-2.0):
 
-- **`pdf417-common`** — las tablas compartidas y las matemáticas de ambos lados necesitan: el símbolo ↔ tablas de palabras clave (2787 entradas,
+- **`pdf417-common`** — las tablas compartidas y las matemáticas que ambos lados necesitan: el símbolo ↔ tablas de palabras clave (2,787 entradas,
   generado a partir de la referencia de ZXing), las búsquedas de palabras clave/clúster (`get_codeword`, `bucket_from_symbol`), el
   module-bit-count → muestreador de símbolos (ruta rápida exacta más un respaldo de relación más cercana construido de manera perezosa), y el **GF (929)
   Decodificador de corrección de errores Reed-Solomon** (`ModulusGF` / `ModulusPoly` / algoritmo euclidiano). Una prueba unitaria afirma cada
@@ -328,7 +337,7 @@ Dos detalles de robustez resultaron esenciales:
   (`sample_codeword_symbol_exact`); una ejecución que no muestra limpiamente se convierte en un _agujero_ `-1` que conserva la columna
   alineación y se omite en la votación. Esto sigue escaneando cada fila de cada imagen de forma económica: la O (tamaño de tabla)
   De lo contrario, el retroceso de proporción más cercana dominaría el barrido del corpus.
-- **Un protector de agujeros contra la sobrecorrección de RS.** Con niveles altos de EC, Reed–Solomon estará encantado de fabricar un
+- **Un protector de agujeros contra la sobrecorrección de RS.** Con niveles altos de EC, Reed–Solomon estará feliz de fabricar un
   Palabra de código _válida pero incorrecta_ de un ensamblado casi vacío (observado como decodificaciones `"AAAA…"` basura). El localizador por lo tanto
   se niega a decodificar cuando el número de agujeros excede `num_ec / 2` (el presupuesto de corrección RS), que eliminó **todos**
   decodifica basura manteniendo todas las correctas y mantiene limpia la protección de falsos positivos de la carpeta negativa.
@@ -337,7 +346,7 @@ Un error solucionado en el camino: el brazo predeterminado del analizador de flu
 compactación en una palabra clave que no puede consumir); ahora se retira cuando no avanza.
 
 **Resultado:** `pdf417-1` / `pdf417-2` / `pdf417-3` pasó de **0 → 8/13/8**
-decodificaciones correctas en la rotación 0, y nuevamente a 180° (**58** correctas entre rotaciones), sin **regresión** en ningún otro
+decodificaciones correctas en la rotación 0, y nuevamente a 180° (**58** correctas entre rotaciones), sin **ninguna regresión** en ningún otro
 carpeta y las carpetas negativas todavía en **cero** falsos positivos. Los viajes de ida y vuelta están cubiertos por
 `pdf417-decode/tests/roundtrip.rs` y `code-scan/tests/generated.rs`, y la ruta completa de la imagen (codificar → renderizar →
 `scan_and_decode`, incl. 180°) por
@@ -347,7 +356,7 @@ carpeta y las carpetas negativas todavía en **cero** falsos positivos. Los viaj
 que el localizador de escaneo de filas no lee. Un pase de escaneo de columnas (transposición), o el arnés que alimenta el marco transpuesto, es
 el seguimiento correspondiente. Una inclinación más pronunciada necesitaría el modelo de perspectiva `Detector` de cuatro esquinas ZXing completo.
 
-### Paso 5: codificación + decodificación MaxiCode + localizador hexagonal _(hecho)_
+### Paso 5: codificación MaxiCode + decodificación + localizador hexagonal _(hecho)_
 
 Un nuevo trío de cajas refleja la división `*-common` / `*-encode` / `*-decode` del repositorio, trasladando `com.google.zxing.maxicode.*`
 (Apache-2.0):
@@ -362,7 +371,7 @@ Un nuevo trío de cajas refleja la división `*-common` / `*-encode` / `*-decode
   `DecodedBitStreamParser`: corrige el bloque primario (10 datos + 10 EC en su conjunto) y el bloque secundario (par/impar).
   entrelazados corregidos de forma independiente), lee el modo nibble, ensambla las palabras de datos y ejecuta el conjunto de cinco
   (`SETS[0..5]`) secuencia de retención/desplazamiento/compactación numérica, incluida la portadora estructurada en modo 2/3
-  conjunto de código postal/país/clase de servicio. Debido a que los tres bloques RS deben validarse, un valor devuelto tiene autoridad.
+  conjunto de código postal/país/clase de servicio. Dado que los tres bloques RS deben validarse, un valor devuelto tiene autoridad.
 - **`maxicode-encode`**: un modo de orientación de escritor sin dependencia 4/5 con los conjuntos de caracteres principales A y B (suficientes para
   codificar cargas útiles ASCII y generar los viajes de ida y vuelta), generando el EC primario + secundario entrelazado y colocando el 144
   palabras en clave en la cuadrícula del módulo a través del mapa compartido `BITNR`.
@@ -374,17 +383,17 @@ la guardia omite regiones obviamente que no son MaxiCode (códigos de barras 1D,
 cualquier imagen que no sea MaxiCode muestreada de esta manera. Está conectado a `scan_and_decode` como
 `FORMAT_MAXICODE`.
 
-**Resultado:** la carpeta `maxicode-1` pasó de **0 → 9** a decodificaciones correctas en la rotación 0 (las nueve imágenes, modos 2 a 5 y
+**Resultado:** la carpeta `maxicode-1` pasó de **0 → 9** decodificaciones correctas en la rotación 0 (las nueve imágenes, modos 2 a 5 y
 la muestra inyectada con error), con **sin regresión** en ninguna otra carpeta y las carpetas negativas aún en **cero**
 falsos positivos. Los viajes de ida y vuelta están cubiertos por `maxicode-decode/tests/roundtrip.rs`.
 (codificar → cuadrícula de módulos → decodificar, incluida la recuperación de errores RS) y
 `code-scan/tests/generated.rs`.
 
-**Próxima iteración de MaxiCode:** al igual que ZXing, el muestreador de bits puros está solo en posición vertical, por lo que las rotaciones **90°/180°/270°** permanecen en
+**Próxima iteración de MaxiCode:** al igual que ZXing, el muestreador de bits puros es solo vertical, por lo que las rotaciones **90°/180°/270°** permanecen en
 línea de base 0 (un símbolo girado muestra la cuadrícula hexagonal incorrectamente y RS la rechaza; no hay falsos positivos). una diana
 El buscador que recupera la rotación del símbolo antes del muestreo levantaría las otras tres rotaciones.
 
-### Paso 6: conecte los nuevos formatos a la fachada JS + cree el artefacto Flint _(hecho)_
+### Paso 6: conecte los nuevos formatos a la fachada JS + construya el artefacto Flint _(hecho)_
 
 Los pasos 3 a 5 colocaron PDF417, GS1 DataBar (RSS-14) y MaxiCode en el escáner
 tubería detrás de las etiquetas `FORMAT_PDF417` / `FORMAT_DATABAR` / `FORMAT_MAXICODE`, mientras que la fachada JS solo conocía la
@@ -394,10 +403,10 @@ cuatro formatos originales. Este paso muestra las nuevas simbologías en tiempo 
   `5 → 'databar'`, `6 → 'maxicode'` y el sindicato `ScanFormat` en `src/types.ts`
   gana los mismos tres nombres, por lo que `scanImageData` / `scanImageDataAsync` (y el
   `*All` / variantes ROI) los devuelven como cualquier otro formato.
-- **El artefacto Flint del escáner está creado** a partir de `src/fws/scanner.flint` mediante el complemento Vite de Flint. El perfil estático
+- **El artefacto del escáner Flint está construido** a partir de `src/fws/scanner.flint` mediante el complemento Flint Vite. El perfil estático
   vincula los gráficos del decodificador en un artefacto autónomo, habilita WebAssembly SIMD y aplica un tiempo de enlace agresivo
   optimización; el perfil dinámico mantiene límites explícitos del módulo decodificador y almacena en caché el envío de exportaciones.
-- **El gráfico Flint y las suites de fachada** (`src/fws/scanner-graph.spec.ts` y
+- **Las suites de fachada y gráficos de Flint** (`src/fws/scanner-graph.spec.ts` y
   `src/scanner/index.spec.ts`) ejercita los gráficos del decodificador vinculado a través del
   escáner ABI y ambos puntos de entrada públicos, incluidos PDF417, GS1 DataBar,
   Rutas MaxiCode, ROI, multiresultados, sincrónicas y asincrónicas. el
@@ -436,7 +445,7 @@ cuantizador, por lo que ambos eran esenciales:
   que, combinado con una suma de verificación coincidentemente válida, decodifica: la fuente de los 9 + 12 falsos positivos iniciales en
   `falsepositives*`.
 - **Consenso de varias filas para las simbologías cortas.** Los EAN-8/UPC-E de 8 dígitos son propensos a una suma de verificación válida por casualidad
-  enmarcados en desorden, por lo que se aceptan solo cuando **≥ 2 filas de escaneo** decodifican de forma independiente el mismo valor (un valor genuino
+  enmarcados desordenados, por lo que se aceptan solo cuando **≥ 2 filas de escaneo** decodifican de forma independiente el mismo valor (un valor genuino
   el código de barras se decodifica en muchas filas de la altura de la barra; aparece una casualidad en uno). El EAN-13 / UPC-A de 13 dígitos (12 dígitos de datos
   más el primer dígito derivado de la paridad)
   son mucho menos propensos y se aceptan de una sola fila. Cada valor devuelto es validado adicionalmente por el símbolo
@@ -458,6 +467,6 @@ ZXing mismo: rechaza un código de barras que no supera su propia suma de verifi
 La prueba permanece `#[ignore]` como documentación del rechazo intencional (dejar caer el protector de suma de verificación para leerlo sería
 volver a abrir los falsos positivos que elimina la guarda).
 
-**Próxima iteración 1D:** extensiones **complementarias** UPC/EAN (`upcean-extension-*`, los suplementos de 2/5 dígitos) y las más difíciles
+**Próxima iteración 1D:** Extensiones **complementarias** UPC/EAN (`upcean-extension-*`, los suplementos de 2/5 dígitos) y las más difíciles
 Las carpetas (`upca-6`, `ean13-5`) permanecen en la línea base 0: el lector complementario y un localizador más potente para esas capturas son los
 seguimientos coincidentes.

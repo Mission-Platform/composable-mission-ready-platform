@@ -9,188 +9,71 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 
 Generado a partir de declaraciones de fuente pública en `@mission-platform/qr-code`.
 
-## `src/encoder/index`
+## `src/components/molecules/forge-qr-code/forge-qr-code`
 
-### codificarMicroQr
-
-**Tipo:** función
-
-```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-Codifique `text` en una matriz de **Micro Código QR** (ISO/IEC 18004), creando una instancia
-el codificador WebAssembly de forma sincrónica en el primer uso.
-
-La versión de racor más pequeña (M1–M4, 11×11 a 17×17) se elige automáticamente.
-Micro QR solo admite niveles de corrección de errores `L`, `M` y `Q`; solicitando
-`H` siempre arroja (ninguna versión Micro QR lo proporciona).
-
-#### Parámetros
-
-| Nombre              | Tipo                     | Descripción |
-| ------------------- | ------------------------ | ----------- |
-| texto               | cadena                   |             |
-| corrección de error | Corrección de errores Qr |             |
-
-#### Contrato
-
-- **@throws:** si el texto es demasiado largo para cualquier versión Micro QR en el
-  nivel elegido (incluida cualquier solicitud de nivel `H`).
-
-### codificarMicroQrAsync
+### Forjar código Qr
 
 **Tipo:** función
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
+function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement;
 ```
 
-Codifique `text` en una matriz de **Micro Código QR**, creando una instancia de WebAssembly
-codificador de forma asíncrona en el primer uso. Ver {@link encodeMicroQr}.
+`ForgeQrCode`: genera un código QR escaneable, creado una vez en JSX neutral
+dialecto y compilado directamente en React o Vue por
+`@mission-platform/vite-plugin-forge`.
+
+La carga útil (`value`) está codificada completamente en el cliente por el
+Codificadores `@mission-platform/qr-code`: codificadores libres de dependencia escritos en
+Rust y compilado en WebAssembly (selección automática de versión, penalización más baja)
+máscara de datos) y dibujado como un SVG nítido e independiente de la resolución. El `variant`
+prop elige la simbología: un código QR cuadrado estándar ({@link encodeQr},
+`'qr'`, el valor predeterminado), un código Micro QR cuadrado compacto
+({@link encodeMicroQr}, `'micro'`) o un código Micro QR/rMQR rectangular ancho
+({@link encodeRmqr}, `'rmqr'`). Se emite un solo `<path>` para toda la oscuridad.
+módulos, por lo que el marcado se mantiene compacto incluso para códigos grandes. Para confiable
+escanear los colores oscuros/claros por defecto es solid negro sobre blanco en lugar de
+tokens de tema, pero ambos se pueden anular a través de `color`/`background`.
+
+Los módulos y patrones del buscador (ojo) se pueden dibujar como cuadrados, cuadrados redondeados,
+o puntos (`moduleShape` / `finderShape`); el relleno oscuro acepta dos paradas
+`gradient` lineal o radial; y un centro opcional `logo` se superpone a un
+placa de respaldo (empareje con `errorCorrection: 'H'` para que el código aún se lea).
+
+Una barra de herramientas de acción opcional (habilitada a través de `showActions` - `true` para cada
+botón, o un objeto {@link QrCodeActions} para seleccionarlos individualmente) permite
+los usuarios **guardan el código como una imagen PNG**, **copian la imagen al portapapeles**,
+y **copie el valor codificado al portapapeles**. El PNG está rasterizado en la
+cliente dibujando el SVG renderizado en un lienzo.
+
+Sustituciones del SFC Vue original: el render `computed` se convierte en el
+neutral {@link useMemo}; la emisión `error` se convierte en el accesorio de devolución de llamada `onError`
+(invocado cuando falla la codificación, reflejando la emisión del original desde el interior del
+calculado). Posee su estilo a través del módulo CSS ubicado en el mismo lugar.
+`forge-qr-code.module.scss`.
 
 #### Parámetros
 
-| Nombre              | Tipo                     | Descripción |
-| ------------------- | ------------------------ | ----------- |
-| texto               | cadena                   |             |
-| corrección de error | Corrección de errores Qr |             |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------- | ----------- |
+| propiedades | Sólo lectura<QrCodeProperties> |             |
 
-#### Contrato
-
-- **@throws:** si el texto es demasiado largo para cualquier versión Micro QR en el
-  nivel elegido (incluida cualquier solicitud de nivel `H`).
-
-### codificarQr
-
-**Tipo:** función
-
-```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
-```
-
-Codifique `text` en una matriz de código QR en el nivel de corrección de errores dado,
-crear una instancia del codificador WebAssembly sincrónicamente en el primer uso.
-
-#### Parámetros
-
-| Nombre              | Tipo                     | Descripción |
-| ------------------- | ------------------------ | ----------- |
-| texto               | cadena                   |             |
-| corrección de error | Corrección de errores Qr |             |
-
-#### Contrato
-
-- **@throws:** si el texto es demasiado largo para caber en la versión más grande
-
-40. Código QR en el nivel de corrección de errores elegido.
-
-### codificarQrAsync
-
-**Tipo:** función
-
-```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
-```
-
-Codifique `text` en una matriz de código QR en el nivel de corrección de errores dado,
-crear una instancia del codificador WebAssembly de forma asincrónica en el primer uso.
-
-#### Parámetros
-
-| Nombre              | Tipo                     | Descripción |
-| ------------------- | ------------------------ | ----------- |
-| texto               | cadena                   |             |
-| corrección de error | Corrección de errores Qr |             |
-
-#### Contrato
-
-- **@throws:** si el texto es demasiado largo para caber en la versión más grande
-
-40. Código QR en el nivel de corrección de errores elegido.
-
-### codificarRmqr
-
-**Tipo:** función
-
-```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-Codifique `text` en una matriz de **Código Micro QR rectangular (rMQR)**
-(ISO/IEC 23941), creando una instancia del codificador WebAssembly sincrónicamente en la primera
-uso.
-
-Se elige la versión de herraje más pequeña (de los 32 tamaños desde R7×43 hasta R17×139)
-automáticamente. rMQR sólo admite los niveles de corrección de errores `M` y `H`, por lo que
-`L`/`M` se asigna a `M` y `Q`/`H` se asigna a `H`.
-
-#### Parámetros
-
-| Nombre              | Tipo                     | Descripción |
-| ------------------- | ------------------------ | ----------- |
-| texto               | cadena                   |             |
-| corrección de error | Corrección de errores Qr |             |
-
-#### Contrato
-
-- **@throws:** si el texto es demasiado largo para cualquier versión de rMQR en el
-  nivel elegido.
-
-### codificarRmqrAsync
-
-**Tipo:** función
-
-```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
-```
-
-Codifique `text` en una matriz de **Código Micro QR rectangular (rMQR)**,
-crear una instancia del codificador WebAssembly de forma asincrónica en el primer uso. Ver
-{@enlace codificarmqr}.
-
-#### Parámetros
-
-| Nombre              | Tipo                     | Descripción |
-| ------------------- | ------------------------ | ----------- |
-| texto               | cadena                   |             |
-| corrección de error | Corrección de errores Qr |             |
-
-#### Contrato
-
-- **@throws:** si el texto es demasiado largo para cualquier versión de rMQR en el
-  nivel elegido.
-
-## `src/types`
-
-### CompactQrMatrix
+### AccionesQrCode
 
 **Tipo:** interfaz
 
 ```typescript
-export interface CompactQrMatrix
+export interface QrCodeActions
 ```
 
-Una variante QR compacta codificada: un Micro QR o un Micro QR rectangular (rMQR)
-Código. A diferencia de {@link QrMatrix}, estos pueden ser rectangulares, por lo que la cuadrícula es
-descrito por `width`/`height` explícito en lugar de un único `size`.
+Qué botones de acción muestra la barra de herramientas. `true` los habilita a todos.
 
-### CorrecciónQrError
-
-**Tipo:** tipo
-
-```typescript
-export type QrErrorCorrection = 'L' | 'M' | 'Q' | 'H';
-```
-
-Nivel de corrección de errores: los niveles más altos toleran más daños pero contienen menos datos.
-
-### Matriz Qr
+### Propiedades del código Qr
 
 **Tipo:** interfaz
 
 ```typescript
-export interface QrMatrix
+export interface QrCodeProperties
 ```
 
-Un código QR decodificado/codificado: una cuadrícula cuadrada de módulos oscuros (`true`).
+No se proporciona descripción.

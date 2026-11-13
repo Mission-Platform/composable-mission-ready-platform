@@ -6,22 +6,24 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > Taal: Nederlands (nl)
 
 Een afhankelijkheidsvrije **beeld-/cameracodescanner** samengesteld uit een statisch gekoppelde
-Smeed een webscriptgrafiek naar WebAssembly. Het lokaliseert en decodeert QR-codes, gegevens
-Matrix, Aztec, 1D-barcodes, PDF417, GS1 DataBar en MaxiCode uit afbeeldingsbestanden
-of live camerastreams. Er is ook een dynamisch bronmoduleprofiel beschikbaar
-implementaties waarvoor onafhankelijk cachebare decodermodules nodig zijn.
+Flint-grafiek naar WebAssembly. Het gekoppelde artefact decodeert momenteel gegevens
+Matrix, compacte Aztec, 1D/RSS-lezers, PDF417 en MaxiCode vanuit afbeeldingsbestanden of
+live camerastreams. De QR-grafiek zendt onafhankelijk uit maar blijft buiten de
+gecombineerd artefact terwijl de Forge-emitterbeperking wordt onderzocht.
 
 ## API-overzicht
 
 ### Kernscanner (`@mission-platform/code-scanner`)
 
 ```ts
-import { scanFile, scanImageData, scanImageDataAll } from '@mission-platform/code-scanner';
+import { scanFile, scanImageData, scanImageDataAll, type ScanOptions } from '@mission-platform/code-scanner';
 
 // Scan ImageData directly
-const result = scanImageData(imageData);
+const options: ScanOptions = { formats: ['DATA_MATRIX'], tryHarder: true };
+const result = scanImageData(imageData, options);
 
-// Scan all codes in frame
+// Scan the package's all-results entry point. The current linked reduced graph
+// returns at most its first validated result until multi-symbol detection lands.
 const allResults = scanImageDataAll(imageData);
 
 // Scan a File / Blob
@@ -44,7 +46,7 @@ van `@mission-platform/vite-config`) en `customConditions` (via het
 </script>
 
 <template>
-  <ForgeCodeScanner @result="(res) => console.log(res.value)" />
+  <ForgeCodeScanner @result="(res) => console.log(res.text, res.format)" />
 </template>
 ```
 
@@ -54,6 +56,6 @@ van `@mission-platform/vite-config`) en `customConditions` (via het
 import { ForgeCodeScanner } from '@mission-platform/code-scanner';
 
 export function CameraScanner() {
-  return <ForgeCodeScanner onResult={(result) => console.log(result.value)} />;
+  return <ForgeCodeScanner onResult={(result) => console.log(result.text, result.format)} />;
 }
 ```

@@ -13,6 +13,12 @@
  * emitted text), then template hoisting and list-key pruning, then the runtime
  * import prune last, so it sees the final plan.
  */
+import type {
+  NeutralOptimizeOptions,
+  TargetIntentions,
+  TargetOptimizeOptions,
+} from "@mission-platform/forge-plugin-api";
+
 import {
   isWebComponentsLowered,
   resolveRuntimeImports,
@@ -23,12 +29,6 @@ import {
   type WebComponentsReactiveProperty,
   type WebComponentsStateField,
 } from "./lower.js";
-
-import type {
-  NeutralOptimizeOptions,
-  TargetIntentions,
-  TargetOptimizeOptions,
-} from "@mission-platform/forge-plugin-api";
 
 /** Identifiers recorded in {@link WebComponentsLoweredModule.appliedOptimizations}. */
 export const WEB_COMPONENTS_OPTIMIZATIONS = {

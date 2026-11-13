@@ -53,7 +53,7 @@ function decodeEntities(value: string): string {
 function parseAttributes(source: string): Record<string, string> {
   const attributes: Record<string, string> = {};
   // HTML attributes may be quoted with either quote character or be unquoted.
-  // eslint-disable-next-line sonarjs/regex-complexity
+
   const pattern = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
   for (let match = pattern.exec(source); match !== null; match = pattern.exec(source)) {
     const name = match[1].toLowerCase();

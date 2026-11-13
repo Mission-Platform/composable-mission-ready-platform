@@ -19,12 +19,12 @@
 function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-البرنامج المساعد Vite الذي يقوم بإنشاء ورقة أنماط _تجاوز_ لرمز تصميم التطبيق تلقائيًا.
+البرنامج الإضافي Vite الذي يُنشئ تلقائيًا ورقة أنماط التصميم المميز للتطبيق _override_.
 
 يقرأ مستند تجاوز نمط DTCG (`options.source`)، ويحوله باستخدام
 {@link buildTokenOverrideScss}، ويكتب `:root { --<prefix>-*: … }` الناتج
 SCSS جزئي لـ `options.outFile`. قم باستيراد هذا الملف الذي تم إنشاؤه من ملف
-ورقة الأنماط _بعد_ `@mission-platform/tokens` بحيث تفوز التجاوزات بالتتالي.
+ورقة الأنماط _after_ `@mission-platform/tokens` بحيث تفوز التجاوزات بالتتالي.
 
 يتم تشغيل الإنشاء في الخطاف `buildStart` المجمع (وبالتالي فهو يغطي `vite build`،
 `vite build --watch`، وخادم التطوير يبدأان على حد سواء) ويعاد تشغيلهما عندما يكون المصدر
@@ -33,19 +33,18 @@ SCSS جزئي لـ `options.outFile`. قم باستيراد هذا الملف ا
 
 #### حدود
 
-| الاسم  | اكتب                        | الوصف |
-| ------ | --------------------------- | ----- |
-| خيارات | TokenOverridesPluginOptions |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------------- | ----------- |
+| خيارات | TokenOverridesPluginOptions |             |
 
 #### عقد
 
 - **@مثال:** ```ts
   // vite.config.ts
   import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
-plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
+  export default defineConfig({
+  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+  });
 
 ````
 ```scss
@@ -62,12 +61,12 @@ plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' }
 function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-البرنامج المساعد Vite الذي يقوم بإنشاء ورقة أنماط _تجاوز_ لرمز تصميم التطبيق تلقائيًا.
+البرنامج الإضافي Vite الذي يُنشئ تلقائيًا ورقة أنماط التصميم المميز للتطبيق _override_.
 
 يقرأ مستند تجاوز نمط DTCG (`options.source`)، ويحوله باستخدام
 {@link buildTokenOverrideScss}، ويكتب `:root { --<prefix>-*: … }` الناتج
 SCSS جزئي لـ `options.outFile`. قم باستيراد هذا الملف الذي تم إنشاؤه من ملف
-ورقة الأنماط _بعد_ `@mission-platform/tokens` بحيث تفوز التجاوزات بالتتالي.
+ورقة الأنماط _after_ `@mission-platform/tokens` بحيث تفوز التجاوزات بالتتالي.
 
 يتم تشغيل الإنشاء في الخطاف `buildStart` المجمع (وبالتالي فهو يغطي `vite build`،
 `vite build --watch`، وخادم التطوير يبدأان على حد سواء) ويعاد تشغيلهما عندما يكون المصدر
@@ -76,19 +75,18 @@ SCSS جزئي لـ `options.outFile`. قم باستيراد هذا الملف ا
 
 #### حدود
 
-| الاسم  | اكتب                        | الوصف |
-| ------ | --------------------------- | ----- |
-| خيارات | TokenOverridesPluginOptions |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------------- | ----------- |
+| خيارات | TokenOverridesPluginOptions |             |
 
 #### عقد
 
 - **@مثال:** ```ts
   // vite.config.ts
   import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
-plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
+  export default defineConfig({
+  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+  });
 
 ````
 ```scss
@@ -118,15 +116,15 @@ function buildTokenOverrideScss(document_: OverrideGroup, options: TokenOverride
 ```
 
 إنشاء تجاوز جزئي لـ SCSS/CSS: كتلة `:root { … }` واحدة
-تم تسوية الخصائص المخصصة `--<prefix>-*` من `document_`. استيراده _بعد_
+تمت تسوية الخصائص المخصصة `--<prefix>-*` من `document_`. استيراده _بعد_
 `@mission-platform/tokens` الأساسي بحيث تفوز الإعلانات بالتتالي.
 
 #### حدود
 
-| الاسم  | اكتب                     | الوصف |
-| ------ | ------------------------ | ----- |
-| وثيقة_ | تجاوز المجموعة           |       |
-| خيارات | TokenOverrideScssOptions |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------------------------ | ----------- |
+| وثيقة_ | تجاوز المجموعة |             |
+| خيارات | TokenOverrideScssOptions |             |
 
 ### FlatOverride
 
@@ -150,16 +148,15 @@ function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride
 البدء بـ `قم بتسوية مستند التجاوز بشكل متكرر إلى {@link FlatOverride}. مفاتيح ذلك
 البدء بـ  (بيانات تعريف DTCG) يتم تخطيها؛ كل ورقة متبقية تصبح
 الخاصية المخصصة `--<prefix>-<path-joined-by-dashes>`. تجاوز المكون
-تحتفظ المسارات بمجمع `component._` DTCG الخاص بها، لكن CSS الذي تم إنشاؤه يحذف ذلك
-المجمع (`component.button._`يصبح`--<prefix>-button-*`).
+تحتفظ المسارات بمجمع `component.*` DTCG الخاص بها، لكن CSS الذي تم إنشاؤه يحذف ذلك
+المجمع (`component.button.*` يصبح `--<prefix>-button-*`).
  `$`
-
 #### حدود
 
-| الاسم   | اكتب           | الوصف |
-| ------- | -------------- | ----- |
-| وثيقة_  | تجاوز المجموعة |       |
-| البادئة |                |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------------- | ----------- |
+| وثيقة_ | تجاوز المجموعة |             |
+| البادئة |               |             |
 
 ### LightDarkValue
 
@@ -181,7 +178,6 @@ export type OverrideGroup = Record<string, unknown>;
 
 مجموعة تجاوز بنمط DTCG node (مجموعات/رموز متداخلة بالإضافة إلى بيانات التعريف `مجموعة تجاوز بنمط DTCG node (مجموعات/رموز متداخلة بالإضافة إلى بيانات التعريف  الاختيارية).
  `$`
-
 ### OverrideToken
 
 **النوع:** الواجهة

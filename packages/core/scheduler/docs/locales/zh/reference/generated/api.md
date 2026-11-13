@@ -23,9 +23,9 @@ function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement;
 方言并直接编译为 React 或 Vue
 `@mission-platform/vite-plugin-forge`。
 
-与 Vue 原始版本完全同等：工具栏（今天/上一页-下一页/标题/
+与 Vue 原始版本完全一致：工具栏（今天/上一页-下一页/标题/
 新事件/五视图切换器）位于活动视图上方 - **时间网格**
-（天/3天/周），具有小时行和列碰撞事件放置，
+（天/3天/周）具有小时行和列碰撞事件放置，
 **月网格**（6×7），或**年网格**（12 个小月）。事件为 RFC 5545
 {@link VEvent}；所有繁重的逻辑（递归扩展、视图范围、
 碰撞布局、持续时间格式化）来自调度程序包核心，
@@ -41,9 +41,9 @@ Vue SFC 的替代：`@mission-platform/icons` V 形变为
 
 #### 参数
 
-| 名称 | 类型                      | 描述 |
-| ---- | ------------------------- | ---- |
-| 属性 | 只读<SchedulerProperties> |      |
+|名称 |类型 |描述 |
+| ---------- | ----------------------------- | ----------- |
+|属性 |只读<SchedulerProperties> |             |
 
 ### 调度程序属性
 
@@ -80,10 +80,10 @@ RFC 5545 修订语义）。 `uid` 被保留。
 
 #### 参数
 
-| 名称 | 类型                      | 描述 |
-| ---- | ------------------------- | ---- |
-| 活动 | V活动                     |      |
-| 补丁 | 部分<Omit<VEvent, 'uid'>> |      |
+|名称 |类型 |描述 |
+| ----- | ---------------------------- | ----------- |
+|活动 | V活动 |             |
+|补丁|部分<Omit<VEvent, 'uid'>> |             |
 
 ### 创建事件
 
@@ -93,14 +93,14 @@ RFC 5545 修订语义）。 `uid` 被保留。
 function createEvent(partial: Omit<VEvent, 'uid' | 'dtstamp'>): VEvent;
 ```
 
-从部分构建全新的{@link VEvent}（没有 `uid`/`dtstamp`），
+从部分构建一个全新的{@link VEvent}（没有 `uid`/`dtstamp`），
 生成 UID 和创建/修改时间戳。
 
 #### 参数
 
-| 名称 | 类型                             | 描述 |
-| ---- | -------------------------------- | ---- |
-| 部分 | 省略<VEvent, 'uid' \| 'dtstamp'> |      |
+|名称 |类型 |描述 |
+| ------- | -------------------------------- | ----------- |
+|部分 |省略<VEvent, 'uid' \| 'dtstamp'> |             |
 
 ### 当日活动
 
@@ -114,10 +114,10 @@ function eventsForDay(events: VEvent[], day: Date): VEvent[];
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| 活动 | V事件[] |      |
-| 日   | 日期    |      |
+|名称 |类型 |描述 |
+| ------ | -------- | ----------- |
+|活动 | V事件[] |             |
+|日 |日期 |             |
 
 ### 范围事件
 
@@ -128,17 +128,17 @@ function eventsForRange(events: VEvent[], start: Date, end: Date): VEvent[];
 ```
 
 返回与给定重叠的事件（包括重复发生的事件）
-日期范围[开始、结束)。 排除带有 `status === 'CANCELLED'` 的事件。
+日期范围[开始、结束)。排除带有 `status === 'CANCELLED'` 的事件。
 重复事件通过其 RRULE / RDATE 进行扩展； EXDATE 排除是
 很荣幸。
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| 活动 | V事件[] |      |
-| 开始 | 日期    |      |
-| 结束 | 日期    |      |
+|名称 |类型 |描述 |
+| ------ | -------- | ----------- |
+|活动 | V事件[] |             |
+|开始 |日期 |             |
+|结束 |日期 |             |
 
 ### 格式持续时间
 
@@ -152,9 +152,9 @@ function formatDuration(event: VEvent): string;
 
 #### 参数
 
-| 名称 | 类型  | 描述 |
-| ---- | ----- | ---- |
-| 活动 | V活动 |      |
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|活动 | V活动 |             |
 
 ### 布局日
 
@@ -170,9 +170,9 @@ function layoutDay(events: VEvent[]): SchedulerEventSlot[];
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| 活动 | V事件[] |      |
+|名称 |类型 |描述 |
+| ------ | -------- | ----------- |
+|活动 | V事件[] |             |
 
 ### 移动事件补丁
 
@@ -187,10 +187,10 @@ function moveEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtstart' 
 
 #### 参数
 
-| 名称    | 类型  | 描述 |
-| ------- | ----- | ---- |
-| 活动    | V活动 |      |
-| DeltaMs | 数量  |      |
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|活动 | V活动 |             |
+| DeltaMs |数量 |             |
 
 ### 调整大小事件补丁
 
@@ -201,14 +201,14 @@ function resizeEventPatch(event: VEvent, deltaMs: number): Pick<VEvent, 'dtend'>
 ```
 
 `{ dtend }` 补丁通过 `deltaMs` 调整事件结束的大小，夹紧以便
-活动持续时间至少 15 分钟（如果是全天活动，则为一天）。
+活动持续时间至少为 15 分钟（如果是全天活动，则为一天）。
 
 #### 参数
 
-| 名称    | 类型  | 描述 |
-| ------- | ----- | ---- |
-| 活动    | V活动 |      |
-| DeltaMs | 数量  |      |
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|活动 | V活动 |             |
+| DeltaMs |数量 |             |
 
 ## `src/core/range`
 
@@ -225,11 +225,11 @@ function stepAnchor(view: SchedulerView, anchor: Date, direction: -1 | 1): Date;
 
 #### 参数
 
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 查看 | 调度视图 |      |
-| 锚   | 日期     |      |
-| 方向 | -1 \| 1  |      |
+|名称 |类型 |描述 |
+| --------- | ------------- | ----------- |
+|查看 |调度视图|             |
+|锚|日期 |             |
+|方向 | -1 \| 1 |             |
 
 ### 可见范围
 
@@ -240,15 +240,15 @@ function visibleRangeFor(view: SchedulerView, anchor: Date, weekStartsOn: WeekSt
 ```
 
 给定 `view` 锚定的可见半开 `[start, end)` 窗口
-`anchor`，表彰 `weekStartsOn` 的每周观看次数。
+`anchor`，表彰 `weekStartsOn` 的每周浏览量。
 
 #### 参数
 
-| 名称     | 类型     | 描述 |
-| -------- | -------- | ---- |
-| 查看     | 调度视图 |      |
-| 锚       | 日期     |      |
-| 周开始于 | 周开始   |      |
+|名称 |类型 |描述 |
+| ------------ | ------------- | ----------- |
+|查看 |调度视图|             |
+|锚|日期 |             |
+|周开始于 |周开始 |             |
 
 ## `src/core/recurrence`
 
@@ -261,7 +261,7 @@ function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEv
 ```
 
 将带有 RRULE 的单个 VEvent 扩展到所有重叠的事件中
-与 [rangeStart, rangeEnd)。 返回虚拟 VEvent 克隆 — 每个
+与 [rangeStart, rangeEnd)。返回虚拟 VEvent 克隆 — 每个
 发生 — 调整 dtstart / dtend。
 
 还处理 RDATE（额外日期）和 EXDATE（排除日期）。
@@ -271,11 +271,11 @@ function expandRecurrences(event: VEvent, rangeStart: Date, rangeEnd: Date): VEv
 
 #### 参数
 
-| 名称     | 类型  | 描述 |
-| -------- | ----- | ---- |
-| 活动     | V活动 |      |
-| 范围开始 | 日期  |      |
-| 范围结束 | 日期  |      |
+|名称 |类型 |描述 |
+| ---------- | ------ | ----------- |
+|活动 | V活动 |             |
+|范围开始 |日期 |             |
+|范围结束 |日期 |             |
 
 ## `src/core/types`
 

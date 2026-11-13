@@ -9,18 +9,27 @@ Un piano per aumentare la velocità di lettura di `@mission-platform/code-scanne
 frame) e per mantenere la pipeline di scansione all'interno di un artefatto Flint/WebAssembly collegato staticamente.
 
 > **Implementazione attuale:** Lo scanner viene fornito collegato staticamente
-> Forge grafico Web Script in `src/fws`, con un profilo dinamico del modulo sorgente
+> Grafico Flint in `src/fws`, con un profilo dinamico del modulo sorgente
 > disponibile per moduli decoder memorizzabili nella cache in modo indipendente. La ruggine e la cassa
 > i riferimenti riportati di seguito riguardano solo la provenienza storica della migrazione; lo sono
 > non creare pacchetti di dipendenze di runtime o creare input.
 >
 > **Avanzamento:** Fase 0 (test dell'immagine generata ampliata), Fase 1 (spostare il file
-> intera pipeline in un artefatto in-process) e **Fase 2** (binarizzazione adattiva + grey
+> intera pipeline in un unico artefatto in-process) e **Fase 2** (binarizzazione adattiva + grey
 > campionamento dei sub-pixel con cancellazioni Reed–Solomon + tentativo di localizzazione↔decodificatore
 > loop) sono **fatti** — vedere §1, §2 e §4. **La Fase 3 è ora completata:** l'UPC-A /
 > Disambiguazione EAN-13 (§2 punto 5), Data Matrix + tolleranza di rotazione/inclinazione 1D
 > (voce 4), il localizzatore azteco (voce 6) e la scansione multi-simbolo + ROI (voce 7)
 > sono atterrati tutti.
+
+> **Stato della porta ZXing (12-09-2026):** Il grafico Flint di proprietà dello scanner ora contiene
+> fondazione delimitata a forma di ZXing, 1D/RSS, Data Matrix, Aztec compatto, PDF417,
+> e percorsi MaxiCode. Il modello TypeScript espone testo, byte, conteggio dei bit,
+> punti, metadati e timestamp, mentre solo l'attuale formato Flint Wire
+> serializza il formato, il conteggio dei bit e il payload; rimangono punti e metadati
+> vuoto fino all'arrivo della migrazione dell'inviluppo binario. Emettono i grafici del decodificatore QR
+> in modo indipendente, ma il collegamento QR combinato è bloccato da Flint
+> `FLINT-WASM-001`; i percorsi 2D ridotti non rivendicano la piena parità ZXing.
 
 L'implementazione originale divideva la pipeline:
 
@@ -60,11 +69,11 @@ il localizzatore e il decoder non possono cooperare:
   riportato come EAN-13 (verificato dalla nuova suite di test). La decodifica in Rust consente al locatore di portare suggerimenti strutturali (elemento
   conteggio, modelli di guardia) per scegliere la giusta simbologia.
 
-### Architettura di destinazione: una chiamata FWS, immagine in ingresso, payload in uscita
+### Architettura target: una chiamata Flint, immagine in entrata, payload in uscita
 
 > **Stato: implementato.** Lo scanner esporta `scan_and_decode`, collega il
 > decoder Flint grafica direttamente, e la facciata JS decodifica attraverso quel singolo
-> chiamare. I dettagli seguenti registrano la logica della migrazione.
+>chiamare. I dettagli seguenti registrano la logica della migrazione.
 
 ```
 image (JS)
@@ -74,8 +83,8 @@ image (JS)
 
 `scan_and_decode(width, height, luma) -> Option<ScanOutcome>` esegue l'intera pipeline all'interno di `src/fws/scanner.flint` e
 restituisce direttamente il **carico utile decodificato** (`value` è vuoto quando viene individuato un simbolo ma non decodificabile). La facciata di JS
-(`scanner/index.ts`) è un sottile strato di marshalling che collega le origini Flint QR, matrice e codice a barre in fase di creazione;
-tali pacchetti rimangono pubblicabili in modo indipendente.
+(`scanner/index.ts`) è un sottile strato di marshalling sulle sorgenti Flint del decodificatore di proprietà dello scanner;
+i pacchetti del codificatore rimangono pubblicabili in modo indipendente e non espongono alcuna facciata del decodificatore.
 
 #### Perché questo è risolvibile adesso
 
@@ -136,7 +145,7 @@ annotato di seguito.
    la **cifra del sistema numerico**:
    `decode_any_barcode` post-elabora la simbologia vincente
    `disambiguate_symbology`, che riporta un EAN-13 la cui cifra del sistema numerico è
-   `0` come modulo UPC-A a 12 cifre (zero iniziale rimosso) lasciando intatto il codice EAN-13 originale. _Rimanente:_ trasporto
+   `0` come modulo UPC-A a 12 cifre (zero iniziale rimosso) lasciando intatto il formato EAN-13 autentico. _Rimanente:_ trasporto
    struttura posizionata più ricca (posizioni delle barre di guardia, conteggio degli elementi) nella decisione ed esponendo la simbologia prevista
    in modo che i chiamanti possano limitarlo.
 6. **Supporto azteco. _(fatto — Fase 3.)_** Il file `@mission-platform/matrix-code`
@@ -161,7 +170,7 @@ Il lavoro di precisione deve essere misurato, non affermato a occhio.
   `src/scanner/index.spec.ts` esegue il rendering di numerosi output dell'encoder: cinque payload QR per dimensioni/UTF-8 più tutti e quattro gli ECC
   livelli, quattro payload Data Matrix e sette simbologie 1D (`code128`, `code39`, `ean13`, `ean8`, `upca`, `itf`,
   `codabar`) - e asserisce il percorso completo `render → locate → sample → decode` (ora il percorso singolo
-  `scan_and_decode` chiamata) recupera il payload. I casi 1D vengono confrontati con la precedenza della simbologia dello scanner
+  `scan_and_decode` call) recupera il payload. I casi 1D vengono confrontati con la precedenza della simbologia dello scanner
   (inclusa la disambiguazione UPC-A/EAN-13).
 - **Tutti i tipi di codice codificano↔decodifica andata e ritorno.** `crates/code-scan/tests/generated.rs`
   codifica **ogni** simbologia che i codificatori possono produrre: QR (4 livelli ECC), tutte e quattro le simbologie di matrice (Data Matrix
@@ -183,12 +192,12 @@ Il lavoro di precisione deve essere misurato, non affermato a occhio.
   percentuale per formato**, delimitata in CI in modo che una modifica non possa regredirla silenziosamente.
 - **Corpus di acquisizione reale.** Raccogli un set di foto reali (il campo riporta frame di riferimento 448×336 a bassa risoluzione
   e ~3px/codici a barre modulo) con payload noti e monitora la velocità di lettura come metrica principale tra le versioni.
-- **Determinismo.** Mantieni seminate tutte le degradazioni sintetiche (il file `speckle`
+- **Determinismo.** Mantieni seminate tutte le degradazioni sintetiche (il file `speckle` esistente
   utilizza un LCG fisso) in modo che i risultati siano riproducibili.
 
 ## 4. Sequenziamento suggerito
 
-1. **Fase 0: test (eseguiti).** Ampliata la suite di immagini generate (con aspetto/rotazione/inclinazione/morfosi/rumore
+1. **Fase 0 — test (effettuati).** Ampliata la suite di immagini generate (con aspetto/rotazione/inclinazione/morfosi/rumore seminati
    degrado) quindi la pipeline aveva una rete di sicurezza prima del refactoring.
 2. **Fase 1 — consolidare la decodifica in Rust (fatto).** Il refactoring di dipendenze/funzionalità + `scan_and_decode` + facciata JS
    dimagrire. Preservazione del comportamento; convalidato dai test di andata e ritorno, dalla pipeline e dai nuovi test `scan_and_decode` e da
@@ -197,7 +206,7 @@ Il lavoro di precisione deve essere misurato, non affermato a occhio.
    campionamento con confidenza per modulo inviato ai decodificatori durante le cancellazioni di Reed-Solomon e il globale → adattivo ×
    ciclo di tentativi di cancellazione/cieco × offset origine in `scan_and_decode`: vince la velocità di lettura più elevata, ora che localizza e
    decodificare coopera in una chiamata Rust.
-4. **Fase 3 — rotazione/inclinazione, disambiguazione della simbologia, azteco, multi-simbolo (in corso).** La simbologia 1D
+4. **Fase 3: rotazione/inclinazione, disambiguazione della simbologia, azteco, multisimbolo (in corso).** La simbologia 1D
    la disambiguazione (§2 punto 5) è arrivata. rimanente:
    Data Matrix/tolleranza di inclinazione della rotazione 1D (elemento 4), un localizzatore azteco (elemento 6) e scansione di simboli multipli + ROI (elemento 7): ciascuno è atterrato dietro il proprio delta della matrice di degradazione.
 
@@ -258,7 +267,7 @@ prevalentemente _localizzato-ma-non-decodificato_, non _non-localizzato_.
   per una trasformazione prospettica a quattro punti (come fa `Detector` di ZXing) è la vittoria QR corrispondente.
 - **Dimensionamento Data Matrix + polarità.** Il singolo Data Matrix `inverted` si trova ora dopo un'inversione di polarità ma
   dimensionato erroneamente dal localizzatore (22×22 per un simbolo numerico di 10 cifre la cui dimensione reale è ~ 12–14), quindi non viene decodificato; un
-  Il tentativo a polarità invertita full-frame è stato prototipato ma invertito per questo passaggio perché ha raddoppiato il tempo di scansione del corpo
+  Il nuovo tentativo a polarità invertita a pieno formato è stato prototipato ma è stato ripristinato per questo passaggio perché ha raddoppiato il tempo di scansione del corpo
   per zero vincite net corpus (il blocco è il dimensionamento del DM, non la polarità). Il supporto invertito dovrebbe tornare una volta visualizzato il localizzatore DM
   il dimensionamento è ristretto, con ambito in modo che il passaggio aggiuntivo venga eseguito solo su frame che altrimenti fallirebbero.
 - **Campionamento azteco.** `aztec-1` (68 localizzati / 0 decodificati): viene trovato il bullseye ma il campionamento della griglia allineata all'asse non viene rilevato
@@ -299,7 +308,7 @@ gruppo a due file nel locatore.
 
 ### Passaggio 4: codifica + decodifica PDF417 + localizzatore di righe in pila _(fatto)_
 
-Un nuovo trio di crate rispecchia la divisione `*-common` / `*-encode` / `*-decode` del repository, effettuando il porting di `com.google.zxing.pdf417.*`
+Un nuovo trio di crate rispecchia la suddivisione `*-common` / `*-encode` / `*-decode` del repository, effettuando il porting di `com.google.zxing.pdf417.*`
 (Apache-2.0):
 
 - **`pdf417-common`** — le tabelle condivise e i calcoli matematici di cui entrambe le parti hanno bisogno: le tabelle simboli ↔ parole codice (2.787 voci,
@@ -312,10 +321,10 @@ Un nuovo trio di crate rispecchia la divisione `*-common` / `*-encode` / `*-deco
   compattazione. Consuma l'array di parole in codice flat assemblato dal localizzatore e restituisce il carico utile.
 - **`pdf417-encode`**: un codificatore di compattazione dei byte (qualsiasi carico utile di byte effettua esattamente il andata e ritorno), dimensionamento delle dimensioni,
   Generatore di parole in codice EC (`EC_COEFFICIENTS` per tutti i nove livelli EC, generato dal riferimento) e matrice di moduli
-  layout (protezioni avvio/arresto, indicatori fila sinistra/destra). Espone sia l'array di parole di codice (per codeword-level
+  disposizione (protezioni avvio/arresto, indicatori fila sinistra/destra). Espone sia l'array di parole di codice (per codeword-level
   andata e ritorno) e la bitmap del modulo compresso (per i test del percorso dell'immagine).
 
-Lo scanner ha guadagnato `crates/code-scan/src/pdf417.rs`. PDF417 è un _lineare impilato_
+Lo scanner ha acquisito `crates/code-scan/src/pdf417.rs`. PDF417 è un _lineare impilato_
 simbologia, quindi il localizzatore lavora una riga di scansione alla volta: su ogni riga dell'immagine trova la guardia di partenza, legge 17 moduli
 parole in codice (8 barre/spazi ciascuno) fino al fermo, vota i metadati di colonna/conteggio righe/livello EC dalla riga
 indicatori, inserisce le parole in codice dei dati in una matrice `rows × cols` (votata a maggioranza per cella attraverso le linee di scansione che
@@ -328,17 +337,17 @@ Due dettagli di robustezza si sono rivelati essenziali:
   (`sample_codeword_symbol_exact`); un'esecuzione che non campiona in modo pulito diventa un _hole_ `-1` che preserva la colonna
   allineamento e viene saltato nella votazione. Ciò mantiene la scansione di ogni riga di ogni immagine a buon mercato: la O (dimensione tabella)
   Il fallback con il rapporto più vicino dominerebbe altrimenti lo spostamento del corpo.
-- **Un buco di protezione contro l'eccessiva correzione dell'RS.** Con alti livelli di EC Reed–Solomon sarà felice di fabbricare un
+- **Una protezione contro l'eccessiva correzione dell'RS.** Con livelli EC elevati, Reed–Solomon sarà felice di fabbricare un
   Parola di codice _valido-ma-sbagliato_ da un assembly per lo più vuoto (osservato come decodifica `"AAAA…"` spazzatura). Il localizzatore quindi
   rifiuta di decodificare quando il numero di buchi supera `num_ec / 2` (il budget di correzione RS), che viene rimosso **ogni**
   decodificare i rifiuti mantenendo tutti quelli corretti e mantenendo pulita la protezione dai falsi positivi della cartella dei negativi.
 
-Un bug risolto lungo il percorso: il braccio predefinito del parser del flusso di bit poteva girare all'infinito su un flusso corrotto (riesecuzione del testo
+Un bug risolto lungo il percorso: il braccio predefinito del parser bit-stream poteva girare all'infinito su un flusso corrotto (riesecuzione del testo
 compattazione in una parola in codice che non può consumare); ora si ritira quando non fa progressi.
 
 **Risultato:** `pdf417-1` / `pdf417-2` / `pdf417-3` è passato da **0 → 8 / 13 / 8**
 decodifica corretta alla rotazione 0 e di nuovo a 180° (**58** corretta attraverso le rotazioni), con **nessuna regressione** in nessun altro
-e le cartelle dei negativi sono ancora a **zero** falsi positivi. I viaggi di andata e ritorno sono coperti da
+cartella e le cartelle dei negativi ancora a **zero** falsi positivi. I viaggi di andata e ritorno sono coperti da
 `pdf417-decode/tests/roundtrip.rs` e `code-scan/tests/generated.rs` e il percorso completo dell'immagine (codifica → rendering →
 `scan_and_decode`, incl. 180°) di
 `code-scan/tests/pipeline.rs`.
@@ -349,7 +358,7 @@ il seguito corrispondente. Un'inclinazione più accentuata richiederebbe il mode
 
 ### Passaggio 5: codifica + decodifica MaxiCode + localizzatore esagonale _(fatto)_
 
-Un nuovo trio di crate rispecchia la divisione `*-common` / `*-encode` / `*-decode` del repository, effettuando il porting di `com.google.zxing.maxicode.*`
+Un nuovo trio di crate rispecchia la suddivisione `*-common` / `*-encode` / `*-decode` del repository, effettuando il porting di `com.google.zxing.maxicode.*`
 (Apache-2.0):
 
 - **`maxicode-common`** — le primitive condivise necessarie ad entrambe le parti: la geometria fissa del simbolo (30 colonne × 33 righe), il
@@ -358,7 +367,7 @@ Un nuovo trio di crate rispecchia la divisione `*-common` / `*-encode` / `*-deco
   coppia inversa e il correttore **GF (64) Reed–Solomon** (primitivo `x⁶+x+1`, base del generatore 1) con soli errori
   Berlekamp–Massey/Chien/Forney. I test unitari coprono una parola in codice pulita, una correzione fino alla metà del budget CE e un
   blocco non correggibile.
-- **`maxicode-decode`** — un port fedele di `Decoder` di ZXing +
+- **`maxicode-decode`** — un fedele port di `Decoder` di ZXing +
   `DecodedBitStreamParser`: corregge il blocco primario (10 dati + 10 EC complessivi) e il blocco secondario (pari/dispari
   interfogli corretti indipendentemente), legge la modalità nibble, assembla i dataword ed esegue il set di cinque
   (`SETS[0..5]`) flusso di latch/shift/compattazione dei numeri, incluso il vettore strutturato in modalità 2/3
@@ -367,7 +376,7 @@ Un nuovo trio di crate rispecchia la divisione `*-common` / `*-encode` / `*-deco
   codificare i payload ASCII e seminare i viaggi di andata e ritorno), generando l'EC primario + interleaved-secondario e ponendo il 144
   parole in codice nella griglia del modulo tramite la mappa condivisa `BITNR`.
 
-Lo scanner ha guadagnato `crates/code-scan/src/maxicode.rs`. MaxiCode viene letto come un simbolo _puro_, esattamente come quello di ZXing
+Lo scanner ha acquisito `crates/code-scan/src/maxicode.rs`. MaxiCode viene letto come un simbolo _puro_, esattamente come quello di ZXing
 `MaxiCodeReader` fa: il localizzatore prende il rettangolo che racchiude i pixel scuri e campiona la griglia fissa 30×33
 sopra di esso, spostando la posizione x del campione di mezzo modulo sulle righe dispari per seguire l'offset esagonale. Un aspetto quadrato economico
 la guardia salta ovviamente le regioni non MaxiCode (codici a barre 1D, etichette alte) prima del campionamento e i tre blocchi RS rifiutano
@@ -384,7 +393,7 @@ falsi positivi. I viaggi di andata e ritorno sono coperti da `maxicode-decode/te
 linea di base 0 (un simbolo ruotato campiona la griglia esagonale in modo errato e RS la rifiuta - nessun falso positivo). Un bersaglio
 finder che recupera la rotazione del simbolo prima che il campionamento solleverebbe le altre tre rotazioni.
 
-### Passaggio 6: collega i nuovi formati alla facciata JS + crea l'artefatto Flint _(fatto)_
+### Passaggio 6: collega i nuovi formati alla facciata JS + costruisci l'artefatto Flint _(fatto)_
 
 I passaggi 3–5 hanno inserito PDF417, GS1 DataBar (RSS-14) e MaxiCode nello scanner
 pipeline dietro i tag `FORMAT_PDF417` / `FORMAT_DATABAR` / `FORMAT_MAXICODE`, mentre la facciata JS conosceva solo i tag
@@ -393,12 +402,12 @@ quattro formati originali. Questo passaggio fa emergere le nuove simbologie in f
 - **`FORMAT_NAMES`** in `src/scanner/index.ts` ora mappa `4 → 'pdf417'`,
   `5 → 'databar'`, `6 → 'maxicode'` e l'unione `ScanFormat` in `src/types.ts`
   ottiene gli stessi tre nomi, quindi `scanImageData` / `scanImageDataAsync` (e il
-  `*All` / varianti ROI) li restituiscono come qualsiasi altro formato.
-- **L'artefatto Flint dello scanner è creato** da `src/fws/scanner.flint` dal plugin Flint Vite. Il profilo statico
+  `*All`/varianti ROI) li restituiscono come qualsiasi altro formato.
+- **L'artefatto Flint dello scanner è creato** da `src/fws/scanner.flint` tramite il plugin Flint Vite. Il profilo statico
   collega i grafici del decodificatore in un artefatto autonomo, abilita WebAssembly SIMD e applica un tempo di collegamento aggressivo
   ottimizzazione; il profilo dinamico mantiene i limiti espliciti del modulo decodificatore e memorizza nella cache l'invio dell'esportazione.
-- **Le suite di grafici e facciate FWS** (`src/fws/scanner-graph.spec.ts` e
-  `src/scanner/index.spec.ts`) esercita i grafici del decoder collegato tramite il
+- **Le suite di grafici e facciate Flint** (`src/fws/scanner-graph.spec.ts` e
+  `src/scanner/index.spec.ts`) esercita i grafici del decodificatore collegato tramite il
   scanner ABI ed entrambi i punti di accesso pubblici, inclusi PDF417, GS1 DataBar,
   MaxiCode, ROI, percorsi multi-risultato, sincroni e asincroni. Il
   Il dispositivo di testo PDF417 package-local mantiene il caso di conformità indipendente da
@@ -413,7 +422,7 @@ lo sforzo è documentato in `docs/model-cost-strategy.md`.
 
 La modalità di errore dominante del corpus rimanente erano i codici a barre 1D **localizzati ma non decodificati**. Il percorso 1D originale
 (`barcode.rs` → `barcode-decode`) campiona ciascuna linea di scansione candidata in una sequenza piatta di bit del modulo quantizzando ogni
-eseguito contro una **singola unità di modulo globale**. Questo è esatto in caso di caricamento pulito, ma in una foto scattata con la fotocamera la larghezza del modulo lo è
+eseguito contro una **singola unità di modulo globale**. Questo è esatto con un caricamento pulito, ma con una foto scattata con la fotocamera la larghezza del modulo lo è
 non è costante nel simbolo (la prospettiva, la sfocatura e la stampa irregolare lo allungano), quindi un'unità globale ne arrotonda molte
 elementi contro la griglia sbagliata e il decodificatore di cella EAN/UPC rigido rifiuta il risultato. Il simbolo è _localizzato_ (`scan`
 restituisce le linee di scansione candidate) ma mai _decodificato_.
@@ -425,7 +434,7 @@ le quattro larghezze di quella cifra nella cella a sette moduli prima di confron
 `MAX_INDIVIDUAL_VARIANCE`). Poiché ogni cifra porta la propria unità locale, la deriva graduale attraverso il simbolo non è più
 sconfigge la lettura. Copre **EAN-13 / UPC-A** (tramite EAN-13, con la cifra iniziale recuperata dalle sei metà di sinistra
 bit di parità), **EAN-8** e **UPC-E** (che prima non aveva _nessun_ percorso di decodifica — è assente nel file `barcode-decode`
-elenco simbologia), riutilizzando il rilevatore di bande di codici a barre condiviso per selezionare le righe di scansione. Funziona in `decode_barcode_frame` come a
+elenco simbologia), riutilizzando il rilevatore di bande di codici a barre condiviso per selezionare le righe di scansione. Funziona in `decode_barcode_frame` come file
 fallback **dopo** che il decodificatore della griglia fallisce, quindi i caricamenti puliti mantengono il percorso veloce.
 
 Due guardie mantengono le cartelle dei negativi a **zero** falsi positivi: il lettore è molto più permissivo della griglia
@@ -433,7 +442,7 @@ quantizzatore, quindi entrambi erano essenziali:
 
 - **Zone silenziose su entrambi i lati.** ZXing richiede una zona silenziosa posteriore larga almeno quanto la protezione finale (rispecchiando la
   zona tranquilla di protezione partenza esistente). Senza di esso, un'esecuzione `1:1:1` _all'interno_ di un simbolo non correlato incornicia un "codice a barre" spurio
-  che, combinato con un checksum casualmente valido, decodifica: la fonte dei 9 + 12 falsi positivi iniziali su
+  che, combinato con un checksum valido per coincidenza, decodifica: la fonte dei 9 + 12 falsi positivi iniziali su
   `falsepositives*`.
 - **Consenso su più righe per le simbologie brevi.** I codici EAN-8/UPC-E a 8 cifre sono soggetti a checksum fortuito valido
   inquadratura in disordine, quindi vengono accettati solo quando **≥ 2 righe di scansione** decodificano in modo indipendente lo stesso valore (un autentico
@@ -449,7 +458,7 @@ fotogrammi raddrizza e riprova, guadagni comparabili a 90°/180°/270° (ad esem
 regredito e le cartelle negative (`falsepositives`, `falsepositives-2`, `unsupported`) rimangono su **zero** false
 positivi. Due test di regressione basati su corpus in
 `code-scan/tests/pipeline.rs` blocca le letture fotografiche UPC-E/EAN-13/EAN-8 reali e la protezione pulita dai falsi positivi e il JS
-smoke suite ottiene foto della fotocamera UPC-E + EAN-13 attraverso sia il percorso di caricamento che quello di streaming.
+smoke suite ottiene foto della fotocamera UPC-E + EAN-13 sia attraverso il percorso di caricamento che di streaming.
 
 **Nota: `img.png`.** L'acquisizione del mondo reale della root dell'area di lavoro (`real_world.rs`) ora è _localizzata_ in modo pulito, ma codifica
 il classico generatore di esempio `01234567`

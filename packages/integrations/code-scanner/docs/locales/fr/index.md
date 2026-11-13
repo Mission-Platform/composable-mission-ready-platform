@@ -6,22 +6,24 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 > Langue: Français (fr)
 
 Un **scanner d'image/code de caméra** sans dépendance compilé à partir d'un fichier lié statiquement
-Forgez le graphique de script Web vers WebAssembly. Il localise et décode les codes QR, les données
-Matrix, Aztec, codes-barres 1D, PDF417, GS1 DataBar et MaxiCode à partir de fichiers image
-ou des flux de caméras en direct. Un profil de module source dynamique est également disponible pour
-déploiements qui nécessitent des modules de décodeur pouvant être mis en cache indépendamment.
+Graphique Flint vers WebAssembly. L'artefact lié décode actuellement les données
+Lecteurs Matrix, Compact Aztec, 1D/RSS, PDF417 et MaxiCode à partir de fichiers images ou
+flux de caméras en direct. Le graphique QR émet indépendamment mais reste en dehors du
+artefact combiné pendant que la limitation de l'émetteur Forge est étudiée.
 
 ## Présentation de l'API
 
 ### Scanner de base (`@mission-platform/code-scanner`)
 
 ```ts
-import { scanFile, scanImageData, scanImageDataAll } from '@mission-platform/code-scanner';
+import { scanFile, scanImageData, scanImageDataAll, type ScanOptions } from '@mission-platform/code-scanner';
 
 // Scan ImageData directly
-const result = scanImageData(imageData);
+const options: ScanOptions = { formats: ['DATA_MATRIX'], tryHarder: true };
+const result = scanImageData(imageData, options);
 
-// Scan all codes in frame
+// Scan the package's all-results entry point. The current linked reduced graph
+// returns at most its first validated result until multi-symbol detection lands.
 const allResults = scanImageDataAll(imageData);
 
 // Scan a File / Blob
@@ -44,7 +46,7 @@ depuis `@mission-platform/vite-config`) et `customConditions` (via le
 </script>
 
 <template>
-  <ForgeCodeScanner @result="(res) => console.log(res.value)" />
+  <ForgeCodeScanner @result="(res) => console.log(res.text, res.format)" />
 </template>
 ```
 
@@ -54,6 +56,6 @@ depuis `@mission-platform/vite-config`) et `customConditions` (via le
 import { ForgeCodeScanner } from '@mission-platform/code-scanner';
 
 export function CameraScanner() {
-  return <ForgeCodeScanner onResult={(result) => console.log(result.value)} />;
+  return <ForgeCodeScanner onResult={(result) => console.log(result.text, result.format)} />;
 }
 ```

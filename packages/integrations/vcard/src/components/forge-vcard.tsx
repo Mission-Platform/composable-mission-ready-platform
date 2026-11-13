@@ -1,9 +1,8 @@
 import { ForgeCard, ForgeStack } from '@mission-platform/components';
+import type { MpElement } from '@mission-platform/forge-jsx';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import { toVCardOptions, type VCard, type VCardOptions } from '../ast/vcard';
-
-import type { MpElement } from '@mission-platform/forge-jsx';
 
 export interface ForgeVCardProperties {
   card: VCard | VCardOptions;

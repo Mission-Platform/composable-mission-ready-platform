@@ -1,6 +1,6 @@
-import { ForgeTagInput, type TagInputProperties } from './forge-tag-input';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeTagInput, type TagInputProperties } from './forge-tag-input';
 
 const meta = {
   title: 'Molecules/Forms/ForgeTagInput',

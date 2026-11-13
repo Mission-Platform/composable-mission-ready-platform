@@ -16,7 +16,7 @@
 **种类：**常数
 
 ```typescript
-export const ALLOWED_METHODS;
+export const ALLOWED_METHODS: Set<string>;
 ```
 
 保持代理只读并仅限于记录的 API 路由。
@@ -26,7 +26,17 @@ export const ALLOWED_METHODS;
 **种类：**常数
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES;
+export const ALLOWED_ROUTE_PREFIXES: string[];
+```
+
+没有提供描述。
+
+### 默认
+
+**种类：**常数
+
+```typescript
+export const handler: ExportedHandler;
 ```
 
 没有提供描述。
@@ -39,10 +49,15 @@ export const ALLOWED_ROUTE_PREFIXES;
 function isAllowedProxyRequest(request: Request): boolean;
 ```
 
-没有提供描述。
+确定代理策略是否允许传入客户端请求。
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 请求 | 请求 |      |
+|名称 |类型 |描述 |
+| ------- | ------- | ------------------------ |
+|请求|请求| - 传入 HTTP 请求。 |
+
+#### 合同
+
+- **@param:** - 传入 HTTP 请求。
+- **@returns:** 如果方法和路径在代理白名单内，则为 True。

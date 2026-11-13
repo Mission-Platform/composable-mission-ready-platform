@@ -9,896 +9,6 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 
 Generado a partir de declaraciones de fuente pública en `@mission-platform/forge-jsx`.
 
-## `src/adapters/react`
-
-### Contenido HTML
-
-**Tipo:** función
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement;
-```
-
-Represente HTML confiable en un host React usando `dangerouslySetInnerHTML`.
-
-#### Parámetros
-
-| Nombre      | Tipo                          | Descripción |
-| ----------- | ----------------------------- | ----------- |
-| propiedades | Propiedades de contenido HTML |             |
-
-### renderizar para reaccionar
-
-**Tipo:** función
-
-```typescript
-function renderToReact(element: MpElement): ReactElement;
-```
-
-Representa un árbol {@link MpElement} neutro en un elemento React.
-
-#### Parámetros
-
-| Nombre   | Tipo       | Descripción |
-| -------- | ---------- | ----------- |
-| elemento | ElementoMp |             |
-
-### Teletransportarse
-
-**Tipo:** función
-
-```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
-```
-
-La construcción React de la primitiva `<Teleport>` neutral: una envoltura delgada alrededor
-{@link createPortal} de `react-dom`. `@mission-platform/vite-plugin-forge`
-reescribe el `import { Teleport } from '@mission-platform/forge-jsx'` de un componente para
-importar este componente, por lo que un `<Teleport to="body">…</Teleport>` de una sola escritura
-compila en un portal nativo React.
-
-Cuando `to` ya es un **elemento** DOM (el caso común del cliente, por ejemplo, el
-resuelto `<dialog>` o `document.body` entregado por una persona que llama) los niños son
-conectados a él **sincrónicamente durante el renderizado**, por lo que se montan en el mismo
-cometer que los abrió. Esto coincide con el `<Teleport>` de Vue (que resuelve su
-objetivo sincrónicamente) y se requiere para la corrección: un panel portal que
-se promociona a sí mismo en la capa superior del navegador con la API Popover
-(`popover="manual"` + `showPopover()` en el siguiente fotograma) ya debe estar
-montado cuando se ejecuta ese marco: posponer el portal mediante un renderizado pierde ese
-carrera, dejando el panel `display:none` (el valor predeterminado de UA para un no mostrado
-popover) y por lo tanto invisible.
-
-Sólo una **cadena** de selector necesita un `document.querySelector` de montaje posterior, que
-mantiene el componente seguro para SSR: durante el procesamiento del servidor y el primer cliente
-renderizar para un destino de cadena: no representa nada (o, cuando `disabled`, el
-hijos en su lugar), y `createPortal` solo se ejecuta una vez que existe un destino DOM.
-
-#### Parámetros
-
-| Nombre                                         | Tipo                          | Descripción |
-| ---------------------------------------------- | ----------------------------- | ----------- |
-| { a = 'cuerpo', discapacitado = falso, hijos } | Propiedades de teletransporte |             |
-
-### Propiedades de teletransporte
-
-**Tipo:** interfaz
-
-```typescript
-export interface TeleportProperties
-```
-
-Las propiedades aceptadas por el componente React {@link Teleport}.
-
-### toReactComponent
-
-**Tipo:** función
-
-```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
-```
-
-Envuelva un componente neutral como componente funcional React de primera clase, listo para
-ser renderizado por `react-dom` o compuesto dentro de otros componentes React.
-
-#### Parámetros
-
-| Nombre              | Tipo           | Descripción |
-| ------------------- | -------------- | ----------- |
-| componente          | MpComponent<P> |             |
-| nombre para mostrar | cadena         |             |
-
-### Transición
-
-**Tipo:** función
-
-```typescript
-function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
-```
-
-La compilación React de la primitiva `<Transition>` neutral: una pequeña clase CSS
-controlador que refleja el `<Transition>` integrado de Vue. Anima un solo
-niño renderizado condicionalmente alternando `<name>-enter-*` / `<name>-leave-*`
-clases (por lo que la misma hoja de estilo controla ambos marcos) y mantiene al niño
-montado a través de su animación de salida. `@mission-platform/vite-plugin-forge`
-reescribe el `import { Transition } from '@mission-platform/forge-jsx'` de un componente para
-importe este componente en el destino React.
-
-Es seguro para SSR: el renderizado del servidor (y el primer pintado del cliente) renderiza al niño
-en su lugar, coincidiendo con la salida SSR de Vue, y la animación solo se ejecuta después.
-
-#### Parámetros
-
-| Nombre                                                               | Tipo                      | Descripción |
-| -------------------------------------------------------------------- | ------------------------- | ----------- |
-| { nombre = 'v', aparecer = falso, duración, hijos, ... anulaciones } | Propiedades de transición |             |
-
-### Grupo de transición
-
-**Tipo:** función
-
-```typescript
-function TransitionGroup({
-  name = 'v',
-  tag,
-  moveClass,
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionGroupProperties): ReactNode;
-```
-
-La compilación React de la primitiva `<TransitionGroup>` neutral: una clase CSS
-controlador que refleja el `<TransitionGroup>` integrado de Vue. Anima un **keyed
-lista**: los niños que ingresan obtienen `<name>-enter-*`, los niños que salen permanecen montados
-a través de su animación `<name>-leave-*`, y niños sobrevivientes que cambian
-posición están animadas mediante FLIP con `<name>-move` (la misma hoja de estilo controla ambos
-marcos). `@mission-platform/vite-plugin-forge` reescribe el código de un componente.
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` para importar esto en el
-React objetivo.
-
-Es seguro para SSR: el renderizado del servidor (y el primer pintado del cliente) renderiza el
-hijos en su lugar (que coinciden con la salida SSR de Vue) y la animación solo se ejecuta
-después. Las clases de transición se aplican al DOM node de cada niño, por lo que:
-como la única {@link Transition}: surten efecto en los elementos secundarios del DOM;
-un niño que es en sí mismo un componente (sin reenvío de referencias) todavía se monta/desmonta
-correctamente pero no recibe ninguna clase (que coincide con la línea de base neutral de SSR en el lugar).
-
-#### Parámetros
-
-| Nombre                                                                                    | Tipo                                | Descripción |
-| ----------------------------------------------------------------------------------------- | ----------------------------------- | ----------- |
-| { nombre = 'v', etiqueta, moveClass, aparecer = falso, duración, hijos, ... anulaciones } | Propiedades del grupo de transición |             |
-
-### Propiedades del grupo de transición
-
-**Tipo:** interfaz
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-Las propiedades aceptadas por el componente React {@link TransitionGroup}.
-
-### Propiedades de transición
-
-**Tipo:** interfaz
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-Las propiedades aceptadas por el componente React {@link Transition}.
-
-## `src/adapters/solid`
-
-### Contenido HTML
-
-**Tipo:** función
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element;
-```
-
-La compilación Solid de la primitiva `<HtmlContent>` neutral. Solid's
-La propiedad `innerHTML` es la operación de contenido sin formato basada en reemplazo nativo.
-
-#### Parámetros
-
-| Nombre      | Tipo                          | Descripción |
-| ----------- | ----------------------------- | ----------- |
-| propiedades | Propiedades de contenido HTML |             |
-
-### Teletransportarse
-
-**Tipo:** función
-
-```typescript
-function Teleport(properties: TeleportProperties): JSX.Element;
-```
-
-La construcción Solid de la primitiva `<Teleport>` neutral: una envoltura delgada alrededor
-{@link Portal} de Solid. `@mission-platform/vite-plugin-forge` reescribe un
-`import { Teleport } from '@mission-platform/forge-jsx'` del componente para importar este
-componente, por lo que un `<Teleport to="body">…</Teleport>` de escritura única se compila en un
-portal nativo Solid.
-
-El destino del portal se resuelve en el cliente, por lo que el componente es seguro para SSR:
-durante el procesamiento del servidor, y antes de que exista un objetivo DOM, se procesa
-nada (o, cuando `disabled`, los niños en su lugar) y {@link Portal} solo
-se monta una vez que un objetivo real está disponible.
-
-#### Parámetros
-
-| Nombre      | Tipo                          | Descripción |
-| ----------- | ----------------------------- | ----------- |
-| propiedades | Propiedades de teletransporte |             |
-
-### Propiedades de teletransporte
-
-**Tipo:** interfaz
-
-```typescript
-export interface TeleportProperties
-```
-
-Las propiedades aceptadas por el componente Solid {@link Teleport}.
-
-### Transición
-
-**Tipo:** función
-
-```typescript
-function Transition(properties: TransitionProperties): JSX.Element;
-```
-
-La compilación Solid de la primitiva `<Transition>` neutral. Un mínimo correcto
-implementación que hace que el niño esté **en su lugar**, coincidiendo con React
-ruta SSR/paridad del adaptador del adaptador y la línea base de tiempo de ejecución neutral, por lo que
-componentes de escritura única, verificación de tipos y montaje sin recurrir a un tercero
-Biblioteca de transición Solid. La animación de entrada/salida de clase se puede superponer más adelante;
-la superficie de apoyo ya coincide con Vue/React (`name`, `appear`, `duration` y
-las anulaciones de clase por fase).
-
-`@mission-platform/vite-plugin-forge` reescribe el código de un componente
-`import { Transition } from '@mission-platform/forge-jsx'` para importar esto en el
-Solid objetivo.
-
-#### Parámetros
-
-| Nombre      | Tipo                      | Descripción |
-| ----------- | ------------------------- | ----------- |
-| propiedades | Propiedades de transición |             |
-
-### Grupo de transición
-
-**Tipo:** función
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
-```
-
-La compilación Solid de la primitiva `<TransitionGroup>` neutral. Me gusta
-{@link Transition}, esta es una implementación mínima correcta que hace que el
-hijos **en su lugar** (la línea base de paridad de adaptador/SSR del adaptador React) para que
-verificación de tipo de componentes Solid generada sin una transición de lista de terceros
-biblioteca. La superficie del puntal coincide con Vue/React (`name`, `tag`, `moveClass`,
-`appear`, `duration` y las anulaciones de clases por fase) para escritura única
-paridad.
-
-`@mission-platform/vite-plugin-forge` reescribe el código de un componente
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` para importar esto en el
-Solid objetivo.
-
-#### Parámetros
-
-| Nombre      | Tipo                                | Descripción |
-| ----------- | ----------------------------------- | ----------- |
-| propiedades | Propiedades del grupo de transición |             |
-
-### Propiedades del grupo de transición
-
-**Tipo:** interfaz
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-Las propiedades aceptadas por el componente Solid {@link TransitionGroup}.
-
-### Propiedades de transición
-
-**Tipo:** interfaz
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-Las propiedades aceptadas por el componente Solid {@link Transition}.
-
-## `src/adapters/svelte`
-
-### Contenido HTML
-
-**Tipo:** función
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet;
-```
-
-Implementación de contenido sin formato del adaptador Svelte. `createRawSnippet` es el
-forma de tiempo de ejecución de la operación `{@html}` de Svelte y su devolución de llamada de configuración se conserva
-referencias de host y reenvío de eventos para el uso del adaptador escrito a mano.
-
-#### Parámetros
-
-| Nombre      | Tipo                          | Descripción |
-| ----------- | ----------------------------- | ----------- |
-| propiedades | Propiedades de contenido HTML |             |
-
-### Teletransportarse
-
-**Tipo:** función
-
-```typescript
-function Teleport(properties: TeleportProperties): Snippet;
-```
-
-Represente un fragmento secundario de Forge para Svelte SSR y paridad de cliente.
-
-#### Parámetros
-
-| Nombre      | Tipo                          | Descripción |
-| ----------- | ----------------------------- | ----------- |
-| propiedades | Propiedades de teletransporte |             |
-
-### Propiedades de teletransporte
-
-**Tipo:** interfaz
-
-```typescript
-export interface TeleportProperties
-```
-
-Las propiedades aceptadas por la primitiva Svelte {@link Teleport}.
-
-### Transición
-
-**Tipo:** función
-
-```typescript
-function Transition(properties: TransitionProperties): Snippet;
-```
-
-Representar un único hijo de transición; la animación es proporcionada por el marcado nativo Svelte.
-
-#### Parámetros
-
-| Nombre      | Tipo                      | Descripción |
-| ----------- | ------------------------- | ----------- |
-| propiedades | Propiedades de transición |             |
-
-### Grupo de transición
-
-**Tipo:** función
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet;
-```
-
-Representa los elementos secundarios del grupo de transición en su lugar para bloques con clave nativa Svelte.
-
-#### Parámetros
-
-| Nombre      | Tipo                                | Descripción |
-| ----------- | ----------------------------------- | ----------- |
-| propiedades | Propiedades del grupo de transición |             |
-
-### Propiedades del grupo de transición
-
-**Tipo:** interfaz
-
-```typescript
-export interface TransitionGroupProperties extends TransitionProperties
-```
-
-Las propiedades aceptadas por la primitiva Svelte {@link TransitionGroup}.
-
-### Propiedades de transición
-
-**Tipo:** interfaz
-
-```typescript
-export interface TransitionProperties
-```
-
-Las propiedades aceptadas por la primitiva Svelte {@link Transition}.
-
-## `src/adapters/vue`
-
-### crear contexto
-
-**Tipo:** función
-
-```typescript
-function createContext(defaultValue: T): VueContext<T>;
-```
-
-La compilación Vue de la primitiva `createContext` neutral. Devuelve un identificador cuyo
-`Provider` es un componente real que `provide()`s y `value` al valor predeterminado
-ranura, por lo que un `<Ctx.Provider value={…}><Slot /></Ctx.Provider>` de escritura única
-se compila en el formato Vue nativo. `@mission-platform/vite-plugin-forge` reescribe un
-`import { createContext, useContext } from '@mission-platform/forge-jsx'` del componente
-para importarlos en el objetivo Vue.
-
-#### Parámetros
-
-| Nombre               | Tipo | Descripción |
-| -------------------- | ---- | ----------- |
-| valor predeterminado | T    |             |
-
-### Contenido HTML
-
-**Tipo:** función
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode;
-```
-
-Represente HTML confiable en un host Vue utilizando su enlace `innerHTML` de función de procesamiento.
-
-#### Parámetros
-
-| Nombre      | Tipo                          | Descripción |
-| ----------- | ----------------------------- | ----------- |
-| propiedades | Propiedades de contenido HTML |             |
-
-### renderToVue
-
-**Tipo:** función
-
-```typescript
-function renderToVue(element: MpElement): VNode;
-```
-
-Represente un árbol {@link MpElement} neutral en un Vue `VNode`.
-
-#### Parámetros
-
-| Nombre   | Tipo       | Descripción |
-| -------- | ---------- | ----------- |
-| elemento | ElementoMp |             |
-
-### al componente Vue
-
-**Tipo:** función
-
-```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
-```
-
-Envuelva un componente neutro como componente funcional Vue. Atributos entrantes
-convertirse en accesorios neutrales, la ranura predeterminada (si la hay) se reenvía como neutral
-`children`, y cada ranura con nombre se reenvía bajo su nombre (como una ranura con alcance
-función), por lo que un `<Slot name="…" />` en el componente se resuelve contra él y
-el resultado se puede utilizar como cualquier otro componente Vue.
-
-#### Parámetros
-
-| Nombre     | Tipo           | Descripción |
-| ---------- | -------------- | ----------- |
-| componente | MpComponent<P> |             |
-| nombre     | cadena         |             |
-
-### utilizarContexto
-
-**Tipo:** función
-
-```typescript
-function useContext(context: VueContext<T>): T;
-```
-
-La construcción Vue de la primitiva `useContext` neutral: una envoltura delgada alrededor
-`inject()` que vuelve al valor predeterminado del contexto cuando no hay encerramiento
-El proveedor proporcionó uno.
-
-#### Parámetros
-
-| Nombre   | Tipo          | Descripción |
-| -------- | ------------- | ----------- |
-| contexto | VueContext<T> |             |
-
-### VueContexto
-
-**Tipo:** interfaz
-
-```typescript
-export interface VueContext<T>
-```
-
-Un identificador de contexto Vue: un `Provider` respaldado por `provide()` más la clave `inject()`.
-
-## `src/adapters/web-components`
-
-### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
-
-**Tipo:** constante
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
-```
-
-Los elementos internos están controlados de manera inofensiva; La asociación del formulario sigue siendo voluntaria.
-
-### DEFAULT_WEBCOMPONENTS_SHADOW_POLICY
-
-**Tipo:** constante
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
-```
-
-Los valores predeterminados de compatibilidad se utilizan cuando una clase generada no anula la política.
-
-### ResultadoDePlantillaDom
-
-**Tipo:** clase
-
-```typescript
-export class DomTemplateResult
-```
-
-Un resultado generado por DOM directo con una identidad de definición estable.
-
-### elemento dinámico
-
-**Tipo:** función
-
-```typescript
-function dynamicElement(
-  tag: unknown,
-  properties: Readonly<Record<string, unknown>>,
-  ...children: readonly unknown[]
-): DynamicElementResult;
-```
-
-Cree un elemento Web-Components nativo cuya etiqueta se seleccione en tiempo de ejecución.
-
-#### Parámetros
-
-| Nombre      | Tipo                                  | Descripción |
-| ----------- | ------------------------------------- | ----------- |
-| etiqueta    | desconocido                           |             |
-| propiedades | Sólo lectura<Record<string, unknown>> |             |
-| niños       | sólo lectura desconocido[]            |             |
-
-### ResultadoDinámicoElemento
-
-**Tipo:** clase
-
-```typescript
-export class DynamicElementResult
-```
-
-Un elemento seleccionado en tiempo de ejecución y sus hijos para una etiqueta JSX calculada.
-
-### Elemento de forja
-
-**Tipo:** clase
-
-```typescript
-export class ForgeElement extends ForgeHTMLElement
-```
-
-Clase base nativa `HTMLElement` para elementos personalizados generados: una
-sustituto libre de dependencia para `LitElement`.
-
-Una subclase declara su superficie reactiva a través de `static properties` (reflejando
-Iluminado): cada tecla se convierte en un prototipo de acceso cuyo configurador programa un
-La microtarea se vuelve a renderizar y cada clave que no sea `state` observa sus minúsculas.
-atributo. `render()` devuelve la plantilla {@link html}`…` del elemento, representada
-en una raíz de sombra abierta. Las confirmaciones reactivas actualizan la plantilla existente
-incrementalmente: las listas posicionales reutilizan entradas compatibles y salidas de ranuras
-conservan sus nodos de proyección nativos mientras las partes no relacionadas cambian.
-
-### ForgeElementConstructor
-
-**Tipo:** interfaz
-
-```typescript
-export interface ForgeElementConstructor
-```
-
-El contrato de hoja de estilo estático implementado por elementos Forge generados.
-
-Las URL se mantienen en la clase de elemento en lugar de en el documento, por lo que aparece una sombra.
-root puede cargar los complementos compilados que los estilos a nivel de documento no pueden alcanzar.
-
-### ForgeElementHostConstructor
-
-**Tipo:** tipo
-
-```typescript
-export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
-```
-
-Una clase de elemento nativo construible aceptada por {@link ForgeElementMixin}.
-
-### ForjaElementoMixin
-
-**Tipo:** función
-
-```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
-```
-
-Agregue el tiempo de ejecución independiente del host de Forge a un constructor de elementos nativo.
-Las funciones integradas personalizadas no pueden ampliar `ForgeElement` y `HTMLDivElement`;
-este mixin copia el comportamiento conservando la cadena del prototipo nativo.
-
-#### Parámetros
-
-| Nombre | Tipo  | Descripción |
-| ------ | ----- | ----------- |
-| Base   | TBase |             |
-
-### Marcador de ranura de forja
-
-**Tipo:** interfaz
-
-```typescript
-export interface ForgeSlotMarker extends HTMLElement
-```
-
-Marcador de tiempo de ejecución emitido por el compilador de componentes web para espacios ambiguos.
-
-### tiene contenido de ranura
-
-**Tipo:** función
-
-```typescript
-function hasSlotContent(host: Element, name?: string): boolean;
-```
-
-Si `host` recibió contenido para una de sus ranuras: el objetivo nativo
-Reemplazo del marcador neutro `hasSlot('x')`.
-
-`hasSlot` es vocabulario en tiempo de compilación: Vue lo reduce a `!!slots.x`, React a
-`properties.x != null`, y un elemento personalizado no tiene ninguno de los dos, por lo que se realiza la verificación
-contra el DOM en su lugar. Un elemento generado se representa en una **sombra abierta
-root**, lo que significa que el contenido que un consumidor proyecta permanece en el host
-**light** DOM como sus hijos: un espacio con nombre lo ocupa un niño que lleva
-`slot="<name>"`, y el espacio predeterminado para cualquier niño que no tenga ninguno. Sólo
-Los hijos directos se consideran, exactamente como la asignación de espacios en sí, y un
-El texto con solo espacios en blanco node no cuenta como contenido.
-
-Se camina a los niños en lugar de consultarlos con `[slot="…"]`, por lo que se crea un nombre de ranura.
-no necesita escape CSS, por lo que es un texto secundario (que ningún selector puede igualar)
-todavía llena el espacio predeterminado.
-
-Tenga en cuenta que una ranura sólo es observable una vez que los hijos del anfitrión existen: durante el
-actualización del analizador de un elemento escrito en el HTML inicial, `connectedCallback`
-se ejecuta antes de que se conecten. El contenido proyectado más tarde vuelve a representar el elemento.
-a través del camino reactivo habitual.
-
-#### Parámetros
-
-| Nombre    | Tipo     | Descripción |
-| --------- | -------- | ----------- |
-| anfitrión | Elemento |             |
-| nombre    | cadena   |             |
-
-### HTML
-
-**Tipo:** función
-
-```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
-```
-
-Fábrica de plantillas etiquetadas. Captura las cadenas estáticas y dinámicas del sitio de llamadas.
-valores en un {@link TemplateResult} para que {@link render} se realice en DOM.
-
-#### Parámetros
-
-| Nombre  | Tipo                           | Descripción |
-| ------- | ------------------------------ | ----------- |
-| cuerdas | Matriz de cadenas de plantilla |             |
-| valores | sólo lectura desconocido[]     |             |
-
-### Contenido HTML
-
-**Tipo:** función
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
-```
-
-Cree un resultado de contenido sin formato de componentes web nativo sin escapar de `html`.
-
-#### Parámetros
-
-| Nombre      | Tipo                          | Descripción |
-| ----------- | ----------------------------- | ----------- |
-| propiedades | Propiedades de contenido HTML |             |
-
-### Propiedades de contenido HTML
-
-**Tipo:** interfaz
-
-```typescript
-export interface HtmlContentProperties
-```
-
-Propiedades aceptadas por el asistente nativo HtmlContent de componentes web.
-
-### Resultado del contenido HTML
-
-**Tipo:** clase
-
-```typescript
-export class HtmlContentResult
-```
-
-Un host nativo más un marcado secundario sin procesar confiable, representado por {@link render}.
-
-### nada
-
-**Tipo:** constante
-
-```typescript
-export const nothing: unique symbol;
-```
-
-Sentinel representado como "sin valor": en posición secundaria no produce nada, en
-posición del atributo, elimina el atributo, el equivalente nativo de
-`nothing` de lit-html.
-
-### Declaración de propiedad
-
-**Tipo:** interfaz
-
-```typescript
-export interface PropertyDeclaration
-```
-
-Una declaración de propiedad reactiva en una subclase {@link ForgeElement}.
-
-### RawHtml
-
-**Tipo:** clase
-
-```typescript
-export class RawHtml
-```
-
-Un valor HTML sin formato confiable utilizado por el adaptador de componentes web nativo.
-
-### prestar
-
-**Tipo:** función
-
-```typescript
-function render(
-  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
-  container: ParentNode,
-): void;
-```
-
-Procese un resultado en `container` utilizando una instancia de plantilla persistente. estática
-El DOM y el estado del formulario nativo se conservan, mientras que solo se modifican los rangos de enlace.
-actualizado; Los tipos de plantillas incompatibles reemplazan el contenido propiedad del renderizador.
-
-#### Parámetros
-
-| Nombre     | Tipo                                                                                                       | Descripción |
-| ---------- | ---------------------------------------------------------------------------------------------------------- | ----------- |
-| resultado  | Resultado de la plantilla \| DomTemplateResult \| ResultadoElementoDinámico \| Resultado de contenido HTML |             |
-| contenedor | Nodo principal                                                                                             |             |
-
-### resolverForgeSlotMarkers
-
-**Tipo:** función
-
-```typescript
-function resolveForgeSlotMarkers(
-  root: ParentNode,
-  owner: ForgeElement,
-  sourceChildren: readonly Node[],
-  destinationRoot: ShadowRoot,
-): void;
-```
-
-Resuelva los marcadores de ranura de tiempo de ejecución emitidos por el compilador en un fragmento de renderizado.
-
-Los marcadores sin una propiedad de contenido se convierten en espacios nativos, conservando la
-la semántica de reserva y asignación del navegador, a menos que se utilice la misma ranura
-repetido en el árbol de renderizado. Los repetidos medios materializan clones del
-hijos light-DOM originales para que cada salida reciba contenido determinista.
-Los marcadores de contenido se reducen a espacios nativos cuando su valor es el del propietario.
-los niños light-DOM originales y la salida no se repiten; de lo contrario su
-El valor se materializa como último recurso.
-
-#### Parámetros
-
-| Nombre      | Tipo                | Descripción |
-| ----------- | ------------------- | ----------- |
-| raíz        | Nodo principal      |             |
-| propietario | Elemento de forja   |             |
-| fuenteNiños | sólo lectura Node[] |             |
-| destinoRaíz | Raíz de sombra      |             |
-
-### Resultado de la plantilla
-
-**Tipo:** clase
-
-```typescript
-export class TemplateResult
-```
-
-Un resultado `html\`…\`` analizado: las cadenas estáticas más los valores interpolados.
-
-### inseguroHtml
-
-**Tipo:** función
-
-```typescript
-function unsafeHtml(value: string): RawHtml;
-```
-
-Marque una cadena como marcado secundario confiable para la ruta nativa de componentes web.
-
-#### Parámetros
-
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| valor  | cadena |             |
-
-### ID de uso
-
-**Tipo:** función
-
-```typescript
-function useId(): string;
-```
-
-El reemplazo del objetivo nativo para `useId` de React.
-
-El vocabulario neutral ofrece `useId()` para los identificadores que vinculan un control a su
-`<label for>` / `aria-describedby`; React lo asigna a sus propios `useId` y Solid
-a `createUniqueId`, pero un elemento personalizado no tiene tiempo de ejecución de marco para tomar prestado
-uno de... así que esto es todo.
-
-En este caso es suficiente un contador a nivel de módulo y, deliberadamente, más sencillo que un
-Generador aleatorio/hash: una identificación solo tiene que ser única **dentro de un documento**,
-y el compilador levanta un `const x = useId()` de `render()` a un
-campo de instancia, por lo que cada instancia de elemento llama a esto exactamente una vez y luego
-mantiene su identificación durante toda su vida. Por lo tanto, las llamadas sucesivas nunca
-colisionan, no se necesita dependencia (nanoide, `crypto.randomUUID`), y el
-El resultado es estable y depurable (`forge-1`, `forge-2`,…). El valor es un
-HTML `id` válido y un identificador CSS válido, por lo que se puede utilizar en un selector
-sin escapar.
-
-### WebComponentsInternalsPolicy
-
-**Tipo:** interfaz
-
-```typescript
-export interface WebComponentsInternalsPolicy
-```
-
-Solicitudes de capacidad para la API {@link ElementInternals} de la plataforma.
-
-### WebComponentsShadowPolicy
-
-**Tipo:** interfaz
-
-```typescript
-export interface WebComponentsShadowPolicy
-```
-
-Opciones de raíz de sombra escritas aceptadas por los elementos Forge generados.
-
 ## `src/runtime/class-names`
 
 ### nombres de clase
@@ -915,8 +25,8 @@ la primera aparición gana). Devuelve una cadena vacía cuando no hay nada activ
 
 #### Parámetros
 
-| Nombre  | Tipo                              | Descripción |
-| ------- | --------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | --------------------- | ----------- |
 | valores | valor de clase de solo lectura [] |             |
 
 ### Valor de clase
@@ -945,9 +55,9 @@ con {@link useContext}.
 
 #### Parámetros
 
-| Nombre               | Tipo | Descripción |
-| -------------------- | ---- | ----------- |
-| valor predeterminado | T    |             |
+| Nombre | Tipo | Descripción |
+| ------------ | ---- | ----------- |
+| valor predeterminado | T |             |
 
 ### esContextProvider
 
@@ -961,9 +71,9 @@ Si un valor es una función de contexto {@link MpContext.Provider}.
 
 #### Parámetros
 
-| Nombre | Tipo        | Descripción |
-| ------ | ----------- | ----------- |
-| valor  | desconocido |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------- | ----------- |
+| valor | desconocido |             |
 
 ### MP_CONTEXTO
 
@@ -1019,8 +129,8 @@ Leer el valor actual de un contexto: el recinto más cercano
 
 #### Parámetros
 
-| Nombre   | Tipo         | Descripción |
-| -------- | ------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------------ | ----------- |
 | contexto | MpContext<T> |             |
 
 ## `src/runtime/dynamic`
@@ -1055,7 +165,7 @@ Las propiedades aceptadas por el elemento {@link Dynamic}.
 Esta es una de las pocas declaraciones que legítimamente mantiene una **bolsa abierta**:
 todas las propiedades distintas de `is` se reenvían palabra por palabra al elemento `is`
 resuelve, y ese elemento sólo se conoce en tiempo de ejecución, por lo que los atributos que
-acepta no se pueden enumerar aquí. Las interfaces de accesorios de componentes _no_ deben
+acepta no se pueden enumerar aquí. Las interfaces de accesorios de componentes _no_
 siga este patrón: consulte {@link MpPropertyBag}.
 
 ## `src/runtime/h`
@@ -1081,11 +191,11 @@ ya sea como argumentos variables finales (la transformación clásica) o mediant
 
 #### Parámetros
 
-| Nombre      | Tipo                                             | Descripción |
-| ----------- | ------------------------------------------------ | ----------- |
-| tipo        | MpElementType \| ((propiedades: P) => MpElement) |             |
-| propiedades | P\| nulo                                         |             |
-| niños       | MpChild[]                                        |             |
+| Nombre | Tipo | Descripción |
+| ---------- | ----------------------------------------------- | ----------- |
+| tipo | MpElementType \| ((propiedades: P) => MpElement) |             |
+| propiedades | P\| nulo |             |
+| niños | MpChild[] |             |
 
 ## `src/runtime/hooks`
 
@@ -1104,7 +214,7 @@ Una lista de dependencias que controla cuándo se vuelve a ejecutar un efecto/me
 **Tipo:** componente
 
 ```typescript
-export type MpEffectCallback = () => void | MpEffectCleanup;
+export type MpEffectCallback = () => MpEffectCleanup | void;
 ```
 
 La devolución de llamada del efecto ejecutada por {@link useEffect}.
@@ -1134,7 +244,7 @@ Un contenedor de referencia mutable, que refleja el `MutableRefObject` de React.
 **Tipo:** componente
 
 ```typescript
-export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
+export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 ```
 
 Actualice una parte del estado, ya sea a un nuevo valor o mediante una función de actualización.
@@ -1151,10 +261,10 @@ Neutro `useCallback`. Devuelve la devolución de llamada sin cambios para el ren
 
 #### Parámetros
 
-| Nombre                | Tipo             | Descripción |
-| --------------------- | ---------------- | ----------- |
-| devolución de llamada | T                |             |
-| _dependencias         | MpDependencyList |             |
+| Nombre | Tipo | Descripción |
+| ------------- | ---------------- | ----------- |
+| devolución de llamada | T |             |
+| _dependencias | MpDependencyList |             |
 
 ### usoEfecto
 
@@ -1169,9 +279,9 @@ no lo ejecute durante un único renderizado SSR/adaptador.
 
 #### Parámetros
 
-| Nombre        | Tipo             | Descripción |
+| Nombre | Tipo | Descripción |
 | ------------- | ---------------- | ----------- |
-| _efecto       | MpEffectCallback |             |
+| _efecto | MpEffectCallback |             |
 | _dependencias | MpDependencyList |             |
 
 ### ID de uso
@@ -1182,12 +292,12 @@ no lo ejecute durante un único renderizado SSR/adaptador.
 function useId(): string;
 ```
 
-Neutro `useId`. Refleja el `useId` de React y Vue: devuelve un valor estable y único.
-cadena de identificación para la instancia del componente, adecuada para la etiqueta / `aria-describedby`
+Neutral `useId`. espejos React'arena Vue's `useId`: devuelve un valor estable y único
+cadena de identificación para la instancia del componente, adecuada para etiqueta / `aria-describedby`
 asociaciones sin contadores enrollados a mano. Las manos de implementación básica
 genera una identificación que incrementa el proceso (`:mp0:`, `:mp1:`,…); el complemento de tiempo de compilación
-intercambia esta importación por el `useId` nativo de cada marco (React/Vue), mientras que
-los adaptadores de tiempo de ejecución y SSR comparten esta forma determinista por lo que un solo render
+intercambia esta importación para el nativo de cada marco `useId` (React's / Vue's), mientras
+Los adaptadores de tiempo de ejecución y SSR comparten esta forma determinista, por lo que un solo renderizado
 permanece estable (e idéntico en ambos marcos).
 
 ### utilizarMemoria
@@ -1202,9 +312,9 @@ Neutro `useMemo`. Calcula el valor una vez para el renderizado.
 
 #### Parámetros
 
-| Nombre        | Tipo             | Descripción |
+| Nombre | Tipo | Descripción |
 | ------------- | ---------------- | ----------- |
-| fábrica       | () => T          |             |
+| fábrica | () => T |             |
 | _dependencias | MpDependencyList |             |
 
 ### utilizarRef
@@ -1212,7 +322,7 @@ Neutro `useMemo`. Calcula el valor una vez para el renderizado.
 **Tipo:** función
 
 ```typescript
-function useRef(initial: T): MpRef<T>;
+function useRef(initial?: T): MpRef<T>;
 ```
 
 Neutro `useRef`. Devuelve un contenedor `{ current }` nuevo para el único
@@ -1220,16 +330,16 @@ rendir; los tiempos de ejecución del marco lo conservan en todos los renderizad
 
 #### Parámetros
 
-| Nombre  | Tipo | Descripción |
+| Nombre | Tipo | Descripción |
 | ------- | ---- | ----------- |
-| inicial | T    |             |
+| inicial | T |             |
 
 ### usoEstado
 
 **Tipo:** función
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>];
+function useState(initial?: T | (() => T)): [T, MpSetState<T>];
 ```
 
 Neutro `useState`. La implementación básica devuelve el valor inicial y
@@ -1238,8 +348,8 @@ el comportamiento correcto para un único renderizado SSR/adaptador.
 
 #### Parámetros
 
-| Nombre  | Tipo          | Descripción |
-| ------- | ------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
 | inicial | T\| (() => T) |             |
 
 ## `src/runtime/html-content`
@@ -1273,6 +383,29 @@ bag en lugar de enumerar toda la superficie del atributo DOM.
 
 ## `src/runtime/slots`
 
+### recogerSlottedNiños
+
+**Tipo:** función
+
+```typescript
+function collectSlottedChildren(children: readonly MpChild[]): SlottedChildren;
+```
+
+Particione los hijos de un componente principal por su marcador `slot="…"` para que
+El componente de escritura única puede **pasar** contenido a la ranura con nombre de un componente secundario.
+(`<ForgeDropdown><button slot="trigger" />…</ForgeDropdown>`). niños cargando
+una propiedad `slot` se agrupa bajo ese nombre (con el marcador eliminado, por lo que
+el contenido resuelto nunca emite un atributo `slot` perdido); todo lo demás
+permanece en {@link SlottedChildren.defaultChildren}. Los adaptadores doblan el nombre.
+grupos en los accesorios del niño, reflejando exactamente cómo el compilador enruta el
+mismos marcadores `slot="…"` a Vue `<template #name>` / a React `name` prop.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | ------------------ | ----------- |
+| niños | MpChild de sólo lectura[] |             |
+
 ### tiene ranura
 
 **Tipo:** función
@@ -1296,7 +429,7 @@ El nombre omitido (o `'default'`) apunta a la ranura predeterminada (`children`)
 ```
 
 `@mission-platform/vite-plugin-forge` reescribe la llamada directamente a cada uno
-verificación de presencia nativa del marco: `!!slots.x` de Vue (`$slots.x` dentro de un
+verificación de presencia nativa del marco: Vue's `!!slots.x` (`$slots.x` dentro de un
 `v-if`) y `properties.x != null` de React, por lo que un componente de escritura única puede
 renderizar una región contenedora opcional solo cuando el espacio está lleno, en ambos
 marcos. La implementación aquí es la línea base del adaptador de tiempo de ejecución/SSR,
@@ -1304,8 +437,8 @@ leyendo el alcance de la ranura del componente actual.
 
 #### Parámetros
 
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
 | nombre | cadena |             |
 
 ### Propiedad MpRender
@@ -1313,7 +446,7 @@ leyendo el alcance de la ranura del componente actual.
 **Tipo:** componente
 
 ```typescript
-export type MpRenderProperty<S = MpPropertyBag> = (scope: S) => MpChild | readonly MpChild[];
+export type MpRenderProperty<S = MpPropertyBag, R = MpChild | readonly MpChild[]> = (scope: S) => R;
 ```
 
 Una función **render-prop/scoped-slot**: dado el alcance de la ranura, devuelve
@@ -1344,7 +477,7 @@ export interface MpSlotProperties extends MpPropertyBag
 
 Las propiedades aceptadas por el elemento {@link Slot}.
 
-Un `<Slot>` es el único elemento neutral que realmente acepta arbitraria extra
+Un `<Slot>` es el único elemento neutral que realmente acepta extras arbitrarios.
 atributos: una ranura **con alcance** pasa su alcance como atributos
 (`<Slot name="row" item={item} index={i} />`), por lo que la declaración mantiene un
 bolsa abierta en lugar de enumerar propiedades que no puede conocer.
@@ -1371,8 +504,8 @@ Empuje los accesorios del componente que está a punto de expandirse hacia el al
 
 #### Parámetros
 
-| Nombre      | Tipo          | Descripción |
-| ----------- | ------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------- | ----------- |
 | propiedades | MpPropertyBag |             |
 
 ### resolverSlot
@@ -1386,14 +519,43 @@ function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[])
 Resolver el contenido de un `<Slot name="…" />` contra el cerramiento
 accesorios del componente, recurriendo a los propios hijos de la tragamonedas cuando no había nada
 proporcionado. Las ranuras con alcance (accesorios de ranura con valores de función) se invocan con el
-Propiedades restantes del elemento de ranura (no `name`).
+Propiedades restantes del elemento slot (no `name`).
 
 #### Parámetros
 
-| Nombre      | Tipo                      | Descripción |
-| ----------- | ------------------------- | ----------- |
-| propiedades | Propiedades de MpSlot     |             |
-| respaldo    | MpChild de sólo lectura[] |             |
+| Nombre | Tipo | Descripción |
+| ---------- | ------------------ | ----------- |
+| propiedades | Propiedades de MpSlot |             |
+| respaldo | MpChild de sólo lectura[] |             |
+
+### resolver marcadores de ranura
+
+**Tipo:** función
+
+```typescript
+function resolveSlotMarkers(children: readonly MpChild[]): MpChild[];
+```
+
+Resuelva en profundidad cada `<Slot name="…" />` **marcador** dentro de un documento escrito por los padres.
+árbol secundario contra el alcance **actual** (padre), devolviendo un árbol de concreto
+contenido. Esto es lo que permite que un componente de escritura única **reenvíe** uno propio
+ranuras con nombre en la ranura de un componente secundario:
+`<ForgeDrawer><div slot="header"><Slot name="startHeader" /></div></ForgeDrawer>`
+- y hacer que se resuelva léxicamente (contra el componente de reenvío), exactamente
+como la salida compilada (React captura `properties.startHeader` en el
+render de los padres; Vue reenvía el slot a través de `<template #header>`).
+
+Los adaptadores llaman a esto en los hijos de un elemento componente **antes** de empujar el
+alcance del niño, por lo que los marcadores ven el alcance principal que los creó; marcadores
+el propio niño regresa intactos (se resuelven más tarde, bajo el
+propio alcance del niño). Los elementos que no son espacios se recorren de forma recursiva, por lo que los marcadores anidados
+(dentro de un contenedor `slot="…"`) también se resuelve.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | ------------------ | ----------- |
+| niños | MpChild de sólo lectura[] |             |
 
 ## `src/runtime/teleport`
 
@@ -1477,10 +639,471 @@ lista: envolviendo los niños mapeados en `<TransitionGroup>`, exactamente como
 El `<TransitionGroup>` integrado de Vue lo hace. Como {@link Transition}, nunca lo es
 invocado directamente: los adaptadores lo interceptan por identidad (haciendo que su
 niños establecidos para SSR) y `@mission-platform/vite-plugin-forge` reasigna su
-importar a la transición del grupo nativo de cada marco: Vue incorporado
+importar a la transición del grupo nativo de cada marco: Vue integrado
 `<TransitionGroup>` y el controlador de clase CSS `@mission-platform/forge-adapters/react`.
 
 ## `src/runtime/types`
+
+### CameltoKebab
+
+**Tipo:** tipo
+
+```typescript
+export type CamelToKebab<S extends string> = S extends `$
+```
+
+Convierta un tipo de cadena camelCase a kebab-case.
+
+### crearAvatarContainerStyle
+
+**Tipo:** función
+
+```typescript
+function createAvatarContainerStyle(): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+### crearAvatarImageImgStyle
+
+**Tipo:** función
+
+```typescript
+function createAvatarImageImgStyle(): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+### crearAvatarInlineStyle
+
+**Tipo:** función
+
+```typescript
+function createAvatarInlineStyle(
+  size: string = 'md',
+  shape: string = 'circle',
+  src?: string,
+  variant: string = 'primary',
+  color?: string,
+): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ------ | ----------- |
+| tamaño | cadena |             |
+| forma | cadena |             |
+| src | cadena |             |
+| variante | cadena |             |
+| color | cadena |             |
+
+### crearAvatarStatusInlineStyle
+
+**Tipo:** función
+
+```typescript
+function createAvatarStatusInlineStyle(size: string = 'md', status?: string): Record<string, string> | undefined;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | ------ | ----------- |
+| tamaño | cadena |             |
+| estado | cadena |             |
+
+### crearFondoVideoInlineStyle
+
+**Tipo:** función
+
+```typescript
+function createBackgroundVideoInlineStyle(minHeight: string = '24rem'): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| --------- | ------ | ----------- |
+| altura mínima | cadena |             |
+
+### crearCodeScannerStyle
+
+**Tipo:** función
+
+```typescript
+function createCodeScannerStyle(): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+### crearContainerInlineStyle
+
+**Tipo:** función
+
+```typescript
+function createContainerInlineStyle(
+  variant: string = 'responsive',
+  maxWidth: string = 'lg',
+  gutter: string = 'md',
+  center: boolean = true,
+): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | ------- | ----------- |
+| variante | cadena |             |
+| ancho máximo | cadena |             |
+| canalón | cadena |             |
+| centro | booleano |             |
+
+### crearCoverObjectFitStyle
+
+**Tipo:** función
+
+```typescript
+function createCoverObjectFitStyle(): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+### crearForgeComponentStyle
+
+**Tipo:** función
+
+```typescript
+function createForgeComponentStyle(
+  prefix: string,
+  properties?: T,
+  style?: Record<string, string>,
+): Record<string, string> | undefined;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---------- | ---------------------- | ----------- |
+| prefijo | cadena |             |
+| propiedades | T |             |
+| estilo | Registro<string, string> |             |
+
+### crearForgeStyle
+
+**Tipo:** función
+
+```typescript
+function createForgeStyle(style: T): DefinedForgeStyle<T> | undefined;
+```
+
+Cree un mapa `style` neutral a partir de valores de propiedad personalizados definidos.
+
+Las entradas cuyo valor es `undefined` se omiten, por lo que SCSS
+Las cadenas `var(--forge-*, <token fallback>)` permanecen activas. Devuelve `undefined`
+cuando no hay anulaciones presentes.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ---- | ----------- |
+| estilo | T |             |
+
+### crearGaugeInlineMath
+
+**Tipo:** función
+
+```typescript
+function createGaugeInlineMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): {
+  clampedValue: number;
+  percentage: number;
+  displayValue: string;
+  dashOffset: number;
+};
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| valor | número |             |
+| mín. | número |             |
+| máximo | número |             |
+
+### crearGridLayoutInlineStyle
+
+**Tipo:** función
+
+```typescript
+function createGridLayoutInlineStyle(rows: number = 1, columns: number = 1, gap: string = 'md'): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ------ | ----------- |
+| filas | número |             |
+| columnas | número |             |
+| brecha | cadena |             |
+
+### crearHighlightStyle
+
+**Tipo:** función
+
+```typescript
+function createHighlightStyle(left: string = '0%', width: string = '100%'): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| izquierda | cadena |             |
+| ancho | cadena |             |
+
+### crear estilo de posición izquierda
+
+**Tipo:** función
+
+```typescript
+function createLeftPositionStyle(left: string = '0%'): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| izquierda | cadena |             |
+
+### crearObjectFitStyle
+
+**Tipo:** función
+
+```typescript
+function createObjectFitStyle(fit: string = 'cover'): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| ajuste | cadena |             |
+
+### crearPreviewTextStyle
+
+**Tipo:** función
+
+```typescript
+function createPreviewTextStyle(): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+### crearProgressBarPercent
+
+**Tipo:** función
+
+```typescript
+function createProgressBarPercent(
+  value: number = 0,
+  max: number = 100,
+  indeterminate: boolean = false,
+): { percent: number; percentLabel: string };
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------------- | ------- | ----------- |
+| valor | número |             |
+| máximo | número |             |
+| indeterminado | booleano |             |
+
+### crearRangeInputMath
+
+**Tipo:** función
+
+```typescript
+function createRangeInputMath(
+  modelValue: [number, number] = [0, 100],
+  min: number = 0,
+  max: number = 100,
+): {
+  minPercent: number;
+  maxPercent: number;
+  highlightLeft: string;
+  highlightWidth: string;
+  minLeft: string;
+  maxLeft: string;
+};
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---------- | ---------------- | ----------- |
+| valor del modelo | [número, número] |             |
+| mín. | número |             |
+| máximo | número |             |
+
+### crearResponsiveImageInlineStyle
+
+**Tipo:** función
+
+```typescript
+function createResponsiveImageInlineStyle(aspectRatio?: string): Record<string, string> | undefined;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----------- | ------ | ----------- |
+| relación de aspecto | cadena |             |
+
+### crearResponsiveVideoInlineStyle
+
+**Tipo:** función
+
+```typescript
+function createResponsiveVideoInlineStyle(
+  aspectRatio: string = '16 / 9',
+  fit: string = 'contain',
+): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----------- | ------ | ----------- |
+| relación de aspecto | cadena |             |
+| ajuste | cadena |             |
+
+### crearEsqueletoEnlíneaEstilo
+
+**Tipo:** función
+
+```typescript
+function createSkeletonInlineStyle(width?: string, height?: string): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | ------ | ----------- |
+| ancho | cadena |             |
+| altura | cadena |             |
+
+### crearSliderMath
+
+**Tipo:** función
+
+```typescript
+function createSliderMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): { percent: number; fillWidth: string; thumbLeft: string };
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| valor | número |             |
+| mín. | número |             |
+| máximo | número |             |
+
+### crearVerticalLayoutInlineStyle
+
+**Tipo:** función
+
+```typescript
+function createVerticalLayoutInlineStyle(gap: string = 'var(--mp-spacing-4)'): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| brecha | cadena |             |
+
+### crearAnchoEstilo
+
+**Tipo:** función
+
+```typescript
+function createWidthStyle(width: string = '0%'): Record<string, string>;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| ancho | cadena |             |
+
+### Propiedades de estilo CSS
+
+**Tipo:** tipo
+
+```typescript
+export type CSSStyleProperties =
+```
+
+Objeto de estilo CSS neutral del marco utilizado por el atributo JSX `style`.
+
+Las propiedades personalizadas de propiedad del componente deben ampliar este tipo con elementos explícitos.
+Claves `--forge-*` (por ejemplo `CSSStyleProperties & { '--forge-button-radius'?: string | undefined }`)
+en lugar de introducir un diccionario de estilos sin tipo o una bolsa `styles` que no sea DOM.
+
+### ForjaPropiedadBolsa
+
+**Tipo:** tipo
+
+```typescript
+export type ForgePropertyBag<T extends Record<string, string | undefined> = Record<string, string | undefined>> =
+```
+
+Bolsa de anulación de propiedad permisiva que acepta claves de propiedad kebab-case o camelCase.
 
 ### Fragmento
 
@@ -1503,7 +1126,7 @@ Sin embargo, en realidad se invoca: los adaptadores de tiempo de ejecución lo i
 (`@mission-platform/vite-plugin-forge`) reduce fragmentos a cada marco
 formulario propio (`<>` de React, hijos en línea de Vue). Llamarlo directamente es un error.
 
-### esMpElement
+### esMpElemento
 
 **Tipo:** función
 
@@ -1515,9 +1138,19 @@ Limite un valor arbitrario a {@link MpElement}.
 
 #### Parámetros
 
-| Nombre | Tipo        | Descripción |
-| ------ | ----------- | ----------- |
-| valor  | desconocido |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------- | ----------- |
+| valor | desconocido |             |
+
+### KebabACamel
+
+**Tipo:** tipo
+
+```typescript
+export type KebabToCamel<S extends string> = S extends `$
+```
+
+Convierta un tipo de cadena kebab-case a camelCase.
 
 ### MpNiño
 
@@ -1542,7 +1175,7 @@ propiedades que devuelven un único {@link MpElement}.
 
 `P` es intencionalmente **sin restricciones**: la interfaz de accesorios de un componente
 declara sólo las propiedades que realmente acepta, y dicha interfaz tiene
-ninguna firma de índice implícita, por lo que limitar `P` a un tipo de registro
+no hay firma de índice implícita, por lo que limitar `P` a un tipo de registro
 Rechace toda declaración honesta de apoyo.
 
 ### elementomp
@@ -1576,8 +1209,8 @@ export type MpPropertyBag = Record<string, unknown>;
 La bolsa **de tiempo de ejecución** de atributos/accesorios que lleva un {@link MpElement}.
 
 Este es deliberadamente un registro sencillo y sin tipo: es lo que la fábrica JSX
-construye y en qué indexan los adaptadores mientras camina por un árbol neutral. es
-_no_ es un tipo base para los accesorios de un componente: un componente declara exactamente el
+construye y en qué indexan los adaptadores mientras caminas por un árbol neutral. es
+_no_ un tipo base para los accesorios de un componente: un componente declara exactamente el
 propiedades que acepta (incluyendo `children?: MpChild | readonly MpChild[]`
 cuando los presenta), de modo que la verificación de exceso de propiedad y `keyof` permanezcan
 significativo en cada objetivo compilado. El puñado de atributos de cada elemento.
@@ -1603,10 +1236,838 @@ se declara a sí mismo, conectado como `JSX.IntrinsicAttributes` mediante el opt
   dóblalo en los accesorios de los padres (ver `collectSlottedChildren`). Omitido (o
   `"default"`) significa la ranura predeterminada.
 
-Ninguno de los dos forma parte del contrato de accesorios del componente; ambos son leídos por el
-_padre_ (el reconciliador, el enrutador de ranura), nunca por el componente en sí.
+Ninguno de los dos forma parte del contrato de accesorios del propio componente; ambos son leídos por el
+_parent_ (el reconciliador, el enrutador de ranura), nunca por el componente en sí.
 por lo que se aceptan para cada elemento aquí en lugar de declararse en cada uno
 interfaz de accesorios.
+
+### MpSuspensoNiño
+
+**Tipo:** componente
+
+```typescript
+export type MpSuspenseChild = MpChild | PromiseLike<MpSuspenseChild> | readonly MpSuspenseChild[];
+```
+
+Contenido sincrónico o asincrónico recursivamente aceptado por Suspense.
+
+### MpSuspensePropiedades
+
+**Tipo:** componente
+
+```typescript
+export interface MpSuspenseProperties
+```
+
+Accesorios llevados por el marcador de suspenso de marco neutro.
+
+### renderAccordionItems
+
+**Tipo:** función
+
+```typescript
+function renderAccordionItems(
+  items: readonly any[] = [],
+  _exclusive: boolean = true,
+  defaultOpen: readonly string[] = [],
+  _properties?: any,
+): any;
+```
+
+Cree un mapa de estilo de propiedad personalizada CSS con ámbito de componente a partir de una bolsa de propiedades camelCase o kebab-case.
+
+Convierte automáticamente las claves de camelCase en kebab-case y garantiza el espacio de nombres del componente
+Se aplica el prefijo `--forge-<prefix>-` y se omiten las entradas no definidas, por lo que se utiliza el token CSS como alternativa.
+Las cadenas permanecen activas. Devuelve `undefined` cuando no hay anulaciones definidas.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----------- | ----------------- | ----------- |
+| artículos | sólo lectura cualquiera[] |             |
+| _exclusivo | booleano |             |
+| predeterminadoAbrir | cadena de solo lectura[] |             |
+| _propiedades | cualquiera |             |
+
+### renderActivityFeedItems
+
+**Tipo:** función
+
+```typescript
+function renderActivityFeedItems(items: readonly any[] = [], maxItems?: number, onItemClick?: (item: any) => void): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----------- | ------------------- | ----------- |
+| artículos | sólo lectura cualquiera[] |             |
+| artículos máximos | número |             |
+| onItemClick | (elemento: cualquiera) => nulo |             |
+
+### renderAssetBrowserGrid
+
+**Tipo:** función
+
+```typescript
+function renderAssetBrowserGrid(
+  assets: readonly any[] = [],
+  selected: readonly string[] = [],
+  onSelect?: (asset: any) => void,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | -------------------- | ----------- |
+| activos | sólo lectura cualquiera[] |             |
+| seleccionado | cadena de solo lectura[] |             |
+| en Seleccionar | (activo: cualquiera) => nulo |             |
+
+### renderBarcodeSvg
+
+**Tipo:** función
+
+```typescript
+function renderBarcodeSvg(
+  value: string = '',
+  symbology: string = 'code128',
+  color: string = '#000000',
+  background: string = '#ffffff',
+  displayValue: boolean = false,
+  ariaLabel?: string,
+  onError?: (err: Error) => void,
+  showActions?: any,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------------ | -------------------- | ----------- |
+| valor | cadena |             |
+| simbología | cadena |             |
+| color | cadena |             |
+| fondo | cadena |             |
+| valor de visualización | booleano |             |
+| ariaLabel | cadena |             |
+| enError | (err: Error) => nulo |             |
+| mostrarAcciones | cualquiera |             |
+
+### renderizar pan ralladoArtículos
+
+**Tipo:** función
+
+```typescript
+function renderBreadcrumbItems(items: readonly any[] = [], separator: string = '/'): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| --------- | -------------- | ----------- |
+| artículos | sólo lectura cualquiera[] |             |
+| separador | cadena |             |
+
+### renderCarruselIndicadorArtículos
+
+**Tipo:** función
+
+```typescript
+function renderCarouselIndicatorItems(
+  total: number = 0,
+  current: number = 0,
+  clickable: boolean = true,
+  variant: string = 'dots',
+  onSelect?: (index: number) => void,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| --------- | ----------------------- | ----------- |
+| totales | número |             |
+| actual | número |             |
+| se puede hacer clic | booleano |             |
+| variante | cadena |             |
+| en Seleccionar | (índice: número) => nulo |             |
+
+### renderCarruselDiapositivas
+
+**Tipo:** función
+
+```typescript
+function renderCarouselSlides(
+  slides: readonly any[] = [],
+  current: number = 0,
+  _orientation: string = 'horizontal',
+  slideWidth: number = 100,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------------ | -------------- | ----------- |
+| diapositivas | sólo lectura cualquiera[] |             |
+| actual | número |             |
+| _orientación | cadena |             |
+| ancho de diapositiva | número |             |
+
+### renderCatálogoIcono
+
+**Tipo:** función
+
+```typescript
+function renderCatalogIcon(name: string, size: number = 20, color: string = 'currentColor'): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| nombre | cadena |             |
+| tamaño | número |             |
+| color | cadena |             |
+
+### renderCodeBlockLineNumbers
+
+**Tipo:** función
+
+```typescript
+function renderCodeBlockLineNumbers(code: string = ''): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| código | cadena |             |
+
+### renderCommandPaletteGroups
+
+**Tipo:** función
+
+```typescript
+function renderCommandPaletteGroups(
+  commands: readonly any[] = [],
+  _groups: readonly string[] = [],
+  activeIndex: number = 0,
+  onSelect?: (command: any) => void,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----------- | ---------------------- | ----------- |
+| comandos | sólo lectura cualquiera[] |             |
+| _grupos | cadena de solo lectura[] |             |
+| índice activo | número |             |
+| en Seleccionar | (comando: cualquiera) => nulo |             |
+
+### renderizarárbol de comentarios
+
+**Tipo:** función
+
+```typescript
+function renderCommentTree(
+  comments: readonly any[] = [],
+  onReply?: (comment: any) => void,
+  onResolve?: (comment: any) => void,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| --------- | ---------------------- | ----------- |
+| comentarios | sólo lectura cualquiera[] |             |
+| enResponder | (comentario: cualquiera) => nulo |             |
+| enResolver | (comentario: cualquiera) => nulo |             |
+
+### renderComparaciónTablaCuerpo
+
+**Tipo:** función
+
+```typescript
+function renderComparisonTableBody(items: readonly any[] = [], features: readonly any[] = []): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | -------------- | ----------- |
+| artículos | sólo lectura cualquiera[] |             |
+| características | sólo lectura cualquiera[] |             |
+
+### renderizar encabezados de tabla de comparación
+
+**Tipo:** función
+
+```typescript
+function renderComparisonTableHeaders(items: readonly any[] = []): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | -------------- | ----------- |
+| artículos | sólo lectura cualquiera[] |             |
+
+### renderCtaBannerAcciones
+
+**Tipo:** función
+
+```typescript
+function renderCtaBannerActions(actions: readonly any[] = []): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| acciones | sólo lectura cualquiera[] |             |
+
+### renderDataCardMetrics
+
+**Tipo:** función
+
+```typescript
+function renderDataCardMetrics(metrics: readonly any[] = []): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| métricas | sólo lectura cualquiera[] |             |
+
+### renderizar elementos desplegables
+
+**Tipo:** función
+
+```typescript
+function renderDropdownItems(items: readonly any[] = [], onSelect?: (item: any) => void): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | ------------------- | ----------- |
+| artículos | sólo lectura cualquiera[] |             |
+| en Seleccionar | (elemento: cualquiera) => nulo |             |
+
+### renderImageFuentes
+
+**Tipo:** función
+
+```typescript
+function renderImageSources(sources?: readonly any[]): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| fuentes | sólo lectura cualquiera[] |             |
+
+### renderMarketingHeaderAcciones
+
+**Tipo:** función
+
+```typescript
+function renderMarketingHeaderActions(actions: readonly any[] = []): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| acciones | sólo lectura cualquiera[] |             |
+
+### renderNavbarItems
+
+**Tipo:** función
+
+```typescript
+function renderNavbarItems(items: readonly any[] = []): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | -------------- | ----------- |
+| artículos | sólo lectura cualquiera[] |             |
+
+### renderNotificationPanelItems
+
+**Tipo:** función
+
+```typescript
+function renderNotificationPanelItems(
+  notifications: readonly any[] = [],
+  onDismiss?: (id: string) => void,
+  _onRead?: (id: string) => void,
+  onActionClick?: (item: any) => void,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------------- | -------------------- | ----------- |
+| notificaciones | sólo lectura cualquiera[] |             |
+| enDescartar | (id: cadena) => vacío |             |
+| _onRead | (id: cadena) => vacío |             |
+| enAcciónClick | (elemento: cualquiera) => nulo |             |
+
+### renderPaginationControls
+
+**Tipo:** función
+
+```typescript
+function renderPaginationControls(
+  currentPage: number = 1,
+  totalPages: number = 1,
+  maxVisiblePages: number = 7,
+  showEdges: boolean = false,
+  onPageChange?: (page: number) => void,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| --------------- | ---------------------- | ----------- |
+| página actual | número |             |
+| páginas totales | número |             |
+| maxVisiblePages | número |             |
+| mostrarBordes | booleano |             |
+| enPageChange | (página: número) => nulo |             |
+
+### renderRatingEstrellas
+
+**Tipo:** función
+
+```typescript
+function renderRatingStars(
+  max: number = 5,
+  modelValue: number = 0,
+  disabled: boolean = false,
+  isReadonly: boolean = false,
+  onUpdateModelValue?: (val: number) => void,
+  onChange?: (val: number) => void,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------------------ | --------------------- | ----------- |
+| máximo | número |             |
+| valor del modelo | número |             |
+| discapacitados | booleano |             |
+| es de solo lectura | booleano |             |
+| onUpdateModelValue | (val: número) => nulo |             |
+| enCambiar | (val: número) => nulo |             |
+
+### renderResourcePlannerFilas
+
+**Tipo:** función
+
+```typescript
+function renderResourcePlannerRows(
+  resources: readonly any[] = [],
+  segments: readonly any[] = [],
+  _assignments: readonly any[] = [],
+  _availability: readonly any[] = [],
+  _onEventClick?: (assignment: any) => void,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------------- | ------------------------- | ----------- |
+| recursos | sólo lectura cualquiera[] |             |
+| segmentos | sólo lectura cualquiera[] |             |
+| _tareas | sólo lectura cualquiera[] |             |
+| _disponibilidad | sólo lectura cualquiera[] |             |
+| _onEventClick | (tarea: cualquiera) => nulo |             |
+
+### renderSegmentControlOptions
+
+**Tipo:** función
+
+```typescript
+function renderSegmentControlOptions(
+  options: readonly any[] = [],
+  modelValue?: string,
+  onSelect?: (value: string) => void,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---------- | ----------------------- | ----------- |
+| opciones | sólo lectura cualquiera[] |             |
+| valor del modelo | cadena |             |
+| en Seleccionar | (valor: cadena) => vacío |             |
+
+### renderSiteFooterSections
+
+**Tipo:** función
+
+```typescript
+function renderSiteFooterSections(sections: readonly any[] = []): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | -------------- | ----------- |
+| secciones | sólo lectura cualquiera[] |             |
+
+### renderPasosArtículos
+
+**Tipo:** función
+
+```typescript
+function renderStepsItems(
+  steps: readonly any[] = [],
+  currentStep: number = 0,
+  onStepClick?: (step: number) => void,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----------- | ---------------------- | ----------- |
+| pasos | sólo lectura cualquiera[] |             |
+| paso actual | número |             |
+| en un paso, haga clic | (paso: número) => anular |             |
+
+### renderizar columnas de tabla
+
+**Tipo:** función
+
+```typescript
+function renderTableColumns(columns: readonly any[] = []): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| columnas | sólo lectura cualquiera[] |             |
+
+### renderizar filas de tabla
+
+**Tipo:** función
+
+```typescript
+function renderTableRows(data: readonly any[] = [], columns: readonly any[] = []): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| datos | sólo lectura cualquiera[] |             |
+| columnas | sólo lectura cualquiera[] |             |
+
+### renderTabsList
+
+**Tipo:** función
+
+```typescript
+function renderTabsList(
+  tabs: readonly any[] = [],
+  activeId?: string,
+  variant: string = 'line',
+  closable: boolean = false,
+  onSelect?: (id: string) => void,
+  onClose?: (id: string) => void,
+  addable: boolean = false,
+  addLabel: string = 'Add tab',
+  onAdd?: () => void,
+): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | -------------------- | ----------- |
+| pestañas | sólo lectura cualquiera[] |             |
+| ID activo | cadena |             |
+| variante | cadena |             |
+| cerrable | booleano |             |
+| en Seleccionar | (id: cadena) => vacío |             |
+| enCerrar | (id: cadena) => vacío |             |
+| agregable | booleano |             |
+| agregarEtiqueta | cadena |             |
+| en Agregar | () => nulo |             |
+
+### renderizar elementos de línea de tiempo
+
+**Tipo:** función
+
+```typescript
+function renderTimelineItems(items: readonly any[] = [], align: string = 'start'): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | -------------- | ----------- |
+| artículos | sólo lectura cualquiera[] |             |
+| alinear | cadena |             |
+
+### renderTreeViewNodos
+
+**Tipo:** función
+
+```typescript
+function renderTreeViewNodes(nodes: readonly any[] = [], onSelect?: (node: any) => void): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| -------- | ------------------- | ----------- |
+| nodos | sólo lectura cualquiera[] |             |
+| en Seleccionar | (node: cualquiera) => nulo |             |
+
+### renderUnreadBadge
+
+**Tipo:** función
+
+```typescript
+function renderUnreadBadge(unreadCount: number = 0): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----------- | ------ | ----------- |
+| recuento no leído | número |             |
+
+### renderVideoFuentes
+
+**Tipo:** función
+
+```typescript
+function renderVideoSources(sources?: readonly any[]): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| fuentes | sólo lectura cualquiera[] |             |
+
+### resolverCatalogIcon
+
+**Tipo:** función
+
+```typescript
+function resolveCatalogIcon(catalog: Record<string, any>, name: string): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ------------------- | ----------- |
+| catálogo | Registro<string, any> |             |
+| nombre | cadena |             |
+
+### resolverCorreo electrónicoTipografíaEtiqueta
+
+**Tipo:** función
+
+```typescript
+function resolveEmailTypographyTag(asTag?: string, variant?: string): string;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ------ | ----------- |
+| comoEtiqueta | cadena |             |
+| variante | cadena |             |
+
+### resolverIconPixelSize
+
+**Tipo:** función
+
+```typescript
+function resolveIconPixelSize(size: string = 'md'): number;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| tamaño | cadena |             |
+
+### resolverEstadoIcono
+
+**Tipo:** función
+
+```typescript
+function resolveStatusIcon(catalog: Record<string, any>, status: string = 'neutral'): any;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ------------------- | ----------- |
+| catálogo | Registro<string, any> |             |
+| estado | cadena |             |
+
+### resolverSyncStatusLabel
+
+**Tipo:** función
+
+```typescript
+function resolveSyncStatusLabel(status: string = 'synced', label?: string): string;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | ------ | ----------- |
+| estado | cadena |             |
+| etiqueta | cadena |             |
+
+### resolverTextVariantForQuote
+
+**Tipo:** función
+
+```typescript
+function resolveTextVariantForQuote(size: string = 'md'): string;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| tamaño | cadena |             |
+
+### resolverTipografíaEscalaVariante
+
+**Tipo:** función
+
+```typescript
+function resolveTypographyScaleVariant(variant?: string): string;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ------ | ----------- |
+| variante | cadena |             |
+
+### resolverEtiqueta de tipografía
+
+**Tipo:** función
+
+```typescript
+function resolveTypographyTag(asTag?: string, href?: string, variant?: string): string;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ------ | ----------- |
+| comoEtiqueta | cadena |             |
+| href | cadena |             |
+| variante | cadena |             |
 
 ### Ranura
 
@@ -1624,3 +2085,13 @@ Sin embargo, en realidad nunca se invoca: el compilador en tiempo de compilació
 (`@mission-platform/vite-plugin-forge`) reescribe cada `<Slot>` en el objetivo
 propio mecanismo de ranura del marco, y los adaptadores de tiempo de ejecución lo interceptan
 identidad (`type === Slot`) antes de cualquier llamada. Llamarlo directamente es un error.
+
+### Suspense
+
+**Tipo:** constante
+
+```typescript
+export const Suspense: MpComponent<MpSuspenseProperties>;
+```
+
+Marcador de límite asíncrono nativo reducido por cada compilador de marco.

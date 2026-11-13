@@ -32,64 +32,69 @@ graph TD
     Workers --> Configs
 ```
 
-1. **应用（`apps/`)**：消耗包， Vite 插件和工作人员。他们从不将代码导出到系统的其他部分
+1. **应用程序 (`apps/`)**：使用包、Vite 插件和工作线程。他们从不将代码导出到系统的其他部分
    单一仓库。
-2. **套餐（`packages/`)**：提供可重用的逻辑和组件。他们可以互相依赖，但永远不能依赖
+2. **包（`packages/`）**：提供可重用的逻辑和组件。他们可以互相依赖，但永远不能依赖
    应用程序。
-3. **伪造插件（`packages/compiler/plugins/`)**：编译器输出目标 - 框架插件和 CMS 目标。他们可能取决于
-   `packages/tooling/vite/` 和 `packages/tooling/configs/`，并且从不 `apps/` 或彼此的兄弟姐妹； CMS 适配器仅取决于
+3. **Forge 插件 (`packages/compiler/plugins/`)**：编译器输出目标 — 框架插件和 CMS 目标。他们可能取决于
+   `packages/tooling/vite/` 和 `packages/tooling/configs/`，并且绝不在 `apps/` 或彼此的兄弟姐妹上； CMS 适配器仅取决于
    `forge-cms-plugin-api`。
-4. **配置（`packages/tooling/configs/`)**：共享工具设置（ESLint, TypeScript， ETC。）。它们是基础并依赖于
+4. **配置 (`packages/tooling/configs/`)**：共享工具设置（ESLint、TypeScript 等）。它们是基础并依赖于
    monorepo 中没有任何内容。
 
 ## 框架中立引擎：Forge
 
-Mission Platform 的核心是 `@mission-platform/forge-jsx`，一个框架中立的组件创作模型
-可组合项。 `@mission-platform/vite-plugin-forge` 是中立的编译器驱动程序：它解析并规范化源代码，
-构建语义 IR，运行共享分析和优化，并分派到显式提供的
-`FrameworkOutputPlugin`.
+Mission Platform 的核心是 `@mission-platform/forge-jsx`，这是一个框架中立的组件和组件创作模型
+可组合项。 `@mission-platform/vite-plugin-forge` 是中立编译器驱动程序：它使用以下命令解析和规范化源代码
+Oxc，构建语义 IR，运行共享分析和优化，并分派到显式提供的
+`FrameworkOutputPlugin`。
 
-框架包如 `@mission-platform/forge-plugin-react` 和 `@mission-platform/forge-plugin-vue` 自己的目标
-降低、目标优化、本机源生成、诊断、运行时元数据以及 Vite/tsdown 适配器。那里
-驱动程序中没有中央框架发射器或字符串到框架注册表。包构建配置选择
-他们发布的插件实例，因此目标实现依赖关系保留在框架边界。
+框架包，例如 `@mission-platform/forge-plugin-react`、`@mission-platform/forge-plugin-vue`、
+`@mission-platform/forge-plugin-solid`、`@mission-platform/forge-plugin-svelte` 和
+`@mission-platform/forge-plugin-web-components`自己的目标降低、目标优化、原生源码生成、
+诊断、运行时元数据和 Vite/tsdown 适配器。没有中央框架发射器或字符串到框架
+驱动程序中的注册表。自定义目标是通过实现具有开放的 `FrameworkOutputPlugin` 来注册的
+`FrameworkId` (`JsxFramework | (string & {})`)，而 `JsxFramework` 仍然是一个封闭联合，以提供内置便利。
+包构建配置选择它们发布的插件实例，因此目标实现依赖关系保持在
+框架边界。
 
-结果流程是**解析/规范化→中性优化→语义IR→目标降低→目标优化→生成→
-本机构建**。本机构建由所选插件执行 Vite 或 tsdown 适配器，它还提供
-目标的声明、外部和输出约定。
+结果流程是**解析/规范化（Oxc）→中性优化→语义IR→目标降低→目标优化→生成→
+本机构建**。生成前严格要求降低和目标优化；目标生成器仅接受
+`assertTargetIntentionsLowered` 验证的降低意图。本机构建由所选插件执行
+Vite 或 tsdown 适配器，它还提供目标的声明、外部和输出约定。
 
 第二个正交轴将相同的中性组件投射到**内容平台**上。
-`@mission-platform/forge-cms-plugin-api` 拥有平台中立的内容模型， `CmsOutputPlugin` 合同，以及一份
-通用驱动程序；适配器包 `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`，
-和 `forge-cms-webflow` 每个人都有一个平台。 CMS 目标“组成”框架插件而不是替换框架插件，因此
-任何平台与任何框架配对，输出落在 `dist/cms/<cms>/<framework>/**`.
+`@mission-platform/forge-cms-plugin-api` 拥有平台中立的内容模型、`CmsOutputPlugin` 合约和
+通用驱动程序；适配器包 `forge-cms-storyblok`、`forge-cms-astro`、`forge-cms-ghost`、`forge-cms-jekyll`、
+和 `forge-cms-webflow` 各拥有一个平台。 CMS 目标_组成_一个框架插件而不是替换一个框架插件，所以
+任何平台与任何框架配对，输出位于 `dist/cms/<cms>/<framework>/**` 中。
 
 有关完整的管道、组件和挂钩使用者、CMS 投影和扩展指南，请参阅
-[Forge 编译器管道](../../../packages/tooling/vite/forge/docs/locales/zh/reference/compiler.md)。对于构建编排视图，请参阅
-[构建系统](build-system.md).
+[Forge 编译器管道](../../../packages/tooling/vite/forge/docs/locales/zh/reference/compiler.md)。对于构建编排视图，请参见
+[构建系统](build-system.md)。
 
 ## 设计代币系统
 
-视觉一致性是通过复杂的设计令牌系统来维护的，该系统由 `@mission-platform/tokens`.
+通过 `@mission-platform/tokens` 管理的复杂设计令牌系统来维护视觉一致性。
 
 - **DTCG 标准**：令牌以 W3C 设计令牌社区组格式 (v2025.10) 编写。
 - **OKLab 色彩空间**：基元使用 OKLab 色彩空间来实现感知上均匀的渐变和主题。
-- **自动化工件**： `@mission-platform/vite-plugin-tokens` 自动生成SCSS变量，CSS自定义
-  属性，以及 TypeScript 来自单一事实来源的常数。
+- **自动化工件**：`@mission-platform/vite-plugin-tokens`自动生成SCSS变量，CSS自定义
+  属性和 TypeScript 常量来自单一事实来源。
 
 ## 与框架无关的路由和 I18n
 
 路由和国际化等核心应用程序服务被设计为与框架无关。
 
 - **`@mission-platform/router`**：提供结构化路由目标、纯 URL/位置帮助程序和编译器标记，例如
-  作为 `MpLink`, `useMpRoute`, `useMpRouter`， 和 `MpRouterView`。它没有 UI 框架或路由器库运行时
+  作为 `MpLink`、`useMpRoute`、`useMpRouter` 和 `MpRouterView`。它没有 UI 框架或路由器库运行时
   依赖关系并且从不拥有应用程序的路由表。
-- **伪造路由器目标**： `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`， 和
+- **伪造路由器目标**：`@mission-platform/forge-router-vue`、`-react`、`-solid`、`-svelte`、`-redwood` 和
   `-web-components` 将这些标记降低到消费应用程序选择的本机路由器。应用程序保留
   本机路由定义、提供者、守卫、加载器和路由器实例的所有权；目标仅提供
   消费能力。
-- **`@mission-platform/i18n`**：一个包装纸 `i18next` 这提供了一个通用的 `createForgeI18N` 工厂。
-  特定于框架的适配器提供 `useI18n` 挂钩和组件 Vue 和 React.
+- **`@mission-platform/i18n`**：`i18next` 的包装器，提供通用 `createForgeI18N` 工厂。
+  特定于框架的适配器为 Vue 和 React 提供 `useI18n` 挂钩和组件。
 
 ## 构建和部署策略
 
@@ -98,14 +103,14 @@ Mission Platform 的核心是 `@mission-platform/forge-jsx`，一个框架中立
 Turborepo 处理整个 monorepo 的构建、测试和 linting 的繁重工作。它使用全局缓存来
 确保任务仅在其输入发生更改时执行。
 
-### Vite- 动力构建
+### Vite 支持的构建
 
-每个包和应用程序都使用 Vite 对于开发和生产构建，利用共享基础配置
-`@mission-platform/vite-config`.
+每个包和应用程序都使用 Vite 进行开发和生产构建，利用来自
+`@mission-platform/vite-config`。
 
 ### Cloudflare 部署
 
-应用程序主要部署到 **Cloudflare Pages**，以及 **Cloudflare Workers**（在 `packages/edge/workers/`) 提供
+应用程序主要部署到 **Cloudflare Pages**，并由 **Cloudflare Workers**（在 `packages/edge/workers/` 下）提供
 用于 API 代理和 SPA 资产服务的专用逻辑。
 
 ## 概括

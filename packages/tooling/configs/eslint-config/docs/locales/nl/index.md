@@ -5,7 +5,7 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > packages/tooling/configs/eslint-config/docs/index.md: [packages/tooling/configs/eslint-config/docs/index.md](../../index.md)
 > Taal: Nederlands (nl)
 
-Gedeeld appartement ESLint configuratie voor Mission Platform-werkruimten.
+Gedeelde platte ESLint-configuratie voor Mission Platform-werkruimten.
 
 ## Installeren en gebruiken
 
@@ -22,14 +22,14 @@ import baseConfig from '@mission-platform/eslint-config';
 export default [...baseConfig];
 ```
 
-Het pakket bevat TypeScript, Vue 3, toegankelijkheid, import, Turbo, en
+Het pakket bevat TypeScript, Vue 3, toegankelijkheid, import, Turbo en
 opmaakintegraties. Voeg alleen werkruimtespecifieke regels toe voor gedrag dat
-kan niet worden gedeeld. Zie [de ESLint referentie](reference/eslint.md) voor de
+kan niet worden gedeeld. Zie [de ESLint-referentie](reference/eslint.md) voor de
 inclusief plug-ins en opdrachten.
 
 ## Bijdragen
 
-Loop `pnpm --filter @mission-platform/eslint-config lint` En
-`pnpm --filter @mission-platform/eslint-config format` na het veranderen van regels.
+Voer `pnpm --filter @mission-platform/eslint-config lint` uit en
+`pnpm --filter @mission-platform/eslint-config format` na het wijzigen van de regels.
 Houd het pakket raamwerkbewust maar werkruimte-agnostisch; toepassingen moeten
 importeer geen regels uit een andere werkruimte.

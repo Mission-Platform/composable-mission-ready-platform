@@ -16,6 +16,12 @@
  * the static subtrees hoisted while printing are emitted as module constants
  * between the declarations and the component.
  */
+import type {
+  GenericComponent,
+  GenericParameter,
+  SemanticModule,
+} from "@mission-platform/forge-plugin-api";
+
 import {
   createModuleScopeContext,
   createSolidLoweringContext,
@@ -41,11 +47,6 @@ import type {
   SolidLoweringContext,
   SolidLoweringOptions,
 } from "../transformers/context.js";
-import type {
-  GenericComponent,
-  GenericParameter,
-  SemanticModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** Options controlling how a module is emitted. */
 export interface SolidEmitOptions {

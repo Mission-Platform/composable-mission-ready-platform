@@ -23,7 +23,7 @@
 탐색 중심 상호 작용 계약. 중립적 구현은 다음과 같습니다.
 `@mission-platform/forge-jsx`에; 메뉴 및 표와 같은 컨트롤도 사용됩니다.
 `@mission-platform/icons`, 탐색경로/navbar 콘텐츠가 소유를 구성하는 동안
-`@mission-platform/typography` 패키지. `ForgeNavbar`은 현재
+`@mission-platform/typography` 패키지. `ForgeNavbar`는 현재
 잔여 `ForgeDrawer`이므로 탐색을 추출하려면 이를 유지하거나 유지해야 합니다.
 종속성은 명시적이거나 먼저 서랍 경계를 결정합니다. 소개해서는 안 된다
 `@mission-platform/components`의 종속성을 탐색으로 다시 전환합니다.
@@ -36,7 +36,7 @@
 
 일반적인 관심사는 다음을 포함하여 구조화된 데이터 또는 대용량 데이터를 렌더링하는 것입니다.
 윈도우화, 정렬, 트리 확장 및 상태 표시. 현재 소스
-`@mission-platform/forge-jsx`을 사용하며 텍스트나 문자가 구성된 경우
+`@mission-platform/forge-jsx`를 사용하며 텍스트나 문자가 구성된 경우
 `@mission-platform/typography` 및 `@mission-platform/icons`; 이것들은 남아있어야 해
 향후 패키지의 하위 수준 종속성. 가상 구성요소는 다음과 같이 이동해야 합니다.
 같은 위치에 있는 스타일/사양/스토리이므로 중립적인 후크 동작과 5가지
@@ -70,7 +70,7 @@ Forge 대상은 계속해서 함께 테스트됩니다.
 `ForgeChatBubble` 및 `ForgeChatArea`.
 
 이러한 구성 요소는 대화 의미, 라이브 영역 동작 및 메시지를 공유합니다.
-레이아웃. `ForgeChatBubble`은 `ForgeAvatar` 및 `@mission-platform/typography`를 구성합니다.
+레이아웃. `ForgeChatBubble`는 `ForgeAvatar` 및 `@mission-platform/typography`를 구성합니다.
 따라서 미래의 패키지는 이에 대한 안정적인 공공 계약에 달려 있어야 합니다.
 잔여물을 가져오는 대신 기본 요소(또는 기초 패키지에 유지)
 별칭을 통한 구성 요소 소스 파일.

@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> packages/flint-lsp/docs/reference/language-service.md: [packages/flint-lsp/docs/reference/language-service.md](../../../reference/language-service.md)
+> packages/flint/lsp/docs/reference/language-service.md: [packages/flint/lsp/docs/reference/language-service.md](../../../reference/language-service.md)
 > Sprache: Deutsch (de)
 
 Flint (`.flint`) verfügt über einen editorneutralen Sprachdienst, einen stdio
@@ -15,7 +15,7 @@ Validator.
 Der unterstützte Sprachvertrag ist **Version 1.0** und der ABI-Vertrag ist
 **Version 1.2**. Das Werkzeug tut es
 Ändern Sie nicht die Grammatik, die Compiler-Ausgabe, das ABI oder das vorhandene Rust und
-AssemblyScript-Integrationen. Sehen [Flint v1](../../../../../flint/docs/locales/de/reference/language.md)
+AssemblyScript-Integrationen. Siehe [Flint v1](../../../../../flint/docs/reference/language.md)
 für die Sprach- und ABI-Referenz.
 
 ## Merkmale und Grenzen
@@ -24,14 +24,14 @@ Der Sprachdienst bietet derzeit:
 
 - Diagnose durch Lexing, Parsing, Typprüfung und ABI-Validierung;
 - UTF-16-fähige Bereiche, geeignet für LSP und Monaco;
-- Dokumentsymbole für Module, Funktionen, Parameter, Lokale, Fähigkeiten
+- Dokumentsymbole für Module, Funktionen, Parameter, Locals, Fähigkeiten
   Aliase, Aggregattypen, Felder, Enum-Varianten, Schnittstellenmethoden, generisch
   Parameter, Iteratorbindungen, Übereinstimmungsbindungen und primitive Typen;
 - Vervollständigung für Forge-Schlüsselwörter, primitive Typen, Deklarationen, Einheimische,
   Aggregattypen, generische Typen, Funktionen, Compiler-eigene Zeichenfolgen und reguläre Ausdrücke
   Funktionen, Fähigkeitsaliase und vom Host inventarisierte Fähigkeitsnamen;
 - Hover-Informationen für Deklarationen, Parameter, Locals, Aufrufe usw
-  Die Funktion wird importiert, wenn der AST das Symbol identifiziert, einschließlich Aggregat
+  Die Fähigkeit wird importiert, wenn der AST das Symbol identifiziert, einschließlich Aggregat
   Typen, generische Typen, Compiler-eigene Standardbibliotheksaufrufe und gerenderte
   Dokumentation für quellendefinierte Funktionen; und
 - lexikalische Tokenisierung v1 für Kommentare, Zeichenfolgen, Zahlen, Schlüsselwörter, Typen,
@@ -110,7 +110,7 @@ Die Vervollständigung für `add` enthält die gleiche Dokumentationszeichenfolg
 Detail/Signatur. Beschreibungsabsätze und Tags werden durch Leerzeilen getrennt;
 Tag-Reihenfolge, doppelte Tags und unbekannte Tags bleiben erhalten. Die Kernsyntax und
 Normalisierungsregeln, einschließlich Funktionszuordnung und unterstütztem Subjekt
-Formen, sind in angegeben [die FWS-Sprachreferenz](../../../../../flint/docs/locales/de/reference/language.md).
+Formulare werden in [der FWS-Sprachreferenz](../../../../../flint/docs/reference/language.md) angegeben.
 
 Bei der Dokumentation handelt es sich lediglich um informative Metadaten. Es ändert nichts an der Diagnose,
 Typprüfung, Funktionsauflösung, generierte Deklarationen, ABI-Signaturen,
@@ -139,12 +139,12 @@ Von `ForgeMonacoEditor` verwendete Anbieter:
 
 - Monaco Hover `contents` enthält die Signatur und die gerenderte Dokumentation als
   separate Markdown-kompatible Werte;
-  – Das Feld `documentation` eines Quellfunktionsvorschlags enthält dasselbe
+– Das Feld `documentation` eines Quellfunktionsvorschlags enthält dasselbe
   gerenderter String als LSP-Vervollständigung;
 - Die lexikalische `comment`-Token-Klassifizierung bleibt für beide unverändert
   gewöhnliche Kommentare und Dokumentationsblockkommentare.
 
-Der Monaco-Adapter stellt keine Verbindung zum Node LSP-Server her und dupliziert diesen nicht
+Der Monaco-Adapter stellt keine Verbindung zum LSP-Server Node her und dupliziert ihn nicht
 Dokumentationsparser. Es leitet das Sprachdienstergebnis weiter, also Browser und
 stdio-Clients bleiben konsistent und beide verwenden UTF-16-Quellbereiche.
 
@@ -256,7 +256,7 @@ neuer. Lassen Sie `flint.serverPath` leer, um den Paketserver zu verwenden.
 Legen Sie einen absoluten oder relativen Pfad zum ersten Arbeitsbereichsordner fest
 um ein lokal erstelltes oder vom Projekt bereitgestelltes `dist/main.js` zu testen. Zusätzlich
 Argumente werden nach dem Server-Einstiegspunkt übergeben. Verwenden Sie `messages` oder `verbose`
-für die LSP-Ablaufverfolgung; Startfehler werden in das **Forge-Webskript geschrieben
+für die LSP-Ablaufverfolgung; Startfehler werden in den **Flint geschrieben
 Der Ausgabekanal des Sprachservers** wurde als Editorfehler angezeigt.
 
 Für die lokale Entwicklung aus diesem Repository:
@@ -296,7 +296,7 @@ erkennt `.flint`-Dateien.
 
 Das Plugin ordnet `*.flint` der Sprach-ID `fws` zu und startet ein gemeinsames stdio
 Server für das Projekt. Die IntelliJ-Konfiguration wird ausschließlich von bereitgestellt
-**Einstellungen | Werkzeuge | Forge-Webskript**; Es gibt kein Projektskript oder Flora
+**Einstellungen | Werkzeuge | Feuerstein**; Es gibt kein Projektskript oder Flora
 Konfigurationspfad. Konfigurieren:
 
 - **Node.js ausführbare Datei** – Node 24 oder neuer; Der Standardwert ist `node`.
@@ -430,10 +430,10 @@ ambient Node oder Browser-APIs.
 
 Die Editoranalyse erlaubt standardmäßig modulprivate Funktionen. Wann
 `requireExports` wird auf dem Standard-LSP-Host, einem injizierten Arbeitsbereich, weggelassen
-Host oder ein Monaco-Workspace-Host, wird er als `false` behandelt, also als privater Helfer
+Host oder ein Monaco-Workspace-Host, wird er als `false` behandelt, also ein privater Helfer
 kann von einer anderen Funktion im selben Modul ohne Produktion aufgerufen werden
 `FLINT-ABI-003`. Private Funktionen bleiben für Symbole desselben Moduls verfügbar.
-Vervollständigung, Hover und Anruf-/Typauflösung, es handelt sich jedoch nicht um Wasm-ABI-Exporte.
+Abschluss, Hover und Anruf-/Typauflösung, es handelt sich jedoch nicht um Wasm-ABI-Exporte.
 
 Hosts, die nur eine ABI-Diagnose wünschen, können `requireExports: true` global oder festlegen
 für ein Dokument über `optionsForUri`; Änderung dieser Richtlinie und Aktualisierung der
@@ -459,17 +459,17 @@ Der LSP-Server veröffentlicht `source: "flint"`. Die Phase und der Hinweis sind
 auch im Diagnoseobjekt `data` enthalten. Typische stabile Codefamilien
 sind:
 
-| Codefamilie     | Phase        | Bedeutung                                                                                                                          |
-| --------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `FLINT-LEX-*`   | `lex`        | Ungültige Zeichen/Escapezeichen, rohe Zeichenfolgenzeilen-Abschlusszeichen oder nicht abgeschlossene Zeichenfolgen/Blockkommentare |
-| `FLINT-PARSE-*` | `parse`      | Ungültige Modul-, Deklarations-, Anweisungs- oder Ausdruckssyntax                                                                  |
-| `FLINT-TYPE-*`  | `type-check` | Ungültige Typen, Namen, Operatoren, Argumente oder Rückgaben                                                                       |
-| `FLINT-ABI-*`   | `abi`        | Doppelte Namen, verweigerte Funktionen, Exporte oder Importe                                                                       |
+| Codefamilie | Phase | Bedeutung |
+| --------------- | ------------ | ----------------------------------------------------------------------------------------------- |
+| `FLINT-LEX-*` | `lex` | Ungültige Zeichen/Escapezeichen, rohe Zeichenfolgenzeilen-Abschlusszeichen oder nicht abgeschlossene Zeichenfolgen/Blockkommentare |
+| `FLINT-PARSE-*` | `parse` | Ungültige Modul-, Deklarations-, Anweisungs- oder Ausdruckssyntax |
+| `FLINT-TYPE-*` | `type-check` | Ungültige Typen, Namen, Operatoren, Argumente oder Rückgaben |
+| `FLINT-ABI-*` | `abi` | Doppelte Namen, verweigerte Funktionen, Exporte oder Importe |
 
 Fehlerhafte Eingaben werden weiterhin tokenisiert und analysiert, sofern die Parser-Wiederherstellung dies zulässt
 es. Beispielsweise kann eine fehlerhafte Quelle beim Beibehalten `FLINT-PARSE-017` erzeugen
 verwendbare lexikalische Token und Teilsymbolinformationen. Kunden sollten angezeigt werden
-den bereitgestellten Bereich und Code anstelle des passenden Diagnosetexts.
+den bereitgestellten Bereich und Code anstelle des passenden Diagnosetextes.
 
 Die Zeichenfolgenlexierung akzeptiert nur JSON-kompatible Escapezeichen (`\\`, `\"`, `\/`, `\b`,
 `\f`, `\n`, `\r`, `\t` und `\uXXXX`). Rohe Zeilenabschlüsse, ungültige Escapezeichen,
@@ -557,10 +557,10 @@ Marker und die eigene Sprachdienstinstanz.
 
 ## LSP versus Browser-Arbeitsbereiche
 
-| Verbraucher     | Arbeitsbereichsimplementierung                          | Root-/Sicherheitsgrenze                                                                               | Transport          |
-| --------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------ |
-| Node LSP-Client | `RootBoundedFlintWorkspaceHost`                         | Kanonisierte konfigurierte Dateisystem-Roots; Externe Lesevorgänge werden abgelehnt                   | stdio LSP          |
-| Monaco/Browser  | Von der Anwendung bereitgestelltes `FlintWorkspaceHost` | Der Host entscheidet, welche URIs/Dateien/Optionen verfügbar gemacht werden; keine Dateisystemannahme | In-Process-Adapter |
+| Verbraucher | Arbeitsbereichsimplementierung | Root-/Sicherheitsgrenze | Transport |
+| --------------- | ----------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
+| Node LSP-Client | `RootBoundedFlintWorkspaceHost` | Kanonisierte konfigurierte Dateisystem-Roots; Externe Lesevorgänge werden abgelehnt | stdio LSP |
+| Monaco/Browser | Von der Anwendung bereitgestelltes `FlintWorkspaceHost` | Der Host entscheidet, welche URIs/Dateien/Optionen verfügbar gemacht werden; keine Dateisystemannahme | In-Process-Adapter |
 
 Beide Adapter verwenden dieselben Sprachdienstverträge und dieselbe Analysesemantik.
 Sie teilen sich jedoch keinen Dokumentenspeicher oder Transport. Ein Browser-Host darf das nicht
@@ -572,7 +572,7 @@ Dateisystem-Host in Monaco.
 
 Die Pakete „Language-Service“ und „LSP“ umfassen Tests für akzeptierte und abgelehnte Dokumente
 Bootstrap-Fixtures, Diagnosecodes und UTF-16-Bereiche, fehlerhafte Eingabe,
-Arbeitsbereich-Invalidierung, Root-Isolation, LSP-Synchronisierung, Vervollständigung,
+Arbeitsbereichsinvalidierung, Root-Isolation, LSP-Synchronisierung, Vervollständigung,
 schweben und entsorgen. Das Inhaltspaket umfasst Adapter, Hervorhebung,
 Marker-, Anbieter-, Entsorgungs- und SSR-/Nicht-Forge-Editor-Abdeckung.
 
@@ -596,7 +596,7 @@ pnpm --filter @mission-platform/content build:check
 ```
 
 Paketweite Inhalts-Lint- und Formatierungsbefehle prüfen auch nicht zusammenhängendes CSS/SCSS
-Dateien; Ein auf die vorhandenen Dateien beschränkter Fehler ist kein Forge-Webskript
-Sprachtooling-Regression. Die maßgeblichen Erwartungen an die sprachliche Fixierung
+Dateien; Ein Fehler, der auf die vorhandenen Dateien beschränkt ist, ist kein Flint
+Sprachtooling-Regression. Die maßgeblichen Erwartungen an die Sprachfestsetzung
 bleiben in `../../../flint/src/fixtures/bootstrap.ts` und die
-[Sprachreferenz](../../../../../flint/docs/locales/de/reference/language.md).
+[Sprachreferenz](../../../../../flint/docs/reference/language.md).

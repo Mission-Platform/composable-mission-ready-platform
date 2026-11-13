@@ -33,10 +33,10 @@ function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 출처 | 문자열                 |      |
-| 편집 | 읽기 전용 SourceEdit[] |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------------- | ----------- |
+| 출처 | 문자열 |             |
+| 편집 | 읽기 전용 SourceEdit[] |             |
 
 ### CLASS_NAME_ATTRIBUTE
 
@@ -60,9 +60,9 @@ Vue 스타일 `on<Event>` prop으로 표시되는 이벤트 이름을 파생시�
 
 #### 매개변수
 
-| 이름   | 유형   | 설명 |
-| ------ | ------ | ---- |
-| 재산명 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ------------ | ------ | ----------- |
+| 재산명 | 문자열 |             |
 
 ### 프레임워크어댑터모듈
 
@@ -76,11 +76,11 @@ function frameworkAdapterModule(framework: JsxFramework): string;
 
 #### 매개변수
 
-| 이름       | 유형          | 설명 |
-| ---------- | ------------- | ---- |
-| 프레임워크 | Jsx프레임워크 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------------ | ----------- |
+| 프레임워크 | Jsx프레임워크 |             |
 
-### FrameworkFor 지시어
+### FrameworkFor 지시문
 
 **종류:** 기능
 
@@ -92,9 +92,9 @@ function frameworkForDirective(directive: string): JsxFramework | undefined;
 
 #### 매개변수
 
-| 이름   | 유형   | 설명 |
-| ------ | ------ | ---- |
-| 지시문 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------ | ----------- |
+| 지시문 | 문자열 |             |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -148,9 +148,9 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 
 #### 매개변수
 
-| 이름       | 유형          | 설명 |
-| ---------- | ------------- | ---- |
-| 프레임워크 | Jsx프레임워크 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------------ | ----------- |
+| 프레임워크 | Jsx프레임워크 |             |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
@@ -284,7 +284,7 @@ export interface HoistedStaticEntry
 
 설명이 제공되지 않았습니다.
 
-### hoistStaticRenderNodes
+### 호이스트StaticRenderNodes
 
 **종류:** 기능
 
@@ -296,9 +296,9 @@ function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 
 #### 매개변수
 
-| 이름 | 유형        | 설명 |
-| ---- | ----------- | ---- |
-| 모듈 | 일반모듈Ast |      |
+| 이름 | 유형 | 설명 |
+| ------ | ---------------- | ----------- |
+| 모듈 | 일반모듈Ast |             |
 
 ### MP_HOIST_PREFIX
 
@@ -327,10 +327,10 @@ AST 구현 유형을 노출하지 않고 모듈 소스에 소스 편집 내용�
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 모듈 | 일반모듈Ast            |      |
-| 편집 | 읽기 전용 SourceEdit[] |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------------- | ----------- |
+| 모듈 | 일반모듈Ast |             |
+| 편집 | 읽기 전용 SourceEdit[] |             |
 
 ### 상수부울
 
@@ -344,9 +344,9 @@ function constantBoolean(expression: ExpressionLike): boolean | undefined;
 
 #### 매개변수
 
-| 이름 | 유형       | 설명 |
-| ---- | ---------- | ---- |
-| 표현 | 표현좋아요 |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------- | ----------- |
+| 표현 | 표현좋아요 |             |
 
 ### 일반 최적화 결과
 
@@ -370,9 +370,9 @@ function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 
 #### 매개변수
 
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 속성 | 읽기 전용 GenericAttribute[] |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------- | ----------- |
+| 속성 | 읽기 전용 GenericAttribute[] |             |
 
 ### hasMpStaticMarker
 
@@ -386,9 +386,9 @@ function hasMpStaticMarker(node: GenericRenderNode): boolean;
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| node | GenericRenderNode |      |
+| 이름 | 유형 | 설명 |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ### isCompileTimeConstant
 
@@ -402,9 +402,9 @@ function isCompileTimeConstant(expression: ExpressionLike): boolean;
 
 #### 매개변수
 
-| 이름 | 유형       | 설명 |
-| ---- | ---------- | ---- |
-| 표현 | 표현좋아요 |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------- | ----------- |
+| 표현 | 표현좋아요 |             |
 
 ### MP_STATIC_ATTR
 
@@ -431,10 +431,10 @@ function optimizeGenericModule(
 
 #### 매개변수
 
-| 이름  | 유형        | 설명 |
-| ----- | ----------- | ---- |
-| 모듈  | 일반모듈Ast |      |
-| _옵션 | 최적화 옵션 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ---------------- | ----------- |
+| 모듈 | 일반모듈Ast |             |
+| _옵션 | 최적화 옵션 |             |
 
 ### 최적화옵션
 
@@ -460,9 +460,9 @@ function stripMpStaticAttributes(
 
 #### 매개변수
 
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 속성 | 읽기 전용 GenericAttribute[] |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------- | ----------- |
+| 속성 | 읽기 전용 GenericAttribute[] |             |
 
 ### 스트립Mp정적마커
 
@@ -476,9 +476,9 @@ function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| node | GenericRenderNode |      |
+| 이름 | 유형 | 설명 |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ## `src/diagnostics`
 
@@ -543,9 +543,9 @@ function createCompilerDiagnostic(
 
 #### 매개변수
 
-| 이름 | 유형                                                         | 설명 |
-| ---- | ------------------------------------------------------------ | ---- |
-| 진단 | Omit<CompilerDiagnostic, "fileName"> & { fileName?: 문자열 } |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------------------------------------ | ----------- |
+| 진단 | Omit<CompilerDiagnostic, "fileName"> & { fileName?: 문자열 } |             |
 
 ### 형식컴파일러진단
 
@@ -559,9 +559,9 @@ function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 
 #### 매개변수
 
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| 진단 | 컴파일러진단 |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------ | ----------- |
+| 진단 | 컴파일러진단 |             |
 
 ### throwOnCompilerErrors
 
@@ -577,9 +577,9 @@ function throwOnCompilerErrors(
 
 #### 매개변수
 
-| 이름 | 유형                                            | 설명 |
-| ---- | ----------------------------------------------- | ---- |
-| 진단 | 읽기 전용 CompilerDiagnostic[] \| 정의되지 않음 |      |
+| 이름 | 유형 | 설명 |
+| ----------- | ------------------------------------------ | ----------- |
+| 진단 | 읽기 전용 CompilerDiagnostic[] \| 정의되지 않음 |             |
 
 ## `src/framework`
 
@@ -654,6 +654,16 @@ export interface GeneratedModule
 
 프레임워크 출력 플러그인에서 반환된 소스 아티팩트입니다.
 
+### 생성된StyleArtifact
+
+**종류:** 인터페이스
+
+```typescript
+export interface GeneratedStyleArtifact
+```
+
+생성된 소스 모듈과 함께 내보내는 스타일시트입니다.
+
 ### GeneratorContext
 
 **종류:** 유형
@@ -662,7 +672,7 @@ export interface GeneratedModule
 export type GeneratorContext = TargetContext;
 ```
 
-목표 낮추기 및 최적화 후 소스 생성기에 컨텍스트가 전달됩니다.
+목표 낮추기 및 최적화 후에 소스 생성기에 컨텍스트가 전달됩니다.
 
 ### Jsx프레임워크
 
@@ -713,7 +723,7 @@ export interface TargetComponentHost
 export interface TargetContext
 ```
 
-목표 낮추기 및 최적화를 통해 공유되는 맥락입니다.
+목표 낮추기 및 최적화를 통해 공유되는 컨텍스트입니다.
 
 ### 대상프레임워크 ID
 
@@ -787,7 +797,7 @@ export interface ViteBuildContext
 **종류:** 상수
 
 ```typescript
-export const defineForgeFramework;
+export const defineForgeFramework: typeof defineForgeOutputPlugin;
 ```
 
 프레임워크 패키지가 대상 구현을 등록한다는 점을 강조하는 별칭입니다.
@@ -804,9 +814,9 @@ function defineForgeOutputPlugin(plugin: T): T;
 
 #### 매개변수
 
-| 이름     | 유형 | 설명 |
-| -------- | ---- | ---- |
-| 플러그인 | 티   |      |
+| 이름 | 유형 | 설명 |
+| ------ | ---- | ----------- |
+| 플러그인 | 티 |             |
 
 ### Forge플러그인 ID
 
@@ -832,9 +842,9 @@ function validateForgeOutputPlugin(
 
 #### 매개변수
 
-| 이름     | 유형       | 설명 |
-| -------- | ---------- | ---- |
-| 플러그인 | 알 수 없음 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------- | ----------- |
+| 플러그인 | 알 수 없음 |             |
 
 ### verifyForgeOutputPluginSelection
 
@@ -850,9 +860,9 @@ function validateForgeOutputPluginSelection(
 
 #### 매개변수
 
-| 이름     | 유형          | 설명 |
-| -------- | ------------- | ---- |
-| 플러그인 | 읽기 전용 T[] |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------ | ----------- |
+| 플러그인 | 읽기 전용 T[] |             |
 
 ## `src/ir`
 
@@ -871,10 +881,10 @@ function attributeExpressionText(
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| node | GenericRenderNode |      |
-| 이름 | 문자열            |      |
+| 이름 | 유형 | 설명 |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| 이름 | 문자열 |             |
 
 ### 속성문자열값
 
@@ -891,10 +901,42 @@ function attributeStringValue(
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| node | GenericRenderNode |      |
-| 이름 | 문자열            |      |
+| 이름 | 유형 | 설명 |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| 이름 | 문자열 |             |
+
+### 하위 슬롯 이름
+
+**종류:** 기능
+
+```typescript
+function childSlotName(
+  child: GenericRenderChild,
+  slotAttributeName = "slot",
+  defaultSlotName = "default",
+): string | undefined;
+```
+
+하위 항목이 라우팅되는 `slot="…"` 이름 또는 기본 슬롯 콘텐츠의 경우 `undefined`입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------------- | ------------------ | ----------- |
+| 아이 | GenericRenderChild |             |
+| 슬롯속성이름 |                    |             |
+| 기본슬롯이름 |                    |             |
+
+### 계산된 설정 값
+
+**종류:** 인터페이스
+
+```typescript
+export interface ComputedSetupValue
+```
+
+설정에서 반환되고 렌더/스타일 바인딩으로 주소를 지정할 수 있는 명명된 값입니다.
 
 ### 동적 노드 의도
 
@@ -961,10 +1003,10 @@ function findAttribute(
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| node | GenericRenderNode |      |
-| 이름 | 문자열            |      |
+| 이름 | 유형 | 설명 |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| 이름 | 문자열 |             |
 
 ### GenericAstNode
 
@@ -982,7 +1024,8 @@ export type GenericAstNode =
 **종류:** 유형
 
 ```typescript
-export type GenericAttribute = GenericJsxAttribute | GenericJsxSpreadAttribute;
+export type GenericAttribute =
+  GenericJsxAttribute | GenericJsxSpreadAttribute | GenericSlotAttribute;
 ```
 
 설명이 제공되지 않았습니다.
@@ -1084,7 +1127,11 @@ export interface GenericParameter
 
 ```typescript
 export type GenericRenderChild =
-  GenericRenderNode | GenericTextNode | GenericExpressionNode;
+  | GenericRenderNode
+  | GenericTextNode
+  | GenericExpressionNode
+  | GenericConditionalNode
+  | GenericForNode;
 ```
 
 설명이 제공되지 않았습니다.
@@ -1130,6 +1177,56 @@ export type GenericStatementKind =
 
 보유된 모듈 수준 명령문의 대략적인 분류입니다.
 
+### 일반 스타일AtRule
+
+**종류:** 인터페이스
+
+```typescript
+export interface GenericStyleAtRule
+```
+
+Flint 스타일 컴패니언에서 전달되는 정규화된 CSS at-rule입니다.
+
+### GenericStyleClassMapNode
+
+**종류:** 인터페이스
+
+```typescript
+export interface GenericStyleClassMapNode
+```
+
+정규화된 CSS 모듈 클래스 맵에 있는 하나의 주소 지정 가능한 로컬 클래스입니다.
+
+### 일반 스타일 동반자
+
+**종류:** 인터페이스
+
+```typescript
+export interface GenericStyleCompanion
+```
+
+하나의 Flint 모듈이 소유한 대상 중립 스타일 아티팩트입니다.
+
+### 일반 스타일 선언
+
+**종류:** 인터페이스
+
+```typescript
+export interface GenericStyleDeclaration
+```
+
+Flint 스타일 컴패니언에서 전달된 정규화된 CSS 선언입니다.
+
+### 일반 스타일 규칙
+
+**종류:** 인터페이스
+
+```typescript
+export interface GenericStyleRule
+```
+
+Flint 스타일 컴패니언에서 전달되는 정규화된 CSS 규칙입니다.
+
 ### 일반 태그 종류
 
 **종류:** 유형
@@ -1138,7 +1235,7 @@ export type GenericStatementKind =
 export type GenericTagKind = "element" | "component" | "fragment" | "dynamic";
 ```
 
-렌더 node의 태그가 대상 어휘에서 해결되는 방법.
+렌더링 node의 태그가 대상 어휘에서 해결되는 방법.
 
 ### 일반 텍스트 노드
 
@@ -1149,6 +1246,23 @@ export interface GenericTextNode
 ```
 
 JSX 태그 사이의 리터럴 텍스트입니다.
+
+### isComponentNode
+
+**종류:** 기능
+
+```typescript
+function isComponentNode(node: GenericRenderNode): boolean;
+```
+
+node의 태그가 구성 요소 이름을 지정하는지 여부(대문자 식별자 또는 동적/멤버 표현식)
+본질적인 HTML 요소가 아닌
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ### isExpressionNode
 
@@ -1164,9 +1278,9 @@ function isExpressionNode(
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 아이 | GenericRenderChild |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------------ | ----------- |
+| 아이 | GenericRenderChild |             |
 
 ### isRenderNode
 
@@ -1176,13 +1290,30 @@ function isExpressionNode(
 function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 ```
 
-렌더링 하위 요소가 중첩된 요소/조각 node인지 여부입니다.
+렌더링 하위 항목이 중첩된 요소/조각 node인지 여부입니다.
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 아이 | GenericRenderChild |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------------ | ----------- |
+| 아이 | GenericRenderChild |             |
+
+### isRenderNodeMarker
+
+**종류:** 기능
+
+```typescript
+function isRenderNodeMarker(node: GenericRenderNode, tag: string): boolean;
+```
+
+node이 명명된 컴파일 시간 표시인지 여부입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| 태그 | 문자열 |             |
 
 ### isTextNode
 
@@ -1196,9 +1327,9 @@ function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 아이 | GenericRenderChild |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------------ | ----------- |
+| 아이 | GenericRenderChild |             |
 
 ### ListKeyIntention
 
@@ -1210,6 +1341,24 @@ export interface ListKeyIntention
 
 대상 목록 렌더러의 안정적인 핵심 후보입니다.
 
+### 의미있는아이들
+
+**종류:** 기능
+
+```typescript
+function meaningfulChildren(
+  node: GenericRenderNode,
+): readonly GenericRenderChild[];
+```
+
+목표까지 살아남은 하위 항목(공백만 있는 텍스트에는 아무것도 전달되지 않음)
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
 ### 메모의도
 
 **종류:** 인터페이스
@@ -1220,6 +1369,16 @@ export interface MemoIntention
 
 메모되거나 파생된 값입니다.
 
+### 모델계약
+
+**종류:** 인터페이스
+
+```typescript
+export interface ModelContract
+```
+
+대상 중립적으로 제어되는 값 및 해당 유형의 업데이트 이벤트입니다.
+
 ### 소유의도
 
 **종류:** 인터페이스
@@ -1229,6 +1388,16 @@ export interface PropIntention
 ```
 
 구성 요소 서명 또는 props 유형에서 유추된 중립 prop 선언입니다.
+
+### 반응성 속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface ReactiveProperty
+```
+
+모든 타겟 이미터가 공유하는 반응성 구성 요소 속성입니다.
 
 ### RefIntention
 
@@ -1252,9 +1421,25 @@ function renderNodeTagName(node: GenericRenderNode): string | undefined;
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| node | GenericRenderNode |      |
+| 이름 | 유형 | 설명 |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
+### renderNodeTagText
+
+**종류:** 기능
+
+```typescript
+function renderNodeTagText(node: GenericRenderNode): string;
+```
+
+렌더 node의 일반 태그 텍스트입니다(계산된 태그는 해당 소스 표현식을 인쇄합니다).
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
 
 ### 의미적 의도
 
@@ -1266,7 +1451,7 @@ export interface SemanticIntentions
 
 목표를 낮추기 전에 한 번 추론된 공유 의미론적 사실입니다.
 
-### Semantic모듈
+### 의미 모듈
 
 **종류:** 인터페이스
 
@@ -1275,6 +1460,36 @@ export interface SemanticModule
 ```
 
 모든 프레임워크 출력 플러그인에서 사용되는 형식화된 의미 체계 IR입니다.
+
+### 설치계약
+
+**종류:** 인터페이스
+
+```typescript
+export interface SetupContract
+```
+
+모든 목표 하강기에서 사용되는 정식 설정/이벤트/모델 계약입니다.
+
+### SetupEventEmitter
+
+**종류:** 인터페이스
+
+```typescript
+export interface SetupEventEmitter
+```
+
+설정 외부에서 선언되고 이벤트 구성과 쌍을 이루는 이벤트 이미터입니다.
+
+### 설정이벤트 핸들러
+
+**종류:** 인터페이스
+
+```typescript
+export interface SetupEventHandler
+```
+
+설정 외부에서 선언된 이벤트 핸들러입니다.
 
 ### 슬롯의도
 
@@ -1302,11 +1517,11 @@ function sourceBacked(
 
 #### 매개변수
 
-| 이름   | 유형                           | 설명 |
-| ------ | ------------------------------ | ---- |
-| 텍스트 | 문자열                         |      |
-| 구문   | SourceBackedExpression["구문"] |      |
-| 범위   | 소스스팬                       |      |
+| 이름 | 유형 | 설명 |
+| ------ | -------------------------------- | ----------- |
+| 텍스트 | 문자열 |             |
+| 구문 | SourceBackedExpression["구문"] |             |
+| 범위 | 소스스팬 |             |
 
 ### SourceBackedExpression
 
@@ -1316,7 +1531,7 @@ function sourceBacked(
 export interface SourceBackedExpression
 ```
 
-낮추는 규칙이 없을 때 대상이 그대로 보존할 수 있는 표현이나 문입니다.
+낮추는 규칙이 없을 때 대상이 그대로 유지할 수 있는 표현이나 문입니다.
 
 ### 소스스팬
 
@@ -1353,10 +1568,465 @@ function walkRenderNodes(
 
 #### 매개변수
 
-| 이름 | 유형                              | 설명 |
-| ---- | --------------------------------- | ---- |
-| 노드 | 읽기 전용 GenericRenderNode[]     |      |
-| 방문 | (node: GenericRenderNode) => void |      |
+| 이름 | 유형 | 설명 |
+| ----- | --------------------------------- | ----------- |
+| 노드 | 읽기 전용 GenericRenderNode[] |             |
+| 방문 | (node: GenericRenderNode) => void |             |
+
+### 슬롯속성 없이
+
+**종류:** 기능
+
+```typescript
+function withoutSlotAttribute(
+  node: GenericRenderNode,
+  slotAttributeName = "slot",
+): GenericRenderNode;
+```
+
+`slot="…"` 라우팅 마커가 없는 node의 복사본입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------------- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+| 슬롯속성이름 |                   |             |
+
+## `src/lowering/dynamic`
+
+### lowerDynamicNodes
+
+**종류:** 기능
+
+```typescript
+function lowerDynamicNodes(
+  module: SemanticModule,
+): readonly NormalizedDynamicPlan[];
+```
+
+동적 node 의도와 렌더링 트리 `<Dynamic>` 태그를 낮춥니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | -------------- | ----------- |
+| 모듈 | 의미 모듈 |             |
+
+### lowerListKeys
+
+**종류:** 기능
+
+```typescript
+function lowerListKeys(
+  module: SemanticModule,
+): readonly NormalizedListKeyPlan[];
+```
+
+`SemanticModule`에서 목록 주요 후보를 낮춥니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | -------------- | ----------- |
+| 모듈 | 의미 모듈 |             |
+
+### lowerStatic하위 트리
+
+**종류:** 기능
+
+```typescript
+function lowerStaticSubtrees(
+  module: SemanticModule,
+): readonly NormalizedStaticSubtreePlan[];
+```
+
+`mp-static`으로 표시된 정적 하위 트리 후보를 낮춥니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | -------------- | ----------- |
+| 모듈 | 의미 모듈 |             |
+
+### 정규화된 동적 계획
+
+**종류:** 인터페이스
+
+```typescript
+export interface NormalizedDynamicPlan
+```
+
+동적 node `<Dynamic is={...}>`에 대한 정규화된 설명자입니다.
+
+### 정규화된 목록키 계획
+
+**종류:** 인터페이스
+
+```typescript
+export interface NormalizedListKeyPlan
+```
+
+목록 키 바인딩에 대한 정규화된 설명자입니다.
+
+### 정규화된 정적 하위 트리 계획
+
+**종류:** 인터페이스
+
+```typescript
+export interface NormalizedStaticSubtreePlan
+```
+
+호이스팅된 정적 하위 트리에 대한 정규화된 설명자입니다.
+
+## `src/lowering/events`
+
+### 정식 이벤트 이름
+
+**종류:** 기능
+
+```typescript
+function canonicalEventName(propName: string): string;
+```
+
+`onXxx` 소품 이름에서 정식 이벤트 이름을 추출합니다(예: `onClick` -> `click`, `onKeyDown` -> `keydown`).
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 소품 이름 | 문자열 |             |
+
+### 형식대상이벤트 이름
+
+**종류:** 기능
+
+```typescript
+function formatTargetEventName(
+  eventName: string,
+  target: "react" | "solid" | "vue" | "svelte" | "web-components",
+): string;
+```
+
+대상 프레임워크의 규칙에 따라 이벤트 이름의 형식을 지정합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | ----------------------------------------------------------- | ----------- |
+| 이벤트명 | 문자열 |             |
+| 목표 | "react" \| "solid" \| "vue" \| "svelte" \| "웹 구성 요소" |             |
+
+### isEventHandlerProp
+
+**종류:** 기능
+
+```typescript
+function isEventHandlerProp(propName: string): boolean;
+```
+
+속성 이름이 이벤트 핸들러 소품(예: `onClick`, `onKeyDown`)을 나타내는지 여부를 결정합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 소품 이름 | 문자열 |             |
+
+### lowerEventIntentions
+
+**종류:** 기능
+
+```typescript
+function lowerEventIntentions(
+  module: SemanticModule,
+): readonly NormalizedEventPlan[];
+```
+
+`SemanticModule`에서 모든 이벤트 핸들러 의도를 추출합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | -------------- | ----------- |
+| 모듈 | 의미 모듈 |             |
+
+### 정규화된 이벤트 계획
+
+**종류:** 인터페이스
+
+```typescript
+export interface NormalizedEventPlan
+```
+
+낮아진 구성요소 이벤트 핸들러에 대한 정규화된 설명자입니다.
+
+## `src/lowering/pipeline`
+
+### 베이스낮은모듈
+
+**종류:** 인터페이스
+
+```typescript
+export interface BaseLoweredModule extends TargetLoweredModule
+```
+
+프레임워크 플러그인을 포함하거나 구축할 수 있는 표준 기준 하향 계획입니다.
+
+### createBaseLoweredModule
+
+**종류:** 기능
+
+```typescript
+function createBaseLoweredModule(
+  module: SemanticModule,
+  framework: TargetFrameworkId,
+): BaseLoweredModule;
+```
+
+공유 속성 정규화, 슬롯 합성을 실행하는 기본 하향 모듈을 생성합니다.
+이벤트 낮추기, 동적 node 추출 및 목록 키 정규화.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | ----------------- | ----------------------------------- |
+| 모듈 | 의미 모듈 | - 프론트엔드 IR의 시맨틱 모듈. |
+| 프레임워크 | 대상프레임워크ID | - 대상 프레임워크 ID입니다.          |
+
+#### 계약
+
+- **@param:** - 프런트엔드 IR의 의미 체계 모듈입니다.
+- **@param:** - 대상 프레임워크 ID입니다.
+- **@returns:** 표준 베이스 하강 모듈.
+
+### verifyLoweredInvariants
+
+**종류:** 기능
+
+```typescript
+function validateLoweredInvariants(lowered: TargetLoweredModule): void;
+```
+
+낮아진 모듈이 필수 구조적 불변성을 준수하는지 확인합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------------------- | ------------------------------ |
+| 낮아진 | TargetLowered모듈 | - 하강된 모듈을 확인합니다. |
+
+#### 계약
+
+- **@param:** - 확인할 모듈이 낮아졌습니다.
+- **@throws:** 불변 계약이 위반되는 경우.
+
+## `src/lowering/props`
+
+### canonicalizeProps계약
+
+**종류:** 기능
+
+```typescript
+function canonicalizePropsContract(
+  module: SemanticModule,
+  defaultParameterName = "props",
+): NormalizedPropsContract;
+```
+
+`SemanticModule`의 props 계약을 정규화합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------------------- | -------------- | ----------------------------------------------------------------------------- |
+| 모듈 | 의미 모듈 | - 검사할 의미 모듈입니다.                                             |
+| 기본매개변수이름 |                | - 아무것도 선언되지 않은 경우 fallback props 매개변수 이름(기본값: 'props'). |
+
+#### 계약
+
+- **@param:** - 검사할 의미 모듈입니다.
+- **@param:** - 아무것도 선언되지 않은 경우 fallback props 매개변수 이름입니다(기본값: 'props').
+- **@returns:** 정식 props 계약입니다.
+
+### 정규화된 속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface NormalizedProp
+```
+
+표준화된 대상에 구애받지 않는 소품 설명입니다.
+
+### 정규화된소품계약
+
+**종류:** 인터페이스
+
+```typescript
+export interface NormalizedPropsContract
+```
+
+구성 요소의 정규화된 props 계약입니다.
+
+### 해결PropTypeText
+
+**종류:** 기능
+
+```typescript
+function resolvePropTypeText(prop: PropIntention): string;
+```
+
+소품 의도에 대한 유형 문자열을 확인합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------------- | ----------- |
+| 소품 | 소유의도 |             |
+
+### UNKNOWN_PROP_TYPE
+
+**종류:** 상수
+
+```typescript
+export const UNKNOWN_PROP_TYPE;
+```
+
+선언되거나 추론된 유형이 없을 때 대체 유형 문자열입니다.
+
+## `src/lowering/setup`
+
+### EMPTY_SETUP_CONTRACT
+
+**종류:** 상수
+
+```typescript
+export const EMPTY_SETUP_CONTRACT: SetupContract;
+```
+
+설정 없이 레거시가 없는 구성 가능 모듈에서 사용되는 빈 설정 계약입니다.
+
+### 정규화설정계약
+
+**종류:** 기능
+
+```typescript
+function normalizeSetupContract(module: SemanticModule): SetupContract;
+```
+
+프런트엔드에 첨부된 표준 설정 계약을 가져옵니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | -------------- | ----------- |
+| 모듈 | 의미 모듈 |             |
+
+### 유효성 검사SetupContract
+
+**종류:** 기능
+
+```typescript
+function validateSetupContract(
+  contract: SetupContract,
+  fileName = "<unknown>",
+): readonly CompilerDiagnostic[];
+```
+
+목표를 낮추기 전에 설정 종속성, 이름 및 모델 페이로드 호환성을 검증합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------------- | ----------- |
+| 계약 | 설치계약 |             |
+| 파일 이름 |               |             |
+
+## `src/lowering/slots`
+
+### DEFAULT_SLOT_NAME
+
+**종류:** 상수
+
+```typescript
+export const DEFAULT_SLOT_NAME;
+```
+
+지원되는 모든 대상 프레임워크의 기본 슬롯 이름입니다.
+
+### isDefaultSlotName
+
+**종류:** 기능
+
+```typescript
+function isDefaultSlotName(name: string): boolean;
+```
+
+슬롯 이름이 기본 슬롯인지 여부를 결정합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 이름 | 문자열 |             |
+
+### isSlotRenderNode
+
+**종류:** 기능
+
+```typescript
+function isSlotRenderNode(node: GenericRenderNode): boolean;
+```
+
+렌더링 node가 슬롯 자리 표시자 태그(`<Slot>` 또는 `<slot>`)를 나타내는지 여부를 결정합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ----------------- | ----------- |
+| node | GenericRenderNode |             |
+
+### 정규화된 슬롯 계획
+
+**종류:** 인터페이스
+
+```typescript
+export interface NormalizedSlotPlan
+```
+
+구성 요소 슬롯에 대한 정규화된 설명자입니다.
+
+### 정규화된슬롯계약
+
+**종류:** 인터페이스
+
+```typescript
+export interface NormalizedSlotsContract
+```
+
+구성 요소에 대해 합성된 모든 슬롯의 정규화된 컬렉션입니다.
+
+### 합성SlotPlans
+
+**종류:** 기능
+
+```typescript
+function synthesizeSlotPlans(module: SemanticModule): NormalizedSlotsContract;
+```
+
+`SemanticModule`에 대한 통합 슬롯 계약을 합성합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | -------------- | --------------------------------- |
+| 모듈 | 의미 모듈 | - 분석할 의미 모듈입니다. |
+
+#### 계약
+
+- **@param:** - 분석할 의미 체계 모듈입니다.
+- **@returns:** 정규화된 슬롯 계획 계약입니다.
 
 ## `src/schema`
 
@@ -1377,10 +2047,10 @@ function assertTargetIntentionsLowered(
 
 #### 매개변수
 
-| 이름           | 유형          | 설명 |
-| -------------- | ------------- | ---- |
-| 의도           | 알 수 없음    |      |
-| 예상프레임워크 | 프레임워크 ID |      |
+| 이름 | 유형 | 설명 |
+| ----------------- | ----------- | ----------- |
+| 의도 | 알 수 없음 |             |
+| 예상프레임워크 | 프레임워크 ID |             |
 
 ### 선언적 스키마
 
@@ -1404,9 +2074,9 @@ function findActionableSpan(value: unknown): SourceSpan | undefined;
 
 #### 매개변수
 
-| 이름 | 유형       | 설명 |
-| ---- | ---------- | ---- |
-| 가치 | 알 수 없음 |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------- | ----------- |
+| 가치 | 알 수 없음 |             |
 
 ### 스키마필드규칙
 
@@ -1525,11 +2195,11 @@ function validateAgainstSchema(
 
 #### 매개변수
 
-| 이름   | 유형                    | 설명                                         |
-| ------ | ----------------------- | -------------------------------------------- |
-| 목표   | 알 수 없음              | - 유효성을 검사할 대상 개체 또는 기록입니다. |
-| 스키마 | 선언적 스키마           | - 구조적 규칙을 정의하는 선언적 스키마.      |
-| 옵션   | 스키마 유효성 검사 옵션 | - 유효성 검사 구성 옵션.                     |
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------- | ----------------------------------------------- |
+| 목표 | 알 수 없음 | - 유효성을 검사할 대상 개체 또는 기록입니다.          |
+| 스키마 | 선언적 스키마 | - 구조적 규칙을 정의하는 선언적 스키마. |
+| 옵션 | 스키마 유효성 검사 옵션 | - 유효성 검사 구성 옵션.             |
 
 #### 계약
 
@@ -1554,7 +2224,552 @@ function validateTargetIntentions(
 
 #### 매개변수
 
-| 이름           | 유형          | 설명 |
-| -------------- | ------------- | ---- |
-| 의도           | 알 수 없음    |      |
-| 예상프레임워크 | 프레임워크 ID |      |
+| 이름 | 유형 | 설명 |
+| ----------------- | ----------- | ----------- |
+| 의도 | 알 수 없음 |             |
+| 예상프레임워크 | 프레임워크 ID |             |
+
+## `src/testing`
+
+### 부울속성
+
+**종류:** 기능
+
+```typescript
+function booleanAttribute(name: string): GenericJsxAttribute;
+```
+
+값이 없는 부울 단축 속성(`disabled`)입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 이름 | 문자열 |             |
+
+### 요소
+
+**종류:** 기능
+
+```typescript
+function component(parts: {
+  name: string;
+  parameter?: string;
+  parameterType?: string;
+  exported?: boolean;
+  body?: readonly GenericStatement[];
+  returnNode?: GenericRenderNode;
+  returnExpression?: string;
+  returned?: { expression: string; nodes?: readonly GenericRenderNode[] };
+}): GenericComponent;
+```
+
+모듈의 이름을 따서 구성 요소 레코드를 만듭니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| 부품 | { 이름: 문자열; 매개변수?: 문자열; 매개변수 유형?: 문자열; 내보냈습니까?: 부울; body?: 읽기 전용 GenericStatement[]; returnNode?: GenericRenderNode; returnExpression?: 문자열; 반환 여부: { 표현식: 문자열; 노드?: 읽기 전용 GenericRenderNode[] }; } |             |
+
+### 동적요소
+
+**종류:** 기능
+
+```typescript
+function dynamicElement(
+  expression: string,
+  parts: {
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+  } = {},
+): GenericRenderNode;
+```
+
+계산된 태그 렌더 node을 빌드합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------------------------------------------------------------------------------------- | ----------- |
+| 표현 | 문자열 |             |
+| 부품 | { 속성?: 읽기 전용 GenericAttribute[]; 어린이?: 읽기 전용 GenericRenderChild[]; 소스?: 문자열; } |             |
+
+### 동적노드
+
+**종류:** 기능
+
+```typescript
+function dynamicNode(
+  expression: string,
+  span: SourceSpan = EMPTY_SPAN,
+): DynamicNodeIntention;
+```
+
+동적 node 의도를 구축합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ---------- | ----------- |
+| 표현 | 문자열 |             |
+| 범위 | 소스스팬 |             |
+
+### 효과
+
+**종류:** 기능
+
+```typescript
+function effect(
+  body: string,
+  second?:
+    | readonly string[]
+    | string
+    | { cleanup?: string; dependencies?: readonly string[] },
+  third?: string | readonly string[],
+): EffectIntention;
+```
+
+효과 의도를 구축하십시오.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---------------------------------------------------------------------------------------- | ----------- |
+| 몸 | 문자열 |             |
+| 두 번째 | \| 읽기 전용 문자열[] \| 문자열 \| { 정리?: 문자열; 종속성?: 읽기 전용 문자열[] } |             |
+| 세 번째 | 문자열 \| 읽기 전용 문자열[] |             |
+
+### 요소
+
+**종류:** 기능
+
+```typescript
+function element(
+  tag: string,
+  parts: {
+    tagKind?: GenericTagKind;
+    selfClosing?: boolean;
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+    span?: SourceSpan;
+  } = {},
+): GenericRenderNode;
+```
+
+렌더 node을 빌드합니다. `source`은 중첩된 마크업을 연결할 때 사용되는 node의 자체 텍스트입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| 태그 | 문자열 |             |
+| 부품 | { tagKind?: 일반TagKind; selfClosing?: 부울; 속성?: 읽기 전용 GenericAttribute[]; 어린이?: 읽기 전용 GenericRenderChild[]; 소스?: 문자열; 범위?: SourceSpan; } |             |
+
+### 요소참조
+
+**종류:** 상수
+
+```typescript
+export const elementRef: typeof reference;
+```
+
+`reference`의 별칭(웹 구성 요소 사양에 사용됨)
+
+### 이벤트
+
+**종류:** 기능
+
+```typescript
+function event(name: string, handler: string): EventIntention;
+```
+
+이벤트 의도를 구축하십시오.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 이름 | 문자열 |             |
+| 핸들러 | 문자열 |             |
+
+### 표현식속성
+
+**종류:** 기능
+
+```typescript
+function expressionAttribute(
+  name: string,
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericJsxAttribute;
+```
+
+선택적으로 중첩된 마크업을 전달하는 `name={expression}` 속성.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---------------------------- | ----------- |
+| 이름 | 문자열 |             |
+| 텍스트 | 문자열 |             |
+| 중첩된 | 읽기 전용 GenericRenderNode[] |             |
+
+### 표현아이
+
+**종류:** 기능
+
+```typescript
+function expressionChild(
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericExpressionNode;
+```
+
+하위 위치의 `{ … }` 보간(선택적으로 중첩된 마크업 포함).
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---------------------------- | ----------- |
+| 텍스트 | 문자열 |             |
+| 중첩된 | 읽기 전용 GenericRenderNode[] |             |
+
+### 고정물 의도
+
+**종류:** 유형
+
+```typescript
+export type FixtureIntentions = SemanticModuleParts;
+```
+
+레거시 Vue 사양과의 `SemanticModuleParts` 호환성을 위한 별칭입니다.
+
+### 파편
+
+**종류:** 기능
+
+```typescript
+function fragment(
+  children: readonly GenericRenderChild[] = [],
+  source = "<Fragment />",
+): GenericRenderNode;
+```
+
+조각 렌더링 node(`<>…</>` 또는 `<Fragment>…</Fragment>`)를 빌드합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ----------------------------- | ----------- |
+| 어린이 | 읽기 전용 GenericRenderChild[] |             |
+| 출처 |                               |             |
+
+### 목록키
+
+**종류:** 기능
+
+```typescript
+function listKey(
+  source: string,
+  second?: boolean | string | { key?: string; stable?: boolean },
+  third?: boolean | string,
+): ListKeyIntention;
+```
+
+목록 키 의도를 구축합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------------------------------------------------------- | ----------- |
+| 출처 | 문자열 |             |
+| 두 번째 | 부울 \| 문자열 \| { 키?: 문자열; 안정?: 부울 } |             |
+| 세 번째 | 부울 \| 문자열 |             |
+
+### 메모
+
+**종류:** 기능
+
+```typescript
+function memo(
+  name: string,
+  factory: string,
+  dependencies?: readonly string[],
+): MemoIntention;
+```
+
+메모 의도를 구축하십시오.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------ | ----------------- | ----------- |
+| 이름 | 문자열 |             |
+| 공장 | 문자열 |             |
+| 종속성 | 읽기 전용 문자열[] |             |
+
+### 모듈가져오기
+
+**종류:** 기능
+
+```typescript
+function moduleImport(
+  text: string,
+  source: string,
+  parts: Partial<Omit<GenericImport, "kind" | "text" | "source" | "span">> = {},
+): GenericImport;
+```
+
+소스 텍스트와 확인된 지정자로부터 가져오기 레코드를 작성합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | -------------------------------------------------------------------- | ----------- |
+| 텍스트 | 문자열 |             |
+| 출처 | 문자열 |             |
+| 부품 | 부분<Omit<GenericImport, "kind" \| "text" \| "source" \| "span">> |             |
+
+### 중립가져오기
+
+**종류:** 기능
+
+```typescript
+function neutralImport(
+  valueNames: readonly string[],
+  typeNames: readonly string[] = [],
+): GenericImport;
+```
+
+이름에서 알 수 있듯이 중립 `@mission-platform/forge-jsx` 가져오기입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------- | ----------- |
+| 값이름 | 읽기 전용 문자열[] |             |
+| 유형이름 | 읽기 전용 문자열[] |             |
+
+### 소품
+
+**종류:** 기능
+
+```typescript
+function prop(
+  name: string,
+  second?:
+    string | { type?: string; optional?: boolean; defaultValue?: string },
+  third?: boolean | { optional?: boolean; defaultValue?: string },
+  fourth?: string,
+): PropIntention;
+```
+
+소품 의도를 구축하세요.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---------------------------------------------------------------------- | ----------- |
+| 이름 | 문자열 |             |
+| 두 번째 | 문자열 \| { 유형?: 문자열; 선택 사항?: 부울; defaultValue?: 문자열 } |             |
+| 세 번째 | 부울 \| { 선택 사항?: 부울; defaultValue?: 문자열 } |             |
+| 네 번째 | 문자열 |             |
+
+### 참조
+
+**종류:** 기능
+
+```typescript
+function reference(
+  name: string,
+  elementType?: string,
+  initializer?: string,
+): RefIntention;
+```
+
+참조 의도를 구축합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ------ | ----------- |
+| 이름 | 문자열 |             |
+| 요소 유형 | 문자열 |             |
+| 초기화 | 문자열 |             |
+
+### return문
+
+**종류:** 기능
+
+```typescript
+function returnStatement(
+  expression: string,
+  renderNodes: readonly GenericRenderNode[] = [],
+): GenericStatement;
+```
+
+구성 요소 본문의 `return …;` 문을 빌드합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ---------------------------- | ----------- |
+| 표현 | 문자열 |             |
+| 렌더노드 | 읽기 전용 GenericRenderNode[] |             |
+
+### semantic모듈
+
+**종류:** 기능
+
+```typescript
+function semanticModule(parts: SemanticModuleParts): SemanticModule;
+```
+
+고정 부품으로 `SemanticModule`을 조립합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------------------- | ----------- |
+| 부품 | SemanticModuleParts |             |
+
+### SemanticModuleParts
+
+**종류:** 인터페이스
+
+```typescript
+export interface SemanticModuleParts
+```
+
+테스트 픽스처가 선언할 수 있는 의도 사실.
+
+### 슬롯
+
+**종류:** 기능
+
+```typescript
+function slot(name: string, fallback?: string): SlotIntention;
+```
+
+슬롯 의도를 구축하십시오.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 이름 | 문자열 |             |
+| 대체 | 문자열 |             |
+
+### 스프레드속성
+
+**종류:** 기능
+
+```typescript
+function spreadAttribute(
+  text: string,
+  span: SourceSpan = EMPTY_SPAN,
+): GenericJsxSpreadAttribute;
+```
+
+`{...expression}` 스프레드 속성.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ---------- | ----------- |
+| 텍스트 | 문자열 |             |
+| 범위 | 소스스팬 |             |
+
+### 상태
+
+**종류:** 기능
+
+```typescript
+function state(
+  name: string,
+  setterName?: string,
+  parts: { type?: string; inferredType?: string; initializer?: string } = {},
+): StateIntention;
+```
+
+국가 의도를 구축하십시오.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------------------------------------------- | ----------- |
+| 이름 | 문자열 |             |
+| 세터이름 | 문자열 |             |
+| 부품 | { 유형?: 문자열; 추론된 유형?: 문자열; 초기화?: 문자열 } |             |
+
+### 성명
+
+**종류:** 기능
+
+```typescript
+function statement(
+  text: string,
+  statementKind: GenericStatementKind = "variable",
+  parts: {
+    name?: string;
+    exported?: boolean;
+    renderNodes?: readonly GenericRenderNode[];
+  } = {},
+): GenericStatement;
+```
+
+소스 텍스트에서 명세서 레코드를 작성합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------- | ---------------------------------------------------------------------------------- | ----------- |
+| 텍스트 | 문자열 |             |
+| 성명종류 | 일반문 종류 |             |
+| 부품 | { 이름?: 문자열; 내보냈습니까?: 부울; renderNodes?: 읽기 전용 GenericRenderNode[]; } |             |
+
+### 문자열속성
+
+**종류:** 기능
+
+```typescript
+function stringAttribute(name: string, value: string): GenericJsxAttribute;
+```
+
+`name="value"` 속성.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 이름 | 문자열 |             |
+| 가치 | 문자열 |             |
+
+### 템플릿참조
+
+**종류:** 상수
+
+```typescript
+export const templateRef: typeof reference;
+```
+
+`reference`의 별칭(Vue 사양에 사용됨)
+
+### 텍스트 하위
+
+**종류:** 기능
+
+```typescript
+function textChild(text: string): GenericTextNode;
+```
+
+태그 사이의 리터럴 텍스트입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 텍스트 | 문자열 |             |

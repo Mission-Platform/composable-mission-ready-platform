@@ -14,11 +14,22 @@ pnpm סביבות עבודה ו-Turborepo.
 הדרך המומלצת ליצור חבילה היא שימוש בכלי Mission Platform Developer MCP, המבטיח הכל
 תצורות, סקריפטים ומבני תיקיות עומדים בסטנדרטים של הפלטפורמה.
 
+### Forge בניית חבילות
+
+Forge רכיבים, hook ו-CMS חבילות משתמשות בשיחת `defineTsdownLibrary` אחת. הוסף
+התוספים המקוריים שהוחזרו על ידי `tsdownForgeComponentPlugins`,
+`tsdownForgeHookPlugins`, או `tsdownForgeCmsPlugins` לאפשרות `plugins` שלו;
+תוספים אלה מכינים ומפרסמים יעדים מ-tsdown הוקס של מחזור החיים במקום
+ביצוע גילוי גרפים בזמן הערכת התצורה. שמור על מסגרת ו
+תוספים של פלט CMS בבעלות מתקשר ומפורש ולכן בחירת היעד נשארת
+ניתן להרכבה ומבודד.
+
 ### 1. פיגום עם MCP
 
-השתמש בכלי `scaffold_package` כדי ליצור את השלד.
+השתמש בכלי `scaffold_package` דרך שרת MCP למפתחי Mission Platform מחובר כדי ליצור את השלד.
+להלן דוגמה לקריאת כלי MCP, לא פקודת מעטפת; השתמש בסעיף ההגדרה הידנית אם MCP אינו זמין.
 
-```bash
+```text
 # Example: Creating a new 'date-utils' package
 # The tool defaults to a dry-run; set apply=true to write files
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
@@ -27,14 +38,14 @@ scaffold_package(name="date-utils", description="Shared date manipulation utilit
 זה יוצר ספריית `packages/date-utils/` תואמת מוסכמות עם:
 
 - `package.json` עם סקריפטים מוכנים לסביבת עבודה ותצורות משותפות.
-- `tsconfig.json` הרחבת ברירת המחדל של הפלטפורמה.
+- `tsconfig.json` הרחבת ברירות המחדל של הפלטפורמה.
 - `vite.config.ts` לבניית אופטימיזציה.
 - קובץ חבית `src/index.ts`.
 - `llms.txt` לתיעוד בסיוע בינה מלאכותית.
 
 ### 2. הגדרה ידנית (אופציונלי)
 
-אם אינך משתמש בכלי MCP, ודא שה-`package.json` שלך משתמש [pnpm קטלוגים](https://pnpm.io/catalogs) עבור
+אם אינך משתמש בכלי MCP, ודא שה-`package.json` שלך משתמש ב[pnpm קטלוגים](https://pnpm.io/catalogs) עבור
 ניהול תלות ועוקב אחר מוסכמות השמות בהיקף:
 
 ```json
@@ -87,9 +98,9 @@ packages/<name>/
 └── README.md
 ```
 
-## Stylelint לחבילות עם סגנונות
+## Stylelint עבור חבילות נושאות סגנון
 
-חבילות הכוללות `CSS`, `SCSS` או בלוקי סגנון של `Vue` חייבות לכלול תצורת Stylelint וסקריפטים לבדיקה:
+חבילות המכילות בלוקים בסגנון CSS, SCSS או Vue חייבות לשמור על תצורת Stylelint וניתנת לגילוי וסקריפטים מרופטים:
 
 ```text
 packages/<name>/
@@ -99,7 +110,7 @@ packages/<name>/
 └── package.json                    # Stylelint scripts and devDependencies
 ```
 
-הוסיפו את התצורה המשותפת ואת תלויות התחביר והתצורה הישירות אל `devDependencies`:
+הוסף את התצורה המשותפת ותלות התחביר/התצורה הישירה שלה ל-`devDependencies`:
 
 ```json
 {
@@ -114,7 +125,7 @@ packages/<name>/
 }
 ```
 
-השתמשו בתצורה המשותפת מ-`stylelint.config.mjs` במקום לשכפל רשומות `extends`:
+השתמש בתצורה המשותפת מ-`stylelint.config.mjs` במקום לשכפל את ערכי ה-`extends` שלו:
 
 ```js
 // stylelint.config.mjs
@@ -123,7 +134,7 @@ import baseConfig from "@mission-platform/stylelint-config";
 export default { ...baseConfig };
 ```
 
-הוסיפו סקריפטים המכסים את מקורות הסגנון בפועל של סביבת העבודה והריצו את הבדיקה לפני הפרסום:
+הוסף סקריפטים המכסים את מקורות הסגנון בפועל של סביבת העבודה, ולאחר מכן הפעל את הבדיקה לפני הפרסום:
 
 ```json
 {
@@ -143,7 +154,7 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 ### כללי כתיבה
 
 1. **TypeScript בכל מקום**: כל קוד המקור חייב להיות ב-`.ts` או `.tsx` (באמצעות `@mission-platform/forge-jsx`).
-2. **ניטרליות המסגרת**: העדיפו היגיון אגנוסטי של מסגרת. יש ליצור רכיבים פעם אחת ב-Forge JSX כדי למקד אותם
+2. **ניטרליות המסגרת**: העדיפו לוגיקה אגנוסטית-מסגרת. יש ליצור רכיבים פעם אחת ב-Forge JSX כדי למקד אותם
    מסגרות מרובות.
 3. **בידוד**: אסור לייבא חבילות מ-`apps/`.
 4. **בדיקה**: כל יחידה (ניתנת לחיבור, חנות, שימוש, רכיב) חייבת להיות בעלת קובץ `.spec.ts` משותף.
@@ -151,13 +162,13 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 להוראות כתיבה מפורטות, ראה:
 
 - [עיצוב רכיבים אטומיים](atomic-component-design.md)
-- [כתיבה ניתנת לחיבור](composable-authoring.md)
+- [כתיבה מותאמת](composable-authoring.md)
 - [עריכת חנות](store-authoring.md)
-- [השתמש בכתיבה](util-authoring.md)
+- [Util Authoring](util-authoring.md)
 
 ### בִּניָן
 
-בנה את החבילה באמצעות Turbo כדי להבטיח שתלות נבנות בסדר הנכון:
+בנה את החבילה באמצעות Turbo כדי להבטיח שתלויות נבנות בסדר הנכון:
 
 ```bash
 pnpm exec turbo run build --filter @mission-platform/<name>
@@ -174,12 +185,12 @@ pnpm exec turbo run test --filter @mission-platform/<name>
 ### חבילות נתב ומטרות רכיבי אינטרנט
 
 השתמש ב-`@mission-platform/router` עבור יעדי מסלול מובנים, עוזרי URL טהורים וסמני מהדר ניטרליים. משותף
-אסור לחבילות להגדיר או לרשום מסלולי יישומים. יישומים בוחרים יעד נתב Forge אחד בנפרד
+אסור לחבילות להגדיר או לרשום נתיבי יישומים. יישומים בוחרים יעד נתב Forge אחד בנפרד
 יעד ממשק המשתמש שלהם, לשמור בעלות על רשומות מסלול מקוריות ומופעי נתב, ולקשר כל זמן ריצה ספציפי ליעד
 הקשר במהלך האתחול. היעדים הראשוניים הם `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
 `-redwood`, ו-`-web-components`; שילובי יכולות לא נתמכים חייבים להישאר אבחון מהדר.
 
-עבור חבילה או אפליקציה ללא מסגרת, בחר את התנאי Forge Web Components בתצורות ה-build וה-TypeScript:
+עבור חבילה או אפליקציה ללא מסגרת, בחר את התנאי Forge Web Components בתצורות ה-build וה-TypeScript גם יחד:
 
 ```ts
 import { frameworkResolveConditions } from "@mission-platform/vite-config";
@@ -217,16 +228,15 @@ export default {
 
 ## הוֹצָאָה לְאוֹר
 
-פלטפורמת המשימה משתמשת [ערכות שינויים](https://github.com/changesets/changesets) עבור גרסאות ופרסום.
+פלטפורמת המשימה משתמשת ב-[Changesets](https://github.com/changesets/changesets) לניהול גרסאות ופרסום.
 
-1. **הוסף ערכת שינויים**: לאחר ביצוע שינויים, הפעל:
-
-```bash
+1. **הוסף ערכת שינויים**: לאחר ביצוע שינויים, הרץ:
+   ```bash
    pnpm changeset
-```
-
-בחר את החבילה ואת סוג השינוי (תיקון, מינור, עיקרי). 2. **Commit the Changeset**: הגדר את קובץ `.changeset/*.md` שנוצר. 3. **גרסה ופרסום**: CI/CD מטפל בפרסום בפועל, אך ניתן להציג גרסאות מקומית עם:
-
-```bash
+   ```
+   בחר את החבילה ואת סוג השינוי (תיקון, מינור, עיקרי).
+2. **תחייב את ערכת השינויים**: הגדר את הקובץ `.changeset/*.md` שנוצר.
+3. **גרסה ופרסום**: CI/CD מטפל בפרסום בפועל, אך ניתן להציג גרסאות מקומית עם:
+   ```bash
    pnpm changeset version
-```
+   ```

@@ -18,6 +18,12 @@
  * ref reads, slot checks and state assignments come out in Svelte form.
  */
 
+import type {
+  GeneratedExtraModule,
+  GenericRenderNode,
+  SemanticModule,
+} from "@mission-platform/forge-plugin-api";
+
 import { lowerSvelteModule, type SvelteLoweredModule } from "../lower.js";
 import {
   indexOfTopLevel,
@@ -36,12 +42,6 @@ import {
   renderNode,
   type SvelteTemplateContext,
 } from "../transformers/template.js";
-
-import type {
-  GeneratedExtraModule,
-  GenericRenderNode,
-  SemanticModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** A generated `.svelte` module and any auxiliary modules written beside it. */
 export interface SvelteModuleOutput {

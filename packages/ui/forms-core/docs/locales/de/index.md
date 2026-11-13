@@ -25,9 +25,9 @@ Das Paket konzentriert sich auf drei Hauptbereiche:
 Definiert den Strukturvertrag für Formulare:
 
 - `SchemaFormDefinition`: Die Root-Definition. Ein einzelnes Objekt stellt ein einstufiges Formular dar, während es sich um ein Array von Objekten handelt
-  Definiert einen mehrstufigen Assistenten.
+  definiert einen mehrstufigen Assistenten.
 - `FormFieldSchema`: Die aufgelöste Form eines Feldes, das zum Rendern bereit ist.
-  – `FieldUiOptions`: Erweiterungen des JSON-Schemas zur Bereitstellung von Präsentationshinweisen (der Namespace `ui`).
+– `FieldUiOptions`: Erweiterungen des JSON-Schemas zur Bereitstellung von Präsentationshinweisen (der Namespace `ui`).
 - `FormValues` und `FormErrors`: Typzuordnungen für aktuelle Formulardaten und die entsprechenden Validierungsfehler.
 
 ### 2. Bedingte Sichtbarkeit (`src/conditions.ts`)
@@ -69,7 +69,7 @@ Dieses Paket ist bewusst schlank und Framework-unabhängig:
 
 ## Verbraucher
 
-Der Hauptverbraucher ist `@mission-platform/forms`, der diesen Kern zur Stromversorgung verwendet:
+Der Hauptverbraucher ist `@mission-platform/forms`, der diesen Kern zur Stromversorgung nutzt:
 
 - **ForgeSchemaForm**: Rendert Felder und validiert Daten mit diesen Dienstprogrammen.
 - **ForgeFormBuilder**: Verwendet die Konvertierungslogik, um Benutzern die visuelle Erstellung von Schemata zu ermöglichen.

@@ -16,11 +16,13 @@ in livelli funzionali:
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── packages/tooling/configs/                # Shared tooling and base configurations
-├── packages/               # Reusable libraries and building blocks
-├── packages/tooling/vite/           # Build-time extensions and compilers
-├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
-├── crates/                 # Rust crates (including Wasm-compiled ones)
+├── packages/core/          # Framework-neutral runtime, Forge JSX/adapters, routing, i18n, and scheduling
+├── packages/ui/            # Components, forms, layouts, themes, and design tokens
+├── packages/content/       # Content, email, search, and SEO pipelines
+├── packages/integrations/  # Barcode, maps, media, 3D, and interoperability adapters
+├── packages/compiler/      # Figma bridges and Forge compiler plugins
+├── packages/tooling/       # Shared configs and Vite/build-time extensions
+├── packages/edge/          # Reusable Cloudflare Worker edge functions
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
@@ -35,6 +37,7 @@ Le applicazioni sono unità distribuibili che compongono funzionalità dalla dir
 e mai pubblicato in un registro.
 
 - **`docs/`**: il sito di documentazione Vite + Vue per il corpus Markdown.
+- **`figma-forge-plugin/`**: il plugin Figma che integra i componenti creati da Forge con i flussi di lavoro Figma.
 - **`my-care-notes/`**: l'applicazione di punta per le note di cura.
 - **`service-monitor/`**: dashboard sull'integrità del servizio RedwoodSDK supportato da un oggetto durevole.
 - **`website/`**: il sito Web di marketing e prodotto di Mission Platform.
@@ -42,12 +45,20 @@ e mai pubblicato in un registro.
 
 ### 2. `packages/` (elementi predefiniti)
 
-Librerie riutilizzabili e con versione utilizzate dalle app. Questi sono destinati ad essere indipendenti dal framework, ove possibile.
+Librerie riutilizzabili e con versione utilizzate dalle app. Le directory di dominio rendono esplicita la proprietà senza modificare i nomi dei pacchetti o le importazioni.
+
+- **`core/`**: runtime indipendente dal framework, Forge JSX/adattatori, routing, localizzazione, osservabilità, RxJS e servizi di pianificazione.
+- **`ui/`**: componenti, punti di interruzione, moduli, layout, selezione, temi, token e tipografia.
+- **`content/`**: modelli di contenuto, componenti/rendering di posta elettronica, strumenti linguistici e SEO.
+- **`integrations/`**: codici a barre, scansione di codici, D3, mappe, codici QR/matrice, parlato, Three.js e vCard.
+- **`compiler/`**: bridge Figma e plugin del compilatore framework/router/CMS.
+- **`tooling/`**: pacchetti di configurazione condivisi e plugin Vite.
+- **`edge/`**: pacchetti di lavoro utilizzati dalle applicazioni ed esempi locali.
 
 - **`@mission-platform/forge-jsx`**: runtime e adattatori JSX indipendenti dal framework.
 - **`@mission-platform/components`**: libreria di componenti multi-framework.
 - **`@mission-platform/forms`** e **`@mission-platform/forms-core`**: primitive del modulo guidate da schema.
-- **`@mission-platform/content`** e **`@mission-platform/email-renderer`**: pipeline di contenuti e rendering.
+- **`@mission-platform/content`** e **`@mission-platform/email-renderer`**: pipeline di contenuto e rendering.
 - **`@mission-platform/tokens`**: progettazione della fonte della verità del token.
 - **`@mission-platform/router`** e **`@mission-platform/i18n`**: routing e localizzazione indipendenti dal framework.
 - **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`** e
@@ -83,6 +94,16 @@ Applicazione distribuibile I lavoratori sono configurati da `apps/website/wrangl
 `apps/my-care-notes/wrangler.jsonc` e `apps/service-monitor/wrangler.jsonc`. Il
 I pacchetti `api-proxy` e `forge-spa` sono dipendenze in bundle anziché distribuzioni Wrangler autonome.
 
+### 6. `packages/compiler/plugins/` (Plugin del compilatore Forge)
+
+Plugin e adattatori di output specifici del framework per il compilatore Forge.
+
+- **`forge-cms-plugin-api/`**: generazione di artefatti CMS e integrazione dell'adattatore Vite/tsdown.
+- **`forge-cms-astro/`**, **`forge-cms-ghost/`**, **`forge-cms-jekyll/`**, **`forge-cms-storyblok/`**, **`forge-cms-webflow/`**: adattatori di integrazione specifici del CMS.
+- **`forge-plugin-api/`**: interfacce plug-in del compilatore Shared Forge.
+- **`forge-vue/`**, **`forge-react/`**, **`forge-solid/`**, **`forge-svelte/`**, **`forge-web-components/`**: generazione di codice specifico del framework e adattatori runtime.
+- **`forge-router-plugin-api/`**, **`forge-router-vue/`**, **`forge-router-react/`**, **`forge-router-solid/`**, **`forge-router-svelte/`**, **`forge-router-web-components/`**, **`forge-router-redwood/`**: adattatori di integrazione specifici del framework del router.
+
 ## Convenzioni sui pacchetti interni
 
 Per mantenere un ambiente prevedibile, tutti i pacchetti e le app seguono un layout interno standard.
@@ -108,12 +129,12 @@ Ogni directory all'interno di `src/` deve contenere un `index.ts` (file barile).
 
 I file chiave nella root del repository governano il comportamento del monorepo:
 
-| File                    | Scopo                                                                                     |
-| :---------------------- | :---------------------------------------------------------------------------------------- |
-| `pnpm-workspace.yaml`   | Definisce i confini dell'area di lavoro, i glob di membri e i cataloghi delle dipendenze. |
-| `turbo.json`            | Orchestra la pipeline di compilazione e la memorizzazione nella cache delle attività.     |
-| `package.json`          | Script a livello di root e devDependencies a livello di monorepo.                         |
-| `commitlint.config.mjs` | Applica la specifica dei commit convenzionali.                                            |
+| File | Scopo |
+| :---------------------- | :------------------------------------------------------------------- |
+| `pnpm-workspace.yaml` | Definisce i confini dell'area di lavoro, i glob di membri e i cataloghi delle dipendenze. |
+| `turbo.json` | Orchestra la pipeline di compilazione e la memorizzazione nella cache delle attività.                    |
+| `package.json` | Script a livello di root e devDependencies a livello di monorepo.                |
+| `commitlint.config.mjs` | Applica la specifica dei commit convenzionali.                     |
 
 ## Gestione delle dipendenze e dello spazio di lavoro
 
@@ -132,7 +153,7 @@ Le attività tra aree di lavoro vengono eseguite tramite la root `package.json` 
 - `pnpm build`: crea tutte le aree di lavoro nell'ordine di dipendenza corretto.
 - `pnpm test`: esegui le suite di test per tutte le aree di lavoro con un'attività `test`. Utilizzare `pnpm exec turbo run test --affected` per
   l'ambito dell'elemento della configurazione dell'area di lavoro modificata.
-- `pnpm lint`: esegui ESLint negli spazi di lavoro.
+- `pnpm lint`: eseguire ESLint negli spazi di lavoro.
 - `pnpm lint:style`: esegui Stylelint per gli stili di app e pacchetti.
 - `pnpm format`: verificare la formattazione con Prettier.
 - `pnpm i18n:extract`: estrae le chiavi di traduzione per le aree di lavoro che possiedono cataloghi.

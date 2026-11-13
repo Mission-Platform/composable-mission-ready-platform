@@ -28,6 +28,9 @@
     "format": "prettier --check .",
     "format:write": "prettier --write ."
   },
+  "dependencies": {
+    "@mission-platform/flint-ast": "workspace:*"
+  },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",

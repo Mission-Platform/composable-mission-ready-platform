@@ -497,7 +497,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const MapContext;
+export const MapContext: MpContext<Map | undefined>;
 ```
 
 Kontext, der die MapLibre `Map`-Instanz des nächstgelegenen `<MapLibre>`-Vorfahren enthält.

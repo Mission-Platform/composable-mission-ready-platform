@@ -7,4 +7,4 @@
 
 SolidJS 라우터용 Forge 라우터 대상
 
-보다 `llms.txt` 공개 API 및 사용 예시를 확인하세요.
+공개 API 및 사용 예는 `llms.txt`을 참조하세요.

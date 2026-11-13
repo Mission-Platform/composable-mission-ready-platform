@@ -19,7 +19,7 @@ pnpm --filter @mission-platform/api-proxy build
 ```
 
 Sólo se aceptan solicitudes `GET` y `HEAD` a `/users` y `/v1`. Consulta
-las cadenas se reenvían; credenciales, el `Host` original y salto a salto
+las cadenas se reenvían; credenciales, el `Host` original y salto por salto
 Se eliminan los encabezados. Los errores de construcción de solicitudes o en sentido ascendente devuelven `502`.
 
 ## Limitaciones
@@ -28,5 +28,5 @@ El paquete no tiene ninguna configuración de implementación Wrangler registrad
 Proxy inverso de propósito general. Agregue una configuración de implementación explícita y
 revise los cambios de autenticación, flujo ascendente y almacenamiento en caché antes de exponerlos.
 
-- [guía de desarrollo](guides/development.md)
+- [Guía de desarrollo](guides/development.md)
 - [`README.md`](../../../README.md)

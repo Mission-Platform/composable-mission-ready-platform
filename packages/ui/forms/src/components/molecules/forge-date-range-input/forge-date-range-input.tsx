@@ -264,7 +264,7 @@ export function ForgeDateRangeInput(properties: Readonly<DateRangeInputPropertie
   const [open, setOpen] = useState<boolean>(false);
   // The day currently under the cursor, used to preview the range from the
   // selected start until a second click commits the end.
-  // eslint-disable-next-line unicorn/no-useless-undefined -- the neutral `useState` requires an explicit initial value
+
   const [hovered, setHovered] = useState<string | undefined>(undefined);
 
   const emitRange = (next: DateRange): void => {

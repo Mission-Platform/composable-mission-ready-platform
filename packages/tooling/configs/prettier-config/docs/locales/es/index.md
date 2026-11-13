@@ -13,12 +13,12 @@ Valores predeterminados de formato del repositorio compartidos por paquetes y ap
 pnpm add --save-dev @mission-platform/prettier-config
 ```
 
-Exporte la configuración compartida desde el espacio de trabajo. `prettier.config.js`.
-Utilice anulaciones locales con moderación para que Markdown, TypeScript, Vuey configuración
+Exporte la configuración compartida desde `prettier.config.js` del espacio de trabajo.
+Utilice anulaciones locales con moderación para que Markdown, TypeScript, Vue y la configuración
 Los archivos permanecen consistentes en todo el monorepo.
 
 ## Contribuir
 
-Correr `pnpm --filter @mission-platform/prettier-config format` después de cambiar el
+Ejecute `pnpm --filter @mission-platform/prettier-config format` después de cambiar el
 configuración. Los cambios deben aplicarse de manera consistente a cada espacio de trabajo que utilice
 el paquete.

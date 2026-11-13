@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> packages/hunspell/docs/index.md: [packages/hunspell/docs/index.md](../../index.md)
+> packages/content/hunspell/docs/index.md: [packages/content/hunspell/docs/index.md](../../index.md)
 > Lingua: Italiano (it)
 
 `@mission-platform/hunspell` fornisce un motore di controllo ortografico ad alte prestazioni basato su Hunspell, compilato per
@@ -88,4 +88,4 @@ handle.dispose();
 Questo pacchetto **non viene fornito con dizionari integrati** per mantenere ridotte le dimensioni del pacchetto. Devi fornire il tuo
 Coppia `.aff` (affisso) e `.dic` (dizionario).
 
-Fonte consigliata: [Dizionari di LibreOffice](https://github.com/LibreOffice/dictionaries).
+Fonte consigliata: [Dizionari LibreOffice](https://github.com/LibreOffice/dictionaries).

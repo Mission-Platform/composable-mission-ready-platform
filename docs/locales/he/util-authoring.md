@@ -11,7 +11,7 @@ Utilities (Utils) הם פונקציות מסייעות טהורות ואגנוס
 
 ## פריסת ספרייה
 
-כל כלי שירות אמור להתגורר בספריית המשנה בעלת השם שלו בתוך `src/utils/`, מלווה בקובץ בדיקה משותף ו
+כל כלי שירות אמור להתגורר בספריית המשנה בעלת השם שלו בתוכו `src/utils/`, מלווה בקובץ בדיקה משותף ו
 חבית מקומית.
 
 ```text
@@ -27,10 +27,10 @@ src/utils/
 
 1. **טוהר**: העדיפו פונקציות טהורות שאין להן תופעות לוואי. בהינתן אותו קלט, הם צריכים תמיד להחזיר את
    אותו פלט.
-2. **ללא ווים של ממשק משתמש**: לעולם אל תייבא ווים של `vue`, `react` או `@mission-platform/forge-jsx` ב-Util. היגיון דורש
-   תגובתיות שייכת ל [חומרי חיבור](composable-authoring.md).
+2. **ללא ווים של ממשק משתמש**: לעולם אל תייבא ווים של `vue`, `react` או `@mission-platform/forge-jsx` ב-Util. היגיון מחייב
+   תגובתיות שייכת ל-[Composables](composable-authoring.md).
 3. **הקלדה מפורשת**: ספק סוגי TypeScript מלאים עבור כל הארגומנטים וערכי ההחזרה.
-4. **בדיקה חובה**: לכל תוכנת שימוש חייב להיות קובץ `.spec.ts` הממוקם במשותף.
+4. **בדיקה חובה**: לכל תוכנת שירות חייב להיות קובץ `.spec.ts` הממוקם במשותף.
 5. **אחריות יחידה**: כל תיקיית util צריכה להתמקד במשימה ספציפית וצרה.
 
 ## דוגמה בסיסית
@@ -46,16 +46,17 @@ export function clamp(value: number, min: number, max: number): number {
 
 ## פיגומים
 
-השתמש בכלי Mission Platform Developer MCP כדי ליצור שלד שירות חדש:
+השתמש בכלי `scaffold_util` דרך שרת MCP של Mission Platform Developer מחובר כדי ליצור כלי שירות חדש
+skeleton. זוהי דוגמה לקריאת כלי MCP, לא פקודת מעטפת:
 
-```bash
+```text
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```
 
 ## מדריכים קשורים
 
-- [פיתוח חבילות](package-development.md)
+- [פיתוח חבילה](package-development.md)
 - [עיצוב רכיבים אטומיים](atomic-component-design.md)
-- [כתיבה ניתנת לחיבור](composable-authoring.md)
+- [כתיבה מותאמת](composable-authoring.md)
 - [עריכת חנות](store-authoring.md)

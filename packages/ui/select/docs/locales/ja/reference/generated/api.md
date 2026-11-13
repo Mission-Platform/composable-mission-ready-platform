@@ -34,9 +34,9 @@ callback-prop `onRemove` (Vue `remove` は代替を発行します)。
 
 #### パラメータ
 
-| 名前       | タイプ                      | 説明 |
-| ---------- | --------------------------- | ---- |
-| プロパティ | 読み取り専用<TagProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------- | ----------- |
+|プロパティ |読み取り専用<TagProperties> |             |
 
 ### タグのプロパティ
 
@@ -83,9 +83,9 @@ function ForgeLanguageSwitcher(properties: Readonly<ForgeLanguageSwitcherPropert
 
 #### パラメータ
 
-| 名前       | タイプ                                        | 説明 |
-| ---------- | --------------------------------------------- | ---- |
-| プロパティ | 読み取り専用<ForgeLanguageSwitcherProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------------------- | ----------- |
+|プロパティ |読み取り専用<ForgeLanguageSwitcherProperties> |             |
 
 ### ForgeLanguageSwitcherオプション
 
@@ -146,9 +146,9 @@ React/Vue); `useI18n` 文字列はプレーン テキストになります。そ
 
 #### パラメータ
 
-| 名前       | タイプ                              | 説明 |
-| ---------- | ----------------------------------- | ---- |
-| プロパティ | 読み取り専用<MultiselectProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------- | ----------- |
+|プロパティ |読み取り専用<MultiselectProperties> |             |
 
 ### 複数選択オプション
 
@@ -182,6 +182,26 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 ## `src/components/molecules/forge-select/forge-select`
 
+### コンボボックスを鍛造する
+
+**種類:** 定数
+
+```typescript
+export const ForgeCombobox: typeof ForgeSelect;
+```
+
+説明はありません。
+
+### ForgeComboboxProps
+
+**種類：**タイプ
+
+```typescript
+export type ForgeComboboxProps = SelectProperties;
+```
+
+説明はありません。
+
 ### フォージセレクト
 
 **種類:** 関数
@@ -190,40 +210,24 @@ export type MultiselectSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
-`ForgeSelect` — ニュートラル JSX で一度作成されたカスタム コンボボックス/選択
-方言を使用し、React または Vue に直接コンパイルされます。
-`@mission-platform/vite-plugin-forge`。
-
-デフォルト (`searchable`、デフォルト) では、トリガーはフィルタリングするテキストフィールドです。
-ユーザーが入力したオプション — {@link ForgeMultiselect} をミラーリング — したがって、値
-スクロールするのではなく、検索することで見つけることができます。 `searchable={false}` を a に設定します
-プレーンなボタントリガー。いずれにしても、リストボックスは視覚的に隠されたものによって裏付けられています。
-ネイティブ `<select>` なので、ブラウザーの自動入力とネイティブ フォームの送信は機能し続けます。
-選択は確立された `modelValue` + によって制御されます
-`onUpdateModelValue`/`onChange` コールバックプロパティ規則。独自のスタイルを持っています
-同じ場所にある CSS モジュール `forge-select.module.scss` を通じて。
-
-フローティング リストボックスは、追記型 **`ForgeDropdown`** によってレンダリングされます。
-(それ自体は React/Vue にコンパイルされます)、ニュートラルな名前付きスロット **passing** 経由で構成されます
-構文: コンボボックス ラッパーはドロップダウンの `trigger` スロットに渡されます。
-(`slot="trigger"`)、`<ul role="listbox">` がデフォルトのスロットになるため、
-パネルは `<Teleport>` を通じてポータル化され、CSS アンカーで固定されます
-インプレース絶対配置リストの代わりに配置します。内部
-`useState` オープン フラグは、そのドロップダウンを介してドロップダウンと同期されます。
-`onUpdateOpen` コールバック。
-
-オリジナルの Vue SFC からのその他の置換: `useId` コンポーザブル マップは、
-フレームワークネイティブの `useId` フック。シェブロンはライトワンスです
-`@mission-platform/icons` `ForgeIconChevron` (`direction` プロップを介して回転、
-それ自体は React/Vue にコンパイルされます)。 `useI18n` 文字列はプレーン テキストになります。そして
-`v-model` + はコールバック プロパティになります。 `start`/`end` 名前付きスロットは次のとおりです。
-中立的な名前付きスロットとして保存されます。
+ForgeSelect コンポーネントは、アクセス可能なフレームワーク中立の選択コントロールを提供します。
+ライブ フィルタリング、非同期検索、キーボード ナビゲーション、カスタム スロットのサポート。
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| プロパティ | 読み取り専用<SelectProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------- | ----------- |
+|プロパティ |読み取り専用<SelectProperties> |             |
+
+### ForgeSelectProps
+
+**種類：**タイプ
+
+```typescript
+export type ForgeSelectProps = SelectProperties;
+```
+
+説明はありません。
 
 ### オプションの選択
 

@@ -43,17 +43,17 @@ function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | 
 Renvoie une référence à attacher à un élément (`ref={reference}`) et exécutez `draw`
 contre la sélection D3 de cet élément.
 
-L'effet s'exécute après le montage et se réexécute chaque fois que `dependencies` change ; quand
+L'effet s'exécute après le montage et se réexécute à chaque fois que `dependencies` change ; quand
 la référence est toujours vide, le tirage est ignoré. `draw` peut renvoyer un démontage qui
 s'exécute avant le prochain redessinage et au démontage, en conservant les transitions et les auditeurs
 bien rangé - à l'identique sur React et Vue.
 
 #### Paramètres
 
-| Nom         | Tapez            | Descriptif |
-| ----------- | ---------------- | ---------- |
-| dessiner    | D3Draw<E>        |            |
-| dépendances | MpDependencyList |            |
+| Nom | Tapez | Descriptif |
+| ------------ | ---------------- | ----------- |
+| dessiner | D3Draw<E> |             |
+| dépendances | MpDependencyList |             |
 
 ## `src/utils/margins`
 
@@ -81,9 +81,9 @@ ne produisez jamais de dimensions négatives (que les échelles D3 rejettent).
 
 #### Paramètres
 
-| Nom   | Tapez              | Descriptif |
-| ----- | ------------------ | ---------- |
-| boîte | Boîte à graphiques |            |
+| Nom | Tapez | Descriptif |
+| ---- | -------- | ----------- |
+| boîte | Boîte à graphiques |             |
 
 ### Dimensions intérieures
 
@@ -130,6 +130,6 @@ le reste à `0`. `undefined` génère une marge nulle.
 
 #### Paramètres
 
-| Nom    | Tapez       | Descriptif |
-| ------ | ----------- | ---------- |
-| entrée | MargeEntrée |            |
+| Nom | Tapez | Descriptif |
+| ----- | ----------- | ----------- |
+| entrée | MargeEntrée |             |

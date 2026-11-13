@@ -47,11 +47,11 @@ Costruire un avviso sulla fase di generazione; il target Ghost non emette mai er
 
 #### Parametri
 
-| Nome      | Digitare | Descrizione |
-| --------- | -------- | ----------- |
-| codice    | stringa  |             |
-| messaggio | stringa  |             |
-| nomefile  | stringa  |             |
+| Nome | Digitare | Descrizione |
+| -------- | ------ | ----------- |
+| codice | stringa |             |
+| messaggio | stringa |             |
+| nomefile | stringa |             |
 
 ## `src/ghost`
 
@@ -67,7 +67,7 @@ Associa la proiezione del tema Ghost a un plug-in di output del framework di pro
 
 #### Parametri
 
-| Nome    | Digitare             | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | -------------------- | ----------- |
 | opzioni | ForgeGhostCmsOptions |             |
 
@@ -103,11 +103,11 @@ la stessa manopola e Ghost ha solo uno spazio dei nomi per loro.
 
 #### Parametri
 
-| Nome        | Digitare                        | Descrizione |
-| ----------- | ------------------------------- | ----------- |
-| componenti  | sola lettura ContentComponent[] |             |
-| temaNome    | stringa                         |             |
-| diagnostica | Diagnostica del compilatore[]   |             |
+| Nome | Digitare | Descrizione |
+| ----------- | --------------------------- | ----------- |
+| componenti | sola lettura ContentComponent[] |             |
+| temaNome | stringa |             |
+| diagnostica | Diagnostica del compilatore[] |             |
 
 ### DEFAULT_GHOST_THEME_NAME
 
@@ -133,8 +133,8 @@ Emetti il ​​contratto con parametri parziali come JSON ben stampato.
 
 #### Parametri
 
-| Nome       | Digitare                        | Descrizione |
-| ---------- | ------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------- | ----------- |
 | componenti | sola lettura ContentComponent[] |             |
 
 ### emitGhostThemeConfig
@@ -153,11 +153,11 @@ Emetti il ​​frammento `config.custom` come JSON ben stampato.
 
 #### Parametri
 
-| Nome        | Digitare                        | Descrizione |
-| ----------- | ------------------------------- | ----------- |
-| componenti  | sola lettura ContentComponent[] |             |
-| temaNome    | stringa                         |             |
-| diagnostica | Diagnostica del compilatore[]   |             |
+| Nome | Digitare | Descrizione |
+| ----------- | --------------------------- | ----------- |
+| componenti | sola lettura ContentComponent[] |             |
+| temaNome | stringa |             |
+| diagnostica | Diagnostica del compilatore[] |             |
 
 ### GHOST_COMPONENTS_MANIFEST
 
@@ -211,7 +211,7 @@ La voce di un componente in `forge-components.json`.
 export interface GhostComponentsManifest
 ```
 
-L'intero contratto a parametro parziale.
+L'intero contratto a parametri parziali.
 
 ### Parametro Ghost
 
@@ -249,8 +249,8 @@ renderebbe la proiezione non deterministica.
 
 #### Parametri
 
-| Nome  | Digitare        | Descrizione |
-| ----- | --------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ------------ | ----------- |
 | campo | Campo contenuto |             |
 
 ### GhostSettingType
@@ -264,7 +264,7 @@ export type GhostSettingType =
 
 I cinque tipi di impostazione accettati dal blocco `config.custom` di Ghost.
 
-### GhostSlot
+### Ghost Slot
 
 **Tipo:** interfaccia
 
@@ -298,8 +298,8 @@ Proietta un componente sulla relativa voce `forge-components.json`.
 
 #### Parametri
 
-| Nome       | Digitare                | Descrizione |
-| ---------- | ----------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| --------- | ---------------- | ----------- |
 | componente | Componente di contenuto |             |
 
 ## `src/template`
@@ -320,8 +320,8 @@ il componente è cambiato.
 
 #### Parametri
 
-| Nome       | Digitare                | Descrizione |
-| ---------- | ----------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| --------- | ---------------- | ----------- |
 | componente | Componente di contenuto |             |
 
 ### ghostPartialFileName
@@ -336,8 +336,8 @@ Il percorso relativo al tema in cui è scritto il partial.
 
 #### Parametri
 
-| Nome       | Digitare                | Descrizione |
-| ---------- | ----------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| --------- | ---------------- | ----------- |
 | componente | Componente di contenuto |             |
 
 ### ghostPartialName
@@ -352,8 +352,8 @@ Il nome parziale con cui viene richiamato un componente (`{{> forge/badge}}`).
 
 #### Parametri
 
-| Nome       | Digitare                | Descrizione |
-| ---------- | ----------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| --------- | ---------------- | ----------- |
 | componente | Componente di contenuto |             |
 
 ### ghostTemplateDiagnostics
@@ -375,7 +375,7 @@ a che fare con ciò deve avvenire prima che venga invocato il partial.
 
 #### Parametri
 
-| Nome       | Digitare                | Descrizione |
-| ---------- | ----------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| --------- | ---------------- | ----------- |
 | componente | Componente di contenuto |             |
-| nomefile   | stringa                 |             |
+| nomefile | stringa |             |

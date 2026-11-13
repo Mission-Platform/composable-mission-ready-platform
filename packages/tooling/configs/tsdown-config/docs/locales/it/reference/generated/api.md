@@ -24,9 +24,39 @@ nome in `names` (e qualsiasi importazione di sottopercorsi, ad esempio `pkg/sub`
 
 #### Parametri
 
-| Nome | Digitare                  | Descrizione |
-| ---- | ------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ----------------- | ----------- |
 | nomi | stringa di sola lettura[] |             |
+
+### cssBundlePlugin
+
+**Tipo:** funzione
+
+```typescript
+function cssBundlePlugin(): TsdownPlugin;
+```
+
+Ricollega ciascuna risorsa CSS estratta al modulo JS che la possiede.
+
+tsdown/Rolldown estrae le importazioni `*.module.scss`/`*.scss` co-localizzate in
+risorse `.css` autonome: con l'hashing del nome della classe già applicato e il file
+risolto i nomi inseriti nelle mappe delle classi di pari livello, ma, a differenza di Vite, lo fa
+_non_* reinserire il file `import './x.css'` corrispondente nel blocco JS (lascia
+un segnaposto `/* empty css *\/`) e scrive tali risorse direttamente in
+disco anziché tramite il bundle Rollup. Un consumatore che importa un componente
+quindi ottiene il suo markup senza i suoi stili e Rolldown non espone no
+`viteMetadata.importedCss` per ricostruire il grafico CSS per blocco.
+
+Quindi, in `writeBundle` (dopo che ogni risorsa è su disco), questo plugin antepone a
+effetto collaterale `import './x.css'` al modulo proprietario di ciascun foglio di stile (vedi
+{@link risolvereCssOwner}) — la mappa delle classi del modulo CSS (o, per Vue, il componente
+pezzo) che i consumatori già importano. Poiché il foglio di stile è inserito in un file
+modulo effettivamente utilizzato (non un puro barile di riesportazione che ha un nome import
+l'albero si scuoterebbe via), l'importazione di un singolo componente si inserisce in modo affidabile ed esatto
+gli stili di quel componente e gli stili dell'intera libreria quando il barile è
+importato: corrisponde al componente automatico della build storica della libreria Vite
+Caricamento CSS. I fogli di stile sono già sottoposti ad hashing una volta, quindi bundler downstream
+spedirli parola per parola.
 
 ### DEFAULT_LIBRARY_EXTERNALS
 
@@ -38,6 +68,23 @@ export const DEFAULT_LIBRARY_EXTERNALS: readonly string[];
 
 Nomi di pacchetto predefiniti che ogni libreria condivisa dovrebbe considerare come forniti da peer.
 Esegue il mirroring di {@link DEFAULT_LIBRARY_EXTERNALS} di `@mission-platform/vite-config`.
+
+### defineTsdownForgeTarget
+
+**Tipo:** funzione
+
+```typescript
+function defineTsdownForgeTarget(options: TsdownForgeTargetOptions): UserConfig;
+```
+
+Crea una configurazione tsdown per il target del componente Forge neutrale (`dist/components/**`).
+Per impostazione predefinita, `outDir` diventa `'dist/components'` preservando tutte le funzionalità di {@link defineTsdownLibrary}.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| ------- | ------------------------ | ----------- |
+| opzioni | TsdownForgeTargetOptions |             |
 
 ### defineTsdownLibrary
 
@@ -53,7 +100,7 @@ Archetipo A/B. Esegue il mirroring della semantica di esternalizzazione `defineL
 
 #### Parametri
 
-| Nome    | Digitare             | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | -------------------- | ----------- |
 | opzioni | TsdownLibraryOptions |             |
 
@@ -70,7 +117,7 @@ per i pacchetti che spediscono SFC `.vue` (`i18n`, `router`, …).
 
 #### Parametri
 
-| Nome    | Digitare             | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | -------------------- | ----------- |
 | opzioni | TsdownLibraryOptions |             |
 
@@ -79,7 +126,7 @@ per i pacchetti che spediscono SFC `.vue` (`i18n`, `router`, …).
 **Tipo:** funzione
 
 ```typescript
-function readPackageDependencyNames(rootDirectory: string): string[];
+function readPackageDependencyNames(rootDirectory: string, options?: { includeDevDependencies?: boolean }): string[];
 ```
 
 Leggi `dependencies` e `peerDependencies` dichiarati nel package.json
@@ -88,9 +135,38 @@ del proprio pacchetto in modo che i consumatori possano deduplicarli e scuoterli
 
 #### Parametri
 
-| Nome          | Digitare | Descrizione |
-| ------------- | -------- | ----------- |
-| rootDirectory | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ------------- | ------------------------------------ | ----------- |
+| rootDirectory | stringa |             |
+| opzioni | { includeDevDependencies?: booleano } |             |
+
+### risolvereCssOwner
+
+**Tipo:** funzione
+
+```typescript
+function resolveCssOwner(outputDirectory: string, cssRelative: string): string | undefined;
+```
+
+Risolvi il modulo JS che "possiede" un foglio di stile estratto `cssRelative`, quindi a
+l'importazione degli effetti collaterali può essere reinserita in un modulo che effettivamente i consumatori
+tirare dentro.
+
+Ogni build di forge framework (react/neutral/solid/svelte/web-components) emette
+una mappa di classe del modulo CSS `X.module.js` accanto al suo `X.css` estratto e ogni
+Il componente che utilizza quelle classi importa la mappa delle classi, quindi è la mappa delle classi
+il proprietario naturale (`forge-accordion.css` → `forge-accordion.module.js`, condiviso
+`size.css` → `size.module.js`). Vue emette invece fogli di stile con ambito SFC denominati
+`X.vue_vue_type_style_index_*.css` insieme a un semplice pezzo del componente `X.js`, quindi
+quel pezzo è il proprietario. Restituisce il percorso del proprietario relativo alla directory di output,
+o `undefined` quando sul disco non esiste alcun blocco proprietario.
+
+#### Parametri
+
+| Nome | Digitare | Descrizione |
+| --------------- | ------ | ----------- |
+| outputDirectory | stringa |             |
+| cssRelativo | stringa |             |
 
 ### risolvereTsdownOutputDirectory
 
@@ -106,11 +182,21 @@ promozionabile in modo indipendente senza consentire a tsdown di pulire un alber
 
 #### Parametri
 
-| Nome            | Digitare | Descrizione |
-| --------------- | -------- | ----------- |
-| rootDirectory   | stringa  |             |
-| outputDirectory | stringa  |             |
-| outputRoot      | stringa  |             |
+| Nome | Digitare | Descrizione |
+| --------------- | ------ | ----------- |
+| rootDirectory | stringa |             |
+| outputDirectory | stringa |             |
+| outputRoot | stringa |             |
+
+### TsdownForgeTargetOptions
+
+**Tipo:** interfaccia
+
+```typescript
+export interface TsdownForgeTargetOptions extends TsdownLibraryOptions
+```
+
+Nessuna descrizione fornita.
 
 ### TsdownLibraryOptions
 

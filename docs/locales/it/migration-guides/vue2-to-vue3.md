@@ -64,7 +64,7 @@ import { ref } from "vue";
 const count = ref(0);
 ```
 
-### Metodi per le funzioni
+### Methods to Functions
 
 I metodi diventano funzioni semplici nel blocco `<script setup>`.
 
@@ -86,19 +86,19 @@ const increment = () => {
 };
 ```
 
-## Passaggio 3: aggiornamento degli hook del ciclo di vita
+## Step 3: Update Lifecycle Hooks
 
 Gli hook del ciclo di vita sono stati rinominati e devono essere importati.
 
-| Vue 2                      | Vue 3                                                |
-| :------------------------- | :--------------------------------------------------- |
+| Vue 2 | Vue 3 |
+| :------------------------- | :---------------------------------------- |
 | `beforeCreate` / `created` | Utilizzare direttamente `setup()` / `<script setup>` |
-| `beforeMount`              | `onBeforeMount`                                      |
-| `mounted`                  | `onMounted`                                          |
-| `beforeUpdate`             | `onBeforeUpdate`                                     |
-| `updated`                  | `onUpdated`                                          |
-| `beforeDestroy`            | `onBeforeUnmount`                                    |
-| `destroyed`                | `onUnmounted`                                        |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 Esempio:
 
@@ -110,7 +110,7 @@ onMounted(() => {
 });
 ```
 
-## Passaggio 4: adottare `<script setup>`
+## Passaggio 4: adotta `<script setup>`
 
 Tutti i componenti nuovi e migrati nella Mission Platform devono utilizzare la sintassi `<script setup>` con TypeScript.
 

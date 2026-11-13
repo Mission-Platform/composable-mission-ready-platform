@@ -1,6 +1,5 @@
-import { borderWidth, radius, size, spacing, themeLight, typography } from '@mission-platform/tokens';
-
 import type { EmailStyle, EmailStyleValue, EmailStyleValueWithFallback } from '@mission-platform/email-renderer';
+import { borderWidth, radius, size, spacing, themeLight, typography } from '@mission-platform/tokens';
 
 export type EmailTypographyVariant = keyof typeof typography;
 export type EmailSpacingScale = keyof typeof spacing;

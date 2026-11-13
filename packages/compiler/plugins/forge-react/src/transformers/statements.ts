@@ -7,10 +7,11 @@
  * expression constructs are rewritten. Module declarations and component body
  * statements go through the same path.
  */
+import type { GenericStatement } from "@mission-platform/forge-plugin-api";
+
 import { lowerTextWithRenderNodes } from "./jsx.js";
 
 import type { ReactLoweringContext } from "./context.js";
-import type { GenericStatement } from "@mission-platform/forge-plugin-api";
 
 /** The `useI18n()` binding injected into components that translate. */
 export const I18N_HOOK_STATEMENT = "const { t } = useI18n();";

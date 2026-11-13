@@ -1,4 +1,4 @@
-# @mission-platform/forge-cms-ghost مرجع واجهة برمجة التطبيقات
+# مرجع @mission-platform/forge-cms-ghost API
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
@@ -29,9 +29,9 @@ export const FORGE_GHOST_FIELD_UNSUPPORTED;
 export const FORGE_GHOST_SETTING_LIMIT;
 ```
 
-أكثر `@cmsSetting` تم توقع الحقول من حقول Ghost `config.custom` يسمح.
+تم عرض حقول `@cmsSetting` أكثر مما يسمح به Ghost's `config.custom`.
 
-### ghostWarning
+### com.ghostWarning
 
 **النوع:** الوظيفة
 
@@ -43,15 +43,15 @@ function ghostWarning(
 ): CompilerDiagnostic;
 ```
 
-إنشاء تحذير لمرحلة الجيل؛ الهدف الشبح لا يصدر أخطاء أبدًا.
+إنشاء تحذير لمرحلة التوليد؛ الهدف الشبح لا يصدر أخطاء أبدًا.
 
 #### حدود
 
-| الاسم     | اكتب  | الوصف |
-| --------- | ----- | ----- |
-| كود       | سلسلة |       |
-| رسالة     | سلسلة |       |
-| اسم الملف | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| كود | سلسلة |             |
+| رسالة | سلسلة |             |
+| اسم الملف | سلسلة |             |
 
 ## `src/ghost`
 
@@ -67,9 +67,9 @@ function forgeGhostCms(options: ForgeGhostCmsOptions): CmsOutputPlugin;
 
 #### حدود
 
-| الاسم  | اكتب               | الوصف |
-| ------ | ------------------ | ----- |
-| خيارات | فورججوستكمسوبتيونس |       |
+| الاسم | اكتب | الوصف |
+| ------- | -------------------- | ----------- |
+| خيارات | فورججوستكمسوبتيونس |             |
 
 ### ForgeGhostCmsOptions
 
@@ -95,7 +95,7 @@ function buildGhostThemeConfig(
 ): GhostThemeConfig;
 ```
 
-بناء `config.custom` قطعة من كل `@cmsSetting`-الحقل الموسوم.
+قم بإنشاء جزء `config.custom` من كل حقل يحمل علامة `@cmsSetting`.
 
 الإعدادات موجودة على مستوى الموقع، لذا يتم مفتاحها بواسطة الخاصية Snake_cased الخاصة بالحقل
 الاسم وليس حسب المكون: يتم وصف مكونين يضعان علامات على نفس الدعامة
@@ -103,11 +103,11 @@ function buildGhostThemeConfig(
 
 #### حدود
 
-| الاسم       | اكتب                           | الوصف |
-| ----------- | ------------------------------ | ----- |
-| مكونات      | للقراءة فقط ContentComponent[] |       |
-| اسم الموضوع | سلسلة                          |       |
-| التشخيص     | مترجم التشخيص[]                |       |
+| الاسم | اكتب | الوصف |
+| ----------- | --------------------------- | ----------- |
+| مكونات | للقراءة فقط ContentComponent[] |             |
+| اسم الموضوع | سلسلة |             |
+| التشخيص | مترجم التشخيص[] |             |
 
 ### DEFAULT_GHOST_THEME_NAME
 
@@ -133,9 +133,9 @@ function emitGhostComponentsManifest(
 
 #### حدود
 
-| الاسم  | اكتب                           | الوصف |
-| ------ | ------------------------------ | ----- |
-| مكونات | للقراءة فقط ContentComponent[] |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------- | ----------- |
+| مكونات | للقراءة فقط ContentComponent[] |             |
 
 ### emitGhostThemeConfig
 
@@ -149,15 +149,15 @@ function emitGhostThemeConfig(
 ): string;
 ```
 
-تنبعث منها `config.custom` جزء مثل JSON مطبوع بشكل جميل.
+قم بإصدار جزء `config.custom` كـ JSON مطبوع بشكل جميل.
 
 #### حدود
 
-| الاسم       | اكتب                           | الوصف |
-| ----------- | ------------------------------ | ----- |
-| مكونات      | للقراءة فقط ContentComponent[] |       |
-| اسم الموضوع | سلسلة                          |       |
-| التشخيص     | مترجم التشخيص[]                |       |
+| الاسم | اكتب | الوصف |
+| ----------- | --------------------------- | ----------- |
+| مكونات | للقراءة فقط ContentComponent[] |             |
+| اسم الموضوع | سلسلة |             |
+| التشخيص | مترجم التشخيص[] |             |
 
 ### GHOST_COMPONENTS_MANIFEST
 
@@ -177,7 +177,7 @@ export const GHOST_COMPONENTS_MANIFEST;
 export const GHOST_SETTING_LIMIT;
 ```
 
-الحد الأقصى لعدد الإدخالات التي يقبلها Ghost `config.custom`.
+الحد الأقصى لعدد الإدخالات التي يقبلها Ghost في `config.custom`.
 
 يرفض Ghost السمة التي تتجاوزها في وقت التحميل، والتي من شأنها أن تتحول إلى
 تتحول لعبة Forge الناجحة إلى فشل لا يكتشفه المؤلف إلا في Ghost
@@ -191,7 +191,7 @@ export const GHOST_SETTING_LIMIT;
 export const GHOST_THEME_CONFIG_MANIFEST;
 ```
 
-الملف `config.custom` تتم كتابة جزء ل.
+الملف الذي تمت كتابة جزء `config.custom` إليه.
 
 ### GhostComponentEntry
 
@@ -201,7 +201,7 @@ export const GHOST_THEME_CONFIG_MANIFEST;
 export interface GhostComponentEntry
 ```
 
-دخول مكون واحد `forge-components.json`.
+إدخال مكون واحد في `forge-components.json`.
 
 ### GhostComponentsManifest
 
@@ -231,7 +231,7 @@ export interface GhostParameter
 export interface GhostSetting
 ```
 
-إدخال واحد للموضوع `config.custom` حاجز.
+إدخال واحد لكتلة `config.custom` الخاصة بالسمة.
 
 ### GhostSettingType
 
@@ -243,15 +243,15 @@ function ghostSettingType(field: ContentField): GhostSettingType;
 
 نوع إعداد Ghost هو نوع حقل محايد يضيق عليه.
 
-`color` جزء من مفردات Ghost ولكن لا يوجد نوع محايد لها: أ
-اللون هو سلسلة عادية في TypeScript والتخمين من اسم الدعامة
-من شأنه أن يجعل الإسقاط غير حتمية.
+يعد `color` جزءًا من مفردات Ghost ولكن لا يوجد نوع محايد لها: أ
+color عبارة عن سلسلة عادية في TypeScript ويتم التخمين من اسم الدعامة
+من شأنه أن يجعل الإسقاط غير حتمي.
 
 #### حدود
 
-| الاسم  | اكتب        | الوصف |
-| ------ | ----------- | ----- |
-| المجال | حقل المحتوى |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------ | ----------- |
+| المجال | حقل المحتوى |             |
 
 ### GhostSettingType
 
@@ -262,7 +262,7 @@ export type GhostSettingType =
   "select" | "boolean" | "color" | "image" | "text";
 ```
 
-الإعدادات الخمسة هي Ghost's `config.custom` تقبل الكتلة.
+أنواع الإعدادات الخمسة التي تقبلها كتلة `config.custom` الخاصة بـ Ghost.
 
 ### GhostSlot
 
@@ -272,7 +272,7 @@ export type GhostSettingType =
 export interface GhostSlot
 ```
 
-فتحة واحدة للجزئي الذي تم إنشاؤه.
+فتحة واحدة للجزء الذي تم إنشاؤه.
 
 ### GhostThemeConfig
 
@@ -282,7 +282,7 @@ export interface GhostSlot
 export interface GhostThemeConfig
 ```
 
-ال `config.custom` تجزئة الموضوع `package.json` يندمج في.
+يقوم جزء `config.custom` بدمج `package.json` الخاص بالموضوع.
 
 ### toGhostComponentEntry
 
@@ -294,13 +294,13 @@ function toGhostComponentEntry(
 ): GhostComponentEntry;
 ```
 
-قم بإسقاط مكون واحد عليه `forge-components.json` دخول.
+قم بإسقاط مكون واحد على إدخال `forge-components.json` الخاص به.
 
 #### حدود
 
-| الاسم  | اكتب         | الوصف |
-| ------ | ------------ | ----- |
-| المكون | مكون المحتوى |       |
+| الاسم | اكتب | الوصف |
+| --------- | ---------------- | ----------- |
+| المكون | مكون المحتوى |             |
 
 ## `src/template`
 
@@ -320,9 +320,9 @@ function emitGhostPartial(component: ContentComponent): string;
 
 #### حدود
 
-| الاسم  | اكتب         | الوصف |
-| ------ | ------------ | ----- |
-| المكون | مكون المحتوى |       |
+| الاسم | اكتب | الوصف |
+| --------- | ---------------- | ----------- |
+| المكون | مكون المحتوى |             |
 
 ### GhostPartialFileName
 
@@ -336,9 +336,9 @@ function ghostPartialFileName(component: ContentComponent): string;
 
 #### حدود
 
-| الاسم  | اكتب         | الوصف |
-| ------ | ------------ | ----- |
-| المكون | مكون المحتوى |       |
+| الاسم | اكتب | الوصف |
+| --------- | ---------------- | ----------- |
+| المكون | مكون المحتوى |             |
 
 ### GhostPartialName
 
@@ -352,9 +352,9 @@ function ghostPartialName(component: ContentComponent): string;
 
 #### حدود
 
-| الاسم  | اكتب         | الوصف |
-| ------ | ------------ | ----- |
-| المكون | مكون المحتوى |       |
+| الاسم | اكتب | الوصف |
+| --------- | ---------------- | ----------- |
+| المكون | مكون المحتوى |             |
 
 ### GhostTemplateDiagnostics
 
@@ -369,13 +369,13 @@ function ghostTemplateDiagnostics(
 
 التشخيص الذي ينبعث منه إنتاج جزئي لمكون واحد.
 
-فقط `number` تم الإبلاغ عن: Ghost ليس له نوع رقمي في أي مكان في موضوعه
+تم الإبلاغ عن `number` فقط: لا يحتوي Ghost على نوع رقمي في أي مكان في موضوعه
 واجهة برمجة التطبيقات (API)، بحيث تبقى القيمة كنص معروض وأي عملية حسابية يريدها الموضوع
 يجب أن يحدث ذلك قبل استدعاء الجزء الجزئي.
 
 #### حدود
 
-| الاسم     | اكتب         | الوصف |
-| --------- | ------------ | ----- |
-| المكون    | مكون المحتوى |       |
-| اسم الملف | سلسلة        |       |
+| الاسم | اكتب | الوصف |
+| --------- | ---------------- | ----------- |
+| المكون | مكون المحتوى |             |
+| اسم الملف | سلسلة |             |

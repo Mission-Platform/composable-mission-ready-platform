@@ -25,14 +25,14 @@ dovrebbe essere speso.
 
 ## Fase → mappatura dei livelli
 
-| Palcoscenico                                            | Lavoro                                                                        | Livello |
-| ------------------------------------------------------- | ----------------------------------------------------------------------------- | ------- |
-| 1 Corpo del venditore + caricatore + imbracatura        | copia/attribuzione (C), caricatore + logica di cablaggio (B)                  | DO → SI |
-| 2 Aumenta la velocità di lettura dei formati supportati | ottimizzazione del localizzatore + percorsi di tentativi                      | A→B     |
-| 3 Famiglia GS1 DataBar                                  | tabelle/codificatori (B), localizzatore RSS-14 + RS (A)                       | A/B     |
-| 4PDF417                                                 | tabelle/codificatore (B), localizzatore di scansione di riga + GF(929) EC (A) | A/B     |
-| 5 MaxiCodice                                            | localizzatore di griglia esadecimale + GF(64) RS (A), tabelle (B)             | A/B     |
-| 6 Cablaggio + JS + documenti                            | boilerplate/docs + cablaggio (C), ricostruzione wasm + fumo (B)               | DO → SI |
+| Palcoscenico | Lavoro | Livello |
+| ---------------------------------- | ------------------------------------------------------- | ---- |
+| 1 Corpo del venditore + caricatore + imbracatura | copia/attribuzione (C), caricatore + logica di cablaggio (B) | DO → SI |
+| 2 Aumenta la velocità di lettura dei formati supportati | ottimizzazione del localizzatore + percorsi di tentativi | A→B |
+| 3 Famiglia GS1 DataBar | tabelle/codificatori (B), localizzatore RSS-14 + RS (A) | A/B |
+| 4PDF417 | tabelle/codificatore (B), localizzatore di scansione di riga + GF(929) EC (A) | A/B |
+| 5 MaxiCodice | localizzatore di griglia esadecimale + GF(64) RS (A), tabelle (B) | A/B |
+| 6 Cablaggio + JS + documenti | boilerplate/docs + cablaggio (C), ricostruzione wasm + fumo (B) | DO → SI |
 
 ## Principio dei costi
 
@@ -51,7 +51,23 @@ una porta del decodificatore prima di impegnare il livello per il resto.
   locatori e Reed-Solomon (GF (929), GF (64), la combinatoria RSS) erano il nucleo di livello A, coerente con la matrice
   sopra.
 
-> Durante l'implementazione non era disponibile alcuno strumento di delega dell'agente personalizzato, quindi a
-> il singolo agente ha eseguito il lavoro spendendo sforzi secondo questa matrice. Il
-> la matrice rimane la guida per eventuali future rieseguizioni in cui la delega è multipla
-> i livelli di modello sono possibili.
+> L'implementazione ha utilizzato revisioni delegate mirate per la correttezza degli RSS, il
+> lettori 2D stacked ed emissione di grafici QR. Tali recensioni hanno confermato il
+> delimitato il limite del lettore ridotto e isolato l'errore QR nel Forge Web
+> Emettitore di script anziché mascherarlo con un fallback. La matrice rimane la
+> guida per futuri passaggi di parità in cui il corpus e il decodificatore mancanti possono funzionare
+> essere divisi in sicurezza.
+
+## Attuale confine di ripianificazione
+
+La fondazione completata e il lavoro 1D/RSS hanno utilizzato il livello B per i porti a forma di ZXing e
+Revisione di livello A per la combinatoria RSS, i checksum e il comportamento della memoria limitata. Il
+gli attuali lettori 2D collegati sono implementazioni deliberatamente ridotte, così affermando
+La parità ZXing completa richiederebbe piuttosto un nuovo decoder di livello A e un passaggio del rilevatore
+di più documentazione o lavoro sulle attrezzature.
+
+La successiva indagine di maggior valore riguarda il guasto dell'emettitore QR di Flint:
+il grafico QR autonomo è valido, ma collega il suo decodificatore allo scanner
+il grafico non riesce a `FLINT-WASM-001` prima del runtime. Fino a quando il limite del compilatore non sarà
+risolto, il dispositivo di livello C e il lavoro API devono mantenere QR come esplicito autonomo
+caso e non deve convertire le partite locali ridotte in rivendicazioni di parità.

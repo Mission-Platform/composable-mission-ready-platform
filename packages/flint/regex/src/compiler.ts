@@ -210,7 +210,7 @@ class Parser {
     while (!this.eof() && /[0-9]/u.test(this.peek())) digits += this.next();
     if (digits === "") {
       this.pos = start;
-      // eslint-disable-next-line unicorn/no-null -- null signals that the brace is not a quantifier.
+
       return null;
     }
     const min = Number(digits);
@@ -223,7 +223,7 @@ class Parser {
     }
     if (this.eof() || this.peek() !== "}") {
       this.pos = start;
-      // eslint-disable-next-line unicorn/no-null -- null signals that the brace is not a quantifier.
+
       return null;
     }
     this.next();
@@ -257,7 +257,7 @@ class Parser {
     if (char === "*" || char === "+" || char === "?")
       throw new RegexSyntaxError(`Nothing to repeat at ${this.pos}`);
     this.next();
-    // eslint-disable-next-line unicorn/prefer-code-point -- Forge bytecode stores UTF-16 code units.
+
     return { kind: "char", code: char.charCodeAt(0) };
   }
 
@@ -355,7 +355,7 @@ class Parser {
       // skipcq: JS-R1005
       return { code: literalEscapeCode(escaped) };
     }
-    // eslint-disable-next-line unicorn/prefer-code-point -- Forge bytecode stores UTF-16 code units.
+
     return { code: char.charCodeAt(0) };
   }
 }
@@ -422,7 +422,6 @@ function escapeClass(char: string): Node | null {
       };
     }
     default: {
-      // eslint-disable-next-line unicorn/no-null -- null distinguishes class escapes from literal escapes.
       return null;
     }
   }
@@ -456,7 +455,6 @@ function literalEscapeCode(char: string): number {
       return 0;
     }
     default: {
-      // eslint-disable-next-line unicorn/prefer-code-point -- Forge bytecode stores UTF-16 code units.
       return char.charCodeAt(0);
     }
   }

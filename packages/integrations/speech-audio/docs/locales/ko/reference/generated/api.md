@@ -59,16 +59,16 @@ function useSound(source?: string): SoundControls;
 프레임워크 중립적인 사운드 재생 후크. 다음을 통해 `source`의 오디오 클립을 재생합니다.
 `HTMLAudioElement`이며 웹 오디오 API를 통해 짧은 톤을 합성할 수 있습니다.
 
-SSR 안전: `isSupported`은 `false`이며 모든 컨트롤은 다음과 같은 경우 작동하지 않습니다.
+SSR 안전: `isSupported`는 `false`이며 모든 컨트롤은 다음과 같은 경우 작동하지 않습니다.
 관련 브라우저 API 또는 DOM을 사용할 수 없습니다.
 자동 정리: 재생이 중지되고 모든 오디오 컨텍스트가 닫힙니다.
 마운트 해제.
 
 #### 매개변수
 
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 출처 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------ | ----------- |
+| 출처 | 문자열 |             |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 

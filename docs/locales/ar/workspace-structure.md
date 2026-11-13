@@ -10,17 +10,19 @@
 
 ## مرجع تخطيط Monorepo
 
-يستخدم Mission Platform مساحات عمل pnpm وTurborepo لإدارة بيئة متعددة الحزم. يتم تنظيم المستودع
+تستخدم Mission Platform مساحات عمل pnpm وTurborepo لإدارة بيئة متعددة الحزم. يتم تنظيم المستودع
 إلى طبقات وظيفية:
 
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── packages/tooling/configs/                # Shared tooling and base configurations
-├── packages/               # Reusable libraries and building blocks
-├── packages/tooling/vite/           # Build-time extensions and compilers
-├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
-├── crates/                 # Rust crates (including Wasm-compiled ones)
+├── packages/core/          # Framework-neutral runtime, Forge JSX/adapters, routing, i18n, and scheduling
+├── packages/ui/            # Components, forms, layouts, themes, and design tokens
+├── packages/content/       # Content, email, search, and SEO pipelines
+├── packages/integrations/  # Barcode, maps, media, 3D, and interoperability adapters
+├── packages/compiler/      # Figma bridges and Forge compiler plugins
+├── packages/tooling/       # Shared configs and Vite/build-time extensions
+├── packages/edge/          # Reusable Cloudflare Worker edge functions
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
@@ -35,14 +37,23 @@ composable_mission_ready_platform/
 ولم يتم نشرها مطلقًا في السجل.
 
 - **`docs/`**: موقع توثيق Vite + Vue لمجموعة Markdown.
+- **`figma-forge-plugin/`**: البرنامج المساعد Figma الذي يدمج المكونات المؤلفة من Forge مع سير عمل Figma.
 - **`my-care-notes/`**: التطبيق الرئيسي لملاحظات الرعاية.
 - **`service-monitor/`**: لوحة معلومات صحة خدمة RedwoodSDK المدعومة بكائن متين.
-- **`website/`**: الموقع الإلكتروني لتسويق منصة Mission Platform والمنتجات.
+- **`website/`**: موقع ويب للتسويق والمنتجات لمنصة Mission Platform.
 - **`storybook/`**: مجموعة عمل المكونات ومجموعة الاختبارات المرئية.
 
 ### 2. `packages/` (لبنات البناء)
 
-مكتبات ذات إصدارات قابلة لإعادة الاستخدام تستهلكها التطبيقات. تهدف هذه إلى أن تكون حيادية للإطار حيثما أمكن ذلك.
+مكتبات ذات إصدارات قابلة لإعادة الاستخدام تستهلكها التطبيقات. تجعل دلائل المجال الملكية صريحة دون تغيير أسماء الحزم أو الواردات.
+
+- **`core/`**: وقت تشغيل محايد لإطار العمل، وForge JSX/adapters، والتوجيه، والترجمة، وقابلية المراقبة، وRxJS، وخدمات الجدولة.
+- **`ui/`**: المكونات ونقاط التوقف والنماذج والتخطيطات والاختيار والموضوعات والرموز المميزة والطباعة.
+- **`content/`**: نماذج المحتوى، ومكونات/عرض البريد الإلكتروني، وأدوات اللغة، وتحسين محركات البحث.
+- **`integrations/`**: الرمز الشريطي، ومسح الرمز الضوئي، وD3، والخرائط، ورموز QR/matrix، والكلام، وThree.js، وvCards.
+- **`compiler/`**: جسور Figma والمكونات الإضافية لبرنامج التحويل البرمجي لإطار العمل/جهاز التوجيه/CMS.
+- **`tooling/`**: حزم التكوين المشتركة والمكونات الإضافية Vite.
+- **`edge/`**: الحزم العاملة التي تستخدمها التطبيقات والأمثلة المحلية.
 
 - **`@mission-platform/forge-jsx`**: وقت تشغيل JSX والمحولات المحايدة لإطار العمل.
 - **`@mission-platform/components`**: مكتبة المكونات متعددة الإطارات.
@@ -83,6 +94,16 @@ composable_mission_ready_platform/
 `apps/my-care-notes/wrangler.jsonc`، و`apps/service-monitor/wrangler.jsonc`. ال
 تعد حزم `api-proxy` و`forge-spa` تبعيات مجمعة وليست عمليات نشر Wrangler المستقلة.
 
+### 6. `packages/compiler/plugins/` (تزوير الإضافات مترجم)
+
+المكونات الإضافية والمحولات الخاصة بالإخراج الخاصة بإطار العمل للمترجم Forge.
+
+- **`forge-cms-plugin-api/`**: إنشاء عناصر CMS وتكامل محول Vite/tsdown.
+- **`forge-cms-astro/`**, **`forge-cms-ghost/`**, **`forge-cms-jekyll/`**, **`forge-cms-storyblok/`**, **`forge-cms-webflow/`**: محولات التكامل الخاصة بنظام إدارة المحتوى (CMS).
+- **`forge-plugin-api/`**: واجهات المكونات الإضافية لبرنامج التحويل البرمجي المشترك Forge.
+- **`forge-vue/`**, **`forge-react/`**, **`forge-solid/`**, **`forge-svelte/`**, **`forge-web-components/`**: إنشاء تعليمات برمجية خاصة بإطار العمل ومحولات وقت التشغيل.
+- **`forge-router-plugin-api/`**, **`forge-router-vue/`**, **`forge-router-react/`**, **`forge-router-solid/`**, **`forge-router-svelte/`**, **`forge-router-web-components/`**, **`forge-router-redwood/`**: محولات التكامل الخاصة بإطار عمل جهاز التوجيه.
+
 ## اتفاقيات الحزمة الداخلية
 
 للحفاظ على بيئة يمكن التنبؤ بها، تتبع جميع الحزم والتطبيقات تخطيطًا داخليًا قياسيًا.
@@ -108,12 +129,12 @@ composable_mission_ready_platform/
 
 تتحكم الملفات الرئيسية الموجودة في جذر المستودع في سلوك monorepo:
 
-| ملف                     | الغرض                                                              |
-| :---------------------- | :----------------------------------------------------------------- |
-| `pnpm-workspace.yaml`   | يحدد حدود مساحة العمل ومجموعات الأعضاء وكتالوجات التبعية.          |
-| `turbo.json`            | ينسق خط أنابيب البناء والتخزين المؤقت للمهام.                      |
-| `package.json`          | البرامج النصية على مستوى الجذر وتبعيات التطوير على مستوى monorepo. |
-| `commitlint.config.mjs` | يفرض مواصفات الالتزامات التقليدية.                                 |
+| ملف | الغرض |
+| :---------------------- | :------------------------------------------------------------------- |
+| `pnpm-workspace.yaml` | يحدد حدود مساحة العمل ومجموعات الأعضاء وكتالوجات التبعية. |
+| `turbo.json` | ينسق خط أنابيب البناء والتخزين المؤقت للمهام.                    |
+| `package.json` | البرامج النصية على مستوى الجذر وتبعيات التطوير على مستوى monorepo.                |
+| `commitlint.config.mjs` | يفرض مواصفات الالتزامات التقليدية.                     |
 
 ## إدارة التبعية ومساحة العمل
 

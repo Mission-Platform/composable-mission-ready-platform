@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createApp, nextTick, type App as VueApp } from 'vue';
 
+import type { ForgeExportBundle } from '@mission-platform/forge-figma';
+
 import App from './App.vue';
 import { FORGE_FIGMA_UI_ORIGIN, isValidRequestId, type ForgePluginMainMessage } from './messages';
-
-import type { ForgeExportBundle } from '@mission-platform/forge-figma';
 
 const sampleBundle: ForgeExportBundle = {
   componentName: 'SampleCard',

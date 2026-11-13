@@ -19,7 +19,17 @@
 export interface CompiledRegex
 ```
 
-Forge 백엔드에 포함된 결정적 표현.
+Forge 백엔드에 포함된 결정적 표현입니다.
+
+### FLINT_REGEX_BYTECODE_VERSION
+
+**종류:** 상수
+
+```typescript
+export const FLINT_REGEX_BYTECODE_VERSION;
+```
+
+공유 Flint 정규식 바이트코드 계약의 안정적인 버전입니다.
 
 ### FORGE_REGEX_BYTECODE_VERSION
 
@@ -29,7 +39,7 @@ Forge 백엔드에 포함된 결정적 표현.
 export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
-공유 Forge 정규식 바이트코드 계약의 안정적인 버전입니다.
+설명이 제공되지 않았습니다.
 
 ### INSTR_WIDTH
 
@@ -59,7 +69,7 @@ Forge 백엔드에서 사용하고 참조 Oracle에서 미러링하는 Opcode입
 export type Opcode = (typeof Op)[keyof typeof Op];
 ```
 
-설명이 제공되지 않았습니다.
+정규식 바이트코드 실행을 위한 바이너리 명령 opcode 식별자입니다.
 
 ## `src/compiler`
 
@@ -75,9 +85,29 @@ function compileRegex(pattern: string): CompiledRegex;
 
 #### 매개변수
 
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 패턴 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 패턴 | 문자열 |             |
+
+### MAX_REGEX_PATTERN_LENGTH
+
+**종류:** 상수
+
+```typescript
+export const MAX_REGEX_PATTERN_LENGTH;
+```
+
+설명이 제공되지 않았습니다.
+
+### MAX_REGEX_REPEAT_BOUND
+
+**종류:** 상수
+
+```typescript
+export const MAX_REGEX_REPEAT_BOUND;
+```
+
+설명이 제공되지 않았습니다.
 
 ### 정규식 구문 오류
 
@@ -88,6 +118,46 @@ export class RegexSyntaxError extends Error
 ```
 
 결정론적 소스 상대 메시지에 컴파일러 소유 구문 오류가 발생했습니다.
+
+## `src/index`
+
+### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
+
+**종류:** 상수
+
+```typescript
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+```
+
+설명이 제공되지 않았습니다.
+
+### flintStandardLibraryID
+
+**종류:** 기능
+
+```typescript
+function flintStandardLibraryIdentity(
+  identity?: FlintStandardLibraryIdentity,
+): FlintStandardLibraryIdentity;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ---------------------------- | ----------- |
+| 정체성 | FlintStandardLibraryIdentity |             |
+
+### 플린트표준라이브러리ID
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintStandardLibraryIdentity
+```
+
+설명이 제공되지 않았습니다.
 
 ## `src/reference-vm`
 
@@ -103,10 +173,10 @@ function captureEnd(captures: Captures | null, group: number): number;
 
 #### 매개변수
 
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| 캡처 | 캡처 \| null |      |
-| 그룹 | 번호         |      |
+| 이름 | 유형 | 설명 |
+| -------- | ---------------- | ----------- |
+| 캡처 | 캡처 \| null |             |
+| 그룹 | 번호 |             |
 
 ### 캡처
 
@@ -130,10 +200,10 @@ function captureStart(captures: Captures | null, group: number): number;
 
 #### 매개변수
 
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| 캡처 | 캡처 \| null |      |
-| 그룹 | 번호         |      |
+| 이름 | 유형 | 설명 |
+| -------- | ---------------- | ----------- |
+| 캡처 | 캡처 \| null |             |
+| 그룹 | 번호 |             |
 
 ### 완전 일치
 
@@ -143,14 +213,64 @@ function captureStart(captures: Captures | null, group: number): number;
 function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-전체 문자열 일치, 위치 0에 고정됨.
+전체 문자열 일치, 위치 0에 고정됨(기본적으로 선형 시간 PikeVM 사용)
 
 #### 매개변수
 
-| 이름 | 유형           | 설명 |
-| ---- | -------------- | ---- |
-| 다시 | 컴파일된정규식 |      |
-| 입력 | 문자열         |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 다시 | 컴파일된정규식 |             |
+| 입력 | 문자열 |             |
+
+### fullMatch역추적
+
+**종류:** 기능
+
+```typescript
+function fullMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+전체 문자열 일치 참조 Oracle을 역추적합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 다시 | 컴파일된정규식 |             |
+| 입력 | 문자열 |             |
+
+### fullMatchLinear
+
+**종류:** 기능
+
+```typescript
+function fullMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+선형 시간 PikeVM 엔진을 사용한 전체 문자열 일치.
+O(M * N) 실행 및 ReDoS 역추적에 대한 면역을 보장합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 다시 | 컴파일된정규식 |             |
+| 입력 | 문자열 |             |
+
+### 파이크러너
+
+**종류:** 클래스
+
+```typescript
+export class PikeRunner extends BaseRunner
+```
+
+선형 시간 비역추적 PikeVM 실행 엔진.
+M은 명령어 수이고 N은 입력 길이인 O(M * N) 시간 복잡도를 보장합니다.
+ReDoS(정규 표현식 서비스 거부)에 대해 완전히 면역됩니다.
 
 ### 접두사 일치
 
@@ -160,14 +280,62 @@ function fullMatch(re: CompiledRegex, input: string): Captures | null;
 function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-접두사 일치, 위치 0에 고정되지만 끝에는 고정되지 않습니다.
+접두사 일치, 위치 0에 고정되지만 끝이 아님(기본적으로 선형 시간 PikeVM 사용)
 
 #### 매개변수
 
-| 이름 | 유형           | 설명 |
-| ---- | -------------- | ---- |
-| 다시 | 컴파일된정규식 |      |
-| 입력 | 문자열         |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 다시 | 컴파일된정규식 |             |
+| 입력 | 문자열 |             |
+
+### prefixMatch역추적
+
+**종류:** 기능
+
+```typescript
+function prefixMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+역추적 접두사 일치 참조 oracle.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 다시 | 컴파일된정규식 |             |
+| 입력 | 문자열 |             |
+
+### 접두사일치선형
+
+**종류:** 기능
+
+```typescript
+function prefixMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+선형 시간 PikeVM 엔진을 사용한 접두사 일치.
+O(M * N) 실행 및 ReDoS 역추적에 대한 면역을 보장합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 다시 | 컴파일된정규식 |             |
+| 입력 | 문자열 |             |
+
+### 달리는 사람
+
+**종류:** 클래스
+
+```typescript
+export class Runner extends BaseRunner
+```
+
+바이트코드 명령어 확인을 위한 역추적 참조 실행 실행기입니다.
 
 ### 찾다
 
@@ -177,15 +345,60 @@ function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
-`start` 또는 그 이후의 가장 왼쪽 일치.
+`start` 또는 그 이후의 가장 왼쪽 일치(기본적으로 선형 시간 PikeVM 사용)
 
 #### 매개변수
 
-| 이름 | 유형           | 설명 |
-| ---- | -------------- | ---- |
-| 다시 | 컴파일된정규식 |      |
-| 입력 | 문자열         |      |
-| 시작 |                |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 다시 | 컴파일된정규식 |             |
+| 입력 | 문자열 |             |
+| 시작 |               |             |
+
+### 검색역추적
+
+**종류:** 기능
+
+```typescript
+function searchBacktracking(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+역추적 검색 참조 oracle.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 다시 | 컴파일된정규식 |             |
+| 입력 | 문자열 |             |
+| 시작 |               |             |
+
+### 검색선형
+
+**종류:** 기능
+
+```typescript
+function searchLinear(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+선형 시간 PikeVM 엔진을 사용하여 `start` 또는 그 이후의 가장 왼쪽 일치.
+고정되지 않은 검색 패턴에 대한 치명적인 역추적에 면역입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 다시 | 컴파일된정규식 |             |
+| 입력 | 문자열 |             |
+| 시작 |               |             |
 
 ### 시험
 
@@ -195,11 +408,46 @@ function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 function test(re: CompiledRegex, input: string): boolean;
 ```
 
-전체 문자열 부울 일치.
+전체 문자열 부울 일치(기본적으로 선형 시간 PikeVM 사용)
 
 #### 매개변수
 
-| 이름 | 유형           | 설명 |
-| ---- | -------------- | ---- |
-| 다시 | 컴파일된정규식 |      |
-| 입력 | 문자열         |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 다시 | 컴파일된정규식 |             |
+| 입력 | 문자열 |             |
+
+### 테스트역추적
+
+**종류:** 기능
+
+```typescript
+function testBacktracking(re: CompiledRegex, input: string): boolean;
+```
+
+역추적 부울 일치 참조 오라클.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 다시 | 컴파일된정규식 |             |
+| 입력 | 문자열 |             |
+
+### 테스트선형
+
+**종류:** 기능
+
+```typescript
+function testLinear(re: CompiledRegex, input: string): boolean;
+```
+
+선형 시간 PikeVM 엔진을 사용하여 전체 문자열 부울 일치.
+병리학적 정규식에 대한 치명적인 역추적에 면역입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------------- | ----------- |
+| 다시 | 컴파일된정규식 |             |
+| 입력 | 문자열 |             |

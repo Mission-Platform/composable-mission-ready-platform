@@ -12,7 +12,7 @@ Vite 和 tsdown 的框架中立 Forge 编译器驱动程序。这个套餐
 
 ## 从这里开始
 
-- [编译器管道参考](reference/compiler.md) — 阶段合同，
+- [编译器管道参考](reference/compiler.md) — 阶段合约，
   目标所有权、缓存、诊断和生成的工件。
 - [构建和测试指南](guides/development.md) — 本地开发和
   集成检查。

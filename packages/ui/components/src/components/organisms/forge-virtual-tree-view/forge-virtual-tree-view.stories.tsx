@@ -1,7 +1,7 @@
 import { ForgeVirtualTreeView } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { TreeNode } from './forge-virtual-tree-view';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /** Build a deep, wide demo tree so virtualisation is meaningful.
  * This single neutral story renders on the framework selected by `STORYBOOK_FRAMEWORK`.

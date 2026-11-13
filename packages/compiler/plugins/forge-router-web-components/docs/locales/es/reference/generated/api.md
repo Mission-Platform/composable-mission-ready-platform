@@ -33,6 +33,16 @@ Salida del enrutador que monta la vista DOM neutral de una ruta. Las solicitudes
 `viewAdapter` al enrutador cuando las vistas necesitan un ciclo de vida personalizado; de lo contrario un
 Node, cadena o fábrica DOM en `route.component` se representa directamente.
 
+### MpRouterViewElemento
+
+**Tipo:** componente
+
+```typescript
+export class MpRouterViewElement extends MpRouterOutletElement
+```
+
+No se proporciona descripción.
+
 ### registrarRouterElements
 
 **Tipo:** función
@@ -45,8 +55,8 @@ Registre las primitivas del enrutador una vez; Es seguro llamar desde hidrataci�
 
 #### Parámetros
 
-| Nombre   | Tipo                           | Descripción |
-| -------- | ------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ----------------------------- | ----------- |
 | opciones | RegistrarRouterElementsOptions |             |
 
 ## `src/runtime/history`
@@ -63,9 +73,9 @@ No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo    | Descripción |
-| ------ | ------- | ----------- |
-| ganar  | Ventana |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| ganar | Ventana |             |
 
 ### crearMemoriaHistoria
 
@@ -79,8 +89,8 @@ No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre      | Tipo | Descripción |
-| ----------- | ---- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ---- | ----------- |
 | URL inicial |      |             |
 
 ### crearHistorialWeb
@@ -103,7 +113,7 @@ export class MpBrowserHistory implements MpHistory
 
 Historial del navegador HTML5. Sólo se construye en el contexto de un navegador.
 
-### MpMemoriaHistoria
+### MpMemoriaHistorial
 
 **Tipo:** componente
 
@@ -189,9 +199,9 @@ Resuelva un objetivo neutral a través del enrutador de componentes web vinculad
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| a      | MpRouteLocationRaw |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 
 ### setForgeRouter
 
@@ -205,8 +215,8 @@ Vincule el enrutador propiedad de la aplicación para obtener capacidades de paq
 
 #### Parámetros
 
-| Nombre    | Tipo                           | Descripción |
-| --------- | ------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | --------------------------- | ----------- |
 | enrutador | MpWebComponentsEnrutador<View> |             |
 
 ### utilizarForgeNavegación
@@ -297,9 +307,19 @@ historial, guardias, redirecciones, suscripciones y comportamiento de desplazami
 
 #### Parámetros
 
-| Nombre   | Tipo                                       | Descripción |
-| -------- | ------------------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ---------------------------------- | ----------- |
 | opciones | MpWebComponentsOpciones de enrutador<View> |             |
+
+### obtener enrutador activo
+
+**Tipo:** función
+
+```typescript
+function getActiveRouter(): MpWebComponentsRouter<unknown> | undefined;
+```
+
+No se proporciona descripción.
 
 ### MpRouterCargaReserva
 
@@ -343,10 +363,26 @@ No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre    | Tipo               | Descripción |
-| --------- | ------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | ------------------ | ----------- |
 | enrutador | Adaptador MpRouter |             |
-| a         | MpRouteLocationRaw |             |
+| a | MpRouteLocationRaw |             |
+
+### establecer enrutador activo
+
+**Tipo:** función
+
+```typescript
+function setActiveRouter(router: MpWebComponentsRouter<View> | undefined): void;
+```
+
+No se proporciona descripción.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | ---------------------------------------- | ----------- |
+| enrutador | MpWebComponentsEnrutador<View> \| indefinido |             |
 
 ## `src/utils/forge-router-web-components`
 

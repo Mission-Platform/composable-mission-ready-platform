@@ -23,9 +23,9 @@ Imprimez la sous-classe `ForgeElement` et son enregistrement pour un plan abaiss
 
 #### Paramètres
 
-| Nom       | Tapez                      | Descriptif |
-| --------- | -------------------------- | ---------- |
-| planifier | WebComponentsLoweredModule |            |
+| Nom | Tapez | Descriptif |
+| ---- | -------------------------- | ----------- |
+| planifier | WebComponentsLoweredModule |             |
 
 ## `src/emitters/module`
 
@@ -46,12 +46,12 @@ Transformez l'ensemble du module en source cible native Web-Components.
 
 #### Paramètres
 
-| Nom                    | Tapez                      | Descriptif |
-| ---------------------- | -------------------------- | ---------- |
-| modules                | Module Sémantique          |            |
-| Nom du composant       | chaîne                     |            |
-| dossiers de composants | ReadonlySet<string>        |            |
-| abaissé                | WebComponentsLoweredModule |            |
+| Nom | Tapez | Descriptif |
+| ---------------- | -------------------------- | ----------- |
+| modules | Module Sémantique |             |
+| Nom du composant | chaîne |             |
+| dossiers de composants | ReadonlySet<string> |             |
+| abaissé | WebComponentsLoweredModule |             |
 
 ## `src/index`
 
@@ -66,6 +66,74 @@ function forgeWebComponentsFramework(): FrameworkOutputPlugin;
 Créez le plug-in de sortie des composants Web TypeScript uniquement.
 
 ## `src/lower`
+
+### moduleWebComponents inférieur
+
+**Genre :** fonction
+
+```typescript
+function lowerWebComponentsModule(
+  module: SemanticModule,
+  context: TargetContext,
+): TargetIntentions;
+```
+
+Abaissez l'IR neutre dans les intentions cibles des composants Web.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| modules | Module Sémantique |             |
+| contexte | Contexte cible |             |
+
+### LowerWebComponentsPlan
+
+**Genre :** fonction
+
+```typescript
+function lowerWebComponentsPlan(
+  module: SemanticModule,
+  context: TargetContext,
+): WebComponentsLoweredModule;
+```
+
+Construisez le plan cible Web-Components pour un module neutre.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| modules | Module Sémantique |             |
+| contexte | Contexte cible |             |
+
+## `src/lower/host-plan`
+
+### inférerWebComponentsHost
+
+**Genre :** fonction
+
+```typescript
+function inferWebComponentsHost(
+  returnNode: GenericRenderNode | undefined,
+  component?: GenericComponent,
+): WebComponentsHostPlan;
+```
+
+Déduisez un hôte intégré personnalisé uniquement à partir d’une seule racine intrinsèque statique.
+
+La liste blanche est volontairement conservatrice : une balise intrinsèque étant valide
+HTML ne garantit pas qu'il s'agit d'un élément intégré personnalisé sûr ou utile.
+base à travers les implémentations DOM prises en charge.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------ | ----------- |
+| noeud de retour | GénériqueRenderNode \| indéfini |             |
+| composant | Composant générique |             |
+
+## `src/lower/types`
 
 ### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
 
@@ -87,28 +155,6 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 
 Paramètres de compatibilité par défaut conservés pour les composants générés.
 
-### inférerWebComponentsHost
-
-**Genre :** fonction
-
-```typescript
-function inferWebComponentsHost(
-  returnNode: GenericRenderNode | undefined,
-): WebComponentsHostPlan;
-```
-
-Déduisez un hôte intégré personnalisé uniquement à partir d’une seule racine intrinsèque statique.
-
-La liste blanche est volontairement conservatrice : une balise intrinsèque étant valide
-HTML ne garantit pas qu'il s'agit d'un élément intégré personnalisé sûr ou utile.
-base à travers les implémentations DOM prises en charge.
-
-#### Paramètres
-
-| Nom             | Tapez                           | Descriptif |
-| --------------- | ------------------------------- | ---------- |
-| noeud de retour | GénériqueRenderNode \| indéfini |            |
-
 ### isWebComponentsLowered
 
 **Genre :** fonction
@@ -123,49 +169,9 @@ Affinez un plan cible au plan Web-Components sans diffusion.
 
 #### Paramètres
 
-| Nom     | Tapez                          | Descriptif |
-| ------- | ------------------------------ | ---------- |
-| abaissé | CibleLoweredModule \| indéfini |            |
-
-### moduleWebComponents inférieur
-
-**Genre :** fonction
-
-```typescript
-function lowerWebComponentsModule(
-  module: SemanticModule,
-  context: TargetContext,
-): TargetIntentions;
-```
-
-Abaissez l'IR neutre dans les intentions cibles des composants Web.
-
-#### Paramètres
-
-| Nom      | Tapez             | Descriptif |
-| -------- | ----------------- | ---------- |
-| modules  | Module Sémantique |            |
-| contexte | Contexte cible    |            |
-
-### LowerWebComponentsPlan
-
-**Genre :** fonction
-
-```typescript
-function lowerWebComponentsPlan(
-  module: SemanticModule,
-  context: TargetContext,
-): WebComponentsLoweredModule;
-```
-
-Construisez le plan cible Web-Components pour un module neutre.
-
-#### Paramètres
-
-| Nom      | Tapez             | Descriptif |
-| -------- | ----------------- | ---------- |
-| modules  | Module Sémantique |            |
-| contexte | Contexte cible    |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------------------- | ----------- |
+| abaissé | CibleLoweredModule \| indéfini |             |
 
 ### UNKNOWN_TYPE
 
@@ -192,7 +198,7 @@ L'ID du framework du plugin, et le discriminateur de son plan abaissé.
 **Genre :** constante
 
 ```typescript
-export const WEBCOMPONENTS_NATIVE_HOSTS;
+export const WEBCOMPONENTS_NATIVE_HOSTS: Readonly<Record<string, string>>;
 ```
 
 Le tableau de compatibilité pour les racines qui peuvent être personnalisées en toute sécurité.
@@ -216,7 +222,7 @@ export type WebComponentsDerivedBody = |
 ```
 
 Le corps d'un getter dérivé, déjà réécrit dans la portée élément-instance :
-une fabrique de mémos concise renvoie une seule expression, une fabrique de blocs apporte
+une fabrique de mémos concise renvoie une expression unique, une fabrique de blocs apporte
 ses propres instructions (que le getter doit exécuter plutôt que retourner).
 
 ### WebComponentsDerivedValue
@@ -227,7 +233,7 @@ ses propres instructions (que le getter doit exécuter plutôt que retourner).
 export interface WebComponentsDerivedValue
 ```
 
-Une valeur mémorisée, abaissée à un getter recalculé à la lecture.
+Une valeur mémorisée, réduite à un getter soutenu par un cache d'instance facultatif.
 
 ### WebComponentsElementRef
 
@@ -352,9 +358,6 @@ _à l'extérieur_ `render()`, donc un local déclaré par la tête de rendu n'ex
 eux. Promouvoir la déclaration auprès d'un membre est ce qui fait une telle lecture
 résoluble - via `this.<name>` - au lieu de pendre.
 
-Seule une déclaration dont l’absence d’effet est prouvée est encouragée (voir
-{@link promuHeadLocals} ); tout le reste reste dans `render()`.
-
 ### WebComponentsPropertyDeclaration
 
 **Genre :** interface
@@ -404,28 +407,6 @@ export interface WebComponentsSetupPhase
 ```
 
 Phase de **configuration** unique de l'élément.
-
-Une graine telle que `useState(parseTime(modelValue))` lit une propriété réactive et
-une propriété ne détient une valeur qu'une fois les attributs de l'hôte adoptés —
-ce qui se produit lors de la connexion, longtemps après l'exécution du constructeur. Pire, le
-la valeur est généralement atteinte via une constante de tête de rendu (`const initial =
-parseTime(modelValue);`) qui n'a pas pu être prouvé sans effet et donc
-reste dans `render()`, donc une graine de constructeur ferait référence à un nom qui fait
-n'existe pas du tout là-bas.
-
-Une telle graine est reportée à `ForgeElement.setup()`, que le runtime appelle
-après l'adoption de l'attribut et avant le premier rendu, exactement une fois par élément
-— une reconnexion ne doit pas réamorcer et ignorer ce que l'utilisateur a modifié depuis.
-Les déclarations principales dont la graine a besoin y sont relues en premier, dans l'ordre principal et
-transitivement fermés, et **uniquement** ceux-là.
-
-La relecture plutôt que la mise en cache est délibérée. Dans la source neutre, la tête
-_est_ le corps du composant, donc `const initial = parseTime(modelValue);` déjà
-s'exécute à chaque rendu ; l'évaluer une fois de plus pendant l'installation n'effectue aucun appel
-le composant créé ne fonctionne pas déjà à chaque passe. Le mettre en cache dans un
-ce champ _réduirait_ à la place le nombre d'évaluations et donnerait à la valeur un
-identité que la source n’a jamais promise. Seulement un simple `const` (ou une fonction)
-la déclaration est toujours relue — voir {@link headReplay}.
 
 ### WebComponentsShadowPolicy
 
@@ -484,10 +465,10 @@ Optimiser les intentions cibles des Web-Components ; d'autres cibles passent à
 
 #### Paramètres
 
-| Nom        | Tapez                        | Descriptif |
-| ---------- | ---------------------------- | ---------- |
-| intentions | Intentions cibles            |            |
-| options    | Options d'optimisation cible |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------- | ----------- |
+| intentions | Intentions cibles |             |
+| options | Options d'optimisation cible |             |
 
 ### optimiserWebComponentsPlan
 
@@ -504,10 +485,10 @@ Affinez un plan Web-Components réduit, en enregistrant chaque passe exécutée.
 
 #### Paramètres
 
-| Nom       | Tapez                        | Descriptif |
-| --------- | ---------------------------- | ---------- |
-| planifier | WebComponentsLoweredModule   |            |
-| options   | Options d'optimisation cible |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------------- | ----------- |
+| planifier | WebComponentsLoweredModule |             |
+| options | Options d'optimisation cible |             |
 
 ### WEB_COMPONENTS_OPTIMIZATIONS
 
@@ -544,9 +525,9 @@ Transformez un module hook neutre en sa source Web-Components.
 
 #### Paramètres
 
-| Nom     | Tapez             | Descriptif |
-| ------- | ----------------- | ---------- |
-| modules | Module Sémantique |            |
+| Nom | Tapez | Descriptif |
+| ------ | -------------- | ----------- |
+| modules | Module Sémantique |             |
 
 ## `src/transformers/expression`
 
@@ -577,9 +558,9 @@ c'est : le corps court toujours exactement quand on l'appelle.
 
 #### Paramètres
 
-| Nom   | Tapez  | Descriptif |
-| ----- | ------ | ---------- |
-| texte | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| texte | chaîne |             |
 
 ### estPureExpressionText
 
@@ -599,9 +580,9 @@ déclaration et elle reste dans `render()`.
 
 #### Paramètres
 
-| Nom   | Tapez  | Descriptif |
-| ----- | ------ | ---------- |
-| texte | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| texte | chaîne |             |
 
 ## `src/transformers/props-binding`
 
@@ -620,9 +601,9 @@ le motif doit donc être découpé avant de pouvoir être décomposé.
 
 #### Paramètres
 
-| Nom   | Tapez  | Descriptif |
-| ----- | ------ | ---------- |
-| texte | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| texte | chaîne |             |
 
 ### parsePropsBinding
 
@@ -640,9 +621,9 @@ son comportement antérieur au lieu d'agir sur une lecture partielle.
 
 #### Paramètres
 
-| Nom        | Tapez  | Descriptif |
-| ---------- | ------ | ---------- |
-| motifTexte | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ----------- | ------ | ----------- |
+| motifTexte | chaîne |             |
 
 ### AccessoiresReliure
 
@@ -684,10 +665,10 @@ donc c'est par défaut - octet identique à celui créé.
 
 #### Paramètres
 
-| Nom     | Tapez                     | Descriptif |
-| ------- | ------------------------- | ---------- |
-| reliure | AccessoiresReliure        |            |
-| estLire | (nom : chaîne) => booléen |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------------- | ----------- |
+| reliure | AccessoiresReliure |             |
+| estLire | (nom : chaîne) => booléen |             |
 
 ## `src/transformers/props-type`
 
@@ -704,7 +685,7 @@ function indexedAccessType(
 
 L'annotation à accès indexé sous laquelle un membre du type props est émis.
 
-La propre optionnalité du membre est conservée exactement : un membre requis n'est _pas_
+La propre optionnalité du membre est conservée exactement : un membre obligatoire n'est _pas_
 élargi avec `| undefined`. Le champ de l'élément n'est renseigné qu'une fois le
 le runtime adopte son attribut, il n'est donc véritablement pas défini dans le constructeur -
 mais cela s'exprime en émettant le champ sous la forme `declare` (le runtime possède le
@@ -713,10 +694,10 @@ chaque lecture d'un accessoire requis éventuellement-`undefined`.
 
 #### Paramètres
 
-| Nom       | Tapez              | Descriptif |
-| --------- | ------------------ | ---------- |
-| référence | PropsTypeRéférence |            |
-| membre    | chaîne             |            |
+| Nom | Tapez | Descriptif |
+| --------- | ------------------ | ----------- |
+| référence | PropsTypeRéférence |             |
+| membre | chaîne |             |
 
 ### PropsTypeRéférence
 
@@ -747,10 +728,10 @@ dans les deux cas, la référence ne serait pas résolue dans le module génér�
 
 #### Paramètres
 
-| Nom          | Tapez                            | Descriptif |
-| ------------ | -------------------------------- | ---------- |
-| annotation   | chaîne \| indéfini               |            |
-| déclarations | lecture seule GenericStatement[] |            |
+| Nom | Tapez | Descriptif |
+| ------------ | --------------------------- | ----------- |
+| annotation | chaîne \| indéfini |             |
+| déclarations | lecture seule GenericStatement[] |             |
 
 ### typeMembres
 
@@ -771,9 +752,9 @@ direction sûre.
 
 #### Paramètres
 
-| Nom              | Tapez  | Descriptif |
-| ---------------- | ------ | ---------- |
-| déclarationTexte | chaîne |            |
+| Nom | Tapez | Descriptif |
+| --------------- | ------ | ----------- |
+| déclarationTexte | chaîne |             |
 
 ### unwrapPropsTypeName
 
@@ -788,6 +769,6 @@ les parenthèses et les wrappers génériques préservant les membres qu'un comp
 
 #### Paramètres
 
-| Nom   | Tapez              | Descriptif |
-| ----- | ------------------ | ---------- |
-| texte | chaîne \| indéfini |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------- | ----------- |
+| texte | chaîne \| indéfini |             |

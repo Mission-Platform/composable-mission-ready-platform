@@ -2,10 +2,10 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> packages/harper/docs/index.md: [packages/harper/docs/index.md](../../index.md)
+> packages/content/harper/docs/index.md: [packages/content/harper/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
-`@mission-platform/harper` bietet eine Integration zwischen [Harper](https://writewithharper.com) Grammatikprüfer und
+`@mission-platform/harper` bietet eine Integration zwischen der Grammatikprüfung [Harper](https://writewithharper.com) und
 der Monaco-Redakteur. Harper ist ein schneller, offline verfügbarer, datenschutzorientierter englischer Grammatikprüfer, der auf WebAssembly basiert und ausgeführt wird
 komplett im Browser.
 
@@ -17,7 +17,7 @@ komplett im Browser.
 - **Schnellkorrekturen**: Durch die Integration mit den „Glühbirnen“-Codeaktionen von Monaco können Benutzer vorgeschlagene Korrekturen anwenden
   sofort.
 - **Privacy First**: Die gesamte Verarbeitung erfolgt lokal in einem Web Worker; Es wird nie Text über das Netzwerk gesendet.
-- **Schweregradstufen**: Unterstützt standardmäßige LSP-Schweregradstufen (Fehler, Warnung, Info und Hinweis).
+- **Schweregradstufen**: Unterstützt Standard-LSP-Schweregradstufen (Fehler, Warnung, Info und Hinweis).
 
 ## Einrichtung und Konfiguration
 
@@ -85,7 +85,6 @@ function useHarperMonaco(
 ```
 
 – `editorReference`: Ein Ref oder Getter, der die Monaco-Editor-Instanz bereitstellt.
-
 - `enabled`: Ein reaktiver boolescher Wert zum Ein-/Ausschalten der Grammatikprüfung.
 - `languageReference`: Der Sprachmodus des Editors, der zum Registrieren von Codeaktionen verwendet wird.
 

@@ -14,29 +14,29 @@ Avant de cloner le référentiel, assurez-vous que votre système répond aux ex
 
 ### Configuration système requise
 
-| Outil       | Version requise        | Objectif                                                      |
-| :---------- | :--------------------- | :------------------------------------------------------------ |
-| **Node.js** | `24.19.0`              | Environnement d'exécution (Active LTS)                        |
-| **pnpm**    | `11.21.0`              | Gestionnaire de packages et orchestrateur d'espace de travail |
-| **Git**     | Dernière stable        | Contrôle des versions                                         |
-| **Rouille** | Chaîne d'outils stable | Développement de benchmark Rust autonome en option            |
-| **Docker**  | Dernière stable        | Requis uniquement pour la version Emscripten Hunspell         |
+| Outil | Version requise | Objectif |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0` | Environnement d'exécution (Active LTS) |
+| **pnpm** | `12.4.2` | Gestionnaire de packages et orchestrateur d'espace de travail |
+| **Git** | Dernière stable | Contrôle des versions |
+| **Rouille** | Chaîne d'outils stable | Développement de benchmark Rust autonome en option |
+| **Docker** | Dernière stable | Requis uniquement pour la version Emscripten Hunspell |
 
 ### Gestion des versions (recommandé)
 
-Nous vous recommandons d'utiliser **nvm** (Node Gestionnaire de versions) pour vous assurer que vous utilisez le bon NodeVersion .js spécifiée dans le
-racine `.nvmrc` déposer.
+Nous vous recommandons d'utiliser **nvm** (Node Version Manager) pour vous assurer que vous utilisez la version correcte de Node.js spécifiée dans le
+fichier racine `.nvmrc`.
 
 ```bash
 nvm install
 nvm use
 ```
 
-Activer **pnpm** en utilisant Corepack :
+Activez **pnpm** à l'aide de Corepack :
 
 ```bash
 corepack enable
-corepack prepare pnpm@11.21.0 --activate
+corepack prepare pnpm@12.4.2 --activate
 ```
 
 ## Configuration initiale
@@ -58,8 +58,24 @@ Installez toutes les dépendances de l'espace de travail et configurez les hooks
 pnpm install
 ```
 
-Cette commande déclenche le `prepare` script, qui initialise **Husky** pour le commit lint et garantit tous les
+Cette commande déclenche le script `prepare`, qui initialise **Husky** pour le commit lint et garantit que toutes les opérations internes
 les liens des packages sont correctement établis.
+
+### Serveur de langue SonarLint
+
+Le `agent-lsp.json` du référentiel inclut le serveur de langage officiel SonarLint pour JavaScript et TypeScript. Le
+Le serveur est distribué sous forme d'archive Java plutôt que de package npm, installez donc Java et créez ou téléchargez le
+Archive `sonarlint-language-server` de [SonarSource](https://github.com/SonarSource/sonarlint-language-server).
+
+Définissez l'archive du serveur et l'analyseur JavaScript avant de démarrer le LSP :
+
+```bash
+export SONARLINT_LS_JAR=/path/to/sonarlint-language-server.jar
+export SONARLINT_ANALYZERS=/path/to/sonarjs.jar
+```
+
+La variable facultative `SONARLINT_JAVA` peut sélectionner un exécutable Java. Le lanceur de référentiel valide le configuré
+chemins et transmet le protocole stdio du serveur sans nécessiter une commande installée globalement.
 
 ### 3. Vérifiez l'installation
 
@@ -69,9 +85,9 @@ Exécutez un test de fumée pour vous assurer que le système de build et l'envi
 pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
-Le `...` construit également les dépendances Forge requises par le package. Le
+Le filtre `...` crée également les dépendances Forge requises par le package. Le
 le scanner de code neutre est compilé à partir de son graphique Flint ; ce n'est pas le cas
-nécessitent un Rust ou `wasm-pack` étape de construction.
+nécessitent une étape de construction Rust ou `wasm-pack`.
 
 ## Flux de travail de développement
 
@@ -108,8 +124,8 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-Les packages basés sur Forge publient la correspondance `mp:vue`, `mp:react`, `mp:svelte`,
-`mp:solid`, et `mp:web-component` conditions. La condition active doit être
+Les packages basés sur Forge publient les correspondances `mp:vue`, `mp:react`, `mp:svelte`,
+Conditions `mp:solid` et `mp:web-component`. La condition active doit être
 configuré par le bundler consommateur ; voir [la référence du compilateur](../../../packages/tooling/vite/forge/docs/locales/fr/reference/compiler.md)
 pour le plugin cible et le pipeline de déclaration.
 
@@ -122,22 +138,22 @@ Pour démarrer une application spécifique en mode développement :
 pnpm exec turbo run dev --filter @mission-platform/my-care-notes
 ```
 
-L'application sera généralement disponible à l'adresse `http://localhost:5173`.
+L'application sera généralement disponible sur `http://localhost:5173`.
 
 ### Commandes communes
 
-| Tâche          | Commande      | Descriptif                                         |
-| :------------- | :------------ | :------------------------------------------------- |
-| **Construire** | `pnpm build`  | Créez toutes les applications et tous les packages |
-| **Tester**     | `pnpm test`   | Exécutez tout Vitest suites                        |
-| **Charpie**    | `pnpm lint`   | Courir ESLint à travers le monorepo                |
-| **Format**     | `pnpm format` | Vérifiez le formatage avec Prettier                |
+| Tâche | Commande | Descriptif |
+| :--------- | :------------ | :----------------------------- |
+| **Construire** | `pnpm build` | Créez toutes les applications et tous les packages |
+| **Tester** | `pnpm test` | Exécutez toutes les suites Vitest |
+| **Charpie** | `pnpm lint` | Exécutez ESLint sur le monorepo |
+| **Format** | `pnpm format` | Vérifiez le formatage avec Prettier |
 
 ## Dépannage
 
 ### Vider les caches
 
-Si vous rencontrez des erreurs de build inattendues, effacez le Turborepo et Node caches :
+Si vous rencontrez des erreurs de build inattendues, effacez les caches Turborepo et Node :
 
 ```bash
 # Remove Turborepo cache
@@ -150,7 +166,7 @@ pnpm install
 
 ### Échecs de construction WASM
 
-Si la création d'un artefact Flint échoue, inspectez les diagnostics de son compilateur.
+Si la construction d'un artefact Flint échoue, inspectez les diagnostics du compilateur
 et vérifiez le profil de lien statique ou dynamique sélectionné. Le
-`@mission-platform/hunspell` La version Emscripten nécessite également que Docker
+La version `@mission-platform/hunspell` d'Emscripten nécessite en outre que Docker
 être en train de courir.

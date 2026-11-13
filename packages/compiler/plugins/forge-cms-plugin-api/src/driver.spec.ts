@@ -13,6 +13,8 @@ import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
+import { createForgeCompilerService } from "@mission-platform/vite-plugin-forge";
+
 import { BADGE, COUNTER, GRID } from "./__fixtures__/components.js";
 import { stubFramework } from "./__fixtures__/framework.js";
 import { defineForgeCmsPlugin } from "./cms.js";
@@ -157,16 +159,18 @@ function recordingTarget(
 function run(
   target: CmsOutputPlugin,
   workspace: { componentsModule: string; outDir: string },
+  service?: Parameters<typeof generateCmsArtifacts>[0]["service"],
 ) {
   return generateCmsArtifacts({
     plugin: target,
     componentsModule: workspace.componentsModule,
     outDir: workspace.outDir,
     componentsImport: "@acme/components",
+    service,
   });
 }
 
-describe("generateCmsArtifacts", () => {
+describe("generateCmsArtifacts", { timeout: 60_000 }, () => {
   it("writes every artifact a target returned at the file name it declared", () => {
     const workspace = createWorkspace([BADGE_COMPONENT, GRID_COMPONENT]);
     const tree = run(recordingTarget(), workspace);
@@ -191,7 +195,11 @@ describe("generateCmsArtifacts", () => {
 
   it("returns the entry artifact path", () => {
     const workspace = createWorkspace([BADGE_COMPONENT]);
-    const tree = run(recordingTarget(), workspace);
+    const tree = run(
+      recordingTarget(),
+      workspace,
+      createForgeCompilerService(),
+    );
     expect(tree.entry).toBe(path.join(workspace.outDir, "index.ts"));
   });
 

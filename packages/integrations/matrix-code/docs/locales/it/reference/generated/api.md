@@ -39,7 +39,7 @@ il simbolo viene comunque scansionato, poiché Data Matrix non dispone di correz
 livello).
 
 Una barra degli strumenti di azione opzionale (abilitata tramite `showActions` — `true` per ogni
-o un oggetto {@link MatrixCodeActions} per selezionarli singolarmente) consente
+pulsante o un oggetto {@link MatrixCodeActions} per selezionarli singolarmente) consente
 gli utenti **salvano il codice come immagine PNG**, **copiano l'immagine negli appunti**,
 e **copia il valore codificato negli appunti**. Il PNG è rasterizzato sul file
 client disegnando l'SVG renderizzato su una tela.
@@ -50,8 +50,8 @@ attraverso il modulo CSS co-locato `forge-matrix-code.module.scss`.
 
 #### Parametri
 
-| Nome      | Digitare                           | Descrizione |
-| --------- | ---------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ------------------------------ | ----------- |
 | proprietà | Sola lettura<MatrixCodeProperties> |             |
 
 ### MatrixCodeActions
@@ -103,72 +103,3 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 ```
 
 Forma utilizzata per disegnare ciascun modulo del codice.
-
-## `src/encoder/index`
-
-### codificaMatrix
-
-**Tipo:** funzione
-
-```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
-```
-
-Codificare `data` in un codice a barre a matrice 2D del dato `symbology`, caricando il
-Forgia artefatti codificatori in modo sincrono al primo utilizzo.
-
-#### Parametri
-
-| Nome       | Digitare          | Descrizione |
-| ---------- | ----------------- | ----------- |
-| simbologia | MatriceSimbologia |             |
-| dati       | stringa           |             |
-
-#### Contrarre
-
-- **@throws:** se il payload non è valido per la simbologia (vuoto o
-  troppo grande per i simboli supportati).
-
-### codificaMatrixAsync
-
-**Tipo:** funzione
-
-```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
-```
-
-Codificare `data` in un codice a barre a matrice 2D del dato `symbology`, caricando il
-Forgia l'artefatto del codificatore in modo asincrono al primo utilizzo.
-
-#### Parametri
-
-| Nome       | Digitare          | Descrizione |
-| ---------- | ----------------- | ----------- |
-| simbologia | MatriceSimbologia |             |
-| dati       | stringa           |             |
-
-#### Contrarre
-
-- **@throws:** se il payload non è valido per la simbologia.
-
-### MatrixCodice
-
-**Tipo:** interfaccia
-
-```typescript
-export interface MatrixCode
-```
-
-Un codice a barre a matrice compressa: dimensioni più un elenco di bit del modulo nella riga principale
-(`0` = chiaro, `1` = scuro).
-
-### Simbologia della matrice
-
-**Genere:** tipo
-
-```typescript
-export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
-```
-
-Le simbologie di matrice 2D supportate da questo codificatore. Passato come primo argomento
-a {@link encodeMatrix}/{@link encodeMatrixAsync}.

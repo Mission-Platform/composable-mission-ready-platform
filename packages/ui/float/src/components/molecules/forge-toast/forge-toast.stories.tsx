@@ -1,6 +1,6 @@
-import { ForgeToast } from './forge-toast';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeToast } from './forge-toast';
 
 /**
  * `ForgeToast` is the write-once `ForgeToast` component of `@mission-platform/float` — the presentational toast item: an intent

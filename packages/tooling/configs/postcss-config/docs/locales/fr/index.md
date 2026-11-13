@@ -13,12 +13,12 @@ Pipeline PostCSS partagé utilisé par les feuilles de style de Mission Platform
 pnpm add --save-dev @mission-platform/postcss-config
 ```
 
-Référencez le package à partir de l'espace de travail `postcss.config.mjs` plutôt que
+Référencez le package à partir du `postcss.config.mjs` de l'espace de travail plutôt que
 dupliquer le pipeline de plugins partagé. Les remplacements locaux appartiennent à cela
 configuration de l'espace de travail.
 
 ## Contribuer
 
-Courir `pnpm --filter @mission-platform/postcss-config lint` et
+Exécutez `pnpm --filter @mission-platform/postcss-config lint` et
 `pnpm --filter @mission-platform/postcss-config format`. Conserver le navigateur
 comportement de compatibilité dans ce package et évitez les plugins spécifiques à l’application.

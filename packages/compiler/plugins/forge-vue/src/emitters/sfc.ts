@@ -8,6 +8,8 @@
  * render-closure fallback assemble their SFC through {@link assembleSfc}; they
  * differ only in the `bodyLines` / `markup` / `scoped` they pass in.
  */
+import type { StyleImport } from "@mission-platform/forge-plugin-api/compiler/ast.js";
+
 import {
   buildEmitsMacro,
   buildImports,
@@ -22,7 +24,6 @@ import type {
   VueModelSignature,
   VuePropertySignature,
 } from "../transformers/props-interface.js";
-import type { StyleImport } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 
 /**
  * The invariant pieces of a component the SFC is assembled from — everything the

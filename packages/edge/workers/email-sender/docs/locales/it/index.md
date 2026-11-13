@@ -29,4 +29,4 @@ Questo lavoratore è una vetrina locale e non è un servizio di posta di produzi
 inserire credenziali o segreti nella configurazione Wrangler tracciata.
 
 - [Guida allo sviluppo](guides/development.md)
-- [`README.md`](../../../README.md)
+-[`README.md`](../../../README.md)

@@ -28,7 +28,7 @@ src/utils/
 1. **Reinheit**: Bevorzugen Sie reine Funktionen, die keine Nebenwirkungen haben. Bei gleicher Eingabe sollten sie immer Folgendes zurückgeben
    gleiche Ausgabe.
 2. **Keine UI-Hooks**: Importieren Sie niemals `vue`-, `react`- oder `@mission-platform/forge-jsx`-Hooks in ein Dienstprogramm. Logik erfordert
-   Reaktivität gehört dazu [Composables](composable-authoring.md).
+   Reaktivität gehört zu [Composables](composable-authoring.md).
 3. **Explizite Typisierung**: Stellen Sie vollständige TypeScript-Typen für alle Argumente und Rückgabewerte bereit.
 4. **Obligatorische Tests**: Jedes Dienstprogramm muss über eine am selben Ort befindliche `.spec.ts`-Datei verfügen.
 5. **Einzelne Verantwortung**: Jeder Util-Ordner sollte sich auf eine bestimmte, eng begrenzte Aufgabe konzentrieren.
@@ -46,9 +46,10 @@ export function clamp(value: number, min: number, max: number): number {
 
 ## Gerüst
 
-Verwenden Sie das Mission Platform Developer MCP-Tool, um ein neues Dienstprogrammskelett zu generieren:
+Verwenden Sie das `scaffold_util`-Tool über einen verbundenen Mission Platform Developer MCP-Server, um ein neues Dienstprogramm zu generieren
+Skelett. Dies ist ein Beispiel für einen MCP-Tool-Aufruf, kein Shell-Befehl:
 
-```bash
+```text
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```
@@ -56,6 +57,6 @@ scaffold_util(name="string-utils", package="i18n", apply=true)
 ## Verwandte Leitfäden
 
 - [Paketentwicklung](package-development.md)
-- [Atomares Komponentendesign](atomic-component-design.md)
+- [Atomkomponentendesign](atomic-component-design.md)
 - [Composable Authoring](composable-authoring.md)
 - [Store-Authoring](store-authoring.md)

@@ -1,5 +1,6 @@
-import { frameworkResolveConditions } from '@mission-platform/vite-config';
 import { describe, expect, it } from 'vitest';
+
+import { frameworkResolveConditions } from '@mission-platform/vite-config';
 
 import {
   createStorybookConfig,

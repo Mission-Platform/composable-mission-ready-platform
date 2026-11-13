@@ -123,6 +123,57 @@ export function parseColorToRgba(
 const GPU_FILL_DARK = { r: 0.14, g: 0.16, b: 0.22, a: 0.95 };
 const GPU_FILL_LIGHT = { r: 1, g: 1, b: 1, a: 0.98 };
 
+export interface WebGpuNodeGlowAndBorder {
+  readonly glowR: number;
+  readonly glowG: number;
+  readonly glowB: number;
+  readonly glowA: number;
+  readonly fillR: number;
+  readonly fillG: number;
+  readonly fillB: number;
+  readonly fillA: number;
+  readonly borderR: number;
+  readonly borderG: number;
+  readonly borderB: number;
+  readonly borderA: number;
+  readonly borderWidth: number;
+}
+
+export interface WebGpuEdgeColorAndWidth {
+  readonly colorR: number;
+  readonly colorG: number;
+  readonly colorB: number;
+  readonly colorA: number;
+  readonly widthVal: number;
+}
+
+export interface WebGpuPinColorAndWidth {
+  readonly fillR: number;
+  readonly fillG: number;
+  readonly fillB: number;
+  readonly fillA: number;
+  readonly borderR: number;
+  readonly borderG: number;
+  readonly borderB: number;
+  readonly borderA: number;
+  readonly borderWidth: number;
+  readonly glowR: number;
+  readonly glowG: number;
+  readonly glowB: number;
+  readonly glowA: number;
+}
+
+export interface GlNodeBorder {
+  readonly br: number;
+  readonly bg: number;
+  readonly bb: number;
+}
+
+export interface C2dNodeStroke {
+  readonly strokeStyle: string;
+  readonly lineWidth: number;
+}
+
 /**
  * Computes WebGPU node instance fill and border styling tuples.
  */
@@ -131,7 +182,7 @@ export function computeWebGpuNodeGlowAndBorder(
   isActive: number,
   isTrapped: number,
   isDark: boolean,
-) {
+): WebGpuNodeGlowAndBorder {
   const table = isDark ? GPU_NODE_STYLES_DARK : GPU_NODE_STYLES_LIGHT;
   const key = resolveNodeStatusKey(isTrapped, isActive, isSelected);
   const nodeStyle = table[key] ?? table.default;
@@ -157,7 +208,11 @@ export function computeWebGpuNodeGlowAndBorder(
 /**
  * Computes WebGPU edge instance color channels and cable stroke width.
  */
-export function computeWebGpuEdgeColorAndWidth(isSelected: number, isActive: number, isDark: boolean) {
+export function computeWebGpuEdgeColorAndWidth(
+  isSelected: number,
+  isActive: number,
+  isDark: boolean,
+): WebGpuEdgeColorAndWidth {
   const table = isDark ? GPU_EDGE_STYLES_DARK : GPU_EDGE_STYLES_LIGHT;
   const key = isSelected ? 'selected' : isActive ? 'active' : 'default';
   const edgeStyle = table[key] ?? table.default;
@@ -173,7 +228,11 @@ export function computeWebGpuEdgeColorAndWidth(isSelected: number, isActive: num
 /**
  * Computes WebGPU pin instance color and halo glow attributes.
  */
-export function computeWebGpuPinColorAndWidth(isHovered: number, isActive: number, isDark: boolean) {
+export function computeWebGpuPinColorAndWidth(
+  isHovered: number,
+  isActive: number,
+  isDark: boolean,
+): WebGpuPinColorAndWidth {
   const table = isDark ? GPU_PIN_STYLES_DARK : GPU_PIN_STYLES_LIGHT;
   const key = isHovered ? 'hovered' : isActive ? 'active' : 'default';
   const pinStyle = table[key] ?? table.default;
@@ -197,7 +256,12 @@ export function computeWebGpuPinColorAndWidth(isHovered: number, isActive: numbe
 /**
  * Computes WebGL node border RGB color channels.
  */
-export function computeGlNodeBorder(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
+export function computeGlNodeBorder(
+  isSelected: number,
+  isActive: number,
+  isTrapped: number,
+  isDark: boolean,
+): GlNodeBorder {
   const table = isDark ? GL_NODE_BORDER_DARK : GL_NODE_BORDER_LIGHT;
   const key = resolveNodeStatusKey(isTrapped, isActive, isSelected);
   const borderTuple = table[key] ?? table.default;
@@ -207,7 +271,12 @@ export function computeGlNodeBorder(isSelected: number, isActive: number, isTrap
 /**
  * Computes 2D Canvas node stroke styling properties.
  */
-export function computeC2dNodeStroke(isSelected: number, isActive: number, isTrapped: number, isDark: boolean) {
+export function computeC2dNodeStroke(
+  isSelected: number,
+  isActive: number,
+  isTrapped: number,
+  isDark: boolean,
+): C2dNodeStroke {
   const table = isDark ? C2D_NODE_STROKE_DARK : C2D_NODE_STROKE_LIGHT;
   const key = resolveNodeStatusKey(isTrapped, isActive, isSelected);
   return table[key] ?? table.default;

@@ -63,9 +63,9 @@ n'a pas de retour racine conditionnel).
 
 #### Paramètres
 
-| Nom        | Tapez                                | Descriptif |
-| ---------- | ------------------------------------ | ---------- |
-| propriétés | Lecture seule<AlertBannerProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------- | ----------- |
+| propriétés | Lecture seule<AlertBannerProperties> |             |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -115,7 +115,7 @@ CSS `anchor-size(width)` — pas de mesure JS.
 Le panneau téléporté est également promu dans la **couche supérieure** du navigateur via le
 API Popover native (`popover="manual"` + `showPopover()`) : une plaine `z-index`
 ne peut jamais s'élever au-dessus d'un natif ouvert `<dialog>` modal/dialog (qui vit dans
-la couche supérieure), de sorte que le panneau choisit la même couche supérieure pour rester au-dessus
+la couche supérieure), de sorte que le panneau opte pour la même couche supérieure pour rester au-dessus
 `ForgeModal`/`ForgeDialog`. Le statique `z-index` en CSS reste la solution de repli
 pour les navigateurs sans support de l'API Popover (là, le `popover` l'attribut est
 ignoré et le panneau s'affiche selon un flux normal).
@@ -139,9 +139,9 @@ accessoires. Il possède son style via le module CSS colocalisé
 
 #### Paramètres
 
-| Nom        | Tapez                             | Descriptif |
-| ---------- | --------------------------------- | ---------- |
-| propriétés | Lecture seule<DropdownProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------------- | ----------- |
+| propriétés | Lecture seule<DropdownProperties> |             |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -173,7 +173,7 @@ fils à l'extérieur-clic + `Escape` licenciement pendant l'ouverture.
 Le panneau téléporté est également promu dans la **couche supérieure** du navigateur via le
 API Popover native (`popover="manual"` + `showPopover()`) : une plaine `z-index`
 ne peut jamais s'élever au-dessus d'un natif ouvert `<dialog>` modal/dialog (qui vit dans
-la couche supérieure), de sorte que le panneau choisit la même couche supérieure pour rester au-dessus
+la couche supérieure), de sorte que le panneau opte pour la même couche supérieure pour rester au-dessus
 `ForgeModal`/`ForgeDialog`. Le statique `z-index` en CSS reste la solution de repli
 pour les navigateurs sans prise en charge de l'API Popover.
 
@@ -195,9 +195,9 @@ accessoires de rappel. Il possède son style via le module CSS colocalisé
 
 #### Paramètres
 
-| Nom        | Tapez                            | Descriptif |
-| ---------- | -------------------------------- | ---------- |
-| propriétés | Lecture seule<PopoverProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------- | ----------- |
+| propriétés | Lecture seule<PopoverProperties> |             |
 
 ### Placement Popover
 
@@ -260,9 +260,9 @@ défini (`ForgeIconCheck`/`ForgeIconError`/`ForgeIconWarning`/`ForgeIconInfo`).
 
 #### Paramètres
 
-| Nom        | Tapez                          | Descriptif |
-| ---------- | ------------------------------ | ---------- |
-| propriétés | Lecture seule<ToastProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------- | ----------- |
+| propriétés | Lecture seule<ToastProperties> |             |
 
 ### Propriétés de Toast
 
@@ -323,7 +323,7 @@ feuille de style colocalisée).
 Le panneau téléporté est également promu dans la **couche supérieure** du navigateur via le
 API Popover native (`popover="manual"` + `showPopover()`) : une plaine `z-index`
 ne peut jamais s'élever au-dessus d'un natif ouvert `<dialog>` modal/dialog (qui vit dans
-la couche supérieure), de sorte que l'indice choisit la même couche supérieure pour rester au-dessus
+la couche supérieure), donc l'indice choisit la même couche supérieure pour rester au-dessus
 `ForgeModal`/`ForgeDialog`. Le statique `z-index` en CSS reste la solution de repli
 pour les navigateurs sans prise en charge de l'API Popover.
 
@@ -344,9 +344,9 @@ possède son style via le module CSS colocalisé `forge-tooltip.module.scss`.
 
 #### Paramètres
 
-| Nom        | Tapez                            | Descriptif |
-| ---------- | -------------------------------- | ---------- |
-| propriétés | Lecture seule<TooltipProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------- | ----------- |
+| propriétés | Lecture seule<TooltipProperties> |             |
 
 ### Info-bullePlacement
 
@@ -433,9 +433,9 @@ accessoires. Il possède son style via le module CSS colocalisé
 
 #### Paramètres
 
-| Nom        | Tapez                           | Descriptif |
-| ---------- | ------------------------------- | ---------- |
-| propriétés | Lecture seule<DialogProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | -------------------------- | ----------- |
+| propriétés | Lecture seule<DialogProperties> |             |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -470,9 +470,9 @@ Module CSS colocalisé `forge-modal.module.scss`.
 
 #### Paramètres
 
-| Nom        | Tapez                          | Descriptif |
-| ---------- | ------------------------------ | ---------- |
-| propriétés | Lecture seule<ModalProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------- | ----------- |
+| propriétés | Lecture seule<ModalProperties> |             |
 
 ### Propriétés modales
 
@@ -493,6 +493,16 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 ```
 
 Pas de largeur du modal sur tablette/ordinateur de bureau (`sm`+) ; le mobile est toujours en pleine largeur.
+
+### Variante modale
+
+**Genre :** type
+
+```typescript
+export type ModalVariant = 'modal' | 'dialog' | 'alert';
+```
+
+Variante visuelle et sémantique de la primitive de superposition modale.
 
 ## `src/components/organisms/forge-toast-container/forge-toast-container`
 
@@ -541,9 +551,9 @@ composable → la couche statique `notification` z-index appliquée en CSS.
 
 #### Paramètres
 
-| Nom        | Tapez                                   | Descriptif |
-| ---------- | --------------------------------------- | ---------- |
-| propriétés | Lecture seule<ToastContainerProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------------------- | ----------- |
+| propriétés | Lecture seule<ToastContainerProperties> |             |
 
 ### Propriétés de ToastContainer
 
@@ -589,16 +599,16 @@ Rejeter un toast par identification.
 
 #### Paramètres
 
-| Nom         | Tapez  | Descriptif |
-| ----------- | ------ | ---------- |
-| identifiant | numéro |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------ | ----------- |
+| identifiant | numéro |             |
 
 ### erreurToast
 
 **Genre :** constante
 
 ```typescript
-export const errorToast;
+export const errorToast: ReturnType<typeof withVariant>;
 ```
 
 Commodité : affichez un toast `error`.
@@ -618,7 +628,7 @@ Lisez un instantané immuable des toasts actifs.
 **Genre :** constante
 
 ```typescript
-export const infoToast;
+export const infoToast: ReturnType<typeof withVariant>;
 ```
 
 Commodité : affichez un toast `info`.
@@ -635,9 +645,9 @@ Montrez un toast et renvoyez son identifiant.
 
 #### Paramètres
 
-| Nom     | Tapez                   | Descriptif |
-| ------- | ----------------------- | ---------- |
-| options | Options Toast \| chaîne |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---------------------- | ----------- |
+| options | Options Toast \| chaîne |             |
 
 ### abonnez-vousToasts
 
@@ -651,16 +661,16 @@ Abonnez-vous pour stocker les modifications ; renvoie une fonction de désabonn
 
 #### Paramètres
 
-| Nom      | Tapez      | Descriptif |
-| -------- | ---------- | ---------- |
-| auditeur | () => vide |            |
+| Nom | Tapez | Descriptif |
+| -------- | ---------- | ----------- |
+| auditeur | () => vide |             |
 
 ### succèsToast
 
 **Genre :** constante
 
 ```typescript
-export const successToast;
+export const successToast: ReturnType<typeof withVariant>;
 ```
 
 Commodité : affichez un toast `success`.
@@ -683,8 +693,6 @@ Options acceptées lors de la présentation d'un toast.
 export type ToastPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
 ```
 
-Où le récipient à pain grillé est ancré sur l'écran.
-
 ### ToastEnregistrement
 
 **Genre :** interface
@@ -692,8 +700,6 @@ Où le récipient à pain grillé est ancré sur l'écran.
 ```typescript
 export interface ToastRecord
 ```
-
-Un toast résolu tenu dans le magasin.
 
 ### utiliserToast
 
@@ -704,7 +710,7 @@ function useToast(): UseToastReturn;
 ```
 
 Aides impératives pour afficher et ignorer les toasts, reflétant le Vue
-`useToast` composable. Afficher un seul `ForgeToastContainer` près de la racine de
+`useToast` composable. Rendre un seul `ForgeToastContainer` près de la racine de
 votre application pour les afficher.
 
 ### UtiliserToastReturn
@@ -715,14 +721,124 @@ votre application pour les afficher.
 export interface UseToastReturn
 ```
 
-L'API publique renvoyée par {@link useToast}.
-
 ### avertissementToast
 
 **Genre :** constante
 
 ```typescript
-export const warningToast;
+export const warningToast: ReturnType<typeof withVariant>;
 ```
 
-Commodité : affichez un toast `warning`.
+Commodité : afficher un `warning` griller.
+
+## `src/utils/fallback-position`
+
+### applyFallbackPosition
+
+**Genre :** fonction
+
+```typescript
+function applyFallbackPosition(
+  triggerElement: HTMLElement,
+  panelElement: HTMLElement,
+  placement: FallbackPlacement = 'bottom-start',
+  options?: FallbackPositionOptions | number,
+): void;
+```
+
+Applique les coordonnées et les styles de secours à `panelElement` par rapport à `triggerElement`.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------------- | --------------------------------- | ----------- |
+| élément déclencheur | Élément HTML |             |
+| panneauElement | Élément HTML |             |
+| placement | Placement de secours |             |
+| options | Options de position de repli \| numéro |             |
+
+### calculerFallbackPosition
+
+**Genre :** fonction
+
+```typescript
+function calculateFallbackPosition(
+  triggerRect: TriggerBoundingRect,
+  placement: FallbackPlacement = 'bottom-start',
+  offset = 0,
+): FallbackPositionResult;
+```
+
+Calcule les propriétés CSS haut, gauche et transformation pour un élément flottant
+en fonction du rectangle englobant de l'élément déclencheur, de l'emplacement souhaité et du décalage.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----------- | ------------------- | ----------- |
+| déclencheurRect | DéclencheurBoundingRect |             |
+| placement | Placement de secours |             |
+| décalage |                     |             |
+
+### Placement de secours
+
+**Genre :** type
+
+```typescript
+export type FallbackPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
+```
+
+Options de placement prises en charge pour le repli du positionnement des ancres.
+
+### Options de position de repli
+
+**Genre :** interface
+
+```typescript
+export interface FallbackPositionOptions
+```
+
+Aucune description fournie.
+
+### Résultat de position de repli
+
+**Genre :** interface
+
+```typescript
+export interface FallbackPositionResult
+```
+
+Aucune description fournie.
+
+### isAnchorPositioningSupported
+
+**Genre :** fonction
+
+```typescript
+function isAnchorPositioningSupported(): boolean;
+```
+
+Vérifiez dynamiquement si le positionnement d'ancre CSS est pris en charge.
+Évalué en tant que fonction afin que les tests unitaires puissent se moquer ou basculer `CSS.supports`.
+
+### prend en chargeAnchorPositioning
+
+**Genre :** constante
+
+```typescript
+export const supportsAnchorPositioning: boolean;
+```
+
+Vérifiez si le positionnement d'ancre CSS est pris en charge dans l'environnement actuel.

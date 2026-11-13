@@ -77,7 +77,7 @@ export function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOp
 }
 
 /** Compatibility alias retained for compiler integrations using the old name. */
-export const optimizeSourceFile = optimizeForgeModule;
+export const optimizeSourceFile: typeof optimizeForgeModule = optimizeForgeModule;
 
 // ─── dead-branch pruning ─────────────────────────────────────────────────────
 

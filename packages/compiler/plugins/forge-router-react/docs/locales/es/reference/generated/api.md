@@ -28,8 +28,8 @@ Cree capacidades neutrales a partir de las primitivas del enrutador React (sin g
 
 #### Parámetros
 
-| Nombre  | Tipo                                                                                                                                                                               | Descripción |
-| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | entrada | { ubicación: { nombre de ruta: cadena; buscar: cadena; hash: cadena }; parámetros?: Registro<string, string \| undefined>; navegar: Función de navegación; salida?: desconocido; } |             |
 
 ### resolverMpLink
@@ -44,9 +44,9 @@ Resuelva un objetivo neutral en una cadena href.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| a      | MpRouteLocationRaw |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 
 ### aMpLocationFromReact
 
@@ -55,7 +55,7 @@ Resuelva un objetivo neutral en una cadena href.
 ```typescript
 function toMpLocationFromReact(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
@@ -63,10 +63,10 @@ Cree una ubicación neutral a partir de instantáneas de parámetros/ubicación 
 
 #### Parámetros
 
-| Nombre     | Tipo                                                     | Descripción |
-| ---------- | -------------------------------------------------------- | ----------- |
-| ubicación  | { nombre de ruta: cadena; buscar: cadena; hash: cadena } |             |
-| parámetros | Registro<string, string \| undefined>                    |             |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------------------------------- | ----------- |
+| ubicación | { nombre de ruta: cadena; buscar: cadena; hash: cadena } |             |
+| parámetros | Registro<string, string \| undefined> |             |
 
 ### aReactHref
 
@@ -80,9 +80,9 @@ Serializa un objetivo neutral en una cadena href.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| a      | MpRouteLocationRaw |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 
 ### para reaccionar a
 
@@ -96,9 +96,9 @@ Convertir un objetivo neutral en un React Enrutador `To` valor.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| a      | MpRouteLocationRaw |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 
 ### utilizarMpNavigation
 

@@ -1,5 +1,7 @@
-import { unsupportedRouterCapabilities } from '@mission-platform/forge-router-plugin-api';
 import { describe, expect, it, vi } from 'vitest';
+
+import { unsupportedRouterCapabilities } from '@mission-platform/forge-router-plugin-api';
+import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
 
 import {
   createSvelteKitRouterCapabilities,
@@ -10,8 +12,6 @@ import {
 } from '../runtime';
 
 import { forgeRouterSvelte } from './forge-router-svelte';
-
-import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
 
 describe('forgeRouterSvelte', () => {
   it('rewrites supported imports to the SvelteKit runtime helpers', () => {

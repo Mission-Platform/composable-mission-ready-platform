@@ -25,7 +25,7 @@ Plataforma monorepo. Está estructurado como una **guía práctica** para diagno
 - **CSS crítico en línea**: asegúrese de que los estilos necesarios para el contenido de la mitad superior de la página estén integrados.
 - **Optimización de imagen**: utilice formatos WebP/AVIF y proporcione `srcset` para imágenes responsivas.
 - **Precarga de recursos**: utilice `<link rel="preload">` para la imagen LCP o fuentes críticas.
-- **Minimizar el trabajo del hilo principal**: posponer JavaScript no esencial usando `async` o `defer`.
+- **Minimizar el trabajo del hilo principal**: posponga JavaScript no esencial usando `async` o `defer`.
 
 ### Fugas de memoria
 
@@ -69,11 +69,10 @@ rm -rf .turbo
 2. Asegúrese de que la versión coincida (se recomienda `workspace:*`).
 3. Ejecute `pnpm install` para actualizar los enlaces simbólicos.
 4. Si los problemas persisten, intente una limpieza profunda:
-
-```bash
+   ```bash
    pnpm -r exec rm -rf node_modules
    pnpm install
-```
+   ```
 
 ### Errores de tipo en CI pero no locales
 
@@ -134,4 +133,4 @@ try {
 
 - [Mejores prácticas](best-practices.md)
 - [Configuración de desarrollo](development-setup.md)
-- [Guía de prueba](testing.md)
+- [Guía de pruebas](testing.md)

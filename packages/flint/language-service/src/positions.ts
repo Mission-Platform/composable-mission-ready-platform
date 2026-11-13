@@ -1,5 +1,6 @@
+import type { FlintSourceSpan } from '@mission-platform/flint-ast';
+
 import type { FlintPosition, FlintRange } from './types.js';
-import type { FlintSourceSpan } from '@mission-platform/flint';
 
 /** Converts a 0-based character offset into line and character coordinates. */
 export function positionAtOffset(source: string, offset: number): FlintPosition {

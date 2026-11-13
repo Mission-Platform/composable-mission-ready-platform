@@ -63,7 +63,7 @@ function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement;
 `@mission-platform/vite-plugin-forge`에 의해 React 또는 Vue로 바로 컴파일됩니다.
 
 `src` 이미지, 대체 `initials` 또는
-표준 `2xs … 2xl` 스케일로 크기가 지정된 기본 슬롯, 선택적으로
+표준 `2xs … 2xl` 스케일로 크기가 지정된 기본 슬롯(선택적으로
 현재 상태 코너 점. 마이그레이션된 레이아웃 프리미티브와 마찬가지로 배치됩니다.
 **인라인 스타일**(디자인 토큰에 의해 구동됨)을 사용하므로 출시되지 않습니다.
 자체 CSS 모듈; 함께 위치한 `forge-avatar.module.scss` 전용 드레스
@@ -71,9 +71,9 @@ function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 속성 | 읽기 전용<AvatarProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<AvatarProperties> |             |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -133,9 +133,9 @@ function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): 
 
 #### 매개변수
 
-| 이름 | 유형                                 | 설명 |
-| ---- | ------------------------------------ | ---- |
-| 속성 | 읽기 전용<BackgroundVideoProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------------- | ----------- |
+| 속성 | 읽기 전용<BackgroundVideoProperties> |             |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -186,7 +186,7 @@ function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 
 `@mission-platform/components` `ForgeBadge`을 반영합니다: 동일한 9개 톤
 변형, 표준 `2xs → 2xl` 크기 척도 및 레이블이 렌더링됩니다.
-{@link ForgeTypography}(`caption`, 중간 두께, 상속된 색상)을 통해
+{@link ForgeTypography}(`caption`, 중간 두께, 상속된 색상)를 통해
 타이포그래피는 Vue 라이브러리와 일치합니다.
 
 함께 배치된 CSS 모듈 `forge-badge.module.scss`를 통해 스타일을 소유합니다.
@@ -197,9 +197,9 @@ function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 속성 | 읽기 전용<BadgeProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------- | ----------- |
+| 속성 | 읽기 전용<BadgeProperties> |             |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -247,13 +247,57 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 (2단계 컴파일러에 의해 모든 프레임워크에 수행되므로 구성 요소는
 자체 `@layer mp.components` CSS를 제공합니다). 해시된 모듈 클래스 이름은 다음과 같습니다.
 다음을 포함하여 프레임워크 중립적인 {@link classNames} 도우미로 조립되었습니다.
-조건부 로딩 수정자에 대한 `{ className: boolean }` 개체 양식입니다.
+조건부 로딩 수정자를 위한 `{ className: boolean }` 개체 양식입니다.
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 속성 | 읽기 전용<ButtonProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<ButtonProperties> |             |
+
+## `src/components/atoms/forge-divider/forge-divider`
+
+### 분배기방향
+
+**종류:** 유형
+
+```typescript
+export type DividerOrientation = 'horizontal' | 'vertical';
+```
+
+구분선의 레이아웃 방향.
+
+### Divider속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface DividerProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeDivider
+
+**종류:** 기능
+
+```typescript
+function ForgeDivider(properties: Readonly<DividerProperties>): MpElement;
+```
+
+`ForgeDivider` — 중립 JSX에서 한 번 작성된 얇은 테두리 구분선
+방언을 사용하여 React 또는 Vue로 바로 컴파일됩니다.
+`@mission-platform/vite-plugin-forge`.
+
+`orientation`에 따라 사용 가능한 너비 또는 높이를 채우고 사용합니다.
+기본적으로 의미론적 `<hr>` 요소입니다. `decorative`를 `false`로 설정하여
+대신 역할을 수행하는 `<div>`을 사용합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------- | ----------- |
+| 속성 | 읽기 전용<DividerProperties> |             |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -270,17 +314,17 @@ function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
 `@mission-platform/vite-plugin-forge`.
 
 기본을 통해 아이콘이 제공되는 기본 `<button>`를 렌더링합니다.
-슬롯. 눈에 보이는 텍스트가 없기 때문에 다음을 통해 접근 가능한 이름이 **필요**합니다.
+슬롯. 눈에 보이는 텍스트가 없기 때문에 액세스 가능한 이름이 **필요**입니다.
 `label`(`aria-label`로 적용됨) `click` 콜백은 억제됩니다.
 `disabled`. 함께 배치된 CSS 모듈을 통해 스타일을 소유합니다.
-`forge-icon-button.module.scss`, 프레임워크 중립으로 조립됨
+프레임워크 중립으로 조립된 `forge-icon-button.module.scss`
 {@link classNames} 도우미.
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<IconButtonProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<IconButtonProperties> |             |
 
 ### 아이콘버튼속성
 
@@ -311,7 +355,95 @@ export type IconButtonVariant =
   'ghost' | 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 ```
 
-아이콘 버튼의 시각적 처리 - 표준 색상 세트와 투명한 `ghost`.
+아이콘 버튼의 시각적 처리 — 표준 색상 세트와 투명한 `ghost`.
+
+## `src/components/atoms/forge-icon/forge-icon`
+
+### Forge아이콘
+
+**종류:** 기능
+
+```typescript
+function ForgeIcon(properties: Readonly<IconProperties>): MpElement;
+```
+
+검토된 `@mission-platform/icons`을 기반으로 하는 프레임워크 중립적 아이콘 외관
+카탈로그. 해결 방법은 데이터 기반이며 알 수 없는 이름은 절대로 잘못된 것으로 렌더링되지 않습니다.
+구성요소; 래퍼는 액세스 가능한 이름을 소유하므로 카탈로그 SVG는 자동으로 유지됩니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------ | ----------- |
+| 속성 | 읽기 전용<IconProperties> |             |
+
+### 아이콘이름
+
+**종류:** 유형
+
+```typescript
+export type IconName = string;
+```
+
+`forge-icon-check`과 같은 카탈로그 이름. 알 수 없는 이름은 대체 아이콘을 사용합니다.
+
+### 아이콘속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface IconProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 아이콘크기
+
+**종류:** 유형
+
+```typescript
+export type IconSize = 'sm' | 'md' | 'lg' | 'xl';
+```
+
+카탈로그의 픽셀 크기에 매핑된 아이콘 크기입니다.
+
+## `src/components/atoms/forge-kbd/forge-kbd`
+
+### ForgeKbd
+
+**종류:** 기능
+
+```typescript
+function ForgeKbd(properties: Readonly<KbdProperties>): MpElement;
+```
+
+중립 JSX 방언으로 렌더링된 시맨틱 키보드 키/코드 레이블입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------- | ----------- |
+| 속성 | 읽기 전용<KbdProperties> |             |
+
+### Kbd속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface KbdProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### Kbd크기
+
+**종류:** 유형
+
+```typescript
+export type KbdSize = 'sm' | 'md' | 'lg';
+```
+
+키보드 키 크기.
 
 ## `src/components/atoms/forge-progress-bar/forge-progress-bar`
 
@@ -335,9 +467,9 @@ function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElemen
 
 #### 매개변수
 
-| 이름 | 유형                             | 설명 |
-| ---- | -------------------------------- | ---- |
-| 속성 | 읽기 전용<ProgressBarProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------- | ----------- |
+| 속성 | 읽기 전용<ProgressBarProperties> |             |
 
 ### ProgressBar속성
 
@@ -397,9 +529,9 @@ JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 속성 | 읽기 전용<QuoteProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------- | ----------- |
+| 속성 | 읽기 전용<QuoteProperties> |             |
 
 ### 견적속성
 
@@ -442,13 +574,13 @@ function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): 
 ```
 
 `ForgeResponsiveImage` — 예술적인 방향으로 반응하는 `<picture>` 요소
-중립 JSX 방언으로 한 번 작성하고 React로 바로 컴파일하거나
+중립 JSX 방언으로 한 번 작성하고 바로 React로 컴파일하거나
 `@mission-platform/vite-plugin-forge`의 Vue.
 
 `sources`의 항목당 하나의 `<source>`가 있는 `<picture>`을 렌더링합니다(아트용).
 방향/형식 협상) 및 대체 `<img>`, 기본 지원
 `srcset`/`sizes`, 지연 로딩, 비동기 디코딩, 고정 `aspectRatio`(
-레이아웃 공간을 예약하고 CLS를 방지하고 `object-fit` 제어를 수행합니다. 그것은 그것을 소유하고 있다
+레이아웃 공간을 예약하고 CLS를 피함) 및 `object-fit` 제어. 그것은 그것을 소유하고 있다
 함께 배치된 CSS 모듈 `forge-responsive-image.module.scss`을 통한 스타일링,
 프레임워크 중립적인 {@link classNames} 도우미로 조립되었습니다.
 
@@ -459,9 +591,9 @@ function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): 
 
 #### 매개변수
 
-| 이름 | 유형                                 | 설명 |
-| ---- | ------------------------------------ | ---- |
-| 속성 | 읽기 전용<ResponsiveImageProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------------- | ----------- |
+| 속성 | 읽기 전용<ResponsiveImageProperties> |             |
 
 ### 반응형이미지맞춤
 
@@ -523,9 +655,9 @@ function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): 
 
 #### 매개변수
 
-| 이름 | 유형                                 | 설명 |
-| ---- | ------------------------------------ | ---- |
-| 속성 | 읽기 전용<ResponsiveVideoProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------------- | ----------- |
+| 속성 | 읽기 전용<ResponsiveVideoProperties> |             |
 
 ### 반응형비디오핏
 
@@ -585,9 +717,9 @@ JSX 방언으로 React 또는 Vue으로 바로 컴파일됩니다.
 
 #### 매개변수
 
-| 이름 | 유형                           | 설명 |
-| ---- | ------------------------------ | ---- |
-| 속성 | 읽기 전용<SeparatorProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------- | ----------- |
+| 속성 | 읽기 전용<SeparatorProperties> |             |
 
 ### 구분 기호방향
 
@@ -651,9 +783,9 @@ function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<SkeletonProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<SkeletonProperties> |             |
 
 ### 뼈대속성
 
@@ -699,9 +831,9 @@ JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
 
 #### 매개변수
 
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 속성 | 읽기 전용<SpinnerProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------- | ----------- |
+| 속성 | 읽기 전용<SpinnerProperties> |             |
 
 ### Spinner속성
 
@@ -756,9 +888,9 @@ BEM 클래스 이름과 계산된 Flexbox 인라인 스타일을 내보냅니다
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 속성 | 읽기 전용<StackProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------- | ----------- |
+| 속성 | 읽기 전용<StackProperties> |             |
 
 ### 스택정렬
 
@@ -824,9 +956,9 @@ function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<StatusIconProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<StatusIconProperties> |             |
 
 ### 상태아이콘레벨
 
@@ -858,6 +990,102 @@ export type StatusIconSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
 표준 2xs → 2xl 크기 스케일.
+
+## `src/components/atoms/forge-surface/forge-surface`
+
+### ForgeSurface
+
+**종류:** 기능
+
+```typescript
+function ForgeSurface(properties: Readonly<SurfaceProperties>): MpElement;
+```
+
+기본 슬롯이 있는 테마 적용 가능한 의미 표면입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------- | ----------- |
+| 속성 | 읽기 전용<SurfaceProperties> |             |
+
+### 표면 고도
+
+**종류:** 유형
+
+```typescript
+export type SurfaceElevation = 0 | 1 | 2 | 3;
+```
+
+표면 고도 수준.
+
+### 표면패딩
+
+**종류:** 유형
+
+```typescript
+export type SurfacePadding = 'none' | 'sm' | 'md' | 'lg';
+```
+
+표면 패딩 규모.
+
+### 표면 속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface SurfaceProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 둥근 표면
+
+**종류:** 유형
+
+```typescript
+export type SurfaceRounded = 'none' | 'sm' | 'md' | 'lg' | 'xl';
+```
+
+표면 코너 반경 처리.
+
+## `src/components/atoms/forge-sync-status-indicator/forge-sync-status-indicator`
+
+### ForgeSync상태 표시기
+
+**종류:** 기능
+
+```typescript
+function ForgeSyncStatusIndicator(properties: Readonly<SyncStatusIndicatorProperties>): MpElement;
+```
+
+컴팩트하고 접근 가능한 동기화 상태 표시기입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------------------- | ----------- |
+| 속성 | 읽기 전용<SyncStatusIndicatorProperties> |             |
+
+### 동기화 상태
+
+**종류:** 유형
+
+```typescript
+export type SyncStatus = 'synced' | 'syncing' | 'pending' | 'error' | 'offline';
+```
+
+표시기로 표시되는 동기화 상태입니다.
+
+### SyncStatusIndicator속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface SyncStatusIndicatorProperties
+```
+
+설명이 제공되지 않았습니다.
 
 ## `src/components/molecules/forge-accordion/forge-accordion`
 
@@ -919,9 +1147,57 @@ React/Vue); 항목당 `summary`/기본 슬롯은 두 개의 범위 지정 슬롯
 
 #### 매개변수
 
-| 이름 | 유형                           | 설명 |
-| ---- | ------------------------------ | ---- |
-| 속성 | 읽기 전용<AccordionProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------- | ----------- |
+| 속성 | 읽기 전용<AccordionProperties> |             |
+
+## `src/components/molecules/forge-alert/forge-alert`
+
+### 경고 속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface AlertProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 경고 크기
+
+**종류:** 유형
+
+```typescript
+export type AlertSize = 'sm' | 'md' | 'lg';
+```
+
+설명이 제공되지 않았습니다.
+
+### 경고 변형
+
+**종류:** 유형
+
+```typescript
+export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeAlert
+
+**종류:** 기능
+
+```typescript
+function ForgeAlert(properties: Readonly<AlertProperties>): MpElement;
+```
+
+구성 가능한 메시지와 작업 슬롯이 포함된 액세스 가능하고 닫을 수 있는 상태 메시지입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------- | ----------- |
+| 속성 | 읽기 전용<AlertProperties> |             |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -970,9 +1246,9 @@ function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<BreadcrumbProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<BreadcrumbProperties> |             |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1015,7 +1291,7 @@ function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElemen
 ```
 
 `ForgeButtonGroup` — 관련 버튼을 단일 시각적 단위로 그룹화합니다. 작성됨
-중립 JSX 방언으로 한 번 사용하고 다음을 통해 React 또는 Vue로 바로 컴파일합니다.
+중립 JSX 방언으로 한 번 실행하고 다음을 통해 React 또는 Vue로 바로 컴파일됩니다.
 `@mission-platform/vite-plugin-forge`.
 
 기본 슬롯 자식(일반적으로 `Button` / `IconButton`)을 래핑합니다.
@@ -1025,14 +1301,62 @@ function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElemen
 그룹을 설명합니다.
 
 함께 배치된 CSS 모듈을 통해 스타일을 소유합니다.
-`forge-button-group.module.scss`, 프레임워크 중립으로 조립됨
+프레임워크 중립으로 조립된 `forge-button-group.module.scss`
 {@link classNames} 도우미.
 
 #### 매개변수
 
-| 이름 | 유형                             | 설명 |
-| ---- | -------------------------------- | ---- |
-| 속성 | 읽기 전용<ButtonGroupProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------- | ----------- |
+| 속성 | 읽기 전용<ButtonGroupProperties> |             |
+
+## `src/components/molecules/forge-callout-block/forge-callout-block`
+
+### 콜아웃블록속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface CalloutBlockProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 설명선블록크기
+
+**종류:** 유형
+
+```typescript
+export type CalloutBlockSize = 'sm' | 'md';
+```
+
+설명이 제공되지 않았습니다.
+
+### 콜아웃블록 변형
+
+**종류:** 유형
+
+```typescript
+export type CalloutBlockVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+설명이 제공되지 않았습니다.
+
+### 단조콜아웃블록
+
+**종류:** 기능
+
+```typescript
+function ForgeCalloutBlock(properties: Readonly<CalloutBlockProperties>): MpElement;
+```
+
+제목, 설명, 콘텐츠 및 작업 슬롯이 포함된 눈에 띄는 정보 블록입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------------- | ----------- |
+| 속성 | 읽기 전용<CalloutBlockProperties> |             |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1081,9 +1405,57 @@ React의 소품 존재 확인) 존재 감지는 두 가지 모두에서 동일�
 
 #### 매개변수
 
-| 이름 | 유형                      | 설명 |
-| ---- | ------------------------- | ---- |
-| 속성 | 읽기 전용<CardProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------ | ----------- |
+| 속성 | 읽기 전용<CardProperties> |             |
+
+## `src/components/molecules/forge-carousel-indicator/forge-carousel-indicator`
+
+### 캐러셀표시기방향
+
+**종류:** 유형
+
+```typescript
+export type CarouselIndicatorOrientation = 'horizontal' | 'vertical';
+```
+
+설명이 제공되지 않았습니다.
+
+### 회전판 표시기속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface CarouselIndicatorProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 캐러셀표시기크기
+
+**종류:** 유형
+
+```typescript
+export type CarouselIndicatorSize = 'sm' | 'md' | 'lg';
+```
+
+설명이 제공되지 않았습니다.
+
+### Forge회전목마표시기
+
+**종류:** 기능
+
+```typescript
+function ForgeCarouselIndicator(properties: Readonly<CarouselIndicatorProperties>): MpElement;
+```
+
+캐러셀에 대해 접근 가능하고 키보드로 작동 가능한 페이지 매기기 도트입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------------- | ----------- |
+| 속성 | 읽기 전용<CarouselIndicatorProperties> |             |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1143,9 +1515,9 @@ function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<ChatBubbleProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<ChatBubbleProperties> |             |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1187,9 +1559,9 @@ function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<CollapseProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<CollapseProperties> |             |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1221,7 +1593,7 @@ export interface DeviceMockProperties
 export type DeviceMockSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-크기 토큰 — 표준 2xs → 2xl 크기. `em` 상대 치수를 통해 전체 프레임의 크기를 조정합니다.
+크기 토큰 — 표준 2xs → 2xl 크기. `em` 관련 치수를 통해 전체 프레임의 크기를 조정합니다.
 
 ### DeviceMockType
 
@@ -1255,9 +1627,125 @@ function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<DeviceMockProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<DeviceMockProperties> |             |
+
+## `src/components/molecules/forge-drop-zone/forge-drop-zone`
+
+### DropZone속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface DropZoneProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### DropZone거부
+
+**종류:** 인터페이스
+
+```typescript
+export interface DropZoneReject
+```
+
+설명이 제공되지 않았습니다.
+
+### DropZoneScope
+
+**종류:** 인터페이스
+
+```typescript
+export interface DropZoneScope
+```
+
+설명이 제공되지 않았습니다.
+
+### DropZoneSize
+
+**종류:** 유형
+
+```typescript
+export type DropZoneSize = 'sm' | 'md' | 'lg';
+```
+
+설명이 제공되지 않았습니다.
+
+### DropZone값
+
+**종류:** 유형
+
+```typescript
+export type DropZoneValue = File | File[];
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeDropZone
+
+**종류:** 기능
+
+```typescript
+function ForgeDropZone(properties: Readonly<DropZoneProperties>): MpElement;
+```
+
+클라이언트 측 검증 기능을 갖춘 키보드 액세스 가능 드래그 앤 드롭 파일 대상입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<DropZoneProperties> |             |
+
+## `src/components/molecules/forge-empty-state/forge-empty-state`
+
+### 빈상태속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface EmptyStateProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 빈상태크기
+
+**종류:** 유형
+
+```typescript
+export type EmptyStateSize = 'sm' | 'md' | 'lg';
+```
+
+설명이 제공되지 않았습니다.
+
+### 빈상태변형
+
+**종류:** 유형
+
+```typescript
+export type EmptyStateVariant = 'neutral' | 'info';
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeEmptyState
+
+**종류:** 기능
+
+```typescript
+function ForgeEmptyState(properties: Readonly<EmptyStateProperties>): MpElement;
+```
+
+선택적 아이콘, 지원 문구 및 작업이 포함된 중앙에 내용이 없는 메시지입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<EmptyStateProperties> |             |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1286,9 +1774,9 @@ BEM 클래스와 계산된 그리드 인라인 스타일을 내보냅니다. 데
 
 #### 매개변수
 
-| 이름 | 유형                      | 설명 |
-| ---- | ------------------------- | ---- |
-| 속성 | 읽기 전용<GridProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------ | ----------- |
+| 속성 | 읽기 전용<GridProperties> |             |
 
 ### 그리드 정렬
 
@@ -1342,9 +1830,9 @@ React 후크로 컴파일되는 중립 후크(`useState`/`useRef`/`useEffect`)
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 속성 | 읽기 전용<InViewProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<InViewProperties> |             |
 
 ### InView애니메이션
 
@@ -1362,6 +1850,64 @@ export type InViewAnimation = 'fade' | 'slide-up' | 'slide-left' | 'slide-right'
 
 ```typescript
 export interface InViewProperties
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/components/molecules/forge-inline-edit/forge-inline-edit`
+
+### Forge인라인편집
+
+**종류:** 기능
+
+```typescript
+function ForgeInlineEdit(properties: Readonly<InlineEditProperties>): MpElement;
+```
+
+키보드 제출, 취소 및 유효성 검사가 포함된 간단한 읽기/편집 컨트롤입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<InlineEditProperties> |             |
+
+### InlineEditInputType
+
+**종류:** 유형
+
+```typescript
+export type InlineEditInputType = 'text' | 'email' | 'url' | 'number';
+```
+
+설명이 제공되지 않았습니다.
+
+### InlineEdit속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface InlineEditProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 인라인편집크기
+
+**종류:** 유형
+
+```typescript
+export type InlineEditSize = 'sm' | 'md' | 'lg';
+```
+
+설명이 제공되지 않았습니다.
+
+### InlineEditValidator
+
+**종류:** 유형
+
+```typescript
+export type InlineEditValidator = (value: string) => string | undefined;
 ```
 
 설명이 제공되지 않았습니다.
@@ -1394,9 +1940,9 @@ function ForgeList(properties: Readonly<ListProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                      | 설명 |
-| ---- | ------------------------- | ---- |
-| 속성 | 읽기 전용<ListProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------ | ----------- |
+| 속성 | 읽기 전용<ListProperties> |             |
 
 ### 목록항목
 
@@ -1468,9 +2014,9 @@ CSS); 동적 다중 열 속성은 인라인으로 적용됩니다.
 
 #### 매개변수
 
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 속성 | 읽기 전용<MasonryProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------- | ----------- |
+| 속성 | 읽기 전용<MasonryProperties> |             |
 
 ### 메이슨리갭
 
@@ -1488,6 +2034,54 @@ export type MasonryGap = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 ```typescript
 export interface MasonryProperties
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/components/molecules/forge-mention-input/forge-mention-input`
+
+### Forge멘션입력
+
+**종류:** 기능
+
+```typescript
+function ForgeMentionInput(properties: Readonly<MentionInputProperties>): MpElement;
+```
+
+접근 가능하고 키보드로 탐색할 수 있는 멘션 제안이 있는 텍스트 영역입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------------- | ----------- |
+| 속성 | 읽기 전용<MentionInputProperties> |             |
+
+### 입력 속성 언급
+
+**종류:** 인터페이스
+
+```typescript
+export interface MentionInputProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 언급항목
+
+**종류:** 인터페이스
+
+```typescript
+export interface MentionItem
+```
+
+설명이 제공되지 않았습니다.
+
+### 언급제안범위
+
+**종류:** 인터페이스
+
+```typescript
+export interface MentionSuggestionScope
 ```
 
 설명이 제공되지 않았습니다.
@@ -1519,9 +2113,9 @@ function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<MenuItemProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<MenuItemProperties> |             |
 
 ### 메뉴항목속성
 
@@ -1566,7 +2160,7 @@ function ForgeMenu(properties: Readonly<MenuProperties>): MpElement;
 하위 메뉴(중립 `useEffect`을 통해 연결된 문서 수신기). 그것은 그것을 소유하고 있다
 함께 배치된 CSS 모듈 `forge-menu.module.scss`를 통한 스타일링.
 
-원본 Vue SFC는 `ForgeMenuList`/`ForgeMenuItemButton`/로 구성됩니다.
+원래 Vue SFC는 `ForgeMenuList`/`ForgeMenuItemButton`/로 구성되었습니다.
 `ForgeMenuItemLink`/`ForgeMenuSubmenu`(자체적으로 반복되는 하위 메뉴) 는
 중립 버전은 단일 깊이의 재귀를 재현합니다.
 `renderItems(items, parentPath)` 걷기 및 단일 경로 입력 `openPath`
@@ -1577,9 +2171,9 @@ function ForgeMenu(properties: Readonly<MenuProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                      | 설명 |
-| ---- | ------------------------- | ---- |
-| 속성 | 읽기 전용<MenuProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------ | ----------- |
+| 속성 | 읽기 전용<MenuProperties> |             |
 
 ### 메뉴노드
 
@@ -1611,6 +2205,76 @@ export interface MenuProperties
 
 설명이 제공되지 않았습니다.
 
+## `src/components/molecules/forge-metric-card/forge-metric-card`
+
+### ForgeMetricCard
+
+**종류:** 기능
+
+```typescript
+function ForgeMetricCard(properties: Readonly<MetricCardProperties>): MpElement;
+```
+
+`ForgeMetricCard` — 중립 JSX에서 한 번 작성된 간단한 메트릭 요약입니다.
+가치, 추세, 로딩 상태, 지원 콘텐츠를 하나로 유지합니다.
+CSS 모듈에 시각적 처리를 남겨두고 접근 가능한 기사입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<MetricCardProperties> |             |
+
+### MetricCard속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface MetricCardProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 메트릭 카드 크기
+
+**종류:** 유형
+
+```typescript
+export type MetricCardSize = 'sm' | 'md' | 'lg';
+```
+
+미터법 카드 배율을 제어하는 ​​크기 토큰입니다.
+
+### MetricCard추세
+
+**종류:** 인터페이스
+
+```typescript
+export interface MetricCardTrend
+```
+
+측정항목 값 아래에 렌더링되는 선택적 변경 표시기입니다.
+
+### 메트릭카드추세방향
+
+**종류:** 유형
+
+```typescript
+export type MetricCardTrendDirection = 'up' | 'down' | 'flat';
+```
+
+측정항목 추세로 표시되는 변화 방향입니다.
+
+### MetricCard변형
+
+**종류:** 유형
+
+```typescript
+export type MetricCardVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+미터법 카드의 표면 톤입니다.
+
 ## `src/components/molecules/forge-navbar-item/forge-navbar-item`
 
 ### ForgeNavbarItem
@@ -1624,7 +2288,7 @@ function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement;
 `ForgeNavbarItem` — 중립 JSX 방언으로 한 번 작성된 navbar 항목 및
 `@mission-platform/vite-plugin-forge`에 의해 React 또는 Vue로 직접 컴파일되었습니다.
 
-`dropdownItems`가 없으면 단일 항목, 즉 링크(`<a href>`)를 렌더링합니다.
+`dropdownItems`가 없으면 단일 항목, 즉 다음과 같은 경우 링크(`<a href>`)를 렌더링합니다.
 활성화되고 `href`가 설정됩니다. 그렇지 않으면 활성화 가능한 `<button>`가 실행됩니다.
 `onClick`. `dropdownItems`을 사용하면 드롭다운 트리거와
 `role="menu"` 패널; 클릭
@@ -1646,9 +2310,9 @@ React의 요소 유형/Vue의 `<component :is>`), `tag`는 `'a'`으로 해석됩
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<NavbarItemProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<NavbarItemProperties> |             |
 
 ### NavbarItemChild
 
@@ -1708,9 +2372,9 @@ function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<PaginationProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<PaginationProperties> |             |
 
 ### 페이지 매김 항목
 
@@ -1778,14 +2442,14 @@ function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
 중립 `<Slot>`)이므로 프레임워크와 중립 모두에서 실제 소품으로 유지됩니다.
 소비자는 이를 일반 속성(`panel={({ tab }) => …}`) - Vue로 전달할 수 있습니다.
 `<Slot>` 지원 명명된 슬롯은 소품으로 전달될 때 삭제됩니다.
-중립 부모를 컴파일하고 패널을 비워 둡니다. 이는 확립된
+중립 상위 항목을 컴파일하고 패널을 비워 둡니다. 이는 확립된
 `modelValue` + 콜백 소품 규칙.
 
 #### 매개변수
 
-| 이름 | 유형                      | 설명 |
-| ---- | ------------------------- | ---- |
-| 속성 | 읽기 전용<TabsProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------ | ----------- |
+| 속성 | 읽기 전용<TabsProperties> |             |
 
 ### 탭항목
 
@@ -1827,6 +2491,57 @@ export type TabsVariant = 'line' | 'pill';
 
 탭 목록의 시각적 처리.
 
+## `src/components/molecules/forge-tag-input/forge-tag-input`
+
+### ForgeTag입력
+
+**종류:** 기능
+
+```typescript
+function ForgeTagInput(properties: Readonly<TagInputProperties>): MpElement;
+```
+
+`ForgeTagInput` — 중립으로 작성된 제어되고 접근 가능한 태그 편집기
+JSX. Enter 또는 쉼표는 잘린 초안을 커밋하고 백스페이스는 마지막 태그를 제거합니다.
+초안이 비어 있고 중복/최대 태그 규칙이
+제어된 업데이트 콜백이 시작됩니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<TagInputProperties> |             |
+
+### 태그입력속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface TagInputProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 태그입력크기
+
+**종류:** 유형
+
+```typescript
+export type TagInputSize = 'sm' | 'md' | 'lg';
+```
+
+태그 입력 배율을 제어하는 ​​크기 토큰입니다.
+
+### 태그입력변형
+
+**종류:** 유형
+
+```typescript
+export type TagInputVariant = 'neutral' | 'primary' | 'error';
+```
+
+태그 입력의 표면 톤입니다.
+
 ## `src/components/molecules/forge-timeline/forge-timeline`
 
 ### Forge타임라인
@@ -1847,17 +2562,17 @@ function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 `items` 배열에 의해 — 마이그레이션된 {@link ForgeTabs}가 취한 것과 동일한 접근 방식 —
 따라서 레이아웃 상태는 단순히 props에서 각 `<li>`로 흐릅니다(컨텍스트 없음).
 필요). 함께 배치된 CSS 모듈을 통해 스타일을 소유합니다.
-원본 컨테이너와 항목을 병합하는 `forge-timeline.module.scss`
+원래 컨테이너와 항목을 병합하는 `forge-timeline.module.scss`
 스타일.
 
 항목당 `marker`/`time`/`title`/기본 슬롯은 4개의 범위 지정 슬롯이 됩니다.
-(`marker`/`time`/`title`/`content`) 항목 필드로 대체됩니다.
+(`marker`/`time`/`title`/`content`) 항목의 필드로 대체됩니다.
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<TimelineProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<TimelineProperties> |             |
 
 ### 타임라인정렬
 
@@ -1952,9 +2667,9 @@ props(원본 SFC의 방출 대체). 중립 `useState` / `useRef`
 
 #### 매개변수
 
-| 이름 | 유형                              | 설명 |
-| ---- | --------------------------------- | ---- |
-| 속성 | 읽기 전용<WindowPopoutProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------------- | ----------- |
+| 속성 | 읽기 전용<WindowPopoutProperties> |             |
 
 ### 창팝아웃속성
 
@@ -1965,6 +2680,164 @@ export interface WindowPopoutProperties
 ```
 
 설명이 제공되지 않았습니다.
+
+## `src/components/organisms/forge-activity-feed/forge-activity-feed`
+
+### 활동피드항목
+
+**종류:** 유형
+
+```typescript
+export type ActivityFeedItem = ActivityItem;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 계약
+
+- **@deprecated:** `ActivityItem`을 사용하세요.
+
+### ActivityFeed속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface ActivityFeedProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 활동피드크기
+
+**종류:** 유형
+
+```typescript
+export type ActivityFeedSize = 'sm' | 'md' | 'lg';
+```
+
+설명이 제공되지 않았습니다.
+
+### 활동 피드 변형
+
+**종류:** 유형
+
+```typescript
+export type ActivityFeedVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeActivityFeed
+
+**종류:** 기능
+
+```typescript
+function ForgeActivityFeed(properties: Readonly<ActivityFeedProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------------- | ----------- |
+| 속성 | 읽기 전용<ActivityFeedProperties> |             |
+
+## `src/components/organisms/forge-announcement-bar/forge-announcement-bar`
+
+### 공지 사항바속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface AnnouncementBarProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 공지사항BarVariant
+
+**종류:** 유형
+
+```typescript
+export type AnnouncementBarVariant = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeAnnouncementBar
+
+**종류:** 기능
+
+```typescript
+function ForgeAnnouncementBar(properties: Readonly<AnnouncementBarProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------------- | ----------- |
+| 속성 | 읽기 전용<AnnouncementBarProperties> |             |
+
+## `src/components/organisms/forge-asset-browser/forge-asset-browser`
+
+### 자산브라우저항목
+
+**종류:** 인터페이스
+
+```typescript
+export interface AssetBrowserItem
+```
+
+설명이 제공되지 않았습니다.
+
+### 자산브라우저속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface AssetBrowserProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 자산브라우저 크기
+
+**종류:** 유형
+
+```typescript
+export type AssetBrowserSize = 'sm' | 'md' | 'lg';
+```
+
+설명이 제공되지 않았습니다.
+
+### 자산브라우저값
+
+**종류:** 유형
+
+```typescript
+export type AssetBrowserValue = string | string[];
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeAsset브라우저
+
+**종류:** 기능
+
+```typescript
+function ForgeAssetBrowser(properties: Readonly<AssetBrowserProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------------- | ----------- |
+| 속성 | 읽기 전용<AssetBrowserProperties> |             |
 
 ## `src/components/organisms/forge-carousel/forge-carousel`
 
@@ -2016,7 +2889,7 @@ WCAG 2.2.2 일시 정지/재생 컨트롤을 사용한 자동 재생. 그것은 
 같은 위치에 있는 CSS 모듈 `forge-carousel.module.scss`.
 
 원본 Vue SFC의 대체: 슬라이드는 기본 슬롯에서 나왔습니다.
-그리고 그 개수는 슬롯 VNode를 검사하여 파생되었습니다.
+개수는 슬롯 VNode를 검사하여 파생되었습니다.
 방언은 할 수 없습니다. 따라서 슬라이드는 `slides` 배열(
 범위가 지정된 `slide` 슬롯(사용자 정의 콘텐츠용), 마이그레이션된 콘텐츠를 동일하게 평면화
 {@link ForgeTabs}가 사용되었습니다. 구성-API `ref`/`watch`/`onBeforeUnmount`
@@ -2028,9 +2901,9 @@ WCAG 2.2.2 일시 정지/재생 컨트롤을 사용한 자동 재생. 그것은 
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<CarouselProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<CarouselProperties> |             |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2061,7 +2934,7 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 `<li>`s로 렌더링된 {@link ForgeChatBubble} 스택) 및 선택 사항
 `footer` 작곡가용 슬롯. `autoScroll`이 활성화되면(기본값)
 마운트 시 최신 메시지에 로그를 고정하고 해당 내용이 증가함에 따라 로그를 유지합니다.
-사용자가 기록을 읽기 위해 위로 스크롤하는 동안 일시 중지됩니다. 그것은 자신의 스타일을 통해
+사용자가 기록을 읽기 위해 위로 스크롤하는 동안 일시 중지됩니다. 그것은 그것을 통해 자신의 스타일을 소유
 공동 배치된 CSS 모듈 `forge-chat-area.module.scss`.
 
 원본 Vue SFC의 대체: Composition-API `onMounted` +
@@ -2074,9 +2947,425 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<ChatAreaProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<ChatAreaProperties> |             |
+
+## `src/components/organisms/forge-command-palette/forge-command-palette`
+
+### 명령팔레트명령
+
+**종류:** 유형
+
+```typescript
+export type CommandPaletteCommand = CommandItem;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 계약
+
+- **@deprecated:** `CommandItem`을 사용하세요.
+
+### 명령팔레트속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface CommandPaletteProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 명령팔레트크기
+
+**종류:** 유형
+
+```typescript
+export type CommandPaletteSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+명령 팔레트 배율을 제어하는 ​​크기 토큰입니다.
+
+### ForgeCommandPalette
+
+**종류:** 기능
+
+```typescript
+function ForgeCommandPalette(properties: Readonly<CommandPaletteProperties>): MpElement;
+```
+
+모달 오버레이가 포함된 검색 가능한 키보드 우선 명령 팔레트입니다. 중립
+구현은 필터링 및 선택 프레임워크에 독립적인 상태를 유지하는 동시에
+SSR에 대한 전역 문서 수신기를 보호합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------------- | ----------- |
+| 속성 | 읽기 전용<CommandPaletteProperties> |             |
+
+## `src/components/organisms/forge-comment-thread/forge-comment-thread`
+
+### 댓글스레드댓글
+
+**종류:** 인터페이스
+
+```typescript
+export interface CommentThreadComment
+```
+
+설명이 제공되지 않았습니다.
+
+### CommentThread속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface CommentThreadProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 댓글스레드크기
+
+**종류:** 유형
+
+```typescript
+export type CommentThreadSize = 'sm' | 'md' | 'lg';
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeComment스레드
+
+**종류:** 기능
+
+```typescript
+function ForgeCommentThread(properties: Readonly<CommentThreadProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------------- | ----------- |
+| 속성 | 읽기 전용<CommentThreadProperties> |             |
+
+## `src/components/organisms/forge-comparison-table/forge-comparison-table`
+
+### 비교표특징
+
+**종류:** 유형
+
+```typescript
+export type ComparisonTableFeature = FeatureRow;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 계약
+
+- **@deprecated:** `FeatureRow`을 사용하세요.
+
+### 비교테이블플랜
+
+**종류:** 유형
+
+```typescript
+export type ComparisonTablePlan = ComparisonItem;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 계약
+
+- **@deprecated:** `ComparisonItem`을 사용하세요.
+
+### 비교테이블속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface ComparisonTableProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 비교테이블크기
+
+**종류:** 유형
+
+```typescript
+export type ComparisonTableSize = 'sm' | 'md' | 'lg';
+```
+
+설명이 제공되지 않았습니다.
+
+### 비교테이블값
+
+**종류:** 유형
+
+```typescript
+export type ComparisonTableValue = string | number | boolean;
+```
+
+설명이 제공되지 않았습니다.
+
+### Forge비교표
+
+**종류:** 기능
+
+```typescript
+function ForgeComparisonTable(properties: Readonly<ComparisonTableProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------------- | ----------- |
+| 속성 | 읽기 전용<ComparisonTableProperties> |             |
+
+## `src/components/organisms/forge-cookie-consent/forge-cookie-consent`
+
+### 쿠키범주
+
+**종류:** 인터페이스
+
+```typescript
+export interface CookieCategory
+```
+
+사용자가 구성할 수 있는 쿠키 카테고리입니다.
+
+### 쿠키동의 속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface CookieConsentProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 쿠키동의 크기
+
+**종류:** 유형
+
+```typescript
+export type CookieConsentSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+동의 표면 규모를 제어하는 ​​크기 토큰입니다.
+
+### 쿠키동의상태
+
+**종류:** 인터페이스
+
+```typescript
+export interface CookieConsentState
+```
+
+호스트 애플리케이션으로 내보내지고 스토리지에 유지되는 동의 페이로드입니다.
+
+### ForgeCookie동의
+
+**종류:** 기능
+
+```typescript
+function ForgeCookieConsent(properties: Readonly<CookieConsentProperties>): MpElement;
+```
+
+필수 카테고리가 포함된 동의 배너 및 접근 가능한 기본 설정 대화 상자
+시행 및 보호된 로컬/세션 저장소 지속성.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------------- | ----------- |
+| 속성 | 읽기 전용<CookieConsentProperties> |             |
+
+## `src/components/organisms/forge-cta-banner/forge-cta-banner`
+
+### CtaBanner액션
+
+**종류:** 인터페이스
+
+```typescript
+export interface CtaBannerAction
+```
+
+설명이 제공되지 않았습니다.
+
+### CtaBanner속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface CtaBannerProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### Cta배너 변형
+
+**종류:** 유형
+
+```typescript
+export type CtaBannerVariant = 'neutral' | 'primary' | 'secondary' | 'success' | 'warning';
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeCta배너
+
+**종류:** 기능
+
+```typescript
+function ForgeCtaBanner(properties: Readonly<CtaBannerProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------- | ----------- |
+| 속성 | 읽기 전용<CtaBannerProperties> |             |
+
+## `src/components/organisms/forge-data-card/forge-data-card`
+
+### 데이터카드데이터
+
+**종류:** 유형
+
+```typescript
+export type DataCardData = VCardData | ICalendarData;
+```
+
+`ForgeDataCard`에 의해 표시되는 입력된 연락처 또는 달력 데이터입니다.
+
+### DataCard속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface DataCardProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 데이터카드크기
+
+**종류:** 유형
+
+```typescript
+export type DataCardSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+데이터 카드 규모를 제어하는 ​​크기 토큰입니다.
+
+### 데이터카드트렌드
+
+**종류:** 인터페이스
+
+```typescript
+export interface DataCardTrend
+```
+
+설명이 제공되지 않았습니다.
+
+#### 계약
+
+- **@deprecated:** 데이터 카드는 이제 `VCardData` 또는 `ICalendarData`을 사용합니다.
+
+### DataCard변형
+
+**종류:** 유형
+
+```typescript
+export type DataCardVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+```
+
+카드 표면의 색상 톤입니다.
+
+### ForgeDataCard
+
+**종류:** 기능
+
+```typescript
+function ForgeDataCard(properties: Readonly<DataCardProperties>): MpElement;
+```
+
+표준을 준수하는 다운로드가 포함된 시맨틱 연락처 또는 달력 카드입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<DataCardProperties> |             |
+
+## `src/components/organisms/forge-diff-viewer/forge-diff-viewer`
+
+### DiffLine 유형
+
+**종류:** 유형
+
+```typescript
+export type DiffLineType = 'context' | 'addition' | 'deletion';
+```
+
+설명이 제공되지 않았습니다.
+
+### DiffViewerLine
+
+**종류:** 인터페이스
+
+```typescript
+export interface DiffViewerLine
+```
+
+설명이 제공되지 않았습니다.
+
+### DiffViewer모드
+
+**종류:** 유형
+
+```typescript
+export type DiffViewerMode = 'unified' | 'split';
+```
+
+설명이 제공되지 않았습니다.
+
+### DiffViewer속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface DiffViewerProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### ForgeDiffViewer
+
+**종류:** 기능
+
+```typescript
+function ForgeDiffViewer(properties: Readonly<DiffViewerProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<DiffViewerProperties> |             |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2131,7 +3420,7 @@ export interface DrawerProperties
 export type DrawerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-표준 명명된 크기 척도(시작/끝 너비, 위쪽/아래쪽 높이)입니다.
+정식 명명된 크기 척도(시작/끝 너비, 위쪽/아래쪽 높이)입니다.
 
 ### 서랍 변형
 
@@ -2151,7 +3440,7 @@ export type DrawerVariant = 'overlay' | 'inline';
 function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement;
 ```
 
-`ForgeDrawer` — 중립 JSX 언어로 한 번 작성된 슬라이딩 패널 및
+`ForgeDrawer` — 중립 JSX 방언으로 한 번 작성된 슬라이딩 패널 및
 `@mission-platform/vite-plugin-forge`에 의해 React 또는 Vue으로 직접 컴파일되었습니다.
 
 `overlay` 서랍(기본값)은 `position: fixed` 패널입니다.
@@ -2162,7 +3451,7 @@ function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement;
 레이아웃 프리미티브에서 사용되는 그 아래의 오버레이 동작으로 돌아갑니다.
 `ForgeVerticalLayout`과 같은 것입니다.
 
-`draggable`이 설정되면 내부 가장자리에서 크기 조정 핸들이 커집니다. 드래그하면 됩니다.
+`draggable`이 설정되면 내부 가장자리에서 크기 조정 핸들이 커집니다. 드래그
 (공유 `pointer-drag` 도우미를 통해 `window`에서 추적된 포인터 끌기)
 `MIN_SIZE_REM`와 확인된 최대값 사이에서 패널 크기를 조정하고 보고합니다.
 `rem`에서 `onResize`까지의 새 크기(Vue `resize`에서 방출)
@@ -2178,9 +3467,199 @@ Vue이 아닌 `onOpenChange(false)` / `onClose()` 또는 `v-model`을 방출합�
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 속성 | 읽기 전용<DrawerProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<DrawerProperties> |             |
+
+## `src/components/organisms/forge-error-page/forge-error-page`
+
+### ErrorPage액션
+
+**종류:** 인터페이스
+
+```typescript
+export interface ErrorPageAction
+```
+
+오류 메시지 아래에 표시되는 작업입니다.
+
+### 오류페이지데이터
+
+**종류:** 인터페이스
+
+```typescript
+export interface ErrorPageData
+```
+
+하나의 공용 데이터 객체로 전달될 수 있는 구조화된 오류 정보입니다.
+
+### 오류 페이지 속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface ErrorPageProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 오류 페이지 크기
+
+**종류:** 유형
+
+```typescript
+export type ErrorPageSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+오류 페이지 규모를 제어하는 ​​크기 토큰입니다.
+
+### ForgeError페이지
+
+**종류:** 기능
+
+```typescript
+function ForgeErrorPage(properties: Readonly<ErrorPageProperties>): MpElement;
+```
+
+입력된 작업 설명이 포함된 의미론적 슬롯 친화적인 오류 상태 페이지입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------- | ----------- |
+| 속성 | 읽기 전용<ErrorPageProperties> |             |
+
+## `src/components/organisms/forge-kanban-board/forge-kanban-board`
+
+### ForgeKanban보드
+
+**종류:** 기능
+
+```typescript
+function ForgeKanbanBoard(properties: Readonly<KanbanBoardProperties>): MpElement;
+```
+
+열 간 항목 이동을 위한 반응형 보드입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------- | ----------- |
+| 속성 | 읽기 전용<KanbanBoardProperties> |             |
+
+### 칸반보드속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface KanbanBoardProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 칸반카드
+
+**종류:** 유형
+
+```typescript
+export type KanbanCard = KanbanItem;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 계약
+
+- **@deprecated:** `KanbanItem`을 사용하세요.
+
+### 칸반칼럼
+
+**종류:** 인터페이스
+
+```typescript
+export interface KanbanColumn
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/components/organisms/forge-logo-cloud/forge-logo-cloud`
+
+### Forge로고클라우드
+
+**종류:** 기능
+
+```typescript
+function ForgeLogoCloud(properties: Readonly<LogoCloudProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------- | ----------- |
+| 속성 | 읽기 전용<LogoCloudProperties> |             |
+
+### 로고구름항목
+
+**종류:** 유형
+
+```typescript
+export type LogoCloudItem = Logo;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 계약
+
+- **@deprecated:** `Logo`을 사용하세요.
+
+### 로고클라우드속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface LogoCloudProperties
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/components/organisms/forge-marketing-header/forge-marketing-header`
+
+### Forge마케팅헤더
+
+**종류:** 기능
+
+```typescript
+function ForgeMarketingHeader(properties: Readonly<MarketingHeaderProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------------- | ----------- |
+| 속성 | 읽기 전용<MarketingHeaderProperties> |             |
+
+### 마케팅헤더액션
+
+**종류:** 인터페이스
+
+```typescript
+export interface MarketingHeaderAction
+```
+
+설명이 제공되지 않았습니다.
+
+### 마케팅헤더속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface MarketingHeaderProperties
+```
+
+설명이 제공되지 않았습니다.
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2209,16 +3688,16 @@ JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
 `ForgeMenuSubmenu`(자체적으로 반복되는 하위 메뉴) 중립 버전
 단일 깊이의 재귀를 재현합니다.
 `renderItems(items, parentPath)` 걷기 및 단일 경로 입력 `openPath`
-`useState`, 동일한 레벨당 하나의 열기 의미를 유지합니다. 그것은 렌더링합니다
+`useState`, 동일한 수준당 하나의 열기 의미를 유지합니다. 그것은 렌더링합니다
 한 번 쓰기 `@mission-platform/icons` `ForgeIconChevron`(해당 경로를 통해 회전됨)
 `direction` 소품) 및 일반 `<a href>`(설립된 `vue-router`
 대체).
 
 #### 매개변수
 
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 속성 | 읽기 전용<MenubarProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------- | ----------- |
+| 속성 | 읽기 전용<MenubarProperties> |             |
 
 ### 메뉴바속성
 
@@ -2258,9 +3737,9 @@ JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 속성 | 읽기 전용<NavbarProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<NavbarProperties> |             |
 
 ### Navbar정렬
 
@@ -2294,6 +3773,306 @@ export interface NavbarProperties
 
 설명이 제공되지 않았습니다.
 
+## `src/components/organisms/forge-notification-panel/forge-notification-panel`
+
+### ForgeNotificationPanel
+
+**종류:** 기능
+
+```typescript
+function ForgeNotificationPanel(properties: Readonly<NotificationPanelProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------------- | ----------- |
+| 속성 | 읽기 전용<NotificationPanelProperties> |             |
+
+### 알림항목
+
+**종류:** 인터페이스
+
+```typescript
+export interface NotificationItem
+```
+
+설명이 제공되지 않았습니다.
+
+### 알림패널속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface NotificationPanelProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 알림 유형
+
+**종류:** 유형
+
+```typescript
+export type NotificationType = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/components/organisms/forge-onboarding-tour/forge-onboarding-tour`
+
+### Forge온보딩투어
+
+**종류:** 기능
+
+```typescript
+function ForgeOnboardingTour(properties: Readonly<OnboardingTourProperties>): MpElement;
+```
+
+키보드 탐색 및 선택적 완성 지속성을 갖춘 접근 가능한 스포트라이트 투어입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------------- | ----------- |
+| 속성 | 읽기 전용<OnboardingTourProperties> |             |
+
+### 온보딩단계
+
+**종류:** 유형
+
+```typescript
+export type OnboardingStep = TourStep;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 계약
+
+- **@deprecated:** `TourStep`을 사용하세요.
+
+### 온보딩투어배치
+
+**종류:** 유형
+
+```typescript
+export type OnboardingTourPlacement = 'top' | 'right' | 'bottom' | 'left' | 'center';
+```
+
+대상에 고정된 둘러보기 대화상자에 대한 배치 기본 설정입니다.
+
+### 온보딩투어속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface OnboardingTourProperties
+```
+
+설명이 제공되지 않았습니다.
+
+### 온보딩투어크기
+
+**종류:** 유형
+
+```typescript
+export type OnboardingTourSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+둘러보기 대화 상자 크기를 제어하는 ​​크기 토큰입니다.
+
+## `src/components/organisms/forge-pricing-table/forge-pricing-table`
+
+### Forge가격표
+
+**종류:** 기능
+
+```typescript
+function ForgePricingTable(properties: Readonly<PricingTableProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------------- | ----------- |
+| 속성 | 읽기 전용<PricingTableProperties> |             |
+
+### 가격 기능
+
+**종류:** 인터페이스
+
+```typescript
+export interface PricingFeature
+```
+
+설명이 제공되지 않았습니다.
+
+### 가격 계획
+
+**종류:** 인터페이스
+
+```typescript
+export interface PricingPlan
+```
+
+설명이 제공되지 않았습니다.
+
+### 가격표속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface PricingTableProperties
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/components/organisms/forge-profile-card/forge-profile-card`
+
+### ForgeProfileCard
+
+**종류:** 기능
+
+```typescript
+function ForgeProfileCard(properties: Readonly<ProfileCardProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------- | ----------- |
+| 속성 | 읽기 전용<ProfileCardProperties> |             |
+
+### 프로필카드속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface ProfileCardProperties
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/components/organisms/forge-site-footer/forge-site-footer`
+
+### ForgeSite바닥글
+
+**종류:** 기능
+
+```typescript
+function ForgeSiteFooter(properties: Readonly<SiteFooterProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<SiteFooterProperties> |             |
+
+### 사이트바닥글열
+
+**종류:** 인터페이스
+
+```typescript
+export interface SiteFooterColumn
+```
+
+설명이 제공되지 않았습니다.
+
+### 사이트바닥글링크
+
+**종류:** 인터페이스
+
+```typescript
+export interface SiteFooterLink
+```
+
+설명이 제공되지 않았습니다.
+
+### 사이트바닥글 속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface SiteFooterProperties
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/components/organisms/forge-split-pane/forge-split-pane`
+
+### Forge분할창
+
+**종류:** 기능
+
+```typescript
+function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------- | ----------- |
+| 속성 | 읽기 전용<SplitPaneProperties> |             |
+
+### 분할창 속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface SplitPaneProperties
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/components/organisms/forge-stats-section/forge-stats-section`
+
+### ForgeStats섹션
+
+**종류:** 기능
+
+```typescript
+function ForgeStatsSection(properties: Readonly<StatsSectionProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------------- | ----------- |
+| 속성 | 읽기 전용<StatsSectionProperties> |             |
+
+### 통계항목
+
+**종류:** 인터페이스
+
+```typescript
+export interface StatItem
+```
+
+설명이 제공되지 않았습니다.
+
+### 통계섹션속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface StatsSectionProperties
+```
+
+설명이 제공되지 않았습니다.
+
 ## `src/components/organisms/forge-table/forge-table`
 
 ### ForgeTable
@@ -2304,29 +4083,13 @@ export interface NavbarProperties
 function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
-`ForgeTable` — 중립 JSX 방언으로 한 번 작성된 정렬 가능한 데이터 테이블
-`@mission-platform/vite-plugin-forge`에 의해 React 또는 Vue로 바로 컴파일됩니다.
-
-클릭하여 정렬하여 `columns`/`rows`을 의미론적 `<table>`로 렌더링합니다.
-`onSort` 콜백을 실행하는 헤더(asc → desc → unsorted 순환)
-선택적 캡션, 로딩 오버레이 및 빈 상태입니다. 셀 텍스트가 렌더링됩니다.
-구성된 중립적인 {@link ForgeTypography}를 통해; 정렬 상태는 다음과 같이 유지됩니다.
-중립적인 {@link useState}/{@link useMemo} 후크. 자신만의 스타일을 소유하고 있습니다.
-공동 배치된 CSS 모듈 `forge-table.module.scss`을 통해.
-
-원래 Vue SFC는 행 유형에 대해 일반적이었습니다.
-`ForgeTableHead`/`ForgeTableBody` 하위 구성 요소, `sort` 방출을 사용하고 노출됨
-열별 범위 `cell-<key>` 슬롯. 중립 버전은 다음을 사용합니다.
-`Record<string, unknown>` 행, 헤드/본문 인라인, `onSort` 사용
-콜백을 수행하고 각 열의 선택 사항을 통해 셀별 렌더링을 구동합니다.
-`render` 포맷터(범위가 지정된 셀 슬롯이 삭제됨) — 방법과 일치
-마이그레이션된 다른 구성요소는 범위가 지정된 슬롯을 삭제했습니다.
+설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 속성 | 읽기 전용<TableProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------- | ----------- |
+| 속성 | 읽기 전용<TableProperties> |             |
 
 ### 정렬방향
 
@@ -2358,42 +4121,83 @@ export interface TableProperties
 
 설명이 제공되지 않았습니다.
 
-## `src/components/organisms/forge-tree-view/forge-tree-view`
+## `src/components/organisms/forge-testimonials-section/forge-testimonials-section`
 
-### Forge트리보기
+### Forge사용후기섹션
 
 **종류:** 기능
 
 ```typescript
-function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
+function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectionProperties>): MpElement;
 ```
 
-`ForgeTreeView` — 중립 JSX에서 한 번 작성된 재귀적이고 접근 가능한 트리
-방언을 사용하여 React 또는 Vue으로 바로 컴파일됩니다.
-`@mission-platform/vite-plugin-forge`. 각 node은 확장/축소될 수 있으며
-클릭; 열린 상태는 중립 {@link useState} 후크로 유지됩니다.
-각 라벨은 범위가 지정된 `label` 슬롯을 통해 사용자 정의할 수 있습니다.
-(`{ node, depth }`) 이는 node의 텍스트로 대체됩니다. 키보드 지원
-원본을 반영합니다(Enter/Space 선택, 오른쪽/왼쪽 화살표 확장/축소).
-이는 함께 배치된 CSS 모듈 `forge-tree-view.module.scss`를 통해 스타일을 소유합니다.
-
-원본 Vue SFC 미러링(재귀적 구성)
-`ForgeTreeNode`/`ForgeTreeNodeLabel` 하위 구성 요소), JSX 버전은 렌더링합니다.
-**진정한 중첩 마크업**: 각 루트 node는 재귀적 {@link ForgeTreeViewItem}입니다.
-(자신의 형제 구성 요소로 추출됨) 자식을
-보이는 트리를 하나로 병합하는 대신 중첩된 `<ul role="group">`
-목록. 단일 루트 수준 `openMap`(`node.id`로 입력되며 Vue와 정확히 동일)
-루트 상태)는 모든 node의 확장 상태를 구동하고 모든 항목과 공유됩니다.
-`resolveOpen`/`selectNode`/`toggleNode`/`keyDownNode` 소품을 통해; 는
-범위가 지정된 `label` 슬롯은 변경되지 않고 아래로 전달되며
-`aria-selected`/`aria-expanded` 의미 체계 및 `onSelect`/`onToggle`
-그렇지 않으면 콜백 소품이 일치합니다.
+설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형                          | 설명 |
-| ---- | ----------------------------- | ---- |
-| 속성 | 읽기 전용<TreeViewProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | --------------------------------------- | ----------- |
+| 속성 | 읽기 전용<TestimonialsSectionProperties> |             |
+
+### 증명서
+
+**종류:** 인터페이스
+
+```typescript
+export interface Testimonial
+```
+
+설명이 제공되지 않았습니다.
+
+### 회원평가섹션속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface TestimonialsSectionProperties
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/components/organisms/forge-transfer-list/forge-transfer-list`
+
+### ForgeTransferList
+
+**종류:** 기능
+
+```typescript
+function ForgeTransferList(properties: Readonly<TransferListProperties>): MpElement;
+```
+
+설명이 제공되지 않았습니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------------- | ----------- |
+| 속성 | 읽기 전용<TransferListProperties> |             |
+
+### 전송항목
+
+**종류:** 인터페이스
+
+```typescript
+export interface TransferItem
+```
+
+설명이 제공되지 않았습니다.
+
+### TransferList속성
+
+**종류:** 인터페이스
+
+```typescript
+export interface TransferListProperties
+```
+
+설명이 제공되지 않았습니다.
+
+## `src/components/organisms/forge-tree-view/forge-tree-view-item`
 
 ### TreeViewLabelScope
 
@@ -2414,6 +4218,43 @@ export interface TreeViewNode
 ```
 
 {@link ForgeTreeView}에 의해 렌더링된 트리의 node입니다.
+
+## `src/components/organisms/forge-tree-view/forge-tree-view`
+
+### Forge트리보기
+
+**종류:** 기능
+
+```typescript
+function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
+```
+
+`ForgeTreeView` — 중립 JSX에서 한 번 작성된 재귀적이고 접근 가능한 트리
+방언을 사용하여 React 또는 Vue으로 바로 컴파일됩니다.
+`@mission-platform/vite-plugin-forge`. 각 node은 확장/축소될 수 있으며
+클릭; 열린 상태는 중립 {@link useState} 후크로 유지됩니다.
+범위가 지정된 `label` 슬롯을 통해 각 라벨을 맞춤 설정할 수 있습니다.
+(`{ node, depth }`) 이는 node의 텍스트로 대체됩니다. 키보드 지원
+원본을 반영합니다(Enter/Space 선택, 화살표 오른쪽/왼쪽 확장/축소).
+이는 함께 배치된 CSS 모듈 `forge-tree-view.module.scss`를 통해 스타일을 소유합니다.
+
+원본 Vue SFC 미러링(재귀적 구성)
+`ForgeTreeNode`/`ForgeTreeNodeLabel` 하위 구성 요소), JSX 버전은 렌더링합니다.
+**진정한 중첩 마크업**: 각 루트 node는 재귀적 {@link ForgeTreeViewItem}입니다.
+(자신의 형제 구성 요소로 추출됨) 자식을
+보이는 트리를 하나로 병합하는 대신 중첩된 `<ul role="group">`
+목록. 단일 루트 수준 `openMap`(`node.id`로 입력되며 Vue와 정확히 동일)
+루트 상태)는 모든 node의 확장 상태를 구동하고 모든 항목과 공유됩니다.
+`resolveOpen`/`selectNode`/`toggleNode`/`keyDownNode` 소품을 통해; 는
+범위가 지정된 `label` 슬롯은 변경되지 않고 아래로 전달되며
+`aria-selected`/`aria-expanded` 의미 체계 및 `onSelect`/`onToggle`
+그렇지 않으면 콜백 소품이 일치합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ---------------------------- | ----------- |
+| 속성 | 읽기 전용<TreeViewProperties> |             |
 
 ### TreeView속성
 
@@ -2453,9 +4294,9 @@ function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElemen
 
 #### 매개변수
 
-| 이름 | 유형                             | 설명 |
-| ---- | -------------------------------- | ---- |
-| 속성 | 읽기 전용<VirtualListProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------- | ----------- |
+| 속성 | 읽기 전용<VirtualListProperties> |             |
 
 ### VirtualListItemScope
 
@@ -2504,9 +4345,9 @@ function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>)
 
 #### 매개변수
 
-| 이름 | 유형                                  | 설명 |
-| ---- | ------------------------------------- | ---- |
-| 속성 | 읽기 전용<VirtualLogViewerProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------------ | ----------- |
+| 속성 | 읽기 전용<VirtualLogViewerProperties> |             |
 
 ### 로그 항목
 
@@ -2575,9 +4416,9 @@ function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElem
 
 #### 매개변수
 
-| 이름 | 유형                              | 설명 |
-| ---- | --------------------------------- | ---- |
-| 속성 | 읽기 전용<VirtualTableProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------------- | ----------- |
+| 속성 | 읽기 전용<VirtualTableProperties> |             |
 
 ### VirtualTableCellScope
 
@@ -2620,7 +4461,7 @@ function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElemen
 ```
 
 `ForgeVirtualTabs` — 활성 탭만 렌더링하는 제어된 탭 컨테이너
-탭 패널**(가상화), 중립 JSX 방언으로 한 번 작성되었으며
+탭 패널**(가상화), 중립 JSX 언어로 한 번 작성되었으며
 `@mission-platform/vite-plugin-forge`에 의해 React 또는 Vue로 직접 컴파일되었습니다.
 
 이는 {@link ForgeTabs}(ARIA `tablist`/`tab`/`tabpanel`, roving)처럼 동작합니다.
@@ -2641,9 +4482,9 @@ function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElemen
 
 #### 매개변수
 
-| 이름 | 유형                             | 설명 |
-| ---- | -------------------------------- | ---- |
-| 속성 | 읽기 전용<VirtualTabsProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------- | ----------- |
+| 속성 | 읽기 전용<VirtualTabsProperties> |             |
 
 ### VirtualTabPanelScope
 
@@ -2688,14 +4529,14 @@ function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): 
 슬롯 및 `select`/`toggle`이 방출됩니다. 중립 버전은 라벨을 인라인합니다.
 1회 쓰기 `@mission-platform/icons` `ForgeIconChevron`(다음을 통해 회전됨)를 렌더링합니다.
 `direction` 소품)은 `row` 범위 지정 슬롯(런타임 어댑터)을 사용합니다.
-기본이 아닌 앞으로 명명된 슬롯(범위가 있는 슬롯) 및 `onSelect`/`onToggle`
+기본값이 아닌 앞으로 명명된 슬롯(범위가 있는 슬롯) 및 `onSelect`/`onToggle`
 콜백 소품.
 
 #### 매개변수
 
-| 이름 | 유형                                 | 설명 |
-| ---- | ------------------------------------ | ---- |
-| 속성 | 읽기 전용<VirtualTreeViewProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------------------- | ----------- |
+| 속성 | 읽기 전용<VirtualTreeViewProperties> |             |
 
 ### 트리노드
 
@@ -2738,14 +4579,14 @@ function ForgeHero(properties: Readonly<HeroProperties>): MpElement;
 ```
 
 `ForgeHero` — 중립 JSX에서 한 번 작성된 페이지 히어로/배너 섹션
-방언을 사용하여 React 또는 Vue으로 직접 컴파일됩니다.
+방언을 사용하여 React 또는 Vue으로 바로 컴파일됩니다.
 `@mission-platform/vite-plugin-forge`.
 
-선택적 눈썹, 제목, 부제를 포함하여 눈에 띄는 배너를 렌더링합니다.
+선택적인 눈썹, 제목, 부제를 포함하여 눈에 띄는 배너를 렌더링합니다.
 자유 형식 본문 콘텐츠(기본 슬롯) 및 `actions` 행. `media`
 영역은 콘텐츠 뒤에 풀 블리드 배경을 렌더링할 수 있습니다.
 텍스트 대비를 유지하기 위한 선택적 스크림 `overlay`(미디어 위에 눈썹/
-제목/부제목이 텍스트 색상 반전으로 전환됨).
+제목/부제목이 반전된 텍스트 색상으로 전환됩니다).
 
 눈썹을 위해 형제 쓰기 가능 {@link ForgeTypography}을 구성하고,
 제목 및 부제목이며 함께 배치된 CSS 모듈을 통해 스타일을 소유합니다.
@@ -2756,9 +4597,9 @@ function ForgeHero(properties: Readonly<HeroProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                      | 설명 |
-| ---- | ------------------------- | ---- |
-| 속성 | 읽기 전용<HeroProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------ | ----------- |
+| 속성 | 읽기 전용<HeroProperties> |             |
 
 ### 영웅정렬
 
@@ -2790,6 +4631,281 @@ export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 수직 패딩 스케일 — 표준 2xs → 2xl 스케일.
 
+## `src/utils/date-time/date-time`
+
+### 브라우저TimezoneLabel
+
+**종류:** 기능
+
+```typescript
+function browserTimezoneLabel(): string;
+```
+
+브라우저 시간대의 IANA 이름 또는 사용할 수 없는 경우 `'Local'`입니다.
+
+### 집게
+
+**종류:** 기능
+
+```typescript
+function clamp(value: number, min: number, max: number): number;
+```
+
+`[min, max]` 범위를 포함하여 숫자를 고정합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 번호 |             |
+| 분 | 번호 |             |
+| 최대 | 번호 |             |
+
+### 날짜 범위
+
+**종류:** 인터페이스
+
+```typescript
+export interface DateRange
+```
+
+`{ start, end }` ISO 날짜 범위(`YYYY-MM-DD`).
+
+### 날짜시간범위
+
+**종류:** 인터페이스
+
+```typescript
+export interface DateTimeRange
+```
+
+`{ start, end, timezone }` 날짜-시간 범위(`YYYY-MM-DD HH:MM[:SS]`).
+
+### 표시시간
+
+**종류:** 기능
+
+```typescript
+function displayTime(value: string, withSeconds: boolean): string;
+```
+
+저장된 시간 문자열을 구성된 정밀도로 정규화합니다(비어 있으면 비어 있음).
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ------- | ----------- |
+| 가치 | 문자열 |             |
+| withSeconds | 부울 |             |
+
+### 형식날짜범위
+
+**종류:** 기능
+
+```typescript
+function formatDateRange(value: DateRange | undefined): string;
+```
+
+ISO 날짜 범위를 `start → end` 요약(빈 부분 축소)으로 형식화합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---------------------- | ----------- |
+| 가치 | 날짜 범위 \| 정의되지 않음 |             |
+
+### 형식날짜시간
+
+**종류:** 기능
+
+```typescript
+function formatDateTime(date: string, parts: TimeParts, withSeconds: boolean): string;
+```
+
+`YYYY-MM-DD` 날짜 및 시간 부분을 `YYYY-MM-DD HH:MM[:SS]` 문자열에 결합합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | --------- | ----------- |
+| 날짜 | 문자열 |             |
+| 부품 | 시간부분 |             |
+| withSeconds | 부울 |             |
+
+### 형식시간
+
+**종류:** 기능
+
+```typescript
+function formatTime(parts: TimeParts, withSeconds: boolean): string;
+```
+
+시/분(/초) 구성 요소를 `HH:MM` 또는 `HH:MM:SS`로 형식화합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | --------- | ----------- |
+| 부품 | 시간부분 |             |
+| withSeconds | 부울 |             |
+
+### 형식시간 범위
+
+**종류:** 기능
+
+```typescript
+function formatTimeRange(value: TimeRange | undefined, withSeconds: boolean): string;
+```
+
+구성된 정밀도로 시간 범위를 `start → end` 요약으로 형식화합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ---------------------- | ----------- |
+| 가치 | 시간 범위 \| 정의되지 않음 |             |
+| withSeconds | 부울 |             |
+
+### HOURS
+
+**종류:** 상수
+
+```typescript
+export const HOURS: readonly number[];
+```
+
+선택 가능한 시(0~23), 분(0~59), 초(0~59) 목록입니다.
+
+### 분
+
+**종류:** 상수
+
+```typescript
+export const MINUTES: readonly number[];
+```
+
+설명이 제공되지 않았습니다.
+
+### 인주
+
+**종류:** 기능
+
+```typescript
+function pad(value: number): string;
+```
+
+숫자를 두 자리까지 제로패드합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 번호 |             |
+
+### 구문 분석 날짜
+
+**종류:** 기능
+
+```typescript
+function parseDate(value: string): Date | undefined;
+```
+
+`YYYY-MM-DD` ISO 날짜 문자열을 `Date`(현지 자정) 또는 `undefined`로 구문 분석합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 문자열 |             |
+
+### 구문 분석 날짜 시간
+
+**종류:** 기능
+
+```typescript
+function parseDateTime(value: string): { date: string } & TimeParts;
+```
+
+`YYYY-MM-DD HH:MM[:SS]`(또는 ISO `T`/`Z`) 문자열을 날짜 + 시간 부분으로 분할합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 문자열 |             |
+
+### 구문 분석 시간
+
+**종류:** 기능
+
+```typescript
+function parseTime(value: string): TimeParts;
+```
+
+`HH:MM[:SS]` 문자열을 시/분/초 구성 요소로 구문 분석합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 문자열 |             |
+
+### 범위
+
+**종류:** 기능
+
+```typescript
+function range(length: number): number[];
+```
+
+`[0, 1, …, length - 1]`.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------ | ----------- |
+| 길이 | 번호 |             |
+
+### 초
+
+**종류:** 상수
+
+```typescript
+export const SECONDS: readonly number[];
+```
+
+설명이 제공되지 않았습니다.
+
+### 시간 부분
+
+**종류:** 인터페이스
+
+```typescript
+export interface TimeParts
+```
+
+구문 분석된 시간의 시/분/초 구성 요소입니다.
+
+### 시간 범위
+
+**종류:** 인터페이스
+
+```typescript
+export interface TimeRange
+```
+
+`{ start, end }` 시간 범위(`HH:MM` 또는 `HH:MM:SS`).
+
+### 시간대 모드
+
+**종류:** 유형
+
+```typescript
+export type TimezoneMode = 'browser' | 'utc';
+```
+
+날짜-시간 범위가 브라우저 영역 또는 UTC로 해석되는지 여부입니다.
+
 ## `src/utils/pointer-drag/pointer-drag`
 
 ### 시작포인터드래그
@@ -2808,9 +4924,9 @@ function beginPointerDrag(handlers: PointerDragHandlers): () => void;
 
 #### 매개변수
 
-| 이름   | 유형                | 설명 |
-| ------ | ------------------- | ---- |
-| 핸들러 | 포인터드래그 핸들러 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------------------- | ----------- |
+| 핸들러 | 포인터드래그 핸들러 |             |
 
 ### 포인터드래그 핸들러
 

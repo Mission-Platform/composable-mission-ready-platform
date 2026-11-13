@@ -1,10 +1,11 @@
+import { sanitizeHtml } from '@mission-platform/content/sanitize';
+import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
+
 import { useMarkdown } from '../composables/use-markdown';
 import { descriptionForSlug, documentationSourceRoots, getDocument, titleForSlug } from '../documentation';
-import { resolveDocumentationLocale } from '../i18n';
+import { createDocumentationI18n, resolveDocumentationLocale } from '../i18n';
 
 import { createElement, supportsForgeCustomizedBuiltIn } from './dom';
-
-import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
 
 function slugFromRoute(route: MpResolvedLocation): string {
   const value = route.params.slug;
@@ -38,18 +39,19 @@ export class DocsDocumentElement extends HTMLElement {
       roots: documentationSourceRoots,
       hasDocument: (target, targetLocale) => getDocument(target, targetLocale) !== undefined,
     });
-    article.innerHTML = rendered.html;
+    article.innerHTML = sanitizeHtml(rendered.html); // safe: sanitizeHtml removes unsafe markup and URLs
   }
 
   private render(route: MpResolvedLocation): void {
     const locale = resolveDocumentationLocale(route.params.locale);
+    const i18n = createDocumentationI18n(locale);
     const slug = slugFromRoute(route);
     const document = getDocument(slug, locale);
     this.replaceChildren();
     if (!document) {
       const missing = createElement<HTMLElement>('div', {}, [
-        createElement<HTMLHeadingElement>('h1', {}, ['Page not found']),
-        createElement<HTMLParagraphElement>('p', {}, [`No documentation exists for “${slug}”.`]),
+        createElement<HTMLHeadingElement>('h1', {}, [i18n.t('notFound.title')]),
+        createElement<HTMLParagraphElement>('p', {}, [i18n.t('notFound.body', { slug })]),
       ]);
       missing.className = 'docs-document__missing';
       const back = createElement<HTMLElement & { setRouter?: (value: MpRouterAdapter) => void }>(
@@ -57,7 +59,7 @@ export class DocsDocumentElement extends HTMLElement {
         {
           to: '/',
         },
-        ['Back to the documentation home'],
+        [i18n.t('notFound.back')],
       );
       back.setRouter?.(this.router!);
       missing.append(back);
@@ -100,9 +102,9 @@ export class DocsDocumentElement extends HTMLElement {
     wrapper.className = 'docs-document';
     wrapper.append(content);
     if (toc.value.length > 0) {
-      const aside = createElement<HTMLElement>('aside', { ariaLabel: 'On this page' });
+      const aside = createElement<HTMLElement>('aside', { ariaLabel: i18n.t('toc.title') });
       aside.className = 'docs-document__toc';
-      aside.append(createElement<HTMLParagraphElement>('p', {}, ['On this page']));
+      aside.append(createElement<HTMLParagraphElement>('p', {}, [i18n.t('toc.title')]));
       const list = createElement<HTMLUListElement>('ul');
       for (const item of toc.value) {
         const listItem = createElement<HTMLLIElement>('li');

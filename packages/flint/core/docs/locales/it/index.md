@@ -5,15 +5,15 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 > packages/flint/core/docs/index.md: [packages/flint/core/docs/index.md](../../index.md)
 > Lingua: Italiano (it)
 
-Flint contratti linguistici v1, parser bootstrap e dispositivi di conformità.
+Contratti linguistici Flint v1, parser bootstrap e dispositivi di conformità.
 Questo pacchetto possiede il contratto linguistico e la documentazione per i consumatori e
 contributori.
 
 ## Inizia qui
 
-- [Lingua e riferimento ABI](reference/language.md) — grammatica, tipi, capacità,
+- [Riferimento lingua e ABI](reference/language.md) — grammatica, tipi, capacità,
   diagnostica, manifesti e comportamento del compilatore.
-- [Guida alla creazione e al test](guides/development.md) — controlli locali, dispositivi e generati
+- [Guida alla creazione e ai test](guides/development.md): controlli locali, dispositivi e generati
   artefatti.
 - [`llms.txt`](../../../llms.txt): API concise e note sull'utilizzo per strumenti e assistenti.
 

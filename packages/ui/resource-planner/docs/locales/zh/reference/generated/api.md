@@ -519,7 +519,7 @@ function selectPlannerRange(
   resourceId: string,
   start: Date,
   end: Date,
-  minimumDurationMs = 15 * 60_000,
+  minimumDurationMs: number = 15 * 60_000,
 ): PlannerRangeSelection | undefined;
 ```
 

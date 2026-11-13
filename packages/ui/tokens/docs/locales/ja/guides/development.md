@@ -18,7 +18,7 @@ pnpm --filter @mission-platform/tokens build
 
 このビルドでは、`dist/` に JavaScript と宣言出力が生成されます。生成された
 `src/generated/` の SCSS および TypeScript ソースは派生アーティファクトであり、
-決定性を保たなければなりません。
+決定論的であり続けなければなりません。
 
 ## トークンを変更する
 

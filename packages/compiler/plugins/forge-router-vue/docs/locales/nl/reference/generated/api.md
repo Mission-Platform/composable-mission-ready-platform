@@ -23,10 +23,10 @@ Bouw neutrale mogelijkheden op basis van een Vue Router-instantie die eigendom i
 
 #### Parameters
 
-| Naam      | Typ    | Beschrijving |
-| --------- | ------ | ------------ |
-| router    | Router |              |
-| huidig ​​ |        |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| router | Router |             |
+| huidig ​​|        |             |
 
 ### oplossingMpLink
 
@@ -40,9 +40,9 @@ Los een neutraal doelwit op via de Vue-router van de app.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| naar | MpRouteLocationRaw |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
 
 ### solvePathTarget
 
@@ -56,9 +56,9 @@ Alleen pad-fallback gebruikt wanneer een Vue Router-instantie niet beschikbaar i
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| naar | MpRouteLocationRaw |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
 
 ### naarMpLocation
 
@@ -80,9 +80,9 @@ Converteer de oorspronkelijke Vue-routestatus naar de neutrale, opgeloste locati
 
 #### Parameters
 
-| Naam  | Typ                                                                                                                                                                                             | Beschrijving |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| route | {pad: tekenreeks; volledig pad: tekenreeks; parameters: Record<string, unknown>; vraag: LocationQuery; hash: tekenreeks; naam?: tekenreeks \| symbool \| nul; meta?: Record<string, unknown>; } |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| route | {pad: tekenreeks; volledig pad: tekenreeks; parameters: Record<string, unknown>; vraag: LocationQuery; hash: tekenreeks; naam?: tekenreeks \| symbool \| nul; meta?: Record<string, unknown>; } |             |
 
 ### naarVueLocation
 
@@ -96,9 +96,9 @@ Vertaal een neutraal doel naar een Vue Router-locatie.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| naar | MpRouteLocationRaw |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
 
 ### gebruik MpNavigatie
 
@@ -108,7 +108,7 @@ Vertaal een neutraal doel naar een Vue Router-locatie.
 function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
-Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
+Alleen noodzakelijke navigatie-/oplossingsmogelijkheden lezen.
 
 ### gebruikMpRoute
 

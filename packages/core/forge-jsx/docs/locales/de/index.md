@@ -5,32 +5,30 @@ Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei B
 > packages/core/forge-jsx/docs/index.md: [packages/core/forge-jsx/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
-Eine winzige, abhängigkeitsfreie Ebene „Einmal schreiben, auf Vue 3 und React ausführen“ für Mission Platform. Komponenten werden einmal erstellt
-JSX und wird auf beiden Frameworks über kleine Adapter gerendert – kein Build-Time-Codegen, kein externer Compiler (dies ist ein
-handgerollte Alternative zu Werkzeugen wie Mitosis).
+Eine kleine, abhängigkeitsfreie, Framework-neutrale JSX-Laufzeitumgebung für Mission Platform.
+Komponenten werden einmal in JSX erstellt und über das separate gerendert
+`@mission-platform/forge-adapters`-Paket.
 
 ## Wie es funktioniert
 
 ```
-author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ toReactComponent ──▶ React
-                                                          └──▶ toVueComponent  ──▶ Vue 3
+author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ framework adapter ──▶ target framework
 ```
 
 1. Komponenten werden in JSX geschrieben und mit der **klassischen** JSX-Transformation kompiliert (`jsxFactory: 'h'`,
    `jsxFragmentFactory: 'Fragment'`).
 2. `h(...)` erstellt einen Framework-neutralen, serialisierbaren `MpElement`-Baum anstelle eines React/Vue-Elements.
-3. Die pro-Framework-Adapter durchlaufen diesen Baum und ordnen jedes node zum Zeitpunkt des Renderns dem `React.createElement` oder dem `h` von Vue zu.
+3. Ein Framework-Adapter durchläuft diesen Baum und ordnet jeden node dem Ziel zu
+   native Rendering-Grundelemente des Frameworks.
 
 ## Merkmale
 
 - **Framework-neutrale JSX-Laufzeit**: Eine kleine, abhängigkeitsfreie Laufzeit, die serialisierbare `MpElement`-Bäume erstellt
-- **Vue 3 Adapter**: Konvertiert neutrale Komponenten in native Vue 3 SFCs mit der richtigen Reaktivität
-- **React-Adapter**: Konvertiert neutrale Komponenten in native React-Komponenten
 - **Hooks-Unterstützung**: Framework-neutrale Hooks im React-Stil (`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`)
   die zu ihren Framework-Äquivalenten kompiliert werden
 - **Kein Build-Time-Codegen**: Im Gegensatz zu Mitosis oder ähnlichen Tools verwendet dieser Ansatz Laufzeitadapter anstelle von Build-Time
   Transformation
-- **TypeScript First**: Vollständige TypeScript-Unterstützung mit ordnungsgemäßer Typinferenz
+- **TypeScript First**: Vollständige TypeScript-Unterstützung mit korrekter Typinferenz
 
 ## Installation
 
@@ -165,28 +163,6 @@ Merkt sich eine Funktion.
 
 **Rückgabe:** Auswendig gelernte Funktion
 
-### Adapter
-
-#### `toVueComponent(component)`
-
-Konvertiert eine Framework-neutrale Komponente in eine Vue 3-Komponente.
-
-**Parameter:**
-
-- `component`: Framework-neutrale Komponentenfunktion
-
-**Rückgabe:** Vue Komponentendefinition
-
-#### `toReactComponent(component)`
-
-Konvertiert eine Framework-neutrale Komponente in eine React-Komponente.
-
-**Parameter:**
-
-- `component`: Framework-neutrale Komponentenfunktion
-
-**Rückgabe:** React Komponentenfunktion
-
 ## TypeScript-Unterstützung
 
 Das Paket enthält vollständige TypeScript-Deklarationen. Sie können JSX mit der richtigen Typprüfung verwenden:
@@ -283,9 +259,9 @@ export function Button({ children }) {
 ## Leistungsüberlegungen
 
 - Die Framework-neutrale Ebene verursacht nur minimalen Overhead (nur ein Tree Walk zur Renderzeit)
-  – Hooks werden für eine optimale Leistung zu nativen Framework-Äquivalenten kompiliert
+- Hooks werden für eine optimale Leistung zu nativen Framework-Äquivalenten kompiliert
 - Es wird keine Laufzeitanalyse oder Codegenerierung durchgeführt
-  – Der Speicherbedarf ist vergleichbar mit dem Schreiben separater React- und Vue-Komponenten
+- Der Speicherbedarf ist vergleichbar mit dem Schreiben separater React- und Vue-Komponenten
 
 ## Lizenz
 

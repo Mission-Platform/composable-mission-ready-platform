@@ -9,188 +9,71 @@
 
 `@mission-platform/qr-code`의 공개 소스 선언에서 생성됩니다.
 
-## `src/encoder/index`
+## `src/components/molecules/forge-qr-code/forge-qr-code`
 
-### 인코딩MicroQr
-
-**종류:** 기능
-
-```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-`text`을 **Micro QR Code** 매트릭스(ISO/IEC 18004)로 인코딩하여 인스턴스화합니다.
-처음 사용할 때 WebAssembly 인코더를 동기식으로 사용합니다.
-
-가장 작은 피팅 버전(M1–M4, 11×11 ~ 17×17)이 자동으로 선택됩니다.
-Micro QR은 오류 수정 수준 `L`, `M` 및 `Q`만 지원합니다. 요청
-`H`은 항상 발생합니다(Micro QR 버전에서는 이를 제공하지 않음).
-
-#### 매개변수
-
-| 이름     | 유형       | 설명 |
-| -------- | ---------- | ---- |
-| 텍스트   | 문자열     |      |
-| 오류수정 | Qr오류수정 |      |
-
-#### 계약
-
-- **@throws:** 마이크로 QR 버전에 비해 텍스트가 너무 긴 경우
-  선택한 레벨(`H` 레벨에 대한 요청 포함)
-
-### encodeMicroQrAsync
+### ForgeQrCode
 
 **종류:** 기능
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
+function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement;
 ```
 
-`text`을 **Micro QR Code** 매트릭스로 인코딩하여 WebAssembly를 인스턴스화합니다.
-처음 사용할 때 비동기적으로 인코더를 사용합니다. {@link encodeMicroQr}을 참조하세요.
+`ForgeQrCode` — 중립 JSX에서 한 번 작성된 스캔 가능한 QR 코드를 렌더링합니다.
+방언을 사용하여 React 또는 Vue로 바로 컴파일됩니다.
+`@mission-platform/vite-plugin-forge`.
+
+페이로드(`value`)는 클라이언트에서 완전히 인코딩됩니다.
+`@mission-platform/qr-code` 인코더 — 다음으로 작성된 종속성 없는 인코더
+Rust를 사용하여 WebAssembly로 컴파일(자동 버전 선택, 가장 낮은 페널티)
+데이터 마스크) - 선명하고 해상도에 독립적인 SVG로 그려집니다. `variant`
+prop은 기호를 선택합니다: 표준 정사각형 QR 코드({@link encodeQr},
+`'qr'`, 기본값), 소형 정사각형 마이크로 QR 코드
+({@link encodeMicroQr}, `'micro'`) 또는 넓은 직사각형 마이크로 QR/rMQR 코드
+({@link encodeRmqr}, `'rmqr'`). 모든 어둠에 대해 단일 `<path>`이 방출됩니다.
+모듈을 사용하므로 큰 코드에도 마크업이 간결하게 유지됩니다. 신뢰할 수 있는
+어둡거나 밝은 색상을 기본적으로 스캔하는 것이 solid이 아닌 흰색 바탕에 검정색으로 설정됩니다.
+테마 토큰이지만 둘 다 `color` / `background`을 통해 재정의할 수 있습니다.
+
+모듈과 파인더(아이) 패턴은 정사각형, 둥근 정사각형,
+또는 도트(`moduleShape` / `finderShape`); 어두운 채우기는 2스톱을 허용합니다.
+선형 또는 방사형 `gradient`; 선택적 센터 `logo`가
+백킹 플레이트(코드가 계속 스캔되도록 `errorCorrection: 'H'`와 페어링).
+
+선택적 작업 도구 모음(`showActions`을 통해 활성화됨 — `true`은 모든
+버튼을 사용하거나 {@link QrCodeActions} 객체를 사용하여 개별적으로 선택)
+사용자는 **코드를 PNG 이미지로 저장**, **이미지를 클립보드에 복사**,
+**인코딩된 값을 클립보드에 복사**합니다. PNG는 래스터화됩니다.
+클라이언트는 렌더링된 SVG를 캔버스에 그려서
+
+원본 Vue SFC의 대체: `computed` 렌더링이
+중립적 {@link useMemo}; `error` 방출은 `onError` 콜백 소품이 됩니다.
+(인코딩이 실패하면 호출되며 원본의 방출을 내부에서 미러링합니다.
+계산됨). 함께 배치된 CSS 모듈을 통해 스타일을 소유합니다.
+`forge-qr-code.module.scss`.
 
 #### 매개변수
 
-| 이름     | 유형       | 설명 |
-| -------- | ---------- | ---- |
-| 텍스트   | 문자열     |      |
-| 오류수정 | Qr오류수정 |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<QrCodeProperties> |             |
 
-#### 계약
-
-- **@throws:** 마이크로 QR 버전에 비해 텍스트가 너무 긴 경우
-  선택한 레벨(`H` 레벨에 대한 요청 포함)
-
-### 인코딩Qr
-
-**종류:** 기능
-
-```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
-```
-
-주어진 오류 수정 수준에서 `text`을 QR 코드 매트릭스로 인코딩합니다.
-처음 사용할 때 WebAssembly 인코더를 동기적으로 인스턴스화합니다.
-
-#### 매개변수
-
-| 이름     | 유형       | 설명 |
-| -------- | ---------- | ---- |
-| 텍스트   | 문자열     |      |
-| 오류수정 | Qr오류수정 |      |
-
-#### 계약
-
-- **@throws:** 텍스트가 너무 길어서 가장 큰 버전에 맞지 않는 경우
-
-40. 선택한 오류 수정 수준의 QR 코드.
-
-### encodeQrAsync
-
-**종류:** 기능
-
-```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
-```
-
-주어진 오류 수정 수준에서 `text`을 QR 코드 매트릭스로 인코딩합니다.
-처음 사용할 때 WebAssembly 인코더를 비동기식으로 인스턴스화합니다.
-
-#### 매개변수
-
-| 이름     | 유형       | 설명 |
-| -------- | ---------- | ---- |
-| 텍스트   | 문자열     |      |
-| 오류수정 | Qr오류수정 |      |
-
-#### 계약
-
-- **@throws:** 텍스트가 너무 길어서 가장 큰 버전에 맞지 않는 경우
-
-40. 선택한 오류 수정 수준의 QR 코드.
-
-### 인코딩Rmqr
-
-**종류:** 기능
-
-```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
-```
-
-`text`을 **직사각형 마이크로 QR(rMQR) 코드** 매트릭스로 인코딩합니다.
-(ISO/IEC 23941), 처음에 WebAssembly 인코더를 동기적으로 인스턴스화합니다.
-사용.
-
-가장 작은 피팅 버전(R7×43부터 R17×139까지의 32가지 사이즈 중)이 선택됩니다.
-자동으로. rMQR은 오류 수정 수준 `M` 및 `H`만 지원하므로
-`L`/`M`은 `M`에 매핑되고 `Q`/`H`은 `H`에 매핑됩니다.
-
-#### 매개변수
-
-| 이름     | 유형       | 설명 |
-| -------- | ---------- | ---- |
-| 텍스트   | 문자열     |      |
-| 오류수정 | Qr오류수정 |      |
-
-#### 계약
-
-- **@throws:** rMQR 버전에 비해 텍스트가 너무 긴 경우
-  선택한 레벨.
-
-### encodeRmqrAsync
-
-**종류:** 기능
-
-```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
-```
-
-`text`을 **직사각형 마이크로 QR(rMQR) 코드** 매트릭스로 인코딩합니다.
-처음 사용할 때 WebAssembly 인코더를 비동기식으로 인스턴스화합니다. 참조
-{@link encodeRmqr}.
-
-#### 매개변수
-
-| 이름     | 유형       | 설명 |
-| -------- | ---------- | ---- |
-| 텍스트   | 문자열     |      |
-| 오류수정 | Qr오류수정 |      |
-
-#### 계약
-
-- **@throws:** rMQR 버전에 비해 텍스트가 너무 긴 경우
-  선택한 레벨.
-
-## `src/types`
-
-### CompactQrMatrix
+### QrCode액션
 
 **종류:** 인터페이스
 
 ```typescript
-export interface CompactQrMatrix
+export interface QrCodeActions
 ```
 
-인코딩된 소형 QR 변형 - Micro QR 또는 rMQR(Rectangular Micro QR)
-코드. {@link QrMatrix}와 달리 직사각형일 수 있으므로 그리드는
-단일 `size`가 아닌 명시적 `width`/`height`로 설명됩니다.
+도구 모음에 표시되는 작업 버튼 `true`은 이 모든 기능을 활성화합니다.
 
-### Qr오류수정
-
-**종류:** 유형
-
-```typescript
-export type QrErrorCorrection = 'L' | 'M' | 'Q' | 'H';
-```
-
-오류 수정 수준: 수준이 높을수록 더 많은 손상을 허용하지만 더 적은 데이터를 보유합니다.
-
-### Qr매트릭스
+### QrCode속성
 
 **종류:** 인터페이스
 
 ```typescript
-export interface QrMatrix
+export interface QrCodeProperties
 ```
 
-디코딩/인코딩된 QR 코드: 어두운 사각형 격자(`true`) 모듈.
+설명이 제공되지 않았습니다.

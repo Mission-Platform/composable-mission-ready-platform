@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
 
+import type {
+  TargetContext,
+  TargetLoweredModule,
+} from "@mission-platform/forge-plugin-api";
+
 import {
   component,
   effect,
@@ -14,11 +19,6 @@ import {
   templateRef,
 } from "./ir-test-helpers.js";
 import { isVueLowered, lowerVueModule } from "./lower.js";
-
-import type {
-  TargetContext,
-  TargetLoweredModule,
-} from "@mission-platform/forge-plugin-api";
 
 const CONTEXT: TargetContext = {
   framework: "vue",

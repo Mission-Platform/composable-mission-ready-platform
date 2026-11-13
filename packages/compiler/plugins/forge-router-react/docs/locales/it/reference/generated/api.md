@@ -24,12 +24,12 @@ function createReactRouterCapabilities(input: {
 }): MpRouterCapabilities;
 ```
 
-Crea funzionalità neutre dalle primitive del router React (senza hook per i test).
+Crea funzionalità neutre dalle primitive del router React (hook-free per i test).
 
 #### Parametri
 
-| Nome     | Digitare                                                                                                                                                              | Descrizione |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | ingresso | { posizione: { percorso: stringa; cerca: stringa; hash: stringa }; parametri?: Record<string, string \| undefined>; navigare: NavigaFunction; sbocco?: sconosciuto; } |             |
 
 ### risolvereMpLink
@@ -44,9 +44,9 @@ Risolvi un obiettivo neutro in una stringa href.
 
 #### Parametri
 
-| Nome | Digitare           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---- | ------------------ | ----------- |
-| a    | MpRouteLocationRaw |             |
+| a | MpRouteLocationRaw |             |
 
 ### toMpLocationFromReact
 
@@ -55,18 +55,18 @@ Risolvi un obiettivo neutro in una stringa href.
 ```typescript
 function toMpLocationFromReact(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
-Crea una posizione neutra dagli snapshot della posizione/parametri del router React.
+Crea una posizione neutra dagli snapshot di posizione/parametri del router React.
 
 #### Parametri
 
-| Nome      | Digitare                                             | Descrizione |
-| --------- | ---------------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | -------------------------------------------------- | ----------- |
 | posizione | { percorso: stringa; cerca: stringa; hash: stringa } |             |
-| parametri | Registra<string, string \| undefined>                |             |
+| parametri | Registra<string, string \| undefined> |             |
 
 ### toReactHref
 
@@ -80,9 +80,9 @@ Serializza un target neutro in una stringa href.
 
 #### Parametri
 
-| Nome | Digitare           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---- | ------------------ | ----------- |
-| a    | MpRouteLocationRaw |             |
+| a | MpRouteLocationRaw |             |
 
 ### toReactTo
 
@@ -96,9 +96,9 @@ Converti un bersaglio neutrale in a React Router `To` valore.
 
 #### Parametri
 
-| Nome | Digitare           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---- | ------------------ | ----------- |
-| a    | MpRouteLocationRaw |             |
+| a | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 
@@ -140,4 +140,4 @@ Leggere l'oggetto capacità neutrale supportato dal router React.
 export const forgeRouterReact;
 ```
 
-Forgia la destinazione del router per un'istanza del router React di proprietà dell'applicazione.
+Forgia destinazione del router per un'istanza del router React di proprietà dell'applicazione.

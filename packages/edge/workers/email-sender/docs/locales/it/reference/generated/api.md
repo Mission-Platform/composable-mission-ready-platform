@@ -11,12 +11,22 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/email-sender`.
 
 ## `src/index`
 
+### predefinito
+
+**Genere:** costante
+
+```typescript
+export const handler: ExportedHandler<WorkerEnvironment>;
+```
+
+Nessuna descrizione fornita.
+
 ### Consegna
 
 **Genere:** tipo
 
 ```typescript
-export type Delivery = (environment: Env, message: SmtpMessage) => Promise<void>;
+export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 ```
 
 Nessuna descrizione fornita.
@@ -36,15 +46,26 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
+function handleRequest(
+  request: Request,
+  environment: WorkerEnvironment,
+  delivery: Delivery = defaultDelivery,
+): Promise<Response>;
 ```
 
-Nessuna descrizione fornita.
+Gestisce le richieste di consegna della posta elettronica in entrata, convalidando l'input e consegnando al servizio SMTP.
 
 #### Parametri
 
-| Nome      | Digitare | Descrizione |
-| --------- | -------- | ----------- |
-| richiesta | Richiedi |             |
-| ambiente  | Busta    |             |
-| consegna  | Consegna |             |
+| Nome | Digitare | Descrizione |
+| ----------- | ----------------- | -------------------------------------------------- |
+| richiesta | Richiedi | - Richiesta HTTP in entrata.                           |
+| ambiente | Ambiente lavoratore | - Vincoli all'ambiente di lavoro.                     |
+| consegna | Consegna | - Funzione di consegna che gestisce la trasmissione dei messaggi. |
+
+#### Contrarre
+
+- **@param:** - Richiesta HTTP in entrata.
+- **@param:** - Collegamenti all'ambiente di lavoro.
+- **@param:** - Funzione di consegna che gestisce la trasmissione del messaggio.
+- **@returns:** Risposta HTTP.

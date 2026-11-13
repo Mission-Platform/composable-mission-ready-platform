@@ -28,8 +28,8 @@ Cree capacidades neutrales a partir de las primitivas del enrutador Solid (sin m
 
 #### Parámetros
 
-| Nombre  | Tipo                                                                                                                                                                       | Descripción |
-| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | entrada | { ubicación: { nombre de ruta: cadena; buscar: cadena; hash: cadena }; parámetros?: Registro<string, string \| undefined>; navegar: SolidNavigate; salida?: desconocido; } |             |
 
 ### MpEnlace
@@ -37,15 +37,15 @@ Cree capacidades neutrales a partir de las primitivas del enrutador Solid (sin m
 **Tipo:** componente
 
 ```typescript
-function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
+export function MpLink(properties:
 ```
 
 Solid proxy del componente ancla vinculado a través de {@link setForgeSolidRouter}.
 
 #### Parámetros
 
-| Nombre      | Tipo                                                                                     | Descripción |
-| ----------- | ---------------------------------------------------------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | ---------------------------------------------------------------------------------- | ----------- |
 | propiedades | { href?: cadena; a?: MpRouteLocationRaw; ¿Niños?: desconocido; ¿reemplazar?: booleano; } |             |
 
 ### MpRouterVer
@@ -53,7 +53,7 @@ Solid proxy del componente ancla vinculado a través de {@link setForgeSolidRout
 **Tipo:** componente
 
 ```typescript
-function MpRouterView(): unknown;
+export function MpRouterView(): unknown;
 ```
 
 Solid proxy de salida vinculado a través de {@link setForgeSolidRouter}.
@@ -70,9 +70,9 @@ Resuelva un objetivo neutral en una cadena href.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| a      | MpRouteLocationRaw |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 
 ### setForgeSolidRouter
 
@@ -87,8 +87,8 @@ formas de gancho/llamada (`useMpRouter().navigate`, `useMpRoute().query`,…).
 
 #### Parámetros
 
-| Nombre     | Tipo                           | Descripción |
-| ---------- | ------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------ | ----------- |
 | superficie | Superficie de enrutador sólido |             |
 
 ### SuperficieEnrutadorSólido
@@ -108,7 +108,7 @@ Mínima Solid Superficie del enrutador utilizada por la cuña de tiempo de ejecu
 ```typescript
 function toMpLocationFromSolid(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
@@ -116,10 +116,10 @@ Cree una ubicación neutral a partir de instantáneas de parámetros/ubicación 
 
 #### Parámetros
 
-| Nombre     | Tipo                                                     | Descripción |
-| ---------- | -------------------------------------------------------- | ----------- |
-| ubicación  | { nombre de ruta: cadena; buscar: cadena; hash: cadena } |             |
-| parámetros | Registro<string, string \| undefined>                    |             |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------------------------------- | ----------- |
+| ubicación | { nombre de ruta: cadena; buscar: cadena; hash: cadena } |             |
+| parámetros | Registro<string, string \| undefined> |             |
 
 ### aSolidHref
 
@@ -133,9 +133,9 @@ Serializar un objetivo neutral para la navegación del enrutador Solid.
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| a      | MpRouteLocationRaw |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 
 ### utilizarMpNavigation
 

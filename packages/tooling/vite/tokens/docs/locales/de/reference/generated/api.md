@@ -23,10 +23,10 @@ Konvertieren Sie einen DTCG-Alias ​​(`{font.size.4xl}`) in eine `var(--<pref
 
 #### Parameter
 
-| Name     | Geben Sie    | ein Beschreibung |
-| -------- | ------------ | ---------------- |
-| Alias ​​ | Zeichenfolge |                  |
-| Präfix   | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------ | ----------- |
+| Alias ​​| Zeichenfolge |             |
+| Präfix | Zeichenfolge |             |
 
 ### CamelCase
 
@@ -40,9 +40,9 @@ camelCase eine gestrichelte Zeichenfolge (`border-width` → `borderWidth`, `z-i
 
 #### Parameter
 
-| Name        | Geben Sie    | ein Beschreibung |
-| ----------- | ------------ | ---------------- |
-| gestrichelt | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------ | ----------- |
+| gestrichelt | Zeichenfolge |             |
 
 ### camelCaseName
 
@@ -94,7 +94,6 @@ export type DtcgGroup = Record<string, unknown>;
 
 Eine DTCG-Gruppe node (ein Objekt aus verschachtelten Gruppen/Tokens plus `Eine DTCG-Gruppe node (ein Objekt aus verschachtelten Gruppen/Tokens plus -Metadaten).
  `$`
-
 ### DtcgToken
 
 **Art:** Schnittstelle
@@ -118,9 +117,9 @@ nächster Vorfahre `$type` bis hin zu jedem Blatt-Token.
 
 #### Parameter
 
-| Name      | Geben Sie | ein Beschreibung |
-| --------- | --------- | ---------------- |
-| document_ | DtcgGroup |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | --------- | ----------- |
+| document_ | DtcgGroup |             |
 
 ### formatColorValue
 
@@ -134,9 +133,9 @@ Formatieren Sie einen DTCG-Farbwert als ungerundete CSS-Zeichenfolge `oklab()` (
 
 #### Parameter
 
-| Name | Geben Sie      | ein Beschreibung |
-| ---- | -------------- | ---------------- |
-| Wert | DtcgColorValue |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | -------------- | ----------- |
+| Wert | DtcgColorValue |             |
 
 ### formatCssColor
 
@@ -150,9 +149,9 @@ Runden Sie einen OKLab-/anderen Farbraumwert auf vier signifikante Ziffern pro K
 
 #### Parameter
 
-| Name | Geben Sie      | ein Beschreibung |
-| ---- | -------------- | ---------------- |
-| Wert | DtcgColorValue |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | -------------- | ----------- |
+| Wert | DtcgColorValue |             |
 
 ### formatCssValue
 
@@ -162,13 +161,13 @@ Runden Sie einen OKLab-/anderen Farbraumwert auf vier signifikante Ziffern pro K
 function formatCssValue(value: unknown): string;
 ```
 
-Formatieren Sie ein Token `$value` als CSS/SCSS-Literal (Farben gerundet; alles andere wörtlich).
+Formatieren Sie ein Token `$value` als CSS/SCSS-Literal (Farben gerundet; Arrays werden zu durch Kommas getrennten Listen).
 
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| ---- | --------- | ---------------- |
-| Wert | unbekannt |                  |
+| ----- | ------- | ----------- |
+| Wert | unbekannt |             |
 
 ### Gruppenbezeichnung
 
@@ -192,10 +191,10 @@ Lösen Sie einen DTCG-Alias ​​(`{font.size.4xl}`) in sein Literal `$value` i
 
 #### Parameter
 
-| Name      | Geben Sie    | ein Beschreibung |
-| --------- | ------------ | ---------------- |
-| Alias ​​  | Zeichenfolge |                  |
-| document_ | DtcgGroup    |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | --------- | ----------- |
+| Alias ​​| Zeichenfolge |             |
+| document_ | DtcgGroup |             |
 
 ### auflösenTsValue
 
@@ -207,13 +206,14 @@ function resolveTsValue(value: unknown): string | number;
 
 Lösen Sie einen DTCG `$value` in den literalen JavaScript-Wert auf, der im generierten verwendet wird
 TypeScript-Modul: Farben werden zu ihrem `oklab(...)`-String, Zahlen bleiben
-Zahlen und alles andere (Abmessungen, Schriftfamilienstapel usw.) bleiben eine Zeichenfolge.
+Zahlen, Arrays werden zu durch Kommas getrennten Listen und alles andere
+(Abmessungen, Schriftfamilienstapel, …) bleibt eine Zeichenfolge.
 
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| ---- | --------- | ---------------- |
-| Wert | unbekannt |                  |
+| ----- | ------- | ----------- |
+| Wert | unbekannt |             |
 
 ### TokenRecord
 
@@ -246,9 +246,9 @@ Alles wird von den benutzerdefinierten Emittenten produziert; Es gibt keine exte
 
 #### Parameter
 
-| Name     | Geben Sie           | ein Beschreibung |
-| -------- | ------------------- | ---------------- |
-| Optionen | TokensPluginOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------- | ----------- |
+| Optionen | TokensPluginOptions |             |
 
 ### TokensPluginOptions
 
@@ -296,11 +296,11 @@ Nachkommen, ohne eine einzelne benutzerdefinierte Farbeigenschaft neu zu definie
 
 #### Parameter
 
-| Name          | Geben Sie | ein Beschreibung |
-| ------------- | --------- | ---------------- |
-| lightDocument | DtcgGroup |                  |
-| DarkDocument  | DtcgGroup |                  |
-| Präfix        |           |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------- | --------- | ----------- |
+| lightDocument | DtcgGroup |             |
+| DarkDocument | DtcgGroup |             |
+| Präfix |           |             |
 
 ### buildPropertyRule
 
@@ -329,19 +329,18 @@ Das Literal `$value` ist inline.
 
 Ein nicht-universelles `@property` erfordert ein rechenunabhängiges
 `initial-value` (kein `var()`, `light-dark()` oder relative Einheiten), also die
-Die universelle `*`-Syntax lässt es weg. Alles, dessen Wert eine `var()`-Referenz ist
-(die Typografiefelder) oder ein nicht typisierbares Literal (Schatten, Beschleunigungskurven,
-Font-Family-Stacks) werden daher unter `*` ohne `initial-value` registriert.
-`$`
-
+Die universelle `*`-Syntax lässt es weg. Werte, deren Wert eine `var()`-Referenz ist (die
+Typografiefelder) oder relative Längeneinheiten (rem, em, vw usw.) werden daher registriert
+unter `*` ohne `initial-value`.
+ `$`
 #### Parameter
 
-| Name            | Geben Sie    | ein Beschreibung |
-| --------------- | ------------ | ---------------- |
-| Rekord          | TokenRecord  |                  |
-| Präfix          | Zeichenfolge |                  |
-| useScssVariable |              |                  |
-| CSSNamespace    | Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------------- | ----------- | ----------- |
+| Rekord | TokenRecord |             |
+| Präfix | Zeichenfolge |             |
+| useScssVariable |             |             |
+| CSSNamespace | Zeichenfolge |             |
 
 ### buildScssVariables
 
@@ -356,16 +355,16 @@ function buildScssVariables(
 ): string;
 ```
 
-Keine Beschreibung angegeben.
+Erstellt Standard-SCSS-$-Variablen-Deklarationsblöcke, gruppiert nach Token-Kategorie.
 
 #### Parameter
 
-| Name                  | Geben Sie           | ein Beschreibung |
-| --------------------- | ------------------- | ---------------- |
-| Aufzeichnungen        | TokenRecord[]       |                  |
-| Präfix                |                     |                  |
-| CSSNamespace          | Zeichenfolge        |                  |
-| KomponentenNamespaces | ReadonlySet<string> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------------- | ------------------- | ----------- |
+| Aufzeichnungen | TokenRecord[] |             |
+| Präfix |                     |             |
+| CSSNamespace | Zeichenfolge |             |
+| KomponentenNamespaces | ReadonlySet<string> |             |
 
 ### buildScssVariablesScss
 
@@ -381,22 +380,21 @@ function buildScssVariablesScss(
 ```
 
 Erstellen Sie einen CSS-freien `Erstellen Sie einen CSS-freien -nur-Variablen-Teil (Header + die {@link buildScssVariables}
-Körper, kein `:root`/`@property`CSS). Wird als`scss/_<file>-vars.scss`ausgegeben, also intern
-Verbraucher (z. B.`scss/_mixins.scss`) können den `Erstellen Sie einen CSS-freien `Erstellen Sie einen CSS-freien -nur-Variablen-Teil (Header + die {@link buildScssVariables}
-Körper, kein `:root`/`@property`CSS). Wird als`scss/_<file>-vars.scss`ausgegeben, also intern
-Verbraucher (z. B.`scss/_mixins.scss`) können den -Wert eines Tokens zur Kompilierungszeit lesen
+Körper, kein `:root`/`@property` CSS). Wird als `scss/_<file>-vars.scss` ausgegeben, also intern
+Verbraucher (z. B. `scss/_mixins.scss`) können den `Erstellen Sie einen CSS-freien `Erstellen Sie einen CSS-freien -nur-Variablen-Teil (Header + die {@link buildScssVariables}
+Körper, kein `:root`/`@property` CSS). Wird als `scss/_<file>-vars.scss` ausgegeben, also intern
+Verbraucher (z. B. `scss/_mixins.scss`) können den -Wert eines Tokens zur Kompilierungszeit lesen
 ohne `@use`-ing des vollständigen Teils – wodurch das `:root`/`@property`-CSS verloren gehen würde
 in jedes konsumierende Stylesheet.
  `$`
-
 #### Parameter
 
-| Name                  | Geben Sie           | ein Beschreibung |
-| --------------------- | ------------------- | ---------------- |
-| Aufzeichnungen        | TokenRecord[]       |                  |
-| Präfix                |                     |                  |
-| CSSNamespace          | Zeichenfolge        |                  |
-| KomponentenNamespaces | ReadonlySet<string> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------------- | ------------------- | ----------- |
+| Aufzeichnungen | TokenRecord[] |             |
+| Präfix |                     |             |
+| CSSNamespace | Zeichenfolge |             |
+| KomponentenNamespaces | ReadonlySet<string> |             |
 
 ### buildStructuralScss
 
@@ -408,40 +406,46 @@ function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', c
 
 Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`
 und eine passende `@property`-Registrierung für jedes Token (mit `initial-value`s).
-aufgelöst in die passende `Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`und eine passende`@property`-Registrierung für jedes Token (mit `initial-value`s).
+aufgelöst in die passende `Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`
+und eine passende `@property`-Registrierung für jedes Token (mit `initial-value`s).
 aufgelöst in die passende -Variable), beide in die `mp.tokens`-Kaskade eingebunden
 Schicht. Die `Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`
 und eine passende `@property`-Registrierung für jedes Token (mit `initial-value`s).
-aufgelöst in die passende `Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`und eine passende`@property`-Registrierung für jedes Token (mit `initial-value`s).
+aufgelöst in die passende `Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`
+und eine passende `@property`-Registrierung für jedes Token (mit `initial-value`s).
 aufgelöst in die passende -Variable), beide in die `mp.tokens`-Kaskade eingebunden
 Schicht. Die -Variablen selbst leben im Begleiter CSS-frei
-`_<file>-vars.scss`teilweise (siehe {@link buildScssVariablesScss}); dieses teilweise`@use`s es (um die Werte in die `:root`/`@property`-Blöcke zu interpolieren) und
-`@forward`s es (so dass nachgeschaltete Verbraucher von `_<file>.scss`es immer noch sehen`Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`
+`_<file>-vars.scss` teilweise (siehe {@link buildScssVariablesScss}); dieses teilweise
+`@use`s es (um die Werte in die `:root`/`@property`-Blöcke zu interpolieren) und
+`@forward`s es (so dass nachgeschaltete Verbraucher von `_<file>.scss` es immer noch sehen
+`Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`
 und eine passende `@property`-Registrierung für jedes Token (mit `initial-value`s).
-aufgelöst in die passende `Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`und eine passende`@property`-Registrierung für jedes Token (mit `initial-value`s).
+aufgelöst in die passende `Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`
+und eine passende `@property`-Registrierung für jedes Token (mit `initial-value`s).
 aufgelöst in die passende -Variable), beide in die `mp.tokens`-Kaskade eingebunden
 Schicht. Die `Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`
 und eine passende `@property`-Registrierung für jedes Token (mit `initial-value`s).
-aufgelöst in die passende `Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`und eine passende`@property`-Registrierung für jedes Token (mit `initial-value`s).
+aufgelöst in die passende `Erstellen Sie einen strukturellen SCSS-Teil: die benutzerdefinierten Eigenschaften `:root { --<prefix>-* }`
+und eine passende `@property`-Registrierung für jedes Token (mit `initial-value`s).
 aufgelöst in die passende -Variable), beide in die `mp.tokens`-Kaskade eingebunden
 Schicht. Die -Variablen selbst leben im Begleiter CSS-frei
-`_<file>-vars.scss`teilweise (siehe {@link buildScssVariablesScss}); dieses teilweise`@use`s es (um die Werte in die `:root`/`@property`-Blöcke zu interpolieren) und
+`_<file>-vars.scss` teilweise (siehe {@link buildScssVariablesScss}); dieses teilweise
+`@use`s es (um die Werte in die `:root`/`@property`-Blöcke zu interpolieren) und
 `@forward`s es (so dass nachgeschaltete Verbraucher von `_<file>.scss` es immer noch sehen
 -Variablen). Die Farbpalette und die zusammengesetzte Typografie werden beide ausgegeben
 über diesen Weg.
 
 `file` ist der Quell-/Ausgabebasisname (z. B. `'radius'`), der als Referenz verwendet wird
 Begleiter `'<file>-vars'` teilweise.
-`$`
-
+ `$`
 #### Parameter
 
-| Name           | Geben Sie     | ein Beschreibung |
-| -------------- | ------------- | ---------------- |
-| Aufzeichnungen | TokenRecord[] |                  |
-| Präfix         |               |                  |
-| Datei          |               |                  |
-| CSSNamespace   | Zeichenfolge  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | ------------- | ----------- |
+| Aufzeichnungen | TokenRecord[] |             |
+| Präfix |               |             |
+| Datei |               |             |
+| CSSNamespace | Zeichenfolge |             |
 
 ### buildTypographyRecords
 
@@ -461,10 +465,33 @@ Jedes Feld wird zu einem `typography-<variant>-<field>`-Token, dessen Wert der i
 
 #### Parameter
 
-| Name            | Geben Sie | ein Beschreibung |
-| --------------- | --------- | ---------------- |
-| typographyGroup | DtcgGroup |                  |
-| Präfix          |           |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------------- | --------- | ----------- |
+| typographyGroup | DtcgGroup |             |
+| Präfix |           |             |
+
+### ist rechnerisch unabhängig
+
+**Art:** Funktion
+
+```typescript
+function isComputationallyIndependent(record: TokenRecord): boolean;
+```
+
+Überprüft, ob ein Tokenwert rechnerisch unabhängig und als gültig ist
+`initial-value` für eine typisierte CSS-`@property`-Registrierung unter dem W3C-CSS
+Eigenschaften und Werte API Level 1-Spezifikation.
+
+Werte, die auf `var()`, `light-dark()`, `env()` verweisen, schriftartrelative Einheiten
+(`rem`, `em` usw.), Ansichtsfenster-/Container-relative Einheiten (`vw`, `vh`, `cqw` usw.),
+oder einheitenloses `0` für `<length>` sind nicht rechnerisch unabhängig und müssen
+Lassen Sie den `initial-value`-Deskriptor weg, indem Sie auf die universelle `'*'`-Syntax zurückgreifen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ----------- | ----------- |
+| Rekord | TokenRecord |             |
 
 ### TypografieEinträge
 
@@ -478,9 +505,9 @@ Gibt `[variant, value]`-Einträge für eine zusammengesetzte DTCG-Typografiegrup
 
 #### Parameter
 
-| Name   | Geben Sie | ein Beschreibung |
-| ------ | --------- | ---------------- |
-| Gruppe | DtcgGroup |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | --------- | ----------- |
+| Gruppe | DtcgGroup |             |
 
 ## `src/generators/typescript`
 
@@ -496,9 +523,9 @@ Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name    | Geben Sie                              | ein Beschreibung |
-| ------- | -------------------------------------- | ---------------- |
-| Quellen | Array<string \| TokenModuleDescriptor> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------------------------- | ----------- |
+| Quellen | Array<string \| TokenModuleDescriptor> |             |
 
 ### buildTokenModule
 
@@ -509,7 +536,7 @@ function buildTokenModule(
   basename: string,
   document_: DtcgGroup,
   aliasDocument?: DtcgGroup,
-  exportName = camelCase(basename),
+  exportName: string = camelCase(basename),
 ): string;
 ```
 
@@ -524,12 +551,12 @@ Die zusammengesetzte `typography`-Quelle löst ihre `{font.*}`-Referenzen dagege
 
 #### Parameter
 
-| Name          | Geben Sie    | ein Beschreibung |
-| ------------- | ------------ | ---------------- |
-| Basisname     | Zeichenfolge |                  |
-| document_     | DtcgGroup    |                  |
-| aliasDocument | DtcgGroup    |                  |
-| Exportname    |              |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------- | --------- | ----------- |
+| Basisname | Zeichenfolge |             |
+| document_ | DtcgGroup |             |
+| aliasDocument | DtcgGroup |             |
+| Exportname | Zeichenfolge |             |
 
 ## `src/index`
 
@@ -542,24 +569,24 @@ function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Vite-Plugin, das die Design-Token-Artefakte der Mission Platform aus generiert
-DTCG-Quellen (https://www.designtokens.org/) unter Verwendung eines eigenständigen Brauchs
+DTCG-Quellen (https://www.designtokens.org/) unter Verwendung einer eigenständigen benutzerdefinierten Methode
 Generator – es ist keine externe CLI beteiligt. Jede `*.tokens.json`-Quelle ergibt eine
 Passend zu `generated/scss/<file>.scss` (eigenständige `Vite-Plugin, das die Design-Token-Artefakte der Mission Platform aus generiert
-DTCG-Quellen (https://www.designtokens.org/) unter Verwendung eines eigenständigen Brauchs
-Generator – es ist keine externe CLI beteiligt. Jede `_.tokens.json`-Quelle ergibt eine
-Passend zu `generated/scss/<file>.scss`(eigenständige -Variablen,`--mp-_`benutzerdefinierte Eigenschaften und ihre`@property`-Registrierungen) und ein verschachteltes `as const`
-`generated/ts/<file>.ts`-Modul neben dem `generated/_tokens.scss`(SCSS
-Barrel) und`generated/tokens.ts` (TypeScript Barrel) Aggregate.
+DTCG-Quellen (https://www.designtokens.org/) unter Verwendung einer eigenständigen benutzerdefinierten Methode
+Generator – es ist keine externe CLI beteiligt. Jede `*.tokens.json`-Quelle ergibt eine
+Passend zu `generated/scss/<file>.scss` (eigenständige -Variablen, `--mp-*`
+benutzerdefinierte Eigenschaften und ihre `@property`-Registrierungen) und ein verschachteltes `as const`
+`generated/ts/<file>.ts`-Modul neben dem `generated/_tokens.scss` (SCSS
+Barrel) und `generated/tokens.ts` (TypeScript Barrel) Aggregate.
 
 Die Generierung wird im Rollup-Hook `buildStart` ausgeführt, sodass die Artefakte erstellt werden
 für `vite build`, `vite build --watch` und den Entwicklungsserver gleichermaßen.
-`$`
-
+ `$`
 #### Parameter
 
-| Name     | Geben Sie           | ein Beschreibung |
-| -------- | ------------------- | ---------------- |
-| Optionen | TokensPluginOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------- | ----------- |
+| Optionen | TokensPluginOptions |             |
 
 ### TokensPlugin
 
@@ -570,24 +597,24 @@ function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Vite-Plugin, das die Design-Token-Artefakte der Mission Platform aus generiert
-DTCG-Quellen (https://www.designtokens.org/) unter Verwendung eines eigenständigen Brauchs
+DTCG-Quellen (https://www.designtokens.org/) unter Verwendung einer eigenständigen benutzerdefinierten Methode
 Generator – es ist keine externe CLI beteiligt. Jede `*.tokens.json`-Quelle ergibt eine
 Passend zu `generated/scss/<file>.scss` (eigenständige `Vite-Plugin, das die Design-Token-Artefakte der Mission Platform aus generiert
-DTCG-Quellen (https://www.designtokens.org/) unter Verwendung eines eigenständigen Brauchs
-Generator – es ist keine externe CLI beteiligt. Jede `_.tokens.json`-Quelle ergibt eine
-Passend zu `generated/scss/<file>.scss`(eigenständige -Variablen,`--mp-_`benutzerdefinierte Eigenschaften und ihre`@property`-Registrierungen) und ein verschachteltes `as const`
-`generated/ts/<file>.ts`-Modul neben dem `generated/_tokens.scss`(SCSS
-Barrel) und`generated/tokens.ts` (TypeScript Barrel) Aggregate.
+DTCG-Quellen (https://www.designtokens.org/) unter Verwendung einer eigenständigen benutzerdefinierten Methode
+Generator – es ist keine externe CLI beteiligt. Jede `*.tokens.json`-Quelle ergibt eine
+Passend zu `generated/scss/<file>.scss` (eigenständige -Variablen, `--mp-*`
+benutzerdefinierte Eigenschaften und ihre `@property`-Registrierungen) und ein verschachteltes `as const`
+`generated/ts/<file>.ts`-Modul neben dem `generated/_tokens.scss` (SCSS
+Barrel) und `generated/tokens.ts` (TypeScript Barrel) Aggregate.
 
-Die Generierung wird im Rollup-Hook `buildStart` ausgeführt, sodass die Artefakte erstellt werden
+Die Generierung läuft im Rollup-`buildStart`-Hook, sodass die Artefakte erzeugt werden
 für `vite build`, `vite build --watch` und den Entwicklungsserver gleichermaßen.
-`$`
-
+ `$`
 #### Parameter
 
-| Name     | Geben Sie           | ein Beschreibung |
-| -------- | ------------------- | ---------------- |
-| Optionen | TokensPluginOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------- | ----------- |
+| Optionen | TokensPluginOptions |             |
 
 ## `src/reachability`
 
@@ -599,13 +626,13 @@ für `vite build`, `vite build --watch` und den Entwicklungsserver gleichermaße
 function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport;
 ```
 
-Erstellen Sie einen deterministischen, konservativen Erreichbarkeitsbericht, ohne die Tokenquellen zu ändern.
+Sammeln Sie einen deterministischen, konservativen Erreichbarkeitsbericht, ohne die Tokenquellen zu ändern.
 
 #### Parameter
 
-| Name     | Geben Sie                | ein Beschreibung |
-| -------- | ------------------------ | ---------------- |
-| Optionen | TokenReachabilityOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------ | ----------- |
+| Optionen | TokenReachabilityOptions |             |
 
 ### TokenAliasEdge
 
@@ -615,7 +642,7 @@ Erstellen Sie einen deterministischen, konservativen Erreichbarkeitsbericht, ohn
 export interface TokenAliasEdge
 ```
 
-Eine Aliaskante, einschließlich in Arrays verschachtelter Aliase und zusammengesetzter Werte.
+Eine Alias-Kante, einschließlich in Arrays verschachtelter Aliase und zusammengesetzter Werte.
 
 ### TokenReachabilityOptions
 
@@ -679,7 +706,7 @@ Schreiben Sie einen Bericht mit stabiler Formatierung, der für die Überprüfun
 
 #### Parameter
 
-| Name      | Geben Sie               | ein Beschreibung |
-| --------- | ----------------------- | ---------------- |
-| Bericht   | TokenReachabilityReport |                  |
-| Dateipfad | Zeichenfolge            |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ----------------------- | ----------- |
+| Bericht | TokenReachabilityReport |             |
+| Dateipfad | Zeichenfolge |             |

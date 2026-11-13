@@ -6,6 +6,16 @@ Generated from public source declarations in `@mission-platform/email-sender`.
 
 ## `src/index`
 
+### default
+
+**Kind:** constant
+
+```typescript
+export const handler: ExportedHandler<WorkerEnvironment>;
+```
+
+No description provided.
+
 ### Delivery
 
 **Kind:** type

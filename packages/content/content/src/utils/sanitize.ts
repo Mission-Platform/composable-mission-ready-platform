@@ -118,7 +118,7 @@ function fallbackSanitizeHtml(value: string): string {
 
       const attributes: string[] = [];
       // HTML attributes support quoted and unquoted forms; all values are filtered below.
-      // eslint-disable-next-line sonarjs/regex-complexity
+
       const attributePattern = /([\w:-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
       for (
         let match = attributePattern.exec(rawAttributes);

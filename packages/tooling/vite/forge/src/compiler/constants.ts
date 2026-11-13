@@ -1,6 +1,5 @@
-import { localJsxTypesModuleSource as sharedLocalJsxTypesModuleSource } from '@mission-platform/forge-plugin-api/compiler/ast.js';
-
 import type { JsxFramework } from '@mission-platform/forge-plugin-api';
+import { localJsxTypesModuleSource as sharedLocalJsxTypesModuleSource } from '@mission-platform/forge-plugin-api/compiler/ast.js';
 
 /** The neutral package the components import their primitives from. */
 export const NEUTRAL_MODULE = '@mission-platform/forge-jsx';

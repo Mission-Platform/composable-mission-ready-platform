@@ -14,11 +14,22 @@ pnpm espacios de trabajo y Turborepo.
 La forma recomendada de crear un paquete es utilizar la herramienta MCP Mission Platform Developer, que garantiza que todos
 Las configuraciones, scripts y estructuras de carpetas siguen los estándares de la plataforma.
 
+### Construcciones de paquetes Forge
+
+Los paquetes de componentes, ganchos y CMS de Forge utilizan una llamada `defineTsdownLibrary`. Añadir
+los complementos nativos devueltos por `tsdownForgeComponentPlugins`,
+`tsdownForgeHookPlugins`, o `tsdownForgeCmsPlugins` a su opción `plugins`;
+Estos complementos preparan y publican objetivos desde enlaces de ciclo de vida de tsdown en lugar de
+realizar el descubrimiento de gráficos mientras se evalúa la configuración. Mantenga el marco y
+Complementos de salida de CMS propiedad de la persona que llama y explícitos para que la selección de objetivos permanezca
+componible y aislado.
+
 ### 1. Andamio con MCP
 
-Utilice la herramienta `scaffold_package` para generar el esqueleto.
+Utilice la herramienta `scaffold_package` a través de un servidor MCP de Mission Platform Developer conectado para generar el esqueleto.
+El siguiente es un ejemplo de llamada a una herramienta MCP, no un comando de shell; utilice la sección de configuración manual si MCP no está disponible.
 
-```bash
+```text
 # Example: Creating a new 'date-utils' package
 # The tool defaults to a dry-run; set apply=true to write files
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
@@ -34,7 +45,7 @@ Esto genera un directorio `packages/date-utils/` compatible con la convención c
 
 ### 2. Configuración manual (opcional)
 
-Si no está utilizando la herramienta MCP, asegúrese de que su `package.json` utilice [pnpm catálogos](https://pnpm.io/catalogs) para
+Si no está utilizando la herramienta MCP, asegúrese de que su `package.json` utilice [catálogos pnpm](https://pnpm.io/catalogs) para
 gestión de dependencias y sigue la convención de nomenclatura de ámbito:
 
 ```json
@@ -60,7 +71,7 @@ gestión de dependencias y sigue la convención de nomenclatura de ámbito:
 
 ## Estructura del paquete
 
-Cada paquete sigue un estricto diseño interno. Las unidades de código (componentes, elementos componibles, almacenes o utilidades) DEBEN residir en
+Cada paquete sigue un estricto diseño interno. Las unidades de código (componentes, elementos componibles, tiendas o utilidades) DEBEN residir en
 sus propios subdirectorios con nombre y pruebas ubicadas conjuntamente.
 
 ```text
@@ -87,9 +98,9 @@ packages/<name>/
 └── README.md
 ```
 
-## Stylelint para paquetes con estilos
+## Stylelint para paquetes con estilo
 
-Los paquetes que contienen `CSS`, `SCSS` o bloques de estilo `Vue` deben incluir una configuración de Stylelint y scripts de lint:
+Los paquetes que contienen bloques de estilo CSS, SCSS o Vue deben mantener una configuración Stylelint reconocible y scripts lint:
 
 ```text
 packages/<name>/
@@ -99,7 +110,7 @@ packages/<name>/
 └── package.json                    # Stylelint scripts and devDependencies
 ```
 
-Añade la configuración compartida y sus dependencias directas de sintaxis y configuración a `devDependencies`:
+Agregue la configuración compartida y sus dependencias directas de sintaxis/configuración a `devDependencies`:
 
 ```json
 {
@@ -114,7 +125,7 @@ Añade la configuración compartida y sus dependencias directas de sintaxis y co
 }
 ```
 
-Usa la configuración compartida desde `stylelint.config.mjs` en lugar de duplicar las entradas `extends`:
+Utilice la configuración compartida de `stylelint.config.mjs` en lugar de duplicar sus entradas `extends`:
 
 ```js
 // stylelint.config.mjs
@@ -123,7 +134,7 @@ import baseConfig from "@mission-platform/stylelint-config";
 export default { ...baseConfig };
 ```
 
-Añade scripts que cubran las fuentes de estilo reales del espacio de trabajo y ejecuta la comprobación antes de publicar:
+Agregue scripts que cubran las fuentes de estilo reales del espacio de trabajo y luego ejecute la verificación antes de publicar:
 
 ```json
 {
@@ -152,7 +163,7 @@ Para obtener instrucciones de creación detalladas, consulte:
 
 - [Diseño de componentes atómicos](atomic-component-design.md)
 - [Autoría componible](composable-authoring.md)
-- [Creación de tiendas](store-authoring.md)
+- [Autoría de tienda](store-authoring.md)
 - [Autoría de utilidades](util-authoring.md)
 
 ### Edificio
@@ -175,7 +186,7 @@ pnpm exec turbo run test --filter @mission-platform/<name>
 
 Utilice `@mission-platform/router` para destinos de ruta estructurados, asistentes de URL puros y marcadores de compilador neutrales. Compartido
 Los paquetes no deben definir ni registrar rutas de aplicaciones. Las aplicaciones seleccionan un destino de enrutador Forge independientemente de
-su objetivo de interfaz de usuario, conserva la propiedad de los registros de ruta nativos y las instancias de enrutador, y vincula cualquier tiempo de ejecución específico del objetivo
+su objetivo de interfaz de usuario, conservar la propiedad de los registros de ruta nativos y las instancias de enrutador, y vincular cualquier tiempo de ejecución específico del objetivo
 contexto durante el arranque. Los objetivos iniciales son `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
 `-redwood` y `-web-components`; Las combinaciones de capacidades no admitidas deben seguir siendo diagnósticos del compilador.
 
@@ -217,16 +228,15 @@ extractor descrito en la aplicación de documentos README.
 
 ## Publicación
 
-La Plataforma de la Misión utiliza [Conjuntos de cambios](https://github.com/changesets/changesets) para control de versiones y publicación.
+Mission Platform utiliza [Conjuntos de cambios](https://github.com/changesets/changesets) para el control de versiones y la publicación.
 
 1. **Agregar un conjunto de cambios**: Después de realizar cambios, ejecute:
-
-```bash
+   ```bash
    pnpm changeset
-```
-
-Seleccione el paquete y el tipo de cambio (parche, menor, mayor). 2. **Confirmar el conjunto de cambios**: confirma el archivo `.changeset/*.md` generado. 3. **Versión y publicación**: CI/CD maneja la publicación real, pero puedes obtener una vista previa de las versiones localmente con:
-
-```bash
+   ```
+   Seleccione el paquete y el tipo de cambio (parche, menor, mayor).
+2. **Confirmar el conjunto de cambios**: confirma el archivo `.changeset/*.md` generado.
+3. **Versión y publicación**: CI/CD maneja la publicación real, pero puedes obtener una vista previa de las versiones localmente con:
+   ```bash
    pnpm changeset version
-```
+   ```

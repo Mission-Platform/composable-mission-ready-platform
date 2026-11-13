@@ -1,10 +1,11 @@
+import type { MpRouterAdapter } from '@mission-platform/router';
+
 import { documentPath, navGroups, titleForSlug } from '../documentation';
 import { resolveDocumentationLocale, createDocumentationI18n } from '../i18n';
 
 import { createElement } from './dom';
 
 import type { DocumentationLocale } from '../i18n';
-import type { MpRouterAdapter } from '@mission-platform/router';
 
 export function createSidebar(router: MpRouterAdapter, onNavigate: () => void): HTMLElement {
   const locale = resolveDocumentationLocale(router.current.value?.params.locale);

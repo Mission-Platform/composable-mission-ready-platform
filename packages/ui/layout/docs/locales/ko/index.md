@@ -18,7 +18,7 @@ Mission Platform 디자인 토큰으로
 
 - **애플리케이션 셸**: `ForgeApplicationLayout`, `ForgeContainer` 및 `ForgeVerticalLayout`
 - **도시락 구성**: 특징과 지원 지역을 갖춘 지배적인 영웅
-- **일반 그리드**: 메트릭 및 상태 카드 컬렉션에 대한 순서가 지정된 명명된 셀
+- **일반 그리드**: 메트릭 및 상태 카드 컬렉션을 위한 순서가 지정된 명명된 셀
 - **F 패턴 구성**: 문서 스타일 헤더, 소개, 기사, 보조 및 바닥글 영역
 - **Z 패턴 구성**: 상단, 중간, 하단 콘텐츠 영역을 교대로 사용
 - **CSS 전용 응답성**: `window`, `matchMedia` 또는 클라이언트 상태가 없는 모바일 우선 리플로우
@@ -107,14 +107,14 @@ export function LandingPage() {
 
 ### 지역 계약
 
-| 구성요소              | 명명된 지역                                                | 작곡 소스                                      |
-| --------------------- | ---------------------------------------------------------- | ---------------------------------------------- |
-| `ForgeBentoLayout`    | `hero`, `feature`, `supporting`                            | 웹사이트 마케팅 영웅 및 기능 섹션              |
-| `ForgeGridLayout`     | `cell1` - `cell12`                                         | 서비스 모니터 대시보드 카드 및 상태 요약       |
-| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer`        | 문서 탐색바/컨텍스트, 기사, 사이드바 및 바닥글 |
-| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | 랜딩 페이지 콘텐츠와 작업을 번갈아 사용        |
+| 구성요소 | 명명된 지역 | 작곡 소스 |
+| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
+| `ForgeBentoLayout` | `hero`, `feature`, `supporting` | 웹사이트 마케팅 영웅 및 기능 섹션 |
+| `ForgeGridLayout` | `cell1` - `cell12` | 서비스 모니터 대시보드 카드 및 상태 요약 |
+| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer` | 문서 탐색바/컨텍스트, 기사, 사이드바 및 바닥글 |
+| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | 랜딩 페이지 콘텐츠와 작업을 번갈아 사용 |
 
-`ForgeGridLayout`은 `rows` 및 `columns`를 허용하고 둘 다 1 이상으로 고정하고 렌더링 가능 영역을 12개로 제한합니다.
+`ForgeGridLayout`는 `rows` 및 `columns`을 허용하고 둘 다 1 이상으로 고정하고 렌더링 가능 영역을 12개로 제한합니다.
 중단점 아래에서 단일 열 대체를 사용합니다. 명명된 셀은 항상 소스 순서대로 렌더링됩니다.
 
 ## 상품 구성 안내
@@ -124,7 +124,7 @@ export function LandingPage() {
 `apps/`에서 `packages/layout`로 가져오기를 도입하지 않고도 기존 콘텐츠를 명명된 영역으로 전달할 수 있습니다.
 
 접근성을 위해 제공된 콘텐츠를 의미론적 읽기 순서로 유지하고 CSS 그리드 영역을 시각적 배치로만 처리합니다.
-긴 콘텐츠는 `min-width: 0` 및 `overflow-wrap: anywhere`로 보호됩니다. SSR에는 `window`가 필요하지 않습니다.
+긴 콘텐츠는 `min-width: 0` 및 `overflow-wrap: anywhere`으로 보호됩니다. SSR에는 `window`가 필요하지 않습니다.
 `matchMedia`.
 
 ## 특허

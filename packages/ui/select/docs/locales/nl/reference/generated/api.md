@@ -34,9 +34,9 @@ callback-prop `onRemove` (de Vue `remove` zendt vervanger uit).
 
 #### Parameters
 
-| Naam          | Typ                         | Beschrijving |
-| ------------- | --------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<TagProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------- | ----------- |
+| eigenschappen | Alleen-lezen<TagProperties> |             |
 
 ### Tageigenschappen
 
@@ -83,9 +83,9 @@ Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam          | Typ                                           | Beschrijving |
-| ------------- | --------------------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<ForgeLanguageSwitcherProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<ForgeLanguageSwitcherProperties> |             |
 
 ### ForgeLanguageSwitcherOption
 
@@ -146,9 +146,9 @@ callback-rekwisieten worden.
 
 #### Parameters
 
-| Naam          | Typ                                 | Beschrijving |
-| ------------- | ----------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<MultiselectProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<MultiselectProperties> |             |
 
 ### MultiselectOptie
 
@@ -182,6 +182,26 @@ Canonieke controlegrootteschaal.
 
 ## `src/components/molecules/forge-select/forge-select`
 
+### ForgeCombobox
+
+**Soort:** constant
+
+```typescript
+export const ForgeCombobox: typeof ForgeSelect;
+```
+
+Geen beschrijving opgegeven.
+
+### ForgeComboboxProps
+
+**Soort:** type
+
+```typescript
+export type ForgeComboboxProps = SelectProperties;
+```
+
+Geen beschrijving opgegeven.
+
 ### ForgeSelect
 
 **Soort:** functie
@@ -190,40 +210,24 @@ Canonieke controlegrootteschaal.
 function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
-`ForgeSelect` — een aangepaste combobox/select die één keer in de neutrale JSX is geschreven
-dialect en rechtstreeks gecompileerd naar React of Vue door
-`@mission-platform/vite-plugin-forge`.
-
-Standaard (`searchable`, de standaard) is de trigger een tekstveld dat filtert
-de opties terwijl de gebruiker typt — spiegelen van {@link ForgeMultiselect} — dus een waarde
-kan worden gevonden door te zoeken in plaats van te scrollen; stel `searchable={false}` in voor een
-gewone knoptrigger. Hoe dan ook, de keuzelijst wordt ondersteund door een visueel verborgen
-native `<select>`, zodat het automatisch invullen van browsers en het verzenden van native formulieren blijven werken.
-Selectie wordt geregeld met de gevestigde `modelValue`+
-`onUpdateModelValue`/`onChange` callback-prop-conventie. Het is eigenaar van zijn stijl
-via de co-located CSS-module `forge-select.module.scss`.
-
-De zwevende keuzelijst wordt weergegeven via de eenmalige schrijfopdracht **`ForgeDropdown`**
-(zelf samengesteld naar React/Vue), samengesteld via het neutrale benoemde slot **passing**
-syntaxis: de combobox-wrapper wordt overgedragen aan het `trigger`-slot van de vervolgkeuzelijst
-(`slot="trigger"`) en de `<ul role="listbox">` wordt het standaardslot, dus
-het paneel wordt door `<Teleport>` geleid en verankerd met CSS Anchor
-Positionering in plaats van een absoluut gepositioneerde lijst ter plaatse. De interne
-`useState` open vlag wordt gesynchroniseerd gehouden met de vervolgkeuzelijst via zijn
-`onUpdateOpen` terugbellen.
-
-Andere vervangingen van de originele Vue SFC: de `useId` samenstelbare kaarten naar
-de framework-native `useId`-haak; de chevron is de eenmalige schrijfwijze
-`@mission-platform/icons` `ForgeIconChevron` (geroteerd via de `direction`-prop,
-zelf gecompileerd naar React/Vue); de `useI18n`-reeksen worden platte tekst; en
-de `v-model` + -uitzendingen worden callback-rekwisieten. De benoemde slots `start`/`end` zijn
-bewaard als slots met een neutrale naam.
+ForgeSelect-component die een toegankelijke, raamwerkneutrale selectiecontrole biedt
+ondersteuning voor live filteren, asynchroon zoeken, toetsenbordnavigatie en aangepaste slots.
 
 #### Parameters
 
-| Naam          | Typ                            | Beschrijving |
-| ------------- | ------------------------------ | ------------ |
-| eigenschappen | Alleen-lezen<SelectProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<SelectProperties> |             |
+
+### ForgeSelectProps
+
+**Soort:** type
+
+```typescript
+export type ForgeSelectProps = SelectProperties;
+```
+
+Geen beschrijving opgegeven.
 
 ### Selecteer Optie
 

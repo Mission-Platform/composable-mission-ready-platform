@@ -9,945 +9,43 @@
 
 נוצר מהצהרות מקור ציבורי ב-`@mission-platform/flint`.
 
-## `src/analysis/analyze`
-
-### analysFlint
-
-פונקציה **סוג:**
-
-```typescript
-function analyzeFlint(frontend: FlintFrontendResult, options: FlintAnalysisOptions = {}): FlintAnalysisReport;
-```
-
-הפעל את כללי ניתוח המקור הרשומים כנגד תוצאת קצה אחת.
-
-#### פרמטרים
-
-| שם       | הקלד                 | תיאור |
-| -------- | -------------------- | ----- |
-| חזית     | FlintFrontendResult  |       |
-| אפשרויות | FlintAnalysisOptions |       |
-
-## `src/analysis/context`
-
-### createFlintAnalysisContext
-
-פונקציה **סוג:**
-
-```typescript
-function createFlintAnalysisContext(
-  frontend: FlintFrontendResult,
-  options: FlintAnalysisOptions = {},
-): FlintAnalysisContext;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם       | הקלד                 | תיאור |
-| -------- | -------------------- | ----- |
-| חזית     | FlintFrontendResult  |       |
-| אפשרויות | FlintAnalysisOptions |       |
-
-## `src/analysis/contracts`
-
-### FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
-```
-
-קידומות יציבות שמורות למשפחות אבחון של ניתוח מקור.
-
-### FlintAnalysisCallGraphNode
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisCallGraphNode
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisCapabilityFact
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisCapabilityFact
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisCategory
-
-**סוג:** סוג
-
-```typescript
-export type FlintAnalysisCategory = 'type' | 'control-flow' | 'memory' | 'ownership' | 'security' | 'resource';
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisContext
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisContext
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisControlFlowFact
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisControlFlowFact
-```
-
-לא סופק תיאור.
-
-### FlintAnalysis Evidence
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisEvidence
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisFacts
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisFacts
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisFinding
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisFinding
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisLimits
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisLimits
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisOptions
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisOptions
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisOwnershipFact
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisOwnershipFact
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisPolicy
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisPolicy
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisProfile
-
-**סוג:** סוג
-
-```typescript
-export type FlintAnalysisProfile = 'development' | 'strict';
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisRangeFact
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisRangeFact
-```
-
-לא סופק תיאור.
-
-### FlintAnalysis Report
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisReport
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisResourceFact
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisResourceFact
-```
-
-לא סופק תיאור.
-
-### FlintAnalysis Rule
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisRule
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisSeverity
-
-**סוג:** סוג
-
-```typescript
-export type FlintAnalysisSeverity = FlintDiagnosticSeverity;
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisSourceFile
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisSourceFile
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisSourceMap
-
-**סוג:** סוג
-
-```typescript
-export type FlintAnalysisSourceMap = readonly FlintAnalysisSourceMapEntry[];
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisSourceMapEntry
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisSourceMapEntry
-```
-
-לא סופק תיאור.
-
-### FlintAnalysisTypeFact
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisTypeFact
-```
-
-לא סופק תיאור.
-
-## `src/analysis/default-rules`
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly FlintAnalysisRule[];
-```
-
-לא סופק תיאור.
-
-## `src/analysis/facts`
-
-### createFlintAnalysisFacts
-
-פונקציה **סוג:**
-
-```typescript
-function createFlintAnalysisFacts(frontend: FlintFrontendResult): FlintAnalysisFacts;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם   | הקלד                | תיאור |
-| ---- | ------------------- | ----- |
-| חזית | FlintFrontendResult |       |
-
-## `src/analysis/policy`
-
-### createFlintAnalysisPolicy
-
-פונקציה **סוג:**
-
-```typescript
-function createFlintAnalysisPolicy(policy: FlintAnalysisOptionsLike = {}): FlintAnalysisPolicy;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם      | הקלד                     | תיאור |
-| ------- | ------------------------ | ----- |
-| מדיניות | Flint ניתוח אפשרויות כמו |       |
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: FlintAnalysisLimits;
-```
-
-לא סופק תיאור.
-
-### FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-לא סופק תיאור.
-
-### FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-לא סופק תיאור.
-
-### Flint ניתוח אפשרויות כמו
-
-**סוג:** סוג
-
-```typescript
-export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limits'> &
-```
-
-לא סופק תיאור.
-
-### isFlintAnalysisFindingBlocking
-
-פונקציה **סוג:**
-
-```typescript
-function isFlintAnalysisFindingBlocking(finding: FlintAnalysisFinding, policy: FlintAnalysisPolicy): boolean;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם      | הקלד                 | תיאור |
-| ------- | -------------------- | ----- |
-| מציאת   | FlintAnalysisFinding |       |
-| מדיניות | FlintAnalysisPolicy  |       |
-
-## `src/analysis/registry`
-
-### createFlintAnalysisRuleRegistry
-
-פונקציה **סוג:**
-
-```typescript
-function createFlintAnalysisRuleRegistry(
-  rules: readonly FlintAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
-): FlintAnalysisRuleRegistry;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| כללים | לקריאה בלבד FlintAnalysisRule[] |       |
-
-### FlintAnalysisRuleRegistry
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAnalysisRuleRegistry
-```
-
-לא סופק תיאור.
-
-## `src/analysis/report`
-
-### createFlintAnalysisDiagnostic
-
-פונקציה **סוג:**
-
-```typescript
-function createFlintAnalysisDiagnostic(finding: FlintAnalysisFinding): FlintDiagnostic;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם    | הקלד                 | תיאור |
-| ----- | -------------------- | ----- |
-| מציאת | FlintAnalysisFinding |       |
-
-## `src/ast`
-
-### FlintArrayLiteralExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintArrayLiteralExpression
-```
-
-לא סופק תיאור.
-
-### FlintAssignmentStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAssignmentStatement
-```
-
-לא סופק תיאור.
-
-### FlintBinaryExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintBinaryExpression
-```
-
-לא סופק תיאור.
-
-### FlintBinaryOperator
-
-**סוג:** סוג
-
-```typescript
-export type FlintBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
-```
-
-לא סופק תיאור.
-
-### FlintCallExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintCallExpression
-```
-
-לא סופק תיאור.
-
-### FlintCapabilityImport
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintCapabilityImport
-```
-
-לא סופק תיאור.
-
-### FlintDocumentation
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintDocumentation
-```
-
-לא סופק תיאור.
-
-### FlintDocumentationTag
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintDocumentationTag
-```
-
-לא סופק תיאור.
-
-### FlintDoWhileStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintDoWhileStatement
-```
-
-לא סופק תיאור.
-
-### FlintEnumDeclaration
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintEnumDeclaration
-```
-
-לא סופק תיאור.
-
-### FlintEnumValueExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintEnumValueExpression
-```
-
-לא סופק תיאור.
-
-### FlintEnumVariant
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintEnumVariant
-```
-
-לא סופק תיאור.
-
-### FlintExpression
-
-**סוג:** סוג
-
-```typescript
-export type FlintExpression =
-  | FlintBinaryExpression
-  | FlintCallExpression
-  | FlintIdentifierExpression
-  | FlintLiteralExpression
-  | FlintFunctionValueExpression
-  | FlintStructValueExpression
-  | FlintEnumValueExpression
-  | FlintArrayLiteralExpression
-  | FlintVectorLiteralExpression
-  | FlintIndexExpression
-  | FlintMatchExpression
-  | FlintUnaryExpression;
-```
-
-לא סופק תיאור.
-
-### FlintExpressionStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintExpressionStatement
-```
-
-לא סופק תיאור.
-
-### FlintForStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintForStatement
-```
-
-לא סופק תיאור.
-
-### FlintFunction
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintFunction
-```
-
-לא סופק תיאור.
-
-### FlintFunctionValueExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintFunctionValueExpression
-```
-
-לא סופק תיאור.
-
-### FlintGenericParameter
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintGenericParameter
-```
-
-לא סופק תיאור.
-
-### FlintIdentifierExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIdentifierExpression
-```
-
-לא סופק תיאור.
-
-### FlintIfStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIfStatement
-```
-
-לא סופק תיאור.
-
-### FlintIndexExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIndexExpression
-```
-
-לא סופק תיאור.
-
-### FlintInterfaceDeclaration
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintInterfaceDeclaration
-```
-
-חוזה מבני בזמן הידור; אין לו ייצוג זמן ריצה.
-
-### FlintInterfaceFunction
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintInterfaceFunction
-```
-
-לא סופק תיאור.
-
-### FlintIteratorLoopStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIteratorLoopStatement
-```
-
-לא סופק תיאור.
-
-### FlintLetStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintLetStatement
-```
-
-לא סופק תיאור.
-
-### FlintLiteralExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintLiteralExpression
-```
-
-לא סופק תיאור.
-
-### FlintMatchArm
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintMatchArm
-```
-
-לא סופק תיאור.
-
-### FlintMatchExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintMatchExpression
-```
-
-לא סופק תיאור.
-
-### FlintMatchStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintMatchStatement
-```
-
-לא סופק תיאור.
-
-### FlintModule
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintModule
-```
-
-לא סופק תיאור.
-
-### Flint Ownership
-
-**סוג:** סוג
-
-```typescript
-export type FlintOwnership = 'borrowed' | 'owned' | 'shared';
-```
-
-לא סופק תיאור.
-
-### FlintParameter
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintParameter
-```
-
-לא סופק תיאור.
-
-### FlintPattern
-
-**סוג:** סוג
-
-```typescript
-export type FlintPattern = |
-```
-
-לא סופק תיאור.
-
-### FlintPrimitiveType
-
-**סוג:** סוג
-
-```typescript
-export type FlintPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
-```
-
-לא סופק תיאור.
-
-### FlintReturnStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintReturnStatement
-```
-
-לא סופק תיאור.
-
-### FlintSourceModuleImport
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintSourceModuleImport
-```
-
-לא סופק תיאור.
-
-### FlintStatement
-
-**סוג:** סוג
-
-```typescript
-export type FlintStatement =
-  | FlintExpressionStatement
-  | FlintAssignmentStatement
-  | FlintIfStatement
-  | FlintLetStatement
-  | FlintMatchStatement
-  | FlintSwitchStatement
-  | FlintReturnStatement
-  | FlintForStatement
-  | FlintDoWhileStatement
-  | FlintWhileStatement
-  | FlintYieldStatement
-  | FlintIteratorLoopStatement;
-```
-
-לא סופק תיאור.
-
-### FlintStructDeclaration
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintStructDeclaration
-```
-
-לא סופק תיאור.
-
-### FlintStructField
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintStructField
-```
-
-לא סופק תיאור.
-
-### FlintStructValueExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintStructValueExpression
-```
-
-לא סופק תיאור.
-
-### FlintSwitchCase
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintSwitchCase
-```
-
-לא סופק תיאור.
-
-### FlintSwitchStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintSwitchStatement
-```
-
-לא סופק תיאור.
-
-### FlintTypeName
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintTypeName
-```
-
-לא סופק תיאור.
-
-### flintTypeNameToString
-
-פונקציה **סוג:**
-
-```typescript
-function flintTypeNameToString(type: FlintTypeName): string;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם   | הקלד          | תיאור |
-| ---- | ------------- | ----- |
-| הקלד | FlintTypeName |       |
-
-### FlintUnaryExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintUnaryExpression
-```
-
-לא סופק תיאור.
-
-### FlintVectorLiteralExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintVectorLiteralExpression
-```
-
-לא סופק תיאור.
-
-### FlintWhileStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintWhileStatement
-```
-
-לא סופק תיאור.
-
-### FlintYieldStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintYieldStatement
-```
-
-לא סופק תיאור.
-
 ## `src/cache`
+
+### FlintCacheIndex
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintCacheIndex
+```
+
+מניפסט מטמון מתמשך עוקב אחר חפצים פעילים על פני מודולים כדי לאפשר ניקוי מיושן.
+
+### FlintCacheIndexEntry
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintCacheIndexEntry
+```
+
+מעקב אחר כניסת אינדקס קבצים מאוחסנים במטמון וחותמת זמן עבור מפתח מודול ספציפי.
+
+### flintCacheIndexPath
+
+פונקציה **סוג:**
+
+```typescript
+function flintCacheIndexPath(cache: FlintWatCache): string;
+```
+
+מחזיר את הנתיב לקובץ אינדקס המטמון `.flint-cache-index.json`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מטמון | FlintWatCache |             |
 
 ### FlintCacheLogger
 
@@ -957,7 +55,7 @@ export interface FlintYieldStatement
 export interface FlintCacheLogger
 ```
 
-לא סופק תיאור.
+ממשק לוגר אבחון לפעולות אחסון במטמון והתאמות/החמצות של מטמון.
 
 ### FlintDebugArtifactPaths
 
@@ -967,7 +65,7 @@ export interface FlintCacheLogger
 export interface FlintDebugArtifactPaths
 ```
 
-לא סופק תיאור.
+נתיבי קבצים לממצאי ניפוי באגים מתמשכים הנפלטים במהלך ההידור.
 
 ### FlintDebugArtifactVariant
 
@@ -977,7 +75,25 @@ export interface FlintDebugArtifactPaths
 export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 ```
 
-לא סופק תיאור.
+מזהה וריאנט אופטימיזציה עבור חפצי ניפוי באגים הנפלטים.
+
+### flintSoNPath
+
+פונקציה **סוג:**
+
+```typescript
+function flintSoNPath(cache: FlintWatCache, key: string, variant: 'optimized' | 'unoptimized' = 'optimized'): string;
+```
+
+מחזירה את הנתיב לחפץ SonIR JSON עבור מפתח מטמון ווריאנט נתון.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ---------------------------- | ----------- |
+| מטמון | FlintWatCache |             |
+| מפתח | מחרוזת |             |
+| וריאנט | 'מותאם' \| 'לא מותאם' |             |
 
 ### FlintWatCache
 
@@ -987,7 +103,7 @@ export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 export interface FlintWatCache
 ```
 
-לא סופק תיאור.
+ספק מערכת קבצים או מטמון בזיכרון עבור חפצי מהדר ויציאות WAT.
 
 ### flintWatCacheKey
 
@@ -997,13 +113,13 @@ export interface FlintWatCache
 function flintWatCacheKey(input: FlintWatCacheKeyInput): string;
 ```
 
-לא סופק תיאור.
+מחשב מפתח מטמון דטרמיניסטי עבור בקשת קומפילציה.
 
 #### פרמטרים
 
-| שם  | הקלד                  | תיאור |
-| --- | --------------------- | ----- |
-| קלט | FlintWatCacheKeyInput |       |
+| שם | הקלד | תיאור |
+| ----- | --------------------- | ----------- |
+| קלט | FlintWatCacheKeyInput |             |
 
 ### FlintWatCacheKeyInput
 
@@ -1013,7 +129,7 @@ function flintWatCacheKey(input: FlintWatCacheKeyInput): string;
 export interface FlintWatCacheKeyInput
 ```
 
-לא סופק תיאור.
+פרמטרי קלט המשמשים לחישוב מפתח מטמון הידור דטרמיניסטי.
 
 ### flintWatPath
 
@@ -1023,14 +139,14 @@ export interface FlintWatCacheKeyInput
 function flintWatPath(cache: FlintWatCache, key: string): string;
 ```
 
-לא סופק תיאור.
+מחזיר את הנתיב לקובץ WAT עבור מפתח מטמון נתון.
 
 #### פרמטרים
 
-| שם    | הקלד          | תיאור |
-| ----- | ------------- | ----- |
-| מטמון | FlintWatCache |       |
-| מפתח  | מחרוזת        |       |
+| שם | הקלד | תיאור |
+| ----- | ------------- | ----------- |
+| מטמון | FlintWatCache |             |
+| מפתח | מחרוזת |             |
 
 ### persistFlintDebugArtifacts
 
@@ -1049,15 +165,39 @@ function persistFlintDebugArtifacts(
 ): FlintDebugArtifactPaths;
 ```
 
-לא סופק תיאור.
+ממשיך חפצי ניפוי באגים (WAT ו-Wasm, אופטימליים ולא אופטימליים) לדיסק.
 
 #### פרמטרים
 
-| שם    | הקלד                                                                                                                                                 | תיאור |
-| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| מטמון | FlintWatCache \| לא מוגדר                                                                                                                            |       |
-| מפתח  | מחרוזת                                                                                                                                               |       |
-| חפצים | { readonly optimizedWat?: string; לקריאה בלבד unoptimizedWat?: מחרוזת; readonly optimizedWasm?: Uint8Array; readonly unoptimizedWasm?: Uint8Array; } |       |
+| שם | הקלד | תיאור |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| מטמון | FlintWatCache \| לא מוגדר |             |
+| מפתח | מחרוזת |             |
+| חפצים | { readonly optimizedWat?: string; לקריאה בלבד unoptimizedWat?: מחרוזת; readonly optimizedWasm?: Uint8Array; readonly unoptimizedWasm?: Uint8Array; } |             |
+
+### persistFlintSoN
+
+פונקציה **סוג:**
+
+```typescript
+function persistFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  module: FlintSoNModule,
+  variant: 'optimized' | 'unoptimized' = 'optimized',
+): string | undefined;
+```
+
+מחזיק מודול SonIR לדיסק בספריית המטמון.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ---------------------------- | ----------- |
+| מטמון | FlintWatCache \| לא מוגדר |             |
+| מפתח | מחרוזת |             |
+| מודול | FlintSoNModule |             |
+| וריאנט | 'מותאם' \| 'לא מותאם' |             |
 
 ### persistFlintWat
 
@@ -1067,17 +207,431 @@ function persistFlintDebugArtifacts(
 function persistFlintWat(cache: FlintWatCache | undefined, key: string, wat: string): string | undefined;
 ```
 
-לא סופק תיאור.
+ממשיכה מחרוזת WAT לדיסק בספריית המטמון.
 
 #### פרמטרים
 
-| שם    | הקלד                      | תיאור |
-| ----- | ------------------------- | ----- |
-| מטמון | FlintWatCache \| לא מוגדר |       |
-| מפתח  | מחרוזת                    |       |
-| מה    | מחרוזת                    |       |
+| שם | הקלד | תיאור |
+| ----- | -------------------------- | ----------- |
+| מטמון | FlintWatCache \| לא מוגדר |             |
+| מפתח | מחרוזת |             |
+| מה | מחרוזת |             |
 
-## `src/compiler`
+### pruneOrphanedFlintCacheFiles
+
+פונקציה **סוג:**
+
+```typescript
+function pruneOrphanedFlintCacheFiles(cache: FlintWatCache | undefined): readonly string[];
+```
+
+גזם קבצי מטמון זמניים ובלתי מאוגדים מיותמים מספריית המטמון.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | -------------------------- | ----------- |
+| מטמון | FlintWatCache \| לא מוגדר |             |
+
+### pruneStaleFlintCache
+
+פונקציה **סוג:**
+
+```typescript
+function pruneStaleFlintCache(
+  cache: FlintWatCache | undefined,
+  moduleIdOrPath: string,
+  currentKey: string,
+  newFiles: readonly string[],
+): void;
+```
+
+גזם חפצי מטמון מיושנים עבור מזהה מודול נתון כאשר מפתח המטמון שלו השתנה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------------- | -------------------------- | ----------- |
+| מטמון | FlintWatCache \| לא מוגדר |             |
+| moduleIdOrPath | מחרוזת |             |
+| currentKey | מחרוזת |             |
+| newFiles | מחרוזת לקריאה בלבד[] |             |
+
+### readFlintCacheIndex
+
+פונקציה **סוג:**
+
+```typescript
+function readFlintCacheIndex(cache: FlintWatCache | undefined): FlintCacheIndex | undefined;
+```
+
+קורא ומנתח את אינדקס המטמון מהדיסק, מחזיר לא מוגדר אם חסר או פגום.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | -------------------------- | ----------- |
+| מטמון | FlintWatCache \| לא מוגדר |             |
+
+### readFlintSoN
+
+פונקציה **סוג:**
+
+```typescript
+function readFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  expected?: {
+    readonly compilerVersion?: string;
+    readonly languageVersion?: string;
+    readonly abiVersion?: string;
+    readonly sourceHash?: string;
+    readonly graphHash?: string;
+    readonly optimization?: 'debug' | 'release';
+    readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
+    readonly memoryModel?: 'region-arc-checked-linear';
+  },
+): FlintSoNModule | undefined;
+```
+
+קורא ומסיר מודול SonIR מהדיסק.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| מטמון | FlintWatCache \| לא מוגדר |             |
+| מפתח | מחרוזת |             |
+| צפוי | { גרסה לקריאה בלבד?: מחרוזת; שפה לקריאה בלבדVersion?: מחרוזת; readonly abiVersion?: מחרוזת; sourceHash לקריאה בלבד?: string; readonly graphHash?: מחרוזת; אופטימיזציה לקריאה בלבד?: 'Debug' \| 'לְשַׁחְרֵר'; readonly boundsChecks?: 'זמן ריצה' \| 'בטוח מוכח' \| 'לא נכלל לפי פרופיל'; readonly memoryModel?: 'region-arc-checked-linear'; } |             |
+
+## `src/compiler/backend`
+
+### artifactVerificationDiagnostic
+
+פונקציה **סוג:**
+
+```typescript
+function artifactVerificationDiagnostic(diagnostic: FlintWasmArtifactVerificationDiagnostic): FlintDiagnostic;
+```
+
+ממיר אבחון אימות חפצי Wasm לאבחון מהדר סטנדרטי.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------------------------------------- | ----------- |
+| אבחון | FlintWasmArtifactVerificationDiagnostic |             |
+
+### dynamicLinkMetadata
+
+פונקציה **סוג:**
+
+```typescript
+function dynamicLinkMetadata(manifest: FlintAbiManifest, artifactId: string): FlintDynamicLinkMetadata | undefined;
+```
+
+מחשב מטא נתונים של קישור דינמי עבור מודולים המסומנים במצב קישור דינמי במניפסט.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ---------------- | ----------- |
+| מניפסט | FlintAbiManifest |             |
+| artifactId | מחרוזת |             |
+
+### קוֹדַאִי
+
+**סוג:** קבוע
+
+```typescript
+export const encoder;
+```
+
+לא סופק תיאור.
+
+### FlintBackendCompilationResult
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintBackendCompilationResult
+```
+
+מבנה התוצאה שהוחזר על ידי יצירת קוד אחורי של WebAssembly.
+
+### hashBytes
+
+פונקציה **סוג:**
+
+```typescript
+function hashBytes(bytes: Uint8Array): string;
+```
+
+מחשב 32-bit FNV-1a hash של מערך הבתים הנתון שהוחזר כמחרוזת hex.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---------- | ----------- |
+| בתים | Uint8Array |             |
+
+### sourceHashForArtifact
+
+פונקציה **סוג:**
+
+```typescript
+function sourceHashForArtifact(source: string, fileName: string): string;
+```
+
+מחשב גיבוב מקור מנורמל עבור חפץ מזרם האסימונים שלו ללא הערות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| מקור | מחרוזת |             |
+| שם קובץ | מחרוזת |             |
+
+### verifyBackendArtifact
+
+פונקציה **סוג:**
+
+```typescript
+function verifyBackendArtifact(input: {
+  readonly wasm: Uint8Array;
+  readonly unoptimizedWasm?: Uint8Array;
+  readonly fileName: string;
+  readonly manifest: FlintAbiManifest;
+  readonly metadata: Parameters<typeof compileFlintWasm>[0]['metadata'];
+  readonly targetFeatures?: Parameters<typeof verifyFlintWasmArtifact>[0]['targetFeatures'];
+  readonly featureRequirements?: FlintWasmFeatureRequirements;
+  readonly iteratorExports?: readonly FlintIteratorExport[];
+  readonly expectedContentHash: string;
+  readonly expectedSourceHash: string;
+  readonly esmSource: string;
+  readonly profile: 'strict' | 'development';
+  readonly allowedCapabilities?: readonly string[];
+}): {
+  readonly verificationDiagnostics: readonly FlintDiagnostic[];
+  readonly artifactVerification: FlintArtifactVerificationReport;
+};
+```
+
+מאמת חפצי WebAssembly בקצה האחורי מול מדיניות, תכונות יעד ומגבלות מניפסט.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| קלט | { wasm לקריאה בלבד: Uint8Array; readonly unoptimizedWasm?: Uint8Array; שם קובץ לקריאה בלבד: מחרוזת; מניפסט לקריאה בלבד: FlintAbiManifest; מטא נתונים לקריאה בלבד: פרמטרים<typeof compileFlintWasm>[0]['metadata']; readonly targetFeatures?: Parameters<typeof verifyFlintWasmArtifact>[0]['targetFeatures']; readonly featureRequirements?: FlintWasmFeatureRequirements; readonly iteratorExports?: Readonly FlintIteratorExport[]; readonly expectedContentHash: מחרוזת; צפוי לקריאה בלבדSourceHash: מחרוזת; לקריאה בלבד esmSource: מחרוזת; פרופיל לקריאה בלבד: 'קפדנית' \| 'הִתפַּתְחוּת'; readonly allowCapabilities?: מחרוזת readonly[]; } |             |
+
+## `src/compiler/declarations`
+
+### ליצור הצהרות
+
+פונקציה **סוג:**
+
+```typescript
+function createDeclarations(manifest: FlintAbiManifest): string;
+```
+
+מייצר תוכן מלא של קובץ הצהרת TypeScript עבור מניפסט פלינט הידור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ---------------- | ----------- |
+| מניפסט | FlintAbiManifest |             |
+
+### פונקציית הצהרה
+
+פונקציה **סוג:**
+
+```typescript
+function declarationFunction(
+  declaration: FlintAbiFunction,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+יוצר את חתימת הפונקציה TypeScript עבור הצהרת פונקציית ABI.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ------------------- | ----------- |
+| הצהרה | FlintAbiFunction |             |
+| enumNames | ReadonlySet<string> |             |
+| recordNames | ReadonlySet<string> |             |
+
+### הצהרת נכס
+
+פונקציה **סוג:**
+
+```typescript
+function declarationProperty(name: string): string;
+```
+
+מעצב מזהה כשם מאפיין בטוח או מחרוזת בציטוט JSON.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| שם | מחרוזת |             |
+
+### DeclarationRecord
+
+פונקציה **סוג:**
+
+```typescript
+function declarationRecord(
+  declarations: readonly FlintAbiFunction[],
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+פולט הגדרות TypeScript עבור רשומות ייצוא ABI מוקלדות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------ | --------------------------- | ----------- |
+| הצהרות | קריאה בלבד FlintAbiFunction[] |             |
+| enumNames | ReadonlySet<string> |             |
+| recordNames | ReadonlySet<string> |             |
+
+### declarationType
+
+פונקציה **סוג:**
+
+```typescript
+function declarationType(
+  value: string | FlintAbiParameter,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+ממפה פרמטר ABI של Flint או שם סוג לסוג הצהרת TypeScript.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | --------------------------- | ----------- |
+| ערך | מחרוזת \| FlintAbiParameter |             |
+| enumNames | ReadonlySet<string> |             |
+| recordNames | ReadonlySet<string> |             |
+
+### rawDeclarationFunction
+
+פונקציה **סוג:**
+
+```typescript
+function rawDeclarationFunction(declaration: FlintAbiFunction): string;
+```
+
+יוצר את חתימת הפונקציה הגולמית ברמה נמוכה עם הרחבת מצביע/אורך עבור מחרוזות ובייטים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ---------------- | ----------- |
+| הצהרה | FlintAbiFunction |             |
+
+### rawDeclarationRecord
+
+פונקציה **סוג:**
+
+```typescript
+function rawDeclarationRecord(declarations: readonly FlintAbiFunction[]): string;
+```
+
+פולט הגדרות TypeScript עבור רשומות ייצוא גולמיות של WebAssembly.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------ | --------------------------- | ----------- |
+| הצהרות | קריאה בלבד FlintAbiFunction[] |             |
+
+### rawDeclarationType
+
+פונקציה **סוג:**
+
+```typescript
+function rawDeclarationType(value: FlintPrimitiveType | FlintAbiParameter): string;
+```
+
+ממפה פרמטר ABI או סוג פרימיטיבי לסוג פרמטר WebAssembly הגולמי שלו ב-TypeScript.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | --------------------------------------- | ----------- |
+| ערך | FlintPrimitiveType \| FlintAbiParameter |             |
+
+## `src/compiler/esm`
+
+### bytesToBase64
+
+פונקציה **סוג:**
+
+```typescript
+function bytesToBase64(bytes: Uint8Array): string;
+```
+
+מקודד מערך בתים למחרוזת Base64 סטנדרטית.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---------- | ----------- |
+| בתים | Uint8Array |             |
+
+### createEsmSource
+
+פונקציה **סוג:**
+
+```typescript
+function createEsmSource(
+  wasm: Uint8Array,
+  manifest: FlintAbiManifest,
+  iteratorExports: readonly FlintIteratorExport[] = [],
+  dynamicMetadata?: FlintDynamicLinkMetadata,
+): string;
+```
+
+יוצר מחרוזת מודול מטעין ESM המכילה מתאמי WebAssembly משובצים ומתאמי זמן ריצה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------------- | ------------------------------ | ----------- |
+| wasm | Uint8Array |             |
+| מניפסט | FlintAbiManifest |             |
+| iteratorExports | לקריאה בלבד FlintIteratorExport[] |             |
+| dynamicMetadata | FlintDynamicLinkMetadata |             |
+
+## `src/compiler/module`
+
+### ניתוח אפשרויות
+
+פונקציה **סוג:**
+
+```typescript
+function analysisOptions(input: FlintCompileInput): FlintAnalysisOptions;
+```
+
+פותר אפשרויות ניתוח סטטי מקלט הידור והגדרות מדיניות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ----------------- | ----------- |
+| קלט | FlintCompileInput |             |
 
 ### compileFlint
 
@@ -1087,13 +641,64 @@ function persistFlintWat(cache: FlintWatCache | undefined, key: string, wat: str
 function compileFlint(input: FlintCompileInput): FlintArtifact;
 ```
 
-לא סופק תיאור.
+קומפילציה של מחרוזת מקור של Flint ל-WebAssembly וחפצי זמן ריצה.
 
 #### פרמטרים
 
-| שם  | הקלד              | תיאור |
-| --- | ----------------- | ----- |
-| קלט | FlintCompileInput |       |
+| שם | הקלד | תיאור |
+| ----- | ----------------- | ----------- |
+| קלט | FlintCompileInput |             |
+
+### compileFlintGraph
+
+פונקציה **סוג:**
+
+```typescript
+function compileFlintGraph(input: FlintGraphCompileInput): FlintArtifact;
+```
+
+מרכיב גרף מודול פלינט מרובה מודולים לחפץ WebAssembly מאוחד.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---------------------- | ----------- |
+| קלט | FlintGraphCompileInput |             |
+
+### compileFlintModule
+
+פונקציה **סוג:**
+
+```typescript
+function compileFlintModule(
+  input: FlintCompileInput,
+  frontend: FlintFrontendResult,
+  graphMetadata: Pick<
+    FlintArtifact,
+    'graphHash' | 'linkMode' | 'linkedModules' | 'linkProfile' | 'optimizationProfile'
+  > = {},
+  sourceFiles: readonly string[] = frontend.sourceFiles,
+): FlintArtifact;
+```
+
+מרכיב מודול Flint מנותח יחיד ל-WebAssembly ומסנתז חפצי מטעין ESM.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| קלט | FlintCompileInput | - מפרט קלט אוסף מודול.                  |
+| חזית | FlintFrontendResult | - תוצאת מהדר חזיתית מוכנה.                       |
+| graphMetadata | בחר< FlintArtifact, 'graphHash' \| 'linkMode' \| 'linkedModules' \| 'linkProfile' \| 'optimizationProfile' > | - מטא נתונים אופציונליים המופצים מקישור גרפי מודול.  |
+| sourceFiles | מחרוזת לקריאה בלבד[] | - נתיבי קבצי מקור התורמים ליחידת הידור זו. |
+
+#### חוֹזֶה
+
+- **@param:** - מפרט קלט הידור של מודול.
+- **@param:** - תוצאת מהדר חזית מוכנה.
+- **@param:** - מטא נתונים אופציונליים המופצים מקישור גרפי מודול.
+- **@param:** - נתיבי קובץ מקור התורמים ליחידת הידור זו.
+- **@returns:** חפץ מלא הידור המכיל קבצים בינאריים, הצהרות ודוחות.
 
 ### compileFlintSeed
 
@@ -1103,14 +708,13 @@ function compileFlint(input: FlintCompileInput): FlintArtifact;
 function compileFlintSeed(input: FlintCompileInput): FlintArtifact;
 ```
 
-הזרע התחום TypeScript בשימוש על ידי ה-bootstrap המתארח בעצמו עד לתיקון-
-שוויון נקודות מקדם את מהדר FWS לבעלים הרגיל של החזית.
+קומפילציה של קלט זרעי Flint על ידי הכנת ASTs frontend וקומפילציה של המודול המתקבל.
 
 #### פרמטרים
 
-| שם  | הקלד              | תיאור |
-| --- | ----------------- | ----- |
-| קלט | FlintCompileInput |       |
+| שם | הקלד | תיאור |
+| ----- | ----------------- | ----------- |
+| קלט | FlintCompileInput |             |
 
 ### createFlintCompiler
 
@@ -1120,7 +724,76 @@ function compileFlintSeed(input: FlintCompileInput): FlintArtifact;
 function createFlintCompiler(): FlintCompiler;
 ```
 
-לא סופק תיאור.
+יוצר מופע של מהדר Flint.
+
+#### חוֹזֶה
+
+- **@returns:** מופע מהדר מוגדר.
+
+### runSelfHostedStage
+
+פונקציה **סוג:**
+
+```typescript
+function runSelfHostedStage(
+  input: Pick<FlintCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  options: FlintCompilerServiceOptions,
+): {
+  readonly report?: FlintSelfHostedStageReport;
+  readonly stageReports?: readonly FlintSelfHostedStageReport[];
+  readonly diagnostic?: FlintDiagnostic;
+};
+```
+
+מבצע שלב מהדר באירוח עצמי ומאמת דוחות זוגיות כנגד טביעות אצבע צפויות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+| קלט | Pick<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+| אפשרויות | FlintCompilerServiceOptions |             |
+
+### selfHostedDiagnostic
+
+פונקציה **סוג:**
+
+```typescript
+function selfHostedDiagnostic(
+  input: Pick<FlintCompileInput, 'fileName'>,
+  message: string,
+  stage: FlintSelfHostedStageReport['stage'] = 'lex',
+): FlintDiagnostic;
+```
+
+יוצר אבחון לבעיות אתחול או אימות זוגיות באירוח עצמי.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ----------------------------------- | ----------- |
+| קלט | Pick<FlintCompileInput, 'fileName'> |             |
+| הודעה | מחרוזת |             |
+| במה | FlintSelfHostedStageReport['stage'] |             |
+
+### עם SelfHostedResult
+
+פונקציה **סוג:**
+
+```typescript
+function withSelfHostedResult(artifact: FlintArtifact, result: ReturnType<typeof runSelfHostedStage>): FlintArtifact;
+```
+
+ממזג את תוצאות אימות שלב הרץ באירוח עצמי לתוך חפץ האוסף הסופי.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------------------------------------- | ----------- |
+| חפץ | FlintArtifact |             |
+| תוצאה | ReturnType<typeof runSelfHostedStage> |             |
+
+## `src/compiler/service`
 
 ### createFlintCompilerService
 
@@ -1130,13 +803,18 @@ function createFlintCompiler(): FlintCompiler;
 function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): FlintCompilerService;
 ```
 
-לא סופק תיאור.
+יוצר שירות מהדר מטמון בזיכרון להידור מצטבר ובניית גרפים.
 
 #### פרמטרים
 
-| שם       | הקלד                        | תיאור |
-| -------- | --------------------------- | ----- |
-| אפשרויות | FlintCompilerServiceOptions |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------- | ------------------------------------------------ |
+| אפשרויות | FlintCompilerServiceOptions | אפשרויות תצורה אופציונליות של שירות מהדר. |
+
+#### חוֹזֶה
+
+- **@param:** אפשרויות תצורה אופציונליות של שירות מהדר.
+- **@returns:** מופע Stateful FlintCompilerService.
 
 ## `src/contracts`
 
@@ -1148,7 +826,7 @@ function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): 
 export interface FlintArtifact
 ```
 
-לא סופק תיאור.
+חפץ מהדר ארוז המכיל ABI, מקורות, קבצים בינאריים ואבחון.
 
 ### FlintArtifactVerificationReport
 
@@ -1158,7 +836,7 @@ export interface FlintArtifact
 export interface FlintArtifactVerificationReport
 ```
 
-לא סופק תיאור.
+תוצאה של אימות גיבוב וגרסאות של תוכן חפץ שנפלט.
 
 ### FlintAsyncCapability
 
@@ -1168,7 +846,7 @@ export interface FlintArtifactVerificationReport
 export type FlintAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-לא סופק תיאור.
+יכולת מארח אסינכרון בשם הנדרשת על ידי חוזי הידור אסינכרון.
 
 ### FlintAsyncCompilation Contract
 
@@ -1208,7 +886,7 @@ export interface FlintBackendResult
 export interface FlintCompileInput
 ```
 
-לא סופק תיאור.
+בקשת קומפילציה של מודול בודד הנצרכת על ידי שירות החזית והקומפיילר.
 
 ### FlintCompiler
 
@@ -1218,7 +896,7 @@ export interface FlintCompileInput
 export interface FlintCompiler
 ```
 
-לא סופק תיאור.
+חזית מהדר מינימלית החושפת קומפילציה וסילוק מודול יחיד.
 
 ### FlintCompilerHints
 
@@ -1228,7 +906,7 @@ export interface FlintCompiler
 export interface FlintCompilerHints
 ```
 
-לא סופק תיאור.
+רמזים אופציונליים להורדה המנחים פליטת קצה אחורית מיוחדים.
 
 ### FlintCompilerLogger
 
@@ -1238,7 +916,7 @@ export interface FlintCompilerHints
 export interface FlintCompilerLogger
 ```
 
-לא סופק תיאור.
+חוזה לוגר מובנה המשמש את שלבי שירות המהדר.
 
 ### FlintCompilerReport
 
@@ -1248,7 +926,7 @@ export interface FlintCompilerLogger
 export interface FlintCompilerReport
 ```
 
-לא סופק תיאור.
+דוח שירות מצטבר המכסה אבחון, סטטיסטיקות מטמון וניתוח.
 
 ### FlintCompilerService
 
@@ -1258,7 +936,7 @@ export interface FlintCompilerReport
 export interface FlintCompilerService extends FlintCompiler
 ```
 
-לא סופק תיאור.
+שירות מהדר מצטבר התומך בהידור גרפים ובאי תוקף.
 
 ### FlintCompilerServiceOptions
 
@@ -1268,7 +946,7 @@ export interface FlintCompilerService extends FlintCompiler
 export interface FlintCompilerServiceOptions
 ```
 
-לא סופק תיאור.
+תיק תצורה מקובל בעת בניית חזית שירות מהדר.
 
 ### FlintDebugArtifacts
 
@@ -1278,7 +956,7 @@ export interface FlintCompilerServiceOptions
 export interface FlintDebugArtifacts
 ```
 
-לא סופק תיאור.
+צילומי WAT/Wasm אופציונליים נשמרו לצורך איתור באגים ואימות.
 
 ### FlintDeterministicArtifactMetadata
 
@@ -1288,7 +966,7 @@ export interface FlintDebugArtifacts
 export interface FlintDeterministicArtifactMetadata
 ```
 
-לא סופק תיאור.
+שדות זהות דטרמיניסטים מתועדים לצד חפצי מהדר שנפלטו.
 
 ### FlintFrontendLinkMetadata
 
@@ -1298,7 +976,7 @@ export interface FlintDeterministicArtifactMetadata
 export interface FlintFrontendLinkMetadata
 ```
 
-לא סופק תיאור.
+מטא נתונים של זמן קישור מצורפים לתוצאה חזיתית עבור אריזת קצה אחורי.
 
 ### FlintFrontendResult
 
@@ -1318,7 +996,7 @@ export interface FlintFrontendResult
 export interface FlintGraphCompileInput
 ```
 
-לא סופק תיאור.
+בקשה להידור גרפים מרובה מודולים כולל בחירת כניסה ומדיניות קישורים.
 
 ### FlintIteratorExport
 
@@ -1328,7 +1006,7 @@ export interface FlintGraphCompileInput
 export interface FlintIteratorExport
 ```
 
-לא סופק תיאור.
+מטא נתונים של ABI המתארים משטח פרוטוקול איטרטור מיוצא.
 
 ### FlintLinkOptimizationProfile
 
@@ -1340,16 +1018,6 @@ export type FlintLinkOptimizationProfile = 'standard' | 'static-aggressive' | 'd
 
 מדיניות זמן קישור נרשמה לצד אופטימיזציית המהדר הרגילה.
 
-### FlintLinkProfile
-
-**סוג:** סוג
-
-```typescript
-export type FlintLinkProfile = 'static' | 'dynamic';
-```
-
-פרופיל אריזה חוצה פרויקטים שמו בשימוש על ידי צרכנים מודעים לגרפים.
-
 ### FlintOptimization
 
 **סוג:** סוג
@@ -1358,7 +1026,7 @@ export type FlintLinkProfile = 'static' | 'dynamic';
 export type FlintOptimization = 'debug' | 'release';
 ```
 
-לא סופק תיאור.
+רמת אופטימיזציה של מהדר בחירת ניפוי באגים או הורדת שחרור.
 
 ### FlintSelfHostedStageReport
 
@@ -1368,7 +1036,7 @@ export type FlintOptimization = 'debug' | 'release';
 export interface FlintSelfHostedStageReport
 ```
 
-תוצאה של שלב המהדר המוגדר על ידי FWS בשימוש על ידי מתאמי כלי עבודה.
+תוצאה של שלב המהדר המוגבלת על ידי FLINT בשימוש על ידי מתאמי כלי עבודה.
 
 ### FlintSelfHostedStageRunner
 
@@ -1391,7 +1059,7 @@ export type FlintSelfHostedStageRunner = (
 export interface FlintTargetFeatures
 ```
 
-לא סופק תיאור.
+דגלי תכונת יעד אופציונליים של WebAssembly המבוקשים על ידי המארח.
 
 ### FlintVmExecutionMode
 
@@ -1401,7 +1069,7 @@ export interface FlintTargetFeatures
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-לא סופק תיאור.
+מצבי ביצוע VM נתמכים עבור שלבי מהדר באירוח עצמי.
 
 ## `src/diagnostics`
 
@@ -1422,20 +1090,32 @@ function createDiagnostic(
 ): FlintDiagnostic;
 ```
 
-לא סופק תיאור.
+בונה אבחון מהדר מובנה עם רמז אופציונלי ומטא נתונים אבטחה.
 
 #### פרמטרים
 
-| שם         | הקלד                                                                                          | תיאור |
-| ---------- | --------------------------------------------------------------------------------------------- | ----- |
-| שם קובץ    | מחרוזת                                                                                        |       |
-| שלב        | FlintDiagnosticPhase                                                                          |       |
-| קוד        | מחרוזת                                                                                        |       |
-| הודעה      | מחרוזת                                                                                        |       |
-| span       | FlintSourceSpan                                                                               |       |
-| חומרה      | FlintDiagnosticSeverity                                                                       |       |
-| רמז        | מחרוזת                                                                                        |       |
-| מטא נתונים | Pick<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |       |
+| שם | הקלד | תיאור |
+| -------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| שם קובץ | מחרוזת | - נתיב או מזהה של קובץ המקור.                                  |
+| שלב | FlintDiagnosticPhase | - שלב המהדר הפולט את האבחון.                                 |
+| קוד | מחרוזת | - שגיאת אבחון או קוד אזהרה.                                       |
+| הודעה | מחרוזת | - הודעה אבחנתית תיאורית הניתנת לקריאה על ידי אדם.                          |
+| span | FlintSourceSpan | - קואורדינטות טווח המקור עבור מיקום האבחון.                    |
+| חומרה | FlintDiagnosticSeverity | - רמת חומרה, ברירת המחדל היא 'שגיאה'.                                  |
+| רמז | מחרוזת | - רמז אופציונלי לתיקון או ייעוץ מעשי.                         |
+| מטא נתונים | Pick<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> | - מזהה כלל אופציונלי, קטגוריה, עדות או מזהי טקסונומיה אבטחה. |
+
+#### חוֹזֶה
+
+- **@param:** - נתיב או מזהה של קובץ המקור.
+- **@param:** - שלב המהדר שפולט את האבחון.
+- **@param:** - שגיאת אבחון או קוד אזהרה.
+- **@param:** - הודעה אבחנתית תיאורית הניתנת לקריאה על ידי אדם.
+- **@param:** - קואורדינטות טווח המקור עבור מיקום האבחון.
+- **@param:** - רמת חומרה, ברירת המחדל היא 'שגיאה'.
+- **@param:** - רמז אופציונלי לתיקון או עצה מתאימה.
+- **@param:** - מזהה כלל אופציונלי, קטגוריה, עדות או מזהי טקסונומיה אבטחה.
+- **@returns:** מופע מובנה של FlintDiagnostic.
 
 ### מפתח אבחון
 
@@ -1445,15 +1125,50 @@ function createDiagnostic(
 function diagnosticKey(diagnostic: FlintDiagnostic): string;
 ```
 
-לא סופק תיאור.
+מחשב מפתח מחרוזת זהות דטרמיניסטית לביטול כפילויות של אבחון.
 
 #### פרמטרים
 
-| שם    | הקלד            | תיאור |
-| ----- | --------------- | ----- |
-| אבחון | FlintDiagnostic |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------- | ---------------------------------- |
+| אבחון | אבחון פלינט | - אבחון לחישוב מפתח עבורו. |
 
-### FlintDiagnostic
+#### חוֹזֶה
+
+- **@param:** - אבחון לחישוב מפתח עבורו.
+- **@returns:** מחרוזת JSON דטרמיניסטית שם קובץ, שלב, קוד, טווח והודעה.
+
+### FLINT_PARSE_STACK_OVERFLOW
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_PARSE_STACK_OVERFLOW;
+```
+
+קוד שגיאה אבחון כאשר עומק הרקורסיה של המנתח חורג מהמגבלה המוגדרת.
+
+### FLINT_PARSE_UNCLOSED_DELIMITER
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_PARSE_UNCLOSED_DELIMITER;
+```
+
+קוד שגיאה אבחון כשמפרידים נשארים לא סגורים ב-EOF.
+
+### FLINT_SECURITY_SOURCE_TOO_LARGE
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_SECURITY_SOURCE_TOO_LARGE;
+```
+
+קוד שגיאה אבחון כאשר קובץ המקור חורג מ-MAX_SOURCE_INPUT_BYTES.
+
+### אבחון פלינט
 
 **סוג:** ממשק
 
@@ -1461,9 +1176,9 @@ function diagnosticKey(diagnostic: FlintDiagnostic): string;
 export interface FlintDiagnostic
 ```
 
-לא סופק תיאור.
+רשומת אבחון מובנית שהופקה על פני שלבי מהדר או מעברי ניתוח סטטי.
 
-### FlintDiagnosticEvidence
+### פלינט אבחון עדות
 
 **סוג:** ממשק
 
@@ -1471,7 +1186,7 @@ export interface FlintDiagnostic
 export interface FlintDiagnosticEvidence
 ```
 
-לא סופק תיאור.
+עדות משנית או מיקום קשור המצורפת לממצא אבחוני.
 
 ### FlintDiagnosticPhase
 
@@ -1479,10 +1194,10 @@ export interface FlintDiagnosticEvidence
 
 ```typescript
 export type FlintDiagnosticPhase =
-  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+  'lex' | 'parse' | 'macro' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
-לא סופק תיאור.
+שלב הקומפילציה בו נפלטה אבחון.
 
 ### FlintDiagnosticSeverity
 
@@ -1492,7 +1207,7 @@ export type FlintDiagnosticPhase =
 export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 ```
 
-לא סופק תיאור.
+רמת חומרה לאבחון מהדר.
 
 ### FlintSourceSpan
 
@@ -1502,7 +1217,40 @@ export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 export interface FlintSourceSpan
 ```
 
-לא סופק תיאור.
+טווח קואורדינטות מקור המגדיר את המיקום המדויק של אסימון, AST node או אבחון בקובץ.
+
+### getSourceByteLength
+
+פונקציה **סוג:**
+
+```typescript
+function getSourceByteLength(source: string): number;
+```
+
+מחשב את גודל הבתים בפועל של מחרוזת מקודדת UTF-8.
+מחרוזות JavaScript משתמשות ב-UTF-16 באופן פנימי, כך ש-`.length` סופרת יחידות קוד, לא בתים.
+פונקציה זו מקודדת ל-UTF-8 ומחזירה את ספירת הבתים האמיתית.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------ | --------------------------- |
+| מקור | מחרוזת | - מחרוזת מקור למדידה. |
+
+#### חוֹזֶה
+
+- **@param:** - מחרוזת מקור למדידה.
+- **@returns:** ספירת בייטים כשהם מקודדים כ-UTF-8.
+
+### MAX_SOURCE_INPUT_BYTES
+
+**סוג:** קבוע
+
+```typescript
+export const MAX_SOURCE_INPUT_BYTES;
+```
+
+גודל קובץ מקור מרבי של Flint בבתים (16 MiB).
 
 ## `src/documentation`
 
@@ -1514,13 +1262,18 @@ export interface FlintSourceSpan
 function parseFlintDocumentation(comment: string): FlintDocumentation;
 ```
 
-לא סופק תיאור.
+מנתח הערת מסמך פלינט לתגיות תיאור ותיעוד מובנים.
 
 #### פרמטרים
 
-| שם    | הקלד   | תיאור |
-| ----- | ------ | ----- |
-| תגובה | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------- | ------ | ------------------------- |
+| תגובה | מחרוזת | - מחרוזת הערות של מסמך גולמי. |
+
+#### חוֹזֶה
+
+- **@param:** - מחרוזת הערות מסמך גולמית.
+- **@returns:** רשומת תיעוד מובנית עם תיאור ותגים מנורמלים.
 
 ### renderFlintDocumentation
 
@@ -1530,13 +1283,18 @@ function parseFlintDocumentation(comment: string): FlintDocumentation;
 function renderFlintDocumentation(documentation: FlintDocumentation): string;
 ```
 
-לא סופק תיאור.
+מעבד רשומת תיעוד מובנית של פלינט בחזרה לסימון הערות למסמך.
 
 #### פרמטרים
 
-| שם    | הקלד               | תיאור |
-| ----- | ------------------ | ----- |
-| תיעוד | FlintDocumentation |       |
+| שם | הקלד | תיאור |
+| ------------- | ------------------ | ---------------------------------- |
+| תיעוד | FlintDocumentation | - תיעוד מובנה. |
+
+#### חוֹזֶה
+
+- **@param:** - רשומת תיעוד מובנית.
+- **@returns:** טקסט סימון תיעוד מעוצב.
 
 ## `src/dynamic-links`
 
@@ -1545,10 +1303,10 @@ function renderFlintDocumentation(documentation: FlintDocumentation): string;
 **סוג:** סוג
 
 ```typescript
-export type FlintDynamicCallable = (...args: readonly number[]) => unknown;
+export type FlintDynamicCallable = (...arguments_: readonly number[]) => unknown;
 ```
 
-לא סופק תיאור.
+חתימת פונקציה הניתנת להתקשרות עבור ייצוא מודול דינמי המקבל נקודות אחיזה/טיעונים מספריים.
 
 ### FlintDynamicLinkCache
 
@@ -1569,7 +1327,7 @@ export class FlintDynamicLinkCache
 export interface FlintDynamicLinkIdentity
 ```
 
-לא סופק תיאור.
+מתאר זהות ייחודי עבור חפץ קישורים דינמי וזוג מניפסט.
 
 ### FlintDynamicModule
 
@@ -1579,11 +1337,11 @@ export interface FlintDynamicLinkIdentity
 export interface FlintDynamicModule
 ```
 
-לא סופק תיאור.
+מודול מקושר דינמית המכיל יצוא שניתן להתקשר וחתימות ABI אופציונליות.
 
 ## `src/frontend`
 
-### prepareFlintFrontend
+### להכין FlintFrontend
 
 פונקציה **סוג:**
 
@@ -1591,13 +1349,19 @@ export interface FlintDynamicModule
 function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 ```
 
-לא סופק תיאור.
+מבצע את ה-frontend pipeline עבור קובץ מקור יחיד של Flint.
+מבצע lexing, ניתוח, בדיקת סוגים, הורדת IR ואופטימיזציה של Sea-of-Nodes.
 
 #### פרמטרים
 
-| שם  | הקלד              | תיאור |
-| --- | ----------------- | ----- |
-| קלט | FlintCompileInput |       |
+| שם | הקלד | תיאור |
+| ----- | ----------------- | ----------------------------------------------------- |
+| קלט | FlintCompileInput | - אפשרויות קלט מהדר של קובץ בודד וקוד מקור. |
+
+#### חוֹזֶה
+
+- **@param:** - אפשרויות קלט מהדר של קובץ בודד וקוד מקור.
+- **@returns:** תוצאת קומפילציה חזיתית המכילה מניפסט AST, IR ו-ABI.
 
 ### prepareFlintGraphFrontend
 
@@ -1607,109 +1371,488 @@ function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 function prepareFlintGraphFrontend(input: FlintGraphCompileInput): FlintFrontendResult;
 ```
 
-לא סופק תיאור.
+מכין את חזית המהדר עבור גרף ריבוי מודולים מקושר.
+פותר סגירות תלות סטטיות, בודק סוג של הרכיב המשולב,
+ומוריד את המודול המקושר לגילויי IR ו-ABI אופטימליים.
 
 #### פרמטרים
 
-| שם  | הקלד                   | תיאור |
-| --- | ---------------------- | ----- |
-| קלט | FlintGraphCompileInput |       |
+| שם | הקלד | תיאור |
+| ----- | ---------------------- | ----------------------------------------------------------------------------- |
+| קלט | FlintGraphCompileInput | - קלט אוסף גרפים מרובה מודולים כולל קצוות גרפים ונקודת כניסה. |
 
-## `src/generics`
+#### חוֹזֶה
 
-### createFlintGenericSpecialization
+- **@param:** - קלט אוסף גרפים מרובה מודולים כולל קצוות גרפים ונקודת כניסה.
+- **@returns:** תוצאת קומפילציה חזיתית משולבת עבור גרף המודול המקושר.
+
+## `src/graph-compiler/ast-builder`
+
+### buildGraphAst
 
 פונקציה **סוג:**
 
 ```typescript
-function createFlintGenericSpecialization(request: FlintGenericSpecializationRequest): FlintSpecialization;
+function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult;
 ```
 
-לא סופק תיאור.
+מוריד FlintNodeGraph מאומת לתוך FlintModule AST בזיכרון ומפת מקור דו-כיוונית.
 
 #### פרמטרים
 
-| שם   | הקלד                              | תיאור |
-| ---- | --------------------------------- | ----- |
-| בקשה | FlintGenericSpecializationRequest |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------- | ----------- |
+| inputGraph | FlintNodeGraph |             |
 
-### createFlintIteratorBoundaryDescriptor
-
-פונקציה **סוג:**
-
-```typescript
-function createFlintIteratorBoundaryDescriptor(
-  generic: string,
-  elementType: FlintTypeName,
-  nextFunction: string,
-  ownership: FlintOwnership = 'borrowed',
-): FlintIteratorBoundaryDescriptor;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם           | הקלד            | תיאור |
-| ------------ | --------------- | ----- |
-| גנרי         | מחרוזת          |       |
-| elementType  | FlintTypeName   |       |
-| NextFunction | מחרוזת          |       |
-| בעלות        | Flint Ownership |       |
-
-### FlintGenericBoundary
-
-**סוג:** סוג
-
-```typescript
-export type FlintGenericBoundary = 'value' | 'interface' | 'iterator';
-```
-
-לא סופק תיאור.
-
-### flintGenericRepresentation
-
-פונקציה **סוג:**
-
-```typescript
-function flintGenericRepresentation(boundary: FlintGenericBoundary = 'value'): FlintSpecialization['representation'];
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם   | הקלד                 | תיאור |
-| ---- | -------------------- | ----- |
-| גבול | FlintGenericBoundary |       |
-
-### FlintGenericSpecializationRequest
+### FlintAstBuildResult
 
 **סוג:** ממשק
 
 ```typescript
-export interface FlintGenericSpecializationRequest
+export interface FlintAstBuildResult
 ```
 
 לא סופק תיאור.
 
-### sortFlintSpecializations
+## `src/graph-compiler/catalog`
+
+### createNodeFromDefinition
 
 פונקציה **סוג:**
 
 ```typescript
-function sortFlintSpecializations(specializations: readonly FlintSpecialization[]): readonly FlintSpecialization[];
+function createNodeFromDefinition(
+  definition: FlintNodeDefinition,
+  id: string,
+  position: { readonly x: number; readonly y: number } = DEFAULT_NODE_POSITION,
+  properties?: Readonly<Record<string, unknown>>,
+): FlintGraphNode;
+```
+
+יוצר מופע של FlintGraphNode מהגדרת קטלוג עם עקיפת מזהה, מיקום ומאפיינים נתונים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------------------ | ----------- |
+| הגדרה | FlintNodeDefinition |             |
+| id | מחרוזת |             |
+| עמדה | { קריאה בלבד x: מספר; לקריאה בלבד y: מספר } |             |
+| נכסים | לקריאה בלבד<Record<string, unknown>> |             |
+
+### FlintNodeDefinition
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintNodeDefinition
 ```
 
 לא סופק תיאור.
 
+### getAllNodeDefinitions
+
+פונקציה **סוג:**
+
+```typescript
+function getAllNodeDefinitions(): readonly FlintNodeDefinition[];
+```
+
+מחזירה את כל ההגדרות הסטנדרטיות של node הרשומות.
+
+### getNodeDefinition
+
+פונקציה **סוג:**
+
+```typescript
+function getNodeDefinition(operation: string): FlintNodeDefinition | undefined;
+```
+
+מאחזר הגדרה node סטנדרטית לפי מזהה הפעולה הייחודי שלה.
+
 #### פרמטרים
 
-| שם       | הקלד                              | תיאור |
-| -------- | --------------------------------- | ----- |
-| התמחויות | לקריאה בלבד FlintSpecialization[] |       |
+| שם | הקלד | תיאור |
+| --------- | ------ | ----------- |
+| מבצע | מחרוזת |             |
+
+### getNodeDefinitionsByCategory
+
+פונקציה **סוג:**
+
+```typescript
+function getNodeDefinitionsByCategory(category: FlintNodeCategory): readonly FlintNodeDefinition[];
+```
+
+מחזירה הגדרות node שסוננו לפי קטגוריה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ----------------- | ----------- |
+| קטגוריה | FlintNodeCategory |             |
+
+## `src/graph-compiler/generator`
+
+### compileGraphToFlint
+
+פונקציה **סוג:**
+
+```typescript
+function compileGraphToFlint(graph: FlintNodeGraph): FlintGraphCompilationArtifact;
+```
+
+מחולל מהדר כפול עבור גרפים חזותיים של Flint node.
+מסנתז את FlintModule AST שהוקלד בזיכרון וטקסט מקור .flint מעוצב עם מפות מקור דו-כיווניות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | -------------- | ----------- |
+| גרף | FlintNodeGraph |             |
+
+### compileNodeGraph
+
+פונקציה **סוג:**
+
+```typescript
+function compileNodeGraph(graph: FlintNodeGraph, options?: Partial<FlintCompileInput>): FlintCompiledNodeGraphArtifact;
+```
+
+מרכיב חזותי FlintNodeGraph מקצה לקצה לתוך WebAssembly בינארי, מניפסט ABI וחפצי מקור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | -------------------------- | ----------- |
+| גרף | FlintNodeGraph |             |
+| אפשרויות | חלקי<FlintCompileInput> |             |
+
+### FlintCompiledNodeGraphArtifact
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintCompiledNodeGraphArtifact extends Omit<FlintArtifact, 'sourceMap'>
+```
+
+לא סופק תיאור.
+
+### FlintGraphCompilationArtifact
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintGraphCompilationArtifact
+```
+
+לא סופק תיאור.
+
+## `src/graph-compiler/source-emitter`
+
+### emitGraphSource
+
+פונקציה **סוג:**
+
+```typescript
+function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmissionResult;
+```
+
+פולט קוד מקור פלינט נקי ומעוצב מגרף מאומת עם מפות מקור דו-כיווניות מדויקות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | -------------- | ----------- |
+| inputGraph | FlintNodeGraph |             |
+
+### FlintSourceEmissionResult
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintSourceEmissionResult
+```
+
+לא סופק תיאור.
+
+## `src/graph-compiler/types`
+
+### createContainerType
+
+פונקציה **סוג:**
+
+```typescript
+function createContainerType(
+  container: string,
+  typeArguments: readonly FlintTypeName[] = [],
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+יוצר node גנרי או מצטבר FlintTypeName.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------- | ------------------------ | ----------- |
+| מיכל | מחרוזת |             |
+| typeArguments | לקריאה בלבד FlintTypeName[] |             |
+| span | FlintSourceSpan |             |
+
+### createPrimitiveType
+
+פונקציה **סוג:**
+
+```typescript
+function createPrimitiveType(
+  primitive: FlintPrimitiveType,
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+יוצר FlintTypeName פרימיטיבי node.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | ------------------ | ----------- |
+| פרימיטיבי | FlintPrimitiveType |             |
+| span | FlintSourceSpan |             |
+
+### ליצור SyntheticSpan
+
+פונקציה **סוג:**
+
+```typescript
+function createSyntheticSpan(line = 1, column = 1, length = 1): FlintSourceSpan;
+```
+
+יוצר טווח מקור סינתטי עבור צמתי AST שנוצרו בתרשים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---- | ----------- |
+| קו |      |             |
+| עמודה |      |             |
+| אורך |      |             |
+
+### flattenGraph
+
+פונקציה **סוג:**
+
+```typescript
+function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph;
+```
+
+באופן רקורסיבי משטח ומשטח כל מטא צמתים בגרף לתוך הצמתים והקצוות הפנימיים המרכיבים אותם.
+משמש במהלך אימות, יצירת AST ופליטת מקור כדי להרכיב בצורה חלקה מטא צמתים מורכבים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | -------------- | ----------- |
+| גרף | FlintNodeGraph |             |
+
+### FlintGraphEdge
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintGraphEdge
+```
+
+לא סופק תיאור.
+
+### FlintGraphGroup
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintGraphGroup
+```
+
+לא סופק תיאור.
+
+### FlintGraphNode
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintGraphNode
+```
+
+לא סופק תיאור.
+
+### FlintGraphPort
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintGraphPort
+```
+
+לא סופק תיאור.
+
+### FlintGraphValidation Issue
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintGraphValidationIssue
+```
+
+לא סופק תיאור.
+
+### FlintGraphValidationResult
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintGraphValidationResult
+```
+
+לא סופק תיאור.
+
+### FlintGraphValidationSeverity
+
+**סוג:** סוג
+
+```typescript
+export type FlintGraphValidationSeverity = 'error' | 'warning' | 'info';
+```
+
+לא סופק תיאור.
+
+### FlintMetaNodeDefinition
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintMetaNodeDefinition
+```
+
+לא סופק תיאור.
+
+### FlintMetaNodePortMapping
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintMetaNodePortMapping
+```
+
+לא סופק תיאור.
+
+### FlintMetaNodeSubgraph
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintMetaNodeSubgraph
+```
+
+לא סופק תיאור.
+
+### FlintNodeCategory
+
+**סוג:** סוג
+
+```typescript
+export type FlintNodeCategory = 'math' | 'logic' | 'text' | 'collection' | 'control' | 'capability' | 'custom';
+```
+
+לא סופק תיאור.
+
+### FlintNodeGraph
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintNodeGraph
+```
+
+לא סופק תיאור.
+
+### FlintNodeKind
+
+**סוג:** סוג
+
+```typescript
+export type FlintNodeKind =
+  'input' | 'output' | 'constant' | 'operation' | 'stdlib_call' | 'capability_call' | 'custom';
+```
+
+לא סופק תיאור.
+
+### FlintNodeSourceMap
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintNodeSourceMap
+```
+
+לא סופק תיאור.
+
+### FlintPortDirection
+
+**סוג:** סוג
+
+```typescript
+export type FlintPortDirection = 'input' | 'output';
+```
+
+לא סופק תיאור.
+
+## `src/graph-compiler/validator`
+
+### areTypesCompatible
+
+פונקציה **סוג:**
+
+```typescript
+function areTypesCompatible(source: FlintTypeName, target: FlintTypeName): boolean;
+```
+
+בודק תאימות מבנית וסמנטית בין סוגי פלינט מקור ויעד.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------------- | ----------- |
+| מקור | FlintTypeName |             |
+| יעד | FlintTypeName |             |
+
+### validateGraph
+
+פונקציה **סוג:**
+
+```typescript
+function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult;
+```
+
+מאמת את טופולוגיית הגרפים, חיבורי קצה, סוגי יציאות ומזהה מחזורים.
+מחזיר מזהי node ממוינים אם הגרף הוא גרף אציקלי מכוון חוקי (DAG).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | -------------- | ----------- |
+| גרף | FlintNodeGraph |             |
 
 ## `src/graph`
+
+### FlintForeignObjectReference
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintForeignObjectReference
+```
+
+הפניה לאובייקט זר שניתן להזזה מסופקת למקשר.
 
 ### FlintGraphResult
 
@@ -1719,9 +1862,9 @@ function sortFlintSpecializations(specializations: readonly FlintSpecialization[
 export interface FlintGraphResult
 ```
 
-לא סופק תיאור.
+תוצאה מצטברת של פתרון גרף מודול, החזרת מבנה גרף המודול ואבחון.
 
-### FlintLinkConfiguration
+### תצורת FlintLink
 
 **סוג:** ממשק
 
@@ -1729,7 +1872,7 @@ export interface FlintGraphResult
 export interface FlintLinkConfiguration
 ```
 
-לא סופק תיאור.
+אפשרויות תצורה המסדירות את מדיניות הקישור בין פרויקטים ומודול אותו פרויקט.
 
 ### FlintLinkMode
 
@@ -1737,6 +1880,17 @@ export interface FlintLinkConfiguration
 
 ```typescript
 export type FlintLinkMode = 'static' | 'dynamic';
+```
+
+מצב קישור המציין אם תלות נפתרת באופן סטטי (מצורף
+לתוך רכיב בודד) או באופן דינמי (באמצעות ייבוא זמן ריצה ברמת המארח).
+
+### FlintLinkProfile
+
+**סוג:** סוג
+
+```typescript
+export type FlintLinkProfile = 'standard' | 'minimal' | 'full' | 'dynamic' | 'static' | 'monolithic' | 'cross-package';
 ```
 
 לא סופק תיאור.
@@ -1749,7 +1903,8 @@ export type FlintLinkMode = 'static' | 'dynamic';
 export interface FlintModuleEdge
 ```
 
-לא סופק תיאור.
+קצה תלות מכוון בגרף המודול המקשר בין יבואן ליבואן
+עם אסטרטגיית קישור משויכת וטווח מיקום קוד מקור.
 
 ### FlintModuleGraph
 
@@ -1759,7 +1914,8 @@ export interface FlintModuleEdge
 export interface FlintModuleGraph
 ```
 
-לא סופק תיאור.
+גרף תלות מודול מכוון הלוכד מודולים שנפתרו, קצוות תלות,
+וגבולות הפרויקט המשתתפים.
 
 ### FlintModuleResolver
 
@@ -1769,9 +1925,9 @@ export interface FlintModuleGraph
 export interface FlintModuleResolver
 ```
 
-לא סופק תיאור.
+ממשק לפתרון מפרטי ייבוא ​​וטעינת טקסט מקור מודול באופן אסינכרוני.
 
-### FlintProject
+### פרויקט פלינט
 
 **סוג:** ממשק
 
@@ -1779,7 +1935,7 @@ export interface FlintModuleResolver
 export interface FlintProject
 ```
 
-לא סופק תיאור.
+מייצג גבול פרויקט המכיל שורש קובץ ומזהה נגזר.
 
 ### FlintResolvedModule
 
@@ -1789,7 +1945,18 @@ export interface FlintProject
 export interface FlintResolvedModule
 ```
 
-לא סופק תיאור.
+מודול מקור של פלינט פתור המכיל AST מנותח, טקסט מקור,
+שיוך שורש פרויקט, ו-hash של תוכן.
+
+### ForeignObjectFormat
+
+**סוג:** סוג
+
+```typescript
+export type ForeignObjectFormat = 'wasm-relocatable' | 'elf-object' | 'mach-o';
+```
+
+פורמט אובייקט זר שניתן למיקום מחדש (הוידור מ-C/C++ clang או Rust cargo).
 
 ### hashFlintModuleGraph
 
@@ -1799,14 +1966,20 @@ export interface FlintResolvedModule
 function hashFlintModuleGraph(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): string;
 ```
 
-לא סופק תיאור.
+מחשב 32-bit FNV-1a hex hash דטרמיניסטי של גרף מודול ותצורת הקישור שלו.
 
 #### פרמטרים
 
-| שם    | הקלד                   | תיאור |
-| ----- | ---------------------- | ----- |
-| גרף   | FlintModuleGraph       |       |
-| תצורה | FlintLinkConfiguration |       |
+| שם | הקלד | תיאור |
+| ------------- | ---------------------- | -------------------------------------------------- |
+| גרף | FlintModuleGraph | - גרף תלות מודול ל-hash.                 |
+| תצורה | FlintLinkConfiguration | - תצורת קישור המשפיעה על רזולוציית הגרף. |
+
+#### חוֹזֶה
+
+- **@param:** - גרף תלות מודול ל-hash.
+- **@param:** - תצורת קישור המשפיעה על רזולוציית הגרפים.
+- **@returns:** מחרוזת hash הקסדצימלית באותיות קטנות בת 8 תווים.
 
 ### resolveFlintModuleGraph
 
@@ -1820,15 +1993,22 @@ function resolveFlintModuleGraph(
 ): Promise<FlintGraphResult>;
 ```
 
-לא סופק תיאור.
+פותר באופן אסינכרוני את גרף התלות המלא של המודול החל מנקודת כניסה אחת או יותר.
 
 #### פרמטרים
 
-| שם    | הקלד                   | תיאור |
-| ----- | ---------------------- | ----- |
-| ערכים | מחרוזת לקריאה בלבד[]   |       |
-| פותר  | FlintModuleResolver    |       |
-| תצורה | FlintLinkConfiguration |       |
+| שם | הקלד | תיאור |
+| ------------- | ---------------------- | ------------------------------------------------------------------- |
+| ערכים | מחרוזת לקריאה בלבד[] | - נתיבי קבצים של מודולי כניסה לשורש לפתרון.                      |
+| פותר | FlintModuleResolver | - פותר מודול אחראי על מיפוי נתיבים וטעינת תוכן. |
+| תצורה | FlintLinkConfiguration | - אפשרויות תצורת קישור ואריזה.                      |
+
+#### חוֹזֶה
+
+- **@param:** - נתיבי קבצים של מודולי הזנת שורש לפתרון.
+- **@param:** - פותר מודול אחראי למיפוי נתיבים וטעינת תוכן.
+- **@param:** - אפשרויות תצורת קישור ואריזה.
+- **@returns:** תוצאת גרף המכילה מודולים שנפתרו, קצוות תלות, פרויקטים ואבחון.
 
 ## `src/identity`
 
@@ -1840,14 +2020,21 @@ function resolveFlintModuleGraph(
 function deriveFlintModuleId(fileName: string, root?: string): string;
 ```
 
-לא סופק תיאור.
+גוזר מזהה מודול קנוני עבור קובץ מקור של פלינט.
+חותך קידומות של נתיב שורש, סמני נתיב יחסיים מובילים וסיומת הקובץ `.flint`.
 
 #### פרמטרים
 
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
-| שורש    | מחרוזת |       |
+| שם | הקלד | תיאור |
+| -------- | ------ | ------------------------------------------------------------------- |
+| שם קובץ | מחרוזת | - שם הקובץ או הנתיב של קובץ המקור של פלינט.                       |
+| שורש | מחרוזת | - נתיב ספריית שורש אופציונלי להורדה ממזהה המודול. |
+
+#### חוֹזֶה
+
+- **@param:** - שם הקובץ או הנתיב של קובץ המקור של Flint.
+- **@param:** - נתיב ספריית שורש אופציונלי להורדה ממזהה המודול.
+- **@returns:** מזהה מודול קנוני, או `'<input>'` אם המזהה המתקבל ריק.
 
 ### normalizeFlintFileId
 
@@ -1857,704 +2044,20 @@ function deriveFlintModuleId(fileName: string, root?: string): string;
 function normalizeFlintFileId(fileName: string): string;
 ```
 
-לא סופק תיאור.
+מנרמל מזהה קובץ עבור הידור Flint.
+מסיר פרמטרים של שאילתה, ממיר מפרידי נתיב של Windows ל-POSIX לוכסנים,
+וממוטט חתכים כפולים קדימה.
 
 #### פרמטרים
 
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| שם קובץ | מחרוזת |       |
+| שם | הקלד | תיאור |
+| -------- | ------ | ------------------------------- |
+| שם קובץ | מחרוזת | - שם קובץ גולמי או מחרוזת נתיב. |
 
-## `src/ir`
+#### חוֹזֶה
 
-### countFlintIr
-
-פונקציה **סוג:**
-
-```typescript
-function countFlintIr(module: FlintIrModule): FlintIrCounts;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם    | הקלד          | תיאור |
-| ----- | ------------- | ----- |
-| מודול | FlintIrModule |       |
-
-### FlintCollectionOperation
-
-**סוג:** סוג
-
-```typescript
-export type FlintCollectionOperation = 'array-iter' | 'iterator-next' | 'array-length';
-```
-
-לא סופק תיאור.
-
-### FlintIrArrayLiteralExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrArrayLiteralExpression
-```
-
-לא סופק תיאור.
-
-### FlintIrAssignmentStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrAssignmentStatement
-```
-
-לא סופק תיאור.
-
-### FlintIrBinaryExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrBinaryExpression
-```
-
-לא סופק תיאור.
-
-### FlintIrCallExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrCallExpression
-```
-
-לא סופק תיאור.
-
-### FlintIrCounts
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrCounts
-```
-
-לא סופק תיאור.
-
-### FlintIrDoWhileStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrDoWhileStatement
-```
-
-לא סופק תיאור.
-
-### FlintIrEnumValueExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrEnumValueExpression
-```
-
-לא סופק תיאור.
-
-### FlintIrExpression
-
-**סוג:** סוג
-
-```typescript
-export type FlintIrExpression =
-  | FlintIrBinaryExpression
-  | FlintIrCallExpression
-  | FlintIrIdentifierExpression
-  | FlintIrLiteralExpression
-  | FlintIrFunctionValueExpression
-  | FlintIrStructValueExpression
-  | FlintIrEnumValueExpression
-  | FlintIrMatchExpression
-  | FlintIrUnaryExpression
-  | FlintIrArrayLiteralExpression
-  | FlintIrIndexExpression;
-```
-
-לא סופק תיאור.
-
-### FlintIrExpressionStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrExpressionStatement
-```
-
-לא סופק תיאור.
-
-### FlintIrFunction
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrFunction
-```
-
-לא סופק תיאור.
-
-### FlintIrFunctionAnalysis
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrFunctionAnalysis
-```
-
-לא סופק תיאור.
-
-### FlintIrFunctionValueExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrFunctionValueExpression
-```
-
-לא סופק תיאור.
-
-### FlintIrIdentifierExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrIdentifierExpression
-```
-
-לא סופק תיאור.
-
-### FlintIrIfStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrIfStatement
-```
-
-לא סופק תיאור.
-
-### FlintIrIndexExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrIndexExpression
-```
-
-לא סופק תיאור.
-
-### FlintIrIteratorLoopStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrIteratorLoopStatement
-```
-
-לא סופק תיאור.
-
-### FlintIrLetStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrLetStatement
-```
-
-לא סופק תיאור.
-
-### FlintIrLiteralExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrLiteralExpression
-```
-
-לא סופק תיאור.
-
-### FlintIrMatchArm
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrMatchArm
-```
-
-לא סופק תיאור.
-
-### FlintIrMatchExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrMatchExpression
-```
-
-לא סופק תיאור.
-
-### FlintIrMatchStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrMatchStatement
-```
-
-לא סופק תיאור.
-
-### FlintIrModule
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrModule
-```
-
-לא סופק תיאור.
-
-### FlintIrPurity
-
-**סוג:** סוג
-
-```typescript
-export type FlintIrPurity = 'pure' | 'effectful' | 'unknown';
-```
-
-לא סופק תיאור.
-
-### FlintIrReturnStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrReturnStatement
-```
-
-לא סופק תיאור.
-
-### FlintIrStatement
-
-**סוג:** סוג
-
-```typescript
-export type FlintIrStatement =
-  | FlintIrExpressionStatement
-  | FlintIrAssignmentStatement
-  | FlintIrIfStatement
-  | FlintIrWhileStatement
-  | FlintIrDoWhileStatement
-  | FlintIrLetStatement
-  | FlintIrReturnStatement
-  | FlintIrMatchStatement
-  | FlintIrSwitchStatement
-  | FlintIrYieldStatement
-  | FlintIrIteratorLoopStatement;
-```
-
-לא סופק תיאור.
-
-### FlintIrStructValueExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrStructValueExpression
-```
-
-לא סופק תיאור.
-
-### FlintIrSwitchStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrSwitchStatement
-```
-
-לא סופק תיאור.
-
-### FlintIrUnaryExpression
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrUnaryExpression
-```
-
-לא סופק תיאור.
-
-### FlintIrWhileStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrWhileStatement
-```
-
-לא סופק תיאור.
-
-### FlintIrYieldStatement
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIrYieldStatement
-```
-
-לא סופק תיאור.
-
-### lowerFlintIrToModule
-
-פונקציה **סוג:**
-
-```typescript
-function lowerFlintIrToModule(module: FlintIrModule): FlintModule;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם    | הקלד          | תיאור |
-| ----- | ------------- | ----- |
-| מודול | FlintIrModule |       |
-
-### lowerFlintToIr
-
-פונקציה **סוג:**
-
-```typescript
-function lowerFlintToIr(module: FlintModule): FlintIrModule;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם    | הקלד        | תיאור |
-| ----- | ----------- | ----- |
-| מודול | FlintModule |       |
-
-## `src/lexer`
-
-### FlintLexResult
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintLexResult
-```
-
-לא סופק תיאור.
-
-### FlintToken
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintToken
-```
-
-לא סופק תיאור.
-
-### FlintTokenKind
-
-**סוג:** סוג
-
-```typescript
-export type FlintTokenKind =
-  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
-```
-
-לא סופק תיאור.
-
-### lexFlint
-
-פונקציה **סוג:**
-
-```typescript
-function lexFlint(source: string, fileName = '<input>'): FlintLexResult;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם      | הקלד   | תיאור |
-| ------- | ------ | ----- |
-| מקור    | מחרוזת |       |
-| שם קובץ |        |       |
-
-## `src/linker`
-
-### FlintLinkResult
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintLinkResult
-```
-
-לא סופק תיאור.
-
-### validateFlintLinks
-
-פונקציה **סוג:**
-
-```typescript
-function validateFlintLinks(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): FlintLinkResult;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם    | הקלד                   | תיאור |
-| ----- | ---------------------- | ----- |
-| גרף   | FlintModuleGraph       |       |
-| תצורה | FlintLinkConfiguration |       |
-
-## `src/manifest`
-
-### createFlintAbiManifest
-
-פונקציה **סוג:**
-
-```typescript
-function createFlintAbiManifest(module: FlintModule, options: FlintAbiManifestOptions = {}): FlintAbiManifest;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם       | הקלד                    | תיאור |
-| -------- | ----------------------- | ----- |
-| מודול    | FlintModule             |       |
-| אפשרויות | FlintAbiManifestOptions |       |
-
-### FORGE_WEB_SCRIPT_ABI_VERSION
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-לא סופק תיאור.
-
-### FORGE_WEB_SCRIPT_LANGUAGE_VERSION
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-לא סופק תיאור.
-
-### FlintAbiFunction
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAbiFunction
-```
-
-לא סופק תיאור.
-
-### FlintAbiManifest
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAbiManifest
-```
-
-לא סופק תיאור.
-
-### FlintAbiManifestOptions
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAbiManifestOptions
-```
-
-לא סופק תיאור.
-
-### FlintAbiParameter
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAbiParameter
-```
-
-לא סופק תיאור.
-
-### FlintAbiVersion
-
-**סוג:** סוג
-
-```typescript
-export type FlintAbiVersion = typeof FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-לא סופק תיאור.
-
-### FlintAggregateFieldLayout
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAggregateFieldLayout
-```
-
-לא סופק תיאור.
-
-### FlintAggregateLayout
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintAggregateLayout
-```
-
-לא סופק תיאור.
-
-### FlintCollectionLayout
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintCollectionLayout
-```
-
-לא סופק תיאור.
-
-### FlintDynamicLinkMetadata
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintDynamicLinkMetadata
-```
-
-מטא נתונים יציבים הנצרכים על ידי מעמיסים דינמיים ומטמוני המשלוח שלהם.
-
-### FlintDynamicModuleBinding
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintDynamicModuleBinding
-```
-
-מידע מחייב גלוי לעין עבור מודול דינמי מפורש.
-
-### FlintEnumMetadata
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintEnumMetadata
-```
-
-לא סופק תיאור.
-
-### FlintHostImport
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintHostImport
-```
-
-לא סופק תיאור.
-
-### FlintIteratorBoundaryDescriptor
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintIteratorBoundaryDescriptor
-```
-
-לא סופק תיאור.
-
-### FlintLanguageVersion
-
-**סוג:** סוג
-
-```typescript
-export type FlintLanguageVersion = typeof FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-לא סופק תיאור.
-
-### FlintLinkedExport
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintLinkedExport
-```
-
-לא סופק תיאור.
-
-### FlintMemoryLayout
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintMemoryLayout
-```
-
-לא סופק תיאור.
-
-### FlintSourceImport
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintSourceImport
-```
-
-לא סופק תיאור.
-
-### FlintSpecialization
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintSpecialization
-```
-
-לא סופק תיאור.
-
-### FlintValueRepresentation
-
-**סוג:** סוג
-
-```typescript
-export type FlintValueRepresentation =
-  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
-```
-
-לא סופק תיאור.
+- **@param:** - שם קובץ גולמי או מחרוזת נתיב.
+- **@returns:** מזהה נתיב קובץ מנורמל בסגנון POSIX.
 
 ## `src/module-types`
 
@@ -2566,7 +2069,7 @@ export type FlintValueRepresentation =
 export interface FlintImportTypeEnvironment
 ```
 
-לא סופק תיאור.
+סביבה מסוג חיצוני המכילה הצהרות המיובאות למודול.
 
 ### resolveFlintImportTypeEnvironment
 
@@ -2579,130 +2082,160 @@ function resolveFlintImportTypeEnvironment(
 ): FlintImportTypeEnvironment;
 ```
 
-לא סופק תיאור.
+פותר חתימות פונקציות מיובאות ממודולי תלות במעלה הזרם בגרף מודול.
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| יבואן | FlintResolvedModule |       |
-| גרף   | FlintModuleGraph    |       |
+| שם | הקלד | תיאור |
+| -------- | ------------------- | ------------------------------------------------------------------------ |
+| יבואן | FlintResolvedModule | - מודול נפתר שתלויות הייבוא ​​שלו נבדקות.         |
+| גרף | FlintModuleGraph | - גרף תלות מרובה מודולים המכיל את כל המודולים והקצוות המקושרים. |
 
-## `src/optimizer`
+#### חוֹזֶה
 
-### FlintOptimizationDecision
+- **@param:** - מודול נפתר שתלויות הייבוא ​​שלו נבדקות.
+- **@param:** - גרף תלות מרובה מודולים המכיל את כל המודולים והקצוות המקושרים.
+- **@returns:** סביבת סוג ייבוא ​​המכילה פונקציות חיצוניות מיוצאות (הן חשופות והן עם קידומת כינוי).
 
-**סוג:** ממשק
+## `src/safety`
 
-```typescript
-export interface FlintOptimizationDecision
-```
-
-לא סופק תיאור.
-
-### FlintOptimizationReport
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintOptimizationReport
-```
-
-לא סופק תיאור.
-
-### FlintOptimizationResult
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintOptimizationResult
-```
-
-לא סופק תיאור.
-
-### optimizeFlintIr
+### canLifetimeEscape
 
 פונקציה **סוג:**
 
 ```typescript
-function optimizeFlintIr(input: FlintIrModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function canLifetimeEscape(source: RegionLifetime, target: RegionLifetime): boolean;
 ```
 
-לא סופק תיאור.
+מאמת שהקצאה או חזרה משך חיי המקור לתקופת חיי היעד אינם מפרים את בטיחות האזור.
+אחסון הפניה קצרת חיים ביעד ארוך יותר ללא קידום/שיבוט מפורש אסור.
 
 #### פרמטרים
 
-| שם  | הקלד               | תיאור |
-| --- | ------------------ | ----- |
-| קלט | FlintIrModule      |       |
-| מצב | 'Debug' \| 'לשחרר' |       |
+| שם | הקלד | תיאור |
+| ------ | -------------- | ----------- |
+| מקור | RegionLifetime |             |
+| יעד | RegionLifetime |             |
 
-### optimizeFlintModule
+### checkFlintSafety
 
 פונקציה **סוג:**
 
 ```typescript
-function optimizeFlintModule(module: FlintModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function checkFlintSafety(module: FlintModule, fileName: string, diagnostics: FlintDiagnostic[]): void;
 ```
 
-לא סופק תיאור.
+מבצע בדיקות ברמת המקור שאינן יכולות להיות מיוצגות על ידי מחרוזות הסוג מדור קודם.
 
 #### פרמטרים
 
-| שם    | הקלד               | תיאור |
-| ----- | ------------------ | ----- |
-| מודול | FlintModule        |       |
-| מצב   | 'Debug' \| 'לשחרר' |       |
+| שם | הקלד | תיאור |
+| ----------- | ----------------- | ------------------------------------ |
+| מודול | FlintModule | - מודול AST לאימות.            |
+| שם קובץ | מחרוזת | - שם הקובץ המשמש לאבחון.    |
+| אבחון | FlintDiagnostic[] | - מצבר לאבחון שגיאות. |
 
-## `src/parser`
+#### חוֹזֶה
 
-### FlintParseOptions
+- **@param:** - מודול AST לאימות.
+- **@param:** - שם הקובץ המשמש לאבחון.
+- **@param:** - מצבר לאבחון שגיאות.
+
+### ClosureCaptureInfo
 
 **סוג:** ממשק
 
 ```typescript
-export interface FlintParseOptions
+export interface ClosureCaptureInfo
 ```
 
-לא סופק תיאור.
+מתאר של משתנה שנלכד על ידי סגירה.
 
-### FlintParseResult
+### MoveSafetyInfo
 
 **סוג:** ממשק
 
 ```typescript
-export interface FlintParseResult
+export interface MoveSafetyInfo
 ```
 
-לא סופק תיאור.
+מתאר מידע בטיחות מהלך מבנה.
 
-### parseFlint
-
-פונקציה **סוג:**
-
-```typescript
-function parseFlint(source: string, fileName = '<input>', options: FlintParseOptions = {}): FlintParseResult;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם       | הקלד              | תיאור |
-| -------- | ----------------- | ----- |
-| מקור     | מחרוזת            |       |
-| שם קובץ  |                   |       |
-| אפשרויות | FlintParseOptions |       |
-
-### פרימיטיביים סוגים
+### REGION_LIFETIME_ORDER
 
 **סוג:** קבוע
 
 ```typescript
-export const primitiveTypes;
+export const REGION_LIFETIME_ORDER: Readonly<Record<RegionLifetime, number>>;
 ```
 
 לא סופק תיאור.
+
+### REGION_LIFETIMES
+
+**סוג:** קבוע
+
+```typescript
+export const REGION_LIFETIMES;
+```
+
+לא סופק תיאור.
+
+### RegionLifetime
+
+**סוג:** סוג
+
+```typescript
+export type RegionLifetime = 'local' | 'function' | 'arena' | 'global' | 'Local' | 'Function' | 'Arena' | 'GlobalHeap';
+```
+
+היררכיית סריג אזורית לכל החיים: מקומי < פונקציה < ארנה < GlobalHeap.
+
+### validateClosureCaptureSafety
+
+פונקציה **סוג:**
+
+```typescript
+function validateClosureCaptureSafety(capture: ClosureCaptureInfo): {
+  readonly safe: boolean;
+  readonly requiresHeapPromotion: boolean;
+  readonly reason?: string;
+};
+```
+
+מאמת את בטיחות לכידת הסגירה וקובע אם קידום ערימה משתנה מחסנית הוא חובה.
+מונע שחיתות זיכרון של Use-After-Scope כאשר סגירות מאריכות ימים של פריימים ערימה שנתפסו.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------------------ | -------------------------------------- |
+| לכידת | ClosureCaptureInfo | - מתאר מטא נתונים של לכידת סגירה. |
+
+#### חוֹזֶה
+
+- **@param:** - מתאר מטא נתונים של לכידת סגירה.
+- **@returns:** תוצאת אימות, האם נדרש קידום ערימה, והודעת שגיאה אם ​​אינה בטוחה.
+
+### validateMoveSafety
+
+פונקציה **סוג:**
+
+```typescript
+function validateMoveSafety(info: MoveSafetyInfo): {
+  readonly safe: boolean;
+  readonly reason?: string;
+};
+```
+
+מאמת אם ניתן להעביר בבטחה ערך מצטבר או מבנה לפי ערך.
+אוסר על העברת מבנים מוצמדים או הפניה עצמית כדי למנוע ריסוק מסגרת מחסנית וסכנות שימוש לאחר תנועה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | -------------- | ----------- |
+| מידע | MoveSafetyInfo |             |
 
 ## `src/self-hosted`
 
@@ -2714,7 +2247,11 @@ export const primitiveTypes;
 function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHostedSourceModule[];
 ```
 
-לא סופק תיאור.
+יוצר את המניפסט המלא של מודולי מקור מהדר המתארח בעצמו.
+
+#### חוֹזֶה
+
+- **@returns:** מערך של מודולי מקור באירוח עצמי.
 
 ### decodeFlintSelfHostedFingerprint
 
@@ -2724,13 +2261,18 @@ function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHosted
 function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
-לא סופק תיאור.
+מפענח טביעת אצבע באירוח עצמי ממערך בתים UTF-8.
 
 #### פרמטרים
 
-| שם   | הקלד       | תיאור |
-| ---- | ---------- | ----- |
-| בתים | Uint8Array |       |
+| שם | הקלד | תיאור |
+| ----- | ---------- | ------------------------------- |
+| בתים | Uint8Array | - מערך הבתים המקודד UTF-8. |
+
+#### חוֹזֶה
+
+- **@param:** - מערך הבתים המקודד UTF-8.
+- **@returns:** מחרוזת טביעת האצבע המפוענחת.
 
 ### encodeFlintSelfHostedFingerprint
 
@@ -2740,13 +2282,18 @@ function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
-לא סופק תיאור.
+מקודד מחרוזת טביעת אצבע באירוח עצמי לתוך מערך בתים UTF-8.
 
 #### פרמטרים
 
-| שם         | הקלד   | תיאור |
-| ---------- | ------ | ----- |
-| טביעת אצבע | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ----------- | ------ | ------------------------- |
+| טביעת אצבע | מחרוזת | - מחרוזת טביעות האצבע. |
+
+#### חוֹזֶה
+
+- **@param:** - מחרוזת טביעת האצבע.
+- **@returns:** מערך הבתים המקודד UTF-8.
 
 ### FlintSelfHostedCompilation
 
@@ -2756,7 +2303,8 @@ function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 export interface FlintSelfHostedCompilation
 ```
 
-לא סופק תיאור.
+מייצג את יחידת ההידור המתארח בעצמו, ממזג את ההפניה ל-TypeScript seed
+ביצוע עם שלב ה-VM של lex/token-normalization bounded.
 
 ### FlintSelfHostedNormalizedOutput
 
@@ -2766,7 +2314,8 @@ export interface FlintSelfHostedCompilation
 export interface FlintSelfHostedNormalizedOutput
 ```
 
-לא סופק תיאור.
+מייצג את ייצוג הפלט המנורמל והדטרמיניסטי של הידור פלינט.
+זה מבטיח שניתן להשוות באופן יציב בין חפצי קומפילציה (AST, IR, WA, אבחון).
 
 ### FlintSelfHostedVmExecutionMode
 
@@ -2776,7 +2325,7 @@ export interface FlintSelfHostedNormalizedOutput
 export type FlintSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-לא סופק תיאור.
+מצב הביצוע של Flint VM בעת הפעלת קומפילציה באירוח עצמי.
 
 ### prepareFlintSelfHostedCompilation
 
@@ -2793,9 +2342,9 @@ function prepareFlintSelfHostedCompilation(input: FlintCompileInput): FlintSelfH
 
 #### פרמטרים
 
-| שם  | הקלד              | תיאור |
-| --- | ----------------- | ----- |
-| קלט | FlintCompileInput |       |
+| שם | הקלד | תיאור |
+| ----- | ----------------- | ----------- |
+| קלט | FlintCompileInput |             |
 
 ### prepareFlintSelfHostedCompilationLegacy טביעת אצבע
 
@@ -2809,9 +2358,9 @@ function prepareFlintSelfHostedCompilationLegacyFingerprint(input: FlintCompileI
 
 #### פרמטרים
 
-| שם  | הקלד              | תיאור |
-| --- | ----------------- | ----- |
-| קלט | FlintCompileInput |       |
+| שם | הקלד | תיאור |
+| ----- | ----------------- | ----------- |
+| קלט | FlintCompileInput |             |
 
 #### חוֹזֶה
 
@@ -2832,16 +2381,24 @@ function createFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-לא סופק תיאור.
+יישום createFlintSelfHostedStageArtifact.
 
 #### פרמטרים
 
-| שם    | הקלד                                 | תיאור |
-| ----- | ------------------------------------ | ----- |
-| במה   | FlintSelfHostedCompilerStage         |       |
-| זהות  | FlintSelfHostedStageArtifactIdentity |       |
-| מטען  | Uint8Array                           |       |
-| אבחון | לקריאה בלבד FlintDiagnostic[]        |       |
+| שם | הקלד | תיאור |
+| ----------- | ------------------------------------ | ---------------------------- |
+| במה | FlintSelfHostedCompilerStage | - פרמטר הבמה.       |
+| זהות | FlintSelfHostedStageArtifactIdentity | - פרמטר הזהות.    |
+| מטען | Uint8Array | - פרמטר המטען.     |
+| אבחון | לקריאה בלבד FlintDiagnostic[] | - פרמטר האבחון. |
+
+#### חוֹזֶה
+
+- **@param:** - פרמטר הבמה.
+- **@param:** - פרמטר הזהות.
+- **@param:** - פרמטר המטען.
+- **@param:** - פרמטר האבחון.
+- **@returns:** תוצאת FlintSelfHostedStageArtifact.
 
 ### decodeFlintSelfHostedDiagnostics
 
@@ -2851,13 +2408,18 @@ function createFlintSelfHostedStageArtifact(
 function decodeFlintSelfHostedDiagnostics(bytes: Uint8Array): readonly FlintDiagnostic[];
 ```
 
-לא סופק תיאור.
+יישום decodeFlintSelfHostedDiagnostics.
 
 #### פרמטרים
 
-| שם   | הקלד       | תיאור |
-| ---- | ---------- | ----- |
-| בתים | Uint8Array |       |
+| שם | הקלד | תיאור |
+| ----- | ---------- | ---------------------- |
+| בתים | Uint8Array | - פרמטר הבתים. |
+
+#### חוֹזֶה
+
+- **@param:** - פרמטר הבתים.
+- **@returns:** התוצאה לקריאה בלבד של FlintDiagnostic[].
 
 ### decodeFlintSelfHostedStageArtifact
 
@@ -2870,14 +2432,20 @@ function decodeFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-לא סופק תיאור.
+יישום decodeFlintSelfHostedStageArtifact.
 
 #### פרמטרים
 
-| שם       | הקלד                                      | תיאור |
-| -------- | ----------------------------------------- | ----- |
-| בתים     | Uint8Array                                |       |
-| אפשרויות | FlintSelfHostedStageArtifactDecodeOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ----------------------------------------- | ------------------------ |
+| בתים | Uint8Array | - פרמטר הבתים.   |
+| אפשרויות | FlintSelfHostedStageArtifactDecodeOptions | - פרמטר האפשרויות. |
+
+#### חוֹזֶה
+
+- **@param:** - פרמטר הבתים.
+- **@param:** - פרמטר האפשרויות.
+- **@returns:** תוצאת FlintSelfHostedStageArtifact.
 
 ### encodeFlintSelfHostedDiagnostics
 
@@ -2887,13 +2455,18 @@ function decodeFlintSelfHostedStageArtifact(
 function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[]): Uint8Array;
 ```
 
-לא סופק תיאור.
+יישום encodeFlintSelfHostedDiagnostics.
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| אבחון | לקריאה בלבד FlintDiagnostic[] |       |
+| שם | הקלד | תיאור |
+| ----------- | -------------------------- | ---------------------------- |
+| אבחון | לקריאה בלבד FlintDiagnostic[] | - פרמטר האבחון. |
+
+#### חוֹזֶה
+
+- **@param:** - פרמטר האבחון.
+- **@returns:** תוצאת Uint8Array.
 
 ### encodeFlintSelfHostedStageArtifact
 
@@ -2903,50 +2476,55 @@ function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[
 function encodeFlintSelfHostedStageArtifact(artifact: FlintSelfHostedStageArtifact): Uint8Array;
 ```
 
-לא סופק תיאור.
+יישום encodeFlintSelfHostedStageArtifact.
 
 #### פרמטרים
 
-| שם  | הקלד                         | תיאור |
-| --- | ---------------------------- | ----- |
-| חפץ | FlintSelfHostedStageArtifact |       |
+| שם | הקלד | תיאור |
+| -------- | ---------------------------- | ------------------------- |
+| חפץ | FlintSelfHostedStageArtifact | - פרמטר החפץ. |
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+#### חוֹזֶה
+
+- **@param:** - פרמטר החפץ.
+- **@returns:** תוצאת Uint8Array.
+
+### FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
+export const FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 לא סופק תיאור.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 לא סופק תיאור.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 לא סופק תיאור.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
+### FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
+export const FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
 ```
 
 לא סופק תיאור.
@@ -2960,7 +2538,7 @@ export type FlintSelfHostedCompilerStage =
   'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
-לא סופק תיאור.
+יישום FlintSelfHostedCompilerStage.
 
 ### FlintSelfHostedStageArtifact
 
@@ -2970,7 +2548,7 @@ export type FlintSelfHostedCompilerStage =
 export interface FlintSelfHostedStageArtifact
 ```
 
-לא סופק תיאור.
+יישום FlintSelfHostedStageArtifact.
 
 ### FlintSelfHostedStageArtifactDecodeOptions
 
@@ -2980,7 +2558,7 @@ export interface FlintSelfHostedStageArtifact
 export interface FlintSelfHostedStageArtifactDecodeOptions
 ```
 
-לא סופק תיאור.
+יישום FlintSelfHostedStageArtifactDecodeOptions.
 
 ### FlintSelfHostedStageArtifactIdentity
 
@@ -2990,7 +2568,7 @@ export interface FlintSelfHostedStageArtifactDecodeOptions
 export interface FlintSelfHostedStageArtifactIdentity
 ```
 
-לא סופק תיאור.
+יישום FlintSelfHostedStageArtifactIdentity.
 
 ### hashFlintSelfHostedBytes
 
@@ -3000,13 +2578,18 @@ export interface FlintSelfHostedStageArtifactIdentity
 function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
-לא סופק תיאור.
+יישום hashFlintSelfHostedBytes.
 
 #### פרמטרים
 
-| שם   | הקלד       | תיאור |
-| ---- | ---------- | ----- |
-| בתים | Uint8Array |       |
+| שם | הקלד | תיאור |
+| ----- | ---------- | ---------------------- |
+| בתים | Uint8Array | - פרמטר הבתים. |
+
+#### חוֹזֶה
+
+- **@param:** - פרמטר הבתים.
+- **@returns:** תוצאת המחרוזת.
 
 ### hashFlintSelfHostedSourceIdentity
 
@@ -3016,21 +2599,28 @@ function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 function hashFlintSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
-לא סופק תיאור.
+יישום hashFlintSelfHostedSourceIdentity.
 
 #### פרמטרים
 
-| שם        | הקלד   | תיאור |
-| --------- | ------ | ----- |
-| מקור      | מחרוזת |       |
-| שם קובץ   | מחרוזת |       |
-| graphHash | מחרוזת |       |
+| שם | הקלד | תיאור |
+| --------- | ------ | -------------------------- |
+| מקור | מחרוזת | - פרמטר המקור.    |
+| שם קובץ | מחרוזת | - הפרמטר fileName.  |
+| graphHash | מחרוזת | - הפרמטר graphHash. |
 
-## `src/self-hosted/fws/lexer`
+#### חוֹזֶה
+
+- **@param:** - פרמטר המקור.
+- **@param:** - הפרמטר fileName.
+- **@param:** - הפרמטר graphHash.
+- **@returns:** תוצאת המחרוזת.
+
+## `src/self-hosted/flint/lexer`
 
 ### is_ws
 
-**סוג:** fws-export
+**סוג:** ייצוא צור
 
 ```typescript
 export fn is_ws(byte: i32) -> bool
@@ -3040,9 +2630,9 @@ export fn is_ws(byte: i32) -> bool
 
 #### פרמטרים
 
-| שם   | הקלד | תיאור           |
-| ---- | ---- | --------------- |
-| בייט | i32  | ערך בתים מועמד. |
+| שם | הקלד | תיאור |
+| ---- | ---- | --------------------- |
+| בייט | i32 | ערך בתים מועמד. |
 
 #### חוֹזֶה
 
@@ -3064,9 +2654,14 @@ function computeFlintLexStageFingerprint(source: string): number;
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור |
-| ---- | ------ | ----- |
-| מקור | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------ | ------ | -------------------- |
+| מקור | מחרוזת | - טקסט מקור של צור. |
+
+#### חוֹזֶה
+
+- **@param:** - טקסט מקור של פלינט.
+- **@returns:** טביעת אצבע חתומה של 32 סיביות.
 
 ### createFlintLexStageVmModule
 
@@ -3081,9 +2676,9 @@ function createFlintLexStageVmModule(sourceHash: string): FlintSelfHostedVmModul
 
 #### פרמטרים
 
-| שם         | הקלד   | תיאור |
-| ---------- | ------ | ----- |
-| sourceHash | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ---------- | ------ | ----------- |
+| sourceHash | מחרוזת |             |
 
 ### encodeFlintLexStageSource
 
@@ -3092,36 +2687,36 @@ function createFlintLexStageVmModule(sourceHash: string): FlintSelfHostedVmModul
 ```typescript
 function encodeFlintLexStageSource(source: string): {
   readonly kind: 'aggregate';
-  readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+  readonly layout: typeof FLINT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
 };
 ```
 
-לא סופק תיאור.
+מקודד את קוד המקור לייצוג הבינארי המצופה משלב ה-VM lexer.
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור |
-| ---- | ------ | ----- |
-| מקור | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------ | ------ | ----------- |
+| מקור | מחרוזת |             |
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+### FLINT_LEX_STAGE_ENTRY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
+export const FLINT_LEX_STAGE_ENTRY;
 ```
 
 לא סופק תיאור.
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+### FLINT_LEX_STAGE_SOURCE_LAYOUT
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+export const FLINT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 לא סופק תיאור.
@@ -3134,7 +2729,7 @@ export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
 export interface FlintSelfHostedVmFunction
 ```
 
-לא סופק תיאור.
+הגדרת פונקציה מבוצעת על ידי המכונה הוירטואלית המתארחת בעצמה.
 
 ### FlintSelfHostedVmInstruction
 
@@ -3144,7 +2739,7 @@ export interface FlintSelfHostedVmFunction
 export type FlintSelfHostedVmInstruction = |
 ```
 
-לא סופק תיאור.
+טופלת הוראות מכונה וירטואלית מבוצעת במהלך לקסינג באירוח עצמי.
 
 ### FlintSelfHostedVmModule
 
@@ -3154,7 +2749,7 @@ export type FlintSelfHostedVmInstruction = |
 export interface FlintSelfHostedVmModule
 ```
 
-לא סופק תיאור.
+מבנה מודול VM מהדר מתארח בעצמו המכיל קוד בתים וקבועים.
 
 ### FlintSelfHostedVmValue
 
@@ -3164,7 +2759,7 @@ export interface FlintSelfHostedVmModule
 export type FlintSelfHostedVmValue = |
 ```
 
-לא סופק תיאור.
+ערך קבוע מאוחסן במאגר קבוע VM המתארח בעצמו.
 
 ## `src/self-hosted/parser-module-stage`
 
@@ -3191,11 +2786,11 @@ function createFlintParserModuleVmModule(
 
 #### פרמטרים
 
-| שם         | הקלד                          | תיאור |
-| ---------- | ----------------------------- | ----- |
-| sourceHash | מחרוזת                        |       |
-| שם קובץ    | מחרוזת                        |       |
-| אפשרויות   | FlintParserModuleStageOptions |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------- | ----------- |
+| sourceHash | מחרוזת |             |
+| שם קובץ | מחרוזת |             |
+| אפשרויות | FlintParserModuleStageOptions |             |
 
 ### decodeFlintParserModuleEnvelope
 
@@ -3205,20 +2800,25 @@ function createFlintParserModuleVmModule(
 function decodeFlintParserModuleEnvelope(bytes: Uint8Array): FlintParserModuleEnvelope;
 ```
 
-לא סופק תיאור.
+יישום decodeFlintParserModuleEnvelope.
 
 #### פרמטרים
 
-| שם   | הקלד       | תיאור |
-| ---- | ---------- | ----- |
-| בתים | Uint8Array |       |
+| שם | הקלד | תיאור |
+| ----- | ---------- | ---------------------- |
+| בתים | Uint8Array | - פרמטר הבתים. |
 
-### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+#### חוֹזֶה
+
+- **@param:** - פרמטר הבתים.
+- **@returns:** תוצאת FlintParserModuleEnvelope.
+
+### FLINT_PARSER_MODULE_STAGE_ENTRY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
+export const FLINT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 לא סופק תיאור.
@@ -3231,7 +2831,7 @@ export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
 export interface FlintParserModuleEnvelope
 ```
 
-מעטפה מפוענחת הוחזרה על ידי {@link FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY}.
+מעטפה מפוענחת הוחזרה על ידי {@link FLINT_PARSER_MODULE_STAGE_ENTRY}.
 
 ### FlintParserModuleStageOptions
 
@@ -3241,7 +2841,7 @@ export interface FlintParserModuleEnvelope
 export interface FlintParserModuleStageOptions
 ```
 
-לא סופק תיאור.
+יישום FlintParserModuleStageOptions.
 
 ## `src/self-hosted/parser-stage`
 
@@ -3253,14 +2853,18 @@ export interface FlintParserModuleStageOptions
 function computeFlintParserStageFingerprint(source: string): number;
 ```
 
-הפניה למקור עבור שלב הנתח המתארח בעצמו.
-חייב להישאר זהה מבחינה התנהגותית ל-{@link createFlintParserStageVmModule}.
+מחשב טביעת אצבע דטרמיניסטית של 32 סיביות FNV עבור שלב הנתח המתארח בעצמו.
 
 #### פרמטרים
 
-| שם   | הקלד   | תיאור |
-| ---- | ------ | ----- |
-| מקור | מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------ | ------ | --------------------------- |
+| מקור | מחרוזת | - מחרוזת קוד מקור של פלינט. |
+
+#### חוֹזֶה
+
+- **@param:** - מחרוזת קוד מקור של Flint.
+- **@returns:** טביעת אצבע דטרמיניסטית חתומה של 32 סיביות.
 
 ### createFlintParserStageVmModule
 
@@ -3278,17 +2882,17 @@ function createFlintParserStageVmModule(
 
 #### פרמטרים
 
-| שם         | הקלד                            | תיאור |
-| ---------- | ------------------------------- | ----- |
-| sourceHash | מחרוזת                          |       |
-| אפשרויות   | FlintParserStageVmModuleOptions |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| sourceHash | מחרוזת |             |
+| אפשרויות | FlintParserStageVmModuleOptions |             |
 
-### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+### FLINT_PARSER_STAGE_ENTRY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
+export const FLINT_PARSER_STAGE_ENTRY;
 ```
 
 לא סופק תיאור.
@@ -3319,17 +2923,26 @@ function createFlintSelfHostedParserArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-לא סופק תיאור.
+createFlintSelfHostedParserArtifact יישום.
 
 #### פרמטרים
 
-| שם        | הקלד                          | תיאור |
-| --------- | ----------------------------- | ----- |
-| מקור      | מחרוזת                        |       |
-| שם קובץ   | מחרוזת                        |       |
-| מודול     | FlintModule                   |       |
-| אבחון     | לקריאה בלבד FlintDiagnostic[] |       |
-| graphHash | מחרוזת                        |       |
+| שם | הקלד | תיאור |
+| ----------- | -------------------------- | ---------------------------- |
+| מקור | מחרוזת | - פרמטר המקור.      |
+| שם קובץ | מחרוזת | - הפרמטר fileName.    |
+| מודול | FlintModule | - פרמטר המודול.      |
+| אבחון | לקריאה בלבד FlintDiagnostic[] | - פרמטר האבחון. |
+| graphHash | מחרוזת | - הפרמטר graphHash.   |
+
+#### חוֹזֶה
+
+- **@param:** - פרמטר המקור.
+- **@param:** - הפרמטר fileName.
+- **@param:** - פרמטר המודול.
+- **@param:** - פרמטר האבחון.
+- **@param:** - הפרמטר graphHash.
+- **@returns:** תוצאת FlintSelfHostedStageArtifact.
 
 ### createFlintSelfHostedTokenArtifact
 
@@ -3345,17 +2958,26 @@ function createFlintSelfHostedTokenArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-לא סופק תיאור.
+createFlintSelfHostedTokenArtifact יישום.
 
 #### פרמטרים
 
-| שם        | הקלד                          | תיאור |
-| --------- | ----------------------------- | ----- |
-| מקור      | מחרוזת                        |       |
-| שם קובץ   | מחרוזת                        |       |
-| אסימונים  | לקריאה בלבד FlintToken[]      |       |
-| אבחון     | לקריאה בלבד FlintDiagnostic[] |       |
-| graphHash | מחרוזת                        |       |
+| שם | הקלד | תיאור |
+| ----------- | -------------------------- | ---------------------------- |
+| מקור | מחרוזת | - פרמטר המקור.      |
+| שם קובץ | מחרוזת | - הפרמטר fileName.    |
+| אסימונים | לקריאה בלבד FlintToken[] | - פרמטר האסימונים.      |
+| אבחון | לקריאה בלבד FlintDiagnostic[] | - פרמטר האבחון. |
+| graphHash | מחרוזת | - הפרמטר graphHash.   |
+
+#### חוֹזֶה
+
+- **@param:** - פרמטר המקור.
+- **@param:** - הפרמטר fileName.
+- **@param:** - פרמטר האסימונים.
+- **@param:** - פרמטר האבחון.
+- **@param:** - הפרמטר graphHash.
+- **@returns:** תוצאת FlintSelfHostedStageArtifact.
 
 ### decodeFlintSelfHostedModule
 
@@ -3365,13 +2987,18 @@ function createFlintSelfHostedTokenArtifact(
 function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 ```
 
-לא סופק תיאור.
+מפענח מטען מודול מנתח שמתארח בעצמו.
 
 #### פרמטרים
 
-| שם   | הקלד       | תיאור |
-| ---- | ---------- | ----- |
-| בתים | Uint8Array |       |
+| שם | הקלד | תיאור |
+| ----- | ---------- | ------------------------ |
+| בתים | Uint8Array | - מטען מודול בינארי. |
+
+#### חוֹזֶה
+
+- **@param:** - מטען מודול בינארי.
+- **@returns:** מודול AST מפוענח.
 
 ### decodeFlintSelfHostedTokens
 
@@ -3381,13 +3008,18 @@ function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 ```
 
-לא סופק תיאור.
+מפענח מטען זרם אסימון מתארח בעצמו.
 
 #### פרמטרים
 
-| שם   | הקלד       | תיאור |
-| ---- | ---------- | ----- |
-| בתים | Uint8Array |       |
+| שם | הקלד | תיאור |
+| ----- | ---------- | ----------------------- |
+| בתים | Uint8Array | - מטען אסימון בינארי. |
+
+#### חוֹזֶה
+
+- **@param:** - מטען אסימון בינארי.
+- **@returns:** זרם אסימונים מפוענח.
 
 ### encodeFlintSelfHostedModule
 
@@ -3397,13 +3029,18 @@ function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 ```
 
-לא סופק תיאור.
+מקודד מטען מודול מנתח שמתארח בעצמו.
 
 #### פרמטרים
 
-| שם    | הקלד        | תיאור |
-| ----- | ----------- | ----- |
-| מודול | FlintModule |       |
+| שם | הקלד | תיאור |
+| ------ | ----------- | -------------------------- |
+| מודול | FlintModule | - מודול AST להסדרה. |
+
+#### חוֹזֶה
+
+- **@param:** - מודול AST להסדרה.
+- **@returns:** מטען מודול בינארי.
 
 ### encodeFlintSelfHostedTokens
 
@@ -3413,13 +3050,18 @@ function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 ```
 
-לא סופק תיאור.
+מקודד מטען זרם אסימון באירוח עצמי.
 
 #### פרמטרים
 
-| שם       | הקלד                     | תיאור |
-| -------- | ------------------------ | ----- |
-| אסימונים | לקריאה בלבד FlintToken[] |       |
+| שם | הקלד | תיאור |
+| ------ | --------------------- | ---------------------------- |
+| אסימונים | לקריאה בלבד FlintToken[] | - זרם אסימונים להצגה בסידרה. |
+
+#### חוֹזֶה
+
+- **@param:** - זרם אסימון להצגה בסידרה.
+- **@returns:** מטען אסימון בינארי.
 
 ### hashFlintSelfHostedStagePayload
 
@@ -3429,13 +3071,18 @@ function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 function hashFlintSelfHostedStagePayload(artifact: FlintSelfHostedStageArtifact): string;
 ```
 
-לא סופק תיאור.
+יישום hashFlintSelfHostedStagePayload.
 
 #### פרמטרים
 
-| שם  | הקלד                         | תיאור |
-| --- | ---------------------------- | ----- |
-| חפץ | FlintSelfHostedStageArtifact |       |
+| שם | הקלד | תיאור |
+| -------- | ---------------------------- | ------------------------- |
+| חפץ | FlintSelfHostedStageArtifact | - פרמטר החפץ. |
+
+#### חוֹזֶה
+
+- **@param:** - פרמטר החפץ.
+- **@returns:** תוצאת המחרוזת.
 
 ### validateFlintSelfHostedStageArtifact
 
@@ -3451,275 +3098,26 @@ function validateFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-לא סופק תיאור.
+validateFlintSelfHostedStageArtifact יישום.
 
 #### פרמטרים
 
-| שם        | הקלד                         | תיאור |
-| --------- | ---------------------------- | ----- |
-| חפץ       | FlintSelfHostedStageArtifact |       |
-| במה       | FlintSelfHostedCompilerStage |       |
-| מקור      | מחרוזת                       |       |
-| שם קובץ   | מחרוזת                       |       |
-| graphHash | מחרוזת                       |       |
-
-## `src/stdlib/memory`
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
-```
-
-לא סופק תיאור.
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly FlintMemoryFunction[];
-```
-
-לא סופק תיאור.
-
-### FlintMemoryFunction
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintMemoryFunction
-```
-
-לא סופק תיאור.
-
-### FlintMemoryOperation
-
-**סוג:** סוג
-
-```typescript
-export type FlintMemoryOperation =
-  | 'memory-alloc'
-  | 'memory-dealloc'
-  | 'memory-realloc'
-  | 'memory-load-u32'
-  | 'memory-store-u32'
-  | 'memory-load-f64'
-  | 'memory-store-f64'
-  | 'f64-from-u32';
-```
-
-בדק פעולות זיכרון ליניארי אורח ששמורים על ידי המהדר.
-
-## `src/stdlib/regex`
-
-### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
-
-**סוג:** קבוע
-
-```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
-```
-
-לא סופק תיאור.
-
-### FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
-```
-
-לא סופק תיאור.
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
-```
-
-לא סופק תיאור.
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTIONS
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly FlintStandardLibraryFunction[];
-```
-
-שיחות בבעלות מהדר. הם שמות מקור שמורים, לא ייבוא מארח, ו
-יורדים לזמן הריצה של Forge Web Script WASM בשלב האחורי.
-פעולות לכידה מחזירות `-1` עבור קבוצה לא מוגדרת או כאשר אין התאמה.
-
-### FORGE_WEB_SCRIPT_REGEX_VERSION
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION;
-```
-
-לא סופק תיאור.
-
-### FlintRegexOperation
-
-**סוג:** סוג
-
-```typescript
-export type FlintRegexOperation =
-  | 'full-match'
-  | 'prefix-match'
-  | 'search'
-  | 'full-capture-start'
-  | 'full-capture-end'
-  | 'prefix-capture-start'
-  | 'prefix-capture-end'
-  | 'search-capture-start'
-  | 'search-capture-end';
-```
-
-לא סופק תיאור.
-
-### FlintStandardLibraryFunction
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintStandardLibraryFunction
-```
-
-לא סופק תיאור.
-
-### flintStandardLibraryIdentity
-
-פונקציה **סוג:**
-
-```typescript
-function flintStandardLibraryIdentity(
-  overrides: Partial<FlintStandardLibraryIdentity> = {},
-): FlintStandardLibraryIdentity;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם   | הקלד                               | תיאור |
-| ---- | ---------------------------------- | ----- |
-| עוקף | חלקי<FlintStandardLibraryIdentity> |       |
-
-### FlintStandardLibraryIdentity
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintStandardLibraryIdentity
-```
-
-כניסות זהות יציבות המשפיעות על הידור רגקס וחפצים שנוצרו.
-
-## `src/stdlib/string`
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
-```
-
-לא סופק תיאור.
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTIONS
-
-**סוג:** קבוע
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly FlintStringFunction[];
-```
-
-לא סופק תיאור.
-
-### FlintStringFunction
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintStringFunction
-```
-
-לא סופק תיאור.
-
-### FlintStringOperation
-
-**סוג:** סוג
-
-```typescript
-export type FlintStringOperation =
-  | 'string-concat'
-  | 'string-length'
-  | 'string-byte-at'
-  | 'string-starts-with'
-  | 'string-slice'
-  | 'string-to-i32'
-  | 'bytes-length'
-  | 'bytes-length-u32'
-  | 'bytes-byte-at'
-  | 'bytes-byte-at-u32'
-  | 'bytes-slice';
-```
-
-פעולות מחרוזות ובייטים דטרמיניסטיות בבעלות מהדר.
-
-## `src/type-checker`
-
-### checkFlint
-
-פונקציה **סוג:**
-
-```typescript
-function checkFlint(
-  module: FlintModule,
-  fileName = '<input>',
-  options: FlintTypeCheckOptions = {},
-): FlintTypeCheckResult;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| מודול    | FlintModule           |       |
-| שם קובץ  |                       |       |
-| אפשרויות | FlintTypeCheckOptions |       |
-
-### FlintTypeCheckOptions
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintTypeCheckOptions
-```
-
-לא סופק תיאור.
-
-### FlintTypeCheckResult
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintTypeCheckResult
-```
-
-לא סופק תיאור.
+| שם | הקלד | תיאור |
+| --------- | ---------------------------- | -------------------------- |
+| חפץ | FlintSelfHostedStageArtifact | - פרמטר החפץ.  |
+| במה | FlintSelfHostedCompilerStage | - פרמטר הבמה.     |
+| מקור | מחרוזת | - פרמטר המקור.    |
+| שם קובץ | מחרוזת | - הפרמטר fileName.  |
+| graphHash | מחרוזת | - הפרמטר graphHash. |
+
+#### חוֹזֶה
+
+- **@param:** - פרמטר החפץ.
+- **@param:** - פרמטר הבמה.
+- **@param:** - פרמטר המקור.
+- **@param:** - הפרמטר fileName.
+- **@param:** - הפרמטר graphHash.
+- **@returns:** תוצאת FlintSelfHostedStageArtifact.
 
 ## `src/validate`
 
@@ -3731,9 +3129,9 @@ export interface FlintTypeCheckResult
 export interface FlintValidationResult
 ```
 
-לא סופק תיאור.
+תוצאה של אימות קובץ מקור של פלינט באמצעות ניתוח ובדיקת סוגים.
 
-### validateFlint
+### לאמת את פלינט
 
 פונקציה **סוג:**
 
@@ -3745,41 +3143,20 @@ function validateFlint(
 ): FlintValidationResult;
 ```
 
-לא סופק תיאור.
+מאמת את טקסט המקור של Flint על ידי הפעלת המנתח ובודק ההקלדות.
+אוסף ומבטל כפילות של אבחון תחבירי וסמנטי.
 
 #### פרמטרים
 
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| מקור     | מחרוזת                |       |
-| שם קובץ  |                       |       |
-| אפשרויות | FlintTypeCheckOptions |       |
+| שם | הקלד | תיאור |
+| -------- | --------------------- | -------------------------------------------------------------------------------- |
+| מקור | מחרוזת | - טקסט קוד מקור פלינט.                                                        |
+| שם קובץ |                       | - נתיב או שם אופציונלי לקובץ המשמשים בטווחי אבחון (ברירת המחדל היא `'<input>'`). |
+| אפשרויות | FlintTypeCheckOptions | - דגלים אופציונליים של תצורת בודק סוג וטבלאות סמלים חיצוניים.          |
 
-## `src/wat`
+#### חוֹזֶה
 
-### FlintWatMetadata
-
-**סוג:** ממשק
-
-```typescript
-export interface FlintWatMetadata
-```
-
-לא סופק תיאור.
-
-### renderFlintWat
-
-פונקציה **סוג:**
-
-```typescript
-function renderFlintWat(module: FlintModule, metadata: FlintWatMetadata = {}): string;
-```
-
-לא סופק תיאור.
-
-#### פרמטרים
-
-| שם         | הקלד             | תיאור |
-| ---------- | ---------------- | ----- |
-| מודול      | FlintModule      |       |
-| מטא נתונים | FlintWatMetadata |       |
+- **@param:** - טקסט קוד מקור פלינט.
+- **@param:** - נתיב או שם קובץ אופציונלי המשמש בטווחי אבחון (ברירת המחדל היא `'<input>'`).
+- **@param:** - דגלים אופציונליים של תצורת בודק סוג וטבלאות סמלים חיצוניים.
+- **@returns:** תוצאת אימות משולבת עם מודול מנותח (אם זמין), אבחון ודגל חוקי.

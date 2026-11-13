@@ -323,7 +323,6 @@ describe('Forge Web Script VM WASM backend', () => {
       ),
     ).toEqual(number(5));
 
-    // eslint-disable-next-line unicorn/consistent-function-scoping -- This trap helper is specific to the parity case.
     const runTrap = (run: () => unknown): FlintTrap => {
       try {
         run();

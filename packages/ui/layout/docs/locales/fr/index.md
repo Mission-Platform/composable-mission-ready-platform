@@ -5,7 +5,7 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 > packages/ui/layout/docs/index.md: [packages/ui/layout/docs/index.md](../../index.md)
 > Langue: Français (fr)
 
-Application neutre et mises en page de modèles pour Vue 3 et React, créées avec le dialecte Forge JSX et stylisées.
+Mises en page d'applications et de modèles neutres en termes de framework pour Vue 3 et React, créées avec le dialecte Forge JSX et stylisées.
 avec des jetons de conception Mission Platform.
 
 ## Aperçu
@@ -107,12 +107,12 @@ zones de grille. Les wrappers de région ont des classes prévisibles de style B
 
 ### Contrats de région
 
-| Composant             | Régions nommées                                            | Source des compositions                                                    |
-| --------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `ForgeBentoLayout`    | `hero`, `feature`, `supporting`                            | Sections héros et fonctionnalités du marketing de site Web                 |
-| `ForgeGridLayout`     | `cell1` à `cell12`                                         | Cartes de tableau de bord du moniteur de service et résumés d'état         |
-| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer`        | Barre de navigation/contexte Docs, article, barre latérale et pied de page |
-| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Alternance du contenu et des actions de la page de destination             |
+| Composant | Régions nommées | Source des compositions |
+| --------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
+| `ForgeBentoLayout` | `hero`, `feature`, `supporting` | Sections héros et fonctionnalités du marketing de site Web |
+| `ForgeGridLayout` | `cell1` à `cell12` | Cartes de tableau de bord du moniteur de service et résumés d'état |
+| `ForgeFPatternLayout` | `header`, `intro`, `primary`, `secondary`, `footer` | Barre de navigation/contexte, article, barre latérale et pied de page de Docs |
+| `ForgeZPatternLayout` | `topStart`, `topEnd`, `middle`, `bottomStart`, `bottomEnd` | Alternance du contenu et des actions de la page de destination |
 
 `ForgeGridLayout` accepte `rows` et `columns`, se limite à un ou plus, limite la zone de rendu à 12 noms
 cellules et utilise un repli sur une seule colonne en dessous de son point d'arrêt. Les cellules nommées s'affichent toujours dans l'ordre source.

@@ -28,7 +28,7 @@ src/utils/
 1. **순도**: 부작용이 없는 순수한 함수를 선호합니다. 동일한 입력이 주어지면 항상 다음을 반환해야 합니다.
    동일한 출력.
 2. **UI 후크 없음**: 유틸리티에서 `vue`, `react` 또는 `@mission-platform/forge-jsx` 후크를 가져오지 마십시오. 필요한 논리
-   반응성이 속한다 [컴포저블](composable-authoring.md).
+   반응성은 [컴포저블](composable-authoring.md)에 속합니다.
 3. **명시적 유형**: 모든 인수 및 반환 값에 대해 전체 TypeScript 유형을 제공합니다.
 4. **필수 테스트**: 모든 유틸리티에는 같은 위치에 `.spec.ts` 파일이 있어야 합니다.
 5. **단일 책임**: 각 util 폴더는 구체적이고 좁은 작업에 중점을 두어야 합니다.
@@ -46,9 +46,10 @@ export function clamp(value: number, min: number, max: number): number {
 
 ## 발판
 
-Mission Platform Developer MCP 도구를 사용하여 새로운 유틸리티 뼈대를 생성하십시오.
+연결된 Mission Platform Developer MCP 서버를 통해 `scaffold_util` 도구를 사용하여 새 유틸리티를 생성합니다.
+해골. 이것은 쉘 명령이 아닌 MCP 도구 호출 예입니다.
 
-```bash
+```text
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```
@@ -56,6 +57,6 @@ scaffold_util(name="string-utils", package="i18n", apply=true)
 ## 관련 가이드
 
 - [패키지 개발](package-development.md)
-- [원자 구성 요소 설계](atomic-component-design.md)
+- [원자부품설계](atomic-component-design.md)
 - [구성 가능한 저작](composable-authoring.md)
-- [스토어 작성](store-authoring.md)
+- [스토어 제작](store-authoring.md)

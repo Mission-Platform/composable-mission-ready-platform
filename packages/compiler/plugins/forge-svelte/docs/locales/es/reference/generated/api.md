@@ -30,12 +30,12 @@ bajado, por lo que el emisor siempre está impulsado por el mismo contrato.
 
 #### Parámetros
 
-| Nombre                  | Tipo                    | Descripción |
-| ----------------------- | ----------------------- | ----------- |
-| módulo                  | Módulo Semántico        |             |
-| nombredelcomponente     | cadena                  |             |
+| Nombre | Tipo | Descripción |
+| ---------------- | ------------------- | ----------- |
+| módulo | Módulo Semántico |             |
+| nombredelcomponente | cadena |             |
 | carpetas de componentes | Sólo lecturaSet<string> |             |
-| plano                   | Módulo reducido esbelto |             |
+| plano | Módulo reducido esbelto |             |
 
 ### Salida del módulo esbelto
 
@@ -61,8 +61,8 @@ Imprima un gancho neutral/módulo componible como su fuente Svelte-destino `.ts`
 
 #### Parámetros
 
-| Nombre | Tipo             | Descripción |
-| ------ | ---------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | -------------- | ----------- |
 | módulo | Módulo Semántico |             |
 
 ## `src/index`
@@ -93,8 +93,8 @@ Si un plan objetivo es el Svelte, el discriminador al que se limita todo consumi
 
 #### Parámetros
 
-| Nombre | Tipo                             | Descripción |
-| ------ | -------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------------------- | ----------- |
 | bajado | TargetLoweredModule\| indefinido |             |
 
 ### módulo inferior esbelto
@@ -112,9 +112,9 @@ Construya el plano Svelte para un módulo neutro.
 
 #### Parámetros
 
-| Nombre   | Tipo              | Descripción |
-| -------- | ----------------- | ----------- |
-| ir       | Módulo Semántico  |             |
+| Nombre | Tipo | Descripción |
+| ------- | -------------- | ----------- |
+| ir | Módulo Semántico |             |
 | contexto | Contexto objetivo |             |
 
 ### Plan de enlace esbelto
@@ -229,7 +229,7 @@ Un ayudante local que regresa JSX (`const renderX = (a, b) => (<div/>)`) reducid
 a Svelte `{#snippet}`.
 
 Un asistente de renderizado neutral es una función parametrizada y valorada por plantilla, que es
-exactamente lo que expresa un fragmento de Svelte 5, incluida la recursividad segura, por lo que un
+exactamente lo que expresa un fragmento Svelte 5, incluida la recursividad segura, por lo que un
 El ayudante autorreferencial (un renderizador de campos que recurre a conjuntos de campos) funciona.
 sin forro. Además de una única expresión devuelta, retorno anticipado terminal
 Los guardias y un terminal `switch` se representan como ramas de fragmentos ordenados.
@@ -242,7 +242,7 @@ Los guardias y un terminal `switch` se representan como ramas de fragmentos orde
 export interface SvelteScriptPlan
 ```
 
-Los hechos que dieron forma al guión el impresor no puede redescubrirlos únicamente a partir de los registros.
+Los hechos que dan forma al guión el impresor no puede redescubrirlos únicamente a partir de los registros.
 
 ### SvelteSlotPlan
 
@@ -302,10 +302,10 @@ objetivo, o una persona que llamó que omitió `lower`) se devuelven intactos.
 
 #### Parámetros
 
-| Nombre      | Tipo                                | Descripción |
-| ----------- | ----------------------------------- | ----------- |
-| intenciones | Intenciones objetivo                |             |
-| opciones    | Opciones de optimización de destino |             |
+| Nombre | Tipo | Descripción |
+| ---------- | --------------------- | ----------- |
+| intenciones | Intenciones objetivo |             |
+| opciones | Opciones de optimización de destino |             |
 
 ### SVELTE_OPTIMIZACIONES
 

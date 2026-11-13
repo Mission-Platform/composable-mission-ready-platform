@@ -42,7 +42,7 @@ Vue 和 React 实现通过构造保持完美的奇偶性。
 
 ### 3. JSON 架构集成 (`src/json-schema.ts`)
 
-处理原始 JSON 模式和可呈现表单字段之间的转换：
+处理原始 JSON 模式和可渲染表单字段之间的转换：
 
 - `jsonSchemaToFields(schema)`：将 JSON 架构递归转换为 `FormFieldSchema` 的有序列表。
 - `jsonSchemaDefaults(schema)`：根据架构的 `default` 关键字或适当的类型生成初始值
@@ -64,7 +64,7 @@ Vue 和 React 实现通过构造保持完美的奇偶性。
 
 - **无框架**：不依赖于 Vue 或 React。
 - **关键依赖项**：
-  - `ajv` 和 `ajv-formats`：用于高性能 JSON 模式验证。
+  - `ajv` 和 `ajv-formats`：用于高性能 JSON 架构验证。
   - `nanoid`：用于在构建器中生成唯一字段标识符。
 
 ## 消费者

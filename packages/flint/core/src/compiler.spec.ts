@@ -843,6 +843,73 @@ export iter fn one() -> Iterator<i32> { yield 1; }`;
     expect(service.report().selfHostedStages?.[1]).toMatchObject({ stage: 'parse', parity: false });
   });
 
+  it('compiles modules with top-level comptime static assertions', () => {
+    const source = `
+struct Header {
+  version: u8,
+  flags: i8,
+}
+
+comptime {
+  assert(size_of("Header") == 2);
+  assert(align_of("Header") == 1);
+}
+
+export fn getMagic() -> i32 {
+  return 1234;
+}
+`;
+    const exports = instantiate(source) as unknown as { readonly getMagic: () => number };
+    expect(exports.getMagic()).toBe(1234);
+  });
+
+  it('compiles and executes functions using u8 and i8 primitive types', () => {
+    const source = `
+export fn addU8(a: u8, b: u8) -> u8 {
+  return a + b;
+}
+
+export fn subI8(a: i8, b: i8) -> i8 {
+  return a - b;
+}
+`;
+    const exports = instantiate(source) as unknown as {
+      readonly addU8: (a: number, b: number) => number;
+      readonly subI8: (a: number, b: number) => number;
+    };
+    expect(exports.addU8(200, 55)).toBe(255);
+    expect(exports.subI8(10, 30)).toBe(-20);
+  });
+
+  it('rejects oversized compilation sources with FLINT-SECURITY-001 without emitting wasm', () => {
+    const hugeSource = 'a'.repeat(16_777_216 + 10);
+    const artifact = compileFlint(input(hugeSource));
+
+    expect(artifact.wasm).toBeUndefined();
+    expect(artifact.diagnostics.length).toBeGreaterThan(0);
+    expect(artifact.diagnostics[0]?.code).toBe('FLINT-SECURITY-001');
+  });
+
+  it('fails compilation when top-level comptime static assertion fails', () => {
+    const source = `
+struct Header {
+  version: u8,
+  flags: i8,
+}
+
+comptime {
+  assert(size_of("Header") == 99, "Header size must match");
+}
+
+export fn getMagic() -> i32 {
+  return 1234;
+}
+`;
+    const artifact = compileFlint(input(source));
+    expect(artifact.wasm).toBeUndefined();
+    expect(artifact.diagnostics.some((d) => d.code === 'FLINT-COMPTIME-ASSERT')).toBe(true);
+  });
+
   it('exposes a checked-in FWS compiler pipeline and a fixed-point seed fingerprint', () => {
     const stages = createFlintSelfHostedCompilerSourceManifest();
     expect(stages.map(({ stage }) => stage)).toEqual([

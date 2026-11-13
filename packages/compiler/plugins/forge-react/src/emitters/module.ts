@@ -24,6 +24,12 @@
  * Stage 2 then compiles the emitted `.tsx` with the standard React JSX
  * transform, so the output is an ordinary, fully native React component.
  */
+import type {
+  GenericComponent,
+  GenericImport,
+  GenericStatement,
+  SemanticModule,
+} from "@mission-platform/forge-plugin-api";
 import { NEUTRAL_MODULE } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 
 import {
@@ -50,13 +56,6 @@ import {
   I18N_HOOK_STATEMENT,
   lowerStatement,
 } from "../transformers/statements.js";
-
-import type {
-  GenericComponent,
-  GenericImport,
-  GenericStatement,
-  SemanticModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** The neutral markers whose presence means the module participates in slotting. */
 const SLOT_MARKERS: ReadonlySet<string> = new Set(["Slot", "hasSlot"]);

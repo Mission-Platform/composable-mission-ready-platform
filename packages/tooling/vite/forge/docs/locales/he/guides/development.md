@@ -15,7 +15,7 @@ pnpm --filter @mission-platform/vite-plugin-forge build:check
 pnpm --filter @mission-platform/vite-plugin-forge test
 ```
 
-בנה עם `pnpm --filter @mission-platform/vite-plugin-forge build`. חבילות
+בנה עם `pnpm --filter @mission-platform/vite-plugin-forge build`. Bundles
 והצהרות נפלטות ל-`dist/`; אל תחייב פלט בנייה מקומי.
 
 ## שנה את המהדר
@@ -28,5 +28,5 @@ pnpm --filter @mission-platform/vite-plugin-forge test
 
 החבילה חייבת להישאר שמישה גם מ-Vite וגם מ-tsdown. אל תוסיף יעד
 החלף תלות בזמן ריצה של טבלה או מסגרת למנהל ההתקן הנייטרלי. עדכן את
-[התייחסות לצינור המהדר](../reference/compiler.md) כאשר במה ציבורית או
+[הפניה לצינור מהדר](../reference/compiler.md) כאשר במה ציבורית או
 שינויים בחוזה חפץ.

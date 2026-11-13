@@ -28,5 +28,5 @@ anfitrión.
 Este trabajador es un escaparate local y no es un servicio de correo de producción. nunca
 coloque credenciales o secretos en la configuración Wrangler rastreada.
 
-- [guía de desarrollo](guides/development.md)
+- [Guía de desarrollo](guides/development.md)
 - [`README.md`](../../../README.md)

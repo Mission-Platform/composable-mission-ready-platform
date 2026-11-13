@@ -37,7 +37,6 @@ export function pure(expression: FlintWasmExpression): boolean {
 
 /** Normalizes integer literal values to 32-bit signed integer representations. */
 export function normalizeInteger(value: number, type: FlintWasmPrimitiveType): number {
-  // eslint-disable-next-line unicorn/prefer-math-trunc -- i32 normalization must preserve WebAssembly wrapping semantics.
   return type === 'u32' ? value >>> 0 : value | 0;
 }
 

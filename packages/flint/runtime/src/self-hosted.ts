@@ -18,8 +18,9 @@ import {
   type FlintSelfHostedStageReport,
   type FlintSelfHostedVmModule,
   type FlintSelfHostedVmValue,
+  lexFlint,
+  parseFlint,
 } from '@mission-platform/flint';
-import { lexFlint, parseFlint } from '@mission-platform/flint';
 
 import {
   createFlintVmAotArtifact,

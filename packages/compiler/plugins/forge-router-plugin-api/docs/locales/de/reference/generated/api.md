@@ -27,9 +27,9 @@ Erstellen Sie eine quelllokale Diagnose für einen Router-Compiler-Fehler.
 
 #### Parameter
 
-| Name     | Geben Sie                                                                                | ein Beschreibung |
-| -------- | ---------------------------------------------------------------------------------------- | ---------------- |
-| Diagnose | Lassen Sie <CompilerDiagnostic, "phase" \| "fileName"> & { readonly fileName?: string; } |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------------------------------------------------------------- | ----------- |
+| Diagnose | Lassen Sie <CompilerDiagnostic, "phase" \| "fileName"> & { readonly fileName?: string; } |             |
 
 ### defineForgeRouterPlugin
 
@@ -43,9 +43,9 @@ Validieren Sie die Metadaten des Router-Plugins, bevor sie in eine Compiler-Pipe
 
 #### Parameter
 
-| Name   | Geben Sie | ein Beschreibung |
-| ------ | --------- | ---------------- |
-| Plugin | T         |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---- | ----------- |
+| Plugin | T |             |
 
 ### defineForgeRouterTarget
 
@@ -67,9 +67,9 @@ dateibasierte oder reine Server-Router.
 
 #### Parameter
 
-| Name     | Geben Sie                | ein Beschreibung |
-| -------- | ------------------------ | ---------------- |
-| Optionen | ForgeRouterTargetOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------ | ----------- |
+| Optionen | ForgeRouterTargetOptions |             |
 
 ### FORGE_ROUTER_RUNTIME_EXPORTS
 
@@ -282,10 +282,10 @@ Finden Sie ein direktes oder per ID ausgewähltes Routerziel, ohne es an UI-Plug
 
 #### Parameter
 
-| Name    | Geben Sie                             | ein Beschreibung |
-| ------- | ------------------------------------- | ---------------- |
-| Auswahl | RouterPluginSelection \| undefiniert  |                  |
-| Plugins | schreibgeschützt RouterOutputPlugin[] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------------------------- | ----------- |
+| Auswahl | RouterPluginSelection \| undefiniert |             |
+| Plugins | schreibgeschützt RouterOutputPlugin[] |             |
 
 ### nicht unterstützte RouterCapabilities
 
@@ -302,7 +302,7 @@ Melden Sie Funktionslücken, bevor ein Ziel die Möglichkeit hat, ein Modul stil
 
 #### Parameter
 
-| Name   | Geben Sie                         | ein Beschreibung |
-| ------ | --------------------------------- | ---------------- |
-| ir     | RouterCapabilityModule            |                  |
-| Plugin | RouterOutputPlugin \| undefiniert |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------------------- | ----------- |
+| ir | RouterCapabilityModule |             |
+| Plugin | RouterOutputPlugin \| undefiniert |             |

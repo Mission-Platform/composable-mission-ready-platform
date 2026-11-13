@@ -15,11 +15,11 @@
  * generated tree's flat layout, the workspace package carried through so its
  * `mp:solid` export condition resolves.
  */
+import type { SemanticModule } from "@mission-platform/forge-plugin-api";
+
 import { createSolidLoweringContext } from "../transformers/context.js";
 import { printSolidImports } from "../transformers/imports.js";
 import { lowerStatement } from "../transformers/statements.js";
-
-import type { SemanticModule } from "@mission-platform/forge-plugin-api";
 
 /** Transform a neutral hook module into its SolidJS source. */
 export function emitSolidHookModule(module: SemanticModule): string {

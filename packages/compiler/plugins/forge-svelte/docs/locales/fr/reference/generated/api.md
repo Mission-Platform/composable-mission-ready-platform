@@ -30,12 +30,12 @@ abaissé celui-ci, de sorte que l'émetteur est toujours animé par le même con
 
 #### Paramètres
 
-| Nom                    | Tapez               | Descriptif |
-| ---------------------- | ------------------- | ---------- |
-| modules                | Module Sémantique   |            |
-| Nom du composant       | chaîne              |            |
-| dossiers de composants | ReadonlySet<string> |            |
-| planifier              | SvelteLoweredModule |            |
+| Nom | Tapez | Descriptif |
+| ---------------- | ------------------- | ----------- |
+| modules | Module Sémantique |             |
+| Nom du composant | chaîne |             |
+| dossiers de composants | ReadonlySet<string> |             |
+| planifier | SvelteLoweredModule |             |
 
 ### SvelteModuleOutput
 
@@ -61,9 +61,9 @@ Imprimez un module hook/composable neutre comme source `.ts` cible Svelte.
 
 #### Paramètres
 
-| Nom     | Tapez             | Descriptif |
-| ------- | ----------------- | ---------- |
-| modules | Module Sémantique |            |
+| Nom | Tapez | Descriptif |
+| ------ | -------------- | ----------- |
+| modules | Module Sémantique |             |
 
 ## `src/index`
 
@@ -93,9 +93,9 @@ Qu'un plan cible soit celui Svelte - le discriminateur sur lequel chaque consomm
 
 #### Paramètres
 
-| Nom     | Tapez                          | Descriptif |
-| ------- | ------------------------------ | ---------- |
-| abaissé | CibleLoweredModule \| indéfini |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------------------------- | ----------- |
+| abaissé | CibleLoweredModule \| indéfini |             |
 
 ### LowerSvelteModule
 
@@ -112,10 +112,10 @@ Créez le plan Svelte pour un module neutre.
 
 #### Paramètres
 
-| Nom      | Tapez             | Descriptif |
-| -------- | ----------------- | ---------- |
-| ir       | Module Sémantique |            |
-| contexte | Contexte cible    |            |
+| Nom | Tapez | Descriptif |
+| ------- | -------------- | ----------- |
+| ir | Module Sémantique |             |
+| contexte | Contexte cible |             |
 
 ### SvelteBindingPlan
 
@@ -137,7 +137,7 @@ export interface SvelteDerivedPlan
 
 Une liaison `$derived`.
 
-### SvelteDynamicPlan
+### Plan dynamique svelte
 
 **Genre :** interface
 
@@ -229,7 +229,7 @@ Un assistant local de retour JSX (`const renderX = (a, b) => (<div/>)`) abaissé
 un Svelte `{#snippet}`.
 
 Un assistant de rendu neutre est une fonction paramétrée et valorisée par un modèle, qui est
-exactement ce qu'exprime un extrait Svelte 5 - y compris une récursivité sûre, donc un
+exactement ce qu'exprime un extrait de code Svelte 5 - y compris une récursivité sûre, donc un
 l'assistant auto-référentiel (un moteur de rendu de champ qui revient dans les ensembles de champs) fonctionne
 sans inlining. Outre une seule expression renvoyée, le terminal à retour anticipé
 les gardes et un terminal `switch` sont représentés sous forme de branches d'extraits ordonnés.
@@ -302,10 +302,10 @@ cible, ou un appelant qui a ignoré `lower`) sont renvoyés intacts.
 
 #### Paramètres
 
-| Nom        | Tapez                        | Descriptif |
-| ---------- | ---------------------------- | ---------- |
-| intentions | Intentions cibles            |            |
-| options    | Options d'optimisation cible |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------- | ----------- |
+| intentions | Intentions cibles |             |
+| options | Options d'optimisation cible |             |
 
 ### SVELTE_OPTIMIZATIONS
 

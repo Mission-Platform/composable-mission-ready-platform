@@ -8,7 +8,7 @@
 本文档提供了 Mission Platform monorepo 布局、目录用途和内部的技术参考
 封装约定。
 
-## Monorepo 布局参考
+## Monorepo Layout Reference
 
 Mission Platform 使用 pnpm 工作区和 Turborepo 来管理多包环境。存储库已组织好
 分为功能层：
@@ -16,11 +16,13 @@ Mission Platform 使用 pnpm 工作区和 Turborepo 来管理多包环境。存�
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── packages/tooling/configs/                # Shared tooling and base configurations
-├── packages/               # Reusable libraries and building blocks
-├── packages/tooling/vite/           # Build-time extensions and compilers
-├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
-├── crates/                 # Rust crates (including Wasm-compiled ones)
+├── packages/core/          # Framework-neutral runtime, Forge JSX/adapters, routing, i18n, and scheduling
+├── packages/ui/            # Components, forms, layouts, themes, and design tokens
+├── packages/content/       # Content, email, search, and SEO pipelines
+├── packages/integrations/  # Barcode, maps, media, 3D, and interoperability adapters
+├── packages/compiler/      # Figma bridges and Forge compiler plugins
+├── packages/tooling/       # Shared configs and Vite/build-time extensions
+├── packages/edge/          # Reusable Cloudflare Worker edge functions
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
@@ -35,6 +37,7 @@ composable_mission_ready_platform/
 并且从未发布到注册表。
 
 - **`docs/`**：Markdown 语料库的 Vite + Vue 文档站点。
+- **`figma-forge-plugin/`**：Figma 插件，将 Forge 创作的组件与 Figma 工作流程集成。
 - **`my-care-notes/`**：旗舰护理笔记应用程序。
 - **`service-monitor/`**：由持久对象支持的 RedwoodSDK 服务运行状况仪表板。
 - **`website/`**：Mission Platform 营销和产品网站。
@@ -42,7 +45,15 @@ composable_mission_ready_platform/
 
 ### 2.`packages/`（构建块）
 
-应用程序使用的可重用、版本化的库。这些旨在尽可能与框架无关。
+应用程序使用的可重用、版本化的库。域目录使所有权变得明确，而无需更改包名称或导入。
+
+- **`core/`**：框架中立的运行时、Forge JSX/适配器、路由、本地化、可观察性、RxJS 和调度程序服务。
+- **`ui/`**：组件、断点、表单、布局、选择、主题、标记和版式。
+- **`content/`**：内容模型、电子邮件组件/渲染、语言工具和 SEO。
+- **`integrations/`**：条形码、代码扫描、D3、地图、QR/矩阵码、语音、Three.js 和 vCard。
+- **`compiler/`**：Figma 桥和框架/路由器/CMS 编译器插件。
+- **`tooling/`**：共享配置包和 Vite 插件。
+- **`edge/`**：应用程序和本地示例使用的工作程序包。
 
 - **`@mission-platform/forge-jsx`**：框架中立的 JSX 运行时和适配器。
 - **`@mission-platform/components`**：多框架组件库。
@@ -59,7 +70,7 @@ composable_mission_ready_platform/
 `devDependencies`。
 
 - **`eslint-config/`**、**`prettier-config/`** 和 **`stylelint-config/`**：检查和格式化规则。
-- **`typescript-config/`**：Node、DOM、库和框架使用者的基本 `tsconfig.json` 文件。
+- **`typescript-config/`**：Node、DOM、库和框架使用者的基础 `tsconfig.json` 文件。
 - **`tsdown-config/`** 和 **`vite-config/`**：通用库、应用程序、Vite 和 Vitest 构建模式。
 - **`i18n-config/`** 和 **`storybook-framework/`**：共享区域设置提取和框架工作台设置。
 
@@ -82,6 +93,16 @@ Cloudflare Workers 用于服务器端逻辑和优化的资产交付。
 可部署的应用程序 Workers 由 `apps/website/wrangler.jsonc` 配置，
 `apps/my-care-notes/wrangler.jsonc` 和 `apps/service-monitor/wrangler.jsonc`。的
 `api-proxy` 和 `forge-spa` 软件包是捆绑的依赖项，而不是独立的 Wrangler 部署。
+
+### 6.`packages/compiler/plugins/`（Forge 编译器插件）
+
+Forge 编译器的特定于框架的输出插件和适配器。
+
+- **`forge-cms-plugin-api/`**：CMS 工件生成和 Vite/tsdown 适配器集成。
+- **`forge-cms-astro/`**、**`forge-cms-ghost/`**、**`forge-cms-jekyll/`**、**`forge-cms-storyblok/`**、**`forge-cms-webflow/`**：CMS 特定的集成适配器。
+- **`forge-plugin-api/`**：共享 Forge 编译器插件接口。
+- **`forge-vue/`**、**`forge-react/`**、**`forge-solid/`**、**`forge-svelte/`**、**`forge-web-components/`**：特定于框架的代码生成和运行时适配器。
+- **`forge-router-plugin-api/`**、**`forge-router-vue/`**、**`forge-router-react/`**、**`forge-router-solid/`**、**`forge-router-svelte/`**、**`forge-router-web-components/`**、**`forge-router-redwood/`**：特定于路由器框架的集成适配器。
 
 ## 内部封装约定
 
@@ -108,12 +129,12 @@ Cloudflare Workers 用于服务器端逻辑和优化的资产交付。
 
 存储库根目录中的关键文件控制 monorepo 的行为：
 
-| 文件                    | 目的                                       |
-| :---------------------- | :----------------------------------------- |
-| `pnpm-workspace.yaml`   | 定义工作区边界、成员全局和依赖项目录。     |
-| `turbo.json`            | 协调构建管道和任务缓存。                   |
-| `package.json`          | 根级脚本和 monorepo 范围的 devDependency。 |
-| `commitlint.config.mjs` | 强制执行常规提交规范。                     |
+|文件|目的|
+| :---------------------- | :------------------------------------------------------------------- |
+| `pnpm-workspace.yaml` |定义工作区边界、成员全局和依赖项目录。 |
+| `turbo.json` |协调构建管道和任务缓存。                    |
+| `package.json` |根级脚本和 monorepo 范围的 devDependency。                |
+| `commitlint.config.mjs` |强制执行常规提交规范。                     |
 
 ## 依赖关系和工作空间管理
 
@@ -130,7 +151,7 @@ Mission Platform 使用 `workspace:*` 协议来实现内部依赖关系。这确
 跨工作空间任务是使用 Turborepo 通过根 `package.json` 执行的：
 
 - `pnpm build`：以正确的依赖顺序构建所有工作区。
-- `pnpm test`：使用 `test` 任务为所有工作区运行测试套件。使用 `pnpm exec turbo run test --affected` 进行
+- `pnpm test`：使用 `test` 任务为所有工作区运行测试套件。使用 `pnpm exec turbo run test --affected`
   更改后的工作空间 CI 范围。
 - `pnpm lint`：跨工作区运行 ESLint。
 - `pnpm lint:style`：针对应用程序和包样式运行 Stylelint。

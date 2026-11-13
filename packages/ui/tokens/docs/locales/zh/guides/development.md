@@ -16,7 +16,7 @@ pnpm --filter @mission-platform/tokens lint:style
 pnpm --filter @mission-platform/tokens build
 ```
 
-构建会在 `dist/` 中生成 JavaScript 和声明输出。生成
+构建会生成 `dist/` 中的 JavaScript 和声明输出。生成
 `src/generated/` 下的 SCSS 和 TypeScript 源是派生工件，
 必须保持确定性。
 

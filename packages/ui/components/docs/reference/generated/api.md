@@ -4626,6 +4626,281 @@ export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 Vertical padding scale — canonical 2xs → 2xl scale.
 
+## `src/utils/date-time/date-time`
+
+### browserTimezoneLabel
+
+**Kind:** function
+
+```typescript
+function browserTimezoneLabel(): string;
+```
+
+The IANA name of the browser timezone, or `'Local'` when unavailable.
+
+### clamp
+
+**Kind:** function
+
+```typescript
+function clamp(value: number, min: number, max: number): number;
+```
+
+Clamp a number into the inclusive `[min, max]` range.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | number |             |
+| min   | number |             |
+| max   | number |             |
+
+### DateRange
+
+**Kind:** interface
+
+```typescript
+export interface DateRange
+```
+
+A `{ start, end }` ISO-date range (`YYYY-MM-DD`).
+
+### DateTimeRange
+
+**Kind:** interface
+
+```typescript
+export interface DateTimeRange
+```
+
+A `{ start, end, timezone }` date-time range (`YYYY-MM-DD HH:MM[:SS]`).
+
+### displayTime
+
+**Kind:** function
+
+```typescript
+function displayTime(value: string, withSeconds: boolean): string;
+```
+
+Normalise a stored time string to the configured precision (empty stays empty).
+
+#### Parameters
+
+| Name        | Type    | Description |
+| ----------- | ------- | ----------- |
+| value       | string  |             |
+| withSeconds | boolean |             |
+
+### formatDateRange
+
+**Kind:** function
+
+```typescript
+function formatDateRange(value: DateRange | undefined): string;
+```
+
+Format an ISO date range into a `start → end` summary (empty parts collapse).
+
+#### Parameters
+
+| Name  | Type                   | Description |
+| ----- | ---------------------- | ----------- |
+| value | DateRange \| undefined |             |
+
+### formatDateTime
+
+**Kind:** function
+
+```typescript
+function formatDateTime(date: string, parts: TimeParts, withSeconds: boolean): string;
+```
+
+Join a `YYYY-MM-DD` date and time parts into a `YYYY-MM-DD HH:MM[:SS]` string.
+
+#### Parameters
+
+| Name        | Type      | Description |
+| ----------- | --------- | ----------- |
+| date        | string    |             |
+| parts       | TimeParts |             |
+| withSeconds | boolean   |             |
+
+### formatTime
+
+**Kind:** function
+
+```typescript
+function formatTime(parts: TimeParts, withSeconds: boolean): string;
+```
+
+Format hour/minute(/second) components into `HH:MM` or `HH:MM:SS`.
+
+#### Parameters
+
+| Name        | Type      | Description |
+| ----------- | --------- | ----------- |
+| parts       | TimeParts |             |
+| withSeconds | boolean   |             |
+
+### formatTimeRange
+
+**Kind:** function
+
+```typescript
+function formatTimeRange(value: TimeRange | undefined, withSeconds: boolean): string;
+```
+
+Format a time range into a `start → end` summary at the configured precision.
+
+#### Parameters
+
+| Name        | Type                   | Description |
+| ----------- | ---------------------- | ----------- |
+| value       | TimeRange \| undefined |             |
+| withSeconds | boolean                |             |
+
+### HOURS
+
+**Kind:** constant
+
+```typescript
+export const HOURS: readonly number[];
+```
+
+The selectable hour (0–23), minute (0–59), and second (0–59) lists.
+
+### MINUTES
+
+**Kind:** constant
+
+```typescript
+export const MINUTES: readonly number[];
+```
+
+No description provided.
+
+### pad
+
+**Kind:** function
+
+```typescript
+function pad(value: number): string;
+```
+
+Zero-pad a number to two digits.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | number |             |
+
+### parseDate
+
+**Kind:** function
+
+```typescript
+function parseDate(value: string): Date | undefined;
+```
+
+Parse a `YYYY-MM-DD` ISO date string into a `Date` (local midnight), or `undefined`.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
+
+### parseDateTime
+
+**Kind:** function
+
+```typescript
+function parseDateTime(value: string): { date: string } & TimeParts;
+```
+
+Split a `YYYY-MM-DD HH:MM[:SS]` (or ISO `T`/`Z`) string into a date + time parts.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
+
+### parseTime
+
+**Kind:** function
+
+```typescript
+function parseTime(value: string): TimeParts;
+```
+
+Parse an `HH:MM[:SS]` string into its hour/minute/second components.
+
+#### Parameters
+
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| value | string |             |
+
+### range
+
+**Kind:** function
+
+```typescript
+function range(length: number): number[];
+```
+
+`[0, 1, …, length - 1]`.
+
+#### Parameters
+
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
+| length | number |             |
+
+### SECONDS
+
+**Kind:** constant
+
+```typescript
+export const SECONDS: readonly number[];
+```
+
+No description provided.
+
+### TimeParts
+
+**Kind:** interface
+
+```typescript
+export interface TimeParts
+```
+
+The hour/minute/second components of a parsed time.
+
+### TimeRange
+
+**Kind:** interface
+
+```typescript
+export interface TimeRange
+```
+
+A `{ start, end }` time range (`HH:MM` or `HH:MM:SS`).
+
+### TimezoneMode
+
+**Kind:** type
+
+```typescript
+export type TimezoneMode = 'browser' | 'utc';
+```
+
+Whether a date-time range is interpreted in the browser zone or UTC.
+
 ## `src/utils/pointer-drag/pointer-drag`
 
 ### beginPointerDrag

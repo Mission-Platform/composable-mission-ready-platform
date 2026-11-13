@@ -14,6 +14,184 @@ struct ViewportBounds {
   max_y: i32;
 }
 
+export struct FlintCamera {
+  x: f64;
+  y: f64;
+  zoom: f64;
+  viewportWidth: f64;
+  viewportHeight: f64;
+}
+
+export struct ViewBounds {
+  minX: f64;
+  minY: f64;
+  maxX: f64;
+  maxY: f64;
+}
+
+export struct ScreenPoint {
+  x: f64;
+  y: f64;
+}
+
+export struct FlintPerformanceMetrics {
+  updateTimeMs: f64;
+  renderTimeMs: f64;
+  spatialIndexTimeMs: f64;
+  bufferUploadTimeMs: f64;
+  drawPassTimeMs: f64;
+  textPassTimeMs: f64;
+  layoutTimeMs: f64;
+  totalFrameTimeMs: f64;
+  visibleNodesCount: f64;
+  totalNodesCount: f64;
+  visibleEdgesCount: f64;
+  totalEdgesCount: f64;
+  visiblePinsCount: f64;
+  totalPinsCount: f64;
+  textQuadCount: f64;
+  dpr: f64;
+  isFallback: bool;
+  fps: f64;
+  backend: string;
+}
+
+export struct RenderWorkerOutputMessage {
+  id: string;
+  type: string;
+  supported: bool;
+  fps: f64;
+  performance: FlintPerformanceMetrics;
+  visibleNodes: f64;
+  visibleEdges: f64;
+  camera: FlintCamera;
+  hit: FlintHitResult;
+  requestId: string;
+  error: string;
+}
+
+export struct GPUAdapter {
+  descriptor: string;
+  info: string;
+  vendor: string;
+  architecture: string;
+  device: string;
+  description: string;
+}
+
+export struct GPUDevice {
+  queue: GPUQueue;
+  descriptor: string;
+}
+
+export struct GPUQueue {
+  buffer: f64;
+  destination: string;
+}
+
+export struct GPUBuffer {
+  size: f64;
+}
+
+export struct GPUSampler {
+  label: string;
+}
+
+export struct GPUShaderModule {
+  label: string;
+}
+
+export struct GPUBindGroupLayout {
+  label: string;
+}
+
+export struct GPUPipelineLayout {
+  label: string;
+}
+
+export struct GPURenderPipeline {
+  label: string;
+}
+
+export struct GPUBindGroup {
+  label: string;
+}
+
+export struct GPUCommandBuffer {
+  label: string;
+}
+
+export struct GPUTexture {
+
+}
+
+export struct GPUTextureView {
+  label: string;
+}
+
+export struct GPUCommandEncoder {
+  descriptor: string;
+}
+
+export struct GPURenderPassEncoder {
+  pipeline: unit;
+  index: f64;
+  slot: f64;
+  vertexCount: f64;
+}
+
+export struct GPUCanvasContext {
+  configuration: string;
+  format: string;
+  alphaMode: string;
+}
+
+export struct WebGpuNavigator {
+  gpu: string;
+  options: string;
+}
+
+export struct WebGLUniformLocations {
+  uResolution: string;
+  uCamera: string;
+  uZoom: string;
+}
+
+export struct WebGLAttribLocations {
+  aPosition: f64;
+  aColor: f64;
+}
+
+export struct WebGLTextUniformLocations {
+  uResolution: string;
+  uCamera: string;
+  uZoom: string;
+  uFontTexture: string;
+}
+
+export struct WebGLTextAttribLocations {
+  aPosition: f64;
+  aUv: f64;
+  aColor: f64;
+}
+
+export struct FlintRenderWorkerWasmExports {
+  value: string;
+}
+
+export enum FlintHitResult {
+  node
+}
+
+export enum RenderWorkerInputMessage {
+  init
+}
+
+export struct GPUTextureFormat {
+  value: string;
+}
+
+
 export fn createCamera(viewport_w: f64, viewport_h: f64, x: f64, y: f64, zoom: f64) -> unit {
   let min_dim: f64 = f64_from_u32(1);
   let mut actual_w: f64 = viewport_w;

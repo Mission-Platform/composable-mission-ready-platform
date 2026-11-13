@@ -6,20 +6,20 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > Taal: Nederlands (nl)
 
 Mission Platform gebruikt een **Atomic Design**-systeem om componenten in hiërarchische niveaus van complexiteit te ordenen. Elke
-component is een "eenmalig schrijven" -eenheid geschreven in het neutrale Forge JSX-dialect (`@mission-platform/forge-jsx`), verzekeren
+component is een "eenmalig schrijven"-eenheid geschreven in het neutrale Forge JSX-dialect (`@mission-platform/forge-jsx`), waardoor
 consistentie binnen meerdere raamwerken.
 
 ## Ontwerpniveaus
 
 Componenten zijn onderverdeeld in vijf niveaus op basis van hun reikwijdte en verantwoordelijkheid.
 
-| Niveau         | Map                         | Beschrijving                                                                                                                                                                              |
-| :------------- | :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Atomen**     | `src/components/atoms/`     | Kleinste UI-primitieven (bijv. `ForgeButton`, `ForgeInput`, `ForgeBadge`). Het zijn doorgaans functionele eenheden die niet verder kunnen worden afgebroken zonder hun doel te verliezen. |
-| **Moleculen**  | `src/components/molecules/` | Eenvoudige composities van atomen (bijv. `ForgeSearchInput`, `ForgeFieldSet`). Ze functioneren samen als een eenheid.                                                                     |
-| **Organismen** | `src/components/organisms/` | Complexe UI-secties bestaande uit atomen, moleculen en andere organismen (bijv. `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                               |
-| **Sjablonen**  | `src/components/templates/` | Lay-outs op paginaniveau die de inhoudsstructuur definiëren (bijv. `ForgeHero`, `ForgeAppLayout`). Ze gebruiken vaak slots om te definiëren waar inhoud moet worden geplaatst.            |
-| **Pagina's**   | `src/components/pages/`     | Specifieke exemplaren van sjablonen gevuld met concrete inhoud en gegevens (bijv. `AccountSettingsPage`).                                                                                 |
+| Niveau | Map | Beschrijving |
+| :------------ | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Atomen** | `src/components/atoms/` | Kleinste UI-primitieven (bijvoorbeeld `ForgeButton`, `ForgeInput`, `ForgeBadge`). Het zijn doorgaans functionele eenheden die niet verder kunnen worden afgebroken zonder hun doel te verliezen. |
+| **Moleculen** | `src/components/molecules/` | Eenvoudige composities van atomen (bijv. `ForgeSearchInput`, `ForgeFieldSet`). Ze functioneren samen als een eenheid.                                                                    |
+| **Organismen** | `src/components/organisms/` | Complexe UI-secties bestaande uit atomen, moleculen en andere organismen (bijv. `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
+| **Sjablonen** | `src/components/templates/` | Lay-outs op paginaniveau die de inhoudsstructuur definiëren (bijvoorbeeld `ForgeHero`, `ForgeAppLayout`). Ze gebruiken vaak slots om te definiëren waar inhoud moet worden geplaatst.                     |
+| **Pagina's** | `src/components/pages/` | Specifieke exemplaren van sjablonen gevuld met concrete inhoud en gegevens (bijvoorbeeld `AccountSettingsPage`).                                                                        |
 
 ## Componentmapindeling
 
@@ -44,24 +44,24 @@ src/components/
 
 ## Verhaalconventies
 
-Verhalenboekverhalen MOETEN op dezelfde plek staan als hun componenten en moeten een strikte titelconventie volgen om de inhoud overzichtelijk te houden
+Verhalenboekverhalen MOETEN op dezelfde locatie als hun componenten worden geplaatst en een strikte titelconventie volgen om schoon te blijven
 zijbalk structuur.
 
 ### Bestandsnaam
 
-Verhalen moeten de `.stories.tsx` verlenging.
+Verhalen moeten de extensie `.stories.tsx` gebruiken.
 
 ### Titelconventie
 
-De `title` veld in het verhalenboek `meta` object moet dit patroon volgen:
+Het veld `title` in het Storybook `meta`-object moet dit patroon volgen:
 
 ```text
 <Level>/<Category>/<Component>
 ```
 
-- **Niveau**: meervoud met hoofdletter (bijv. `Atoms`, `Molecules`).
+- **Niveau**: meervoud met hoofdletter (bijvoorbeeld `Atoms`, `Molecules`).
 - **Categorie**: functionele groepering (bijv. `Forms`, `Navigation`, `Display`, `Feedback`).
-- **Component**: PascalCase-componentnaam (bijv. `ForgeButton`).
+- **Component**: PascalCase-componentnaam (bijvoorbeeld `ForgeButton`).
 
 **Voorbeeld (`forge-button.stories.tsx`):**
 
@@ -75,13 +75,14 @@ const meta = {
 
 ## Auteursnormen
 
-1. **Framework Neutrality**: Auteur nooit afzonderlijk Vue En React versies. Gebruik `@mission-platform/forge-jsx`.
-2. **Naamgeving**: Componenten moeten de `Base` voorvoegsel (bijv. `ForgeCard`) tenzij het specifieke implementaties zijn.
-3. **Typeveiligheid**: Exporteren `*Properties` interface voor de rekwisieten van de component.
-4. **Testen**: Een co-locatie `.spec.ts` is voor elk onderdeel vereist.
-5. **Steiger**: Gebruik de `scaffold_component` MCP-tool om te zorgen voor de juiste directorystructuur en boilerplate.
+1. **Framework-neutraliteit**: Maak nooit afzonderlijke Vue- en React-versies. Gebruik `@mission-platform/forge-jsx`.
+2. **Naamgeving**: Componenten moeten het voorvoegsel `Base` gebruiken (bijvoorbeeld `ForgeCard`), tenzij het specifieke implementaties zijn.
+3. **Typeveiligheid**: exporteer een `*Properties`-interface voor de rekwisieten van de component.
+4. **Testen**: Voor elk onderdeel is een co-located `.spec.ts` vereist.
+5. **Steigers**: Gebruik de `scaffold_component` MCP-tool via een aangesloten Mission Platform Developer MCP-server om
+   Zorg voor de juiste mapstructuur en standaardtekst.
 
-```bash
+```text
 # Example: Creating a new 'forge-chip' atom in the 'components' package
 scaffold_component(name="forge-chip", level="atom", area="Display", package="components", apply=true)
 ```
@@ -89,6 +90,6 @@ scaffold_component(name="forge-chip", level="atom", area="Display", package="com
 ## Gerelateerde gidsen
 
 - [Pakketontwikkeling](package-development.md)
-- [Composeerbaar schrijven](composable-authoring.md)
+- [Composable Authoring](composable-authoring.md)
 - [Winkelontwerp](store-authoring.md)
 - [Util Authoring](util-authoring.md)

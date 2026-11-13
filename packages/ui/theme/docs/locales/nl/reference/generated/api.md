@@ -25,7 +25,7 @@ door `@mission-platform/vite-plugin-forge`.
 
 Het wordt ondersteund door de gedeelde waarneembare themawinkel (`../theme-store`): klikken
 het drijft dezelfde singleton aan die `ForgeThemeProvider` configureert, dus het
-behoudt de voorkeur, zet `data-theme`/`color-scheme` vast in de documenthoofdmap
+behoudt de voorkeur, zet `data-theme`/`color-scheme` vast in de documentroot
 (en de gesynchroniseerde `<meta name="color-scheme">`), en blijft gesynchroniseerd met de
 systeem thema. Het onderdeel abonneert zich op de winkel met de neutrale
 {@link useState}/{@link useEffect} hooks, zodat één enkele bron reactief blijft
@@ -39,9 +39,9 @@ via het standaardslot.
 
 #### Parameters
 
-| Naam          | Typ                                 | Beschrijving |
-| ------------- | ----------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<ThemeToggleProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<ThemeToggleProperties> |             |
 
 ### ThemeToggleEigenschappen
 
@@ -96,9 +96,9 @@ wrapper is een vaste `<div>`.
 
 #### Parameters
 
-| Naam          | Typ                                   | Beschrijving |
-| ------------- | ------------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<ThemeComposerProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<ThemeComposerProperties> |             |
 
 ### ThemeComposerEigenschappen
 
@@ -151,9 +151,9 @@ opslag op documentniveau met een vaste `<div>`-wrapper.
 
 #### Parameters
 
-| Naam          | Typ                                   | Beschrijving |
-| ------------- | ------------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<ThemeProviderProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<ThemeProviderProperties> |             |
 
 ### ThemaProviderEigenschappen
 
@@ -201,9 +201,9 @@ eigenschappen (`--mp-*` → waarde). Attributen hebben eerst voorrang, daarna de
 
 #### Parameters
 
-| Naam         | Typ                 | Beschrijving |
-| ------------ | ------------------- | ------------ |
-| configuratie | ThemeComposerConfig |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------- | ----------- |
+| configuratie | ThemeComposerConfig |             |
 
 ### configToStyleString
 
@@ -217,9 +217,9 @@ Los een configuratie op naar de volledige inline `style`-reeks (aangepaste eigen
 
 #### Parameters
 
-| Naam         | Typ                 | Beschrijving |
-| ------------ | ------------------- | ------------ |
-| configuratie | ThemeComposerConfig |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------- | ----------- |
+| configuratie | ThemeComposerConfig |             |
 
 ### cssVariabelenToString
 
@@ -233,9 +233,9 @@ Serialiseert een aangepaste CSS-eigenschapskaart in een inline `style`-tekenreek
 
 #### Parameters
 
-| Naam       | Typ                    | Beschrijving |
-| ---------- | ---------------------- | ------------ |
-| variabelen | Record<string, string> |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------------- | ----------- |
+| variabelen | Record<string, string> |             |
 
 ### mergeConfig
 
@@ -249,10 +249,10 @@ Voeg een gedeeltelijke configuratie ondiep samen met de huidige (waarbij `undefi
 
 #### Parameters
 
-| Naam         | Typ                 | Beschrijving |
-| ------------ | ------------------- | ------------ |
-| configuratie | ThemeComposerConfig |              |
-| gedeeltelijk | ThemeComposerConfig |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------- | ----------- |
+| configuratie | ThemeComposerConfig |             |
+| gedeeltelijk | ThemeComposerConfig |             |
 
 ### removeConfigToken
 
@@ -266,10 +266,10 @@ Verwijder een enkele onbewerkte tokenoverschrijving.
 
 #### Parameters
 
-| Naam         | Typ                 | Beschrijving |
-| ------------ | ------------------- | ------------ |
-| configuratie | ThemeComposerConfig |              |
-| sleutel      | tekenreeks          |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------- | ----------- |
+| configuratie | ThemeComposerConfig |             |
+| sleutel | tekenreeks |             |
 
 ### setConfigAttribuut
 
@@ -287,11 +287,11 @@ Stel één enkel vriendelijk attribuut in (geef `undefined` door om het te wisse
 
 #### Parameters
 
-| Naam         | Typ                    | Beschrijving |
-| ------------ | ---------------------- | ------------ |
-| configuratie | ThemeComposerConfig    |              |
-| attribuut    | K                      |              |
-| waarde       | ThemeComposerConfig[K] |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------------- | ----------- |
+| configuratie | ThemeComposerConfig |             |
+| attribuut | K |             |
+| waarde | ThemeComposerConfig[K] |             |
 
 ### setConfigToken
 
@@ -305,11 +305,33 @@ Stel één onbewerkte tokenoverschrijving in. De sleutel kan het voorvoegsel `--
 
 #### Parameters
 
-| Naam         | Typ                 | Beschrijving |
-| ------------ | ------------------- | ------------ |
-| configuratie | ThemeComposerConfig |              |
-| sleutel      | tekenreeks          |              |
-| waarde       | tekenreeks          |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------- | ----------- |
+| configuratie | ThemeComposerConfig |             |
+| sleutel | tekenreeks |             |
+| waarde | tekenreeks |             |
+
+### ThemeComposerAttribuut
+
+**Soort:** type
+
+```typescript
+export type ThemeComposerAttribute = Exclude<keyof ThemeComposerConfig, 'tokens' | 'colorScheme'>;
+```
+
+De gebruiksvriendelijke attribuutsleutels die zijn toegewezen aan een aangepaste eigenschap `--mp-*`.
+
+### ThemeComposerConfig
+
+**Soort:** interface
+
+```typescript
+export interface ThemeComposerConfig
+```
+
+Een getypte beschrijving op hoog niveau van de themakenmerken die een consument kan samenstellen
+tijdens runtime. Elk kenmerk wordt toegewezen aan een van de `--mp-*` van het platform
+aangepaste CSS-eigenschappen design-token (zie {@link ATTRIBUTE_TO_CSS_VAR}).
 
 ## `src/stores/theme-store/theme-store`
 
@@ -327,9 +349,9 @@ neem de `defaultTheme` van de provider over. Opnieuw toepassen en abonnees op de
 
 #### Parameters
 
-| Naam         | Typ         | Beschrijving |
-| ------------ | ----------- | ------------ |
-| configuratie | ThemaConfig |              |
+| Naam | Typ | Beschrijving |
+| ------ | ----------- | ----------- |
+| configuratie | ThemaConfig |             |
 
 ### cyclusThema
 
@@ -373,9 +395,9 @@ Stel de themavoorkeur expliciet in.
 
 #### Parameters
 
-| Naam     | Typ   | Beschrijving |
-| -------- | ----- | ------------ |
-| volgende | Thema |              |
+| Naam | Typ | Beschrijving |
+| ---- | ----- | ----------- |
+| volgende | Thema |             |
 
 ### abonnerenThema
 
@@ -389,9 +411,9 @@ Abonneer u om wijzigingen op te slaan; retourneert een afmeldfunctie.
 
 #### Parameters
 
-| Naam       | Typ            | Beschrijving |
-| ---------- | -------------- | ------------ |
-| luisteraar | () => ongeldig |              |
+| Naam | Typ | Beschrijving |
+| -------- | ---------- | ----------- |
+| luisteraar | () => ongeldig |             |
 
 ### Thema
 
@@ -423,7 +445,7 @@ export interface ThemeSnapshot
 
 Een onveranderlijke momentopname van de huidige status van de winkel, geretourneerd door {@link getThemeSnapshot}.
 
-### toggleTheme
+### schakelThema
 
 **Soort:** functie
 

@@ -34,7 +34,7 @@ Definisce il contratto strutturale per le forme:
 
 Fornisce il motore per valutare se un campo deve essere visibile in base ai valori correnti:
 
-- `evaluateCondition(condition, values)`: valuta un `FieldCondition` utilizzando combinatori simili a JSON Schema:
+- `evaluateCondition(condition, values)`: valuta un `FieldCondition` utilizzando combinatori simili a schemi JSON:
   - `allOf`: logica AND (tutte le condizioni devono essere vere).
   - `anyOf`: OR logico (almeno una condizione deve essere vera).
   - `oneOf`: logica XOR (esattamente una condizione deve essere vera).
@@ -42,10 +42,10 @@ Fornisce il motore per valutare se un campo deve essere visibile in base ai valo
 
 ### 3. Integrazione dello schema JSON (`src/json-schema.ts`)
 
-Gestisce la traduzione tra schemi JSON grezzi e campi del modulo renderizzabile:
+Gestisce la traduzione tra schemi JSON grezzi e campi modulo renderizzabili:
 
 - `jsonSchemaToFields(schema)`: converte ricorsivamente uno schema JSON in un elenco ordinato di `FormFieldSchema`.
-- `jsonSchemaDefaults(schema)`: genera valori iniziali in base alle parole chiave `default` dello schema o appropriate al tipo
+- `jsonSchemaDefaults(schema)`: genera valori iniziali in base alle parole chiave `default` dello schema o al tipo appropriato
   spazi vuoti.
 - `createFormValidator(schema, translate?)`: restituisce un `FormValidator` che utilizza Ajv per convalidare i valori del modulo. Esso
   esclude automaticamente i campi nascosti dalla convalida e supporta messaggi di errore personalizzati.

@@ -15,6 +15,7 @@ describe('RootBoundedFlintWorkspaceHost', () => {
       await mkdir(nodePath.join(root, 'dist'), { recursive: true });
       await mkdir(nodePath.join(root, '.git'), { recursive: true });
       await writeFile(nodePath.join(root, 'src', 'main.flint'), 'fn main() {}');
+      await writeFile(nodePath.join(root, 'src', 'button.flintc'), '<script></script>');
       await writeFile(nodePath.join(root, 'src', 'notes.txt'), 'not Forge Web Script');
       await writeFile(nodePath.join(root, 'node_modules', 'dependency', 'ignored.flint'), 'fn ignored() {}');
       await writeFile(nodePath.join(root, 'dist', 'ignored.flint'), 'fn ignored() {}');
@@ -22,7 +23,10 @@ describe('RootBoundedFlintWorkspaceHost', () => {
 
       const host = new RootBoundedFlintWorkspaceHost({ roots: [root] });
 
-      await expect(host.listFiles()).resolves.toEqual([`file://${root}/src/main.flint`]);
+      await expect(host.listFiles()).resolves.toEqual([
+        `file://${root}/src/button.flintc`,
+        `file://${root}/src/main.flint`,
+      ]);
     } finally {
       await rm(root, { recursive: true, force: true });
     }
@@ -74,6 +78,7 @@ describe('RootBoundedFlintWorkspaceHost', () => {
     const subscription = host.watch((change) => changes.push(change));
 
     listeners[0]?.('/workspace/project/main.flint');
+    listeners[0]?.('/workspace/project/button.flintc');
     listeners[0]?.('/workspace/project/notes.txt');
     listeners[0]?.('/workspace/project/node_modules/dependency/ignored.flint');
     listeners[0]?.('/workspace/outside.flint');
@@ -82,6 +87,7 @@ describe('RootBoundedFlintWorkspaceHost', () => {
 
     expect(changes).toEqual([
       { uri: 'file:///workspace/project/main.flint', kind: 'changed' },
+      { uri: 'file:///workspace/project/button.flintc', kind: 'changed' },
       { uri: 'file:///workspace/other/secondary.flint', kind: 'changed' },
     ]);
     expect(disposed).toEqual(['/workspace/project', '/workspace/other']);

@@ -96,7 +96,23 @@ Schema.org `ImageObject`.
 **النوع:** ثابت
 
 ```typescript
-export const jsonLd;
+export const jsonLd: {
+  readonly webSite: typeof webSite;
+  readonly organization: typeof organization;
+  readonly localBusiness: typeof localBusiness;
+  readonly person: typeof person;
+  readonly webPage: typeof webPage;
+  readonly breadcrumbList: typeof breadcrumbList;
+  readonly article: typeof article;
+  readonly product: typeof product;
+  readonly faqPage: typeof faqPage;
+  readonly event: typeof event;
+  readonly videoObject: typeof videoObject;
+  readonly imageObject: typeof imageObject;
+  readonly softwareApplication: typeof softwareApplication;
+  readonly recipe: typeof recipe;
+  readonly review: typeof review;
+};
 ```
 
 إعادة تصدير مساحة الاسم حتى يتمكن المستهلكون من استيراد { jsonLd } من
@@ -524,7 +540,7 @@ function useSeo(metadata: MaybeRefOrGetter<SeoMetadata>): void;
 **النوع:** مكون
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 مكون `<Seo>` بدون عرض - غلاف تعريفي حول {@link useSeo}.
@@ -546,7 +562,7 @@ export const MpSeo;
 **النوع:** مكون
 
 ```typescript
-export const MpSeo;
+export MpSeo: DefineComponent<MpSeoProps> = defineComponent(
 ```
 
 مكون `<Seo>` بدون عرض - غلاف تعريفي حول {@link useSeo}.

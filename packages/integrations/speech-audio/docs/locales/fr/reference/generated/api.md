@@ -66,9 +66,9 @@ démonter.
 
 #### Paramètres
 
-| Nom    | Tapez  | Descriptif |
-| ------ | ------ | ---------- |
-| source | chaîne |            |
+| Nom | Tapez | Descriptif |
+| ------ | ------ | ----------- |
+| source | chaîne |             |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 

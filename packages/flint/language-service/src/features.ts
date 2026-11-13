@@ -5,7 +5,7 @@ import {
   type FlintModule,
   type FlintSourceSpan,
   type FlintStatement,
-} from '@mission-platform/flint';
+} from '@mission-platform/flint-ast';
 
 import { positionAtOffset, rangeFromSpan } from './positions.js';
 

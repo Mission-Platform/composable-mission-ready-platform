@@ -31,11 +31,31 @@ pnpm test
 
 ### 특정 작업공간에 대한 테스트 실행
 
-단일 패키지 또는 애플리케이션에 대한 테스트를 실행하려면 다음 안내를 따르세요.
+업스트림 종속성을 자동으로 프라이밍하는 동안 단일 패키지 또는 애플리케이션에 대한 테스트를 실행하려면 다음 안내를 따르세요.
+
+```bash
+pnpm test:package @mission-platform/<name>
+```
+
+또는 Turborepo를 직접 호출합니다.
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
+
+### 업스트림 종속성 프라이밍
+
+모노레포 전체의 패키지는 업스트림 작업공간 종속성에서 컴파일된 아티팩트(`dist/`)를 사용하는 경우가 많습니다. 새로 프로비저닝된 작업 트리 또는 정리된 환경에서는 이러한 아티팩트가 아직 존재하지 않을 수 있습니다.
+
+이 문제를 원활하게 해결하려면:
+
+- **자동 Turborepo 해결:** `turbo.json`의 `test` 및 `build:check` 작업 그래프는 `"dependsOn": ["^build"]`를 적용합니다. Turborepo는 대상 패키지에서 테스트를 실행하기 전에 모든 업스트림 종속성을 자동으로 빌드합니다.
+- **전용 패키지 도우미:** `pnpm test:package <package-name>`를 실행하면 패키지 테스트를 실행하기 전에 업스트림 빌드(`build --filter <package-name>^...`)가 명시적으로 프라이밍됩니다. `test` 작업이 `^build`도 선언하더라도 이 워밍업은 의도적인 것입니다. 이는 도우미의 프라이밍 동작을 명시적이고 일관되게 유지하며 Turbo이 이미 해당 종속성을 해결한 경우 캐시된 무작동입니다.
+- **패키지 빌드 도우미:** `pnpm build:package <package-name>`를 실행하면 대상 패키지를 빌드하기 전에 동일한 명시적 업스트림 워밍업이 사용됩니다.
+- **수동 업스트림 빌드:** 테스트 실행기를 직접 실행하는 경우(예: 단일 패키지 디렉터리의 `vitest`) 종속성을 먼저 프라이밍합니다.
+  ```bash
+  pnpm exec turbo run build --filter @mission-platform/<name>^...
+  ```
 
 ### 영향을 받는 테스트 실행(CI 스타일)
 
@@ -72,7 +92,7 @@ pnpm --filter @mission-platform/components test:coverage
 
 ## 방법: 테스트 작성
 
-### 단위 및 구성 요소 테스트
+### 단위 및 구성요소 테스트
 
 테스트는 소스 코드와 함께 배치되며 `.spec.ts`(또는 `.spec.tsx`) 확장을 사용합니다.
 
@@ -100,20 +120,20 @@ describe("ForgeButton.vue", () => {
 
 ### 브라우저 테스트
 
-Mission Platform은 실제 DOM 환경이나 크로스 브라우저가 필요한 테스트를 위해 Vitest의 브라우저 모드를 활용합니다.
+Mission Platform은 실제 DOM 환경 또는 크로스 브라우저가 필요한 테스트를 위해 Vitest의 브라우저 모드를 활용합니다.
 확인.
 
 1. 평소대로 테스트 파일을 작성합니다.
 2. `vitest.config.ts` 패키지가 브라우저 모드를 활성화하는지 확인합니다(아래 참조 참조).
 3. `pnpm test`로 실행합니다.
 
-### Forge 웹 스크립트 테스트
+### 플린트 테스트
 
 결정론적 컴파일러, 아티팩트, Wasm 및 자체 호스팅 패리티에 `@mission-platform/flint-vitest`을 사용합니다.
 수표. 프로덕션에서 사용되는 것과 동일한 컴파일러 서비스 및 Vite 플러그인에 컴파일을 위임합니다. 그것은 생성하지 않습니다
 두 번째 모듈 시스템.
 
-`.fws` 모듈을 테스트하는 작업공간에 패키지를 설치한 후 표준 Vitest 구성으로 해당 어댑터를 구성합니다.
+`.flint` 모듈을 테스트하는 작업공간에 패키지를 설치한 후 표준 Vitest 구성으로 해당 어댑터를 구성합니다.
 
 ```typescript
 // vitest.config.ts
@@ -143,7 +163,7 @@ import {
   createFlintTestHarness,
 } from "@mission-platform/flint-vitest";
 
-describe("FWS fixture", () => {
+describe("Flint fixture", () => {
   const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
@@ -186,7 +206,7 @@ describe("FWS fixture", () => {
 선언되지 않은 가져오기는 명시적으로 실패합니다. 브라우저나 Node API는 암시적으로 삽입되지 않습니다. 소스 가져오기에 `compileGraph` 사용
 링크 구성을 테스트할 때 그래프를 작성하고 `graphHash`, 링크된 모듈, 선언 및 콘텐츠 해시를 비교합니다.
 
-어댑터 경로는 생성된 ESM 계약을 Vitest에서 확인하는 대로 테스트합니다.
+어댑터 경로는 Vitest가 확인하는 대로 생성된 ESM 계약을 테스트합니다.
 
 ```typescript
 import {
@@ -201,7 +221,7 @@ expect((await load<{ answer: () => number }>()).answer()).toBe(42);
 expect(loadSync<{ answer: () => number }>().answer()).toBe(42);
 ```
 
-FWS 값의 경우 두 계층을 모두 명시적으로 테스트하세요. 원시 WASM 테스트는 다음을 주장해야 합니다.
+Flint 값의 경우 두 레이어를 모두 명시적으로 테스트하세요. 원시 WASM 테스트는 다음을 주장해야 합니다.
 포인터 길이 ABI 및 소유권 호출 생성된 ESM 테스트는 다음을 주장해야 합니다.
 자바스크립트 프로젝션:
 
@@ -234,16 +254,16 @@ expect((await generated.load()).echo("")).toBe("");
 자동 `Uint8Array` 변환.
 
 벤치마크 작업 공간은 원시 포인터 길이 어댑터를
-ESM 어댑터를 별도의 FWS 모드로 생성:
+별도의 Flint 모드로 ESM 어댑터 생성:
 
 ```bash
 pnpm --filter @mission-platform/benchmark run bench -- \
   --node-only --warmup 3 --samples 10 \
-  --output benchmark/results/fws-generated-boundary
+  --output benchmark/results/flint-generated-boundary
 ```
 
 보고서에는 빌드, 초기화 및 정상 상태 실행 단계가 포함됩니다. 는
-FWS 원시 `wasm` 행은 새로운 인스턴스와 3개의 문자열 입력 할당을 사용합니다.
+Flint 원시 `wasm` 행은 새로운 인스턴스와 3개의 문자열 입력 할당을 사용합니다.
 벤치마크 커널; `wasm-generated`은 생성된 `loadSync` 계약을 사용합니다.
 하나의 압축 문자열 입력 할당. 현재 게스트 할당 해제자는
 범프 할당기 공간, 생성된 문자열/바이트를 재활용하지 않고 범위를 검증합니다.
@@ -255,7 +275,7 @@ FWS 원시 `wasm` 행은 새로운 인스턴스와 3개의 문자열 입력 할�
 코퍼스 해시, 호스트 런타임 및 벤치마크 스키마가 일치하는 경우.
 
 예를 들어, 위의 Node만 실행하면 336개의 측정된 위상 결과가 생성됩니다.
-제로 실패 및 코퍼스 해시 `ad092f7c552cc914`. 두 FWS 행 모두 원시 Wasm을 가졌습니다.
+제로 실패 및 코퍼스 해시 `ad092f7c552cc914`. 두 Flint 행 모두 원시 Wasm을 가졌습니다.
 해시 `0ac58f11`, 원시 Wasm 크기 1,625바이트 및 생성된 ESM 소스 크기 18,490
 바이트; 원시 및 생성된 문자열 입력 할당 횟수는 3과 1이었습니다.
 유니코드 작은 문자열의 경우, 평균 초기화는 원시 대비 0.00024ms였습니다.
@@ -264,7 +284,7 @@ FWS 원시 `wasm` 행은 새로운 인스턴스와 3개의 문자열 입력 할�
 기계 간 성능을 보장하지 않습니다. 보고서의 사례별 샘플을 사용하세요.
 비교를 위해.
 
-플러그인은 또한 `?flint-manifest`, `?flint-declarations`,
+플러그인은 또한 `?flint-manifest`, `?flint-declarations`에 대한 명시적 가상 쿼리를 노출합니다.
 `?flint-wasm` 및 `?flint-source-map`. TypeScript에서 해당 주변 모듈을 검색할 수 있도록 하려면,
 테스트 프로젝트 유형에 제공된 선언 하위 경로를 추가합니다.
 
@@ -283,15 +303,15 @@ FWS 원시 `wasm` 행은 새로운 인스턴스와 3개의 문자열 입력 할�
 프로젝트에 포함된 진입점을 입력하세요. 선언 하위 경로는 유형 전용이며 런타임 가져오기를 추가하지 않습니다.
 
 패키지 간 언어 및 ABI 준수를 위해 `packages/flint/vitest/fixtures/`의 공유 픽스처를 사용합니다.
-`valid/`, `diagnostics/`, `capabilities/`, `graphs/` 및 `self-hosted/`는 의도적으로 안정적입니다. 옆에 고정 장치를 두십시오
-개인 구현 세부 사항을 다루는 경우 컴파일러, 런타임 또는 플러그인 사양 작은 파서에는 인라인 소스를 사용하거나
+`valid/`, `diagnostics/`, `capabilities/`, `graphs/` 및 `self-hosted/`은 의도적으로 안정적입니다. 옆에 고정 장치를 두십시오
+비공개 구현 세부 사항을 다루는 경우 컴파일러, 런타임 또는 플러그인 사양 작은 파서에는 인라인 소스를 사용하거나
 VM 유닛 케이스. 이는 하네스를 통해 낮은 수준의 테스트를 강제하지 않고도 고정 장치 이름과 정리 결정성을 유지합니다.
 
 `checkVmParity(file, mode)`은 `interpret`, `jit` 및 `aot`을 지원하지만 해당 보고서는 기존의 제한된 자체 호스팅 보고서입니다.
 lex 단계 패리티 계약. `parity`, 지문, 단계 및 AOT 재현성 메타데이터를 주장합니다. 보고서를 처리하지 마십시오
-임의 컴파일된 FWS VM 실행 또는 Wasm 동작 테스트를 대체합니다.
+임의 컴파일된 Flint VM 실행 또는 Wasm 동작 테스트를 대체합니다.
 
-일반적인 작업 공간 작업으로 집중된 FWS 매트릭스를 실행합니다.
+일반적인 작업 공간 작업으로 집중된 Flint 행렬을 실행합니다.
 
 ```bash
 pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
@@ -308,11 +328,11 @@ pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-flin
 환경:
 
 - **환경**: 기본적으로 `jsdom`입니다.
-- **전역**: 활성화됨(원하지 않는 한 `describe`, `it`, `expect`을 가져올 필요 없음)
+- **전역**: 활성화됨(원하지 않는 한 `describe`, `it`, `expect`를 가져올 필요 없음)
 - **플러그인**: `@vitejs/plugin-vue` 및 i18n 블록 무시를 포함합니다.
 - **범위**: 사전 구성된 `v8` 공급자.
 
-**예: `vitest.config.ts`:**
+**예 `vitest.config.ts`:**
 
 ```typescript
 import { defineVitestConfig } from "@mission-platform/vite-config/vitest";
@@ -327,17 +347,17 @@ export default defineVitestConfig({
 ### 디렉토리 구조
 
 - `src/**/*.spec.ts`: 단위 테스트 및 구성 요소 테스트.
-- `src/**/*.stories.tsx`: 스토리북 스토리(상호작용 테스트 정의로도 사용됨)
+- `src/**/*.stories.tsx`: 스토리북 스토리(상호작용 테스트 정의로도 사용됨).
 - `apps/storybook/vitest.config.ts`: 브라우저 기반 상호 작용 테스트를 위한 기본 구성입니다.
 
 ### 스크립트 요약
 
-| 스크립트        | 명령                                                       | 목적                                         |
-| :-------------- | :--------------------------------------------------------- | :------------------------------------------- |
-| `test`          | `pnpm exec turbo run test`                                 | 모든 작업 영역 테스트 작업을 실행합니다.     |
-| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | 감시 모드에서 구성 요소 테스트를 실행합니다. |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | 구성 요소 적용 범위 보고서를 생성합니다.     |
-| 러스트/WASM     | `cargo test --workspace`                                   | 기본 Rust 상자 테스트를 실행하세요.          |
+| 스크립트 | 명령 | 목적 |
+| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
+| `test` | `pnpm exec turbo run test` | 모든 작업 영역 테스트 작업을 실행합니다.          |
+| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | 감시 모드에서 구성 요소 테스트를 실행합니다.    |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | 구성 요소 적용 범위 보고서를 생성합니다. |
+| 러스트/WASM | `cargo test --workspace` | 기본 Rust 상자 테스트를 실행하세요.           |
 
 Wasm 래퍼 패키지는 자체 패키지 작업을 통해 테스트됩니다. 예를 들어, scanner 패키지와 해당 패키지를 실행합니다.
 스캐너 동작을 변경할 때 함께 래퍼:

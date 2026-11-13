@@ -11,11 +11,11 @@ Door de omgeving geselecteerde Storybook-framework-voorinstelling voor Mission P
 
 Voeg het pakket toe aan de Storybook-werkruimte en verwijs ernaar
 `.storybook/main.ts` of de overeenkomstige Storybook-configuratie. Selecteer de
-raamwerk door de ondersteunde omstandigheden van de werkruimte; niet hardcoderen a
+raamwerk via de ondersteunde omstandigheden van de werkruimte; niet hardcoderen a
 framework-adapter in pakketten met gedeelde componenten.
 
 ## Bijdragen
 
-Loop `pnpm --filter @mission-platform/storybook-framework lint` en de
+Voer `pnpm --filter @mission-platform/storybook-framework lint` uit en het
 Controles op het bouwen van verhalenboeken. Houd dit pakket gericht op raamwerkselectie en
-gedeelde Storybook-standaardinstellingen; deelverhalen horen erbij `apps/storybook`.
+gedeelde Storybook-standaardinstellingen; componentverhalen horen thuis in `apps/storybook`.

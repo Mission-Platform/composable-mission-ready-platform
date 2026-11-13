@@ -1,13 +1,11 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
-import { encodeMatrix } from '@mission-platform/matrix-code';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import {
-  createFlintCompilerService,
-  resolveFlintModuleGraph,
-} from '../../../../flint/core/dist/index.js';
+import { encodeMatrix } from '@mission-platform/matrix-code';
+
+import { createFlintCompilerService, resolveFlintModuleGraph } from '../../../../flint/core/dist/index.js';
 
 interface ScannerExports {
   readonly memory: WebAssembly.Memory;
@@ -69,7 +67,8 @@ function loadTree(directory: string, files: Record<string, string>): void {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     const fileName = join(directory, entry.name);
     if (entry.isDirectory()) loadTree(fileName, files);
-    else if (entry.name.endsWith('.flint') || entry.name.endsWith('.fws')) files[resolve(fileName)] = readFileSync(fileName, 'utf8');
+    else if (entry.name.endsWith('.flint') || entry.name.endsWith('.fws'))
+      files[resolve(fileName)] = readFileSync(fileName, 'utf8');
   }
 }
 
@@ -333,7 +332,13 @@ function rssCombins(n: number, r: number): number {
   return computeCombinsProduct(n, maxDenom, minDenom);
 }
 
-function computeLessValue(remaining: number, elementWidth: number, bar: number, elementsLeft: number, maxWidth: number): number {
+function computeLessValue(
+  remaining: number,
+  elementWidth: number,
+  bar: number,
+  elementsLeft: number,
+  maxWidth: number,
+): number {
   let lessValue = 0;
   let widest = remaining - elementWidth - 2 + bar;
   while (widest > maxWidth) {
@@ -756,7 +761,12 @@ function findMatchingRssCandidate(
   checkCharCandidates: ReturnType<typeof rssExpCharacters>,
 ) {
   for (const firstCandidate of firstCandidates) {
-    const matched = tryMatchCandidatePair(firstCandidate, secondLeftCandidates, secondRightCandidates, checkCharCandidates);
+    const matched = tryMatchCandidatePair(
+      firstCandidate,
+      secondLeftCandidates,
+      secondRightCandidates,
+      checkCharCandidates,
+    );
     if (matched !== undefined) return matched;
   }
   throw new Error('failed to find a valid checksum-consistent RSS Expanded fixture');
@@ -812,13 +822,7 @@ function buildRssExpandedFixture() {
   const modules = [...quiet, ...runsToBits(pair0Runs), 1, ...gap, ...runsToBits(pair1Runs), 1, ...quiet];
   return { modules, expected };
 }
-function paintLumaPixelBlock(
-  luma: number[],
-  stride: number,
-  startX: number,
-  startY: number,
-  scale: number,
-): void {
+function paintLumaPixelBlock(luma: number[], stride: number, startX: number, startY: number, scale: number): void {
   for (let py = 0; py < scale; py += 1) {
     for (let px = 0; px < scale; px += 1) {
       luma[(startY + py) * stride + startX + px] = 0;

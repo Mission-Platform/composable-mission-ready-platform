@@ -25,23 +25,22 @@ function seoPlugin(options: SeoPluginOptions): Plugin;
 
 #### 参数
 
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 选项 | SeoPlugin选项 |      |
+|名称 |类型 |描述 |
+| ------- | ---------------- | ----------- |
+|选项 | SeoPlugin选项 |             |
 
 #### 合同
 
 - **@例子：** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 
@@ -59,23 +58,22 @@ function seoPlugin(options: SeoPluginOptions): Plugin
 
 #### 参数
 
-| 名称 | 类型          | 描述 |
-| ---- | ------------- | ---- |
-| 选项 | SeoPlugin选项 |      |
+|名称 |类型 |描述 |
+| ------- | ---------------- | ----------- |
+|选项 | SeoPlugin选项 |             |
 
 #### 合同
 
 - **@例子：** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 

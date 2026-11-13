@@ -10,12 +10,12 @@
 ## התקן והשתמש
 
 הוסף את החבילה לסביבת העבודה של Storybook והפנה אליה
-`.storybook/main.ts` או התצורה המתאימה של Storybook. בחר את
+`.storybook/main.ts` או תצורת ספר הסיפורים המתאימה. בחר את
 מסגרת באמצעות התנאים הנתמכים של מרחב העבודה; אל תקוד קשיח א
 מתאם מסגרת בחבילות רכיבים משותפות.
 
 ## לִתְרוֹם
 
-לָרוּץ `pnpm --filter @mission-platform/storybook-framework lint` ואת
+הפעל את `pnpm --filter @mission-platform/storybook-framework lint` ואת
 בדיקות בניית ספר סיפורים. שמור את החבילה הזו ממוקדת בבחירת מסגרת ו
-ברירות מחדל של Storybook משותף; סיפורי מרכיבים שייכים `apps/storybook`.
+ברירות מחדל של Storybook משותף; סיפורי רכיבים שייכים ל-`apps/storybook`.

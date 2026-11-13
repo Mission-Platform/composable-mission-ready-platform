@@ -27,30 +27,30 @@ function createSvelteKitRouterCapabilities(input: {
 
 #### פרמטרים
 
-| שם  | הקלד                                                                                                                                                                          | תיאור |
-| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| קלט | { page: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; resolvePath?: (נתיב: מחרוזת) => מחרוזת; } |       |
+| שם | הקלד | תיאור |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| קלט | { page: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; resolvePath?: (נתיב: מחרוזת) => מחרוזת; } |             |
 
 ### MpLink
 
 **סוג:** רכיב
 
 ```typescript
-export const MpLink;
+export MpLink = 'a'
 ```
 
 SvelteKit משתמש בעוגנים רגילים לקישורים. המהדר שומר על הסמן הזה כך
-פלט Svelte יכול לבדוק הקלדה את השימוש הנייטרלי של מחברי החבילות ב-`MpLink`.
+פלט Svelte יכול לבדוק הקלדה בשימוש הנייטרלי של מחברי החבילות ב-`MpLink`.
 
 ### MpRouterView
 
 **סוג:** רכיב
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
-Outlet נמצאת בבעלות האפליקציה ב-SvelteKit; אבחון יכולת דוחה `view`.
+Outlet נמצאת בבעלות אפליקציה ב-SvelteKit; אבחון יכולת דוחה `view`.
 
 ### resolveMpLink
 
@@ -64,9 +64,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### פרמטרים
 
-| שם  | הקלד               | תיאור |
-| --- | ------------------ | ----- |
-| ל   | MpRouteLocationRaw |       |
+| שם | הקלד | תיאור |
+| ---- | ------------------ | ----------- |
+| ל | MpRouteLocationRaw |             |
 
 ### setForgeSvelteKitRouter
 
@@ -81,9 +81,9 @@ function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void;
 
 #### פרמטרים
 
-| שם   | הקלד                   | תיאור |
-| ---- | ---------------------- | ----- |
-| משטח | SvelteKitRouterSurface |       |
+| שם | הקלד | תיאור |
+| ------- | ---------------------- | ----------- |
+| משטח | SvelteKitRouterSurface |             |
 
 ### SvelteKitRouterSurface
 
@@ -110,9 +110,9 @@ function toMpLocationFromSvelte(page: {
 
 #### פרמטרים
 
-| שם   | הקלד                                                                                   | תיאור |
-| ---- | -------------------------------------------------------------------------------------- | ----- |
-| עמוד | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; פרמטרים: Record<string, string>; } |       |
+| שם | הקלד | תיאור |
+| ---- | ------------------------------------------------------------------------------------- | ----------- |
+| עמוד | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; פרמטרים: Record<string, string>; } |             |
 
 ### לSvelteHref
 
@@ -126,10 +126,10 @@ function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => st
 
 #### פרמטרים
 
-| שם          | הקלד                     | תיאור |
-| ----------- | ------------------------ | ----- |
-| ל           | MpRouteLocationRaw       |       |
-| resolvePath | (נתיב: מחרוזת) => מחרוזת |       |
+| שם | הקלד | תיאור |
+| ----------- | ------------------------ | ----------- |
+| ל | MpRouteLocationRaw |             |
+| resolvePath | (נתיב: מחרוזת) => מחרוזת |             |
 
 ### השתמש ב-MpNavigation
 
@@ -149,7 +149,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 function useMpRoute(): MpResolvedLocation | null;
 ```
 
-קריאת מסלול נתמכת דרך משטח הדף המחובר עבור ניווט/פתרון חבילות.
+קריאות מסלול נתמכות דרך משטח העמוד הכרוך לניווט/פתרון חבילות.
 
 ### השתמש ב-MpRouter
 
@@ -171,4 +171,4 @@ function useMpRouter(): MpRouterCapabilities;
 export const forgeRouterSvelte;
 ```
 
-זיוף יעד נתב עבור ממשקי API של דף/ניווט בבעלות האפליקציה של SvelteKit.
+זיוף יעד נתב עבור ה-API של דף/ניווט בבעלות האפליקציה של SvelteKit.

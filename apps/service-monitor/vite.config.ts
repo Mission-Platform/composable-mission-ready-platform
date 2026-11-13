@@ -1,9 +1,10 @@
 import { cloudflare } from '@cloudflare/vite-plugin';
+import { redwood } from 'rwsdk/vite';
+import { defineConfig } from 'vite';
+
 import { frameworkCondition } from '@mission-platform/vite-config';
 import i18nPlugin from '@mission-platform/vite-plugin-i18n';
 import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-import { redwood } from 'rwsdk/vite';
-import { defineConfig } from 'vite';
 
 import type { Plugin } from 'vite';
 

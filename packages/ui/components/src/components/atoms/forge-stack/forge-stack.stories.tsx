@@ -1,8 +1,7 @@
 import { ForgeStack } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import styles from './forge-stack.module.scss';
-
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * `ForgeStack` is the write-once `ForgeStack` component of `@mission-platform/components` —

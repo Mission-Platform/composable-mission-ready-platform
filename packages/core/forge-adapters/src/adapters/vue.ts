@@ -8,6 +8,20 @@
  * component merges incoming attrs and its default slot into the neutral props.
  */
 import {
+  defineComponent,
+  Fragment as VueFragment,
+  type FunctionalComponent,
+  h as createVueElement,
+  inject,
+  type InjectionKey,
+  isVNode,
+  Suspense as VueSuspense,
+  provide,
+  type VNode,
+  type VNodeChild,
+} from 'vue';
+
+import {
   collectSlottedChildren,
   Dynamic as DynamicMarker,
   Fragment,
@@ -33,19 +47,6 @@ import {
   type MpSlotProperties,
   type MpSuspenseProperties,
 } from '@mission-platform/forge-jsx/runtime';
-import {
-  defineComponent,
-  Fragment as VueFragment,
-  type FunctionalComponent,
-  h as createVueElement,
-  inject,
-  type InjectionKey,
-  isVNode,
-  Suspense as VueSuspense,
-  provide,
-  type VNode,
-  type VNodeChild,
-} from 'vue';
 
 /**
  * Map the neutral props onto Vue's `h` props. The neutral `className={…}`
@@ -241,7 +242,7 @@ export function toVueComponent<P extends MpPropertyBag>(
       // component returning `null` renders nothing, so it is forwarded verbatim
       // rather than fed into `renderToVue` (which expects a real element).
       const rendered = component(merged as P) as MpElement | null;
-      // eslint-disable-next-line unicorn/no-null
+
       return rendered === null ? null : renderToVue(rendered);
     } finally {
       popSlotScope();

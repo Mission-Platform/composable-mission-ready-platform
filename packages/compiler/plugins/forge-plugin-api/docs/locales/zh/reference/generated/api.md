@@ -33,10 +33,10 @@ function applySourceEdits(source: string, edits: readonly SourceEdit[]): string;
 
 #### 参数
 
-| 名称 | 类型              | 描述 |
-| ---- | ----------------- | ---- |
-| 来源 | 字符串            |      |
-| 编辑 | 只读 SourceEdit[] |      |
+|名称 |类型 |描述 |
+| ------ | --------------------- | ----------- |
+|来源 |字符串|             |
+|编辑|只读 SourceEdit[] |             |
 
 ### CLASS_NAME_ATTRIBUTE
 
@@ -60,9 +60,9 @@ function eventNameForProperty(propertyName: string): string;
 
 #### 参数
 
-| 名称     | 类型   | 描述 |
-| -------- | ------ | ---- |
-| 属性名称 | 字符串 |      |
+|名称 |类型 |描述 |
+| ------------ | ------ | ----------- |
+|属性名称 |字符串|             |
 
 ### 框架适配器模块
 
@@ -76,9 +76,9 @@ function frameworkAdapterModule(framework: JsxFramework): string;
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| 框架 | Jsx框架 |      |
+|名称 |类型 |描述 |
+| --------- | ------------ | ----------- |
+|框架| Jsx框架 |             |
 
 ### 指令框架
 
@@ -92,9 +92,9 @@ function frameworkForDirective(directive: string): JsxFramework | undefined;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 指令 | 字符串 |      |
+|名称 |类型 |描述 |
+| --------- | ------ | ----------- |
+|指令|字符串|             |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -148,9 +148,9 @@ function localJsxTypesModuleSource(framework: JsxFramework): string;
 
 #### 参数
 
-| 名称 | 类型    | 描述 |
-| ---- | ------- | ---- |
-| 框架 | Jsx框架 |      |
+|名称 |类型 |描述 |
+| --------- | ------------ | ----------- |
+|框架| Jsx框架 |             |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
@@ -296,9 +296,9 @@ function hoistStaticRenderNodes(module: GenericModuleAst): GenericHoistResult;
 
 #### 参数
 
-| 名称 | 类型        | 描述 |
-| ---- | ----------- | ---- |
-| 模块 | 通用模块Ast |      |
+|名称 |类型 |描述 |
+| ------ | ---------------- | ----------- |
+|模块|通用模块Ast |             |
 
 ### MP_HOIST_PREFIX
 
@@ -327,10 +327,10 @@ function applyOptimizationEdits(
 
 #### 参数
 
-| 名称 | 类型              | 描述 |
-| ---- | ----------------- | ---- |
-| 模块 | 通用模块Ast       |      |
-| 编辑 | 只读 SourceEdit[] |      |
+|名称 |类型 |描述 |
+| ------ | --------------------- | ----------- |
+|模块|通用模块Ast |             |
+|编辑|只读 SourceEdit[] |             |
 
 ### 常量布尔值
 
@@ -344,9 +344,9 @@ function constantBoolean(expression: ExpressionLike): boolean | undefined;
 
 #### 参数
 
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 表达 | 类似表达 |      |
+|名称 |类型 |描述 |
+| ---------- | -------------- | ----------- |
+|表达|类似表达 |             |
 
 ### 通用优化结果
 
@@ -370,9 +370,9 @@ function hasJsxKey(attributes: readonly GenericAttribute[]): boolean;
 
 #### 参数
 
-| 名称 | 类型                    | 描述 |
-| ---- | ----------------------- | ---- |
-| 属性 | 只读 GenericAttribute[] |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------- | ----------- |
+|属性 |只读 GenericAttribute[] |             |
 
 ### 有Mp静态标记
 
@@ -386,9 +386,9 @@ function hasMpStaticMarker(node: GenericRenderNode): boolean;
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| node | 通用渲染节点 |      |
+|名称 |类型 |描述 |
+| ---- | ----------------- | ----------- |
+| node |通用渲染节点 |             |
 
 ### isCompileTimeConstant
 
@@ -402,9 +402,9 @@ function isCompileTimeConstant(expression: ExpressionLike): boolean;
 
 #### 参数
 
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 表达 | 类似表达 |      |
+|名称 |类型 |描述 |
+| ---------- | -------------- | ----------- |
+|表达|类似表达 |             |
 
 ### MP_STATIC_ATTR
 
@@ -431,10 +431,10 @@ function optimizeGenericModule(
 
 #### 参数
 
-| 名称  | 类型        | 描述 |
-| ----- | ----------- | ---- |
-| 模块  | 通用模块Ast |      |
-| _选项 | 优化选项    |      |
+|名称 |类型 |描述 |
+| -------- | ---------------- | ----------- |
+|模块|通用模块Ast |             |
+| _选项 |优化选项 |             |
 
 ### 优化选项
 
@@ -460,9 +460,9 @@ function stripMpStaticAttributes(
 
 #### 参数
 
-| 名称 | 类型                    | 描述 |
-| ---- | ----------------------- | ---- |
-| 属性 | 只读 GenericAttribute[] |      |
+|名称 |类型 |描述 |
+| ---------- | --------------------------- | ----------- |
+|属性 |只读 GenericAttribute[] |             |
 
 ### 剥离Mp静态标记
 
@@ -476,9 +476,9 @@ function stripMpStaticMarker(node: GenericRenderNode): GenericRenderNode;
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| node | 通用渲染节点 |      |
+|名称 |类型 |描述 |
+| ---- | ----------------- | ----------- |
+| node |通用渲染节点 |             |
 
 ## `src/diagnostics`
 
@@ -539,13 +539,13 @@ function createCompilerDiagnostic(
 ): CompilerDiagnostic;
 ```
 
-创建诊断而不将阶段契约耦合到 TypeScript 节点。
+创建诊断而不将阶段合同耦合到 TypeScript 节点。
 
 #### 参数
 
-| 名称 | 类型                                                         | 描述 |
-| ---- | ------------------------------------------------------------ | ---- |
-| 诊断 | 省略<CompilerDiagnostic, "fileName"> & { fileName?: string } |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------------------------------------------------ | ----------- |
+|诊断|省略<CompilerDiagnostic, "fileName"> & { fileName?: string } |             |
 
 ### 格式编译器诊断
 
@@ -555,13 +555,13 @@ function createCompilerDiagnostic(
 function formatCompilerDiagnostic(diagnostic: CompilerDiagnostic): string;
 ```
 
-设置编译器错误诊断的格式，而不会丢失其源位置。
+对编译器错误的诊断进行格式化，而不会丢失其源位置。
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 诊断 | 编译器诊断 |      |
+|名称 |类型 |描述 |
+| ---------- | ------------------ | ----------- |
+|诊断|编译器诊断 |             |
 
 ### 抛出编译器错误
 
@@ -577,9 +577,9 @@ function throwOnCompilerErrors(
 
 #### 参数
 
-| 名称 | 类型                      | 描述 |
-| ---- | ------------------------- | ---- |
-| 诊断 | 只读编译器诊断[] \|未定义 |      |
+|名称 |类型 |描述 |
+| ----------- | ------------------------------------------ | ----------- |
+|诊断 |只读编译器诊断[] \|未定义 |             |
 
 ## `src/framework`
 
@@ -653,6 +653,16 @@ export interface GeneratedModule
 ```
 
 框架输出插件返回的源工件。
+
+### 生成样式工件
+
+**种类：**接口
+
+```typescript
+export interface GeneratedStyleArtifact
+```
+
+与生成的源模块一起发出的样式表。
 
 ### 生成器上下文
 
@@ -787,7 +797,7 @@ export interface ViteBuildContext
 **种类：**常数
 
 ```typescript
-export const defineForgeFramework;
+export const defineForgeFramework: typeof defineForgeOutputPlugin;
 ```
 
 别名强调框架包注册目标实现。
@@ -804,9 +814,9 @@ function defineForgeOutputPlugin(plugin: T): T;
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 插件 | T    |      |
+|名称 |类型 |描述 |
+| ------ | ---- | ----------- |
+|插件 | T |             |
 
 ### Forge插件ID
 
@@ -832,9 +842,9 @@ function validateForgeOutputPlugin(
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 插件 | 未知 |      |
+|名称 |类型 |描述 |
+| ------ | ------- | ----------- |
+|插件 |未知 |             |
 
 ### validateForgeOutputPluginSelection
 
@@ -850,9 +860,9 @@ function validateForgeOutputPluginSelection(
 
 #### 参数
 
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 插件 | 只读 T[] |      |
+|名称 |类型 |描述 |
+| ------- | ------------ | ----------- |
+|插件 |只读 T[] |             |
 
 ## `src/ir`
 
@@ -871,10 +881,10 @@ function attributeExpressionText(
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| node | 通用渲染节点 |      |
-| 名称 | 字符串       |      |
+|名称 |类型 |描述 |
+| ---- | ----------------- | ----------- |
+| node |通用渲染节点 |             |
+|名称 |字符串|             |
 
 ### 属性字符串值
 
@@ -891,10 +901,42 @@ function attributeStringValue(
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| node | 通用渲染节点 |      |
-| 名称 | 字符串       |      |
+|名称 |类型 |描述 |
+| ---- | ----------------- | ----------- |
+| node |通用渲染节点 |             |
+|名称 |字符串|             |
+
+### 子插槽名称
+
+**种类：**功能
+
+```typescript
+function childSlotName(
+  child: GenericRenderChild,
+  slotAttributeName = "slot",
+  defaultSlotName = "default",
+): string | undefined;
+```
+
+子项路由到的 `slot="…"` 名称，或默认槽内容的 `undefined`。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------------- | ------------------ | ----------- |
+|孩子 |通用渲染子|             |
+|插槽属性名称 |                    |             |
+|默认插槽名称 |                    |             |
+
+### 计算设置值
+
+**种类：**接口
+
+```typescript
+export interface ComputedSetupValue
+```
+
+从设置返回并可通过渲染/样式绑定寻址的命名值。
 
 ### 动态节点意图
 
@@ -961,10 +1003,10 @@ function findAttribute(
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| node | 通用渲染节点 |      |
-| 名称 | 字符串       |      |
+|名称 |类型 |描述 |
+| ---- | ----------------- | ----------- |
+| node |通用渲染节点 |             |
+|名称 |字符串|             |
 
 ### 通用AstNode
 
@@ -982,7 +1024,8 @@ export type GenericAstNode =
 **种类：**类型
 
 ```typescript
-export type GenericAttribute = GenericJsxAttribute | GenericJsxSpreadAttribute;
+export type GenericAttribute =
+  GenericJsxAttribute | GenericJsxSpreadAttribute | GenericSlotAttribute;
 ```
 
 没有提供描述。
@@ -1084,7 +1127,11 @@ export interface GenericParameter
 
 ```typescript
 export type GenericRenderChild =
-  GenericRenderNode | GenericTextNode | GenericExpressionNode;
+  | GenericRenderNode
+  | GenericTextNode
+  | GenericExpressionNode
+  | GenericConditionalNode
+  | GenericForNode;
 ```
 
 没有提供描述。
@@ -1130,6 +1177,56 @@ export type GenericStatementKind =
 
 保留的模块级语句的粗分类。
 
+### 规则的通用样式
+
+**种类：**接口
+
+```typescript
+export interface GenericStyleAtRule
+```
+
+标准化 CSS at 规则源自 Flint 风格伴侣。
+
+### 通用样式类映射节点
+
+**种类：**接口
+
+```typescript
+export interface GenericStyleClassMapNode
+```
+
+规范化 CSS 模块类映射中的一个可寻址本地类。
+
+### 通用风格伴侣
+
+**种类：**接口
+
+```typescript
+export interface GenericStyleCompanion
+```
+
+由一个 Flint 模块拥有的目标中立风格工件。
+
+### 通用样式声明
+
+**种类：**接口
+
+```typescript
+export interface GenericStyleDeclaration
+```
+
+规范化的 CSS 声明来自 Flint 风格的同伴。
+
+### 通用样式规则
+
+**种类：**接口
+
+```typescript
+export interface GenericStyleRule
+```
+
+标准化 CSS 规则由 Flint 风格伴侣携带。
+
 ### 通用标签种类
 
 **种类：**类型
@@ -1150,6 +1247,23 @@ export interface GenericTextNode
 
 JSX 标记之间的文字文本。
 
+### 是组件节点
+
+**种类：**功能
+
+```typescript
+function isComponentNode(node: GenericRenderNode): boolean;
+```
+
+node 的标记是否命名组件（大写标识符或动态/成员表达式）
+而不是固有的 HTML 元素。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ----------------- | ----------- |
+| node |通用渲染节点 |             |
+
 ### 是表达式节点
 
 **种类：**功能
@@ -1164,9 +1278,9 @@ function isExpressionNode(
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 孩子 | 通用渲染子 |      |
+|名称 |类型 |描述 |
+| ----- | ------------------ | ----------- |
+|孩子 |通用渲染子|             |
 
 ### 是渲染节点
 
@@ -1180,9 +1294,26 @@ function isRenderNode(child: GenericRenderChild): child is GenericRenderNode;
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 孩子 | 通用渲染子 |      |
+|名称 |类型 |描述 |
+| ----- | ------------------ | ----------- |
+|孩子 |通用渲染子|             |
+
+### 渲染节点标记
+
+**种类：**功能
+
+```typescript
+function isRenderNodeMarker(node: GenericRenderNode, tag: string): boolean;
+```
+
+node 是否是命名的编译时标记。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ----------------- | ----------- |
+| node |通用渲染节点 |             |
+|标签|字符串|             |
 
 ### 是文本节点
 
@@ -1196,9 +1327,9 @@ function isTextNode(child: GenericRenderChild): child is GenericTextNode;
 
 #### 参数
 
-| 名称 | 类型       | 描述 |
-| ---- | ---------- | ---- |
-| 孩子 | 通用渲染子 |      |
+|名称 |类型 |描述 |
+| ----- | ------------------ | ----------- |
+|孩子 |通用渲染子|             |
 
 ### 列出关键意图
 
@@ -1210,6 +1341,24 @@ export interface ListKeyIntention
 
 目标列表渲染器的稳定关键候选者。
 
+### 有意义的孩子
+
+**种类：**功能
+
+```typescript
+function meaningfulChildren(
+  node: GenericRenderNode,
+): readonly GenericRenderChild[];
+```
+
+存活到目标的子级（仅空白文本不包含任何内容）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ----------------- | ----------- |
+| node |通用渲染节点 |             |
+
 ### 备忘录意图
 
 **种类：**接口
@@ -1220,6 +1369,16 @@ export interface MemoIntention
 
 记忆值或派生值。
 
+### 示范合同
+
+**种类：**接口
+
+```typescript
+export interface ModelContract
+```
+
+目标中立的控制值及其类型化更新事件。
+
 ### 道具意图
 
 **种类：**接口
@@ -1229,6 +1388,16 @@ export interface PropIntention
 ```
 
 从组件签名或 props 类型推断出的中性 prop 声明。
+
+### 反应性
+
+**种类：**接口
+
+```typescript
+export interface ReactiveProperty
+```
+
+每个目标发射器共享的无功组件属性。
 
 ### 参考意图
 
@@ -1252,9 +1421,25 @@ function renderNodeTagName(node: GenericRenderNode): string | undefined;
 
 #### 参数
 
-| 名称 | 类型         | 描述 |
-| ---- | ------------ | ---- |
-| node | 通用渲染节点 |      |
+|名称 |类型 |描述 |
+| ---- | ----------------- | ----------- |
+| node |通用渲染节点 |             |
+
+### 渲染节点标签文本
+
+**种类：**功能
+
+```typescript
+function renderNodeTagText(node: GenericRenderNode): string;
+```
+
+渲染 node 的纯标记文本（计算标记打印其源表达式）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ----------------- | ----------- |
+| node |通用渲染节点 |             |
 
 ### 语义意图
 
@@ -1275,6 +1460,36 @@ export interface SemanticModule
 ```
 
 每个框架输出插件使用的类型化语义 IR。
+
+### 设置合同
+
+**种类：**接口
+
+```typescript
+export interface SetupContract
+```
+
+所有目标降低者消耗的规范设置/事件/模型合同。
+
+### 设置事件发射器
+
+**种类：**接口
+
+```typescript
+export interface SetupEventEmitter
+```
+
+在设置外部声明并与事件配置配对的事件发射器。
+
+### 设置事件处理程序
+
+**种类：**接口
+
+```typescript
+export interface SetupEventHandler
+```
+
+在设置之外声明的事件处理程序。
 
 ### 槽位意图
 
@@ -1302,11 +1517,11 @@ function sourceBacked(
 
 #### 参数
 
-| 名称 | 类型                           | 描述 |
-| ---- | ------------------------------ | ---- |
-| 文字 | 字符串                         |      |
-| 语法 | SourceBackedExpression["语法"] |      |
-| 跨度 | 来源跨度                       |      |
+|名称 |类型 |描述 |
+| ------ | -------------------------------- | ----------- |
+|文字|字符串|             |
+|语法| SourceBackedExpression["语法"] |             |
+|跨度|来源跨度 |             |
 
 ### 源支持表达式
 
@@ -1318,7 +1533,7 @@ export interface SourceBackedExpression
 
 目标在没有降低规则时可以逐字保留的表达式或声明。
 
-### 源跨度
+### SourceSpan
 
 **种类：**接口
 
@@ -1338,7 +1553,7 @@ export interface StateIntention
 
 状态单元及其关联的 setter，独立于目标反应原语。
 
-### 行走渲染节点
+### walkRenderNodes
 
 **种类：**功能
 
@@ -1353,10 +1568,465 @@ function walkRenderNodes(
 
 #### 参数
 
-| 名称 | 类型                              | 描述                      |
-| ---- | --------------------------------- | ------------------------- |
-| 节点 | 只读 GenericRenderNode[]          |                           |
-| 访问 | (node: GenericRenderNode) => void | (node: GenericRenderNode) |
+|名称 |类型 |描述 |
+| ----- | --------------------------------- | ----------- |
+|节点 |只读 GenericRenderNode[] |             |
+|访问 | (node: GenericRenderNode) => void | (node: GenericRenderNode)             |
+
+### 没有Slot属性
+
+**种类：**功能
+
+```typescript
+function withoutSlotAttribute(
+  node: GenericRenderNode,
+  slotAttributeName = "slot",
+): GenericRenderNode;
+```
+
+node 的副本，不带 `slot="…"` 路由标记。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------------- | ----------------- | ----------- |
+| node |通用渲染节点 |             |
+|插槽属性名称 |                   |             |
+
+## `src/lowering/dynamic`
+
+### 低动态节点
+
+**种类：**功能
+
+```typescript
+function lowerDynamicNodes(
+  module: SemanticModule,
+): readonly NormalizedDynamicPlan[];
+```
+
+降低动态 node 意图并渲染树 `<Dynamic>` 标签。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | -------------- | ----------- |
+|模块|语义模块 |             |
+
+### 下列表键
+
+**种类：**功能
+
+```typescript
+function lowerListKeys(
+  module: SemanticModule,
+): readonly NormalizedListKeyPlan[];
+```
+
+下面列出了 `SemanticModule` 中的关键候选者。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | -------------- | ----------- |
+|模块|语义模块 |             |
+
+### 下层静态子树
+
+**种类：**功能
+
+```typescript
+function lowerStaticSubtrees(
+  module: SemanticModule,
+): readonly NormalizedStaticSubtreePlan[];
+```
+
+降低标有 `mp-static` 的静态候选子树。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | -------------- | ----------- |
+|模块|语义模块 |             |
+
+### 标准化动态计划
+
+**种类：**接口
+
+```typescript
+export interface NormalizedDynamicPlan
+```
+
+动态 node `<Dynamic is={...}>` 的规范化描述符。
+
+### 规范化列表密钥计划
+
+**种类：**接口
+
+```typescript
+export interface NormalizedListKeyPlan
+```
+
+列表键绑定的标准化描述符。
+
+### 标准化静态子树计划
+
+**种类：**接口
+
+```typescript
+export interface NormalizedStaticSubtreePlan
+```
+
+提升静态子树的标准化描述符。
+
+## `src/lowering/events`
+
+### 规范事件名称
+
+**种类：**功能
+
+```typescript
+function canonicalEventName(propName: string): string;
+```
+
+从 `onXxx` 属性名称中提取规范事件名称（例如 `onClick` -> `click`、`onKeyDown` -> `keydown`）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|道具名称 |字符串|             |
+
+### 格式化目标事件名称
+
+**种类：**功能
+
+```typescript
+function formatTargetEventName(
+  eventName: string,
+  target: "react" | "solid" | "vue" | "svelte" | "web-components",
+): string;
+```
+
+根据目标框架的约定格式化事件名称。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | ----------------------------------------------------------- | ----------- |
+|活动名称 |字符串|             |
+|目标| “react”\| “solid”\| “vue”\| “svelte”\| “网络组件”|             |
+
+### isEventHandlerProp
+
+**种类：**功能
+
+```typescript
+function isEventHandlerProp(propName: string): boolean;
+```
+
+确定属性名称是否表示事件处理程序属性（例如 `onClick`、`onKeyDown`）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|道具名称 |字符串|             |
+
+### 较低的事件意图
+
+**种类：**功能
+
+```typescript
+function lowerEventIntentions(
+  module: SemanticModule,
+): readonly NormalizedEventPlan[];
+```
+
+从 `SemanticModule` 中提取所有事件处理程序意图。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | -------------- | ----------- |
+|模块|语义模块 |             |
+
+### 规范化事件计划
+
+**种类：**接口
+
+```typescript
+export interface NormalizedEventPlan
+```
+
+降低组件事件处理程序的标准化描述符。
+
+## `src/lowering/pipeline`
+
+### 基础降低模块
+
+**种类：**接口
+
+```typescript
+export interface BaseLoweredModule extends TargetLoweredModule
+```
+
+框架插件可以嵌入或构建的标准基线降低计划。
+
+### 创建BaseLoweredModule
+
+**种类：**功能
+
+```typescript
+function createBaseLoweredModule(
+  module: SemanticModule,
+  framework: TargetFrameworkId,
+): BaseLoweredModule;
+```
+
+创建一个执行共享道具标准化、插槽合成的基础降低模块，
+事件降低、动态 node 提取和列表键规范化。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| --------- | ----------------- | ----------------------------------- |
+|模块| SemanticModule    | - 来自前端 IR 的语义模块。 |
+|框架| TargetFrameworkId | - 目标框架ID。          |
+
+#### 合同
+
+- **@param:** - 来自前端 IR 的语义模块。
+- **@param:** - 目标框架 ID。
+- **@returns:** 标准底座降低模块。
+
+### 验证降低不变量
+
+**种类：**功能
+
+```typescript
+function validateLoweredInvariants(lowered: TargetLoweredModule): void;
+```
+
+验证降低的模块符合所需的结构不变量。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------------------- | ------------------------------ |
+|降低|目标降低模块 | - The lowered module to check. |
+
+#### 合同
+
+- **@param:** - 要检查的降低的模块。
+- **@throws:** 如果违反不变契约。
+
+## `src/lowering/props`
+
+### 规范化PropsContract
+
+**种类：**功能
+
+```typescript
+function canonicalizePropsContract(
+  module: SemanticModule,
+  defaultParameterName = "props",
+): NormalizedPropsContract;
+```
+
+规范化来自 `SemanticModule` 的 props 合约。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------------------- | -------------- | ----------------------------------------------------------------------------- |
+| module               |语义模块 | - 要检查的语义模块。                                             |
+| defaultParameterName |                | - The fallback props parameter name when none is declared (default: 'props'). |
+
+#### 合同
+
+- **@param:** - 要检查的语义模块。
+- **@param:** - 未声明时的后备 props 参数名称（默认值：'props'）。
+- **@returns:** 规范道具合约。
+
+### 归一化属性
+
+**种类：**接口
+
+```typescript
+export interface NormalizedProp
+```
+
+标准化的、与目标无关的道具描述。
+
+### 规范化道具合约
+
+**种类：**接口
+
+```typescript
+export interface NormalizedPropsContract
+```
+
+组件的标准化 props 契约。
+
+### 解析属性类型文本
+
+**种类：**功能
+
+```typescript
+function resolvePropTypeText(prop: PropIntention): string;
+```
+
+解析 prop 意图的类型字符串。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------------- | ----------- |
+|支柱|道具意图 |             |
+
+### UNKNOWN_PROP_TYPE
+
+**种类：**常数
+
+```typescript
+export const UNKNOWN_PROP_TYPE;
+```
+
+当不存在声明或推断类型时的后备类型字符串。
+
+## `src/lowering/setup`
+
+### 空_设置_合同
+
+**种类：**常数
+
+```typescript
+export const EMPTY_SETUP_CONTRACT: SetupContract;
+```
+
+由无遗留可组合模块使用的空安装合约，无需安装。
+
+### 规范化设置合约
+
+**种类：**功能
+
+```typescript
+function normalizeSetupContract(module: SemanticModule): SetupContract;
+```
+
+获取前端附加的规范设置合同。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | -------------- | ----------- |
+|模块|语义模块 |             |
+
+### 验证安装合同
+
+**种类：**功能
+
+```typescript
+function validateSetupContract(
+  contract: SetupContract,
+  fileName = "<unknown>",
+): readonly CompilerDiagnostic[];
+```
+
+在目标降低之前验证设置依赖项、名称和模型有效负载兼容性。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------------- | ----------- |
+|合同|设置合同|             |
+|文件名 |               |             |
+
+## `src/lowering/slots`
+
+### DEFAULT_SLOT_NAME
+
+**种类：**常数
+
+```typescript
+export const DEFAULT_SLOT_NAME;
+```
+
+所有支持的目标框架的默认插槽名称。
+
+### isDefaultSlotName
+
+**种类：**功能
+
+```typescript
+function isDefaultSlotName(name: string): boolean;
+```
+
+确定插槽名称是否为默认插槽。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|名称 |字符串|             |
+
+### isSlot渲染节点
+
+**种类：**功能
+
+```typescript
+function isSlotRenderNode(node: GenericRenderNode): boolean;
+```
+
+确定渲染 node 是否表示槽占位符标记（`<Slot>` 或 `<slot>`）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ----------------- | ----------- |
+| node |通用渲染节点 |             |
+
+### 标准化时隙计划
+
+**种类：**接口
+
+```typescript
+export interface NormalizedSlotPlan
+```
+
+组件槽的标准化描述符。
+
+### 标准化槽合约
+
+**种类：**接口
+
+```typescript
+export interface NormalizedSlotsContract
+```
+
+为组件合成的所有插槽的标准化集合。
+
+### 综合SlotPlans
+
+**种类：**功能
+
+```typescript
+function synthesizeSlotPlans(module: SemanticModule): NormalizedSlotsContract;
+```
+
+为 `SemanticModule` 合成统一的插槽合约。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | -------------- | --------------------------------- |
+|模块|语义模块 | - 要分析的语义模块。 |
+
+#### 合同
+
+- **@param:** - 要分析的语义模块。
+- **@returns:** 标准化的时段计划合同。
 
 ## `src/schema`
 
@@ -1377,10 +2047,10 @@ function assertTargetIntentionsLowered(
 
 #### 参数
 
-| 名称     | 类型    | 描述 |
-| -------- | ------- | ---- |
-| 意向     | 未知    |      |
-| 预期框架 | 框架 ID |      |
+|名称 |类型 |描述 |
+| ----------------- | ----------- | ----------- |
+| intentions        |未知 |             |
+| expectedFramework | FrameworkId |             |
 
 ### 声明式模式
 
@@ -1404,9 +2074,9 @@ function findActionableSpan(value: unknown): SourceSpan | undefined;
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 价值 | 未知 |      |
+|名称 |类型 |描述 |
+| ----- | ------- | ----------- |
+|价值|未知 |             |
 
 ### 模式字段规则
 
@@ -1418,7 +2088,7 @@ export interface SchemaFieldRule
 
 应用于架构属性的声明性规则。
 
-### 模式字段类型
+### 架构字段类型
 
 **种类：**类型
 
@@ -1429,7 +2099,7 @@ export type SchemaFieldType =
 
 声明性架构验证支持的字段类型。
 
-### 模式验证问题
+### 架构验证问题
 
 **种类：**接口
 
@@ -1509,7 +2179,7 @@ export const targetLoweredModuleSchema: DeclarativeSchema;
 
 验证降低的目标计划的结构的模式。
 
-### 针对模式进行验证
+### 根据模式验证
 
 **种类：**功能
 
@@ -1525,11 +2195,11 @@ function validateAgainstSchema(
 
 #### 参数
 
-| 名称 | 类型         | 描述                         |
-| ---- | ------------ | ---------------------------- |
-| 目标 | 未知         | - 要验证的目标对象或记录。   |
-| 架构 | 声明式架构   | - 定义结构规则的声明性模式。 |
-| 选项 | 架构验证选项 | - 验证配置选项。             |
+|名称 |类型 |描述 |
+| ------- | ----------------------- | ----------------------------------------------- |
+|目标|未知 | - 要验证的目标对象或记录。          |
+|架构|声明式架构 | - 定义结构规则的声明性模式。 |
+|选项 |架构验证选项 | - 验证配置选项。             |
 
 #### 合同
 
@@ -1554,7 +2224,552 @@ function validateTargetIntentions(
 
 #### 参数
 
-| 名称     | 类型    | 描述 |
-| -------- | ------- | ---- |
-| 意向     | 未知    |      |
-| 预期框架 | 框架 ID |      |
+|名称 |类型 |描述 |
+| ----------------- | ----------- | ----------- |
+|意向 |未知 |             |
+|预期框架 |框架 ID |             |
+
+## `src/testing`
+
+### 布尔属性
+
+**种类：**功能
+
+```typescript
+function booleanAttribute(name: string): GenericJsxAttribute;
+```
+
+无值布尔简写属性 (`disabled`)。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|名称 |字符串|             |
+
+### 成分
+
+**种类：**功能
+
+```typescript
+function component(parts: {
+  name: string;
+  parameter?: string;
+  parameterType?: string;
+  exported?: boolean;
+  body?: readonly GenericStatement[];
+  returnNode?: GenericRenderNode;
+  returnExpression?: string;
+  returned?: { expression: string; nodes?: readonly GenericRenderNode[] };
+}): GenericComponent;
+```
+
+构建模块命名的组件记录。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|零件 | { 名称：字符串；参数？：字符串；参数类型？：字符串；导出？：布尔值； body?: 只读 GenericStatement[]; returnNode？：GenericRenderNode；返回表达式？：字符串；返回？：{ 表达式：字符串；节点？：只读 GenericRenderNode[] }; } |             |
+
+### 动态元素
+
+**种类：**功能
+
+```typescript
+function dynamicElement(
+  expression: string,
+  parts: {
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+  } = {},
+): GenericRenderNode;
+```
+
+构建计算标签渲染 node。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | -------------------------------------------------------------------------------------------------------- | ----------- |
+|表达|字符串|             |
+|零件 | { 属性？：只读 GenericAttribute[];孩子？：只读 GenericRenderChild[]；来源？：字符串； } |             |
+
+### 动态节点
+
+**种类：**功能
+
+```typescript
+function dynamicNode(
+  expression: string,
+  span: SourceSpan = EMPTY_SPAN,
+): DynamicNodeIntention;
+```
+
+构建动态-node 意图。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ---------- | ----------- |
+|表达|字符串|             |
+|跨度|来源跨度 |             |
+
+### 影响
+
+**种类：**功能
+
+```typescript
+function effect(
+  body: string,
+  second?:
+    | readonly string[]
+    | string
+    | { cleanup?: string; dependencies?: readonly string[] },
+  third?: string | readonly string[],
+): EffectIntention;
+```
+
+建立效果意图。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---------------------------------------------------------------------------------------- | ----------- |
+|身体|字符串|             |
+|第二 | \|只读字符串[] \|字符串\| { 清理？： 字符串；依赖项？：只读字符串[] } |             |
+|第三|字符串\|只读字符串[] |             |
+
+### 元素
+
+**种类：**功能
+
+```typescript
+function element(
+  tag: string,
+  parts: {
+    tagKind?: GenericTagKind;
+    selfClosing?: boolean;
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+    span?: SourceSpan;
+  } = {},
+): GenericRenderNode;
+```
+
+构建渲染 node； `source` 是 node 自己的文本，在拼接嵌套标记时使用。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|标签|字符串|             |
+|零件 | { tagKind？： GenericTagKind; selfClosing？：布尔值；属性？：只读 GenericAttribute[]；孩子？：只读 GenericRenderChild[]；来源？：字符串；跨度？：来源跨度； } |             |
+
+### 元素引用
+
+**种类：**常数
+
+```typescript
+export const elementRef: typeof reference;
+```
+
+`reference` 的别名（在 Web 组件规范中使用）。
+
+### 事件
+
+**种类：**功能
+
+```typescript
+function event(name: string, handler: string): EventIntention;
+```
+
+建立活动意图。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|名称 |字符串|             |
+|处理程序 |字符串|             |
+
+### 表达式属性
+
+**种类：**功能
+
+```typescript
+function expressionAttribute(
+  name: string,
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericJsxAttribute;
+```
+
+`name={expression}` 属性，可选地携带嵌套标记。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---------------------------- | ----------- |
+|名称 |字符串|             |
+|文字|字符串|             |
+|嵌套 |只读 GenericRenderNode[] |             |
+
+### 表达儿童
+
+**种类：**功能
+
+```typescript
+function expressionChild(
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericExpressionNode;
+```
+
+子位置的 `{ … }` 插值，可以选择携带嵌套标记。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---------------------------- | ----------- |
+|文字|字符串|             |
+|嵌套 |只读 GenericRenderNode[] |             |
+
+### 夹具意图
+
+**种类：**类型
+
+```typescript
+export type FixtureIntentions = SemanticModuleParts;
+```
+
+`SemanticModuleParts` 与旧版 Vue 规范兼容的别名。
+
+### 分段
+
+**种类：**功能
+
+```typescript
+function fragment(
+  children: readonly GenericRenderChild[] = [],
+  source = "<Fragment />",
+): GenericRenderNode;
+```
+
+构建片段渲染 node（`<>…</>` 或 `<Fragment>…</Fragment>`）。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ----------------------------- | ----------- |
+|儿童 |只读 GenericRenderChild[] |             |
+|来源 |                               |             |
+
+### 列表键
+
+**种类：**功能
+
+```typescript
+function listKey(
+  source: string,
+  second?: boolean | string | { key?: string; stable?: boolean },
+  third?: boolean | string,
+): ListKeyIntention;
+```
+
+建立一个清单关键意图。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ------------------------------------------------------- | ----------- |
+|来源 |字符串|             |
+|第二 |布尔值\|字符串\| { 键？： 字符串；稳定？：布尔值 } |             |
+|第三|布尔值\|字符串|             |
+
+### 备忘录
+
+**种类：**功能
+
+```typescript
+function memo(
+  name: string,
+  factory: string,
+  dependencies?: readonly string[],
+): MemoIntention;
+```
+
+建立备忘录意图。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------ | ----------------- | ----------- |
+|名称 |字符串|             |
+|工厂|字符串|             |
+|依赖关系 |只读字符串[] |             |
+
+### 模块导入
+
+**种类：**功能
+
+```typescript
+function moduleImport(
+  text: string,
+  source: string,
+  parts: Partial<Omit<GenericImport, "kind" | "text" | "source" | "span">> = {},
+): GenericImport;
+```
+
+从源文本和已解析的说明符构建导入记录。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | -------------------------------------------------------------------- | ----------- |
+|文字|字符串|             |
+|来源 |字符串|             |
+|零件 |部分<Omit<GenericImport, "kind" \| "text" \| "source" \| "span">> |             |
+
+### 中性进口
+
+**种类：**功能
+
+```typescript
+function neutralImport(
+  valueNames: readonly string[],
+  typeNames: readonly string[] = [],
+): GenericImport;
+```
+
+中性的 `@mission-platform/forge-jsx` 导入，从其名称中拼写出来。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | ----------------- | ----------- |
+|值名称 |只读字符串[] |             |
+|类型名称 |只读字符串[] |             |
+
+### 支柱
+
+**种类：**功能
+
+```typescript
+function prop(
+  name: string,
+  second?:
+    string | { type?: string; optional?: boolean; defaultValue?: string },
+  third?: boolean | { optional?: boolean; defaultValue?: string },
+  fourth?: string,
+): PropIntention;
+```
+
+建立一个道具意图。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---------------------------------------------------------------------- | ----------- |
+|名称 |字符串|             |
+|第二 |字符串\| { 类型？： 字符串；可选？：布尔值；默认值？：字符串} |             |
+|第三|布尔值\| { 可选？：布尔值；默认值？：字符串} |             |
+|第四|字符串|             |
+
+### 参考
+
+**种类：**功能
+
+```typescript
+function reference(
+  name: string,
+  elementType?: string,
+  initializer?: string,
+): RefIntention;
+```
+
+建立参考意图。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ------ | ----------- |
+|名称 |字符串|             |
+|元素类型 |字符串|             |
+|初始化程序|字符串|             |
+
+### 返回语句
+
+**种类：**功能
+
+```typescript
+function returnStatement(
+  expression: string,
+  renderNodes: readonly GenericRenderNode[] = [],
+): GenericStatement;
+```
+
+构建组件主体的 `return …;` 语句。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----------- | ---------------------------- | ----------- |
+|表达|字符串|             |
+|渲染节点 |只读 GenericRenderNode[] |             |
+
+### 语义模块
+
+**种类：**功能
+
+```typescript
+function semanticModule(parts: SemanticModuleParts): SemanticModule;
+```
+
+从固定部件组装 `SemanticModule`。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------------------- | ----------- |
+|零件 |语义模块部分 |             |
+
+### 语义模块部分
+
+**种类：**接口
+
+```typescript
+export interface SemanticModuleParts
+```
+
+测试装置可能声明的意图事实。
+
+### 投币口
+
+**种类：**功能
+
+```typescript
+function slot(name: string, fallback?: string): SlotIntention;
+```
+
+建立老虎机意图。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ------ | ----------- |
+|名称 |字符串|             |
+|后备|字符串|             |
+
+### 扩展属性
+
+**种类：**功能
+
+```typescript
+function spreadAttribute(
+  text: string,
+  span: SourceSpan = EMPTY_SPAN,
+): GenericJsxSpreadAttribute;
+```
+
+`{...expression}` 传播属性。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ---------- | ----------- |
+|文字|字符串|             |
+|跨度|来源跨度 |             |
+
+### 状态
+
+**种类：**功能
+
+```typescript
+function state(
+  name: string,
+  setterName?: string,
+  parts: { type?: string; inferredType?: string; initializer?: string } = {},
+): StateIntention;
+```
+
+树立国家意图。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---------- | -------------------------------------------------------------- | ----------- |
+|名称 |字符串|             |
+|设置器名称 |字符串|             |
+|零件 | { 类型？： 字符串；推断类型？：字符串；初始化器？：字符串 } |             |
+
+### 陈述
+
+**种类：**功能
+
+```typescript
+function statement(
+  text: string,
+  statementKind: GenericStatementKind = "variable",
+  parts: {
+    name?: string;
+    exported?: boolean;
+    renderNodes?: readonly GenericRenderNode[];
+  } = {},
+): GenericStatement;
+```
+
+从源文本构建语句记录。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------------- | ---------------------------------------------------------------------------------- | ----------- |
+|文字|字符串|             |
+|声明种类 |通用声明类型 |             |
+|零件 | { 名称？： 字符串；导出？：布尔值； renderNodes？：只读 GenericRenderNode[]； } |             |
+
+### 字符串属性
+
+**种类：**功能
+
+```typescript
+function stringAttribute(name: string, value: string): GenericJsxAttribute;
+```
+
+`name="value"` 属性。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------ | ----------- |
+|名称 |字符串|             |
+|价值|字符串|             |
+
+### 模板引用
+
+**种类：**常数
+
+```typescript
+export const templateRef: typeof reference;
+```
+
+`reference` 的别名（用于 Vue 规范）。
+
+### 文本子项
+
+**种类：**功能
+
+```typescript
+function textChild(text: string): GenericTextNode;
+```
+
+标签之间的文字文本。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|文字|字符串|             |

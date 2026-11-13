@@ -32,7 +32,7 @@ Convertissez les options pratiques en un document vCard complet et inscriptible.
 **Genre :** constante
 
 ```typescript
-export const parseVCard;
+export const parseVCard: typeof readVCard;
 ```
 
 Alias ​​pour les appelants qui préfèrent la terminologie de l'analyseur.
@@ -616,7 +616,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const parseICalendar;
+export const parseICalendar: typeof readICalendar;
 ```
 
 Aucune description fournie.
@@ -642,7 +642,7 @@ Analysez un flux iCalendar RFC 5545, en préservant chaque composant et proprié
 **Genre :** constante
 
 ```typescript
-export const serializeICalendar;
+export const serializeICalendar: typeof writeICalendar;
 ```
 
 Aucune description fournie.

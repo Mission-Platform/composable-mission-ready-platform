@@ -12,6 +12,7 @@ import {
   type ContentComponent,
   type ContentField,
 } from "@mission-platform/forge-cms-plugin-api";
+import type { OxcParsedModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
 
 import type {
   AnalyzedField,
@@ -22,7 +23,6 @@ import type {
   StoryblokProjectionOptions,
   StoryblokSchemaField,
 } from "./types.js";
-import type { OxcParsedModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
 
 /** The Storyblok field type a neutral content kind maps onto. */
 export function contentKindToStoryblokFieldType(
@@ -240,7 +240,7 @@ export function toStoryblokComponent(
 
   const technicalName = component.names.technicalName;
   const metadata = resolveStoryblokMetadata(component, options);
-  /* eslint-disable unicorn/no-null -- null is required by Storyblok's component object schema. */
+
   const componentObject: StoryblokComponent = {
     name: technicalName,
     display_name: component.names.displayName,
@@ -254,7 +254,6 @@ export function toStoryblokComponent(
     preview_tmpl: null,
     component_group_uuid: null,
   };
-  /* eslint-enable unicorn/no-null */
 
   return { component: componentObject, fields };
 }

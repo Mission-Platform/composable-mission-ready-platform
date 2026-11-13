@@ -1,10 +1,11 @@
-import { useD3 } from '@mission-platform/d3';
 import { arc as d3Arc, pie as d3Pie, type PieArcDatum } from 'd3';
+
+import { useD3 } from '@mission-platform/d3';
+import type { MpElement } from '@mission-platform/forge-jsx';
 
 import styles from './forge-performance-pie-chart.module.scss';
 
 import type { FlintPerformanceMetrics } from '../../../renderer/render-worker';
-import type { MpElement } from '@mission-platform/forge-jsx';
 
 export interface PerformanceSliceData {
   readonly label: string;
@@ -58,7 +59,7 @@ export function ForgePerformancePieChart(properties: Readonly<ForgePerformancePi
 
       const pieGenerator = d3Pie<PerformanceSliceData>()
         .value((d) => d.value)
-        // eslint-disable-next-line unicorn/no-array-sort -- D3 layout generator uses fluent sort method
+
         .sort((_a, _b) => 0)
         .padAngle(0.03);
 
@@ -130,7 +131,7 @@ export function ForgePerformancePieChart(properties: Readonly<ForgePerformancePi
         </div>
         <div className={styles.summaryCard}>
           <span className={styles.summaryLabel}>Render Time</span>
-          <span className={styles.summaryValue}>{metrics.renderTimeMs.toFixed(2)} ms</span>
+          <span className={styles.summaryValue}>{(metrics.renderTimeMs ?? 0).toFixed(2)} ms</span>
         </div>
         <div className={styles.summaryCard}>
           <span className={styles.summaryLabel}>Pixel Ratio (DPR)</span>

@@ -43,7 +43,7 @@ Associa la proiezione Jekyll (Liquid) a un plug-in di output del framework di pr
 
 #### Parametri
 
-| Nome    | Digitare              | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | --------------------- | ----------- |
 | opzioni | ForgeJekyllCmsOptions |             |
 
@@ -78,10 +78,10 @@ la pagina di documentazione generata dovrebbe elencarli.
 
 #### Parametri
 
-| Nome            | Digitare                        | Descrizione |
-| --------------- | ------------------------------- | ----------- |
-| componenti      | sola lettura ContentComponent[] |             |
-| spazio dei nomi | stringa                         |             |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------- | ----------- |
+| componenti | sola lettura ContentComponent[] |             |
+| spazio dei nomi | stringa |             |
 
 ### emitJekyllConfig
 
@@ -105,10 +105,10 @@ filtri e altrimenti vedrebbero valori vuoti.
 
 #### Parametri
 
-| Nome            | Digitare                        | Descrizione |
-| --------------- | ------------------------------- | ----------- |
-| componenti      | sola lettura ContentComponent[] |             |
-| spazio dei nomi | stringa                         |             |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------- | ----------- |
+| componenti | sola lettura ContentComponent[] |             |
+| spazio dei nomi | stringa |             |
 
 ### campoToJekyllType
 
@@ -122,8 +122,8 @@ Il tipo di dati Jekyll con cui viene pubblicato un campo neutro.
 
 #### Parametri
 
-| Nome  | Digitare        | Descrizione |
-| ----- | --------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ------------ | ----------- |
 | campo | Campo contenuto |             |
 
 ### JekyllFieldType
@@ -148,8 +148,8 @@ Uno scalare YAML per un valore predefinito neutro.
 
 #### Parametri
 
-| Nome   | Digitare              | Descrizione |
-| ------ | --------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ------------------- | ----------- |
 | valore | ContenutoDefaultValue |             |
 
 ## `src/template`
@@ -179,10 +179,10 @@ Emettere il liquido incluso per un componente.
 
 #### Parametri
 
-| Nome            | Digitare                | Descrizione |
-| --------------- | ----------------------- | ----------- |
-| componente      | Componente di contenuto |             |
-| spazio dei nomi | stringa                 |             |
+| Nome | Digitare | Descrizione |
+| --------- | ---------------- | ----------- |
+| componente | Componente di contenuto |             |
+| spazio dei nomi | stringa |             |
 
 ### includeNomeFile
 
@@ -199,10 +199,10 @@ Il nome del file artefatto di un componente include.
 
 #### Parametri
 
-| Nome            | Digitare                | Descrizione |
-| --------------- | ----------------------- | ----------- |
-| componente      | Componente di contenuto |             |
-| spazio dei nomi | stringa                 |             |
+| Nome | Digitare | Descrizione |
+| --------- | ---------------- | ----------- |
+| componente | Componente di contenuto |             |
+| spazio dei nomi | stringa |             |
 
 ### includePath
 
@@ -219,10 +219,10 @@ Il percorso di inclusione da cui viene indirizzato un componente, relativo a `_i
 
 #### Parametri
 
-| Nome            | Digitare                | Descrizione |
-| --------------- | ----------------------- | ----------- |
-| componente      | Componente di contenuto |             |
-| spazio dei nomi | stringa                 |             |
+| Nome | Digitare | Descrizione |
+| --------- | ---------------- | ----------- |
+| componente | Componente di contenuto |             |
+| spazio dei nomi | stringa |             |
 
 ### jekyllDiagnostics
 
@@ -241,13 +241,13 @@ Il liquido può trasportare ogni tipo di campo neutro: tutto ciò che raggiunge 
 una stringa alla fine, quindi non c'è nulla di cui avvisare tranne un'ambiguità
 Liquid stesso non può risolversi: `include` è uno spazio dei nomi semplice, quindi un nome
 lo slot che condivide un nome con un'oggetto non-slot avrebbe il valore vincolato dell'oggetto
-reso dove era previsto il markup.
+reso dove era previsto il suo markup.
 
 #### Parametri
 
-| Nome       | Digitare                | Descrizione |
-| ---------- | ----------------------- | ----------- |
-| io         | Modulo Semantico        |             |
+| Nome | Digitare | Descrizione |
+| --------- | ---------------- | ----------- |
+| io | Modulo Semantico |             |
 | componente | Componente di contenuto |             |
 
 ### liquidoLetteral
@@ -266,6 +266,6 @@ piuttosto che forzare il valore predefinito su una stringa.
 
 #### Parametri
 
-| Nome   | Digitare              | Descrizione |
-| ------ | --------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ------------------- | ----------- |
 | valore | ContenutoDefaultValue |             |

@@ -16,14 +16,14 @@ import '@mission-platform/theme';
 // Register the web-components layout module and retain its CSS sidecar in the
 // production bundle.
 import '@mission-platform/layouts';
+import type { MpRouteChangeEvent, MpRouterAdapter } from '@mission-platform/router';
+
 import forgeNavbarCssUrl from '../../../packages/ui/components/dist/web-components/components/organisms/forge-navbar/forge-navbar.css?url';
 import forgeApplicationLayoutCssUrl from '../../../packages/ui/layout/dist/web-components/components/templates/forge-application-layout/forge-application-layout.css?url';
 import forgeSelectCssUrl from '../../../packages/ui/select/dist/web-components/components/molecules/forge-select/forge-select.css?url';
 
 import { updateRouteMetadata } from './app/metadata';
 import { createDocsRouter } from './app/router';
-
-import type { MpRouteChangeEvent, MpRouterAdapter } from '@mission-platform/router';
 
 import './app/app-shell';
 

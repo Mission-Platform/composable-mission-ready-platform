@@ -45,8 +45,8 @@ Mission Platform is built on a modern, high-performance stack:
 
 - **Forge JSX (`@mission-platform/forge-jsx`)**: The primary UI framework — a framework-neutral JSX runtime in which all
   shared components (everything except the apps) are authored.
-- **Vue 3**: The framework the applications in `apps/` are built with, and one of several native render targets for
-  Forge components.
+- **Vue 3**: Used by several applications and one of several native render targets for Forge components. The
+  `service-monitor` application uses RedwoodSDK/React instead.
 - **TypeScript**: The standard for all source code.
 - **Vite**: The build tool powering fast HMR and optimised production bundles.
 - **pnpm Workspaces**: Efficient dependency management with shared lockfiles.

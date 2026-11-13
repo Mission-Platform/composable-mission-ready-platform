@@ -147,7 +147,7 @@ React 어댑터는 React 라우터와의 통합을 제공합니다.
 ### RedwoodSDK 어댑터(`./redwood`)
 
 RedwoodSDK는 `mp:*` 프레임워크 중 하나가 아니므로 전용 하위 경로를 유지합니다. 이는 다음과의 통합을 제공합니다.
-`rwsdk/router` — RedwoodSDK에서 사용하는 단순 요청/응답 경로 테이블(Cloudflare Workers의 React)
+`rwsdk/router` — RedwoodSDK에서 사용하는 평면형 요청/응답 경로 테이블(Cloudflare Workers의 React)
 
 **주요 수출품:**
 
@@ -390,7 +390,7 @@ const routes = defineRoutes([
 
 ### Vue 라우터에서 직접
 
-vue-라우터에서 @mission-platform/router으로 마이그레이션하는 경우:
+vue-라우터에서 @mission-platform/router로 마이그레이션하는 경우:
 
 1. `createRouter`을 `createMpRouter`로 교체
 2. `defineRoutes`를 사용하도록 경로 정의를 변환합니다.

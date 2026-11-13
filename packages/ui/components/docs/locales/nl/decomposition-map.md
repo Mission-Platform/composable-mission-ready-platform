@@ -24,7 +24,7 @@ navigatiegerichte interactiecontracten. Hun neutrale implementaties zijn afhanke
 op `@mission-platform/forge-jsx`; menu- en tabelachtige bedieningselementen worden ook gebruikt
 `@mission-platform/icons`, terwijl de inhoud van de broodkruimel/navigatiebalk het eigendom samenstelt
 `@mission-platform/typography`-pakket. `ForgeNavbar` componeert momenteel de
-resterende `ForgeDrawer`, dus voor het extraheren van de navigatie moet u deze behouden
+resterend `ForgeDrawer`, dus voor het extraheren van de navigatie moet dit behouden blijven
 afhankelijkheid expliciet of eerst de ladegrens bepalen; het mag niet worden geïntroduceerd
 een afhankelijkheid van `@mission-platform/components` terug in de navigatie.
 
@@ -60,7 +60,7 @@ de bronboom van het domeinpakket.
 
 De eerste drie bezitten de semantiek voor het laden/weergave van media, terwijl ze carrousel en apparaat zijn
 mock add-presentatie rond media. Hun neutrale bron is momenteel afhankelijk van
-`@mission-platform/forge-jsx` en, voor carrouselbesturingen, `@mission-platform/icons`;
+`@mission-platform/forge-jsx` en, voor carrouselbedieningen, `@mission-platform/icons`;
 er is geen afhankelijkheid van de uitgepakte pakketten. Behoud verminderde beweging en
 CSS per component als onderdeel van een toekomstige stap in plaats van het splitsen van mediagedrag
 van zijn stijlen.
@@ -106,7 +106,7 @@ typografie van `@mission-platform/typography`, en pakket-lokale stijlen/hulpprog
 Verhalen kunnen het pakketvat importeren om het publieke oppervlak te oefenen; dat is niet zo
 een implementatieafhankelijkheid of een pakketcyclus.
 
-Elke resterende component behoudt zijn naast elkaar gelegen `index.ts`, neutrale bron, SCSS,
+Elke resterende component behoudt zijn co-gelokaliseerde `index.ts`, neutrale bron, SCSS,
 spec en Storybook-verhaal. Het pakketmanifest publiceert `dist`, componenten,
 alleen stijlen en hulpprogramma's; de geëxtraheerde winkelboom is niet langer inbegrepen.
 

@@ -4,10 +4,10 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
+
 import { createForgeArtifactManifest } from './artifact-manifest.js';
 import { createForgeCompilerService } from './service.js';
-
-import type { FrameworkOutputPlugin } from '@mission-platform/forge-plugin-api';
 
 function fixtureFramework(phases: string[], warning = false): FrameworkOutputPlugin {
   return {

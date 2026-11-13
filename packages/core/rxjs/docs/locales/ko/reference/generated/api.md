@@ -16,17 +16,17 @@
 **종류:** 기능
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined;
+function useObservable(source: Observable<T>, initialValue?: T): T | undefined;
 ```
 
-`source`을 구독하고 최신 방출을 상태로 반환합니다. 반품
-첫 번째 방출이 도착할 때까지 `undefined`입니다.
+설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형         | 설명 |
-| ---- | ------------ | ---- |
-| 출처 | 관찰 가능<T> |      |
+| 이름 | 유형 | 설명 |
+| ------------ | ------------- | ----------- |
+| 출처 | 관찰 가능<T> |             |
+| 초기값 | 티 |             |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -53,16 +53,16 @@ function useSubscribe(
 ```
 
 지정된 `observer`(또는 `next` 콜백)을 사용하여 `source`을 구독합니다.
-구성요소의 수명, `source`(또는 추가
+구성 요소의 수명, `source`(또는 추가
 `dependencies`)이 변경됩니다.
 
 #### 매개변수
 
-| 이름           | 유형                                   | 설명 |
-| -------------- | -------------------------------------- | ---- |
-| 출처           | 관찰 가능<T>                           |      |
-| 관찰자또는다음 | 부분<Observer<T>> \| ((값: T) => 무효) |      |
-| 종속성         | MpDependencyList                       |      |
+| 이름 | 유형 | 설명 |
+| -------------- | -------------------------------------------- | ----------- |
+| 출처 | 관찰 가능<T> |             |
+| 관찰자또는다음 | 부분<Observer<T>> \| ((값: T) => 무효) |             |
+| 종속성 | MpDependencyList |             |
 
 ### 사용구독
 
@@ -78,7 +78,7 @@ function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDepend
 
 #### 매개변수
 
-| 이름   | 유형             | 설명 |
-| ------ | ---------------- | ---- |
-| 구독   | () => 구독 불가  |      |
-| 종속성 | MpDependencyList |      |
+| 이름 | 유형 | 설명 |
+| ------------ | -------------------- | ----------- |
+| 구독 | () => 구독 불가 |             |
+| 종속성 | MpDependencyList |             |

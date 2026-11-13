@@ -3524,7 +3524,7 @@ export const SUPPORTED_COUNTRY_CODES;
 **النوع:** ثابت
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS;
+export const COUNTRY_FLAG_SYMBOL_IDS: string[];
 ```
 
 لم يتم تقديم أي وصف.
@@ -3574,7 +3574,7 @@ export interface IconUseProperties
 **النوع:** ثابت
 
 ```typescript
-export const IconSpriteContext;
+export const IconSpriteContext: MpContext<IconSpriteContextValue>;
 ```
 
 لم يتم تقديم أي وصف.

@@ -1,6 +1,8 @@
+import { analyzeFlint, type FlintAnalysisOptions, type FlintAnalysisReport } from '@mission-platform/flint-analysis';
+import type { FlintAbiManifest, FlintDynamicLinkMetadata } from '@mission-platform/flint-c-abi';
+import { flintStandardLibraryIdentity } from '@mission-platform/flint-regex';
 import { compileFlintWasm } from '@mission-platform/flint-wasm';
 
-import { analyzeFlint } from '../analysis/analyze.js';
 import {
   flintWatCacheKey,
   persistFlintDebugArtifacts,
@@ -12,7 +14,6 @@ import {
 } from '../cache.js';
 import { createDiagnostic, type FlintDiagnostic } from '../diagnostics.js';
 import { prepareFlintFrontend, prepareFlintGraphFrontend } from '../frontend.js';
-import { flintStandardLibraryIdentity } from '../stdlib/regex.js';
 
 import {
   dynamicLinkMetadata,
@@ -25,7 +26,6 @@ import {
 import { createDeclarations } from './declarations.js';
 import { createEsmSource } from './esm.js';
 
-import type { FlintAnalysisOptions, FlintAnalysisReport } from '../analysis/contracts.js';
 import type {
   FlintArtifact,
   FlintArtifactVerificationReport,
@@ -36,7 +36,6 @@ import type {
   FlintGraphCompileInput,
   FlintSelfHostedStageReport,
 } from '../contracts.js';
-import type { FlintAbiManifest, FlintDynamicLinkMetadata } from '../manifest.js';
 
 /**
  * Resolves the analysis policy merged with any requested capabilities.

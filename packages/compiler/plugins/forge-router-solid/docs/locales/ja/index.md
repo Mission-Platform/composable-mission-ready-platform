@@ -7,4 +7,4 @@
 
 SolidJS Router のルーター ターゲットをフォージする
 
-見る `llms.txt`
+パブリック API と使用例については、`llms.txt` を参照してください。

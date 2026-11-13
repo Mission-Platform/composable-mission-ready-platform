@@ -33,8 +33,19 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
+    "@mission-platform/flint-analysis": "workspace:*",
+    "@mission-platform/flint-ast": "workspace:*",
+    "@mission-platform/flint-backend-metal-arm": "workspace:*",
+    "@mission-platform/flint-backend-metal-native": "workspace:*",
+    "@mission-platform/flint-backend-web-wasm": "workspace:*",
     "@mission-platform/flint-c-abi": "workspace:*",
+    "@mission-platform/flint-linker": "workspace:*",
+    "@mission-platform/flint-machir": "workspace:*",
+    "@mission-platform/flint-macro": "workspace:*",
+    "@mission-platform/flint-parser": "workspace:*",
     "@mission-platform/flint-regex": "workspace:*",
+    "@mission-platform/flint-sonir": "workspace:*",
+    "@mission-platform/flint-types": "workspace:*",
     "@mission-platform/flint-wasm": "workspace:*"
   },
   "devDependencies": {

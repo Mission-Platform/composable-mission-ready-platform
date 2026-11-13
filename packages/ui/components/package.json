@@ -188,7 +188,7 @@
     "@vitejs/plugin-vue-jsx": "catalog:vue",
     "@vitest/coverage-v8": "catalog:testing",
     "eslint": "catalog:eslint",
-    "i18next-cli": "1.73.3",
+    "i18next-cli": "catalog:i18next",
     "jsdom": "catalog:testing",
     "postcss-html": "catalog:stylelint",
     "postcss-scss": "catalog:stylelint",

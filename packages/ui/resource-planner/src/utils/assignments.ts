@@ -1,7 +1,7 @@
 import { eventsForRange } from "@mission-platform/scheduler";
+import type { VEvent } from "@mission-platform/vcard";
 
 import type { PlannerAssignment, PlannerEventRecord } from "../types";
-import type { VEvent } from "@mission-platform/vcard";
 
 export function normalizeAssignments(
   assignments: PlannerAssignment[],

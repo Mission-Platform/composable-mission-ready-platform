@@ -13,7 +13,7 @@ export function jsx(type: MpElementType, properties?: MpPropertyBag | null, key?
 }
 
 /** Static JSX uses the same neutral element construction as dynamic JSX. */
-export const jsxs = jsx;
+export const jsxs: typeof jsx = jsx;
 
 /** Development transforms pass additional metadata that the neutral runtime does not need. */
 export function jsxDEV(

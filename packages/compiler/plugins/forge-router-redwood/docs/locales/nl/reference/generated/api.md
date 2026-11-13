@@ -29,32 +29,32 @@ Bouw neutrale mogelijkheden op basis van Redwood-primitieven (framework-vrij voo
 
 #### Parameters
 
-| Naam   | Typ                                                                                                                                                                                                              | Beschrijving |
-| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| invoer | { locatie: { padnaam: string; zoeken: tekenreeks; hash?: tekenreeks }; parameters?: MpRouteParameters; navigeren: RedwoodRouterSurface['navigeren']; routes?: RedwoodRouterSurface['routes']; link?: onbekend; } |              |
+| Naam | Typ | Beschrijving |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| invoer | { locatie: { padnaam: string; zoeken: tekenreeks; hash?: tekenreeks }; parameters?: MpRouteParameters; navigeren: RedwoodRouterSurface['navigeren']; routes?: RedwoodRouterSurface['routes']; link?: onbekend; } |             |
 
 ### MpLink
 
 **Soort:** component
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown;
+export function MpLink(properties:
 ```
 
 Proxy voor koppelingscomponenten; apps binden de native Redwood `Link` via {@link setForgeRedwoodRouter}.
 
 #### Parameters
 
-| Naam          | Typ                                                                    | Beschrijving |
-| ------------- | ---------------------------------------------------------------------- | ------------ |
-| eigenschappen | { naar: MpRouteLocationRaw; vervangen?: boolean; kinderen?: onbekend } |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------------------------------------------------- | ----------- |
+| eigenschappen | { naar: MpRouteLocationRaw; vervangen?: boolean; kinderen?: onbekend } |             |
 
 ### MpRouterView
 
 **Soort:** component
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Redwood heeft geen draagbaar stopcontact; de compiler rapporteert `view` als niet-ondersteund.
@@ -81,9 +81,9 @@ Een neutraal doel omzetten in een href-tekenreeks.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| naar | MpRouteLocationRaw |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
 
 ### setForgeRedwoodRouter
 
@@ -98,9 +98,9 @@ deze naad zodat de haak-/roepvormen overeenkomen met het neutrale contract.
 
 #### Parameters
 
-| Naam      | Typ                  | Beschrijving |
-| --------- | -------------------- | ------------ |
-| oppervlak | RedwoodRouterSurface |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------- | ----------- |
+| oppervlak | RedwoodRouterSurface |             |
 
 ### naarMpLocatieVanRedwood
 
@@ -109,7 +109,7 @@ deze naad zodat de haak-/roepvormen overeenkomen met het neutrale contract.
 ```typescript
 function toMpLocationFromRedwood(
   location: { pathname: string; search: string; hash?: string },
-  params: MpRouteParameters = {},
+  parameters: MpRouteParameters = {},
 ): MpResolvedLocation;
 ```
 
@@ -117,10 +117,10 @@ Bouw een neutrale locatie op basis van een momentopname van de Redwood-locatie.
 
 #### Parameters
 
-| Naam    | Typ                                                    | Beschrijving |
-| ------- | ------------------------------------------------------ | ------------ |
-| locatie | { padnaam: string; zoeken: tekenreeks; hash?: string } |              |
-| params  | MpRouteParameters                                      |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------------------------------- | ----------- |
+| locatie | { padnaam: string; zoeken: tekenreeks; hash?: string } |             |
+| parameters | MpRouteParameters |             |
 
 ### naarRedwoodHref
 
@@ -134,10 +134,10 @@ Serialiseer een neutraal doelwit voor Redwood-navigatie.
 
 #### Parameters
 
-| Naam      | Typ                            | Beschrijving |
-| --------- | ------------------------------ | ------------ |
-| naar      | MpRouteLocationRaw             |              |
-| trajecten | RedwoodRouterSurface['routes'] |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------------------ | ----------- |
+| naar | MpRouteLocationRaw |             |
+| trajecten | RedwoodRouterSurface['routes'] |             |
 
 ### gebruik MpNavigatie
 
@@ -147,7 +147,7 @@ Serialiseer een neutraal doelwit voor Redwood-navigatie.
 function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
-Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
+Alleen noodzakelijke navigatie-/oplossingsmogelijkheden lezen.
 
 ### gebruikMpRoute
 

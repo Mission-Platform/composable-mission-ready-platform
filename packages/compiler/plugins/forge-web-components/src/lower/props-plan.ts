@@ -28,7 +28,7 @@ export const DEFAULT_PROPS_PARAMETER = "properties";
 export const SLOTTED_PROP = "children";
 
 /** Pattern matching a `const { ... } = properties` destructuring statement. */
-export const PROPS_DESTRUCTURING =
+export const PROPS_DESTRUCTURING: RegExp =
   /^(?:const|let|var)\s+(\{[\S\s]*\})\s*=\s*([A-Za-z_$][\w$]*)\s*;?$/;
 
 /**

@@ -7,13 +7,14 @@ import '@mission-platform/tokens/scss/tokens';
 import '@mission-platform/tokens/scss/themes/light';
 import '@mission-platform/tokens/scss/themes/dark';
 
-import { createForgeI18N, forgeNamespace, createForgeI18NVue } from '@mission-platform/i18n';
-import { useSeo } from '@mission-platform/seo';
 import { supportedLocales } from 'virtual:i18n-locales';
 import { resources as defaultLocaleResources } from 'virtual:i18n-resources';
 import { ViteSSG } from 'vite-ssg';
 import { effectScope, h, type VNode } from 'vue';
 import { RouterView } from 'vue-router';
+
+import { createForgeI18N, forgeNamespace, createForgeI18NVue } from '@mission-platform/i18n';
+import { useSeo } from '@mission-platform/seo';
 
 import { routerOptions } from './router';
 import { APP_ORIGIN } from './seo-app';

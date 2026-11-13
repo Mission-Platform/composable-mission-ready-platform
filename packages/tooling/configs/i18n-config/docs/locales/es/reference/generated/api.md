@@ -1,4 +1,4 @@
-# @mission-platform/i18n-config Referencia API
+# Referencia de API @mission-platform/i18n-config
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
@@ -23,10 +23,10 @@ No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre           | Tipo                           | Descripción |
-| ---------------- | ------------------------------ | ----------- |
-| predeterminadoNS | cadena                         |             |
-| opciones         | Opciones de configuración I18n |             |
+| Nombre | Tipo | Descripción |
+| --------- | ----------------- | ----------- |
+| predeterminadoNS | cadena |             |
+| opciones | Opciones de configuración I18n |             |
 
 ### DEFAULT_LOCALE
 

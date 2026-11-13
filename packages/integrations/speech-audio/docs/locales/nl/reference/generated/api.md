@@ -66,9 +66,9 @@ ontkoppelen.
 
 #### Parameters
 
-| Naam | Typ        | Beschrijving |
-| ---- | ---------- | ------------ |
-| bron | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------ | ----------- |
+| bron | tekenreeks |             |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 

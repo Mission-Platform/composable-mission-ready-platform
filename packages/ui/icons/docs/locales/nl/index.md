@@ -16,7 +16,7 @@ ondersteunde raamwerken:
 - **Compilatie**: een enkele `pnpm build` zendt één framework-native bundel per doel uit, een deterministische `dist/icons.svg`
   sprite en CSS-items per pictogram.
 - **Single Entry, Conditional Resolution**: Er is precies één openbaar toegangspunt,
-  `@mission-platform/icons`. Het bevat de `mp:vue`, `mp:react`, `mp:solid` en
+  `@mission-platform/icons`. Het bevat de namen `mp:vue`, `mp:react`, `mp:solid` en
   `mp:web-component` exportvoorwaarden; welke uw toolchain ook activeert, bepaalt welke gecompileerde build de kale is
   specificatie lost op. Als er geen voorwaarde is gesteld, valt het terug naar de neutrale smederijbron, wat de andere is
   "eenmalig schrijven"-componenten verbruiken.
@@ -104,25 +104,25 @@ voor ontbrekende referenties en cycli vóór het genereren van sprite.
 ## API-referentie
 
 Elk pictogram geeft een `<svg role="img">` weer binnen een centrerende `<div>`-wrapper die de BEM-klasse `.forge-icon-<name>` gebruikt.
-Alle pictogrammen zijn gebaseerd op een viewbox van $ 24 \maal 24 $.
+Alle pictogrammen zijn gebaseerd op een viewbox van $ 24 x 24 $.
 
 ### Universele rekwisieten
 
-| Prop        | Typ                | Standaard                 | Beschrijving                                                                                                                  |
-| :---------- | :----------------- | :------------------------ | :---------------------------------------------------------------------------------------------------------------------------- |
-| `size`      | `number \| string` | `'md'`                    | Breedte en hoogte. Ondersteunt benoemde tokens (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) of een pixelnummer. |
-| `color`     | `string`           | `'currentColor'`          | Lijnkleur (en vulling voor pictogrammen met gevulde markering).                                                               |
-| `ariaLabel` | `string`           | _Per-pictogram standaard_ | Toegankelijke naam. Als u dit weglaat, wordt het pictogram gemarkeerd als `aria-hidden`.                                      |
+| Prop | Typ | Standaard | Beschrijving |
+| :---------- | :----------------- | :----------------- | :-------------------------------------------------------------------------------------------------------------------- |
+| `size` | `number \| string` | `'md'` | Breedte en hoogte. Ondersteunt benoemde tokens (`'2xs'`, `'xs'`, `'sm'`, `'md'`, `'lg'`, `'xl'`, `'2xl'`) of een pixelnummer. |
+| `color` | `string` | `'currentColor'` | Lijnkleur (en vulling voor pictogrammen met gevulde markering).                                                                     |
+| `ariaLabel` | `string` | _Per-pictogram standaard_ | Toegankelijke naam. Als u dit weglaat, wordt het pictogram gemarkeerd als `aria-hidden`.                                                     |
 
 ### Gedragspictogrammen
 
 Bepaalde pictogrammen bevatten extra rekwisieten om hun uiterlijk te bepalen:
 
-| Icoon              | Extra rekwisieten                                                       | Beschrijving                                                         |
-| :----------------- | :---------------------------------------------------------------------- | :------------------------------------------------------------------- |
-| `ForgeIconArrow`   | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (standaard `'up'`)   | Roteert de pijl via een inline-transformatie.                        |
-| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (standaard `'down'`) | Roteert de chevron via een inline-transformatie.                     |
-| `ForgeIconSort`    | `active`: `boolean`, `direction`: `'asc' \| 'desc' \| undefined`        | Markeert de punthaak die overeenkomt met de actieve sorteerrichting. |
+| Icoon | Extra rekwisieten | Beschrijving |
+| :----------------- | :-------------------------------------------------------------------- | :--------------------------------------------------------- |
+| `ForgeIconArrow` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (standaard `'up'`) | Roteert de pijl via een inline-transformatie.                 |
+| `ForgeIconChevron` | `direction`: `'up' \| 'right' \| 'down' \| 'left'` (standaard `'down'`) | Roteert de chevron via een inline-transformatie.               |
+| `ForgeIconSort` | `active`: `boolean`, `direction`: `'asc' \| 'desc' \| undefined` | Markeert de punthaak die overeenkomt met de actieve sorteerrichting. |
 
 ## Pictogrambibliotheek
 
@@ -153,5 +153,5 @@ pnpm exec turbo run build --filter @mission-platform/icons
 ### Verhalenboek
 
 Pictogrammen worden gecatalogiseerd onder `icons/<category>/<subcategory>/<icon-name>`, terwijl `icons/overview` de volledige galerij blijft.
-Het overzicht toont ook herhaalde pictogrammen via één `IconSpriteProvider`; individuele verhalen leggen `size` bloot,
+Het overzicht toont ook herhaalde pictogrammen via één `IconSpriteProvider`; individuele verhalen onthullen `size`,
 `color`, landcode en `ariaLabel`-controles, indien van toepassing.

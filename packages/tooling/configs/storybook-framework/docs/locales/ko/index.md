@@ -16,6 +16,6 @@ Storybook 작업 공간에 패키지를 추가하고 다음에서 참조합니�
 
 ## 기여하다
 
-달리다 `pnpm --filter @mission-platform/storybook-framework lint` 그리고
+`pnpm --filter @mission-platform/storybook-framework lint`을 실행하고
 스토리북 빌드 검사. 이 패키지를 프레임워크 선택에 집중하고
-공유 Storybook 기본값; 구성 요소 스토리가 속해 있습니다. `apps/storybook`.
+공유 Storybook 기본값; 컴포넌트 스토리는 `apps/storybook`에 속합니다.

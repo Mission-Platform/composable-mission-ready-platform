@@ -26,10 +26,19 @@ function findTsdownConfigs(packageRoot: string): string[] {
 }
 
 /** Cleans non-dotfiles from the dist directory before launching builders. */
-function cleanDistNonDotfiles(packageRoot: string): void {
+export function cleanDistNonDotfiles(packageRoot: string): void {
   const distDir = path.join(packageRoot, 'dist');
-  if (!fs.existsSync(distDir)) {
-    return;
+  let distStat: fs.Stats;
+  try {
+    distStat = fs.lstatSync(distDir);
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+      return;
+    }
+    throw error;
+  }
+  if (!distStat.isDirectory() || distStat.isSymbolicLink()) {
+    throw new Error(`Refusing to clean unsafe dist path: ${distDir}`);
   }
   for (const file of fs.readdirSync(distDir)) {
     if (!file.startsWith('.')) {

@@ -106,7 +106,7 @@ De Vue-specifieke adapter biedt integratie met `vue-router`.
 - **`createMpRouter`**: Creëert een Vue Router-instantie van neutrale routes
 - **`useMpRouter`**: configureerbaar voor toegang tot de routerinstantie
 - **`useMpRoute`**: samen te stellen om toegang te krijgen tot huidige route-informatie
-- **`MpRouterLink`**: Kaderneutrale routerverbindingscomponent
+- **`MpRouterLink`**: raamwerkneutrale routerverbindingscomponent
 
 **Voorbeeld:**
 
@@ -399,7 +399,7 @@ Bij het migreren van vue-router naar @mission-platform/router:
 
 ### Rechtstreeks vanaf de React-router
 
-Bij het migreren vanuit react-router-dom:
+Bij migratie vanuit react-router-dom:
 
 1. Definieer routes met behulp van het neutrale formaat met `defineRoutes`
 2. Vervang `<Link>` door `<MpLink>`

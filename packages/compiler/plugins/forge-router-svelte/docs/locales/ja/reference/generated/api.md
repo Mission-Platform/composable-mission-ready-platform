@@ -27,16 +27,16 @@ SvelteKit プリミティブから中立的な機能を構築します (テス�
 
 #### パラメータ
 
-| 名前 | タイプ                                                                                                                                                                           | 説明 |
-| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| 入力 | { ページ: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>;パラメータ: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; solvePath?: (パス: 文字列) => 文字列; } |      |
+|名前 |タイプ |説明 |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|入力 | { ページ: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>;パラメータ: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; solvePath?: (パス: 文字列) => 文字列; } |             |
 
 ### エムピーリンク
 
 **種類:** コンポーネント
 
 ```typescript
-export const MpLink;
+export MpLink = 'a'
 ```
 
 SvelteKit はリンクに通常のアンカーを使用します。コンパイラはこのマーカーを保持するので、
@@ -47,7 +47,7 @@ Svelte 出力は、パッケージ作成者の中立的な `MpLink` の使用法
 **種類:** コンポーネント
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 アウトレットは SvelteKit のアプリケーションによって所有されます。機能診断は `view` を拒否します。
@@ -64,9 +64,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### パラメータ
 
-| 名前 | タイプ             | 説明 |
-| ---- | ------------------ | ---- |
-| へ   | MpRouteLocationRaw |      |
+|名前 |タイプ |説明 |
+| ---- | ------------------ | ----------- |
+|へ | MpRouteLocationRaw |             |
 
 ### setForgeSvelteKitRouter
 
@@ -81,9 +81,9 @@ function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void;
 
 #### パラメータ
 
-| 名前 | タイプ                 | 説明 |
-| ---- | ---------------------- | ---- |
-| 表面 | SvelteKitRouterSurface |      |
+|名前 |タイプ |説明 |
+| ------- | ---------------------- | ----------- |
+|表面 | SvelteKitRouterSurface |             |
 
 ### SvelteKitRouterSurface
 
@@ -110,9 +110,9 @@ SvelteKit ページのスナップショットから中立的な場所を構築�
 
 #### パラメータ
 
-| 名前   | タイプ                                                                                    | 説明 |
-| ------ | ----------------------------------------------------------------------------------------- | ---- |
-| ページ | { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>; パラメータ: Record<string, string>; } |      |
+|名前 |タイプ |説明 |
+| ---- | ------------------------------------------------------------------------------------- | ----------- |
+|ページ | { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>;パラメータ: Record<string, string>; } |             |
 
 ### toSvelteHref
 
@@ -126,10 +126,10 @@ SvelteKit ナビゲーションのニュートラル ターゲットをシリア
 
 #### パラメータ
 
-| 名前     | タイプ                   | 説明 |
-| -------- | ------------------------ | ---- |
-| へ       | MpRouteLocationRaw       |      |
-| 解決パス | (パス: 文字列) => 文字列 |      |
+|名前 |タイプ |説明 |
+| ----------- | ------------------------ | ----------- |
+|に | MpRouteLocationRaw |             |
+|解決パス | (パス: 文字列) => 文字列 |             |
 
 ### useMpNavigation
 

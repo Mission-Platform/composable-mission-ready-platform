@@ -23,32 +23,32 @@ function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 dialecte et compilé directement en React ou Vue par
 `@mission-platform/vite-plugin-forge`.
 
-Il restitue le contenu de son emplacement par défaut dans la balise sémantique du
+Il restitue son contenu d'emplacement par défaut dans la balise sémantique pour le
 `variant` (remplaçable avec `as`), en appliquant l'échelle de type de la variante plus le
-modificateurs facultatifs `weight`, `color`, `horizontalAlign`, `verticalAlign` et `truncate`.
+facultatif `weight`, `color`, `horizontalAlign`, `verticalAlign`, et `truncate` modificateurs.
 
-Les liens proviennent également d'ici, de deux manières : `variant="link"` pour le texte du lien autonome,
+Les liens viennent également d'ici, de deux manières : `variant="link"` pour le texte de lien autonome,
 et `href` sur **n'importe quelle** variante afin qu'un titre ou une légende puisse être un lien sans
 laissant sa propre échelle de types. Quoi qu'il en soit, l'élément s'affiche sous la forme d'un `<a>` avec le
-couleur du lien, son traitement hover/actif et `:visited`, une bague de mise au point visible
-et le mode `underline` choisi (`'always'` par défaut) ; `target="_blank"` obtient
+couleur du lien, son survol/actif et `:visited` traitement, une bague de mise au point visible
+et l'élu `underline` mode (`'always'` par défaut); `target="_blank"` obtient
 `rel="noopener noreferrer"` automatiquement. Il possède son
 style via le module CSS colocalisé `forge-typography.module.scss`
 (transporté sur chaque framework par le compilateur en deux étapes, donc le composant
-expédie son propre CSS `@layer mp.typography`); les noms de classe hachés sont
+expédie le sien `@layer mp.typography` CSS); les noms de classe hachés sont
 assemblé avec l'assistant {@link classNames} indépendant du framework.
 
-La fenêtre contextuelle tronquée `@floating-ui` originale du SFC Vue est restaurée ici via
-la prop `truncatePopup` : lorsqu'elle est activée, le texte tronqué devient l'ancre d'un
-popup `role="tooltip"` flottant (révélé au survol/au focus uniquement lorsque le texte
+L'original Vue Les SFC `@floating-ui` truncate-popup est restauré ici via
+le `truncatePopup` prop : lorsqu'il est activé, le texte tronqué devient l'ancre d'un
+flottant `role="tooltip"` popup (révélé au survol/au focus uniquement lorsque le texte
 déborde en fait), positionné avec **CSS Anchor Positioning** au lieu de
-`@floating-ui`, et piloté par les crochets neutres `useRef`/`useState`.
+`@floating-ui`, et entraîné par le point mort `useRef`/`useState` crochets.
 
 #### Paramètres
 
-| Nom        | Tapez                               | Descriptif |
-| ---------- | ----------------------------------- | ---------- |
-| propriétés | Lecture seule<TypographyProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------------ | ----------- |
+| propriétés | Lecture seule<TypographyProperties> |             |
 
 ### TypographieCouleur
 
@@ -71,7 +71,7 @@ export type TypographyColor =
 ```
 
 Couleur du texte. Les jetons structurels (`primary`/`secondary`/`tertiary`/
-`disabled`/`inverse`) mappé vers `--mp-color-text-*` ; les tons sémantiques canoniques
+`disabled`/`inverse`) mappé à `--mp-color-text-*` ; les tons sémantiques canoniques
 (`neutral`/`success`/`warning`/`info`/`error`/`critical`) mappé au correspondant
 Jeton `--mp-color-<family>-text` ; `inherit` n'en applique aucun.
 
@@ -114,6 +114,26 @@ export type TypographySize = SizeScale;
 ```
 
 Jeton de taille facultatif — échelle canonique 2xs → 2xl (remplace la taille de police de la variante lorsqu'elle est définie).
+
+### TypographieStyle
+
+**Genre :** type
+
+```typescript
+export type TypographyStyle = CSSStyleProperties &
+```
+
+Aucune description fournie.
+
+### TypographieStylePropriétés
+
+**Genre :** interface
+
+```typescript
+export interface TypographyStyleProperties
+```
+
+Valeurs CSS appartenant aux composants héritées des descendants de typographie et du contenu contextuel.
 
 ### TypographieTarget
 

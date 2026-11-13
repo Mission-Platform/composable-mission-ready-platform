@@ -13,12 +13,12 @@
 pnpm add --save-dev @mission-platform/postcss-config
 ```
 
-עיין בחבילה מסביבת העבודה `postcss.config.mjs` במקום
+עיין בחבילה מ-`postcss.config.mjs` של סביבת העבודה במקום
 שכפול צינור הפלאגין המשותף. דרישות מקומיות שייכות לזה
 תצורת סביבת העבודה.
 
 ## לִתְרוֹם
 
-לָרוּץ `pnpm --filter @mission-platform/postcss-config lint` ו
+הפעל את `pnpm --filter @mission-platform/postcss-config lint` ו
 `pnpm --filter @mission-platform/postcss-config format`. שמור על דפדפן
 התנהגות תאימות בחבילה זו והימנע מפלאגינים ספציפיים ליישום.

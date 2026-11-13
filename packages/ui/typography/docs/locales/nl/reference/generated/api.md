@@ -23,11 +23,11 @@ function ForgeTypography(properties: Readonly<TypographyProperties>): MpElement;
 dialect en rechtstreeks gecompileerd naar React of Vue door
 `@mission-platform/vite-plugin-forge`.
 
-Het geeft de standaardslotinhoud weer in de semantische tag voor de gekozen
+Het geeft de inhoud van het standaardslot weer in de semantische tag voor de gekozen
 `variant` (overschrijfbaar met `as`), waarbij de typeschaal van de variant plus de
 optionele `weight`, `color`, `horizontalAlign`, `verticalAlign` en `truncate` modifiers.
 
-Links komen hier ook op twee manieren vandaan: `variant="link"` voor zelfstandige linktekst,
+Links komen hier ook vandaan, op twee manieren: `variant="link"` voor zelfstandige linktekst,
 en `href` op **elke** variant, zodat een kop of bijschrift een link kan zijn zonder
 zijn eigen typeschaal achterlatend. Hoe dan ook, het element wordt weergegeven als een `<a>` met de
 linkkleur, de hover/active en `:visited`-behandeling, een zichtbare scherpstelring
@@ -40,15 +40,15 @@ samengesteld met de raamwerkneutrale {@link classNames}-helper.
 
 De originele Vue SFC's `@floating-ui` afknotting-pop-up wordt hier hersteld via
 de `truncatePopup` prop: indien ingeschakeld, wordt de ingekorte tekst het anker voor a
-zwevende `role="tooltip"`-pop-up (wordt alleen zichtbaar bij hover/focus wanneer de tekst
+zwevende `role="tooltip"` pop-up (wordt alleen zichtbaar bij hover/focus wanneer de tekst
 loopt eigenlijk over), gepositioneerd met **CSS Anchor Positioning** in plaats van
 `@floating-ui`, en aangedreven door de neutrale `useRef`/`useState` haken.
 
 #### Parameters
 
-| Naam          | Typ                                | Beschrijving |
-| ------------- | ---------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<TypographyProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------ | ----------- |
+| eigenschappen | Alleen-lezen<TypographyProperties> |             |
 
 ### TypografieKleur
 
@@ -113,7 +113,27 @@ Geen beschrijving opgegeven.
 export type TypographySize = SizeScale;
 ```
 
-Optioneel groottetoken — canonieke 2xs → 2xl-schaal (overschrijft de lettergrootte van de variant indien ingesteld).
+Optioneel groottetoken — canonieke 2xs → 2xl schaal (overschrijft de lettergrootte van de variant indien ingesteld).
+
+### TypografieStijl
+
+**Soort:** type
+
+```typescript
+export type TypographyStyle = CSSStyleProperties &
+```
+
+Geen beschrijving opgegeven.
+
+### TypografieStijleigenschappen
+
+**Soort:** interface
+
+```typescript
+export interface TypographyStyleProperties
+```
+
+CSS-waarden die eigendom zijn van de component, overgenomen door typografische afstammelingen en pop-upinhoud.
 
 ### TypografieDoel
 

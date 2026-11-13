@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
 
+import type {
+  GeneratedModule,
+  TargetContext,
+  TargetIntentions,
+} from "@mission-platform/forge-plugin-api";
+
 import {
   forgeReactFramework,
   isReactLowered,
@@ -20,12 +26,6 @@ import {
   textChild,
   type SemanticModuleParts,
 } from "./ir-test-helpers.ts";
-
-import type {
-  GeneratedModule,
-  TargetContext,
-  TargetIntentions,
-} from "@mission-platform/forge-plugin-api";
 
 const CONTEXT: TargetContext = {
   framework: "react",

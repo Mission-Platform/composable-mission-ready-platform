@@ -13,14 +13,14 @@
  * set.
  */
 
-import { constantMemoValue } from "./constants.js";
-import { matchBracket, splitTopLevel } from "./text.js";
-
 import type {
   GenericComponent,
   GenericStatement,
   SemanticModule,
 } from "@mission-platform/forge-plugin-api";
+
+import { constantMemoValue } from "./constants.js";
+import { matchBracket, splitTopLevel } from "./text.js";
 
 /** The SolidJS primitives referenced by the rewrites, so the import builder can include them. */
 export interface SolidPrimitiveUsage {

@@ -190,7 +190,7 @@ export function startForgePlugin(host: FigmaSelectionHost, uiHtml: string): void
   host.on?.('selectionchange', postSelectionStatus);
   host.onSelectionChange?.(postSelectionStatus);
   // Figma's plugin UI API exposes `onmessage`; it is not a DOM EventTarget.
-  // eslint-disable-next-line unicorn/prefer-add-event-listener
+
   host.ui.onmessage = async (message: unknown): Promise<void> => {
     const pluginMessage = unwrapForgePluginMessage(message);
     if (!isForgePluginUiMessage(pluginMessage)) return;

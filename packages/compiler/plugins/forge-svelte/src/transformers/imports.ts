@@ -15,6 +15,7 @@
  *   flattened into the generated tree's flat layout.
  */
 
+import type { GenericImport } from "@mission-platform/forge-plugin-api";
 import {
   LOCAL_JSX_TYPE_NAMES,
   LOCAL_JSX_TYPES_MODULE,
@@ -27,8 +28,6 @@ import {
   importBase,
   toPascalCase,
 } from "../runtime/names.js";
-
-import type { GenericImport } from "@mission-platform/forge-plugin-api";
 
 /** Swap the module specifier of an import statement's own source text. */
 function withSpecifier(entry: GenericImport, specifier: string): string {

@@ -23,10 +23,10 @@ Créez des fonctionnalités neutres à partir d’une instance de routeur Vue ap
 
 #### Paramètres
 
-| Nom     | Tapez   | Descriptif |
-| ------- | ------- | ---------- |
-| routeur | Routeur |            |
-| actuel  |         |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------ | ----------- |
+| routeur | Routeur |             |
+| actuel |        |             |
 
 ### résoudreMpLink
 
@@ -40,9 +40,9 @@ Résolvez une cible neutre via le routeur Vue appartenant à l'application.
 
 #### Paramètres
 
-| Nom | Tapez              | Descriptif |
-| --- | ------------------ | ---------- |
-| à   | MpRouteLocationRaw |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
 
 ### résoudrePathTarget
 
@@ -56,9 +56,9 @@ Repli de chemin uniquement utilisé lorsqu'une instance de routeur Vue est indis
 
 #### Paramètres
 
-| Nom | Tapez              | Descriptif |
-| --- | ------------------ | ---------- |
-| à   | MpRouteLocationRaw |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
 
 ### toMpEmplacement
 
@@ -80,9 +80,9 @@ Convertissez l’état de la route Vue natif en emplacement résolu neutre.
 
 #### Paramètres
 
-| Nom        | Tapez                                                                                                                                                                                                    | Descriptif |
-| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| itinéraire | { chemin : chaîne ; chemin complet : chaîne ; paramètres : Record<string, unknown> ; requête : LocationQuery ; hachage : chaîne ; nom ? : chaîne \| symbole \| nul; méta ? : Record<string, unknown> ; } |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| itinéraire | { chemin : chaîne ; chemin complet : chaîne ; paramètres : Record<string, unknown> ; requête : LocationQuery ; hachage : chaîne ; nom ? : chaîne \| symbole \| nul; méta ? : Record<string, unknown> ; } |             |
 
 ### toVueEmplacement
 
@@ -96,9 +96,9 @@ Traduisez une cible neutre en un emplacement de routeur Vue.
 
 #### Paramètres
 
-| Nom | Tapez              | Descriptif |
-| --- | ------------------ | ---------- |
-| à   | MpRouteLocationRaw |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 

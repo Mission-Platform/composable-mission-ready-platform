@@ -1,7 +1,8 @@
 import path from 'node:path';
 
-import type { ForgeArtifactWriter } from '../compiler/artifact-writer.js';
 import type { GeneratedModule } from '@mission-platform/forge-plugin-api';
+
+import type { ForgeArtifactWriter } from '../compiler/artifact-writer.js';
 
 const KNOWN_MODULE_EXT = /(\.d\.ts|\.vue|\.svelte|\.tsx|\.ts|\.jsx|\.js)$/;
 

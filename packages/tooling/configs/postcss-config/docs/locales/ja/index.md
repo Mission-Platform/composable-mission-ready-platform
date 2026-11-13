@@ -13,12 +13,12 @@ Mission Platform スタイルシートで使用される共有 PostCSS パイプ
 pnpm add --save-dev @mission-platform/postcss-config
 ```
 
-ワークスペースからパッケージを参照します。 `postcss.config.mjs` むしろ
+ではなく、ワークスペースの `postcss.config.mjs` からパッケージを参照します。
 共有プラグイン パイプラインを複製します。ローカルオーバーライドはこれに属します
 ワークスペースの構成。
 
 ## 貢献する
 
-走る `pnpm --filter @mission-platform/postcss-config lint` そして
+`pnpm --filter @mission-platform/postcss-config lint` を実行し、
 `pnpm --filter @mission-platform/postcss-config format`。ブラウザを維持する
-このパッケージの互換性動作は、アプリケーション固有のプラグインを避けてください。
+このパッケージの互換性動作を考慮し、アプリケーション固有のプラグインを避けてください。

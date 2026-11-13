@@ -8,8 +8,9 @@
 // module provides an ergonomic, fully typed façade with a lazily-instantiated
 // singleton so consumers never touch the raw wasm exports.
 
-import type { ForgePhoneNumberExports } from './phone-number.flint';
 import { load, loadSync } from './phone-number.flint';
+
+import type { ForgePhoneNumberExports } from './phone-number.flint';
 
 /** Line type of a phone number, mirroring libphonenumber's `PhoneNumberType`. */
 export const PhoneNumberType = {

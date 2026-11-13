@@ -7,7 +7,7 @@
 
 Cloudflare Worker מקומי בלבד שמקבל HTML שהושלם ושולח אותו אל
 MailPit דרך SMTP. סביבת עבודה זו היא הבעלים של חוזה `/api/email/send` ושלו
-תצורת פיתוח MailPit.
+תצורת פיתוח של MailPit.
 
 ## השתמש מקומי
 

@@ -14,11 +14,22 @@ Aree di lavoro pnpm e Turborepo.
 Il modo consigliato per creare un pacchetto è utilizzare lo strumento MCP Mission Platform Developer, che garantisce tutto
 configurazioni, script e strutture di cartelle seguono gli standard della piattaforma.
 
+### Build del pacchetto Forge
+
+Il componente Forge, l'hook e i pacchetti CMS utilizzano una chiamata `defineTsdownLibrary`. Aggiungi
+i plugin nativi restituiti da `tsdownForgeComponentPlugins`,
+`tsdownForgeHookPlugins` o `tsdownForgeCmsPlugins` nella relativa opzione `plugins`;
+questi plugin preparano e pubblicano obiettivi dagli hook del ciclo di vita di tsdown anziché
+eseguire il rilevamento dei grafici mentre viene valutata la configurazione. Mantieni il quadro e
+Plugin di output CMS di proprietà del chiamante ed espliciti, quindi la selezione della destinazione rimane
+componibile e isolato.
+
 ### 1. Impalcatura con MCP
 
-Utilizzare lo strumento `scaffold_package` per generare lo scheletro.
+Utilizzare lo strumento `scaffold_package` tramite un server MCP Mission Platform Developer connesso per generare lo scheletro.
+Quello che segue è un esempio di chiamata allo strumento MCP, non un comando di shell; utilizzare la sezione di configurazione manuale se MCP non è disponibile.
 
-```bash
+```text
 # Example: Creating a new 'date-utils' package
 # The tool defaults to a dry-run; set apply=true to write files
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
@@ -30,11 +41,11 @@ Ciò genera una directory `packages/date-utils/` conforme alla convenzione con:
 - `tsconfig.json` estende le impostazioni predefinite della piattaforma.
 - `vite.config.ts` per build ottimizzate.
 - Lima a botte `src/index.ts`.
-- `llms.txt` per la documentazione assistita da intelligenza artificiale.
+- `llms.txt` per documentazione assistita da intelligenza artificiale.
 
 ### 2. Configurazione manuale (opzionale)
 
-Se non stai utilizzando lo strumento MCP, assicurati che `package.json` utilizzi [Cataloghi pnpm](https://pnpm.io/catalogs) per
+Se non si utilizza lo strumento MCP, assicurarsi che `package.json` utilizzi [cataloghi pnpm](https://pnpm.io/catalogs) per
 gestione delle dipendenze e segue la convenzione di denominazione con ambito:
 
 ```json
@@ -87,9 +98,9 @@ packages/<name>/
 └── README.md
 ```
 
-## Stylelint per pacchetti con stili
+## Stylelint per i pacchetti con stile
 
-I pacchetti che contengono `CSS`, `SCSS` o blocchi di stile `Vue` devono includere una configurazione Stylelint e script di lint:
+I pacchetti che contengono blocchi di stile CSS, SCSS o Vue devono mantenere una configurazione Stylelint rilevabile e script lint:
 
 ```text
 packages/<name>/
@@ -99,7 +110,7 @@ packages/<name>/
 └── package.json                    # Stylelint scripts and devDependencies
 ```
 
-Aggiungete la configurazione condivisa e le dipendenze dirette di sintassi e configurazione a `devDependencies`:
+Aggiungere la configurazione condivisa e le relative dipendenze dirette di sintassi/configurazione a `devDependencies`:
 
 ```json
 {
@@ -114,7 +125,7 @@ Aggiungete la configurazione condivisa e le dipendenze dirette di sintassi e con
 }
 ```
 
-Usate la configurazione condivisa da `stylelint.config.mjs` invece di duplicare le voci `extends`:
+Utilizza la configurazione condivisa da `stylelint.config.mjs` invece di duplicare le relative voci `extends`:
 
 ```js
 // stylelint.config.mjs
@@ -123,7 +134,7 @@ import baseConfig from "@mission-platform/stylelint-config";
 export default { ...baseConfig };
 ```
 
-Aggiungete script che coprano le sorgenti di stile effettive del workspace ed eseguite il controllo prima della pubblicazione:
+Aggiungi script che coprano le origini di stile effettive dell'area di lavoro, quindi esegui il controllo prima della pubblicazione:
 
 ```json
 {
@@ -151,8 +162,8 @@ pnpm exec turbo run lint:style --filter @mission-platform/<name>
 Per istruzioni dettagliate sulla creazione, vedere:
 
 - [Progettazione di componenti atomici](atomic-component-design.md)
-- [Authoring componibile](composable-authoring.md)
-- [Creazione di archivi](store-authoring.md)
+- [Creazione componibile](composable-authoring.md)
+- [Creazione archivio](store-authoring.md)
 - [Creazione utile](util-authoring.md)
 
 ### Edificio
@@ -217,16 +228,15 @@ estrattore descritto nel README dell'app della documentazione.
 
 ## Editoria
 
-La piattaforma di missione utilizza [Set di modifiche](https://github.com/changesets/changesets) per il controllo delle versioni e la pubblicazione.
+La Mission Platform utilizza [Changesets](https://github.com/changesets/changesets) per il controllo delle versioni e la pubblicazione.
 
 1. **Aggiungi un set di modifiche**: dopo aver apportato le modifiche, esegui:
-
-```bash
+   ```bash
    pnpm changeset
-```
-
-Seleziona il pacchetto e il tipo di modifica (patch, minor, major). 2. **Conferma il set di modifiche**: conferma il file `.changeset/*.md` generato. 3. **Versione e pubblicazione**: CI/CD gestisce la pubblicazione effettiva, ma è possibile visualizzare in anteprima localmente le versioni con:
-
-```bash
+   ```
+   Seleziona il pacchetto e il tipo di modifica (patch, minor, major).
+2. **Conferma il set di modifiche**: conferma il file `.changeset/*.md` generato.
+3. **Versione e pubblicazione**: CI/CD gestisce la pubblicazione effettiva, ma è possibile visualizzare in anteprima localmente le versioni con:
+   ```bash
    pnpm changeset version
-```
+   ```

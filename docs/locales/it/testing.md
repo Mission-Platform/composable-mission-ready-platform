@@ -31,11 +31,31 @@ pnpm test
 
 ### Esegui test per un'area di lavoro specifica
 
-Per eseguire test per un singolo pacchetto o applicazione:
+Per eseguire test per un singolo pacchetto o applicazione durante il priming automatico delle dipendenze upstream:
+
+```bash
+pnpm test:package @mission-platform/<name>
+```
+
+In alternativa, richiama direttamente Turborepo:
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
+
+### Priming delle dipendenze upstream
+
+I pacchetti nel monorepo spesso utilizzano artefatti compilati (`dist/`) dalle dipendenze dell'area di lavoro upstream. Negli alberi di lavoro appena sottoposti a provisioning o negli ambienti puliti, questi artefatti potrebbero non esistere ancora.
+
+Per risolvere questo problema senza problemi:
+
+- **Risoluzione automatica Turborepo:** I grafici delle attività `test` e `build:check` in `turbo.json` applicano `"dependsOn": ["^build"]`. Turborepo crea automaticamente tutte le dipendenze upstream prima di eseguire i test nel pacchetto di destinazione.
+- **Assistente pacchetto dedicato:** L'esecuzione di `pnpm test:package <package-name>` prepara esplicitamente le build upstream (`build --filter <package-name>^...`) prima di eseguire i test del pacchetto. Questo riscaldamento è intenzionale anche se l'attività `test` dichiara anche `^build`: mantiene il comportamento di priming dell'helper esplicito e coerente ed è un'operazione non operativa memorizzata nella cache quando Turbo ha già risolto tali dipendenze.
+- **Assistente per la creazione del pacchetto:** L'esecuzione di `pnpm build:package <package-name>` utilizza lo stesso riscaldamento upstream esplicito prima della creazione del pacchetto di destinazione.
+- **Build upstream manuale:** Se si esegue direttamente un test runner (ad esempio, `vitest` in una directory a pacchetto singolo), inizializzare prima le sue dipendenze:
+  ```bash
+  pnpm exec turbo run build --filter @mission-platform/<name>^...
+  ```
 
 ### Esegui test interessati (stile CI)
 
@@ -107,13 +127,13 @@ verifica.
 2. Assicurarsi che il pacchetto `vitest.config.ts` abiliti la modalità browser (vedere Riferimento di seguito).
 3. Eseguire con `pnpm test`.
 
-### Forgia test di script Web
+### Prove sulla selce
 
 Utilizzare `@mission-platform/flint-vitest` per compilatore deterministico, artefatto, Wasm e parità self-hosted
 controlli. Delega la compilazione allo stesso servizio compilatore e plugin Vite utilizzati dalla produzione; non crea a
 sistema del secondo modulo.
 
-Installa il pacchetto in un'area di lavoro che testa i moduli `.fws`, quindi componi il suo adattatore con la configurazione Vitest standard:
+Installa il pacchetto in un'area di lavoro che testa i moduli `.flint`, quindi componi il relativo adattatore con la configurazione Vitest standard:
 
 ```typescript
 // vitest.config.ts
@@ -143,7 +163,7 @@ import {
   createFlintTestHarness,
 } from "@mission-platform/flint-vitest";
 
-describe("FWS fixture", () => {
+describe("Flint fixture", () => {
   const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
@@ -201,7 +221,7 @@ expect((await load<{ answer: () => number }>()).answer()).toBe(42);
 expect(loadSync<{ answer: () => number }>().answer()).toBe(42);
 ```
 
-Per i valori FWS, testare esplicitamente entrambi i livelli. I test WASM grezzi dovrebbero affermare il file
+Per i valori Flint, testare esplicitamente entrambi i livelli. I test WASM grezzi dovrebbero affermare il file
 ABI a lunghezza puntatore e chiamate di proprietà; I test ESM generati dovrebbero affermare il file
 Proiezione JavaScript:
 
@@ -234,33 +254,33 @@ deve continuare a passare una tupla `[pointer, length]` anziché aspettarsi una 
 conversione automatica `Uint8Array`.
 
 L'area di lavoro benchmark confronta l'adattatore di lunghezza del puntatore non elaborato con il file
-adattatore ESM generato come modalità FWS separate:
+adattatore ESM generato come modalità Flint separate:
 
 ```bash
 pnpm --filter @mission-platform/benchmark run bench -- \
   --node-only --warmup 3 --samples 10 \
-  --output benchmark/results/fws-generated-boundary
+  --output benchmark/results/flint-generated-boundary
 ```
 
 I report includono le fasi di creazione, inizializzazione ed esecuzione in stato stazionario. Il
-La riga `wasm` non elaborata FWS utilizza nuove istanze e tre allocazioni di input di stringa per
+La riga `wasm` grezza di Flint utilizza nuove istanze e tre allocazioni di input di stringa per
 il kernel di riferimento; `wasm-generated` utilizza il contratto `loadSync` generato
 e un'allocazione di input di stringa compressa. Perché l'attuale deallocatore guest
 convalida gli intervalli senza riciclare lo spazio dell'allocatore bump, la stringa/byte generati
 gli esempi utilizzano una nuova istanza del caricatore per chiamata; i campioni scalari riutilizzano quelli caricati
-istanza. Ciò isola ciascun campione con un'allocazione pesante ed è intenzionale
+istanza. Ciò isola ogni campione con un'allocazione pesante ed è intenzionale
 segnalato come sovraccarico del limite del caricatore anziché come richiesta di istanza persistente.
-Ogni artefatto riporta byte Wasm grezzi, byte sorgente ESM generati, hash del contenuto,
+Ogni artefatto riporta byte Wasm non elaborati, byte di origine ESM generati, hash del contenuto,
 e i conteggi dell'allocazione statica utilizzati dal confronto. Confronta solo le righe
 quando l'hash del corpus, il runtime dell'host e lo schema del benchmark corrispondono.
 
-Ad esempio, l'esecuzione solo di Node di cui sopra ha prodotto 336 risultati di fase misurati con
-zero errori e hash corpus `ad092f7c552cc914`. Entrambe le righe FWS avevano Wasm grezzo
-hash `0ac58f11`, dimensione Wasm grezza 1.625 byte e dimensione origine ESM generata 18.490
+Ad esempio, l'esecuzione solo di Node sopra ha prodotto 336 risultati di fase misurati con
+zero errori e hash corpus `ad092f7c552cc914`. Entrambe le file di Flint avevano Wasm crudo
+hash `0ac58f11`, dimensione Wasm grezza 1.625 byte e dimensione sorgente ESM generata 18.490
 byte; i conteggi di allocazione dell'input di stringa grezza e generata erano 3 e 1. Sul file
 Maiuscole e minuscole in formato Unicode, l'inizializzazione media è stata di 0,00024 ms grezzi rispetto a
 0,00188 ms generati e l'esecuzione media è stata di 0,0236 ms grezzi rispetto a 0,1070 ms
-generato nell'esecuzione Node registrata. Queste cifre sono prove rappresentative,
+generato durante l'esecuzione Node registrata. Queste cifre sono prove rappresentative,
 garanzie di prestazione non trasversali alla macchina; utilizzare i campioni per caso del rapporto
 per i confronti.
 
@@ -284,14 +304,14 @@ tipo entrypoint incluso dal progetto. Il percorso secondario della dichiarazione
 
 Utilizza dispositivi condivisi in `packages/flint/vitest/fixtures/` per il linguaggio di più pacchetti e la conformità ABI:
 `valid/`, `diagnostics/`, `capabilities/`, `graphs/` e `self-hosted/` sono intenzionalmente stabili. Tieni un apparecchio accanto
-una specifica del compilatore, del runtime o del plugin quando copre un dettaglio di implementazione privata; utilizzare il sorgente in linea per un piccolo parser o
+una specifica del compilatore, del runtime o del plugin quando copre un dettaglio di implementazione privato; utilizzare il sorgente in linea per un piccolo parser o
 Casi di unità VM. Ciò mantiene i nomi delle apparecchiature e la pulizia deterministici senza forzare test di basso livello attraverso il cablaggio.
 
 `checkVmParity(file, mode)` supporta `interpret`, `jit` e `aot`, ma il relativo report è l'esistente limite self-hosted
-contratto di parità lex-stage. Dichiarare `parity`, impronte digitali, passaggi e metadati di riproducibilità AOT; non trattare il rapporto
-come esecuzione arbitraria di VM FWS compilata o in sostituzione dei test di comportamento Wasm.
+contratto di parità lex-stage. Assert `parity`, impronte digitali, passaggi e metadati di riproducibilità AOT; non trattare il rapporto
+come esecuzione arbitraria di VM Flint compilate o in sostituzione dei test di comportamento Wasm.
 
-Esegui la matrice FWS focalizzata con le normali attività dell'area di lavoro:
+Esegui la matrice Flint focalizzata con le normali attività dell'area di lavoro:
 
 ```bash
 pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
@@ -332,12 +352,12 @@ export default defineVitestConfig({
 
 ### Riepilogo degli script
 
-| Scrittura       | Comando                                                    | Scopo                                                 |
-| :-------------- | :--------------------------------------------------------- | :---------------------------------------------------- |
-| `test`          | `pnpm exec turbo run test`                                 | Esegui tutte le attività di test dell'area di lavoro. |
-| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | Esegui test dei componenti in modalità orologio.      |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Genera un report sulla copertura dei componenti.      |
-| Ruggine/WASM    | `cargo test --workspace`                                   | Esegui test dei crate nativi di Rust.                 |
+| Scrittura | Comando | Scopo |
+| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
+| `test` | `pnpm exec turbo run test` | Esegui tutte le attività di test dell'area di lavoro.          |
+| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | Esegui test dei componenti in modalità orologio.    |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Genera un report sulla copertura dei componenti. |
+| Ruggine/WASM | `cargo test --workspace` | Esegui test dei crate nativi di Rust.           |
 
 I pacchetti wrapper Wasm vengono testati tramite le attività del pacchetto proprietario. Ad esempio, esegui il pacchetto scanner e il suo file
 wrapper insieme quando si modifica il comportamento dello scanner:
@@ -348,6 +368,6 @@ pnpm exec turbo run test --filter @mission-platform/code-scanner...
 
 ## Documentazione correlata
 
-- [Configurazione dello sviluppo](development-setup.md)
+- [Impostazione sviluppo](development-setup.md)
 - [Migliori pratiche](best-practices.md)
-- [Sviluppo di pacchetti](package-development.md)
+- [Sviluppo pacchetto](package-development.md)

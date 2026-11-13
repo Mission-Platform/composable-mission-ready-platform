@@ -5,27 +5,25 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 > packages/core/forge-jsx/docs/index.md: [packages/core/forge-jsx/docs/index.md](../../index.md)
 > Langue: Français (fr)
 
-Une petite couche « écrire une fois, exécutée sur Vue 3 et React » sans dépendance pour Mission Platform. Les composants sont créés une fois dans
-JSX et rendu sur l'un ou l'autre framework via de petits adaptateurs - pas de codegen au moment de la construction, pas de compilateur externe (il s'agit d'un
-alternative roulée à la main aux outils comme Mitosis).
+Un petit runtime JSX indépendant du framework, sans dépendances, pour Mission Platform.
+Les composants sont créés une fois dans JSX et rendus via le
+Package `@mission-platform/forge-adapters`.
 
 ## Comment ça marche
 
 ```
-author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ toReactComponent ──▶ React
-                                                          └──▶ toVueComponent  ──▶ Vue 3
+author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ framework adapter ──▶ target framework
 ```
 
 1. Les composants sont écrits en JSX compilé par la transformation JSX **classique** (`jsxFactory: 'h'`,
    `jsxFragmentFactory: 'Fragment'`).
 2. `h(...)` crée une arborescence `MpElement` sérialisable, neutre en termes de framework, au lieu d'un élément React/Vue.
-3. Les adaptateurs par framework parcourent cette arborescence et mappent chaque node sur `React.createElement` ou `h` de Vue au moment du rendu.
+3. Un adaptateur de structure parcourt cette arborescence et mappe chaque node sur la cible.
+   primitives de rendu natives du framework.
 
 ## Caractéristiques
 
 - **Framework-Neutral JSX Runtime** : un petit runtime sans dépendance qui crée des arborescences `MpElement` sérialisables.
-- **Adaptateur Vue 3** : convertit les composants neutres en SFC Vue 3 natifs avec une réactivité appropriée
-- **Adaptateur React** : convertit les composants neutres en composants React natifs
 - **Prise en charge des hooks** : hooks de style React indépendants du framework (`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`)
   qui compilent vers leurs équivalents framework
 - **Pas de codegen au moment de la construction** : contrairement à Mitosis ou à des outils similaires, cette approche utilise des adaptateurs d'exécution au lieu du moment de la construction.
@@ -104,7 +102,7 @@ La fonction d'usine JSX indépendante du framework.
 
 - `type` : type d'élément React ou nom de balise de chaîne
 - `props` : Objet de props/attributs
-- `children` : Éléments enfants
+- `children` : Éléments enfants
 
 **Renvoie :** `MpElement` - Une arborescence d'éléments indépendante du framework
 
@@ -164,28 +162,6 @@ Mémorise une fonction.
 - `dependencies` : Tableau de dépendances
 
 **Retours :** Fonction mémorisée
-
-### Adaptateurs
-
-#### `toVueComponent(component)`
-
-Convertit un composant indépendant du framework en un composant Vue 3.
-
-**Paramètres :**
-
-- `component` : fonction de composant neutre en termes de framework
-
-**Renvoie :** Définition du composant Vue
-
-#### `toReactComponent(component)`
-
-Convertit un composant indépendant du framework en un composant React.
-
-**Paramètres :**
-
-- `component` : fonction de composant neutre en termes de framework
-
-**Renvoi :** Fonction du composant React
 
 ## TypeScript Prise en charge
 

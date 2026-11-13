@@ -1,8 +1,8 @@
-# تطوير خادم لغة Flint
+# تطوير خادم لغة فلينت
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> packages/flint-lsp/docs/guides/development.md: [packages/flint-lsp/docs/guides/development.md](../../../guides/development.md)
+> packages/flint/lsp/docs/guides/development.md: [packages/flint/lsp/docs/guides/development.md](../../../guides/development.md)
 > اللغة: العربية (ar)
 
 ## التثبيت والتحقق

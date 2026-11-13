@@ -19,33 +19,32 @@
 function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-תוסף Vite שמייצר אוטומטית את גיליון הסגנונות _עקיפה_* של סמל העיצוב של אפליקציה.
+תוסף Vite שיוצר אוטומטית את גיליון הסגנונות של סמל העיצוב של אפליקציה.
 
 הוא קורא מסמך עקיפה בסגנון DTCG (`options.source`), הופך אותו עם
 {@link buildTokenOverrideScss}, וכותב את ה-`:root { --<prefix>-*: … }` שנוצר
 SCSS חלקי ל-`options.outFile`. ייבא את הקובץ שנוצר מהקובץ שלך
-גיליון סגנונות _אחרי_ `@mission-platform/tokens` כך שהעקיפות זוכות במפל.
+גיליון סגנונות _after_ `@mission-platform/tokens` כך שהעקיפות ינצחו במפל.
 
-הדור פועל ב-Rollup `buildStart` וו (כך שהוא מכסה `vite build`,
+הדור פועל בהוק `buildStart` הרולאפ (כך שהוא מכסה את `vite build`,
 `vite build --watch`, ו-dev-server מתחילים כאחד) ומופעלים מחדש כאשר המקור
 שינויים במסמך בזמן ששרת הפיתוח פועל. הקובץ שנוצר הוא מבנה
 artefact - הוסף אותו ל-`.gitignore`/`.prettierignore` במקום לבצע אותו.
 
 #### פרמטרים
 
-| שם       | הקלד                        | תיאור |
-| -------- | --------------------------- | ----- |
-| אפשרויות | TokenOverridesPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------- | ----------- |
+| אפשרויות | TokenOverridesPluginOptions |             |
 
 #### חוֹזֶה
 
 - **@example:** ```ts
   // vite.config.ts
   import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
-plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
+  export default defineConfig({
+  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+  });
 
 ````
 ```scss
@@ -62,33 +61,32 @@ plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' }
 function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-תוסף Vite שמייצר אוטומטית את גיליון הסגנונות _עקיפה_* של סמל העיצוב של אפליקציה.
+תוסף Vite שיוצר אוטומטית את גיליון הסגנונות של סמל העיצוב של אפליקציה.
 
 הוא קורא מסמך עקיפה בסגנון DTCG (`options.source`), הופך אותו עם
 {@link buildTokenOverrideScss}, וכותב את ה-`:root { --<prefix>-*: … }` שנוצר
 SCSS חלקי ל-`options.outFile`. ייבא את הקובץ שנוצר מהקובץ שלך
-גיליון סגנונות _אחרי_ `@mission-platform/tokens` כך שהעקיפות זוכות במפל.
+גיליון סגנונות _after_ `@mission-platform/tokens` כך שהעקיפות ינצחו במפל.
 
-הדור פועל ב-Rollup `buildStart` וו (כך שהוא מכסה `vite build`,
+הדור פועל בהוק `buildStart` הרולאפ (כך שהוא מכסה את `vite build`,
 `vite build --watch`, ו-dev-server מתחילים כאחד) ומופעלים מחדש כאשר המקור
 שינויים במסמך בזמן ששרת הפיתוח פועל. הקובץ שנוצר הוא מבנה
 artefact - הוסף אותו ל-`.gitignore`/`.prettierignore` במקום לבצע אותו.
 
 #### פרמטרים
 
-| שם       | הקלד                        | תיאור |
-| -------- | --------------------------- | ----- |
-| אפשרויות | TokenOverridesPluginOptions |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------- | ----------- |
+| אפשרויות | TokenOverridesPluginOptions |             |
 
 #### חוֹזֶה
 
 - **@example:** ```ts
   // vite.config.ts
   import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-
-export default defineConfig({
-plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
-});
+  export default defineConfig({
+  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+  });
 
 ````
 ```scss
@@ -117,16 +115,16 @@ export interface TokenOverridesPluginOptions
 function buildTokenOverrideScss(document_: OverrideGroup, options: TokenOverrideScssOptions = {}): string;
 ```
 
-בנה חלקי עקיפה של SCSS/CSS: בלוק `:root { … }` יחיד של
+בניית חלקי עקיפה של SCSS/CSS: בלוק `:root { … }` יחיד של
 מאפיינים מותאמים אישית של `--<prefix>-*` מושטחים מ-`document_`. ייבא את זה _אחרי_
-הבסיס `@mission-platform/tokens` כך שההצהרות מנצחות את המפל.
+הבסיס `@mission-platform/tokens` כך שההצהרות זוכות במפל.
 
 #### פרמטרים
 
-| שם       | הקלד                     | תיאור |
-| -------- | ------------------------ | ----- |
-| מסמך_    | OverrideGroup            |       |
-| אפשרויות | TokenOverrideScssOptions |       |
+| שם | הקלד | תיאור |
+| --------- | ------------------------ | ----------- |
+| מסמך_ | OverrideGroup |             |
+| אפשרויות | TokenOverrideScssOptions |             |
 
 ### FlatOverride
 
@@ -150,16 +148,15 @@ function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride
 התחל עם `שטחו באופן רקורסיבי מסמך עקיפה לתוך {@link FlatOverride}. מפתחות את זה
 התחל עם  (מטא-נתונים של DTCG) מדלגים; כל עלה שנותר הופך לא
 מאפיין מותאם אישית `--<prefix>-<path-joined-by-dashes>`. עקיפה של רכיבים
-נתיבים שומרים על מעטפת ה-`component._` DTCG שלהם, אבל CSS שנוצר משמיט את זה
-עטיפה (`component.button._` הופך ל-`--<prefix>-button-*`).
+נתיבים שומרים על מעטפת ה-`component.*` DTCG שלהם, אבל CSS שנוצר משמיט את זה
+עטיפה (`component.button.*` הופך ל-`--<prefix>-button-*`).
  `$`
-
 #### פרמטרים
 
-| שם     | הקלד          | תיאור |
-| ------ | ------------- | ----- |
-| מסמך_  | OverrideGroup |       |
-| קידומת |               |       |
+| שם | הקלד | תיאור |
+| --------- | ------------- | ----------- |
+| מסמך_ | OverrideGroup |             |
+| קידומת |               |             |
 
 ### LightDarkValue
 
@@ -181,7 +178,6 @@ export type OverrideGroup = Record<string, unknown>;
 
 קבוצת עקיפה בסגנון DTCG node (קבוצות מקוננות/אסימונים בתוספת מטא נתונים `קבוצת עקיפה בסגנון DTCG node (קבוצות מקוננות/אסימונים בתוספת מטא נתונים  אופציונליים).
  `$`
-
 ### OverrideToken
 
 **סוג:** ממשק

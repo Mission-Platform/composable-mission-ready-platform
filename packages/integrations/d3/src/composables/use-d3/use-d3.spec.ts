@@ -1,11 +1,12 @@
-import { toReactComponent } from '@mission-platform/forge-adapters/react';
-import { toVueComponent } from '@mission-platform/forge-adapters/vue';
-import { h, type MpElement } from '@mission-platform/forge-jsx';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
+import { h, type MpElement } from '@mission-platform/forge-jsx';
 
 import { useD3 } from './use-d3';
 
@@ -20,7 +21,7 @@ function Chart(): MpElement {
 describe('useD3 (neutral render-once baseline)', () => {
   it('returns an empty ref container', () => {
     const reference = useD3(() => {});
-    // eslint-disable-next-line unicorn/no-null
+
     expect(reference).toEqual({ current: null });
   });
 

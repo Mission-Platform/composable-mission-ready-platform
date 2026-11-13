@@ -16,11 +16,13 @@ Mission Platform משתמשת בסביבות עבודה pnpm וב-Turborepo לנ
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── packages/tooling/configs/                # Shared tooling and base configurations
-├── packages/               # Reusable libraries and building blocks
-├── packages/tooling/vite/           # Build-time extensions and compilers
-├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
-├── crates/                 # Rust crates (including Wasm-compiled ones)
+├── packages/core/          # Framework-neutral runtime, Forge JSX/adapters, routing, i18n, and scheduling
+├── packages/ui/            # Components, forms, layouts, themes, and design tokens
+├── packages/content/       # Content, email, search, and SEO pipelines
+├── packages/integrations/  # Barcode, maps, media, 3D, and interoperability adapters
+├── packages/compiler/      # Figma bridges and Forge compiler plugins
+├── packages/tooling/       # Shared configs and Vite/build-time extensions
+├── packages/edge/          # Reusable Cloudflare Worker edge functions
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
@@ -35,6 +37,7 @@ composable_mission_ready_platform/
 ומעולם לא פורסם לרישום.
 
 - **`docs/`**: אתר התיעוד Vite + Vue עבור קורפוס Markdown.
+- **`figma-forge-plugin/`**: תוסף Figma המשלב רכיבים שכתב Forge עם זרימות עבודה של Figma.
 - **`my-care-notes/`**: אפליקציית הדגל של הערות טיפול.
 - **`service-monitor/`**: לוח המחוונים הבריאותי של השירות RedwoodSDK מגובה באובייקט עמיד.
 - **`website/`**: אתר השיווק והמוצר של Mission Platform.
@@ -42,13 +45,21 @@ composable_mission_ready_platform/
 
 ### 2. `packages/` (אבני בניין)
 
-ספריות ניתנות לשימוש חוזר עם גרסאות הנצרכות על ידי אפליקציות. אלה נועדו להיות אגנוסטיים למסגרת במידת האפשר.
+ספריות עם גרסאות ניתנות לשימוש חוזר הנצרכות על ידי אפליקציות. ספריות דומיינים מבהירות את הבעלות מבלי לשנות את שמות החבילות או לייבא.
+
+- **`core/`**: זמן ריצה ניטרלי למסגרת, Forge JSX/מתאמים, ניתוב, לוקליזציה, יכולת תצפית, RxJS ושירותי מתזמן.
+- **`ui/`**: רכיבים, נקודות שבירה, טפסים, פריסות, בחירה, ערכות נושא, אסימונים וטיפוגרפיה.
+- **`content/`**: מודלים של תוכן, רכיבי דוא"ל/עיבוד, כלי שפה ו-SEO.
+- **`integrations/`**: ברקוד, סריקת קוד, D3, מפות, קודי QR/מטריקס, דיבור, Three.js ו-vCards.
+- **`compiler/`**: גשרי Figma ותוספי מהדר של מסגרת/נתב/CMS.
+- **`tooling/`**: חבילות תצורה משותפות ותוספי Vite.
+- **`edge/`**: חבילות עובדים המשמשות יישומים ודוגמאות מקומיות.
 
 - **`@mission-platform/forge-jsx`**: זמן הריצה ומתאמים של JSX ניטרליים למסגרת.
 - **`@mission-platform/components`**: ספריית רכיבי ריבוי המסגרות.
-- **`@mission-platform/forms`** ו-**`@mission-platform/forms-core`**: פרימיטיביים של צורות מונעי סכמה.
+- **`@mission-platform/forms`** ו-**`@mission-platform/forms-core`**: פרימיטיבים של צורות מונעי סכמה.
 - **`@mission-platform/content`** ו-**`@mission-platform/email-renderer`**: צינורות תוכן ועיבוד.
-- **`@mission-platform/tokens`**: עיצוב אסימון מקור האמת.
+- **`@mission-platform/tokens`**: עיצוב אסימון מקור לאמת.
 - **`@mission-platform/router`** ו-**`@mission-platform/i18n`**: ניתוב ולוקליזציה ניטרליים במסגרת.
 - **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**, וכן
   **`@mission-platform/qr-code`**: חבילות סריקה וקידוד בגיבוי Wasm.
@@ -59,7 +70,7 @@ composable_mission_ready_platform/
 `devDependencies`.
 
 - **`eslint-config/`**, **`prettier-config/`** ו-**`stylelint-config/`**: כללי ריפוד ועיצוב.
-- **`typescript-config/`**: קובצי בסיס `tsconfig.json` עבור צרכני Node, DOM, ספרייה ומסגרת.
+- **`typescript-config/`**: בסיס קבצי `tsconfig.json` עבור צרכני Node, DOM, ספריות ומסגרת.
 - **`tsdown-config/`** ו-**`vite-config/`**: תבניות בנייה נפוצות של ספרייה, אפליקציה, Vite ו-Vitest.
 - **`i18n-config/`** ו-**`storybook-framework/`**: חילוץ מקומי והגדרות מסגרת עבודה משותפות.
 
@@ -69,19 +80,29 @@ composable_mission_ready_platform/
 
 - **`forge/`**: המהדר הרב-שלבי לרכיבי Forge.
 - **`tokens/`**: יוצר חפצי קוד מהגדרות אסימון DTCG.
-- **`i18n/`**: מטפל בטעינת מיקום ובחילוץ סטטי.
+- **`i18n/`**: מטפל בטעינת אזורים ובחילוץ סטטי.
 
-### 5. `packages/edge/workers/` (שירותי Edge)
+### 5. `packages/edge/workers/` (שירותי אדג')
 
 Cloudflare Workers להיגיון בצד השרת ואספקת נכסים אופטימלית.
 
 - **`api-proxy/`**: מספק גישת קריאה מוגבלת לנתיבי API מאושרים.
-- **`email-sender/`**: עובד חלון ראווה של דוא"ל מקומי המגובה באימייל.
+- **`email-sender/`**: עובד חלון ראווה של דואר אלקטרוני בגיבוי דואר מקומי.
 - **`forge-spa/`**: משרת נכסים סטטיים עם ספא מחייב `ASSETS`.
 
 יישום Workers הניתנים לפריסה מוגדרים על ידי `apps/website/wrangler.jsonc`,
 `apps/my-care-notes/wrangler.jsonc`, ו-`apps/service-monitor/wrangler.jsonc`. ה
 חבילות `api-proxy` ו-`forge-spa` הן תלות מאגדת ולא פריסות Wrangler עצמאיות.
+
+### 6. `packages/compiler/plugins/` (Forge Compiler Plugins)
+
+תוספים ומתאמים של פלט ספציפיים למסגרת עבור המהדר Forge.
+
+- **`forge-cms-plugin-api/`**: יצירת חפצי CMS ושילוב מתאם Vite/tsdown.
+- **`forge-cms-astro/`**, **`forge-cms-ghost/`**, **`forge-cms-jekyll/`**, **`forge-cms-storyblok/`**, **`forge-cms-webflow/`**: מתאמי אינטגרציה ספציפיים ל-CMS.
+- **`forge-plugin-api/`**: ממשקי פלאגין מהדר Shared Forge.
+- **`forge-vue/`**, **`forge-react/`**, **`forge-solid/`**, **`forge-svelte/`**, **`forge-web-components/`**: מתאמי יצירת קוד ספציפי למסגרת ומתאמי זמן ריצה.
+- **`forge-router-plugin-api/`**, **`forge-router-vue/`**, **`forge-router-react/`**, **`forge-router-solid/`**, **`forge-router-svelte/`**, **`forge-router-web-components/`**, **`forge-router-redwood/`**: שילוב מתאמים ספציפיים למסגרת.
 
 ## אמנות חבילה פנימית
 
@@ -97,7 +118,7 @@ Cloudflare Workers להיגיון בצד השרת ואספקת נכסים אופ
 - **`locales/`**: קובצי תרגום JSON/YAML.
 - **`styles/`**: חלקי SCSS ושילובי מערכות עיצוב.
 
-### דפוס ייצוא חבית
+### דפוס יצוא חבית
 
 כל ספרייה בתוך `src/` חייבת להכיל `index.ts` (קובץ חבית).
 
@@ -108,12 +129,12 @@ Cloudflare Workers להיגיון בצד השרת ואספקת נכסים אופ
 
 קבצי מפתח בשורש המאגר שולטים בהתנהגות המונורפו:
 
-| קובץ                    | מטרה                                                        |
-| :---------------------- | :---------------------------------------------------------- |
-| `pnpm-workspace.yaml`   | מגדיר את גבולות סביבת העבודה, גלובס חברים וקטלוגים של תלות. |
-| `turbo.json`            | מתזמר את צינור הבנייה ושמירה במטמון.                        |
-| `package.json`          | סקריפטים ברמת השורש ותלות מונורפואית.                       |
-| `commitlint.config.mjs` | אוכף את מפרט ה-Conventional Commits.                        |
+| קובץ | מטרה |
+| :---------------------- | :------------------------------------------------------------------- |
+| `pnpm-workspace.yaml` | מגדיר את גבולות סביבת העבודה, גלובס חברים וקטלוגים של תלות. |
+| `turbo.json` | מתזמר את צינור הבנייה ושמירה במטמון.                    |
+| `package.json` | סקריפטים ברמת השורש ותלות מונורפואית.                |
+| `commitlint.config.mjs` | אוכף את מפרט ה-Conventional Commits.                     |
 
 ## ניהול תלות ומרחב עבודה
 

@@ -1,8 +1,8 @@
-# Développer le serveur du langage Flint
+# Développer le serveur de langage Flint
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> packages/flint-lsp/docs/guides/development.md: [packages/flint-lsp/docs/guides/development.md](../../../guides/development.md)
+> packages/flint/lsp/docs/guides/development.md: [packages/flint/lsp/docs/guides/development.md](../../../guides/development.md)
 > Langue: Français (fr)
 
 ## Installer et vérifier

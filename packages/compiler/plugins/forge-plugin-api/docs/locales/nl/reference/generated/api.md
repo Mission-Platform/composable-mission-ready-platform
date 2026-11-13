@@ -33,10 +33,10 @@ Pas niet-overlappende bronbewerkingen toe zonder parserknooppunten bloot te legg
 
 #### Parameters
 
-| Naam        | Typ                       | Beschrijving |
-| ----------- | ------------------------- | ------------ |
-| bron        | tekenreeks                |              |
-| bewerkingen | alleen-lezen SourceEdit[] |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------------- | ----------- |
+| bron | tekenreeks |             |
+| bewerkingen | alleen-lezen SourceEdit[] |             |
 
 ### CLASS_NAME_ATTRIBUTE
 
@@ -60,9 +60,9 @@ Leid de gebeurtenisnaam af die wordt weergegeven door een Vue-stijl `on<Event>`-
 
 #### Parameters
 
-| Naam           | Typ        | Beschrijving |
-| -------------- | ---------- | ------------ |
-| eigenschapNaam | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------------ | ------ | ----------- |
+| eigenschapNaam | tekenreeks |             |
 
 ### frameworkAdapterModule
 
@@ -76,9 +76,9 @@ Leid de Forge-adapter/runtime-module af voor elk ingebouwd doelframework.
 
 #### Parameters
 
-| Naam  | Typ          | Beschrijving |
-| ----- | ------------ | ------------ |
-| kader | JsxFramework |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------------ | ----------- |
+| kader | JsxFramework |             |
 
 ### frameworkForDirective
 
@@ -92,9 +92,9 @@ Los een toonaangevende `use <framework>`-richtlijn op voor elk ingebouwd doel.
 
 #### Parameters
 
-| Naam      | Typ        | Beschrijving |
-| --------- | ---------- | ------------ |
-| richtlijn | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------ | ----------- |
+| richtlijn | tekenreeks |             |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -148,9 +148,9 @@ Zend raamwerk-lokale JSX-primitieve declaraties uit zonder parser-afhankelijkhed
 
 #### Parameters
 
-| Naam  | Typ          | Beschrijving |
-| ----- | ------------ | ------------ |
-| kader | JsxFramework |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------------ | ----------- |
+| kader | JsxFramework |             |
 
 ### NEUTRAAL_COMPILE_TIME_MARKERS
 
@@ -296,9 +296,9 @@ Hijs gemarkeerde renderrecords en retourneer de vermeldingen voor de doelgenerat
 
 #### Parameters
 
-| Naam   | Typ                | Beschrijving |
-| ------ | ------------------ | ------------ |
-| module | GeneriekeModuleAst |              |
+| Naam | Typ | Beschrijving |
+| ------ | ---------------- | ----------- |
+| module | GeneriekeModuleAst |             |
 
 ### MP_HOIST_PREFIX
 
@@ -327,10 +327,10 @@ Pas bronbewerkingen toe op een modulebron zonder een AST-implementatietype bloot
 
 #### Parameters
 
-| Naam        | Typ                       | Beschrijving |
-| ----------- | ------------------------- | ------------ |
-| module      | GeneriekeModuleAst        |              |
-| bewerkingen | alleen-lezen SourceEdit[] |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------------- | ----------- |
+| module | GeneriekeModuleAst |             |
+| bewerkingen | alleen-lezen SourceEdit[] |             |
 
 ### constanteBooleaans
 
@@ -344,9 +344,9 @@ Los een letterlijke Booleaanse waarde op zonder de geschreven code te evalueren.
 
 #### Parameters
 
-| Naam        | Typ           | Beschrijving |
-| ----------- | ------------- | ------------ |
-| uitdrukking | ExpressieLike |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------- | ----------- |
+| expressie | ExpressieLike |             |
 
 ### GeneriekOptimalisatieResultaat
 
@@ -370,9 +370,9 @@ Of een generieke JSX-attributenlijst een sleutel bevat.
 
 #### Parameters
 
-| Naam       | Typ                             | Beschrijving |
-| ---------- | ------------------------------- | ------------ |
-| attributen | alleen-lezen GenericAttribute[] |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------- | ----------- |
+| attributen | alleen-lezen GenericAttribute[] |             |
 
 ### heeftMpStaticMarker
 
@@ -386,9 +386,9 @@ Of een generieke JSX node de eigen statische marker heeft.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| node | GeneriekRenderNode |              |
+| Naam | Typ | Beschrijving |
+| ---- | ----------------- | ----------- |
+| node | GeneriekRenderNode |             |
 
 ### isCompileTimeConstant
 
@@ -402,9 +402,9 @@ Of de brontekst een pure letterlijke uitdrukking tijdens het compileren is.
 
 #### Parameters
 
-| Naam        | Typ           | Beschrijving |
-| ----------- | ------------- | ------------ |
-| uitdrukking | ExpressieLike |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------- | ----------- |
+| expressie | ExpressieLike |             |
 
 ### MP_STATIC_ATTR
 
@@ -431,10 +431,10 @@ Pas optimalisatie op recordniveau toe en retourneer eventuele bronbewerkingen af
 
 #### Parameters
 
-| Naam    | Typ                 | Beschrijving |
-| ------- | ------------------- | ------------ |
-| module  | GeneriekeModuleAst  |              |
-| _opties | Optimalisatieopties |              |
+| Naam | Typ | Beschrijving |
+| -------- | ---------------- | ----------- |
+| module | GeneriekeModuleAst |             |
+| _opties | Optimalisatieopties |             |
 
 ### Optimaliseer Opties
 
@@ -460,9 +460,9 @@ Retourneert een markeringsvrije generieke attributenlijst.
 
 #### Parameters
 
-| Naam       | Typ                             | Beschrijving |
-| ---------- | ------------------------------- | ------------ |
-| attributen | alleen-lezen GenericAttribute[] |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------- | ----------- |
+| attributen | alleen-lezen GenericAttribute[] |             |
 
 ### stripMpStaticMarker
 
@@ -476,9 +476,9 @@ Retourneert een generieke weergave zonder markeringen node, waarbij de bronreeks
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| node | GeneriekRenderNode |              |
+| Naam | Typ | Beschrijving |
+| ---- | ----------------- | ----------- |
+| node | GeneriekRenderNode |             |
 
 ## `src/diagnostics`
 
@@ -543,9 +543,9 @@ Creëer een diagnose zonder de fasecontracten te koppelen aan TypeScript-knooppu
 
 #### Parameters
 
-| Naam         | Typ                                                              | Beschrijving |
-| ------------ | ---------------------------------------------------------------- | ------------ |
-| diagnostisch | Laat<CompilerDiagnostic, "fileName"> & { bestandsnaam?: string } |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------------------------------------ | ----------- |
+| diagnostisch | Laat<CompilerDiagnostic, "fileName"> & { bestandsnaam?: string } |             |
 
 ### formatCompilerDiagnostisch
 
@@ -559,9 +559,9 @@ Formatteer een diagnose voor een compilerfout zonder de bronlocatie te verliezen
 
 #### Parameters
 
-| Naam         | Typ                  | Beschrijving |
-| ------------ | -------------------- | ------------ |
-| diagnostisch | CompilerDiagnostisch |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------ | ----------- |
+| diagnostisch | CompilerDiagnostisch |             |
 
 ### throwOnCompilerErrors
 
@@ -577,9 +577,9 @@ Breek een compilerpijplijn af wanneer een fase een of meer fouten rapporteert.
 
 #### Parameters
 
-| Naam        | Typ                                                 | Beschrijving |
-| ----------- | --------------------------------------------------- | ------------ |
-| diagnostiek | alleen-lezen CompilerDiagnostic[] \| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| ----------- | ------------------------------------------ | ----------- |
+| diagnostiek | alleen-lezen CompilerDiagnostic[] \| ongedefinieerd |             |
 
 ## `src/framework`
 
@@ -653,6 +653,16 @@ export interface GeneratedModule
 ```
 
 Het bronartefact dat wordt geretourneerd door een framework-uitvoerplug-in.
+
+### Gegenereerde stijlartefact
+
+**Soort:** interface
+
+```typescript
+export interface GeneratedStyleArtifact
+```
+
+Een stylesheet uitgezonden naast een gegenereerde bronmodule.
 
 ### GeneratorContext
 
@@ -787,7 +797,7 @@ Gedeelde context voor Vite-plug-inbundels die eigendom zijn van het framework.
 **Soort:** constant
 
 ```typescript
-export const defineForgeFramework;
+export const defineForgeFramework: typeof defineForgeOutputPlugin;
 ```
 
 Alias ​​die benadrukt dat raamwerkpakketten doelimplementaties registreren.
@@ -804,9 +814,9 @@ Valideer en retourneer een framework-uitvoerplug-in voor registratie door consum
 
 #### Parameters
 
-| Naam    | Typ | Beschrijving |
-| ------- | --- | ------------ |
-| plug-in | T   |              |
+| Naam | Typ | Beschrijving |
+| ------ | ---- | ----------- |
+| plug-in | T |             |
 
 ### ForgePluginId
 
@@ -832,9 +842,9 @@ Valideer doelmetagegevens onafhankelijk van enig raamwerkregister.
 
 #### Parameters
 
-| Naam    | Typ      | Beschrijving |
-| ------- | -------- | ------------ |
-| plug-in | onbekend |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------- | ----------- |
+| plug-in | onbekend |             |
 
 ### validateForgeOutputPluginSelection
 
@@ -850,9 +860,9 @@ Valideer een doelselectie die eigendom is van de beller, inclusief lege en dubbe
 
 #### Parameters
 
-| Naam     | Typ              | Beschrijving |
-| -------- | ---------------- | ------------ |
-| plug-ins | alleen-lezen T[] |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------ | ----------- |
+| plug-ins | alleen-lezen T[] |             |
 
 ## `src/ir`
 
@@ -871,10 +881,10 @@ Lees de expressietekst van een benoemd attribuut, wanneer deze er een bevat.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| node | GeneriekRenderNode |              |
-| naam | tekenreeks         |              |
+| Naam | Typ | Beschrijving |
+| ---- | ----------------- | ----------- |
+| node | GeneriekRenderNode |             |
+| naam | tekenreeks |             |
 
 ### attribuutStringWaarde
 
@@ -891,10 +901,42 @@ Lees de statische tekenreekswaarde van een benoemd attribuut, als deze er een he
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| node | GeneriekRenderNode |              |
-| naam | tekenreeks         |              |
+| Naam | Typ | Beschrijving |
+| ---- | ----------------- | ----------- |
+| node | GeneriekRenderNode |             |
+| naam | tekenreeks |             |
+
+### kindSlotNaam
+
+**Soort:** functie
+
+```typescript
+function childSlotName(
+  child: GenericRenderChild,
+  slotAttributeName = "slot",
+  defaultSlotName = "default",
+): string | undefined;
+```
+
+De `slot="…"`-naam waarnaar een kind wordt doorgestuurd, of `undefined` voor standaardinhoud.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------------- | ------------------ | ----------- |
+| kind | GeneriekRenderChild |             |
+| slotAttributeName |                    |             |
+| standaardslotnaam |                    |             |
+
+### BerekendeSetupWaarde
+
+**Soort:** interface
+
+```typescript
+export interface ComputedSetupValue
+```
+
+Een benoemde waarde die wordt geretourneerd door de installatie en kan worden geadresseerd door render-/stijlbindingen.
 
 ### DynamicNodeIntentie
 
@@ -961,10 +1003,10 @@ Zoek het benoemde attribuut op een render node.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| node | GeneriekRenderNode |              |
-| naam | tekenreeks         |              |
+| Naam | Typ | Beschrijving |
+| ---- | ----------------- | ----------- |
+| node | GeneriekRenderNode |             |
+| naam | tekenreeks |             |
 
 ### GeneriekAstNode
 
@@ -982,7 +1024,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type GenericAttribute = GenericJsxAttribute | GenericJsxSpreadAttribute;
+export type GenericAttribute =
+  GenericJsxAttribute | GenericJsxSpreadAttribute | GenericSlotAttribute;
 ```
 
 Geen beschrijving opgegeven.
@@ -1084,7 +1127,11 @@ Een componentparameter, de bindende vorm en het gedeclareerde type.
 
 ```typescript
 export type GenericRenderChild =
-  GenericRenderNode | GenericTextNode | GenericExpressionNode;
+  | GenericRenderNode
+  | GenericTextNode
+  | GenericExpressionNode
+  | GenericConditionalNode
+  | GenericForNode;
 ```
 
 Geen beschrijving opgegeven.
@@ -1130,6 +1177,56 @@ export type GenericStatementKind =
 
 Grove classificatie van een behouden verklaring op moduleniveau.
 
+### Generieke StijlAtRule
+
+**Soort:** interface
+
+```typescript
+export interface GenericStyleAtRule
+```
+
+Genormaliseerde CSS-at-rule overgenomen van een metgezel in Flint-stijl.
+
+### GeneriekeStyleClassMapNode
+
+**Soort:** interface
+
+```typescript
+export interface GenericStyleClassMapNode
+```
+
+Eén adresseerbare lokale klasse in een genormaliseerde CSS-moduleklassekaart.
+
+### Generieke StijlCompanion
+
+**Soort:** interface
+
+```typescript
+export interface GenericStyleCompanion
+```
+
+Doelneutraal stijlartefact eigendom van één Flint-module.
+
+### Generieke stijlverklaring
+
+**Soort:** interface
+
+```typescript
+export interface GenericStyleDeclaration
+```
+
+Genormaliseerde CSS-declaratie overgenomen van een metgezel in Flint-stijl.
+
+### Generieke stijlregel
+
+**Soort:** interface
+
+```typescript
+export interface GenericStyleRule
+```
+
+Genormaliseerde CSS-regel overgenomen van een metgezel in Flint-stijl.
+
 ### GeneriekeTagKind
 
 **Soort:** type
@@ -1150,6 +1247,23 @@ export interface GenericTextNode
 
 Letterlijke tekst tussen JSX-tags.
 
+### isComponentNode
+
+**Soort:** functie
+
+```typescript
+function isComponentNode(node: GenericRenderNode): boolean;
+```
+
+Of de tag van de node een component een naam geeft (een ID met hoofdletters of een dynamische/lidexpressie)
+in plaats van een intrinsiek HTML-element.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ----------------- | ----------- |
+| node | GeneriekRenderNode |             |
+
 ### isExpressionNode
 
 **Soort:** functie
@@ -1164,9 +1278,9 @@ Of een render-kind een `{ … }`-interpolatie is.
 
 #### Parameters
 
-| Naam | Typ                 | Beschrijving |
-| ---- | ------------------- | ------------ |
-| kind | GeneriekRenderChild |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------------ | ----------- |
+| kind | GeneriekRenderChild |             |
 
 ### isRenderNode
 
@@ -1180,9 +1294,26 @@ Of een render-kind een genest element/fragment node is.
 
 #### Parameters
 
-| Naam | Typ                 | Beschrijving |
-| ---- | ------------------- | ------------ |
-| kind | GeneriekRenderChild |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------------ | ----------- |
+| kind | GeneriekRenderChild |             |
+
+### isRenderNodeMarker
+
+**Soort:** functie
+
+```typescript
+function isRenderNodeMarker(node: GenericRenderNode, tag: string): boolean;
+```
+
+Of de node een benoemde compileermarkering is.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ----------------- | ----------- |
+| node | GeneriekRenderNode |             |
+| label | tekenreeks |             |
 
 ### isTextNode
 
@@ -1196,9 +1327,9 @@ Of een render-kind letterlijke JSX-tekst is.
 
 #### Parameters
 
-| Naam | Typ                 | Beschrijving |
-| ---- | ------------------- | ------------ |
-| kind | GeneriekRenderChild |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------------ | ----------- |
+| kind | GeneriekRenderChild |             |
 
 ### LijstSleutelIntentie
 
@@ -1210,6 +1341,24 @@ export interface ListKeyIntention
 
 Een stabiele sleutelkandidaat voor een renderer voor doellijsten.
 
+### betekenisvolKinderen
+
+**Soort:** functie
+
+```typescript
+function meaningfulChildren(
+  node: GenericRenderNode,
+): readonly GenericRenderChild[];
+```
+
+Kinderen die het doelwit overleven (tekst met alleen witruimte bevat niets).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ----------------- | ----------- |
+| node | GeneriekRenderNode |             |
+
 ### MemoIntentie
 
 **Soort:** interface
@@ -1218,7 +1367,17 @@ Een stabiele sleutelkandidaat voor een renderer voor doellijsten.
 export interface MemoIntention
 ```
 
-Een gememoriseerde of afgeleide waarde.
+Een opgeslagen of afgeleide waarde.
+
+### ModelContract
+
+**Soort:** interface
+
+```typescript
+export interface ModelContract
+```
+
+Een doelneutrale gecontroleerde waarde en de getypte update-gebeurtenis ervan.
 
 ### PropIntentie
 
@@ -1229,6 +1388,16 @@ export interface PropIntention
 ```
 
 Een neutrale prop-declaratie afgeleid van een componenthandtekening of props-type.
+
+### Reactieve eigenschap
+
+**Soort:** interface
+
+```typescript
+export interface ReactiveProperty
+```
+
+Een reactieve componenteigenschap die door elke doelzender wordt gedeeld.
 
 ### RefIntentie
 
@@ -1248,13 +1417,29 @@ Een ref-intentie die onafhankelijk is van de ref-representatie van het doelwit.
 function renderNodeTagName(node: GenericRenderNode): string | undefined;
 ```
 
-De gewone tagnaam van een render node, of `undefined` voor een berekende tag.
+De gewone tagnaam van een weergave node, of `undefined` voor een berekende tag.
 
 #### Parameters
 
-| Naam | Typ                | Beschrijving |
-| ---- | ------------------ | ------------ |
-| node | GeneriekRenderNode |              |
+| Naam | Typ | Beschrijving |
+| ---- | ----------------- | ----------- |
+| node | GeneriekRenderNode |             |
+
+### renderNodeTagText
+
+**Soort:** functie
+
+```typescript
+function renderNodeTagText(node: GenericRenderNode): string;
+```
+
+De platte tagtekst van een render node (een berekende tag drukt de bronexpressie af).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ----------------- | ----------- |
+| node | GeneriekRenderNode |             |
 
 ### SemantischeIntenties
 
@@ -1276,6 +1461,36 @@ export interface SemanticModule
 
 De getypte semantische IR die door elke framework-uitvoerplug-in wordt gebruikt.
 
+### InstallatieContract
+
+**Soort:** interface
+
+```typescript
+export interface SetupContract
+```
+
+Canonieke setup/gebeurtenis/modelcontract dat door alle doelverlagers wordt gebruikt.
+
+### SetupEventEmitter
+
+**Soort:** interface
+
+```typescript
+export interface SetupEventEmitter
+```
+
+Een gebeurteniszender die buiten de configuratie is verklaard en is gekoppeld aan de gebeurtenisconfiguratie.
+
+### SetupEventHandler
+
+**Soort:** interface
+
+```typescript
+export interface SetupEventHandler
+```
+
+Een gebeurtenishandler die buiten de setup is gedeclareerd.
+
 ### SlotIntentie
 
 **Soort:** interface
@@ -1284,7 +1499,7 @@ De getypte semantische IR die door elke framework-uitvoerplug-in wordt gebruikt.
 export interface SlotIntention
 ```
 
-Een slot gelezen of slot doorgegeven aan een onderliggende component.
+Een slot gelezen of doorgegeven aan een onderliggende component.
 
 ### bronGesteund
 
@@ -1302,11 +1517,11 @@ Bouw een brongebaseerde expressie op basis van reeds afgedrukte tekst.
 
 #### Parameters
 
-| Naam       | Typ                                | Beschrijving |
-| ---------- | ---------------------------------- | ------------ |
-| tekst      | tekenreeks                         |              |
-| syntaxis   | SourceBackedExpression["syntaxis"] |              |
-| spanwijdte | BronSpan                           |              |
+| Naam | Typ | Beschrijving |
+| ------ | -------------------------------- | ----------- |
+| tekst | tekenreeks |             |
+| syntaxis | SourceBackedExpression["syntaxis"] |             |
+| spanwijdte | BronSpan |             |
 
 ### BronBackedExpression
 
@@ -1353,10 +1568,465 @@ Voer een renderboom eerst in de diepte uit, inclusief geneste expressiemarkering
 
 #### Parameters
 
-| Naam        | Typ                                   | Beschrijving |
-| ----------- | ------------------------------------- | ------------ |
-| knooppunten | alleen-lezen GenericRenderNode[]      |              |
-| bezoek      | (node: GenericRenderNode) => ongeldig |              |
+| Naam | Typ | Beschrijving |
+| ----- | --------------------------------- | ----------- |
+| knooppunten | alleen-lezen GenericRenderNode[] |             |
+| bezoek | (node: GenericRenderNode) => ongeldig |             |
+
+### zonderSlotAttribute
+
+**Soort:** functie
+
+```typescript
+function withoutSlotAttribute(
+  node: GenericRenderNode,
+  slotAttributeName = "slot",
+): GenericRenderNode;
+```
+
+Een kopie van de node zonder de `slot="…"`-routeringsmarkering.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------------- | ----------------- | ----------- |
+| node | GeneriekRenderNode |             |
+| slotAttributeName |                   |             |
+
+## `src/lowering/dynamic`
+
+### lagereDynamicNodes
+
+**Soort:** functie
+
+```typescript
+function lowerDynamicNodes(
+  module: SemanticModule,
+): readonly NormalizedDynamicPlan[];
+```
+
+Verlaagt de dynamische node-intenties en geeft drie `<Dynamic>`-tags weer.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | -------------- | ----------- |
+| module | SemantischeModule |             |
+
+### lagere lijstsleutels
+
+**Soort:** functie
+
+```typescript
+function lowerListKeys(
+  module: SemanticModule,
+): readonly NormalizedListKeyPlan[];
+```
+
+Verlaagt de belangrijkste kandidaten uit `SemanticModule`.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | -------------- | ----------- |
+| module | SemantischeModule |             |
+
+### lowerStaticSubbomen
+
+**Soort:** functie
+
+```typescript
+function lowerStaticSubtrees(
+  module: SemanticModule,
+): readonly NormalizedStaticSubtreePlan[];
+```
+
+Verlaagt statische substructuurkandidaten gemarkeerd met `mp-static`.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | -------------- | ----------- |
+| module | SemantischeModule |             |
+
+### GenormaliseerdDynamischPlan
+
+**Soort:** interface
+
+```typescript
+export interface NormalizedDynamicPlan
+```
+
+Genormaliseerde descriptor voor een dynamische node `<Dynamic is={...}>`.
+
+### NormalizedListKeyPlan
+
+**Soort:** interface
+
+```typescript
+export interface NormalizedListKeyPlan
+```
+
+Genormaliseerde descriptor voor een lijstsleutelbinding.
+
+### GenormaliseerdStatischSubboomPlan
+
+**Soort:** interface
+
+```typescript
+export interface NormalizedStaticSubtreePlan
+```
+
+Genormaliseerde descriptor voor een gehesen statische subboom.
+
+## `src/lowering/events`
+
+### canoniekeEventName
+
+**Soort:** functie
+
+```typescript
+function canonicalEventName(propName: string): string;
+```
+
+Extraheert de canonieke gebeurtenisnaam uit een `onXxx`-propnaam (bijvoorbeeld `onClick` -> `click`, `onKeyDown` -> `keydown`).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| propName | tekenreeks |             |
+
+### formatTargetEventName
+
+**Soort:** functie
+
+```typescript
+function formatTargetEventName(
+  eventName: string,
+  target: "react" | "solid" | "vue" | "svelte" | "web-components",
+): string;
+```
+
+Formatteert een gebeurtenisnaam volgens de conventies van het doelframework.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | ----------------------------------------------------------- | ----------- |
+| gebeurtenisnaam | tekenreeks |             |
+| doel | "react" \| "solid" \| "vue" \| "svelte" \| "webcomponenten" |             |
+
+### isEventHandlerProp
+
+**Soort:** functie
+
+```typescript
+function isEventHandlerProp(propName: string): boolean;
+```
+
+Bepaalt of een eigenschapsnaam een ​​gebeurtenishandlerprop vertegenwoordigt (bijvoorbeeld `onClick`, `onKeyDown`).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| propName | tekenreeks |             |
+
+### lagereEventIntenties
+
+**Soort:** functie
+
+```typescript
+function lowerEventIntentions(
+  module: SemanticModule,
+): readonly NormalizedEventPlan[];
+```
+
+Extraheert alle intenties van de gebeurtenishandler uit een `SemanticModule`.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | -------------- | ----------- |
+| module | SemantischeModule |             |
+
+### GenormaliseerdEventPlan
+
+**Soort:** interface
+
+```typescript
+export interface NormalizedEventPlan
+```
+
+Genormaliseerde descriptor voor een verlaagde componentgebeurtenishandler.
+
+## `src/lowering/pipeline`
+
+### BasisVerlaagdModule
+
+**Soort:** interface
+
+```typescript
+export interface BaseLoweredModule extends TargetLoweredModule
+```
+
+Standaard basislijn-verlaagd plan waarin framework-plug-ins kunnen worden ingebed of waarop kan worden voortgebouwd.
+
+### createBaseLoweredModule
+
+**Soort:** functie
+
+```typescript
+function createBaseLoweredModule(
+  module: SemanticModule,
+  framework: TargetFrameworkId,
+): BaseLoweredModule;
+```
+
+Creëert een basisverlaagde module die gedeelde prop-normalisatie, slotsynthese,
+gebeurtenisverlaging, dynamische node-extractie en normalisatie van lijstsleutels.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | ----------------- | ----------------------------------- |
+| module | SemantischeModule | - Semantische module van frontend IR. |
+| kader | DoelFrameworkId | - De doelframework-ID.          |
+
+#### Contract
+
+- **@param:** - Semantische module van frontend IR.
+- **@param:** - De doelframework-ID.
+- **@returns:** Standaard verlaagde basismodule.
+
+### validateLoweredInvarianten
+
+**Soort:** functie
+
+```typescript
+function validateLoweredInvariants(lowered: TargetLoweredModule): void;
+```
+
+Valideert dat een verlaagde module voldoet aan de vereiste structurele invarianten.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------------- | ------------------------------ |
+| verlaagd | TargetLoweredModule | - De verlaagde module om te controleren. |
+
+#### Contract
+
+- **@param:** - De verlaagde module om te controleren.
+- **@throws:** Als invariante contracten worden geschonden.
+
+## `src/lowering/props`
+
+### canonicalizePropsContract
+
+**Soort:** functie
+
+```typescript
+function canonicalizePropsContract(
+  module: SemanticModule,
+  defaultParameterName = "props",
+): NormalizedPropsContract;
+```
+
+Canoniseert het rekwisietencontract van een `SemanticModule`.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------------------- | -------------- | ----------------------------------------------------------------------------- |
+| module | SemantischeModule | - De semantische module die moet worden geïnspecteerd.                                             |
+| standaardparameternaam |                | - De parameternaam van de fallback-props als er geen is gedeclareerd (standaard: 'props'). |
+
+#### Contract
+
+- **@param:** - De semantische module die moet worden geïnspecteerd.
+- **@param:** - De parameternaam van de fallback-props als er geen is gedeclareerd (standaard: 'props').
+- **@returns:** Canoniek rekwisietencontract.
+
+### GenormaliseerdeProp
+
+**Soort:** interface
+
+```typescript
+export interface NormalizedProp
+```
+
+Een genormaliseerde, doel-agnostische beschrijving van rekwisieten.
+
+### GenormaliseerdePropsContract
+
+**Soort:** interface
+
+```typescript
+export interface NormalizedPropsContract
+```
+
+Het genormaliseerde rekwisietencontract van een component.
+
+### solvePropTypeText
+
+**Soort:** functie
+
+```typescript
+function resolvePropTypeText(prop: PropIntention): string;
+```
+
+Lost de typetekenreeks op voor een prop-intentie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------------- | ----------- |
+| steun | PropIntentie |             |
+
+### UNKNOWN_PROP_TYPE
+
+**Soort:** constant
+
+```typescript
+export const UNKNOWN_PROP_TYPE;
+```
+
+De tekenreeks van het fallback-type wanneer er geen gedeclareerd of afgeleid type aanwezig is.
+
+## `src/lowering/setup`
+
+### LEEG_SETUP_CONTRACT
+
+**Soort:** constant
+
+```typescript
+export const EMPTY_SETUP_CONTRACT: SetupContract;
+```
+
+Leeg installatiecontract dat wordt gebruikt door samenstelbare modules zonder oudere configuratie zonder installatie.
+
+### normaliserenSetupContract
+
+**Soort:** functie
+
+```typescript
+function normalizeSetupContract(module: SemanticModule): SetupContract;
+```
+
+Haalt het canonieke installatiecontract op dat door de frontend is bijgevoegd.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | -------------- | ----------- |
+| module | SemantischeModule |             |
+
+### valideerSetupContract
+
+**Soort:** functie
+
+```typescript
+function validateSetupContract(
+  contract: SetupContract,
+  fileName = "<unknown>",
+): readonly CompilerDiagnostic[];
+```
+
+Valideert installatie-afhankelijkheden, namen en compatibiliteit van de payload van modellen voordat het doel wordt verlaagd.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------------- | ----------- |
+| overeenkomst | InstallatieContract |             |
+| bestandsnaam |               |             |
+
+## `src/lowering/slots`
+
+### DEFAULT_SLOT_NAME
+
+**Soort:** constant
+
+```typescript
+export const DEFAULT_SLOT_NAME;
+```
+
+Standaard slotnaam voor alle ondersteunde doelframeworks.
+
+### isDefaultSlotName
+
+**Soort:** functie
+
+```typescript
+function isDefaultSlotName(name: string): boolean;
+```
+
+Bepaalt of een slotnaam het standaardslot is.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| naam | tekenreeks |             |
+
+### isSlotRenderNode
+
+**Soort:** functie
+
+```typescript
+function isSlotRenderNode(node: GenericRenderNode): boolean;
+```
+
+Bepaalt of een render node een plaatsaanduidingstag voor een slot vertegenwoordigt (`<Slot>` of `<slot>`).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ----------------- | ----------- |
+| node | GeneriekRenderNode |             |
+
+### GenormaliseerdSlotPlan
+
+**Soort:** interface
+
+```typescript
+export interface NormalizedSlotPlan
+```
+
+Genormaliseerde descriptor voor een componentslot.
+
+### GenormaliseerdSlotsContract
+
+**Soort:** interface
+
+```typescript
+export interface NormalizedSlotsContract
+```
+
+Genormaliseerde verzameling van alle slots die voor een component zijn gesynthetiseerd.
+
+### synthetiserenSlotPlans
+
+**Soort:** functie
+
+```typescript
+function synthesizeSlotPlans(module: SemanticModule): NormalizedSlotsContract;
+```
+
+Synthetiseert een uniform slotcontract voor een `SemanticModule`.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | -------------- | --------------------------------- |
+| module | SemantischeModule | - De semantische module om te analyseren. |
+
+#### Contract
+
+- **@param:** - De semantische module om te analyseren.
+- **@returns:** Genormaliseerd slotplancontract.
 
 ## `src/schema`
 
@@ -1377,10 +2047,10 @@ of als de verlaagde plandiscriminator niet aansluit bij het verwachte kader.
 
 #### Parameters
 
-| Naam              | Typ         | Beschrijving |
-| ----------------- | ----------- | ------------ |
-| bedoelingen       | onbekend    |              |
-| verwachtFramework | FrameworkId |              |
+| Naam | Typ | Beschrijving |
+| ----------------- | ----------- | ----------- |
+| bedoelingen | onbekend |             |
+| verwachtFramework | FrameworkId |             |
 
 ### DeclaratiefSchema
 
@@ -1404,9 +2074,9 @@ Zoek recursief naar een bruikbare bronreeks binnen intenties of hun AST-feiten.
 
 #### Parameters
 
-| Naam   | Typ      | Beschrijving |
-| ------ | -------- | ------------ |
-| waarde | onbekend |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------- | ----------- |
+| waarde | onbekend |             |
 
 ### Schemaveldregel
 
@@ -1525,11 +2195,11 @@ Valideert een doelobject tegen een declaratief schema, waarbij alle structurele 
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving                                            |
-| ------ | --------------------- | ------------------------------------------------------- |
-| doel   | onbekend              | - Doelobject of record om te valideren.                 |
-| schema | DeclaratiefSchema     | - Declaratief schema dat structurele regels definieert. |
-| opties | SchemaValidatieOpties | - Validatieconfiguratieopties.                          |
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------- | ----------------------------------------------- |
+| doel | onbekend | - Doelobject of record om te valideren.          |
+| schema | DeclaratiefSchema | - Declaratief schema dat structurele regels definieert. |
+| opties | SchemaValidatieOpties | - Validatieconfiguratieopties.             |
 
 #### Contract
 
@@ -1554,7 +2224,552 @@ Retourneert gestructureerde validatiefouten en bijbehorende CompilerDiagnostic-o
 
 #### Parameters
 
-| Naam              | Typ         | Beschrijving |
-| ----------------- | ----------- | ------------ |
-| bedoelingen       | onbekend    |              |
-| verwachtFramework | FrameworkId |              |
+| Naam | Typ | Beschrijving |
+| ----------------- | ----------- | ----------- |
+| bedoelingen | onbekend |             |
+| verwachtFramework | FrameworkId |             |
+
+## `src/testing`
+
+### booleaans attribuut
+
+**Soort:** functie
+
+```typescript
+function booleanAttribute(name: string): GenericJsxAttribute;
+```
+
+Een waardeloos Booleaans steno-attribuut (`disabled`).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| naam | tekenreeks |             |
+
+### bestanddeel
+
+**Soort:** functie
+
+```typescript
+function component(parts: {
+  name: string;
+  parameter?: string;
+  parameterType?: string;
+  exported?: boolean;
+  body?: readonly GenericStatement[];
+  returnNode?: GenericRenderNode;
+  returnExpression?: string;
+  returned?: { expression: string; nodes?: readonly GenericRenderNode[] };
+}): GenericComponent;
+```
+
+Bouw het componentrecord waarnaar een module is vernoemd.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| onderdelen | {naam: tekenreeks; parameter?: tekenreeks; parameterType?: tekenreeks; geëxporteerd?: boolean; body?: alleen-lezen GenericStatement[]; returnNode?: GenericRenderNode; returnExpressie?: string; geretourneerd?: {expressie: string; knooppunten?: alleen-lezen GenericRenderNode[] }; } |             |
+
+### dynamischElement
+
+**Soort:** functie
+
+```typescript
+function dynamicElement(
+  expression: string,
+  parts: {
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+  } = {},
+): GenericRenderNode;
+```
+
+Bouw een berekende tag-weergave node.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------------------------------------------------------------------------------------- | ----------- |
+| expressie | tekenreeks |             |
+| onderdelen | { attributen?: alleen-lezen GenericAttribute[]; kinderen?: alleen-lezen GenericRenderChild[]; bron?: tekenreeks; } |             |
+
+### dynamisch knooppunt
+
+**Soort:** functie
+
+```typescript
+function dynamicNode(
+  expression: string,
+  span: SourceSpan = EMPTY_SPAN,
+): DynamicNodeIntention;
+```
+
+Bouw een dynamische node-intentie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | ---------- | ----------- |
+| expressie | tekenreeks |             |
+| spanwijdte | BronSpan |             |
+
+### effect
+
+**Soort:** functie
+
+```typescript
+function effect(
+  body: string,
+  second?:
+    | readonly string[]
+    | string
+    | { cleanup?: string; dependencies?: readonly string[] },
+  third?: string | readonly string[],
+): EffectIntention;
+```
+
+Bouw een effectintentie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---------------------------------------------------------------------------------------- | ----------- |
+| lichaam | tekenreeks |             |
+| tweede | \| alleen-lezen tekenreeks[] \| tekenreeks \| {opruimen?: string; afhankelijkheden?: alleen-lezen string[] } |             |
+| derde | tekenreeks \| alleen-lezen tekenreeks[] |             |
+
+### element
+
+**Soort:** functie
+
+```typescript
+function element(
+  tag: string,
+  parts: {
+    tagKind?: GenericTagKind;
+    selfClosing?: boolean;
+    attributes?: readonly GenericAttribute[];
+    children?: readonly GenericRenderChild[];
+    source?: string;
+    span?: SourceSpan;
+  } = {},
+): GenericRenderNode;
+```
+
+Bouw een render node; `source` is de eigen tekst van node, die wordt gebruikt bij het splitsen van geneste markeringen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| label | tekenreeks |             |
+| onderdelen | { tagKind?: GeneriekeTagKind; zelfsluitend?: boolean; attributen?: alleen-lezen GenericAttribute[]; kinderen?: alleen-lezen GenericRenderChild[]; bron?: tekenreeks; span?: SourceSpan; } |             |
+
+### elementRef
+
+**Soort:** constant
+
+```typescript
+export const elementRef: typeof reference;
+```
+
+Alias ​​voor `reference` (gebruikt in de specificaties van Web Components).
+
+### evenement
+
+**Soort:** functie
+
+```typescript
+function event(name: string, handler: string): EventIntention;
+```
+
+Bouw een evenementintentie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| naam | tekenreeks |             |
+| begeleider | tekenreeks |             |
+
+### expressieAttribuut
+
+**Soort:** functie
+
+```typescript
+function expressionAttribute(
+  name: string,
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericJsxAttribute;
+```
+
+Een `name={expression}`-attribuut, optioneel met geneste opmaak.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---------------------------- | ----------- |
+| naam | tekenreeks |             |
+| tekst | tekenreeks |             |
+| genest | alleen-lezen GenericRenderNode[] |             |
+
+### expressieKind
+
+**Soort:** functie
+
+```typescript
+function expressionChild(
+  text: string,
+  nested: readonly GenericRenderNode[] = [],
+): GenericExpressionNode;
+```
+
+Een `{ … }`-interpolatie in onderliggende positie, optioneel met geneste markup.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---------------------------- | ----------- |
+| tekst | tekenreeks |             |
+| genest | alleen-lezen GenericRenderNode[] |             |
+
+### ArmatuurIntenties
+
+**Soort:** type
+
+```typescript
+export type FixtureIntentions = SemanticModuleParts;
+```
+
+Alias ​​voor `SemanticModuleParts`-compatibiliteit met oudere Vue-specificaties.
+
+### fragment
+
+**Soort:** functie
+
+```typescript
+function fragment(
+  children: readonly GenericRenderChild[] = [],
+  source = "<Fragment />",
+): GenericRenderNode;
+```
+
+Bouw een fragmentweergave node (`<>…</>` of `<Fragment>…</Fragment>`).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ----------------------------- | ----------- |
+| kinderen | alleen-lezen GenericRenderChild[] |             |
+| bron |                               |             |
+
+### lijstSleutel
+
+**Soort:** functie
+
+```typescript
+function listKey(
+  source: string,
+  second?: boolean | string | { key?: string; stable?: boolean },
+  third?: boolean | string,
+): ListKeyIntention;
+```
+
+Bouw een lijstsleutelintentie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------------------------------------------------------- | ----------- |
+| bron | tekenreeks |             |
+| tweede | booleaanse \| tekenreeks \| { sleutel?: string; stabiel?: boolean } |             |
+| derde | booleaanse \| tekenreeks |             |
+
+### memo
+
+**Soort:** functie
+
+```typescript
+function memo(
+  name: string,
+  factory: string,
+  dependencies?: readonly string[],
+): MemoIntention;
+```
+
+Bouw een memo-intentie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------ | ----------------- | ----------- |
+| naam | tekenreeks |             |
+| fabriek | tekenreeks |             |
+| afhankelijkheden | alleen-lezen tekenreeks[] |             |
+
+### moduleImporteren
+
+**Soort:** functie
+
+```typescript
+function moduleImport(
+  text: string,
+  source: string,
+  parts: Partial<Omit<GenericImport, "kind" | "text" | "source" | "span">> = {},
+): GenericImport;
+```
+
+Bouw een importrecord op basis van de brontekst en de opgeloste specificatie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | -------------------------------------------------------------------- | ----------- |
+| tekst | tekenreeks |             |
+| bron | tekenreeks |             |
+| onderdelen | Gedeeltelijk<Omit<GenericImport, "kind" \| "text" \| "source" \| "span">> |             |
+
+### neutraalImporteren
+
+**Soort:** functie
+
+```typescript
+function neutralImport(
+  valueNames: readonly string[],
+  typeNames: readonly string[] = [],
+): GenericImport;
+```
+
+De neutrale `@mission-platform/forge-jsx`-import, gespeld vanuit de namen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------- | ----------- |
+| waardeNamen | alleen-lezen tekenreeks[] |             |
+| typeNamen | alleen-lezen tekenreeks[] |             |
+
+### prop
+
+**Soort:** functie
+
+```typescript
+function prop(
+  name: string,
+  second?:
+    string | { type?: string; optional?: boolean; defaultValue?: string },
+  third?: boolean | { optional?: boolean; defaultValue?: string },
+  fourth?: string,
+): PropIntention;
+```
+
+Bouw een prop-intentie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---------------------------------------------------------------------- | ----------- |
+| naam | tekenreeks |             |
+| tweede | tekenreeks \| {type?: tekenreeks; optioneel?: boolean; standaardwaarde?: string } |             |
+| derde | booleaanse \| { optioneel?: boolean; standaardwaarde?: string } |             |
+| vierde | tekenreeks |             |
+
+### referentie
+
+**Soort:** functie
+
+```typescript
+function reference(
+  name: string,
+  elementType?: string,
+  initializer?: string,
+): RefIntention;
+```
+
+Creëer een ref-intentie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ------ | ----------- |
+| naam | tekenreeks |             |
+| elementType | tekenreeks |             |
+| initialisatie | tekenreeks |             |
+
+### retourVerklaring
+
+**Soort:** functie
+
+```typescript
+function returnStatement(
+  expression: string,
+  renderNodes: readonly GenericRenderNode[] = [],
+): GenericStatement;
+```
+
+Bouw de instructie `return …;` van een componentbody.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ---------------------------- | ----------- |
+| uitdrukking | tekenreeks |             |
+| renderNodes | alleen-lezen GenericRenderNode[] |             |
+
+### semantischeModule
+
+**Soort:** functie
+
+```typescript
+function semanticModule(parts: SemanticModuleParts): SemanticModule;
+```
+
+Stel een `SemanticModule` samen uit armatuuronderdelen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------------------- | ----------- |
+| onderdelen | SemantischeModuleParts |             |
+
+### SemantischeModuleParts
+
+**Soort:** interface
+
+```typescript
+export interface SemanticModuleParts
+```
+
+De bedoelingsfeiten die een testopstelling kan verklaren.
+
+### sleuf
+
+**Soort:** functie
+
+```typescript
+function slot(name: string, fallback?: string): SlotIntention;
+```
+
+Bouw een slotintentie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| naam | tekenreeks |             |
+| terugval | tekenreeks |             |
+
+### spreadAttribuut
+
+**Soort:** functie
+
+```typescript
+function spreadAttribute(
+  text: string,
+  span: SourceSpan = EMPTY_SPAN,
+): GenericJsxSpreadAttribute;
+```
+
+Een spreadkenmerk `{...expression}`.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ---------- | ----------- |
+| tekst | tekenreeks |             |
+| spanwijdte | BronSpan |             |
+
+### staat
+
+**Soort:** functie
+
+```typescript
+function state(
+  name: string,
+  setterName?: string,
+  parts: { type?: string; inferredType?: string; initializer?: string } = {},
+): StateIntention;
+```
+
+Bouw een staatsintentie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------------------------------------------- | ----------- |
+| naam | tekenreeks |             |
+| setterNaam | tekenreeks |             |
+| onderdelen | {type?: tekenreeks; afgeleidType?: string; initialisatie?: string } |             |
+
+### stelling
+
+**Soort:** functie
+
+```typescript
+function statement(
+  text: string,
+  statementKind: GenericStatementKind = "variable",
+  parts: {
+    name?: string;
+    exported?: boolean;
+    renderNodes?: readonly GenericRenderNode[];
+  } = {},
+): GenericStatement;
+```
+
+Bouw een verklaringsrecord op basis van de brontekst.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------- | ---------------------------------------------------------------------------------- | ----------- |
+| tekst | tekenreeks |             |
+| verklaringSoort | Generieke verklaringsoort |             |
+| onderdelen | { naam?: tekenreeks; geëxporteerd?: boolean; renderNodes?: alleen-lezen GenericRenderNode[]; } |             |
+
+### stringAttribuut
+
+**Soort:** functie
+
+```typescript
+function stringAttribute(name: string, value: string): GenericJsxAttribute;
+```
+
+Een `name="value"`-kenmerk.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| naam | tekenreeks |             |
+| waarde | tekenreeks |             |
+
+### sjabloonRef
+
+**Soort:** constant
+
+```typescript
+export const templateRef: typeof reference;
+```
+
+Alias ​​voor `reference` (gebruikt in Vue-specificaties).
+
+### tekstKind
+
+**Soort:** functie
+
+```typescript
+function textChild(text: string): GenericTextNode;
+```
+
+Letterlijke tekst tussen tags.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| tekst | tekenreeks |             |

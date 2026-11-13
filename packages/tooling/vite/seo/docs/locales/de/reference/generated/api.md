@@ -20,28 +20,27 @@ function seoPlugin(options: SeoPluginOptions): Plugin;
 ```
 
 Erstellen Sie ein Vite-Plugin, das `robots.txt` und `sitemap.xml` in das schreibt
-`publicDir` (oder {@link SeoPluginOptions.outDir}) des Projekts zu Beginn
+`publicDir` (oder {@link SeoPluginOptions.outDir}) des Projekts zu Beginn von
 jeder Build- und Dev-Server-Lauf.
 
 #### Parameter
 
-| Name     | Geben Sie        | ein Beschreibung |
-| -------- | ---------------- | ---------------- |
-| Optionen | SeoPluginOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------- | ----------- |
+| Optionen | SeoPluginOptions |             |
 
 #### Vertrag
 
 - **@Beispiel:** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 
@@ -54,28 +53,27 @@ function seoPlugin(options: SeoPluginOptions): Plugin
 ````
 
 Erstellen Sie ein Vite-Plugin, das `robots.txt` und `sitemap.xml` in das schreibt
-`publicDir` (oder {@link SeoPluginOptions.outDir}) des Projekts zu Beginn
+`publicDir` (oder {@link SeoPluginOptions.outDir}) des Projekts zu Beginn von
 jeder Build- und Dev-Server-Lauf.
 
 #### Parameter
 
-| Name     | Geben Sie        | ein Beschreibung |
-| -------- | ---------------- | ---------------- |
-| Optionen | SeoPluginOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------- | ----------- |
+| Optionen | SeoPluginOptions |             |
 
 #### Vertrag
 
 - **@Beispiel:** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 

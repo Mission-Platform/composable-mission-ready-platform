@@ -1,8 +1,14 @@
+import type {
+  FlintAbiManifest,
+  FlintAbiParameter,
+  FlintDynamicLinkMetadata,
+  FlintHostImport,
+} from '@mission-platform/flint-c-abi';
+
 import { declarationProperty } from './declarations.js';
 import { createValueAdapterSource } from './esm-runtime.js';
 
 import type { FlintIteratorExport } from '../contracts.js';
-import type { FlintAbiManifest, FlintAbiParameter, FlintDynamicLinkMetadata, FlintHostImport } from '../manifest.js';
 
 /**
  * Encodes a byte array into a standard Base64 string.

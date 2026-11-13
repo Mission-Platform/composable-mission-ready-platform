@@ -19,6 +19,12 @@ import {
   slotFields,
   toTechnicalName,
 } from "@mission-platform/forge-cms-plugin-api";
+import type {
+  ContentComponent,
+  ContentDefaultValue,
+  ContentField,
+} from "@mission-platform/forge-cms-plugin-api";
+import type { CompilerDiagnostic } from "@mission-platform/forge-plugin-api";
 
 import {
   FORGE_GHOST_FIELD_UNSUPPORTED,
@@ -26,13 +32,6 @@ import {
   ghostWarning,
 } from "./diagnostics.js";
 import { ghostPartialName } from "./template.js";
-
-import type {
-  ContentComponent,
-  ContentDefaultValue,
-  ContentField,
-} from "@mission-platform/forge-cms-plugin-api";
-import type { CompilerDiagnostic } from "@mission-platform/forge-plugin-api";
 
 /** The file the partial-parameter contract is written to. */
 export const GHOST_COMPONENTS_MANIFEST = "forge-components.json";

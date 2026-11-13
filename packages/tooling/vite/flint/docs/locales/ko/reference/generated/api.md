@@ -11,7 +11,7 @@
 
 ## `src/compile`
 
-### compileFlint파일
+### 컴파일플린트파일
 
 **종류:** 기능
 
@@ -20,9 +20,10 @@ function compileFlintFile(
   fileName: string,
   options: FlintPluginOptions,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): FlintCompiledModule;
 ```
@@ -31,13 +32,13 @@ function compileFlintFile(
 
 #### 매개변수
 
-| 이름      | 유형                 | 설명 |
-| --------- | -------------------- | ---- |
-| 파일 이름 | 문자열               |      |
-| 옵션      | Flint플러그인옵션    |      |
-| 서비스    | FlintCompilerService |      |
+| 이름 | 유형 | 설명 |
+| -------- | -------------------- | ----------- |
+| 파일 이름 | 문자열 |             |
+| 옵션 | 플린트 플러그인 옵션 |             |
+| 서비스 | 플린트컴파일러서비스 |             |
 
-### 컴파일FlintGraph
+### 컴파일플린트그래프
 
 **종류:** 기능
 
@@ -47,9 +48,10 @@ function compileFlintGraph(
   options: FlintPluginOptions,
   resolver: FlintModuleResolver,
   service: FlintCompilerService = options.compilerService ??
+    options.graphCache?.compilerService ??
     createFlintCompilerService({
       selfHostedRunner: runFlintSelfHostedLexStage,
-      selfHostedVmMode: options.selfHostedVmMode,
+      selfHostedVmMode: options.selfHostedVmMode ?? "aot",
     }),
 ): Promise<FlintCompiledModule>;
 ```
@@ -58,14 +60,33 @@ function compileFlintGraph(
 
 #### 매개변수
 
-| 이름      | 유형                 | 설명 |
-| --------- | -------------------- | ---- |
-| 파일 이름 | 문자열               |      |
-| 옵션      | Flint플러그인옵션    |      |
-| 리졸버    | FlintModuleResolver  |      |
-| 서비스    | FlintCompilerService |      |
+| 이름 | 유형 | 설명 |
+| -------- | -------------------- | ----------- |
+| 파일 이름 | 문자열 |             |
+| 옵션 | 플린트 플러그인 옵션 |             |
+| 리졸버 | 플린트모듈리졸버 |             |
+| 서비스 | 플린트컴파일러서비스 |             |
 
-### Flint컴파일된 모듈
+### createFlintGraphCache
+
+**종류:** 기능
+
+```typescript
+function createFlintGraphCache(options?: {
+  readonly compilerService?: FlintCompilerService;
+  readonly selfHostedVmMode?: FlintVmExecutionMode;
+}): FlintGraphCache;
+```
+
+순차 및 동시 그래프 확인을 모두 중복 제거하는 그래프 캐시를 만듭니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+| 옵션 | { 읽기 전용 컴파일러서비스?: FlintCompilerService; 읽기 전용 selfHostedVmMode?: FlintVmExecutionMode; } |             |
+
+### 플린트컴파일된 모듈
 
 **종류:** 인터페이스
 
@@ -75,7 +96,17 @@ export interface FlintCompiledModule
 
 컴파일된 소스, 아티팩트 메타데이터, 소스 맵 및 선택적 그래프 보고서.
 
-### Flint플러그인옵션
+### 플린트그래프캐시
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintGraphCache
+```
+
+여러 Flint 대상에서 사용되는 공유 메모리 내 그래프 결과입니다.
+
+### 플린트플러그인옵션
 
 **종류:** 인터페이스
 
@@ -85,7 +116,7 @@ export interface FlintPluginOptions
 
 설명이 제공되지 않았습니다.
 
-### 해결FlintPath
+### 해결플린트 경로
 
 **종류:** 기능
 
@@ -93,16 +124,32 @@ export interface FlintPluginOptions
 function resolveFlintPath(root: string, value: string): string;
 ```
 
-값이 이미 절대값이 아닌 이상 루트를 기준으로 플러그인 경로를 확인합니다.
+값이 이미 절대값이 아닌 한 루트를 기준으로 플러그인 경로를 확인합니다.
 
 #### 매개변수
 
-| 이름 | 유형   | 설명 |
-| ---- | ------ | ---- |
-| 루트 | 문자열 |      |
-| 가치 | 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 루트 | 문자열 |             |
+| 가치 | 문자열 |             |
 
 ## `src/generate`
+
+### createFlintArtifactSource
+
+**종류:** 기능
+
+```typescript
+function createFlintArtifactSource(compiled: FlintCompiledModule): string;
+```
+
+빌드 시 아티팩트 임베딩을 위한 하나의 독립형 모듈을 생성합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------------------- | ----------- |
+| 컴파일 | 플린트컴파일 모듈 |             |
 
 ### createFlintDeclarationsSource
 
@@ -117,9 +164,9 @@ function createFlintDeclarationsSource(compiled: FlintCompiledModule): string;
 
 #### 매개변수
 
-| 이름   | 유형                | 설명 |
-| ------ | ------------------- | ---- |
-| 컴파일 | FlintCompiledModule |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------------------- | ----------- |
+| 컴파일 | 플린트컴파일 모듈 |             |
 
 ### createFlintManifestSource
 
@@ -133,9 +180,9 @@ JSON 직렬화 가능한 ABI 매니페스트가 포함된 모듈을 생성합니
 
 #### 매개변수
 
-| 이름   | 유형                | 설명 |
-| ------ | ------------------- | ---- |
-| 컴파일 | FlintCompiledModule |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------------------- | ----------- |
+| 컴파일 | 플린트컴파일 모듈 |             |
 
 ### createFlintModuleSource
 
@@ -146,13 +193,14 @@ function createFlintModuleSource(compiled: FlintCompiledModule): string;
 ```
 
 일반 소비자 모듈을 생성합니다. 생성된 모듈은
-함수를 컴파일하고 `abiManifest`을 통해 동일한 ABI 매니페스트를 노출합니다.
+컴파일된 함수, `abiManifest`을 통해 동일한 ABI 매니페스트를 노출합니다.
+기본 내보내기로 동기 라이브러리 로더를 제공합니다.
 
 #### 매개변수
 
-| 이름   | 유형                | 설명 |
-| ------ | ------------------- | ---- |
-| 컴파일 | FlintCompiledModule |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------------------- | ----------- |
+| 컴파일 | 플린트컴파일 모듈 |             |
 
 ### createFlintSourceMapSource
 
@@ -166,9 +214,9 @@ function createFlintSourceMapSource(compiled: FlintCompiledModule): string;
 
 #### 매개변수
 
-| 이름   | 유형                | 설명 |
-| ------ | ------------------- | ---- |
-| 컴파일 | FlintCompiledModule |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------------------- | ----------- |
+| 컴파일 | 플린트컴파일 모듈 |             |
 
 ### createFlintWasmSource
 
@@ -182,9 +230,9 @@ function createFlintWasmSource(compiled: FlintCompiledModule): string;
 
 #### 매개변수
 
-| 이름   | 유형                | 설명 |
-| ------ | ------------------- | ---- |
-| 컴파일 | FlintCompiledModule |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------------------- | ----------- |
+| 컴파일 | 플린트컴파일 모듈 |             |
 
 ### createFlintWatSource
 
@@ -199,56 +247,66 @@ Wasm 실행이 아닌 검사 및 적합성 주장을 위한 것입니다.
 
 #### 매개변수
 
-| 이름   | 유형                | 설명 |
-| ------ | ------------------- | ---- |
-| 컴파일 | FlintCompiledModule |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------------------- | ----------- |
+| 컴파일 | 플린트컴파일 모듈 |             |
 
-### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+### FLINT_ARTIFACT_QUERY
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
+export const FLINT_ARTIFACT_QUERY;
+```
+
+하나의 그래프 컴파일에서 컴파일된 모든 아티팩트 데이터를 반환하는 쿼리입니다.
+
+### FLINT_DECLARATIONS_QUERY
+
+**종류:** 상수
+
+```typescript
+export const FLINT_DECLARATIONS_QUERY;
 ```
 
 연결된 선언과 그래프 메타데이터를 ES 모듈로 반환하는 쿼리입니다.
 
-### FORGE_WEB_SCRIPT_MANIFEST_QUERY
+### FLINT_MANIFEST_QUERY
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
+export const FLINT_MANIFEST_QUERY;
 ```
 
 컴파일된 ABI 매니페스트를 ES 모듈로 반환하는 쿼리입니다.
 
-### FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+### FLINT_SOURCE_MAP_QUERY
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
+export const FLINT_SOURCE_MAP_QUERY;
 ```
 
 생성된 소스 맵을 모듈 기본 내보내기로 반환하는 쿼리입니다.
 
-### FORGE_WEB_SCRIPT_WASM_QUERY
+### FLINT_WASM_QUERY
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY;
+export const FLINT_WASM_QUERY;
 ```
 
 컴파일된 Wasm 바이트를 모듈 기본 내보내기로 반환하는 쿼리입니다.
 
-### FORGE_WEB_SCRIPT_WAT_QUERY
+### FLINT_WAT_QUERY
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY;
+export const FLINT_WAT_QUERY;
 ```
 
 분기 테이블 하강을 포함하여 생성된 WAT를 문자열로 반환하는 쿼리입니다.
@@ -263,17 +321,17 @@ export const FORGE_WEB_SCRIPT_WAT_QUERY;
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-Vite에 Forge 웹 스크립트 컴파일 및 가상 아티팩트 쿼리를 설치합니다.
+Vite에 Flint 컴파일 및 가상 아티팩트 쿼리를 설치합니다.
 플러그인은 매니페스트를 노출하는 동안 스칼라 Wasm 내보내기 ABI를 유지합니다.
-툴링 및 설비에 대한 선언, Wasm, WAT 및 소스 맵 쿼리.
+선언, Wasm, WAT, 툴링 및 설비에 대한 소스 맵 쿼리.
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 옵션 | Flint플러그인옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------ | ----------- |
+| 옵션 | 플린트 플러그인 옵션 |             |
 
-### flint플러그인
+### 부싯돌플러그인
 
 **종류:** 기능
 
@@ -281,15 +339,15 @@ Vite에 Forge 웹 스크립트 컴파일 및 가상 아티팩트 쿼리를 설�
 function flintPlugin(options: FlintPluginOptions = {}): Plugin;
 ```
 
-Vite에 Forge 웹 스크립트 컴파일 및 가상 아티팩트 쿼리를 설치합니다.
+Vite에 Flint 컴파일 및 가상 아티팩트 쿼리를 설치합니다.
 플러그인은 매니페스트를 노출하는 동안 스칼라 Wasm 내보내기 ABI를 유지합니다.
-툴링 및 설비에 대한 선언, Wasm, WAT 및 소스 맵 쿼리.
+선언, Wasm, WAT, 툴링 및 설비에 대한 소스 맵 쿼리.
 
 #### 매개변수
 
-| 이름 | 유형              | 설명 |
-| ---- | ----------------- | ---- |
-| 옵션 | Flint플러그인옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------ | ----------- |
+| 옵션 | 플린트 플러그인 옵션 |             |
 
 ### FlintViteError
 

@@ -1,5 +1,7 @@
+import type { FlintOwnership } from '@mission-platform/flint';
+import type { FlintAggregateLayout, FlintSpecialization } from '@mission-platform/flint-c-abi';
+
 import type { FlintTraceOptions, FlintTraceReport } from './trace.js';
-import type { FlintAggregateLayout, FlintOwnership, FlintSpecialization } from '@mission-platform/flint';
 
 /**
  * Supported VM bytecode execution modes ('interpret', 'jit', 'aot').

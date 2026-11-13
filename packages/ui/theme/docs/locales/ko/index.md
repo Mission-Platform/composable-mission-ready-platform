@@ -5,13 +5,13 @@
 > packages/ui/theme/docs/index.md: [packages/ui/theme/docs/index.md](../../index.md)
 > 언어: 한국어 (ko)
 
-`@mission-platform/theme`은 `@mission-platform/components`에서 추출한 1회 쓰기 테마 화면을 소유합니다.
+`@mission-platform/theme`은 `@mission-platform/components`에서 추출한 1회 쓰기 테마 표면을 소유합니다.
 
 ## 공개 표면
 
 - `ForgeThemeToggle`은 공유된 밝음, 어두움 및 자동 기본 설정을 순환합니다.
 - `ForgeThemeProvider`은 지속성을 구성하고 범위가 지정된 렌더링 소품을 통해 테마 상태를 노출합니다.
-- `ForgeThemeComposer`는 범위 또는 전역 `--mp-*` 토큰 재정의를 제어합니다.
+- `ForgeThemeComposer`는 범위가 지정된 또는 전역 `--mp-*` 토큰 재정의를 제어합니다.
 - 테마 스토어 계약에는 `getThemeSnapshot`, `subscribeTheme`, `setTheme`, `toggleTheme`, `cycleTheme` 및
   `configureTheme`.
 - 작성기 계약에는 구성 병합, 속성/토큰 변형, CSS 변수 변환 및 재설정 도우미가 포함됩니다.

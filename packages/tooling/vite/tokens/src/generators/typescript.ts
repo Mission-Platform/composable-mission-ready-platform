@@ -58,7 +58,7 @@ export function buildTokenModule(
   basename: string,
   document_: DtcgGroup,
   aliasDocument?: DtcgGroup,
-  exportName = camelCase(basename),
+  exportName: string = camelCase(basename),
 ): string {
   const topGroups = Object.keys(document_).filter((key) => !key.startsWith('$'));
   const resolved = resolveNode(document_, aliasDocument);

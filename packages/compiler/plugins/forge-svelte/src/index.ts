@@ -1,17 +1,11 @@
 import { createRequire } from "node:module";
 
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+
 import {
   assertTargetIntentionsLowered,
   defineForgeOutputPlugin,
 } from "@mission-platform/forge-plugin-api";
-import { svelte } from "@sveltejs/vite-plugin-svelte";
-
-import { emitSvelteModule } from "./emitters/component.js";
-import { emitSvelteHookModule } from "./emitters/hook.js";
-import { lowerSvelteModule } from "./lower.js";
-import { optimizeSvelteModule } from "./optimize.js";
-
-import type { SvelteLoweredModule } from "./lower.js";
 import type {
   ForgeBuildAdapters,
   FrameworkOutputPlugin,
@@ -20,6 +14,13 @@ import type {
   TargetIntentions,
   TargetOptimizeOptions,
 } from "@mission-platform/forge-plugin-api";
+
+import { emitSvelteModule } from "./emitters/component.js";
+import { emitSvelteHookModule } from "./emitters/hook.js";
+import { lowerSvelteModule } from "./lower.js";
+import { optimizeSvelteModule } from "./optimize.js";
+
+import type { SvelteLoweredModule } from "./lower.js";
 import type { TsdownPlugin } from "tsdown";
 import type { Plugin } from "vite";
 

@@ -1,4 +1,4 @@
-# @mission-platform/forge-router-redwood مرجع واجهة برمجة التطبيقات
+# مرجع @mission-platform/forge-router-redwood API
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
@@ -25,39 +25,39 @@ function createRedwoodRouterCapabilities(input: {
 }): MpRouterCapabilities;
 ```
 
-قم ببناء قدرات محايدة من بدايات Redwood (بدون إطار عمل للاختبارات).
+قم ببناء قدرات محايدة من بدايات Redwood (بدون إطار للاختبارات).
 
 #### حدود
 
-| الاسم   | اكتب                                                                                                                                                                                                     | الوصف |
-| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| الإدخال | { الموقع: { اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة ؟: سلسلة }; المعلمات ؟: MpRouteParameters; التنقل: RedwoodRouterSurface['navigate']; الطرق ؟: RedwoodRouterSurface['routes']; الرابط؟: غير معروف؛ } |       |
+| الاسم | اكتب | الوصف |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| الإدخال | { الموقع: { اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة ؟: سلسلة }; المعلمات؟: MpRouteParameters; التنقل: RedwoodRouterSurface['navigate']; الطرق ؟: RedwoodRouterSurface['routes']; الرابط؟: غير معروف؛ } |             |
 
 ### مبلينك
 
 **النوع:** مكون
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown;
+export function MpLink(properties:
 ```
 
-وكيل مكون الارتباط؛ تطبيقات ربط الخشب الأحمر الأصلي `Link` من خلال {@link setForgeRedwoodRouter}.
+وكيل مكون الارتباط؛ تربط التطبيقات Redwood `Link` الأصلي من خلال {@link setForgeRedwoodRouter}.
 
 #### حدود
 
-| الاسم | اكتب                                                             | الوصف |
-| ----- | ---------------------------------------------------------------- | ----- |
-| خصائص | { إلى: MpRouteLocationRaw; استبدال؟: منطقي؛ أطفال ؟: غير معروف } |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------------------------------------------- | ----------- |
+| خصائص | { إلى: MpRouteLocationRaw; استبدال؟: منطقي؛ أطفال ؟: غير معروف } |             |
 
 ### MpRouterView
 
 **النوع:** مكون
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
-ريدوود ليس لديه منفذ محمول. تقارير المترجم `view` باعتبارها غير مدعومة.
+ريدوود ليس لديه منفذ محمول. يُبلغ المترجم أن `view` غير مدعوم.
 
 ### RedwoodRouterSurface
 
@@ -81,9 +81,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### حدود
 
-| الاسم | اكتب             | الوصف |
-| ----- | ---------------- | ----- |
-| إلى   | مبرووتلوكيشن راو |       |
+| الاسم | اكتب | الوصف |
+| ---- | ------------------ | ----------- |
+| إلى | مبرووتلوكيشن راو |             |
 
 ### setForgeRedwoodRouter
 
@@ -94,13 +94,13 @@ function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void;
 ```
 
 قم بربط وحدة توجيه Redwood المملوكة للتطبيق. يقرأ رمز الحزمة المترجمة
-هذا التماس بحيث تتطابق أشكال الخطاف / الاتصال مع العقد المحايد.
+هذا التماس بحيث تتوافق أشكال الخطاف / الاتصال مع العقد المحايد.
 
 #### حدود
 
-| الاسم | اكتب               | الوصف |
-| ----- | ------------------ | ----- |
-| سطح   | ريدوود راوترسورفيس |       |
+| الاسم | اكتب | الوصف |
+| ------- | -------------------- | ----------- |
+| سطح | ريدوود راوترسورفيس |             |
 
 ### toMpLocationFromRedwood
 
@@ -109,7 +109,7 @@ function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void;
 ```typescript
 function toMpLocationFromRedwood(
   location: { pathname: string; search: string; hash?: string },
-  params: MpRouteParameters = {},
+  parameters: MpRouteParameters = {},
 ): MpResolvedLocation;
 ```
 
@@ -117,10 +117,10 @@ function toMpLocationFromRedwood(
 
 #### حدود
 
-| الاسم    | اكتب                                                 | الوصف |
-| -------- | ---------------------------------------------------- | ----- |
-| الموقع   | {اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة ؟: سلسلة } |       |
-| المعلمات | مبرووتباراميترات                                     |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------------------------------- | ----------- |
+| الموقع | {اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة ؟: سلسلة } |             |
+| المعلمات | مبرووتباراميترات |             |
 
 ### إلى RedwoodHref
 
@@ -134,10 +134,10 @@ function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['rou
 
 #### حدود
 
-| الاسم | اكتب                          | الوصف |
-| ----- | ----------------------------- | ----- |
-| إلى   | مبرووتلوكيشن راو              |       |
-| الطرق | RedwoodRouterSurface['الطرق'] |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------------------------------ | ----------- |
+| إلى | مبرووتلوكيشن راو |             |
+| الطرق | RedwoodRouterSurface['الطرق'] |             |
 
 ### useMpNavigation
 
@@ -147,7 +147,7 @@ function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['rou
 function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
-اقرأ فقط إمكانيات التنقل/الحل الضرورية.
+اقرأ فقط قدرات التنقل/الحل الضرورية.
 
 ### useMpRoute
 

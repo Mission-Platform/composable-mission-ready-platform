@@ -1,4 +1,4 @@
-/* eslint-disable import-x/order, unicorn/consistent-function-scoping, unicorn/prefer-switch */
+/* eslint-disable import-x/order */
 
 import type {
   FlintWasmBackendInput,
@@ -36,6 +36,18 @@ import {
   type FlintWasmSsaValue,
 } from './cfg.js';
 import { optimizeFlintWasmModule } from './optimizer.js';
+import { signedLeb, unsignedLeb } from './encoding/leb128.js';
+import {
+  appendF32,
+  appendF64,
+  CANONICAL_F32_NAN_BYTES,
+  CANONICAL_F64_NAN_BYTES,
+  vector,
+  wasmString,
+} from './encoding/bytes.js';
+import { section } from './emitter/section-builder.js';
+
+export { appendF32, appendF64, CANONICAL_F32_NAN_BYTES, CANONICAL_F64_NAN_BYTES };
 
 const STATIC_DATA_START = 1024; // 1 KiB null guard page (0x0 - 0x400) LLVM/wasm-ld standard
 const encoder = new TextEncoder();
@@ -69,49 +81,6 @@ const wasmTypes: Readonly<Record<FlintWasmPrimitiveType, readonly WasmValueType[
   v128: [0x7b],
 };
 
-/** Encodes an unsigned 32-bit integer into a WebAssembly LEB128 byte array. */
-function unsignedLeb(value: number): number[] {
-  const result: number[] = [];
-  let remaining = value >>> 0;
-  do {
-    const byte = remaining & 0x7f;
-    remaining >>>= 7;
-    result.push(remaining === 0 ? byte : byte | 0x80);
-  } while (remaining !== 0);
-  return result;
-}
-
-/** Encodes a signed 32-bit integer into a WebAssembly LEB128 byte array. */
-// skipcq: JS-R1005
-function signedLeb(value: number | bigint): number[] {
-  const result: number[] = [];
-  let remaining = BigInt(value);
-  let more = true;
-  while (more) {
-    const byte = Number(remaining & 0x7fn);
-    remaining >>= 7n;
-    more = !((remaining === 0n && (byte & 0x40) === 0) || (remaining === -1n && (byte & 0x40) !== 0));
-    result.push(more ? byte | 0x80 : byte);
-  }
-  return result;
-}
-
-/** Prefixes an array of bytecode elements with its count in LEB128 encoding. */
-function vector(values: readonly number[]): number[] {
-  return [...unsignedLeb(values.length), ...values];
-}
-
-/** Encodes a UTF-8 string prefixed by its byte length in WebAssembly format. */
-function wasmString(value: string): number[] {
-  const bytes = [...encoder.encode(value)];
-  return [...unsignedLeb(bytes.length), ...bytes];
-}
-
-/** Packages payload bytes into a WebAssembly section with section ID and length prefix. */
-function section(id: number, contents: readonly number[]): number[] {
-  return [id, ...unsignedLeb(contents.length), ...contents];
-}
-
 /** Maps high-level primitive types to WebAssembly binary value type constants. */
 function valueTypes(type: FlintWasmPrimitiveType): readonly WasmValueType[] {
   return wasmTypes[type];
@@ -120,32 +89,6 @@ function valueTypes(type: FlintWasmPrimitiveType): readonly WasmValueType[] {
 /** Encodes a WebAssembly function signature type entry. */
 function wasmFunctionType(parameters: readonly FlintWasmPrimitiveType[], result: FlintWasmPrimitiveType): number[] {
   return [0x60, ...vector(parameters.flatMap((parameter) => valueTypes(parameter))), ...vector(valueTypes(result))];
-}
-
-/** Canonical quiet NaN bit pattern for 32-bit floats (0x7fc00000 in little-endian). */
-export const CANONICAL_F32_NAN_BYTES = Object.freeze([0x00, 0x00, 0xc0, 0x7f]);
-
-/** Canonical quiet NaN bit pattern for 64-bit floats (0x7ff8000000000000 in little-endian). */
-export const CANONICAL_F64_NAN_BYTES = Object.freeze([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x7f]);
-
-/** Appends a 32-bit floating point number in little-endian binary format, canonicalizing NaNs. */
-export function appendF32(value: number): number[] {
-  if (Number.isNaN(value)) {
-    return [...CANONICAL_F32_NAN_BYTES];
-  }
-  const buffer = new ArrayBuffer(4);
-  new DataView(buffer).setFloat32(0, value, true);
-  return [...new Uint8Array(buffer)];
-}
-
-/** Appends a 64-bit floating point number in little-endian binary format, canonicalizing NaNs. */
-export function appendF64(value: number): number[] {
-  if (Number.isNaN(value)) {
-    return [...CANONICAL_F64_NAN_BYTES];
-  }
-  const buffer = new ArrayBuffer(8);
-  new DataView(buffer).setFloat64(0, value, true);
-  return [...new Uint8Array(buffer)];
 }
 
 /** Returns zero or initial value representation for a primitive type. */

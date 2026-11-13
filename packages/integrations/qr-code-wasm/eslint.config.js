@@ -19,13 +19,10 @@ export default [
       'unicorn/numeric-separators-style': 'off',
       'unicorn/no-for-loop': 'off',
       'unicorn/no-array-for-each': 'off',
-      'unicorn/no-useless-undefined': 'off',
       'unicorn/prefer-string-raw': 'off',
       'unicorn/prefer-string-replace-all': 'off',
       'unicorn/no-immediate-mutation': 'off',
       'unicorn/prefer-export-from': 'off',
-      'import-x/no-useless-path-segments': 'off',
-      'import-x/order': 'off',
     },
   },
 ];

@@ -58,7 +58,7 @@ Forge 라우터 컴파일러 플러그인에서 사용되는 안정적인 메타
 **종류:** 구성요소
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor;
+export function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 중립 링크 마커. 네이티브 대상은 컴파일 중에 이 함수를 대체합니다.
@@ -154,7 +154,7 @@ export type MpRouterCapabilityOverrides = Partial<MpRouterCapabilities>;
 **종류:** 구성요소
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
+export function MpRouterView(properties: MpRouterViewProps =
 ```
 
 중립 콘센트/뷰 마커. 네이티브 대상은 컴파일 중에 이 함수를 대체합니다.
@@ -244,7 +244,11 @@ function useMpRouter(): MpRouterCapabilities;
 **종류:** 상수
 
 ```typescript
-export const applicationCompatibilityFixtures;
+export const applicationCompatibilityFixtures: {
+  readonly website: ForgeCompatibilityFixture;
+  readonly myCareNotes: ForgeCompatibilityFixture;
+  readonly guardsAndLazy: ForgeCompatibilityFixture;
+};
 ```
 
 설명이 제공되지 않았습니다.

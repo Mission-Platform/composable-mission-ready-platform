@@ -6,20 +6,20 @@
 > 语言: 简体中文 (zh)
 
 任务平台使用**原子设计**系统将组件组织成复杂的层次结构。每个
-组件是用中立的 Forge JSX 方言编写的“一次写入”单元（`@mission-platform/forge-jsx`)，确保
+组件是用中立的 Forge JSX 方言 (`@mission-platform/forge-jsx`) 编写的“一次写入”单元，确保
 跨多个框架的一致性。
 
 ## 设计水平
 
 组件根据其范围和职责分为五个级别。
 
-| 水平       | 文件夹                      | 描述                                                                                                                          |
-| :--------- | :-------------------------- | :---------------------------------------------------------------------------------------------------------------------------- |
-| **原子**   | `src/components/atoms/`     | 最小的 UI 原语（例如， `ForgeButton`, `ForgeInput`, `ForgeBadge`)。它们通常是功能单元，不能在不失去其用途的情况下进一步分解。 |
-| **分子**   | `src/components/molecules/` | 原子的简单组成（例如， `ForgeSearchInput`, `ForgeFieldSet`)。它们作为一个整体共同发挥作用。                                   |
-| **生物体** | `src/components/organisms/` | 由原子、分子和其他有机体（例如， `ForgeNavbar`, `ForgeTable`, `ForgeModal`)。                                                 |
-| **模板**   | `src/components/templates/` | 定义内容结构的页面级布局（例如， `ForgeHero`, `ForgeAppLayout`)。他们经常使用插槽来定义内容的放置位置。                       |
-| **页面**   | `src/components/pages/`     | 填充有具体内容和数据的模板的特定实例（例如， `AccountSettingsPage`).                                                          |
+|水平|文件夹|描述 |
+| :------------ | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **原子** | `src/components/atoms/` |最小的 UI 原语（例如 `ForgeButton`、`ForgeInput`、`ForgeBadge`）。它们通常是功能单元，不能在不失去其用途的情况下进一步分解。 |
+| **分子** | `src/components/molecules/` |原子的简单组成（例如 `ForgeSearchInput`、`ForgeFieldSet`）。它们作为一个整体共同发挥作用。                                                                    |
+| **生物体** | `src/components/organisms/` |由原子、分子和其他有机体组成的复杂 UI 部分（例如 `ForgeNavbar`、`ForgeTable`、`ForgeModal`）。                                                       |
+| **模板** | `src/components/templates/` |定义内容结构的页面级布局（例如 `ForgeHero`、`ForgeAppLayout`）。他们经常使用插槽来定义内容的放置位置。                     |
+| **页面** | `src/components/pages/` |填充有具体内容和数据的模板的特定实例（例如，`AccountSettingsPage`）。                                                                        |
 
 ## 组件文件夹布局
 
@@ -49,21 +49,21 @@ src/components/
 
 ### 文件名
 
-故事必须使用 `.stories.tsx` 扩大。
+故事必须使用 `.stories.tsx` 扩展名。
 
 ### 产权约定
 
-这 `title` 故事书里的田野 `meta` 对象必须遵循以下模式：
+Storybook `meta` 对象中的 `title` 字段必须遵循以下模式：
 
 ```text
 <Level>/<Category>/<Component>
 ```
 
-- **级别**：大写复数（例如， `Atoms`, `Molecules`)。
-- **类别**：功能分组（例如， `Forms`, `Navigation`, `Display`, `Feedback`)。
-- **组件**：PascalCase 组件名称（例如， `ForgeButton`).
+- **级别**：大写复数（例如 `Atoms`、`Molecules`）。
+- **类别**：功能分组（例如，`Forms`、`Navigation`、`Display`、`Feedback`）。
+- **组件**：PascalCase 组件名称（例如 `ForgeButton`）。
 
-**例子 （`forge-button.stories.tsx`):**
+**示例（`forge-button.stories.tsx`）：**
 
 ```tsx
 const meta = {
@@ -75,20 +75,21 @@ const meta = {
 
 ## 编写标准
 
-1. **框架中立性**：切勿单独创作 Vue 和 React 版本。使用 `@mission-platform/forge-jsx`。
-2. **命名**：组件应使用 `Base` 前缀（例如， `ForgeCard`) 除非它们是具体的实现。
-3. **类型安全**：导出 `*Properties` 组件道具的接口。
-4. **测试**：同地办公 `.spec.ts` 每个组件都需要。
-5. **脚手架**：使用 `scaffold_component` MCP 工具确保正确的目录结构和样板文件。
+1. **框架中立性**：切勿编写单独的 Vue 和 React 版本。使用 `@mission-platform/forge-jsx`。
+2. **命名**：组件应使用 `Base` 前缀（例如 `ForgeCard`），除非它们是特定实现。
+3. **类型安全**：为组件的 props 导出 `*Properties` 接口。
+4. **测试**：每个组件都需要一个位于同一位置的 `.spec.ts`。
+5. **脚手架**：通过连接的 Mission Platform Developer MCP 服务器使用 `scaffold_component` MCP 工具来
+   确保正确的目录结构和样板文件。
 
-```bash
+```text
 # Example: Creating a new 'forge-chip' atom in the 'components' package
 scaffold_component(name="forge-chip", level="atom", area="Display", package="components", apply=true)
 ```
 
 ## 相关指南
 
-- [封装开发](package-development.md)
+- [软件包开发](package-development.md)
 - [可组合创作](composable-authoring.md)
 - [商店创作](store-authoring.md)
 - [实用程序创作](util-authoring.md)

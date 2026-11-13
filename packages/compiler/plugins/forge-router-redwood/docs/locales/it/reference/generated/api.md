@@ -29,8 +29,8 @@ Costruisci capacità neutre dalle primitive Redwood (prive di framework per i te
 
 #### Parametri
 
-| Nome     | Digitare                                                                                                                                                                                                            | Descrizione |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | ingresso | { posizione: { percorso: stringa; cerca: stringa; hash?: stringa }; parametri?: MpRouteParameters; navigare: RedwoodRouterSurface['navigare']; rotte?: RedwoodRouterSurface['rotte']; collegamento?: sconosciuto; } |             |
 
 ### MpLink
@@ -38,15 +38,15 @@ Costruisci capacità neutre dalle primitive Redwood (prive di framework per i te
 **Tipo:** componente
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown;
+export function MpLink(properties:
 ```
 
 Proxy del componente di collegamento; le app collegano il Redwood nativo `Link` tramite {@link setForgeRedwoodRouter}.
 
 #### Parametri
 
-| Nome      | Digitare                                                                | Descrizione |
-| --------- | ----------------------------------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | ----------------------------------------------------------------- | ----------- |
 | proprietà | { a: MpRouteLocationRaw; sostituire?: booleano; bambini?: sconosciuto } |             |
 
 ### MpRouterView
@@ -54,7 +54,7 @@ Proxy del componente di collegamento; le app collegano il Redwood nativo `Link` 
 **Tipo:** componente
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Redwood non ha una presa portatile; il compilatore segnala `view` come non supportato.
@@ -81,9 +81,9 @@ Risolvi un obiettivo neutro in una stringa href.
 
 #### Parametri
 
-| Nome | Digitare           | Descrizione |
+| Nome | Digitare | Descrizione |
 | ---- | ------------------ | ----------- |
-| a    | MpRouteLocationRaw |             |
+| a | MpRouteLocationRaw |             |
 
 ### setForgeRedwoodRouter
 
@@ -98,8 +98,8 @@ questa cucitura in modo che le forme del gancio/chiamata corrispondano al contra
 
 #### Parametri
 
-| Nome       | Digitare                         | Descrizione |
-| ---------- | -------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ------- | -------------------- | ----------- |
 | superficie | Superficie del router di sequoia |             |
 
 ### toMpLocationFromRedwood
@@ -109,7 +109,7 @@ questa cucitura in modo che le forme del gancio/chiamata corrispondano al contra
 ```typescript
 function toMpLocationFromRedwood(
   location: { pathname: string; search: string; hash?: string },
-  params: MpRouteParameters = {},
+  parameters: MpRouteParameters = {},
 ): MpResolvedLocation;
 ```
 
@@ -117,10 +117,10 @@ Costruisci una posizione neutrale da un'istantanea della posizione di Redwood.
 
 #### Parametri
 
-| Nome      | Digitare                                              | Descrizione |
-| --------- | ----------------------------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------------------------------- | ----------- |
 | posizione | { percorso: stringa; cerca: stringa; hash?: stringa } |             |
-| parametri | MpRouteParametri                                      |             |
+| parametri | MpRouteParametri |             |
 
 ### aRedwoodHref
 
@@ -134,9 +134,9 @@ Serializza un bersaglio neutrale per la navigazione a Redwood.
 
 #### Parametri
 
-| Nome     | Digitare                         | Descrizione |
-| -------- | -------------------------------- | ----------- |
-| a        | MpRouteLocationRaw               |             |
+| Nome | Digitare | Descrizione |
+| ------ | ------------------------------ | ----------- |
+| a | MpRouteLocationRaw |             |
 | percorsi | RedwoodRouterSurface['percorsi'] |             |
 
 ### useMpNavigation

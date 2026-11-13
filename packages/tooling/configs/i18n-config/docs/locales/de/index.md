@@ -17,7 +17,7 @@ pnpm add --save-dev @mission-platform/i18n-config
 ```
 
 Bewahren Sie Gebietsschemaquellen neben dem Arbeitsbereich auf, zu dem sie gehören. Extraktion schreibt
-Namespace-Bundles unter dem besitzenden Arbeitsbereich `locales/<locale>/` Verzeichnis;
+Namespace-Bundles im `locales/<locale>/`-Verzeichnis des besitzenden Arbeitsbereichs;
 Der Befehl auf Repository-Ebene orchestriert alle konfigurierten Arbeitsbereiche.
 
 ## Beitragen

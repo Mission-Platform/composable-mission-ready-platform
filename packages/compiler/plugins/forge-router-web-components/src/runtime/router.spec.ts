@@ -1,5 +1,6 @@
-import { docsCompatibilityFixture, routerCompatibilityFixtures } from '@mission-platform/router';
 import { describe, expect, it, vi } from 'vitest';
+
+import { docsCompatibilityFixture, routerCompatibilityFixtures } from '@mission-platform/router';
 
 import { MpMemoryHistory } from './history';
 import { createWebComponentsRouter } from './router';

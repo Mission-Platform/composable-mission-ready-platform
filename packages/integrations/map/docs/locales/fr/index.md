@@ -10,7 +10,7 @@ Un wrapper Vue 3 pour MapLibre GL qui offre une prise en charge complète de la 
 
 ## Aperçu
 
-Le package `@mission-platform/map` fournit un wrapper composable et réactif autour [MapLibre GL](https://maplibre.org/),
+Le package `@mission-platform/map` fournit un wrapper composable et réactif autour de [MapLibre GL](https://maplibre.org/),
 permettant aux développeurs de créer des cartes interactives avec l'API de composition de Vue 3. Il fait abstraction de la complexité de
 gérer les instances MapLibre tout en conservant un accès complet aux puissantes fonctionnalités de MapLibre.
 
@@ -37,7 +37,7 @@ Le composant principal pour le rendu de cartes interactives.
 - `pitch` : Pas initial en degrés
 - `container` : sélecteur CSS ou HTMLElement pour le conteneur de carte
 
-**Exemple:**
+**Exemple :**
 
 ```vue
 <template>
@@ -63,7 +63,7 @@ Fournit l’accès à l’instance MapLibre et à l’état de la carte.
 - `isReady` : Booléen indiquant si la carte est entièrement initialisée
 - `loadingProgress` : Nombre compris entre 0 et 1 indiquant la progression du chargement
 
-**Exemple:**
+**Exemple :**
 
 ```vue
 <script setup lang="ts">
@@ -118,7 +118,7 @@ Abonne aux événements MapLibre avec nettoyage automatique.
 
 Le package suit une architecture en couches :
 
-1. **Couche principale** : liaisons MapLibre indépendantes du framework
+1. **Core Layer** : liaisons MapLibre indépendantes du framework
 2. **Adaptateur Vue** : intégration de réactivité et wrappers de composants
 3. **API publique** : composants et composants destinés à l'utilisation des applications
 

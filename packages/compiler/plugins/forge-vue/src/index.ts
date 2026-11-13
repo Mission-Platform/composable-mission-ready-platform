@@ -1,15 +1,10 @@
+import vueJsx from "@vitejs/plugin-vue-jsx";
+import Vue from "unplugin-vue/rolldown";
+
 import {
   assertTargetIntentionsLowered,
   defineForgeOutputPlugin,
 } from "@mission-platform/forge-plugin-api";
-import vueJsx from "@vitejs/plugin-vue-jsx";
-import Vue from "unplugin-vue/rolldown";
-
-import { emitVueHookModule, emitVueModule } from "./emitters";
-import { lowerVueModule } from "./lower.js";
-import { optimizeVueModule } from "./optimize.js";
-
-import type { VueLoweredModule } from "./lower.js";
 import type {
   ForgeBuildAdapters,
   FrameworkOutputPlugin,
@@ -18,6 +13,12 @@ import type {
   TargetIntentions,
   TargetOptimizeOptions,
 } from "@mission-platform/forge-plugin-api";
+
+import { emitVueHookModule, emitVueModule } from "./emitters";
+import { lowerVueModule } from "./lower.js";
+import { optimizeVueModule } from "./optimize.js";
+
+import type { VueLoweredModule } from "./lower.js";
 import type { TsdownPlugin } from "tsdown";
 import type { Plugin } from "vite";
 

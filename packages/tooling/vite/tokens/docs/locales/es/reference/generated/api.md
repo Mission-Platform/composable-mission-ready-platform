@@ -23,9 +23,9 @@ Convierta un alias DTCG (`{font.size.4xl}`) en una referencia `var(--<prefix>-fo
 
 #### Parámetros
 
-| Nombre  | Tipo   | Descripción |
-| ------- | ------ | ----------- |
-| alias   | cadena |             |
+| Nombre | Tipo | Descripción |
+| ------ | ------ | ----------- |
+| alias | cadena |             |
 | prefijo | cadena |             |
 
 ### camelloCaso
@@ -36,12 +36,12 @@ Convierta un alias DTCG (`{font.size.4xl}`) en una referencia `var(--<prefix>-fo
 function camelCase(dashed: string): string;
 ```
 
-camelCase una cadena de puntos (`border-width` → `borderWidth`, `z-index` → `zIndex`).
+camelCase una cadena de guiones (`border-width` → `borderWidth`, `z-index` → `zIndex`).
 
 #### Parámetros
 
-| Nombre      | Tipo   | Descripción |
-| ----------- | ------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ------ | ------ | ----------- |
 | discontinuo | cadena |             |
 
 ### camelloNombre del caso
@@ -94,7 +94,6 @@ export type DtcgGroup = Record<string, unknown>;
 
 Un grupo DTCG node (un objeto de grupos/tokens anidados más metadatos `Un grupo DTCG node (un objeto de grupos/tokens anidados más metadatos ).
  `$`
-
 ### DtcgToken
 
 **Tipo:** interfaz
@@ -118,8 +117,8 @@ ancestro más cercano `$type` hasta cada token de hoja.
 
 #### Parámetros
 
-| Nombre     | Tipo       | Descripción |
-| ---------- | ---------- | ----------- |
+| Nombre | Tipo | Descripción |
+| --------- | --------- | ----------- |
 | documento_ | Grupo Dtcg |             |
 
 ### formatoColorValor
@@ -134,9 +133,9 @@ Formatee un valor de color DTCG como una cadena CSS `oklab()` (u otro espacio de
 
 #### Parámetros
 
-| Nombre | Tipo           | Descripción |
-| ------ | -------------- | ----------- |
-| valor  | DtcgColorValor |             |
+| Nombre | Tipo | Descripción |
+| ----- | -------------- | ----------- |
+| valor | DtcgColorValor |             |
 
 ### formatoCssColor
 
@@ -150,9 +149,9 @@ Redondee un valor de OKLab/otro espacio de color a cuatro cifras significativas 
 
 #### Parámetros
 
-| Nombre | Tipo           | Descripción |
-| ------ | -------------- | ----------- |
-| valor  | DtcgColorValor |             |
+| Nombre | Tipo | Descripción |
+| ----- | -------------- | ----------- |
+| valor | DtcgColorValor |             |
 
 ### formatoCssValor
 
@@ -162,13 +161,13 @@ Redondee un valor de OKLab/otro espacio de color a cuatro cifras significativas 
 function formatCssValue(value: unknown): string;
 ```
 
-Formatee un token `$value` como un literal CSS/SCSS (colores redondeados; todo lo demás palabra por palabra).
+Formatee un token `$value` como un literal CSS/SCSS (los colores se redondean; las matrices se convierten en listas separadas por comas).
 
 #### Parámetros
 
-| Nombre | Tipo        | Descripción |
-| ------ | ----------- | ----------- |
-| valor  | desconocido |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------- | ----------- |
+| valor | desconocido |             |
 
 ### etiqueta de grupo
 
@@ -192,9 +191,9 @@ Resuelva un alias DTCG (`{font.size.4xl}`) en su literal `$value` en un document
 
 #### Parámetros
 
-| Nombre     | Tipo       | Descripción |
-| ---------- | ---------- | ----------- |
-| alias      | cadena     |             |
+| Nombre | Tipo | Descripción |
+| --------- | --------- | ----------- |
+| alias | cadena |             |
 | documento_ | Grupo Dtcg |             |
 
 ### resolverTsValue
@@ -207,13 +206,14 @@ function resolveTsValue(value: unknown): string | number;
 
 Resuelva un DTCG `$value` al valor literal de JavaScript utilizado en el archivo generado.
 Módulo TypeScript: los colores se convierten en su cadena `oklab(...)`, los números permanecen
-los números y todo lo demás (dimensiones, pilas de familias de fuentes,…) siguen siendo una cadena.
+números, las matrices se convierten en listas separadas por comas y todo lo demás
+(dimensiones, pilas de familias de fuentes,…) sigue siendo una cadena.
 
 #### Parámetros
 
-| Nombre | Tipo        | Descripción |
-| ------ | ----------- | ----------- |
-| valor  | desconocido |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------- | ----------- |
+| valor | desconocido |             |
 
 ### Registro de tokens
 
@@ -246,8 +246,8 @@ Todo es producido por emisores personalizados; no hay CLI externa.
 
 #### Parámetros
 
-| Nombre   | Tipo                              | Descripción |
-| -------- | --------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------- | ----------- |
 | opciones | Opciones de complemento de tokens |             |
 
 ### TokensPluginOptions
@@ -296,11 +296,11 @@ descendientes sin redefinir una propiedad personalizada de un solo color.
 
 #### Parámetros
 
-| Nombre           | Tipo       | Descripción |
-| ---------------- | ---------- | ----------- |
-| luzDocumento     | Grupo Dtcg |             |
+| Nombre | Tipo | Descripción |
+| ------------- | --------- | ----------- |
+| luzDocumento | Grupo Dtcg |             |
 | documento oscuro | Grupo Dtcg |             |
-| prefijo          |            |             |
+| prefijo |           |             |
 
 ### construir regla de propiedad
 
@@ -329,19 +329,18 @@ El literal `$value` está incluido.
 
 Un `@property` no universal requiere un computacionalmente independiente
 `initial-value` (no `var()`, `light-dark()` o unidades relativas), por lo que el
-La sintaxis universal `*` lo omite. Todo cuyo valor sea una referencia `var()`
-(los campos de tipografía) o un literal que no se puede escribir (sombras, curvas suavizadas,
-pilas de familias de fuentes) por lo tanto se registra en `*` sin un `initial-value`.
-`$`
-
+La sintaxis universal `*` lo omite. Valores cuyo valor es una referencia `var()` (el
+campos de tipografía) o unidades de longitud relativa (rem, em, vw, etc.), por lo tanto, regístrese
+bajo `*` sin `initial-value`.
+ `$`
 #### Parámetros
 
-| Nombre                | Tipo               | Descripción |
-| --------------------- | ------------------ | ----------- |
-| registro              | Registro de tokens |             |
-| prefijo               | cadena             |             |
-| utilizarScssVariable  |                    |             |
-| cssEspacio de nombres | cadena             |             |
+| Nombre | Tipo | Descripción |
+| --------------- | ----------- | ----------- |
+| registro | Registro de tokens |             |
+| prefijo | cadena |             |
+| utilizarScssVariable |             |             |
+| cssEspacio de nombres | cadena |             |
 
 ### construirVariablesScss
 
@@ -356,15 +355,15 @@ function buildScssVariables(
 ): string;
 ```
 
-No se proporciona descripción.
+Crea bloques de declaración de variables $ SCSS estándar agrupados por categoría de token.
 
 #### Parámetros
 
-| Nombre                             | Tipo                    | Descripción |
-| ---------------------------------- | ----------------------- | ----------- |
-| registros                          | Registro de tokens[]    |             |
-| prefijo                            |                         |             |
-| cssEspacio de nombres              | cadena                  |             |
+| Nombre | Tipo | Descripción |
+| ------------------- | ------------------- | ----------- |
+| registros | Registro de tokens[] |             |
+| prefijo |                     |             |
+| cssEspacio de nombres | cadena |             |
 | espacios de nombres de componentes | Sólo lecturaSet<string> |             |
 
 ### construirScssVariablesScss
@@ -381,20 +380,20 @@ function buildScssVariablesScss(
 ```
 
 Cree un `Cree un  parcial sin CSS solo con variables (encabezado + {@link buildScssVariables}
-cuerpo, sin `:root`/`@property`CSS). Emitido como`scss/_<file>-vars.scss`de forma interna.
-los consumidores (por ejemplo,`scss/_mixins.scss`) pueden leer el valor `Cree un `Cree un  parcial sin CSS solo con variables (encabezado + {@link buildScssVariables}
-cuerpo, sin `:root`/`@property`CSS). Emitido como`scss/_<file>-vars.scss`de forma interna.
-los consumidores (por ejemplo,`scss/_mixins.scss`) pueden leer el valor  de un token en el momento de la compilación
-sin `@use`-ing el parcial completo, lo que filtraría su CSS `:root`/`@property`en cada hoja de estilo consumidora.
-`$`
-
+cuerpo, sin `:root`/`@property` CSS). Emitido como `scss/_<file>-vars.scss` de forma interna.
+los consumidores (por ejemplo, `scss/_mixins.scss`) pueden leer el valor `Cree un `Cree un  parcial sin CSS solo con variables (encabezado + {@link buildScssVariables}
+cuerpo, sin `:root`/`@property` CSS). Emitido como `scss/_<file>-vars.scss` de forma interna.
+los consumidores (por ejemplo, `scss/_mixins.scss`) pueden leer el valor  de un token en el momento de la compilación
+sin `@use`-ing el parcial completo, lo que filtraría su CSS `:root`/`@property`
+en cada hoja de estilo consumidora.
+ `$`
 #### Parámetros
 
-| Nombre                             | Tipo                    | Descripción |
-| ---------------------------------- | ----------------------- | ----------- |
-| registros                          | Registro de tokens[]    |             |
-| prefijo                            |                         |             |
-| cssEspacio de nombres              | cadena                  |             |
+| Nombre | Tipo | Descripción |
+| ------------------- | ------------------- | ----------- |
+| registros | Registro de tokens[] |             |
+| prefijo |                     |             |
+| cssEspacio de nombres | cadena |             |
 | espacios de nombres de componentes | Sólo lecturaSet<string> |             |
 
 ### construirStructuralScss
@@ -407,34 +406,46 @@ function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', c
 
 Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
 y un registro `@property` coincidente para cada token (con `initial-value`s
-resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`y un registro`@property`coincidente para cada token (con`initial-value`s
-resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`capa. Las propias variables`Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
+resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
 y un registro `@property` coincidente para cada token (con `initial-value`s
-resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`y un registro`@property`coincidente para cada token (con`initial-value`s
-resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`capa. Las propias variables  viven en el complemento libre de CSS.`_<file>-vars.scss`parcial (ver {@link buildScssVariablesScss}); este parcial`@use`s lo (para interpolar los valores en los bloques `:root`/`@property`) y
-`@forward`s así (por lo que los consumidores intermedios de `_<file>.scss`todavía ven el`Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
+resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`
+capa. Las propias variables `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
 y un registro `@property` coincidente para cada token (con `initial-value`s
-resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`y un registro`@property`coincidente para cada token (con`initial-value`s
-resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`capa. Las propias variables`Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
+resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
 y un registro `@property` coincidente para cada token (con `initial-value`s
-resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`y un registro`@property`coincidente para cada token (con`initial-value`s
-resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`capa. Las propias variables  viven en el complemento libre de CSS.`_<file>-vars.scss`parcial (ver {@link buildScssVariablesScss}); este parcial`@use`s lo (para interpolar los valores en los bloques `:root`/`@property`) y
+resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`
+capa. Las propias variables  viven en el complemento libre de CSS.
+`_<file>-vars.scss` parcial (ver {@link buildScssVariablesScss}); este parcial
+`@use`s lo (para interpolar los valores en los bloques `:root`/`@property`) y
+`@forward`s así (por lo que los consumidores intermedios de `_<file>.scss` todavía ven el
+`Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
+y un registro `@property` coincidente para cada token (con `initial-value`s
+resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
+y un registro `@property` coincidente para cada token (con `initial-value`s
+resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`
+capa. Las propias variables `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
+y un registro `@property` coincidente para cada token (con `initial-value`s
+resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
+y un registro `@property` coincidente para cada token (con `initial-value`s
+resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`
+capa. Las propias variables  viven en el complemento libre de CSS.
+`_<file>-vars.scss` parcial (ver {@link buildScssVariablesScss}); este parcial
+`@use`s lo (para interpolar los valores en los bloques `:root`/`@property`) y
 `@forward`s así (por lo que los consumidores intermedios de `_<file>.scss` todavía ven el
 -variables). La paleta de colores y la tipografía compuesta se emiten.
 por este camino.
 
 `file` es el nombre base de origen/salida (por ejemplo, `'radius'`), utilizado para hacer referencia al
 compañero `'<file>-vars'` parcial.
-`$`
-
+ `$`
 #### Parámetros
 
-| Nombre                | Tipo                 | Descripción |
-| --------------------- | -------------------- | ----------- |
-| registros             | Registro de tokens[] |             |
-| prefijo               |                      |             |
-| archivo               |                      |             |
-| cssEspacio de nombres | cadena               |             |
+| Nombre | Tipo | Descripción |
+| ------------ | ------------- | ----------- |
+| registros | Registro de tokens[] |             |
+| prefijo |               |             |
+| archivo |               |             |
+| cssEspacio de nombres | cadena |             |
 
 ### construirTipografíaRegistros
 
@@ -454,10 +465,33 @@ Cada campo se convierte en un token `typography-<variant>-<field>` cuyo valor es
 
 #### Parámetros
 
-| Nombre          | Tipo       | Descripción |
-| --------------- | ---------- | ----------- |
+| Nombre | Tipo | Descripción |
+| --------------- | --------- | ----------- |
 | tipografíaGrupo | Grupo Dtcg |             |
-| prefijo         |            |             |
+| prefijo |           |             |
+
+### es computacionalmente independiente
+
+**Tipo:** función
+
+```typescript
+function isComputationallyIndependent(record: TokenRecord): boolean;
+```
+
+Comprueba si un valor de token es computacionalmente independiente y válido como valor
+`initial-value` para un registro CSS escrito `@property` bajo el CSS W3C
+Propiedades y valores Especificación API Nivel 1.
+
+Valores que hacen referencia a `var()`, `light-dark()`, `env()`, unidades relativas a la fuente
+(`rem`, `em`, etc.), unidades relativas a ventana gráfica/contenedor (`vw`, `vh`, `cqw`, etc.),
+o `0` sin unidades para `<length>` no son computacionalmente independientes y deben
+omita el descriptor `initial-value` recurriendo a la sintaxis universal `'*'`.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | ----------- | ----------- |
+| registro | Registro de tokens |             |
 
 ### tipografíaEntradas
 
@@ -471,9 +505,9 @@ Devuelve entradas `[variant, value]` para un grupo de tipografía compuesta DTCG
 
 #### Parámetros
 
-| Nombre | Tipo       | Descripción |
-| ------ | ---------- | ----------- |
-| grupo  | Grupo Dtcg |             |
+| Nombre | Tipo | Descripción |
+| ----- | --------- | ----------- |
+| grupo | Grupo Dtcg |             |
 
 ## `src/generators/typescript`
 
@@ -489,8 +523,8 @@ No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre  | Tipo                                    | Descripción |
-| ------- | --------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | -------------------------------------- | ----------- |
 | fuentes | Matriz<string \| TokenModuleDescriptor> |             |
 
 ### módulo buildToken
@@ -502,7 +536,7 @@ function buildTokenModule(
   basename: string,
   document_: DtcgGroup,
   aliasDocument?: DtcgGroup,
-  exportName = camelCase(basename),
+  exportName: string = camelCase(basename),
 ): string;
 ```
 
@@ -517,12 +551,12 @@ fuente compuesta `typography` resuelve sus referencias `{font.*}` en su contra).
 
 #### Parámetros
 
-| Nombre                | Tipo       | Descripción |
-| --------------------- | ---------- | ----------- |
-| nombre base           | cadena     |             |
-| documento_            | Grupo Dtcg |             |
-| aliasDocumento        | Grupo Dtcg |             |
-| nombre de exportación |            |             |
+| Nombre | Tipo | Descripción |
+| ------------- | --------- | ----------- |
+| nombre base | cadena |             |
+| documento_ | Grupo Dtcg |             |
+| aliasDocumento | Grupo Dtcg |             |
+| nombre de exportación | cadena |             |
 
 ## `src/index`
 
@@ -535,22 +569,23 @@ function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Complemento Vite que genera los artefactos de token de diseño de Mission Platform a partir del
-Fuentes DTCG (https://www.designtokens.org/) que utilizan una interfaz personalizada
+Fuentes DTCG (https://www.designtokens.org/) que utilizan un sistema personalizado
 generador: no interviene ninguna CLI externa. Cada fuente `*.tokens.json` produce un
 `generated/scss/<file>.scss` coincidente (variables `Complemento Vite que genera los artefactos de token de diseño de Mission Platform a partir del
-Fuentes DTCG (https://www.designtokens.org/) que utilizan una interfaz personalizada
-generador: no interviene ninguna CLI externa. Cada fuente `_.tokens.json`produce un`generated/scss/<file>.scss`coincidente (variables  autónomas,`--mp-_`propiedades personalizadas y sus registros`@property`) y un `as const`anidado
-Módulo`generated/ts/<file>.ts`, junto con el módulo `generated/_tokens.scss`(SCSS
-barril) y agregados`generated/tokens.ts` (barril TypeScript).
+Fuentes DTCG (https://www.designtokens.org/) que utilizan un sistema personalizado
+generador: no interviene ninguna CLI externa. Cada fuente `*.tokens.json` produce un
+`generated/scss/<file>.scss` coincidente (variables  autónomas, `--mp-*`
+propiedades personalizadas y sus registros `@property`) y un `as const` anidado
+Módulo `generated/ts/<file>.ts`, junto con el módulo `generated/_tokens.scss` (SCSS
+barril) y agregados `generated/tokens.ts` (TypeScript barril).
 
 La generación se ejecuta en el gancho `buildStart`, por lo que se producen los artefactos.
 para `vite build`, `vite build --watch` y el servidor de desarrollo por igual.
-`$`
-
+ `$`
 #### Parámetros
 
-| Nombre   | Tipo                              | Descripción |
-| -------- | --------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------- | ----------- |
 | opciones | Opciones de complemento de tokens |             |
 
 ### tokensPlugin
@@ -562,22 +597,23 @@ function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Complemento Vite que genera los artefactos de token de diseño de Mission Platform a partir del
-Fuentes DTCG (https://www.designtokens.org/) que utilizan una interfaz personalizada
+Fuentes DTCG (https://www.designtokens.org/) que utilizan un sistema personalizado
 generador: no interviene ninguna CLI externa. Cada fuente `*.tokens.json` produce un
 `generated/scss/<file>.scss` coincidente (variables `Complemento Vite que genera los artefactos de token de diseño de Mission Platform a partir del
-Fuentes DTCG (https://www.designtokens.org/) que utilizan una interfaz personalizada
-generador: no interviene ninguna CLI externa. Cada fuente `_.tokens.json`produce un`generated/scss/<file>.scss`coincidente (variables  autónomas,`--mp-_`propiedades personalizadas y sus registros`@property`) y un `as const`anidado
-Módulo`generated/ts/<file>.ts`, junto con el módulo `generated/_tokens.scss`(SCSS
-barril) y agregados`generated/tokens.ts` (barril TypeScript).
+Fuentes DTCG (https://www.designtokens.org/) que utilizan un sistema personalizado
+generador: no interviene ninguna CLI externa. Cada fuente `*.tokens.json` produce un
+`generated/scss/<file>.scss` coincidente (variables  autónomas, `--mp-*`
+propiedades personalizadas y sus registros `@property`) y un `as const` anidado
+Módulo `generated/ts/<file>.ts`, junto con el módulo `generated/_tokens.scss` (SCSS
+barril) y agregados `generated/tokens.ts` (TypeScript barril).
 
 La generación se ejecuta en el gancho `buildStart`, por lo que se producen los artefactos.
 para `vite build`, `vite build --watch` y el servidor de desarrollo por igual.
-`$`
-
+ `$`
 #### Parámetros
 
-| Nombre   | Tipo                              | Descripción |
-| -------- | --------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------- | ----------- |
 | opciones | Opciones de complemento de tokens |             |
 
 ## `src/reachability`
@@ -594,8 +630,8 @@ Recopile un informe de accesibilidad conservador determinista sin cambiar las fu
 
 #### Parámetros
 
-| Nombre   | Tipo                               | Descripción |
-| -------- | ---------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------------ | ----------- |
 | opciones | Opciones de accesibilidad de token |             |
 
 ### TokenAliasEdge
@@ -670,7 +706,7 @@ Escriba un informe con un formato estable adecuado para revisión y control de f
 
 #### Parámetros
 
-| Nombre         | Tipo                               | Descripción |
-| -------------- | ---------------------------------- | ----------- |
-| informe        | Informe de accesibilidad del token |             |
-| rutadelarchivo | cadena                             |             |
+| Nombre | Tipo | Descripción |
+| -------- | ----------------------- | ----------- |
+| informe | Informe de accesibilidad del token |             |
+| rutadelarchivo | cadena |             |

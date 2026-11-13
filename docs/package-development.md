@@ -21,9 +21,10 @@ composable and isolated.
 
 ### 1. Scaffold with MCP
 
-Use the `scaffold_package` tool to generate the skeleton.
+Use the `scaffold_package` tool through a connected Mission Platform Developer MCP server to generate the skeleton.
+The following is an MCP tool-call example, not a shell command; use the manual setup section if MCP is unavailable.
 
-```bash
+```text
 # Example: Creating a new 'date-utils' package
 # The tool defaults to a dry-run; set apply=true to write files
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)

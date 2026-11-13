@@ -24,7 +24,6 @@ import {
   slotFields,
   toKebabName,
 } from "@mission-platform/forge-cms-plugin-api";
-
 import type {
   ContentComponent,
   ContentDefaultValue,

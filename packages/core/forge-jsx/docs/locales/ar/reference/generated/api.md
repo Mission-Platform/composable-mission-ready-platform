@@ -9,896 +9,6 @@
 
 تم إنشاؤها من إعلانات المصدر العام في `@mission-platform/forge-jsx`.
 
-## `src/adapters/react`
-
-### محتوى HTML
-
-**النوع:** الوظيفة
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement;
-```
-
-قم بعرض HTML الموثوق به في مضيف React باستخدام `dangerouslySetInnerHTML`.
-
-#### حدود
-
-| الاسم | اكتب                  | الوصف |
-| ----- | --------------------- | ----- |
-| خصائص | HtmlContentProperties |       |
-
-### renderToReact
-
-**النوع:** الوظيفة
-
-```typescript
-function renderToReact(element: MpElement): ReactElement;
-```
-
-قم بعرض شجرة {@link MpElement} محايدة في عنصر React.
-
-#### حدود
-
-| الاسم | اكتب      | الوصف |
-| ----- | --------- | ----- |
-| عنصر  | مب إليمنت |       |
-
-### النقل الفوري
-
-**النوع:** الوظيفة
-
-```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
-```
-
-بناء React للبدائي `<Teleport>` المحايد - غلاف رقيق حوله
-`react-dom`'s {@link createPortal}. `@mission-platform/vite-plugin-forge`
-يعيد كتابة `import { Teleport } from '@mission-platform/forge-jsx'` للمكون إلى
-قم باستيراد هذا المكون، لذلك سيتم كتابة `<Teleport to="body">…</Teleport>` مرة واحدة
-يجمع إلى بوابة React الأصلية.
-
-عندما يكون `to` بالفعل **عنصر** DOM (حالة العميل الشائعة — على سبيل المثال
-(حل `<dialog>` أو `document.body` تم تسليمه بواسطة المتصل) الأطفال هم
-يتم إدخالها إليه ** بشكل متزامن أثناء العرض **، بحيث يتم تركيبها في نفس الوقت
-الالتزام الذي فتح لهم. يتطابق هذا مع Vue الخاص بـ `<Teleport>` (الذي يحل مشكلة
-الهدف بشكل متزامن) وهو مطلوب من أجل الصحة: لوحة مدخلية
-يروج لنفسه في الطبقة العليا للمتصفح باستخدام Popover API
-(`popover="manual"` + `showPopover()` في الإطار التالي) يجب أن يكون موجودًا بالفعل
-يتم تثبيته عند تشغيل هذا الإطار - يؤدي تأجيل البوابة عن طريق العرض إلى فقدان ذلك
-السباق، مع ترك اللوحة `display:none` (الإعداد الافتراضي UA لملف غير معروض
-Popover) وبالتالي غير مرئية.
-
-فقط المحدد **سلسلة** يحتاج إلى `document.querySelector` بعد التثبيت، والذي
-يحافظ على مكون SSR آمنًا: أثناء تقديم الخادم — والعميل الأول
-تقديم لهدف سلسلة - فهو لا يعرض شيئًا (أو عندما يكون `disabled`، فإن ملف
-الأطفال في مكانهم)، ولا يعمل `createPortal` إلا عند وجود هدف DOM.
-
-#### حدود
-
-| الاسم                                | اكتب                | الوصف |
-| ------------------------------------ | ------------------- | ----- |
-| { إلى = 'الجسم'، معطل = خطأ، أطفال } | خصائص النقل الفضائي |       |
-
-### خصائص النقل الآني
-
-**النوع:** الواجهة
-
-```typescript
-export interface TeleportProperties
-```
-
-الخصائص المقبولة بواسطة مكون React {@link Teleport}.
-
-### toReactComponent
-
-**النوع:** الوظيفة
-
-```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
-```
-
-قم بتغليف مكون محايد كمكون دالة React من الدرجة الأولى، وجاهز لذلك
-يتم تقديمه بواسطة `react-dom` أو تكوينه داخل مكونات React أخرى.
-
-#### حدود
-
-| الاسم     | اكتب           | الوصف |
-| --------- | -------------- | ----- |
-| المكون    | MpComponent<P> |       |
-| اسم العرض | سلسلة          |       |
-
-### انتقال
-
-**النوع:** الوظيفة
-
-```typescript
-function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
-```
-
-بناء React للبدائي `<Transition>` المحايد - فئة CSS صغيرة
-برنامج التشغيل الذي يعكس Vue المدمج في `<Transition>`. إنه ينعش واحدة
-الطفل الذي تم تقديمه بشكل مشروط عن طريق تبديل `<name>-enter-*` / `<name>-leave-*`
-Classes (وبالتالي فإن نفس ورقة الأنماط تدفع كلا الإطارين) وتحتفظ بالطفل
-شنت من خلال الرسوم المتحركة إجازة. `@mission-platform/vite-plugin-forge`
-يعيد كتابة `import { Transition } from '@mission-platform/forge-jsx'` للمكون إلى
-قم باستيراد هذا المكون على الهدف React.
-
-إنه آمن لـ SSR: يعرض الخادم (ورسم العميل الأول) الطفل
-في مكانه - يطابق مخرجات SSR الخاصة بـ Vue - ولا يتم تشغيل الرسوم المتحركة إلا بعد ذلك.
-
-#### حدود
-
-| الاسم                                                   | اكتب           | الوصف |
-| ------------------------------------------------------- | -------------- | ----- |
-| { الاسم = 'v'، يظهر = خطأ، المدة، الأطفال، ...تجاوزات } | خصائص الانتقال |       |
-
-### TransitionGroup
-
-**النوع:** الوظيفة
-
-```typescript
-function TransitionGroup({
-  name = 'v',
-  tag,
-  moveClass,
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionGroupProperties): ReactNode;
-```
-
-بناء React للبدائي `<TransitionGroup>` المحايد - فئة CSS
-برنامج التشغيل الذي يعكس Vue المدمج في `<TransitionGroup>`. إنه ينشط ** مرتبطا
-القائمة **: يحصل دخول الأطفال على `<name>-enter-*`، ويبقى الأطفال مثبتين
-من خلال الرسوم المتحركة `<name>-leave-*`، والأطفال الباقين على قيد الحياة الذين يتغيرون
-يتم تحريك الموضع باستخدام FLIP باستخدام `<name>-move` (نفس ورقة الأنماط هي التي تحرك كليهما
-الأطر). يقوم `@mission-platform/vite-plugin-forge` بإعادة كتابة المكون
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` لاستيراد هذا على ملف
-الهدف React.
-
-إنه آمن لـ SSR: يعرض الخادم (ورسم العميل الأول) ملف
-الأطفال في مكانهم - يطابقون مخرجات SSR الخاصة بـ Vue - ويتم تشغيل الرسوم المتحركة فقط
-بعد ذلك. يتم تطبيق فئات النقل على DOM node لكل طفل، لذلك —
-مثل {@link Transition} المنفرد - تصبح سارية المفعول على عناصر DOM الفرعية؛
-لا يزال الطفل الذي يعد في حد ذاته مكونًا (لا يحتاج إلى إعادة توجيه) يتم تحميله/إلغاء تحميله
-بشكل صحيح ولكن لا يتلقى أي فئة (مطابقة خط الأساس المحايد SSR في المكان).
-
-#### حدود
-
-| الاسم                                                                       | اكتب                      | الوصف |
-| --------------------------------------------------------------------------- | ------------------------- | ----- |
-| { الاسم = 'v'، العلامة، moveClass، تظهر = خطأ، المدة، الأطفال، ...تجاوزات } | TransitionGroupProperties |       |
-
-### TransitionGroupProperties
-
-**النوع:** الواجهة
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-الخصائص المقبولة بواسطة مكون React {@link TransitionGroup}.
-
-### خصائص الانتقال
-
-**النوع:** الواجهة
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-الخصائص المقبولة بواسطة مكون React {@link Transition}.
-
-## `src/adapters/solid`
-
-### محتوى HTML
-
-**النوع:** الوظيفة
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element;
-```
-
-بناء Solid للبدائي `<HtmlContent>` المحايد. Solid
-الخاصية `innerHTML` هي عملية المحتوى الأولي الأصلية المستندة إلى الاستبدال.
-
-#### حدود
-
-| الاسم | اكتب                 | الوصف |
-| ----- | -------------------- | ----- |
-| خصائص | هتملكونتينتبروبيرتيز |       |
-
-### النقل الفوري
-
-**النوع:** الوظيفة
-
-```typescript
-function Teleport(properties: TeleportProperties): JSX.Element;
-```
-
-بناء Solid للبدائي `<Teleport>` المحايد - غلاف رقيق حوله
-Solid's {@link Portal}. `@mission-platform/vite-plugin-forge` يعيد كتابة أ
-المكون `import { Teleport } from '@mission-platform/forge-jsx'` لاستيراد هذا
-مكون، لذلك يتم تجميع `<Teleport to="body">…</Teleport>` للكتابة مرة واحدة إلى ملف
-بوابة Solid الأصلية.
-
-يتم حل هدف البوابة الإلكترونية على العميل بحيث يكون المكون آمنًا لـ SSR:
-أثناء عرض الخادم - وقبل وجود هدف DOM - يتم عرضه
-لا شيء (أو عندما يكون `disabled`، الأطفال في مكانهم)، و{@link Portal} فقط
-يتصاعد بمجرد توفر هدف حقيقي.
-
-#### حدود
-
-| الاسم | اكتب                | الوصف |
-| ----- | ------------------- | ----- |
-| خصائص | خصائص النقل الفضائي |       |
-
-### خصائص النقل الآني
-
-**النوع:** الواجهة
-
-```typescript
-export interface TeleportProperties
-```
-
-الخصائص المقبولة بواسطة مكون Solid {@link Teleport}.
-
-### انتقال
-
-**النوع:** الوظيفة
-
-```typescript
-function Transition(properties: TransitionProperties): JSX.Element;
-```
-
-بناء Solid للبدائي `<Transition>` المحايد. الحد الأدنى الصحيح
-التنفيذ الذي يجعل الطفل **في مكانه** — مطابقًا لـ React
-مسار SSR / تكافؤ المحول وخط الأساس لوقت التشغيل المحايد - لذلك
-يتم التحقق من نوع المكونات التي يتم كتابتها مرة واحدة وتثبيتها دون الحاجة إلى الاستعانة بطرف ثالث
-مكتبة الانتقال Solid. يمكن وضع الرسوم المتحركة للدخول/الخروج للصف في طبقات لاحقًا؛
-يتطابق سطح الدعامة بالفعل مع Vue/React (`name`، `appear`، `duration`، و
-تجاوزات فئة كل مرحلة).
-
-يقوم `@mission-platform/vite-plugin-forge` بإعادة كتابة المكون
-`import { Transition } from '@mission-platform/forge-jsx'` لاستيراد هذا على ملف
-الهدف Solid.
-
-#### حدود
-
-| الاسم | اكتب           | الوصف |
-| ----- | -------------- | ----- |
-| خصائص | خصائص الانتقال |       |
-
-### TransitionGroup
-
-**النوع:** الوظيفة
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
-```
-
-بناء Solid للبدائي `<TransitionGroup>` المحايد. مثل
-{@link Transition}، هذا هو الحد الأدنى من التنفيذ الصحيح الذي يعرض
-الأطفال ** في مكانهم ** (خط الأساس SSR / تكافؤ المحول للمحول React) لذا
-تم إنشاء فحص نوع المكونات Solid بدون انتقال قائمة جهة خارجية
-مكتبة. يتطابق سطح الدعامة مع Vue/React (`name`، `tag`، `moveClass`،
-`appear`، `duration`، وتجاوزات الفئة لكل مرحلة) للكتابة مرة واحدة
-التكافؤ.
-
-يقوم `@mission-platform/vite-plugin-forge` بإعادة كتابة المكون
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` لاستيراد هذا على ملف
-الهدف Solid.
-
-#### حدود
-
-| الاسم | اكتب                      | الوصف |
-| ----- | ------------------------- | ----- |
-| خصائص | TransitionGroupProperties |       |
-
-### TransitionGroupProperties
-
-**النوع:** الواجهة
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-الخصائص المقبولة بواسطة مكون Solid {@link TransitionGroup}.
-
-### خصائص الانتقال
-
-**النوع:** الواجهة
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-الخصائص المقبولة بواسطة مكون Solid {@link Transition}.
-
-## `src/adapters/svelte`
-
-### محتوى HTML
-
-**النوع:** الوظيفة
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet;
-```
-
-تنفيذ المحتوى الأولي للمحول Svelte. `createRawSnippet` هو
-نموذج وقت التشغيل لعملية Svelte الخاصة بـ `{@html}` ويحتفظ رد اتصال الإعداد الخاص به
-مراجع المضيف وإعادة توجيه الأحداث لاستخدام المحول المكتوب بخط اليد.
-
-#### حدود
-
-| الاسم | اكتب                 | الوصف |
-| ----- | -------------------- | ----- |
-| خصائص | هتملكونتينتبروبيرتيز |       |
-
-### النقل الفوري
-
-**النوع:** الوظيفة
-
-```typescript
-function Teleport(properties: TeleportProperties): Snippet;
-```
-
-قم بعرض مقتطف Forge التابع في مكانه لـ Svelte SSR وتكافؤ العميل.
-
-#### حدود
-
-| الاسم | اكتب                | الوصف |
-| ----- | ------------------- | ----- |
-| خصائص | خصائص النقل الفضائي |       |
-
-### خصائص النقل الآني
-
-**النوع:** الواجهة
-
-```typescript
-export interface TeleportProperties
-```
-
-الخصائص المقبولة بواسطة Svelte {@link Teleport} البدائية.
-
-### انتقال
-
-**النوع:** الوظيفة
-
-```typescript
-function Transition(properties: TransitionProperties): Snippet;
-```
-
-تقديم طفل انتقالي واحد؛ يتم توفير الرسوم المتحركة بواسطة ترميز Svelte الأصلي.
-
-#### حدود
-
-| الاسم | اكتب           | الوصف |
-| ----- | -------------- | ----- |
-| خصائص | خصائص الانتقال |       |
-
-### TransitionGroup
-
-**النوع:** الوظيفة
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet;
-```
-
-قم بعرض أطفال المجموعة الانتقالية في مكانهم للكتل ذات المفاتيح الأصلية Svelte.
-
-#### حدود
-
-| الاسم | اكتب                      | الوصف |
-| ----- | ------------------------- | ----- |
-| خصائص | TransitionGroupProperties |       |
-
-### TransitionGroupProperties
-
-**النوع:** الواجهة
-
-```typescript
-export interface TransitionGroupProperties extends TransitionProperties
-```
-
-الخصائص المقبولة بواسطة Svelte {@link TransitionGroup} البدائية.
-
-### خصائص الانتقال
-
-**النوع:** الواجهة
-
-```typescript
-export interface TransitionProperties
-```
-
-الخصائص المقبولة بواسطة Svelte {@link Transition} البدائية.
-
-## `src/adapters/vue`
-
-### createContext
-
-**النوع:** الوظيفة
-
-```typescript
-function createContext(defaultValue: T): VueContext<T>;
-```
-
-بناء Vue للبدائي `createContext` المحايد. إرجاع المقبض الذي
-`Provider` هو مكون حقيقي يقوم `provide()` بتحويل `value` إلى الإعداد الافتراضي
-فتحة، لذلك الكتابة مرة واحدة `<Ctx.Provider value={…}><Slot /></Ctx.Provider>`
-يجمع إلى توفير Vue الأصلي. `@mission-platform/vite-plugin-forge` يعيد كتابة أ
-المكون `import { createContext, useContext } from '@mission-platform/forge-jsx'`
-لاستيرادها على الهدف Vue.
-
-#### حدود
-
-| الاسم             | اكتب | الوصف |
-| ----------------- | ---- | ----- |
-| القيمة الافتراضية | ت    |       |
-
-### محتوى HTML
-
-**النوع:** الوظيفة
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode;
-```
-
-قم بعرض HTML الموثوق به في مضيف Vue باستخدام ربط وظيفة العرض `innerHTML` الخاص به.
-
-#### حدود
-
-| الاسم | اكتب                 | الوصف |
-| ----- | -------------------- | ----- |
-| خصائص | هتملكونتينتبروبيرتيز |       |
-
-### renderToVue
-
-**النوع:** الوظيفة
-
-```typescript
-function renderToVue(element: MpElement): VNode;
-```
-
-قم بعرض شجرة {@link MpElement} محايدة في Vue `VNode`.
-
-#### حدود
-
-| الاسم | اكتب      | الوصف |
-| ----- | --------- | ----- |
-| عنصر  | مب إليمنت |       |
-
-### toVueComponent
-
-**النوع:** الوظيفة
-
-```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
-```
-
-لف مكونًا محايدًا كمكون وظيفي Vue. الصفات الواردة
-تصبح دعائم محايدة، تتم إعادة توجيه الفتحة الافتراضية (إن وجدت) باعتبارها محايدة
-`children`، ويتم إعادة توجيه كل فتحة مسماة تحت اسمها (كفتحة ذات نطاق محدد
-وظيفة)، لذلك يتم حل `<Slot name="…" />` في المكون ضدها و
-يمكن استخدام النتيجة مثل أي مكون Vue آخر.
-
-#### حدود
-
-| الاسم  | اكتب           | الوصف |
-| ------ | -------------- | ----- |
-| المكون | MpComponent<P> |       |
-| الاسم  | سلسلة          |       |
-
-### useContext
-
-**النوع:** الوظيفة
-
-```typescript
-function useContext(context: VueContext<T>): T;
-```
-
-بناء Vue للبدائي `useContext` المحايد - غلاف رقيق حوله
-`inject()` الذي يعود إلى القيمة الافتراضية للسياق عند عدم وجود تضمين
-مزود واحد.
-
-#### حدود
-
-| الاسم  | اكتب           | الوصف |
-| ------ | -------------- | ----- |
-| السياق | فيوكونتيكست<T> |       |
-
-### VueContext
-
-**النوع:** الواجهة
-
-```typescript
-export interface VueContext<T>
-```
-
-مقبض سياق Vue: `provide()` المدعومة `Provider` بالإضافة إلى المفتاح `inject()`.
-
-## `src/adapters/web-components`
-
-### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
-
-**النوع:** ثابت
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
-```
-
-الأجزاء الداخلية مقيدة بالقدرات بشكل غير ضار. يظل اقتران النموذج اختياريًا.
-
-### DEFAULT_WEBCOMPONENTS_SHADOW_POLICY
-
-**النوع:** ثابت
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
-```
-
-يتم استخدام إعدادات التوافق الافتراضية عندما لا تتجاوز الفئة التي تم إنشاؤها السياسة.
-
-### DomTemplateResult
-
-**النوع:** فئة
-
-```typescript
-export class DomTemplateResult
-```
-
-نتيجة تم إنشاؤها بواسطة DOM مباشر بهوية تعريف مستقرة.
-
-### DynamicElement
-
-**النوع:** الوظيفة
-
-```typescript
-function dynamicElement(
-  tag: unknown,
-  properties: Readonly<Record<string, unknown>>,
-  ...children: readonly unknown[]
-): DynamicElementResult;
-```
-
-قم ببناء عنصر Web-Components الأصلي الذي تم تحديد علامته في وقت التشغيل.
-
-#### حدود
-
-| الاسم   | اكتب                                 | الوصف |
-| ------- | ------------------------------------ | ----- |
-| العلامة | غير معروف                            |       |
-| خصائص   | للقراءة فقط<Record<string, unknown>> |       |
-| أطفال   | للقراءة فقط غير معروف[]              |       |
-
-### DynamicElementResult
-
-**النوع:** فئة
-
-```typescript
-export class DynamicElementResult
-```
-
-عنصر محدد في وقت التشغيل وأفرعه لعلامة JSX محسوبة.
-
-### ForgeElement
-
-**النوع:** فئة
-
-```typescript
-export class ForgeElement extends ForgeHTMLElement
-```
-
-الفئة الأساسية `HTMLElement` الأصلية للعناصر المخصصة التي تم إنشاؤها — أ
-بديل خالي من التبعية لـ `LitElement`.
-
-تعلن الفئة الفرعية عن سطحها التفاعلي عبر `static properties` (النسخ المتطابق
-مضاء): يصبح كل مفتاح بمثابة نموذج أولي لأداة الوصول التي يقوم جهاز ضبطها بجدولة أ
-إعادة عرض المهام الدقيقة، ويلاحظ كل مفتاح غير `state` أحرفه الصغيرة
-سمة. تقوم `render()` بإرجاع قالب {@link html}`…` الخاص بالعنصر، والذي تم عرضه
-إلى جذر الظل المفتوح. تقوم الالتزامات التفاعلية بتحديث القالب الموجود
-بشكل تدريجي: تعيد القوائم الموضعية استخدام الإدخالات المتوافقة ومنافذ الفتحات
-تحتفظ بعقد الإسقاط الأصلية الخاصة بها بينما تتغير الأجزاء غير ذات الصلة.
-
-### ForgeElementConstructor
-
-**النوع:** الواجهة
-
-```typescript
-export interface ForgeElementConstructor
-```
-
-عقد ورقة الأنماط الثابتة الذي يتم تنفيذه بواسطة عناصر Forge التي تم إنشاؤها.
-
-يتم الاحتفاظ بعناوين URL في فئة العنصر وليس في المستند بحيث يكون الظل
-يمكن للجذر تحميل الملفات الجانبية المترجمة التي لا يمكن للأنماط على مستوى المستند الوصول إليها.
-
-### ForgeElementHostConstructor
-
-**النوع:** النوع
-
-```typescript
-export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
-```
-
-فئة عنصر أصلية قابلة للإنشاء مقبولة بواسطة {@link ForgeElementMixin}.
-
-### ForgeElementMixin
-
-**النوع:** الوظيفة
-
-```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
-```
-
-أضف وقت تشغيل Forge المستقل عن المضيف إلى مُنشئ العنصر الأصلي.
-لا يمكن للمكونات المضمنة المخصصة توسيع كل من `ForgeElement` و`HTMLDivElement`؛
-يقوم هذا المزيج بنسخ السلوك مع الحفاظ على سلسلة النموذج الأولي الأصلي.
-
-#### حدود
-
-| الاسم | اكتب | الوصف |
-| ----- | ---- | ----- |
-| قاعدة | تبيس |       |
-
-### ForgeSlotMarker
-
-**النوع:** الواجهة
-
-```typescript
-export interface ForgeSlotMarker extends HTMLElement
-```
-
-علامة وقت التشغيل المنبعثة من برنامج التحويل البرمجي Web-Components للفتحات الغامضة.
-
-### hasSlotContent
-
-**النوع:** الوظيفة
-
-```typescript
-function hasSlotContent(host: Element, name?: string): boolean;
-```
-
-ما إذا كان `host` قد تم منحه محتوى لإحدى فتحاته - الهدف الأصلي
-استبدال علامة `hasSlot('x')` المحايدة.
-
-`hasSlot` عبارة عن مفردات وقت الترجمة: Vue يخفضها إلى `!!slots.x`، React إلى
-`properties.x != null`، والعنصر المخصص لا يحتوي على أي منهما، لذلك تم إجراء التحقق
-ضد DOM بدلاً من ذلك. يتم عرض العنصر الذي تم إنشاؤه على شكل **ظل مفتوح
-الجذر**، وهو ما يعني أن المحتوى الذي يعرضه المستهلك يبقى في المضيف
-**light** DOM كأبناء له - يتم ملء الفتحة المسماة بواسطة طفل يحمل
-`slot="<name>"`، والفتحة الافتراضية لأي طفل لا يحمل أي شيء. فقط
-يتم اعتبار الأطفال المباشرين، تمامًا مثل تعيين الفتحة نفسها، و
-النص ذو المسافة البيضاء فقط node لا يعتبر محتوى.
-
-يتم توجيه الأطفال بدلاً من الاستعلام عنهم باستخدام `[slot="…"]` لذلك اسم الفتحة
-لا يحتاج إلى هروب CSS، وبالتالي فهو نص فرعي مجرد (لا يمكن لأي محدد مطابقته)
-لا يزال يملأ الفتحة الافتراضية.
-
-لاحظ أن الفتحة لا يمكن ملاحظتها إلا بمجرد وجود أبناء المضيف: أثناء
-ترقية المحلل اللغوي لعنصر مكتوب بتنسيق HTML الأولي، `connectedCallback`
-يعمل قبل أن يتم إرفاقها. المحتوى المسقط لاحقًا يعيد عرض العنصر
-من خلال المسار التفاعلي المعتاد.
-
-#### حدود
-
-| الاسم  | اكتب   | الوصف |
-| ------ | ------ | ----- |
-| المضيف | العنصر |       |
-| الاسم  | سلسلة  |       |
-
-### أتش تي أم أل
-
-**النوع:** الوظيفة
-
-```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
-```
-
-مصنع القوالب الموسومة. يلتقط السلاسل الثابتة والديناميكية لموقع الاتصال
-القيم في {@link TemplateResult} لـ {@link render} لتحقيقها في DOM.
-
-#### حدود
-
-| الاسم | اكتب                    | الوصف |
-| ----- | ----------------------- | ----- |
-| سلاسل | سلاسل القالب            |       |
-| القيم | للقراءة فقط غير معروف[] |       |
-
-### محتوى HTML
-
-**النوع:** الوظيفة
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
-```
-
-أنشئ نتيجة محتوى أولي لمكونات Web-Components الأصلية دون الهروب من `html`.
-
-#### حدود
-
-| الاسم | اكتب                 | الوصف |
-| ----- | -------------------- | ----- |
-| خصائص | هتملكونتينتبروبيرتيز |       |
-
-### HTMLContentProperties
-
-**النوع:** الواجهة
-
-```typescript
-export interface HtmlContentProperties
-```
-
-يتم قبول الخصائص بواسطة مساعد Web-Components HtmlContent الأصلي.
-
-### htmlContentResult
-
-**النوع:** فئة
-
-```typescript
-export class HtmlContentResult
-```
-
-مضيف أصلي بالإضافة إلى ترميز فرعي موثوق به، يتم تقديمه بواسطة {@link render}.
-
-### لا شئ
-
-**النوع:** ثابت
-
-```typescript
-export const nothing: unique symbol;
-```
-
-تم تقديم Sentinel كـ "بلا قيمة": في الموضع الفرعي لا ينتج شيئًا، في
-موضع السمة يزيل السمة - المعادل الأصلي لـ
-مضاءة HTML `nothing`.
-
-### إعلان الملكية
-
-**النوع:** الواجهة
-
-```typescript
-export interface PropertyDeclaration
-```
-
-إعلان خاصية تفاعلية في فئة فرعية {@link ForgeElement}.
-
-### RawHtml
-
-**النوع:** فئة
-
-```typescript
-export class RawHtml
-```
-
-قيمة HTML أولية موثوقة يستخدمها محول Web-Components الأصلي.
-
-### يجعل
-
-**النوع:** الوظيفة
-
-```typescript
-function render(
-  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
-  container: ParentNode,
-): void;
-```
-
-قم بتقديم نتيجة إلى `container` باستخدام مثيل القالب المستمر. ثابت
-يتم الاحتفاظ بـ DOM وحالة النموذج الأصلية بينما يتم الاحتفاظ بنطاقات الربط المتغيرة فقط
-محدث؛ تحل أنواع القوالب غير المتوافقة محل المحتوى المملوك للعارض.
-
-#### حدود
-
-| الاسم   | اكتب                                                                          | الوصف |
-| ------- | ----------------------------------------------------------------------------- | ----- |
-| النتيجة | نتيجة القالب \| دومتيمبليتريسولت \| DynamicElementResult \| هتملكونتينتريسولت |       |
-| حاوية   | عقدة الوالدين                                                                 |       |
-
-### ResolveForgeSlotMarkers
-
-**النوع:** الوظيفة
-
-```typescript
-function resolveForgeSlotMarkers(
-  root: ParentNode,
-  owner: ForgeElement,
-  sourceChildren: readonly Node[],
-  destinationRoot: ShadowRoot,
-): void;
-```
-
-حل علامات فتحة وقت التشغيل المنبعثة من برنامج التحويل البرمجي في جزء العرض.
-
-تصبح العلامات التي لا تحتوي على خاصية محتوى فتحات أصلية، مع الاحتفاظ بـ
-الاحتياطي ودلالات التعيين في المتصفح، ما لم تكن نفس الفتحة
-تتكرر في شجرة العرض. تجسد المنافذ المتكررة نسخًا من
-أطفال Light-DOM الأصليون بحيث يتلقى كل منفذ محتوى محددًا.
-يتم تخفيض علامات المحتوى إلى الفتحات الأصلية عندما تكون قيمتها مملوكة للمالك
-لا يتكرر أطفال DOM الأصليون والمخرج ؛ وإلا بهم
-تتحقق القيمة كملاذ أخير.
-
-#### حدود
-
-| الاسم         | اكتب               | الوصف |
-| ------------- | ------------------ | ----- |
-| الجذر         | عقدة الوالدين      |       |
-| مالك          | فورج إليمينت       |       |
-| المصدرالأطفال | للقراءة فقط Node[] |       |
-| الوجهة الجذر  | جذر الظل           |       |
-
-### نتيجة القالب
-
-**النوع:** فئة
-
-```typescript
-export class TemplateResult
-```
-
-نتيجة `html\`...\`` التي تم تحليلها: السلاسل الثابتة بالإضافة إلى القيم المحرفة.
-
-### unsafeHtml
-
-**النوع:** الوظيفة
-
-```typescript
-function unsafeHtml(value: string): RawHtml;
-```
-
-قم بوضع علامة على سلسلة كعلامة فرعية موثوقة لمسار مكونات الويب الأصلي.
-
-#### حدود
-
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| القيمة | سلسلة |       |
-
-### معرف الاستخدام
-
-**النوع:** الوظيفة
-
-```typescript
-function useId(): string;
-```
-
-استبدال الهدف الأصلي لـ React's `useId`.
-
-توفر المفردات المحايدة `useId()` للمعرفات التي تربط عنصر التحكم به
-`<label for>` / `aria-describedby`; يقوم React بتعيينه إلى `useId` وSolid الخاص به
-إلى `createUniqueId`، ولكن العنصر المخصص ليس له وقت تشغيل إطاري يمكن استعارته
-واحد من — إذن هذا هو.
-
-يعد العداد على مستوى الوحدة كافيًا هنا، وهو أبسط عمدًا من
-المولد العشوائي/المجزأ: يجب أن يكون المعرف فريدًا فقط **داخل المستند**،
-ويقوم المترجم برفع `const x = useId()` من `render()` إلى ملف
-حقل المثيل، لذلك يستدعي كل مثيل عنصر هذا مرة واحدة بالضبط وبعد ذلك
-يحتفظ بهويته طوال حياته. المكالمات المتتالية لذلك أبدا
-تتصادم، ليست هناك حاجة إلى تبعية (nanoid، `crypto.randomUUID`)، و
-والنتيجة مستقرة وقابلة للتصحيح (`forge-1`، `forge-2`، ...). القيمة هي أ
-HTML `id` صالح ومعرف CSS صالح، بحيث يمكن استخدامه في المحدد
-لم يهرب.
-
-### WebComponentsInternalsPolicy
-
-**النوع:** الواجهة
-
-```typescript
-export interface WebComponentsInternalsPolicy
-```
-
-طلبات القدرة على واجهة برمجة التطبيقات {@link ElementInternals} الخاصة بالنظام الأساسي.
-
-### WebComponentsShadowPolicy
-
-**النوع:** الواجهة
-
-```typescript
-export interface WebComponentsShadowPolicy
-```
-
-خيارات جذر الظل المكتوبة المقبولة بواسطة عناصر Forge التي تم إنشاؤها.
-
 ## `src/runtime/class-names`
 
 ### أسماء الفئات
@@ -915,9 +25,9 @@ function classNames(...values: readonly ClassValue[]): string;
 
 #### حدود
 
-| الاسم | اكتب                     | الوصف |
-| ----- | ------------------------ | ----- |
-| القيم | للقراءة فقط ClassValue[] |       |
+| الاسم | اكتب | الوصف |
+| ------ | --------------------- | ----------- |
+| القيم | للقراءة فقط ClassValue[] |             |
 
 ### قيمة الفئة
 
@@ -945,9 +55,9 @@ function createContext(defaultValue: T): MpContext<T>;
 
 #### حدود
 
-| الاسم             | اكتب | الوصف |
-| ----------------- | ---- | ----- |
-| القيمة الافتراضية | ت    |       |
+| الاسم | اكتب | الوصف |
+| ------------ | ---- | ----------- |
+| القيمة الافتراضية | ت |             |
 
 ### isContextProvider
 
@@ -961,9 +71,9 @@ function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 
 #### حدود
 
-| الاسم  | اكتب      | الوصف |
-| ------ | --------- | ----- |
-| القيمة | غير معروف |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------- | ----------- |
+| القيمة | غير معروف |             |
 
 ### MP_CONTEXT
 
@@ -1015,13 +125,13 @@ function useContext(context: MpContext<T>): T;
 ```
 
 اقرأ القيمة الحالية للسياق: أقرب مرفق
-`<Ctx.Provider>` `value`، أو الإعداد الافتراضي للسياق في حالة عدم وجوده.
+`<Ctx.Provider>` `value`، أو الإعداد الافتراضي للسياق في حالة عدم وجود أي شيء.
 
 #### حدود
 
-| الاسم  | اكتب          | الوصف |
-| ------ | ------------- | ----- |
-| السياق | مبكونتيكست<T> |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------------ | ----------- |
+| السياق | MpContext<T> |             |
 
 ## `src/runtime/dynamic`
 
@@ -1055,7 +165,7 @@ export interface MpDynamicProperties extends MpPropertyBag
 هذا أحد التصريحات القليلة التي تحافظ بشكل شرعي على **حقيبة مفتوحة**:
 يتم إعادة توجيه كل خاصية بخلاف `is` حرفيًا إلى العنصر `is`
 يحل، وهذا العنصر معروف فقط في وقت التشغيل، وبالتالي فإن سماته
-لا يمكن تعداد القبول هنا. يجب أن تكون واجهات عناصر المكونات _لا_
+لا يمكن تعداد القبول هنا. يجب أن تكون واجهات عناصر المكونات _not_
 اتبع هذا النمط — راجع {@link MpPropertyBag}.
 
 ## `src/runtime/h`
@@ -1074,18 +184,18 @@ function h(
 
 مصنع JSX الكلاسيكي (`jsxFactory: 'h'`).
 
-يتم تجميع كل تعبير JSX تم تأليفه مقابل وقت التشغيل هذا لاستدعاء
+يتم تجميع كل تعبير JSX تم تأليفه في وقت التشغيل هذا لاستدعاء
 `h`، الذي يبني إطار عمل محايد {@link MpElement}. قد يصل الأطفال
 إما كوسائط متغيرة زائدة (التحويل الكلاسيكي) أو عبر
 `properties.children`; يتم تطبيع كلاهما في مجموعة مسطحة واحدة.
 
 #### حدود
 
-| الاسم | اكتب                                         | الوصف |
-| ----- | -------------------------------------------- | ----- |
-| اكتب  | مبElementType \| ((الخصائص: P) => MpElement) |       |
-| خصائص | ف \| فارغة                                   |       |
-| أطفال | مبتشايلد[]                                   |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------------------------- | ----------- |
+| اكتب | مبElementType \| ((الخصائص: P) => MpElement) |             |
+| خصائص | ف \| فارغة |             |
+| أطفال | مبتشايلد[] |             |
 
 ## `src/runtime/hooks`
 
@@ -1104,7 +214,7 @@ export type MpDependencyList = readonly unknown[];
 **النوع:** مكون
 
 ```typescript
-export type MpEffectCallback = () => void | MpEffectCleanup;
+export type MpEffectCallback = () => MpEffectCleanup | void;
 ```
 
 يتم تشغيل رد اتصال التأثير بواسطة {@link useEffect}.
@@ -1134,7 +244,7 @@ export interface MpRef<T>
 **النوع:** مكون
 
 ```typescript
-export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
+export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 ```
 
 قم بتحديث جزء من الحالة، إما إلى قيمة جديدة أو عبر وظيفة التحديث.
@@ -1151,10 +261,10 @@ function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 
 #### حدود
 
-| الاسم      | اكتب           | الوصف |
-| ---------- | -------------- | ----- |
-| رد الاتصال | ت              |       |
-| _التبعيات  | قائمة التبعيات |       |
+| الاسم | اكتب | الوصف |
+| ------------- | ---------------- | ----------- |
+| رد الاتصال | ت |             |
+| _التبعيات | قائمة التبعيات |             |
 
 ### useEffect
 
@@ -1169,10 +279,10 @@ function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList):
 
 #### حدود
 
-| الاسم     | اكتب             | الوصف |
-| --------- | ---------------- | ----- |
-| _تأثير    | MpEffectCallback |       |
-| _التبعيات | قائمة التبعيات   |       |
+| الاسم | اكتب | الوصف |
+| ------------- | ---------------- | ----------- |
+| _تأثير | MpEffectCallback |             |
+| _التبعيات | قائمة التبعيات |             |
 
 ### معرف الاستخدام
 
@@ -1186,7 +296,7 @@ function useId(): string;
 سلسلة معرف مثيل المكون، مناسبة للتسمية / `aria-describedby`
 الجمعيات دون عدادات المدرفلة يدويا. أيدي تنفيذ خط الأساس
 إخراج معرف زيادة العملية (`:mp0:`، `:mp1:`، ...)؛ البرنامج المساعد وقت البناء
-يقوم بمبادلة هذا الاستيراد لكل إطار عمل أصلي `useId` (React's / Vue's)، بينما
+يقوم بمبادلة هذا الاستيراد لكل إطار عمل `useId` (React's / Vue's)، بينما
 تشترك محولات وقت التشغيل وSSR في هذا النموذج الحتمي بحيث يتم عرض واحد
 يبقى مستقرًا (ومتطابقًا في كلا الإطارين).
 
@@ -1202,17 +312,17 @@ function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 
 #### حدود
 
-| الاسم     | اكتب           | الوصف |
-| --------- | -------------- | ----- |
-| مصنع      | () => ت        |       |
-| _التبعيات | قائمة التبعيات |       |
+| الاسم | اكتب | الوصف |
+| ------------- | ---------------- | ----------- |
+| مصنع | () => ت |             |
+| _التبعيات | قائمة التبعيات |             |
 
 ### استخدامالمرجع
 
 **النوع:** الوظيفة
 
 ```typescript
-function useRef(initial: T): MpRef<T>;
+function useRef(initial?: T): MpRef<T>;
 ```
 
 `useRef` محايد. إرجاع حاوية `{ current }` جديدة للفرد
@@ -1220,27 +330,27 @@ function useRef(initial: T): MpRef<T>;
 
 #### حدود
 
-| الاسم  | اكتب | الوصف |
-| ------ | ---- | ----- |
-| الأولي | ت    |       |
+| الاسم | اكتب | الوصف |
+| ------- | ---- | ----------- |
+| الأولي | ت |             |
 
 ### useState
 
 **النوع:** الوظيفة
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>];
+function useState(initial?: T | (() => T)): [T, MpSetState<T>];
 ```
 
 `useState` محايد. يُرجع تنفيذ خط الأساس القيمة الأولية و
-أداة ضبط no-op (الحالة لا تتغير أبدًا بدون إعادة عرض إطار العمل)، وهو
+أداة ضبط no-op (لا تتغير الحالة أبدًا بدون إعادة عرض إطار العمل)، وهو
 السلوك الصحيح لعرض SSR/محول واحد.
 
 #### حدود
 
-| الاسم  | اكتب           | الوصف |
-| ------ | -------------- | ----- |
-| الأولي | ت \| (() => ت) |       |
+| الاسم | اكتب | الوصف |
+| ------- | -------------- | ----------- |
+| الأولي | ت \| (() => ت) |             |
 
 ## `src/runtime/html-content`
 
@@ -1257,7 +367,7 @@ export const HtmlContent: MpComponent<HtmlContentProperties>;
 تعترض المحولات المحايدة والمترجم Forge هذه العلامة وتخفضها
 إلى عملية المحتوى الخام الأصلية الخاصة بهم. لا ينبغي أبدا أن يتم استدعاؤه مباشرة.
 
-### HTMLContentProperties
+### خصائص محتوى HTML
 
 **النوع:** الواجهة
 
@@ -1272,6 +382,29 @@ export interface HtmlContentProperties extends MpPropertyBag
 حقيبة بدلاً من تعداد سطح سمة DOM بالكامل.
 
 ## `src/runtime/slots`
+
+### اجمعSlottedChildren
+
+**النوع:** الوظيفة
+
+```typescript
+function collectSlottedChildren(children: readonly MpChild[]): SlottedChildren;
+```
+
+قم بتقسيم العناصر الفرعية للمكون الأصلي بواسطة علامة `slot="…"` الخاصة بهم، لذلك أ
+يمكن لمكون الكتابة مرة واحدة ** تمرير ** المحتوى إلى الفتحة المسماة للمكون الفرعي
+(`<ForgeDropdown><button slot="trigger" />…</ForgeDropdown>`). أطفال يحملون
+يتم تجميع خاصية `slot` تحت هذا الاسم (مع إزالة العلامة، لذلك
+المحتوى الذي تم حله لا يصدر أبدًا سمة `slot` شاردة)؛ كل شيء آخر
+يبقى في {@link SlottedChildren.defaultChildren}. تقوم المحولات بطي الاسم
+مجموعات في الدعائم الطفل، مما يعكس بالضبط كيفية توجيه المترجم
+نفس علامات `slot="…"` إلى Vue `<template #name>` / دعامة React `name`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------------------ | ----------- |
+| أطفال | للقراءة فقط MpChild[] |             |
 
 ### hasSlot
 
@@ -1297,23 +430,23 @@ function hasSlot(name?: string): boolean;
 
 يقوم `@mission-platform/vite-plugin-forge` بإعادة كتابة المكالمة مباشرة إلى كل منهما
 التحقق من التواجد الأصلي لإطار العمل - Vue's `!!slots.x` (`$slots.x` داخل
-`v-if`) وReact's `properties.x != null` - لذلك يمكن لمكون الكتابة مرة واحدة
+`v-if`) وReact's `properties.x != null` - بحيث يمكن لمكون الكتابة مرة واحدة
 عرض منطقة غلاف اختيارية فقط عند امتلاء الفتحة، على كليهما
 الأطر. التنفيذ هنا هو خط الأساس لمحول وقت التشغيل / SSR،
 قراءة نطاق فتحة المكون الحالي.
 
 #### حدود
 
-| الاسم | اكتب  | الوصف |
-| ----- | ----- | ----- |
-| الاسم | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| الاسم | سلسلة |             |
 
 ### MpRenderProperty
 
 **النوع:** مكون
 
 ```typescript
-export type MpRenderProperty<S = MpPropertyBag> = (scope: S) => MpChild | readonly MpChild[];
+export type MpRenderProperty<S = MpPropertyBag, R = MpChild | readonly MpChild[]> = (scope: S) => R;
 ```
 
 وظيفة **render-prop /scoped-slot**: نظرًا لنطاق الفتحة، فإنها تُرجعها
@@ -1371,9 +504,9 @@ function pushSlotScope(properties: MpPropertyBag): void;
 
 #### حدود
 
-| الاسم | اكتب         | الوصف |
-| ----- | ------------ | ----- |
-| خصائص | مبروبرتي باج |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------- | ----------- |
+| خصائص | مبروبرتي باج |             |
 
 ### ResolveSlot
 
@@ -1390,10 +523,39 @@ function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[])
 
 #### حدود
 
-| الاسم   | اكتب                  | الوصف |
-| ------- | --------------------- | ----- |
-| خصائص   | MpSlotProperties      |       |
-| احتياطي | للقراءة فقط MpChild[] |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------ | ----------- |
+| خصائص | MpSlotProperties |             |
+| احتياطي | للقراءة فقط MpChild[] |             |
+
+### ResolveSlotMarkers
+
+**النوع:** الوظيفة
+
+```typescript
+function resolveSlotMarkers(children: readonly MpChild[]): MpChild[];
+```
+
+حل عميق لكل `<Slot name="…" />` **علامة** داخل تأليف الأصل
+الشجرة الفرعية مقابل النطاق **الحالي** (الأصل)، مما يؤدي إلى إرجاع شجرة من الخرسانة
+المحتوى. هذا هو ما يسمح للمكون الذي يُكتب مرة واحدة بإعادة توجيه مكون خاص به
+فتحات مسماة في فتحة المكون الفرعي -
+`<ForgeDrawer><div slot="header"><Slot name="startHeader" /></div></ForgeDrawer>`
+- وجعلها تحل بشكل معجمي (مقابل مكون إعادة التوجيه)، بالضبط
+مثل الإخراج المترجم (React يلتقط `properties.startHeader` في
+تقديم الوالدين؛ يقوم Vue بإعادة توجيه الفتحة من خلال `<template #header>`).
+
+تقوم المحولات باستدعاء هذا على العناصر الفرعية للعنصر المكون **قبل** دفع الملف
+نطاق الطفل، بحيث ترى العلامات النطاق الأصلي الذي قام بتأليفها؛ علامات
+عودة الطفل نفسه لم تمس (يتم حلها لاحقًا، تحت عنوان
+نطاق الطفل الخاص). يتم السير على العناصر غير ذات الفتحة بشكل متكرر بحيث تتداخل العلامات
+(داخل غلاف `slot="…"`) يتم حله أيضًا.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------------------ | ----------- |
+| أطفال | للقراءة فقط MpChild[] |             |
 
 ## `src/runtime/teleport`
 
@@ -1458,7 +620,7 @@ export const Transition: MpComponent<MpTransitionProperties>;
 تقوم المكونات المعتمدة باستيرادها من `@mission-platform/forge-jsx`؛ كلا وقت التشغيل
 تتعرف المحولات والمترجم وقت البناء عليه بشكل خاص. لم يكن أبدا
 يتم تقديمه مباشرةً - تعترضه المحولات (تُظهر طفله في مكانه)
-ويقوم المترجم بإعادة رسم خريطة لاستيراده إلى انتقال الإطار الهدف.
+ويقوم المترجم بإعادة تخطيط استيراده إلى انتقال الإطار الهدف.
 
 ### TransitionGroup
 
@@ -1468,7 +630,7 @@ export const Transition: MpComponent<MpTransitionProperties>;
 export const TransitionGroup: MpComponent<MpTransitionGroupProperties>;
 ```
 
-العلامة المستخدمة كعنصر `type` للانتقال **قائمة** إدخال/مغادرة/نقل
+العلامة المستخدمة كعنصر `type` لانتقال **القائمة** إدخال/مغادرة/نقل
 (`<TransitionGroup name="…">{items.map(…)}</TransitionGroup>`)، و
 النظير متعدد الأطفال لـ {@link Transition}.
 
@@ -1476,11 +638,472 @@ export const TransitionGroup: MpComponent<MpTransitionGroupProperties>;
 القائمة - عن طريق تغليف الأطفال المعينين في `<TransitionGroup>`، تمامًا كما هو الحال
 Vue المدمج في `<TransitionGroup>` يفعل ذلك. مثل {@link Transition} فهو ليس كذلك أبدًا
 تم استدعاؤه مباشرة: تعترضه المحولات عن طريق الهوية (مما يجعل ملف
-الأطفال في مكانهم من أجل SSR) ويقوم `@mission-platform/vite-plugin-forge` بإعادة رسم خرائطه
-استيراد إلى انتقال المجموعة الأصلية لكل إطار - Vue المدمج
+الأطفال في مكانهم لـ SSR) ويقوم `@mission-platform/vite-plugin-forge` بإعادة رسم خرائطه
+استيراد إلى انتقال المجموعة الأصلية لكل إطار عمل - Vue المدمج
 `<TransitionGroup>` وبرنامج التشغيل فئة `@mission-platform/forge-adapters/react` CSS.
 
 ## `src/runtime/types`
+
+### CamelToKebab
+
+**النوع:** النوع
+
+```typescript
+export type CamelToKebab<S extends string> = S extends `$
+```
+
+تحويل نوع سلسلة CamelCase إلى حالة كباب.
+
+### createAvatarContainerStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createAvatarContainerStyle(): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+### createAvatarImageImgStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createAvatarImageImgStyle(): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+### createAvatarInlineStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createAvatarInlineStyle(
+  size: string = 'md',
+  shape: string = 'circle',
+  src?: string,
+  variant: string = 'primary',
+  color?: string,
+): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| الحجم | سلسلة |             |
+| الشكل | سلسلة |             |
+| سرك | سلسلة |             |
+| البديل | سلسلة |             |
+| اللون | سلسلة |             |
+
+### createAvatarStatusInlineStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createAvatarStatusInlineStyle(size: string = 'md', status?: string): Record<string, string> | undefined;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------ | ----------- |
+| الحجم | سلسلة |             |
+| الحالة | سلسلة |             |
+
+### createBackgroundVideoInlineStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createBackgroundVideoInlineStyle(minHeight: string = '24rem'): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | ------ | ----------- |
+| الحد الأدنى للارتفاع | سلسلة |             |
+
+### createCodeScannerStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createCodeScannerStyle(): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+### createContainerInlineStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createContainerInlineStyle(
+  variant: string = 'responsive',
+  maxWidth: string = 'lg',
+  gutter: string = 'md',
+  center: boolean = true,
+): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------- | ----------- |
+| البديل | سلسلة |             |
+| أقصى عرض | سلسلة |             |
+| مزراب | سلسلة |             |
+| مركز | منطقية |             |
+
+### createCoverObjectFitStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createCoverObjectFitStyle(): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+### createForgeComponentStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createForgeComponentStyle(
+  prefix: string,
+  properties?: T,
+  style?: Record<string, string>,
+): Record<string, string> | undefined;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------------- | ----------- |
+| البادئة | سلسلة |             |
+| خصائص | ت |             |
+| اسلوب | سجل<string, string> |             |
+
+### createForgeStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createForgeStyle(style: T): DefinedForgeStyle<T> | undefined;
+```
+
+أنشئ خريطة `style` محايدة من قيم الخصائص المخصصة المحددة.
+
+يتم حذف الإدخالات التي تكون قيمتها `undefined` لذا SCSS
+تظل سلاسل `var(--forge-*, <token fallback>)` نشطة. إرجاع `undefined`
+عندما لا تكون هناك تجاوزات.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---- | ----------- |
+| اسلوب | ت |             |
+
+### createGaugeInlineMath
+
+**النوع:** الوظيفة
+
+```typescript
+function createGaugeInlineMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): {
+  clampedValue: number;
+  percentage: number;
+  displayValue: string;
+  dashOffset: number;
+};
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | رقم |             |
+| دقيقة | رقم |             |
+| ماكس | رقم |             |
+
+### createGridLayoutInlineStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createGridLayoutInlineStyle(rows: number = 1, columns: number = 1, gap: string = 'md'): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| صفوف | رقم |             |
+| أعمدة | رقم |             |
+| فجوة | سلسلة |             |
+
+### createHighlightStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createHighlightStyle(left: string = '0%', width: string = '100%'): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| اليسار | سلسلة |             |
+| العرض | سلسلة |             |
+
+### createLeftPositionStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createLeftPositionStyle(left: string = '0%'): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| اليسار | سلسلة |             |
+
+### createObjectFitStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createObjectFitStyle(fit: string = 'cover'): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| مناسبا | سلسلة |             |
+
+### createPreviewTextStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createPreviewTextStyle(): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+### createProgressBarPercent
+
+**النوع:** الوظيفة
+
+```typescript
+function createProgressBarPercent(
+  value: number = 0,
+  max: number = 100,
+  indeterminate: boolean = false,
+): { percent: number; percentLabel: string };
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------- | ------- | ----------- |
+| القيمة | رقم |             |
+| ماكس | رقم |             |
+| غير محدد | منطقية |             |
+
+### createRangeInputMath
+
+**النوع:** الوظيفة
+
+```typescript
+function createRangeInputMath(
+  modelValue: [number, number] = [0, 100],
+  min: number = 0,
+  max: number = 100,
+): {
+  minPercent: number;
+  maxPercent: number;
+  highlightLeft: string;
+  highlightWidth: string;
+  minLeft: string;
+  maxLeft: string;
+};
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------- | ----------- |
+| قيمة النموذج | [الرقم، العدد] |             |
+| دقيقة | رقم |             |
+| ماكس | رقم |             |
+
+### createResponsiveImageInlineStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createResponsiveImageInlineStyle(aspectRatio?: string): Record<string, string> | undefined;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ------ | ----------- |
+| نسبة العرض إلى الارتفاع | سلسلة |             |
+
+### createResponsiveVideoInlineStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createResponsiveVideoInlineStyle(
+  aspectRatio: string = '16 / 9',
+  fit: string = 'contain',
+): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ------ | ----------- |
+| نسبة العرض إلى الارتفاع | سلسلة |             |
+| مناسبا | سلسلة |             |
+
+### createSkeletonInlineStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createSkeletonInlineStyle(width?: string, height?: string): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------ | ----------- |
+| العرض | سلسلة |             |
+| الارتفاع | سلسلة |             |
+
+### createSliderMath
+
+**النوع:** الوظيفة
+
+```typescript
+function createSliderMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): { percent: number; fillWidth: string; thumbLeft: string };
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| القيمة | رقم |             |
+| دقيقة | رقم |             |
+| ماكس | رقم |             |
+
+### createVerticalLayoutInlineStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createVerticalLayoutInlineStyle(gap: string = 'var(--mp-spacing-4)'): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| فجوة | سلسلة |             |
+
+### createWidthStyle
+
+**النوع:** الوظيفة
+
+```typescript
+function createWidthStyle(width: string = '0%'): Record<string, string>;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| العرض | سلسلة |             |
+
+### CSSStyleProperties
+
+**النوع:** النوع
+
+```typescript
+export type CSSStyleProperties =
+```
+
+كائن نمط CSS محايد للإطار تستخدمه سمة JSX `style`.
+
+يجب أن تقوم الخصائص المخصصة المملوكة للمكونات بتوسيع هذا النوع بصيغة صريحة
+مفاتيح `--forge-*` (على سبيل المثال `CSSStyleProperties & { '--forge-button-radius'?: string | undefined }`)
+بدلاً من تقديم قاموس نمط غير مكتوب أو حقيبة `styles` غير DOM.
+
+### ForgePropertyBag
+
+**النوع:** النوع
+
+```typescript
+export type ForgePropertyBag<T extends Record<string, string | undefined> = Record<string, string | undefined>> =
+```
+
+حقيبة تجاوز الخاصية المسموح بها تقبل مفاتيح خاصية علبة الكباب أو علبة الجمل.
 
 ### جزء
 
@@ -1515,9 +1138,19 @@ function isMpElement(value: unknown): value is MpElement;
 
 #### حدود
 
-| الاسم  | اكتب      | الوصف |
-| ------ | --------- | ----- |
-| القيمة | غير معروف |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------- | ----------- |
+| القيمة | غير معروف |             |
+
+### KebabToCamel
+
+**النوع:** النوع
+
+```typescript
+export type KebabToCamel<S extends string> = S extends `$
+```
+
+تحويل نوع سلسلة حالة الكباب إلى حالة الجمل.
 
 ### MpChild
 
@@ -1575,9 +1208,9 @@ export type MpPropertyBag = Record<string, unknown>;
 
 حقيبة **وقت التشغيل** من السمات/الدعائم التي يحملها {@link MpElement}.
 
-هذا سجل عادي وغير مكتوب عمدًا: هذا هو ما يفعله مصنع JSX
+هذا سجل عادي وغير مكتوب عن عمد: هذا هو ما يفعله مصنع JSX
 يبني وما يتم فهرسه المحولات أثناء المشي على شجرة محايدة. إنه كذلك
-_ليس_ نوعًا أساسيًا لدعائم المكون - يُعلن المكون تمامًا عن
+_not_ نوع أساسي لدعائم المكون - يعلن المكون بالضبط عن
 الخصائص التي يقبلها (بما في ذلك `children?: MpChild | readonly MpChild[]`
 عندما يعرضها)، بحيث يبقى التحقق من الخاصية الزائدة و`keyof`
 ذات معنى في كل هدف تم تجميعه. حفنة من السمات كل عنصر
@@ -1604,9 +1237,837 @@ export interface MpReservedProperties
   `"default"`) يعني الفتحة الافتراضية.
 
 لا يعد أي منهما جزءًا من عقد الدعائم الخاص بالمكون - فكلاهما تتم قراءته بواسطة
-_الوالد_ (المُصلح، وجهاز توجيه الفتحة)، وليس بواسطة المكون نفسه —
+_parent_ (المُصلح، وموجه الفتحة)، وليس بواسطة المكون نفسه —
 لذلك يتم قبولها لكل عنصر هنا بدلاً من الإعلان عنها في كل عنصر
 واجهة الدعائم.
+
+### MpSuspenseChild
+
+**النوع:** مكون
+
+```typescript
+export type MpSuspenseChild = MpChild | PromiseLike<MpSuspenseChild> | readonly MpSuspenseChild[];
+```
+
+محتوى متزامن أو غير متزامن بشكل متكرر يقبله Suspense.
+
+### MpSuspenseProperties
+
+**النوع:** مكون
+
+```typescript
+export interface MpSuspenseProperties
+```
+
+الدعائم التي تحملها علامة التشويق المحايدة للإطار.
+
+### renderAccordionItems
+
+**النوع:** الوظيفة
+
+```typescript
+function renderAccordionItems(
+  items: readonly any[] = [],
+  _exclusive: boolean = true,
+  defaultOpen: readonly string[] = [],
+  _properties?: any,
+): any;
+```
+
+أنشئ خريطة نمط خصائص CSS مخصصة على نطاق المكونات من حقيبة خصائص حالة الجمل أو حالة الكباب.
+
+يحول مفاتيح CamelCase تلقائيًا إلى علبة كباب، ويضمن مساحة اسم المكون
+يتم تطبيق البادئة `--forge-<prefix>-`، ويتم حذف الإدخالات غير المحددة لذلك يتم الرجوع إلى رمز CSS المميز
+تظل السلاسل نشطة. تقوم بإرجاع `undefined` في حالة عدم وجود تجاوزات محددة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ----------------- | ----------- |
+| العناصر | للقراءة فقط أي[] |             |
+| _حصريا | منطقية |             |
+| الافتراضيفتح | سلسلة للقراءة فقط[] |             |
+| _خصائص | أي |             |
+
+### renderActivityFeedItems
+
+**النوع:** الوظيفة
+
+```typescript
+function renderActivityFeedItems(items: readonly any[] = [], maxItems?: number, onItemClick?: (item: any) => void): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ------------------- | ----------- |
+| العناصر | للقراءة فقط أي[] |             |
+| العناصر القصوى | رقم |             |
+| onItemClick | (العنصر: أي) => باطل |             |
+
+### renderAssetBrowserGrid
+
+**النوع:** الوظيفة
+
+```typescript
+function renderAssetBrowserGrid(
+  assets: readonly any[] = [],
+  selected: readonly string[] = [],
+  onSelect?: (asset: any) => void,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | -------------------- | ----------- |
+| الأصول | للقراءة فقط أي[] |             |
+| مختارة | سلسلة للقراءة فقط[] |             |
+| على تحديد | (الأصل: أي) => باطل |             |
+
+### renderBarcodeSvg
+
+**النوع:** الوظيفة
+
+```typescript
+function renderBarcodeSvg(
+  value: string = '',
+  symbology: string = 'code128',
+  color: string = '#000000',
+  background: string = '#ffffff',
+  displayValue: boolean = false,
+  ariaLabel?: string,
+  onError?: (err: Error) => void,
+  showActions?: any,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------ | -------------------- | ----------- |
+| القيمة | سلسلة |             |
+| الرموز | سلسلة |             |
+| اللون | سلسلة |             |
+| الخلفية | سلسلة |             |
+| قيمة العرض | منطقية |             |
+| أريا ليبل | سلسلة |             |
+| خطأ | (خطأ: خطأ) => باطل |             |
+| شو أكشن | أي |             |
+
+### renderBreadcrumbItems
+
+**النوع:** الوظيفة
+
+```typescript
+function renderBreadcrumbItems(items: readonly any[] = [], separator: string = '/'): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | -------------- | ----------- |
+| العناصر | للقراءة فقط أي[] |             |
+| فاصل | سلسلة |             |
+
+### renderCarouselIndicatorItems
+
+**النوع:** الوظيفة
+
+```typescript
+function renderCarouselIndicatorItems(
+  total: number = 0,
+  current: number = 0,
+  clickable: boolean = true,
+  variant: string = 'dots',
+  onSelect?: (index: number) => void,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | ----------------------- | ----------- |
+| المجموع | رقم |             |
+| الحالي | رقم |             |
+| قابلة للنقر | منطقية |             |
+| البديل | سلسلة |             |
+| على تحديد | (الفهرس: رقم) => باطل |             |
+
+### renderCarouselSlides
+
+**النوع:** الوظيفة
+
+```typescript
+function renderCarouselSlides(
+  slides: readonly any[] = [],
+  current: number = 0,
+  _orientation: string = 'horizontal',
+  slideWidth: number = 100,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------ | -------------- | ----------- |
+| شرائح | للقراءة فقط أي[] |             |
+| الحالي | رقم |             |
+| _ التوجه | سلسلة |             |
+| عرض الشريحة | رقم |             |
+
+### renderCatalogIcon
+
+**النوع:** الوظيفة
+
+```typescript
+function renderCatalogIcon(name: string, size: number = 20, color: string = 'currentColor'): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------ | ----------- |
+| الاسم | سلسلة |             |
+| الحجم | رقم |             |
+| اللون | سلسلة |             |
+
+### renderCodeBlockLineNumbers
+
+**النوع:** الوظيفة
+
+```typescript
+function renderCodeBlockLineNumbers(code: string = ''): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| كود | سلسلة |             |
+
+### renderCommandPaletteGroups
+
+**النوع:** الوظيفة
+
+```typescript
+function renderCommandPaletteGroups(
+  commands: readonly any[] = [],
+  _groups: readonly string[] = [],
+  activeIndex: number = 0,
+  onSelect?: (command: any) => void,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ---------------------- | ----------- |
+| أوامر | للقراءة فقط أي[] |             |
+| _المجموعات | سلسلة للقراءة فقط[] |             |
+| الفهرس النشط | رقم |             |
+| على تحديد | (الأمر: أي) => باطل |             |
+
+### renderCommentTree
+
+**النوع:** الوظيفة
+
+```typescript
+function renderCommentTree(
+  comments: readonly any[] = [],
+  onReply?: (comment: any) => void,
+  onResolve?: (comment: any) => void,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | ---------------------- | ----------- |
+| تعليقات | للقراءة فقط أي[] |             |
+| على الرد | (تعليق: أي) => باطل |             |
+| على الحل | (تعليق: أي) => باطل |             |
+
+### renderComparisonTableBody
+
+**النوع:** الوظيفة
+
+```typescript
+function renderComparisonTableBody(items: readonly any[] = [], features: readonly any[] = []): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | -------------- | ----------- |
+| العناصر | للقراءة فقط أي[] |             |
+| المميزات | للقراءة فقط أي[] |             |
+
+### renderComparisonTableHeaders
+
+**النوع:** الوظيفة
+
+```typescript
+function renderComparisonTableHeaders(items: readonly any[] = []): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | -------------- | ----------- |
+| العناصر | للقراءة فقط أي[] |             |
+
+### renderCtaBannerActions
+
+**النوع:** الوظيفة
+
+```typescript
+function renderCtaBannerActions(actions: readonly any[] = []): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | -------------- | ----------- |
+| أفعال | للقراءة فقط أي[] |             |
+
+### renderDataCardMetrics
+
+**النوع:** الوظيفة
+
+```typescript
+function renderDataCardMetrics(metrics: readonly any[] = []): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | -------------- | ----------- |
+| المقاييس | للقراءة فقط أي[] |             |
+
+### renderDropdownItems
+
+**النوع:** الوظيفة
+
+```typescript
+function renderDropdownItems(items: readonly any[] = [], onSelect?: (item: any) => void): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------------------- | ----------- |
+| العناصر | للقراءة فقط أي[] |             |
+| على تحديد | (العنصر: أي) => باطل |             |
+
+### renderImageSources
+
+**النوع:** الوظيفة
+
+```typescript
+function renderImageSources(sources?: readonly any[]): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | -------------- | ----------- |
+| مصادر | للقراءة فقط أي[] |             |
+
+### renderMarketingHeaderActions
+
+**النوع:** الوظيفة
+
+```typescript
+function renderMarketingHeaderActions(actions: readonly any[] = []): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | -------------- | ----------- |
+| أفعال | للقراءة فقط أي[] |             |
+
+### renderNavbarItems
+
+**النوع:** الوظيفة
+
+```typescript
+function renderNavbarItems(items: readonly any[] = []): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | -------------- | ----------- |
+| العناصر | للقراءة فقط أي[] |             |
+
+### renderNotificationPanelItems
+
+**النوع:** الوظيفة
+
+```typescript
+function renderNotificationPanelItems(
+  notifications: readonly any[] = [],
+  onDismiss?: (id: string) => void,
+  _onRead?: (id: string) => void,
+  onActionClick?: (item: any) => void,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------- | -------------------- | ----------- |
+| الإخطارات | للقراءة فقط أي[] |             |
+| على تجاهل | (المعرف: سلسلة) => باطل |             |
+| _onRead | (المعرف: سلسلة) => باطل |             |
+| onActionClick | (العنصر: أي) => باطل |             |
+
+### renderPaginationControls
+
+**النوع:** الوظيفة
+
+```typescript
+function renderPaginationControls(
+  currentPage: number = 1,
+  totalPages: number = 1,
+  maxVisiblePages: number = 7,
+  showEdges: boolean = false,
+  onPageChange?: (page: number) => void,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------------- | ---------------------- | ----------- |
+| الصفحة الحالية | رقم |             |
+| إجمالي الصفحات | رقم |             |
+| الحد الأقصى للصفحات المرئية | رقم |             |
+| عرض الحواف | منطقية |             |
+| onPageChange | (الصفحة: الرقم) => باطل |             |
+
+### renderRatingStars
+
+**النوع:** الوظيفة
+
+```typescript
+function renderRatingStars(
+  max: number = 5,
+  modelValue: number = 0,
+  disabled: boolean = false,
+  isReadonly: boolean = false,
+  onUpdateModelValue?: (val: number) => void,
+  onChange?: (val: number) => void,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------------ | --------------------- | ----------- |
+| ماكس | رقم |             |
+| قيمة النموذج | رقم |             |
+| معطل | منطقية |             |
+| للقراءة فقط | منطقية |             |
+| onUpdateModelValue | (فال: رقم) => باطل |             |
+| على التغيير | (فال: رقم) => باطل |             |
+
+### renderResourcePlannerRows
+
+**النوع:** الوظيفة
+
+```typescript
+function renderResourcePlannerRows(
+  resources: readonly any[] = [],
+  segments: readonly any[] = [],
+  _assignments: readonly any[] = [],
+  _availability: readonly any[] = [],
+  _onEventClick?: (assignment: any) => void,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------- | ------------------------- | ----------- |
+| الموارد | للقراءة فقط أي[] |             |
+| شرائح | للقراءة فقط أي[] |             |
+| _التكليفات | للقراءة فقط أي[] |             |
+| _التوفر | للقراءة فقط أي[] |             |
+| _onEventClick | (التكليف: أي) => باطل |             |
+
+### renderSegmentControlOptions
+
+**النوع:** الوظيفة
+
+```typescript
+function renderSegmentControlOptions(
+  options: readonly any[] = [],
+  modelValue?: string,
+  onSelect?: (value: string) => void,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------- | ----------- |
+| خيارات | للقراءة فقط أي[] |             |
+| قيمة النموذج | سلسلة |             |
+| على تحديد | (القيمة: سلسلة) => باطل |             |
+
+### renderSiteFooterSections
+
+**النوع:** الوظيفة
+
+```typescript
+function renderSiteFooterSections(sections: readonly any[] = []): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | -------------- | ----------- |
+| أقسام | للقراءة فقط أي[] |             |
+
+### renderStepsItems
+
+**النوع:** الوظيفة
+
+```typescript
+function renderStepsItems(
+  steps: readonly any[] = [],
+  currentStep: number = 0,
+  onStepClick?: (step: number) => void,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ---------------------- | ----------- |
+| خطوات | للقراءة فقط أي[] |             |
+| الخطوة الحالية | رقم |             |
+| على ستيب كليك | (الخطوة: الرقم) => باطل |             |
+
+### renderTableColumns
+
+**النوع:** الوظيفة
+
+```typescript
+function renderTableColumns(columns: readonly any[] = []): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | -------------- | ----------- |
+| أعمدة | للقراءة فقط أي[] |             |
+
+### renderTableRows
+
+**النوع:** الوظيفة
+
+```typescript
+function renderTableRows(data: readonly any[] = [], columns: readonly any[] = []): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | -------------- | ----------- |
+| البيانات | للقراءة فقط أي[] |             |
+| أعمدة | للقراءة فقط أي[] |             |
+
+### renderTabsList
+
+**النوع:** الوظيفة
+
+```typescript
+function renderTabsList(
+  tabs: readonly any[] = [],
+  activeId?: string,
+  variant: string = 'line',
+  closable: boolean = false,
+  onSelect?: (id: string) => void,
+  onClose?: (id: string) => void,
+  addable: boolean = false,
+  addLabel: string = 'Add tab',
+  onAdd?: () => void,
+): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | -------------------- | ----------- |
+| علامات التبويب | للقراءة فقط أي[] |             |
+| المعرف النشط | سلسلة |             |
+| البديل | سلسلة |             |
+| قابل للإغلاق | منطقية |             |
+| على تحديد | (المعرف: سلسلة) => باطل |             |
+| عند الإغلاق | (المعرف: سلسلة) => باطل |             |
+| قابل للإضافة | منطقية |             |
+| addLabel | سلسلة |             |
+| على إضافة | () => باطل |             |
+
+### renderTimelineItems
+
+**النوع:** الوظيفة
+
+```typescript
+function renderTimelineItems(items: readonly any[] = [], align: string = 'start'): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | -------------- | ----------- |
+| العناصر | للقراءة فقط أي[] |             |
+| محاذاة | سلسلة |             |
+
+### renderTreeViewNodes
+
+**النوع:** الوظيفة
+
+```typescript
+function renderTreeViewNodes(nodes: readonly any[] = [], onSelect?: (node: any) => void): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------------------- | ----------- |
+| العقد | للقراءة فقط أي[] |             |
+| على تحديد | (node: أي) => باطل |             |
+
+### renderUnreadBadge
+
+**النوع:** الوظيفة
+
+```typescript
+function renderUnreadBadge(unreadCount: number = 0): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ------ | ----------- |
+| عدد غير مقروء | رقم |             |
+
+### renderVideoSources
+
+**النوع:** الوظيفة
+
+```typescript
+function renderVideoSources(sources?: readonly any[]): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | -------------- | ----------- |
+| مصادر | للقراءة فقط أي[] |             |
+
+### ResolveCatalogIcon
+
+**النوع:** الوظيفة
+
+```typescript
+function resolveCatalogIcon(catalog: Record<string, any>, name: string): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------------- | ----------- |
+| كتالوج | سجل<string, any> |             |
+| الاسم | سلسلة |             |
+
+### حل البريد الإلكترونيTypographyTag
+
+**النوع:** الوظيفة
+
+```typescript
+function resolveEmailTypographyTag(asTag?: string, variant?: string): string;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| علامة | سلسلة |             |
+| البديل | سلسلة |             |
+
+### ResolveIconPixelSize
+
+**النوع:** الوظيفة
+
+```typescript
+function resolveIconPixelSize(size: string = 'md'): number;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| الحجم | سلسلة |             |
+
+### ResolveStatusIcon
+
+**النوع:** الوظيفة
+
+```typescript
+function resolveStatusIcon(catalog: Record<string, any>, status: string = 'neutral'): any;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------------- | ----------- |
+| كتالوج | سجل<string, any> |             |
+| الحالة | سلسلة |             |
+
+### ResolveSyncStatusLabel
+
+**النوع:** الوظيفة
+
+```typescript
+function resolveSyncStatusLabel(status: string = 'synced', label?: string): string;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------ | ----------- |
+| الحالة | سلسلة |             |
+| التسمية | سلسلة |             |
+
+### ResolveTextVariantForQuote
+
+**النوع:** الوظيفة
+
+```typescript
+function resolveTextVariantForQuote(size: string = 'md'): string;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| الحجم | سلسلة |             |
+
+### ResolveTypographyScaleVariant
+
+**النوع:** الوظيفة
+
+```typescript
+function resolveTypographyScaleVariant(variant?: string): string;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| البديل | سلسلة |             |
+
+### حل الطباعةعلامة
+
+**النوع:** الوظيفة
+
+```typescript
+function resolveTypographyTag(asTag?: string, href?: string, variant?: string): string;
+```
+
+لم يتم تقديم أي وصف.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ----------- |
+| علامة | سلسلة |             |
+| href | سلسلة |             |
+| البديل | سلسلة |             |
 
 ### فتحة
 
@@ -1624,3 +2085,13 @@ export const Slot: MpComponent;
 (`@mission-platform/vite-plugin-forge`) يعيد كتابة كل `<Slot>` إلى الهدف
 آلية الفتحة الخاصة بإطار العمل، ومحولات وقت التشغيل تعترضها
 الهوية (`type === Slot`) قبل أي مكالمة. الاتصال به مباشرة هو خطأ.
+
+### تشويق
+
+**النوع:** ثابت
+
+```typescript
+export const Suspense: MpComponent<MpSuspenseProperties>;
+```
+
+تم تخفيض علامة الحدود غير المتزامنة الأصلية بواسطة كل مترجم إطار عمل.

@@ -1,5 +1,4 @@
 import { ForgeBarcode } from '@mission-platform/barcode';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**

@@ -58,7 +58,7 @@ Forge ルーター コンパイラー プラグインによって消費される
 **種類:** コンポーネント
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor;
+export function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 ニュートラルリンクマーカー。ネイティブ ターゲットは、コンパイル中にこの関数を置き換えます。
@@ -154,7 +154,7 @@ export type MpRouterCapabilityOverrides = Partial<MpRouterCapabilities>;
 **種類:** コンポーネント
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
+export function MpRouterView(properties: MpRouterViewProps =
 ```
 
 ニュートラルアウトレット/ビューマーカー。ネイティブ ターゲットは、コンパイル中にこの関数を置き換えます。
@@ -244,7 +244,11 @@ function useMpRouter(): MpRouterCapabilities;
 **種類:** 定数
 
 ```typescript
-export const applicationCompatibilityFixtures;
+export const applicationCompatibilityFixtures: {
+  readonly website: ForgeCompatibilityFixture;
+  readonly myCareNotes: ForgeCompatibilityFixture;
+  readonly guardsAndLazy: ForgeCompatibilityFixture;
+};
 ```
 
 説明はありません。

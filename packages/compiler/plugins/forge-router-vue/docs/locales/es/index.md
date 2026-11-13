@@ -5,6 +5,6 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > packages/compiler/plugins/forge-router-vue/docs/index.md: [packages/compiler/plugins/forge-router-vue/docs/index.md](../../index.md)
 > Idioma: Español (es)
 
-Forge router target para Vue Router
+Objetivo de enrutador Forge para enrutador Vue
 
-See `llms.txt` para el public API y usage examples.
+Consulte `llms.txt` para conocer la API pública y ejemplos de uso.

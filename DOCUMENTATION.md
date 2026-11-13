@@ -1,12 +1,12 @@
 # Mission Platform Documentation
 
-This repository contains comprehensive documentation for the Mission Platform, a VueJS 3 monorepo managed with pnpm
-workspaces.
+This repository contains comprehensive documentation for the Mission Platform, a multi-framework TypeScript monorepo
+managed with pnpm workspaces and Turborepo.
 
 ## Browsing the Documentation
 
 Project guidance under `docs/` can be read directly on GitHub, or browsed in a dedicated documentation site: the **
-`@mission-platform/docs`** app (`apps/docs`). It is a Vite + Vue 3 single-page app that renders the canonical Markdown
+`@mission-platform/docs`** app (`apps/docs`). It is a Vite + Web Components application that renders the canonical Markdown
 from the project `docs/` tree and package-owned `docs/` trees at build time, with grouped sidebar navigation, per-page
 table of contents, syntax-highlighted code, and in-app cross-links, and client-enhanced Mermaid diagrams with readable
 Markdown fallbacks.
@@ -91,7 +91,7 @@ a cross-package directory; it is not a substitute for package-owned API document
 - **[packages/tooling/configs/eslint-config/docs/index.md](packages/tooling/configs/eslint-config/docs/index.md)**: ESLint package usage and development
 - **[packages/tooling/configs/typescript-config/docs/index.md](packages/tooling/configs/typescript-config/docs/index.md)**: TypeScript preset usage and development
 - **[packages/tooling/configs/vite-config/docs/index.md](packages/tooling/configs/vite-config/docs/index.md)**: Vite/Vitest helper usage and development
-- **[packages/tooling/configs/*/docs/index.md](packages/tooling/configs/)**: Documentation owned by each configuration package
+- **[packages/tooling/configs/\*/docs/index.md](packages/tooling/configs/)**: Documentation owned by each configuration package
 - **[docs/configs/workers-config.md](docs/configs/workers-config.md)**: Cross-workspace Cloudflare Worker guidance
 
 ### Advanced Documentation

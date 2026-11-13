@@ -1,5 +1,6 @@
-import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';
 import { marked, type Token, type Tokens } from 'marked';
+
+import { h, type MpChild, type MpElement } from '@mission-platform/forge-jsx';
 
 import { validateUrl } from '../render';
 

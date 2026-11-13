@@ -64,16 +64,16 @@ function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement;
 
 הוא מציג (בסדר עדיפות) תמונת `src`, `initials`, או את
 חריץ ברירת מחדל, בגודל לפי סולם `2xs … 2xl` הקנוני, אופציונלי עם א
-נקודה בפינת סטטוס נוכחות. כמו פרימיטיביות הפריסה הנדידה שהיא מניחה
+נקודה בפינת מצב נוכחות. כמו פרימיטיביות הפריסה הנדידה שהיא מניחה
 עצמו יוצא עם **סגנונות מוטבעים** (מונע על ידי אסימוני עיצוב), כך שהוא נשלח לא
 מודול CSS משלו; שמלות `forge-avatar.module.scss` הממוקמות במשותף בלבד
 תוכן ההדגמה של Storybook.
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| נכסים | לקריאה בלבד<AvatarProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<AvatarProperties> |             |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -133,9 +133,9 @@ function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): 
 
 #### פרמטרים
 
-| שם    | הקלד                                   | תיאור |
-| ----- | -------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<BackgroundVideoProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<BackgroundVideoProperties> |             |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -197,9 +197,9 @@ function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                         | תיאור |
-| ----- | ---------------------------- | ----- |
-| נכסים | לקריאה בלבד<BadgeProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------- | ----------- |
+| נכסים | לקריאה בלבד<BadgeProperties> |             |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -251,9 +251,53 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| נכסים | לקריאה בלבד<ButtonProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ButtonProperties> |             |
+
+## `src/components/atoms/forge-divider/forge-divider`
+
+### כיוון מחלק
+
+**סוג:** סוג
+
+```typescript
+export type DividerOrientation = 'horizontal' | 'vertical';
+```
+
+כיוון הפריסה של המפריד.
+
+### DividerProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface DividerProperties
+```
+
+לא סופק תיאור.
+
+### ForgeDivider
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeDivider(properties: Readonly<DividerProperties>): MpElement;
+```
+
+`ForgeDivider` - מחלק גבול דק שיוצר פעם אחת ב-JSX הנייטרלי
+ניב והורכב ישר ל-React או Vue על-ידי
+`@mission-platform/vite-plugin-forge`.
+
+הוא ממלא את הרוחב או הגובה הזמינים לפי `orientation` ומשתמשים
+האלמנט הסמנטי `<hr>` כברירת מחדל. הגדר את `decorative` ל-`false` כדי להשתמש ב-a
+נושא תפקידים `<div>` במקום.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------------------------- | ----------- |
+| נכסים | לקריאה בלבד<DividerProperties> |             |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -265,7 +309,7 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
 ```
 
-`ForgeIconButton` - כפתור קומפקטי, מרובע, עם סמלים בלבד שנכתב פעם אחת ב-
+`ForgeIconButton` - כפתור קומפקטי, מרובע, עם סמלים בלבד, שנכתב פעם אחת ב-
 ניב JSX ניטרלי והורכב ישר ל-React או Vue על ידי
 `@mission-platform/vite-plugin-forge`.
 
@@ -278,9 +322,9 @@ function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<IconButtonProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<IconButtonProperties> |             |
 
 ### IconButtonProperties
 
@@ -300,7 +344,7 @@ export interface IconButtonProperties
 export type IconButtonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-אסימון גודל השולט בריפוד המרובע - סולם 2xs קנוני → 2xl.
+אסימון גודל השולט בריפוד הריבוע - קנה מידה קנוני של 2xs → 2xl.
 
 ### IconButtonVariant
 
@@ -312,6 +356,94 @@ export type IconButtonVariant =
 ```
 
 טיפול ויזואלי בכפתור הסמל - ערכת הצבעים הקנונית בתוספת `ghost` שקוף.
+
+## `src/components/atoms/forge-icon/forge-icon`
+
+### ForgeIcon
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeIcon(properties: Readonly<IconProperties>): MpElement;
+```
+
+חזית אייקונים ניטרלית למסגרת מגובה ב-`@mission-platform/icons` שנבדקה
+קטלוג. הרזולוציה מונעת על ידי נתונים ושמות לא ידועים אף פעם לא הופכים לא חוקי
+רכיב; העטיפה היא הבעלים של השם הנגיש ולכן קטלוגי SVG נשארים דוממים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------ | ----------- |
+| נכסים | לקריאה בלבד<IconProperties> |             |
+
+### שם אייקון
+
+**סוג:** סוג
+
+```typescript
+export type IconName = string;
+```
+
+שם קטלוגי כגון `forge-icon-check`; שמות לא ידועים משתמשים בסמל החזרה.
+
+### IconProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface IconProperties
+```
+
+לא סופק תיאור.
+
+### IconSize
+
+**סוג:** סוג
+
+```typescript
+export type IconSize = 'sm' | 'md' | 'lg' | 'xl';
+```
+
+גודל הסמל ממופה לממדי הפיקסלים של הקטלוג.
+
+## `src/components/atoms/forge-kbd/forge-kbd`
+
+### ForgeKbd
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeKbd(properties: Readonly<KbdProperties>): MpElement;
+```
+
+תווית מקש/אקורד סמנטי המוצגת בניב JSX הנייטרלי.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ----------------------- | ----------- |
+| נכסים | לקריאה בלבד<KbdProperties> |             |
+
+### KbdProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface KbdProperties
+```
+
+לא סופק תיאור.
+
+### גודל Kbd
+
+**סוג:** סוג
+
+```typescript
+export type KbdSize = 'sm' | 'md' | 'lg';
+```
+
+גודל מקש מקלדת.
 
 ## `src/components/atoms/forge-progress-bar/forge-progress-bar`
 
@@ -335,9 +467,9 @@ function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElemen
 
 #### פרמטרים
 
-| שם    | הקלד                               | תיאור |
-| ----- | ---------------------------------- | ----- |
-| נכסים | לקריאה בלבד<ProgressBarProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ProgressBarProperties> |             |
 
 ### ProgressBarProperties
 
@@ -384,7 +516,7 @@ function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement;
 ניב JSX והורכב ישר ל-React או Vue על ידי
 `@mission-platform/vite-plugin-forge`.
 
-הוא מציג את תוכן המשבצת המוגדר כברירת מחדל בתור הציטוט (באמצעות ה- composed
+הוא מציג את תוכן חריץ ברירת המחדל שלו בתור הציטוט (באמצעות ה- composed
 ניטרלי {@link ForgeTypography}) עם ייחוס `author`/`source` אופציונלי
 וטיפול ויזואלי שניתן להגדרה. הוא הבעלים של הסטיילינג שלו דרך
 מודול CSS `forge-quote.module.scss` הממוקם במשותף, מורכב עם
@@ -393,14 +525,13 @@ function ForgeQuote(properties: Readonly<QuoteProperties>): MpElement;
 ה-Vue SFC המקורי חשף בנוסף חריץ `author` בהיקף (עוקף
 האביזרים `author`/`source`) ונוכחות משבצת זוהתה; הגרסה הנייטרלית
 הורדת המשבצת הזו - הייחוס מונע על ידי האביזרים `author`/`source`
-
-- תואם לאופן שבו שאר הרכיבים שהועברו הורידו חריצים בהיקף.
+- תואם לאופן שבו שאר הרכיבים שהועברו הורידו משבצות בהיקף.
 
 #### פרמטרים
 
-| שם    | הקלד                         | תיאור |
-| ----- | ---------------------------- | ----- |
-| נכסים | לקריאה בלבד<QuoteProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------- | ----------- |
+| נכסים | לקריאה בלבד<QuoteProperties> |             |
 
 ### QuoteProperties
 
@@ -420,7 +551,7 @@ export interface QuoteProperties
 export type QuoteSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
-אסימון גודל השולט בסולם טקסט הציטוט - קנה מידה קנוני של 2xs → 2xl.
+אסימון גודל שולט בסולם טקסט הציטוט - קנה מידה קנוני של 2xs → 2xl.
 
 ### ציטוט Variant
 
@@ -460,9 +591,9 @@ Vue מאת `@mission-platform/vite-plugin-forge`.
 
 #### פרמטרים
 
-| שם    | הקלד                                   | תיאור |
-| ----- | -------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<ResponsiveImageProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ResponsiveImageProperties> |             |
 
 ### ResponsiveImageFit
 
@@ -508,25 +639,25 @@ function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): 
 ניב JSX ניטרלי והורכב ישר ל-React או Vue על ידי
 `@mission-platform/vite-plugin-forge`.
 
-הוא מעבד `<video>` שמתרחב למיכל שלו תוך שמירה על קבוע
+זה מעבד `<video>` שמתרחב למיכל שלו תוך שמירה על קבוע
 `aspectRatio` (הימנעות משינוי פריסה), תומך במספר ערכי `<source>`
 עבור משא ומתן על פורמט, תמונת פוסטר, בקרות מקוריות והרגיל
 דגלי השמעה. עבור רקעים דקורטיביים, ללא תוכן העדיפו
-{@link ForgeBackgroundVideo}. היא הבעלים של הסטיילינג שלה באמצעות ה-CSS המשותף
+{@link ForgeBackgroundVideo}. הוא הבעלים של הסטיילינג שלו באמצעות ה-CSS המשותף
 מודול `forge-responsive-video.module.scss`, מורכב עם
 עוזר {@link classNames} ניטרלי במסגרת.
 
 Vue SFC המקורי שידר מחדש את אירועי `play`/`pause`/`ended` המקוריים כ
 פולט רכיב; הגרסה הנייטרלית חושפת אותם בתור
-`onPlay`/`onPause`/`onEnded` אביזרי התקשרות חזרה הקשורים ישירות ל-`<video>`
-(תואם את מוסכמות ה-callback-prop המשמשת בכל המעבר
+`onPlay`/`onPause`/`onEnded` אביזרי התקשרות חוזרים הקשורים ישירות ל-`<video>`
+(תואם את מוסכמת ה-callback-prop המשמשת בכל המעבר
 רכיבים).
 
 #### פרמטרים
 
-| שם    | הקלד                                   | תיאור |
-| ----- | -------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<ResponsiveVideoProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ResponsiveVideoProperties> |             |
 
 ### ResponsiveVideoFit
 
@@ -572,7 +703,7 @@ function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
 ניב JSX והורכב ישר ל-React או Vue על ידי
 `@mission-platform/vite-plugin-forge`.
 
-מעבד כלל אופקי או אנכי (`<hr>`) המשמש להפרדת קבוצות של
+מציג כלל אופקי או אנכי (`<hr>`) המשמש להפרדת קבוצות של
 תוכן. כאשר מסופק תוכן משבצת ברירת מחדל (אופקי בלבד) הוא מוצג
 במקום זאת תווית ממורכזת בין שני קווים. כברירת מחדל זה חושף
 `role="separator"` עם `aria-orientation` המתאים; הגדר `decorative`
@@ -586,9 +717,9 @@ function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                             | תיאור |
-| ----- | -------------------------------- | ----- |
-| נכסים | לקריאה בלבד<SeparatorProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------- | ----------- |
+| נכסים | לקריאה בלבד<SeparatorProperties> |             |
 
 ### מפריד אוריינטציה
 
@@ -652,9 +783,9 @@ function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<SkeletonProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<SkeletonProperties> |             |
 
 ### שלד מאפיינים
 
@@ -700,9 +831,9 @@ function ForgeSpinner(properties: Readonly<SpinnerProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                           | תיאור |
-| ----- | ------------------------------ | ----- |
-| נכסים | לקריאה בלבד<SpinnerProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------- | ----------- |
+| נכסים | לקריאה בלבד<SpinnerProperties> |             |
 
 ### SpinnerProperties
 
@@ -757,9 +888,9 @@ function ForgeStack(properties: Readonly<StackProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                         | תיאור |
-| ----- | ---------------------------- | ----- |
-| נכסים | לקריאה בלבד<StackProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------- | ----------- |
+| נכסים | לקריאה בלבד<StackProperties> |             |
 
 ### StackAlign
 
@@ -825,9 +956,9 @@ function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<StatusIconProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<StatusIconProperties> |             |
 
 ### StatusIconLevel
 
@@ -859,6 +990,102 @@ export type StatusIconSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
 סקאלת גודל קנונית 2xs → 2xl.
+
+## `src/components/atoms/forge-surface/forge-surface`
+
+### ForgeSurface
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeSurface(properties: Readonly<SurfaceProperties>): MpElement;
+```
+
+משטח סמנטי בעל נושא עם חריץ ברירת מחדל.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------------------------- | ----------- |
+| נכסים | לקריאה בלבד<SurfaceProperties> |             |
+
+### גובה פני השטח
+
+**סוג:** סוג
+
+```typescript
+export type SurfaceElevation = 0 | 1 | 2 | 3;
+```
+
+מפלס גובה פני השטח.
+
+### SurfacePadding
+
+**סוג:** סוג
+
+```typescript
+export type SurfacePadding = 'none' | 'sm' | 'md' | 'lg';
+```
+
+סולם ריפוד משטח.
+
+### SurfaceProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface SurfaceProperties
+```
+
+לא סופק תיאור.
+
+### משטח מעוגל
+
+**סוג:** סוג
+
+```typescript
+export type SurfaceRounded = 'none' | 'sm' | 'md' | 'lg' | 'xl';
+```
+
+טיפול רדיוס פינתי משטח.
+
+## `src/components/atoms/forge-sync-status-indicator/forge-sync-status-indicator`
+
+### ForgeSyncStatusIndicator
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeSyncStatusIndicator(properties: Readonly<SyncStatusIndicatorProperties>): MpElement;
+```
+
+מחוון מצב סנכרון קומפקטי ונגיש.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<SyncStatusIndicatorProperties> |             |
+
+### SyncStatus
+
+**סוג:** סוג
+
+```typescript
+export type SyncStatus = 'synced' | 'syncing' | 'pending' | 'error' | 'offline';
+```
+
+מצב סנכרון המיוצג על ידי המחוון.
+
+### SyncStatusIndicatorProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface SyncStatusIndicatorProperties
+```
+
+לא סופק תיאור.
 
 ## `src/components/molecules/forge-accordion/forge-accordion`
 
@@ -920,9 +1147,57 @@ React/Vue); וחריצי `summary`/ברירת מחדל לכל פריט הופכ�
 
 #### פרמטרים
 
-| שם    | הקלד                             | תיאור |
-| ----- | -------------------------------- | ----- |
-| נכסים | לקריאה בלבד<AccordionProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------- | ----------- |
+| נכסים | לקריאה בלבד<AccordionProperties> |             |
+
+## `src/components/molecules/forge-alert/forge-alert`
+
+### AlertProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface AlertProperties
+```
+
+לא סופק תיאור.
+
+### AlertSize
+
+**סוג:** סוג
+
+```typescript
+export type AlertSize = 'sm' | 'md' | 'lg';
+```
+
+לא סופק תיאור.
+
+### AlertVariant
+
+**סוג:** סוג
+
+```typescript
+export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+לא סופק תיאור.
+
+### ForgeAlert
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeAlert(properties: Readonly<AlertProperties>): MpElement;
+```
+
+הודעת סטטוס נגישה וניתנת לביטול עם הודעה ניתנת לחיבור וחריץ פעולה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------- | ----------- |
+| נכסים | לקריאה בלבד<AlertProperties> |             |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -971,9 +1246,9 @@ function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<BreadcrumbProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<BreadcrumbProperties> |             |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1031,9 +1306,57 @@ function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElemen
 
 #### פרמטרים
 
-| שם    | הקלד                               | תיאור |
-| ----- | ---------------------------------- | ----- |
-| נכסים | לקריאה בלבד<ButtonGroupProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ButtonGroupProperties> |             |
+
+## `src/components/molecules/forge-callout-block/forge-callout-block`
+
+### CalloutBlockProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface CalloutBlockProperties
+```
+
+לא סופק תיאור.
+
+### CalloutBlockSize
+
+**סוג:** סוג
+
+```typescript
+export type CalloutBlockSize = 'sm' | 'md';
+```
+
+לא סופק תיאור.
+
+### CalloutBlockVariant
+
+**סוג:** סוג
+
+```typescript
+export type CalloutBlockVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+לא סופק תיאור.
+
+### ForgeCalloutBlock
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeCalloutBlock(properties: Readonly<CalloutBlockProperties>): MpElement;
+```
+
+בלוק מידע בולט עם כותרת, תיאור, תוכן ומשבצות פעולה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<CalloutBlockProperties> |             |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1082,9 +1405,57 @@ function ForgeCard(properties: Readonly<CardProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                        | תיאור |
-| ----- | --------------------------- | ----- |
-| נכסים | לקריאה בלבד<CardProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------ | ----------- |
+| נכסים | לקריאה בלבד<CardProperties> |             |
+
+## `src/components/molecules/forge-carousel-indicator/forge-carousel-indicator`
+
+### CarouselIndicatorOrientation
+
+**סוג:** סוג
+
+```typescript
+export type CarouselIndicatorOrientation = 'horizontal' | 'vertical';
+```
+
+לא סופק תיאור.
+
+### Carousel IndicatorProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface CarouselIndicatorProperties
+```
+
+לא סופק תיאור.
+
+### CarouselIndicatorSize
+
+**סוג:** סוג
+
+```typescript
+export type CarouselIndicatorSize = 'sm' | 'md' | 'lg';
+```
+
+לא סופק תיאור.
+
+### אינדיקטור ForgeCarousel
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeCarouselIndicator(properties: Readonly<CarouselIndicatorProperties>): MpElement;
+```
+
+נקודות עימוד נגישות המופעלות על ידי מקלדת לקרוסלה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<CarouselIndicatorProperties> |             |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1144,9 +1515,9 @@ function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<ChatBubbleProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<ChatBubbleProperties> |             |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1188,9 +1559,9 @@ function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<CollapseProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<CollapseProperties> |             |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1202,7 +1573,7 @@ function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
 export type DeviceMockOrientation = 'portrait' | 'landscape';
 ```
 
-כיוון מסגרות כף היד (`mobile`/`tablet`). התעלמו על ידי `desktop`/`browser`.
+אוריינטציה של מסגרות כף היד (`mobile`/`tablet`). התעלמו על ידי `desktop`/`browser`.
 
 ### DeviceMockProperties
 
@@ -1249,16 +1620,132 @@ function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 `@mission-platform/vite-plugin-forge`.
 
 המסגרת מצויירת כולה עם אסימוני עיצוב CSS וגודלה ביחידות `em`,
-כך שהאסימון המשותף `size` (`2xs … 2xl`) משנה את המכשיר כולו. ה
+אז האסימון המשותף `size` (`2xs … 2xl`) משנה את כל המכשיר. ה
 מסגרות כף יד (`mobile`/`tablet`) מכבדות את אביזר `orientation`; את
 מסגרת `browser` מציגה שורת כותרת עם בקרות רמזור ו-
-שורת הכתובת `url`. חריץ ברירת המחדל מוקרן על מסך המכשיר.
+`url` address bar. חריץ ברירת המחדל מוקרן על מסך המכשיר.
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<DeviceMockProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<DeviceMockProperties> |             |
+
+## `src/components/molecules/forge-drop-zone/forge-drop-zone`
+
+### DropZoneProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface DropZoneProperties
+```
+
+לא סופק תיאור.
+
+### DropZoneReject
+
+**סוג:** ממשק
+
+```typescript
+export interface DropZoneReject
+```
+
+לא סופק תיאור.
+
+### DropZoneScope
+
+**סוג:** ממשק
+
+```typescript
+export interface DropZoneScope
+```
+
+לא סופק תיאור.
+
+### DropZoneSize
+
+**סוג:** סוג
+
+```typescript
+export type DropZoneSize = 'sm' | 'md' | 'lg';
+```
+
+לא סופק תיאור.
+
+### DropZoneValue
+
+**סוג:** סוג
+
+```typescript
+export type DropZoneValue = File | File[];
+```
+
+לא סופק תיאור.
+
+### ForgeDropZone
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeDropZone(properties: Readonly<DropZoneProperties>): MpElement;
+```
+
+מטרת גרירה ושחרור הנגישה למקלדת עם אימות בצד הלקוח.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<DropZoneProperties> |             |
+
+## `src/components/molecules/forge-empty-state/forge-empty-state`
+
+### EmptyStateProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface EmptyStateProperties
+```
+
+לא סופק תיאור.
+
+### EmptyStateSize
+
+**סוג:** סוג
+
+```typescript
+export type EmptyStateSize = 'sm' | 'md' | 'lg';
+```
+
+לא סופק תיאור.
+
+### EmptyStateVariant
+
+**סוג:** סוג
+
+```typescript
+export type EmptyStateVariant = 'neutral' | 'info';
+```
+
+לא סופק תיאור.
+
+### ForgeEmptyState
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeEmptyState(properties: Readonly<EmptyStateProperties>): MpElement;
+```
+
+הודעה מרוכזת ללא תוכן עם סמל אופציונלי, עותק תומך ופעולה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<EmptyStateProperties> |             |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1270,10 +1757,10 @@ function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement;
 function ForgeGrid(properties: Readonly<GridProperties>): MpElement;
 ```
 
-`ForgeGrid` - פרימיטיבי פרימיטיבי של רשת CSS המסדרת את התוכן שלו ל-a
+`ForgeGrid` - פרימיטיבי פרימיטיבי של פריסת רשת CSS המסדרת את התוכן שלו ל-a
 רשת של `rows` (מ') על ידי `cols` (n) עם `gap` הניתן להגדרה (ניתן לעקוף לפי
 ציר דרך `rowGap` / `columnGap`). נכתב פעם אחת בניב JSX הנייטרלי
-והידור ישר ל-React או Vue על ידי `@mission-platform/vite-plugin-forge`.
+והורכב ישר ל-React או Vue על ידי `@mission-platform/vite-plugin-forge`.
 
 ילדים המסופקים דרך חריץ ברירת המחדל זורמים לתוך תאי הרשת במקור
 להזמין ועשוי להשתרע על מספר רצועות עם `grid-column` הסטנדרטי /
@@ -1287,9 +1774,9 @@ function ForgeGrid(properties: Readonly<GridProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                        | תיאור |
-| ----- | --------------------------- | ----- |
-| נכסים | לקריאה בלבד<GridProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------ | ----------- |
+| נכסים | לקריאה בלבד<GridProperties> |             |
 
 ### יישור רשת
 
@@ -1335,7 +1822,7 @@ function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
 אנימציה הניתנת להגדרה ברגע שהיא גוללת לתצוגה. נכתב פעם אחת ב
 ניב JSX ניטרלי; מצב/מחזור חיים חוצה מסגרות מסופק על ידי
 ווים ניטרליים (`useState`/`useRef`/`useEffect`), המהדרים לווים React
-או מתקן וו Vue דרך `@mission-platform/vite-plugin-forge`.
+או מקלדת וו Vue דרך `@mission-platform/vite-plugin-forge`.
 
 הערה: בניגוד ל-Vue המקורי, הוא אינו חושף חריץ בהיקף - מצב חשוף
 מועבר אך ורק דרך סגנון האנימציה של העטיפה וה-
@@ -1343,9 +1830,9 @@ function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| נכסים | לקריאה בלבד<InViewProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<InViewProperties> |             |
 
 ### InViewAnimation
 
@@ -1367,6 +1854,64 @@ export interface InViewProperties
 
 לא סופק תיאור.
 
+## `src/components/molecules/forge-inline-edit/forge-inline-edit`
+
+### ForgeInlineEdit
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeInlineEdit(properties: Readonly<InlineEditProperties>): MpElement;
+```
+
+בקרת קריאה/עריכה קומפקטית עם שליחה, ביטול ואימות מקלדת.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<InlineEditProperties> |             |
+
+### InlineEditInputType
+
+**סוג:** סוג
+
+```typescript
+export type InlineEditInputType = 'text' | 'email' | 'url' | 'number';
+```
+
+לא סופק תיאור.
+
+### InlineEditProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface InlineEditProperties
+```
+
+לא סופק תיאור.
+
+### InlineEditSize
+
+**סוג:** סוג
+
+```typescript
+export type InlineEditSize = 'sm' | 'md' | 'lg';
+```
+
+לא סופק תיאור.
+
+### InlineEdit Validator
+
+**סוג:** סוג
+
+```typescript
+export type InlineEditValidator = (value: string) => string | undefined;
+```
+
+לא סופק תיאור.
+
 ## `src/components/molecules/forge-list/forge-list`
 
 ### ForgeList
@@ -1383,7 +1928,7 @@ function ForgeList(properties: Readonly<ListProperties>): MpElement;
 
 זה מעבד את ה-`items` שסופק כאלמנט הסמנטי המתאים (`ul` /
 `ol` / `dl`), הטקסט של כל שורה מוצג דרך הנייטרלי המורכב
-{@link ForgeTypography}; כל ילדי משבצת ברירת המחדל מתווספים אחרי
+{@link ForgeTypography}; כל ילדי משבצת ברירת המחדל מתווספים לאחר ה-
 שורות שנוצרו. הוא הבעלים של הסגנון שלו באמצעות מודול ה-CSS המשותף
 `forge-list.module.scss`, מורכב עם המסגרת ניטראלית
 עוזר {@link classNames}.
@@ -1391,13 +1936,13 @@ function ForgeList(properties: Readonly<ListProperties>): MpElement;
 ה-Vue SFC המקורי חשף גם חריץ `item` בהיקף של כל שורה (עם
 `item`/`index` כריכות) עוקף את השורה שנוצרה; הגרסה הנייטרלית
 מורידה את החריץ הזה - שורות מונעות על ידי `items` - בהתאם לאופן שבו
-רכיבים שהועברו אחרים הורידו חריצים בהיקף.
+רכיבים אחרים שהועברו הורידו חריצים בהיקף.
 
 #### פרמטרים
 
-| שם    | הקלד                        | תיאור |
-| ----- | --------------------------- | ----- |
-| נכסים | לקריאה בלבד<ListProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------ | ----------- |
+| נכסים | לקריאה בלבד<ListProperties> |             |
 
 ### פריט רשימה
 
@@ -1469,9 +2014,9 @@ CSS); המאפיינים הדינמיים של ריבוי עמודות מיוש�
 
 #### פרמטרים
 
-| שם    | הקלד                           | תיאור |
-| ----- | ------------------------------ | ----- |
-| נכסים | לקריאה בלבד<MasonryProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------- | ----------- |
+| נכסים | לקריאה בלבד<MasonryProperties> |             |
 
 ### MasonryGap
 
@@ -1489,6 +2034,54 @@ export type MasonryGap = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 ```typescript
 export interface MasonryProperties
+```
+
+לא סופק תיאור.
+
+## `src/components/molecules/forge-mention-input/forge-mention-input`
+
+### ForgeMentionInput
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeMentionInput(properties: Readonly<MentionInputProperties>): MpElement;
+```
+
+אזור טקסט עם הצעות אזכור נגישות הניתנות לניווט במקלדת.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<MentionInputProperties> |             |
+
+### MentionInputProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface MentionInputProperties
+```
+
+לא סופק תיאור.
+
+### MentionItem
+
+**סוג:** ממשק
+
+```typescript
+export interface MentionItem
+```
+
+לא סופק תיאור.
+
+### MentionSuggestionScope
+
+**סוג:** ממשק
+
+```typescript
+export interface MentionSuggestionScope
 ```
 
 לא סופק תיאור.
@@ -1520,9 +2113,9 @@ function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<MenuItemProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<MenuItemProperties> |             |
 
 ### MenuItemProperties
 
@@ -1578,9 +2171,9 @@ Vue SFC המקורי מורכב `ForgeMenuList`/`ForgeMenuItemButton`/
 
 #### פרמטרים
 
-| שם    | הקלד                        | תיאור |
-| ----- | --------------------------- | ----- |
-| נכסים | לקריאה בלבד<MenuProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------ | ----------- |
+| נכסים | לקריאה בלבד<MenuProperties> |             |
 
 ### MenuNode
 
@@ -1612,6 +2205,76 @@ export interface MenuProperties
 
 לא סופק תיאור.
 
+## `src/components/molecules/forge-metric-card/forge-metric-card`
+
+### ForgeMetricCard
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeMetricCard(properties: Readonly<MetricCardProperties>): MpElement;
+```
+
+`ForgeMetricCard` - סיכום מטרי קומפקטי שנכתב פעם אחת ב-JSX ניטרלי.
+זה שומר את הערך, המגמה, מצב הטעינה והתוכן התומך באחד
+מאמר נגיש תוך השארת טיפולים חזותיים למודול ה-CSS שלו.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<MetricCardProperties> |             |
+
+### MetricCardProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface MetricCardProperties
+```
+
+לא סופק תיאור.
+
+### MetricCardSize
+
+**סוג:** סוג
+
+```typescript
+export type MetricCardSize = 'sm' | 'md' | 'lg';
+```
+
+אסימון גודל השולט בסולם הכרטיס המטרי.
+
+### MetricCardTrend
+
+**סוג:** ממשק
+
+```typescript
+export interface MetricCardTrend
+```
+
+מחוון שינוי אופציונלי מוצג מתחת לערך המדד.
+
+### MetricCardTrendDirection
+
+**סוג:** סוג
+
+```typescript
+export type MetricCardTrendDirection = 'up' | 'down' | 'flat';
+```
+
+כיוון השינוי המיוצג על ידי מגמה מטרית.
+
+### MetricCardVariant
+
+**סוג:** סוג
+
+```typescript
+export type MetricCardVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+גוון פני השטח של הכרטיס המטרי.
+
 ## `src/components/molecules/forge-navbar-item/forge-navbar-item`
 
 ### ForgeNavbarItem
@@ -1633,8 +2296,8 @@ function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement;
 (נופל בחזרה ל-`label`) עם חריץ `icon` מוביל אופציונלי. זה הבעלים שלו
 עיצוב באמצעות מודול ה-CSS המשותף `forge-navbar-item.module.scss`.
 
-Vue SFC המקורי השתמש בתפריט נפתח צף
-(טלפורט + מיקום `@floating-ui`), תג `<component :is>` דינמי,
+ה-Vue SFC המקורי השתמש בתפריט נפתח צף
+(מיצוב טלפורט + `@floating-ui`), תג `<component :is>` דינמי,
 `vue-router` `RouterLink`, ה-`@mission-platform/icons` `ForgeIconChevron`, ו-
 `click` פולט. הגרסה הנייטרלית שומרת על **תג דינמי** - חסר ילדים
 פריט מעבד באמצעות הפרימיטיבי `<Dynamic is={tag}>` הנייטרלי (הידור ל
@@ -1643,13 +2306,13 @@ Vue SFC המקורי השתמש בתפריט נפתח צף
 תפריט נפתח במיקום מוחלט (מצב פתוח ב-`useState`, סגור באמצעות
 מאזיני מסמכים `useEffect`), היעד `RouterLink` עם `<a>` פשוט,
 `@mission-platform/icons` `ForgeIconChevron` לכתוב פעם אחת (מסובב באמצעות
-אבזר `direction` משלו), ואביזר `onClick` התקשרות חוזרת.
+אבזר `direction` משלו), ואביזר `onClick` להתקשרות חוזרת.
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<NavbarItemProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<NavbarItemProperties> |             |
 
 ### NavbarItemChild
 
@@ -1709,9 +2372,9 @@ function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                              | תיאור |
-| ----- | --------------------------------- | ----- |
-| נכסים | לקריאה בלבד<PaginationProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<PaginationProperties> |             |
 
 ### פריט עימוד
 
@@ -1760,7 +2423,7 @@ function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
 זה מעבד ARIA `tablist` של לחצני כרטיסיות (תווית מורכבת באמצעות המעבר
 {@link ForgeTypography}) עם `tabindex` משוטט + מקלדת חץ/בית/סוף
 ניווט, סגירה אופציונלית לכל כרטיסייה ותוספת אופציונלית
-(`+`). תוכן הכרטיסייה הפעילה מוצג באמצעות `panel` בהיקף
+כפתור (`+`). תוכן הכרטיסייה הפעילה מוצג באמצעות `panel` בהיקף
 **רנד-פרופס**. הוא הבעלים של הסגנון שלו באמצעות מודול ה-CSS המשותף
 `forge-tabs.module.scss`.
 
@@ -1770,7 +2433,7 @@ Vue SFC המקורי מורכב `ForgeTabList`/`ForgeTab`/`ForgeTabPanel`
 גרסה ניטרלית משלבת את סרגל הכרטיסיות (תואמת איך `ForgeTable`/
 `ForgeVirtualTable` צירפה את רכיבי המשנה שלהם) ומציגה את הכתיבה פעם אחת
 `@mission-platform/icons` `ForgeIconPlus`/`ForgeIconClose` עבור הוספה/סגירה
-תנאים. כמו ה-Vue המקורי, הוא מציג `role="tabpanel"`
+תקציבים. כמו ה-Vue המקורי, הוא מציג `role="tabpanel"`
 עבור **כל** לשונית ושומר על לוחות לא פעילים מותקן אך `hidden` (כך פאנל
 מצב שורד מתגי כרטיסיות); מכיוון שהניב הנייטרלי לא יכול לבטא את זה של Vue
 שמות חריצים דינמיים לכל מזהה (`<slot :name="tab.id">`), כל פאנל מפעיל א
@@ -1784,9 +2447,9 @@ Vue SFC המקורי מורכב `ForgeTabList`/`ForgeTab`/`ForgeTabPanel`
 
 #### פרמטרים
 
-| שם    | הקלד                        | תיאור |
-| ----- | --------------------------- | ----- |
-| נכסים | לקריאה בלבד<TabsProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------ | ----------- |
+| נכסים | לקריאה בלבד<TabsProperties> |             |
 
 ### TabItem
 
@@ -1818,7 +2481,7 @@ export interface TabsProperties
 
 לא סופק תיאור.
 
-### Tabs Variant
+### TabsVariant
 
 **סוג:** סוג
 
@@ -1827,6 +2490,57 @@ export type TabsVariant = 'line' | 'pill';
 ```
 
 טיפול ויזואלי ברשימת הכרטיסיות.
+
+## `src/components/molecules/forge-tag-input/forge-tag-input`
+
+### ForgeTagInput
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeTagInput(properties: Readonly<TagInputProperties>): MpElement;
+```
+
+`ForgeTagInput` - עורך תגים נשלט ונגיש שיוצר בניוטרל
+JSX. Enter או פסיק מבצע טיוטה חתוכה, רווח אחורי מסיר את התג האחרון
+כאשר הטיוטה ריקה, וכללי שכפול/תג מקסימום מוחלים לפני ה-
+התקשרות חוזרת של עדכונים מבוקרת מופעלת.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<TagInputProperties> |             |
+
+### TagInputProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface TagInputProperties
+```
+
+לא סופק תיאור.
+
+### TagInputSize
+
+**סוג:** סוג
+
+```typescript
+export type TagInputSize = 'sm' | 'md' | 'lg';
+```
+
+אסימון גודל השולט בסולם קלט התג.
+
+### TagInputVariant
+
+**סוג:** סוג
+
+```typescript
+export type TagInputVariant = 'neutral' | 'primary' | 'error';
+```
+
+טון פני השטח של קלט התג.
 
 ## `src/components/molecules/forge-timeline/forge-timeline`
 
@@ -1844,21 +2558,21 @@ function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 
 צמד Vue המקורי (`ForgeTimeline` + `ForgeTimelineItem`) שיתף את
 אוריינטציה/קצב מתחלף באמצעות הקשר `provide`/`inject`. ה
-גרסה נייטרלית **משטחת** את ההרכב הזה לרכיב יחיד מונע
+גרסה ניטרלית **משטחת** את ההרכב הזה לרכיב יחיד מונע
 על ידי מערך `items` - אותה גישה שהעברה {@link ForgeTabs} נקטה -
 כך שמצב הפריסה פשוט זורם מהאביזרים אל כל `<li>` (ללא הקשר
 צריך). הוא הבעלים של הסגנון שלו באמצעות מודול ה-CSS המשותף
 `forge-timeline.module.scss`, הממזג את המיכל והפריט המקורי
 סגנונות.
 
-חריצי `marker`/`time`/`title`/ברירת מחדל לכל פריט הופכים לארבעה חריצים בהיקף
+חריצי `marker`/`time`/`title`/ברירת מחדל לכל פריט הופכים לארבעה חריצים בעלי היקף
 (`marker`/`time`/`title`/`content`) הנופלים חזרה לשדות הפריט.
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<TimelineProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<TimelineProperties> |             |
 
 ### יישור קו זמן
 
@@ -1939,23 +2653,23 @@ function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElem
 החוצה זה פותח חלון שני אמיתי (`window.open`), מציג דף פנימי
 `placeholder`, ומצב דוחות באמצעות התקשרות חוזרת `onOpen` / `onClose`
 אביזרים (החלפת פליטות ה-SFC המקוריות). `useState` / `useRef` הנייטרלי
-/ `useEffect` ווים מניעים את מחזור החיים של החלון (פתיחה, סגירה חיצונית,
+/ `useEffect` ווים מניעים את מחזור החיים של החלון (פתוח, סגירה חיצונית,
 וביטול ניקוי) בשתי המסגרות.
 
-הוא הבעלים של הסגנון שלו באמצעות `forge-window-popout.module.scss` המשותף.
+הוא הבעלים של הסגנון שלו באמצעות `forge-window-popout.module.scss` הממוקם במשותף.
 יחסית ל-Vue SFC המקורי, הניב הנייטרלי לא מדגמן אף אחד מהם
 `<Teleport>`, חריצים בהיקף, פולטות, `useI18n`, ולא `@mission-platform/icons`, כך
 החלון המוקפץ מקבל **תמונת מצב סטטית של HTML** של ה-inline
-תוכן (לא פורטל מסגרת חי), משבצת `controls` בהיקף ו-
+תוכן (לא פורטל מסגרת חי), חריץ `controls` בהיקף וה-
 סמלים של פופ-אין/אאוט נשמטים, ה-`placeholder` בדף הוא `placeholder`
 משבצת עם שם (`<Slot>`, עם הודעת ברירת מחדל בתור החזרה שלו), והתוויות
 הם אביזרים פשוטים.
 
 #### פרמטרים
 
-| שם    | הקלד                                | תיאור |
-| ----- | ----------------------------------- | ----- |
-| נכסים | לקריאה בלבד<WindowPopoutProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<WindowPopoutProperties> |             |
 
 ### WindowPopoutProperties
 
@@ -1966,6 +2680,164 @@ export interface WindowPopoutProperties
 ```
 
 לא סופק תיאור.
+
+## `src/components/organisms/forge-activity-feed/forge-activity-feed`
+
+### ActivityFeedItem
+
+**סוג:** סוג
+
+```typescript
+export type ActivityFeedItem = ActivityItem;
+```
+
+לא סופק תיאור.
+
+#### חוֹזֶה
+
+- **@מבוטל:** השתמש ב-`ActivityItem`.
+
+### ActivityFeedProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface ActivityFeedProperties
+```
+
+לא סופק תיאור.
+
+### ActivityFeedSize
+
+**סוג:** סוג
+
+```typescript
+export type ActivityFeedSize = 'sm' | 'md' | 'lg';
+```
+
+לא סופק תיאור.
+
+### ActivityFeed Variant
+
+**סוג:** סוג
+
+```typescript
+export type ActivityFeedVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+לא סופק תיאור.
+
+### ForgeActivityFeed
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeActivityFeed(properties: Readonly<ActivityFeedProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ActivityFeedProperties> |             |
+
+## `src/components/organisms/forge-announcement-bar/forge-announcement-bar`
+
+### AnnouncementBarProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface AnnouncementBarProperties
+```
+
+לא סופק תיאור.
+
+### AnnouncementBarVariant
+
+**סוג:** סוג
+
+```typescript
+export type AnnouncementBarVariant = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+לא סופק תיאור.
+
+### ForgeAnnouncementBar
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeAnnouncementBar(properties: Readonly<AnnouncementBarProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<AnnouncementBarProperties> |             |
+
+## `src/components/organisms/forge-asset-browser/forge-asset-browser`
+
+### AssetBrowserItem
+
+**סוג:** ממשק
+
+```typescript
+export interface AssetBrowserItem
+```
+
+לא סופק תיאור.
+
+### AssetBrowserProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface AssetBrowserProperties
+```
+
+לא סופק תיאור.
+
+### AssetBrowserSize
+
+**סוג:** סוג
+
+```typescript
+export type AssetBrowserSize = 'sm' | 'md' | 'lg';
+```
+
+לא סופק תיאור.
+
+### AssetBrowserValue
+
+**סוג:** סוג
+
+```typescript
+export type AssetBrowserValue = string | string[];
+```
+
+לא סופק תיאור.
+
+### ForgeAssetBrowser
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeAssetBrowser(properties: Readonly<AssetBrowserProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<AssetBrowserProperties> |             |
 
 ## `src/components/organisms/forge-carousel/forge-carousel`
 
@@ -2029,9 +2901,9 @@ composable הופך לסימון `matchMedia` מוטבע בתוך האפקט; ה
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<CarouselProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<CarouselProperties> |             |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2066,7 +2938,7 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 מודול ה-CSS המשותף `forge-chat-area.module.scss`.
 
 תחליפים מ-Vue SFC המקורי: ה-Composition-API `onMounted` +
-צנרת `watch` + `ResizeObserver` הופכת לאינסטלציה `useEffect` נייטרלית אחת
+צנרת `watch` + `ResizeObserver` הופכת לצנרת `useEffect` נייטרלית אחת
 (שהמהדר ממפה את מחזור חיי ההרכבה/ניקוי של כל מסגרת), וה-
 דגל "מוצמד לתחתית" שניתן לשינוי הופך ל-`useRef` (לכן עדכון זה לא
 עיבוד מחדש). ידית ההכרעה `defineExpose({ scrollToBottom })` של SFC היא
@@ -2075,9 +2947,425 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<ChatAreaProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ChatAreaProperties> |             |
+
+## `src/components/organisms/forge-command-palette/forge-command-palette`
+
+### CommandPaletteCommand
+
+**סוג:** סוג
+
+```typescript
+export type CommandPaletteCommand = CommandItem;
+```
+
+לא סופק תיאור.
+
+#### חוֹזֶה
+
+- **@מבוטל:** השתמש ב-`CommandItem`.
+
+### CommandPaletteProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface CommandPaletteProperties
+```
+
+לא סופק תיאור.
+
+### CommandPaletteSize
+
+**סוג:** סוג
+
+```typescript
+export type CommandPaletteSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+אסימון גודל השולט בסולם פלטת הפקודות.
+
+### ForgeCommandPalette
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeCommandPalette(properties: Readonly<CommandPaletteProperties>): MpElement;
+```
+
+פלטת פקודות ניתנת לחיפוש, המקלדת הראשונה עם שכבת-על מודאלית. הנייטרלי
+היישום שומר על סינון ובחירה ללא תלות במסגרת בזמן
+שמירה על מאזיני מסמכים גלובליים עבור SSR.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<CommandPaletteProperties> |             |
+
+## `src/components/organisms/forge-comment-thread/forge-comment-thread`
+
+### CommentThreadComment
+
+**סוג:** ממשק
+
+```typescript
+export interface CommentThreadComment
+```
+
+לא סופק תיאור.
+
+### CommentThreadProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface CommentThreadProperties
+```
+
+לא סופק תיאור.
+
+### הערהThreadSize
+
+**סוג:** סוג
+
+```typescript
+export type CommentThreadSize = 'sm' | 'md' | 'lg';
+```
+
+לא סופק תיאור.
+
+### ForgeCommentThread
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeCommentThread(properties: Readonly<CommentThreadProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<CommentThreadProperties> |             |
+
+## `src/components/organisms/forge-comparison-table/forge-comparison-table`
+
+### ComparisonTable Feature
+
+**סוג:** סוג
+
+```typescript
+export type ComparisonTableFeature = FeatureRow;
+```
+
+לא סופק תיאור.
+
+#### חוֹזֶה
+
+- **@מבוטל:** השתמש ב-`FeatureRow`.
+
+### ComparisonTablePlan
+
+**סוג:** סוג
+
+```typescript
+export type ComparisonTablePlan = ComparisonItem;
+```
+
+לא סופק תיאור.
+
+#### חוֹזֶה
+
+- **@מבוטל:** השתמש ב-`ComparisonItem`.
+
+### ComparisonTableProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface ComparisonTableProperties
+```
+
+לא סופק תיאור.
+
+### ComparisonTableSize
+
+**סוג:** סוג
+
+```typescript
+export type ComparisonTableSize = 'sm' | 'md' | 'lg';
+```
+
+לא סופק תיאור.
+
+### ComparisonTableValue
+
+**סוג:** סוג
+
+```typescript
+export type ComparisonTableValue = string | number | boolean;
+```
+
+לא סופק תיאור.
+
+### ForgeComparisonTable
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeComparisonTable(properties: Readonly<ComparisonTableProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ComparisonTableProperties> |             |
+
+## `src/components/organisms/forge-cookie-consent/forge-cookie-consent`
+
+### קטגוריית קובצי Cookie
+
+**סוג:** ממשק
+
+```typescript
+export interface CookieCategory
+```
+
+קטגוריית עוגיות הניתנת להגדרה על ידי המשתמש.
+
+### CookieConsentProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface CookieConsentProperties
+```
+
+לא סופק תיאור.
+
+### CookieConsentSize
+
+**סוג:** סוג
+
+```typescript
+export type CookieConsentSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+אסימון גודל השולט בסולם משטח ההסכמה.
+
+### CookieConsentState
+
+**סוג:** ממשק
+
+```typescript
+export interface CookieConsentState
+```
+
+מטען ההסכמה שנפלט ליישום המארח ונמשך באחסון.
+
+### ForgeCookieConsent
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeCookieConsent(properties: Readonly<CookieConsentProperties>): MpElement;
+```
+
+באנר הסכמה ודיאלוג העדפות נגיש עם קטגוריה נדרשת
+אכיפה והתמדה באחסון מקומי/מושבים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<CookieConsentProperties> |             |
+
+## `src/components/organisms/forge-cta-banner/forge-cta-banner`
+
+### CtaBannerAction
+
+**סוג:** ממשק
+
+```typescript
+export interface CtaBannerAction
+```
+
+לא סופק תיאור.
+
+### CtaBannerProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface CtaBannerProperties
+```
+
+לא סופק תיאור.
+
+### CtaBannerVariant
+
+**סוג:** סוג
+
+```typescript
+export type CtaBannerVariant = 'neutral' | 'primary' | 'secondary' | 'success' | 'warning';
+```
+
+לא סופק תיאור.
+
+### ForgeCtaBanner
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeCtaBanner(properties: Readonly<CtaBannerProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------- | ----------- |
+| נכסים | לקריאה בלבד<CtaBannerProperties> |             |
+
+## `src/components/organisms/forge-data-card/forge-data-card`
+
+### DataCardData
+
+**סוג:** סוג
+
+```typescript
+export type DataCardData = VCardData | ICalendarData;
+```
+
+נתוני איש קשר או לוח שנה מוקלדים המוצגים על ידי `ForgeDataCard`.
+
+### DataCardProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface DataCardProperties
+```
+
+לא סופק תיאור.
+
+### DataCardSize
+
+**סוג:** סוג
+
+```typescript
+export type DataCardSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+אסימון גודל השולט בסולם כרטיס הנתונים.
+
+### DataCardTrend
+
+**סוג:** ממשק
+
+```typescript
+export interface DataCardTrend
+```
+
+לא סופק תיאור.
+
+#### חוֹזֶה
+
+- **@מבוטל:** כרטיסי נתונים משתמשים כעת ב-`VCardData` או ב-`ICalendarData`.
+
+### DataCard Variant
+
+**סוג:** סוג
+
+```typescript
+export type DataCardVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+```
+
+גוון הצבע של משטח הכרטיס.
+
+### ForgeDataCard
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeDataCard(properties: Readonly<DataCardProperties>): MpElement;
+```
+
+איש קשר סמנטי או כרטיס לוח שנה עם הורדות תואמות תקנים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<DataCardProperties> |             |
+
+## `src/components/organisms/forge-diff-viewer/forge-diff-viewer`
+
+### DiffLineType
+
+**סוג:** סוג
+
+```typescript
+export type DiffLineType = 'context' | 'addition' | 'deletion';
+```
+
+לא סופק תיאור.
+
+### DiffViewerLine
+
+**סוג:** ממשק
+
+```typescript
+export interface DiffViewerLine
+```
+
+לא סופק תיאור.
+
+### DiffViewerMode
+
+**סוג:** סוג
+
+```typescript
+export type DiffViewerMode = 'unified' | 'split';
+```
+
+לא סופק תיאור.
+
+### DiffViewerProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface DiffViewerProperties
+```
+
+לא סופק תיאור.
+
+### ForgeDiffViewer
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeDiffViewer(properties: Readonly<DiffViewerProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<DiffViewerProperties> |             |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2089,7 +3377,7 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 export type DrawerBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 ```
 
-נקודת עצירה בשם נקודת ראות שמעליה/מעליה מגירת `inline` הופכת פתוחה קבועה.
+נקודת עצירה בשם נקודת תצוגה שמעליה/מעליה מגירת `inline` הופכת לפתיחה קבועה.
 
 ### מגירה ניתנת לגרירה
 
@@ -2102,7 +3390,7 @@ export type DrawerDraggable = boolean | DrawerSize | number;
 שולט אם ניתן לשנות את גודל המגירה על ידי גרירת הקצה הפנימי שלה:
 `false` (ברירת מחדל, גודל קבוע), `true` (ניתן לשינוי גודל עד יציאת התצוגה המלאה ב-
 הציר הרלוונטי), {@link DrawerSize} (ניתן לשנות את הגודל עד לגודל המקסימלי הזה), או
-`number` (ניתן לשנות את הגודל עד למספר רב של `rem`).
+`number` (ניתן לשינוי גודל עד למספר רב של `rem`).
 
 ### מיקום מגירות
 
@@ -2165,23 +3453,213 @@ scrim, עם אותו Enter/Leave Fade + Slide כמו Vue SFC המקורי באמ
 
 כאשר `draggable` מוגדר, הקצה הפנימי מצמיח ידית לשינוי גודל: גרירתו
 (גרירת מצביע במעקב ב-`window` דרך העוזר המשותף `pointer-drag`)
-משנה את גודל הלוח בין `MIN_SIZE_REM` למקסימום שנפתר ודוחות
+משנה את גודל הפאנל בין `MIN_SIZE_REM` למקסימום שנפתר ודוחות
 הגודל החדש ב-`rem` עד `onResize` (פולט Vue `resize`).
 
 לפי ועידת `callback-prop` חוצת המסגרת, היא מדווחת על סגירה
 `onOpenChange(false)` / `onClose()` במקום Vue פולט או `v-model`. זה
-הבעלים של הסטיילינג שלה באמצעות `forge-drawer.module.scss` הממוקם במשותף. יחסית ל
+הבעלים של הסטיילינג שלו באמצעות `forge-drawer.module.scss` המשותף. יחסית ל
 ה-Vue SFC המקורי, הניב הנייטרלי עדיין לא יכול לדגמן `<Teleport>`,
-חריצים בהיקף, `useI18n`, `useZIndex`, או `useRouterClose`, כך שהפאנל
+חריצים בהיקף, `useI18n`, `useZIndex` או `useRouterClose`, כך שהפאנל
 עיבוד במקום (לא מועבר בטלפורטציה ל-`<body>`), עם `header`/`footer` בשם
 משבצות (`<Slot>`, נוכחות זוהתה עם {@link hasSlot} ניטרלי המסגרת
 עוזר) ואביזר `closeLabel` במקום i18n.
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| נכסים | לקריאה בלבד<DrawerProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<DrawerProperties> |             |
+
+## `src/components/organisms/forge-error-page/forge-error-page`
+
+### ErrorPageAction
+
+**סוג:** ממשק
+
+```typescript
+export interface ErrorPageAction
+```
+
+פעולה המוצגת מתחת להודעת השגיאה.
+
+### ErrorPageData
+
+**סוג:** ממשק
+
+```typescript
+export interface ErrorPageData
+```
+
+מידע שגיאה מובנה שניתן להעביר כאובייקט נתונים ציבורי אחד.
+
+### ErrorPageProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface ErrorPageProperties
+```
+
+לא סופק תיאור.
+
+### ErrorPageSize
+
+**סוג:** סוג
+
+```typescript
+export type ErrorPageSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+אסימון גודל השולט בסולם עמודי השגיאה.
+
+### ForgeErrorPage
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeErrorPage(properties: Readonly<ErrorPageProperties>): MpElement;
+```
+
+דף מצב שגיאה סמנטי וידידותי למשבצת עם מתארי פעולה מוקלדים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ErrorPageProperties> |             |
+
+## `src/components/organisms/forge-kanban-board/forge-kanban-board`
+
+### ForgeKanbanBoard
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeKanbanBoard(properties: Readonly<KanbanBoardProperties>): MpElement;
+```
+
+לוח רספונסיבי להעברת פריטים בין עמודים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<KanbanBoardProperties> |             |
+
+### KanbanBoardProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface KanbanBoardProperties
+```
+
+לא סופק תיאור.
+
+### KanbanCard
+
+**סוג:** סוג
+
+```typescript
+export type KanbanCard = KanbanItem;
+```
+
+לא סופק תיאור.
+
+#### חוֹזֶה
+
+- **@מבוטל:** השתמש ב-`KanbanItem`.
+
+### KanbanColumn
+
+**סוג:** ממשק
+
+```typescript
+export interface KanbanColumn
+```
+
+לא סופק תיאור.
+
+## `src/components/organisms/forge-logo-cloud/forge-logo-cloud`
+
+### ForgeLogoCloud
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeLogoCloud(properties: Readonly<LogoCloudProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------- | ----------- |
+| נכסים | לקריאה בלבד<LogoCloudProperties> |             |
+
+### LogoCloudItem
+
+**סוג:** סוג
+
+```typescript
+export type LogoCloudItem = Logo;
+```
+
+לא סופק תיאור.
+
+#### חוֹזֶה
+
+- **@מבוטל:** השתמש ב-`Logo`.
+
+### LogoCloudProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface LogoCloudProperties
+```
+
+לא סופק תיאור.
+
+## `src/components/organisms/forge-marketing-header/forge-marketing-header`
+
+### ForgeMarketingHeader
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeMarketingHeader(properties: Readonly<MarketingHeaderProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<MarketingHeaderProperties> |             |
+
+### MarketingHeaderAction
+
+**סוג:** ממשק
+
+```typescript
+export interface MarketingHeaderAction
+```
+
+לא סופק תיאור.
+
+### MarketingHeaderProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface MarketingHeaderProperties
+```
+
+לא סופק תיאור.
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2217,9 +3695,9 @@ Vue SFC המקורי עשה שימוש חוזר `ForgeMenuItemButton`/`ForgeMenu
 
 #### פרמטרים
 
-| שם    | הקלד                           | תיאור |
-| ----- | ------------------------------ | ----- |
-| נכסים | לקריאה בלבד<MenubarProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | --------------------------- | ----------- |
+| נכסים | לקריאה בלבד<MenubarProperties> |             |
 
 ### מאפייני שורת התפריטים
 
@@ -2259,11 +3737,11 @@ function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement;
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| נכסים | לקריאה בלבד<NavbarProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------- | ----------- |
+| נכסים | לקריאה בלבד<NavbarProperties> |             |
 
-### Navbar Align
+### NavbarAlign
 
 **סוג:** סוג
 
@@ -2282,7 +3760,7 @@ export type NavbarBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 ```
 
 נקודת עצירה בשם **שתחתיה** סרגל הניווט מתמוטט לתוכו
-מגירה ניידת עם המבורגר (ומעליה/מעליה ה-`brand` המלא /
+מגירה ניידת עם המבורגר (ומעליה `brand` המלא /
 אזורי מרכז / `end` מוצגים בשורה).
 
 ### NavbarProperties
@@ -2291,6 +3769,306 @@ export type NavbarBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 ```typescript
 export interface NavbarProperties
+```
+
+לא סופק תיאור.
+
+## `src/components/organisms/forge-notification-panel/forge-notification-panel`
+
+### ForgeNotificationPanel
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeNotificationPanel(properties: Readonly<NotificationPanelProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<NotificationPanelProperties> |             |
+
+### הודעה פריט
+
+**סוג:** ממשק
+
+```typescript
+export interface NotificationItem
+```
+
+לא סופק תיאור.
+
+### מאפייני לוח התראות
+
+**סוג:** ממשק
+
+```typescript
+export interface NotificationPanelProperties
+```
+
+לא סופק תיאור.
+
+### NotificationType
+
+**סוג:** סוג
+
+```typescript
+export type NotificationType = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+לא סופק תיאור.
+
+## `src/components/organisms/forge-onboarding-tour/forge-onboarding-tour`
+
+### ForgeOnboardingTour
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeOnboardingTour(properties: Readonly<OnboardingTourProperties>): MpElement;
+```
+
+סיור זרקורים נגיש עם ניווט מקלדת והתמדה אופציונלית.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<OnboardingTourProperties> |             |
+
+### OnboardingStep
+
+**סוג:** סוג
+
+```typescript
+export type OnboardingStep = TourStep;
+```
+
+לא סופק תיאור.
+
+#### חוֹזֶה
+
+- **@מבוטל:** השתמש ב-`TourStep`.
+
+### OnboardingTourPlacement
+
+**סוג:** סוג
+
+```typescript
+export type OnboardingTourPlacement = 'top' | 'right' | 'bottom' | 'left' | 'center';
+```
+
+העדפת מיקום עבור תיבת דו-שיח של סיור המעוגנת ביעד.
+
+### OnboardingTourProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface OnboardingTourProperties
+```
+
+לא סופק תיאור.
+
+### OnboardingTourSize
+
+**סוג:** סוג
+
+```typescript
+export type OnboardingTourSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+אסימון גודל השולט בסולם הדו-שיח של הסיור.
+
+## `src/components/organisms/forge-pricing-table/forge-pricing-table`
+
+### ForgePricingTable
+
+פונקציה **סוג:**
+
+```typescript
+function ForgePricingTable(properties: Readonly<PricingTableProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<PricingTableProperties> |             |
+
+### תכונת מחירים
+
+**סוג:** ממשק
+
+```typescript
+export interface PricingFeature
+```
+
+לא סופק תיאור.
+
+### תוכנית תמחור
+
+**סוג:** ממשק
+
+```typescript
+export interface PricingPlan
+```
+
+לא סופק תיאור.
+
+### מאפיינים טבלת מחירים
+
+**סוג:** ממשק
+
+```typescript
+export interface PricingTableProperties
+```
+
+לא סופק תיאור.
+
+## `src/components/organisms/forge-profile-card/forge-profile-card`
+
+### ForgeProfileCard
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeProfileCard(properties: Readonly<ProfileCardProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<ProfileCardProperties> |             |
+
+### ProfileCardProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface ProfileCardProperties
+```
+
+לא סופק תיאור.
+
+## `src/components/organisms/forge-site-footer/forge-site-footer`
+
+### ForgeSiteFooter
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeSiteFooter(properties: Readonly<SiteFooterProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<SiteFooterProperties> |             |
+
+### SiteFooterColumn
+
+**סוג:** ממשק
+
+```typescript
+export interface SiteFooterColumn
+```
+
+לא סופק תיאור.
+
+### SiteFooterLink
+
+**סוג:** ממשק
+
+```typescript
+export interface SiteFooterLink
+```
+
+לא סופק תיאור.
+
+### SiteFooterProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface SiteFooterProperties
+```
+
+לא סופק תיאור.
+
+## `src/components/organisms/forge-split-pane/forge-split-pane`
+
+### ForgeSplitPane
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------- | ----------- |
+| נכסים | לקריאה בלבד<SplitPaneProperties> |             |
+
+### SplitPaneProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface SplitPaneProperties
+```
+
+לא סופק תיאור.
+
+## `src/components/organisms/forge-stats-section/forge-stats-section`
+
+### ForgeStatsSection
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeStatsSection(properties: Readonly<StatsSectionProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<StatsSectionProperties> |             |
+
+### StatItem
+
+**סוג:** ממשק
+
+```typescript
+export interface StatItem
+```
+
+לא סופק תיאור.
+
+### StatsSectionProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface StatsSectionProperties
 ```
 
 לא סופק תיאור.
@@ -2305,29 +4083,13 @@ export interface NavbarProperties
 function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
-`ForgeTable` - טבלת נתונים ניתנת למיון שנכתבה פעם אחת בניב JSX הנייטרלי
-והידור ישר ל-React או Vue על ידי `@mission-platform/vite-plugin-forge`.
-
-זה מעבד את ה-`columns`/`rows` כ-`<table>` סמנטי, עם קליק למיון
-כותרות (עלייה באופניים ← תיאור ← לא ממוינים) שמפעילות את ההתקשרות חזרה של `onSort`,
-כיתוב אופציונלי, שכבת-על טעינה ומצב ריק. טקסט התא מעובד
-באמצעות {@link ForgeTypography} הניטרלית המורכבת; מצב המיון מוחזק עם
-הווים הנייטרליים של {@link useState}/{@link useMemo}. הוא הבעלים של הסטיילינג שלו
-דרך מודול ה-CSS המשותף `forge-table.module.scss`.
-
-ה-Vue SFC המקורי היה גנרי על סוג השורה, מורכב
-רכיבי משנה `ForgeTableHead`/`ForgeTableBody`, השתמשו בפליטת `sort` ונחשפו
-חריצי `cell-<key>` בהיקף לכל עמודה. הגרסה הנייטרלית משתמשת
-`Record<string, unknown>` שורות, משולבת בראש/גוף, משתמשת ב-`onSort`
-התקשרות חוזרת, ומניעה רינדור לכל תא דרך האופציונלי של כל עמודה
-פורמט `render` (חריצי התאים בטווחים נשמטים) - תואם כיצד
-שאר הרכיבים שהועברו הורידו חריצים בהיקף.
+לא סופק תיאור.
 
 #### פרמטרים
 
-| שם    | הקלד                         | תיאור |
-| ----- | ---------------------------- | ----- |
-| נכסים | לקריאה בלבד<TableProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------- | ----------- |
+| נכסים | לקריאה בלבד<TableProperties> |             |
 
 ### SortDirection
 
@@ -2358,6 +4120,104 @@ export interface TableProperties
 ```
 
 לא סופק תיאור.
+
+## `src/components/organisms/forge-testimonials-section/forge-testimonials-section`
+
+### ForgeTestimonialsSection
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectionProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<TestimonialsSectionProperties> |             |
+
+### תְעוּדַת הוֹקָרָה
+
+**סוג:** ממשק
+
+```typescript
+export interface Testimonial
+```
+
+לא סופק תיאור.
+
+### המלצותSectionProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface TestimonialsSectionProperties
+```
+
+לא סופק תיאור.
+
+## `src/components/organisms/forge-transfer-list/forge-transfer-list`
+
+### ForgeTransferList
+
+פונקציה **סוג:**
+
+```typescript
+function ForgeTransferList(properties: Readonly<TransferListProperties>): MpElement;
+```
+
+לא סופק תיאור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<TransferListProperties> |             |
+
+### TransferItem
+
+**סוג:** ממשק
+
+```typescript
+export interface TransferItem
+```
+
+לא סופק תיאור.
+
+### TransferListProperties
+
+**סוג:** ממשק
+
+```typescript
+export interface TransferListProperties
+```
+
+לא סופק תיאור.
+
+## `src/components/organisms/forge-tree-view/forge-tree-view-item`
+
+### TreeViewLabelScope
+
+**סוג:** ממשק
+
+```typescript
+export interface TreeViewLabelScope
+```
+
+ההיקף הועבר למשבצת `label` (בהיקף) של {@link ForgeTreeView} לכל node.
+
+### TreeViewNode
+
+**סוג:** ממשק
+
+```typescript
+export interface TreeViewNode
+```
+
+node בעץ שניתנו על ידי {@link ForgeTreeView}.
 
 ## `src/components/organisms/forge-tree-view/forge-tree-view`
 
@@ -2392,29 +4252,9 @@ root state) מניע את המצב המורחב של כל node ומשותף עם
 
 #### פרמטרים
 
-| שם    | הקלד                            | תיאור |
-| ----- | ------------------------------- | ----- |
-| נכסים | לקריאה בלבד<TreeViewProperties> |       |
-
-### TreeViewLabelScope
-
-**סוג:** ממשק
-
-```typescript
-export interface TreeViewLabelScope
-```
-
-ההיקף הועבר למשבצת `label` (בהיקף) של {@link ForgeTreeView} לכל node.
-
-### TreeViewNode
-
-**סוג:** ממשק
-
-```typescript
-export interface TreeViewNode
-```
-
-node בעץ שניתנו על ידי {@link ForgeTreeView}.
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------- | ----------- |
+| נכסים | לקריאה בלבד<TreeViewProperties> |             |
 
 ### TreeViewProperties
 
@@ -2454,9 +4294,9 @@ function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElemen
 
 #### פרמטרים
 
-| שם    | הקלד                               | תיאור |
-| ----- | ---------------------------------- | ----- |
-| נכסים | לקריאה בלבד<VirtualListProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<VirtualListProperties> |             |
 
 ### VirtualListItemScope
 
@@ -2494,20 +4334,20 @@ Vue מאת `@mission-platform/vite-plugin-forge`; זה מציג רק את השו
 יציאת התצוגה בעוד מרווח בגובה מלא מייצג את כולו (אופציונלי
 מסונן) יומן. תנוחת הגלילה משתמשת בקרסים ניטרליים, זנב מעקב מונע
 על ידי {@link useEffect} שמוקש על ספירת הכניסות, והקליק של כל שורה מופעל
-החזרה `onSelect`. הבעלים של הסגנון שלו דרך `forge-virtual-log-viewer.module.scss`.
+החזרה `onSelect`. הבעלים של הסטיילינג שלו דרך `forge-virtual-log-viewer.module.scss`.
 
 Vue SFC המקורי מורכב `ForgeLogViewerRow`/`ForgeLogViewerToolbar`
 רכיבי משנה, השתמשו בחבילת האייקונים עבור הגליף לכל רמה, ו-`select`
 פולטים. הגרסה הנייטרלית משולבת בשורה + סרגל הכלים, מחליפה קוד צבע
 `●` גליף עבור הסמלים (תואם לשאר הרכיבים שהועברו), ו
-משתמש באביזר `onSelect` להתקשרות חזרה; זנב הגלילה הידני של המקור
+משתמש ב-`onSelect` התקשרות חוזרת; זנב הגלילה הידני של המקור
 הדיכוי ירד.
 
 #### פרמטרים
 
-| שם    | הקלד                                    | תיאור |
-| ----- | --------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<VirtualLogViewerProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------------ | ----------- |
+| נכסים | לקריאה בלבד<VirtualLogViewerProperties> |             |
 
 ### LogEntry
 
@@ -2558,7 +4398,7 @@ function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElem
 
 הכותרת הדביקה מציעה עמודות לחיצה למיין (עלייה באופניים → תיאור →
 לא ממוין) שיפעיל את ההתקשרות חזרה `onSort`; שורות גוף אש `onRowClick`, וכן א
-`footer` משבצת בשם נופלת חזרה לסיכום ספירת שורות + מיון. כמו ה
+`footer` בשם משבצת נופל חזרה לסיכום ספירת שורות + מיון. כמו ה
 המקורי הוא משתמש ב-`div` + ARIA `role="table|rowgroup|row|columnheader|gridcell"`
 (במקום אלמנטים מקוריים של `<table>`) כדי לעקוף את השולחן של Mobile Safari
 באג פריסה תוך שמירה על גישה לקורא מסך.
@@ -2567,18 +4407,18 @@ function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElem
 `ForgeVirtualTableHead`/`Row`/`Footer` רכיבי משנה, השתמשו בחבילת האייקונים
 עבור גליף המיון, חריצי `cell-<key>` חשופים לכל עמודה, ונפלט
 `sort`/`rowClick`. הגרסה הנייטרלית משתמשת בשורות `Record<string, unknown>`,
-משלב את הראש/שורה/תחתונה, מעבד את `@mission-platform/icons` לכתוב פעם אחת
+משלב את הראש/שורה/תחתונה, מעבד את ה-`@mission-platform/icons` שנכתב פעם אחת
 `ForgeIconSort` (שממלא את השברון בכיוון הפעיל), ו
 משתמש באביזרים להתקשרות חזרה `onSort`/`onRowClick`. תוכן לכל תא מונע על ידי
 הפורמט האופציונלי של כל עמודה `render`, עם חריץ `cell` יחיד בהיקף
 (`{ column, row, value }`) מחליף את ה-`cell-<key>` לכל עמודה המקורית
-חריצים לתוכן תא מותאם אישית מלא (אינטראקטיבי).
+חריצים עבור תוכן תא מותאם אישית מלא (אינטראקטיבי).
 
 #### פרמטרים
 
-| שם    | הקלד                                | תיאור |
-| ----- | ----------------------------------- | ----- |
-| נכסים | לקריאה בלבד<VirtualTableProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<VirtualTableProperties> |             |
 
 ### VirtualTableCellScope
 
@@ -2621,13 +4461,13 @@ function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElemen
 ```
 
 `ForgeVirtualTabs` - מיכל כרטיסיות נשלט המציג את **רק את הפעיל
-לוח הכרטיסיות** (וירטואלי), נכתב פעם אחת בניב JSX הנייטרלי ו
+לוח הכרטיסיות** (וירטואליות), נכתב פעם אחת בניב JSX הנייטרלי ו
 הידור ישר ל-React או Vue על ידי `@mission-platform/vite-plugin-forge`.
 
 הוא מתנהג כמו {@link ForgeTabs} (ARIA `tablist`/`tab`/`tabpanel`, נודד
 `tabindex`, חץ/בית/סיום ניווט במקלדת, תנאים ניתנים לסגירה/הוספה,
 `panel` **רנדור-prop** בעל היקף), אך לעולם אינו מתקין את הפאנלים הלא פעילים -
-מתאים לתוכן פאנל כבד. היא הבעלים של הסטיילינג שלה באמצעות ה-CSS המשותף
+מתאים לתוכן פאנל כבד. הוא הבעלים של הסטיילינג שלו באמצעות ה-CSS המשותף
 מודול `forge-virtual-tabs.module.scss`.
 
 Vue SFC המקורי עשה שימוש חוזר בתת-רכיב `ForgeTabList` המשותף ו
@@ -2642,9 +4482,9 @@ affordances, מעבד את הפאנל הפעיל באמצעות `panel` בהיק
 
 #### פרמטרים
 
-| שם    | הקלד                               | תיאור |
-| ----- | ---------------------------------- | ----- |
-| נכסים | לקריאה בלבד<VirtualTabsProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<VirtualTabsProperties> |             |
 
 ### VirtualTabPanelScope
 
@@ -2694,9 +4534,9 @@ Vue SFC המקורי מורכב `ForgeTreeNodeLabel`, השתמש ב-**ברירת
 
 #### פרמטרים
 
-| שם    | הקלד                                   | תיאור |
-| ----- | -------------------------------------- | ----- |
-| נכסים | לקריאה בלבד<VirtualTreeViewProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------------------- | ----------- |
+| נכסים | לקריאה בלבד<VirtualTreeViewProperties> |             |
 
 ### TreeNode
 
@@ -2757,9 +4597,9 @@ helper) ו-`eyebrow`/`title`/`subtitle` הם אביזרי מיתר.
 
 #### פרמטרים
 
-| שם    | הקלד                        | תיאור |
-| ----- | --------------------------- | ----- |
-| נכסים | לקריאה בלבד<HeroProperties> |       |
+| שם | הקלד | תיאור |
+| ---------- | ------------------------ | ----------- |
+| נכסים | לקריאה בלבד<HeroProperties> |             |
 
 ### HeroAlign
 
@@ -2791,6 +4631,281 @@ export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 סולם ריפוד אנכי - קנה מידה קנוני של 2xs → 2xl.
 
+## `src/utils/date-time/date-time`
+
+### דפדפןTimezoneLabel
+
+פונקציה **סוג:**
+
+```typescript
+function browserTimezoneLabel(): string;
+```
+
+שם IANA של אזור הזמן של הדפדפן, או `'Local'` כאשר אינו זמין.
+
+### מַהְדֵק
+
+פונקציה **סוג:**
+
+```typescript
+function clamp(value: number, min: number, max: number): number;
+```
+
+הצמד מספר לטווח `[min, max]` הכולל.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מספר |             |
+| דקות | מספר |             |
+| מקסימום | מספר |             |
+
+### טווח תאריכים
+
+**סוג:** ממשק
+
+```typescript
+export interface DateRange
+```
+
+טווח תאריכים של `{ start, end }` ISO (`YYYY-MM-DD`).
+
+### DateTimeRange
+
+**סוג:** ממשק
+
+```typescript
+export interface DateTimeRange
+```
+
+טווח תאריכים-זמן `{ start, end, timezone }` (`YYYY-MM-DD HH:MM[:SS]`).
+
+### זמן תצוגה
+
+פונקציה **סוג:**
+
+```typescript
+function displayTime(value: string, withSeconds: boolean): string;
+```
+
+נרמל מחרוזת זמן מאוחסנת לפי הדיוק המוגדר (ריק נשאר ריק).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ------- | ----------- |
+| ערך | מחרוזת |             |
+| withSeconds | בוליאני |             |
+
+### formatDateRange
+
+פונקציה **סוג:**
+
+```typescript
+function formatDateRange(value: DateRange | undefined): string;
+```
+
+עצב טווח תאריכים ISO לסיכום `start → end` (כיווץ חלקים ריקים).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---------------------- | ----------- |
+| ערך | טווח תאריכים \| לא מוגדר |             |
+
+### formatDateTime
+
+פונקציה **סוג:**
+
+```typescript
+function formatDateTime(date: string, parts: TimeParts, withSeconds: boolean): string;
+```
+
+חבר חלקי תאריך ושעה `YYYY-MM-DD` למחרוזת `YYYY-MM-DD HH:MM[:SS]`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | --------- | ----------- |
+| תאריך | מחרוזת |             |
+| חלקים | TimeParts |             |
+| withSeconds | בוליאני |             |
+
+### formatTime
+
+פונקציה **סוג:**
+
+```typescript
+function formatTime(parts: TimeParts, withSeconds: boolean): string;
+```
+
+עיצוב רכיבי שעה/דקה (/שנייה) ל-`HH:MM` או `HH:MM:SS`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | --------- | ----------- |
+| חלקים | TimeParts |             |
+| withSeconds | בוליאני |             |
+
+### formatTimeRange
+
+פונקציה **סוג:**
+
+```typescript
+function formatTimeRange(value: TimeRange | undefined, withSeconds: boolean): string;
+```
+
+עצב טווח זמן לסיכום `start → end` בדיוק המוגדר.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ---------------------- | ----------- |
+| ערך | טווח זמן \| לא מוגדר |             |
+| withSeconds | בוליאני |             |
+
+### שעות
+
+**סוג:** קבוע
+
+```typescript
+export const HOURS: readonly number[];
+```
+
+רשימות השעות הניתנות לבחירה (0–23), הדקות (0–59) והשנייה (0–59).
+
+### פּרוֹטוֹקוֹל
+
+**סוג:** קבוע
+
+```typescript
+export const MINUTES: readonly number[];
+```
+
+לא סופק תיאור.
+
+### כָּרִית
+
+פונקציה **סוג:**
+
+```typescript
+function pad(value: number): string;
+```
+
+אפס מקלדת מספר עד שתי ספרות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מספר |             |
+
+### parseDate
+
+פונקציה **סוג:**
+
+```typescript
+function parseDate(value: string): Date | undefined;
+```
+
+נתח מחרוזת תאריך `YYYY-MM-DD` ISO לתוך `Date` (חצות מקומית), או `undefined`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מחרוזת |             |
+
+### parseDateTime
+
+פונקציה **סוג:**
+
+```typescript
+function parseDateTime(value: string): { date: string } & TimeParts;
+```
+
+פצל מחרוזת `YYYY-MM-DD HH:MM[:SS]` (או ISO `T`/`Z`) לחלקי תאריך + שעה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מחרוזת |             |
+
+### ניתוח זמן
+
+פונקציה **סוג:**
+
+```typescript
+function parseTime(value: string): TimeParts;
+```
+
+נתח מחרוזת `HH:MM[:SS]` לרכיבי השעה/דקה/שנייה שלו.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מחרוזת |             |
+
+### לָנוּעַ
+
+פונקציה **סוג:**
+
+```typescript
+function range(length: number): number[];
+```
+
+`[0, 1, …, length - 1]`.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------ | ----------- |
+| אורך | מספר |             |
+
+### שניות
+
+**סוג:** קבוע
+
+```typescript
+export const SECONDS: readonly number[];
+```
+
+לא סופק תיאור.
+
+### TimeParts
+
+**סוג:** ממשק
+
+```typescript
+export interface TimeParts
+```
+
+רכיבי השעה/דקה/שנייה של זמן מנותח.
+
+### טווח זמן
+
+**סוג:** ממשק
+
+```typescript
+export interface TimeRange
+```
+
+טווח זמן `{ start, end }` (`HH:MM` או `HH:MM:SS`).
+
+### מצב אזור זמן
+
+**סוג:** סוג
+
+```typescript
+export type TimezoneMode = 'browser' | 'utc';
+```
+
+האם טווח תאריכים וזמן מתפרש באזור הדפדפן או ב-UTC.
+
 ## `src/utils/pointer-drag/pointer-drag`
 
 ### beginPointerDrag
@@ -2809,9 +4924,9 @@ disposer שמסיים את הדראג מוקדם (גם מסיר את המאזי�
 
 #### פרמטרים
 
-| שם     | הקלד                | תיאור |
-| ------ | ------------------- | ----- |
-| מטפלים | PointerDragHandlers |       |
+| שם | הקלד | תיאור |
+| -------- | ------------------- | ----------- |
+| מטפלים | PointerDragHandlers |             |
 
 ### PointerDragHandlers
 

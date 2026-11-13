@@ -22,11 +22,11 @@ pnpm --filter @mission-platform/vite-plugin-forge test
 
 解析、正規化、セマンティック IR、キャッシュ、診断を中立的な状態に保ちます。
 ターゲットの低下とソースの生成は選択されたものに属します
-`@mission-platform/forge-plugin-*` パッケージ。キャッシュの回帰カバレッジを追加する
+`@mission-platform/forge-plugin-*` パッケージ。 Add regression coverage for cache
 ID、無効化、診断、生成されたアーティファクト、および呼び出し側プラグイン
-ドライバー変更時の保存。
+preservation when changing the driver.
 
 パッケージは、Vite と tsdown の両方から使用可能な状態を維持する必要があります。ターゲットを追加しないでください
 テーブルまたはフレームワークのランタイム依存関係をニュートラルドライバーに切り替えます。を更新します
-[コンパイラパイプラインリファレンス](../reference/compiler.md) 公共のステージまたは
-アーティファクトの契約が変更されます。
+[コンパイラ パイプライン リファレンス](../reference/compiler.md) パブリック ステージまたは
+artifact contract changes.

@@ -71,9 +71,9 @@ Retourneert de pixelwaarde voor een bepaalde breekpuntsleutel.
 
 #### Parameters
 
-| Naam    | Typ              | Beschrijving |
-| ------- | ---------------- | ------------ |
-| sleutel | Breekpuntsleutel |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------- | ----------- |
+| sleutel | Breekpuntsleutel |             |
 
 ### maxMediaQuery
 
@@ -88,9 +88,9 @@ breekpunt - dat wil zeggen "kleiner dan de volgende stap omhoog".
 
 #### Parameters
 
-| Naam    | Typ              | Beschrijving |
-| ------- | ---------------- | ------------ |
-| sleutel | Breekpuntsleutel |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------- | ----------- |
+| sleutel | Breekpuntsleutel |             |
 
 #### Contract
 
@@ -108,9 +108,9 @@ Retourneert een `min-width`-mediaquerytekenreeks voor het opgegeven breekpunt.
 
 #### Parameters
 
-| Naam    | Typ              | Beschrijving |
-| ------- | ---------------- | ------------ |
-| sleutel | Breekpuntsleutel |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------------- | ----------- |
+| sleutel | Breekpuntsleutel |             |
 
 #### Contract
 
@@ -129,9 +129,9 @@ Retourneert, gegeven een pixelbreedte, de momenteel actieve breekpuntsleutel.
 
 #### Parameters
 
-| Naam    | Typ    | Beschrijving |
-| ------- | ------ | ------------ |
-| breedte | nummer |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| breedte | nummer |             |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -155,9 +155,9 @@ De reactieve viewport-breedte wordt gevolgd via de neutrale haken
 
 #### Parameters
 
-| Naam          | Typ                            | Beschrijving |
-| ------------- | ------------------------------ | ------------ |
-| eigenschappen | Alleen-lezen<HideAtProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<HideAtProperties> |             |
 
 ### HideAtProperties
 
@@ -192,9 +192,9 @@ schakelen zonder een extra lay-outvak te introduceren.
 
 #### Parameters
 
-| Naam          | Typ                            | Beschrijving |
-| ------------- | ------------------------------ | ------------ |
-| eigenschappen | Alleen-lezen<ShowAtProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<ShowAtProperties> |             |
 
 ### ShowAtProperties
 
@@ -226,7 +226,7 @@ De overlay heeft geen eigenschappen: hij leest de live-viewport zelf.
 function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>): MpElement;
 ```
 
-`ForgeBreakpointDebug` — een overlay over de ontwikkelingstijd rechtsonder
+`ForgeBreakpointDebug` - een overlay over de ontwikkelingstijd rechtsonder
 hoek waarin het huidige actieve breekpunt wordt weergegeven en welke breekpunten dat zijn
 actief voor de breedte van de live-viewport. Eén keer geschreven in het neutrale JSX-dialect
 en rechtstreeks gecompileerd naar React of Vue door `@mission-platform/vite-plugin-forge`.
@@ -240,9 +240,9 @@ zowel React als Vue.
 
 #### Parameters
 
-| Naam           | Typ                                     | Beschrijving |
-| -------------- | --------------------------------------- | ------------ |
-| _eigenschappen | Alleen-lezen<BreakpointDebugProperties> |              |
+| Naam | Typ | Beschrijving |
+| ----------- | ----------------------------------- | ----------- |
+| _eigenschappen | Alleen-lezen<BreakpointDebugProperties> |             |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 

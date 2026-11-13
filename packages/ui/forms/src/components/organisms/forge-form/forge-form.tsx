@@ -102,7 +102,7 @@ export const defaultFormContext: FormContextValue = {
   resetForm: defaultNoop,
   submitForm: () => Promise.resolve(),
   validateForm: () => Promise.resolve({}),
-  // eslint-disable-next-line unicorn/no-useless-undefined -- interface specifies returning undefined when valid
+
   validateField: () => Promise.resolve(undefined),
   getFieldProperties: (name: string) => ({
     name,

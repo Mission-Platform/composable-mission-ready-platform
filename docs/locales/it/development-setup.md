@@ -14,29 +14,29 @@ Prima di clonare il repository, assicurati che il tuo sistema soddisfi i seguent
 
 ### Requisiti di sistema
 
-| Strumento   | Versione richiesta          | Scopo                                                    |
-| :---------- | :-------------------------- | :------------------------------------------------------- |
-| **Node.js** | `24.19.0`                   | Ambiente runtime (LTS attivo)                            |
-| **pnpm**    | `11.21.0`                   | Gestore di pacchetti e orchestratore dell'area di lavoro |
-| **Git**     | Ultima stabile              | Controllo della versione                                 |
-| **Ruggine** | Catena di strumenti stabile | Sviluppo opzionale di benchmark Rust autonomo            |
-| **Docker**  | Ultima stabile              | Necessario solo per la build Emscripten Hunspell         |
+| Strumento | Versione richiesta | Scopo |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0` | Ambiente runtime (LTS attivo) |
+| **pnpm** | `12.4.2` | Gestore di pacchetti e orchestratore dell'area di lavoro |
+| **Git** | Ultima stabile | Controllo della versione |
+| **Ruggine** | Catena di strumenti stabile | Sviluppo opzionale di benchmark Rust autonomo |
+| **Docker** | Ultima stabile | Necessario solo per la build Emscripten Hunspell |
 
 ### Gestione delle versioni (consigliato)
 
-Si consiglia di utilizzare **nvm** (Node Version Manager) per assicurarti di utilizzare il file corretto NodeVersione .js specificata nel file
-radice `.nvmrc` file.
+Ti consigliamo di utilizzare **nvm** (Node Version Manager) per assicurarti di utilizzare la versione Node.js corretta specificata nel file
+file principale `.nvmrc`.
 
 ```bash
 nvm install
 nvm use
 ```
 
-Abilitare **pnpm** utilizzando Corepack:
+Abilita **pnpm** utilizzando Corepack:
 
 ```bash
 corepack enable
-corepack prepare pnpm@11.21.0 --activate
+corepack prepare pnpm@12.4.2 --activate
 ```
 
 ## Configurazione iniziale
@@ -58,8 +58,24 @@ Installa tutte le dipendenze dell'area di lavoro e configura gli hook git:
 pnpm install
 ```
 
-Questo comando attiva il `prepare` script, che inizializza **Husky** per il linting dei commit e garantisce tutti i file internal
+Questo comando attiva lo script `prepare`, che inizializza **Husky** per il linting dei commit e garantisce che tutti i
 i collegamenti ai pacchetti siano stabiliti correttamente.
+
+### Server linguistico SonarLint
+
+`agent-lsp.json` del repository include il server linguistico SonarLint ufficiale per JavaScript e TypeScript. Il
+il server è distribuito come archivio Java anziché come pacchetto npm, quindi installa Java e crea o scarica il file
+Archivio `sonarlint-language-server` da [SonarSource](https://github.com/SonarSource/sonarlint-language-server).
+
+Impostare l'archivio del server e l'analizzatore JavaScript prima di avviare l'LSP:
+
+```bash
+export SONARLINT_LS_JAR=/path/to/sonarlint-language-server.jar
+export SONARLINT_ANALYZERS=/path/to/sonarjs.jar
+```
+
+La variabile opzionale `SONARLINT_JAVA` può selezionare un eseguibile Java. L'avvio del repository convalida il file configurato
+percorsi e inoltra il protocollo stdio del server senza richiedere un comando installato a livello globale.
 
 ### 3. Verificare l'installazione
 
@@ -69,9 +85,9 @@ Esegui un test del fumo per assicurarti che il sistema di build e l'ambiente sia
 pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
-IL `...` crea anche le dipendenze Forge richieste dal pacchetto. Il
-lo scanner di codice neutro è compilato dal grafico Flint; non è così
-richiedono una ruggine o `wasm-pack` passo di costruzione.
+Il filtro `...` crea anche le dipendenze Forge richieste dal pacchetto. Il
+lo scanner di codice neutro è compilato dal suo grafico Flint; non è così
+richiedono un passaggio di creazione Rust o `wasm-pack`.
 
 ## Flusso di lavoro di sviluppo
 
@@ -108,9 +124,9 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-I pacchetti supportati da Forge pubblicano la corrispondenza `mp:vue`, `mp:react`, `mp:svelte`,
-`mp:solid`, E `mp:web-component` condizioni. La condizione attiva deve essere
-configurato dal bundler consumatore; Vedere [il riferimento del compilatore](../../../packages/tooling/vite/forge/docs/locales/it/reference/compiler.md)
+I pacchetti supportati da Forge pubblicano `mp:vue`, `mp:react`, `mp:svelte` corrispondenti,
+Condizioni `mp:solid` e `mp:web-component`. La condizione attiva deve essere
+configurato dal bundler consumatore; vedere [il riferimento del compilatore](../../../packages/tooling/vite/forge/docs/locales/it/reference/compiler.md)
 per il plugin di destinazione e la pipeline di dichiarazione.
 
 ### Sviluppo di applicazioni
@@ -122,22 +138,22 @@ Per avviare un'applicazione specifica in modalità di sviluppo:
 pnpm exec turbo run dev --filter @mission-platform/my-care-notes
 ```
 
-L'applicazione sarà generalmente disponibile all'indirizzo `http://localhost:5173`.
+L'applicazione sarà in genere disponibile all'indirizzo `http://localhost:5173`.
 
 ### Comandi comuni
 
-| Compito        | Comando       | Descrizione                             |
-| :------------- | :------------ | :-------------------------------------- |
-| **Costruisci** | `pnpm build`  | Crea tutte le app e i pacchetti         |
-| **Prova**      | `pnpm test`   | Corri tutto Vitest suite                |
-| **Lanugine**   | `pnpm lint`   | Correre ESLint attraverso il monorepo   |
-| **Formato**    | `pnpm format` | Controlla la formattazione con Prettier |
+| Compito | Comando | Descrizione |
+| :--------- | :------------ | :----------------------------- |
+| **Costruisci** | `pnpm build` | Crea tutte le app e i pacchetti |
+| **Prova** | `pnpm test` | Esegui tutte le suite Vitest |
+| **Lanugine** | `pnpm lint` | Eseguire ESLint nel monorepo |
+| **Formato** | `pnpm format` | Controlla la formattazione con Prettier |
 
 ## Risoluzione dei problemi
 
 ### Cancellazione delle cache
 
-Se riscontri errori di compilazione imprevisti, cancella Turborepo e Node cache:
+Se riscontri errori di compilazione imprevisti, svuota le cache Turborepo e Node:
 
 ```bash
 # Remove Turborepo cache
@@ -151,6 +167,6 @@ pnpm install
 ### Errori di creazione WASM
 
 Se la creazione di un artefatto Flint non riesce, controlla la diagnostica del compilatore
-e verificare il profilo di collegamento statico o dinamico selezionato. IL
+e verificare il profilo di collegamento statico o dinamico selezionato. Il
 `@mission-platform/hunspell` La build di Emscripten richiede inoltre che Docker
 correre.

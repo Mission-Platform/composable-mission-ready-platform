@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
 
+import type {
+  SemanticModule,
+  TargetContext,
+  TargetIntentions,
+  TargetOptimizeOptions,
+} from "@mission-platform/forge-plugin-api";
+
 import {
   component,
   effect,
@@ -21,12 +28,6 @@ import {
 } from "./optimize.js";
 
 import type { VueLoweredModule } from "./lower.js";
-import type {
-  SemanticModule,
-  TargetContext,
-  TargetIntentions,
-  TargetOptimizeOptions,
-} from "@mission-platform/forge-plugin-api";
 
 const CONTEXT: TargetContext = {
   framework: "vue",

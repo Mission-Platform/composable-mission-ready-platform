@@ -5,6 +5,6 @@ Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manua
 > packages/compiler/plugins/forge-router-svelte/docs/index.md: [packages/compiler/plugins/forge-router-svelte/docs/index.md](../../index.md)
 > Lingua: Italiano (it)
 
-Forge router target per Svelte e SvelteKit
+Forgia target del router per Svelte e SvelteKit
 
-See `llms.txt` per il public API e usage examples.
+Vedere `llms.txt` per l'API pubblica e gli esempi di utilizzo.

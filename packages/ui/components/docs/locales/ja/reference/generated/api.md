@@ -71,9 +71,9 @@ Storybook のデモ コンテンツ。
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| プロパティ | 読み取り専用<AvatarProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------- | ----------- |
+|プロパティ |読み取り専用<AvatarProperties> |             |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -133,9 +133,9 @@ function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): 
 
 #### パラメータ
 
-| 名前       | タイプ                                  | 説明 |
-| ---------- | --------------------------------------- | ---- |
-| プロパティ | 読み取り専用<BackgroundVideoProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------------- | ----------- |
+|プロパティ |読み取り専用<BackgroundVideoProperties> |             |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -179,14 +179,14 @@ function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 ```
 
 `ForgeBadge` — ニュートラル JSX で一度作成された小さなステータス/ラベル チップ
-方言。 `toReactComponent(ForgeBadge)` または
-`toVueComponent(ForgeBadge)`、または事前に適応されたバリアントを次からインポートします
+dialect. `toReactComponent(ForgeBadge)` または
+`toVueComponent(ForgeBadge)`、またはから事前に適応されたバリアントをインポートします
 `@mission-platform/components` — フレームワーク ビルドは
 指定子によるものではなく、消費者の `mp:<framework>` エクスポート条件。
 
 `@mission-platform/components` `ForgeBadge` を反映しています: 同じ 9 トーン
 バリアント、正規の `2xs → 2xl` サイズ スケール、およびラベルがレンダリングされます
-{@link ForgeTypography} 経由 (`caption`、中程度の太さ、継承された色)
+{@link ForgeTypography} を通じて (`caption`、中程度の太さ、継承された色)
 タイポグラフィは Vue ライブラリと一致します。
 
 同じ場所に配置された CSS モジュール `forge-badge.module.scss` を通じてそのスタイルを所有します。
@@ -197,9 +197,9 @@ function ForgeBadge(properties: Readonly<BadgeProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                        | 説明 |
-| ---------- | ----------------------------- | ---- |
-| プロパティ | 読み取り専用<BadgeProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------- | ----------- |
+|プロパティ |読み取り専用<BadgeProperties> |             |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -237,13 +237,13 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 
 これは、正規版の `@mission-platform/components` `ForgeButton` を反映しています。
 カラーバリエーションと透明な `ghost` 処理、標準
-`2xs → 2xl` サイズスケール、焦点が見える輪郭、
+`2xs → 2xl` サイズスケール、焦点が見える輪郭、および
 `aria-busy` を設定し、
-アクティブなときにクリックします。オリジナルの Vue SFC は、スピナーのラベルを次の場所から取得しました。
+アクティブなときにクリックします。オリジナルの Vue SFC は、スピナーのラベルのソースを次のとおりにしました。
 `@mission-platform/i18n`;中立バージョン (i18n はこれに含まれていません)
 ライブラリ) のデフォルトは `loadingLabel` から `'Loading…'` です。
 
-同じ場所に配置された CSS モジュール `forge-button.module.scss` を通じてスタイルを所有します。
+同じ場所に配置された CSS モジュール `forge-button.module.scss` を通じてそのスタイルを所有します。
 (2 段階のコンパイラーによってすべてのフレームワークに引き継がれるため、コンポーネント
 独自の `@layer mp.components` CSS が付属しています)。ハッシュされたモジュールのクラス名は次のとおりです。
 フレームワークに依存しない {@link classNames} ヘルパーを使用してアセンブルされます。
@@ -251,9 +251,53 @@ function ForgeButton(properties: Readonly<ButtonProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| プロパティ | 読み取り専用<ButtonProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------- | ----------- |
+|プロパティ |読み取り専用<ButtonProperties> |             |
+
+## `src/components/atoms/forge-divider/forge-divider`
+
+### ディバイダの向き
+
+**種類：**タイプ
+
+```typescript
+export type DividerOrientation = 'horizontal' | 'vertical';
+```
+
+ディバイダのレイアウト方向。
+
+### Dividerプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface DividerProperties
+```
+
+説明はありません。
+
+### フォージディバイダー
+
+**種類:** 関数
+
+```typescript
+function ForgeDivider(properties: Readonly<DividerProperties>): MpElement;
+```
+
+`ForgeDivider` — ニュートラル JSX で一度作成された細い境界線の境界線
+方言を使用し、React または Vue に直接コンパイルされます。
+`@mission-platform/vite-plugin-forge`。
+
+`orientation` に従って利用可能な幅または高さを埋め、使用します
+デフォルトではセマンティック `<hr>` 要素。 `decorative` を `false` に設定して、
+代わりに、役割を持つ `<div>` が使用されます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------------------------- | ----------- |
+|プロパティ |読み取り専用<DividerProperties> |             |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -278,9 +322,9 @@ function ForgeIconButton(properties: Readonly<IconButtonProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                             | 説明 |
-| ---------- | ---------------------------------- | ---- |
-| プロパティ | 読み取り専用<IconButtonProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<IconButtonProperties> |             |
 
 ### アイコンボタンプロパティ
 
@@ -313,6 +357,94 @@ export type IconButtonVariant =
 
 アイコン ボタンの視覚的な処理 — 正規のカラー セットと透明な `ghost`。
 
+## `src/components/atoms/forge-icon/forge-icon`
+
+### 鍛造アイコン
+
+**種類:** 関数
+
+```typescript
+function ForgeIcon(properties: Readonly<IconProperties>): MpElement;
+```
+
+レビューされた `@mission-platform/icons` に裏付けられたフレームワーク中立のアイコン ファサード
+カタログ。解決はデータ主導型であり、不明な名前が無効になることはありません。
+コンポーネント;ラッパーはアクセス可能な名前を所有しているため、カタログ SVG はサイレントのままです。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------ | ----------- |
+|プロパティ |読み取り専用<IconProperties> |             |
+
+### アイコン名
+
+**種類：**タイプ
+
+```typescript
+export type IconName = string;
+```
+
+`forge-icon-check` などのカタログ名。不明な名前にはフォールバック アイコンが使用されます。
+
+### アイコンのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface IconProperties
+```
+
+説明はありません。
+
+### アイコンのサイズ
+
+**種類：**タイプ
+
+```typescript
+export type IconSize = 'sm' | 'md' | 'lg' | 'xl';
+```
+
+カタログのピクセル寸法にマップされたアイコンのサイズ。
+
+## `src/components/atoms/forge-kbd/forge-kbd`
+
+### フォージKbd
+
+**種類:** 関数
+
+```typescript
+function ForgeKbd(properties: Readonly<KbdProperties>): MpElement;
+```
+
+ニュートラルな JSX 方言でレンダリングされたセマンティック キーボード キー/コード ラベル。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ----------------------- | ----------- |
+|プロパティ |読み取り専用<KbdProperties> |             |
+
+### KbdProperties
+
+**種類:** インターフェース
+
+```typescript
+export interface KbdProperties
+```
+
+説明はありません。
+
+### Kbdサイズ
+
+**種類：**タイプ
+
+```typescript
+export type KbdSize = 'sm' | 'md' | 'lg';
+```
+
+キーボードのキーのサイズ。
+
 ## `src/components/atoms/forge-progress-bar/forge-progress-bar`
 
 ### ForgeProgressBar
@@ -335,9 +467,9 @@ function ForgeProgressBar(properties: Readonly<ProgressBarProperties>): MpElemen
 
 #### パラメータ
 
-| 名前       | タイプ                              | 説明 |
-| ---------- | ----------------------------------- | ---- |
-| プロパティ | 読み取り専用<ProgressBarProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------- | ----------- |
+|プロパティ |読み取り専用<ProgressBarProperties> |             |
 
 ### ProgressBarProperties
 
@@ -397,9 +529,9 @@ JSX 方言であり、React または Vue に直接コンパイルされます�
 
 #### パラメータ
 
-| 名前       | タイプ                        | 説明 |
-| ---------- | ----------------------------- | ---- |
-| プロパティ | 読み取り専用<QuoteProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------- | ----------- |
+|プロパティ |読み取り専用<QuoteProperties> |             |
 
 ### 見積プロパティ
 
@@ -448,7 +580,7 @@ function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): 
 `sources` のエントリごとに 1 つの `<source>` を含む `<picture>` をレンダリングします (アート用)
 方向/形式ネゴシエーション）およびフォールバック `<img>`、ネイティブをサポート
 `srcset`/`sizes`、遅延ロード、非同期デコード、固定 `aspectRatio` (
-レイアウト スペースを確保し、CLS を回避します)、`object-fit` 制御。それはそれを所有しています
+レイアウト スペースを確保し、CLS を回避します）、`object-fit` 制御。それはそれを所有しています
 同じ場所に配置された CSS モジュール `forge-responsive-image.module.scss` によるスタイリング、
 フレームワークに依存しない {@link classNames} ヘルパーを使用してアセンブルされます。
 
@@ -459,9 +591,9 @@ function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): 
 
 #### パラメータ
 
-| 名前       | タイプ                                  | 説明 |
-| ---------- | --------------------------------------- | ---- |
-| プロパティ | 読み取り専用<ResponsiveImageProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------------- | ----------- |
+|プロパティ |読み取り専用<ResponsiveImageProperties> |             |
 
 ### レスポンシブイメージフィット
 
@@ -491,7 +623,7 @@ export interface ResponsiveImageProperties
 export interface ResponsiveImageSource
 ```
 
-単一のアート志向/フォーマット固有の画像ソース。
+アートに特化した、フォーマット固有の単一の画像ソース。
 
 ## `src/components/atoms/forge-responsive-video/forge-responsive-video`
 
@@ -517,15 +649,15 @@ function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): 
 
 元の Vue SFC は、ネイティブ `play`/`pause`/`ended` イベントを次のように再発行しました。
 コンポーネントが放出します。中立バージョンでは、それらを次のように公開します。
-`onPlay`/`onPause`/`onEnded` コールバック プロパティは `<video>` に直接バインドされています
+`onPlay`/`onPause`/`onEnded` `<video>` に直接バインドされたコールバック プロパティ
 (移行されたシステム全体で使用される callback-prop 規則と一致します)
 コンポーネント）。
 
 #### パラメータ
 
-| 名前       | タイプ                                  | 説明 |
-| ---------- | --------------------------------------- | ---- |
-| プロパティ | 読み取り専用<ResponsiveVideoProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------------- | ----------- |
+|プロパティ |読み取り専用<ResponsiveVideoProperties> |             |
 
 ### レスポンシブビデオフィット
 
@@ -585,9 +717,9 @@ JSX 方言であり、React または Vue に直接コンパイルされます�
 
 #### パラメータ
 
-| 名前       | タイプ                            | 説明 |
-| ---------- | --------------------------------- | ---- |
-| プロパティ | 読み取り専用<SeparatorProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------- | ----------- |
+|プロパティ |読み取り専用<SeparatorProperties> |             |
 
 ### セパレータの方向
 
@@ -651,9 +783,9 @@ function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                           | 説明 |
-| ---------- | -------------------------------- | ---- |
-| プロパティ | 読み取り専用<SkeletonProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------- | ----------- |
+|プロパティ |読み取り専用<SkeletonProperties> |             |
 
 ### スケルトンのプロパティ
 
@@ -699,9 +831,9 @@ JSX 方言であり、React または Vue に直接コンパイルされます�
 
 #### パラメータ
 
-| 名前       | タイプ                          | 説明 |
-| ---------- | ------------------------------- | ---- |
-| プロパティ | 読み取り専用<SpinnerProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------------------- | ----------- |
+|プロパティ |読み取り専用<SpinnerProperties> |             |
 
 ### スピナーのプロパティ
 
@@ -756,9 +888,9 @@ BEM クラス名と計算されたフレックスボックス インライン �
 
 #### パラメータ
 
-| 名前       | タイプ                        | 説明 |
-| ---------- | ----------------------------- | ---- |
-| プロパティ | 読み取り専用<StackProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------- | ----------- |
+|プロパティ |読み取り専用<StackProperties> |             |
 
 ### スタックアライン
 
@@ -824,9 +956,9 @@ function ForgeStatusIcon(properties: Readonly<StatusIconProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                             | 説明 |
-| ---------- | ---------------------------------- | ---- |
-| プロパティ | 読み取り専用<StatusIconProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<StatusIconProperties> |             |
 
 ### ステータスアイコンレベル
 
@@ -858,6 +990,102 @@ export type StatusIconSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
 正規の2xs→2xlサイズスケール。
+
+## `src/components/atoms/forge-surface/forge-surface`
+
+### フォージサーフェス
+
+**種類:** 関数
+
+```typescript
+function ForgeSurface(properties: Readonly<SurfaceProperties>): MpElement;
+```
+
+デフォルトのスロットを備えたテーマ対応のセマンティック サーフェス。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------------------------- | ----------- |
+|プロパティ |読み取り専用<SurfaceProperties> |             |
+
+### 表面標高
+
+**種類：**タイプ
+
+```typescript
+export type SurfaceElevation = 0 | 1 | 2 | 3;
+```
+
+表面の標高レベル。
+
+### サーフェスパディング
+
+**種類：**タイプ
+
+```typescript
+export type SurfacePadding = 'none' | 'sm' | 'md' | 'lg';
+```
+
+サーフェス パディング スケール。
+
+### 表面特性
+
+**種類:** インターフェース
+
+```typescript
+export interface SurfaceProperties
+```
+
+説明はありません。
+
+### 表面が丸い
+
+**種類：**タイプ
+
+```typescript
+export type SurfaceRounded = 'none' | 'sm' | 'md' | 'lg' | 'xl';
+```
+
+表面コーナーR処理。
+
+## `src/components/atoms/forge-sync-status-indicator/forge-sync-status-indicator`
+
+### ForgeSyncStatusIndicator
+
+**種類:** 関数
+
+```typescript
+function ForgeSyncStatusIndicator(properties: Readonly<SyncStatusIndicatorProperties>): MpElement;
+```
+
+コンパクトでアクセスしやすい同期状態インジケーター。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------------------------------------- | ----------- |
+|プロパティ |読み取り専用<SyncStatusIndicatorProperties> |             |
+
+### 同期ステータス
+
+**種類：**タイプ
+
+```typescript
+export type SyncStatus = 'synced' | 'syncing' | 'pending' | 'error' | 'offline';
+```
+
+インジケーターで表される同期状態。
+
+### SyncStatusIndicatorプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface SyncStatusIndicatorProperties
+```
+
+説明はありません。
 
 ## `src/components/molecules/forge-accordion/forge-accordion`
 
@@ -919,9 +1147,57 @@ React/Vue);アイテムごとの `summary`/デフォルト スロットは 2 つ
 
 #### パラメータ
 
-| 名前       | タイプ                            | 説明 |
-| ---------- | --------------------------------- | ---- |
-| プロパティ | 読み取り専用<AccordionProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------- | ----------- |
+|プロパティ |読み取り専用<AccordionProperties> |             |
+
+## `src/components/molecules/forge-alert/forge-alert`
+
+### アラートプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface AlertProperties
+```
+
+説明はありません。
+
+### アラートサイズ
+
+**種類：**タイプ
+
+```typescript
+export type AlertSize = 'sm' | 'md' | 'lg';
+```
+
+説明はありません。
+
+### アラートバリアント
+
+**種類：**タイプ
+
+```typescript
+export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+説明はありません。
+
+### フォージアラート
+
+**種類:** 関数
+
+```typescript
+function ForgeAlert(properties: Readonly<AlertProperties>): MpElement;
+```
+
+作成可能なメッセージとアクション スロットを備えた、アクセス可能で消去可能なステータス メッセージ。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------- | ----------- |
+|プロパティ |読み取り専用<AlertProperties> |             |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -970,9 +1246,9 @@ function ForgeBreadcrumb(properties: Readonly<BreadcrumbProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                             | 説明 |
-| ---------- | ---------------------------------- | ---- |
-| プロパティ | 読み取り専用<BreadcrumbProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<BreadcrumbProperties> |             |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1030,9 +1306,57 @@ function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElemen
 
 #### パラメータ
 
-| 名前       | タイプ                              | 説明 |
-| ---------- | ----------------------------------- | ---- |
-| プロパティ | 読み取り専用<ButtonGroupProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------- | ----------- |
+|プロパティ |読み取り専用<ButtonGroupProperties> |             |
+
+## `src/components/molecules/forge-callout-block/forge-callout-block`
+
+### 吹き出しブロックのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface CalloutBlockProperties
+```
+
+説明はありません。
+
+### 吹き出しブロックサイズ
+
+**種類：**タイプ
+
+```typescript
+export type CalloutBlockSize = 'sm' | 'md';
+```
+
+説明はありません。
+
+### 吹き出しブロックバリアント
+
+**種類：**タイプ
+
+```typescript
+export type CalloutBlockVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+説明はありません。
+
+### ForgeCalloutBlock
+
+**種類:** 関数
+
+```typescript
+function ForgeCalloutBlock(properties: Readonly<CalloutBlockProperties>): MpElement;
+```
+
+タイトル、説明、コンテンツ、およびアクション スロットを含む目立つ情報ブロック。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | -------------------------------- | ----------- |
+|プロパティ |読み取り専用<CalloutBlockProperties> |             |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1081,9 +1405,57 @@ React の prop-presence チェック）により、両方で存在検出が同�
 
 #### パラメータ
 
-| 名前       | タイプ                       | 説明 |
-| ---------- | ---------------------------- | ---- |
-| プロパティ | 読み取り専用<CardProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------ | ----------- |
+|プロパティ |読み取り専用<CardProperties> |             |
+
+## `src/components/molecules/forge-carousel-indicator/forge-carousel-indicator`
+
+### カルーセルインジケーターの向き
+
+**種類：**タイプ
+
+```typescript
+export type CarouselIndicatorOrientation = 'horizontal' | 'vertical';
+```
+
+説明はありません。
+
+### カルーセルインジケーターのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface CarouselIndicatorProperties
+```
+
+説明はありません。
+
+### カルーセルインジケーターサイズ
+
+**種類：**タイプ
+
+```typescript
+export type CarouselIndicatorSize = 'sm' | 'md' | 'lg';
+```
+
+説明はありません。
+
+### Forgeカルーセルインジケーター
+
+**種類:** 関数
+
+```typescript
+function ForgeCarouselIndicator(properties: Readonly<CarouselIndicatorProperties>): MpElement;
+```
+
+カルーセルのアクセス可能でキーボード操作可能なページネーション ドット。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------------- | ----------- |
+|プロパティ |読み取り専用<CarouselIndicatorProperties> |             |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1143,9 +1515,9 @@ function ForgeChatBubble(properties: Readonly<ChatBubbleProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                             | 説明 |
-| ---------- | ---------------------------------- | ---- |
-| プロパティ | 読み取り専用<ChatBubbleProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<ChatBubbleProperties> |             |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1187,9 +1559,9 @@ function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                           | 説明 |
-| ---------- | -------------------------------- | ---- |
-| プロパティ | 読み取り専用<CollapseProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------- | ----------- |
+|プロパティ |読み取り専用<CollapseProperties> |             |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1255,9 +1627,125 @@ chrome、ニュートラルな JSX 方言で一度作成されました (`@missi
 
 #### パラメータ
 
-| 名前       | タイプ                             | 説明 |
-| ---------- | ---------------------------------- | ---- |
-| プロパティ | 読み取り専用<DeviceMockProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<DeviceMockProperties> |             |
+
+## `src/components/molecules/forge-drop-zone/forge-drop-zone`
+
+### ドロップゾーンのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface DropZoneProperties
+```
+
+説明はありません。
+
+### ドロップゾーン拒否
+
+**種類:** インターフェース
+
+```typescript
+export interface DropZoneReject
+```
+
+説明はありません。
+
+### ドロップゾーンスコープ
+
+**種類:** インターフェース
+
+```typescript
+export interface DropZoneScope
+```
+
+説明はありません。
+
+### ドロップゾーンサイズ
+
+**種類：**タイプ
+
+```typescript
+export type DropZoneSize = 'sm' | 'md' | 'lg';
+```
+
+説明はありません。
+
+### ドロップゾーン値
+
+**種類：**タイプ
+
+```typescript
+export type DropZoneValue = File | File[];
+```
+
+説明はありません。
+
+### フォージドロップゾーン
+
+**種類:** 関数
+
+```typescript
+function ForgeDropZone(properties: Readonly<DropZoneProperties>): MpElement;
+```
+
+クライアント側の検証を備えたキーボードからアクセス可能なドラッグ アンド ドロップ ファイル ターゲット。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------- | ----------- |
+|プロパティ |読み取り専用<DropZoneProperties> |             |
+
+## `src/components/molecules/forge-empty-state/forge-empty-state`
+
+### EmptyStateProperties
+
+**種類:** インターフェース
+
+```typescript
+export interface EmptyStateProperties
+```
+
+説明はありません。
+
+### EmptyStateSize
+
+**種類：**タイプ
+
+```typescript
+export type EmptyStateSize = 'sm' | 'md' | 'lg';
+```
+
+説明はありません。
+
+### 空の状態バリアント
+
+**種類：**タイプ
+
+```typescript
+export type EmptyStateVariant = 'neutral' | 'info';
+```
+
+説明はありません。
+
+### ForgeEmptyState
+
+**種類:** 関数
+
+```typescript
+function ForgeEmptyState(properties: Readonly<EmptyStateProperties>): MpElement;
+```
+
+オプションのアイコン、サポート コピー、およびアクションを備えた中央に配置されたコンテンツのないメッセージ。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<EmptyStateProperties> |             |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1275,10 +1763,10 @@ function ForgeGrid(properties: Readonly<GridProperties>): MpElement;
 そして、`@mission-platform/vite-plugin-forge` によって React または Vue に直接コンパイルされます。
 
 デフォルトのスロットを通じて提供された子は、ソース内のグリッド セルに流れ込みます。
-標準の `grid-column` / を使用すると、複数のトラックにまたがる場合があります。
+標準 `grid-column` / の順序で複数のトラックにまたがる場合があります。
 `grid-row` `span` CSS。オリジナルの Vue とは異なり、スコープ付きの
 `cell` スロット - 完全に設定されたモードは、Vue のスコープ付きスロットにマップされます。
-中立的な方言はモデル化されません。
+中立的な方言はモデルではありません。
 
 BEM クラスと計算されたグリッド インライン スタイルを出力します。デモのスタイリング
 同じ場所にある `forge-grid.module.scss` に住んでいます (輸入元
@@ -1286,9 +1774,9 @@ BEM クラスと計算されたグリッド インライン スタイルを出�
 
 #### パラメータ
 
-| 名前       | タイプ                       | 説明 |
-| ---------- | ---------------------------- | ---- |
-| プロパティ | 読み取り専用<GridProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------ | ----------- |
+|プロパティ |読み取り専用<GridProperties> |             |
 
 ### グリッドアラインメント
 
@@ -1331,7 +1819,7 @@ function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
 ```
 
 `ForgeInView` — コンテンツをラップし、`IntersectionObserver` を使用してそれを表示します。
-スクロールして表示されるアニメーションは設定可能です。で一度執筆されました
+スクロールして表示されると、設定可能なアニメーションが表示されます。で一度執筆されました
 中立的な JSX 方言。フレームワーク間の状態/ライフサイクルは、
 ニュートラル フック (`useState`/`useRef`/`useEffect`)。React フックにコンパイルされます。
 または、`@mission-platform/vite-plugin-forge` 経由の Vue フック シム。
@@ -1342,9 +1830,9 @@ function ForgeInView(properties: Readonly<InViewProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| プロパティ | 読み取り専用<InViewProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------- | ----------- |
+|プロパティ |読み取り専用<InViewProperties> |             |
 
 ### インビューアニメーション
 
@@ -1362,6 +1850,64 @@ export type InViewAnimation = 'fade' | 'slide-up' | 'slide-left' | 'slide-right'
 
 ```typescript
 export interface InViewProperties
+```
+
+説明はありません。
+
+## `src/components/molecules/forge-inline-edit/forge-inline-edit`
+
+### フォージインライン編集
+
+**種類:** 関数
+
+```typescript
+function ForgeInlineEdit(properties: Readonly<InlineEditProperties>): MpElement;
+```
+
+キーボードによる送信、キャンセル、検証を備えたコンパクトな読み取り/編集コントロール。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<InlineEditProperties> |             |
+
+### InlineEditInputType
+
+**種類：**タイプ
+
+```typescript
+export type InlineEditInputType = 'text' | 'email' | 'url' | 'number';
+```
+
+説明はありません。
+
+### インライン編集プロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface InlineEditProperties
+```
+
+説明はありません。
+
+### インライン編集サイズ
+
+**種類：**タイプ
+
+```typescript
+export type InlineEditSize = 'sm' | 'md' | 'lg';
+```
+
+説明はありません。
+
+### InlineEditValidator
+
+**種類：**タイプ
+
+```typescript
+export type InlineEditValidator = (value: string) => string | undefined;
 ```
 
 説明はありません。
@@ -1394,9 +1940,9 @@ function ForgeList(properties: Readonly<ListProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                       | 説明 |
-| ---------- | ---------------------------- | ---- |
-| プロパティ | 読み取り専用<ListProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------ | ----------- |
+|プロパティ |読み取り専用<ListProperties> |             |
 
 ### リストアイテム
 
@@ -1457,7 +2003,7 @@ function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement;
 `columns` の数、または同じ数の列に適合するように `minColumnWidth` を設定します。
 少なくともその幅が適合します (`minColumnWidth` が勝ちます)。コンテナが露出する
 `--mp-masonry-gap` カスタム プロパティとしてのギャップと、オリジナルの Vue と同様に、
-すべてのデフォルトスロットの子を自動的にブレークセーフに保ちます。 Vue とは異なります。
+すべてのデフォルト スロットの子を自動的にブレークセーフに保ちます。 Vue とは異なります。
 オリジナルでは、`items` prop / スコープ付き `item` スロットを公開しません。これはマップされます。
 Vue のスコープ付きスロットに接続します。
 
@@ -1468,9 +2014,9 @@ CSS);動的な複数列プロパティはインラインで適用されます。
 
 #### パラメータ
 
-| 名前       | タイプ                          | 説明 |
-| ---------- | ------------------------------- | ---- |
-| プロパティ | 読み取り専用<MasonryProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------------------- | ----------- |
+|プロパティ |読み取り専用<MasonryProperties> |             |
 
 ### 石積みギャップ
 
@@ -1488,6 +2034,54 @@ export type MasonryGap = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 ```typescript
 export interface MasonryProperties
+```
+
+説明はありません。
+
+## `src/components/molecules/forge-mention-input/forge-mention-input`
+
+### フォージメンション入力
+
+**種類:** 関数
+
+```typescript
+function ForgeMentionInput(properties: Readonly<MentionInputProperties>): MpElement;
+```
+
+アクセス可能でキーボードでナビゲート可能なメンションの提案を含むテキストエリア。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | -------------------------------- | ----------- |
+|プロパティ |読み取り専用<MentionInputProperties> |             |
+
+### 入力プロパティについての言及
+
+**種類:** インターフェース
+
+```typescript
+export interface MentionInputProperties
+```
+
+説明はありません。
+
+### メンションアイテム
+
+**種類:** インターフェース
+
+```typescript
+export interface MentionItem
+```
+
+説明はありません。
+
+### 言及提案範囲
+
+**種類:** インターフェース
+
+```typescript
+export interface MentionSuggestionScope
 ```
 
 説明はありません。
@@ -1519,9 +2113,9 @@ function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                           | 説明 |
-| ---------- | -------------------------------- | ---- |
-| プロパティ | 読み取り専用<MenuItemProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------- | ----------- |
+|プロパティ |読み取り専用<MenuItemProperties> |             |
 
 ### メニュー項目のプロパティ
 
@@ -1577,9 +2171,9 @@ function ForgeMenu(properties: Readonly<MenuProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                       | 説明 |
-| ---------- | ---------------------------- | ---- |
-| プロパティ | 読み取り専用<MenuProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------ | ----------- |
+|プロパティ |読み取り専用<MenuProperties> |             |
 
 ### メニューノード
 
@@ -1611,6 +2205,76 @@ export interface MenuProperties
 
 説明はありません。
 
+## `src/components/molecules/forge-metric-card/forge-metric-card`
+
+### フォージメトリックカード
+
+**種類:** 関数
+
+```typescript
+function ForgeMetricCard(properties: Readonly<MetricCardProperties>): MpElement;
+```
+
+`ForgeMetricCard` — ニュートラル JSX で一度作成されたコンパクトなメトリクスの概要。
+値、トレンド、読み込み状態、サポート コンテンツを 1 つにまとめます
+視覚的な処理を CSS モジュールに任せながら、アクセス可能な記事を作成します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<MetricCardProperties> |             |
+
+### メトリックカードのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface MetricCardProperties
+```
+
+説明はありません。
+
+### メトリクスカードサイズ
+
+**種類：**タイプ
+
+```typescript
+export type MetricCardSize = 'sm' | 'md' | 'lg';
+```
+
+メトリクス カードのスケールを制御するサイズ トークン。
+
+### メトリックカードトレンド
+
+**種類:** インターフェース
+
+```typescript
+export interface MetricCardTrend
+```
+
+メトリック値の下に表示されるオプションの変更インジケーター。
+
+### メトリックカードトレンド方向
+
+**種類：**タイプ
+
+```typescript
+export type MetricCardTrendDirection = 'up' | 'down' | 'flat';
+```
+
+メトリクスのトレンドで表される変化の方向。
+
+### メトリックカードバリアント
+
+**種類：**タイプ
+
+```typescript
+export type MetricCardVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+メトリックカードの表面の色合い。
+
 ## `src/components/molecules/forge-navbar-item/forge-navbar-item`
 
 ### NavbarItem を鍛造する
@@ -1629,14 +2293,14 @@ function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement;
 `onClick`。 `dropdownItems` を使用すると、ドロップダウン トリガーと
 `role="menu"` パネル;クリックする
 外側にいるか、`Escape` を押すと閉じます。ラベルはデフォルトのスロットから取得されます
-(`label` にフォールバック) オプションの先頭の `icon` スロットを使用します。それはそれを所有しています
+(`label` にフォールバック) オプションの先頭 `icon` スロットを使用します。それはそれを所有しています
 同じ場所にある CSS モジュール `forge-navbar-item.module.scss` を介したスタイリング。
 
 元の Vue SFC はフローティング ドロップダウンを使用していました
 (テレポート + `@floating-ui` 位置決め)、動的 `<component :is>` タグ、
 `vue-router` `RouterLink`、`@mission-platform/icons` `ForgeIconChevron`、および
 `click` が発行します。ニュートラル バージョンでは **動的タグ** (子なし) が維持されます。
-項目はニュートラル `<Dynamic is={tag}>` プリミティブ (次のようにコンパイルされます) を通じてレンダリングされます。
+アイテムはニュートラル `<Dynamic is={tag}>` プリミティブ (次のようにコンパイルされます) を通じてレンダリングされます。
 React の要素タイプ / Vue の `<component :is>`)、`tag` は `'a'` に解決されます
 (enabled + `href`) または `'button'` — インラインを置き換えます。
 絶対配置ドロップダウン (`useState` で開いた状態、経由で閉じた状態)
@@ -1646,9 +2310,9 @@ React の要素タイプ / Vue の `<component :is>`)、`tag` は `'a'` に解�
 
 #### パラメータ
 
-| 名前       | タイプ                             | 説明 |
-| ---------- | ---------------------------------- | ---- |
-| プロパティ | 読み取り専用<NavbarItemProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<NavbarItemProperties> |             |
 
 ### NavbarItemChild
 
@@ -1708,9 +2372,9 @@ function ForgePagination(properties: Readonly<PaginationProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                             | 説明 |
-| ---------- | ---------------------------------- | ---- |
-| プロパティ | 読み取り専用<PaginationProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<PaginationProperties> |             |
 
 ### ページネーション項目
 
@@ -1771,11 +2435,11 @@ function ForgeTabs(properties: Readonly<TabsProperties>): MpElement;
 `@mission-platform/icons` `ForgeIconPlus`/`ForgeIconClose` (追加/クローズ用)
 アフォーダンス。オリジナルの Vue と同様に、`role="tabpanel"` をレンダリングします。
 **すべて**のタブに対して非アクティブなパネルをマウントしたままにしますが、`hidden` (したがってパネル
-状態はタブ切り替え後に存続します);中立的な方言では Vue を表現できないため、
+状態はタブ切り替え後に存続します)。中立的な方言では Vue を表現できないため、
 ID ごとの動的なスロット名 (`<slot :name="tab.id">`)、各パネルは
-単一スコープの `panel` **render-prop** と `{ tab }` (コンシューマのスイッチがオン)
+単一スコープの `panel` **render-prop** と `{ tab }` (コンシューマーのスイッチがオン)
 `tab.id`)。 `panel` render-prop は (コマンド経由ではなく) 直接呼び出されます。
-ニュートラル `<Slot>`) なので、両方のフレームワークとニュートラルの実際のプロップのままです。
+中立的な `<Slot>`)、両方のフレームワークと中立的なフレームワークの実際のプロップのままです。
 消費者はそれをプレーン属性 (`panel={({ tab }) => …}`) — Vue として渡すことができます。
 `<Slot>` でサポートされた名前付きスロットは、からプロップとして渡されるとドロップされます。
 コンパイルされたニュートラル親。パネルは空白のままです。確立されたものを使用します
@@ -1783,9 +2447,9 @@ ID ごとの動的なスロット名 (`<slot :name="tab.id">`)、各パネルは
 
 #### パラメータ
 
-| 名前       | タイプ                       | 説明 |
-| ---------- | ---------------------------- | ---- |
-| プロパティ | 読み取り専用<TabsProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------ | ----------- |
+|プロパティ |読み取り専用<TabsProperties> |             |
 
 ### タブ項目
 
@@ -1827,6 +2491,57 @@ export type TabsVariant = 'line' | 'pill';
 
 タブリストの視覚的な処理。
 
+## `src/components/molecules/forge-tag-input/forge-tag-input`
+
+### フォージタグ入力
+
+**種類:** 関数
+
+```typescript
+function ForgeTagInput(properties: Readonly<TagInputProperties>): MpElement;
+```
+
+`ForgeTagInput` — ニュートラルで作成された、制御されたアクセス可能なタグ エディター
+JSX。 Enter またはカンマでトリミングされたドラフトをコミットし、Backspace で最後のタグを削除します
+ドラフトが空で、重複/最大タグ ルールが適用される前に、
+制御された更新コールバックが起動されます。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------- | ----------- |
+|プロパティ |読み取り専用<TagInputProperties> |             |
+
+### タグ入力プロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface TagInputProperties
+```
+
+説明はありません。
+
+### タグ入力サイズ
+
+**種類：**タイプ
+
+```typescript
+export type TagInputSize = 'sm' | 'md' | 'lg';
+```
+
+タグ入力スケールを制御するサイズトークン。
+
+### タグ入力バリアント
+
+**種類：**タイプ
+
+```typescript
+export type TagInputVariant = 'neutral' | 'primary' | 'error';
+```
+
+タグ入力の表面トーン。
+
 ## `src/components/molecules/forge-timeline/forge-timeline`
 
 ### フォージタイムライン
@@ -1855,9 +2570,9 @@ function ForgeTimeline(properties: Readonly<TimelineProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                           | 説明 |
-| ---------- | -------------------------------- | ---- |
-| プロパティ | 読み取り専用<TimelineProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------- | ----------- |
+|プロパティ |読み取り専用<TimelineProperties> |             |
 
 ### タイムライン整列
 
@@ -1900,7 +2615,7 @@ export type TimelineItemVariant =
 
 マーカー ドットに適用されるカラー ファミリ。
 
-### タイムラインの向き
+### タイムラインの方向
 
 **種類：**タイプ
 
@@ -1952,9 +2667,9 @@ props (元の SFC のエミットを置き換えます)。中立的な `useState
 
 #### パラメータ
 
-| 名前       | タイプ                               | 説明 |
-| ---------- | ------------------------------------ | ---- |
-| プロパティ | 読み取り専用<WindowPopoutProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------------- | ----------- |
+|プロパティ |読み取り専用<WindowPopoutProperties> |             |
 
 ### ウィンドウポップアウトプロパティ
 
@@ -1965,6 +2680,164 @@ export interface WindowPopoutProperties
 ```
 
 説明はありません。
+
+## `src/components/organisms/forge-activity-feed/forge-activity-feed`
+
+### アクティビティフィード項目
+
+**種類：**タイプ
+
+```typescript
+export type ActivityFeedItem = ActivityItem;
+```
+
+説明はありません。
+
+#### 契約
+
+- **@非推奨:** `ActivityItem` を使用します。
+
+### アクティビティフィードプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface ActivityFeedProperties
+```
+
+説明はありません。
+
+### アクティビティフィードサイズ
+
+**種類：**タイプ
+
+```typescript
+export type ActivityFeedSize = 'sm' | 'md' | 'lg';
+```
+
+説明はありません。
+
+### アクティビティフィードバリアント
+
+**種類：**タイプ
+
+```typescript
+export type ActivityFeedVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+説明はありません。
+
+### フォージアクティビティフィード
+
+**種類:** 関数
+
+```typescript
+function ForgeActivityFeed(properties: Readonly<ActivityFeedProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | -------------------------------- | ----------- |
+|プロパティ |読み取り専用<ActivityFeedProperties> |             |
+
+## `src/components/organisms/forge-announcement-bar/forge-announcement-bar`
+
+### アナウンスバーのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface AnnouncementBarProperties
+```
+
+説明はありません。
+
+### お知らせバーバリアント
+
+**種類：**タイプ
+
+```typescript
+export type AnnouncementBarVariant = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+説明はありません。
+
+### Forgeアナウンスバー
+
+**種類:** 関数
+
+```typescript
+function ForgeAnnouncementBar(properties: Readonly<AnnouncementBarProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------------- | ----------- |
+|プロパティ |読み取り専用<AnnouncementBarProperties> |             |
+
+## `src/components/organisms/forge-asset-browser/forge-asset-browser`
+
+### アセットブラウザアイテム
+
+**種類:** インターフェース
+
+```typescript
+export interface AssetBrowserItem
+```
+
+説明はありません。
+
+### アセットブラウザのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface AssetBrowserProperties
+```
+
+説明はありません。
+
+### アセットブラウザのサイズ
+
+**種類：**タイプ
+
+```typescript
+export type AssetBrowserSize = 'sm' | 'md' | 'lg';
+```
+
+説明はありません。
+
+### アセットブラウザ値
+
+**種類：**タイプ
+
+```typescript
+export type AssetBrowserValue = string | string[];
+```
+
+説明はありません。
+
+### ForgeAssetBrowser
+
+**種類:** 関数
+
+```typescript
+function ForgeAssetBrowser(properties: Readonly<AssetBrowserProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | -------------------------------- | ----------- |
+|プロパティ |読み取り専用<AssetBrowserProperties> |             |
 
 ## `src/components/organisms/forge-carousel/forge-carousel`
 
@@ -2028,9 +2901,9 @@ CSS モジュール `forge-carousel.module.scss` が同じ場所にあります�
 
 #### パラメータ
 
-| 名前       | タイプ                           | 説明 |
-| ---------- | -------------------------------- | ---- |
-| プロパティ | 読み取り専用<CarouselProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------- | ----------- |
+|プロパティ |読み取り専用<CarouselProperties> |             |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2074,9 +2947,425 @@ function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                           | 説明 |
-| ---------- | -------------------------------- | ---- |
-| プロパティ | 読み取り専用<ChatAreaProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------- | ----------- |
+|プロパティ |読み取り専用<ChatAreaProperties> |             |
+
+## `src/components/organisms/forge-command-palette/forge-command-palette`
+
+### コマンドパレットコマンド
+
+**種類：**タイプ
+
+```typescript
+export type CommandPaletteCommand = CommandItem;
+```
+
+説明はありません。
+
+#### 契約
+
+- **@非推奨:** `CommandItem` を使用します。
+
+### コマンドパレットのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface CommandPaletteProperties
+```
+
+説明はありません。
+
+### コマンドパレットサイズ
+
+**種類：**タイプ
+
+```typescript
+export type CommandPaletteSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+コマンド パレットのスケールを制御するサイズ トークン。
+
+### コマンドパレットを鍛造する
+
+**種類:** 関数
+
+```typescript
+function ForgeCommandPalette(properties: Readonly<CommandPaletteProperties>): MpElement;
+```
+
+モーダル オーバーレイを備えた、検索可能なキーボードファーストのコマンド パレット。中立者
+実装はフィルタリングと選択をフレームワークに依存しませんが、
+SSR のグローバル ドキュメント リスナーを保護します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------------- | ----------- |
+|プロパティ |読み取り専用<CommandPaletteProperties> |             |
+
+## `src/components/organisms/forge-comment-thread/forge-comment-thread`
+
+### コメントスレッドコメント
+
+**種類:** インターフェース
+
+```typescript
+export interface CommentThreadComment
+```
+
+説明はありません。
+
+### コメントスレッドプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface CommentThreadProperties
+```
+
+説明はありません。
+
+### CommentThreadSize
+
+**種類：**タイプ
+
+```typescript
+export type CommentThreadSize = 'sm' | 'md' | 'lg';
+```
+
+説明はありません。
+
+### Forgeコメントスレッド
+
+**種類:** 関数
+
+```typescript
+function ForgeCommentThread(properties: Readonly<CommentThreadProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------------------------------- | ----------- |
+|プロパティ |読み取り専用<CommentThreadProperties> |             |
+
+## `src/components/organisms/forge-comparison-table/forge-comparison-table`
+
+### 比較表特徴
+
+**種類：**タイプ
+
+```typescript
+export type ComparisonTableFeature = FeatureRow;
+```
+
+説明はありません。
+
+#### 契約
+
+- **@非推奨:** `FeatureRow` を使用します。
+
+### 比較表プラン
+
+**種類：**タイプ
+
+```typescript
+export type ComparisonTablePlan = ComparisonItem;
+```
+
+説明はありません。
+
+#### 契約
+
+- **@非推奨:** `ComparisonItem` を使用します。
+
+### 比較テーブルのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface ComparisonTableProperties
+```
+
+説明はありません。
+
+### ComparisonTableSize
+
+**種類：**タイプ
+
+```typescript
+export type ComparisonTableSize = 'sm' | 'md' | 'lg';
+```
+
+説明はありません。
+
+### 比較テーブルの値
+
+**種類：**タイプ
+
+```typescript
+export type ComparisonTableValue = string | number | boolean;
+```
+
+説明はありません。
+
+### Forge比較表
+
+**種類:** 関数
+
+```typescript
+function ForgeComparisonTable(properties: Readonly<ComparisonTableProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------------- | ----------- |
+|プロパティ |読み取り専用<ComparisonTableProperties> |             |
+
+## `src/components/organisms/forge-cookie-consent/forge-cookie-consent`
+
+### クッキーカテゴリ
+
+**種類:** インターフェース
+
+```typescript
+export interface CookieCategory
+```
+
+ユーザーが構成可能な Cookie カテゴリ。
+
+### CookieConsentProperties
+
+**種類:** インターフェース
+
+```typescript
+export interface CookieConsentProperties
+```
+
+説明はありません。
+
+### Cookie同意サイズ
+
+**種類：**タイプ
+
+```typescript
+export type CookieConsentSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+同意面のスケールを制御するサイズ トークン。
+
+### Cookie同意状態
+
+**種類:** インターフェース
+
+```typescript
+export interface CookieConsentState
+```
+
+同意ペイロードはホスト アプリケーションに発行され、ストレージに保存されます。
+
+### クッキー同意を鍛造する
+
+**種類:** 関数
+
+```typescript
+function ForgeCookieConsent(properties: Readonly<CookieConsentProperties>): MpElement;
+```
+
+同意バナーと必須カテゴリを含むアクセス可能な設定ダイアログ
+強制と保護されたローカル/セッション ストレージの永続性。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------------------------------- | ----------- |
+|プロパティ |読み取り専用<CookieConsentProperties> |             |
+
+## `src/components/organisms/forge-cta-banner/forge-cta-banner`
+
+### Ctaバナーアクション
+
+**種類:** インターフェース
+
+```typescript
+export interface CtaBannerAction
+```
+
+説明はありません。
+
+### CtaBannerProperties
+
+**種類:** インターフェース
+
+```typescript
+export interface CtaBannerProperties
+```
+
+説明はありません。
+
+### Ctaバナーバリアント
+
+**種類：**タイプ
+
+```typescript
+export type CtaBannerVariant = 'neutral' | 'primary' | 'secondary' | 'success' | 'warning';
+```
+
+説明はありません。
+
+### ForgeCtaバナー
+
+**種類:** 関数
+
+```typescript
+function ForgeCtaBanner(properties: Readonly<CtaBannerProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------- | ----------- |
+|プロパティ |読み取り専用<CtaBannerProperties> |             |
+
+## `src/components/organisms/forge-data-card/forge-data-card`
+
+### データカードデータ
+
+**種類：**タイプ
+
+```typescript
+export type DataCardData = VCardData | ICalendarData;
+```
+
+`ForgeDataCard` によって表示される、入力された連絡先またはカレンダー データ。
+
+### データカードのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface DataCardProperties
+```
+
+説明はありません。
+
+### データカードのサイズ
+
+**種類：**タイプ
+
+```typescript
+export type DataCardSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+データカードのスケールを制御するサイズトークン。
+
+### データカードトレンド
+
+**種類:** インターフェース
+
+```typescript
+export interface DataCardTrend
+```
+
+説明はありません。
+
+#### 契約
+
+- **@非推奨:** データ カードは `VCardData` または `ICalendarData` を使用するようになりました。
+
+### データカードバリアント
+
+**種類：**タイプ
+
+```typescript
+export type DataCardVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+```
+
+カード表面の色調。
+
+### データカードを鍛造する
+
+**種類:** 関数
+
+```typescript
+function ForgeDataCard(properties: Readonly<DataCardProperties>): MpElement;
+```
+
+標準に準拠したダウンロードが可能なセマンティック連絡先カードまたはカレンダー カード。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------- | ----------- |
+|プロパティ |読み取り専用<DataCardProperties> |             |
+
+## `src/components/organisms/forge-diff-viewer/forge-diff-viewer`
+
+### DiffLineType
+
+**種類：**タイプ
+
+```typescript
+export type DiffLineType = 'context' | 'addition' | 'deletion';
+```
+
+説明はありません。
+
+### DiffViewerLine
+
+**種類:** インターフェース
+
+```typescript
+export interface DiffViewerLine
+```
+
+説明はありません。
+
+### DiffViewerモード
+
+**種類：**タイプ
+
+```typescript
+export type DiffViewerMode = 'unified' | 'split';
+```
+
+説明はありません。
+
+### DiffViewer プロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface DiffViewerProperties
+```
+
+説明はありません。
+
+### ForgeDiffViewer
+
+**種類:** 関数
+
+```typescript
+function ForgeDiffViewer(properties: Readonly<DiffViewerProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<DiffViewerProperties> |             |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2151,36 +3440,226 @@ export type DrawerVariant = 'overlay' | 'inline';
 function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement;
 ```
 
-`ForgeDrawer` — ニュートラルな JSX 方言で一度作成されたスライディング パネル
-`@mission-platform/vite-plugin-forge` によって React または Vue に直接コンパイルされます。
+`ForgeDrawer` — a sliding panel authored once in the neutral JSX dialect and
+compiled straight to React or Vue by `@mission-platform/vite-plugin-forge`.
 
-`overlay` ドロワー (デフォルト) は、ドロワーに固定された `position: fixed` パネルです。
-ビューポート エッジ (`placement`)、`open` によってゲートされ、クリックして閉じることでサポートされます
-スクリム、オリジナルの Vue SFC と同じエンター/リーブ フェード + スライド
+An `overlay` drawer (default) is a `position: fixed` panel anchored to a
+viewport edge (`placement`), gated by `open` and backed by a click-to-close
+scrim, with the same enter/leave fade + slide as the original Vue SFC via the
 ニュートラル `<Transition>` プリミティブ。 `inline` ドロワーは静的としてレンダリングされます。
-`inlineBreakpoint` 以降の固定オープン パネル (リアクティブ `matchMedia` クエリ)
-そして、その下のオーバーレイ動作にフォールバックします — レイアウト プリミティブによって使用されます
+fixed-open panel at/above `inlineBreakpoint` (a reactive `matchMedia` query)
+and falls back to the overlay behaviour below it — used by layout primitives
 `ForgeVerticalLayout` など。
 
-`draggable` が設定されている場合、内側のエッジにサイズ変更ハンドルが成長します。ハンドルをドラッグします。
-(共有 `pointer-drag` ヘルパーを介して `window` で追跡されるポインター ドラッグ)
-`MIN_SIZE_REM` と解決された最大値の間でパネルのサイズを変更し、レポートします
+When `draggable` is set the inner edge grows a resize handle: dragging it
+(pointer-drag tracked on `window` via the shared `pointer-drag` helper)
+resizes the panel between `MIN_SIZE_REM` and the resolved maximum and reports
 `rem` から `onResize` までの新しいサイズ (Vue `resize` が発行)。
 
-クロスフレームワーク `callback-prop` 規約に従って、終了までを報告します。
+Per the cross-framework `callback-prop` convention, it reports closing through
 Vue または `v-model` ではなく `onOpenChange(false)` / `onClose()` が発行されます。それ
-は、同じ場所にある `forge-drawer.module.scss` を通じてそのスタイルを所有しています。相対的に
-オリジナルの Vue SFC では、中立方言はまだ `<Teleport>` をモデル化できません。
-スコープ付きスロット、`useI18n`、`useZIndex`、または `useRouterClose` なので、パネル
+owns its styling through the co-located `forge-drawer.module.scss`.相対的に
+the original Vue SFC the neutral dialect still cannot model `<Teleport>`,
+scoped slots, `useI18n`, `useZIndex`, or `useRouterClose`, so the panel
 `header`/`footer` という名前を使用して、その場でレンダリングします (`<body>` にはテレポートされません)。
-スロット (`<Slot>`、フレームワークに依存しない {@link hasSlot} で存在が検出されました)
+slots (`<Slot>`, presence detected with the framework-neutral {@link hasSlot}
 helper) と、i18n の代わりに `closeLabel` prop を使用します。
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| プロパティ | 読み取り専用<DrawerProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------- | ----------- |
+|プロパティ |読み取り専用<DrawerProperties> |             |
+
+## `src/components/organisms/forge-error-page/forge-error-page`
+
+### エラーページアクション
+
+**種類:** インターフェース
+
+```typescript
+export interface ErrorPageAction
+```
+
+エラーメッセージの下に表示されるアクション。
+
+### エラーページデータ
+
+**種類:** インターフェース
+
+```typescript
+export interface ErrorPageData
+```
+
+1 つのパブリック データ オブジェクトとして渡すことができる構造化されたエラー情報。
+
+### エラーページのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface ErrorPageProperties
+```
+
+説明はありません。
+
+### エラーページサイズ
+
+**種類：**タイプ
+
+```typescript
+export type ErrorPageSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+エラーページのスケールを制御するサイズトークン。
+
+### ForgeErrorPage
+
+**種類:** 関数
+
+```typescript
+function ForgeErrorPage(properties: Readonly<ErrorPageProperties>): MpElement;
+```
+
+入力されたアクション記述子を含む、セマンティックでスロットに優しいエラー状態ページ。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------- | ----------- |
+|プロパティ |読み取り専用<ErrorPageProperties> |             |
+
+## `src/components/organisms/forge-kanban-board/forge-kanban-board`
+
+### フォージかんばんボード
+
+**種類:** 関数
+
+```typescript
+function ForgeKanbanBoard(properties: Readonly<KanbanBoardProperties>): MpElement;
+```
+
+列間でアイテムを移動するための応答性の高いボード。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------- | ----------- |
+|プロパティ |読み取り専用<KanbanBoardProperties> |             |
+
+### カンバンボードのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface KanbanBoardProperties
+```
+
+説明はありません。
+
+### かんばんカード
+
+**種類：**タイプ
+
+```typescript
+export type KanbanCard = KanbanItem;
+```
+
+説明はありません。
+
+#### 契約
+
+- **@非推奨:** `KanbanItem` を使用します。
+
+### かんばん列
+
+**種類:** インターフェース
+
+```typescript
+export interface KanbanColumn
+```
+
+説明はありません。
+
+## `src/components/organisms/forge-logo-cloud/forge-logo-cloud`
+
+### フォージロゴクラウド
+
+**種類:** 関数
+
+```typescript
+function ForgeLogoCloud(properties: Readonly<LogoCloudProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------- | ----------- |
+|プロパティ |読み取り専用<LogoCloudProperties> |             |
+
+### ロゴクラウドアイテム
+
+**種類：**タイプ
+
+```typescript
+export type LogoCloudItem = Logo;
+```
+
+説明はありません。
+
+#### 契約
+
+- **@非推奨:** `Logo` を使用します。
+
+### ロゴクラウドプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface LogoCloudProperties
+```
+
+説明はありません。
+
+## `src/components/organisms/forge-marketing-header/forge-marketing-header`
+
+### Forgeマーケティングヘッダー
+
+**種類:** 関数
+
+```typescript
+function ForgeMarketingHeader(properties: Readonly<MarketingHeaderProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------------- | ----------- |
+|プロパティ |読み取り専用<MarketingHeaderProperties> |             |
+
+### マーケティングヘッダーアクション
+
+**種類:** インターフェース
+
+```typescript
+export interface MarketingHeaderAction
+```
+
+説明はありません。
+
+### マーケティングヘッダーのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface MarketingHeaderProperties
+```
+
+説明はありません。
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2203,7 +3682,7 @@ JSX 方言であり、React または Vue に直接コンパイルされます�
 祖先チェーンが維持されている間、レベル (兄弟を開くと前の兄弟が閉じます)
 開いた。 `items` が省略された場合、代わりにデフォルトのスロットがレンダリングされます。クリックする
 外側にいるか、`Escape` を押すと、開いているすべてのドロップダウンが閉じます。独自のスタイルを持っています
-同じ場所にある CSS モジュール `forge-menubar.module.scss` を介して。
+同じ場所にある CSS モジュール `forge-menubar.module.scss` を通じて。
 
 オリジナルの Vue SFC は `ForgeMenuItemButton`/`ForgeMenuItemLink`/ を再利用しました
 `ForgeMenuSubmenu` (それ自体を再帰するサブメニュー)。ニュートラルバージョン
@@ -2216,9 +3695,9 @@ JSX 方言であり、React または Vue に直接コンパイルされます�
 
 #### パラメータ
 
-| 名前       | タイプ                          | 説明 |
-| ---------- | ------------------------------- | ---- |
-| プロパティ | 読み取り専用<MenubarProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | --------------------------- | ----------- |
+|プロパティ |読み取り専用<MenubarProperties> |             |
 
 ### メニューバーのプロパティ
 
@@ -2258,9 +3737,9 @@ JSX 方言であり、React または Vue に直接コンパイルされます�
 
 #### パラメータ
 
-| 名前       | タイプ                         | 説明 |
-| ---------- | ------------------------------ | ---- |
-| プロパティ | 読み取り専用<NavbarProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------- | ----------- |
+|プロパティ |読み取り専用<NavbarProperties> |             |
 
 ### ナビゲーションバーの位置合わせ
 
@@ -2281,7 +3760,7 @@ export type NavbarBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 ```
 
 名前付きビューポート ブレークポイント **その下**でナビゲーションバーが折りたたまれます。
-ハンバーガー切り替えモバイルドロワー (その上/上に完全な `brand` /
+ハンバーガートグル式モバイルドロワー (およびその上/上に完全な `brand` /
 中央/`end` 領域はインラインで表示されます)。
 
 ### ナビゲーションバーのプロパティ
@@ -2290,6 +3769,306 @@ export type NavbarBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 ```typescript
 export interface NavbarProperties
+```
+
+説明はありません。
+
+## `src/components/organisms/forge-notification-panel/forge-notification-panel`
+
+### Forge通知パネル
+
+**種類:** 関数
+
+```typescript
+function ForgeNotificationPanel(properties: Readonly<NotificationPanelProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------------- | ----------- |
+|プロパティ |読み取り専用<NotificationPanelProperties> |             |
+
+### 通知項目
+
+**種類:** インターフェース
+
+```typescript
+export interface NotificationItem
+```
+
+説明はありません。
+
+### 通知パネルのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface NotificationPanelProperties
+```
+
+説明はありません。
+
+### 通知タイプ
+
+**種類：**タイプ
+
+```typescript
+export type NotificationType = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+説明はありません。
+
+## `src/components/organisms/forge-onboarding-tour/forge-onboarding-tour`
+
+### Forgeオンボーディングツアー
+
+**種類:** 関数
+
+```typescript
+function ForgeOnboardingTour(properties: Readonly<OnboardingTourProperties>): MpElement;
+```
+
+キーボード ナビゲーションとオプションの完了永続性を備えたアクセス可能なスポットライト ツアー。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------------- | ----------- |
+|プロパティ |読み取り専用<OnboardingTourProperties> |             |
+
+### オンボーディングステップ
+
+**種類：**タイプ
+
+```typescript
+export type OnboardingStep = TourStep;
+```
+
+説明はありません。
+
+#### 契約
+
+- **@非推奨:** `TourStep` を使用します。
+
+### オンボーディングツアーの手配
+
+**種類：**タイプ
+
+```typescript
+export type OnboardingTourPlacement = 'top' | 'right' | 'bottom' | 'left' | 'center';
+```
+
+ターゲットに固定されたツアー ダイアログの配置設定。
+
+### オンボーディングツアープロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface OnboardingTourProperties
+```
+
+説明はありません。
+
+### オンボーディングツアーサイズ
+
+**種類：**タイプ
+
+```typescript
+export type OnboardingTourSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+ツアーダイアログのスケールを制御するサイズトークン。
+
+## `src/components/organisms/forge-pricing-table/forge-pricing-table`
+
+### Forge価格表
+
+**種類:** 関数
+
+```typescript
+function ForgePricingTable(properties: Readonly<PricingTableProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | -------------------------------- | ----------- |
+|プロパティ |読み取り専用<PricingTableProperties> |             |
+
+### 価格機能
+
+**種類:** インターフェース
+
+```typescript
+export interface PricingFeature
+```
+
+説明はありません。
+
+### 料金プラン
+
+**種類:** インターフェース
+
+```typescript
+export interface PricingPlan
+```
+
+説明はありません。
+
+### 価格表プロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface PricingTableProperties
+```
+
+説明はありません。
+
+## `src/components/organisms/forge-profile-card/forge-profile-card`
+
+### プロファイルカードを鍛造する
+
+**種類:** 関数
+
+```typescript
+function ForgeProfileCard(properties: Readonly<ProfileCardProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------- | ----------- |
+|プロパティ |読み取り専用<ProfileCardProperties> |             |
+
+### プロファイルカードのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface ProfileCardProperties
+```
+
+説明はありません。
+
+## `src/components/organisms/forge-site-footer/forge-site-footer`
+
+### Forgeサイトフッター
+
+**種類:** 関数
+
+```typescript
+function ForgeSiteFooter(properties: Readonly<SiteFooterProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------ | ----------- |
+|プロパティ |読み取り専用<SiteFooterProperties> |             |
+
+### サイトフッター列
+
+**種類:** インターフェース
+
+```typescript
+export interface SiteFooterColumn
+```
+
+説明はありません。
+
+### サイトフッターリンク
+
+**種類:** インターフェース
+
+```typescript
+export interface SiteFooterLink
+```
+
+説明はありません。
+
+### サイトフッターのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface SiteFooterProperties
+```
+
+説明はありません。
+
+## `src/components/organisms/forge-split-pane/forge-split-pane`
+
+### ForgeSplitPane
+
+**種類:** 関数
+
+```typescript
+function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------- | ----------- |
+|プロパティ |読み取り専用<SplitPaneProperties> |             |
+
+### SplitPaneプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface SplitPaneProperties
+```
+
+説明はありません。
+
+## `src/components/organisms/forge-stats-section/forge-stats-section`
+
+### ForgeStatsセクション
+
+**種類:** 関数
+
+```typescript
+function ForgeStatsSection(properties: Readonly<StatsSectionProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | -------------------------------- | ----------- |
+|プロパティ |読み取り専用<StatsSectionProperties> |             |
+
+### 統計項目
+
+**種類:** インターフェース
+
+```typescript
+export interface StatItem
+```
+
+説明はありません。
+
+### 統計セクションのプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface StatsSectionProperties
 ```
 
 説明はありません。
@@ -2304,29 +4083,13 @@ export interface NavbarProperties
 function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
-`ForgeTable` — ニュートラルな JSX 言語で一度作成された並べ替え可能なデータ テーブル
-そして、`@mission-platform/vite-plugin-forge` によって React または Vue に直接コンパイルされます。
-
-`columns`/`rows` を、クリックして並べ替えるセマンティック `<table>` としてレンダリングします。
-`onSort` コールバックを起動するヘッダー (asc → desc → unsorted を循環)、
-オプションのキャプション、読み込み中のオーバーレイ、および空の状態。セルのテキストがレンダリングされます
-構成されたニュートラルな {@link ForgeTypography} を通じて。ソート状態は保持されます
-ニュートラルな {@link useState}/{@link useMemo} フック。独自のスタイルを持っています
-同じ場所にある CSS モジュール `forge-table.module.scss` を通じて。
-
-元の Vue SFC は行タイプに対して汎用であり、構成されていました。
-`ForgeTableHead`/`ForgeTableBody` サブコンポーネント、`sort` 発行が使用され、公開されました
-列ごとにスコープ指定された `cell-<key>` スロット。ニュートラルバージョンでは、
-`Record<string, unknown>` 行、ヘッド/ボディをインライン化、`onSort` を使用
-コールバックを呼び出し、各列のオプションを通じてセルごとのレンダリングを駆動します。
-`render` フォーマッタ (スコープ指定されたセル スロットは削除されます) — 方法と一致しています
-他の移行されたコンポーネントはスコープ付きスロットを削除しました。
+説明はありません。
 
 #### パラメータ
 
-| 名前       | タイプ                        | 説明 |
-| ---------- | ----------------------------- | ---- |
-| プロパティ | 読み取り専用<TableProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------- | ----------- |
+|プロパティ |読み取り専用<TableProperties> |             |
 
 ### 並べ替え方向
 
@@ -2357,6 +4120,104 @@ export interface TableProperties
 ```
 
 説明はありません。
+
+## `src/components/organisms/forge-testimonials-section/forge-testimonials-section`
+
+### Forgeお客様の声セクション
+
+**種類:** 関数
+
+```typescript
+function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectionProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | --------------------------------------- | ----------- |
+|プロパティ |読み取り専用<TestimonialsSectionProperties> |             |
+
+### お客様の声
+
+**種類:** インターフェース
+
+```typescript
+export interface Testimonial
+```
+
+説明はありません。
+
+### お客様の声セクションプロパティ
+
+**種類:** インターフェース
+
+```typescript
+export interface TestimonialsSectionProperties
+```
+
+説明はありません。
+
+## `src/components/organisms/forge-transfer-list/forge-transfer-list`
+
+### ForgeTransferList
+
+**種類:** 関数
+
+```typescript
+function ForgeTransferList(properties: Readonly<TransferListProperties>): MpElement;
+```
+
+説明はありません。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ---------- | -------------------------------- | ----------- |
+|プロパティ |読み取り専用<TransferListProperties> |             |
+
+### 転送アイテム
+
+**種類:** インターフェース
+
+```typescript
+export interface TransferItem
+```
+
+説明はありません。
+
+### TransferListProperties
+
+**種類:** インターフェース
+
+```typescript
+export interface TransferListProperties
+```
+
+説明はありません。
+
+## `src/components/organisms/forge-tree-view/forge-tree-view-item`
+
+### ツリービューラベルスコープ
+
+**種類:** インターフェース
+
+```typescript
+export interface TreeViewLabelScope
+```
+
+node ごとに、{@link ForgeTreeView} の `label` (スコープ付き) スロットに渡されるスコープ。
+
+### ツリービューノード
+
+**種類:** インターフェース
+
+```typescript
+export interface TreeViewNode
+```
+
+{@link ForgeTreeView} によってレンダリングされたツリー内の node。
 
 ## `src/components/organisms/forge-tree-view/forge-tree-view`
 
@@ -2391,29 +4252,9 @@ function ForgeTreeView(properties: Readonly<TreeViewProperties>): MpElement;
 
 #### パラメータ
 
-| 名前       | タイプ                           | 説明 |
-| ---------- | -------------------------------- | ---- |
-| プロパティ | 読み取り専用<TreeViewProperties> |      |
-
-### ツリービューラベルスコープ
-
-**種類:** インターフェース
-
-```typescript
-export interface TreeViewLabelScope
-```
-
-node ごとに、{@link ForgeTreeView} の `label` (スコープ付き) スロットに渡されるスコープ。
-
-### ツリービューノード
-
-**種類:** インターフェース
-
-```typescript
-export interface TreeViewNode
-```
-
-{@link ForgeTreeView} によってレンダリングされたツリー内の node。
+|名前 |タイプ |説明 |
+| ---------- | ---------------------------- | ----------- |
+|プロパティ |読み取り専用<TreeViewProperties> |             |
 
 ### ツリービューのプロパティ
 
@@ -2453,9 +4294,9 @@ function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElemen
 
 #### パラメータ
 
-| 名前       | タイプ                              | 説明 |
-| ---------- | ----------------------------------- | ---- |
-| プロパティ | 読み取り専用<VirtualListProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------- | ----------- |
+|プロパティ |読み取り専用<VirtualListProperties> |             |
 
 ### VirtualListItemScope
 
@@ -2465,7 +4306,7 @@ function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElemen
 export interface VirtualListItemScope
 ```
 
-レンダリングされた行ごとに {@link ForgeVirtualList} の `row` (スコープ付き) スロットに渡されるスコープ。
+レンダリングされた行ごとに、{@link ForgeVirtualList} の `row` (スコープ付き) スロットに渡されるスコープ。
 
 ### VirtualListプロパティ
 
@@ -2504,9 +4345,9 @@ Vue by `@mission-platform/vite-plugin-forge`;内の行のみをレンダリン�
 
 #### パラメータ
 
-| 名前       | タイプ                                   | 説明 |
-| ---------- | ---------------------------------------- | ---- |
-| プロパティ | 読み取り専用<VirtualLogViewerProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------------ | ----------- |
+|プロパティ |読み取り専用<VirtualLogViewerProperties> |             |
 
 ### ログエントリ
 
@@ -2575,9 +4416,9 @@ unsorted) `onSort` コールバックを起動します。ボディ行は `onRow
 
 #### パラメータ
 
-| 名前       | タイプ                               | 説明 |
-| ---------- | ------------------------------------ | ---- |
-| プロパティ | 読み取り専用<VirtualTableProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | -------------------------------- | ----------- |
+|プロパティ |読み取り専用<VirtualTableProperties> |             |
 
 ### 仮想テーブルセルスコープ
 
@@ -2641,9 +4482,9 @@ function ForgeVirtualTabs(properties: Readonly<VirtualTabsProperties>): MpElemen
 
 #### パラメータ
 
-| 名前       | タイプ                              | 説明 |
-| ---------- | ----------------------------------- | ---- |
-| プロパティ | 読み取り専用<VirtualTabsProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------------- | ----------- |
+|プロパティ |読み取り専用<VirtualTabsProperties> |             |
 
 ### VirtualTabPanelScope
 
@@ -2675,13 +4516,13 @@ export interface VirtualTabsProperties
 function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement;
 ```
 
-`ForgeVirtualTreeView` — 表示を平坦化する仮想スクロール ツリー
-ノードを 1 つのリストにまとめ、ビューポート内の行のみをレンダリングします。
+`ForgeVirtualTreeView` — 表示されるツリーを平坦化する仮想スクロール ツリー
+ノードを単一のリストにまとめ、ビューポート内の行のみをレンダリングします。
 数万のノードを持つツリーは滑らかなままです。で一度執筆されました
 中立的な JSX 方言であり、直接 React または Vue にコンパイルされます。
 `@mission-platform/vite-plugin-forge`;開いた状態とスクロール位置を使用します
 ニュートラルフック。各行は、スコープ指定された `row` スロットを通じてカスタマイズできます。
-(`{ node, depth, isOpen, toggle, select }`) 組み込みのラベルに戻ります
+(`{ node, depth, isOpen, toggle, select }`) 組み込みラベルにフォールバックします
 展開/折りたたみ山形付き。 `forge-virtual-tree-view.module.scss` を通じてスタイリングを所有しています。
 
 元の Vue SFC は `ForgeTreeNodeLabel` を構成し、スコープ付き **デフォルト** を使用しました
@@ -2693,9 +4534,9 @@ function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): 
 
 #### パラメータ
 
-| 名前       | タイプ                                  | 説明 |
-| ---------- | --------------------------------------- | ---- |
-| プロパティ | 読み取り専用<VirtualTreeViewProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ----------------------------------- | ----------- |
+|プロパティ |読み取り専用<VirtualTreeViewProperties> |             |
 
 ### ツリーノード
 
@@ -2756,9 +4597,9 @@ helper) と `eyebrow`/`title`/`subtitle` は文字列プロパティです。
 
 #### パラメータ
 
-| 名前       | タイプ                       | 説明 |
-| ---------- | ---------------------------- | ---- |
-| プロパティ | 読み取り専用<HeroProperties> |      |
+|名前 |タイプ |説明 |
+| ---------- | ------------------------ | ----------- |
+|プロパティ |読み取り専用<HeroProperties> |             |
 
 ### ヒーローアライン
 
@@ -2790,9 +4631,284 @@ export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 垂直パディングスケール — 標準的な 2xs → 2xl スケール。
 
+## `src/utils/date-time/date-time`
+
+### ブラウザタイムゾーンラベル
+
+**種類:** 関数
+
+```typescript
+function browserTimezoneLabel(): string;
+```
+
+ブラウザーのタイムゾーンの IANA 名、または使用できない場合は `'Local'`。
+
+### クランプ
+
+**種類:** 関数
+
+```typescript
+function clamp(value: number, min: number, max: number): number;
+```
+
+数値を `[min, max]` の範囲に固定します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |番号 |             |
+|分 |番号 |             |
+|最大 |番号 |             |
+
+### DateRange
+
+**種類:** インターフェース
+
+```typescript
+export interface DateRange
+```
+
+`{ start, end }` ISO 日付範囲 (`YYYY-MM-DD`)。
+
+### 日時範囲
+
+**種類:** インターフェース
+
+```typescript
+export interface DateTimeRange
+```
+
+`{ start, end, timezone }` 日時範囲 (`YYYY-MM-DD HH:MM[:SS]`)。
+
+### 表示時間
+
+**種類:** 関数
+
+```typescript
+function displayTime(value: string, withSeconds: boolean): string;
+```
+
+保存された時刻文字列を構成された精度に正規化します (空は空のままです)。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ------- | ----------- |
+|値 |文字列 |             |
+|秒付き |ブール値 |             |
+
+### formatDateRange
+
+**種類:** 関数
+
+```typescript
+function formatDateRange(value: DateRange | undefined): string;
+```
+
+ISO 日付範囲を `start → end` 概要にフォーマットします (空の部分は折りたたまれます)。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ---------------------- | ----------- |
+|値 |日付範囲 \|未定義 |             |
+
+### 形式日付時刻
+
+**種類:** 関数
+
+```typescript
+function formatDateTime(date: string, parts: TimeParts, withSeconds: boolean): string;
+```
+
+`YYYY-MM-DD` の日付と時刻の部分を `YYYY-MM-DD HH:MM[:SS]` 文字列に結合します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | --------- | ----------- |
+|日付 |文字列 |             |
+|部品 |時間パーツ |             |
+|秒付き |ブール値 |             |
+
+### フォーマット時間
+
+**種類:** 関数
+
+```typescript
+function formatTime(parts: TimeParts, withSeconds: boolean): string;
+```
+
+時/分(/秒)コンポーネントを `HH:MM` または `HH:MM:SS` にフォーマットします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | --------- | ----------- |
+|部品 |時間パーツ |             |
+|秒付き |ブール値 |             |
+
+### フォーマット時間範囲
+
+**種類:** 関数
+
+```typescript
+function formatTimeRange(value: TimeRange | undefined, withSeconds: boolean): string;
+```
+
+構成された精度で時間範囲を `start → end` 概要にフォーマットします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----------- | ---------------------- | ----------- |
+|値 |時間範囲 \|未定義 |             |
+|秒付き |ブール値 |             |
+
+### 営業時間
+
+**種類:** 定数
+
+```typescript
+export const HOURS: readonly number[];
+```
+
+選択可能な時間 (0 ～ 23)、分 (0 ～ 59)、および秒 (0 ～ 59) のリスト。
+
+### 分
+
+**種類:** 定数
+
+```typescript
+export const MINUTES: readonly number[];
+```
+
+説明はありません。
+
+### パッド
+
+**種類:** 関数
+
+```typescript
+function pad(value: number): string;
+```
+
+数値にゼロを埋め込んで 2 桁にします。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |番号 |             |
+
+### 解析日
+
+**種類:** 関数
+
+```typescript
+function parseDate(value: string): Date | undefined;
+```
+
+`YYYY-MM-DD` ISO 日付文字列を `Date` (現地の午前 0 時) または `undefined` に解析します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |文字列 |             |
+
+### 解析日時
+
+**種類:** 関数
+
+```typescript
+function parseDateTime(value: string): { date: string } & TimeParts;
+```
+
+`YYYY-MM-DD HH:MM[:SS]` (または ISO `T`/`Z`) 文字列を日付と時刻の部分に分割します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |文字列 |             |
+
+### 解析時間
+
+**種類:** 関数
+
+```typescript
+function parseTime(value: string): TimeParts;
+```
+
+`HH:MM[:SS]` 文字列を時/分/秒のコンポーネントに解析します。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ----- | ------ | ----------- |
+|値 |文字列 |             |
+
+### 範囲
+
+**種類:** 関数
+
+```typescript
+function range(length: number): number[];
+```
+
+`[0, 1, …, length - 1]`。
+
+#### パラメータ
+
+|名前 |タイプ |説明 |
+| ------ | ------ | ----------- |
+|長さ |番号 |             |
+
+### 秒
+
+**種類:** 定数
+
+```typescript
+export const SECONDS: readonly number[];
+```
+
+説明はありません。
+
+### 時間部分
+
+**種類:** インターフェース
+
+```typescript
+export interface TimeParts
+```
+
+解析された時刻の時/分/秒の構成要素。
+
+### 時間範囲
+
+**種類:** インターフェース
+
+```typescript
+export interface TimeRange
+```
+
+`{ start, end }` 時間範囲 (`HH:MM` または `HH:MM:SS`)。
+
+### タイムゾーンモード
+
+**種類：**タイプ
+
+```typescript
+export type TimezoneMode = 'browser' | 'utc';
+```
+
+日付と時刻の範囲がブラウザー ゾーンで解釈されるか、UTC で解釈されるか。
+
 ## `src/utils/pointer-drag/pointer-drag`
 
-### beginPointerドラッグ
+### beginPointerDrag
 
 **種類:** 関数
 
@@ -2801,18 +4917,18 @@ function beginPointerDrag(handlers: PointerDragHandlers): () => void;
 ```
 
 ウィンドウ追跡ポインタのドラッグを開始します。 `pointermove`/`pointerup`/を添付します
-`pointercancel` リスナーを `window` に転送し、`handlers.onMove` に転送します。
+`pointercancel` リスナーから `window` へ、転送は `handlers.onMove` へ、
 そしてリリース時にリスナーを削除し、`handlers.onEnd` を呼び出します。を返します
 ドラッグを早期に終了するディスポーザ (リスナーも削除します)。ノーオペオン
 サーバー (`window` なし)。
 
 #### パラメータ
 
-| 名前       | タイプ                       | 説明 |
-| ---------- | ---------------------------- | ---- |
-| ハンドラー | ポインタードラッグハンドラー |      |
+|名前 |タイプ |説明 |
+| -------- | ------------------- | ----------- |
+|ハンドラー |ポインタードラッグハンドラー |             |
 
-### ポインタードラッグハンドラー
+### PointerDragHandlers
 
 **種類:** インターフェース
 

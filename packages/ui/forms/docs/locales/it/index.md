@@ -20,10 +20,7 @@ preimpostazioni `@mission-platform/typescript-config/framework-<name>`).
 
 ### `ForgeSchemaForm`
 
-Il componente principale per il rendering di moduli basati sui dati. Richiede una definizione di schema JSON e genera automaticamente il file
-widget dell'interfaccia utente corrispondenti e logica di convalida.
-
-#### Caratteristiche principali:
+#### Key Features:
 
 - **Schema-Driven**: interamente configurato tramite JSON Schema. Un singolo oggetto esegue il rendering di un modulo in un solo passaggio; una serie di oggetti
   crea una procedura guidata in più passaggi.
@@ -69,7 +66,7 @@ const MyComponent = () => (
 
 Uno strumento di creazione visiva che consente ai non sviluppatori di creare schemi di moduli senza scrivere manualmente JSON.
 
-#### Caratteristiche principali:
+#### Key Features:
 
 - **Visual Canvas**: editor di stile drag-and-drop per organizzare i campi e definirne le proprietà.
 - **Configurazione guidata**: una scheda "Passaggi" dedicata per la gestione del flusso in più passaggi nelle procedure guidate.
@@ -96,7 +93,7 @@ Per evitare cicli di dipendenza mantenendo la parità del framework:
 
 ## Stili
 
-Il pacchetto fornisce assistenti condivisi per l'accessibilità tramite:
+Il pacchetto fornisce assistenti per l'accessibilità condivisa tramite:
 
 ```ts
 import '@mission-platform/forms/styles';

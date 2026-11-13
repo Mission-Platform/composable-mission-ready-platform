@@ -7,11 +7,11 @@
 
 コンポーザブルは、Mission Platform 内でリアクティブ ロジックをカプセル化して再利用するための主な方法です。これらを確実にするために
 ロジックのユニットは、サポートされているすべての UI フレームワーク間で移植可能であり、
-によって提供されるフレームワークに依存しないフック `@mission-platform/forge-jsx`.
+`@mission-platform/forge-jsx` によって提供されるフレームワークに依存しないフック。
 
 ## ディレクトリのレイアウト
 
-各コンポーザブルは、コンポーザブル内の独自の名前付きサブディレクトリに存在する必要があります。 `src/composables/`、同じ場所でのテストを伴う
+各コンポーザブルは、同じ場所に配置されたテストを伴って、`src/composables/` 内の独自の名前付きサブディレクトリに存在する必要があります。
 ファイルとローカルバレル。
 
 ```text
@@ -25,14 +25,14 @@ src/composables/
 
 ## オーサリングルール
 
-1. **Forge フックを使用**: リアクティブ プリミティブのみをインポートします (例: `useState`, `useEffect`, `useMemo`, `useRef`) から
-   `@mission-platform/forge-jsx`。 ～から直接輸入しないでください `vue` または `react`。
-2. **命名規則**: コンポーザブル名にはケバブケースを使用し、接頭辞を付ける必要があります。 `use-` (e.g., `use-media-query`)。
-3. **SSR の安全性**: ロジックがサーバーサイド レンダリングに対して安全であることを確認します。次のようなブラウザ専用 API へのアクセスを保護します。 `window`,
-   `document`、 または `localStorage`。
+1. **Forge フックを使用**: リアクティブ プリミティブ (`useState`、`useEffect`、`useMemo`、`useRef` など) のみをインポートします。
+   `@mission-platform/forge-jsx`。 `vue` または `react` から直接インポートしないでください。
+2. **命名規則**: コンポーザブル名にはケバブケースを使用し、接頭辞として `use-` を付ける必要があります (例: `use-media-query`)。
+3. **SSR の安全性**: ロジックがサーバーサイド レンダリングに対して安全であることを確認します。 `window` などのブラウザ専用 API へのアクセスを保護します。
+   `document`、または `localStorage`。
 4. **UI コンポーネントなし**: コンポーザブルはロジックに重点を置く必要があります。 UI コンポーネントを直接返したり操作したりしないでください。代わりに、
    状態、参照、またはコールバックを返します。
-5. **必須テスト**: すべてのコンポーザブルには、同じ場所に `.spec.ts` ファイルを使用して Vitest.
+5. **必須テスト**: すべてのコンポーザブルには、Vitest を使用して同じ場所に `.spec.ts` ファイルが存在する必要があります。
 
 ## 基本的な例
 
@@ -64,9 +64,10 @@ export function useEventListener(
 
 ## 足場
 
-新しいコンポーザブルを作成する最も速い方法は、Mission Platform Developer MCP ツールを使用することです。
+新しいコンポーザブルを作成する最も速い方法は、接続された Mission Platform 上の `scaffold_composable` ツールを使用することです。
+開発者向け MCP サーバー。これは MCP ツール呼び出しの例であり、シェル コマンドではありません。
 
-```bash
+```text
 # Example: Creating a new 'use-click-outside' composable in the 'observers' package
 scaffold_composable(name="use-click-outside", package="observers", apply=true)
 ```
@@ -74,6 +75,6 @@ scaffold_composable(name="use-click-outside", package="observers", apply=true)
 ## 関連ガイド
 
 - [パッケージ開発](package-development.md)
-- [アトミックコンポーネント設計](atomic-component-design.md)
+- [原子コンポーネント設計](atomic-component-design.md)
 - [ストアオーサリング](store-authoring.md)
-- [ユーティリティオーサリング](util-authoring.md)
+- [利用オーサリング](util-authoring.md)

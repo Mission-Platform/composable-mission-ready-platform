@@ -19,29 +19,28 @@
 function seoPlugin(options: SeoPluginOptions): Plugin;
 ```
 
-を作成します Vite 書き込むプラグイン `robots.txt` そして `sitemap.xml` に
+を作成します Vite を書き込むプラグイン `robots.txt` そして `sitemap.xml` に
 プロジェクトの `publicDir` (または {@link SeoPluginOptions.outDir}) の開始時に
 すべてのビルドと開発サーバーの実行。
 
 #### パラメータ
 
-| 名前       | タイプ              | 説明 |
-| ---------- | ------------------- | ---- |
-| オプション | SeoPluginオプション |      |
+|名前 |タイプ |説明 |
+| ------- | ---------------- | ----------- |
+|オプション | SeoPluginオプション |             |
 
 #### 契約
 
 - **@例：** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 
@@ -53,29 +52,28 @@ robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
 function seoPlugin(options: SeoPluginOptions): Plugin
 ````
 
-を作成します Vite 書き込むプラグイン `robots.txt` そして `sitemap.xml` に
+を作成します Vite を書き込むプラグイン `robots.txt` そして `sitemap.xml` に
 プロジェクトの `publicDir` (または {@link SeoPluginOptions.outDir}) の開始時に
 すべてのビルドと開発サーバーの実行。
 
 #### パラメータ
 
-| 名前       | タイプ              | 説明 |
-| ---------- | ------------------- | ---- |
-| オプション | SeoPluginオプション |      |
+|名前 |タイプ |説明 |
+| ------- | ---------------- | ----------- |
+|オプション | SeoPluginオプション |             |
 
 #### 契約
 
 - **@例：** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 

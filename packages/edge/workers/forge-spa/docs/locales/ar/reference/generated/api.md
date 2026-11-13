@@ -11,6 +11,16 @@
 
 ## `src/index`
 
+### تقصير
+
+**النوع:** ثابت
+
+```typescript
+export const handler: ExportedHandler<Env>;
+```
+
+لم يتم تقديم أي وصف.
+
 ### البيئة
 
 **النوع:** الواجهة

@@ -5,27 +5,25 @@
 > packages/core/forge-jsx/docs/index.md: [packages/core/forge-jsx/docs/index.md](../../index.md)
 > שפה: עברית (he)
 
-שכבת "כתוב פעם אחת, הרצה על Vue 3 ו-React" זעירה נטולת תלות עבור Mission Platform. רכיבים נכתבו פעם אחת
-JSX ומעובד בכל אחת מהמסגרת באמצעות מתאמים קטנים - ללא קודגן בזמן בנייה, ללא מהדר חיצוני (זהו
-אלטרנטיבה מגולגלת ביד לכלים כמו מיטוזיס).
+זמן ריצה JSX זעיר וללא תלות מסגרת ניטרלי עבור Mission Platform.
+רכיבים נכתבו פעם אחת ב-JSX ומעובדים דרך הנפרד
+חבילת `@mission-platform/forge-adapters`.
 
 ## איך זה עובד
 
 ```
-author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ toReactComponent ──▶ React
-                                                          └──▶ toVueComponent  ──▶ Vue 3
+author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ framework adapter ──▶ target framework
 ```
 
 1. רכיבים נכתבים ב-JSX הידור על ידי הטרנספורמציה **הקלאסית** JSX (`jsxFactory: 'h'`,
    `jsxFragmentFactory: 'Fragment'`).
 2. `h(...)` בונה עץ `MpElement` ניטראלי במסגרת וניתנת לסידרה במקום אלמנט React/Vue.
-3. המתאמים לכל מסגרת הולכים על העץ וממפים כל node אל `React.createElement` או `h` של Vue בזמן רינדור.
+3. מתאם מסגרת הולך על העץ הזה וממפה כל node אל היעד
+   פרימיטיביות העיבוד המקוריות של המסגרת.
 
 ## תכונות
 
 - **Runtime JSX Neutral Framework**: זמן ריצה זעיר וללא תלות שבונה עצי `MpElement` הניתנים לסידרה
-- **מתאם Vue 3**: ממיר רכיבים ניטרליים ל-Vue 3 SFCs מקוריים עם תגובתיות מתאימה
-- **מתאם React**: ממיר רכיבים ניטרליים לרכיבי React מקוריים
 - **תמיכה בווים**: ווים בסגנון React ניטרליים למסגרת (`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`)
   שמרכיבים למסגרת המקבילות שלהם
 - **ללא קודגן בזמן בנייה**: בניגוד למיטוזיס או כלים דומים, גישה זו משתמשת במתאמי זמן ריצה במקום בזמן בנייה
@@ -98,7 +96,7 @@ function App() {
 
 #### `h(type, props?, ...children)`
 
-פונקציית המפעל של JSX ניטרלית במסגרת.
+פונקציית המפעל של JSX נייטרלי מסגרת.
 
 **פרמטרים:**
 
@@ -164,28 +162,6 @@ function App() {
 - `dependencies`: מערך תלות
 
 **מחזירה:** פונקציה מזיכרון
-
-### מתאמים
-
-#### `toVueComponent(component)`
-
-ממירה רכיב ניטרלי במסגרת לרכיב Vue 3.
-
-**פרמטרים:**
-
-- `component`: פונקציית רכיבים ניטרליים במסגרת
-
-**החזרות:** הגדרת רכיב Vue
-
-#### `toReactComponent(component)`
-
-ממירה רכיב ניטרלי במסגרת לרכיב React.
-
-**פרמטרים:**
-
-- `component`: פונקציית רכיבים ניטרליים במסגרת
-
-**מחזיר:** פונקציית רכיב React
 
 ## תמיכה ב-TypeScript
 

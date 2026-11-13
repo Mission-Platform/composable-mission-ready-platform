@@ -6,8 +6,8 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 > Langue: Français (fr)
 
 `@mission-platform/phone-number` est une réimplémentation ciblée du cœur de
-Google [numéro de téléphone lib](https://github.com/google/libphonenumber), écrit en
-[AssemblageScript](https://www.assemblyscript.org/) et compilé dans **WebAssembly**. Il analyse, valide, classe et
+Google [libphonenumber](https://github.com/google/libphonenumber), écrit en
+[AssemblyScript](https://www.assemblyscript.org/) et compilé dans **WebAssembly**. Il analyse, valide, classe et
 formate les numéros de téléphone internationaux et est présenté sous la forme d'un module ES autonome sans dépendances d'exécution.
 
 ## Architecture

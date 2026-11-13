@@ -1,8 +1,7 @@
 import { ForgeGrid } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import styles from './forge-grid.module.scss';
-
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * `ForgeGrid` is the write-once component of `@mission-platform/components`.

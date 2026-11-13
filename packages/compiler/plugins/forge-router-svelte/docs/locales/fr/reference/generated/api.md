@@ -27,16 +27,16 @@ Créez des fonctionnalités neutres à partir des primitives SvelteKit (sans fra
 
 #### Paramètres
 
-| Nom    | Tapez                                                                                                                                                                                             | Descriptif |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| entrée | { page : { URL : Pick<URL, 'pathname' \| 'search' \| 'hash'> ; paramètres : Record<string, string> } ; aller à : SvelteKitRouterSurface['aller à']; solvePath ? : (chemin : chaîne) => chaîne ; } |            |
+| Nom | Tapez | Descriptif |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| entrée | { page : { URL : Pick<URL, 'pathname' \| 'search' \| 'hash'> ; paramètres : Record<string, string> } ; aller à : SvelteKitRouterSurface['aller à']; solvePath ? : (chemin : chaîne) => chaîne ; } |             |
 
 ### MpLink
 
 **Genre :** composant
 
 ```typescript
-export const MpLink;
+export MpLink = 'a'
 ```
 
 SvelteKit utilise des ancres normales pour les liens. Le compilateur conserve ce marqueur
@@ -47,7 +47,7 @@ La sortie Svelte peut vérifier l'utilisation neutre de `MpLink` par les auteurs
 **Genre :** composant
 
 ```typescript
-export const MpRouterView;
+export MpRouterView = undefined
 ```
 
 Outlet appartient à l'application dans SvelteKit ; les diagnostics de capacité rejettent `view`.
@@ -64,9 +64,9 @@ Résolvez une cible neutre en une chaîne href.
 
 #### Paramètres
 
-| Nom | Tapez              | Descriptif |
-| --- | ------------------ | ---------- |
-| à   | MpRouteLocationRaw |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
 
 ### setForgeSvelteKitRouter
 
@@ -81,9 +81,9 @@ Les applications appellent généralement cela une fois à partir d'une disposit
 
 #### Paramètres
 
-| Nom      | Tapez                  | Descriptif |
-| -------- | ---------------------- | ---------- |
-| surfaces | SvelteKitRouterSurface |            |
+| Nom | Tapez | Descriptif |
+| ------- | ---------------------- | ----------- |
+| surfaces | SvelteKitRouterSurface |             |
 
 ### SvelteKitRouterSurface
 
@@ -92,8 +92,6 @@ Les applications appellent généralement cela une fois à partir d'une disposit
 ```typescript
 export interface SvelteKitRouterSurface
 ```
-
-Surface SvelteKit minimale utilisée par la cale d'exécution.
 
 ### versMpLocationFromSvelte
 
@@ -110,9 +108,9 @@ Créez un emplacement neutre à partir d'un instantané de page SvelteKit.
 
 #### Paramètres
 
-| Nom  | Tapez                                                                                         | Descriptif |
-| ---- | --------------------------------------------------------------------------------------------- | ---------- |
-| page | { URL : Pick<URL, 'pathname' \| 'search' \| 'hash'> ; paramètres : Record<string, string> ; } |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------------------------------------------------------------------------- | ----------- |
+| page | { URL : Pick<URL, 'pathname' \| 'search' \| 'hash'> ; paramètres : Record<string, string> ; } |             |
 
 ### àSvelteHref
 
@@ -122,14 +120,12 @@ Créez un emplacement neutre à partir d'un instantané de page SvelteKit.
 function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string;
 ```
 
-Sérialisez une cible neutre pour la navigation SvelteKit.
-
 #### Paramètres
 
-| Nom          | Tapez                       | Descriptif |
-| ------------ | --------------------------- | ---------- |
-| à            | MpRouteLocationRaw          |            |
-| résoudrePath | (chemin : chaîne) => chaîne |            |
+| Nom | Tapez | Descriptif |
+| ----------- | ------------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
+| résoudrePath | (chemin : chaîne) => chaîne |             |
 
 ### useMpNavigation
 
@@ -171,4 +167,4 @@ Lisez l'objet de capacité neutre soutenu par la navigation SvelteKit.
 export const forgeRouterSvelte;
 ```
 
-Cible de routeur Forge pour les API de page/navigation appartenant aux applications de SvelteKit.
+Cible du routeur Forge pour les API de page/navigation appartenant aux applications de SvelteKit.

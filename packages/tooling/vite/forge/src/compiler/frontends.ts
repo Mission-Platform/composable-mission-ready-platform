@@ -1,4 +1,21 @@
 import { createCompilerDiagnostic } from '@mission-platform/forge-plugin-api';
+import type {
+  CompilerDiagnostic,
+  GenericAstNode,
+  GenericAttribute,
+  GenericAttributeValue,
+  GenericBindingKind,
+  GenericComponent,
+  GenericImport,
+  GenericModuleAst,
+  GenericParameter,
+  GenericRenderChild,
+  GenericRenderNode,
+  GenericStatement,
+  GenericStatementKind,
+  GenericTagKind,
+  SourceBackedExpression,
+} from '@mission-platform/forge-plugin-api';
 
 import {
   buildOxcParentMap,
@@ -21,24 +38,6 @@ import {
   type OxcParentMap,
   type OxcParsedModule,
 } from './oxc.js';
-
-import type {
-  CompilerDiagnostic,
-  GenericAstNode,
-  GenericAttribute,
-  GenericAttributeValue,
-  GenericBindingKind,
-  GenericComponent,
-  GenericImport,
-  GenericModuleAst,
-  GenericParameter,
-  GenericRenderChild,
-  GenericRenderNode,
-  GenericStatement,
-  GenericStatementKind,
-  GenericTagKind,
-  SourceBackedExpression,
-} from '@mission-platform/forge-plugin-api';
 
 /** Source kinds supported by the Forge frontend. */
 export type ForgeSourceKind = 'js' | 'jsx' | 'ts' | 'tsx';

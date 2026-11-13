@@ -13,7 +13,7 @@ dans les composants natifs Vue 3 et React.
 
 Toutes les importations utilisent le seul spécificateur `@mission-platform/forms`. Le framework est sélectionné une fois pour l'ensemble de l'application via
 la condition d'export `mp:<framework>` — `resolve.conditions` (voir `defineFrameworkAppConfig` /
-`frameworkResolveConditions` de `@mission-platform/vite-config`) et `customConditions` (via le
+`frameworkResolveConditions` à partir de `@mission-platform/vite-config`) et `customConditions` (via le
 `@mission-platform/typescript-config/framework-<name>` préréglages).
 
 ## Composants de base
@@ -96,7 +96,7 @@ Pour éviter les cycles de dépendance tout en maintenant la parité du framewor
 
 ## Styles
 
-Le package fournit des assistants d’accessibilité partagés via :
+Le package fournit des aides à l’accessibilité partagée via :
 
 ```ts
 import '@mission-platform/forms/styles';

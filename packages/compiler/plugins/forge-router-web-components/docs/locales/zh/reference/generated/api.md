@@ -29,11 +29,21 @@ export class MpRouterLinkElement extends HTMLElement
 export class MpRouterOutletElement extends HTMLElement
 ```
 
-安装路由的中性 DOM 视图的路由器出口。应用程序可能会通过
-当视图需要自定义生命周期时，将 `viewAdapter` 发送给路由器；否则一个
-Node、字符串或 `route.component` 中的 DOM 工厂直接渲染。
+Router outlet that mounts a route's neutral DOM view.应用程序可能会通过
+`viewAdapter` to the router when views need a custom lifecycle;否则一个
+Node, string, or DOM factory in `route.component` is rendered directly.
 
-### 注册路由器元素
+### MpRouterViewElement
+
+**种类：**组件
+
+```typescript
+export class MpRouterViewElement extends MpRouterOutletElement
+```
+
+没有提供描述。
+
+### registerRouterElements
 
 **种类：**功能
 
@@ -45,9 +55,9 @@ function registerRouterElements(options: RegisterRouterElementsOptions = {}): vo
 
 #### 参数
 
-| 名称 | 类型               | 描述 |
-| ---- | ------------------ | ---- |
-| 选项 | 注册路由器元素选项 |      |
+|名称 |类型 |描述 |
+| ------- | ----------------------------- | ----------- |
+|选项 |注册路由器元素选项 |             |
 
 ## `src/runtime/history`
 
@@ -63,9 +73,9 @@ function createBrowserHistory(win?: Window): MpBrowserHistory;
 
 #### 参数
 
-| 名称 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| 赢   | 窗口 |      |
+|名称 |类型 |描述 |
+| ---- | ------ | ----------- |
+|赢 |窗口|             |
 
 ### 创建内存历史记录
 
@@ -79,9 +89,9 @@ function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 
 #### 参数
 
-| 名称     | 类型 | 描述 |
-| -------- | ---- | ---- |
-| 初始网址 |      |      |
+|名称 |类型 |描述 |
+| ---------- | ---- | ----------- |
+|初始网址 |      |             |
 
 ### 创建网络历史
 
@@ -93,7 +103,7 @@ function createWebHistory(): MpHistory;
 
 没有提供描述。
 
-### Mp浏览器历史记录
+### MpBrowserHistory
 
 **种类：**组件
 
@@ -126,8 +136,6 @@ export const ForgeRouterLink;
 没有提供描述。
 
 #### 合同
-
-- **@deprecated:** 更喜欢 {@link MpLink}；为现有运行时使用者保留。
 
 ### ForgeRouterOutlet
 
@@ -189,9 +197,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### 参数
 
-| 名称 | 类型                | 描述 |
-| ---- | ------------------- | ---- |
-| 至   | MpRouteLocation原始 |      |
+|名称 |类型 |描述 |
+| ---- | ------------------ | ----------- |
+|至 | MpRouteLocation原始|             |
 
 ### 设置ForgeRouter
 
@@ -205,9 +213,9 @@ function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 
 #### 参数
 
-| 名称   | 类型                          | 描述 |
-| ------ | ----------------------------- | ---- |
-| 路由器 | MpWebComponentsRou​​ter<View> |      |
+|名称 |类型 |描述 |
+| ------ | --------------------------- | ----------- |
+|路由器| MpWebComponentsRou​​ter<View> |             |
 
 ### 使用ForgeNavigation
 
@@ -297,11 +305,21 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 
 #### 参数
 
-| 名称 | 类型                                 | 描述                                 |
-| ---- | ------------------------------------ | ------------------------------------ |
-| 选项 | MpWebComponentsRou​​terOptions<View> | MpWebComponentsRou​​terOptions<View> |
+|名称 |类型 |描述 |
+| ------- | ---------------------------------- | ----------- |
+|选项 | MpWebComponentsRou​​terOptions<View> | MpWebComponentsRou​​terOptions<View>             |
 
-### MpRouter加载回退
+### 获取活动路由器
+
+**种类：**功能
+
+```typescript
+function getActiveRouter(): MpWebComponentsRouter<unknown> | undefined;
+```
+
+没有提供描述。
+
+### MpRouterLoadingFallback
 
 **种类：**组件
 
@@ -331,7 +349,7 @@ export interface MpWebComponentsRouterOptions<View = unknown>
 
 没有提供描述。
 
-### 路由参考
+### routeHref
 
 **种类：**功能
 
@@ -343,10 +361,26 @@ function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 
 #### 参数
 
-| 名称   | 类型                | 描述 |
-| ------ | ------------------- | ---- |
-| 路由器 | MpRouter适配器      |      |
-| 至     | MpRouteLocation原始 |      |
+|名称 |类型 |描述 |
+| ------ | ------------------ | ----------- |
+|路由器| MpRouter适配器|             |
+|至 | MpRouteLocation原始|             |
+
+### 设置活动路由器
+
+**种类：**功能
+
+```typescript
+function setActiveRouter(router: MpWebComponentsRouter<View> | undefined): void;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ------ | ---------------------------------------- | ----------- |
+|路由器| MpWebComponentsRou​​ter<View> \|未定义 |             |
 
 ## `src/utils/forge-router-web-components`
 

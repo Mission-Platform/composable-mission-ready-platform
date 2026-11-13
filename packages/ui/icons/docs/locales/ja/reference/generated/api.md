@@ -3524,7 +3524,7 @@ export const SUPPORTED_COUNTRY_CODES;
 **種類:** 定数
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS;
+export const COUNTRY_FLAG_SYMBOL_IDS: string[];
 ```
 
 説明はありません。
@@ -3574,7 +3574,7 @@ export interface IconUseProperties
 **種類:** 定数
 
 ```typescript
-export const IconSpriteContext;
+export const IconSpriteContext: MpContext<IconSpriteContextValue>;
 ```
 
 説明はありません。

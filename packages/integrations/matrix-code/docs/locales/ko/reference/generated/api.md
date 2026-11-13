@@ -20,7 +20,7 @@ function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 ```
 
 `ForgeMatrixCode` — 스캔 가능한 2D 매트릭스 바코드를 렌더링합니다(데이터 매트릭스 ECC
-200), 중립 JSX 방언으로 한 번 작성되었으며 바로 React로 컴파일되었습니다.
+200), 중립 JSX 방언으로 한 번 작성되었으며 바로 React으로 컴파일되었습니다.
 또는 `@mission-platform/vite-plugin-forge`의 Vue입니다.
 
 페이로드(`value`)는 클라이언트에서 완전히 인코딩됩니다.
@@ -30,12 +30,12 @@ Rust로 작성되고 WebAssembly로 컴파일된 종속성 없는 인코더(자�
 해상도에 독립적인 SVG. 모든 다크 모듈에 대해 단일 `<path>`가 방출됩니다.
 따라서 큰 코드에도 마크업이 간결하게 유지됩니다. 안정적인 스캔을 위해서는
 어두운/밝은 색상은 기본적으로 테마 토큰이 아닌 solid 흰색 바탕에 검정색으로 설정됩니다.
-그러나 둘 다 `color` / `background`를 통해 재정의할 수 있습니다.
+그러나 둘 다 `color` / `background`을 통해 재정의할 수 있습니다.
 
 데이터 모듈은 정사각형, 둥근 정사각형 또는 점으로 그릴 수 있습니다.
 (`moduleShape`); 어두운 채우기는 2스톱 선형 또는 방사형 `gradient`을 허용합니다.
 옵션 센터 `logo`는 백킹 플레이트 위에 겹쳐져 있습니다(작게 유지하십시오.
-Data Matrix에는 조정 가능한 오류 수정 기능이 없으므로 기호는 계속 스캔됩니다.
+Data Matrix에는 조정 가능한 오류 수정 기능이 없기 때문에 기호는 계속 스캔됩니다.
 수준).
 
 선택적 작업 도구 모음(`showActions`을 통해 활성화됨 - `true`은 모든
@@ -46,13 +46,13 @@ Data Matrix에는 조정 가능한 오류 수정 기능이 없으므로 기호�
 
 `computed` 렌더링은 중립적인 {@link useMemo}입니다. `error` 케이스는 다음과 같습니다.
 `onError` 콜백 소품(인코딩이 실패할 때 호출됨) 자신만의 스타일을 소유하고 있습니다.
-공동 배치된 CSS 모듈 `forge-matrix-code.module.scss`을 통해.
+공동 배치된 CSS 모듈 `forge-matrix-code.module.scss`를 통해.
 
 #### 매개변수
 
-| 이름 | 유형                            | 설명 |
-| ---- | ------------------------------- | ---- |
-| 속성 | 읽기 전용<MatrixCodeProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ------------------------------ | ----------- |
+| 속성 | 읽기 전용<MatrixCodeProperties> |             |
 
 ### MatrixCodeActions
 
@@ -103,72 +103,3 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 ```
 
 코드의 각 모듈을 그리는 데 사용되는 모양입니다.
-
-## `src/encoder/index`
-
-### 인코딩매트릭스
-
-**종류:** 기능
-
-```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
-```
-
-`data`을 주어진 `symbology`의 2D 매트릭스 바코드로 인코딩하여
-처음 사용할 때 동기적으로 인코더 아티팩트를 위조합니다.
-
-#### 매개변수
-
-| 이름   | 유형            | 설명 |
-| ------ | --------------- | ---- |
-| 기호   | 매트릭스 기호학 |      |
-| 데이터 | 문자열          |      |
-
-#### 계약
-
-- **@throws:** 페이로드가 기호에 대해 유효하지 않은 경우(비어 있거나
-  지원되는 기호에 비해 너무 큽니다).
-
-### encodeMatrixAsync
-
-**종류:** 기능
-
-```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
-```
-
-`data`을 주어진 `symbology`의 2D 매트릭스 바코드로 인코딩하여
-처음 사용할 때 인코더 아티팩트를 비동기적으로 위조합니다.
-
-#### 매개변수
-
-| 이름   | 유형            | 설명 |
-| ------ | --------------- | ---- |
-| 기호   | 매트릭스 기호학 |      |
-| 데이터 | 문자열          |      |
-
-#### 계약
-
-- **@throws:** 페이로드가 기호에 유효하지 않은 경우.
-
-### 매트릭스코드
-
-**종류:** 인터페이스
-
-```typescript
-export interface MatrixCode
-```
-
-압축형 매트릭스 바코드: 치수와 모듈 비트의 주요 행 목록
-(`0` = 밝음, `1` = 어두움).
-
-### 매트릭스 기호
-
-**종류:** 유형
-
-```typescript
-export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
-```
-
-2D 매트릭스 기호는 이 인코더가 지원합니다. 첫 번째 인수로 전달됨
-{@link encodeMatrix} / {@link encodeMatrixAsync}로.

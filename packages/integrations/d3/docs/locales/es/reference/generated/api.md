@@ -43,16 +43,16 @@ function useD3(draw: D3Draw<E>, dependencies: MpDependencyList = []): MpRef<E | 
 Devuelve una referencia para adjuntarla a un elemento (`ref={reference}`) y ejecuta `draw`
 contra la selección D3 de ese elemento.
 
-El efecto se ejecuta después del montaje y se vuelve a ejecutar cada vez que `dependencies` cambia; cuando
+El efecto se ejecuta después del montaje y se vuelve a ejecutar cada vez que cambia `dependencies`; cuando
 el árbitro aún está vacío, se salta el sorteo. `draw` puede devolver un desmontaje que
 se ejecuta antes del próximo rediseño y al desmontar, manteniendo las transiciones y los oyentes
 ordenado: de manera idéntica en React y Vue.
 
 #### Parámetros
 
-| Nombre       | Tipo             | Descripción |
+| Nombre | Tipo | Descripción |
 | ------------ | ---------------- | ----------- |
-| dibujar      | D3Draw<E>        |             |
+| dibujar | D3Draw<E> |             |
 | dependencias | MpDependencyList |             |
 
 ## `src/utils/margins`
@@ -81,9 +81,9 @@ nunca produzca dimensiones negativas (que las escalas D3 rechazan).
 
 #### Parámetros
 
-| Nombre | Tipo               | Descripción |
-| ------ | ------------------ | ----------- |
-| caja   | Cuadro de gráficos |             |
+| Nombre | Tipo | Descripción |
+| ---- | -------- | ----------- |
+| caja | Cuadro de gráficos |             |
 
 ### Dimensiones interiores
 
@@ -124,12 +124,12 @@ objeto parcial (los lados faltantes son por defecto `0`).
 function resolveMargin(input?: MarginInput): Margin;
 ```
 
-Normalice un {@link MarginInput} en un {@link Margin} completo. un número es
+Normalice un {@link MarginInput} en un {@link Margin} completo. un numero es
 aplicado a todos los lados; un objeto parcial mantiene sus lados proporcionados y sus valores predeterminados
 el resto a `0`. `undefined` produce un margen cero.
 
 #### Parámetros
 
-| Nombre  | Tipo              | Descripción |
-| ------- | ----------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ----- | ----------- | ----------- |
 | entrada | Margen de entrada |             |

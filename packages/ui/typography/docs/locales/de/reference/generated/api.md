@@ -27,14 +27,14 @@ Es rendert seinen Standard-Slot-Inhalt im semantischen Tag für den ausgewählte
 `variant` (überschreibbar mit `as`), wobei die Typskala der Variante plus angewendet wird
 optionale Modifikatoren `weight`, `color`, `horizontalAlign`, `verticalAlign` und `truncate`.
 
-Von hier kommen auch Links, auf zwei Arten: `variant="link"` für eigenständigen Linktext,
+Links kommen auch von hier, auf zwei Arten: `variant="link"` für eigenständigen Linktext,
 und `href` für **jede** Variante, sodass eine Überschrift oder Bildunterschrift ein Link ohne sein kann
 hinterlässt eine eigene Typenskala. In beiden Fällen wird das Element als `<a>` mit dem gerendert
 Link-Farbe, Hover/Active und `:visited`-Behandlung, ein sichtbarer Fokusring
 und der gewählte `underline`-Modus (standardmäßig `'always'`); `target="_blank"` erhält
 `rel="noopener noreferrer"` automatisch. Es besitzt seine
 Styling durch das parallel befindliche CSS-Modul `forge-typography.module.scss`
-(vom zweistufigen Compiler auf jedes Framework übertragen, also die Komponente
+(wird vom zweistufigen Compiler, also der Komponente, auf jedes Framework übertragen
 liefert sein eigenes `@layer mp.typography` CSS); Die gehashten Klassennamen sind
 zusammengestellt mit dem Framework-neutralen {@link classNames}-Helfer.
 
@@ -46,9 +46,9 @@ tatsächlich überläuft), stattdessen mit **CSS-Ankerpositionierung** positioni
 
 #### Parameter
 
-| Name          | Geben Sie                              | ein Beschreibung |
-| ------------- | -------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<TypographyProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<TypographyProperties> |             |
 
 ### TypografieFarbe
 
@@ -114,6 +114,26 @@ export type TypographySize = SizeScale;
 ```
 
 Optionales Größentoken – kanonischer Maßstab 2xs → 2xl (überschreibt die Schriftgröße der Variante, wenn sie festgelegt ist).
+
+### TypografieStil
+
+**Art:** Typ
+
+```typescript
+export type TypographyStyle = CSSStyleProperties &
+```
+
+Keine Beschreibung angegeben.
+
+### TypographyStyleProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface TypographyStyleProperties
+```
+
+Komponenteneigene CSS-Werte, die von typografischen Nachkommen und Popup-Inhalten geerbt werden.
 
 ### TypografieZiel
 

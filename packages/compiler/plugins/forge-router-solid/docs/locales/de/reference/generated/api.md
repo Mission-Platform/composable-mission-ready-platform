@@ -28,35 +28,35 @@ Erstellen Sie neutrale Funktionen aus Solid-Router-Primitiven (Framework-frei f�
 
 #### Parameter
 
-| Name    | Geben Sie                                                                                                                                                               | ein Beschreibung |
-| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| Eingabe | { Ort: { Pfadname: Zeichenfolge; Suche: Zeichenfolge; Hash: string }; params?: Record<string, string \| undefined>; navigieren: SolidNavigate; Steckdose?: unbekannt; } |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Eingabe | { Ort: { Pfadname: Zeichenfolge; Suche: Zeichenfolge; Hash: Zeichenfolge }; params?: Record<string, string \| undefined>; navigieren: SolidNavigate; Steckdose?: unbekannt; } |             |
 
 ### MpLink
 
 **Art:** Komponente
 
 ```typescript
-function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
+export function MpLink(properties:
 ```
 
 Solid Ankerkomponenten-Proxy, der über {@link setForgeSolidRouter} gebunden ist.
 
 #### Parameter
 
-| Name          | Geben Sie                                                                             | ein Beschreibung |
-| ------------- | ------------------------------------------------------------------------------------- | ---------------- |
-| Eigenschaften | { href?: string; nach?: MpRouteLocationRaw; Kinder?: unbekannt; ersetzen?: boolean; } |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------------------------------------------------------------- | ----------- |
+| Eigenschaften | { href?: string; nach?: MpRouteLocationRaw; Kinder?: unbekannt; ersetzen?: boolean; } |             |
 
 ### MpRouterView
 
 **Art:** Komponente
 
 ```typescript
-function MpRouterView(): unknown;
+export function MpRouterView(): unknown;
 ```
 
-Solid Outlet-Proxy über {@link setForgeSolidRouter} gebunden.
+Solid Outlet-Proxy, der über {@link setForgeSolidRouter} gebunden ist.
 
 ### auflösenMpLink
 
@@ -70,9 +70,9 @@ Ein neutrales Ziel in eine href-Zeichenfolge auflösen.
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| zu   | MpRouteLocationRaw |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
 
 ### setForgeSolidRouter
 
@@ -87,9 +87,9 @@ Hook-/Call-Formen (`useMpRouter().navigate`, `useMpRoute().query`, …).
 
 #### Parameter
 
-| Name       | Geben Sie          | ein Beschreibung |
-| ---------- | ------------------ | ---------------- |
-| Oberfläche | SolidRouterSurface |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------ | ----------- |
+| Oberfläche | SolidRouterSurface |             |
 
 ### SolidRouterSurface
 
@@ -108,7 +108,7 @@ Minimale Solid Router-Oberfläche, die vom Laufzeit-Shim verwendet wird.
 ```typescript
 function toMpLocationFromSolid(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
@@ -116,10 +116,10 @@ Erstellen Sie einen neutralen Standort aus Solid Router-Standort-/Parameter-Snap
 
 #### Parameter
 
-| Name      | Geben Sie                                               | ein Beschreibung |
-| --------- | ------------------------------------------------------- | ---------------- |
-| Standort  | { Pfadname: string; Suche: Zeichenfolge; Hash: string } |                  |
-| Parameter | Record<string, string \| undefined>                     |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------------------------- | ----------- |
+| Standort | { Pfadname: string; Suche: Zeichenfolge; Hash: string } |             |
+| Parameter | Record<string, string \| undefined> |             |
 
 ### toSolidHref
 
@@ -133,9 +133,9 @@ Serialisieren Sie ein neutrales Ziel für die Router-Navigation Solid.
 
 #### Parameter
 
-| Name | Geben Sie          | ein Beschreibung |
-| ---- | ------------------ | ---------------- |
-| zu   | MpRouteLocationRaw |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------------ | ----------- |
+| zu | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 

@@ -469,7 +469,23 @@ export function review(input: ReviewInput): JsonLd {
  * '@mission-platform/seo'` and call `jsonLd.webSite(...)`,
  * `jsonLd.organization(...)`, etc.
  */
-export const jsonLd = {
+export const jsonLd: {
+  readonly webSite: typeof webSite;
+  readonly organization: typeof organization;
+  readonly localBusiness: typeof localBusiness;
+  readonly person: typeof person;
+  readonly webPage: typeof webPage;
+  readonly breadcrumbList: typeof breadcrumbList;
+  readonly article: typeof article;
+  readonly product: typeof product;
+  readonly faqPage: typeof faqPage;
+  readonly event: typeof event;
+  readonly videoObject: typeof videoObject;
+  readonly imageObject: typeof imageObject;
+  readonly softwareApplication: typeof softwareApplication;
+  readonly recipe: typeof recipe;
+  readonly review: typeof review;
+} = {
   webSite,
   organization,
   localBusiness,

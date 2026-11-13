@@ -1,8 +1,8 @@
-# 开发 Flint 语言服务器
+# 开发Flint语言服务器
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> packages/flint-lsp/docs/guides/development.md: [packages/flint-lsp/docs/guides/development.md](../../../guides/development.md)
+> packages/flint/lsp/docs/guides/development.md: [packages/flint/lsp/docs/guides/development.md](../../../guides/development.md)
 > 语言: 简体中文 (zh)
 
 ## 安装并验证
@@ -26,5 +26,5 @@ pnpm --filter @mission-platform/flint-lsp test
 转到定义、引用、重命名、格式化、代码操作、跨文件
 语言导入或浏览器托管的传输。
 
-该服务器基于 stdio，并且仅包含 Node。浏览器编辑器集成属于
+服务器基于 stdio，并且仅包含 Node。浏览器编辑器集成属于
 语言服务包的本地适配器而不是该服务器。

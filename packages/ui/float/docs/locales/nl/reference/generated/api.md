@@ -54,7 +54,7 @@ De originele Vue SFC gebruikte `v-model` + een `dismiss`-uitzending en `icon`/`a
 benoemde slots met `$slots` aanwezigheidsdetectie; de neutrale versie is a
 **gecontroleerde** component (`modelValue` + `onUpdateModelValue`), gebruikt de
 cross-framework callback-prop `onDismiss`, onthult de `iconContent`/`actions`
-benoemde slots (aanwezigheid gedetecteerd met de raamwerk-neutrale {@link hasSlot}
+benoemde slots (aanwezigheid gedetecteerd met de raamwerkneutrale {@link hasSlot}
 helper), en tekent het statuspictogram met de eenmalige schrijfwijze
 `@mission-platform/icons` set (`ForgeIconCheck`/`ForgeIconError`/`ForgeIconWarning`/
 `ForgeIconInfo`). Het is verpakt in een `display: contents`
@@ -63,9 +63,9 @@ heeft geen voorwaardelijke wortelretour).
 
 #### Parameters
 
-| Naam          | Typ                                 | Beschrijving |
-| ------------- | ----------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<AlertBannerProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<AlertBannerProperties> |             |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -123,7 +123,7 @@ genegeerd en het paneel wordt in normale flow weergegeven).
 Wanneer de trigger zich in een open modale `<dialog>` bevindt, wordt het paneel geportaliseerd
 **in dat dialoogvenster** (via {@link solvePortalTarget}) in plaats van `body`: a
 modale dialoog maakt alles buiten de subboom `inert`, dus wordt er een paneel naartoe gestuurd
-`body` zou inert zijn (onzichtbaar/niet-klikbaar) en verkeerd gestapeld – en nog meer
+`body` zou inert zijn (onzichtbaar/niet-klikbaar) en verkeerd gestapeld – nog meer
 wanneer modalen zijn genest. Door het binnen het dichtstbijzijnde dialoogvenster te houden, wordt de Popover
 API stapelt het boven dat (mogelijk gestapelde) dialoogvenster.
 
@@ -139,9 +139,9 @@ rekwisieten. Het is eigenaar van de stijl via de naast elkaar geplaatste CSS-mod
 
 #### Parameters
 
-| Naam          | Typ                              | Beschrijving |
-| ------------- | -------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<DropdownProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<DropdownProperties> |             |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -179,8 +179,8 @@ voor browsers zonder Popover API-ondersteuning.
 
 Wanneer de trigger zich in een open modale `<dialog>` bevindt, wordt het paneel geportaliseerd
 **in dat dialoogvenster** (via {@link solvePortalTarget}) in plaats van `body`: a
-modale dialoog maakt alles buiten zijn subboom `inert`, dus wordt er een paneel naartoe gestuurd
-`body` zou inert zijn (onzichtbaar/niet-klikbaar) en verkeerd gestapeld – nog meer
+modale dialoog maakt alles buiten de subboom `inert`, dus wordt er een paneel naartoe gestuurd
+`body` zou inert zijn (onzichtbaar/niet-klikbaar) en verkeerd gestapeld – en nog meer
 wanneer modalen zijn genest. Door het binnen het dichtstbijzijnde dialoogvenster te houden, wordt de Popover
 API stapelt het boven dat (mogelijk gestapelde) dialoogvenster.
 
@@ -195,9 +195,9 @@ terugroep rekwisieten. Het is eigenaar van de stijl via de naast elkaar geplaats
 
 #### Parameters
 
-| Naam          | Typ                             | Beschrijving |
-| ------------- | ------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<PopoverProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<PopoverProperties> |             |
 
 ### Popoverplaatsing
 
@@ -246,13 +246,13 @@ JSX-dialect en rechtstreeks gecompileerd naar React of Vue door
 `@mission-platform/vite-plugin-forge`.
 
 Het toont een intentie-glyph, een optionele titel, het bericht (de standaard slot
-overschrijft de `message`-prop), en een optionele knop voor negeren, rendering
+overschrijft de `message`-prop) en een optionele knop voor negeren, rendering
 `role="alert"` (assertief) voor `error`/`warning` en `role="status"` (beleefd)
 anders. Het is eigenaar van de stijl via de naast elkaar geplaatste CSS-module
 `forge-toast.module.scss`, geassembleerd met het raamwerk-neutraal
 {@link classNames}-helper.
 
-De originele Vue SFC gebruikte een `dismiss`-uitzending en een `icon`-genaamd slot, en renderde
+De originele Vue SFC gebruikte een `dismiss`-uitzending en een `icon`-genaamd slot, en
 het intentiepictogram als een inline SVG; de neutrale versie maakt gebruik van het kruiskader
 callback-prop `onDismiss`, het `iconContent` genoemde slot (`<Slot>`, met de
 intent-pictogram als reserve) en de eenmalige beschrijfbare `@mission-platform/icons`
@@ -260,9 +260,9 @@ ingesteld (`ForgeIconCheck`/`ForgeIconError`/`ForgeIconWarning`/`ForgeIconInfo`)
 
 #### Parameters
 
-| Naam          | Typ                           | Beschrijving |
-| ------------- | ----------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<ToastProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<ToastProperties> |             |
 
 ### ToastEigenschappen
 
@@ -330,8 +330,8 @@ voor browsers zonder Popover API-ondersteuning.
 Wanneer de trigger zich in een open modale `<dialog>` bevindt, wordt de hint geportaliseerd
 **in dat dialoogvenster** (via {@link solvePortalTarget}) in plaats van `body`: a
 modale dialoog maakt alles buiten de subboom `inert`, dus er wordt een hint naar gestuurd
-`body` zou inert (onzichtbaar) en verkeerd gestapeld zijn – vooral als modals
-zijn genest. Door het binnen het dichtstbijzijnde dialoogvenster te houden, kan de Popover API het stapelen
+`body` zou inert (onzichtbaar) zijn en verkeerd gestapeld – vooral als modals
+zijn genest. Door het in het dichtstbijzijnde dialoogvenster te houden, kan de Popover API het stapelen
 daarboven (mogelijk gestapeld) dialoogvenster.
 
 Vervangingen van de originele Vue SFC: `@floating-ui/vue` → CSS-anker
@@ -340,13 +340,13 @@ positionering; `<Teleport>` → de neutrale `<Teleport>`-portaalprimitief;
 verwijderd (een CSS-driehoek kan later opnieuw worden toegevoegd); `useId` → de framework-native `useId`-hook; en
 `useZIndex('tooltip')` → de bovenste laag van de browser (Popover API) met een static
 `tooltip` z-indexlaag in CSS als reserve. Het
-bezit zijn stijl via de naast elkaar geplaatste CSS-module `forge-tooltip.module.scss`.
+bezit zijn stijl via de co-located CSS-module `forge-tooltip.module.scss`.
 
 #### Parameters
 
-| Naam          | Typ                             | Beschrijving |
-| ------------- | ------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<TooltipProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<TooltipProperties> |             |
 
 ### TooltipPlaatsing
 
@@ -421,7 +421,7 @@ enter/exit fade-levens in CSS (`@starting-style` + `transition-behavior` op de
 `display`/`overlay` eigenschappen), ter vervanging van de originele Vue `<Transition>`.
 
 Vervangingen van de originele Vue SFC: de `ForgeDialogHeader`/`Body`/`Footer`
-subcomponenten zijn inline geplaatst en de `header`/`footer`-regio's zijn geschreven als
+subcomponenten zijn inline en de `header`/`footer`-regio's zijn geschreven als
 genoemde slots (`<Slot>`), waarbij hun aanwezigheid wordt gedetecteerd via de
 raamwerkneutrale {@link hasSlot}-helper; `useI18n`-labels worden de
 `closeLabel` steun;
@@ -433,9 +433,9 @@ rekwisieten. Het is eigenaar van de stijl via de naast elkaar geplaatste CSS-mod
 
 #### Parameters
 
-| Naam          | Typ                            | Beschrijving |
-| ------------- | ------------------------------ | ------------ |
-| eigenschappen | Alleen-lezen<DialogProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | -------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<DialogProperties> |             |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -470,9 +470,9 @@ co-located CSS-module `forge-modal.module.scss`.
 
 #### Parameters
 
-| Naam          | Typ                           | Beschrijving |
-| ------------- | ----------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<ModalProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<ModalProperties> |             |
 
 ### Modale eigenschappen
 
@@ -494,6 +494,16 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 
 Breedtestap van de modal op tablet/desktop (`sm`+); mobiel is altijd over de volledige breedte.
 
+### Modale variant
+
+**Soort:** type
+
+```typescript
+export type ModalVariant = 'modal' | 'dialog' | 'alert';
+```
+
+Visuele en semantische variant van de modale overlay-primitief.
+
 ## `src/components/organisms/forge-toast-container/forge-toast-container`
 
 ### ForgeToastContainer
@@ -509,7 +519,7 @@ eenmaal geschreven in het neutrale JSX-dialect en rechtstreeks gecompileerd naar
 door `@mission-platform/vite-plugin-forge`.
 
 Monteer één exemplaar in de buurt van de hoofdmap van uw toepassing. Het teleporteert een
-stack met vaste positie naar `<body>` (via het framework-neutraal
+stack met vaste positie naar `<body>` (via het framework-neutral
 **`<Teleport>`**-portaal), verankert het op een van de zes schermposities, en
 wijst toast af op verzoek van de gebruiker. De component abonneert zich op het gedeelde
 waarneembare winkel met de neutrale {@link useState}/{@link useEffect} hooks
@@ -541,9 +551,9 @@ composable → de statische `notification` z-indexlaag toegepast in CSS.
 
 #### Parameters
 
-| Naam          | Typ                                    | Beschrijving |
-| ------------- | -------------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<ToastContainerProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<ToastContainerProperties> |             |
 
 ### ToastContainerEigenschappen
 
@@ -589,16 +599,16 @@ Een toast van id afwijzen.
 
 #### Parameters
 
-| Naam | Typ    | Beschrijving |
-| ---- | ------ | ------------ |
-| ID   | nummer |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| ID | nummer |             |
 
 ### foutToast
 
 **Soort:** constant
 
 ```typescript
-export const errorToast;
+export const errorToast: ReturnType<typeof withVariant>;
 ```
 
 Gemak: toon een `error`-toast.
@@ -618,7 +628,7 @@ Lees een onveranderlijke momentopname van de actieve toasts.
 **Soort:** constant
 
 ```typescript
-export const infoToast;
+export const infoToast: ReturnType<typeof withVariant>;
 ```
 
 Gemak: toon een `info`-toast.
@@ -635,9 +645,9 @@ Laat een toost zien en stuur de ID terug.
 
 #### Parameters
 
-| Naam   | Typ                       | Beschrijving |
-| ------ | ------------------------- | ------------ |
-| opties | Toastopties \| tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------- | ---------------------- | ----------- |
+| opties | Toastopties \| tekenreeks |             |
 
 ### abonnerenToast
 
@@ -651,16 +661,16 @@ Abonneer u om wijzigingen op te slaan; retourneert een afmeldfunctie.
 
 #### Parameters
 
-| Naam       | Typ            | Beschrijving |
-| ---------- | -------------- | ------------ |
-| luisteraar | () => ongeldig |              |
+| Naam | Typ | Beschrijving |
+| -------- | ---------- | ----------- |
+| luisteraar | () => ongeldig |             |
 
 ### succesToast
 
 **Soort:** constant
 
 ```typescript
-export const successToast;
+export const successToast: ReturnType<typeof withVariant>;
 ```
 
 Gemak: toon een `success`-toast.
@@ -722,7 +732,119 @@ De openbare API geretourneerd door {@link useToast}.
 **Soort:** constant
 
 ```typescript
-export const warningToast;
+export const warningToast: ReturnType<typeof withVariant>;
 ```
 
 Gemak: toon een `warning`-toast.
+
+## `src/utils/fallback-position`
+
+### FallbackPosition toepassen
+
+**Soort:** functie
+
+```typescript
+function applyFallbackPosition(
+  triggerElement: HTMLElement,
+  panelElement: HTMLElement,
+  placement: FallbackPlacement = 'bottom-start',
+  options?: FallbackPositionOptions | number,
+): void;
+```
+
+Past terugvalcoördinaten en -stijlen toe op `panelElement` ten opzichte van `triggerElement`.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------------- | --------------------------------- | ----------- |
+| triggerElement | HTMLElement |             |
+| paneelElement | HTMLElement |             |
+| plaatsing | Terugvalplaatsing |             |
+| opties | FallbackPositionOptions \| nummer |             |
+
+### berekenFallbackPosition
+
+**Soort:** functie
+
+```typescript
+function calculateFallbackPosition(
+  triggerRect: TriggerBoundingRect,
+  placement: FallbackPlacement = 'bottom-start',
+  offset = 0,
+): FallbackPositionResult;
+```
+
+Berekent CSS-eigenschappen bovenaan, links en getransformeerd voor een zwevend element
+gebaseerd op de grensrect, gewenste plaatsing en offset van het triggerelement.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ------------------- | ----------- |
+| triggerRect | TriggerBoundingRect |             |
+| plaatsing | Terugvalplaatsing |             |
+| gecompenseerd |                     |             |
+
+### Terugvalplaatsing
+
+**Soort:** type
+
+```typescript
+export type FallbackPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
+```
+
+Ondersteunde plaatsingsopties voor terugval bij ankerpositionering.
+
+### FallbackPositionOpties
+
+**Soort:** interface
+
+```typescript
+export interface FallbackPositionOptions
+```
+
+Geen beschrijving opgegeven.
+
+### FallbackPositieResultaat
+
+**Soort:** interface
+
+```typescript
+export interface FallbackPositionResult
+```
+
+Geen beschrijving opgegeven.
+
+### wordt AnchorPositioning ondersteund
+
+**Soort:** functie
+
+```typescript
+function isAnchorPositioningSupported(): boolean;
+```
+
+Controleer dynamisch of CSS-ankerpositionering wordt ondersteund.
+Geëvalueerd als een functie, zodat unit-tests `CSS.supports` kunnen nabootsen of omschakelen.
+
+### ondersteunt AnchorPositioning
+
+**Soort:** constant
+
+```typescript
+export const supportsAnchorPositioning: boolean;
+```
+
+Controleer of CSS Anchor Positioning wordt ondersteund in de huidige omgeving.

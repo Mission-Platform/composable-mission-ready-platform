@@ -16,17 +16,17 @@
 **種類:** 関数
 
 ```typescript
-function useObservable(source: Observable<T>): T | undefined;
+function useObservable(source: Observable<T>, initialValue?: T): T | undefined;
 ```
 
-`source` をサブスクライブし、その最新のエミッションを状態として返します。返品
-最初の放出が到着するまで `undefined`。
+説明はありません。
 
 #### パラメータ
 
-| 名前   | タイプ        | 説明 |
-| ------ | ------------- | ---- |
-| ソース | Observable<T> |      |
+|名前 |タイプ |説明 |
+| ------------ | ------------- | ----------- |
+|ソース | Observable<T> |             |
+|初期値 |た |             |
 
 ## `src/composables/use-subscription/use-subscription`
 
@@ -58,11 +58,11 @@ function useSubscribe(
 
 #### パラメータ
 
-| 名前                 | タイプ                                    | 説明 |
-| -------------------- | ----------------------------------------- | ---- |
-| ソース               | Observable<T>                             |      |
-| オブザーバーまたは次 | Partial<Observer<T>> \| ((値: T) => void) |      |
-| 依存関係             | MpDependencyList                          |      |
+|名前 |タイプ |説明 |
+| -------------- | -------------------------------------------- | ----------- |
+|ソース | Observable<T> |             |
+|オブザーバーまたは次 | Partial<Observer<T>> \| ((値: T) => void) |             |
+|依存関係 | MpDependencyList |             |
 
 ### useサブスクリプション
 
@@ -78,7 +78,7 @@ function useSubscription(subscribe: () => Unsubscribable, dependencies: MpDepend
 
 #### パラメータ
 
-| 名前     | タイプ           | 説明 |
-| -------- | ---------------- | ---- |
-| 購読する | () => 購読不可   |      |
-| 依存関係 | MpDependencyList |      |
+|名前 |タイプ |説明 |
+| ------------ | -------------------- | ----------- |
+|購読する | () => 購読不可 |             |
+|依存関係 | MpDependencyList |             |

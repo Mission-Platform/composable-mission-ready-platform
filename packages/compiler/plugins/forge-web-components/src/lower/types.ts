@@ -1,5 +1,6 @@
-import type { DomTemplateSource } from "../transformers/template.js";
 import type { TargetLoweredModule } from "@mission-platform/forge-plugin-api";
+
+import type { DomTemplateSource } from "../transformers/template.js";
 
 /** The plugin's framework ID, and the discriminator of its lowered plan. */
 export const WEB_COMPONENTS_FRAMEWORK = "web-components";
@@ -224,7 +225,7 @@ export interface WebComponentsInternalsPolicy {
 }
 
 /** The compatibility table for roots that can safely be customized built-ins. */
-export const WEBCOMPONENTS_NATIVE_HOSTS = {
+export const WEBCOMPONENTS_NATIVE_HOSTS: Readonly<Record<string, string>> = {
   div: "HTMLDivElement",
   span: "HTMLSpanElement",
   p: "HTMLParagraphElement",
@@ -234,7 +235,7 @@ export const WEBCOMPONENTS_NATIVE_HOSTS = {
   h4: "HTMLHeadingElement",
   h5: "HTMLHeadingElement",
   h6: "HTMLHeadingElement",
-} as const satisfies Readonly<Record<string, string>>;
+};
 
 /** Compatibility defaults preserved for generated components. */
 export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy = {

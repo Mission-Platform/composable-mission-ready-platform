@@ -94,7 +94,7 @@ Se debe representar el mismo inventario de historias de escritura única en cada
 **Tipo:** función
 
 ```typescript
-function sharedPreviewDecorators();
+function sharedPreviewDecorators(): Array<ReturnType<typeof withThemeByDataAttribute<TRenderer>>>;
 ```
 
 Decoradores de Storybook compartidos para todos los marcos.
@@ -104,7 +104,17 @@ Decoradores de Storybook compartidos para todos los marcos.
 **Tipo:** constante
 
 ```typescript
-export const sharedPreviewParameters;
+export const sharedPreviewParameters: {
+  readonly controls: {
+    readonly matchers: {
+      readonly color: RegExp;
+      readonly date: RegExp;
+    };
+  };
+  readonly a11y: {
+    readonly test: 'error';
+  };
+};
 ```
 
 Parámetros de Storybook compartidos para todos los marcos.
@@ -114,7 +124,15 @@ Parámetros de Storybook compartidos para todos los marcos.
 **Tipo:** función
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework);
+function sharedPreviewParametersFor(framework?: PreviewFramework):
+  | typeof sharedPreviewParameters
+  | (typeof sharedPreviewParameters & {
+      readonly docs: {
+        readonly source: {
+          readonly type: 'code';
+        };
+      };
+    });
 ```
 
 Parámetros de Storybook compatibles con el marco.

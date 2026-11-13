@@ -454,16 +454,10 @@ export function ForgeResourcePlanner(
   const [scrollTop, setScrollTop] = useState(0);
   const [interaction, setInteraction] = useState<
     PlannerInteraction | undefined
-  >(
-    // eslint-disable-next-line unicorn/no-useless-undefined -- neutral useState requires an explicit initial value
-    undefined,
-  );
+  >(undefined);
   const [selection, setSelection] = useState<
     PlannerSelectionOverlay | undefined
-  >(
-    // eslint-disable-next-line unicorn/no-useless-undefined -- neutral useState requires an explicit initial value
-    undefined,
-  );
+  >(undefined);
   const [selectedResourceId, setSelectedResourceId] = useState<
     string | undefined
   >(resources[0]?.id);

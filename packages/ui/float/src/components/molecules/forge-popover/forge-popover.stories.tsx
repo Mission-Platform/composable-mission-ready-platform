@@ -1,11 +1,11 @@
-import { ForgeButton, ForgeStack } from '@mission-platform/components';
-import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
-import { ForgeTypography } from '@mission-platform/typography';
 import { useArgs } from 'storybook/preview-api';
 
-import { ForgePopover } from './forge-popover';
-
+import { ForgeButton, ForgeStack } from '@mission-platform/components';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
+import { ForgeTypography } from '@mission-platform/typography';
+
+import { ForgePopover } from './forge-popover';
 
 /**
  * `ForgePopover` is the write-once `ForgePopover` component of `@mission-platform/float`. The trigger is the `trigger` named slot and the

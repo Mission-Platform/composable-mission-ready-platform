@@ -1,3 +1,5 @@
+import type { FlintTypeName } from '@mission-platform/flint-ast';
+
 import {
   createContainerType,
   createPrimitiveType,
@@ -6,8 +8,6 @@ import {
   type FlintNodeCategory,
   type FlintNodeKind,
 } from './types.js';
-
-import type { FlintTypeName } from '../ast.js';
 
 export interface FlintNodeDefinition {
   readonly operation: string;

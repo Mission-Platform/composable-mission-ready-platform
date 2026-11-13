@@ -61,7 +61,7 @@ Error thrown when invalid CLI arguments or options are supplied.
 **Kind:** function
 
 ```typescript
-function parseFlintCliArgs(argv: readonly string[], cwd = process.cwd()): FlintCliOptions;
+function parseFlintCliArgs(argv: readonly string[], cwd: string = process.cwd()): FlintCliOptions;
 ```
 
 Parses and validates raw command-line arguments for the Flint CLI.
@@ -71,7 +71,7 @@ Parses and validates raw command-line arguments for the Flint CLI.
 | Name | Type              | Description                   |
 | ---- | ----------------- | ----------------------------- |
 | argv | readonly string[] | Command-line arguments slice. |
-| cwd  |                   | Current working directory.    |
+| cwd  | string            | Current working directory.    |
 
 #### Contract
 
@@ -119,7 +119,7 @@ Pluggable IO interface for Flint CLI stdout and stderr logging.
 function runFlintCli(
   argv: readonly string[] = process.argv.slice(2),
   io: FlintCliIo = defaultIo,
-  cwd = process.cwd(),
+  cwd: string = process.cwd(),
 ): Promise<number>;
 ```
 
@@ -131,7 +131,7 @@ Executes the Flint CLI with given argument vector.
 | ---- | ----------------- | ----------------------------- |
 | argv | readonly string[] | Command-line arguments slice. |
 | io   | FlintCliIo        | Pluggable I/O interface.      |
-| cwd  |                   | Base working directory.       |
+| cwd  | string            | Base working directory.       |
 
 #### Contract
 

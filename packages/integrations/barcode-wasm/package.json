@@ -28,7 +28,8 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@mission-platform/flint-runtime": "workspace:*"
+    "@mission-platform/flint-runtime": "workspace:*",
+    "@mission-platform/wasm-bridge": "workspace:*"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",

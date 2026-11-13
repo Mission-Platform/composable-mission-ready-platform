@@ -1,6 +1,4 @@
-import { deserializeFlintSoN, serializeFlintSoN } from './son-cache.js';
-
-import type { FlintSoNModule } from './son-ir.js';
+import { deserializeFlintSoN, serializeFlintSoN, type FlintSoNModule } from '@mission-platform/flint-sonir';
 
 /**
  * File system or in-memory cache provider for compiler artifacts and WAT outputs.

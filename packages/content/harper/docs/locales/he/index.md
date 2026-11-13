@@ -2,10 +2,10 @@
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> packages/harper/docs/index.md: [packages/harper/docs/index.md](../../index.md)
+> packages/content/harper/docs/index.md: [packages/content/harper/docs/index.md](../../index.md)
 > שפה: עברית (he)
 
-`@mission-platform/harper` מספק אינטגרציה בין [הארפר](https://writewithharper.com) בודק דקדוק ו
+`@mission-platform/harper` מספק אינטגרציה בין בודק הדקדוק [Harper](https://writewithharper.com) לבין
 עורך מונקו. Harper הוא בודק דקדוק באנגלית מהיר, לא מקוון, ראשון בפרטיות, המופעל על ידי WebAssembly שפועל
 לגמרי בדפדפן.
 
@@ -92,7 +92,7 @@ function useHarperMonaco(
 
 ### אינטגרציה של מסגרת-אגנוסטית
 
-עבור צרכנים שאינם Vue (כגון רכיבים ב-`@mission-platform/components`), השתמשו ב-`attachHarperMonaco` החיוני
+לצרכנים שאינם Vue (כגון רכיבים ב-`@mission-platform/components`), השתמשו ב-`attachHarperMonaco` החיוני
 פונקציה.
 
 #### דוּגמָה

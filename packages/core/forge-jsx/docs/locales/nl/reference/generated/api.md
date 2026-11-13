@@ -9,896 +9,6 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 
 Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-jsx`.
 
-## `src/adapters/react`
-
-### HtmlInhoud
-
-**Soort:** functie
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement;
-```
-
-Geef vertrouwde HTML weer in een React-host met behulp van `dangerouslySetInnerHTML`.
-
-#### Parameters
-
-| Naam          | Typ                      | Beschrijving |
-| ------------- | ------------------------ | ------------ |
-| eigenschappen | HtmlContenteigenschappen |              |
-
-### renderToReact
-
-**Soort:** functie
-
-```typescript
-function renderToReact(element: MpElement): ReactElement;
-```
-
-Render een neutrale {@link MpElement}-boom in een React-element.
-
-#### Parameters
-
-| Naam      | Typ       | Beschrijving |
-| --------- | --------- | ------------ |
-| onderdeel | MpElement |              |
-
-### Teleporteren
-
-**Soort:** functie
-
-```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
-```
-
-De React-versie van de neutrale `<Teleport>`-primitief – een dunne verpakking eromheen
-{@link createPortal} van `react-dom`. `@mission-platform/vite-plugin-forge`
-herschrijft de `import { Teleport } from '@mission-platform/forge-jsx'` van een component naar
-importeer dit onderdeel, dus een eenmalige beschrijfbare `<Teleport to="body">…</Teleport>`
-compileert naar een native React-portal.
-
-Wanneer `to` al een DOM **element** is (het algemene clientgeval — bijv.
-opgelost `<dialog>` of `document.body` ingeleverd door beller) de kinderen zijn
-er **synchroon in geportaleerd tijdens het renderen**, zodat ze op dezelfde manier worden geactiveerd
-commit die ze heeft geopend. Dit komt overeen met Vue's `<Teleport>` (die het probleem oplost
-doel synchroon) en is vereist voor correctheid: een portaalpaneel dat
-promoot zichzelf naar de bovenste laag van de browser met de Popover API
-(`popover="manual"` + `showPopover()` op het volgende frame) moet al zijn
-gemonteerd wanneer dat frame wordt uitgevoerd - het uitstellen van de portal door een render verliest dat
-race, waarbij het paneel `display:none` overblijft (de UA-standaard voor een niet-weergegeven
-popover) en dus onzichtbaar.
-
-Alleen een selector **string** heeft een post-mount `document.querySelector` nodig, die
-houdt het onderdeel SSR-veilig: tijdens het renderen van de server – en de eerste client
-render voor een stringdoel — het rendert niets (of, wanneer `disabled`, het
-kinderen aanwezig) en `createPortal` wordt alleen uitgevoerd zodra er een DOM-doel bestaat.
-
-#### Parameters
-
-| Naam                                                | Typ                   | Beschrijving |
-| --------------------------------------------------- | --------------------- | ------------ |
-| { to = 'lichaam', uitgeschakeld = false, kinderen } | TeleportEigenschappen |              |
-
-### TeleportEigenschappen
-
-**Soort:** interface
-
-```typescript
-export interface TeleportProperties
-```
-
-De eigenschappen die worden geaccepteerd door de component React {@link Teleport}.
-
-### naarReactComponent
-
-**Soort:** functie
-
-```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
-```
-
-Verpak een neutraal component als een eersteklas React-functiecomponent, klaar om te gebruiken
-worden weergegeven door `react-dom` of samengesteld in andere React-componenten.
-
-#### Parameters
-
-| Naam         | Typ            | Beschrijving |
-| ------------ | -------------- | ------------ |
-| bestanddeel  | MpComponent<P> |              |
-| weergavenaam | tekenreeks     |              |
-
-### Overgang
-
-**Soort:** functie
-
-```typescript
-function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
-```
-
-De React-build van de neutrale `<Transition>`-primitief - een kleine CSS-klasse
-driver die de ingebouwde `<Transition>` van Vue weerspiegelt. Het animeert een single
-voorwaardelijk weergegeven kind door te wisselen tussen `<name>-enter-*` en `<name>-leave-*`
-klassen (dus dezelfde stylesheet stuurt beide raamwerken aan) en behoudt het kind
-gemonteerd via de verlofanimatie. `@mission-platform/vite-plugin-forge`
-herschrijft de `import { Transition } from '@mission-platform/forge-jsx'` van een component naar
-importeer dit onderdeel op het React-doel.
-
-Het is SSR-veilig: de server render (en de eerste client paint) geeft het kind weer
-op zijn plaats – passend bij de SSR-uitvoer van Vue – en de animatie wordt pas daarna uitgevoerd.
-
-#### Parameters
-
-| Naam                                                                                     | Typ                    | Beschrijving |
-| ---------------------------------------------------------------------------------------- | ---------------------- | ------------ |
-| { naam = 'v', verschijning = false, duur, onderliggende elementen, ...overschrijvingen } | Overgangseigenschappen |              |
-
-### TransitieGroep
-
-**Soort:** functie
-
-```typescript
-function TransitionGroup({
-  name = 'v',
-  tag,
-  moveClass,
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionGroupProperties): ReactNode;
-```
-
-De React-build van de neutrale `<TransitionGroup>`-primitief - een CSS-klasse
-driver die de ingebouwde `<TransitionGroup>` van Vue weerspiegelt. Het animeert een **ingetoetst
-lijst**: binnenkomende kinderen krijgen `<name>-enter-*`, vertrekkende kinderen blijven gemonteerd
-via hun `<name>-leave-*`-animatie, en overlevende kinderen die veranderen
-positie zijn FLIP-geanimeerd met `<name>-move` (dezelfde stylesheet stuurt beide aan
-kaders). `@mission-platform/vite-plugin-forge` herschrijft de bestanden van een component
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` om dit te importeren op het
-React doel.
-
-Het is SSR-veilig: de server render (en de eerste client paint) geeft de
-kinderen op hun plaats - overeenkomend met de SSR-uitvoer van Vue - en de animatie wordt alleen uitgevoerd
-daarna. De overgangsklassen worden toegepast op de DOM node van elk kind, dus —
-zoals de single {@link Transition} — ze hebben effect op kinderen met DOM-elementen;
-een kind dat zelf een (niet-ref-forwarding) component is, wordt nog steeds aan-/afgekoppeld
-correct, maar krijgt geen klasse (overeenkomend met de neutrale SSR-in-place basislijn).
-
-#### Parameters
-
-| Naam                                                                                      | Typ                       | Beschrijving |
-| ----------------------------------------------------------------------------------------- | ------------------------- | ------------ |
-| { naam = 'v', tag, moveClass, verschijning = false, duur, kinderen, ...overschrijvingen } | TransitionGroupProperties |              |
-
-### TransitionGroupProperties
-
-**Soort:** interface
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-De eigenschappen die worden geaccepteerd door de component React {@link TransitionGroup}.
-
-### Overgangseigenschappen
-
-**Soort:** interface
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-De eigenschappen die worden geaccepteerd door de component React {@link Transition}.
-
-## `src/adapters/solid`
-
-### HtmlInhoud
-
-**Soort:** functie
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element;
-```
-
-De Solid-versie van de neutrale `<HtmlContent>`-primitief. Solid's
-De eigenschap `innerHTML` is de oorspronkelijke, op vervanging gebaseerde bewerking van onbewerkte inhoud.
-
-#### Parameters
-
-| Naam          | Typ                      | Beschrijving |
-| ------------- | ------------------------ | ------------ |
-| eigenschappen | HtmlContenteigenschappen |              |
-
-### Teleporteren
-
-**Soort:** functie
-
-```typescript
-function Teleport(properties: TeleportProperties): JSX.Element;
-```
-
-De Solid-versie van de neutrale `<Teleport>`-primitief – een dunne verpakking eromheen
-Het {@linkportaal} van Solid. `@mission-platform/vite-plugin-forge` herschrijft een
-component `import { Teleport } from '@mission-platform/forge-jsx'` om dit te importeren
-component, dus een eenmalig beschrijfbare `<Teleport to="body">…</Teleport>` compileert naar een
-native Solid-portal.
-
-Het portaldoel wordt op de client opgelost, zodat de component SSR-veilig is:
-tijdens het renderen van de server – en voordat een DOM-doel bestaat – wordt het weergegeven
-niets (of, wanneer `disabled`, de kinderen op hun plaats), en alleen {@link Portal}
-wordt geactiveerd zodra een echt doelwit beschikbaar is.
-
-#### Parameters
-
-| Naam          | Typ                   | Beschrijving |
-| ------------- | --------------------- | ------------ |
-| eigenschappen | TeleportEigenschappen |              |
-
-### TeleportEigenschappen
-
-**Soort:** interface
-
-```typescript
-export interface TeleportProperties
-```
-
-De eigenschappen die worden geaccepteerd door de component Solid {@link Teleport}.
-
-### Overgang
-
-**Soort:** functie
-
-```typescript
-function Transition(properties: TransitionProperties): JSX.Element;
-```
-
-De Solid-versie van de neutrale `<Transition>`-primitief. Een minimale correctie
-implementatie die het kind **op zijn plaats** maakt — passend bij de React
-adapter's SSR / adapter-pariteitspad en de neutrale runtime-basislijn - dus
-Eenmalig beschrijfbare componenten, typecontrole en montage zonder tussenkomst van een derde partij
-Solid overgangsbibliotheek. De animatie voor het betreden/verlaten van de klasse kan later op een laag worden aangebracht;
-het steunoppervlak komt al overeen met Vue/React (`name`, `appear`, `duration` en
-de klassenoverschrijvingen per fase).
-
-`@mission-platform/vite-plugin-forge` herschrijft de bestanden van een component
-`import { Transition } from '@mission-platform/forge-jsx'` om dit te importeren in het
-Solid doel.
-
-#### Parameters
-
-| Naam          | Typ                    | Beschrijving |
-| ------------- | ---------------------- | ------------ |
-| eigenschappen | Overgangseigenschappen |              |
-
-### TransitieGroep
-
-**Soort:** functie
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
-```
-
-De Solid-versie van de neutrale `<TransitionGroup>`-primitief. Zoals
-{@link Transition}, dit is een minimaal correcte implementatie die de
-kinderen **op hun plaats** (de SSR/adapter-pariteitsbasislijn van de React-adapter) dus
-gegenereerde Solid-componententypecontrole zonder lijstovergang van derden
-bibliotheek. Het steunoppervlak komt overeen met Vue/React (`name`, `tag`, `moveClass`,
-`appear`, `duration` en de klassenoverschrijvingen per fase) voor eenmalig schrijven
-pariteit.
-
-`@mission-platform/vite-plugin-forge` herschrijft de bestanden van een component
-`import { TransitionGroup } from '@mission-platform/forge-jsx'` om dit te importeren op het
-Solid doel.
-
-#### Parameters
-
-| Naam          | Typ                       | Beschrijving |
-| ------------- | ------------------------- | ------------ |
-| eigenschappen | TransitionGroupProperties |              |
-
-### TransitionGroupProperties
-
-**Soort:** interface
-
-```typescript
-export interface TransitionGroupProperties extends TransitionClassOverrides
-```
-
-De eigenschappen die worden geaccepteerd door de component Solid {@link TransitionGroup}.
-
-### Overgangseigenschappen
-
-**Soort:** interface
-
-```typescript
-export interface TransitionProperties extends TransitionClassOverrides
-```
-
-De eigenschappen die worden geaccepteerd door de component Solid {@link Transition}.
-
-## `src/adapters/svelte`
-
-### HtmlInhoud
-
-**Soort:** functie
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet;
-```
-
-De onbewerkte inhoudsimplementatie van de Svelte-adapter. `createRawSnippet` is de
-runtime-vorm van Svelte's `{@html}`-bewerking en de setup-callback blijft behouden
-hostreferenties en doorsturen van gebeurtenissen voor gebruik van handgeschreven adapters.
-
-#### Parameters
-
-| Naam          | Typ                      | Beschrijving |
-| ------------- | ------------------------ | ------------ |
-| eigenschappen | HtmlContenteigenschappen |              |
-
-### Teleporteren
-
-**Soort:** functie
-
-```typescript
-function Teleport(properties: TeleportProperties): Snippet;
-```
-
-Geef een Forge-onderliggend fragment weer voor Svelte SSR en clientpariteit.
-
-#### Parameters
-
-| Naam          | Typ                   | Beschrijving |
-| ------------- | --------------------- | ------------ |
-| eigenschappen | TeleportEigenschappen |              |
-
-### TeleportEigenschappen
-
-**Soort:** interface
-
-```typescript
-export interface TeleportProperties
-```
-
-De eigenschappen die worden geaccepteerd door de Svelte {@link Teleport}-primitief.
-
-### Overgang
-
-**Soort:** functie
-
-```typescript
-function Transition(properties: TransitionProperties): Snippet;
-```
-
-Geef een enkel overgangskind weer; animatie wordt geleverd door native Svelte-opmaak.
-
-#### Parameters
-
-| Naam          | Typ                    | Beschrijving |
-| ------------- | ---------------------- | ------------ |
-| eigenschappen | Overgangseigenschappen |              |
-
-### TransitieGroep
-
-**Soort:** functie
-
-```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet;
-```
-
-Geef overgangsgroepkinderen op hun plaats voor blokken met native Svelte-sleutel.
-
-#### Parameters
-
-| Naam          | Typ                       | Beschrijving |
-| ------------- | ------------------------- | ------------ |
-| eigenschappen | TransitionGroupProperties |              |
-
-### TransitionGroupProperties
-
-**Soort:** interface
-
-```typescript
-export interface TransitionGroupProperties extends TransitionProperties
-```
-
-De eigenschappen die worden geaccepteerd door de Svelte {@link TransitionGroup} primitief.
-
-### Overgangseigenschappen
-
-**Soort:** interface
-
-```typescript
-export interface TransitionProperties
-```
-
-De eigenschappen die worden geaccepteerd door de Svelte {@link Transition} primitief.
-
-## `src/adapters/vue`
-
-### maakContext
-
-**Soort:** functie
-
-```typescript
-function createContext(defaultValue: T): VueContext<T>;
-```
-
-De Vue-versie van de neutrale `createContext`-primitief. Retourneert een handvat waarvan
-`Provider` is een echte component waarvan `provide()` de standaard `value` is
-slot, dus een eenmalig beschrijfbare `<Ctx.Provider value={…}><Slot /></Ctx.Provider>`
-compileert naar native Vue-voorziening. `@mission-platform/vite-plugin-forge` herschrijft een
-component `import { createContext, useContext } from '@mission-platform/forge-jsx'`
-om deze te importeren in het Vue-doel.
-
-#### Parameters
-
-| Naam            | Typ | Beschrijving |
-| --------------- | --- | ------------ |
-| standaardwaarde | T   |              |
-
-### HtmlInhoud
-
-**Soort:** functie
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode;
-```
-
-Geef vertrouwde HTML weer in een Vue-host met behulp van de renderfunctie `innerHTML`-binding.
-
-#### Parameters
-
-| Naam          | Typ                      | Beschrijving |
-| ------------- | ------------------------ | ------------ |
-| eigenschappen | HtmlContenteigenschappen |              |
-
-### renderToVue
-
-**Soort:** functie
-
-```typescript
-function renderToVue(element: MpElement): VNode;
-```
-
-Geef een neutrale {@link MpElement}-boom weer in een Vue `VNode`.
-
-#### Parameters
-
-| Naam      | Typ       | Beschrijving |
-| --------- | --------- | ------------ |
-| onderdeel | MpElement |              |
-
-### naarVueComponent
-
-**Soort:** functie
-
-```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
-```
-
-Verpak een neutraal onderdeel als een Vue functioneel onderdeel. Binnenkomende attributen
-neutrale rekwisieten worden, wordt het standaardslot (indien aanwezig) doorgestuurd als neutraal
-`children`, en elk benoemd slot wordt doorgestuurd onder zijn naam (als een scoped-slot
-functie), dus een `<Slot name="…" />` in de component lost dit op en
-het resultaat kan worden gebruikt zoals elk ander Vue-onderdeel.
-
-#### Parameters
-
-| Naam        | Typ            | Beschrijving |
-| ----------- | -------------- | ------------ |
-| bestanddeel | MpComponent<P> |              |
-| naam        | tekenreeks     |              |
-
-### gebruikContext
-
-**Soort:** functie
-
-```typescript
-function useContext(context: VueContext<T>): T;
-```
-
-De Vue-versie van de neutrale `useContext`-primitief – een dunne verpakking eromheen
-`inject()` die terugvalt naar de standaardwaarde van de context als er geen omhulling is
-De aanbieder heeft er één geleverd.
-
-#### Parameters
-
-| Naam    | Typ           | Beschrijving |
-| ------- | ------------- | ------------ |
-| context | VueContext<T> |              |
-
-### VueContext
-
-**Soort:** interface
-
-```typescript
-export interface VueContext<T>
-```
-
-Een Vue-contexthandle: een door `provide()` ondersteunde `Provider` plus de `inject()`-sleutel.
-
-## `src/adapters/web-components`
-
-### DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY
-
-**Soort:** constant
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
-```
-
-Interne onderdelen zijn op onschadelijke wijze capaciteitsafhankelijk; vormassociatie blijft opt-in.
-
-### DEFAULT_WEBCOMPONENTS_SHADOW_POLICY
-
-**Soort:** constant
-
-```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
-```
-
-Standaardwaarden voor compatibiliteit die worden gebruikt wanneer een gegenereerde klasse het beleid niet overschrijft.
-
-### DomTemplateResultaat
-
-**Soort:** klasse
-
-```typescript
-export class DomTemplateResult
-```
-
-Een direct-DOM gegenereerd resultaat met een stabiele definitie-identiteit.
-
-### dynamischElement
-
-**Soort:** functie
-
-```typescript
-function dynamicElement(
-  tag: unknown,
-  properties: Readonly<Record<string, unknown>>,
-  ...children: readonly unknown[]
-): DynamicElementResult;
-```
-
-Bouw een native Web-Components-element waarvan de tag tijdens runtime wordt geselecteerd.
-
-#### Parameters
-
-| Naam          | Typ                                   | Beschrijving |
-| ------------- | ------------------------------------- | ------------ |
-| label         | onbekend                              |              |
-| eigenschappen | Alleen-lezen<Record<string, unknown>> |              |
-| kinderen      | alleen-lezen onbekend[]               |              |
-
-### DynamicElementResultaat
-
-**Soort:** klasse
-
-```typescript
-export class DynamicElementResult
-```
-
-Een runtime-geselecteerd element en zijn onderliggende elementen voor een berekende JSX-tag.
-
-### ForgeElement
-
-**Soort:** klasse
-
-```typescript
-export class ForgeElement extends ForgeHTMLElement
-```
-
-Native `HTMLElement`-basisklasse voor gegenereerde aangepaste elementen — a
-afhankelijkheidsvrije stand-in voor `LitElement`.
-
-Een subklasse declareert zijn reactieve oppervlak via `static properties` (mirroring
-Brandt): elke sleutel wordt een prototype-accessor waarvan de setter een
-microtaak wordt opnieuw weergegeven, en elke niet-`state`-sleutel neemt de kleine letters in acht
-attribuut. `render()` retourneert de {@link html}`…`-sjabloon van het element, weergegeven
-in een open schaduwwortel. Reactieve commits updaten de bestaande sjabloon
-stapsgewijs: positionele lijsten hergebruiken compatibele vermeldingen en slot-outlets
-behouden hun oorspronkelijke projectieknooppunten terwijl niet-gerelateerde onderdelen veranderen.
-
-### ForgeElementConstructor
-
-**Soort:** interface
-
-```typescript
-export interface ForgeElementConstructor
-```
-
-Het statische stylesheetcontract geïmplementeerd door gegenereerde Forge-elementen.
-
-URL's worden in de elementklasse bewaard in plaats van in het document, dus een schaduw
-root kan de gecompileerde zijspannen laden die stijlen op documentniveau niet kunnen bereiken.
-
-### ForgeElementHostConstructor
-
-**Soort:** type
-
-```typescript
-export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
-```
-
-Een bouwbare native elementklasse geaccepteerd door {@link ForgeElementMixin}.
-
-### ForgeElementMixin
-
-**Soort:** functie
-
-```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
-```
-
-Voeg de host-onafhankelijke runtime van Forge toe aan een native elementconstructor.
-Aangepaste ingebouwde installaties kunnen niet zowel `ForgeElement` als `HTMLDivElement` uitbreiden;
-deze mix kopieert het gedrag met behoud van de oorspronkelijke prototypeketen.
-
-#### Parameters
-
-| Naam  | Typ   | Beschrijving |
-| ----- | ----- | ------------ |
-| Basis | TBase |              |
-
-### ForgeSlotMarker
-
-**Soort:** interface
-
-```typescript
-export interface ForgeSlotMarker extends HTMLElement
-```
-
-Runtime-markering uitgegeven door de Web-Components-compiler voor dubbelzinnige slots.
-
-### heeftSlotContent
-
-**Soort:** functie
-
-```typescript
-function hasSlotContent(host: Element, name?: string): boolean;
-```
-
-Of `host` inhoud kreeg voor een van zijn slots: die van het oorspronkelijke doel
-vervanging voor de neutrale `hasSlot('x')` marker.
-
-`hasSlot` is het vocabulaire tijdens het compileren: Vue verlaagt het naar `!!slots.x`, React naar
-`properties.x != null`, en een aangepast element heeft geen van beide, dus de controle is uitgevoerd
-tegen de DOM. Een gegenereerd element wordt weergegeven in een **open schaduw
-root**, wat betekent dat de inhoud die een consument projecteert op de host blijft staan
-**licht** DOM als zijn kinderen - een benoemd slot wordt gevuld door een kind dat draagt
-`slot="<name>"`, en het standaardslot van elk kind dat er geen heeft. Alleen
-er wordt rekening gehouden met directe kinderen, precies zoals de slottoewijzing zelf, en a
-tekst met alleen witruimte node telt niet als inhoud.
-
-De kinderen worden uitgelaten in plaats van bevraagd met `[slot="…"]`, dus een slotnaam
-heeft geen CSS-escaping nodig, en dus een kaal tekstkind (waar geen enkele selector aan kan tippen)
-vult nog steeds het standaardslot.
-
-Houd er rekening mee dat een slot alleen waarneembaar is als de kinderen van de gastheer bestaan: tijdens de
-parser's upgrade van een element geschreven in de initiële HTML, `connectedCallback`
-loopt voordat ze worden bevestigd. Inhoud die later wordt geprojecteerd, geeft het element opnieuw weer
-via het gebruikelijke reactieve pad.
-
-#### Parameters
-
-| Naam     | Typ        | Beschrijving |
-| -------- | ---------- | ------------ |
-| gastheer | Element    |              |
-| naam     | tekenreeks |              |
-
-### html
-
-**Soort:** functie
-
-```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
-```
-
-Getagde sjabloonfabriek. Legt de statische en dynamische strings van de oproepsite vast
-waarden in een {@link TemplateResult} zodat {@link render} in DOM kan worden gerealiseerd.
-
-#### Parameters
-
-| Naam    | Typ                     | Beschrijving |
-| ------- | ----------------------- | ------------ |
-| snaren  | TemplateStringsArray    |              |
-| waarden | alleen-lezen onbekend[] |              |
-
-### HtmlInhoud
-
-**Soort:** functie
-
-```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
-```
-
-Bouw een native Web-Components raw-content resultaat zonder te ontsnappen aan `html`.
-
-#### Parameters
-
-| Naam          | Typ                      | Beschrijving |
-| ------------- | ------------------------ | ------------ |
-| eigenschappen | HtmlContenteigenschappen |              |
-
-### HtmlContentProperties
-
-**Soort:** interface
-
-```typescript
-export interface HtmlContentProperties
-```
-
-Eigenschappen geaccepteerd door de native Web-Components HtmlContent-helper.
-
-### HtmlContentResultaat
-
-**Soort:** klasse
-
-```typescript
-export class HtmlContentResult
-```
-
-Een native host plus vertrouwde onbewerkte onderliggende opmaak, weergegeven door {@link render}.
-
-### Niets
-
-**Soort:** constant
-
-```typescript
-export const nothing: unique symbol;
-```
-
-Sentinel weergegeven als "geen waarde": in kindpositie produceert het niets, in
-attribuutpositie waar het het attribuut verwijdert – het oorspronkelijke equivalent van
-lit-html's `nothing`.
-
-### Eigendomsverklaring
-
-**Soort:** interface
-
-```typescript
-export interface PropertyDeclaration
-```
-
-Een reactieve eigenschapsdeclaratie voor een {@link ForgeElement}-subklasse.
-
-### RawHTml
-
-**Soort:** klasse
-
-```typescript
-export class RawHtml
-```
-
-Een vertrouwde onbewerkte HTML-waarde die wordt gebruikt door de native Web-Components-adapter.
-
-### veroorzaken
-
-**Soort:** functie
-
-```typescript
-function render(
-  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
-  container: ParentNode,
-): void;
-```
-
-Geef een resultaat weer in `container` met behulp van een persistente sjablooninstantie. Statisch
-DOM en oorspronkelijke vormstatus blijven behouden, terwijl alleen gewijzigde bindingsbereiken dat zijn
-bijgewerkt; incompatibele sjabloontypen vervangen de inhoud die eigendom is van de renderer.
-
-#### Parameters
-
-| Naam      | Typ                                                                                      | Beschrijving |
-| --------- | ---------------------------------------------------------------------------------------- | ------------ |
-| resultaat | SjabloonResultaat \| DomTemplateResult\| DynamicElementResultaat \| HtmlContentResultaat |              |
-| houder    | ParentNode                                                                               |              |
-
-### solveForgeSlotMarkers
-
-**Soort:** functie
-
-```typescript
-function resolveForgeSlotMarkers(
-  root: ParentNode,
-  owner: ForgeElement,
-  sourceChildren: readonly Node[],
-  destinationRoot: ShadowRoot,
-): void;
-```
-
-Los door de compiler uitgezonden runtimeslotmarkeringen op in een renderfragment.
-
-Markeringen zonder inhoudseigenschap worden native slots, waarbij de
-de terugval- en toewijzingssemantiek van de browser, tenzij hetzelfde slot is
-herhaald in de renderboom. Herhaalde verkooppunten materialiseren klonen van de
-originele light-DOM-kinderen, zodat elk verkooppunt deterministische inhoud krijgt.
-Inhoudsmarkeringen worden verlaagd naar native slots wanneer hun waarde die van de eigenaar is
-originele licht-DOM-kinderen en de uitlaat worden niet herhaald; anders hun
-waarde wordt gematerialiseerd als laatste redmiddel.
-
-#### Parameters
-
-| Naam           | Typ                 | Beschrijving |
-| -------------- | ------------------- | ------------ |
-| wortel         | ParentNode          |              |
-| eigenaar       | ForgeElement        |              |
-| bronKinderen   | alleen-lezen Node[] |              |
-| bestemmingRoot | Schaduwwortel       |              |
-
-### SjabloonResultaat
-
-**Soort:** klasse
-
-```typescript
-export class TemplateResult
-```
-
-Een geparseerd `html\`…\`` resultaat: de statische tekenreeksen plus de geïnterpoleerde waarden.
-
-### onveilige HTML
-
-**Soort:** functie
-
-```typescript
-function unsafeHtml(value: string): RawHtml;
-```
-
-Markeer een tekenreeks als vertrouwde onderliggende opmaak voor het oorspronkelijke webcomponentenpad.
-
-#### Parameters
-
-| Naam   | Typ        | Beschrijving |
-| ------ | ---------- | ------------ |
-| waarde | tekenreeks |              |
-
-### gebruikId
-
-**Soort:** functie
-
-```typescript
-function useId(): string;
-```
-
-De vervanging van het oorspronkelijke doelwit voor React's `useId`.
-
-Het neutrale vocabulaire biedt `useId()` voor de ID's die een besturingselement daaraan koppelen
-`<label for>` / `aria-describedby`; React wijst het toe aan zijn eigen `useId` en Solid
-naar `createUniqueId`, maar een aangepast element kan geen framework-runtime lenen
-één van - dus dit is het.
-
-Een teller op moduleniveau is hier voldoende, en bewust eenvoudiger dan een
-willekeurige/gehashte generator: een id hoeft alleen uniek te zijn **binnen een document**,
-en de compiler tilt een `const x = useId()` uit `render()` naar een
-instance-veld, dus elke elementinstantie roept dit precies één keer aan
-behoudt zijn id gedurende zijn hele levensduur. Opeenvolgende oproepen dus nooit
-botsen, is er geen afhankelijkheid (nanoïde, `crypto.randomUUID`) nodig, en de
-resultaat is stabiel en debugbaar (`forge-1`, `forge-2`, …). De waarde is een
-geldige HTML `id` en een geldige CSS-identifier, zodat deze in een selector kan worden gebruikt
-onontkoombaar.
-
-### WebComponentsInternalsBeleid
-
-**Soort:** interface
-
-```typescript
-export interface WebComponentsInternalsPolicy
-```
-
-Capaciteitsverzoeken voor de {@link ElementInternals} API van het platform.
-
-### WebComponentenSchaduwbeleid
-
-**Soort:** interface
-
-```typescript
-export interface WebComponentsShadowPolicy
-```
-
-Getypte schaduwwortelopties geaccepteerd door gegenereerde Forge-elementen.
-
 ## `src/runtime/class-names`
 
 ### klasseNamen
@@ -915,9 +25,9 @@ eerste gebeurtenis wint). Retourneert een lege tekenreeks als er niets actief is
 
 #### Parameters
 
-| Naam    | Typ                       | Beschrijving |
-| ------- | ------------------------- | ------------ |
-| waarden | alleen-lezen ClassValue[] |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------------- | ----------- |
+| waarden | alleen-lezen ClassValue[] |             |
 
 ### Klassewaarde
 
@@ -945,9 +55,9 @@ met {@link useContext}.
 
 #### Parameters
 
-| Naam            | Typ | Beschrijving |
-| --------------- | --- | ------------ |
-| standaardwaarde | T   |              |
+| Naam | Typ | Beschrijving |
+| ------------ | ---- | ----------- |
+| standaardwaarde | T |             |
 
 ### isContextProvider
 
@@ -961,9 +71,9 @@ Of een waarde een context-{@link MpContext.Provider}-functie is.
 
 #### Parameters
 
-| Naam   | Typ      | Beschrijving |
-| ------ | -------- | ------------ |
-| waarde | onbekend |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------- | ----------- |
+| waarde | onbekend |             |
 
 ### MP_CONTEXT
 
@@ -1019,9 +129,9 @@ Lees de huidige waarde van een context: de dichtstbijzijnde omhulling
 
 #### Parameters
 
-| Naam    | Typ          | Beschrijving |
-| ------- | ------------ | ------------ |
-| context | MpContext<T> |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------ | ----------- |
+| context | MpContext<T> |             |
 
 ## `src/runtime/dynamic`
 
@@ -1055,7 +165,7 @@ De eigenschappen die worden geaccepteerd door het element {@link Dynamic}.
 Dit is een van de weinige verklaringen die op legitieme wijze een **open zak** bewaren:
 elke eigenschap anders dan `is` wordt letterlijk doorgestuurd naar het element `is`
 lost op, en dat element is alleen bekend tijdens runtime, dus de attributen ervan
-aanvaardt, kunnen hier niet worden opgesomd. Component-props-interfaces mogen _niet_
+aanvaardt, kunnen hier niet worden opgesomd. Component-props-interfaces moeten _not_ zijn
 volg dit patroon — zie {@link MpPropertyBag}.
 
 ## `src/runtime/h`
@@ -1081,11 +191,11 @@ hetzij als afsluitende variadische argumenten (de klassieke transformatie) of vi
 
 #### Parameters
 
-| Naam          | Typ                                                | Beschrijving |
-| ------------- | -------------------------------------------------- | ------------ |
-| typ           | MpElementType \| ((eigenschappen: P) => MpElement) |              |
-| eigenschappen | P \| nul                                           |              |
-| kinderen      | MpChild[]                                          |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------------------------------- | ----------- |
+| typ | MpElementType \| ((eigenschappen: P) => MpElement) |             |
+| eigenschappen | P \| nul |             |
+| kinderen | MpChild[] |             |
 
 ## `src/runtime/hooks`
 
@@ -1104,7 +214,7 @@ Een afhankelijkheidslijst die bepaalt wanneer een effect/memo opnieuw wordt uitg
 **Soort:** component
 
 ```typescript
-export type MpEffectCallback = () => void | MpEffectCleanup;
+export type MpEffectCallback = () => MpEffectCleanup | void;
 ```
 
 De effect-callback uitgevoerd door {@link useEffect}.
@@ -1134,7 +244,7 @@ Een veranderlijke ref-container, die de `MutableRefObject` van React weerspiegel
 **Soort:** component
 
 ```typescript
-export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
+export type MpSetState<T> = (value?: T | ((previous: T) => T)) => void;
 ```
 
 Update een staatsdeel, hetzij naar een nieuwe waarde, hetzij via een updatefunctie.
@@ -1151,10 +261,10 @@ Neutraal `useCallback`. Retourneert de callback ongewijzigd voor de render.
 
 #### Parameters
 
-| Naam              | Typ              | Beschrijving |
-| ----------------- | ---------------- | ------------ |
-| terugbellen       | T                |              |
-| _afhankelijkheden | MpDependencyList |              |
+| Naam | Typ | Beschrijving |
+| ------------- | ---------------- | ----------- |
+| terugbellen | T |             |
+| _afhankelijkheden | MpDependencyList |             |
 
 ### gebruikEffect
 
@@ -1169,10 +279,10 @@ niet uitvoeren tijdens een enkele SSR/adapter-rendering.
 
 #### Parameters
 
-| Naam              | Typ              | Beschrijving |
-| ----------------- | ---------------- | ------------ |
-| _effect           | MpEffectCallback |              |
-| _afhankelijkheden | MpDependencyList |              |
+| Naam | Typ | Beschrijving |
+| ------------- | ---------------- | ----------- |
+| _effect | MpEffectCallback |             |
+| _afhankelijkheden | MpDependencyList |             |
 
 ### gebruikId
 
@@ -1202,17 +312,17 @@ Neutraal `useMemo`. Berekent de waarde één keer voor de weergave.
 
 #### Parameters
 
-| Naam              | Typ              | Beschrijving |
-| ----------------- | ---------------- | ------------ |
-| fabriek           | () => T          |              |
-| _afhankelijkheden | MpDependencyList |              |
+| Naam | Typ | Beschrijving |
+| ------------- | ---------------- | ----------- |
+| fabriek | () => T |             |
+| _afhankelijkheden | MpDependencyList |             |
 
 ### gebruikRef
 
 **Soort:** functie
 
 ```typescript
-function useRef(initial: T): MpRef<T>;
+function useRef(initial?: T): MpRef<T>;
 ```
 
 Neutraal `useRef`. Retourneert een nieuwe `{ current }`-container voor de single
@@ -1220,16 +330,16 @@ renderen; de framework-runtimes behouden het voor alle renders.
 
 #### Parameters
 
-| Naam     | Typ | Beschrijving |
-| -------- | --- | ------------ |
-| initiële | T   |              |
+| Naam | Typ | Beschrijving |
+| ------- | ---- | ----------- |
+| initiële | T |             |
 
 ### gebruikState
 
 **Soort:** functie
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>];
+function useState(initial?: T | (() => T)): [T, MpSetState<T>];
 ```
 
 Neutraal `useState`. De basislijnimplementatie retourneert de initiële waarde en
@@ -1238,9 +348,9 @@ het juiste gedrag voor een enkele SSR/adapter-weergave.
 
 #### Parameters
 
-| Naam     | Typ            | Beschrijving |
-| -------- | -------------- | ------------ |
-| initiële | T \| (() => T) |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| initiële | T \| (() => T) |             |
 
 ## `src/runtime/html-content`
 
@@ -1273,6 +383,29 @@ bag in plaats van het hele DOM-attribuutoppervlak op te sommen.
 
 ## `src/runtime/slots`
 
+### verzamelSlottedChildren
+
+**Soort:** functie
+
+```typescript
+function collectSlottedChildren(children: readonly MpChild[]): SlottedChildren;
+```
+
+Verdeel de onderliggende componenten van een bovenliggende component op basis van hun `slot="…"`-markering, zodat a
+Eenmalig te schrijven component kan inhoud **doorgeven** in het benoemde slot van een onderliggende component
+(`<ForgeDropdown><button slot="trigger" />…</ForgeDropdown>`). Kinderen dragen
+een eigenschap `slot` zijn gegroepeerd onder die naam (waarbij de markering is verwijderd, dus
+de opgeloste inhoud zendt nooit een verdwaald `slot`-attribuut uit); al het andere
+blijft in {@link SlottedChildren.defaultChildren}. De adapters vouwen de genoemde
+groepen in de rekwisieten van het kind, precies weerspiegelend hoe de compiler de
+dezelfde `slot="…"`-markeringen als Vue `<template #name>` / a React `name` prop.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------------------ | ----------- |
+| kinderen | alleen-lezen MpChild[] |             |
+
 ### heeftSlot
 
 **Soort:** functie
@@ -1282,7 +415,7 @@ function hasSlot(name?: string): boolean;
 ```
 
 Of de omsluitende component inhoud kreeg voor een slot – de neutrale
-tegenhanger van Vue's `$slots.x` / een React `properties.x != null`-controle. Een
+tegenhanger van de `$slots.x` van Vue / een React `properties.x != null`-controle. Een
 weggelaten (of `'default'`) naam richt zich op het standaardslot (`children`):
 
 ```tsx
@@ -1297,23 +430,23 @@ weggelaten (of `'default'`) naam richt zich op het standaardslot (`children`):
 
 `@mission-platform/vite-plugin-forge` herschrijft de oproep rechtstreeks naar elk
 native aanwezigheidscontrole van het framework: Vue's `!!slots.x` (`$slots.x` in een
-`v-if`) en React's `properties.x != null` - zodat een component die slechts één keer kan worden geschreven
+`v-if`) en React's `properties.x != null` - dus een component die slechts eenmaal kan worden geschreven
 geef alleen een optioneel wrappergebied weer als de sleuf gevuld is, op beide
 kaders. De implementatie hier is de runtime-adapter / SSR-basislijn,
 het lezen van de slotscope van de huidige component.
 
 #### Parameters
 
-| Naam | Typ        | Beschrijving |
-| ---- | ---------- | ------------ |
-| naam | tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| naam | tekenreeks |             |
 
 ### MpRenderEigenschap
 
 **Soort:** component
 
 ```typescript
-export type MpRenderProperty<S = MpPropertyBag> = (scope: S) => MpChild | readonly MpChild[];
+export type MpRenderProperty<S = MpPropertyBag, R = MpChild | readonly MpChild[]> = (scope: S) => R;
 ```
 
 Een **render-prop / scoped-slot**-functie: gegeven de reikwijdte van het slot retourneert deze
@@ -1347,7 +480,7 @@ De eigenschappen die worden geaccepteerd door het element {@link Slot}.
 Een `<Slot>` is het enige neutrale element dat echt willekeurig extraatje accepteert
 attributen: een **scoped** slot geeft zijn bereik door als attributen
 (`<Slot name="row" item={item} index={i} />`), dus de declaratie behoudt een
-open de zak in plaats van eigenschappen op te sommen die hij niet kan kennen.
+open zak in plaats van eigenschappen op te sommen die hij niet kan kennen.
 
 ### popSlotScope
 
@@ -1371,9 +504,9 @@ Duw de steunen van het uit te breiden onderdeel op de slotscope.
 
 #### Parameters
 
-| Naam          | Typ           | Beschrijving |
-| ------------- | ------------- | ------------ |
-| eigenschappen | MpPropertyBag |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------- | ----------- |
+| eigenschappen | MpPropertyBag |             |
 
 ### oplossingSlot
 
@@ -1390,10 +523,39 @@ resterende (niet-`name`) eigenschappen van het slotelement.
 
 #### Parameters
 
-| Naam          | Typ                    | Beschrijving |
-| ------------- | ---------------------- | ------------ |
-| eigenschappen | MpSlotEigenschappen    |              |
-| terugval      | alleen-lezen MpChild[] |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------------------ | ----------- |
+| eigenschappen | MpSlotEigenschappen |             |
+| terugval | alleen-lezen MpChild[] |             |
+
+### oplossingSlotMarkers
+
+**Soort:** functie
+
+```typescript
+function resolveSlotMarkers(children: readonly MpChild[]): MpChild[];
+```
+
+Zorg voor een grondige oplossing van elke `<Slot name="…" />` **marker** binnen een door een ouder geschreven bestand
+onderliggende boom tegen het **huidige** (bovenliggende) bereik, en retourneert een boom van beton
+inhoud. Hierdoor kan een eenmalig te schrijven component een van zijn eigen componenten **doorsturen**
+benoemde slots in de slot van een onderliggende component —
+`<ForgeDrawer><div slot="header"><Slot name="startHeader" /></div></ForgeDrawer>`
+- en laat het lexicaal (tegen de doorstuurcomponent) precies oplossen
+zoals de gecompileerde uitvoer (React legt `properties.startHeader` vast in de
+weergave van de ouders; Vue stuurt het slot door via `<template #header>`).
+
+De adapters noemen dit op de kinderen van een componentelement **voordat** ze op de
+het bereik van het kind, zodat de markeringen het bovenliggende bereik zien dat ze heeft geschreven; markeringen
+het kind zelf terugkeert, blijft onaangeroerd (ze worden later opgelost, onder de
+eigen bereik van het kind). Niet-slotelementen worden recursief bewandeld, dus geneste markeringen
+(in een `slot="…"`-wrapper) ook oplossen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------------------ | ----------- |
+| kinderen | alleen-lezen MpChild[] |             |
 
 ## `src/runtime/teleport`
 
@@ -1482,6 +644,467 @@ importeer naar de eigen groepsovergang van elk framework: de ingebouwde Vue
 
 ## `src/runtime/types`
 
+### KameelToKebab
+
+**Soort:** type
+
+```typescript
+export type CamelToKebab<S extends string> = S extends `$
+```
+
+Converteer een camelCase-tekenreekstype naar kebab-case.
+
+### createAvatarContainerStyle
+
+**Soort:** functie
+
+```typescript
+function createAvatarContainerStyle(): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+### createAvatarImageImgStyle
+
+**Soort:** functie
+
+```typescript
+function createAvatarImageImgStyle(): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+### maakAvatarInlineStyle
+
+**Soort:** functie
+
+```typescript
+function createAvatarInlineStyle(
+  size: string = 'md',
+  shape: string = 'circle',
+  src?: string,
+  variant: string = 'primary',
+  color?: string,
+): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| maat | tekenreeks |             |
+| vorm | tekenreeks |             |
+| src | tekenreeks |             |
+| variant | tekenreeks |             |
+| kleur | tekenreeks |             |
+
+### createAvatarStatusInlineStyle
+
+**Soort:** functie
+
+```typescript
+function createAvatarStatusInlineStyle(size: string = 'md', status?: string): Record<string, string> | undefined;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------ | ----------- |
+| maat | tekenreeks |             |
+| staat | tekenreeks |             |
+
+### creëerAchtergrondVideoInlineStyle
+
+**Soort:** functie
+
+```typescript
+function createBackgroundVideoInlineStyle(minHeight: string = '24rem'): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | ------ | ----------- |
+| minHoogte | tekenreeks |             |
+
+### createCodeScannerStyle
+
+**Soort:** functie
+
+```typescript
+function createCodeScannerStyle(): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+### createContainerInlineStyle
+
+**Soort:** functie
+
+```typescript
+function createContainerInlineStyle(
+  variant: string = 'responsive',
+  maxWidth: string = 'lg',
+  gutter: string = 'md',
+  center: boolean = true,
+): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------- | ----------- |
+| variant | tekenreeks |             |
+| maxBreedte | tekenreeks |             |
+| goot | tekenreeks |             |
+| centrum | booleaans |             |
+
+### maakCoverObjectFitStyle
+
+**Soort:** functie
+
+```typescript
+function createCoverObjectFitStyle(): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+### createForgeComponentStyle
+
+**Soort:** functie
+
+```typescript
+function createForgeComponentStyle(
+  prefix: string,
+  properties?: T,
+  style?: Record<string, string>,
+): Record<string, string> | undefined;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------------- | ----------- |
+| voorvoegsel | tekenreeks |             |
+| eigenschappen | T |             |
+| stijl | Record<string, string> |             |
+
+### creëerForgeStyle
+
+**Soort:** functie
+
+```typescript
+function createForgeStyle(style: T): DefinedForgeStyle<T> | undefined;
+```
+
+Bouw een neutrale `style`-kaart op basis van gedefinieerde waarden voor aangepaste eigenschappen.
+
+Invoer waarvan de waarde `undefined` is, wordt weggelaten, dus SCSS
+`var(--forge-*, <token fallback>)`-ketens blijven actief. Retourneert `undefined`
+wanneer er geen overschrijvingen aanwezig zijn.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ---- | ----------- |
+| stijl | T |             |
+
+### createGaugeInlineMath
+
+**Soort:** functie
+
+```typescript
+function createGaugeInlineMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): {
+  clampedValue: number;
+  percentage: number;
+  displayValue: string;
+  dashOffset: number;
+};
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | nummer |             |
+| min | nummer |             |
+| maximaal | nummer |             |
+
+### createGridLayoutInlineStyle
+
+**Soort:** functie
+
+```typescript
+function createGridLayoutInlineStyle(rows: number = 1, columns: number = 1, gap: string = 'md'): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| rijen | nummer |             |
+| kolommen | nummer |             |
+| kloof | tekenreeks |             |
+
+### maakHighlightStyle
+
+**Soort:** functie
+
+```typescript
+function createHighlightStyle(left: string = '0%', width: string = '100%'): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| links | tekenreeks |             |
+| breedte | tekenreeks |             |
+
+### createLeftPositionStyle
+
+**Soort:** functie
+
+```typescript
+function createLeftPositionStyle(left: string = '0%'): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| links | tekenreeks |             |
+
+### createObjectFitStyle
+
+**Soort:** functie
+
+```typescript
+function createObjectFitStyle(fit: string = 'cover'): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| passen | tekenreeks |             |
+
+### createPreviewTextStyle
+
+**Soort:** functie
+
+```typescript
+function createPreviewTextStyle(): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+### createProgressBarPercent
+
+**Soort:** functie
+
+```typescript
+function createProgressBarPercent(
+  value: number = 0,
+  max: number = 100,
+  indeterminate: boolean = false,
+): { percent: number; percentLabel: string };
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------- | ------- | ----------- |
+| waarde | nummer |             |
+| maximaal | nummer |             |
+| onbepaald | booleaans |             |
+
+### createRangeInputMath
+
+**Soort:** functie
+
+```typescript
+function createRangeInputMath(
+  modelValue: [number, number] = [0, 100],
+  min: number = 0,
+  max: number = 100,
+): {
+  minPercent: number;
+  maxPercent: number;
+  highlightLeft: string;
+  highlightWidth: string;
+  minLeft: string;
+  maxLeft: string;
+};
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | ---------------- | ----------- |
+| modelWaarde | [nummer, nummer] |             |
+| min | nummer |             |
+| maximaal | nummer |             |
+
+### maakResponsiveImageInlineStyle
+
+**Soort:** functie
+
+```typescript
+function createResponsiveImageInlineStyle(aspectRatio?: string): Record<string, string> | undefined;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ------ | ----------- |
+| aspectRatio | tekenreeks |             |
+
+### maakResponsiveVideoInlineStyle
+
+**Soort:** functie
+
+```typescript
+function createResponsiveVideoInlineStyle(
+  aspectRatio: string = '16 / 9',
+  fit: string = 'contain',
+): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ------ | ----------- |
+| aspectRatio | tekenreeks |             |
+| passen | tekenreeks |             |
+
+### createSkeletonInlineStyle
+
+**Soort:** functie
+
+```typescript
+function createSkeletonInlineStyle(width?: string, height?: string): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------ | ----------- |
+| breedte | tekenreeks |             |
+| hoogte | tekenreeks |             |
+
+### creëerSliderMath
+
+**Soort:** functie
+
+```typescript
+function createSliderMath(
+  value: number = 0,
+  min: number = 0,
+  max: number = 100,
+): { percent: number; fillWidth: string; thumbLeft: string };
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | nummer |             |
+| min | nummer |             |
+| maximaal | nummer |             |
+
+### createVerticalLayoutInlineStyle
+
+**Soort:** functie
+
+```typescript
+function createVerticalLayoutInlineStyle(gap: string = 'var(--mp-spacing-4)'): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| kloof | tekenreeks |             |
+
+### createWidthStyle
+
+**Soort:** functie
+
+```typescript
+function createWidthStyle(width: string = '0%'): Record<string, string>;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| breedte | tekenreeks |             |
+
+### CSSStyle-eigenschappen
+
+**Soort:** type
+
+```typescript
+export type CSSStyleProperties =
+```
+
+Kaderneutraal object in CSS-stijl dat wordt gebruikt door het kenmerk JSX `style`.
+
+Aangepaste eigenschappen die eigendom zijn van componenten moeten dit type uitbreiden met expliciet
+`--forge-*`-sleutels (bijvoorbeeld `CSSStyleProperties & { '--forge-button-radius'?: string | undefined }`)
+in plaats van een woordenboek zonder type of een niet-DOM `styles`-tas te introduceren.
+
+### ForgePropertyBag
+
+**Soort:** type
+
+```typescript
+export type ForgePropertyBag<T extends Record<string, string | undefined> = Record<string, string | undefined>> =
+```
+
+Toegestane eigenschapsoverschrijvingstas die eigendomssleutels kebab-case of camelCase accepteert.
+
 ### Fragment
 
 **Soort:** constant
@@ -1515,9 +1138,19 @@ Beperk een willekeurige waarde tot een {@link MpElement}.
 
 #### Parameters
 
-| Naam   | Typ      | Beschrijving |
-| ------ | -------- | ------------ |
-| waarde | onbekend |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------- | ----------- |
+| waarde | onbekend |             |
+
+### KebabToCamel
+
+**Soort:** type
+
+```typescript
+export type KebabToCamel<S extends string> = S extends `$
+```
+
+Converteer een tekenreekstype kebab-case naar camelCase.
 
 ### MpKind
 
@@ -1575,9 +1208,9 @@ export type MpPropertyBag = Record<string, unknown>;
 
 De **runtime** verzameling attributen/rekwisieten die wordt gedragen door een {@link MpElement}.
 
-Dit is met opzet een eenvoudige, ongetypeerde plaat: het is wat de JSX-fabriek heeft
+Dit is bewust een eenvoudige, ongetypeerde plaat: het is wat de JSX-fabriek heeft
 bouwt en waar de adapters in indexeren tijdens het lopen door een neutrale boom. Het is
-_niet_ een basistype voor de rekwisieten van een component — een component declareert precies de
+_not_ een basistype voor de rekwisieten van een component — een component declareert precies de
 eigenschappen die het accepteert (inclusief `children?: MpChild | readonly MpChild[]`
 wanneer deze worden weergegeven), zodat de controle op overtollige eigendommen en `keyof` blijven bestaan
 betekenisvol in elk samengesteld doel. Het handjevol attributen dat elk element kenmerkt
@@ -1591,7 +1224,7 @@ accepteert ongeacht, worden één keer gedeclareerd in {@link MpReservedProperti
 export interface MpReservedProperties
 ```
 
-De **gereserveerde** kenmerken die elk JSX-element accepteert, bovenop de eigenschappen
+De **gereserveerde** attributen die elk JSX-element accepteert, bovenop de eigenschappen
 het declareert zichzelf, aangesloten als `JSX.IntrinsicAttributes` door de opt-in
 `@mission-platform/forge-jsx/jsx-globals`-typeringen.
 
@@ -1607,6 +1240,834 @@ Geen van beide maakt deel uit van het rekwisietencontract van een component; bei
 _parent_ (de reconciler, de slotrouter), nooit door de component zelf —
 dus ze worden hier voor elk element geaccepteerd in plaats van op elk element te worden vermeld
 rekwisieten-interface.
+
+### MpSuspenseKind
+
+**Soort:** component
+
+```typescript
+export type MpSuspenseChild = MpChild | PromiseLike<MpSuspenseChild> | readonly MpSuspenseChild[];
+```
+
+Synchrone of recursief asynchrone inhoud geaccepteerd door Suspense.
+
+### MpSuspenseProperties
+
+**Soort:** component
+
+```typescript
+export interface MpSuspenseProperties
+```
+
+Rekwisieten gedragen door de raamwerk-neutrale spanningsmarkering.
+
+### renderAccordeonItems
+
+**Soort:** functie
+
+```typescript
+function renderAccordionItems(
+  items: readonly any[] = [],
+  _exclusive: boolean = true,
+  defaultOpen: readonly string[] = [],
+  _properties?: any,
+): any;
+```
+
+Bouw een op componenten gerichte CSS-stijlkaart met aangepaste eigenschappen vanuit een camelCase- of kebab-case-eigenschappentas.
+
+Converteert camelCase-sleutels automatisch naar kebab-case, zorgt voor de componentnaamruimte
+het voorvoegsel `--forge-<prefix>-` wordt toegepast en laat ongedefinieerde vermeldingen weg, zodat CSS-tokens terugvallen
+ketens blijven actief. Retourneert `undefined` wanneer er geen gedefinieerde overschrijvingen aanwezig zijn.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ----------------- | ----------- |
+| artikelen | alleen-lezen elke[] |             |
+| _exclusief | booleaans |             |
+| standaardOpen | alleen-lezen tekenreeks[] |             |
+| _eigenschappen | elke |             |
+
+### renderActivityFeedItems
+
+**Soort:** functie
+
+```typescript
+function renderActivityFeedItems(items: readonly any[] = [], maxItems?: number, onItemClick?: (item: any) => void): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ------------------- | ----------- |
+| artikelen | alleen-lezen elke[] |             |
+| maxItems | nummer |             |
+| opItemKlik | (item: willekeurig) => ongeldig |             |
+
+### renderAssetBrowserGrid
+
+**Soort:** functie
+
+```typescript
+function renderAssetBrowserGrid(
+  assets: readonly any[] = [],
+  selected: readonly string[] = [],
+  onSelect?: (asset: any) => void,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | -------------------- | ----------- |
+| activa | alleen-lezen elke[] |             |
+| geselecteerd | alleen-lezen tekenreeks[] |             |
+| opSelecteer | (activum: elk) => ongeldig |             |
+
+### renderBarcodeSvg
+
+**Soort:** functie
+
+```typescript
+function renderBarcodeSvg(
+  value: string = '',
+  symbology: string = 'code128',
+  color: string = '#000000',
+  background: string = '#ffffff',
+  displayValue: boolean = false,
+  ariaLabel?: string,
+  onError?: (err: Error) => void,
+  showActions?: any,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------ | -------------------- | ----------- |
+| waarde | tekenreeks |             |
+| symboliek | tekenreeks |             |
+| kleur | tekenreeks |             |
+| achtergrond | tekenreeks |             |
+| weergavewaarde | booleaans |             |
+| ariaLabel | tekenreeks |             |
+| opFout | (fout: fout) => ongeldig |             |
+| showActions | elke |             |
+
+### renderBreadcrumbItems
+
+**Soort:** functie
+
+```typescript
+function renderBreadcrumbItems(items: readonly any[] = [], separator: string = '/'): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | -------------- | ----------- |
+| artikelen | alleen-lezen elke[] |             |
+| scheidingsteken | tekenreeks |             |
+
+### renderCarouselIndicatorItems
+
+**Soort:** functie
+
+```typescript
+function renderCarouselIndicatorItems(
+  total: number = 0,
+  current: number = 0,
+  clickable: boolean = true,
+  variant: string = 'dots',
+  onSelect?: (index: number) => void,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | ----------------------- | ----------- |
+| totaal | nummer |             |
+| huidig ​​| nummer |             |
+| klikbaar | booleaans |             |
+| variant | tekenreeks |             |
+| opSelecteer | (index: getal) => ongeldig |             |
+
+### renderCarrouselDia's
+
+**Soort:** functie
+
+```typescript
+function renderCarouselSlides(
+  slides: readonly any[] = [],
+  current: number = 0,
+  _orientation: string = 'horizontal',
+  slideWidth: number = 100,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------ | -------------- | ----------- |
+| dia's | alleen-lezen elke[] |             |
+| huidig ​​| nummer |             |
+| _oriëntatie | tekenreeks |             |
+| slideWidth | nummer |             |
+
+### renderCatalogIcon
+
+**Soort:** functie
+
+```typescript
+function renderCatalogIcon(name: string, size: number = 20, color: string = 'currentColor'): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| naam | tekenreeks |             |
+| maat | nummer |             |
+| kleur | tekenreeks |             |
+
+### renderCodeBlockLineNumbers
+
+**Soort:** functie
+
+```typescript
+function renderCodeBlockLineNumbers(code: string = ''): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| code | tekenreeks |             |
+
+### renderCommandPaletteGroups
+
+**Soort:** functie
+
+```typescript
+function renderCommandPaletteGroups(
+  commands: readonly any[] = [],
+  _groups: readonly string[] = [],
+  activeIndex: number = 0,
+  onSelect?: (command: any) => void,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ---------------------- | ----------- |
+| opdrachten | alleen-lezen elke[] |             |
+| _groepen | alleen-lezen tekenreeks[] |             |
+| actieveIndex | nummer |             |
+| opSelecteer | (opdracht: willekeurig) => ongeldig |             |
+
+### renderCommentBoom
+
+**Soort:** functie
+
+```typescript
+function renderCommentTree(
+  comments: readonly any[] = [],
+  onReply?: (comment: any) => void,
+  onResolve?: (comment: any) => void,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | ---------------------- | ----------- |
+| opmerkingen | alleen-lezen elke[] |             |
+| opAntwoord | (commentaar: willekeurig) => ongeldig |             |
+| opOplossen | (commentaar: willekeurig) => ongeldig |             |
+
+### renderComparisonTableBody
+
+**Soort:** functie
+
+```typescript
+function renderComparisonTableBody(items: readonly any[] = [], features: readonly any[] = []): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | -------------- | ----------- |
+| artikelen | alleen-lezen elke[] |             |
+| kenmerken | alleen-lezen elke[] |             |
+
+### renderComparisonTableHeaders
+
+**Soort:** functie
+
+```typescript
+function renderComparisonTableHeaders(items: readonly any[] = []): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | -------------- | ----------- |
+| artikelen | alleen-lezen elke[] |             |
+
+### renderCtaBannerActions
+
+**Soort:** functie
+
+```typescript
+function renderCtaBannerActions(actions: readonly any[] = []): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| acties | alleen-lezen elke[] |             |
+
+### renderDataCardMetrics
+
+**Soort:** functie
+
+```typescript
+function renderDataCardMetrics(metrics: readonly any[] = []): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| statistieken | alleen-lezen elke[] |             |
+
+### renderDropdownItems
+
+**Soort:** functie
+
+```typescript
+function renderDropdownItems(items: readonly any[] = [], onSelect?: (item: any) => void): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------------------- | ----------- |
+| artikelen | alleen-lezen elke[] |             |
+| opSelecteer | (item: willekeurig) => ongeldig |             |
+
+### renderImageSources
+
+**Soort:** functie
+
+```typescript
+function renderImageSources(sources?: readonly any[]): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| bronnen | alleen-lezen elke[] |             |
+
+### renderMarketingHeaderActions
+
+**Soort:** functie
+
+```typescript
+function renderMarketingHeaderActions(actions: readonly any[] = []): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| acties | alleen-lezen elke[] |             |
+
+### renderNavbarItems
+
+**Soort:** functie
+
+```typescript
+function renderNavbarItems(items: readonly any[] = []): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | -------------- | ----------- |
+| artikelen | alleen-lezen elke[] |             |
+
+### renderNotificationPanelItems
+
+**Soort:** functie
+
+```typescript
+function renderNotificationPanelItems(
+  notifications: readonly any[] = [],
+  onDismiss?: (id: string) => void,
+  _onRead?: (id: string) => void,
+  onActionClick?: (item: any) => void,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------- | -------------------- | ----------- |
+| meldingen | alleen-lezen elke[] |             |
+| opAfwijzen | (id: string) => ongeldig |             |
+| _onRead | (id: string) => ongeldig |             |
+| opActieKlik | (item: willekeurig) => ongeldig |             |
+
+### renderPaginationControls
+
+**Soort:** functie
+
+```typescript
+function renderPaginationControls(
+  currentPage: number = 1,
+  totalPages: number = 1,
+  maxVisiblePages: number = 7,
+  showEdges: boolean = false,
+  onPageChange?: (page: number) => void,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------------- | ---------------------- | ----------- |
+| huidigePagina | nummer |             |
+| totaalPagina's | nummer |             |
+| maxVisiblePagina's | nummer |             |
+| toonEdges | booleaans |             |
+| opPaginaWijzigen | (pagina: nummer) => ongeldig |             |
+
+### renderRatingSterren
+
+**Soort:** functie
+
+```typescript
+function renderRatingStars(
+  max: number = 5,
+  modelValue: number = 0,
+  disabled: boolean = false,
+  isReadonly: boolean = false,
+  onUpdateModelValue?: (val: number) => void,
+  onChange?: (val: number) => void,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------------ | --------------------- | ----------- |
+| maximaal | nummer |             |
+| modelWaarde | nummer |             |
+| uitgeschakeld | booleaans |             |
+| is alleen-lezen | booleaans |             |
+| onUpdateModelValue | (val: getal) => ongeldig |             |
+| opWijzigen | (val: getal) => ongeldig |             |
+
+### renderResourcePlannerRijen
+
+**Soort:** functie
+
+```typescript
+function renderResourcePlannerRows(
+  resources: readonly any[] = [],
+  segments: readonly any[] = [],
+  _assignments: readonly any[] = [],
+  _availability: readonly any[] = [],
+  _onEventClick?: (assignment: any) => void,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------- | ------------------------- | ----------- |
+| middelen | alleen-lezen elke[] |             |
+| segmenten | alleen-lezen elke[] |             |
+| _opdrachten | alleen-lezen elke[] |             |
+| _beschikbaarheid | alleen-lezen elke[] |             |
+| _onEventClick | (toewijzing: willekeurig) => ongeldig |             |
+
+### renderSegmentControlOptions
+
+**Soort:** functie
+
+```typescript
+function renderSegmentControlOptions(
+  options: readonly any[] = [],
+  modelValue?: string,
+  onSelect?: (value: string) => void,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------- | ----------- |
+| opties | alleen-lezen elke[] |             |
+| modelWaarde | tekenreeks |             |
+| opSelecteer | (waarde: string) => ongeldig |             |
+
+### renderSiteFooterSections
+
+**Soort:** functie
+
+```typescript
+function renderSiteFooterSections(sections: readonly any[] = []): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | -------------- | ----------- |
+| secties | alleen-lezen elke[] |             |
+
+### renderStepsItems
+
+**Soort:** functie
+
+```typescript
+function renderStepsItems(
+  steps: readonly any[] = [],
+  currentStep: number = 0,
+  onStepClick?: (step: number) => void,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ---------------------- | ----------- |
+| stappen | alleen-lezen elke[] |             |
+| huidigeStap | nummer |             |
+| opStepClick | (stap: nummer) => ongeldig |             |
+
+### renderTableColumns
+
+**Soort:** functie
+
+```typescript
+function renderTableColumns(columns: readonly any[] = []): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| kolommen | alleen-lezen elke[] |             |
+
+### renderTabelRijen
+
+**Soort:** functie
+
+```typescript
+function renderTableRows(data: readonly any[] = [], columns: readonly any[] = []): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| gegevens | alleen-lezen elke[] |             |
+| kolommen | alleen-lezen elke[] |             |
+
+### renderTabsLijst
+
+**Soort:** functie
+
+```typescript
+function renderTabsList(
+  tabs: readonly any[] = [],
+  activeId?: string,
+  variant: string = 'line',
+  closable: boolean = false,
+  onSelect?: (id: string) => void,
+  onClose?: (id: string) => void,
+  addable: boolean = false,
+  addLabel: string = 'Add tab',
+  onAdd?: () => void,
+): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | -------------------- | ----------- |
+| tabbladen | alleen-lezen elke[] |             |
+| actieveId | tekenreeks |             |
+| variant | tekenreeks |             |
+| afsluitbaar | booleaans |             |
+| opSelecteer | (id: string) => ongeldig |             |
+| opSluiten | (id: string) => ongeldig |             |
+| toevoegbaar | booleaans |             |
+| addLabel | tekenreeks |             |
+| opToevoegen | () => ongeldig |             |
+
+### renderTimelineItems
+
+**Soort:** functie
+
+```typescript
+function renderTimelineItems(items: readonly any[] = [], align: string = 'start'): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | -------------- | ----------- |
+| artikelen | alleen-lezen elke[] |             |
+| uitlijnen | tekenreeks |             |
+
+### renderTreeViewNodes
+
+**Soort:** functie
+
+```typescript
+function renderTreeViewNodes(nodes: readonly any[] = [], onSelect?: (node: any) => void): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------------------- | ----------- |
+| knooppunten | alleen-lezen elke[] |             |
+| opSelecteer | (node: willekeurig) => ongeldig |             |
+
+### renderUnreadBadge
+
+**Soort:** functie
+
+```typescript
+function renderUnreadBadge(unreadCount: number = 0): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ------ | ----------- |
+| ongelezenCount | nummer |             |
+
+### renderVideobronnen
+
+**Soort:** functie
+
+```typescript
+function renderVideoSources(sources?: readonly any[]): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| bronnen | alleen-lezen elke[] |             |
+
+### solveCatalogIcon
+
+**Soort:** functie
+
+```typescript
+function resolveCatalogIcon(catalog: Record<string, any>, name: string): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------------- | ----------- |
+| catalogus | Record<string, any> |             |
+| naam | tekenreeks |             |
+
+### oplossingE-mailTypografieTag
+
+**Soort:** functie
+
+```typescript
+function resolveEmailTypographyTag(asTag?: string, variant?: string): string;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| asTag | tekenreeks |             |
+| variant | tekenreeks |             |
+
+### solveIconPixelSize
+
+**Soort:** functie
+
+```typescript
+function resolveIconPixelSize(size: string = 'md'): number;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| maat | tekenreeks |             |
+
+### solveStatusIcon
+
+**Soort:** functie
+
+```typescript
+function resolveStatusIcon(catalog: Record<string, any>, status: string = 'neutral'): any;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------------- | ----------- |
+| catalogus | Record<string, any> |             |
+| staat | tekenreeks |             |
+
+### solveSyncStatusLabel
+
+**Soort:** functie
+
+```typescript
+function resolveSyncStatusLabel(status: string = 'synced', label?: string): string;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------ | ----------- |
+| staat | tekenreeks |             |
+| etiket | tekenreeks |             |
+
+### solveTextVariantForQuote
+
+**Soort:** functie
+
+```typescript
+function resolveTextVariantForQuote(size: string = 'md'): string;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| maat | tekenreeks |             |
+
+### solveTypografieSchaalVariant
+
+**Soort:** functie
+
+```typescript
+function resolveTypographyScaleVariant(variant?: string): string;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| variant | tekenreeks |             |
+
+### oplossingTypografieTag
+
+**Soort:** functie
+
+```typescript
+function resolveTypographyTag(asTag?: string, href?: string, variant?: string): string;
+```
+
+Geen beschrijving opgegeven.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| asTag | tekenreeks |             |
+| href | tekenreeks |             |
+| variant | tekenreeks |             |
 
 ### Sleuf
 
@@ -1624,3 +2085,13 @@ Het wordt echter nooit daadwerkelijk aangeroepen: de build-time compiler
 (`@mission-platform/vite-plugin-forge`) herschrijft elke `<Slot>` naar het doel
 framework's eigen slotmechanisme, en de runtime-adapters onderscheppen het door
 identiteit (`type === Slot`) vóór elke oproep. Direct bellen is een bug.
+
+### Spanning
+
+**Soort:** constant
+
+```typescript
+export const Suspense: MpComponent<MpSuspenseProperties>;
+```
+
+Native asynchrone grensmarkering verlaagd door elke framework-compiler.

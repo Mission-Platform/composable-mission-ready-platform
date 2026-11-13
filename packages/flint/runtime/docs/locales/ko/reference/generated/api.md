@@ -19,13 +19,18 @@
 function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 ```
 
-설명이 제공되지 않았습니다.
+Flint ABI 매니페스트가 런타임 사양 규칙에 따라 유효한지 확인합니다.
 
 #### 매개변수
 
-| 이름       | 유형               | 설명 |
-| ---------- | ------------------ | ---- |
-| 매니페스트 | FlintAbi매니페스트 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ---------------- | --------------------------- |
+| 매니페스트 | FlintAbi매니페스트 | - 유효성을 검사할 ABI 매니페스트입니다. |
+
+#### 계약
+
+- **@param:** - 유효성을 검사할 ABI 매니페스트입니다.
+- **@throws:** 매니페스트 검증이 실패한 경우.
 
 ### 동등함수
 
@@ -35,16 +40,22 @@ function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean;
 ```
 
-설명이 제공되지 않았습니다.
+두 ABI 함수 선언의 구조적 동등성을 비교합니다.
 
 #### 매개변수
 
-| 이름 | 유형             | 설명 |
-| ---- | ---------------- | ---- |
-| 왼쪽 | FlintAbiFunction |      |
-| 맞다 | FlintAbiFunction |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------------- | ------------------------------ |
+| 왼쪽 | 플린트Abi기능 | - 첫 번째 함수 선언.  |
+| 맞다 | 플린트Abi기능 | - 두 번째 함수 선언. |
 
-### FlintAbiValidationResult
+#### 계약
+
+- **@param:** - 첫 번째 함수 선언입니다.
+- **@param:** - 두 번째 함수 선언입니다.
+- **@returns:** 두 선언의 서명, 매개변수 및 반환 유형이 모두 동일한 경우 True입니다.
+
+### FlintAbi검증 결과
 
 **종류:** 인터페이스
 
@@ -52,9 +63,9 @@ function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean
 export interface FlintAbiValidationResult
 ```
 
-설명이 제공되지 않았습니다.
+유효성 검사 상태 및 오류 메시지가 포함된 Flint ABI 매니페스트에 대한 유효성 검사 결과입니다.
 
-### verifyFlintAbiManifest
+### verifyFlintAbi매니페스트
 
 **종류:** 기능
 
@@ -62,13 +73,100 @@ export interface FlintAbiValidationResult
 function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidationResult;
 ```
 
-설명이 제공되지 않았습니다.
+사양 요구 사항, 레이아웃 및 기능 제약 조건에 대해 Flint ABI 매니페스트를 검증합니다.
 
 #### 매개변수
 
-| 이름       | 유형               | 설명 |
-| ---------- | ------------------ | ---- |
-| 매니페스트 | FlintAbi매니페스트 |      |
+| 이름 | 유형 | 설명 |
+| -------- | ---------------- | --------------------------- |
+| 매니페스트 | FlintAbi매니페스트 | - 유효성을 검사할 ABI 매니페스트입니다. |
+
+#### 계약
+
+- **@param:** - 유효성을 검사할 ABI 매니페스트입니다.
+- **@returns:** 부울 상태 및 수집된 진단 오류가 포함된 유효성 검사 결과입니다.
+
+## `src/allocator/slab`
+
+### 플린트원자스핀잠금
+
+**종류:** 클래스
+
+```typescript
+export class FlintAtomicSpinLock
+```
+
+공유 WebAssembly 메모리 구조에 대한 상호 배타적 액세스를 제공하는 원자 스핀록.
+
+### 리저널범프아레나
+
+**종류:** 클래스
+
+```typescript
+export class RegionalBumpArena
+```
+
+$O(1)$ 할당 및 즉각적인 대량 재설정을 제공하는 지역 범프 할당자 경기장입니다.
+
+### 분리된Slab할당자
+
+**종류:** 클래스
+
+```typescript
+export class SegregatedSlabAllocator
+```
+
+분리된 $O(1)$ 크기 클래스 슬랩 할당자.
+
+### SegregatedSlabAllocator옵션
+
+**종류:** 인터페이스
+
+```typescript
+export interface SegregatedSlabAllocatorOptions
+```
+
+분리된 슬랩 할당자에 대한 구성 옵션입니다.
+
+### SLAB_CANARY_TAG
+
+**종류:** 상수
+
+```typescript
+export const SLAB_CANARY_TAG;
+```
+
+설명이 제공되지 않았습니다.
+
+### SLAB_SIZE_CLASSES
+
+**종류:** 상수
+
+```typescript
+export const SLAB_SIZE_CLASSES;
+```
+
+분리된 중소형 객체 슬래브 할당을 위한 표준 2의 거듭제곱 크기 클래스입니다.
+
+### 슬래브블록
+
+**종류:** 인터페이스
+
+```typescript
+export interface SlabBlock
+```
+
+특정 크기 등급에 대한 고정 크기 슬롯을 관리하는 할당 슬래브입니다.
+
+### 슬래브 크기 클래스
+
+**종류:** 유형
+
+```typescript
+export type SlabSizeClass = (typeof SLAB_SIZE_CLASSES)[number];
+```
+
+설명이 제공되지 않았습니다.
 
 ## `src/async`
 
@@ -80,20 +178,41 @@ function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidatio
 function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}): FlintAsyncRuntime;
 ```
 
-설명이 제공되지 않았습니다.
+비동기 작업 대기열을 관리하는 새 FlintAsyncRuntime 인스턴스를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 옵션 | FlintAsyncRuntime옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------------ | -------------------------------- |
+| 옵션 | FlintAsyncRuntime옵션 | - 런타임 구성 옵션. |
 
-### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+#### 계약
+
+- **@param:** - 런타임 구성 옵션입니다.
+- **@returns:** FlintAsyncRuntime 인스턴스를 구성했습니다.
+
+### createFlintJspi서스펜더
+
+**종류:** 기능
+
+```typescript
+function createFlintJspiSuspender(options?: FlintJspiOptions): FlintJspiSuspender;
+```
+
+Flint JSPI 스택 서스펜더의 인스턴스를 생성합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ---------------- | ----------- |
+| 옵션 | FlintJspi옵션 |             |
+
+### FLINT_ASYNC_CAPABILITIES
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
+export const FLINT_ASYNC_CAPABILITIES;
 ```
 
 설명이 제공되지 않았습니다.
@@ -103,13 +222,12 @@ export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
 **종류:** 유형
 
 ```typescript
-export type FlintAsyncCapability =
-  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type FlintAsyncCapability = (typeof FLINT_ASYNC_CAPABILITIES)[keyof typeof FLINT_ASYNC_CAPABILITIES];
 ```
 
-설명이 제공되지 않았습니다.
+승인된 비동기 런타임 기능 식별자 문자열입니다.
 
-### FlintAsync실행
+### FlintAsyncExecution
 
 **종류:** 인터페이스
 
@@ -117,7 +235,7 @@ export type FlintAsyncCapability =
 export interface FlintAsyncExecution
 ```
 
-설명이 제공되지 않았습니다.
+작업 출력 페이로드가 포함된 성공적인 실행 결과입니다.
 
 ### FlintAsyncExecutionResult
 
@@ -127,9 +245,9 @@ export interface FlintAsyncExecution
 export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 ```
 
-설명이 제공되지 않았습니다.
+비동기 작업 실행 결과(성공 또는 실패)입니다.
 
-### FlintAsync실패
+### 플린트비동기실패
 
 **종류:** 인터페이스
 
@@ -137,7 +255,7 @@ export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 export interface FlintAsyncFailure
 ```
 
-설명이 제공되지 않았습니다.
+비동기 예약 또는 실행 작업에서 반환된 실패 보고서입니다.
 
 ### FlintAsyncFailureCode
 
@@ -148,9 +266,9 @@ export type FlintAsyncFailureCode =
   'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
-설명이 제공되지 않았습니다.
+비동기 실행 실패에 대한 오류 범주 코드입니다.
 
-### FlintAsyncHostAdapter
+### 플린트AsyncHostAdapter
 
 **종류:** 인터페이스
 
@@ -158,9 +276,9 @@ export type FlintAsyncFailureCode =
 export interface FlintAsyncHostAdapter
 ```
 
-설명이 제공되지 않았습니다.
+미세 작업을 예약하고 작업자 메시지를 전달하기 위한 호스트 통합 후크입니다.
 
-### FlintAsync런타임
+### 플린트Async런타임
 
 **종류:** 인터페이스
 
@@ -168,7 +286,7 @@ export interface FlintAsyncHostAdapter
 export interface FlintAsyncRuntime
 ```
 
-설명이 제공되지 않았습니다.
+마이크로태스크, 작업자 큐, 이벤트 루프 드레이닝을 관리하는 비동기 런타임 코디네이터입니다.
 
 ### FlintAsyncRuntime옵션
 
@@ -178,7 +296,7 @@ export interface FlintAsyncRuntime
 export interface FlintAsyncRuntimeOptions
 ```
 
-설명이 제공되지 않았습니다.
+비동기 런타임 엔진에 대한 구성 옵션입니다.
 
 ### FlintAsyncScheduledTask
 
@@ -188,7 +306,7 @@ export interface FlintAsyncRuntimeOptions
 export interface FlintAsyncScheduledTask
 ```
 
-설명이 제공되지 않았습니다.
+비동기 작업에 대한 성공적인 예약 결과입니다.
 
 ### FlintAsyncScheduleResult
 
@@ -198,9 +316,9 @@ export interface FlintAsyncScheduledTask
 export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailure;
 ```
 
-설명이 제공되지 않았습니다.
+비동기 작업 예약 결과(예약 또는 실패)
 
-### FlintAsyncTask
+### 플린트AsyncTask
 
 **종류:** 인터페이스
 
@@ -208,7 +326,7 @@ export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailu
 export interface FlintAsyncTask
 ```
 
-설명이 제공되지 않았습니다.
+런타임에 대기 중인 비동기 작업에 대한 설명자입니다.
 
 ### FlintAsyncTaskHandler
 
@@ -218,9 +336,9 @@ export interface FlintAsyncTask
 export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 ```
 
-설명이 제공되지 않았습니다.
+입력 바이트 페이로드를 가져와서 출력 바이트 페이로드를 반환하는 작업 실행 콜백입니다.
 
-### FlintAsyncTaskKind
+### 플린트AsyncTask종류
 
 **종류:** 유형
 
@@ -228,7 +346,7 @@ export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 export type FlintAsyncTaskKind = 'microtask' | 'worker';
 ```
 
-설명이 제공되지 않았습니다.
+작업 일정 분류('마이크로태스크' 또는 '작업자').
 
 ### FlintAsyncWorker메시지
 
@@ -238,7 +356,72 @@ export type FlintAsyncTaskKind = 'microtask' | 'worker';
 export interface FlintAsyncWorkerMessage
 ```
 
-설명이 제공되지 않았습니다.
+작업자 스레드와 주고받는 메시지 패킷입니다.
+
+### FlintJspi옵션
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintJspiOptions
+```
+
+WebAssembly JavaScript Promise Integration(JSPI) 서스펜더를 구성하는 옵션입니다.
+
+### 플린트Jspi서스펜더
+
+**종류:** 클래스
+
+```typescript
+export class FlintJspiSuspender
+```
+
+WebAssembly JSPI(JavaScript Promise Integration) 스택 전환.
+비동기 호스트 약속 전체에서 WebAssembly 스택을 일시 중지하고 재개합니다.
+기본적으로 컴파일러 기반 Asyncify 코드 변환이 필요하지 않습니다.
+
+## `src/async/fiber`
+
+### 플린트섬유
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintFiber<T = unknown>
+```
+
+활성 또는 일시 중단된 협력 섬유 지속을 처리합니다.
+
+### FlintFiberScheduler
+
+**종류:** 클래스
+
+```typescript
+export class FlintFiberScheduler
+```
+
+JSPI 스타일 비동기 스택 정지를 지원하는 협력 파이버 스케줄러,
+프레임 격리, 스택 경계 어설션 및 재진입 보호.
+
+### FlintFiberScheduler옵션
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintFiberSchedulerOptions
+```
+
+협력 파이버 스케줄러에 대한 구성 옵션입니다.
+
+### 플린트섬유상태
+
+**종류:** 유형
+
+```typescript
+export type FlintFiberState = 'ready' | 'running' | 'suspended' | 'completed' | 'failed' | 'cancelled';
+```
+
+협동 Fiber의 실행 상태.
 
 ## `src/collections`
 
@@ -257,10 +440,10 @@ function createFlintArray(
 
 #### 매개변수
 
-| 이름   | 유형                  | 설명 |
-| ------ | --------------------- | ---- |
-| 가치   | 읽기 전용 TValue[]    |      |
-| 소유권 | FlintCollection소유권 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------------------------ | ----------- |
+| 가치 | 읽기 전용 TValue[] |             |
+| 소유권 | FlintCollection 소유권 |             |
 
 ### createFlintIterator
 
@@ -274,10 +457,10 @@ function createFlintIterator(values: Iterable<TValue>, descriptor: FlintIterator
 
 #### 매개변수
 
-| 이름   | 유형                    | 설명 |
-| ------ | ----------------------- | ---- |
-| 가치   | 반복 가능한<TValue>     |      |
-| 설명자 | FlintIteratorDescriptor |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------- | ----------- |
+| 가치 | 반복 가능한<TValue> |             |
+| 설명자 | FlintIteratorDescriptor |             |
 
 ### createFlintIteratorDescriptor
 
@@ -296,12 +479,12 @@ function createFlintIteratorDescriptor(
 
 #### 매개변수
 
-| 이름      | 유형                    | 설명 |
-| --------- | ----------------------- | ---- |
-| 아이디    | 문자열                  |      |
-| 요소 유형 |                         |      |
-| 능력      | FlintIteratorCapability |      |
-| 소유권    | FlintCollection소유권   |      |
+| 이름 | 유형 | 설명 |
+| ----------- | ------------------------ | ----------- |
+| 아이디 | 문자열 |             |
+| 요소 유형 |                          |             |
+| 능력 | FlintIteratorCapability |             |
+| 소유권 | FlintCollection 소유권 |             |
 
 ### createFlintMap
 
@@ -314,16 +497,22 @@ function createFlintMap(
 ): FlintMap<TKey, TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+키-값 항목으로 초기화된 영구 FlintMap을 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형                                    | 설명 |
-| ---- | --------------------------------------- | ---- |
-| 항목 | 읽기 전용 FlintMapEntry<TKey, TValue>[] |      |
-| 전략 | FlintHashStrategy<TKey>                 |      |
+| 이름 | 유형 | 설명 |
+| -------- | -------------------------------------- | --------------------------- |
+| 항목 | 읽기 전용 FlintMapEntry<TKey, TValue>[] | - 초기 키-값 튜플. |
+| 전략 | FlintHashStrategy<TKey> |                             |
 
-### createFlintSet
+#### 계약
+
+- **@param:** - 초기 키-값 튜플.
+- **@param:** - 사용자 정의 키 동등성 및 해싱 전략.
+- **@returns:** 초기화된 FlintMap 인스턴스입니다.
+
+### 생성플린트세트
 
 **종류:** 기능
 
@@ -334,16 +523,22 @@ function createFlintSet(
 ): FlintSet<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+값으로 초기화된 영구 FlintSet을 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형                      | 설명 |
-| ---- | ------------------------- | ---- |
-| 가치 | 읽기 전용 TValue[]        |      |
-| 전략 | FlintHashStrategy<TValue> |      |
+| 이름 | 유형 | 설명 |
+| -------- | ------------------------- | ----------------------------- |
+| 가치 | 읽기 전용 TValue[] | - 값의 초기 반복 가능. |
+| 전략 | FlintHashStrategy<TValue> |                               |
 
-### createFlintVector
+#### 계약
+
+- **@param:** - 값의 초기 반복 가능.
+- **@param:** - 사용자 정의 평등 및 해싱 전략.
+- **@returns:** 초기화된 FlintSet 인스턴스입니다.
+
+### 생성플린트벡터
 
 **종류:** 기능
 
@@ -358,12 +553,12 @@ function createFlintVector(
 
 #### 매개변수
 
-| 이름   | 유형                  | 설명 |
-| ------ | --------------------- | ---- |
-| 가치   | 읽기 전용 TValue[]    |      |
-| 소유권 | FlintCollection소유권 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------------------------ | ----------- |
+| 가치 | 읽기 전용 TValue[] |             |
+| 소유권 | FlintCollection 소유권 |             |
 
-### FlintArray
+### 플린트어레이
 
 **종류:** 인터페이스
 
@@ -373,7 +568,7 @@ export interface FlintArray<TValue>
 
 고정 크기 연속 컬렉션; 업데이트는 복사된 배열 값을 반환합니다.
 
-### flintArrayGet
+### 부싯돌ArrayGet
 
 **종류:** 기능
 
@@ -385,12 +580,12 @@ function flintArrayGet(array: FlintArray<TValue>, index: number): FlintOption<TV
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 배열 | FlintArray<TValue> |      |
-| 색인 | 번호               |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------------ | ----------- |
+| 배열 | 플린트어레이<TValue> |             |
+| 색인 | 번호 |             |
 
-### flintArray길이
+### 부싯돌배열길이
 
 **종류:** 기능
 
@@ -402,9 +597,9 @@ function flintArrayLength(array: FlintArray<TValue>): number;
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 배열 | FlintArray<TValue> |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------------ | ----------- |
+| 배열 | 플린트어레이<TValue> |             |
 
 ### flintArraySet
 
@@ -418,13 +613,13 @@ function flintArraySet(array: FlintArray<TValue>, index: number, value: TValue):
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 배열 | FlintArray<TValue> |      |
-| 색인 | 번호               |      |
-| 가치 | T값                |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------------ | ----------- |
+| 배열 | 플린트어레이<TValue> |             |
+| 색인 | 번호 |             |
+| 가치 | T값 |             |
 
-### flintArrayTrySet
+### 부싯돌ArrayTrySet
 
 **종류:** 기능
 
@@ -440,11 +635,11 @@ function flintArrayTrySet(
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 배열 | FlintArray<TValue> |      |
-| 색인 | 번호               |      |
-| 가치 | T값                |      |
+| 이름 | 유형 | 설명 |
+| ----- | ------------------ | ----------- |
+| 배열 | 플린트어레이<TValue> |             |
+| 색인 | 번호 |             |
+| 가치 | T값 |             |
 
 ### FlintCollection소유권
 
@@ -454,7 +649,7 @@ function flintArrayTrySet(
 export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 ```
 
-설명이 제공되지 않았습니다.
+컬렉션 요소에 대한 메모리 소유권 의미('소유', '빌려', '공유').
 
 ### flintDefaultHash전략
 
@@ -464,9 +659,13 @@ export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 function flintDefaultHashStrategy(): FlintHashStrategy<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+결정적 직렬화를 사용하여 기본 해시 전략을 반환합니다.
 
-### flint오류
+#### 계약
+
+- **@returns:** 기본 FlintHashStrategy 인스턴스입니다.
+
+### 부싯돌오류
 
 **종류:** 상수
 
@@ -484,9 +683,9 @@ export const flintError;
 export interface FlintHashStrategy<TValue>
 ```
 
-설명이 제공되지 않았습니다.
+세트 및 맵의 사용자 정의 키 유형에 대한 동일성 및 해싱 전략 인터페이스입니다.
 
-### FlintIterable
+### 플린트반복 가능
 
 **종류:** 유형
 
@@ -506,7 +705,7 @@ export interface FlintIterator<TValue>
 
 설명자 기능과 선택적 직접 인덱싱이 포함된 지연 반복기 보기입니다.
 
-### flintIteratorAdd
+### flintIterator추가
 
 **종류:** 기능
 
@@ -518,12 +717,12 @@ function flintIteratorAdd(source: FlintIterator<TValue>, value: TValue): FlintIt
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 출처 | FlintIterator<TValue> |      |
-| 가치 | T값                   |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------------- | ----------- |
+| 출처 | FlintIterator<TValue> |             |
+| 가치 | T값 |             |
 
-### flintIteratorAt
+### 부싯돌IteratorAt
 
 **종류:** 기능
 
@@ -531,14 +730,20 @@ function flintIteratorAdd(source: FlintIterator<TValue>, value: TValue): FlintIt
 function flintIteratorAt(iterator: FlintIterator<TValue>, index: number): FlintOption<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+Option으로 래핑된 지정된 인덱스의 요소를 반환합니다.
 
 #### 매개변수
 
-| 이름   | 유형                  | 설명 |
-| ------ | --------------------- | ---- |
-| 반복자 | FlintIterator<TValue> |      |
-| 색인   | 번호                  |      |
+| 이름 | 유형 | 설명 |
+| -------- | --------------------- | --------------------------- |
+| 반복자 | FlintIterator<TValue> | - 소스 반복자.          |
+| 색인 | 번호 | - 0 기반 요소 인덱스. |
+
+#### 계약
+
+- **@param:** - 소스 반복자.
+- **@param:** - 0 기반 요소 인덱스입니다.
+- **@returns:** 인덱스에 요소를 포함하거나 포함하지 않는 옵션입니다.
 
 ### FlintIterator 기능
 
@@ -558,13 +763,18 @@ export type FlintIteratorCapability = 'linear' | 'random-access';
 function flintIteratorCollect(iterator: FlintIterator<TValue>): FlintVector<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+반복자를 수집된 값의 소유 벡터로 구체화합니다.
 
 #### 매개변수
 
-| 이름   | 유형                  | 설명 |
-| ------ | --------------------- | ---- |
-| 반복자 | FlintIterator<TValue> |      |
+| 이름 | 유형 | 설명 |
+| -------- | --------------------- | --------------------------- |
+| 반복자 | FlintIterator<TValue> | - 배수할 소스 반복자입니다. |
+
+#### 계약
+
+- **@param:** - 드레이닝할 소스 반복자입니다.
+- **@returns:** 수집된 값을 포함하는 FlintVector입니다.
 
 ### flintIteratorConcat
 
@@ -578,10 +788,10 @@ function flintIteratorConcat(first: FlintIterator<TValue>, second: FlintIterable
 
 #### 매개변수
 
-| 이름    | 유형                  | 설명 |
-| ------- | --------------------- | ---- |
-| 먼저    | FlintIterator<TValue> |      |
-| 두 번째 | FlintIterable<TValue> |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------------- | ----------- |
+| 먼저 | FlintIterator<TValue> |             |
+| 두 번째 | FlintIterable<TValue> |             |
 
 ### FlintIterator설명자
 
@@ -593,7 +803,7 @@ export interface FlintIteratorDescriptor
 
 요소 표현, 소유권 및 액세스 기능을 설명하는 ABI 메타데이터입니다.
 
-### flintIteratorFilter
+### flintIterator필터
 
 **종류:** 기능
 
@@ -608,12 +818,12 @@ function flintIteratorFilter(
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 출처 | FlintIterator<TValue> |      |
-| 술어 | (값: TValue) => 부울  |      |
+| 이름 | 유형 | 설명 |
+| --------- | -------------------------- | ----------- |
+| 출처 | FlintIterator<TValue> |             |
+| 술어 | (값: TValue) => 부울 |             |
 
-### 위조WebScriptIteratorFirst
+### 부싯돌IteratorFirst
 
 **종류:** 기능
 
@@ -621,13 +831,18 @@ function flintIteratorFilter(
 function flintIteratorFirst(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+Option으로 래핑된 반복자의 첫 번째 요소를 반환합니다.
 
 #### 매개변수
 
-| 이름   | 유형                  | 설명 |
-| ------ | --------------------- | ---- |
-| 반복자 | FlintIterator<TValue> |      |
+| 이름 | 유형 | 설명 |
+| -------- | --------------------- | ------------------ |
+| 반복자 | FlintIterator<TValue> | - 소스 반복자. |
+
+#### 계약
+
+- **@param:** - 소스 반복자.
+- **@returns:** 첫 번째 요소를 포함하거나 포함하지 않는 옵션입니다.
 
 ### flintIteratorFlatten
 
@@ -641,11 +856,11 @@ function flintIteratorFlatten(source: FlintIterator<FlintIterable<TValue>>): Fli
 
 #### 매개변수
 
-| 이름 | 유형                                 | 설명 |
-| ---- | ------------------------------------ | ---- |
-| 출처 | FlintIterator<FlintIterable<TValue>> |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------------------------ | ----------- |
+| 출처 | FlintIterator<FlintIterable<TValue>> |             |
 
-### flintIteratorFold
+### 부싯돌IteratorFold
 
 **종류:** 기능
 
@@ -657,15 +872,22 @@ function flintIteratorFold(
 ): TResult;
 ```
 
-설명이 제공되지 않았습니다.
+누산기 콜백을 사용하여 반복기를 왼쪽에서 오른쪽으로 줄입니다.
 
 #### 매개변수
 
-| 이름   | 유형                                                   | 설명 |
-| ------ | ------------------------------------------------------ | ---- |
-| 반복자 | FlintIterator<TValue>                                  |      |
-| 초기   | 결과                                                   |      |
-| 감속기 | (누산기: TResult, 값: TValue, 인덱스: 숫자) => TResult |      |
+| 이름 | 유형 | 설명 |
+| -------- | --------------------------------------------------------------- | ----------------------------- |
+| 반복자 | FlintIterator<TValue> | - 소스 반복자.            |
+| 초기 | 결과 | - 초기 누산기 값.  |
+| 감속기 | (누산기: TResult, 값: TValue, 인덱스: 숫자) => TResult | - 콜백 기능을 줄입니다. |
+
+#### 계약
+
+- **@param:** - 소스 반복자.
+- **@param:** - 초기 누산기 값입니다.
+- **@param:** - 콜백 기능을 줄입니다.
+- **@returns:** 최종 감소 누산기 결과입니다.
 
 ### flintIteratorFromArray
 
@@ -682,10 +904,10 @@ function flintIteratorFromArray(
 
 #### 매개변수
 
-| 이름   | 유형                    | 설명 |
-| ------ | ----------------------- | ---- |
-| 배열   | FlintArray<TValue>      |      |
-| 설명자 | FlintIteratorDescriptor |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------- | ----------- |
+| 배열 | 플린트어레이<TValue> |             |
+| 설명자 | FlintIteratorDescriptor |             |
 
 ### flintIteratorFromIterable
 
@@ -699,15 +921,15 @@ function flintIteratorFromIterable(
 ): FlintIterator<TValue>;
 ```
 
-임의의 반복 가능 항목을 게으른 선형 Forge 웹 스크립트 반복자에 적용합니다.
+임의의 반복 가능 항목을 게으른 선형 Flint 반복자에 적용합니다.
 
 #### 매개변수
 
-| 이름      | 유형                | 설명 |
-| --------- | ------------------- | ---- |
-| 가치      | 반복 가능한<TValue> |      |
-| 요소 유형 |                     |      |
-| 아이디    |                     |      |
+| 이름 | 유형 | 설명 |
+| ----------- | ---------------- | ----------- |
+| 가치 | 반복 가능한<TValue> |             |
+| 요소 유형 |                  |             |
+| 아이디 |                  |             |
 
 ### flintIteratorFromVector
 
@@ -724,12 +946,12 @@ function flintIteratorFromVector(
 
 #### 매개변수
 
-| 이름   | 유형                    | 설명 |
-| ------ | ----------------------- | ---- |
-| 벡터   | FlintVector<TValue>     |      |
-| 설명자 | FlintIteratorDescriptor |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------------- | ----------- |
+| 벡터 | 플린트벡터<TValue> |             |
+| 설명자 | FlintIteratorDescriptor |             |
 
-### flintIteratorLast
+### flintIterator마지막
 
 **종류:** 기능
 
@@ -737,13 +959,18 @@ function flintIteratorFromVector(
 function flintIteratorLast(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+Option에 래핑된 반복자의 마지막 요소를 반환합니다.
 
 #### 매개변수
 
-| 이름   | 유형                  | 설명 |
-| ------ | --------------------- | ---- |
-| 반복자 | FlintIterator<TValue> |      |
+| 이름 | 유형 | 설명 |
+| -------- | --------------------- | ------------------ |
+| 반복자 | FlintIterator<TValue> | - 소스 반복자. |
+
+#### 계약
+
+- **@param:** - 소스 반복자.
+- **@returns:** 마지막 요소를 포함하거나 포함하지 않는 옵션입니다.
 
 ### flintIteratorMap
 
@@ -761,11 +988,11 @@ function flintIteratorMap(
 
 #### 매개변수
 
-| 이름      | 유형                    | 설명 |
-| --------- | ----------------------- | ---- |
-| 출처      | FlintIterator<TValue>   |      |
-| 지도      | (값: TValue) => TResult |      |
-| 요소 유형 |                         |      |
+| 이름 | 유형 | 설명 |
+| ----------- | -------------------------- | ----------- |
+| 출처 | FlintIterator<TValue> |             |
+| 지도 | (값: TValue) => TResult |             |
+| 요소 유형 |                            |             |
 
 ### FlintIteratorResult
 
@@ -777,7 +1004,7 @@ export interface FlintIteratorResult<TValue>
 
 하나의 압축된 반복자 풀 결과; done은 지친 후에도 여전히 사실입니다.
 
-### flintIteratorTake
+### 부싯돌IteratorTake
 
 **종류:** 기능
 
@@ -789,10 +1016,10 @@ function flintIteratorTake(source: FlintIterator<TValue>, count: number): FlintI
 
 #### 매개변수
 
-| 이름   | 유형                  | 설명 |
-| ------ | --------------------- | ---- |
-| 출처   | FlintIterator<TValue> |      |
-| 카운트 | 번호                  |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------------- | ----------- |
+| 출처 | FlintIterator<TValue> |             |
+| 카운트 | 번호 |             |
 
 ### flintIteratorToArray
 
@@ -805,16 +1032,22 @@ function flintIteratorToArray(
 ): FlintArray<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+반복자를 소유한 FlintArray로 변환합니다.
 
 #### 매개변수
 
-| 이름   | 유형                  | 설명 |
-| ------ | --------------------- | ---- |
-| 반복자 | FlintIterator<TValue> |      |
-| 소유권 | FlintCollection소유권 |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------------------------ | ----------------------------- |
+| 반복자 | FlintIterator<TValue> | - 소스 반복자.            |
+| 소유권 | FlintCollection 소유권 | - 컬렉션 소유권 모델. |
 
-### Flint지도
+#### 계약
+
+- **@param:** - 소스 반복자.
+- **@param:** - 컬렉션 소유권 모델.
+- **@returns:** FlintArray를 초기화했습니다.
+
+### 플린트지도
 
 **종류:** 인터페이스
 
@@ -822,9 +1055,9 @@ function flintIteratorToArray(
 export interface FlintMap<TKey, TValue>
 ```
 
-설명이 제공되지 않았습니다.
+지속적인 해시 맵 수집 데이터 구조.
 
-### flint지도삭제
+### 부싯돌지도삭제
 
 **종류:** 기능
 
@@ -832,16 +1065,22 @@ export interface FlintMap<TKey, TValue>
 function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+맵에서 키-값 매핑을 삭제하고 새 영구 맵을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 지도 | FlintMap<TKey, TValue> |      |
-| 키   | T키                    |      |
+| 이름 | 유형 | 설명 |
+| ---- | ---------------------- | ---------------- |
+| 지도 | 플린트맵<TKey, TValue> | - 목표지도.    |
+| 키 | T키 | - 삭제할 키입니다. |
 
-### flintMapEntries
+#### 계약
+
+- **@param:** - 대상 맵.
+- **@param:** - 삭제할 키입니다.
+- **@returns:** 영구 맵이 업데이트되었습니다.
+
+### 부싯돌지도 항목
 
 **종류:** 기능
 
@@ -849,15 +1088,20 @@ function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, 
 function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry<TKey, TValue>>;
 ```
 
-설명이 제공되지 않았습니다.
+맵에 포함된 모든 키-값 항목을 소유된 벡터로 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 지도 | FlintMap<TKey, TValue> |      |
+| 이름 | 유형 | 설명 |
+| ---- | ---------------------- | ------------- |
+| 지도 | 플린트맵<TKey, TValue> | - 목표지도. |
 
-### FlintMapEntry
+#### 계약
+
+- **@param:** - 대상 맵.
+- **@returns:** 맵 항목의 벡터입니다.
+
+### 부싯돌지도 항목
 
 **종류:** 인터페이스
 
@@ -865,9 +1109,9 @@ function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry
 export interface FlintMapEntry<TKey, TValue>
 ```
 
-설명이 제공되지 않았습니다.
+영구 해시 맵의 키-값 항목 레코드입니다.
 
-### 위조WebScriptMapGet
+### 부싯돌지도얻기
 
 **종류:** 기능
 
@@ -875,16 +1119,22 @@ export interface FlintMapEntry<TKey, TValue>
 function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+맵에서 키와 연관된 값을 검색합니다.
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 지도 | FlintMap<TKey, TValue> |      |
-| 키   | T키                    |      |
+| 이름 | 유형 | 설명 |
+| ---- | ---------------------- | ------------- |
+| 지도 | 플린트맵<TKey, TValue> | - 목표지도. |
+| 키 | T키 | - 조회 키. |
 
-### flintMapSet
+#### 계약
+
+- **@param:** - 대상 맵.
+- **@param:** - 조회 키입니다.
+- **@returns:** 값을 포함하거나 포함하지 않는 옵션입니다.
+
+### 부싯돌지도 세트
 
 **종류:** 기능
 
@@ -892,17 +1142,24 @@ function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue
 function flintMapSet(map: FlintMap<TKey, TValue>, key: TKey, value: TValue): FlintMap<TKey, TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+키-값 매핑을 삽입하거나 업데이트하여 새 영구 맵을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 지도 | FlintMap<TKey, TValue> |      |
-| 키   | T키                    |      |
-| 가치 | T값                    |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------------------- | ---------------- |
+| 지도 | 플린트맵<TKey, TValue> | - 목표지도.    |
+| 키 | T키 | - 매핑 키.   |
+| 가치 | T값 | - 매핑 값. |
 
-### flint없음
+#### 계약
+
+- **@param:** - 대상 맵.
+- **@param:** - 매핑 키입니다.
+- **@param:** - 매핑 값입니다.
+- **@returns:** 영구 맵이 업데이트되었습니다.
+
+### 부싯돌없음
 
 **종류:** 상수
 
@@ -912,7 +1169,7 @@ export const flintNone;
 
 빈 옵션 값을 구성합니다.
 
-### 위조웹스크립트확인
+### 부싯돌알았어
 
 **종류:** 상수
 
@@ -922,7 +1179,7 @@ export const flintOk;
 
 성공적인 결과 값을 구성합니다.
 
-### Flint옵션
+### 플린트옵션
 
 **종류:** 인터페이스
 
@@ -932,7 +1189,7 @@ export interface FlintOption<TValue>
 
 안전한 읽기 및 빈 반복자 터미널에서 사용되는 옵션과 유사한 값입니다.
 
-### FlintResultValue
+### 플린트결과값
 
 **종류:** 인터페이스
 
@@ -942,7 +1199,7 @@ export interface FlintResultValue<TValue, TError = string>
 
 비트래핑 컬렉션 돌연변이 도우미가 사용하는 결과와 유사한 값입니다.
 
-### FlintSet
+### 플린트세트
 
 **종류:** 인터페이스
 
@@ -950,9 +1207,9 @@ export interface FlintResultValue<TValue, TError = string>
 export interface FlintSet<TValue>
 ```
 
-설명이 제공되지 않았습니다.
+영구 해시 세트 컬렉션 데이터 구조.
 
-### flintSetAdd
+### 부싯돌세트추가
 
 **종류:** 기능
 
@@ -960,16 +1217,22 @@ export interface FlintSet<TValue>
 function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+세트에 요소를 추가하고 수정된 경우 새 영구 세트를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형             | 설명 |
-| ---- | ---------------- | ---- |
-| 설정 | FlintSet<TValue> |      |
-| 가치 | T값              |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------------- | ------------------ |
+| 설정 | 플린트셋<TValue> | - 목표가 설정되었습니다.      |
+| 가치 | T값 | - 삽입할 값입니다. |
 
-### flintSetDelete
+#### 계약
+
+- **@param:** - 목표가 설정되었습니다.
+- **@param:** - 삽입할 값입니다.
+- **@returns:** 영구 세트가 업데이트되었습니다.
+
+### 부싯돌설정삭제
 
 **종류:** 기능
 
@@ -977,16 +1240,22 @@ function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+세트에서 요소를 삭제하고 수정된 경우 새 영구 세트를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형             | 설명 |
-| ---- | ---------------- | ---- |
-| 설정 | FlintSet<TValue> |      |
-| 가치 | T값              |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------------- | ------------------ |
+| 설정 | 플린트셋<TValue> | - 목표가 설정되었습니다.      |
+| 가치 | T값 | - 제거할 값입니다. |
 
-### flintSetHas
+#### 계약
+
+- **@param:** - 목표가 설정되었습니다.
+- **@param:** - 제거할 값입니다.
+- **@returns:** 영구 세트가 업데이트되었습니다.
+
+### 부싯돌세트가 있음
 
 **종류:** 기능
 
@@ -994,16 +1263,22 @@ function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 ```
 
-설명이 제공되지 않았습니다.
+집합에 값이 존재하는지 테스트합니다.
 
 #### 매개변수
 
-| 이름 | 유형             | 설명 |
-| ---- | ---------------- | ---- |
-| 설정 | FlintSet<TValue> |      |
-| 가치 | T값              |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------------- | ----------------- |
+| 설정 | 플린트셋<TValue> | - 목표가 설정되었습니다.     |
+| 가치 | T값 | - 확인할 값. |
 
-### flintSetValues
+#### 계약
+
+- **@param:** - 목표가 설정되었습니다.
+- **@param:** - 확인할 값입니다.
+- **@returns:** 값이 있으면 참입니다.
+
+### flintSet값
 
 **종류:** 기능
 
@@ -1011,15 +1286,20 @@ function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 function flintSetValues(set: FlintSet<TValue>): FlintVector<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+집합에 포함된 모든 값을 소유된 벡터로 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형             | 설명 |
-| ---- | ---------------- | ---- |
-| 설정 | FlintSet<TValue> |      |
+| 이름 | 유형 | 설명 |
+| ---- | ---------------- | ------------- |
+| 설정 | 플린트셋<TValue> | - 목표가 설정되었습니다. |
 
-### 위조WebScriptSome
+#### 계약
+
+- **@param:** - 목표가 설정되었습니다.
+- **@returns:** 집합에 있는 값의 벡터입니다.
+
+### 부싯돌섬
 
 **종류:** 상수
 
@@ -1029,7 +1309,7 @@ export const flintSome;
 
 현재 옵션 값을 구성합니다.
 
-### Flint벡터
+### 플린트벡터
 
 **종류:** 인터페이스
 
@@ -1040,7 +1320,7 @@ export interface FlintVector<TValue>
 성장 가능한 연속 컬렉션. 런타임에서 생성된 벡터에는 소유된 핸들이 있습니다.
 차용/공유 소유권은 파생 가치에 의해 유지되는 동안 계약을 체결합니다.
 
-### flintVectorAdd
+### 부싯돌벡터추가
 
 **종류:** 상수
 
@@ -1050,7 +1330,7 @@ export const flintVectorAdd;
 
 stdlib 반복자 `add` 어휘와 일치하는 벡터 푸시의 별칭입니다.
 
-### flintVectorFilter
+### 부싯돌벡터필터
 
 **종류:** 기능
 
@@ -1065,12 +1345,12 @@ function flintVectorFilter(
 
 #### 매개변수
 
-| 이름 | 유형                                  | 설명 |
-| ---- | ------------------------------------- | ---- |
-| 벡터 | FlintVector<TValue>                   |      |
-| 술어 | (값: TValue, 인덱스: 숫자) => boolean |      |
+| 이름 | 유형 | 설명 |
+| --------- | ----------------------------------------- | ----------- |
+| 벡터 | 플린트벡터<TValue> |             |
+| 술어 | (값: TValue, 인덱스: 숫자) => boolean |             |
 
-### flintVectorFold
+### 부싯돌벡터접기
 
 **종류:** 기능
 
@@ -1086,13 +1366,13 @@ function flintVectorFold(
 
 #### 매개변수
 
-| 이름   | 유형                                                   | 설명 |
-| ------ | ------------------------------------------------------ | ---- |
-| 벡터   | FlintVector<TValue>                                    |      |
-| 초기   | 결과                                                   |      |
-| 감속기 | (누산기: TResult, 값: TValue, 인덱스: 숫자) => TResult |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------------------------------------------------- | ----------- |
+| 벡터 | 플린트벡터<TValue> |             |
+| 초기 | 결과 |             |
+| 감속기 | (누산기: TResult, 값: TValue, 인덱스: 숫자) => TResult |             |
 
-### 위조WebScriptVectorGet
+### 부싯돌벡터가져오기
 
 **종류:** 기능
 
@@ -1104,12 +1384,12 @@ function flintVectorGet(vector: FlintVector<TValue>, index: number): FlintOption
 
 #### 매개변수
 
-| 이름 | 유형                | 설명 |
-| ---- | ------------------- | ---- |
-| 벡터 | FlintVector<TValue> |      |
-| 색인 | 번호                |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------- | ----------- |
+| 벡터 | 플린트벡터<TValue> |             |
+| 색인 | 번호 |             |
 
-### flint벡터길이
+### 부싯돌벡터길이
 
 **종류:** 기능
 
@@ -1121,11 +1401,11 @@ function flintVectorLength(vector: FlintVector<TValue>): number;
 
 #### 매개변수
 
-| 이름 | 유형                | 설명 |
-| ---- | ------------------- | ---- |
-| 벡터 | FlintVector<TValue> |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------- | ----------- |
+| 벡터 | 플린트벡터<TValue> |             |
 
-### 위조WebScriptVectorMap
+### 부싯돌벡터지도
 
 **종류:** 기능
 
@@ -1140,12 +1420,12 @@ function flintVectorMap(
 
 #### 매개변수
 
-| 이름 | 유형                                  | 설명 |
-| ---- | ------------------------------------- | ---- |
-| 벡터 | FlintVector<TValue>                   |      |
-| 변환 | (값: TValue, 인덱스: 숫자) => TResult |      |
+| 이름 | 유형 | 설명 |
+| --------- | ----------------------------------------- | ----------- |
+| 벡터 | 플린트벡터<TValue> |             |
+| 변환 | (값: TValue, 인덱스: 숫자) => TResult |             |
 
-### 위조WebScriptVectorPop
+### 부싯돌벡터팝
 
 **종류:** 기능
 
@@ -1160,11 +1440,11 @@ function flintVectorPop(vector: FlintVector<TValue>): {
 
 #### 매개변수
 
-| 이름 | 유형                | 설명 |
-| ---- | ------------------- | ---- |
-| 벡터 | FlintVector<TValue> |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------- | ----------- |
+| 벡터 | 플린트벡터<TValue> |             |
 
-### 위조WebScriptVectorPush
+### 부싯돌벡터푸시
 
 **종류:** 기능
 
@@ -1176,12 +1456,12 @@ function flintVectorPush(vector: FlintVector<TValue>, value: TValue): FlintVecto
 
 #### 매개변수
 
-| 이름 | 유형                | 설명 |
-| ---- | ------------------- | ---- |
-| 벡터 | FlintVector<TValue> |      |
-| 가치 | T값                 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------- | ----------- |
+| 벡터 | 플린트벡터<TValue> |             |
+| 가치 | T값 |             |
 
-### 위조WebScriptVectorSet
+### 부싯돌벡터세트
 
 **종류:** 기능
 
@@ -1193,13 +1473,13 @@ function flintVectorSet(vector: FlintVector<TValue>, index: number, value: TValu
 
 #### 매개변수
 
-| 이름 | 유형                | 설명 |
-| ---- | ------------------- | ---- |
-| 벡터 | FlintVector<TValue> |      |
-| 색인 | 번호                |      |
-| 가치 | T값                 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------- | ----------- |
+| 벡터 | 플린트벡터<TValue> |             |
+| 색인 | 번호 |             |
+| 가치 | T값 |             |
 
-### flintVectorTrySet
+### 부싯돌벡터TrySet
 
 **종류:** 기능
 
@@ -1215,15 +1495,15 @@ function flintVectorTrySet(
 
 #### 매개변수
 
-| 이름 | 유형                | 설명 |
-| ---- | ------------------- | ---- |
-| 벡터 | FlintVector<TValue> |      |
-| 색인 | 번호                |      |
-| 가치 | T값                 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------- | ----------- |
+| 벡터 | 플린트벡터<TValue> |             |
+| 색인 | 번호 |             |
+| 가치 | T값 |             |
 
 ## `src/ecs`
 
-### addFlintEcsComponent
+### 추가FlintEcsComponent
 
 **종류:** 기능
 
@@ -1236,16 +1516,24 @@ function addFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+아직 존재하지 않는 경우 엔터티에 구성 요소를 연결합니다.
 
 #### 매개변수
 
-| 이름     | 유형                  | 설명 |
-| -------- | --------------------- | ---- |
-| 세계     | FlintEcsWorld<TValue> |      |
-| 엔터티   | FlintEcsEntity        |      |
-| 구성요소 | 문자열                |      |
-| 가치     | T값                   |      |
+| 이름 | 유형 | 설명 |
+| --------- | --------------------- | ------------------------- |
+| 세계 | 플린트EcsWorld<TValue> | - 현재 세계 스냅샷. |
+| 엔터티 | 플린트Ecs엔티티 | - 대상 엔터티.          |
+| 구성요소 | 문자열 |                           |
+| 가치 | T값 | - 구성요소 값 데이터.   |
+
+#### 계약
+
+- **@param:** - 현재 세계 스냅샷입니다.
+- **@param:** - 대상 엔터티입니다.
+- **@param:** - 구성 요소 이름입니다.
+- **@param:** - 구성요소 값 데이터입니다.
+- **@returns:** 전환 결과 결과입니다.
 
 ### createFlintEcsScheduler
 
@@ -1260,18 +1548,23 @@ function createFlintEcsScheduler(
 ): FlintEcsScheduler<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+ECS 실행 파이프라인 스케줄러를 생성합니다.
 
 #### 매개변수
 
-| 이름      | 유형                               | 설명 |
-| --------- | ---------------------------------- | ---- |
-| 시스템    | 읽기 전용 FlintEcsSystem<TValue>[] |      |
-| 신호      | 읽기 전용 FlintEcsSignal[]         |      |
-| 구독      | 읽기 전용 FlintEcsSubscription[]   |      |
-| 최대 단계 |                                    |      |
+| 이름 | 유형 | 설명 |
+| ------------- | --------------------------------- | -------------------------------------------------- |
+| 시스템 | 읽기 전용 FlintEcsSystem<TValue>[] | - 파이프라인에 등록할 시스템의 순서입니다. |
+| 신호 | 읽기 전용 FlintEcsSignal[] |                                                    |
+| 구독 | 읽기 전용 FlintEcsSubscription[] |                                                    |
+| 최대 단계 |                                   |                                                    |
 
-### createFlintEcsWorld
+#### 계약
+
+- **@param:** - 파이프라인에 등록할 시스템의 순서입니다.
+- **@returns:** FlintEcsScheduler 인스턴스를 구성했습니다.
+
+### 생성플린트EcsWorld
 
 **종류:** 기능
 
@@ -1279,9 +1572,13 @@ function createFlintEcsScheduler(
 function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+빈 엔터티 구성 요소 시스템 세계를 초기화합니다.
 
-### despawnFlintEcsEntity
+#### 계약
+
+- **@returns:** 새로 초기화된 FlintEcsWorld 인스턴스입니다.
+
+### 디스폰플린트Ecs엔티티
 
 **종류:** 기능
 
@@ -1289,14 +1586,20 @@ function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): FlintEcsResult<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+엔터티를 생성하여 생성을 늘리고 연결된 모든 구성 요소를 지웁니다.
 
 #### 매개변수
 
-| 이름   | 유형                  | 설명 |
-| ------ | --------------------- | ---- |
-| 세계   | FlintEcsWorld<TValue> |      |
-| 엔터티 | FlintEcsEntity        |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------------- | ------------------------- |
+| 세계 | 플린트EcsWorld<TValue> | - 현재 세계 스냅샷. |
+| 엔터티 | 플린트Ecs엔티티 | - 소멸할 개체.      |
+
+#### 계약
+
+- **@param:** - 현재 세계 스냅샷입니다.
+- **@param:** - 소멸할 개체입니다.
+- **@returns:** 전환 결과 결과입니다.
 
 ### FlintEcsComponentStore
 
@@ -1306,9 +1609,9 @@ function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEnt
 export interface FlintEcsComponentStore<TValue = Uint8Array>
 ```
 
-설명이 제공되지 않았습니다.
+구성 요소 스토리지 매핑 엔터티 인덱스 번호를 구성 요소 인스턴스에 매핑합니다.
 
-### FlintEcsEntity
+### FlintEcs엔티티
 
 **종류:** 인터페이스
 
@@ -1316,7 +1619,7 @@ export interface FlintEcsComponentStore<TValue = Uint8Array>
 export interface FlintEcsEntity
 ```
 
-설명이 제공되지 않았습니다.
+인덱스와 생성 카운터를 결합한 경량 세대 엔터티 핸들입니다.
 
 ### FlintEcsEntityResult
 
@@ -1326,9 +1629,9 @@ export interface FlintEcsEntity
 export interface FlintEcsEntityResult<TValue = Uint8Array>
 ```
 
-설명이 제공되지 않았습니다.
+수정된 세계 및 엔터티 핸들을 반환하는 엔터티 변이의 결과입니다.
 
-### FlintEcsQuery
+### 플린트Ecs쿼리
 
 **종류:** 인터페이스
 
@@ -1336,9 +1639,9 @@ export interface FlintEcsEntityResult<TValue = Uint8Array>
 export interface FlintEcsQuery
 ```
 
-설명이 제공되지 않았습니다.
+필수 및 제외 구성 요소 키를 정의하는 엔터티 쿼리 사양입니다.
 
-### FlintEcsResult
+### 플린트Ecs결과
 
 **종류:** 유형
 
@@ -1346,7 +1649,7 @@ export interface FlintEcsQuery
 export type FlintEcsResult<TValue = Uint8Array> = |
 ```
 
-설명이 제공되지 않았습니다.
+ECS 전환의 결과 결과(성공 또는 실패)입니다.
 
 ### FlintEcs스케줄러
 
@@ -1356,7 +1659,7 @@ export type FlintEcsResult<TValue = Uint8Array> = |
 export interface FlintEcsScheduler<TValue = Uint8Array>
 ```
 
-설명이 제공되지 않았습니다.
+시스템 단계와 신호 ​​전달을 조정하는 파이프라인 스케줄러입니다.
 
 ### FlintEcsScheduleResult
 
@@ -1366,9 +1669,9 @@ export interface FlintEcsScheduler<TValue = Uint8Array>
 export interface FlintEcsScheduleResult<TValue = Uint8Array>
 ```
 
-설명이 제공되지 않았습니다.
+여러 시스템 단계에서 ECS 일정을 실행한 결과입니다.
 
-### FlintEcs신호
+### 플린트Ecs신호
 
 **종류:** 인터페이스
 
@@ -1376,7 +1679,7 @@ export interface FlintEcsScheduleResult<TValue = Uint8Array>
 export interface FlintEcsSignal
 ```
 
-설명이 제공되지 않았습니다.
+ECS 시스템 실행 중에 발생하는 이벤트 또는 상태 변경 신호입니다.
 
 ### FlintEcs구독
 
@@ -1386,9 +1689,9 @@ export interface FlintEcsSignal
 export interface FlintEcsSubscription
 ```
 
-설명이 제공되지 않았습니다.
+이벤트 핸들러 콜백에 신호를 바인딩하는 구독입니다.
 
-### FlintEcs시스템
+### 플린트Ecs시스템
 
 **종류:** 인터페이스
 
@@ -1396,9 +1699,9 @@ export interface FlintEcsSubscription
 export interface FlintEcsSystem<TValue = Uint8Array>
 ```
 
-설명이 제공되지 않았습니다.
+쿼리 및 업데이트를 기반으로 ECS 세계를 변환하는 시스템 실행 단위입니다.
 
-### FlintEcs전환
+### 플린트Ecs전환
 
 **종류:** 인터페이스
 
@@ -1406,9 +1709,9 @@ export interface FlintEcsSystem<TValue = Uint8Array>
 export interface FlintEcsTransition<TValue = Uint8Array>
 ```
 
-설명이 제공되지 않았습니다.
+이전 세계, 다음 세계 및 방출된 신호를 자세히 설명하는 세계 전환을 기록했습니다.
 
-### FlintEcsWorld
+### 플린트EcsWorld
 
 **종류:** 인터페이스
 
@@ -1416,7 +1719,7 @@ export interface FlintEcsTransition<TValue = Uint8Array>
 export interface FlintEcsWorld<TValue = Uint8Array>
 ```
 
-설명이 제공되지 않았습니다.
+엔터티 구성 요소 시스템 세계의 변경 불가능한 스냅샷입니다.
 
 ### getFlintEcsComponent
 
@@ -1430,15 +1733,22 @@ function getFlintEcsComponent(
 ): TValue | undefined;
 ```
 
-설명이 제공되지 않았습니다.
+엔터티에 연결된 구성 요소 인스턴스를 검색합니다.
 
 #### 매개변수
 
-| 이름     | 유형                  | 설명 |
-| -------- | --------------------- | ---- |
-| 세계     | FlintEcsWorld<TValue> |      |
-| 엔터티   | FlintEcsEntity        |      |
-| 구성요소 | 문자열                |      |
+| 이름 | 유형 | 설명 |
+| --------- | --------------------- | ------------------------- |
+| 세계 | 플린트EcsWorld<TValue> | - 현재 세계 스냅샷. |
+| 엔터티 | 플린트Ecs엔티티 | - 대상 엔터티.          |
+| 구성요소 | 문자열 |                           |
+
+#### 계약
+
+- **@param:** - 현재 세계 스냅샷입니다.
+- **@param:** - 대상 엔터티입니다.
+- **@param:** - 구성 요소 이름입니다.
+- **@returns:** 구성 요소 값이거나 없으면 정의되지 않습니다.
 
 ### isFlintEcsEntityAlive
 
@@ -1448,16 +1758,22 @@ function getFlintEcsComponent(
 function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): boolean;
 ```
 
-설명이 제공되지 않았습니다.
+엔터티 핸들이 세계의 활성 세대와 일치하는지 여부를 결정합니다.
 
 #### 매개변수
 
-| 이름   | 유형                  | 설명 |
-| ------ | --------------------- | ---- |
-| 세계   | FlintEcsWorld<TValue> |      |
-| 엔터티 | FlintEcsEntity        |      |
+| 이름 | 유형 | 설명 |
+| ------ | --------------------- | ------------------------- |
+| 세계 | 플린트EcsWorld<TValue> | - 현재 세계 스냅샷. |
+| 엔터티 | 플린트Ecs엔티티 | - 확인할 엔터티 핸들입니다. |
 
-### queryFlintEcs엔티티
+#### 계약
+
+- **@param:** - 현재 세계 스냅샷입니다.
+- **@param:** - 확인할 엔터티 핸들입니다.
+- **@returns:** 살아 있으면 참입니다.
+
+### 쿼리FlintEcs엔티티
 
 **종류:** 기능
 
@@ -1465,14 +1781,20 @@ function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEnt
 function queryFlintEcsEntities(world: FlintEcsWorld<TValue>, query: FlintEcsQuery): readonly FlintEcsEntity[];
 ```
 
-설명이 제공되지 않았습니다.
+구성요소 필터 기준과 일치하는 활성 엔터티를 쿼리합니다.
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 세계 | FlintEcsWorld<TValue> |      |
-| 쿼리 | FlintEcsQuery         |      |
+| 이름 | 유형 | 설명 |
+| ----- | --------------------- | ----------------------------- |
+| 세계 | 플린트EcsWorld<TValue> | - 현재 세계 스냅샷.     |
+| 쿼리 | 플린트Ecs쿼리 | - 쿼리 필터 사양. |
+
+#### 계약
+
+- **@param:** - 현재 세계 스냅샷입니다.
+- **@param:** - 쿼리 필터 사양입니다.
+- **@returns:** 일치하는 엔터티 핸들의 배열입니다.
 
 ### 제거FlintEcsComponent
 
@@ -1486,17 +1808,24 @@ function removeFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+엔터티에서 구성 요소를 제거합니다.
 
 #### 매개변수
 
-| 이름     | 유형                  | 설명 |
-| -------- | --------------------- | ---- |
-| 세계     | FlintEcsWorld<TValue> |      |
-| 엔터티   | FlintEcsEntity        |      |
-| 구성요소 | 문자열                |      |
+| 이름 | 유형 | 설명 |
+| --------- | --------------------- | ------------------------- |
+| 세계 | 플린트EcsWorld<TValue> | - 현재 세계 스냅샷. |
+| 엔터티 | 플린트Ecs엔티티 | - 대상 엔터티.          |
+| 구성요소 | 문자열 |                           |
 
-### runFlintEcsScheduler
+#### 계약
+
+- **@param:** - 현재 세계 스냅샷입니다.
+- **@param:** - 대상 엔터티입니다.
+- **@param:** - 제거할 구성 요소 이름입니다.
+- **@returns:** 전환 결과 결과입니다.
+
+### runFlintEcs스케줄러
 
 **종류:** 기능
 
@@ -1507,14 +1836,20 @@ function runFlintEcsScheduler(
 ): FlintEcsScheduleResult<TValue> | Extract<FlintEcsResult<TValue>, { readonly ok: false }>;
 ```
 
-설명이 제공되지 않았습니다.
+등록된 모든 시스템 및 단계에서 ECS 스케줄러 파이프라인을 실행합니다.
 
 #### 매개변수
 
-| 이름     | 유형                      | 설명 |
-| -------- | ------------------------- | ---- |
-| 세계     | FlintEcsWorld<TValue>     |      |
-| 스케줄러 | FlintEcsScheduler<TValue> |      |
+| 이름 | 유형 | 설명 |
+| --------- | ------------------------- | -------------------------------- |
+| 세계 | 플린트EcsWorld<TValue> | - 초기 월드 스냅샷.        |
+| 스케줄러 | FlintEcsScheduler<TValue> | - 스케줄러 파이프라인을 구성했습니다. |
+
+#### 계약
+
+- **@param:** - 초기 세계 스냅샷입니다.
+- **@param:** - 스케줄러 파이프라인이 구성되었습니다.
+- **@returns:** 일정 실행 보고서입니다.
 
 ### setFlintEcsComponent
 
@@ -1529,18 +1864,26 @@ function setFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+엔터티의 구성 요소 값을 설정하거나 덮어씁니다.
 
 #### 매개변수
 
-| 이름     | 유형                  | 설명 |
-| -------- | --------------------- | ---- |
-| 세계     | FlintEcsWorld<TValue> |      |
-| 엔터티   | FlintEcsEntity        |      |
-| 구성요소 | 문자열                |      |
-| 가치     | T값                   |      |
+| 이름 | 유형 | 설명 |
+| --------- | --------------------- | ------------------------- |
+| 세계 | 플린트EcsWorld<TValue> | - 현재 세계 스냅샷. |
+| 엔터티 | 플린트Ecs엔티티 | - 대상 엔터티.          |
+| 구성요소 | 문자열 |                           |
+| 가치 | T값 | - 구성요소 값 데이터.   |
 
-### SpawnFlintEcsEntity
+#### 계약
+
+- **@param:** - 현재 세계 스냅샷입니다.
+- **@param:** - 대상 엔터티입니다.
+- **@param:** - 구성 요소 이름입니다.
+- **@param:** - 구성요소 값 데이터입니다.
+- **@returns:** 전환 결과 결과입니다.
+
+### 스폰플린트EcsEntity
 
 **종류:** 기능
 
@@ -1548,15 +1891,20 @@ function setFlintEcsComponent(
 function spawnFlintEcsEntity(world: FlintEcsWorld<TValue>): FlintEcsEntityResult<TValue>;
 ```
 
-설명이 제공되지 않았습니다.
+새 엔터티 핸들을 할당하고 이를 세계에 추가합니다.
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 세계 | FlintEcsWorld<TValue> |      |
+| 이름 | 유형 | 설명 |
+| ----- | --------------------- | ------------------------- |
+| 세계 | 플린트EcsWorld<TValue> | - 현재 세계 스냅샷. |
 
-### verifyFlintEcsSignals
+#### 계약
+
+- **@param:** - 현재 세계 스냅샷입니다.
+- **@returns:** 업데이트된 세계와 새 엔터티를 포함하는 엔터티 결과입니다.
+
+### 검증플린트Ecs신호
 
 **종류:** 기능
 
@@ -1566,15 +1914,31 @@ function validateFlintEcsSignals(
 ): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
-설명이 제공되지 않았습니다.
+선언된 신호 정의에 대해 신호 시퀀스를 검증합니다.
 
 #### 매개변수
 
-| 이름 | 유형                       | 설명 |
-| ---- | -------------------------- | ---- |
-| 신호 | 읽기 전용 FlintEcsSignal[] |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------------- | ------------------------------- |
+| 신호 | 읽기 전용 FlintEcsSignal[] | - 검증할 신호 배열. |
+
+#### 계약
+
+- **@param:** - 검증할 신호 배열입니다.
+- **@returns:** 유효한 상태 및 오류 메시지가 있는 개체입니다.
 
 ## `src/host`
+
+### AtomicRingBufferChannel
+
+**종류:** 클래스
+
+```typescript
+export class AtomicRingBufferChannel
+```
+
+공유 호스트 Interop 링 버퍼 메모리에서 원자성 헤드/테일 포인터 업데이트를 동기화합니다.
+경합 조건을 방지하기 위해 메모리 순서 보장과 함께 WebAssembly 호환 원자 저장/로드 작업을 사용합니다.
 
 ### createDefaultFlintCapability
 
@@ -1584,13 +1948,18 @@ function validateFlintEcsSignals(
 function createDefaultFlintCapabilities(options: FlintDefaultHostOptions = {}): FlintCapabilityRegistry;
 ```
 
-설명이 제공되지 않았습니다.
+기본 내장 기능 공급자(예: env.now)를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형                    | 설명 |
-| ---- | ----------------------- | ---- |
-| 옵션 | FlintDefaultHostOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------- | ------------------------------------------------- |
+| 옵션 | FlintDefaultHostOptions | - 기본 기능에 대한 구성 옵션입니다. |
+
+#### 계약
+
+- **@param:** - 기본 기능에 대한 구성 옵션입니다.
+- **@returns:** 기본 기능 구현이 포함된 레지스트리입니다.
 
 ### createFlintHost
 
@@ -1604,17 +1973,24 @@ function createFlintHost(
 ): FlintHost;
 ```
 
-설명이 제공되지 않았습니다.
+게스트 가져오기를 승인된 기능에 바인딩하는 런타임 호스트 환경을 만듭니다.
 
 #### 매개변수
 
-| 이름       | 유형                    | 설명 |
-| ---------- | ----------------------- | ---- |
-| 매니페스트 | FlintAbi매니페스트      |      |
-| 레지스트리 | FlintCapabilityRegistry |      |
-| 옵션       | FlintHost옵션           |      |
+| 이름 | 유형 | 설명 |
+| -------- | ----------------------- | ------------------------------------------------------------ |
+| 매니페스트 | FlintAbi매니페스트 | - 필수 기능과 가져오기를 설명하는 ABI 매니페스트입니다. |
+| 레지스트리 | FlintCapability등록 | - 사용 가능한 기능 구현의 등록.          |
+| 옵션 | 플린트호스트 옵션 | - 호스트 초기화를 위한 구성 옵션입니다.             |
 
-### Flint기능구현
+#### 계약
+
+- **@param:** - 필수 기능과 가져오기를 설명하는 ABI 매니페스트입니다.
+- **@param:** - 사용 가능한 기능 구현의 레지스트리입니다.
+- **@param:** - 호스트 초기화를 위한 구성 옵션입니다.
+- **@returns:** FlintHost 인스턴스를 구성했습니다.
+
+### FlintCapability구현
 
 **종류:** 인터페이스
 
@@ -1622,9 +1998,9 @@ function createFlintHost(
 export interface FlintCapabilityImplementation
 ```
 
-설명이 제공되지 않았습니다.
+호출 핸들러 및 ABI 서명을 등록하는 호스트 기능 구현입니다.
 
-### FlintCapabilityRegistry
+### FlintCapability레지스트리
 
 **종류:** 유형
 
@@ -1632,7 +2008,7 @@ export interface FlintCapabilityImplementation
 export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImplementation>>;
 ```
 
-설명이 제공되지 않았습니다.
+기능 이름을 호스트 구현 공급자에 매핑합니다.
 
 ### FlintDefaultHost옵션
 
@@ -1642,9 +2018,39 @@ export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImp
 export interface FlintDefaultHostOptions
 ```
 
-설명이 제공되지 않았습니다.
+기본 내장 기능 공급자에 대한 구성 옵션입니다.
 
-### Flint호스트
+### 플린트외국 통화
+
+**종류:** 유형
+
+```typescript
+export type FlintForeignCall = (symbol: string, arguments_: readonly unknown[]) => unknown | Promise<unknown>;
+```
+
+호스트 외부 기능 호출 핸들러.
+
+### FlintForeignCapability구현
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintForeignCapabilityImplementation
+```
+
+호스트 외부 기능 구현 설명자입니다.
+
+### FlintForeignCapabilityRegistry
+
+**종류:** 유형
+
+```typescript
+export type FlintForeignCapabilityRegistry = Readonly<Record<string, FlintForeignCapabilityImplementation>>;
+```
+
+사용 가능한 해외 기능 구현 등록.
+
+### 플린트호스트
 
 **종류:** 인터페이스
 
@@ -1652,7 +2058,7 @@ export interface FlintDefaultHostOptions
 export interface FlintHost
 ```
 
-설명이 제공되지 않았습니다.
+게스트 모듈에 대한 기능 호출 및 수명 관리를 제공하는 실행 호스트입니다.
 
 ### FlintHostCall
 
@@ -1662,7 +2068,7 @@ export interface FlintHost
 export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promise<unknown>;
 ```
 
-설명이 제공되지 않았습니다.
+게스트 런타임 실행에 의해 호출되는 호출 가능 호스트 함수입니다.
 
 ### FlintHost옵션
 
@@ -1672,7 +2078,52 @@ export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promis
 export interface FlintHostOptions
 ```
 
+FlintHost 인스턴스 초기화를 위한 구성 옵션입니다.
+
+### MAX_FFI_CALL_DEPTH
+
+**종류:** 상수
+
+```typescript
+export const MAX_FFI_CALL_DEPTH;
+```
+
 설명이 제공되지 않았습니다.
+
+### timingSafeEqualString
+
+**종류:** 기능
+
+```typescript
+function timingSafeEqualString(stringA: string, stringB: string): boolean;
+```
+
+보안에 중요한 식별자에 대한 부채널 공격 타이밍을 방지하기 위해 두 문자열의 상수 시간 비교를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 문자열A | 문자열 |             |
+| 문자열B | 문자열 |             |
+
+### verifyHostPointerBounds
+
+**종류:** 기능
+
+```typescript
+function validateHostPointerBounds(pointer: number, length: number, memoryLimit = 0xff_ff_ff_ff): boolean;
+```
+
+호스트 포인터 오프셋과 길이가 공간 경계 불변성을 충족하는지 확인합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | ------ | ----------- |
+| 포인터 | 번호 |             |
+| 길이 | 번호 |             |
+| 메모리 한도 |        |             |
 
 ## `src/iterator`
 
@@ -1692,11 +2143,11 @@ function createFlintWasmIterator(
 
 #### 매개변수
 
-| 이름 | 유형                                      | 설명 |
-| ---- | ----------------------------------------- | ---- |
-| 핸들 | 번호                                      |      |
-| 다음 | (핸들: 번호) => FlintPackedIteratorResult |      |
-| 옵션 | FlintWasmIteratorOptions<TValue>          |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------------------------------- | ----------- |
+| 핸들 | 번호 |             |
+| 다음 | (핸들: 번호) => FlintPackedIteratorResult |             |
+| 옵션 | FlintWasmIteratorOptions<TValue> |             |
 
 ### createFlintWasmIteratorFactory
 
@@ -1714,11 +2165,11 @@ function createFlintWasmIteratorFactory(
 
 #### 매개변수
 
-| 이름 | 유형                                      | 설명 |
-| ---- | ----------------------------------------- | ---- |
-| 공장 | (...arguments_: TArguments) => 숫자       |      |
-| 다음 | (핸들: 번호) => FlintPackedIteratorResult |      |
-| 옵션 | FlintWasmIteratorOptions<TValue>          |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------------------------------- | ----------- |
+| 공장 | (...arguments_: TArguments) => 숫자 |             |
+| 다음 | (핸들: 번호) => FlintPackedIteratorResult |             |
+| 옵션 | FlintWasmIteratorOptions<TValue> |             |
 
 ### FlintPackedIteratorResult
 
@@ -1728,9 +2179,9 @@ function createFlintWasmIteratorFactory(
 export type FlintPackedIteratorResult = number | bigint;
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly에서 반환된 다음 반복기 호출의 압축된 숫자 표현입니다.
 
-### FlintWasmIterator
+### 플린트WasmIterator
 
 **종류:** 인터페이스
 
@@ -1738,7 +2189,7 @@ export type FlintPackedIteratorResult = number | bigint;
 export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TValue>
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 반복자 상태 핸들을 래핑하는 JavaScript 반복자 및 반복 가능한 브리지입니다.
 
 ### FlintWasmIterator옵션
 
@@ -1748,7 +2199,7 @@ export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TV
 export interface FlintWasmIteratorOptions<TValue>
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 반복자 래퍼 구성을 위한 구성 옵션입니다.
 
 ## `src/logging`
 
@@ -1760,15 +2211,20 @@ export interface FlintWasmIteratorOptions<TValue>
 function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 ```
 
-설명이 제공되지 않았습니다.
+사용자 지정 심각도 필터링 및 싱크를 사용하여 범위가 지정된 FlintLogger 인스턴스를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형            | 설명 |
-| ---- | --------------- | ---- |
-| 옵션 | FlintLogger옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------ | -------------------------------------------------- |
+| 옵션 | FlintLogger옵션 | - 로거 초기화를 위한 구성 옵션입니다. |
 
-### FlintLogEvent
+#### 계약
+
+- **@param:** - 로거 초기화를 위한 구성 옵션입니다.
+- **@returns:** FlintLogger 인스턴스를 구성했습니다.
+
+### 플린트로그이벤트
 
 **종류:** 인터페이스
 
@@ -1776,9 +2232,9 @@ function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 export interface FlintLogEvent
 ```
 
-설명이 제공되지 않았습니다.
+로거에서 발생하는 구조화된 런타임 로그 이벤트입니다.
 
-### FlintLogger
+### 플린트로거
 
 **종류:** 인터페이스
 
@@ -1786,7 +2242,7 @@ export interface FlintLogEvent
 export interface FlintLogger
 ```
 
-설명이 제공되지 않았습니다.
+런타임 이벤트 추적을 위한 범위가 지정된 진단 로깅 인터페이스입니다.
 
 ### FlintLogger옵션
 
@@ -1796,9 +2252,9 @@ export interface FlintLogger
 export interface FlintLoggerOptions
 ```
 
-설명이 제공되지 않았습니다.
+런타임 로거 인스턴스를 초기화하기 위한 구성 옵션입니다.
 
-### FlintLog레벨
+### 플린트로그레벨
 
 **종류:** 유형
 
@@ -1806,9 +2262,9 @@ export interface FlintLoggerOptions
 export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 ```
 
-설명이 제공되지 않았습니다.
+런타임 이벤트 기록에 지원되는 로깅 심각도 수준입니다.
 
-### FlintLogSink
+### 플린트로그싱크
 
 **종류:** 유형
 
@@ -1816,37 +2272,4199 @@ export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 export type FlintLogSink = (event: FlintLogEvent) => void;
 ```
 
-설명이 제공되지 않았습니다.
+구조화된 런타임 로그 이벤트를 수신하는 소비자 콜백 함수입니다.
 
-## `src/memory`
+## `src/math/bignum`
 
-### createFlintMemory
+### CreateFlintDMatrix
 
 **종류:** 기능
 
 ```typescript
-function createFlintMemory(options?: FlintMemoryOptions): FlintMemory;
+function createFlintDMatrix(rows: number, cols: number, data?: readonly number[]): FlintDMatrix;
 ```
 
-설명이 제공되지 않았습니다.
+플린트 D 행렬 생성 작업을 수행합니다.
 
 #### 매개변수
 
-| 이름 | 유형            | 설명 |
-| ---- | --------------- | ---- |
-| 옵션 | FlintMemory옵션 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ----------------- | ----------- |
+| 행 | 번호 |             |
+| 열 | 번호 |             |
+| 데이터 | 읽기 전용 숫자[] |             |
 
-### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+### createFlintTensor
+
+**종류:** 기능
+
+```typescript
+function createFlintTensor(shape: FlintTensorShape, data: readonly TValue[]): FlintTensor<TValue>;
+```
+
+플린트 텐서 작업 생성을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ----------------- | ----------- |
+| 모양 | 플린트텐서모양 |             |
+| 데이터 | 읽기 전용 TValue[] |             |
+
+### createFlintTensorShape
+
+**종류:** 기능
+
+```typescript
+function createFlintTensorShape(dimensions: readonly number[]): FlintTensorShape;
+```
+
+플린트 텐서 모양 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | ----------------- | ----------- |
+| 치수 | 읽기 전용 숫자[] |             |
+
+### createFlintTensorView
+
+**종류:** 기능
+
+```typescript
+function createFlintTensorView(shape: FlintTensorShape, data: readonly TValue[], offset = 0): FlintTensorView<TValue>;
+```
+
+플린트 텐서 뷰 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ----------------- | ----------- |
+| 모양 | 플린트텐서모양 |             |
+| 데이터 | 읽기 전용 TValue[] |             |
+| 오프셋 |                   |             |
+
+### 플린트Cholesky분해
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintCholeskyDecomposition
+```
+
+Cholesky 분해 표현.
+
+### 플린트D매트릭스
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintDMatrix
+```
+
+D 매트릭스 표현.
+
+### flintDMatrixAddInplace
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixAddInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+d 행렬 추가 내부 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------------ | ----------- |
+| 매트릭스A | 플린트매트릭스 |             |
+| 매트릭스B | 플린트매트릭스 |             |
+
+### 부싯돌DMatrixCholesky
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixCholesky(matrix: FlintDMatrix): FlintOption<FlintCholeskyDecomposition>;
+```
+
+d 행렬 촐레스키 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------------ | ----------- |
+| 매트릭스 | 플린트매트릭스 |             |
+
+### 부싯돌DMatrixCholeskySolve
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixCholeskySolve(
+  chol: FlintCholeskyDecomposition,
+  rhsVector: FlintDMatrix,
+): FlintOption<FlintDMatrix>;
+```
+
+d 행렬 촐레스키 풀이 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | -------------------------- | ----------- |
+| 콜 | 플린트Cholesky분해 |             |
+| rhs벡터 | 플린트매트릭스 |             |
+
+### flintDMatrix결정자
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixDeterminant(matrix: FlintDMatrix): FlintOption<number>;
+```
+
+d 행렬 행렬식 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------------ | ----------- |
+| 매트릭스 | 플린트매트릭스 |             |
+
+### flintDMatrixEigenSymmetric
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixEigenSymmetric(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintEigenDecomposition>;
+```
+
+d 행렬 고유 대칭 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------- | ------------ | ----------- |
+| 매트릭스 | 플린트매트릭스 |             |
+| 최대 반복 |              |             |
+| 엡실론 |              |             |
+
+### 부싯돌DMatrixGet
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixGet(matrix: FlintDMatrix, row: number, col: number): FlintOption<number>;
+```
+
+d 행렬 가져오기 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------------ | ----------- |
+| 매트릭스 | 플린트매트릭스 |             |
+| 행 | 번호 |             |
+| 열 | 번호 |             |
+
+### flintDMatrixID
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixIdentity(size: number): FlintDMatrix;
+```
+
+d 행렬 항등 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 크기 | 번호 |             |
+
+### flintDMatrix역
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixInverse(matrix: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+d 행렬 역연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------------ | ----------- |
+| 매트릭스 | 플린트매트릭스 |             |
+
+### 부싯돌DMatrixLU
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixLU(matrix: FlintDMatrix): FlintOption<FlintLUDecomposition>;
+```
+
+d 행렬 l u 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------------ | ----------- |
+| 매트릭스 | 플린트매트릭스 |             |
+
+### 부싯돌DMatrixMul
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixMul(matrixA: FlintDMatrix, matrixB: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+d 행렬 mul 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------------ | ----------- |
+| 매트릭스A | 플린트매트릭스 |             |
+| 매트릭스B | 플린트매트릭스 |             |
+
+### flintDMatrixMulAccumulate
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixMulAccumulate(
+  outMatrix: FlintDMatrix,
+  matrixA: FlintDMatrix,
+  matrixB: FlintDMatrix,
+  alpha = 1,
+): boolean;
+```
+
+d 행렬 다중 누적 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | ------------ | ----------- |
+| 아웃매트릭스 | 플린트매트릭스 |             |
+| 매트릭스A | 플린트매트릭스 |             |
+| 매트릭스B | 플린트매트릭스 |             |
+| 알파 |              |             |
+
+### flintDMatrix의사 역행렬
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixPseudoinverse(matrix: FlintDMatrix, epsilon = FLINT_MATH_EPSILON): FlintOption<FlintDMatrix>;
+```
+
+d 행렬 의사 역연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------------ | ----------- |
+| 매트릭스 | 플린트매트릭스 |             |
+| 엡실론 |              |             |
+
+### 부싯돌DMatrixQR
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixQR(matrix: FlintDMatrix): FlintOption<FlintQRDecomposition>;
+```
+
+d 행렬 q r 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------------ | ----------- |
+| 매트릭스 | 플린트매트릭스 |             |
+
+### flintDMatrixScaleInplace
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixScaleInplace(matrix: FlintDMatrix, factor: number): void;
+```
+
+d 행렬 크기 조정 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------------ | ----------- |
+| 매트릭스 | 플린트매트릭스 |             |
+| 요인 | 번호 |             |
+
+### 플린트D매트릭스세트
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixSet(matrix: FlintDMatrix, row: number, col: number, value: number): boolean;
+```
+
+d 행렬 집합 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------------ | ----------- |
+| 매트릭스 | 플린트매트릭스 |             |
+| 행 | 번호 |             |
+| 열 | 번호 |             |
+| 가치 | 번호 |             |
+
+### flintDMatrix해결
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixSolve(matrixA: FlintDMatrix, rhsVector: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+d 행렬 풀기 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | ------------ | ----------- |
+| 매트릭스A | 플린트매트릭스 |             |
+| rhs벡터 | 플린트매트릭스 |             |
+
+### flintDMatrixSubInplace
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixSubInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+d 행렬 하위 대체 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------------ | ----------- |
+| 매트릭스A | 플린트매트릭스 |             |
+| 매트릭스B | 플린트매트릭스 |             |
+
+### 부싯돌DMatrixSVD
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixSVD(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintSVDDecomposition>;
+```
+
+d 행렬 s v d 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------------- | ------------ | ----------- |
+| 매트릭스 | 플린트매트릭스 |             |
+| 최대 반복 |              |             |
+| 엡실론 |              |             |
+
+### flintDMatrix전치
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixTranspose(matrix: FlintDMatrix): FlintDMatrix;
+```
+
+d 행렬 전치 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------------ | ----------- |
+| 매트릭스 | 플린트매트릭스 |             |
+
+### 플린트DMatrixZeros
+
+**종류:** 기능
+
+```typescript
+function flintDMatrixZeros(rows: number, cols: number): FlintDMatrix;
+```
+
+d 행렬 0 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------ | ----------- |
+| 행 | 번호 |             |
+| 열 | 번호 |             |
+
+### 플린트아이겐분해
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintEigenDecomposition
+```
+
+고유 분해 표현.
+
+### FlintLU분해
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintLUDecomposition
+```
+
+L U 분해 표현.
+
+### FlintQR분해
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintQRDecomposition
+```
+
+Q R 분해 표현.
+
+### FlintSVD분해
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintSVDDecomposition
+```
+
+S V D 분해 표현.
+
+### 플린트텐서
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintTensor<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+텐서 표현.
+
+### 부싯돌TensorFill
+
+**종류:** 기능
+
+```typescript
+function flintTensorFill(shape: FlintTensorShape, value: TValue): FlintTensor<TValue>;
+```
+
+텐서 채우기 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---------------- | ----------- |
+| 모양 | 플린트텐서모양 |             |
+| 가치 | T값 |             |
+
+### 부싯돌TensorMatmul
+
+**종류:** 기능
+
+```typescript
+function flintTensorMatmul(
+  tensorA: FlintTensor<number>,
+  tensorB: FlintTensor<number>,
+): FlintOption<FlintTensor<number>>;
+```
+
+텐서 matmul 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------------------- | ----------- |
+| 텐서A | 플린트Tensor<number> |             |
+| 텐서B | 플린트Tensor<number> |             |
+
+### 부싯돌TensorReshape
+
+**종류:** 기능
+
+```typescript
+function flintTensorReshape(tensor: FlintTensor<TValue>, newShape: FlintTensorShape): FlintOption<FlintTensor<TValue>>;
+```
+
+텐서 재구성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------------------- | ----------- |
+| 텐서 | 플린트Tensor<TValue> |             |
+| 새로운 모양 | 플린트텐서모양 |             |
+
+### 부싯돌텐서모양
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintTensorShape
+```
+
+텐서 모양 표현.
+
+### 부싯돌텐서모양크기
+
+**종류:** 기능
+
+```typescript
+function flintTensorShapeSize(shape: FlintTensorShape): number;
+```
+
+텐서 모양 크기 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---------------- | ----------- |
+| 모양 | 플린트텐서모양 |             |
+
+### 부싯돌TensorSlice
+
+**종류:** 기능
+
+```typescript
+function flintTensorSlice(
+  view: FlintTensorView<TValue>,
+  axis: number,
+  start: number,
+  length: number,
+): FlintOption<FlintTensorView<TValue>>;
+```
+
+텐서 슬라이스 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ----------------------- | ----------- |
+| 보기 | FlintTensorView<TValue> |             |
+| 축 | 번호 |             |
+| 시작 | 번호 |             |
+| 길이 | 번호 |             |
+
+### 부싯돌TensorView
+
+**종류:** 기능
+
+```typescript
+function flintTensorView(tensor: FlintTensor<TValue>): FlintTensorView<TValue>;
+```
+
+텐서 뷰 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------------------- | ----------- |
+| 텐서 | 플린트Tensor<TValue> |             |
+
+### 플린트TensorView
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintTensorView<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+텐서 뷰 표현.
+
+### 부싯돌TensorViewGet
+
+**종류:** 기능
+
+```typescript
+function flintTensorViewGet(view: FlintTensorView<TValue>, indices: readonly number[]): FlintOption<TValue>;
+```
+
+텐서 뷰 가져오기 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------- | ----------- |
+| 보기 | FlintTensorView<TValue> |             |
+| 지수 | 읽기 전용 숫자[] |             |
+
+### 부싯돌TensorViewSet
+
+**종류:** 기능
+
+```typescript
+function flintTensorViewSet(view: FlintTensorView<TValue>, indices: readonly number[], value: TValue): boolean;
+```
+
+텐서 뷰 설정 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------- | ----------- |
+| 보기 | FlintTensorView<TValue> |             |
+| 지수 | 읽기 전용 숫자[] |             |
+| 가치 | T값 |             |
+
+## `src/math/ieee754`
+
+### createFlintColorRgba
+
+**종류:** 기능
+
+```typescript
+function createFlintColorRgba(red = 0, green = 0, blue = 0, alpha = 1): FlintColorRgba;
+```
+
+플린트 색상 RGBA 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---- | ----------- |
+| 빨간색 |      |             |
+| 녹색 |      |             |
+| 파란색 |      |             |
+| 알파 |      |             |
+
+### FLINT_MATH_DEG_TO_RAD
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
+export const FLINT_MATH_DEG_TO_RAD;
+```
+
+도에서 라디안으로의 변환 계수입니다.
+
+### FLINT_MATH_E
+
+**종류:** 상수
+
+```typescript
+export const FLINT_MATH_E;
+```
+
+오일러 상수(e).
+
+### FLINT_MATH_EPSILON
+
+**종류:** 상수
+
+```typescript
+export const FLINT_MATH_EPSILON;
+```
+
+오일러 상수(e).
+
+### FLINT_MATH_F32_EPSILON
+
+**종류:** 상수
+
+```typescript
+export const FLINT_MATH_F32_EPSILON;
+```
+
+32비트 부동 소수점 연산을 위한 머신 엡실론입니다.
+
+### FLINT_MATH_PI
+
+**종류:** 상수
+
+```typescript
+export const FLINT_MATH_PI;
+```
+
+Flint 런타임의 표준 수학 상수입니다.
+
+### FLINT_MATH_RAD_TO_DEG
+
+**종류:** 상수
+
+```typescript
+export const FLINT_MATH_RAD_TO_DEG;
+```
+
+라디안에서 각도로의 변환 계수입니다.
+
+### FLINT_MATH_SQRT2
+
+**종류:** 상수
+
+```typescript
+export const FLINT_MATH_SQRT2;
+```
+
+2 상수의 제곱근입니다.
+
+### FLINT_MATH_TAU
+
+**종류:** 상수
+
+```typescript
+export const FLINT_MATH_TAU;
+```
+
+2 * PI(타우) 원 상수.
+
+### 부싯돌대략 같음
+
+**종류:** 기능
+
+```typescript
+function flintApproxEqual(first: number, second: number, epsilon = FLINT_MATH_EPSILON): boolean;
+```
+
+지정된 엡실론 내에서 대략적인 동일성을 테스트합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 먼저 | 번호 |             |
+| 두 번째 | 번호 |             |
+| 엡실론 |        |             |
+
+### 부싯돌천장
+
+**종류:** 기능
+
+```typescript
+function flintCeil(value: number): number;
+```
+
+x보다 크거나 같은 가장 작은 정수를 계산합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 번호 |             |
+
+### 부싯돌클램프
+
+**종류:** 기능
+
+```typescript
+function flintClamp(value: number, minimum: number, maximum: number): number;
+```
+
+최소 및 최대 경계 사이에 숫자 값을 고정합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 가치 | 번호 |             |
+| 최소 | 번호 |             |
+| 최대 | 번호 |             |
+
+### 플린트색상Hsv
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintColorHsv
+```
+
+색상 Hsv 표현.
+
+### flintColorHsvToRgb
+
+**종류:** 기능
+
+```typescript
+function flintColorHsvToRgb(hsv: FlintColorHsv): FlintColorRgba;
+```
+
+컬러 hsv에서 rgb 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------------- | ----------- |
+| HSV | 플린트컬러Hsv |             |
+
+### 부싯돌색LerpOklab
+
+**종류:** 기능
+
+```typescript
+function flintColorLerpOklab(first: FlintColorRgba, second: FlintColorRgba, factor: number): FlintColorRgba;
+```
+
+색상 lerp oklab 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | -------------- | ----------- |
+| 먼저 | 플린트컬러Rgba |             |
+| 두 번째 | 플린트컬러Rgba |             |
+| 요인 | 번호 |             |
+
+### flintColorLinearToSrgb
+
+**종류:** 기능
+
+```typescript
+function flintColorLinearToSrgb(color: FlintColorRgba): FlintColorRgba;
+```
+
+srgb 작업에 대한 선형 색상을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | -------------- | ----------- |
+| 색상 | 플린트컬러Rgba |             |
+
+### 플린트컬러Oklab
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintColorOklab
+```
+
+색상 Oklab 표현.
+
+### flintColorOklabToSrgb
+
+**종류:** 기능
+
+```typescript
+function flintColorOklabToSrgb(lab: FlintColorOklab): FlintColorRgba;
+```
+
+색상 oklab을 srgb 작업으로 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | --------------- | ----------- |
+| 연구실 | FlintColorOklab |             |
+
+### 플린트컬러Rgba
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintColorRgba
+```
+
+색상 Rgba 표현.
+
+### 플린트ColorRgbToHsv
+
+**종류:** 기능
+
+```typescript
+function flintColorRgbToHsv(color: FlintColorRgba): FlintColorHsv;
+```
+
+컬러 rgb에서 hsv 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | -------------- | ----------- |
+| 색상 | 플린트컬러Rgba |             |
+
+### flintColorSrgbToLinear
+
+**종류:** 기능
+
+```typescript
+function flintColorSrgbToLinear(color: FlintColorRgba): FlintColorRgba;
+```
+
+컬러 srgb를 선형 작업으로 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | -------------- | ----------- |
+| 색상 | 플린트컬러Rgba |             |
+
+### flintColorSrgbToOklab
+
+**종류:** 기능
+
+```typescript
+function flintColorSrgbToOklab(color: FlintColorRgba): FlintColorOklab;
+```
+
+oklab 작업에 대한 색상 srgb를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | -------------- | ----------- |
+| 색상 | 플린트컬러Rgba |             |
+
+### 부싯돌도
+
+**종류:** 기능
+
+```typescript
+function flintDegrees(radians: number): number;
+```
+
+라디안을 도로 변환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 라디안 | 번호 |             |
+
+### 부싯돌층
+
+**종류:** 기능
+
+```typescript
+function flintFloor(value: number): number;
+```
+
+x보다 작거나 같은 가장 큰 정수를 계산합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 번호 |             |
+
+### 부싯돌Fract
+
+**종류:** 기능
+
+```typescript
+function flintFract(value: number): number;
+```
+
+분수 부분을 계산합니다: x - Floor(x).
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 번호 |             |
+
+### 부싯돌Lerp
+
+**종류:** 기능
+
+```typescript
+function flintLerp(start: number, end: number, factor: number): number;
+```
+
+요인별로 시작과 끝 사이를 선형 보간합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------ | ----------- |
+| 시작 | 번호 |             |
+| 끝 | 번호 |             |
+| 요인 | 번호 |             |
+
+### 부싯돌라디안
+
+**종류:** 기능
+
+```typescript
+function flintRadians(degrees: number): number;
+```
+
+각도를 라디안으로 변환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| 도 | 번호 |             |
+
+### 부싯돌표지
+
+**종류:** 기능
+
+```typescript
+function flintSign(value: number): number;
+```
+
+x(1, -1, 0 또는 NaN)의 부호를 반환합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가치 | 번호 |             |
+
+### 부싯돌스무스스텝
+
+**종류:** 기능
+
+```typescript
+function flintSmoothstep(edge0: number, edge1: number, value: number): number;
+```
+
+edge0과 edge1 사이의 부드러운 에르미트 보간.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가장자리0 | 번호 |             |
+| 가장자리1 | 번호 |             |
+| 가치 | 번호 |             |
+
+### 부싯돌단계
+
+**종류:** 기능
+
+```typescript
+function flintStep(edge: number, value: number): number;
+```
+
+x < edge이면 0을 반환하고 그렇지 않으면 1을 반환하는 단계 함수입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------ | ----------- |
+| 가장자리 | 번호 |             |
+| 가치 | 번호 |             |
+
+## `src/math/transcendental`
+
+### 플린트AABB2 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintAABB2(minPoint: FlintVec2, maxPoint: FlintVec2): FlintAABB2;
+```
+
+flint a a b b 2 작업 만들기를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | --------- | ----------- |
+| 최소포인트 | 플린트Vec2 |             |
+| 최대포인트 | 플린트Vec2 |             |
+
+### 생성플린트AABB3
+
+**종류:** 기능
+
+```typescript
+function createFlintAABB3(minPoint: FlintVec3, maxPoint: FlintVec3): FlintAABB3;
+```
+
+flint a a b b 3 작업 만들기를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | --------- | ----------- |
+| 최소포인트 | 플린트Vec3 |             |
+| 최대포인트 | 플린트Vec3 |             |
+
+### createFlintBVHNode3
+
+**종류:** 기능
+
+```typescript
+function createFlintBVHNode3(
+  bounds: FlintAABB3,
+  leftChild: number,
+  rightChild: number,
+  primitiveIndex: number,
+): FlintBVHNode3;
+```
+
+flint b v h node 3 작업 생성을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------------- | ---------- | ----------- |
+| 경계 | 플린트AABB3 |             |
+| 왼쪽자식 | 번호 |             |
+| 오른쪽자식 | 번호 |             |
+| 원시인덱스 | 번호 |             |
+
+### createFlintBVHTree3
+
+**종류:** 기능
+
+```typescript
+function createFlintBVHTree3(nodes: readonly FlintBVHNode3[], rootIndex = 0): FlintBVHTree3;
+```
+
+flint b v h tree 3 작업 만들기를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | ------------------------ | ----------- |
+| 노드 | 읽기 전용 FlintBVHNode3[] |             |
+| 루트 인덱스 |                          |             |
+
+### 플린트서클 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintCircle(center: FlintVec2, radius: number): FlintCircle;
+```
+
+플린트 원 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 센터 | 플린트Vec2 |             |
+| 반경 | 번호 |             |
+
+### 플린트OBB2 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintOBB2(center: FlintVec2, halfExtents: FlintVec2, angleRad = 0): FlintOBB2;
+```
+
+flint o b b 2 작업 만들기를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | --------- | ----------- |
+| 센터 | 플린트Vec2 |             |
+| halfExtents | 플린트Vec2 |             |
+| 각도Rad |           |             |
+
+### 생성FlintOBB3
+
+**종류:** 기능
+
+```typescript
+function createFlintOBB3(
+  center: FlintVec3,
+  halfExtents: FlintVec3,
+  orientation: FlintQuat = flintQuatIdentity(),
+): FlintOBB3;
+```
+
+flint o b b 3 작업 만들기를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | --------- | ----------- |
+| 센터 | 플린트Vec3 |             |
+| halfExtents | 플린트Vec3 |             |
+| 오리엔테이션 | 플린트콰트 |             |
+
+### 생성FlintPlane3
+
+**종류:** 기능
+
+```typescript
+function createFlintPlane3(normal: FlintVec3, distance: number): FlintPlane3;
+```
+
+플린트 평면 3 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | --------- | ----------- |
+| 정상 | 플린트Vec3 |             |
+| 거리 | 번호 |             |
+
+### 플린트레이2 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintRay2(origin: FlintVec2, direction: FlintVec2): FlintRay2;
+```
+
+Flint Ray 2 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | --------- | ----------- |
+| 원산지 | 플린트Vec2 |             |
+| 방향 | 플린트Vec2 |             |
+
+### 플린트레이3 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintRay3(origin: FlintVec3, direction: FlintVec3): FlintRay3;
+```
+
+Flint Ray 3 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------- | --------- | ----------- |
+| 원산지 | 플린트Vec3 |             |
+| 방향 | 플린트Vec3 |             |
+
+### 플린트RayHit3 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintRayHit3(
+  hit: boolean,
+  t: number,
+  point: FlintVec3,
+  normal: FlintVec3,
+  primitiveId: number,
+): FlintRayHit3;
+```
+
+Flint Ray Hit 3 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | --------- | ----------- |
+| 히트 | 부울 |             |
+| 티 | 번호 |             |
+| 포인트 | 플린트Vec3 |             |
+| 정상 | 플린트Vec3 |             |
+| 기본ID | 번호 |             |
+
+### 플린트세그먼트2 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintSegment2(startPoint: FlintVec2, endPoint: FlintVec2): FlintSegment2;
+```
+
+플린트 세그먼트 2 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------- | ----------- |
+| 시작점 | 플린트Vec2 |             |
+| 엔드포인트 | 플린트Vec2 |             |
+
+### 플린트세그먼트3 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintSegment3(startPoint: FlintVec3, endPoint: FlintVec3): FlintSegment3;
+```
+
+플린트 세그먼트 3 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------- | ----------- |
+| 시작점 | 플린트Vec3 |             |
+| 엔드포인트 | 플린트Vec3 |             |
+
+### createFlintSphere
+
+**종류:** 기능
+
+```typescript
+function createFlintSphere(center: FlintVec3, radius: number): FlintSphere;
+```
+
+플린트 구 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 센터 | 플린트Vec3 |             |
+| 반경 | 번호 |             |
+
+### 생성FlintTriangle2
+
+**종류:** 기능
+
+```typescript
+function createFlintTriangle2(pointA: FlintVec2, pointB: FlintVec2, pointC: FlintVec2): FlintTriangle2;
+```
+
+플린트 삼각형 2 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 포인트A | 플린트Vec2 |             |
+| 포인트B | 플린트Vec2 |             |
+| 포인트C | 플린트Vec2 |             |
+
+### 생성FlintTriangle3
+
+**종류:** 기능
+
+```typescript
+function createFlintTriangle3(pointA: FlintVec3, pointB: FlintVec3, pointC: FlintVec3): FlintTriangle3;
+```
+
+플린트 삼각형 3 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 포인트A | 플린트Vec3 |             |
+| 포인트B | 플린트Vec3 |             |
+| 포인트C | 플린트Vec3 |             |
+
+### 플린트AABB2
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintAABB2
+```
+
+A A B B 2 표현.
+
+### 부싯돌AABB2Area
+
+**종류:** 기능
+
+```typescript
+function flintAABB2Area(box: FlintAABB2): number;
+```
+
+a b b 2 영역 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ---------- | ----------- |
+| 상자 | 플린트AABB2 |             |
+
+### flintAABB2ContainsPoint
+
+**종류:** 기능
+
+```typescript
+function flintAABB2ContainsPoint(box: FlintAABB2, point: FlintVec2): boolean;
+```
+
+a a b b 2 포함 포인트 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---------- | ----------- |
+| 상자 | 플린트AABB2 |             |
+| 포인트 | 플린트Vec2 |             |
+
+### 부싯돌AABB2IntersectsAABB2
+
+**종류:** 기능
+
+```typescript
+function flintAABB2IntersectsAABB2(first: FlintAABB2, second: FlintAABB2): boolean;
+```
+
+a a b b 2 교차 a a b b 2 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---------- | ----------- |
+| 먼저 | 플린트AABB2 |             |
+| 두 번째 | 플린트AABB2 |             |
+
+### 부싯돌AABB2Union
+
+**종류:** 기능
+
+```typescript
+function flintAABB2Union(first: FlintAABB2, second: FlintAABB2): FlintAABB2;
+```
+
+a a b b 2 합집합 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---------- | ----------- |
+| 먼저 | 플린트AABB2 |             |
+| 두 번째 | 플린트AABB2 |             |
+
+### 플린트AABB3
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintAABB3
+```
+
+A A B B 3 표현.
+
+### flintAABB3ContainsPoint
+
+**종류:** 기능
+
+```typescript
+function flintAABB3ContainsPoint(box: FlintAABB3, point: FlintVec3): boolean;
+```
+
+a a b b 3 포함 포인트 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ---------- | ----------- |
+| 상자 | 플린트AABB3 |             |
+| 포인트 | 플린트Vec3 |             |
+
+### 부싯돌AABB3IntersectsAABB3
+
+**종류:** 기능
+
+```typescript
+function flintAABB3IntersectsAABB3(first: FlintAABB3, second: FlintAABB3): boolean;
+```
+
+a a b b 3 교차 a a b b 3 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---------- | ----------- |
+| 먼저 | 플린트AABB3 |             |
+| 두 번째 | 플린트AABB3 |             |
+
+### 부싯돌AABB3볼륨
+
+**종류:** 기능
+
+```typescript
+function flintAABB3Volume(box: FlintAABB3): number;
+```
+
+a b b 3 볼륨 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ---------- | ----------- |
+| 상자 | 플린트AABB3 |             |
+
+### 부싯돌Bezier2입방
+
+**종류:** 기능
+
+```typescript
+function flintBezier2Cubic(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+베지어 2차 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 포인트0 | 플린트Vec2 |             |
+| 포인트1 | 플린트Vec2 |             |
+| 포인트2 | 플린트Vec2 |             |
+| 포인트3 | 플린트Vec2 |             |
+| 요인 | 번호 |             |
+
+### 부싯돌Bezier2Quadratic
+
+**종류:** 기능
+
+```typescript
+function flintBezier2Quadratic(point0: FlintVec2, point1: FlintVec2, point2: FlintVec2, factor: number): FlintVec2;
+```
+
+베지어 2차 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 포인트0 | 플린트Vec2 |             |
+| 포인트1 | 플린트Vec2 |             |
+| 포인트2 | 플린트Vec2 |             |
+| 요인 | 번호 |             |
+
+### 부싯돌베지어3입방
+
+**종류:** 기능
+
+```typescript
+function flintBezier3Cubic(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+베지어 3차 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 포인트0 | 플린트Vec3 |             |
+| 포인트1 | 플린트Vec3 |             |
+| 포인트2 | 플린트Vec3 |             |
+| 포인트3 | 플린트Vec3 |             |
+| 요인 | 번호 |             |
+
+### 부싯돌BVHBuildFromAABBs
+
+**종류:** 기능
+
+```typescript
+function flintBVHBuildFromAABBs(boxes: readonly FlintAABB3[]): FlintBVHTree3;
+```
+
+a b bs 작업에서 b v h 빌드를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | --------------------- | ----------- |
+| 상자 | 읽기 전용 FlintAABB3[] |             |
+
+### 플린트BVHNode3
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintBVHNode3
+```
+
+B V H Node 3 표현.
+
+### 부싯돌BVHRRay교차
+
+**종류:** 기능
+
+```typescript
+function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): FlintOption<FlintRayHit3>;
+```
+
+b v h 광선 교차 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ------------- | ----------- |
+| 나무 | 플린트BVHTree3 |             |
+| 레이 | 플린트레이3 |             |
+
+### 플린트BVHTree3
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintBVHTree3
+```
+
+B V H 트리 3 표현.
+
+### 부싯돌CatmullRom2
+
+**종류:** 기능
+
+```typescript
+function flintCatmullRom2(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+catmull rom 2 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 포인트0 | 플린트Vec2 |             |
+| 포인트1 | 플린트Vec2 |             |
+| 포인트2 | 플린트Vec2 |             |
+| 포인트3 | 플린트Vec2 |             |
+| 요인 | 번호 |             |
+
+### 부싯돌CatmullRom3
+
+**종류:** 기능
+
+```typescript
+function flintCatmullRom3(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+catmull rom 3 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 포인트0 | 플린트Vec3 |             |
+| 포인트1 | 플린트Vec3 |             |
+| 포인트2 | 플린트Vec3 |             |
+| 포인트3 | 플린트Vec3 |             |
+| 요인 | 번호 |             |
+
+### 플린트서클
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintCircle
+```
+
+원 표현.
+
+### 부싯돌원포함점
+
+**종류:** 기능
+
+```typescript
+function flintCircleContainsPoint(circle: FlintCircle, point: FlintVec2): boolean;
+```
+
+원에 점이 포함된 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ----------- | ----------- |
+| 원 | 플린트서클 |             |
+| 포인트 | 플린트Vec2 |             |
+
+### 부싯돌원교차원
+
+**종류:** 기능
+
+```typescript
+function flintCircleIntersectsCircle(first: FlintCircle, second: FlintCircle): boolean;
+```
+
+원 교차 원 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ----------- | ----------- |
+| 먼저 | 플린트서클 |             |
+| 두 번째 | 플린트서클 |             |
+
+### 플린트절두체
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintFrustum
+```
+
+절두체 표현.
+
+### flintFrustumFromViewProj
+
+**종류:** 기능
+
+```typescript
+function flintFrustumFromViewProj(viewProj: FlintMat4): FlintFrustum;
+```
+
+뷰 프로젝트 작업에서 절두체를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | --------- | ----------- |
+| 뷰프로젝트 | 플린트매트4 |             |
+
+### 부싯돌절두체교차점구
+
+**종류:** 기능
+
+```typescript
+function flintFrustumIntersectsSphere(frustum: FlintFrustum, sphere: FlintSphere): boolean;
+```
+
+절두체 교차 구 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------------ | ----------- |
+| 절두체 | 플린트프러스텀 |             |
+| 구체 | 부싯돌구 |             |
+
+### 플린트OBB2
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintOBB2
+```
+
+O B B 2 표현.
+
+### 플린트OBB3
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintOBB3
+```
+
+O B B 3 표현.
+
+### 플린트Plane3
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintPlane3
+```
+
+평면 3 표현.
+
+### flintPlane3DistanceToPoint
+
+**종류:** 기능
+
+```typescript
+function flintPlane3DistanceToPoint(plane: FlintPlane3, point: FlintVec3): number;
+```
+
+평면 3의 점간 거리 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ----------- | ----------- |
+| 비행기 | 플린트플레인3 |             |
+| 포인트 | 플린트Vec3 |             |
+
+### 플린트레이2
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintRay2
+```
+
+레이 2 표현.
+
+### 플린트레이3
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintRay3
+```
+
+레이 3 표현.
+
+### flintRay3IntersectOBB
+
+**종류:** 기능
+
+```typescript
+function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOption<number>;
+```
+
+광선 3 교차 o b b 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | --------- | ----------- |
+| 레이 | 플린트레이3 |             |
+| 산부인과 | 플린트OBB3 |             |
+
+### flintRay3IntersectsAABB3
+
+**종류:** 기능
+
+```typescript
+function flintRay3IntersectsAABB3(ray: FlintRay3, box: FlintAABB3): FlintOption<number>;
+```
+
+광선 3 교차 a a b b 3 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---- | ---------- | ----------- |
+| 레이 | 플린트레이3 |             |
+| 상자 | 플린트AABB3 |             |
+
+### flintRay3IntersectsPlane3
+
+**종류:** 기능
+
+```typescript
+function flintRay3IntersectsPlane3(ray: FlintRay3, plane: FlintPlane3): FlintOption<number>;
+```
+
+광선 3이 평면 3과 교차하는 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ----------- | ----------- |
+| 레이 | 플린트레이3 |             |
+| 비행기 | 플린트플레인3 |             |
+
+### 부싯돌Ray3Intersects구
+
+**종류:** 기능
+
+```typescript
+function flintRay3IntersectsSphere(ray: FlintRay3, sphere: FlintSphere): FlintOption<number>;
+```
+
+광선 3 교차 구 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ----------- | ----------- |
+| 레이 | 플린트레이3 |             |
+| 구체 | 부싯돌구 |             |
+
+### 부싯돌Ray3교차삼각형3
+
+**종류:** 기능
+
+```typescript
+function flintRay3IntersectsTriangle3(ray: FlintRay3, triangle: FlintTriangle3): FlintOption<number>;
+```
+
+광선 3이 삼각형 3과 교차하는 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | -------------- | ----------- |
+| 레이 | 플린트레이3 |             |
+| 삼각형 | 플린트트라이앵글3 |             |
+
+### 플린트레이히트3
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintRayHit3
+```
+
+레이 히트 3 표현.
+
+### 플린트세그먼트2
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintSegment2
+```
+
+세그먼트 2 표현.
+
+### 플린트세그먼트3
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintSegment3
+```
+
+세그먼트 3 표현.
+
+### 부싯돌구
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintSphere
+```
+
+구 표현.
+
+### 부싯돌구체포함점
+
+**종류:** 기능
+
+```typescript
+function flintSphereContainsPoint(sphere: FlintSphere, point: FlintVec3): boolean;
+```
+
+구에 점이 포함된 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ----------- | ----------- |
+| 구체 | 부싯돌구 |             |
+| 포인트 | 플린트Vec3 |             |
+
+### 부싯돌구교차구
+
+**종류:** 기능
+
+```typescript
+function flintSphereIntersectsSphere(first: FlintSphere, second: FlintSphere): boolean;
+```
+
+구가 구와 교차하는 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ----------- | ----------- |
+| 먼저 | 부싯돌구 |             |
+| 두 번째 | 부싯돌구 |             |
+
+### 플린트트라이앵글2
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintTriangle2
+```
+
+삼각형 2 표현.
+
+### 부싯돌Triangle2Area
+
+**종류:** 기능
+
+```typescript
+function flintTriangle2Area(triangle: FlintTriangle2): number;
+```
+
+삼각형 2 영역 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | -------------- | ----------- |
+| 삼각형 | 플린트트라이앵글2 |             |
+
+### 플린트트라이앵글3
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintTriangle3
+```
+
+삼각형 3 표현.
+
+### 부싯돌삼각형3일반
+
+**종류:** 기능
+
+```typescript
+function flintTriangle3Normal(triangle: FlintTriangle3): FlintVec3;
+```
+
+삼각형 3 정상 작동을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | -------------- | ----------- |
+| 삼각형 | 플린트트라이앵글3 |             |
+
+## `src/math/vector`
+
+### 플린트IVec2 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintIVec2(coordX = 0, coordY = 0): FlintIVec2;
+```
+
+flint i vec 2 작업 만들기를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---- | ----------- |
+| 코디엑스 |      |             |
+| 코디 |      |             |
+
+### 플린트IVec3 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintIVec3(coordX = 0, coordY = 0, coordZ = 0): FlintIVec3;
+```
+
+flint i vec 3 작업 만들기를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---- | ----------- |
+| 코디X |      |             |
+| 코디 |      |             |
+| 코디Z |      |             |
+
+### 플린트매트2 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintMat2(column0OrElements?: FlintVec2 | readonly number[], column1?: FlintVec2): FlintMat2;
+```
+
+플린트 매트 2 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------------- | ------------------------------ | ----------- |
+| 열0또는요소 | FlintVec2 \| 읽기 전용 숫자[] |             |
+| 열1 | 플린트Vec2 |             |
+
+### CreateFlintMat3
+
+**종류:** 기능
+
+```typescript
+function createFlintMat3(
+  column0OrElements?: FlintVec3 | readonly number[],
+  column1?: FlintVec3,
+  column2?: FlintVec3,
+): FlintMat3;
+```
+
+플린트 매트 3 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------------- | ------------------------------ | ----------- |
+| 열0또는요소 | FlintVec3 \| 읽기 전용 숫자[] |             |
+| 열1 | 플린트Vec3 |             |
+| 컬럼2 | 플린트Vec3 |             |
+
+### 플린트매트4 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintMat4(
+  column0OrElements?: FlintVec4 | readonly number[],
+  column1?: FlintVec4,
+  column2?: FlintVec4,
+  column3?: FlintVec4,
+): FlintMat4;
+```
+
+플린트 매트 4 생성 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------------- | ------------------------------ | ----------- |
+| 열0또는요소 | FlintVec4 \| 읽기 전용 숫자[] |             |
+| 열1 | 플린트Vec4 |             |
+| 컬럼2 | 플린트Vec4 |             |
+| 컬럼3 | 플린트Vec4 |             |
+
+### createFlintQuat
+
+**종류:** 기능
+
+```typescript
+function createFlintQuat(coordX = 0, coordY = 0, coordZ = 0, coordW = 1): FlintQuat;
+```
+
+flint quat 작업 만들기를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---- | ----------- |
+| 코디X |      |             |
+| 코디 |      |             |
+| 코디Z |      |             |
+| 코디W |      |             |
+
+### 생성FlintVec2
+
+**종류:** 기능
+
+```typescript
+function createFlintVec2(coordX = 0, coordY = 0): FlintVec2;
+```
+
+flint vec 2 작업 생성을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---- | ----------- |
+| 코디엑스 |      |             |
+| 코디 |      |             |
+
+### CreateFlintVec3
+
+**종류:** 기능
+
+```typescript
+function createFlintVec3(coordX = 0, coordY = 0, coordZ = 0): FlintVec3;
+```
+
+flint vec 3 작업 생성을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---- | ----------- |
+| 코디엑스 |      |             |
+| 코디 |      |             |
+| 코디Z |      |             |
+
+### 생성FlintVec4
+
+**종류:** 기능
+
+```typescript
+function createFlintVec4(coordX = 0, coordY = 0, coordZ = 0, coordW = 0): FlintVec4;
+```
+
+flint vec 4 작업 생성을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ---- | ----------- |
+| 코디엑스 |      |             |
+| 코디 |      |             |
+| 코디Z |      |             |
+| 코디W |      |             |
+
+### 플린트IVec2
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintIVec2
+```
+
+2D 정수 벡터.
+
+### 플린트IVec3
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintIVec3
+```
+
+3D 정수 벡터입니다.
+
+### 플린트매트2
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintMat2
+```
+
+매트 2 표현.
+
+### flintMat2추가
+
+**종류:** 기능
+
+```typescript
+function flintMat2Add(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+매트 2 추가 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트매트2 |             |
+| 두 번째 | 플린트매트2 |             |
+
+### flintMat2Determinant
+
+**종류:** 기능
+
+```typescript
+function flintMat2Determinant(matrix: FlintMat2): number;
+```
+
+매트 2 행렬식 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트2 |             |
+
+### flintMat2FromCols
+
+**종류:** 기능
+
+```typescript
+function flintMat2FromCols(column0: FlintVec2, column1: FlintVec2): FlintMat2;
+```
+
+cols 작업에서 mat 2를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | --------- | ----------- |
+| 열0 | 플린트Vec2 |             |
+| 열1 | 플린트Vec2 |             |
+
+### flintMat2Identity
+
+**종류:** 기능
+
+```typescript
+function flintMat2Identity(): FlintMat2;
+```
+
+mat 2 항등 연산을 수행합니다.
+
+### flintMat2Inverse
+
+**종류:** 기능
+
+```typescript
+function flintMat2Inverse(matrix: FlintMat2): FlintOption<FlintMat2>;
+```
+
+매트 2의 역연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트2 |             |
+
+### flintMat2Mul
+
+**종류:** 기능
+
+```typescript
+function flintMat2Mul(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+매트 2 다중 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트매트2 |             |
+| 두 번째 | 플린트매트2 |             |
+
+### flintMat2Rotation
+
+**종류:** 기능
+
+```typescript
+function flintMat2Rotation(angleRad: number): FlintMat2;
+```
+
+매트 2 회전 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 각도Rad | 번호 |             |
+
+### flintMat2Scale
+
+**종류:** 기능
+
+```typescript
+function flintMat2Scale(matrix: FlintMat2, scalar: number): FlintMat2;
+```
+
+매트 2 스케일 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트2 |             |
+| 스칼라 | 번호 |             |
+
+### flintMat2Scaling
+
+**종류:** 기능
+
+```typescript
+function flintMat2Scaling(scaleVector: FlintVec2): FlintMat2;
+```
+
+매트 2 스케일링 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | --------- | ----------- |
+| 스케일벡터 | 플린트Vec2 |             |
+
+### flintMat2Sub
+
+**종류:** 기능
+
+```typescript
+function flintMat2Sub(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+매트 2 하위 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트매트2 |             |
+| 두 번째 | 플린트매트2 |             |
+
+### flintMat2TransformVec2
+
+**종류:** 기능
+
+```typescript
+function flintMat2TransformVec2(matrix: FlintMat2, vector: FlintVec2): FlintVec2;
+```
+
+mat 2 변환 vec 2 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트2 |             |
+| 벡터 | 플린트Vec2 |             |
+
+### flintMat2Transpose
+
+**종류:** 기능
+
+```typescript
+function flintMat2Transpose(matrix: FlintMat2): FlintMat2;
+```
+
+매트 2 조옮김 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트2 |             |
+
+### 플린트매트3
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintMat3
+```
+
+매트 3 표현.
+
+### flintMat3추가
+
+**종류:** 기능
+
+```typescript
+function flintMat3Add(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+매트 3 추가 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트매트3 |             |
+| 두 번째 | 플린트매트3 |             |
+
+### flintMat3Determinant
+
+**종류:** 기능
+
+```typescript
+function flintMat3Determinant(matrix: FlintMat3): number;
+```
+
+매트 3 행렬식 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트3 |             |
+
+### flintMat3FromCols
+
+**종류:** 기능
+
+```typescript
+function flintMat3FromCols(column0: FlintVec3, column1: FlintVec3, column2: FlintVec3): FlintMat3;
+```
+
+cols 작업에서 mat 3을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | --------- | ----------- |
+| 열0 | 플린트Vec3 |             |
+| 열1 | 플린트Vec3 |             |
+| 컬럼2 | 플린트Vec3 |             |
+
+### flintMat3Identity
+
+**종류:** 기능
+
+```typescript
+function flintMat3Identity(): FlintMat3;
+```
+
+mat 3 항등 연산을 수행합니다.
+
+### flintMat3Inverse
+
+**종류:** 기능
+
+```typescript
+function flintMat3Inverse(matrix: FlintMat3): FlintOption<FlintMat3>;
+```
+
+매트 3의 역연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트3 |             |
+
+### flintMat3Mul
+
+**종류:** 기능
+
+```typescript
+function flintMat3Mul(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+매트 3 다중 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트매트3 |             |
+| 두 번째 | 플린트매트3 |             |
+
+### flintMat3Rotate2D
+
+**종류:** 기능
+
+```typescript
+function flintMat3Rotate2D(angleRad: number): FlintMat3;
+```
+
+매트 3 회전 2d 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 각도Rad | 번호 |             |
+
+### 부싯돌Mat3Scale
+
+**종류:** 기능
+
+```typescript
+function flintMat3Scale(matrix: FlintMat3, scalar: number): FlintMat3;
+```
+
+매트 3 스케일 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트3 |             |
+| 스칼라 | 번호 |             |
+
+### 부싯돌Mat3Scale2D
+
+**종류:** 기능
+
+```typescript
+function flintMat3Scale2D(scale: FlintVec2): FlintMat3;
+```
+
+매트 3 스케일 2d 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | --------- | ----------- |
+| 규모 | 플린트Vec2 |             |
+
+### 부싯돌Mat3Sub
+
+**종류:** 기능
+
+```typescript
+function flintMat3Sub(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+매트 3 하위 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트매트3 |             |
+| 두 번째 | 플린트매트3 |             |
+
+### flintMat3TransformVec2
+
+**종류:** 기능
+
+```typescript
+function flintMat3TransformVec2(matrix: FlintMat3, vector: FlintVec2): FlintVec2;
+```
+
+mat 3 변환 vec 2 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트3 |             |
+| 벡터 | 플린트Vec2 |             |
+
+### flintMat3TransformVec3
+
+**종류:** 기능
+
+```typescript
+function flintMat3TransformVec3(matrix: FlintMat3, vector: FlintVec3): FlintVec3;
+```
+
+mat 3 변환 vec 3 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트3 |             |
+| 벡터 | 플린트Vec3 |             |
+
+### flintMat3Translate2D
+
+**종류:** 기능
+
+```typescript
+function flintMat3Translate2D(translation: FlintVec2): FlintMat3;
+```
+
+매트 3 번역 2d 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----------- | --------- | ----------- |
+| 번역 | 플린트Vec2 |             |
+
+### flintMat3Transpose
+
+**종류:** 기능
+
+```typescript
+function flintMat3Transpose(matrix: FlintMat3): FlintMat3;
+```
+
+매트 3 조옮김 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트3 |             |
+
+### 플린트매트4
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintMat4
+```
+
+매트 4 표현.
+
+### flintMat4추가
+
+**종류:** 기능
+
+```typescript
+function flintMat4Add(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+매트 4 추가 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트매트4 |             |
+| 두 번째 | 플린트매트4 |             |
+
+### flintMat4Determinant
+
+**종류:** 기능
+
+```typescript
+function flintMat4Determinant(matrix: FlintMat4): number;
+```
+
+매트 4 행렬식 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트4 |             |
+
+### flintMat4FromCols
+
+**종류:** 기능
+
+```typescript
+function flintMat4FromCols(column0: FlintVec4, column1: FlintVec4, column2: FlintVec4, column3: FlintVec4): FlintMat4;
+```
+
+cols 작업에서 mat 4를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | --------- | ----------- |
+| 열0 | 플린트Vec4 |             |
+| 열1 | 플린트Vec4 |             |
+| 컬럼2 | 플린트Vec4 |             |
+| 컬럼3 | 플린트Vec4 |             |
+
+### flintMat4Identity
+
+**종류:** 기능
+
+```typescript
+function flintMat4Identity(): FlintMat4;
+```
+
+mat 4 항등 연산을 수행합니다.
+
+### flintMat4Inverse
+
+**종류:** 기능
+
+```typescript
+function flintMat4Inverse(matrix: FlintMat4): FlintOption<FlintMat4>;
+```
+
+매트 4의 역연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트4 |             |
+
+### 부싯돌Mat4LookAt
+
+**종류:** 기능
+
+```typescript
+function flintMat4LookAt(eye: FlintVec3, target: FlintVec3, up: FlintVec3): FlintMat4;
+```
+
+작업 시 매트 4 보기를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 눈 | 플린트Vec3 |             |
+| 목표 | 플린트Vec3 |             |
+| 최대 | 플린트Vec3 |             |
+
+### 부싯돌Mat4Mul
+
+**종류:** 기능
+
+```typescript
+function flintMat4Mul(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+매트 4 다중 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트매트4 |             |
+| 두 번째 | 플린트매트4 |             |
+
+### flintMat4Orthographic
+
+**종류:** 기능
+
+```typescript
+function flintMat4Orthographic(
+  left: number,
+  right: number,
+  bottom: number,
+  top: number,
+  zNear: number,
+  zFar: number,
+): FlintMat4;
+```
+
+매트 4 직교 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------ | ----------- |
+| 왼쪽 | 번호 |             |
+| 맞다 | 번호 |             |
+| 바닥 | 번호 |             |
+| 상단 | 번호 |             |
+| z근처 | 번호 |             |
+| zFar | 번호 |             |
+
+### flintMat4Perspective
+
+**종류:** 기능
+
+```typescript
+function flintMat4Perspective(fovYRad: number, aspect: number, zNear: number, zFar: number): FlintMat4;
+```
+
+매트 4 투시 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------ | ----------- |
+| fovYRad | 번호 |             |
+| 측면 | 번호 |             |
+| z근처 | 번호 |             |
+| zFar | 번호 |             |
+
+### 부싯돌매트4회전축각도
+
+**종류:** 기능
+
+```typescript
+function flintMat4RotationAxisAngle(axis: FlintVec3, angleRad: number): FlintMat4;
+```
+
+매트 4 회전축 각도 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | --------- | ----------- |
+| 축 | 플린트Vec3 |             |
+| 각도Rad | 번호 |             |
+
+### 부싯돌매트4회전X
+
+**종류:** 기능
+
+```typescript
+function flintMat4RotationX(angleRad: number): FlintMat4;
+```
+
+매트 4회전x작동을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 각도Rad | 번호 |             |
+
+### 부싯돌매트4회전Y
+
+**종류:** 기능
+
+```typescript
+function flintMat4RotationY(angleRad: number): FlintMat4;
+```
+
+매트 4 회전 y 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 각도Rad | 번호 |             |
+
+### 부싯돌Mat4RotationZ
+
+**종류:** 기능
+
+```typescript
+function flintMat4RotationZ(angleRad: number): FlintMat4;
+```
+
+매트 4 회전 z 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | ------ | ----------- |
+| 각도Rad | 번호 |             |
+
+### 부싯돌Mat4Scale
+
+**종류:** 기능
+
+```typescript
+function flintMat4Scale(matrix: FlintMat4, scalar: number): FlintMat4;
+```
+
+매트 4 스케일 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트4 |             |
+| 스칼라 | 번호 |             |
+
+### flintMat4Scaling
+
+**종류:** 기능
+
+```typescript
+function flintMat4Scaling(scale: FlintVec3): FlintMat4;
+```
+
+매트 4 스케일링 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | --------- | ----------- |
+| 규모 | 플린트Vec3 |             |
+
+### 부싯돌Mat4Sub
+
+**종류:** 기능
+
+```typescript
+function flintMat4Sub(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+매트 4 하위 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트매트4 |             |
+| 두 번째 | 플린트매트4 |             |
+
+### flintMat4TransformPoint3
+
+**종류:** 기능
+
+```typescript
+function flintMat4TransformPoint3(matrix: FlintMat4, point: FlintVec3): FlintVec3;
+```
+
+매트 4 변환 지점 3 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트4 |             |
+| 포인트 | 플린트Vec3 |             |
+
+### flintMat4TransformVec4
+
+**종류:** 기능
+
+```typescript
+function flintMat4TransformVec4(matrix: FlintMat4, vector: FlintVec4): FlintVec4;
+```
+
+mat 4 변환 vec 4 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트4 |             |
+| 벡터 | 플린트Vec4 |             |
+
+### flintMat4TransformVector3
+
+**종류:** 기능
+
+```typescript
+function flintMat4TransformVector3(matrix: FlintMat4, vector: FlintVec3): FlintVec3;
+```
+
+매트 4 변환 벡터 3 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트4 |             |
+| 벡터 | 플린트Vec3 |             |
+
+### flintMat4번역
+
+**종류:** 기능
+
+```typescript
+function flintMat4Translation(offset: FlintVec3): FlintMat4;
+```
+
+매트 4 변환 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 오프셋 | 플린트Vec3 |             |
+
+### flintMat4Transpose
+
+**종류:** 기능
+
+```typescript
+function flintMat4Transpose(matrix: FlintMat4): FlintMat4;
+```
+
+매트 4 조옮김 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 매트릭스 | 플린트매트4 |             |
+
+### 플린트콰트
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintQuat
+```
+
+콰트 표현.
+
+### flintQuatConjugate
+
+**종류:** 기능
+
+```typescript
+function flintQuatConjugate(quaternion: FlintQuat): FlintQuat;
+```
+
+쿼트 공액 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------- | ----------- |
+| 쿼터니언 | 플린트콰트 |             |
+
+### 플린트쿼트닷
+
+**종류:** 기능
+
+```typescript
+function flintQuatDot(first: FlintQuat, second: FlintQuat): number;
+```
+
+쿼트 도트 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트콰트 |             |
+| 두 번째 | 플린트콰트 |             |
+
+### flintQuatFromAxisAngle
+
+**종류:** 기능
+
+```typescript
+function flintQuatFromAxisAngle(axis: FlintVec3, angleRad: number): FlintQuat;
+```
+
+축 각도 작업에서 quat를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | --------- | ----------- |
+| 축 | 플린트Vec3 |             |
+| 각도Rad | 번호 |             |
+
+### flintQuatFromEuler
+
+**종류:** 기능
+
+```typescript
+function flintQuatFromEuler(pitchX: number, yawY: number, rollZ: number): FlintQuat;
+```
+
+오일러 연산에서 quat를 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ------ | ----------- |
+| 피치X | 번호 |             |
+| 요이 | 번호 |             |
+| 롤Z | 번호 |             |
+
+### flintQuatID
+
+**종류:** 기능
+
+```typescript
+function flintQuatIdentity(): FlintQuat;
+```
+
+quat 항등 연산을 수행합니다.
+
+### 부싯돌Quat역
+
+**종류:** 기능
+
+```typescript
+function flintQuatInverse(quaternion: FlintQuat): FlintOption<FlintQuat>;
+```
+
+quat 역연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------- | ----------- |
+| 쿼터니언 | 플린트콰트 |             |
+
+### 부싯돌QuatMul
+
+**종류:** 기능
+
+```typescript
+function flintQuatMul(first: FlintQuat, second: FlintQuat): FlintQuat;
+```
+
+quat mul 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트콰트 |             |
+| 두 번째 | 플린트콰트 |             |
+
+### 부싯돌QuatNorm
+
+**종류:** 기능
+
+```typescript
+function flintQuatNorm(quaternion: FlintQuat): number;
+```
+
+quat Norm 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------- | ----------- |
+| 쿼터니언 | 플린트콰트 |             |
+
+### flintQuat정규화
+
+**종류:** 기능
+
+```typescript
+function flintQuatNormalize(quaternion: FlintQuat): FlintQuat;
+```
+
+quat 정규화 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------- | ----------- |
+| 쿼터니언 | 플린트콰트 |             |
+
+### 플린트쿼트NormSq
+
+**종류:** 기능
+
+```typescript
+function flintQuatNormSq(quaternion: FlintQuat): number;
+```
+
+quat norm sq 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------- | ----------- |
+| 쿼터니언 | 플린트콰트 |             |
+
+### flintQuatRotateVec3
+
+**종류:** 기능
+
+```typescript
+function flintQuatRotateVec3(quaternion: FlintQuat, vector: FlintVec3): FlintVec3;
+```
+
+4회전 vec 3 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------- | ----------- |
+| 쿼터니언 | 플린트콰트 |             |
+| 벡터 | 플린트Vec3 |             |
+
+### 부싯돌QuatSlerp
+
+**종류:** 기능
+
+```typescript
+function flintQuatSlerp(first: FlintQuat, second: FlintQuat, factor: number): FlintQuat;
+```
+
+quat slerp 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트콰트 |             |
+| 두 번째 | 플린트콰트 |             |
+| 요인 | 번호 |             |
+
+### flintQuatToMat3
+
+**종류:** 기능
+
+```typescript
+function flintQuatToMat3(quaternion: FlintQuat): FlintMat3;
+```
+
+quat to mat 3 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------- | ----------- |
+| 쿼터니언 | 플린트콰트 |             |
+
+### flintQuatToMat4
+
+**종류:** 기능
+
+```typescript
+function flintQuatToMat4(quaternion: FlintQuat): FlintMat4;
+```
+
+quat to mat 4 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ---------- | --------- | ----------- |
+| 쿼터니언 | 플린트콰트 |             |
+
+### 플린트벡2
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintVec2
+```
+
+2D 부동 소수점 벡터.
+
+### flintVec2추가
+
+**종류:** 기능
+
+```typescript
+function flintVec2Add(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+vec 2 추가 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec2 |             |
+| 두 번째 | 플린트Vec2 |             |
+
+### 부싯돌Vec2Angle
+
+**종류:** 기능
+
+```typescript
+function flintVec2Angle(first: FlintVec2, second: FlintVec2): number;
+```
+
+vec 2 각도 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec2 |             |
+| 두 번째 | 플린트Vec2 |             |
+
+### 부싯돌Vec2거리
+
+**종류:** 기능
+
+```typescript
+function flintVec2Distance(first: FlintVec2, second: FlintVec2): number;
+```
+
+vec 2 거리 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec2 |             |
+| 두 번째 | 플린트Vec2 |             |
+
+### 부싯돌Vec2거리제곱
+
+**종류:** 기능
+
+```typescript
+function flintVec2DistanceSquared(first: FlintVec2, second: FlintVec2): number;
+```
+
+vec 2 거리 제곱 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec2 |             |
+| 두 번째 | 플린트Vec2 |             |
+
+### 부싯돌Vec2Div
+
+**종류:** 기능
+
+```typescript
+function flintVec2Div(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+vec 2 div 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec2 |             |
+| 스칼라 | 번호 |             |
+
+### 부싯돌Vec2Dot
+
+**종류:** 기능
+
+```typescript
+function flintVec2Dot(first: FlintVec2, second: FlintVec2): number;
+```
+
+vec 2 도트 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec2 |             |
+| 두 번째 | 플린트Vec2 |             |
+
+### 부싯돌Vec2길이
+
+**종류:** 기능
+
+```typescript
+function flintVec2Length(vector: FlintVec2): number;
+```
+
+vec 2 길이 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec2 |             |
+
+### 부싯돌Vec2길이Sq
+
+**종류:** 기능
+
+```typescript
+function flintVec2LengthSq(vector: FlintVec2): number;
+```
+
+vec 2 길이 제곱 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec2 |             |
+
+### 부싯돌Vec2Lerp
+
+**종류:** 기능
+
+```typescript
+function flintVec2Lerp(first: FlintVec2, second: FlintVec2, factor: number): FlintVec2;
+```
+
+vec 2 lerp 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec2 |             |
+| 두 번째 | 플린트Vec2 |             |
+| 요인 | 번호 |             |
+
+### 부싯돌Vec2Mul
+
+**종류:** 기능
+
+```typescript
+function flintVec2Mul(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+vec 2 mul 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec2 |             |
+| 두 번째 | 플린트Vec2 |             |
+
+### 플린트Vec2Neg
+
+**종류:** 기능
+
+```typescript
+function flintVec2Neg(vector: FlintVec2): FlintVec2;
+```
+
+vec 2 neg 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec2 |             |
+
+### flintVec2Normalize
+
+**종류:** 기능
+
+```typescript
+function flintVec2Normalize(vector: FlintVec2): FlintVec2;
+```
+
+vec 2 정규화 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec2 |             |
+
+### flintVec2PerpDot
+
+**종류:** 기능
+
+```typescript
+function flintVec2PerpDot(first: FlintVec2, second: FlintVec2): number;
+```
+
+vec 2 perp dot 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec2 |             |
+| 두 번째 | 플린트Vec2 |             |
+
+### flintVec2프로젝트
+
+**종류:** 기능
+
+```typescript
+function flintVec2Project(vector: FlintVec2, target: FlintVec2): FlintVec2;
+```
+
+vec 2 프로젝트 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec2 |             |
+| 목표 | 플린트Vec2 |             |
+
+### 부싯돌Vec2Reflect
+
+**종류:** 기능
+
+```typescript
+function flintVec2Reflect(vector: FlintVec2, normal: FlintVec2): FlintVec2;
+```
+
+vec 2 반영 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec2 |             |
+| 정상 | 플린트Vec2 |             |
+
+### flintVec2Rotate
+
+**종류:** 기능
+
+```typescript
+function flintVec2Rotate(vector: FlintVec2, angleRad: number): FlintVec2;
+```
+
+vec 2 회전 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| -------- | --------- | ----------- |
+| 벡터 | 플린트Vec2 |             |
+| 각도Rad | 번호 |             |
+
+### flintVec2Scale
+
+**종류:** 기능
+
+```typescript
+function flintVec2Scale(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+vec 2 스케일 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec2 |             |
+| 스칼라 | 번호 |             |
+
+### 부싯돌Vec2Sub
+
+**종류:** 기능
+
+```typescript
+function flintVec2Sub(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+vec 2 하위 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec2 |             |
+| 두 번째 | 플린트Vec2 |             |
+
+### 플린트Vec3
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintVec3
+```
+
+3D 부동 소수점 벡터.
+
+### flintVec3추가
+
+**종류:** 기능
+
+```typescript
+function flintVec3Add(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+vec 3 추가 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec3 |             |
+| 두 번째 | 플린트Vec3 |             |
+
+### 부싯돌Vec3Angle
+
+**종류:** 기능
+
+```typescript
+function flintVec3Angle(first: FlintVec3, second: FlintVec3): number;
+```
+
+vec 3 각도 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec3 |             |
+| 두 번째 | 플린트Vec3 |             |
+
+### 부싯돌Vec3Cross
+
+**종류:** 기능
+
+```typescript
+function flintVec3Cross(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+vec 3 교차 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec3 |             |
+| 두 번째 | 플린트Vec3 |             |
+
+### 부싯돌Vec3거리
+
+**종류:** 기능
+
+```typescript
+function flintVec3Distance(first: FlintVec3, second: FlintVec3): number;
+```
+
+vec 3 거리 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec3 |             |
+| 두 번째 | 플린트Vec3 |             |
+
+### 부싯돌Vec3거리제곱
+
+**종류:** 기능
+
+```typescript
+function flintVec3DistanceSquared(first: FlintVec3, second: FlintVec3): number;
+```
+
+vec 3 거리 제곱 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec3 |             |
+| 두 번째 | 플린트Vec3 |             |
+
+### 부싯돌Vec3Div
+
+**종류:** 기능
+
+```typescript
+function flintVec3Div(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+vec 3 div 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec3 |             |
+| 스칼라 | 번호 |             |
+
+### 부싯돌Vec3Dot
+
+**종류:** 기능
+
+```typescript
+function flintVec3Dot(first: FlintVec3, second: FlintVec3): number;
+```
+
+vec 3 도트 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec3 |             |
+| 두 번째 | 플린트Vec3 |             |
+
+### 부싯돌Vec3길이
+
+**종류:** 기능
+
+```typescript
+function flintVec3Length(vector: FlintVec3): number;
+```
+
+vec 3 길이 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec3 |             |
+
+### 부싯돌Vec3길이Sq
+
+**종류:** 기능
+
+```typescript
+function flintVec3LengthSq(vector: FlintVec3): number;
+```
+
+vec 3 길이 제곱 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec3 |             |
+
+### 부싯돌Vec3Lerp
+
+**종류:** 기능
+
+```typescript
+function flintVec3Lerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+vec 3 lerp 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec3 |             |
+| 두 번째 | 플린트Vec3 |             |
+| 요인 | 번호 |             |
+
+### 부싯돌Vec3Mul
+
+**종류:** 기능
+
+```typescript
+function flintVec3Mul(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+vec 3 mul 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec3 |             |
+| 두 번째 | 플린트Vec3 |             |
+
+### 부싯돌Vec3Neg
+
+**종류:** 기능
+
+```typescript
+function flintVec3Neg(vector: FlintVec3): FlintVec3;
+```
+
+vec 3 neg 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec3 |             |
+
+### flintVec3Normalize
+
+**종류:** 기능
+
+```typescript
+function flintVec3Normalize(vector: FlintVec3): FlintVec3;
+```
+
+vec 3 정규화 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec3 |             |
+
+### flintVec3프로젝트
+
+**종류:** 기능
+
+```typescript
+function flintVec3Project(vector: FlintVec3, target: FlintVec3): FlintVec3;
+```
+
+vec 3 프로젝트 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec3 |             |
+| 목표 | 플린트Vec3 |             |
+
+### 부싯돌Vec3Reflect
+
+**종류:** 기능
+
+```typescript
+function flintVec3Reflect(vector: FlintVec3, normal: FlintVec3): FlintVec3;
+```
+
+vec 3 반영 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec3 |             |
+| 정상 | 플린트Vec3 |             |
+
+### 부싯돌Vec3굴절
+
+**종류:** 기능
+
+```typescript
+function flintVec3Refract(vector: FlintVec3, normal: FlintVec3, eta: number): FlintVec3;
+```
+
+vec 3 굴절 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec3 |             |
+| 정상 | 플린트Vec3 |             |
+| 에타 | 번호 |             |
+
+### flintVec3거부
+
+**종류:** 기능
+
+```typescript
+function flintVec3Reject(vector: FlintVec3, from: FlintVec3): FlintVec3;
+```
+
+vec 3 거부 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec3 |             |
+| 에서 | 플린트Vec3 |             |
+
+### 부싯돌Vec3Scale
+
+**종류:** 기능
+
+```typescript
+function flintVec3Scale(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+vec 3 스케일 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec3 |             |
+| 스칼라 | 번호 |             |
+
+### 부싯돌Vec3Slerp
+
+**종류:** 기능
+
+```typescript
+function flintVec3Slerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+vec 3 slerp 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec3 |             |
+| 두 번째 | 플린트Vec3 |             |
+| 요인 | 번호 |             |
+
+### 부싯돌Vec3Sub
+
+**종류:** 기능
+
+```typescript
+function flintVec3Sub(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+vec 3 하위 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec3 |             |
+| 두 번째 | 플린트Vec3 |             |
+
+### 플린트벡4
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintVec4
+```
+
+4D 부동 소수점 벡터.
+
+### flintVec4추가
+
+**종류:** 기능
+
+```typescript
+function flintVec4Add(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+vec 4 추가 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec4 |             |
+| 두 번째 | 플린트Vec4 |             |
+
+### 부싯돌Vec4Div
+
+**종류:** 기능
+
+```typescript
+function flintVec4Div(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+vec 4 div 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec4 |             |
+| 스칼라 | 번호 |             |
+
+### 부싯돌Vec4Dot
+
+**종류:** 기능
+
+```typescript
+function flintVec4Dot(first: FlintVec4, second: FlintVec4): number;
+```
+
+vec 4 도트 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec4 |             |
+| 두 번째 | 플린트Vec4 |             |
+
+### 부싯돌Vec4길이
+
+**종류:** 기능
+
+```typescript
+function flintVec4Length(vector: FlintVec4): number;
+```
+
+vec 4 길이 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec4 |             |
+
+### 부싯돌Vec4Lerp
+
+**종류:** 기능
+
+```typescript
+function flintVec4Lerp(first: FlintVec4, second: FlintVec4, factor: number): FlintVec4;
+```
+
+vec 4 lerp 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec4 |             |
+| 두 번째 | 플린트Vec4 |             |
+| 요인 | 번호 |             |
+
+### 부싯돌Vec4Neg
+
+**종류:** 기능
+
+```typescript
+function flintVec4Neg(vector: FlintVec4): FlintVec4;
+```
+
+vec 4 neg 연산을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec4 |             |
+
+### flintVec4Normalize
+
+**종류:** 기능
+
+```typescript
+function flintVec4Normalize(vector: FlintVec4): FlintVec4;
+```
+
+vec 4 정규화 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec4 |             |
+
+### 부싯돌Vec4Scale
+
+**종류:** 기능
+
+```typescript
+function flintVec4Scale(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+vec 4 스케일 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 벡터 | 플린트Vec4 |             |
+| 스칼라 | 번호 |             |
+
+### 부싯돌Vec4Sub
+
+**종류:** 기능
+
+```typescript
+function flintVec4Sub(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+vec 4 하위 작업을 수행합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | --------- | ----------- |
+| 먼저 | 플린트Vec4 |             |
+| 두 번째 | 플린트Vec4 |             |
+
+## `src/memory`
+
+### 플린트메모리 생성
+
+**종류:** 기능
+
+```typescript
+function createFlintMemory(
+  memoryOrOptions?: WebAssembly.Memory | FlintMemoryOptions,
+  options?: FlintMemoryOptions,
+): FlintMemory;
+```
+
+구성된 FlintMemory 인스턴스를 만듭니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| --------------- | ---------------------------------------- | ----------------------------------------------------------------- |
+| 메모리또는옵션 | WebAssembly.Memory \| 플린트메모리옵션 | - 기존 WebAssembly.Memory 또는 메모리 생성 옵션.         |
+| 옵션 | 플린트메모리옵션 | - 메모리 인스턴스가 제공되는 경우 메모리 생성 및 크기 조정 옵션. |
+
+#### 계약
+
+- **@param:** - 기존 WebAssembly.Memory 또는 메모리 생성 옵션.
+- **@param:** - 메모리 인스턴스가 제공되는 경우 메모리 생성 및 크기 조정 옵션입니다.
+- **@returns:** 초기화된 FlintMemory 인스턴스입니다.
+
+### createFlintMultiMemory
+
+**종류:** 기능
+
+```typescript
+function createFlintMultiMemory(options?: FlintMultiMemoryOptions): FlintMultiMemory;
+```
+
+전용 게스트 힙, 호스트 상호 운용성 및 정적 파티션을 사용하여 격리된 다중 메모리 인스턴스를 만듭니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------- | ----------- |
+| 옵션 | 플린트멀티메모리옵션 |             |
+
+### FALLBACK_GUARD_PAGE_SIZE
+
+**종류:** 상수
+
+```typescript
+export const FALLBACK_GUARD_PAGE_SIZE;
 ```
 
 설명이 제공되지 않았습니다.
 
-### Flint메모리
+### FLINT_MEMORY_CAPABILITIES
+
+**종류:** 상수
+
+```typescript
+export const FLINT_MEMORY_CAPABILITIES;
+```
+
+설명이 제공되지 않았습니다.
+
+### 플린트메모리
 
 **종류:** 클래스
 
@@ -1854,9 +6472,9 @@ export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
 export class FlintMemory
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly 선형 메모리 할당, 경계 확인 및 바이너리 I/O를 관리합니다.
 
-### Flint메모리주소
+### FlintMemory주소
 
 **종류:** 유형
 
@@ -1864,7 +6482,7 @@ export class FlintMemory
 export type FlintMemoryAddress = number | bigint;
 ```
 
-설명이 제공되지 않았습니다.
+32비트(숫자) 및 64비트(bigint) 주소를 모두 지원하는 메모리 주소 포인터 표현입니다.
 
 ### FlintMemory옵션
 
@@ -1874,26 +6492,83 @@ export type FlintMemoryAddress = number | bigint;
 export interface FlintMemoryOptions
 ```
 
-설명이 제공되지 않았습니다.
+Flint 선형 메모리 인스턴스를 생성하고 크기를 조정하기 위한 구성 옵션입니다.
+
+### 플린트메모리파티션이름
+
+**종류:** 유형
+
+```typescript
+export type FlintMemoryPartitionName = 'guestHeap' | 'foreignHeap' | 'hostInterop' | 'staticData';
+```
+
+다중 메모리 모듈용 전용 선형 메모리 파티션의 이름입니다.
+
+### 플린트멀티메모리
+
+**종류:** 클래스
+
+```typescript
+export class FlintMultiMemory
+```
+
+WebAssembly 다중 메모리 분리 코디네이터.
+게스트 실행을 위한 전용 공간(메모리 0)으로 메모리를 분리합니다.
+신뢰할 수 없는 외부 C/Rust 힙(메모리 1), 호스트 상호 운용성 버퍼(메모리 2),
+및 정적 상수/테이블(메모리 3).
+
+기본 다중 메모리 하드웨어 격리 및 제로 할당 지원
+다중 메모리가 없는 런타임을 위한 분할된 단일 메모리 대체 에뮬레이션(예: Safari/WebKit)
+
+### FlintMultiMemory옵션
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintMultiMemoryOptions
+```
+
+여러 개의 독립 선형 메모리 파티션을 구성하는 옵션입니다.
+
+### 플린트지역아레나
+
+**종류:** 클래스
+
+```typescript
+export class FlintRegionalArena
+```
+
+O(1) 할당을 제공하는 범위가 지정된 지역 범프 할당자 풀(계층 1)
+범위 종료 시 결정론적 대량 할당 해제.
+
+### 다중 메모리 지원됨
+
+**종류:** 기능
+
+```typescript
+function isMultiMemorySupported(): boolean;
+```
+
+호스트 JavaScript 환경이 기본적으로 WebAssembly 다중 메모리를 지원하는지 여부를 감지합니다.
 
 ## `src/parallel`
 
-### FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+### FLINT_PARALLEL_CAPABILITIES
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
+export const FLINT_PARALLEL_CAPABILITIES;
 ```
 
 작업자, 스레드, 원자성 및 공유 메모리 실행을 인증하는 데 사용되는 기능 이름입니다.
 
-### FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS
+### FLINT_PARALLEL_OPERATION_DESCRIPTORS
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
+export const FLINT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<FlintParallelOperation, FlintParallelOperationDescriptor>
 >;
 ```
@@ -1916,11 +6591,11 @@ function flintIteratorParAt(
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 출처 | FlintIterable<TValue> |      |
-| 색인 | 번호                  |      |
-| 옵션 | FlintParallelOptions  |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------- | ----------- |
+| 출처 | FlintIterable<TValue> |             |
+| 색인 | 번호 |             |
+| 옵션 | 플린트Parallel옵션 |             |
 
 ### flintIteratorParCollect
 
@@ -1937,10 +6612,10 @@ function flintIteratorParCollect(
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 출처 | FlintIterable<TValue> |      |
-| 옵션 | FlintParallelOptions  |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------- | ----------- |
+| 출처 | FlintIterable<TValue> |             |
+| 옵션 | 플린트Parallel옵션 |             |
 
 ### flintIteratorParFilter
 
@@ -1959,13 +6634,13 @@ function flintIteratorParFilter(
 
 #### 매개변수
 
-| 이름 | 유형                                                       | 설명 |
-| ---- | ---------------------------------------------------------- | ---- |
-| 출처 | FlintIterable<TValue>                                      |      |
-| 술어 | (값: TValue, 인덱스: 숫자) => 부울 \| PromiseLike<boolean> |      |
-| 옵션 | FlintParallelOptions                                       |      |
+| 이름 | 유형 | 설명 |
+| --------- | ----------------------------------------------------------------- | ----------- |
+| 출처 | FlintIterable<TValue> |             |
+| 술어 | (값: TValue, 인덱스: 숫자) => 부울 \| PromiseLike<boolean> |             |
+| 옵션 | 플린트Parallel옵션 |             |
 
-### flintIteratorParFirst
+### 부싯돌IteratorParFirst
 
 **종류:** 기능
 
@@ -1980,10 +6655,10 @@ function flintIteratorParFirst(
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 출처 | FlintIterable<TValue> |      |
-| 옵션 | FlintParallelOptions  |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------- | ----------- |
+| 출처 | FlintIterable<TValue> |             |
+| 옵션 | 플린트Parallel옵션 |             |
 
 ### flintIteratorParFlaten
 
@@ -2000,10 +6675,10 @@ function flintIteratorParFlatten(
 
 #### 매개변수
 
-| 이름 | 유형                                 | 설명 |
-| ---- | ------------------------------------ | ---- |
-| 출처 | FlintIterable<FlintIterable<TValue>> |      |
-| 옵션 | FlintParallelOptions                 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------------------------ | ----------- |
+| 출처 | FlintIterable<FlintIterable<TValue>> |             |
+| 옵션 | 플린트Parallel옵션 |             |
 
 ### flintIteratorParFold
 
@@ -2022,12 +6697,12 @@ function flintIteratorParFold(
 
 #### 매개변수
 
-| 이름   | 유형                                                   | 설명 |
-| ------ | ------------------------------------------------------ | ---- |
-| 출처   | FlintIterable<TValue>                                  |      |
-| 초기   | 결과                                                   |      |
-| 감속기 | (누산기: TResult, 값: TValue, 인덱스: 숫자) => TResult |      |
-| 옵션   | FlintParallelOptions                                   |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------------------------------------------------- | ----------- |
+| 출처 | FlintIterable<TValue> |             |
+| 초기 | 결과 |             |
+| 감속기 | (누산기: TResult, 값: TValue, 인덱스: 숫자) => TResult |             |
+| 옵션 | 플린트Parallel옵션 |             |
 
 ### flintIteratorParLast
 
@@ -2044,10 +6719,10 @@ function flintIteratorParLast(
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 출처 | FlintIterable<TValue> |      |
-| 옵션 | FlintParallelOptions  |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------- | ----------- |
+| 출처 | FlintIterable<TValue> |             |
+| 옵션 | 플린트Parallel옵션 |             |
 
 ### flintIteratorParMap
 
@@ -2066,11 +6741,11 @@ function flintIteratorParMap(
 
 #### 매개변수
 
-| 이름 | 유형                                                          | 설명 |
-| ---- | ------------------------------------------------------------- | ---- |
-| 출처 | FlintIterable<TValue>                                         |      |
-| 지도 | (값: TValue, 인덱스: 숫자) => TResult \| PromiseLike<TResult> |      |
-| 옵션 | FlintParallelOptions                                          |      |
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------------------------------------------------- | ----------- |
+| 출처 | FlintIterable<TValue> |             |
+| 지도 | (값: TValue, 인덱스: 숫자) => TResult \| PromiseLike<TResult> |             |
+| 옵션 | 플린트Parallel옵션 |             |
 
 ### flintIteratorParToArray
 
@@ -2087,12 +6762,12 @@ function flintIteratorParToArray(
 
 #### 매개변수
 
-| 이름 | 유형                  | 설명 |
-| ---- | --------------------- | ---- |
-| 출처 | FlintIterable<TValue> |      |
-| 옵션 | FlintParallelOptions  |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------- | ----------- |
+| 출처 | FlintIterable<TValue> |             |
+| 옵션 | 플린트Parallel옵션 |             |
 
-### flintParallelDescriptor
+### 부싯돌ParallelDescriptor
 
 **종류:** 기능
 
@@ -2107,12 +6782,12 @@ function flintParallelDescriptor(
 
 #### 매개변수
 
-| 이름 | 유형                   | 설명 |
-| ---- | ---------------------- | ---- |
-| 운영 | FlintParallelOperation |      |
-| 옵션 | FlintParallelOptions   |      |
+| 이름 | 유형 | 설명 |
+| --------- | ---------------------- | ----------- |
+| 운영 | 플린트병렬작업(FlintParallelOperation) |             |
+| 옵션 | 플린트Parallel옵션 |             |
 
-### FlintParallelExecutor
+### 플린트ParallelExecutor
 
 **종류:** 인터페이스
 
@@ -2122,7 +6797,7 @@ export interface FlintParallelExecutor
 
 호스트 작업자 또는 컴파일된 Wasm 스레드 실행기가 사용하는 최소 스케줄러 경계입니다.
 
-### FlintParallelOperation
+### 플린트병렬작업
 
 **종류:** 유형
 
@@ -2163,7 +6838,7 @@ export interface FlintParallelOptions
 전략 요청 및 역량 입력. `auto`은 허용된 Wasm 스레드를 선호합니다.
 그런 다음 작업자를 호스트하고 마지막으로 직렬 실행을 수행합니다. 안전하지 않은 기능은 추론되지 않습니다.
 
-### FlintParallelPlan
+### 플린트병렬 계획
 
 **종류:** 인터페이스
 
@@ -2173,7 +6848,7 @@ export interface FlintParallelPlan
 
 선택된 전략과 그것이 선택된 명확한 이유.
 
-### Flint병렬전략
+### FlintParallel전략
 
 **종류:** 유형
 
@@ -2183,7 +6858,7 @@ export type FlintParallelStrategy = 'serial' | 'host-workers' | 'wasm-threads';
 
 순서가 지정된 병렬 작업을 위해 선택된 실행 전략입니다.
 
-### selectFlintParallelStrategy
+### selectFlintParallel전략
 
 **종류:** 기능
 
@@ -2195,9 +6870,138 @@ function selectFlintParallelStrategy(options: FlintParallelOptions = {}): FlintP
 
 #### 매개변수
 
-| 이름 | 유형                 | 설명 |
-| ---- | -------------------- | ---- |
-| 옵션 | FlintParallelOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | -------------------- | ----------- |
+| 옵션 | 플린트Parallel옵션 |             |
+
+## `src/safe-heap`
+
+### createFlintSafeHeap
+
+**종류:** 기능
+
+```typescript
+function createFlintSafeHeap(memory: FlintMemory): FlintSafeHeap;
+```
+
+새로운 FlintSafeHeap 관리자를 생성하는 팩토리 함수입니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------ | ----------- | ------------------------- |
+| 메모리 | 플린트메모리 | - 선형 메모리 인스턴스. |
+
+#### 계약
+
+- **@param:** - 선형 메모리 인스턴스.
+- **@returns:** 초기화된 FlintSafeHeap 인스턴스.
+
+### FLINT_MEMORY_MODEL
+
+**종류:** 상수
+
+```typescript
+export const FLINT_MEMORY_MODEL;
+```
+
+설명이 제공되지 않았습니다.
+
+### FlintDynamicTableManager
+
+**종류:** 클래스
+
+```typescript
+export class FlintDynamicTableManager
+```
+
+슬롯 할당, 생성 추적,
+오래된 함수 디스패치를 방지하기 위해 클로저 릴리스 시 즉시 무효화됩니다.
+
+### 플린트 지역
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintRegion
+```
+
+활성 메모리 영역을 식별하는 수명 토큰입니다.
+
+### 플린트지역할당
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintRegionAllocation
+```
+
+수명 영역에 바인딩된 메모리 할당을 추적하는 설명자입니다.
+
+### 플린트지역아레나
+
+**종류:** 클래스
+
+```typescript
+export class FlintRegionArena
+```
+
+일시적인 작업을 위한 고성능 범위의 경기장 범프 할당자입니다.
+즉각적인 O(1) 포인터 재설정으로 할당된 모든 메모리를 회수합니다.
+
+### 부싯돌안전힙
+
+**종류:** 클래스
+
+```typescript
+export class FlintSafeHeap
+```
+
+컴파일러 관리 값에 대한 결정적 범위의 힙입니다. 원시 fws_alloc 호출
+FlintMemory에 남아 있으며 여기에 암시적으로 보관되지 않습니다.
+
+### 플린트공유핸들
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintSharedHandle
+```
+
+참조 횟수가 계산된 공유 메모리 할당을 식별하는 참조를 처리합니다.
+
+### 플린트테이블슬롯핸들
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintTableSlotHandle
+```
+
+동적 함수 테이블 슬롯은 추적 테이블 인덱스 및 세대 토큰을 처리합니다.
+
+### FlintTlsf할당자
+
+**종류:** 클래스
+
+```typescript
+export class FlintTlsfAllocator
+```
+
+TLSF(2단계 분리 맞춤) 메모리 할당자입니다.
+즉각적인 물리적 통합으로 O(1) 할당 및 할당 취소 시간을 보장합니다.
+임베디드/실시간 Wasm 워크로드에 대한 조각화를 최소화합니다.
+
+### 부싯돌약한손잡이
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintWeakHandle
+```
+
+강력한 참조 횟수를 늘리지 않고 공유 메모리 할당을 참조하는 약한 참조 핸들입니다.
+순환 데이터 구조로 인해 발생하는 단조로운 메모리 누수를 완화합니다.
 
 ## `src/self-hosted`
 
@@ -2209,9 +7013,9 @@ function selectFlintParallelStrategy(options: FlintParallelOptions = {}): FlintP
 export interface FlintSelfHostedRunOptions
 ```
 
-설명이 제공되지 않았습니다.
+VM 또는 AOT 모드에서 자체 호스팅 컴파일러 단계를 실행하기 위한 구성 옵션입니다.
 
-### FlintSelfHostedVmRun
+### FlintSelf호스팅VmRun
 
 **종류:** 인터페이스
 
@@ -2219,7 +7023,7 @@ export interface FlintSelfHostedRunOptions
 export interface FlintSelfHostedVmRun
 ```
 
-설명이 제공되지 않았습니다.
+어휘 분석 및 구문 분석 단계 전반에 걸쳐 실행되는 자체 호스팅 컴파일러의 전체 실행 보고서입니다.
 
 ### runFlintSelfHostedCompiler
 
@@ -2242,11 +7046,11 @@ function runFlintSelfHostedCompiler(
 
 #### 매개변수
 
-| 이름 | 유형                      | 설명 |
-| ---- | ------------------------- | ---- |
-| 입력 | Flint컴파일 입력          |      |
-| 모드 | FlintVmExecutionMode      |      |
-| 옵션 | FlintSelfHostedRunOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------------- | ----------- |
+| 입력 | 플린트컴파일입력 |             |
+| 모드 | FlintVmExecutionMode |             |
+| 옵션 | FlintSelfHostedRunOptions |             |
 
 ### runFlintSelfHostedLexStage
 
@@ -2264,15 +7068,49 @@ function runFlintSelfHostedLexStage(
 
 #### 매개변수
 
-| 이름 | 유형                                                                                            | 설명 |
-| ---- | ----------------------------------------------------------------------------------------------- | ---- |
-| 입력 | Pick<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |      |
-| 모드 | FlintVmExecutionMode                                                                            |      |
-| 옵션 | FlintSelfHostedRunOptions                                                                       |      |
+| 이름 | 유형 | 설명 |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+| 입력 | Pick<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+| 모드 | FlintVmExecutionMode |             |
+| 옵션 | FlintSelfHostedRunOptions |             |
 
 ## `src/threading`
 
-### canUseFlintWasmThreads
+### 주장플린트보내기
+
+**종류:** 기능
+
+```typescript
+function assertFlintSend(value: T, context = 'value'): T;
+```
+
+값이 '보내기' 계약을 충족하는지 확인하고 위반할 경우 트랩을 던집니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ---- | ----------- |
+| 가치 | 티 |             |
+| 맥락 |      |             |
+
+### AssertFlintSync
+
+**종류:** 기능
+
+```typescript
+function assertFlintSync(value: T, context = 'value'): T;
+```
+
+값이 '동기화' 계약을 충족하는지 확인하고 위반할 경우 트랩을 발생시킵니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ---- | ----------- |
+| 가치 | 티 |             |
+| 맥락 |      |             |
+
+### canUseFlintWasm스레드
 
 **종류:** 기능
 
@@ -2288,10 +7126,10 @@ function canUseFlintWasmThreads(
 
 #### 매개변수
 
-| 이름      | 유형                                           | 설명 |
-| --------- | ---------------------------------------------- | ---- |
-| 대상 기능 | FlintWasmThreadTargetFeatures \| 정의되지 않음 |      |
-| 능력      | 읽기 전용 문자열[] \| 정의되지 않음            |      |
+| 이름 | 유형 | 설명 |
+| -------------- | ------------------------------------------ | ----------- |
+| 대상 기능 | FlintWasmThreadTargetFeatures \| 정의되지 않음 |             |
+| 능력 | 읽기 전용 문자열[] \| 정의되지 않음 |             |
 
 ### createFlintAtomicI32
 
@@ -2301,14 +7139,20 @@ function canUseFlintWasmThreads(
 function createFlintAtomicI32(length = 1, options: FlintAtomicI32Options = {}): FlintAtomicI32;
 ```
 
-설명이 제공되지 않았습니다.
+공유 원자성 32비트 정수 배열을 할당하고 이를 원자성 연산으로 래핑합니다.
 
 #### 매개변수
 
-| 이름 | 유형               | 설명 |
-| ---- | ------------------ | ---- |
-| 길이 |                    |      |
-| 옵션 | FlintAtomicI32옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------- | ---------------------------------------------------------- |
+| 길이 |                       | - 할당할 32비트 정수 슬롯 수입니다.              |
+| 옵션 | FlintAtomicI32옵션 | - 기존 SharedArrayBuffer를 포함한 할당 옵션. |
+
+#### 계약
+
+- **@param:** - 할당할 32비트 정수 슬롯 수입니다.
+- **@param:** - 기존 SharedArrayBuffer를 포함한 할당 옵션입니다.
+- **@returns:** FlintAtomicI32 인스턴스를 구성했습니다.
 
 ### createFlintWasmThreadScheduler
 
@@ -2324,9 +7168,9 @@ function createFlintWasmThreadScheduler(options: FlintWasmThreadSchedulerOptions
 
 #### 매개변수
 
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 옵션 | FlintWasmThreadScheduler옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------------------- | ----------- |
+| 옵션 | FlintWasmThreadSchedulerOptions |             |
 
 ### createFlintWorkerRuntime
 
@@ -2336,21 +7180,31 @@ function createFlintWasmThreadScheduler(options: FlintWasmThreadSchedulerOptions
 function createFlintWorkerRuntime(
   createWorker: () => FlintWorkerPort,
   onMessage: (message: unknown) => void,
-  onError: (error: unknown) => void = () => {},
+  onError: (error: unknown) => void = (_error: unknown) => {
+    // Default no-op error handler.
+  },
   options: FlintWorkerRuntimeOptions = {},
 ): FlintWorkerRuntime;
 ```
 
-설명이 제공되지 않았습니다.
+제공된 포트 팩토리 및 수명 주기 후크를 사용하여 작업자 런타임을 인스턴스화합니다.
 
 #### 매개변수
 
-| 이름         | 유형                         | 설명 |
-| ------------ | ---------------------------- | ---- |
-| createWorker | () => FlintWorkerPort        |      |
-| 메시지       | (메시지: 알 수 없음) => 무효 |      |
-| 오류 발생    | (오류: 알 수 없음) => 무효   |      |
-| 옵션         | FlintWorkerRuntime옵션       |      |
+| 이름 | 유형 | 설명 |
+| ------------ | -------------------------- | ---------------------------------------- |
+| createWorker | () => FlintWorkerPort | - 포트 팩토리 콜백.                 |
+| 메시지 | (메시지: 알 수 없음) => 무효 | - 메시지 핸들러 콜백.              |
+| 오류 발생 | (오류: 알 수 없음) => 무효 | - 선택적 오류 처리기 콜백.       |
+| 옵션 | FlintWorkerRuntime옵션 | - 런타임에 대한 구성 옵션입니다. |
+
+#### 계약
+
+- **@param:** - 포트 팩토리 콜백.
+- **@param:** - 메시지 핸들러 콜백.
+- **@param:** - 선택적 오류 핸들러 콜백.
+- **@param:** - 런타임에 대한 구성 옵션입니다.
+- **@returns:** FlintWorkerRuntime을 초기화했습니다.
 
 ### createFlintWorkerScheduler
 
@@ -2369,21 +7223,21 @@ function createFlintWorkerScheduler(options: FlintWorkerSchedulerOptions = {}): 
 
 #### 매개변수
 
-| 이름 | 유형                     | 설명 |
-| ---- | ------------------------ | ---- |
-| 옵션 | FlintWorkerScheduler옵션 |      |
+| 이름 | 유형 | 설명 |
+| ------- | --------------------------- | ----------- |
+| 옵션 | FlintWorkerScheduler옵션 |             |
 
-### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+### FLINT_THREADING_CAPABILITIES
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
+export const FLINT_THREADING_CAPABILITIES;
 ```
 
 설명이 제공되지 않았습니다.
 
-### FlintAtomicI32
+### 플린트AtomicI32
 
 **종류:** 인터페이스
 
@@ -2391,7 +7245,7 @@ export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
 export interface FlintAtomicI32
 ```
 
-설명이 제공되지 않았습니다.
+공유 32비트 정수 버퍼에서 원자성 읽기-수정-쓰기 작업을 제공하는 래퍼입니다.
 
 ### FlintAtomicI32옵션
 
@@ -2401,7 +7255,17 @@ export interface FlintAtomicI32
 export interface FlintAtomicI32Options
 ```
 
-설명이 제공되지 않았습니다.
+원자성 32비트 정수 배열의 할당 또는 공유를 구성하는 옵션입니다.
+
+### 부싯돌실안전마커
+
+**종류:** 인터페이스
+
+```typescript
+export interface FlintThreadSafetyMarker
+```
+
+공유 메모리 동시성 보장을 확인하는 스레드 안전성 메타데이터 마커입니다.
 
 ### FlintWasmThreadScheduler옵션
 
@@ -2411,9 +7275,9 @@ export interface FlintAtomicI32Options
 export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFeatures
 ```
 
-설명이 제공되지 않았습니다.
+공유 메모리 및 작업자가 지원하는 WebAssembly 스레드 스케줄러를 구성하는 옵션입니다.
 
-### FlintWasmThreadTarget기능
+### FlintWasmThreadTarget특징
 
 **종류:** 인터페이스
 
@@ -2421,9 +7285,9 @@ export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFe
 export interface FlintWasmThreadTargetFeatures
 ```
 
-설명이 제공되지 않았습니다.
+WebAssembly는 멀티스레딩 및 공유 메모리와 관련된 기능을 대상으로 합니다.
 
-### FlintWorker포트
+### 플린트워커포트
 
 **종류:** 인터페이스
 
@@ -2431,7 +7295,7 @@ export interface FlintWasmThreadTargetFeatures
 export interface FlintWorkerPort
 ```
 
-설명이 제공되지 않았습니다.
+작업자 통신을 위한 일반 postMessage 메시지 포트 계약입니다.
 
 ### FlintWorker런타임
 
@@ -2441,7 +7305,7 @@ export interface FlintWorkerPort
 export interface FlintWorkerRuntime
 ```
 
-설명이 제공되지 않았습니다.
+작업자 통신 포트 및 해당 수명 주기 해제를 관리하는 런타임 핸들입니다.
 
 ### FlintWorkerRuntime옵션
 
@@ -2451,9 +7315,9 @@ export interface FlintWorkerRuntime
 export interface FlintWorkerRuntimeOptions
 ```
 
-설명이 제공되지 않았습니다.
+작업자 런타임 생성을 구성하는 옵션입니다.
 
-### FlintWorkerScheduler
+### FlintWorker스케줄러
 
 **종류:** 인터페이스
 
@@ -2471,7 +7335,41 @@ export interface FlintWorkerScheduler
 export interface FlintWorkerSchedulerOptions
 ```
 
-설명이 제공되지 않았습니다.
+호스트 작업자 작업 스케줄러를 생성하기 위한 구성 옵션입니다.
+
+### 플린트보내기
+
+**종류:** 기능
+
+```typescript
+function isFlintSend(value: unknown, visited = new Set<unknown>()): boolean;
+```
+
+값이 '보내기' 계약을 충족하는지 확인합니다(스레드 경계를 넘어 전송해도 안전함).
+일반 객체, 배열, 기본 요소 및 형식화된 버퍼를 재귀적으로 확인합니다.
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ------- | ------- | ----------- |
+| 가치 | 알 수 없음 |             |
+| 방문 |         |             |
+
+### isFlintSync
+
+**종류:** 기능
+
+```typescript
+function isFlintSync(value: unknown): boolean;
+```
+
+값이 '동기화' 계약을 충족하는지 확인합니다(스레드 간에 동시에 공유해도 안전함).
+
+#### 매개변수
+
+| 이름 | 유형 | 설명 |
+| ----- | ------- | ----------- |
+| 가치 | 알 수 없음 |             |
 
 ## `src/trace`
 
@@ -2483,16 +7381,22 @@ export interface FlintWorkerSchedulerOptions
 function createFlintTraceRecorder(options: FlintTraceOptions, functionName: string): FlintTraceRecorder;
 ```
 
-설명이 제공되지 않았습니다.
+크기 예산 및 원격 측정 캡처를 적용하는 실행 추적 레코더를 만듭니다.
 
 #### 매개변수
 
-| 이름     | 유형           | 설명 |
-| -------- | -------------- | ---- |
-| 옵션     | FlintTrace옵션 |      |
-| 함수이름 | 문자열         |      |
+| 이름 | 유형 | 설명 |
+| ------------ | ----------------- | ------------------------------------ |
+| 옵션 | FlintTrace옵션 | - 추적을 위한 구성 옵션입니다. |
+| 함수이름 | 문자열 | - 기본 진입점 함수 이름입니다. |
 
-### FlintTraceCaptureMode
+#### 계약
+
+- **@param:** - 추적을 위한 구성 옵션입니다.
+- **@param:** - 기본 진입점 함수 이름입니다.
+- **@returns:** FlintTraceRecorder 인스턴스를 구성했습니다.
+
+### 플린트트레이스캡처모드
 
 **종류:** 유형
 
@@ -2500,7 +7404,7 @@ function createFlintTraceRecorder(options: FlintTraceOptions, functionName: stri
 export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 ```
 
-설명이 제공되지 않았습니다.
+실행 추적 기록을 위한 자세한 정보 표시 모드를 캡처합니다.
 
 ### FlintTrace카운터
 
@@ -2510,9 +7414,9 @@ export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 export interface FlintTraceCounters
 ```
 
-설명이 제공되지 않았습니다.
+추적 중에 기록된 집계된 실행 측정항목 및 작업 카운터입니다.
 
-### FlintTraceEvent
+### 플린트트레이스이벤트
 
 **종류:** 인터페이스
 
@@ -2520,7 +7424,7 @@ export interface FlintTraceCounters
 export interface FlintTraceEvent
 ```
 
-설명이 제공되지 않았습니다.
+런타임 또는 VM 해석 중에 캡처된 자세한 실행 추적 이벤트입니다.
 
 ### FlintTraceEventType
 
@@ -2531,7 +7435,7 @@ export type FlintTraceEventType =
   'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
-설명이 제공되지 않았습니다.
+기록된 런타임 추적 이벤트의 카테고리입니다.
 
 ### FlintTraceLimits
 
@@ -2541,7 +7445,7 @@ export type FlintTraceEventType =
 export interface FlintTraceLimits
 ```
 
-설명이 제공되지 않았습니다.
+추적 이벤트 볼륨 및 바이트 크기를 제한하는 리소스 제한입니다.
 
 ### FlintTrace옵션
 
@@ -2551,9 +7455,9 @@ export interface FlintTraceLimits
 export interface FlintTraceOptions extends FlintTraceLimits
 ```
 
-설명이 제공되지 않았습니다.
+실행 추적 기록을 초기화하기 위한 구성 옵션입니다.
 
-### FlintTraceRecorder
+### 플린트트레이스 레코더
 
 **종류:** 인터페이스
 
@@ -2561,9 +7465,9 @@ export interface FlintTraceOptions extends FlintTraceLimits
 export interface FlintTraceRecorder
 ```
 
-설명이 제공되지 않았습니다.
+런타임 실행 이벤트를 사용하고 추적 보고서를 작성하는 활성 레코더 인터페이스입니다.
 
-### FlintTraceReport
+### 플린트추적보고서
 
 **종류:** 인터페이스
 
@@ -2571,17 +7475,17 @@ export interface FlintTraceRecorder
 export interface FlintTraceReport
 ```
 
-설명이 제공되지 않았습니다.
+실행 완료 후 요약된 완전한 구조적 실행 추적 보고서입니다.
 
-### FlintTraceSourceLocation
+### FlintTraceSource위치
 
-**종류:** 인터페이스
+**종류:** 유형
 
 ```typescript
-export interface FlintTraceSourceLocation extends FlintVmDebugSpan
+export type FlintTraceSourceLocation = FlintVmDebugSpan;
 ```
 
-설명이 제공되지 않았습니다.
+기록된 실행 추적 이벤트에 대한 소스 매핑 위치입니다.
 
 ### 요약FlintVm값
 
@@ -2591,18 +7495,24 @@ export interface FlintTraceSourceLocation extends FlintVmDebugSpan
 function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValue) => string): string;
 ```
 
-설명이 제공되지 않았습니다.
+선택적으로 교정을 적용하여 진단 추적을 위한 VM 값을 요약합니다.
 
 #### 매개변수
 
-| 이름 | 유형                         | 설명 |
-| ---- | ---------------------------- | ---- |
-| 가치 | FlintVm값                    |      |
-| 수정 | (값: FlintVmValue) => 문자열 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------------------------- | ------------------------------ |
+| 가치 | 플린트Vm값 | - 포맷할 VM 값입니다.          |
+| 수정 | (값: FlintVmValue) => 문자열 | - 선택적 편집 콜백. |
+
+#### 계약
+
+- **@param:** - 형식을 지정할 VM 값입니다.
+- **@param:** - 선택적 수정 콜백.
+- **@returns:** 사람이 읽을 수 있는 요약 문자열입니다.
 
 ## `src/traps`
 
-### AttachFlintTrace
+### 첨부플린트트레이스
 
 **종류:** 기능
 
@@ -2610,16 +7520,21 @@ function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValu
 function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 ```
 
-설명이 제공되지 않았습니다.
+해당하는 경우 실행 추적 보고서를 Flint 트랩 오류와 연결합니다.
 
 #### 매개변수
 
-| 이름 | 유형             | 설명 |
-| ---- | ---------------- | ---- |
-| 오류 | 알 수 없음       |      |
-| 추적 | FlintTraceReport |      |
+| 이름 | 유형 | 설명 |
+| ----- | ---------------- | ----------------------------------- |
+| 오류 | 알 수 없음 | - 후보 오류 개체.           |
+| 추적 | 플린트추적보고서 | - 첨부할 실행 추적 보고서. |
 
-### Flint트랩
+#### 계약
+
+- **@param:** - 후보 오류 개체입니다.
+- **@param:** - 첨부할 실행 추적 보고서입니다.
+
+### 부싯돌함정
 
 **종류:** 클래스
 
@@ -2627,9 +7542,9 @@ function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 export class FlintTrap extends Error
 ```
 
-설명이 제공되지 않았습니다.
+Flint의 치명적인 런타임 또는 게스트 실행 트랩을 나타냅니다.
 
-### FlintTrapCode
+### 플린트트랩코드
 
 **종류:** 유형
 
@@ -2641,12 +7556,18 @@ export type FlintTrapCode =
   | 'InvalidOwnership'
   | 'MemoryExhausted'
   | 'MemoryOutOfBounds'
-  | 'GuestTrap';
+  | 'GuestTrap'
+  | 'BorrowViolation'
+  | 'RegionExpired'
+  | 'UseAfterRelease'
+  | 'DoubleRelease'
+  | 'StackOverflow'
+  | 'CallDepthExhausted';
 ```
 
-설명이 제공되지 않았습니다.
+정식 런타임 트랩 오류 카테고리 코드입니다.
 
-### FlintTrap옵션
+### 부싯돌함정옵션
 
 **종류:** 인터페이스
 
@@ -2654,7 +7575,7 @@ export type FlintTrapCode =
 export interface FlintTrapOptions extends ErrorOptions
 ```
 
-설명이 제공되지 않았습니다.
+런타임 트랩 오류 보고 및 로깅을 구성하는 옵션입니다.
 
 ### toFlintHostError
 
@@ -2664,15 +7585,22 @@ export interface FlintTrapOptions extends ErrorOptions
 function toFlintHostError(error: unknown, capability: string, logger?: FlintLogger): FlintTrap;
 ```
 
-설명이 제공되지 않았습니다.
+알 수 없는 호스트 오류를 ​​정규화된 FlintTrap 인스턴스로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형        | 설명 |
-| ---- | ----------- | ---- |
-| 오류 | 알 수 없음  |      |
-| 능력 | 문자열      |      |
-| 로거 | FlintLogger |      |
+| 이름 | 유형 | 설명 |
+| ---------- | ----------- | --------------------------------------------------- |
+| 오류 | 알 수 없음 | - 원시에서 발견된 오류입니다.                                 |
+| 능력 | 문자열 | - 대상 호스트 기능 식별자.                |
+| 로거 | 플린트로거 | - 진단 원격 측정을 위한 선택적 런타임 로거. |
+
+#### 계약
+
+- **@param:** - 원시에서 오류가 발생했습니다.
+- **@param:** - 대상 호스트 기능 식별자입니다.
+- **@param:** - 진단 원격 측정을 위한 선택적 런타임 로거입니다.
+- **@returns:** 정규화된 FlintTrap 인스턴스.
 
 ## `src/vm-executor`
 
@@ -2684,14 +7612,20 @@ function toFlintHostError(error: unknown, capability: string, logger?: FlintLogg
 function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string): FlintVmAotArtifact;
 ```
 
-설명이 제공되지 않았습니다.
+VM 모듈을 AOT(Ahead-of-Time) JavaScript 아티팩트로 컴파일합니다.
 
 #### 매개변수
 
-| 이름         | 유형        | 설명 |
-| ------------ | ----------- | ---- |
-| 모듈         | FlintVm모듈 |      |
-| 컴파일러버전 | 문자열      |      |
+| 이름 | 유형 | 설명 |
+| --------------- | ------------- | -------------------------- |
+| 모듈 | 플린트Vm모듈 | - 컴파일할 VM 모듈.    |
+| 컴파일러버전 | 문자열 | - 컴파일러 버전 문자열. |
+
+#### 계약
+
+- **@param:** - 컴파일할 VM 모듈입니다.
+- **@param:** - 컴파일러 버전 문자열입니다.
+- **@returns:** AOT 아티팩트를 내보냈습니다.
 
 ### createFlintVmExecutor
 
@@ -2701,15 +7635,20 @@ function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string
 function createFlintVmExecutor(executorOptions: FlintVmExecutorOptions = {}): FlintVmExecutor;
 ```
 
-설명이 제공되지 않았습니다.
+JIT 컴파일을 지원하는 바이트코드 VM 실행기를 생성합니다.
 
 #### 매개변수
 
-| 이름       | 유형                | 설명 |
-| ---------- | ------------------- | ---- |
-| 실행자옵션 | FlintVmExecutor옵션 |      |
+| 이름 | 유형 | 설명 |
+| --------------- | ---------------------- | ----------------------------------------- |
+| 실행자옵션 | FlintVmExecutor옵션 | - 실행기에 대한 구성 옵션입니다. |
 
-### ExecuteFlintVm
+#### 계약
+
+- **@param:** - 실행기에 대한 구성 옵션입니다.
+- **@returns:** FlintVmExecutor 인스턴스를 구성했습니다.
+
+### 실행FlintVm
 
 **종류:** 기능
 
@@ -2722,18 +7661,26 @@ function executeFlintVm(
 ): FlintVmExecutionResult;
 ```
 
-설명이 제공되지 않았습니다.
+VM 모듈에서 함수를 실행하는 간편 실행기입니다.
 
 #### 매개변수
 
-| 이름     | 유형                     | 설명 |
-| -------- | ------------------------ | ---- |
-| 모듈     | FlintVm모듈              |      |
-| 함수이름 | 문자열                   |      |
-| 인수_    | 읽기 전용 FlintVmValue[] |      |
-| 옵션     | FlintVmExecutionOptions  |      |
+| 이름 | 유형 | 설명 |
+| ------------ | ----------------------- | ---------------------- |
+| 모듈 | 플린트Vm모듈 | - VM 모듈.           |
+| 함수이름 | 문자열 | - 입력 기능 이름. |
+| 인수_ | 읽기 전용 FlintVmValue[] | - 인수 배열.     |
+| 옵션 | FlintVmExecutionOptions | - 실행 옵션.   |
 
-### ExecuteFlintVmAotArtifact
+#### 계약
+
+- **@param:** - VM 모듈.
+- **@param:** - 입력 함수 이름입니다.
+- **@param:** - 인수 배열.
+- **@param:** - 실행 옵션.
+- **@returns:** 실행 결과입니다.
+
+### 실행FlintVmAotArtifact
 
 **종류:** 기능
 
@@ -2746,16 +7693,24 @@ function executeFlintVmAotArtifact(
 ): FlintVmExecutionResult;
 ```
 
-설명이 제공되지 않았습니다.
+컴파일된 AOT 아티팩트를 실행합니다.
 
 #### 매개변수
 
-| 이름     | 유형                                   | 설명 |
-| -------- | -------------------------------------- | ---- |
-| 유물     | FlintVmAotArtifact                     |      |
-| 함수이름 | 문자열                                 |      |
-| 인수_    | 읽기 전용 FlintVmValue[]               |      |
-| 옵션     | <FlintVmExecutionOptions, 'mode'> 생략 |      |
+| 이름 | 유형 | 설명 |
+| ------------ | ------------------------------------- | ------------------------ |
+| 유물 | 플린트VmAot아티팩트 | - AOT 아티팩트를 컴파일했습니다. |
+| 함수이름 | 문자열 | - 입력 기능 이름.   |
+| 인수_ | 읽기 전용 FlintVmValue[] | - 인수 배열.       |
+| 옵션 | <FlintVmExecutionOptions, 'mode'> 생략 | - 실행 옵션.     |
+
+#### 계약
+
+- **@param:** - AOT 아티팩트를 컴파일했습니다.
+- **@param:** - 입력 함수 이름입니다.
+- **@param:** - 인수 배열.
+- **@param:** - 실행 옵션.
+- **@returns:** 실행 결과입니다.
 
 ### FlintVmExecutor옵션
 
@@ -2765,9 +7720,9 @@ function executeFlintVmAotArtifact(
 export interface FlintVmExecutorOptions
 ```
 
-설명이 제공되지 않았습니다.
+Flint 가상 머신 실행기의 구성 옵션입니다.
 
-### runFlintVmBootstrap
+### runFlintVm부트스트랩
 
 **종류:** 기능
 
@@ -2781,19 +7736,28 @@ function runFlintVmBootstrap(
 ): FlintVmExecutionResult;
 ```
 
-설명이 제공되지 않았습니다.
+가상 머신에서 부트스트랩 모듈을 실행합니다.
 
 #### 매개변수
 
-| 이름     | 유형                                   | 설명 |
-| -------- | -------------------------------------- | ---- |
-| 모듈     | FlintVm모듈                            |      |
-| 함수이름 | 문자열                                 |      |
-| 인수_    | 읽기 전용 FlintVmValue[]               |      |
-| 모드     | FlintVmExecutionMode                   |      |
-| 옵션     | <FlintVmExecutionOptions, 'mode'> 생략 |      |
+| 이름 | 유형 | 설명 |
+| ------------ | ------------------------------------- | ---------------------- |
+| 모듈 | 플린트Vm모듈 | - 부트스트랩 VM 모듈. |
+| 함수이름 | 문자열 | - 입력 기능 이름. |
+| 인수_ | 읽기 전용 FlintVmValue[] | - 인수 배열.     |
+| 모드 | FlintVmExecutionMode | - 실행 모드.      |
+| 옵션 | <FlintVmExecutionOptions, 'mode'> 생략 | - 실행 옵션.   |
 
-### verifyFlintVmModule
+#### 계약
+
+- **@param:** - 부트스트랩 VM 모듈.
+- **@param:** - 입력 함수 이름입니다.
+- **@param:** - 인수 배열.
+- **@param:** - 실행 모드.
+- **@param:** - 실행 옵션.
+- **@returns:** 실행 결과입니다.
+
+### verifyFlintVm모듈
 
 **종류:** 기능
 
@@ -2801,17 +7765,21 @@ function runFlintVmBootstrap(
 function validateFlintVmModule(module: FlintVmModule): void;
 ```
 
-설명이 제공되지 않았습니다.
+바이트코드 규칙에 대해 Flint VM 모듈 구조를 검증합니다.
 
 #### 매개변수
 
-| 이름 | 유형        | 설명 |
-| ---- | ----------- | ---- |
-| 모듈 | FlintVm모듈 |      |
+| 이름 | 유형 | 설명 |
+| ------ | ------------- | ------------------------ |
+| 모듈 | 플린트Vm모듈 | - 유효성을 검사할 VM 모듈입니다. |
+
+#### 계약
+
+- **@param:** - 유효성을 검사할 VM 모듈입니다.
 
 ## `src/vm-wasm`
 
-### 컴파일FlintVmWasm
+### 컴파일플린트VmWasm
 
 **종류:** 기능
 
@@ -2819,16 +7787,16 @@ function validateFlintVmModule(module: FlintVmModule): void;
 function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOptions = {}): FlintVmWasmArtifact;
 ```
 
-설명이 제공되지 않았습니다.
+Flint VM 모듈을 검증된 WebAssembly 바이트코드 아티팩트로 컴파일합니다.
 
 #### 매개변수
 
-| 이름 | 유형                      | 설명 |
-| ---- | ------------------------- | ---- |
-| 모듈 | FlintVm모듈               |      |
-| 옵션 | FlintVmWasmCompileOptions |      |
+| 이름 | 유형 | 설명 |
+| ------- | ------------------------- | ----------- |
+| 모듈 | 플린트Vm모듈 |             |
+| 옵션 | FlintVmWasmCompileOptions |             |
 
-### FlintVmWasmCompile옵션
+### FlintVmWasm컴파일옵션
 
 **종류:** 인터페이스
 
@@ -2836,9 +7804,9 @@ function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOp
 export interface FlintVmWasmCompileOptions
 ```
 
-설명이 제공되지 않았습니다.
+Flint VM 모듈을 WebAssembly로 컴파일하도록 구성하는 옵션입니다.
 
-### prepareFlintVm
+### 준비플린트Vm
 
 **종류:** 상수
 
@@ -2848,7 +7816,7 @@ export const prepareFlintVm;
 
 설명이 제공되지 않았습니다.
 
-### prepareFlintVmWasm
+### 준비플린트VmWasm
 
 **종류:** 기능
 
@@ -2859,38 +7827,48 @@ function prepareFlintVmWasm(
 ): FlintVmPreparedExecutor;
 ```
 
-설명이 제공되지 않았습니다.
+빠른 호출을 위해 모듈이나 아티팩트에서 WebAssembly 실행자를 준비합니다.
 
 #### 매개변수
 
-| 이름             | 유형                                 | 설명 |
-| ---------------- | ------------------------------------ | ---- |
-| 모듈또는아티팩트 | FlintVmModule \| FlintVmWasmArtifact |      |
-| 옵션             | FlintVmPreparedExecutorOptions       |      |
+| 이름 | 유형 | 설명 |
+| ---------------- | ------------------------------------ | ----------- |
+| 모듈또는아티팩트 | FlintVmModule \| 플린트VmWasmArtifact |             |
+| 옵션 | FlintVmPreparedExecutorOptions |             |
 
 ## `src/vm`
 
-### FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+### FLINT_VM_DEFAULT_MAX_MEMORY_PAGES
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
+export const FLINT_VM_DEFAULT_MAX_MEMORY_PAGES;
 ```
 
 설명이 제공되지 않았습니다.
 
-### FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+### FLINT_VM_WASM_ABI_VERSION
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
+export const FLINT_VM_WASM_ABI_VERSION;
 ```
 
 설명이 제공되지 않았습니다.
 
-### FlintVmAotArtifact
+### FLINT_VM_WASM_LOWERING_VERSION
+
+**종류:** 상수
+
+```typescript
+export const FLINT_VM_WASM_LOWERING_VERSION;
+```
+
+설명이 제공되지 않았습니다.
+
+### 플린트VmAotArtifact
 
 **종류:** 인터페이스
 
@@ -2898,7 +7876,7 @@ export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
 export interface FlintVmAotArtifact
 ```
 
-설명이 제공되지 않았습니다.
+VM 모듈에서 생성된 사전 컴파일된 JavaScript 아티팩트입니다.
 
 ### FlintVmCapability가져오기
 
@@ -2908,9 +7886,9 @@ export interface FlintVmAotArtifact
 export interface FlintVmCapabilityImport
 ```
 
-설명이 제공되지 않았습니다.
+VM 모듈에서 요청한 호스트 기능 가져오기 설명자입니다.
 
-### FlintVmDebugSpan
+### 플린트Vm디버그스팬
 
 **종류:** 인터페이스
 
@@ -2918,9 +7896,9 @@ export interface FlintVmCapabilityImport
 export interface FlintVmDebugSpan
 ```
 
-설명이 제공되지 않았습니다.
+바이트코드 명령 오프셋을 소스 코드 좌표에 매핑하는 디버그 소스 범위입니다.
 
-### FlintVmExecutionMode
+### FlintVm실행 모드
 
 **종류:** 유형
 
@@ -2928,7 +7906,7 @@ export interface FlintVmDebugSpan
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-설명이 제공되지 않았습니다.
+지원되는 VM 바이트코드 실행 모드('interpret', 'jit', 'aot').
 
 ### FlintVmExecution옵션
 
@@ -2938,9 +7916,9 @@ export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 export interface FlintVmExecutionOptions
 ```
 
-설명이 제공되지 않았습니다.
+VM 실행 제한, 메모리 버퍼 및 원격 측정을 구성하는 옵션입니다.
 
-### FlintVmExecutionResult
+### FlintVm실행 결과
 
 **종류:** 인터페이스
 
@@ -2948,9 +7926,9 @@ export interface FlintVmExecutionOptions
 export interface FlintVmExecutionResult
 ```
 
-설명이 제공되지 않았습니다.
+값 및 단계 측정항목을 포함하여 VM 실행 실행에서 반환된 결과입니다.
 
-### FlintVmExecutor
+### 플린트VmExecutor
 
 **종류:** 인터페이스
 
@@ -2958,9 +7936,9 @@ export interface FlintVmExecutionResult
 export interface FlintVmExecutor
 ```
 
-설명이 제공되지 않았습니다.
+컴파일된 Flint VM 모듈을 실행하기 위한 기본 실행 인터페이스입니다.
 
-### FlintVm함수
+### 플린트Vm함수
 
 **종류:** 인터페이스
 
@@ -2968,7 +7946,7 @@ export interface FlintVmExecutor
 export interface FlintVmFunction
 ```
 
-설명이 제공되지 않았습니다.
+명령어, 레지스터 및 메타데이터를 포함하는 컴파일된 VM 기능 정의입니다.
 
 ### FlintVm명령
 
@@ -2978,9 +7956,9 @@ export interface FlintVmFunction
 export type FlintVmInstruction = |
 ```
 
-설명이 제공되지 않았습니다.
+Flint 가상 머신에서 지원되는 바이트코드 명령 작업입니다.
 
-### FlintVmJitCache
+### 플린트VmJit캐시
 
 **종류:** 인터페이스
 
@@ -2988,9 +7966,9 @@ export type FlintVmInstruction = |
 export interface FlintVmJitCache
 ```
 
-설명이 제공되지 않았습니다.
+Tier-1 JIT 컴파일 함수 및 핫 함수 호출 횟수의 캐시입니다.
 
-### FlintVmJitEntry
+### 플린트VmJitEntry
 
 **종류:** 인터페이스
 
@@ -2998,9 +7976,9 @@ export interface FlintVmJitCache
 export interface FlintVmJitEntry
 ```
 
-설명이 제공되지 않았습니다.
+컴파일된 함수와 호출 횟수를 저장하는 JIT 컴파일 캐시 항목입니다.
 
-### FlintVm모듈
+### 플린트Vm모듈
 
 **종류:** 인터페이스
 
@@ -3008,7 +7986,7 @@ export interface FlintVmJitEntry
 export interface FlintVmModule
 ```
 
-설명이 제공되지 않았습니다.
+VM 및 AOT 실행기가 사용하는 실행 가능한 바이트코드 모듈 컨테이너입니다.
 
 ### FlintVmPreparedExecutor
 
@@ -3018,7 +7996,7 @@ export interface FlintVmModule
 export interface FlintVmPreparedExecutor
 ```
 
-설명이 제공되지 않았습니다.
+특정 모듈에 바인딩된 재사용 가능하고 사전 할당된 실행기 인스턴스입니다.
 
 ### FlintVmPreparedExecutor옵션
 
@@ -3028,7 +8006,7 @@ export interface FlintVmPreparedExecutor
 export interface FlintVmPreparedExecutorOptions
 ```
 
-설명이 제공되지 않았습니다.
+준비된 재사용 가능한 VM 실행 인스턴스를 구성하는 옵션입니다.
 
 ### FlintVm값
 
@@ -3038,9 +8016,9 @@ export interface FlintVmPreparedExecutorOptions
 export type FlintVmValue = |
 ```
 
-설명이 제공되지 않았습니다.
+바이트코드 VM에 의해 조작되는 런타임 값을 나타내는 태그된 공용체입니다.
 
-### FlintVmWasmArtifact
+### 플린트VmWasmArtifact
 
 **종류:** 인터페이스
 
@@ -3048,4 +8026,4 @@ export type FlintVmValue = |
 export interface FlintVmWasmArtifact
 ```
 
-설명이 제공되지 않았습니다.
+VM 모듈에서 생성된 WebAssembly 바이너리 및 가져오기 메타데이터 아티팩트입니다.

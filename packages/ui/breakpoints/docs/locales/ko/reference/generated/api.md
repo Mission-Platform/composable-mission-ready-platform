@@ -71,9 +71,9 @@ function getBreakpointValue(key: BreakpointKey): number;
 
 #### 매개변수
 
-| 이름 | 유형     | 설명 |
-| ---- | -------- | ---- |
-| 키   | 중단점키 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------------- | ----------- |
+| 키 | 중단점키 |             |
 
 ### 최대미디어쿼리
 
@@ -88,9 +88,9 @@ function maxMediaQuery(key: BreakpointKey): string;
 
 #### 매개변수
 
-| 이름 | 유형     | 설명 |
-| ---- | -------- | ---- |
-| 키   | 중단점키 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------------- | ----------- |
+| 키 | 중단점키 |             |
 
 #### 계약
 
@@ -104,13 +104,13 @@ function maxMediaQuery(key: BreakpointKey): string;
 function mediaQuery(key: BreakpointKey): string;
 ```
 
-지정된 중단점에 대해 `min-width` 미디어 쿼리 문자열을 반환합니다.
+지정된 중단점에 대한 `min-width` 미디어 쿼리 문자열을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형     | 설명 |
-| ---- | -------- | ---- |
-| 키   | 중단점키 |      |
+| 이름 | 유형 | 설명 |
+| ---- | ------------- | ----------- |
+| 키 | 중단점키 |             |
 
 #### 계약
 
@@ -130,8 +130,8 @@ function resolveBreakpoint(width: number): BreakpointKey;
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| ---- | ---- | ---- |
-| 폭   | 번호 |      |
+| ----- | ------ | ----------- |
+| 폭 | 번호 |             |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -155,9 +155,9 @@ function ForgeHideAt(properties: Readonly<HideAtProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 속성 | 읽기 전용<HideAtProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<HideAtProperties> |             |
 
 ### HideAt속성
 
@@ -180,7 +180,7 @@ function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 ```
 
 `ForgeShowAt` — 뷰포트가 다음 위치에 있을 때만 기본 슬롯을 조건부로 렌더링합니다.
-또는 공유된 7단계에서 `min` 이상(및/또는 `max`보다 엄격하게 낮음)
+공유된 7단계에서 `min` 이상(및/또는 `max`보다 엄격하게 낮음)
 중단점 척도. 중립 JSX 방언으로 한 번 작성하고 컴파일했습니다.
 `@mission-platform/vite-plugin-forge`을 통해 React 또는 Vue로 바로 연결됩니다.
 
@@ -192,9 +192,9 @@ function ForgeShowAt(properties: Readonly<ShowAtProperties>): MpElement;
 
 #### 매개변수
 
-| 이름 | 유형                        | 설명 |
-| ---- | --------------------------- | ---- |
-| 속성 | 읽기 전용<ShowAtProperties> |      |
+| 이름 | 유형 | 설명 |
+| ---------- | -------------------------- | ----------- |
+| 속성 | 읽기 전용<ShowAtProperties> |             |
 
 ### ShowAt속성
 
@@ -233,16 +233,16 @@ function ForgeBreakpointDebug(_properties: Readonly<BreakpointDebugProperties>):
 
 반응형 뷰포트 너비는 중립 후크를 통해 추적됩니다.
 (`useState`/`useEffect`). 해당 레이블은 i18next를 통해 현지화됩니다.
-`i18next.t(...)` 호출은 `defaultValue`(영어 대체)을 전달합니다.
-`@mission-platform/vite-plugin-forge`는 프레임워크 `useI18n()` 후크를 주입하므로
+`i18next.t(...)` 호출은 `defaultValue`(영어 대체)를 전달합니다.
+`@mission-platform/vite-plugin-forge`은 프레임워크 `useI18n()` 후크를 주입하므로
 동일한 소스가 패키지의 `mp.breakpoints` 네임스페이스에 대해 확인됩니다.
 React 및 Vue 모두.
 
 #### 매개변수
 
-| 이름  | 유형                                 | 설명 |
-| ----- | ------------------------------------ | ---- |
-| _속성 | 읽기 전용<BreakpointDebugProperties> |      |
+| 이름 | 유형 | 설명 |
+| ----------- | ----------------------------------- | ----------- |
+| _속성 | 읽기 전용<BreakpointDebugProperties> |             |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 

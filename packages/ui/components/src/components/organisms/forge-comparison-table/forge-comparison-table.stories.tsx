@@ -1,5 +1,4 @@
 import { ForgeComparisonTable } from '@mission-platform/components';
-
 import type { ComparisonTableProperties } from '@mission-platform/components';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 

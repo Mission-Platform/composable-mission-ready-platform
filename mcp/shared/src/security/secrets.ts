@@ -53,6 +53,10 @@ const IGNORED_FILES = new Set([
   "yarn.lock",
 ]);
 
+const DELIBERATE_FIXTURE_FILES = new Set([
+  "mcp/shared/src/security/security.test.ts",
+]);
+
 const PLACEHOLDER_PATTERN =
   /(?:example|placeholder|dummy|fake|mock|fixture|todo|test[-_]token|your[-_]token|sample|change[-_]me|00000000|123456789012|xxxxxx)/i;
 
@@ -467,7 +471,7 @@ function collectFiles(
 
 interface SecretFileAnalysisResult {
   readonly findings: SecurityFinding[];
-  readonly status: "scanned" | "oversized" | "unreadable";
+  readonly status: "scanned" | "oversized" | "excluded" | "unreadable";
   readonly error?: string;
 }
 
@@ -479,13 +483,16 @@ function scanSingleFile(
   repoRoot: string,
   severityThreshold?: SecurityFinding["severity"],
 ): SecretFileAnalysisResult {
+  const relativePath = relative(repoRoot, filePath).replaceAll("\\", "/");
+  if (DELIBERATE_FIXTURE_FILES.has(relativePath)) {
+    return { findings: [], status: "excluded" };
+  }
   try {
     const stat = lstatSync(filePath);
     if (stat.size > MAX_SCAN_BYTES) {
       return { findings: [], status: "oversized" };
     }
     const content = readFileSync(filePath, "utf8");
-    const relativePath = relative(repoRoot, filePath).replaceAll("\\", "/");
     return {
       findings: scanTextLines(content, relativePath, severityThreshold),
       status: "scanned",
@@ -530,6 +537,7 @@ function accumulateSecretOutcome(
     findings: SecurityFinding[];
     scannedCount: number;
     oversizedCount: number;
+    excludedCount: number;
     unreadableCount: number;
     errors: string[];
   },
@@ -541,6 +549,10 @@ function accumulateSecretOutcome(
   }
   if (result.status === "oversized") {
     stats.oversizedCount += 1;
+    return;
+  }
+  if (result.status === "excluded") {
+    stats.excludedCount += 1;
     return;
   }
   stats.unreadableCount += 1;
@@ -564,6 +576,7 @@ function scanSecretDirectoryTargetPath(
     findings: [] as SecurityFinding[],
     scannedCount: 0,
     oversizedCount: 0,
+    excludedCount: 0,
     unreadableCount,
     errors: [...errors],
   };
@@ -590,6 +603,7 @@ function scanSecretTargetPath(
       findings: [] as SecurityFinding[],
       scannedCount: 0,
       oversizedCount: 0,
+      excludedCount: 0,
       unreadableCount: 0,
       errors: [] as string[],
     };
@@ -601,6 +615,7 @@ function scanSecretTargetPath(
       findings: [],
       scannedCount: 0,
       oversizedCount: 0,
+      excludedCount: 0,
       unreadableCount: 0,
       skippedCount: 0,
       errors: [],
@@ -621,6 +636,7 @@ function isSecretScanIncomplete(stats: {
   oversizedCount: number;
   unreadableCount: number;
   skippedCount: number;
+  excludedCount: number;
   errors: readonly string[];
 }): boolean {
   if (stats.oversizedCount > 0) return true;
@@ -674,6 +690,7 @@ function buildSecretScanResult(
     incomplete: incomplete ? true : undefined,
     skippedFiles: positiveCountOrUndefined(targetResult.skippedCount),
     oversizedFiles: positiveCountOrUndefined(targetResult.oversizedCount),
+    excludedFiles: positiveCountOrUndefined(targetResult.excludedCount),
     unreadableFiles: positiveCountOrUndefined(targetResult.unreadableCount),
     errors: nonEmptyErrorsOrUndefined(targetResult.errors),
   };

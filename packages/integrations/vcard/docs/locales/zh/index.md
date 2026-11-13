@@ -13,4 +13,4 @@
 `calendarEvents(readICalendar(source))` 的标准化结果，因此生成
 框架组件保持独立于解析器运行时模块。
 
-有关公共 API 和用法示例，请参阅 `llms.txt`。
+有关公共 API 和使用示例，请参阅 `llms.txt`。

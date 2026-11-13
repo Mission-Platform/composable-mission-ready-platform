@@ -9,945 +9,43 @@
 
 تم إنشاؤها من إعلانات المصدر العام في `@mission-platform/flint`.
 
-## `src/analysis/analyze`
-
-### تحليلFlint
-
-**النوع:** الوظيفة
-
-```typescript
-function analyzeFlint(frontend: FlintFrontendResult, options: FlintAnalysisOptions = {}): FlintAnalysisReport;
-```
-
-قم بتشغيل قواعد تحليل المصدر المسجلة مقابل نتيجة واجهة أمامية واحدة.
-
-#### حدود
-
-| الاسم            | اكتب                          | الوصف |
-| ---------------- | ----------------------------- | ----- |
-| الواجهة الأمامية | FlintFrontendResult           |       |
-| خيارات           | خيارات تحليل فورجي ويب سكريبت |       |
-
-## `src/analysis/context`
-
-### createFlintAnalogyContext
-
-**النوع:** الوظيفة
-
-```typescript
-function createFlintAnalysisContext(
-  frontend: FlintFrontendResult,
-  options: FlintAnalysisOptions = {},
-): FlintAnalysisContext;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم            | اكتب                          | الوصف |
-| ---------------- | ----------------------------- | ----- |
-| الواجهة الأمامية | FlintFrontendResult           |       |
-| خيارات           | خيارات تحليل فورجي ويب سكريبت |       |
-
-## `src/analysis/contracts`
-
-### FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
-```
-
-البادئات المستقرة محفوظة لعائلات تشخيص تحليل المصدر.
-
-### FlintتحليلCallGraphNode
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisCallGraphNode
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAnalogyCapabilityFact
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisCapabilityFact
-```
-
-لم يتم تقديم أي وصف.
-
-### فئة تحليل Flint
-
-**النوع:** النوع
-
-```typescript
-export type FlintAnalysisCategory = 'type' | 'control-flow' | 'memory' | 'ownership' | 'security' | 'resource';
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAnalogyContext
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisContext
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintتحليلControlFlowFact
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisControlFlowFact
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAna AnalysisEvidence
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisEvidence
-```
-
-لم يتم تقديم أي وصف.
-
-### حقائق تحليل Flint
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisFacts
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAnalogyFinding
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisFinding
-```
-
-لم يتم تقديم أي وصف.
-
-### حدود تحليل Flint
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisLimits
-```
-
-لم يتم تقديم أي وصف.
-
-### خيارات تحليل Flint
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisOptions
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAna AnalysisOwnershipFact
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisOwnershipFact
-```
-
-لم يتم تقديم أي وصف.
-
-### سياسة تحليل Flint
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisPolicy
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAnalogyProfile
-
-**النوع:** النوع
-
-```typescript
-export type FlintAnalysisProfile = 'development' | 'strict';
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintتحليلRangeFact
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisRangeFact
-```
-
-لم يتم تقديم أي وصف.
-
-### تقرير تحليل Flint
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisReport
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAnalogyResourceFact
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisResourceFact
-```
-
-لم يتم تقديم أي وصف.
-
-### قاعدة تحليل Flint
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisRule
-```
-
-لم يتم تقديم أي وصف.
-
-### Flintتحليل الخطورة
-
-**النوع:** النوع
-
-```typescript
-export type FlintAnalysisSeverity = FlintDiagnosticSeverity;
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAnalogySourceFile
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisSourceFile
-```
-
-لم يتم تقديم أي وصف.
-
-### تحليل FlintSourceMap
-
-**النوع:** النوع
-
-```typescript
-export type FlintAnalysisSourceMap = readonly FlintAnalysisSourceMapEntry[];
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAnalogySourceMapEntry
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisSourceMapEntry
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAnalogyTypeFact
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisTypeFact
-```
-
-لم يتم تقديم أي وصف.
-
-## `src/analysis/default-rules`
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly FlintAnalysisRule[];
-```
-
-لم يتم تقديم أي وصف.
-
-## `src/analysis/facts`
-
-### createFlintAnalogyFacts
-
-**النوع:** الوظيفة
-
-```typescript
-function createFlintAnalysisFacts(frontend: FlintFrontendResult): FlintAnalysisFacts;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم            | اكتب                | الوصف |
-| ---------------- | ------------------- | ----- |
-| الواجهة الأمامية | FlintFrontendResult |       |
-
-## `src/analysis/policy`
-
-### createFlintAnalogyPolicy
-
-**النوع:** الوظيفة
-
-```typescript
-function createFlintAnalysisPolicy(policy: FlintAnalysisOptionsLike = {}): FlintAnalysisPolicy;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم | اكتب                                | الوصف |
-| ----- | ----------------------------------- | ----- |
-| سياسة | فورج ويب سكريبت أناليسيسوبتيونس مثل |       |
-
-### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: FlintAnalysisLimits;
-```
-
-لم يتم تقديم أي وصف.
-
-### FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-لم يتم تقديم أي وصف.
-
-### FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: FlintAnalysisPolicy;
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAnalogyOptionsLike
-
-**النوع:** النوع
-
-```typescript
-export type FlintAnalysisOptionsLike = Omit<Partial<FlintAnalysisPolicy>, 'limits'> &
-```
-
-لم يتم تقديم أي وصف.
-
-### isFlintAnalogyFindingBlocking
-
-**النوع:** الوظيفة
-
-```typescript
-function isFlintAnalysisFindingBlocking(finding: FlintAnalysisFinding, policy: FlintAnalysisPolicy): boolean;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم      | اكتب                 | الوصف |
-| ---------- | -------------------- | ----- |
-| العثور على | البحث عن تحليل Flint |       |
-| سياسة      | سياسة تحليل Flint    |       |
-
-## `src/analysis/registry`
-
-### createFlintAnalogyRuleRegistry
-
-**النوع:** الوظيفة
-
-```typescript
-function createFlintAnalysisRuleRegistry(
-  rules: readonly FlintAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
-): FlintAnalysisRuleRegistry;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم   | اكتب                           | الوصف |
-| ------- | ------------------------------ | ----- |
-| القواعد | للقراءة فقط FlintAnalogyRule[] |       |
-
-### FlintAnalogyRuleRegistry
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAnalysisRuleRegistry
-```
-
-لم يتم تقديم أي وصف.
-
-## `src/analysis/report`
-
-### createFlintAnalogyDiagnostic
-
-**النوع:** الوظيفة
-
-```typescript
-function createFlintAnalysisDiagnostic(finding: FlintAnalysisFinding): FlintDiagnostic;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم      | اكتب                 | الوصف |
-| ---------- | -------------------- | ----- |
-| العثور على | البحث عن تحليل Flint |       |
-
-## `src/ast`
-
-### FlintArrayLiteralExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintArrayLiteralExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAssignmentStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAssignmentStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintBinaryExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintBinaryExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintBinaryOperator
-
-**النوع:** النوع
-
-```typescript
-export type FlintBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintCallExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintCallExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintCapabilityImport
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintCapabilityImport
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintDocumentation
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintDocumentation
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintDocumentationTag
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintDocumentationTag
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintDoWhileStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintDoWhileStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintEnumDeclaration
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintEnumDeclaration
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintEnumValueExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintEnumValueExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintEnumVariant
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintEnumVariant
-```
-
-لم يتم تقديم أي وصف.
-
-### تعبير Flint
-
-**النوع:** النوع
-
-```typescript
-export type FlintExpression =
-  | FlintBinaryExpression
-  | FlintCallExpression
-  | FlintIdentifierExpression
-  | FlintLiteralExpression
-  | FlintFunctionValueExpression
-  | FlintStructValueExpression
-  | FlintEnumValueExpression
-  | FlintArrayLiteralExpression
-  | FlintVectorLiteralExpression
-  | FlintIndexExpression
-  | FlintMatchExpression
-  | FlintUnaryExpression;
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintExpressionStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintExpressionStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintForStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintForStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### وظيفة Flint
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintFunction
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintFunctionValueExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintFunctionValueExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintGenericParameter
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintGenericParameter
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIdentifierExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIdentifierExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIfStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIfStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIndexExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIndexExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintInterfaceDeclaration
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintInterfaceDeclaration
-```
-
-عقد هيكلي يستغرق وقتاً للتجميع؛ ليس لديه تمثيل وقت التشغيل.
-
-### FlintInterfaceFunction
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintInterfaceFunction
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIteratorLoopStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIteratorLoopStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintLetStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintLetStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintLiteralExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintLiteralExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintMatchArm
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintMatchArm
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintMatchExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintMatchExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintMatchStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintMatchStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintModule
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintModule
-```
-
-لم يتم تقديم أي وصف.
-
-### ملكية Flint
-
-**النوع:** النوع
-
-```typescript
-export type FlintOwnership = 'borrowed' | 'owned' | 'shared';
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintParameter
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintParameter
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintPattern
-
-**النوع:** النوع
-
-```typescript
-export type FlintPattern = |
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintPrimitiveType
-
-**النوع:** النوع
-
-```typescript
-export type FlintPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintReturnStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintReturnStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintSourceModuleImport
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintSourceModuleImport
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintStatement
-
-**النوع:** النوع
-
-```typescript
-export type FlintStatement =
-  | FlintExpressionStatement
-  | FlintAssignmentStatement
-  | FlintIfStatement
-  | FlintLetStatement
-  | FlintMatchStatement
-  | FlintSwitchStatement
-  | FlintReturnStatement
-  | FlintForStatement
-  | FlintDoWhileStatement
-  | FlintWhileStatement
-  | FlintYieldStatement
-  | FlintIteratorLoopStatement;
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintStructDeclaration
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintStructDeclaration
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintStructField
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintStructField
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintStructValueExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintStructValueExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintSwitchCase
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintSwitchCase
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintSwitchStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintSwitchStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintTypeName
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintTypeName
-```
-
-لم يتم تقديم أي وصف.
-
-### flintTypeNameToString
-
-**النوع:** الوظيفة
-
-```typescript
-function flintTypeNameToString(type: FlintTypeName): string;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم | اكتب          | الوصف |
-| ----- | ------------- | ----- |
-| اكتب  | FlintTypeName |       |
-
-### FlintUnaryExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintUnaryExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintVectorLiteralExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintVectorLiteralExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintWhileStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintWhileStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintYieldStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintYieldStatement
-```
-
-لم يتم تقديم أي وصف.
-
 ## `src/cache`
+
+### FlintCacheIndex
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintCacheIndex
+```
+
+يتتبع بيان ذاكرة التخزين المؤقت المستمر العناصر النشطة عبر الوحدات النمطية لتمكين التنظيف القديم.
+
+### FlintCacheIndexEntry
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintCacheIndexEntry
+```
+
+يقوم إدخال الفهرس بتتبع الملفات المخزنة مؤقتًا والطابع الزمني لمفتاح وحدة نمطية معينة.
+
+### flintCacheIndexPath
+
+**النوع:** الوظيفة
+
+```typescript
+function flintCacheIndexPath(cache: FlintWatCache): string;
+```
+
+إرجاع المسار إلى ملف فهرس ذاكرة التخزين المؤقت `.flint-cache-index.json`.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| ذاكرة التخزين المؤقت | فلينت وات كاش |             |
 
 ### FlintCacheLogger
 
@@ -957,7 +55,7 @@ export interface FlintYieldStatement
 export interface FlintCacheLogger
 ```
 
-لم يتم تقديم أي وصف.
+واجهة المسجل التشخيصي لعمليات التخزين المؤقت وضربات/أخطاء ذاكرة التخزين المؤقت.
 
 ### FlintDebugArtifactPaths
 
@@ -967,7 +65,7 @@ export interface FlintCacheLogger
 export interface FlintDebugArtifactPaths
 ```
 
-لم يتم تقديم أي وصف.
+مسارات الملفات إلى عناصر تصحيح الأخطاء المستمرة المنبعثة أثناء التجميع.
 
 ### FlintDebugArtifactVariant
 
@@ -977,7 +75,25 @@ export interface FlintDebugArtifactPaths
 export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 ```
 
-لم يتم تقديم أي وصف.
+معرف متغير التحسين لعناصر التصحيح المنبعثة.
+
+### flintSoNPath
+
+**النوع:** الوظيفة
+
+```typescript
+function flintSoNPath(cache: FlintWatCache, key: string, variant: 'optimized' | 'unoptimized' = 'optimized'): string;
+```
+
+إرجاع المسار إلى قطعة أثرية SonIR JSON لمفتاح ذاكرة التخزين المؤقت ومتغيره المحددين.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ---------------------------- | ----------- |
+| ذاكرة التخزين المؤقت | فلينت وات كاش |             |
+| مفتاح | سلسلة |             |
+| البديل | 'الأمثل' \| "غير محسّن" |             |
 
 ### FlintWatCache
 
@@ -987,7 +103,7 @@ export type FlintDebugArtifactVariant = 'optimized' | 'unoptimized';
 export interface FlintWatCache
 ```
 
-لم يتم تقديم أي وصف.
+نظام الملفات أو مزود ذاكرة التخزين المؤقت في الذاكرة لعناصر المترجم ومخرجات WAT.
 
 ### flintWatCacheKey
 
@@ -997,13 +113,13 @@ export interface FlintWatCache
 function flintWatCacheKey(input: FlintWatCacheKeyInput): string;
 ```
 
-لم يتم تقديم أي وصف.
+يحسب مفتاح ذاكرة التخزين المؤقت الحتمية لطلب الترجمة.
 
 #### حدود
 
-| الاسم   | اكتب                  | الوصف |
-| ------- | --------------------- | ----- |
-| الإدخال | FlintWatCacheKeyInput |       |
+| الاسم | اكتب | الوصف |
+| ----- | --------------------- | ----------- |
+| الإدخال | فلينت وات كاش كيينبوت |             |
 
 ### FlintWatCacheKeyInput
 
@@ -1013,7 +129,7 @@ function flintWatCacheKey(input: FlintWatCacheKeyInput): string;
 export interface FlintWatCacheKeyInput
 ```
 
-لم يتم تقديم أي وصف.
+معلمات الإدخال المستخدمة لحساب مفتاح ذاكرة التخزين المؤقت للترجمة الحتمية.
 
 ### flintWatPath
 
@@ -1023,16 +139,16 @@ export interface FlintWatCacheKeyInput
 function flintWatPath(cache: FlintWatCache, key: string): string;
 ```
 
-لم يتم تقديم أي وصف.
+إرجاع المسار إلى ملف WAT لمفتاح ذاكرة التخزين المؤقت المحدد.
 
 #### حدود
 
-| الاسم                | اكتب                     | الوصف |
-| -------------------- | ------------------------ | ----- |
-| ذاكرة التخزين المؤقت | فورجي ويب سكريبت وات كاش |       |
-| مفتاح                | سلسلة                    |       |
+| الاسم | اكتب | الوصف |
+| ----- | ------------- | ----------- |
+| ذاكرة التخزين المؤقت | فلينت وات كاش |             |
+| مفتاح | سلسلة |             |
 
-### استمرار FlintDebugArtifacts
+### PersistFlintDebugArtifacts
 
 **النوع:** الوظيفة
 
@@ -1049,17 +165,41 @@ function persistFlintDebugArtifacts(
 ): FlintDebugArtifactPaths;
 ```
 
-لم يتم تقديم أي وصف.
+يستمر في تصحيح أخطاء العناصر (WAT وWasm، سواء المحسّنة أو غير المحسّنة) على القرص.
 
 #### حدود
 
-| الاسم                | اكتب                                                                                                                                            | الوصف |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| ذاكرة التخزين المؤقت | FlintWatCache \| غير محدد                                                                                                                       |       |
-| مفتاح                | سلسلة                                                                                                                                           |       |
-| التحف                | { للقراءة فقط الأمثل؟: سلسلة؛ للقراءة فقط غير محسّنة؟: string; للقراءة فقط الأمثل Wasm ؟: Uint8Array; readonly unoptimizedWasm ؟: Uint8Array; } |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| ذاكرة التخزين المؤقت | فلينت وات كاش \| غير محدد |             |
+| مفتاح | سلسلة |             |
+| التحف | { للقراءة فقط الأمثل؟: سلسلة؛ للقراءة فقط غير محسّنة؟: string; للقراءة فقط الأمثل Wasm ؟: Uint8Array; readonly unoptimizedWasm ؟: Uint8Array; } |             |
 
-### استمرار FlintWat
+### PersistFlintSoN
+
+**النوع:** الوظيفة
+
+```typescript
+function persistFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  module: FlintSoNModule,
+  variant: 'optimized' | 'unoptimized' = 'optimized',
+): string | undefined;
+```
+
+تستمر وحدة SonIR في القرص في دليل ذاكرة التخزين المؤقت.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ---------------------------- | ----------- |
+| ذاكرة التخزين المؤقت | فلينت وات كاش \| غير محدد |             |
+| مفتاح | سلسلة |             |
+| الوحدة النمطية | فلينتسوننمودول |             |
+| البديل | 'الأمثل' \| "غير محسّن" |             |
+
+### PersistFlintWat
 
 **النوع:** الوظيفة
 
@@ -1067,19 +207,433 @@ function persistFlintDebugArtifacts(
 function persistFlintWat(cache: FlintWatCache | undefined, key: string, wat: string): string | undefined;
 ```
 
-لم يتم تقديم أي وصف.
+استمرار سلسلة WAT على القرص في دليل ذاكرة التخزين المؤقت.
 
 #### حدود
 
-| الاسم                | اكتب                      | الوصف |
-| -------------------- | ------------------------- | ----- |
-| ذاكرة التخزين المؤقت | FlintWatCache \| غير محدد |       |
-| مفتاح                | سلسلة                     |       |
-| وات                  | سلسلة                     |       |
+| الاسم | اكتب | الوصف |
+| ----- | -------------------------- | ----------- |
+| ذاكرة التخزين المؤقت | فلينت وات كاش \| غير محدد |             |
+| مفتاح | سلسلة |             |
+| وات | سلسلة |             |
 
-## `src/compiler`
+### PruneOrphanedFlintCacheFiles
 
-### compileFlint
+**النوع:** الوظيفة
+
+```typescript
+function pruneOrphanedFlintCacheFiles(cache: FlintWatCache | undefined): readonly string[];
+```
+
+يحذف ملفات ذاكرة التخزين المؤقت المؤقتة وغير المفهرسة من دليل ذاكرة التخزين المؤقت.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | -------------------------- | ----------- |
+| ذاكرة التخزين المؤقت | فلينت وات كاش \| غير محدد |             |
+
+### pruneStaleFlintCache
+
+**النوع:** الوظيفة
+
+```typescript
+function pruneStaleFlintCache(
+  cache: FlintWatCache | undefined,
+  moduleIdOrPath: string,
+  currentKey: string,
+  newFiles: readonly string[],
+): void;
+```
+
+تقليم القطع الأثرية المخزنة مؤقتًا التي لا معنى لها لمعرف وحدة معينة عند تغيير مفتاح التخزين المؤقت الخاص بها.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------------- | -------------------------- | ----------- |
+| ذاكرة التخزين المؤقت | فلينت وات كاش \| غير محدد |             |
+| الوحدة النمطيةIdOrPath | سلسلة |             |
+| المفتاح الحالي | سلسلة |             |
+| ملفات جديدة | سلسلة للقراءة فقط[] |             |
+
+### readFlintCacheIndex
+
+**النوع:** الوظيفة
+
+```typescript
+function readFlintCacheIndex(cache: FlintWatCache | undefined): FlintCacheIndex | undefined;
+```
+
+يقرأ ويوزع فهرس ذاكرة التخزين المؤقت من القرص، ويعيد غير محدد إذا كان مفقودًا أو تالفًا.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | -------------------------- | ----------- |
+| ذاكرة التخزين المؤقت | فلينت وات كاش \| غير محدد |             |
+
+### قراءةFlintSoN
+
+**النوع:** الوظيفة
+
+```typescript
+function readFlintSoN(
+  cache: FlintWatCache | undefined,
+  key: string,
+  expected?: {
+    readonly compilerVersion?: string;
+    readonly languageVersion?: string;
+    readonly abiVersion?: string;
+    readonly sourceHash?: string;
+    readonly graphHash?: string;
+    readonly optimization?: 'debug' | 'release';
+    readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
+    readonly memoryModel?: 'region-arc-checked-linear';
+  },
+): FlintSoNModule | undefined;
+```
+
+قراءة وإلغاء تسلسل وحدة SonIR من القرص.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| ذاكرة التخزين المؤقت | فلينت وات كاش \| غير محدد |             |
+| مفتاح | سلسلة |             |
+| المتوقع | { للقراءة فقط المترجم؟: سلسلة؛ نسخة اللغة للقراءة فقط؟: سلسلة؛ للقراءة فقط أبيفيرسيون؟: سلسلة؛ للقراءة فقط sourceHash ؟: string; للقراءة فقط graphHash ؟: string; التحسين للقراءة فقط؟: 'تصحيح' \| 'يطلق'؛ عمليات التحقق من الحدود للقراءة فقط؟: 'وقت التشغيل' \| 'آمنة' \| "مستبعد حسب الملف الشخصي"؛ نموذج الذاكرة للقراءة فقط؟: 'المنطقة-قوس-محدد-خطي'؛ } |             |
+
+## `src/compiler/backend`
+
+### قطعة أثريةVerificationDiagnostic
+
+**النوع:** الوظيفة
+
+```typescript
+function artifactVerificationDiagnostic(diagnostic: FlintWasmArtifactVerificationDiagnostic): FlintDiagnostic;
+```
+
+يحول تشخيص التحقق من قطعة أثرية Wasm إلى تشخيص مترجم قياسي.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | --------------------------------------- | ----------- |
+| التشخيص | فلينت واسم ارتيفاكت فيريفيشن دياجنوستيك |             |
+
+### DynamicLinkMetadata
+
+**النوع:** الوظيفة
+
+```typescript
+function dynamicLinkMetadata(manifest: FlintAbiManifest, artifactId: string): FlintDynamicLinkMetadata | undefined;
+```
+
+يحسب بيانات تعريف الارتباط الديناميكي للوحدات النمطية المميزة بوضع الارتباط الديناميكي في البيان.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ---------------- | ----------- |
+| بيان | فلينتابيمانيفيست |             |
+| معرف قطعة أثرية | سلسلة |             |
+
+### التشفير
+
+**النوع:** ثابت
+
+```typescript
+export const encoder;
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintBackendCompilationResult
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintBackendCompilationResult
+```
+
+يتم إرجاع بنية النتيجة عن طريق إنشاء كود الواجهة الخلفية لـ WebAssembly.
+
+### hashBytes
+
+**النوع:** الوظيفة
+
+```typescript
+function hashBytes(bytes: Uint8Array): string;
+```
+
+يحسب تجزئة FNV-1a ذات 32 بت لمصفوفة البايت المحددة التي يتم إرجاعها كسلسلة سداسية عشرية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---------- | ----------- |
+| بايت | Uint8Array |             |
+
+### sourceHashForArtifact
+
+**النوع:** الوظيفة
+
+```typescript
+function sourceHashForArtifact(source: string, fileName: string): string;
+```
+
+يحسب تجزئة مصدر تمت تسويتها لقطعة أثرية من دفق الرمز المميز غير التعليقي الخاص بها.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ----------- |
+| المصدر | سلسلة |             |
+| اسم الملف | سلسلة |             |
+
+### checkBackendArtifact
+
+**النوع:** الوظيفة
+
+```typescript
+function verifyBackendArtifact(input: {
+  readonly wasm: Uint8Array;
+  readonly unoptimizedWasm?: Uint8Array;
+  readonly fileName: string;
+  readonly manifest: FlintAbiManifest;
+  readonly metadata: Parameters<typeof compileFlintWasm>[0]['metadata'];
+  readonly targetFeatures?: Parameters<typeof verifyFlintWasmArtifact>[0]['targetFeatures'];
+  readonly featureRequirements?: FlintWasmFeatureRequirements;
+  readonly iteratorExports?: readonly FlintIteratorExport[];
+  readonly expectedContentHash: string;
+  readonly expectedSourceHash: string;
+  readonly esmSource: string;
+  readonly profile: 'strict' | 'development';
+  readonly allowedCapabilities?: readonly string[];
+}): {
+  readonly verificationDiagnostics: readonly FlintDiagnostic[];
+  readonly artifactVerification: FlintArtifactVerificationReport;
+};
+```
+
+يتحقق من عناصر WebAssembly الخلفية مقابل السياسة والميزات المستهدفة والقيود الواضحة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| الإدخال | { للقراءة فقط: Uint8Array؛ readonly unoptimizedWasm ؟: Uint8Array; اسم الملف للقراءة فقط: سلسلة؛ بيان للقراءة فقط: FlintAbiManifest؛ البيانات الوصفية للقراءة فقط: Parameters<typeof compileFlintWasm>[0]['metadata']; readonly targetFeatures?: Parameters<typeof verifyFlintWasmArtifact>[0]['targetFeatures']; readonly featureRequirements ؟: FlintWasmFeatureRequirements; readonly iteratorExports ؟: readonly FlintIteratorExport[]; للقراءة فقط المتوقعContentHash: سلسلة؛ للقراءة فقط المتوقعSourceHash: سلسلة؛ للقراءة فقط esmSource: سلسلة؛ ملف تعريف للقراءة فقط: 'صارم' \| 'تطوير'؛ للقراءة فقط المسموح بها؟: readonly string[]; } |             |
+
+## `src/compiler/declarations`
+
+### createDeclarations
+
+**النوع:** الوظيفة
+
+```typescript
+function createDeclarations(manifest: FlintAbiManifest): string;
+```
+
+يُنشئ محتويات ملف تعريف TypeScript كاملة لبيان Flint المترجم.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ---------------- | ----------- |
+| بيان | فلينتابيمانيفيست |             |
+
+### إعلانFunction
+
+**النوع:** الوظيفة
+
+```typescript
+function declarationFunction(
+  declaration: FlintAbiFunction,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+ينشئ توقيع الدالة TypeScript لإعلان دالة ABI.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ------------------- | ----------- |
+| إعلان | فلينتابيفونكشن |             |
+| أسماء التعداد | ReadonlySet<string> |             |
+| أسماء السجلات | ReadonlySet<string> |             |
+
+### إعلانProperty
+
+**النوع:** الوظيفة
+
+```typescript
+function declarationProperty(name: string): string;
+```
+
+يقوم بتنسيق المعرف كاسم خاصية آمنة أو سلسلة JSON المقتبسة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | ------ | ----------- |
+| الاسم | سلسلة |             |
+
+### إعلانRecord
+
+**النوع:** الوظيفة
+
+```typescript
+function declarationRecord(
+  declarations: readonly FlintAbiFunction[],
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+يصدر تعريفات TypeScript لسجلات تصدير ABI المكتوبة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------ | --------------------------- | ----------- |
+| تصريحات | للقراءة فقط FlintAbiFunction[] |             |
+| أسماء التعداد | ReadonlySet<string>         |             |
+| أسماء السجلات | ReadonlySet<string>         |             |
+
+### نوع الإعلان
+
+**النوع:** الوظيفة
+
+```typescript
+function declarationType(
+  value: string | FlintAbiParameter,
+  enumNames?: ReadonlySet<string>,
+  recordNames?: ReadonlySet<string>,
+): string;
+```
+
+يقوم بتعيين معلمة Flint ABI أو اسم النوع إلى نوع تعريف TypeScript.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | --------------------------- | ----------- |
+| القيمة | سلسلة \| فلينتابيباراميتر |             |
+| أسماء التعداد | ReadonlySet<string>         |             |
+| أسماء السجلات | ReadonlySet<string>         |             |
+
+### RawDeclarationFunction
+
+**النوع:** الوظيفة
+
+```typescript
+function rawDeclarationFunction(declaration: FlintAbiFunction): string;
+```
+
+ينشئ توقيع دالة أولية منخفضة المستوى مع توسيع المؤشر/الطول للسلاسل والبايتات.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----------- | ---------------- | ----------- |
+| إعلان | فلينتابيفونكشن |             |
+
+### RawDeclarationRecord
+
+**النوع:** الوظيفة
+
+```typescript
+function rawDeclarationRecord(declarations: readonly FlintAbiFunction[]): string;
+```
+
+يصدر تعريفات TypeScript لسجلات تصدير WebAssembly الأولية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------ | --------------------------- | ----------- |
+| تصريحات | للقراءة فقط FlintAbiFunction[] |             |
+
+### RawDeclarationType
+
+**النوع:** الوظيفة
+
+```typescript
+function rawDeclarationType(value: FlintPrimitiveType | FlintAbiParameter): string;
+```
+
+يقوم بتعيين معلمة ABI أو النوع البدائي إلى نوع معلمة WebAssembly الخام الخاص به في TypeScript.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | --------------------------------------- | ----------- |
+| القيمة | FlintPrimitiveType \| فلينتابيباراميتر |             |
+
+## `src/compiler/esm`
+
+### bytesToBase64
+
+**النوع:** الوظيفة
+
+```typescript
+function bytesToBase64(bytes: Uint8Array): string;
+```
+
+يشفر صفيف بايت في سلسلة Base64 القياسية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---------- | ----------- |
+| بايت | Uint8Array |             |
+
+### createEsmSource
+
+**النوع:** الوظيفة
+
+```typescript
+function createEsmSource(
+  wasm: Uint8Array,
+  manifest: FlintAbiManifest,
+  iteratorExports: readonly FlintIteratorExport[] = [],
+  dynamicMetadata?: FlintDynamicLinkMetadata,
+): string;
+```
+
+يُنشئ سلسلة وحدة تحميل ESM تحتوي على WebAssembly ومحولات وقت التشغيل المضمنة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------------- | ------------------------------ | ----------- |
+| وسم | Uint8Array |             |
+| بيان | فلينتابيمانيفيست |             |
+| صادرات التكرار | للقراءة فقط FlintIteratorExport[] |             |
+| البيانات الوصفية الديناميكية | فلينتديناميكلينكميتاداتا |             |
+
+## `src/compiler/module`
+
+### AnalysisOptions
+
+**النوع:** الوظيفة
+
+```typescript
+function analysisOptions(input: FlintCompileInput): FlintAnalysisOptions;
+```
+
+يحل خيارات التحليل الثابت من مدخلات التجميع وإعدادات السياسة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ----------------- | ----------- |
+| الإدخال | فلينتكومبيلينبوت |             |
+
+### compilFlint
 
 **النوع:** الوظيفة
 
@@ -1087,13 +641,64 @@ function persistFlintWat(cache: FlintWatCache | undefined, key: string, wat: str
 function compileFlint(input: FlintCompileInput): FlintArtifact;
 ```
 
-لم يتم تقديم أي وصف.
+تجميع سلسلة مصدر Flint إلى WebAssembly وعناصر وقت التشغيل.
 
 #### حدود
 
-| الاسم   | اكتب                      | الوصف |
-| ------- | ------------------------- | ----- |
-| الإدخال | فورجيويبسكريبتكومبيلينبوت |       |
+| الاسم | اكتب | الوصف |
+| ----- | ----------------- | ----------- |
+| الإدخال | فلينتكومبيلينبوت |             |
+
+### compileFlintGraph
+
+**النوع:** الوظيفة
+
+```typescript
+function compileFlintGraph(input: FlintGraphCompileInput): FlintArtifact;
+```
+
+تجميع رسم بياني لوحدة Flint متعدد الوحدات في قطعة أثرية WebAssembly موحدة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | ---------------------- | ----------- |
+| الإدخال | فلينتغرافكومبيلينبوت |             |
+
+### compileFlintModule
+
+**النوع:** الوظيفة
+
+```typescript
+function compileFlintModule(
+  input: FlintCompileInput,
+  frontend: FlintFrontendResult,
+  graphMetadata: Pick<
+    FlintArtifact,
+    'graphHash' | 'linkMode' | 'linkedModules' | 'linkProfile' | 'optimizationProfile'
+  > = {},
+  sourceFiles: readonly string[] = frontend.sourceFiles,
+): FlintArtifact;
+```
+
+تجميع وحدة Flint واحدة تم تحليلها إلى WebAssembly وتجميع عناصر محمل ESM.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| الإدخال | فلينتكومبيلينبوت | - مواصفات إدخال تجميع الوحدة النمطية.                  |
+| الواجهة الأمامية | فلينتفرونتند ريسولت | - نتيجة مترجم الواجهة الأمامية المعدة.                       |
+| البيانات الوصفية للرسم البياني | اختر< FlintArtifact، 'graphHash' \| 'وضع الارتباط' \| 'linkedModules' \| 'ملف تعريف الارتباط' \| "ملف تعريف التحسين" > | - البيانات الوصفية الاختيارية التي يتم نشرها من خلال ربط الرسم البياني للوحدة.  |
+| ملفات المصدر | سلسلة للقراءة فقط[] | - مسارات الملفات المصدرية المساهمة في وحدة التجميع هذه. |
+
+#### عقد
+
+- **@param:** - مواصفات إدخال تجميع الوحدة النمطية.
+- **@param:** - نتيجة مترجم الواجهة الأمامية.
+- **@param:** - بيانات التعريف الاختيارية التي يتم نشرها من خلال ربط الرسم البياني للوحدة.
+- **@param:** - مسارات الملفات المصدرية المساهمة في وحدة التجميع هذه.
+- **@returns:** قطعة أثرية مجمعة كاملة تحتوي على ثنائيات وإعلانات وتقارير.
 
 ### compileFlintSeed
 
@@ -1103,14 +708,13 @@ function compileFlint(input: FlintCompileInput): FlintArtifact;
 function compileFlintSeed(input: FlintCompileInput): FlintArtifact;
 ```
 
-بذرة TypeScript المقيدة المستخدمة بواسطة bootstrap المستضاف ذاتيًا حتى يتم إصلاحها
-يعمل تكافؤ النقاط على ترقية مترجم FWS إلى مالك الواجهة الأمامية العادي.
+تجميع مدخلات بذور فلينت عن طريق إعداد ASTs للواجهة الأمامية وتجميع الوحدة الناتجة.
 
 #### حدود
 
-| الاسم   | اكتب                      | الوصف |
-| ------- | ------------------------- | ----- |
-| الإدخال | فورجيويبسكريبتكومبيلينبوت |       |
+| الاسم | اكتب | الوصف |
+| ----- | ----------------- | ----------- |
+| الإدخال | فلينتكومبيلينبوت |             |
 
 ### createFlintCompiler
 
@@ -1120,7 +724,76 @@ function compileFlintSeed(input: FlintCompileInput): FlintArtifact;
 function createFlintCompiler(): FlintCompiler;
 ```
 
-لم يتم تقديم أي وصف.
+إنشاء مثيل للمترجم فلينت.
+
+#### عقد
+
+- **@returns:** مثيل المترجم الذي تم تكوينه.
+
+### runSelfHostedStage
+
+**النوع:** الوظيفة
+
+```typescript
+function runSelfHostedStage(
+  input: Pick<FlintCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  options: FlintCompilerServiceOptions,
+): {
+  readonly report?: FlintSelfHostedStageReport;
+  readonly stageReports?: readonly FlintSelfHostedStageReport[];
+  readonly diagnostic?: FlintDiagnostic;
+};
+```
+
+ينفذ مرحلة مترجم مستضافة ذاتيًا ويتحقق من صحة تقارير التكافؤ مقابل بصمات الأصابع المتوقعة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+| الإدخال | يختار<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+| خيارات | فلينتكومبيليرسيرفيسيوبشنز |             |
+
+### selfHostedDiagnostic
+
+**النوع:** الوظيفة
+
+```typescript
+function selfHostedDiagnostic(
+  input: Pick<FlintCompileInput, 'fileName'>,
+  message: string,
+  stage: FlintSelfHostedStageReport['stage'] = 'lex',
+): FlintDiagnostic;
+```
+
+ينشئ تشخيصًا لمشكلات التمهيد المستضافة ذاتيًا أو التحقق من التكافؤ.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ----------------------------------- | ----------- |
+| الإدخال | يختار<FlintCompileInput, 'fileName'> |             |
+| رسالة | سلسلة |             |
+| المرحلة | FlintSelfHostedStageReport['المرحلة'] |             |
+
+### معSelfHostedResult
+
+**النوع:** الوظيفة
+
+```typescript
+function withSelfHostedResult(artifact: FlintArtifact, result: ReturnType<typeof runSelfHostedStage>): FlintArtifact;
+```
+
+دمج نتائج التحقق من مرحلة العداء المستضافة ذاتيًا في قطعة أثر التجميع النهائية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ------------------------------------- | ----------- |
+| قطعة أثرية | قطعة أثرية من الصوان |             |
+| النتيجة | نوع الإرجاع<typeof runSelfHostedStage> |             |
+
+## `src/compiler/service`
 
 ### createFlintCompilerService
 
@@ -1130,17 +803,22 @@ function createFlintCompiler(): FlintCompiler;
 function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): FlintCompilerService;
 ```
 
-لم يتم تقديم أي وصف.
+إنشاء خدمة مترجم للتخزين المؤقت في الذاكرة من أجل التجميع المتزايد وإنشاء الرسوم البيانية.
 
 #### حدود
 
-| الاسم  | اكتب                               | الوصف |
-| ------ | ---------------------------------- | ----- |
-| خيارات | فورجيويبسكريبتكومبيليرسيرفيسيوبشنز |       |
+| الاسم | اكتب | الوصف |
+| ------- | --------------------------- | ------------------------------------------------ |
+| خيارات | فلينتكومبيليرسيرفيسيوبشنز | خيارات تكوين خدمة المترجم الاختيارية. |
+
+#### عقد
+
+- **@param:** خيارات تكوين خدمة المترجم الاختيارية.
+- **@returns:** مثيل FlintCompilerService ذو الحالة.
 
 ## `src/contracts`
 
-### FlintArtifact
+### قطعة أثرية فلينت
 
 **النوع:** الواجهة
 
@@ -1148,9 +826,9 @@ function createFlintCompilerService(options: FlintCompilerServiceOptions = {}): 
 export interface FlintArtifact
 ```
 
-لم يتم تقديم أي وصف.
+قطعة أثرية للمترجم تحتوي على ABI والمصادر والثنائيات والتشخيصات.
 
-### FlintArtifactVerificationReport
+### تقرير التحقق من قطعة أثرية فلينت
 
 **النوع:** الواجهة
 
@@ -1158,7 +836,7 @@ export interface FlintArtifact
 export interface FlintArtifactVerificationReport
 ```
 
-لم يتم تقديم أي وصف.
+نتيجة التحقق من تجزئات ومتغيرات محتوى العناصر المنبعثة.
 
 ### FlintAsyncCapability
 
@@ -1168,7 +846,7 @@ export interface FlintArtifactVerificationReport
 export type FlintAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-لم يتم تقديم أي وصف.
+قدرة المضيف غير المتزامنة المطلوبة بموجب عقود الترجمة غير المتزامنة.
 
 ### FlintAsyncCompilationContract
 
@@ -1208,9 +886,9 @@ export interface FlintBackendResult
 export interface FlintCompileInput
 ```
 
-لم يتم تقديم أي وصف.
+طلب ترجمة أحادي الوحدة يستهلكه الواجهة الأمامية وخدمة المترجم.
 
-### FlintCompiler
+### فلينتكومبيلر
 
 **النوع:** الواجهة
 
@@ -1218,9 +896,9 @@ export interface FlintCompileInput
 export interface FlintCompiler
 ```
 
-لم يتم تقديم أي وصف.
+الحد الأدنى من واجهة المترجم التي تعرض تجميع الوحدة الواحدة والتخلص منها.
 
-### تلميحات FlintCompiler
+### FlintCompilerHints
 
 **النوع:** الواجهة
 
@@ -1228,7 +906,7 @@ export interface FlintCompiler
 export interface FlintCompilerHints
 ```
 
-لم يتم تقديم أي وصف.
+تلميحات خفض اختيارية توجه الانبعاثات الخلفية المتخصصة.
 
 ### FlintCompilerLogger
 
@@ -1238,9 +916,9 @@ export interface FlintCompilerHints
 export interface FlintCompilerLogger
 ```
 
-لم يتم تقديم أي وصف.
+عقد المسجل المنظم الذي تستخدمه مراحل خدمة المترجم.
 
-### FlintCompilerReport
+### تقرير فلينتكومبيلر
 
 **النوع:** الواجهة
 
@@ -1248,7 +926,7 @@ export interface FlintCompilerLogger
 export interface FlintCompilerReport
 ```
 
-لم يتم تقديم أي وصف.
+تقرير خدمة مجمع يغطي التشخيص وإحصائيات ذاكرة التخزين المؤقت والتحليل.
 
 ### FlintCompilerService
 
@@ -1258,7 +936,7 @@ export interface FlintCompilerReport
 export interface FlintCompilerService extends FlintCompiler
 ```
 
-لم يتم تقديم أي وصف.
+خدمة المترجم التزايدي التي تدعم عمليات تجميع الرسوم البيانية وإبطالها.
 
 ### FlintCompilerServiceOptions
 
@@ -1268,7 +946,7 @@ export interface FlintCompilerService extends FlintCompiler
 export interface FlintCompilerServiceOptions
 ```
 
-لم يتم تقديم أي وصف.
+يتم قبول حقيبة التكوين عند إنشاء واجهة خدمة المترجم.
 
 ### FlintDebugArtifacts
 
@@ -1278,7 +956,7 @@ export interface FlintCompilerServiceOptions
 export interface FlintDebugArtifacts
 ```
 
-لم يتم تقديم أي وصف.
+يتم الاحتفاظ بلقطات WAT/Wasm الاختيارية لتصحيح الأخطاء والتحقق.
 
 ### FlintDeterministicArtifactMetadata
 
@@ -1288,7 +966,7 @@ export interface FlintDebugArtifacts
 export interface FlintDeterministicArtifactMetadata
 ```
 
-لم يتم تقديم أي وصف.
+حقول الهوية الحتمية المسجلة بجانب أعمال المترجم المنبعثة.
 
 ### FlintFrontendLinkMetadata
 
@@ -1298,7 +976,7 @@ export interface FlintDeterministicArtifactMetadata
 export interface FlintFrontendLinkMetadata
 ```
 
-لم يتم تقديم أي وصف.
+بيانات تعريف وقت الارتباط المرفقة بنتيجة الواجهة الأمامية لتعبئة الواجهة الخلفية.
 
 ### FlintFrontendResult
 
@@ -1318,7 +996,7 @@ export interface FlintFrontendResult
 export interface FlintGraphCompileInput
 ```
 
-لم يتم تقديم أي وصف.
+طلب تجميع الرسم البياني متعدد الوحدات بما في ذلك اختيار الإدخال وسياسة الارتباط.
 
 ### FlintIteratorExport
 
@@ -1328,9 +1006,9 @@ export interface FlintGraphCompileInput
 export interface FlintIteratorExport
 ```
 
-لم يتم تقديم أي وصف.
+بيانات تعريف ABI التي تصف سطح بروتوكول التكرار المُصدَّر.
 
-### FlintLinkOptimizationProfile
+### ملف فلينت لينك الأمثل
 
 **النوع:** النوع
 
@@ -1340,17 +1018,7 @@ export type FlintLinkOptimizationProfile = 'standard' | 'static-aggressive' | 'd
 
 تم تسجيل سياسة وقت الارتباط جنبًا إلى جنب مع تحسين المترجم العادي.
 
-### FlintLinkProfile
-
-**النوع:** النوع
-
-```typescript
-export type FlintLinkProfile = 'static' | 'dynamic';
-```
-
-ملف تعريف التعبئة والتغليف المسمى عبر المشروعات الذي يستخدمه المستهلكون المدركون للرسم البياني.
-
-### FlintOptimization
+### تحسين فلينت
 
 **النوع:** النوع
 
@@ -1358,9 +1026,9 @@ export type FlintLinkProfile = 'static' | 'dynamic';
 export type FlintOptimization = 'debug' | 'release';
 ```
 
-لم يتم تقديم أي وصف.
+مستوى تحسين المترجم من خلال تحديد تصحيح الأخطاء أو خفض الإصدار.
 
-### FlintSelfHostedStageReport
+### تقرير فلينت سيلف هوستيد ستيج
 
 **النوع:** الواجهة
 
@@ -1368,7 +1036,7 @@ export type FlintOptimization = 'debug' | 'release';
 export interface FlintSelfHostedStageReport
 ```
 
-نتيجة مرحلة التحويل البرمجي المحددة بواسطة FWS المستخدمة بواسطة محولات الأدوات.
+نتيجة مرحلة المحول البرمجي المؤلف من FLINT والمستخدمة بواسطة محولات الأدوات.
 
 ### FlintSelfHostedStageRunner
 
@@ -1383,7 +1051,7 @@ export type FlintSelfHostedStageRunner = (
 
 نقطة إدخال VM التي يوفرها وقت التشغيل دون اقتران الواجهة الآمنة للمتصفح بها.
 
-### ميزات FlintTarget
+### ميزات فلينتتارجيت
 
 **النوع:** الواجهة
 
@@ -1391,7 +1059,7 @@ export type FlintSelfHostedStageRunner = (
 export interface FlintTargetFeatures
 ```
 
-لم يتم تقديم أي وصف.
+إشارات ميزة هدف WebAssembly الاختيارية التي يطلبها المضيف.
 
 ### FlintVmExecutionMode
 
@@ -1401,7 +1069,7 @@ export interface FlintTargetFeatures
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-لم يتم تقديم أي وصف.
+أوضاع تنفيذ VM المدعومة لمراحل المترجم المستضافة ذاتيًا.
 
 ## `src/diagnostics`
 
@@ -1422,20 +1090,32 @@ function createDiagnostic(
 ): FlintDiagnostic;
 ```
 
-لم يتم تقديم أي وصف.
+ينشئ تشخيصًا منظمًا للمترجم باستخدام تلميحات اختيارية وبيانات تعريف أمان.
 
 #### حدود
 
-| الاسم            | اكتب                                                                                           | الوصف |
-| ---------------- | ---------------------------------------------------------------------------------------------- | ----- |
-| اسم الملف        | سلسلة                                                                                          |       |
-| المرحلة          | مرحلة تشخيص فورجي ويب سكريبت                                                                   |       |
-| كود              | سلسلة                                                                                          |       |
-| رسالة            | سلسلة                                                                                          |       |
-| فترة             | فورجيويبسكريبتسورسسبان                                                                         |       |
-| خطورة            | FlintDiagnosticSeverity                                                                        |       |
-| تلميح            | سلسلة                                                                                          |       |
-| البيانات الوصفية | يختار<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |       |
+| الاسم | اكتب | الوصف |
+| -------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| اسم الملف | سلسلة | - مسار أو معرف الملف المصدر.                                  |
+| المرحلة | مرحلة تشخيص فلينت | - مرحلة المترجم التي ينبعث منها التشخيص.                                 |
+| كود | سلسلة | - خطأ تشخيصي أو رمز تحذير.                                       |
+| رسالة | سلسلة | - رسالة تشخيصية وصفية يمكن قراءتها من قبل الإنسان.                          |
+| فترة | فلينتسورسسبان | - إحداثيات نطاق المصدر لموقع التشخيص.                    |
+| خطورة | فلينت دياجنوستيك سيفيريتي | - مستوى الخطورة، الافتراضي هو "خطأ".                                  |
+| تلميح | سلسلة | - تلميح علاج اختياري أو نصيحة قابلة للتنفيذ.                         |
+| البيانات الوصفية | يختار<FlintDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> | - معرف القاعدة الاختياري أو الفئة أو الدليل أو معرفات تصنيف الأمان. |
+
+#### عقد
+
+- **@param:** - مسار أو معرف الملف المصدر.
+- **@param:** - مرحلة المترجم التي ينبعث منها التشخيص.
+- **@param:** - خطأ تشخيصي أو رمز تحذير.
+- **@param:** - رسالة تشخيصية وصفية يمكن قراءتها بواسطة الإنسان.
+- **@param:** - إحداثيات نطاق المصدر لموقع التشخيص.
+- **@param:** - مستوى الخطورة، الإعداد الافتراضي هو "خطأ".
+- **@param:** - تلميح علاجي اختياري أو نصيحة قابلة للتنفيذ.
+- **@param:** - معرف القاعدة الاختياري أو الفئة أو الدليل أو معرفات تصنيف الأمان.
+- **@returns:** مثيل FlintDiagnostic منظم.
 
 ### مفتاح التشخيص
 
@@ -1445,15 +1125,50 @@ function createDiagnostic(
 function diagnosticKey(diagnostic: FlintDiagnostic): string;
 ```
 
-لم يتم تقديم أي وصف.
+يحسب مفتاح سلسلة الهوية الحتمية لإلغاء تكرار التشخيص.
 
 #### حدود
 
-| الاسم   | اكتب                     | الوصف |
-| ------- | ------------------------ | ----- |
-| التشخيص | فورجي ويب سكريبت التشخيص |       |
+| الاسم | اكتب | الوصف |
+| ---------- | --------------- | ---------------------------------- |
+| التشخيص | تشخيص فلينت | - التشخيص لحساب مفتاح ل. |
 
-### FlintDiagnostic
+#### عقد
+
+- **@param:** - تشخيص لحساب مفتاح.
+- **@returns:** اسم ملف ترميز سلسلة JSON المحدد والمرحلة والرمز والامتداد والرسالة.
+
+### FLINT_PARSE_STACK_OVERFLOW
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_PARSE_STACK_OVERFLOW;
+```
+
+رمز خطأ تشخيصي عندما يتجاوز عمق التكرار للمحلل الحد الذي تم تكوينه.
+
+### FLINT_PARSE_UNCLOSED_DELIMITER
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_PARSE_UNCLOSED_DELIMITER;
+```
+
+رمز الخطأ التشخيصي عندما تظل المحددات غير مغلقة عند EOF.
+
+### FLINT_SECURITY_SOURCE_TOO_LARGE
+
+**النوع:** ثابت
+
+```typescript
+export const FLINT_SECURITY_SOURCE_TOO_LARGE;
+```
+
+رمز الخطأ التشخيصي عندما يتجاوز الملف المصدر MAX_SOURCE_INPUT_BYTES.
+
+### فلينت دياجنوستيك
 
 **النوع:** الواجهة
 
@@ -1461,7 +1176,7 @@ function diagnosticKey(diagnostic: FlintDiagnostic): string;
 export interface FlintDiagnostic
 ```
 
-لم يتم تقديم أي وصف.
+سجل تشخيصي منظم يتم إنتاجه عبر مراحل برنامج التحويل البرمجي أو يمر بالتحليل الثابت.
 
 ### FlintDiagnosticEvidence
 
@@ -1471,20 +1186,20 @@ export interface FlintDiagnostic
 export interface FlintDiagnosticEvidence
 ```
 
-لم يتم تقديم أي وصف.
+دليل ثانوي أو موقع ذي صلة مرتبط بنتيجة تشخيصية.
 
-### مرحلة تشخيص Flint
+### مرحلة تشخيص فلينت
 
 **النوع:** النوع
 
 ```typescript
 export type FlintDiagnosticPhase =
-  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+  'lex' | 'parse' | 'macro' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
-لم يتم تقديم أي وصف.
+مرحلة التجميع التي تم فيها إصدار التشخيص.
 
-### FlintDiagnosticSeverity
+### فلينت دياجنوستيك سيفيريتي
 
 **النوع:** النوع
 
@@ -1492,7 +1207,7 @@ export type FlintDiagnosticPhase =
 export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 ```
 
-لم يتم تقديم أي وصف.
+مستوى الخطورة لتشخيص المترجم.
 
 ### FlintSourceSpan
 
@@ -1502,7 +1217,40 @@ export type FlintDiagnosticSeverity = 'error' | 'warning' | 'info';
 export interface FlintSourceSpan
 ```
 
-لم يتم تقديم أي وصف.
+نطاق إحداثي المصدر يحدد الموقع الدقيق للرمز المميز، AST node، أو التشخيص في ملف.
+
+### getSourceByteLength
+
+**النوع:** الوظيفة
+
+```typescript
+function getSourceByteLength(source: string): number;
+```
+
+يحسب حجم البايت الفعلي لسلسلة مشفرة UTF-8.
+تستخدم سلاسل JavaScript UTF-16 داخليًا، لذا يقوم `.length` بحساب وحدات التعليمات البرمجية، وليس البايتات.
+تقوم هذه الوظيفة بتشفير UTF-8 وإرجاع عدد البايتات الحقيقي.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------ | --------------------------- |
+| المصدر | سلسلة | - سلسلة المصدر للقياس. |
+
+#### عقد
+
+- **@param:** - سلسلة المصدر المراد قياسها.
+- **@returns:** عدد البايتات عند ترميزه كـ UTF-8.
+
+### MAX_SOURCE_INPUT_BYTES
+
+**النوع:** ثابت
+
+```typescript
+export const MAX_SOURCE_INPUT_BYTES;
+```
+
+الحد الأقصى المسموح به لحجم ملف مصدر Flint بالبايت (16 ميجابايت).
 
 ## `src/documentation`
 
@@ -1514,13 +1262,18 @@ export interface FlintSourceSpan
 function parseFlintDocumentation(comment: string): FlintDocumentation;
 ```
 
-لم يتم تقديم أي وصف.
+يوزع تعليق مستند Flint إلى وصف منظم وعلامات توثيق.
 
 #### حدود
 
-| الاسم | اكتب  | الوصف |
-| ----- | ----- | ----- |
-| تعليق | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ------- | ------ | ------------------------- |
+| تعليق | سلسلة | - سلسلة تعليق المستند الخام. |
+
+#### عقد
+
+- **@param:** - سلسلة تعليقات المستند الخام.
+- **@returns:** سجل توثيق منظم مع وصف وعلامات موحدة.
 
 ### renderFlintDocumentation
 
@@ -1530,13 +1283,18 @@ function parseFlintDocumentation(comment: string): FlintDocumentation;
 function renderFlintDocumentation(documentation: FlintDocumentation): string;
 ```
 
-لم يتم تقديم أي وصف.
+يعرض سجل وثائق Flint المنظم مرة أخرى إلى علامة تعليق المستند.
 
 #### حدود
 
-| الاسم | اكتب        | الوصف |
-| ----- | ----------- | ----- |
-| توثيق | توثيق Flint |       |
+| الاسم | اكتب | الوصف |
+| ------------- | ------------------ | ---------------------------------- |
+| توثيق | توثيق فلينت | - سجل التوثيق المنظم. |
+
+#### عقد
+
+- **@param:** - سجل التوثيق المنظم.
+- **@returns:** نص منسق للوثائق.
 
 ## `src/dynamic-links`
 
@@ -1545,10 +1303,10 @@ function renderFlintDocumentation(documentation: FlintDocumentation): string;
 **النوع:** النوع
 
 ```typescript
-export type FlintDynamicCallable = (...args: readonly number[]) => unknown;
+export type FlintDynamicCallable = (...arguments_: readonly number[]) => unknown;
 ```
 
-لم يتم تقديم أي وصف.
+توقيع دالة قابلة للاستدعاء لصادرات الوحدة الديناميكية التي تقبل المقابض/الوسائط الرقمية.
 
 ### FlintDynamicLinkCache
 
@@ -1559,7 +1317,7 @@ export class FlintDynamicLinkCache
 ```
 
 يحل مشكلة تصدير وحدة المصدر الديناميكية مرة واحدة لكل قطعة أثرية وبيان.
-يؤدي استبدال أي من مكونات الهوية إلى إبطال المقابض القديمة القابلة للاستدعاء.
+يؤدي استبدال أي مكون من مكونات الهوية إلى إبطال المقابض القديمة القابلة للاستدعاء.
 
 ### FlintDynamicLinkIdentity
 
@@ -1569,7 +1327,7 @@ export class FlintDynamicLinkCache
 export interface FlintDynamicLinkIdentity
 ```
 
-لم يتم تقديم أي وصف.
+واصف هوية فريد لعنصر الارتباط الديناميكي وزوج البيان.
 
 ### FlintDynamicModule
 
@@ -1579,7 +1337,7 @@ export interface FlintDynamicLinkIdentity
 export interface FlintDynamicModule
 ```
 
-لم يتم تقديم أي وصف.
+وحدة مرتبطة ديناميكيًا تحتوي على عمليات تصدير قابلة للاستدعاء وتوقيعات ABI اختيارية.
 
 ## `src/frontend`
 
@@ -1591,13 +1349,19 @@ export interface FlintDynamicModule
 function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 ```
 
-لم يتم تقديم أي وصف.
+ينفذ خط أنابيب الواجهة الأمامية لملف مصدر فلينت واحد.
+ينفذ عملية التقسيم والتحليل والتحقق من النوع وخفض الأشعة تحت الحمراء وتحسين Sea-of-Nodes.
 
 #### حدود
 
-| الاسم   | اكتب                      | الوصف |
-| ------- | ------------------------- | ----- |
-| الإدخال | فورجيويبسكريبتكومبيلينبوت |       |
+| الاسم | اكتب | الوصف |
+| ----- | ----------------- | ----------------------------------------------------- |
+| الإدخال | فلينتكومبيلينبوت | - خيارات إدخال برنامج التحويل البرمجي للملف الواحد وكود المصدر. |
+
+#### عقد
+
+- **@param:** - خيارات إدخال برنامج التحويل البرمجي للملف الواحد وكود المصدر.
+- **@returns:** نتيجة تجميع الواجهة الأمامية التي تحتوي على بيان AST وIR وABI.
 
 ### PreparFlintGraphFrontend
 
@@ -1607,109 +1371,488 @@ function prepareFlintFrontend(input: FlintCompileInput): FlintFrontendResult;
 function prepareFlintGraphFrontend(input: FlintGraphCompileInput): FlintFrontendResult;
 ```
 
-لم يتم تقديم أي وصف.
+يقوم بإعداد الواجهة الأمامية للمترجم لرسم بياني متعدد الوحدات مرتبط.
+يحل عمليات إغلاق التبعية الثابتة، ويتحقق من نوع المكون المدمج،
+ويخفض الوحدة المرتبطة إلى بيانات IR وABI المحسنة.
 
 #### حدود
 
-| الاسم   | اكتب                   | الوصف |
-| ------- | ---------------------- | ----- |
-| الإدخال | FlintGraphCompileInput |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------------------- | ----------------------------------------------------------------------------- |
+| الإدخال | فلينتغرافكومبيلينبوت | - إدخال تجميع الرسم البياني متعدد الوحدات بما في ذلك حواف الرسم البياني ونقطة الدخول. |
 
-## `src/generics`
+#### عقد
 
-### createFlintGenericSpecialization
+- **@param:** - مدخلات تجميع الرسم البياني متعدد الوحدات بما في ذلك حواف الرسم البياني ونقطة الدخول.
+- **@returns:** نتيجة تجميع الواجهة الأمامية المدمجة للرسم البياني للوحدة المرتبطة.
+
+## `src/graph-compiler/ast-builder`
+
+### buildGraphAst
 
 **النوع:** الوظيفة
 
 ```typescript
-function createFlintGenericSpecialization(request: FlintGenericSpecializationRequest): FlintSpecialization;
+function buildGraphAst(inputGraph: FlintNodeGraph): FlintAstBuildResult;
 ```
 
-لم يتم تقديم أي وصف.
+يخفض FlintNodeGraph الذي تم التحقق من صحته إلى FlintModule AST في الذاكرة وخريطة مصدر ثنائية الاتجاه.
 
 #### حدود
 
-| الاسم | اكتب                              | الوصف |
-| ----- | --------------------------------- | ----- |
-| طلب   | FlintGenericSpecializationRequest |       |
+| الاسم | اكتب | الوصف |
+| ---------- | -------------- | ----------- |
+| الرسم البياني للإدخال | فلينتنودغراف |             |
 
-### createFlintIteratorBoundaryDescriptor
-
-**النوع:** الوظيفة
-
-```typescript
-function createFlintIteratorBoundaryDescriptor(
-  generic: string,
-  elementType: FlintTypeName,
-  nextFunction: string,
-  ownership: FlintOwnership = 'borrowed',
-): FlintIteratorBoundaryDescriptor;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم           | اكتب          | الوصف |
-| --------------- | ------------- | ----- |
-| عام             | سلسلة         |       |
-| نوع العنصر      | FlintTypeName |       |
-| الوظيفة التالية | سلسلة         |       |
-| ملكية           | ملكية Flint   |       |
-
-### FlintGenericBoundary
-
-**النوع:** النوع
-
-```typescript
-export type FlintGenericBoundary = 'value' | 'interface' | 'iterator';
-```
-
-لم يتم تقديم أي وصف.
-
-### flintGenericRepresentation
-
-**النوع:** الوظيفة
-
-```typescript
-function flintGenericRepresentation(boundary: FlintGenericBoundary = 'value'): FlintSpecialization['representation'];
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم  | اكتب                 | الوصف |
-| ------ | -------------------- | ----- |
-| الحدود | FlintGenericBoundary |       |
-
-### FlintGenericSpecializationRequest
+### FlintAstBuildResult
 
 **النوع:** الواجهة
 
 ```typescript
-export interface FlintGenericSpecializationRequest
+export interface FlintAstBuildResult
 ```
 
 لم يتم تقديم أي وصف.
 
-### SortFlintSpecializations
+## `src/graph-compiler/catalog`
+
+### createNodeFromDefinition
 
 **النوع:** الوظيفة
 
 ```typescript
-function sortFlintSpecializations(specializations: readonly FlintSpecialization[]): readonly FlintSpecialization[];
+function createNodeFromDefinition(
+  definition: FlintNodeDefinition,
+  id: string,
+  position: { readonly x: number; readonly y: number } = DEFAULT_NODE_POSITION,
+  properties?: Readonly<Record<string, unknown>>,
+): FlintGraphNode;
+```
+
+إنشاء مثيل لـ FlintGraphNode من تعريف الكتالوج مع تجاوزات المعرف والموضع والخصائص المحددة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------------------ | ----------- |
+| تعريف | تعريف فلينتنوديد |             |
+| معرف | سلسلة |             |
+| موقف | { للقراءة فقط س: الرقم؛ للقراءة فقط ص: رقم } |             |
+| خصائص | للقراءة فقط<Record<string, unknown>> |             |
+
+### FlintNodeDefinition
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintNodeDefinition
 ```
 
 لم يتم تقديم أي وصف.
 
+### getAllNodeDefinitions
+
+**النوع:** الوظيفة
+
+```typescript
+function getAllNodeDefinitions(): readonly FlintNodeDefinition[];
+```
+
+إرجاع جميع تعريفات node القياسية المسجلة.
+
+### getNodeDefinition
+
+**النوع:** الوظيفة
+
+```typescript
+function getNodeDefinition(operation: string): FlintNodeDefinition | undefined;
+```
+
+يسترد تعريف node القياسي بواسطة معرف التشغيل الفريد الخاص به.
+
 #### حدود
 
-| الاسم    | اكتب                              | الوصف |
-| -------- | --------------------------------- | ----- |
-| التخصصات | للقراءة فقط FlintSpecialization[] |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------ | ----------- |
+| عملية | سلسلة |             |
+
+### getNodeDefinitionsByCategory
+
+**النوع:** الوظيفة
+
+```typescript
+function getNodeDefinitionsByCategory(category: FlintNodeCategory): readonly FlintNodeDefinition[];
+```
+
+إرجاع تعريفات node التي تمت تصفيتها حسب الفئة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| -------- | ----------------- | ----------- |
+| فئة | فئة فلينت نود |             |
+
+## `src/graph-compiler/generator`
+
+### compileGraphToFlint
+
+**النوع:** الوظيفة
+
+```typescript
+function compileGraphToFlint(graph: FlintNodeGraph): FlintGraphCompilationArtifact;
+```
+
+مولد مترجم مزدوج للرسوم البيانية node البصرية فلينت.
+يقوم بتجميع FlintModule AST المكتوب في الذاكرة والنص المصدري المنسق بصيغة .flint مع خرائط المصدر ثنائية الاتجاه.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | -------------- | ----------- |
+| رسم بياني | فلينتنودغراف |             |
+
+### compileNodeGraph
+
+**النوع:** الوظيفة
+
+```typescript
+function compileNodeGraph(graph: FlintNodeGraph, options?: Partial<FlintCompileInput>): FlintCompiledNodeGraphArtifact;
+```
+
+تجميع مخطط FlintNodeGraph المرئي من طرف إلى طرف في ثنائي WebAssembly وبيان ABI والعناصر المصدرية.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | -------------------------- | ----------- |
+| رسم بياني | فلينتنودغراف |             |
+| خيارات | جزئي<FlintCompileInput> |             |
+
+### FlintCompiledNodeGraphArtifact
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintCompiledNodeGraphArtifact extends Omit<FlintArtifact, 'sourceMap'>
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintGraphCompilationArtifact
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintGraphCompilationArtifact
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/graph-compiler/source-emitter`
+
+### emitGraphSource
+
+**النوع:** الوظيفة
+
+```typescript
+function emitGraphSource(inputGraph: FlintNodeGraph): FlintSourceEmissionResult;
+```
+
+يُصدر كود مصدر Flint النظيف والمنسق من رسم بياني تم التحقق من صحته مع خرائط مصدر ثنائية الاتجاه دقيقة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---------- | -------------- | ----------- |
+| الرسم البياني للإدخال | فلينتنودغراف |             |
+
+### FlintSourceEmissionResult
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintSourceEmissionResult
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/graph-compiler/types`
+
+### createContainerType
+
+**النوع:** الوظيفة
+
+```typescript
+function createContainerType(
+  container: string,
+  typeArguments: readonly FlintTypeName[] = [],
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+يقوم بإنشاء FlintTypeName عام أو مجمع node.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------------- | ------------------------ | ----------- |
+| حاوية | سلسلة |             |
+| نوع الحجج | للقراءة فقط FlintTypeName[] |             |
+| فترة | فلينتسورسسبان |             |
+
+### createPrimitiveType
+
+**النوع:** الوظيفة
+
+```typescript
+function createPrimitiveType(
+  primitive: FlintPrimitiveType,
+  span: FlintSourceSpan = createSyntheticSpan(),
+): FlintTypeName;
+```
+
+إنشاء FlintTypeName بدائي node.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| --------- | ------------------ | ----------- |
+| بدائية | فلينت بريميتيف تايب |             |
+| فترة | فلينتسورسسبان |             |
+
+### createSyntheticSpan
+
+**النوع:** الوظيفة
+
+```typescript
+function createSyntheticSpan(line = 1, column = 1, length = 1): FlintSourceSpan;
+```
+
+ينشئ نطاق مصدر اصطناعي لعقد AST المولدة بالرسم البياني.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ---- | ----------- |
+| خط |      |             |
+| العمود |      |             |
+| الطول |      |             |
+
+### flattenGraph
+
+**النوع:** الوظيفة
+
+```typescript
+function flattenGraph(graph: FlintNodeGraph): FlintNodeGraph;
+```
+
+يقوم بشكل متكرر بتضمين وتسوية أي عقد وصفية في الرسم البياني في العقد والحواف الداخلية المكونة لها.
+يُستخدم أثناء التحقق من الصحة، وتوليد AST، وانبعاث المصدر لتجميع العقد التعريفية المركبة بسلاسة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | -------------- | ----------- |
+| رسم بياني | فلينتنودغراف |             |
+
+### FlintGraphEdge
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintGraphEdge
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintGraphGroup
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintGraphGroup
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintGraphNode
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintGraphNode
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintGraphPort
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintGraphPort
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintGraphValidationIssue
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintGraphValidationIssue
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintGraphValidationResult
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintGraphValidationResult
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintGraphValidationSeverity
+
+**النوع:** النوع
+
+```typescript
+export type FlintGraphValidationSeverity = 'error' | 'warning' | 'info';
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintMetaNodeDefinition
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintMetaNodeDefinition
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintMetaNodePortMapping
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintMetaNodePortMapping
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintMetaNodeSubgraph
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintMetaNodeSubgraph
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintNodeCategory
+
+**النوع:** النوع
+
+```typescript
+export type FlintNodeCategory = 'math' | 'logic' | 'text' | 'collection' | 'control' | 'capability' | 'custom';
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintNodeGraph
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintNodeGraph
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintNodeKind
+
+**النوع:** النوع
+
+```typescript
+export type FlintNodeKind =
+  'input' | 'output' | 'constant' | 'operation' | 'stdlib_call' | 'capability_call' | 'custom';
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintNodeSourceMap
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintNodeSourceMap
+```
+
+لم يتم تقديم أي وصف.
+
+### FlintPortDirection
+
+**النوع:** النوع
+
+```typescript
+export type FlintPortDirection = 'input' | 'output';
+```
+
+لم يتم تقديم أي وصف.
+
+## `src/graph-compiler/validator`
+
+### areTypesCompatible
+
+**النوع:** الوظيفة
+
+```typescript
+function areTypesCompatible(source: FlintTypeName, target: FlintTypeName): boolean;
+```
+
+يتحقق من التوافق الهيكلي والدلالي بين أنواع فلينت المصدر والوجهة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------ | ------------- | ----------- |
+| المصدر | اسم فلينت تايب |             |
+| الهدف | اسم فلينت تايب |             |
+
+### validateGraph
+
+**النوع:** الوظيفة
+
+```typescript
+function validateGraph(graph: FlintNodeGraph): FlintGraphValidationResult;
+```
+
+التحقق من صحة طوبولوجيا الرسم البياني، واتصالات الحافة، وأنواع المنافذ، واكتشاف الدورات.
+إرجاع معرفات node المصنفة إذا كان الرسم البياني عبارة عن رسم بياني دوري موجه (DAG) صالح.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ----- | -------------- | ----------- |
+| رسم بياني | فلينتنودغراف |             |
 
 ## `src/graph`
+
+### FlintForeignObjectReference
+
+**النوع:** الواجهة
+
+```typescript
+export interface FlintForeignObjectReference
+```
+
+تم توفير مرجع الكائن الخارجي القابل للنقل إلى الرابط.
 
 ### FlintGraphResult
 
@@ -1719,9 +1862,9 @@ function sortFlintSpecializations(specializations: readonly FlintSpecialization[
 export interface FlintGraphResult
 ```
 
-لم يتم تقديم أي وصف.
+النتيجة الإجمالية لحل الرسم البياني للوحدة، وإرجاع بنية الرسم البياني للوحدة والتشخيصات.
 
-### FlintLinkConfiguration
+### تكوين فلينت لينك
 
 **النوع:** الواجهة
 
@@ -1729,14 +1872,25 @@ export interface FlintGraphResult
 export interface FlintLinkConfiguration
 ```
 
-لم يتم تقديم أي وصف.
+خيارات التكوين التي تحكم سياسات ربط الوحدة النمطية المشتركة للمشروع ونفس المشروع.
 
-### FlintLinkMode
+### وضع فلينت لينك
 
 **النوع:** النوع
 
 ```typescript
 export type FlintLinkMode = 'static' | 'dynamic';
+```
+
+وضع الارتباط الذي يحدد ما إذا كان سيتم حل التبعيات بشكل ثابت (bundled
+في مكون واحد) أو ديناميكيًا (عبر عمليات استيراد وقت التشغيل على مستوى المضيف).
+
+### ملف فلينت لينك الشخصي
+
+**النوع:** النوع
+
+```typescript
+export type FlintLinkProfile = 'standard' | 'minimal' | 'full' | 'dynamic' | 'static' | 'monolithic' | 'cross-package';
 ```
 
 لم يتم تقديم أي وصف.
@@ -1749,7 +1903,8 @@ export type FlintLinkMode = 'static' | 'dynamic';
 export interface FlintModuleEdge
 ```
 
-لم يتم تقديم أي وصف.
+حافة التبعية الموجهة في الرسم البياني للوحدة التي تربط المستورد بالمستورد
+مع استراتيجية الارتباط المرتبطة ونطاق موقع التعليمات البرمجية المصدر.
 
 ### FlintModuleGraph
 
@@ -1759,7 +1914,8 @@ export interface FlintModuleEdge
 export interface FlintModuleGraph
 ```
 
-لم يتم تقديم أي وصف.
+رسم بياني لتبعية الوحدة الموجهة يلتقط الوحدات التي تم حلها وحواف التبعية
+وحدود المشروع المشاركة.
 
 ### FlintModuleResolver
 
@@ -1769,9 +1925,9 @@ export interface FlintModuleGraph
 export interface FlintModuleResolver
 ```
 
-لم يتم تقديم أي وصف.
+واجهة لحل محددات الاستيراد وتحميل النص المصدر للوحدة بشكل غير متزامن.
 
-### FlintProject
+### مشروع فلينت
 
 **النوع:** الواجهة
 
@@ -1779,7 +1935,7 @@ export interface FlintModuleResolver
 export interface FlintProject
 ```
 
-لم يتم تقديم أي وصف.
+يمثل حدود المشروع التي تحتوي على جذر الملف والمعرف المشتق.
 
 ### FlintResolvedModule
 
@@ -1789,7 +1945,18 @@ export interface FlintProject
 export interface FlintResolvedModule
 ```
 
-لم يتم تقديم أي وصف.
+تم حل وحدة مصدر Flint التي تحتوي على AST التي تم تحليلها، والنص المصدر،
+اقتران جذر المشروع وتجزئة المحتوى.
+
+### تنسيق كائن أجنبي
+
+**النوع:** النوع
+
+```typescript
+export type ForeignObjectFormat = 'wasm-relocatable' | 'elf-object' | 'mach-o';
+```
+
+تنسيق كائن أجنبي قابل للنقل (تم تجميعه من C/C++ clang أو Rust cargo).
 
 ### hashFlintModuleGraph
 
@@ -1799,14 +1966,20 @@ export interface FlintResolvedModule
 function hashFlintModuleGraph(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): string;
 ```
 
-لم يتم تقديم أي وصف.
+يحسب التجزئة السداسية FNV-1a الحتمية 32 بت للرسم البياني للوحدة وتكوين الارتباط الخاص بها.
 
 #### حدود
 
-| الاسم     | اكتب                   | الوصف |
-| --------- | ---------------------- | ----- |
-| رسم بياني | FlintModuleGraph       |       |
-| التكوين   | FlintLinkConfiguration |       |
+| الاسم | اكتب | الوصف |
+| ------------- | ---------------------- | -------------------------------------------------- |
+| رسم بياني | فلينتمودولغراف | - الرسم البياني لتبعية الوحدة إلى التجزئة.                 |
+| التكوين | تكوين فلينت لينك | - تكوين الارتباط يؤثر على دقة الرسم البياني. |
+
+#### عقد
+
+- **@param:** - رسم بياني لتبعية الوحدة النمطية للتجزئة.
+- **@param:** - يؤثر تكوين الارتباط على دقة الرسم البياني.
+- **@returns:** سلسلة تجزئة سداسية عشرية صغيرة مكونة من 8 أحرف.
 
 ### ResolveFlintModuleGraph
 
@@ -1820,15 +1993,22 @@ function resolveFlintModuleGraph(
 ): Promise<FlintGraphResult>;
 ```
 
-لم يتم تقديم أي وصف.
+يعمل بشكل غير متزامن على حل الرسم البياني لتبعية الوحدة الكاملة بدءًا من نقطة دخول واحدة أو أكثر.
 
 #### حدود
 
-| الاسم   | اكتب                   | الوصف |
-| ------- | ---------------------- | ----- |
-| مداخل   | سلسلة للقراءة فقط[]    |       |
-| محلل    | FlintModuleResolver    |       |
-| التكوين | FlintLinkConfiguration |       |
+| الاسم | اكتب | الوصف |
+| ------------- | ---------------------- | ------------------------------------------------------------------- |
+| مداخل | سلسلة للقراءة فقط[] | - مسارات الملفات لوحدات إدخال الجذر لحلها.                      |
+| محلل | فلينتمودولريسولفير | - محلل الوحدة المسؤول عن رسم خرائط المسار وتحميل المحتوى. |
+| التكوين | تكوين فلينت لينك | - خيارات تكوين الربط والتعبئة.                      |
+
+#### عقد
+
+- **@param:** - مسارات ملفات وحدات الإدخال الجذرية المطلوب حلها.
+- **@param:** - محلل الوحدة المسؤول عن تعيين المسار وتحميل المحتوى.
+- **@param:** - خيارات تكوين الربط والتعبئة.
+- **@returns:** نتيجة الرسم البياني التي تحتوي على الوحدات النمطية التي تم حلها وحواف التبعية والمشاريع والتشخيصات.
 
 ## `src/identity`
 
@@ -1840,16 +2020,23 @@ function resolveFlintModuleGraph(
 function deriveFlintModuleId(fileName: string, root?: string): string;
 ```
 
-لم يتم تقديم أي وصف.
+يشتق معرف الوحدة النمطية الأساسي لملف مصدر Flint.
+يقوم بقص بادئات مسار الجذر وعلامات المسار النسبي البادئة وامتداد الملف `.flint`.
 
 #### حدود
 
-| الاسم     | اكتب  | الوصف |
-| --------- | ----- | ----- |
-| اسم الملف | سلسلة |       |
-| الجذر     | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ------------------------------------------------------------------- |
+| اسم الملف | سلسلة | - اسم الملف أو مسار الملف المصدر فلينت.                       |
+| الجذر | سلسلة | - مسار الدليل الجذر الاختياري للتجريد من معرف الوحدة. |
 
-### تطبيع FlintFileId
+#### عقد
+
+- **@param:** - اسم الملف أو مسار الملف المصدري لـ Flint.
+- **@param:** - مسار الدليل الجذر الاختياري لإزالة معرف الوحدة.
+- **@returns:** معرف الوحدة الأساسية، أو `'<input>'` إذا كان المعرف الناتج فارغًا.
+
+### تطبيعFlintFileId
 
 **النوع:** الوظيفة
 
@@ -1857,704 +2044,20 @@ function deriveFlintModuleId(fileName: string, root?: string): string;
 function normalizeFlintFileId(fileName: string): string;
 ```
 
-لم يتم تقديم أي وصف.
+تطبيع معرف الملف لتجميع فلينت.
+تجريد معلمات الاستعلام، وتحويل فواصل مسار Windows إلى خطوط مائلة POSIX،
+وينهار الخطوط المائلة الأمامية المكررة.
 
 #### حدود
 
-| الاسم     | اكتب  | الوصف |
-| --------- | ----- | ----- |
-| اسم الملف | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| -------- | ------ | ------------------------------- |
+| اسم الملف | سلسلة | - اسم الملف الخام أو سلسلة المسار. |
 
-## `src/ir`
+#### عقد
 
-### countFlintIr
-
-**النوع:** الوظيفة
-
-```typescript
-function countFlintIr(module: FlintIrModule): FlintIrCounts;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم          | اكتب          | الوصف |
-| -------------- | ------------- | ----- |
-| الوحدة النمطية | FlintIrModule |       |
-
-### FlintCollectionOperation
-
-**النوع:** النوع
-
-```typescript
-export type FlintCollectionOperation = 'array-iter' | 'iterator-next' | 'array-length';
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrArrayLiteralExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrArrayLiteralExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrAssignmentStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrAssignmentStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrBinaryExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrBinaryExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrCallExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrCallExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrCounts
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrCounts
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrDoWhileStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrDoWhileStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrEnumValueExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrEnumValueExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrExpression
-
-**النوع:** النوع
-
-```typescript
-export type FlintIrExpression =
-  | FlintIrBinaryExpression
-  | FlintIrCallExpression
-  | FlintIrIdentifierExpression
-  | FlintIrLiteralExpression
-  | FlintIrFunctionValueExpression
-  | FlintIrStructValueExpression
-  | FlintIrEnumValueExpression
-  | FlintIrMatchExpression
-  | FlintIrUnaryExpression
-  | FlintIrArrayLiteralExpression
-  | FlintIrIndexExpression;
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrExpressionStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrExpressionStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrFunction
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrFunction
-```
-
-لم يتم تقديم أي وصف.
-
-### تحليل FlintIrFunction
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrFunctionAnalysis
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrFunctionValueExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrFunctionValueExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrIdentifierExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrIdentifierExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrIfStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrIfStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrIndexExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrIndexExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrIteratorLoopStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrIteratorLoopStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrLetStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrLetStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrLiteralExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrLiteralExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrMatchArm
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrMatchArm
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrMatchExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrMatchExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrMatchStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrMatchStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrModule
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrModule
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrPurity
-
-**النوع:** النوع
-
-```typescript
-export type FlintIrPurity = 'pure' | 'effectful' | 'unknown';
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrReturnStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrReturnStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrStatement
-
-**النوع:** النوع
-
-```typescript
-export type FlintIrStatement =
-  | FlintIrExpressionStatement
-  | FlintIrAssignmentStatement
-  | FlintIrIfStatement
-  | FlintIrWhileStatement
-  | FlintIrDoWhileStatement
-  | FlintIrLetStatement
-  | FlintIrReturnStatement
-  | FlintIrMatchStatement
-  | FlintIrSwitchStatement
-  | FlintIrYieldStatement
-  | FlintIrIteratorLoopStatement;
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrStructValueExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrStructValueExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrSwitchStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrSwitchStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrUnaryExpression
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrUnaryExpression
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrWhileStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrWhileStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIrYieldStatement
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIrYieldStatement
-```
-
-لم يتم تقديم أي وصف.
-
-### LowerFlintIrToModule
-
-**النوع:** الوظيفة
-
-```typescript
-function lowerFlintIrToModule(module: FlintIrModule): FlintModule;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم          | اكتب          | الوصف |
-| -------------- | ------------- | ----- |
-| الوحدة النمطية | FlintIrModule |       |
-
-### LowerFlintToIr
-
-**النوع:** الوظيفة
-
-```typescript
-function lowerFlintToIr(module: FlintModule): FlintIrModule;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم          | اكتب        | الوصف |
-| -------------- | ----------- | ----- |
-| الوحدة النمطية | FlintModule |       |
-
-## `src/lexer`
-
-### FlintLexResult
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintLexResult
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintToken
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintToken
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintTokenKind
-
-**النوع:** النوع
-
-```typescript
-export type FlintTokenKind =
-  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
-```
-
-لم يتم تقديم أي وصف.
-
-### lexFlint
-
-**النوع:** الوظيفة
-
-```typescript
-function lexFlint(source: string, fileName = '<input>'): FlintLexResult;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم     | اكتب  | الوصف |
-| --------- | ----- | ----- |
-| المصدر    | سلسلة |       |
-| اسم الملف |       |       |
-
-## `src/linker`
-
-### FlintLinkResult
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintLinkResult
-```
-
-لم يتم تقديم أي وصف.
-
-### التحقق من صحة الروابط Flint
-
-**النوع:** الوظيفة
-
-```typescript
-function validateFlintLinks(graph: FlintModuleGraph, configuration: FlintLinkConfiguration = {}): FlintLinkResult;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم     | اكتب                   | الوصف |
-| --------- | ---------------------- | ----- |
-| رسم بياني | FlintModuleGraph       |       |
-| التكوين   | FlintLinkConfiguration |       |
-
-## `src/manifest`
-
-### createFlintAbiManifest
-
-**النوع:** الوظيفة
-
-```typescript
-function createFlintAbiManifest(module: FlintModule, options: FlintAbiManifestOptions = {}): FlintAbiManifest;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم          | اكتب                    | الوصف |
-| -------------- | ----------------------- | ----- |
-| الوحدة النمطية | FlintModule             |       |
-| خيارات         | FlintAbiManifestOptions |       |
-
-### FORGE_WEB_SCRIPT_ABI_VERSION
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-لم يتم تقديم أي وصف.
-
-### FORGE_WEB_SCRIPT_LANGUAGE_VERSION
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAbiFunction
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAbiFunction
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAbiManifest
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAbiManifest
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAbiManifestOptions
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAbiManifestOptions
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAbiParameter
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAbiParameter
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAbiVersion
-
-**النوع:** النوع
-
-```typescript
-export type FlintAbiVersion = typeof FORGE_WEB_SCRIPT_ABI_VERSION;
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAggregateFieldLayout
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAggregateFieldLayout
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintAggregateLayout
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintAggregateLayout
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintCollectionLayout
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintCollectionLayout
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintDynamicLinkMetadata
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintDynamicLinkMetadata
-```
-
-البيانات التعريفية الثابتة التي تستهلكها أدوات التحميل الديناميكية وذاكرة التخزين المؤقت للإرسال الخاصة بها.
-
-### FlintDynamicModuleBinding
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintDynamicModuleBinding
-```
-
-معلومات الربط الواضحة والمرئية لوحدة نمطية ديناميكية بشكل صريح.
-
-### FlintEnumMetadata
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintEnumMetadata
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintHostImport
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintHostImport
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintIteratorBoundaryDescriptor
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintIteratorBoundaryDescriptor
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintLanguageVersion
-
-**النوع:** النوع
-
-```typescript
-export type FlintLanguageVersion = typeof FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintLinkedExport
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintLinkedExport
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintMemoryLayout
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintMemoryLayout
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintSourceImport
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintSourceImport
-```
-
-لم يتم تقديم أي وصف.
-
-### Flint التخصص
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintSpecialization
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintValueRepresentation
-
-**النوع:** النوع
-
-```typescript
-export type FlintValueRepresentation =
-  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
-```
-
-لم يتم تقديم أي وصف.
+- **@param:** - اسم الملف الخام أو سلسلة المسار.
+- **@returns:** مُعرف مسار ملف بنمط POSIX.
 
 ## `src/module-types`
 
@@ -2566,7 +2069,7 @@ export type FlintValueRepresentation =
 export interface FlintImportTypeEnvironment
 ```
 
-لم يتم تقديم أي وصف.
+بيئة النوع الخارجي التي تحتوي على إعلانات مستوردة إلى وحدة نمطية.
 
 ### ResolveFlintImportTypeEnvironment
 
@@ -2579,130 +2082,160 @@ function resolveFlintImportTypeEnvironment(
 ): FlintImportTypeEnvironment;
 ```
 
-لم يتم تقديم أي وصف.
+يحل تواقيع الوظائف المستوردة من وحدات التبعية الأولية في الرسم البياني للوحدة.
 
 #### حدود
 
-| الاسم     | اكتب                | الوصف |
-| --------- | ------------------- | ----- |
-| مستورد    | FlintResolvedModule |       |
-| رسم بياني | FlintModuleGraph    |       |
+| الاسم | اكتب | الوصف |
+| -------- | ------------------- | ------------------------------------------------------------------------ |
+| مستورد | فلينت ريسولفدمودول | - تم حل الوحدة النمطية التي يتم فحص تبعيات الاستيراد الخاصة بها.         |
+| رسم بياني | فلينتمودولغراف | - رسم بياني لتبعية متعدد الوحدات يحتوي على جميع الوحدات والحواف المرتبطة. |
 
-## `src/optimizer`
+#### عقد
 
-### FlintOptimizationDecision
+- **@param:** - تم حل الوحدة النمطية التي يتم فحص تبعيات الاستيراد الخاصة بها.
+- **@param:** - رسم بياني تبعية متعدد الوحدات يحتوي على جميع الوحدات والحواف المرتبطة.
+- **@returns:** بيئة من نوع الاستيراد تحتوي على وظائف خارجية مُصدَّرة (سواء كانت عارية أو مسبوقة باسم مستعار).
 
-**النوع:** الواجهة
+## `src/safety`
 
-```typescript
-export interface FlintOptimizationDecision
-```
-
-لم يتم تقديم أي وصف.
-
-### تقرير FlintOptimization
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintOptimizationReport
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintOptimizationResult
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintOptimizationResult
-```
-
-لم يتم تقديم أي وصف.
-
-### الأمثلFlintIr
+### canLifetimeEscape
 
 **النوع:** الوظيفة
 
 ```typescript
-function optimizeFlintIr(input: FlintIrModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function canLifetimeEscape(source: RegionLifetime, target: RegionLifetime): boolean;
 ```
 
-لم يتم تقديم أي وصف.
+التحقق من أن التعيين أو العودة من عمر المصدر إلى عمر الهدف لا ينتهك سلامة المنطقة.
+لا يُسمح بتخزين مرجع قصير العمر في هدف طويل العمر دون الترويج/الاستنساخ الصريح.
 
 #### حدود
 
-| الاسم   | اكتب                 | الوصف |
-| ------- | -------------------- | ----- |
-| الإدخال | FlintIrModule        |       |
-| الوضع   | 'تصحيح' \| "الإفراج" |       |
+| الاسم | اكتب | الوصف |
+| ------ | -------------- | ----------- |
+| المصدر | عمر المنطقة |             |
+| الهدف | عمر المنطقة |             |
 
-### optimFlintModule
+### checkFlintSafety
 
 **النوع:** الوظيفة
 
 ```typescript
-function optimizeFlintModule(module: FlintModule, mode: 'debug' | 'release' = 'release'): FlintOptimizationResult;
+function checkFlintSafety(module: FlintModule, fileName: string, diagnostics: FlintDiagnostic[]): void;
 ```
 
-لم يتم تقديم أي وصف.
+ينفذ عمليات فحص على مستوى المصدر لا يمكن تمثيلها بواسطة سلاسل النوع القديمة.
 
 #### حدود
 
-| الاسم          | اكتب                 | الوصف |
-| -------------- | -------------------- | ----- |
-| الوحدة النمطية | FlintModule          |       |
-| الوضع          | 'تصحيح' \| "الإفراج" |       |
+| الاسم | اكتب | الوصف |
+| ----------- | ----------------- | ------------------------------------ |
+| الوحدة النمطية | فلينتمودول | - وحدة AST للتحقق من صحتها.            |
+| اسم الملف | سلسلة | - اسم الملف المستخدم للتشخيص.    |
+| التشخيص | تشخيص فلينت [] | - تراكم لتشخيص الأخطاء. |
 
-## `src/parser`
+#### عقد
 
-### FlintParseOptions
+- **@param:** - الوحدة AST للتحقق من صحتها.
+- **@param:** - اسم الملف المستخدم للتشخيص.
+- **@param:** - أداة تراكمية لتشخيص الأخطاء.
+
+### معلومات الإغلاق
 
 **النوع:** الواجهة
 
 ```typescript
-export interface FlintParseOptions
+export interface ClosureCaptureInfo
 ```
 
-لم يتم تقديم أي وصف.
+واصف المتغير الذي تم التقاطه بواسطة الإغلاق.
 
-### FlintParseResult
+### معلومات السلامة المتحركة
 
 **النوع:** الواجهة
 
 ```typescript
-export interface FlintParseResult
+export interface MoveSafetyInfo
 ```
 
-لم يتم تقديم أي وصف.
+واصف معلومات سلامة الحركة الهيكلية.
 
-### parseFlint
-
-**النوع:** الوظيفة
-
-```typescript
-function parseFlint(source: string, fileName = '<input>', options: FlintParseOptions = {}): FlintParseResult;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم     | اكتب                       | الوصف |
-| --------- | -------------------------- | ----- |
-| المصدر    | سلسلة                      |       |
-| اسم الملف |                            |       |
-| خيارات    | فورجيويبسكريبتبارسيوبتيونس |       |
-
-### أنواع بدائية
+### REGION_LIFETIME_ORDER
 
 **النوع:** ثابت
 
 ```typescript
-export const primitiveTypes;
+export const REGION_LIFETIME_ORDER: Readonly<Record<RegionLifetime, number>>;
 ```
 
 لم يتم تقديم أي وصف.
+
+### REGION_LIFTIMES
+
+**النوع:** ثابت
+
+```typescript
+export const REGION_LIFETIMES;
+```
+
+لم يتم تقديم أي وصف.
+
+### عمر المنطقة
+
+**النوع:** النوع
+
+```typescript
+export type RegionLifetime = 'local' | 'function' | 'arena' | 'global' | 'Local' | 'Function' | 'Arena' | 'GlobalHeap';
+```
+
+التسلسل الهرمي للشبكة الإقليمية مدى الحياة: Local <Function <Arena <GlobalHeap.
+
+### validateClosureCaptureSafety
+
+**النوع:** الوظيفة
+
+```typescript
+function validateClosureCaptureSafety(capture: ClosureCaptureInfo): {
+  readonly safe: boolean;
+  readonly requiresHeapPromotion: boolean;
+  readonly reason?: string;
+};
+```
+
+التحقق من سلامة التقاط الإغلاق وتحديد ما إذا كان تعزيز الكومة المتغيرة للمكدس إلزاميًا.
+يمنع تلف الذاكرة Use-After-Scope عندما تتجاوز عمليات الإغلاق إطارات المكدس الملتقطة.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ------- | ------------------ | -------------------------------------- |
+| التقاط | كلوسوركابتشر إنفو | - إغلاق واصف البيانات الوصفية. |
+
+#### عقد
+
+- **@param:** - واصف البيانات الوصفية لالتقاط الإغلاق.
+- **@returns:** نتيجة التحقق، وما إذا كان ترقية الكومة مطلوبًا، ورسالة خطأ إذا كانت غير آمنة.
+
+### validateMoveSafety
+
+**النوع:** الوظيفة
+
+```typescript
+function validateMoveSafety(info: MoveSafetyInfo): {
+  readonly safe: boolean;
+  readonly reason?: string;
+};
+```
+
+التحقق من صحة ما إذا كان من الممكن نقل القيمة المجمعة أو الهيكلية بأمان حسب القيمة.
+يمنع تحريك الهياكل المثبتة أو المرجعية الذاتية للتخلص من تحطيم إطار المكدس ومخاطر الاستخدام بعد النقل.
+
+#### حدود
+
+| الاسم | اكتب | الوصف |
+| ---- | -------------- | ----------- |
+| معلومات | معلومات السلامة |             |
 
 ## `src/self-hosted`
 
@@ -2714,7 +2247,11 @@ export const primitiveTypes;
 function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHostedSourceModule[];
 ```
 
-لم يتم تقديم أي وصف.
+ينشئ البيان الكامل لوحدات مصدر المترجم المستضافة ذاتيًا.
+
+#### عقد
+
+- **@returns:** مجموعة من وحدات المصدر ذاتية الاستضافة.
 
 ### decodeFlintSelfHostedFingerprint
 
@@ -2724,13 +2261,18 @@ function createFlintSelfHostedCompilerSourceManifest(): readonly FlintSelfHosted
 function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
-لم يتم تقديم أي وصف.
+يقوم بفك تشفير بصمة الإصبع المستضافة ذاتيًا من مصفوفة بايت UTF-8.
 
 #### حدود
 
-| الاسم | اكتب       | الوصف |
-| ----- | ---------- | ----- |
-| بايت  | Uint8Array |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------- | ------------------------------- |
+| بايت | Uint8Array | - مصفوفة البايتات المشفرة UTF-8. |
+
+#### عقد
+
+- **@param:** - مصفوفة البايتات المشفرة بترميز UTF-8.
+- **@returns:** سلسلة بصمة الإصبع التي تم فك تشفيرها.
 
 ### encodeFlintSelfHostedFingerprint
 
@@ -2740,13 +2282,18 @@ function decodeFlintSelfHostedFingerprint(bytes: Uint8Array): string;
 function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
-لم يتم تقديم أي وصف.
+يقوم بتشفير سلسلة بصمة ذاتية الاستضافة في مصفوفة بايت UTF-8.
 
 #### حدود
 
-| الاسم | اكتب  | الوصف |
-| ----- | ----- | ----- |
-| بصمة  | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ----------- | ------ | ------------------------- |
+| بصمة | سلسلة | - سلسلة البصمة . |
+
+#### عقد
+
+- **@param:** - سلسلة البصمة.
+- **@returns:** مصفوفة البايت المشفرة بترميز UTF-8.
 
 ### FlintSelfHostedCompilation
 
@@ -2756,7 +2303,8 @@ function encodeFlintSelfHostedFingerprint(fingerprint: string): Uint8Array;
 export interface FlintSelfHostedCompilation
 ```
 
-لم يتم تقديم أي وصف.
+يمثل وحدة التجميع ذاتية الاستضافة، ودمج مرجع البذور TypeScript
+التنفيذ باستخدام مرحلة VM الخاصة بتطبيع lex/token والمحدودة ذاتيًا.
 
 ### FlintSelfHostedNormalizedOutput
 
@@ -2766,7 +2314,8 @@ export interface FlintSelfHostedCompilation
 export interface FlintSelfHostedNormalizedOutput
 ```
 
-لم يتم تقديم أي وصف.
+يمثل تمثيل الإخراج الحتمي الطبيعي لتجميع فلينت.
+وهذا يضمن إمكانية مقارنة عناصر التجميع (AST، IR، WA، التشخيص) بشكل ثابت.
 
 ### FlintSelfHostedVmExecutionMode
 
@@ -2776,7 +2325,7 @@ export interface FlintSelfHostedNormalizedOutput
 export type FlintSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-لم يتم تقديم أي وصف.
+وضع التنفيذ لـ Flint VM عند تشغيل تجميع مستضاف ذاتيًا.
 
 ### PreparFlintSelfHostedCompilation
 
@@ -2793,9 +2342,9 @@ function prepareFlintSelfHostedCompilation(input: FlintCompileInput): FlintSelfH
 
 #### حدود
 
-| الاسم   | اكتب                      | الوصف |
-| ------- | ------------------------- | ----- |
-| الإدخال | فورجيويبسكريبتكومبيلينبوت |       |
+| الاسم | اكتب | الوصف |
+| ----- | ----------------- | ----------- |
+| الإدخال | فلينتكومبيلينبوت |             |
 
 ### PreparFlintSelfHostedCompilationLegacyFingerprint
 
@@ -2809,9 +2358,9 @@ function prepareFlintSelfHostedCompilationLegacyFingerprint(input: FlintCompileI
 
 #### حدود
 
-| الاسم   | اكتب                      | الوصف |
-| ------- | ------------------------- | ----- |
-| الإدخال | فورجيويبسكريبتكومبيلينبوت |       |
+| الاسم | اكتب | الوصف |
+| ----- | ----------------- | ----------- |
+| الإدخال | فلينتكومبيلينبوت |             |
 
 #### عقد
 
@@ -2832,16 +2381,24 @@ function createFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ createFlintSelfHostedStageArtifact.
 
 #### حدود
 
-| الاسم   | اكتب                                 | الوصف |
-| ------- | ------------------------------------ | ----- |
-| المرحلة | FlintSelfHostedCompilerStage         |       |
-| الهوية  | FlintSelfHostedStageArtifactIdentity |       |
-| الحمولة | Uint8Array                           |       |
-| التشخيص | للقراءة فقط FlintDiagnostic[]        |       |
+| الاسم | اكتب | الوصف |
+| ----------- | ------------------------------------ | ---------------------------- |
+| المرحلة | فلينت سيلف هوستيد كومبيلر ستاج | - معلمة المرحلة.       |
+| الهوية | فلينتSelfHostedStageArtifactIdentity | - معلمة الهوية.    |
+| الحمولة | Uint8Array | - معلمة الحمولة.     |
+| التشخيص | للقراءة فقط FlintDiagnostic[] | - المعلمة التشخيصية. |
+
+#### عقد
+
+- **@param:** - معلمة المرحلة.
+- **@param:** - معلمة الهوية.
+- **@param:** - معلمة الحمولة.
+- **@param:** - معلمة التشخيص.
+- **@returns:** نتيجة FlintSelfHostedStageArtifact.
 
 ### decodeFlintSelfHostedDiagnostics
 
@@ -2851,13 +2408,18 @@ function createFlintSelfHostedStageArtifact(
 function decodeFlintSelfHostedDiagnostics(bytes: Uint8Array): readonly FlintDiagnostic[];
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ decodeFlintSelfHostedDiagnostics.
 
 #### حدود
 
-| الاسم | اكتب       | الوصف |
-| ----- | ---------- | ----- |
-| بايت  | Uint8Array |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------- | ---------------------- |
+| بايت | Uint8Array | - المعلمة بايت. |
+
+#### عقد
+
+- **@param:** - معلمة البايتات.
+- **@returns:** نتيجة FlintDiagnostic[] للقراءة فقط.
 
 ### decodeFlintSelfHostedStageArtifact
 
@@ -2870,14 +2432,20 @@ function decodeFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ decodeFlintSelfHostedStageArtifact.
 
 #### حدود
 
-| الاسم  | اكتب                                      | الوصف |
-| ------ | ----------------------------------------- | ----- |
-| بايت   | Uint8Array                                |       |
-| خيارات | FlintSelfHostedStageArtifactDecodeOptions |       |
+| الاسم | اكتب | الوصف |
+| ------- | ----------------------------------------- | ------------------------ |
+| بايت | Uint8Array | - المعلمة بايت.   |
+| خيارات | فلينت سيلف هوستيد ستاج أرتيفاكت ديكوديوبتيونس | - معلمة الخيارات. |
+
+#### عقد
+
+- **@param:** - معلمة البايتات.
+- **@param:** - معلمة الخيارات.
+- **@returns:** نتيجة FlintSelfHostedStageArtifact.
 
 ### encodeFlintSelfHostedDiagnostics
 
@@ -2887,13 +2455,18 @@ function decodeFlintSelfHostedStageArtifact(
 function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[]): Uint8Array;
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ encodeFlintSelfHostedDiagnostics.
 
 #### حدود
 
-| الاسم   | اكتب                          | الوصف |
-| ------- | ----------------------------- | ----- |
-| التشخيص | للقراءة فقط FlintDiagnostic[] |       |
+| الاسم | اكتب | الوصف |
+| ----------- | -------------------------- | ---------------------------- |
+| التشخيص | للقراءة فقط FlintDiagnostic[] | - المعلمة التشخيصية. |
+
+#### عقد
+
+- **@param:** - معلمة التشخيص.
+- **@returns:** نتيجة Uint8Array.
 
 ### encodeFlintSelfHostedStageArtifact
 
@@ -2903,50 +2476,55 @@ function encodeFlintSelfHostedDiagnostics(diagnostics: readonly FlintDiagnostic[
 function encodeFlintSelfHostedStageArtifact(artifact: FlintSelfHostedStageArtifact): Uint8Array;
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ encodeFlintSelfHostedStageArtifact.
 
 #### حدود
 
-| الاسم      | اكتب                         | الوصف |
-| ---------- | ---------------------------- | ----- |
-| قطعة أثرية | FlintSelfHostedStageArtifact |       |
+| الاسم | اكتب | الوصف |
+| -------- | ---------------------------- | ------------------------- |
+| قطعة أثرية | فلينتSelfHostedStageArtifact | - المعلمة قطعة أثرية. |
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+#### عقد
+
+- **@param:** - معلمة القطعة الأثرية.
+- **@returns:** نتيجة Uint8Array.
+
+### FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
+export const FLINT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 لم يتم تقديم أي وصف.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 لم يتم تقديم أي وصف.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+### FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
+export const FLINT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 لم يتم تقديم أي وصف.
 
-### FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
+### FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
+export const FLINT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<Record<FlintSelfHostedCompilerStage, string>>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2960,7 +2538,7 @@ export type FlintSelfHostedCompilerStage =
   'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ FlintSelfHostedCompilerStage.
 
 ### FlintSelfHostedStageArtifact
 
@@ -2970,7 +2548,7 @@ export type FlintSelfHostedCompilerStage =
 export interface FlintSelfHostedStageArtifact
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ FlintSelfHostedStageArtifact.
 
 ### FlintSelfHostedStageArtifactDecodeOptions
 
@@ -2980,7 +2558,7 @@ export interface FlintSelfHostedStageArtifact
 export interface FlintSelfHostedStageArtifactDecodeOptions
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ FlintSelfHostedStageArtifactDecodeOptions.
 
 ### FlintSelfHostedStageArtifactIdentity
 
@@ -2990,7 +2568,7 @@ export interface FlintSelfHostedStageArtifactDecodeOptions
 export interface FlintSelfHostedStageArtifactIdentity
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ FlintSelfHostedStageArtifactIdentity.
 
 ### hashFlintSelfHostedBytes
 
@@ -3000,13 +2578,18 @@ export interface FlintSelfHostedStageArtifactIdentity
 function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ hashFlintSelfHostedBytes.
 
 #### حدود
 
-| الاسم | اكتب       | الوصف |
-| ----- | ---------- | ----- |
-| بايت  | Uint8Array |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------- | ---------------------- |
+| بايت | Uint8Array | - المعلمة بايت. |
+
+#### عقد
+
+- **@param:** - معلمة البايتات.
+- **@returns:** نتيجة السلسلة.
 
 ### hashFlintSelfHostedSourceIdentity
 
@@ -3016,21 +2599,28 @@ function hashFlintSelfHostedBytes(bytes: Uint8Array): string;
 function hashFlintSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ hashFlintSelfHostedSourceIdentity.
 
 #### حدود
 
-| الاسم             | اكتب  | الوصف |
-| ----------------- | ----- | ----- |
-| المصدر            | سلسلة |       |
-| اسم الملف         | سلسلة |       |
-| الرسم البياني هاش | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| --------- | ------ | -------------------------- |
+| المصدر | سلسلة | - المعلمة المصدر.    |
+| اسم الملف | سلسلة | - المعلمة اسم الملف.  |
+| الرسم البياني هاش | سلسلة | - المعلمة graphHash. |
 
-## `src/self-hosted/fws/lexer`
+#### عقد
+
+- **@param:** - المعلمة المصدر.
+- **@param:** - معلمة اسم الملف.
+- **@param:** - معلمة graphHash.
+- **@returns:** نتيجة السلسلة.
+
+## `src/self-hosted/flint/lexer`
 
 ### is_ws
 
-**النوع:** fws-export
+**النوع:** الصوان للتصدير
 
 ```typescript
 export fn is_ws(byte: i32) -> bool
@@ -3040,9 +2630,9 @@ export fn is_ws(byte: i32) -> bool
 
 #### حدود
 
-| الاسم | اكتب | الوصف               |
-| ----- | ---- | ------------------- |
-| بايت  | i32  | قيمة البايت المرشح. |
+| الاسم | اكتب | الوصف |
+| ---- | ---- | --------------------- |
+| بايت | i32 | قيمة البايت المرشح. |
 
 #### عقد
 
@@ -3064,9 +2654,14 @@ function computeFlintLexStageFingerprint(source: string): number;
 
 #### حدود
 
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| المصدر | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------ | -------------------- |
+| المصدر | سلسلة | - النص المصدر فلينت. |
+
+#### عقد
+
+- **@param:** - نص مصدر الصوان.
+- **@returns:** بصمة عدد صحيح موقعة 32 بت.
 
 ### createFlintLexStageVmModule
 
@@ -3081,9 +2676,9 @@ function createFlintLexStageVmModule(sourceHash: string): FlintSelfHostedVmModul
 
 #### حدود
 
-| الاسم   | اكتب  | الوصف |
-| ------- | ----- | ----- |
-| مصدرهاش | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------ | ----------- |
+| مصدرهاش | سلسلة |             |
 
 ### encodeFlintLexStageSource
 
@@ -3092,36 +2687,36 @@ function createFlintLexStageVmModule(sourceHash: string): FlintSelfHostedVmModul
 ```typescript
 function encodeFlintLexStageSource(source: string): {
   readonly kind: 'aggregate';
-  readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+  readonly layout: typeof FLINT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
 };
 ```
 
-لم يتم تقديم أي وصف.
+يقوم بتشفير الكود المصدري في التمثيل الثنائي المتوقع بواسطة مرحلة VM lexer.
 
 #### حدود
 
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| المصدر | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------ | ----------- |
+| المصدر | سلسلة |             |
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+### FLINT_LEX_STAGE_ENTRY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
+export const FLINT_LEX_STAGE_ENTRY;
 ```
 
 لم يتم تقديم أي وصف.
 
-### FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+### FLINT_LEX_STAGE_SOURCE_LAYOUT
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
+export const FLINT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3134,7 +2729,7 @@ export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
 export interface FlintSelfHostedVmFunction
 ```
 
-لم يتم تقديم أي وصف.
+تعريف الوظيفة الذي يتم تنفيذه بواسطة الجهاز الظاهري المستضاف ذاتيًا.
 
 ### FlintSelfHostedVmInstruction
 
@@ -3144,7 +2739,7 @@ export interface FlintSelfHostedVmFunction
 export type FlintSelfHostedVmInstruction = |
 ```
 
-لم يتم تقديم أي وصف.
+يتم تنفيذ مجموعة تعليمات الآلة الافتراضية أثناء عملية الاستضافة الذاتية.
 
 ### FlintSelfHostedVmModule
 
@@ -3154,7 +2749,7 @@ export type FlintSelfHostedVmInstruction = |
 export interface FlintSelfHostedVmModule
 ```
 
-لم يتم تقديم أي وصف.
+بنية وحدة VM للمترجم ذاتية الاستضافة تحتوي على كود بايت وثوابت.
 
 ### FlintSelfHostedVmValue
 
@@ -3164,7 +2759,7 @@ export interface FlintSelfHostedVmModule
 export type FlintSelfHostedVmValue = |
 ```
 
-لم يتم تقديم أي وصف.
+القيمة الثابتة المخزنة في التجمع الثابت VM المستضاف ذاتيًا.
 
 ## `src/self-hosted/parser-module-stage`
 
@@ -3191,11 +2786,11 @@ function createFlintParserModuleVmModule(
 
 #### حدود
 
-| الاسم     | اكتب                          | الوصف |
-| --------- | ----------------------------- | ----- |
-| مصدرهاش   | سلسلة                         |       |
-| اسم الملف | سلسلة                         |       |
-| خيارات    | FlintParserModuleStageOptions |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ----------------------------- | ----------- |
+| مصدرهاش | سلسلة |             |
+| اسم الملف | سلسلة |             |
+| خيارات | FlintParserModuleStageOptions |             |
 
 ### decodeFlintParserModuleEnvelope
 
@@ -3205,20 +2800,25 @@ function createFlintParserModuleVmModule(
 function decodeFlintParserModuleEnvelope(bytes: Uint8Array): FlintParserModuleEnvelope;
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ decodeFlintParserModuleEnvelope.
 
 #### حدود
 
-| الاسم | اكتب       | الوصف |
-| ----- | ---------- | ----- |
-| بايت  | Uint8Array |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------- | ---------------------- |
+| بايت | Uint8Array | - المعلمة بايت. |
 
-### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+#### عقد
+
+- **@param:** - معلمة البايتات.
+- **@returns:** نتيجة FlintParserModuleEnvelope.
+
+### FLINT_PARSER_MODULE_STAGE_ENTRY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
+export const FLINT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3231,7 +2831,7 @@ export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
 export interface FlintParserModuleEnvelope
 ```
 
-تم إرجاع المغلف الذي تم فك تشفيره بواسطة {@link FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY}.
+تم إرجاع المغلف الذي تم فك تشفيره بواسطة {@link FLINT_PARSER_MODULE_STAGE_ENTRY}.
 
 ### FlintParserModuleStageOptions
 
@@ -3241,7 +2841,7 @@ export interface FlintParserModuleEnvelope
 export interface FlintParserModuleStageOptions
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ FlintParserModuleStageOptions.
 
 ## `src/self-hosted/parser-stage`
 
@@ -3253,14 +2853,18 @@ export interface FlintParserModuleStageOptions
 function computeFlintParserStageFingerprint(source: string): number;
 ```
 
-مرجع أولي لمرحلة المحلل اللغوي المستضافة ذاتيًا.
-يجب أن يظل سلوكيًا مطابقًا لـ {@link createFlintParserStageVmModule}.
+يحسب بصمة FNV حتمية 32 بت لمرحلة المحلل اللغوي المستضافة ذاتيًا.
 
 #### حدود
 
-| الاسم  | اكتب  | الوصف |
-| ------ | ----- | ----- |
-| المصدر | سلسلة |       |
+| الاسم | اكتب | الوصف |
+| ------ | ------ | --------------------------- |
+| المصدر | سلسلة | - سلسلة التعليمات البرمجية المصدر فلينت. |
+
+#### عقد
+
+- **@param:** - سلسلة كود مصدر فلينت.
+- **@returns:** بصمة عدد صحيح حتمية 32 بت.
 
 ### createFlintParserStageVmModule
 
@@ -3273,22 +2877,22 @@ function createFlintParserStageVmModule(
 ): FlintSelfHostedVmModule;
 ```
 
-وحدة VM تم إنزالها يدويًا لمرحلة محلل بصمات الأصابع.
-الإدخال: parse_stage (المصدر: FlintSourceBytes) -> i32
+وحدة VM تم إنزالها يدويًا لمرحلة تحليل بصمات الأصابع.
+الإدخال: parse_stage(المصدر: FlintSourceBytes) -> i32
 
 #### حدود
 
-| الاسم   | اكتب                            | الوصف |
-| ------- | ------------------------------- | ----- |
-| مصدرهاش | سلسلة                           |       |
-| خيارات  | FlintParserStageVmModuleOptions |       |
+| الاسم | اكتب | الوصف |
+| ---------- | ------------------------------- | ----------- |
+| مصدرهاش | سلسلة |             |
+| خيارات | FlintParserStageVmModuleOptions |             |
 
-### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+### FLINT_PARSER_STAGE_ENTRY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
+export const FLINT_PARSER_STAGE_ENTRY;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3319,17 +2923,26 @@ function createFlintSelfHostedParserArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ createFlintSelfHostedParserArtifact.
 
 #### حدود
 
-| الاسم             | اكتب                          | الوصف |
-| ----------------- | ----------------------------- | ----- |
-| المصدر            | سلسلة                         |       |
-| اسم الملف         | سلسلة                         |       |
-| الوحدة النمطية    | FlintModule                   |       |
-| التشخيص           | للقراءة فقط FlintDiagnostic[] |       |
-| الرسم البياني هاش | سلسلة                         |       |
+| الاسم | اكتب | الوصف |
+| ----------- | -------------------------- | ---------------------------- |
+| المصدر | سلسلة | - المعلمة المصدر.      |
+| اسم الملف | سلسلة | - المعلمة اسم الملف.    |
+| الوحدة النمطية | فلينتمودول | - معلمة الوحدة.      |
+| التشخيص | للقراءة فقط FlintDiagnostic[] | - المعلمة التشخيصية. |
+| الرسم البياني هاش | سلسلة | - المعلمة graphHash.   |
+
+#### عقد
+
+- **@param:** - المعلمة المصدر.
+- **@param:** - معلمة اسم الملف.
+- **@param:** - معلمة الوحدة.
+- **@param:** - معلمة التشخيص.
+- **@param:** - معلمة graphHash.
+- **@returns:** نتيجة FlintSelfHostedStageArtifact.
 
 ### createFlintSelfHostedTokenArtifact
 
@@ -3345,17 +2958,26 @@ function createFlintSelfHostedTokenArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ createFlintSelfHostedTokenArtifact.
 
 #### حدود
 
-| الاسم             | اكتب                          | الوصف |
-| ----------------- | ----------------------------- | ----- |
-| المصدر            | سلسلة                         |       |
-| اسم الملف         | سلسلة                         |       |
-| الرموز            | للقراءة فقط FlintToken[]      |       |
-| التشخيص           | للقراءة فقط FlintDiagnostic[] |       |
-| الرسم البياني هاش | سلسلة                         |       |
+| الاسم | اكتب | الوصف |
+| ----------- | -------------------------- | ---------------------------- |
+| المصدر | سلسلة | - المعلمة المصدر.      |
+| اسم الملف | سلسلة | - المعلمة اسم الملف.    |
+| الرموز | للقراءة فقط فلينتتوكين[] | - المعلمة الرموز.      |
+| التشخيص | للقراءة فقط FlintDiagnostic[] | - المعلمة التشخيصية. |
+| الرسم البياني هاش | سلسلة | - المعلمة graphHash.   |
+
+#### عقد
+
+- **@param:** - المعلمة المصدر.
+- **@param:** - معلمة اسم الملف.
+- **@param:** - معلمة الرموز المميزة.
+- **@param:** - معلمة التشخيص.
+- **@param:** - معلمة graphHash.
+- **@returns:** نتيجة FlintSelfHostedStageArtifact.
 
 ### decodeFlintSelfHostedModule
 
@@ -3365,13 +2987,18 @@ function createFlintSelfHostedTokenArtifact(
 function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 ```
 
-لم يتم تقديم أي وصف.
+يقوم بفك ترميز حمولة وحدة المحلل اللغوي ذاتية الاستضافة.
 
 #### حدود
 
-| الاسم | اكتب       | الوصف |
-| ----- | ---------- | ----- |
-| بايت  | Uint8Array |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------- | ------------------------ |
+| بايت | Uint8Array | - حمولة الوحدة الثنائية. |
+
+#### عقد
+
+- **@param:** - حمولة الوحدة الثنائية.
+- **@returns:** الوحدة النمطية AST.
 
 ### decodeFlintSelfHostedTokens
 
@@ -3381,13 +3008,18 @@ function decodeFlintSelfHostedModule(bytes: Uint8Array): FlintModule;
 function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 ```
 
-لم يتم تقديم أي وصف.
+يقوم بفك ترميز حمولة دفق الرمز المميز المستضافة ذاتيًا.
 
 #### حدود
 
-| الاسم | اكتب       | الوصف |
-| ----- | ---------- | ----- |
-| بايت  | Uint8Array |       |
+| الاسم | اكتب | الوصف |
+| ----- | ---------- | ----------------------- |
+| بايت | Uint8Array | - حمولة الرمز الثنائي. |
+
+#### عقد
+
+- **@param:** - حمولة الرمز الثنائي.
+- **@returns:** تيار الرمز المميز الذي تم فك تشفيره.
 
 ### encodeFlintSelfHostedModule
 
@@ -3397,13 +3029,18 @@ function decodeFlintSelfHostedTokens(bytes: Uint8Array): readonly FlintToken[];
 function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 ```
 
-لم يتم تقديم أي وصف.
+يقوم بتشفير حمولة وحدة المحلل اللغوي ذاتية الاستضافة.
 
 #### حدود
 
-| الاسم          | اكتب        | الوصف |
-| -------------- | ----------- | ----- |
-| الوحدة النمطية | FlintModule |       |
+| الاسم | اكتب | الوصف |
+| ------ | ----------- | -------------------------- |
+| الوحدة النمطية | فلينتمودول | - وحدة AST للتسلسل. |
+
+#### عقد
+
+- **@param:** - وحدة AST للتسلسل.
+- **@returns:** حمولة الوحدة الثنائية.
 
 ### encodeFlintSelfHostedTokens
 
@@ -3413,13 +3050,18 @@ function encodeFlintSelfHostedModule(module: FlintModule): Uint8Array;
 function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 ```
 
-لم يتم تقديم أي وصف.
+يقوم بتشفير حمولة دفق الرمز المميز المستضافة ذاتيًا.
 
 #### حدود
 
-| الاسم  | اكتب                     | الوصف |
-| ------ | ------------------------ | ----- |
-| الرموز | للقراءة فقط FlintToken[] |       |
+| الاسم | اكتب | الوصف |
+| ------ | --------------------- | ---------------------------- |
+| الرموز | للقراءة فقط فلينتتوكين[] | - تيار رمزي للتسلسل. |
+
+#### عقد
+
+- **@param:** - دفق الرمز المميز لإجراء تسلسل.
+- **@returns:** حمولة الرمز الثنائي.
 
 ### hashFlintSelfHostedStagePayload
 
@@ -3429,13 +3071,18 @@ function encodeFlintSelfHostedTokens(tokens: readonly FlintToken[]): Uint8Array;
 function hashFlintSelfHostedStagePayload(artifact: FlintSelfHostedStageArtifact): string;
 ```
 
-لم يتم تقديم أي وصف.
+تنفيذ hashFlintSelfHostedStagePayload.
 
 #### حدود
 
-| الاسم      | اكتب                         | الوصف |
-| ---------- | ---------------------------- | ----- |
-| قطعة أثرية | FlintSelfHostedStageArtifact |       |
+| الاسم | اكتب | الوصف |
+| -------- | ---------------------------- | ------------------------- |
+| قطعة أثرية | فلينتSelfHostedStageArtifact | - المعلمة قطعة أثرية. |
+
+#### عقد
+
+- **@param:** - معلمة القطعة الأثرية.
+- **@returns:** نتيجة السلسلة.
 
 ### validateFlintSelfHostedStageArtifact
 
@@ -3451,275 +3098,26 @@ function validateFlintSelfHostedStageArtifact(
 ): FlintSelfHostedStageArtifact;
 ```
 
-لم يتم تقديم أي وصف.
+التحقق من صحة تنفيذ FlintSelfHostedStageArtifact.
 
 #### حدود
 
-| الاسم             | اكتب                         | الوصف |
-| ----------------- | ---------------------------- | ----- |
-| قطعة أثرية        | FlintSelfHostedStageArtifact |       |
-| المرحلة           | FlintSelfHostedCompilerStage |       |
-| المصدر            | سلسلة                        |       |
-| اسم الملف         | سلسلة                        |       |
-| الرسم البياني هاش | سلسلة                        |       |
-
-## `src/stdlib/memory`
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
-```
-
-لم يتم تقديم أي وصف.
-
-### FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly FlintMemoryFunction[];
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintMemoryFunction
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintMemoryFunction
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintMemoryOperation
-
-**النوع:** النوع
-
-```typescript
-export type FlintMemoryOperation =
-  | 'memory-alloc'
-  | 'memory-dealloc'
-  | 'memory-realloc'
-  | 'memory-load-u32'
-  | 'memory-store-u32'
-  | 'memory-load-f64'
-  | 'memory-store-f64'
-  | 'f64-from-u32';
-```
-
-تم التحقق من عمليات الذاكرة الخطية الضيف المحجوزة بواسطة المترجم.
-
-## `src/stdlib/regex`
-
-### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
-
-**النوع:** ثابت
-
-```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
-```
-
-لم يتم تقديم أي وصف.
-
-### FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
-```
-
-لم يتم تقديم أي وصف.
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
-```
-
-لم يتم تقديم أي وصف.
-
-### FORGE_WEB_SCRIPT_REGEX_FUNCTIONS
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly FlintStandardLibraryFunction[];
-```
-
-المكالمات المملوكة للمترجم. إنها أسماء مصادر محجوزة، وليست واردات المضيف، و
-يتم تخفيضها إلى وقت تشغيل Forge Web Script WASM في مرحلة الواجهة الخلفية.
-تقوم عمليات الالتقاط بإرجاع `-1` لمجموعة غير محددة أو في حالة عدم وجود تطابق.
-
-### FORGE_WEB_SCRIPT_REGEX_VERSION
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION;
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintRegexOperation
-
-**النوع:** النوع
-
-```typescript
-export type FlintRegexOperation =
-  | 'full-match'
-  | 'prefix-match'
-  | 'search'
-  | 'full-capture-start'
-  | 'full-capture-end'
-  | 'prefix-capture-start'
-  | 'prefix-capture-end'
-  | 'search-capture-start'
-  | 'search-capture-end';
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintStandardLibraryFunction
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintStandardLibraryFunction
-```
-
-لم يتم تقديم أي وصف.
-
-### flintStandardLibraryIdentity
-
-**النوع:** الوظيفة
-
-```typescript
-function flintStandardLibraryIdentity(
-  overrides: Partial<FlintStandardLibraryIdentity> = {},
-): FlintStandardLibraryIdentity;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم  | اكتب                               | الوصف |
-| ------ | ---------------------------------- | ----- |
-| يتجاوز | جزئي<FlintStandardLibraryIdentity> |       |
-
-### FlintStandardLibraryIdentity
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintStandardLibraryIdentity
-```
-
-مدخلات هوية مستقرة تؤثر على تجميع التعبير العادي والتحف التي تم إنشاؤها.
-
-## `src/stdlib/string`
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
-```
-
-لم يتم تقديم أي وصف.
-
-### FORGE_WEB_SCRIPT_STRING_FUNCTIONS
-
-**النوع:** ثابت
-
-```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly FlintStringFunction[];
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintStringFunction
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintStringFunction
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintStringOperation
-
-**النوع:** النوع
-
-```typescript
-export type FlintStringOperation =
-  | 'string-concat'
-  | 'string-length'
-  | 'string-byte-at'
-  | 'string-starts-with'
-  | 'string-slice'
-  | 'string-to-i32'
-  | 'bytes-length'
-  | 'bytes-length-u32'
-  | 'bytes-byte-at'
-  | 'bytes-byte-at-u32'
-  | 'bytes-slice';
-```
-
-سلسلة حتمية مملوكة للمترجم وعمليات البايت.
-
-## `src/type-checker`
-
-### checkFlint
-
-**النوع:** الوظيفة
-
-```typescript
-function checkFlint(
-  module: FlintModule,
-  fileName = '<input>',
-  options: FlintTypeCheckOptions = {},
-): FlintTypeCheckResult;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم          | اكتب                                | الوصف |
-| -------------- | ----------------------------------- | ----- |
-| الوحدة النمطية | FlintModule                         |       |
-| اسم الملف      |                                     |       |
-| خيارات         | فورجي ويب سكريبت تايب تشيك أوبتيونس |       |
-
-### FlintTypeCheckOptions
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintTypeCheckOptions
-```
-
-لم يتم تقديم أي وصف.
-
-### FlintTypeCheckResult
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintTypeCheckResult
-```
-
-لم يتم تقديم أي وصف.
+| الاسم | اكتب | الوصف |
+| --------- | ---------------------------- | -------------------------- |
+| قطعة أثرية | فلينتSelfHostedStageArtifact | - المعلمة قطعة أثرية.  |
+| المرحلة | فلينت سيلف هوستيد كومبيلر ستاج | - معلمة المرحلة.     |
+| المصدر | سلسلة | - المعلمة المصدر.    |
+| اسم الملف | سلسلة | - المعلمة اسم الملف.  |
+| الرسم البياني هاش | سلسلة | - المعلمة graphHash. |
+
+#### عقد
+
+- **@param:** - معلمة القطعة الأثرية.
+- **@param:** - معلمة المرحلة.
+- **@param:** - المعلمة المصدر.
+- **@param:** - معلمة اسم الملف.
+- **@param:** - معلمة graphHash.
+- **@returns:** نتيجة FlintSelfHostedStageArtifact.
 
 ## `src/validate`
 
@@ -3731,7 +3129,7 @@ export interface FlintTypeCheckResult
 export interface FlintValidationResult
 ```
 
-لم يتم تقديم أي وصف.
+نتيجة التحقق من صحة ملف مصدر Flint من خلال التحليل والتحقق من النوع.
 
 ### validateFlint
 
@@ -3745,41 +3143,20 @@ function validateFlint(
 ): FlintValidationResult;
 ```
 
-لم يتم تقديم أي وصف.
+التحقق من صحة النص المصدر لـ Flint عن طريق تشغيل المحلل اللغوي ومدقق النوع.
+يجمع ويحذف التشخيصات النحوية والدلالية.
 
 #### حدود
 
-| الاسم     | اكتب                                | الوصف |
-| --------- | ----------------------------------- | ----- |
-| المصدر    | سلسلة                               |       |
-| اسم الملف |                                     |       |
-| خيارات    | فورجي ويب سكريبت تايب تشيك أوبتيونس |       |
+| الاسم | اكتب | الوصف |
+| -------- | --------------------- | -------------------------------------------------------------------------------- |
+| المصدر | سلسلة | - نص التعليمات البرمجية المصدر فلينت.                                                        |
+| اسم الملف |                       | - مسار الملف الاختياري أو الاسم المستخدم في النطاقات التشخيصية (الإعداد الافتراضي هو `'<input>'`). |
+| خيارات | فلينتتيبشيكوبتيونس | - أعلام تكوين مدقق النوع الاختيارية وجداول الرموز الخارجية.          |
 
-## `src/wat`
+#### عقد
 
-### FlintWatMetadata
-
-**النوع:** الواجهة
-
-```typescript
-export interface FlintWatMetadata
-```
-
-لم يتم تقديم أي وصف.
-
-### renderFlintWat
-
-**النوع:** الوظيفة
-
-```typescript
-function renderFlintWat(module: FlintModule, metadata: FlintWatMetadata = {}): string;
-```
-
-لم يتم تقديم أي وصف.
-
-#### حدود
-
-| الاسم            | اكتب             | الوصف |
-| ---------------- | ---------------- | ----- |
-| الوحدة النمطية   | FlintModule      |       |
-| البيانات الوصفية | FlintWatMetadata |       |
+- **@param:** - نص كود مصدر فلينت.
+- **@param:** - مسار الملف الاختياري أو الاسم المستخدم في النطاقات التشخيصية (الإعداد الافتراضي هو `'<input>'`).
+- **@param:** - إشارات تكوين مدقق النوع الاختيارية وجداول الرموز الخارجية.
+- **@returns:** نتيجة التحقق من الصحة المدمجة مع الوحدة النمطية التي تم تحليلها (إذا كانت متوفرة)، والتشخيصات، والعلامة الصالحة.

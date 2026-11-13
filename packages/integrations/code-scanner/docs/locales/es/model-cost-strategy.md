@@ -8,7 +8,7 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 Este documento captura la **matriz de niveles de modelo** solicitada para el trabajo del corpus de caja negra de ZXING ("agentes de uso de
 varios modelos para determinar la mejor manera de lograrlo al costo más efectivo"). Registra qué nivel de modelo es mejor
 adecuado para cada etapa de entrega, de modo que dondequiera que exista un mecanismo de delegación el trabajo pueda dirigirse al más barato
-nivel de capacidad, y cuando un solo agente hace el trabajo, guía dónde se realiza el mayor esfuerzo (y el modelo más capaz)
+nivel de capacidad, y cuando un solo agente hace el trabajo, guía dónde se realiza el mayor esfuerzo (y el modelo más capaz).
 debe gastarse.
 
 ## Definiciones de niveles
@@ -17,7 +17,7 @@ debe gastarse.
   cuadrícula hexagonal + diana, agrupación de filas PDF417, conjunto de filas apiladas GS1 DataBar) y Reed–Solomon /
   matemáticas de corrección de errores (GF (929) para PDF417, GF (64) para MaxiCode, la combinatoria RSS). Estas son las partes más
   Es probable que se equivoque de manera sutil y sea más difícil de recuperar de un mal primer borrador.
-- **Nivel B (medio)**: portabilidad bien especificada de la referencia de ZXING: tablas de simbología, codificadores, generación de ida y vuelta
+- **Nivel B (medio)**: portabilidad bien especificada de la referencia ZXING: tablas de simbología, codificadores, ida y vuelta generados
   pruebas, lógica de aprovechamiento y generalización del cargador PNG. Se conoce la forma de la respuesta; el trabajo es cuidadoso
   transcripción y cableado.
 - **Nivel C (barato/mecánico)**: copia masiva, archivos de atribución, andamiaje de referencia, documentos y texto estándar de cableado.
@@ -25,14 +25,14 @@ debe gastarse.
 
 ## Etapa → mapeo de niveles
 
-| Etapa                                                    | Trabajo                                                                  | Nivel |
-| -------------------------------------------------------- | ------------------------------------------------------------------------ | ----- |
-| 1 Corpus de vendedor + cargador + arnés                  | copia/atribución (C), cargador + lógica de arnés (B)                     | C→B   |
-| 2 Aumentar la velocidad de lectura de formatos admitidos | ajuste del localizador + rutas de reintento                              | A→B   |
-| 3 familia GS1 DataBar                                    | mesas/codificadores (B), localizador RSS-14 + RS (A)                     | A/B   |
-| 4PDF417                                                  | tablas/codificador (B), localizador de escaneo de filas + GF(929) EC (A) | A/B   |
-| 5 MaxiCódigo                                             | localizador de rejilla hexagonal + GF(64) RS (A), tablas (B)             | A/B   |
-| 6 Cableado + JS + documentos                             | texto estándar/docs + cableado (C), reconstrucción de wasm + humo (B)    | C→B   |
+| Etapa | Trabajo | Nivel |
+| ---------------------------------- | ------------------------------------------------------- | ---- |
+| 1 Corpus de vendedor + cargador + arnés | copia/atribución (C), cargador + lógica de arnés (B) | C→B |
+| 2 Aumentar la velocidad de lectura de formatos admitidos | ajuste del localizador + rutas de reintento | A→B |
+| 3 familia GS1 DataBar | mesas/codificadores (B), localizador RSS-14 + RS (A) | A/B |
+| 4PDF417 | tablas/codificador (B), localizador de escaneo de filas + GF(929) EC (A) | A/B |
+| 5 MaxiCódigo | localizador de rejilla hexagonal + GF(64) RS (A), tablas (B) | A/B |
+| 6 Cableado + JS + documentos | texto estándar/docs + cableado (C), reconstrucción de wasm + humo (B) | C→B |
 
 ## Principio de costo
 
@@ -51,7 +51,23 @@ un puerto de decodificador antes de comprometer el nivel para el resto.
   Los localizadores y Reed-Solomon (GF (929), GF (64), la combinatoria RSS) fueron el núcleo de Nivel A, consistente con la matriz.
   arriba.
 
-> No había ninguna herramienta de delegación de agentes personalizada disponible durante la implementación, por lo que se
-> un solo agente realizó el trabajo mientras dedicaba esfuerzo según esta matriz. el
-> la matriz sigue siendo la guía para futuras repeticiones en las que se delegue a múltiples
-> los niveles de modelo son posibles.
+> La implementación utilizó revisiones delegadas enfocadas para la corrección de RSS, el
+> Lectores 2D apilados y emisión de gráficos QR. Esas revisiones confirmaron la
+> limitó el límite del lector reducido y aisló la falla del QR en Forge Web
+> Emisor de script en lugar de enmascararlo con un respaldo. La matriz sigue siendo la
+> guía para futuros pases de paridad donde el corpus y el decodificador que faltan pueden funcionar
+> dividirse de forma segura.
+
+## Límite de replanificación actual
+
+Los cimientos completados y el trabajo 1D/RSS utilizaron el Nivel B para puertos en forma de ZXing y
+Revisión de nivel A para combinatoria RSS, sumas de verificación y comportamiento de memoria limitada. el
+Los lectores 2D vinculados actuales son implementaciones deliberadamente reducidas, por lo que afirmar
+La paridad ZXing completa requeriría un nuevo decodificador y detector de nivel A en lugar de
+que más documentación o trabajo fijo.
+
+La siguiente investigación de mayor valor es la falla del emisor QR de Flint:
+el gráfico QR independiente es válido, pero vinculando su decodificador al escáner
+El gráfico falla `FLINT-WASM-001` antes del tiempo de ejecución. Hasta que el límite del compilador sea
+resuelto, el trabajo de API y accesorios de nivel C debe mantener QR como un elemento independiente explícito
+caso y no debe convertir los partidos locales reducidos en reclamos de paridad.

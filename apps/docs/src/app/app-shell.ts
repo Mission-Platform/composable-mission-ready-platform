@@ -1,3 +1,5 @@
+import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
+
 import { DEFAULT_SLUG, documentPath } from '../documentation';
 import {
   createDocumentationI18n,
@@ -11,8 +13,6 @@ import { LOCALE_BCP47 } from '../seo-site';
 
 import { createElement, supportsForgeCustomizedBuiltIn } from './dom';
 import { createSidebar } from './sidebar';
-
-import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
 
 interface RouterLinkElement extends HTMLElement {
   to: string;

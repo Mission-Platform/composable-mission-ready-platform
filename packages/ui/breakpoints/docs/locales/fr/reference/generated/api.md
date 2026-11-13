@@ -71,9 +71,9 @@ Renvoie la valeur de pixel pour une clé de point d'arrêt donnée.
 
 #### Paramètres
 
-| Nom | Tapez                | Descriptif |
-| --- | -------------------- | ---------- |
-| clé | Clé de point d'arrêt |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------- | ----------- |
+| clé | Clé de point d'arrêt |             |
 
 ### maxMediaQuery
 
@@ -88,9 +88,9 @@ point d'arrêt - c'est-à-dire "plus petit que l'étape suivante".
 
 #### Paramètres
 
-| Nom | Tapez                | Descriptif |
-| --- | -------------------- | ---------- |
-| clé | Clé de point d'arrêt |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------- | ----------- |
+| clé | Clé de point d'arrêt |             |
 
 #### Contracter
 
@@ -108,9 +108,9 @@ Renvoie une chaîne de requête multimédia `min-width` pour le point d'arrêt d
 
 #### Paramètres
 
-| Nom | Tapez                | Descriptif |
-| --- | -------------------- | ---------- |
-| clé | Clé de point d'arrêt |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------- | ----------- |
+| clé | Clé de point d'arrêt |             |
 
 #### Contracter
 
@@ -129,9 +129,9 @@ function resolveBreakpoint(width: number): BreakpointKey;
 
 #### Paramètres
 
-| Nom     | Tapez  | Descriptif |
-| ------- | ------ | ---------- |
-| largeur | numéro |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| largeur | numéro |             |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -155,9 +155,9 @@ Hôte `display: contents` afin que la visibilité puisse basculer sans zone de m
 
 #### Paramètres
 
-| Nom        | Tapez                           | Descriptif |
-| ---------- | ------------------------------- | ---------- |
-| propriétés | Lecture seule<HideAtProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | -------------------------- | ----------- |
+| propriétés | Lecture seule<HideAtProperties> |             |
 
 ### Masquer dans les propriétés
 
@@ -192,9 +192,9 @@ basculer sans introduire de zone de mise en page supplémentaire.
 
 #### Paramètres
 
-| Nom        | Tapez                           | Descriptif |
-| ---------- | ------------------------------- | ---------- |
-| propriétés | Lecture seule<ShowAtProperties> |            |
+| Nom | Tapez | Descriptif |
+| ---------- | -------------------------- | ----------- |
+| propriétés | Lecture seule<ShowAtProperties> |             |
 
 ### ShowAtProperties
 
@@ -240,9 +240,9 @@ la même source est résolue par rapport à l'espace de noms `mp.breakpoints` du
 
 #### Paramètres
 
-| Nom         | Tapez                                    | Descriptif |
-| ----------- | ---------------------------------------- | ---------- |
-| _propriétés | Lecture seule<BreakpointDebugProperties> |            |
+| Nom | Tapez | Descriptif |
+| ----------- | ----------------------------------- | ----------- |
+| _propriétés | Lecture seule<BreakpointDebugProperties> |             |
 
 ## `src/composables/use-breakpoints/use-breakpoints`
 

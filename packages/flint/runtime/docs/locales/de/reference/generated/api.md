@@ -19,13 +19,18 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/flint-runti
 function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 ```
 
-Keine Beschreibung angegeben.
+Bestätigt, dass ein Flint-ABI-Manifest gemäß den Laufzeitspezifikationsregeln gültig ist.
 
 #### Parameter
 
-| Name          | Geben Sie        | ein Beschreibung |
-| ------------- | ---------------- | ---------------- |
-| manifestieren | FlintAbiManifest |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ---------------- | --------------------------- |
+| manifestieren | FlintAbiManifest | - ABI-Manifest zur Validierung. |
+
+#### Vertrag
+
+- **@param:** – ABI-Manifest zur Validierung.
+- **@throws:** Wenn die Manifestvalidierung fehlschlägt.
 
 ### equalFunction
 
@@ -35,14 +40,20 @@ Keine Beschreibung angegeben.
 function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean;
 ```
 
-Keine Beschreibung angegeben.
+Vergleicht zwei ABI-Funktionsdeklarationen auf strukturelle Äquivalenz.
 
 #### Parameter
 
-| Name    | Geben Sie        | ein Beschreibung |
-| ------- | ---------------- | ---------------- |
-| links   | FlintAbiFunction |                  |
-| richtig | FlintAbiFunction |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------------- | ------------------------------ |
+| links | FlintAbiFunction | - Erste Funktionsdeklaration.  |
+| richtig | FlintAbiFunction | - Zweite Funktionsdeklaration. |
+
+#### Vertrag
+
+- **@param:** – Erste Funktionsdeklaration.
+- **@param:** – Zweite Funktionsdeklaration.
+- **@returns:** True, wenn beide Deklarationen identische Signaturen, Parameter und Rückgabetypen haben.
 
 ### FlintAbiValidationResult
 
@@ -52,7 +63,7 @@ Keine Beschreibung angegeben.
 export interface FlintAbiValidationResult
 ```
 
-Keine Beschreibung angegeben.
+Validierungsergebnis für ein Flint-ABI-Manifest mit Validierungsstatus und Fehlermeldungen.
 
 ### validierenFlintAbiManifest
 
@@ -62,13 +73,100 @@ Keine Beschreibung angegeben.
 function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidationResult;
 ```
 
-Keine Beschreibung angegeben.
+Validiert ein Flint-ABI-Manifest anhand von Spezifikationsanforderungen, Layouts und Leistungseinschränkungen.
 
 #### Parameter
 
-| Name          | Geben Sie        | ein Beschreibung |
-| ------------- | ---------------- | ---------------- |
-| manifestieren | FlintAbiManifest |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ---------------- | --------------------------- |
+| manifestieren | FlintAbiManifest | - ABI-Manifest zur Validierung. |
+
+#### Vertrag
+
+- **@param:** – ABI-Manifest zur Validierung.
+- **@returns:** Validierungsergebnis, das den booleschen Status und gesammelte Diagnosefehler enthält.
+
+## `src/allocator/slab`
+
+### FlintAtomicSpinLock
+
+**Art:** Klasse
+
+```typescript
+export class FlintAtomicSpinLock
+```
+
+Atomarer Spinlock, der sich gegenseitig ausschließenden Zugriff auf gemeinsam genutzte WebAssembly-Speicherstrukturen bietet.
+
+### RegionalBumpArena
+
+**Art:** Klasse
+
+```typescript
+export class RegionalBumpArena
+```
+
+Regionale Bump-Allocator-Arena mit $O(1)$-Zuweisung und sofortigem Massen-Reset.
+
+### SegregatedSlabAllocator
+
+**Art:** Klasse
+
+```typescript
+export class SegregatedSlabAllocator
+```
+
+Getrennter $O(1)$-Größenklassen-Plattenzuteiler.
+
+### SegregatedSlabAllocatorOptions
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SegregatedSlabAllocatorOptions
+```
+
+Konfigurationsoptionen für den getrennten Plattenzuteiler.
+
+### SLAB_CANARY_TAG
+
+**Art:** konstant
+
+```typescript
+export const SLAB_CANARY_TAG;
+```
+
+Keine Beschreibung angegeben.
+
+### SLAB_SIZE_CLASSES
+
+**Art:** konstant
+
+```typescript
+export const SLAB_SIZE_CLASSES;
+```
+
+Standardmäßige Zweierpotenz-Größenklassen für die getrennte Zuweisung kleiner und mittlerer Objektplatten.
+
+### SlabBlock
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SlabBlock
+```
+
+Zuweisungsplatte, die Steckplätze mit fester Größe für eine bestimmte Größenklasse verwaltet.
+
+### SlabSizeClass
+
+**Art:** Typ
+
+```typescript
+export type SlabSizeClass = (typeof SLAB_SIZE_CLASSES)[number];
+```
+
+Keine Beschreibung angegeben.
 
 ## `src/async`
 
@@ -80,20 +178,41 @@ Keine Beschreibung angegeben.
 function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}): FlintAsyncRuntime;
 ```
 
-Keine Beschreibung angegeben.
+Erstellt eine neue FlintAsyncRuntime-Instanz, die asynchrone Aufgabenwarteschlangen verwaltet.
 
 #### Parameter
 
-| Name     | Geben Sie                | ein Beschreibung |
-| -------- | ------------------------ | ---------------- |
-| Optionen | FlintAsyncRuntimeOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------ | -------------------------------- |
+| Optionen | FlintAsyncRuntimeOptions | - Laufzeitkonfigurationsoptionen. |
 
-### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+#### Vertrag
+
+- **@param:** – Laufzeitkonfigurationsoptionen.
+- **@returns:** Konfigurierte FlintAsyncRuntime-Instanz.
+
+### createFlintJspiSuspender
+
+**Art:** Funktion
+
+```typescript
+function createFlintJspiSuspender(options?: FlintJspiOptions): FlintJspiSuspender;
+```
+
+Erstellt eine Instanz des Flint JSPI-Stack-Suspenders.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------- | ----------- |
+| Optionen | FlintJspiOptions |             |
+
+### FLINT_ASYNC_CAPABILITIES
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
+export const FLINT_ASYNC_CAPABILITIES;
 ```
 
 Keine Beschreibung angegeben.
@@ -103,11 +222,10 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type FlintAsyncCapability =
-  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type FlintAsyncCapability = (typeof FLINT_ASYNC_CAPABILITIES)[keyof typeof FLINT_ASYNC_CAPABILITIES];
 ```
 
-Keine Beschreibung angegeben.
+Bezeichnerzeichenfolge für autorisierte asynchrone Laufzeitfunktionen.
 
 ### FlintAsyncExecution
 
@@ -117,7 +235,7 @@ Keine Beschreibung angegeben.
 export interface FlintAsyncExecution
 ```
 
-Keine Beschreibung angegeben.
+Ergebnis der erfolgreichen Ausführung, das die Nutzlast der Aufgabenausgabe enthält.
 
 ### FlintAsyncExecutionResult
 
@@ -127,7 +245,7 @@ Keine Beschreibung angegeben.
 export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 ```
 
-Keine Beschreibung angegeben.
+Ergebnis der Ausführung einer asynchronen Aufgabe (entweder Erfolg oder Misserfolg).
 
 ### FlintAsyncFailure
 
@@ -137,7 +255,7 @@ Keine Beschreibung angegeben.
 export interface FlintAsyncFailure
 ```
 
-Keine Beschreibung angegeben.
+Fehlerbericht, der von einem asynchronen Planungs- oder Ausführungsvorgang zurückgegeben wird.
 
 ### FlintAsyncFailureCode
 
@@ -148,7 +266,7 @@ export type FlintAsyncFailureCode =
   'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
-Keine Beschreibung angegeben.
+Fehlerkategoriecodes für asynchrone Ausführungsfehler.
 
 ### FlintAsyncHostAdapter
 
@@ -158,7 +276,7 @@ Keine Beschreibung angegeben.
 export interface FlintAsyncHostAdapter
 ```
 
-Keine Beschreibung angegeben.
+Host-Integrations-Hooks zum Planen von Mikrotasks und zum Zustellen von Worker-Nachrichten.
 
 ### FlintAsyncRuntime
 
@@ -168,7 +286,7 @@ Keine Beschreibung angegeben.
 export interface FlintAsyncRuntime
 ```
 
-Keine Beschreibung angegeben.
+Asynchroner Laufzeitkoordinator, der Mikrotasks, Worker-Warteschlangen und das Entleeren von Ereignisschleifen verwaltet.
 
 ### FlintAsyncRuntimeOptions
 
@@ -178,7 +296,7 @@ Keine Beschreibung angegeben.
 export interface FlintAsyncRuntimeOptions
 ```
 
-Keine Beschreibung angegeben.
+Konfigurationsoptionen für die asynchrone Laufzeit-Engine.
 
 ### FlintAsyncScheduledTask
 
@@ -188,7 +306,7 @@ Keine Beschreibung angegeben.
 export interface FlintAsyncScheduledTask
 ```
 
-Keine Beschreibung angegeben.
+Erfolgreiches Planungsergebnis für eine asynchrone Aufgabe.
 
 ### FlintAsyncScheduleResult
 
@@ -198,7 +316,7 @@ Keine Beschreibung angegeben.
 export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailure;
 ```
 
-Keine Beschreibung angegeben.
+Ergebnis der Planung einer asynchronen Aufgabe (entweder geplant oder fehlgeschlagen).
 
 ### FlintAsyncTask
 
@@ -208,7 +326,7 @@ Keine Beschreibung angegeben.
 export interface FlintAsyncTask
 ```
 
-Keine Beschreibung angegeben.
+Deskriptor einer asynchronen Aufgabe, die zur Laufzeit in die Warteschlange gestellt wird.
 
 ### FlintAsyncTaskHandler
 
@@ -218,7 +336,7 @@ Keine Beschreibung angegeben.
 export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 ```
 
-Keine Beschreibung angegeben.
+Rückruf zur Aufgabenausführung, der eine Eingabebyte-Nutzlast übernimmt und eine Ausgabebyte-Nutzlast zurückgibt.
 
 ### FlintAsyncTaskKind
 
@@ -228,7 +346,7 @@ Keine Beschreibung angegeben.
 export type FlintAsyncTaskKind = 'microtask' | 'worker';
 ```
 
-Keine Beschreibung angegeben.
+Klassifizierung der Aufgabenplanung („Mikrotask“ oder „Arbeiter“).
 
 ### FlintAsyncWorkerMessage
 
@@ -238,7 +356,72 @@ Keine Beschreibung angegeben.
 export interface FlintAsyncWorkerMessage
 ```
 
-Keine Beschreibung angegeben.
+Nachrichtenpaket, das an oder von einem Arbeitsthread übertragen wird.
+
+### FlintJspiOptions
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintJspiOptions
+```
+
+Optionen zum Konfigurieren des JSPI-Suspenders (WebAssembly JavaScript Promise Integration).
+
+### FlintJspiSuspender
+
+**Art:** Klasse
+
+```typescript
+export class FlintJspiSuspender
+```
+
+WebAssembly JavaScript Promise Integration (JSPI)-Stack-Switching.
+Hält WebAssembly-Stacks über asynchrone Host-Versprechen hinweg an und setzt sie fort
+nativ, ohne dass vom Compiler gesteuerte Asyncify-Codetransformationen erforderlich sind.
+
+## `src/async/fiber`
+
+### FlintFiber
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintFiber<T = unknown>
+```
+
+Handle zu einer aktiven oder suspendierten kooperativen Faserfortsetzung.
+
+### FlintFiberScheduler
+
+**Art:** Klasse
+
+```typescript
+export class FlintFiberScheduler
+```
+
+Kooperativer Fiber-Scheduler, der die asynchrone Stack-Suspendierung im JSPI-Stil unterstützt,
+Frame-Isolation, Stack-Grenzen-Assertion und Wiedereintrittsschutz.
+
+### FlintFiberSchedulerOptions
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintFiberSchedulerOptions
+```
+
+Konfigurationsoptionen für den kooperativen Fibre-Scheduler.
+
+### FlintFiberState
+
+**Art:** Typ
+
+```typescript
+export type FlintFiberState = 'ready' | 'running' | 'suspended' | 'completed' | 'failed' | 'cancelled';
+```
+
+Ausführungsstatus einer kooperativen Faser.
 
 ## `src/collections`
 
@@ -257,10 +440,10 @@ Erstellen Sie ein festes Array, indem Sie die angegebenen Werte kopieren.
 
 #### Parameter
 
-| Name     | Geben Sie                   | ein Beschreibung |
-| -------- | --------------------------- | ---------------- |
-| Werte    | schreibgeschützter TValue[] |                  |
-| Eigentum | FlintCollectionOwnership    |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------------------ | ----------- |
+| Werte | schreibgeschützter TValue[] |             |
+| Eigentum | FlintCollectionOwnership |             |
 
 ### createFlintIterator
 
@@ -274,10 +457,10 @@ Passen Sie einen Iterable mit dem bereitgestellten ABI-Deskriptor an einen Lazy-
 
 #### Parameter
 
-| Name       | Geben Sie               | ein Beschreibung |
-| ---------- | ----------------------- | ---------------- |
-| Werte      | Iterable<TValue>        |                  |
-| Deskriptor | FlintIteratorDescriptor |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------- | ----------- |
+| Werte | Iterable<TValue> |             |
+| Deskriptor | FlintIteratorDescriptor |             |
 
 ### createFlintIteratorDescriptor
 
@@ -296,12 +479,12 @@ Deskriptorgrenzen-Metadaten erstellen; Ältere Anrufer verwenden standardmäßig
 
 #### Parameter
 
-| Name        | Geben Sie                | ein Beschreibung |
-| ----------- | ------------------------ | ---------------- |
-| id          | Zeichenfolge             |                  |
-| elementType |                          |                  |
-| Fähigkeit   | FlintIteratorCapability  |                  |
-| Eigentum    | FlintCollectionOwnership |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ------------------------ | ----------- |
+| id | Zeichenfolge |             |
+| elementType |                          |             |
+| Fähigkeit | FlintIteratorCapability |             |
+| Eigentum | FlintCollectionOwnership |             |
 
 ### createFlintMap
 
@@ -314,14 +497,20 @@ function createFlintMap(
 ): FlintMap<TKey, TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Erstellt eine persistente FlintMap, die mit Schlüsselwerteinträgen initialisiert wird.
 
 #### Parameter
 
-| Name      | Geben Sie                              | ein Beschreibung |
-| --------- | -------------------------------------- | ---------------- |
-| Einträge  | readonly FlintMapEntry<TKey, TValue>[] |                  |
-| Strategie | FlintHashStrategy<TKey>                |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | -------------------------------------- | --------------------------- |
+| Einträge | schreibgeschützt FlintMapEntry<TKey, TValue>[] | – Anfängliche Schlüsselwert-Tupel. |
+| Strategie | FlintHashStrategy<TKey> |                             |
+
+#### Vertrag
+
+- **@param:** – Anfängliche Schlüsselwert-Tupel.
+- **@param:** – Benutzerdefinierte Schlüsselgleichheit und Hashing-Strategie.
+- **@returns:** Initialisierte FlintMap-Instanz.
 
 ### createFlintSet
 
@@ -334,14 +523,20 @@ function createFlintSet(
 ): FlintSet<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Erstellt ein persistentes FlintSet, das mit Werten initialisiert wird.
 
 #### Parameter
 
-| Name      | Geben Sie                   | ein Beschreibung |
-| --------- | --------------------------- | ---------------- |
-| Werte     | schreibgeschützter TValue[] |                  |
-| Strategie | FlintHashStrategy<TValue>   |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------------------------- | ----------------------------- |
+| Werte | schreibgeschützter TValue[] | - Anfängliche Iteration von Werten. |
+| Strategie | FlintHashStrategy<TValue> |                               |
+
+#### Vertrag
+
+- **@param:** – Anfängliche Iterbarkeit von Werten.
+- **@param:** – Benutzerdefinierte Gleichheits- und Hashing-Strategie.
+- **@returns:** Initialisierte FlintSet-Instanz.
 
 ### createFlintVector
 
@@ -358,10 +553,10 @@ Erstellen Sie einen eigenen Vektor, indem Sie die angegebenen Werte kopieren.
 
 #### Parameter
 
-| Name     | Geben Sie                   | ein Beschreibung |
-| -------- | --------------------------- | ---------------- |
-| Werte    | schreibgeschützter TValue[] |                  |
-| Eigentum | FlintCollectionOwnership    |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------------------ | ----------- |
+| Werte | schreibgeschützter TValue[] |             |
+| Eigentum | FlintCollectionOwnership |             |
 
 ### FlintArray
 
@@ -385,10 +580,10 @@ Ein Array-Element lesen; Ungültige Indizes geben Option.none zurück.
 
 #### Parameter
 
-| Name  | Geben Sie          | ein Beschreibung |
-| ----- | ------------------ | ---------------- |
-| Array | FlintArray<TValue> |                  |
-| Index | Zahl               |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------------ | ----------- |
+| Array | FlintArray<TValue> |             |
+| Index | Nummer |             |
 
 ### flintArrayLength
 
@@ -402,9 +597,9 @@ Gibt eine Array-Länge zurück, ohne seine Elemente zu verbrauchen oder zu kopie
 
 #### Parameter
 
-| Name  | Geben Sie          | ein Beschreibung |
-| ----- | ------------------ | ---------------- |
-| Array | FlintArray<TValue> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------------ | ----------- |
+| Array | FlintArray<TValue> |             |
 
 ### flintArraySet
 
@@ -414,15 +609,15 @@ Gibt eine Array-Länge zurück, ohne seine Elemente zu verbrauchen oder zu kopie
 function flintArraySet(array: FlintArray<TValue>, index: number, value: TValue): FlintArray<TValue>;
 ```
 
-Ersetzen Sie ein Array-Element. Ungültige Indizes lösen RangeError aus.
+Ersetzen Sie ein Array-Element; Ungültige Indizes lösen RangeError aus.
 
 #### Parameter
 
-| Name  | Geben Sie          | ein Beschreibung |
-| ----- | ------------------ | ---------------- |
-| Array | FlintArray<TValue> |                  |
-| Index | Zahl               |                  |
-| Wert  | TValue             |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------------ | ----------- |
+| Array | FlintArray<TValue> |             |
+| Index | Nummer |             |
+| Wert | TValue |             |
 
 ### flintArrayTrySet
 
@@ -440,11 +635,11 @@ Ersetzen Sie ein Array-Element, ohne es auszulösen. Ungültige Indizes geben ei
 
 #### Parameter
 
-| Name  | Geben Sie          | ein Beschreibung |
-| ----- | ------------------ | ---------------- |
-| Array | FlintArray<TValue> |                  |
-| Index | Zahl               |                  |
-| Wert  | TValue             |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------------------ | ----------- |
+| Array | FlintArray<TValue> |             |
+| Index | Nummer |             |
+| Wert | TValue |             |
 
 ### FlintCollectionOwnership
 
@@ -454,7 +649,7 @@ Ersetzen Sie ein Array-Element, ohne es auszulösen. Ungültige Indizes geben ei
 export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 ```
 
-Keine Beschreibung angegeben.
+Speichereigentumssemantik für Sammlungselemente („besessen“, „geliehen“, „geteilt“).
 
 ### flintDefaultHashStrategy
 
@@ -464,7 +659,11 @@ Keine Beschreibung angegeben.
 function flintDefaultHashStrategy(): FlintHashStrategy<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Gibt die Standard-Hash-Strategie mit deterministischer Serialisierung zurück.
+
+#### Vertrag
+
+- **@returns:** Standard-FlintHashStrategy-Instanz.
 
 ### flintError
 
@@ -484,7 +683,7 @@ Konstruieren Sie einen Fehlerergebniswert, ohne ihn auszulösen.
 export interface FlintHashStrategy<TValue>
 ```
 
-Keine Beschreibung angegeben.
+Gleichheits- und Hashing-Strategieschnittstelle für benutzerdefinierte Schlüsseltypen in Sets und Maps.
 
 ### FlintIterable
 
@@ -518,10 +717,10 @@ Hängt einen Wert träge an einen Iterator an.
 
 #### Parameter
 
-| Name   | Geben Sie             | ein Beschreibung |
-| ------ | --------------------- | ---------------- |
-| Quelle | FlintIterator<TValue> |                  |
-| Wert   | TValue                |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------------------- | ----------- |
+| Quelle | FlintIterator<TValue> |             |
+| Wert | TValue |             |
 
 ### flintIteratorAt
 
@@ -531,14 +730,20 @@ Hängt einen Wert träge an einen Iterator an.
 function flintIteratorAt(iterator: FlintIterator<TValue>, index: number): FlintOption<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Gibt das Element an einem angegebenen Index zurück, eingeschlossen in eine Option.
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Iterator | FlintIterator<TValue> |                  |
-| Index    | Zahl                  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------------------- | --------------------------- |
+| Iterator | FlintIterator<TValue> | - Quelliterator.          |
+| Index | Nummer | - Nullbasierter Elementindex. |
+
+#### Vertrag
+
+- **@param:** – Quelliterator.
+- **@param:** – Nullbasierter Elementindex.
+- **@returns:** Option, die ein Element am Index enthält oder keins.
 
 ### FlintIteratorCapability
 
@@ -558,13 +763,18 @@ Linearer Konsum oder nicht konsumierender Direktzugriff, unterstützt durch eine
 function flintIteratorCollect(iterator: FlintIterator<TValue>): FlintVector<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Materialisiert einen Iterator in einen eigenen Vektor gesammelter Werte.
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Iterator | FlintIterator<TValue> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------------------- | --------------------------- |
+| Iterator | FlintIterator<TValue> | - Quelliterator zum Entleeren. |
+
+#### Vertrag
+
+- **@param:** – Quelliterator zum Entleeren.
+- **@returns:** FlintVector, der gesammelte Werte enthält.
 
 ### flintIteratorConcat
 
@@ -578,10 +788,10 @@ Verkettet zwei Quellen langsam, ohne die Reihenfolge einer der beiden Quellen zu
 
 #### Parameter
 
-| Name   | Geben Sie             | ein Beschreibung |
-| ------ | --------------------- | ---------------- |
-| zuerst | FlintIterator<TValue> |                  |
-| zweite | FlintIterable<TValue> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------------------- | ----------- |
+| zuerst | FlintIterator<TValue> |             |
+| zweite | FlintIterable<TValue> |             |
 
 ### FlintIteratorDescriptor
 
@@ -608,10 +818,10 @@ Werte träge filtern; Beim Filtern wird die Fähigkeit immer auf den linearen Zu
 
 #### Parameter
 
-| Name     | Geben Sie                 | ein Beschreibung |
-| -------- | ------------------------- | ---------------- |
-| Quelle   | FlintIterator<TValue>     |                  |
-| Prädikat | (Wert: TValue) => boolean |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | -------------------------- | ----------- |
+| Quelle | FlintIterator<TValue> |             |
+| Prädikat | (Wert: TValue) => boolean |             |
 
 ### flintIteratorFirst
 
@@ -621,13 +831,18 @@ Werte träge filtern; Beim Filtern wird die Fähigkeit immer auf den linearen Zu
 function flintIteratorFirst(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Gibt das erste Element eines Iterators zurück, der in eine Option eingeschlossen ist.
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Iterator | FlintIterator<TValue> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------------------- | ------------------ |
+| Iterator | FlintIterator<TValue> | - Quelliterator. |
+
+#### Vertrag
+
+- **@param:** – Quelliterator.
+- **@returns:** Option, die das erste oder kein Element enthält.
 
 ### flintIteratorFlatten
 
@@ -641,9 +856,9 @@ Reduzieren Sie verschachtelte Quellen langsam in der Reihenfolge der äußeren u
 
 #### Parameter
 
-| Name   | Geben Sie                            | ein Beschreibung |
-| ------ | ------------------------------------ | ---------------- |
-| Quelle | FlintIterator<FlintIterable<TValue>> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------------------------ | ----------- |
+| Quelle | FlintIterator<FlintIterable<TValue>> |             |
 
 ### flintIteratorFold
 
@@ -657,15 +872,22 @@ function flintIteratorFold(
 ): TResult;
 ```
 
-Keine Beschreibung angegeben.
+Reduziert einen Iterator mithilfe eines Akkumulator-Rückrufs von links nach rechts.
 
 #### Parameter
 
-| Name       | Geben Sie                                                    | ein Beschreibung |
-| ---------- | ------------------------------------------------------------ | ---------------- |
-| Iterator   | FlintIterator<TValue>                                        |                  |
-| Initiale   | TResult                                                      |                  |
-| Reduzierer | (Akkumulator: TResult, Wert: TValue, Index: Zahl) => TResult |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------------------------------------------------------------- | ----------------------------- |
+| Iterator | FlintIterator<TValue> | - Quelliterator.            |
+| Initiale | TResult | - Anfänglicher Akkumulatorwert.  |
+| Reduzierer | (Akkumulator: TResult, Wert: TValue, Index: Zahl) => TResult | - Reduzierte Rückruffunktion. |
+
+#### Vertrag
+
+- **@param:** – Quelliterator.
+- **@param:** – Anfänglicher Akkumulatorwert.
+- **@param:** – Rückruffunktion reduzieren.
+- **@returns:** Endgültiges reduziertes Akkumulatorergebnis.
 
 ### flintIteratorFromArray
 
@@ -682,10 +904,10 @@ Erstellen Sie einen Iterator mit wahlfreiem Zugriff über ein festes Array, ohne
 
 #### Parameter
 
-| Name       | Geben Sie               | ein Beschreibung |
-| ---------- | ----------------------- | ---------------- |
-| Array      | FlintArray<TValue>      |                  |
-| Deskriptor | FlintIteratorDescriptor |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------- | ----------- |
+| Array | FlintArray<TValue> |             |
+| Deskriptor | FlintIteratorDescriptor |             |
 
 ### flintIteratorFromIterable
 
@@ -699,15 +921,15 @@ function flintIteratorFromIterable(
 ): FlintIterator<TValue>;
 ```
 
-Passen Sie ein beliebiges Iterable an einen Lazy-Linear-Forge-Web-Script-Iterator an.
+Passen Sie einen beliebigen Iterator an einen Lazy-Linear-Flint-Iterator an.
 
 #### Parameter
 
-| Name        | Geben Sie        | ein Beschreibung |
-| ----------- | ---------------- | ---------------- |
-| Werte       | Iterable<TValue> |                  |
-| elementType |                  |                  |
-| id          |                  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ---------------- | ----------- |
+| Werte | Iterable<TValue> |             |
+| elementType |                  |             |
+| id |                  |             |
 
 ### flintIteratorFromVector
 
@@ -724,10 +946,10 @@ Erstellen Sie einen Iterator mit wahlfreiem Zugriff über einen Vektor, ohne sei
 
 #### Parameter
 
-| Name       | Geben Sie               | ein Beschreibung |
-| ---------- | ----------------------- | ---------------- |
-| Vektor     | FlintVector<TValue>     |                  |
-| Deskriptor | FlintIteratorDescriptor |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------- | ----------- |
+| Vektor | FlintVector<TValue> |             |
+| Deskriptor | FlintIteratorDescriptor |             |
 
 ### flintIteratorLast
 
@@ -737,13 +959,18 @@ Erstellen Sie einen Iterator mit wahlfreiem Zugriff über einen Vektor, ohne sei
 function flintIteratorLast(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Gibt das letzte Element eines Iterators zurück, der in eine Option eingeschlossen ist.
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Iterator | FlintIterator<TValue> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------------------- | ------------------ |
+| Iterator | FlintIterator<TValue> | - Quelliterator. |
+
+#### Vertrag
+
+- **@param:** – Quelliterator.
+- **@returns:** Option, die das letzte oder kein Element enthält.
 
 ### flintIteratorMap
 
@@ -761,11 +988,11 @@ Ordnen Sie Werte langsam zu und behalten Sie dabei den Direktzugriff nur dann be
 
 #### Parameter
 
-| Name        | Geben Sie                 | ein Beschreibung |
-| ----------- | ------------------------- | ---------------- |
-| Quelle      | FlintIterator<TValue>     |                  |
-| Karte       | (Wert: TValue) => TResult |                  |
-| elementType |                           |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | -------------------------- | ----------- |
+| Quelle | FlintIterator<TValue> |             |
+| Karte | (Wert: TValue) => TResult |             |
+| elementType |                            |             |
 
 ### FlintIteratorResult
 
@@ -789,10 +1016,10 @@ Begrenzen Sie eine Quelle langsam auf höchstens Zählwerte.
 
 #### Parameter
 
-| Name   | Geben Sie             | ein Beschreibung |
-| ------ | --------------------- | ---------------- |
-| Quelle | FlintIterator<TValue> |                  |
-| zählen | Zahl                  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------------------- | ----------- |
+| Quelle | FlintIterator<TValue> |             |
+| zählen | Nummer |             |
 
 ### flintIteratorToArray
 
@@ -805,14 +1032,20 @@ function flintIteratorToArray(
 ): FlintArray<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Konvertiert einen Iterator in ein eigenes FlintArray.
 
 #### Parameter
 
-| Name     | Geben Sie                | ein Beschreibung |
-| -------- | ------------------------ | ---------------- |
-| Iterator | FlintIterator<TValue>    |                  |
-| Eigentum | FlintCollectionOwnership |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------------------ | ----------------------------- |
+| Iterator | FlintIterator<TValue> | - Quelliterator.            |
+| Eigentum | FlintCollectionOwnership | - Sammlungseigentumsmodell. |
+
+#### Vertrag
+
+- **@param:** – Quelliterator.
+- **@param:** – Sammlungseigentumsmodell.
+- **@returns:** FlintArray initialisiert.
 
 ### FlintMap
 
@@ -822,7 +1055,7 @@ Keine Beschreibung angegeben.
 export interface FlintMap<TKey, TValue>
 ```
 
-Keine Beschreibung angegeben.
+Datenstruktur der persistenten Hash-Map-Sammlung.
 
 ### flintMapDelete
 
@@ -832,14 +1065,20 @@ Keine Beschreibung angegeben.
 function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Löscht eine Schlüsselwertzuordnung aus der Karte und gibt eine neue persistente Karte zurück.
 
 #### Parameter
 
-| Name      | Geben Sie              | ein Beschreibung |
-| --------- | ---------------------- | ---------------- |
-| Karte     | FlintMap<TKey, TValue> |                  |
-| Schlüssel | TKey                   |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ---------------------- | ---------------- |
+| Karte | FlintMap<TKey, TValue> | - Zielkarte.    |
+| Schlüssel | TKey | - Schlüssel zum Löschen. |
+
+#### Vertrag
+
+- **@param:** – Zielkarte.
+- **@param:** – Schlüssel zum Löschen.
+- **@returns:** Persistente Karte aktualisiert.
 
 ### flintMapEntries
 
@@ -849,13 +1088,18 @@ Keine Beschreibung angegeben.
 function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry<TKey, TValue>>;
 ```
 
-Keine Beschreibung angegeben.
+Gibt alle in der Karte enthaltenen Schlüsselwerteinträge als eigenen Vektor zurück.
 
 #### Parameter
 
-| Name  | Geben Sie              | ein Beschreibung |
-| ----- | ---------------------- | ---------------- |
-| Karte | FlintMap<TKey, TValue> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ---------------------- | ------------- |
+| Karte | FlintMap<TKey, TValue> | - Zielkarte. |
+
+#### Vertrag
+
+- **@param:** – Zielkarte.
+- **@returns:** Vektor der Einträge in der Karte.
 
 ### FlintMapEntry
 
@@ -865,7 +1109,7 @@ Keine Beschreibung angegeben.
 export interface FlintMapEntry<TKey, TValue>
 ```
 
-Keine Beschreibung angegeben.
+Schlüsselwert-Eintragsdatensatz in einer persistenten Hash-Map.
 
 ### flintMapGet
 
@@ -875,14 +1119,20 @@ Keine Beschreibung angegeben.
 function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Ruft den einem Schlüssel zugeordneten Wert aus der Karte ab.
 
 #### Parameter
 
-| Name      | Geben Sie              | ein Beschreibung |
-| --------- | ---------------------- | ---------------- |
-| Karte     | FlintMap<TKey, TValue> |                  |
-| Schlüssel | TKey                   |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ---------------------- | ------------- |
+| Karte | FlintMap<TKey, TValue> | - Zielkarte. |
+| Schlüssel | TKey | - Suchschlüssel. |
+
+#### Vertrag
+
+- **@param:** – Zielkarte.
+- **@param:** – Suchschlüssel.
+- **@returns:** Option, die einen Wert enthält oder keinen.
 
 ### flintMapSet
 
@@ -892,15 +1142,22 @@ Keine Beschreibung angegeben.
 function flintMapSet(map: FlintMap<TKey, TValue>, key: TKey, value: TValue): FlintMap<TKey, TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Fügt eine Schlüssel-Wert-Zuordnung ein oder aktualisiert sie und gibt eine neue persistente Zuordnung zurück.
 
 #### Parameter
 
-| Name      | Geben Sie              | ein Beschreibung |
-| --------- | ---------------------- | ---------------- |
-| Karte     | FlintMap<TKey, TValue> |                  |
-| Schlüssel | TKey                   |                  |
-| Wert      | TValue                 |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------------------- | ---------------- |
+| Karte | FlintMap<TKey, TValue> | - Zielkarte.    |
+| Schlüssel | TKey | - Zuordnungsschlüssel.   |
+| Wert | TValue | - Mapping-Wert. |
+
+#### Vertrag
+
+- **@param:** – Zielkarte.
+- **@param:** – Zuordnungsschlüssel.
+- **@param:** – Zuordnungswert.
+- **@returns:** Persistente Karte aktualisiert.
 
 ### flintNone
 
@@ -912,7 +1169,7 @@ export const flintNone;
 
 Konstruieren Sie einen leeren Optionswert.
 
-### flintOk
+### flintOkay
 
 **Art:** konstant
 
@@ -950,7 +1207,7 @@ Ergebnisähnlicher Wert, der von nicht abfangenden Sammlungsmutationshelfern ver
 export interface FlintSet<TValue>
 ```
 
-Keine Beschreibung angegeben.
+Datenstruktur der persistenten Hash-Set-Sammlung.
 
 ### flintSetAdd
 
@@ -960,14 +1217,20 @@ Keine Beschreibung angegeben.
 function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Fügt der Menge ein Element hinzu und gibt bei Änderung eine neue persistente Menge zurück.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| einstellen | FlintSet<TValue> |                  |
-| Wert       | TValue           |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------------- | ------------------ |
+| einstellen | FlintSet<TValue> | - Ziel gesetzt.      |
+| Wert | TValue | - Einzufügender Wert. |
+
+#### Vertrag
+
+- **@param:** – Ziel festgelegt.
+- **@param:** – Einzufügender Wert.
+- **@returns:** Persistenter Satz aktualisiert.
 
 ### flintSetDelete
 
@@ -977,14 +1240,20 @@ Keine Beschreibung angegeben.
 function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Löscht ein Element aus der Menge und gibt bei Änderung eine neue persistente Menge zurück.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| einstellen | FlintSet<TValue> |                  |
-| Wert       | TValue           |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------------- | ------------------ |
+| einstellen | FlintSet<TValue> | - Ziel gesetzt.      |
+| Wert | TValue | - Zu entfernender Wert. |
+
+#### Vertrag
+
+- **@param:** – Ziel festgelegt.
+- **@param:** – Zu entfernender Wert.
+- **@returns:** Persistenter Satz aktualisiert.
 
 ### flintSetHas
 
@@ -994,14 +1263,20 @@ Keine Beschreibung angegeben.
 function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 ```
 
-Keine Beschreibung angegeben.
+Testet, ob ein Wert in der Menge vorhanden ist.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| einstellen | FlintSet<TValue> |                  |
-| Wert       | TValue           |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------------- | ----------------- |
+| einstellen | FlintSet<TValue> | - Ziel gesetzt.     |
+| Wert | TValue | - Zu prüfender Wert. |
+
+#### Vertrag
+
+- **@param:** – Ziel festgelegt.
+- **@param:** – Zu überprüfender Wert.
+- **@returns:** True, wenn Wert vorhanden ist.
 
 ### flintSetValues
 
@@ -1011,13 +1286,18 @@ Keine Beschreibung angegeben.
 function flintSetValues(set: FlintSet<TValue>): FlintVector<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Gibt alle in der Menge enthaltenen Werte als eigenen Vektor zurück.
 
 #### Parameter
 
-| Name       | Geben Sie        | ein Beschreibung |
-| ---------- | ---------------- | ---------------- |
-| einstellen | FlintSet<TValue> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ---------------- | ------------- |
+| einstellen | FlintSet<TValue> | - Ziel gesetzt. |
+
+#### Vertrag
+
+- **@param:** – Ziel festgelegt.
+- **@returns:** Vektor der Werte in der Menge.
 
 ### flintSome
 
@@ -1065,10 +1345,10 @@ Filtern Sie einen Vektor eifrig in einen neuen Vektor und behalten Sie dabei die
 
 #### Parameter
 
-| Name     | Geben Sie                              | ein Beschreibung |
-| -------- | -------------------------------------- | ---------------- |
-| Vektor   | FlintVector<TValue>                    |                  |
-| Prädikat | (Wert: TValue, Index: Zahl) => boolean |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ----------------------------------------- | ----------- |
+| Vektor | FlintVector<TValue> |             |
+| Prädikat | (Wert: TValue, Index: Zahl) => boolean |             |
 
 ### flintVectorFold
 
@@ -1086,11 +1366,11 @@ Vektorwerte von links nach rechts falten, einschließlich des bereitgestellten A
 
 #### Parameter
 
-| Name       | Geben Sie                                                    | ein Beschreibung |
-| ---------- | ------------------------------------------------------------ | ---------------- |
-| Vektor     | FlintVector<TValue>                                          |                  |
-| Initiale   | TResult                                                      |                  |
-| Reduzierer | (Akkumulator: TResult, Wert: TValue, Index: Zahl) => TResult |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------------------------------------------------- | ----------- |
+| Vektor | FlintVector<TValue> |             |
+| Initiale | TResult |             |
+| Reduzierer | (Akkumulator: TResult, Wert: TValue, Index: Zahl) => TResult |             |
 
 ### flintVectorGet
 
@@ -1104,10 +1384,10 @@ Ein Vektorelement lesen; Ungültige Indizes geben Option.none zurück.
 
 #### Parameter
 
-| Name   | Geben Sie           | ein Beschreibung |
-| ------ | ------------------- | ---------------- |
-| Vektor | FlintVector<TValue> |                  |
-| Index  | Zahl                |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------- | ----------- |
+| Vektor | FlintVector<TValue> |             |
+| Index | Nummer |             |
 
 ### flintVectorLength
 
@@ -1121,9 +1401,9 @@ Gibt die Anzahl der initialisierten Vektorelemente zurück.
 
 #### Parameter
 
-| Name   | Geben Sie           | ein Beschreibung |
-| ------ | ------------------- | ---------------- |
-| Vektor | FlintVector<TValue> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------- | ----------- |
+| Vektor | FlintVector<TValue> |             |
 
 ### flintVectorMap
 
@@ -1140,10 +1420,10 @@ Ordnen Sie einen Vektor in der Quellindexreihenfolge eifrig einem neuen Vektor z
 
 #### Parameter
 
-| Name           | Geben Sie                              | ein Beschreibung |
-| -------------- | -------------------------------------- | ---------------- |
-| Vektor         | FlintVector<TValue>                    |                  |
-| transformieren | (Wert: TValue, Index: Zahl) => TResult |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ----------------------------------------- | ----------- |
+| Vektor | FlintVector<TValue> |             |
+| transformieren | (Wert: TValue, Index: Zahl) => TResult |             |
 
 ### flintVectorPop
 
@@ -1160,9 +1440,9 @@ Entfernen Sie den endgültigen Vektorwert und geben Sie den aktualisierten Vekto
 
 #### Parameter
 
-| Name   | Geben Sie           | ein Beschreibung |
-| ------ | ------------------- | ---------------- |
-| Vektor | FlintVector<TValue> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------- | ----------- |
+| Vektor | FlintVector<TValue> |             |
 
 ### flintVectorPush
 
@@ -1176,10 +1456,10 @@ Fügen Sie einen Wert hinzu und erweitern Sie die Kapazität nach Bedarf, wobei 
 
 #### Parameter
 
-| Name   | Geben Sie           | ein Beschreibung |
-| ------ | ------------------- | ---------------- |
-| Vektor | FlintVector<TValue> |                  |
-| Wert   | TValue              |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------- | ----------- |
+| Vektor | FlintVector<TValue> |             |
+| Wert | TValue |             |
 
 ### flintVectorSet
 
@@ -1193,11 +1473,11 @@ Ersetzen Sie ein Vektorelement. Ungültige Indizes lösen RangeError aus.
 
 #### Parameter
 
-| Name   | Geben Sie           | ein Beschreibung |
-| ------ | ------------------- | ---------------- |
-| Vektor | FlintVector<TValue> |                  |
-| Index  | Zahl                |                  |
-| Wert   | TValue              |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------- | ----------- |
+| Vektor | FlintVector<TValue> |             |
+| Index | Nummer |             |
+| Wert | TValue |             |
 
 ### flintVectorTrySet
 
@@ -1215,11 +1495,11 @@ Ersetzen Sie ein Vektorelement, ohne es auszulösen. Ungültige Indizes geben ei
 
 #### Parameter
 
-| Name   | Geben Sie           | ein Beschreibung |
-| ------ | ------------------- | ---------------- |
-| Vektor | FlintVector<TValue> |                  |
-| Index  | Zahl                |                  |
-| Wert   | TValue              |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------- | ----------- |
+| Vektor | FlintVector<TValue> |             |
+| Index | Nummer |             |
+| Wert | TValue |             |
 
 ## `src/ecs`
 
@@ -1236,16 +1516,24 @@ function addFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Fügt einer Entität eine Komponente hinzu, sofern diese noch nicht vorhanden ist.
 
 #### Parameter
 
-| Name       | Geben Sie             | ein Beschreibung |
-| ---------- | --------------------- | ---------------- |
-| Welt       | FlintEcsWorld<TValue> |                  |
-| Entität    | FlintEcsEntity        |                  |
-| Komponente | Zeichenfolge          |                  |
-| Wert       | TValue                |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | --------------------- | ------------------------- |
+| Welt | FlintEcsWorld<TValue> | - Aktueller Weltschnappschuss. |
+| Entität | FlintEcsEntity | - Zielentität.          |
+| Komponente | Zeichenfolge |                           |
+| Wert | TValue | - Komponentenwertdaten.   |
+
+#### Vertrag
+
+- **@param:** - Aktueller Welt-Schnappschuss.
+- **@param:** – Zielentität.
+- **@param:** – Komponentenname.
+- **@param:** – Komponentenwertdaten.
+- **@returns:** Ergebnis des Übergangs.
 
 ### createFlintEcsScheduler
 
@@ -1260,16 +1548,21 @@ function createFlintEcsScheduler(
 ): FlintEcsScheduler<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Erstellt einen ECS-Ausführungspipeline-Planer.
 
 #### Parameter
 
-| Name        | Geben Sie                                 | ein Beschreibung |
-| ----------- | ----------------------------------------- | ---------------- |
-| Systeme     | schreibgeschützt FlintEcsSystem<TValue>[] |                  |
-| Signale     | schreibgeschützt FlintEcsSignal[]         |                  |
-| Abonnements | readonly FlintEcsSubscription[]           |                  |
-| maxSteps    |                                           |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------- | --------------------------------- | -------------------------------------------------- |
+| Systeme | schreibgeschützt FlintEcsSystem<TValue>[] | - Reihenfolge der in der Pipeline zu registrierenden Systeme. |
+| Signale | schreibgeschützt FlintEcsSignal[] |                                                    |
+| Abonnements | schreibgeschützt FlintEcsSubscription[] |                                                    |
+| maxSteps |                                   |                                                    |
+
+#### Vertrag
+
+- **@param:** – Reihenfolge der Systeme, die in der Pipeline registriert werden sollen.
+- **@returns:** Konfigurierte FlintEcsScheduler-Instanz.
 
 ### createFlintEcsWorld
 
@@ -1279,7 +1572,11 @@ Keine Beschreibung angegeben.
 function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Initialisiert eine leere Entity Component System-Welt.
+
+#### Vertrag
+
+- **@returns:** Frisch initialisierte FlintEcsWorld-Instanz.
 
 ### despawnFlintEcsEntity
 
@@ -1289,14 +1586,20 @@ Keine Beschreibung angegeben.
 function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): FlintEcsResult<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Despawnt eine Entität, erhöht ihre Generierung und löscht alle angeschlossenen Komponenten.
 
 #### Parameter
 
-| Name    | Geben Sie             | ein Beschreibung |
-| ------- | --------------------- | ---------------- |
-| Welt    | FlintEcsWorld<TValue> |                  |
-| Entität | FlintEcsEntity        |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------------------- | ------------------------- |
+| Welt | FlintEcsWorld<TValue> | - Aktueller Weltschnappschuss. |
+| Entität | FlintEcsEntity | - Entität zum Despawnen.      |
+
+#### Vertrag
+
+- **@param:** - Aktueller Welt-Schnappschuss.
+- **@param:** – Entität, die verschwinden soll.
+- **@returns:** Ergebnis des Übergangs.
 
 ### FlintEcsComponentStore
 
@@ -1306,7 +1609,7 @@ Keine Beschreibung angegeben.
 export interface FlintEcsComponentStore<TValue = Uint8Array>
 ```
 
-Keine Beschreibung angegeben.
+Komponentenspeicherzuordnungs-Entitätsindexnummern zu Komponenteninstanzen.
 
 ### FlintEcsEntity
 
@@ -1316,7 +1619,7 @@ Keine Beschreibung angegeben.
 export interface FlintEcsEntity
 ```
 
-Keine Beschreibung angegeben.
+Leichtes Generationen-Entitätshandle, das Index und Generationszähler kombiniert.
 
 ### FlintEcsEntityResult
 
@@ -1326,7 +1629,7 @@ Keine Beschreibung angegeben.
 export interface FlintEcsEntityResult<TValue = Uint8Array>
 ```
 
-Keine Beschreibung angegeben.
+Ergebnis einer Entitätsmutation, die die geänderte Welt und das geänderte Entitätshandle zurückgibt.
 
 ### FlintEcsQuery
 
@@ -1336,7 +1639,7 @@ Keine Beschreibung angegeben.
 export interface FlintEcsQuery
 ```
 
-Keine Beschreibung angegeben.
+Entitätsabfragespezifikation, die erforderliche und ausgeschlossene Komponentenschlüssel definiert.
 
 ### FlintEcsResult
 
@@ -1346,7 +1649,7 @@ Keine Beschreibung angegeben.
 export type FlintEcsResult<TValue = Uint8Array> = |
 ```
 
-Keine Beschreibung angegeben.
+Ergebnis eines ECS-Übergangs, entweder erfolgreich oder fehlgeschlagen.
 
 ### FlintEcsScheduler
 
@@ -1356,7 +1659,7 @@ Keine Beschreibung angegeben.
 export interface FlintEcsScheduler<TValue = Uint8Array>
 ```
 
-Keine Beschreibung angegeben.
+Pipeline-Scheduler, der Systemphasen und Signalübermittlung koordiniert.
 
 ### FlintEcsScheduleResult
 
@@ -1366,7 +1669,7 @@ Keine Beschreibung angegeben.
 export interface FlintEcsScheduleResult<TValue = Uint8Array>
 ```
 
-Keine Beschreibung angegeben.
+Ergebnis der Ausführung eines ECS-Zeitplans über mehrere Systemschritte hinweg.
 
 ### FlintEcsSignal
 
@@ -1376,7 +1679,7 @@ Keine Beschreibung angegeben.
 export interface FlintEcsSignal
 ```
 
-Keine Beschreibung angegeben.
+Ereignis- oder Zustandsänderungssignal, das während der Ausführung des ECS-Systems ausgegeben wird.
 
 ### FlintEcsSubscription
 
@@ -1386,7 +1689,7 @@ Keine Beschreibung angegeben.
 export interface FlintEcsSubscription
 ```
 
-Keine Beschreibung angegeben.
+Abonnement, das ein Signal an einen Event-Handler-Callback bindet.
 
 ### FlintEcsSystem
 
@@ -1396,7 +1699,7 @@ Keine Beschreibung angegeben.
 export interface FlintEcsSystem<TValue = Uint8Array>
 ```
 
-Keine Beschreibung angegeben.
+Systemausführungseinheit, die eine ECS-Welt basierend auf Abfragen und Aktualisierungen transformiert.
 
 ### FlintEcsTransition
 
@@ -1406,7 +1709,7 @@ Keine Beschreibung angegeben.
 export interface FlintEcsTransition<TValue = Uint8Array>
 ```
 
-Keine Beschreibung angegeben.
+Aufgezeichneter Weltübergang mit detaillierten Angaben zur vorherigen Welt, der nächsten Welt und den ausgesendeten Signalen.
 
 ### FlintEcsWorld
 
@@ -1416,7 +1719,7 @@ Keine Beschreibung angegeben.
 export interface FlintEcsWorld<TValue = Uint8Array>
 ```
 
-Keine Beschreibung angegeben.
+Unveränderlicher Schnappschuss einer Entity Component System-Welt.
 
 ### getFlintEcsComponent
 
@@ -1430,15 +1733,22 @@ function getFlintEcsComponent(
 ): TValue | undefined;
 ```
 
-Keine Beschreibung angegeben.
+Ruft die einer Entität zugeordnete Komponenteninstanz ab.
 
 #### Parameter
 
-| Name       | Geben Sie             | ein Beschreibung |
-| ---------- | --------------------- | ---------------- |
-| Welt       | FlintEcsWorld<TValue> |                  |
-| Entität    | FlintEcsEntity        |                  |
-| Komponente | Zeichenfolge          |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | --------------------- | ------------------------- |
+| Welt | FlintEcsWorld<TValue> | - Aktueller Weltschnappschuss. |
+| Entität | FlintEcsEntity | - Zielentität.          |
+| Komponente | Zeichenfolge |                           |
+
+#### Vertrag
+
+- **@param:** - Aktueller Welt-Schnappschuss.
+- **@param:** – Zielentität.
+- **@param:** – Komponentenname.
+- **@returns:** Komponentenwert oder undefiniert, falls nicht vorhanden.
 
 ### isFlintEcsEntityAlive
 
@@ -1448,14 +1758,20 @@ Keine Beschreibung angegeben.
 function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): boolean;
 ```
 
-Keine Beschreibung angegeben.
+Bestimmt, ob ein Entitätshandle mit der aktiven Generation in der Welt übereinstimmt.
 
 #### Parameter
 
-| Name    | Geben Sie             | ein Beschreibung |
-| ------- | --------------------- | ---------------- |
-| Welt    | FlintEcsWorld<TValue> |                  |
-| Entität | FlintEcsEntity        |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------------------- | ------------------------- |
+| Welt | FlintEcsWorld<TValue> | - Aktueller Weltschnappschuss. |
+| Entität | FlintEcsEntity | – Zu überprüfendes Entitätshandle. |
+
+#### Vertrag
+
+- **@param:** - Aktueller Welt-Schnappschuss.
+- **@param:** – Zu überprüfendes Entitätshandle.
+- **@returns:** True, wenn lebendig.
 
 ### queryFlintEcsEntities
 
@@ -1465,14 +1781,20 @@ Keine Beschreibung angegeben.
 function queryFlintEcsEntities(world: FlintEcsWorld<TValue>, query: FlintEcsQuery): readonly FlintEcsEntity[];
 ```
 
-Keine Beschreibung angegeben.
+Fragt aktive Entitäten ab, die den Komponentenfilterkriterien entsprechen.
 
 #### Parameter
 
-| Name    | Geben Sie             | ein Beschreibung |
-| ------- | --------------------- | ---------------- |
-| Welt    | FlintEcsWorld<TValue> |                  |
-| Abfrage | FlintEcsQuery         |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | --------------------- | ----------------------------- |
+| Welt | FlintEcsWorld<TValue> | - Aktueller Weltschnappschuss.     |
+| Abfrage | FlintEcsQuery | - Filterspezifikation abfragen. |
+
+#### Vertrag
+
+- **@param:** - Aktueller Welt-Schnappschuss.
+- **@param:** – Filterspezifikation abfragen.
+- **@returns:** Array passender Entitätshandles.
 
 ### RemoveFlintEcsComponent
 
@@ -1486,15 +1808,22 @@ function removeFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Entfernt eine Komponente aus einer Entität.
 
 #### Parameter
 
-| Name       | Geben Sie             | ein Beschreibung |
-| ---------- | --------------------- | ---------------- |
-| Welt       | FlintEcsWorld<TValue> |                  |
-| Entität    | FlintEcsEntity        |                  |
-| Komponente | Zeichenfolge          |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | --------------------- | ------------------------- |
+| Welt | FlintEcsWorld<TValue> | - Aktueller Weltschnappschuss. |
+| Entität | FlintEcsEntity | - Zielentität.          |
+| Komponente | Zeichenfolge |                           |
+
+#### Vertrag
+
+- **@param:** - Aktueller Welt-Schnappschuss.
+- **@param:** – Zielentität.
+- **@param:** – Komponentenname, der entfernt werden soll.
+- **@returns:** Ergebnis des Übergangs.
 
 ### runFlintEcsScheduler
 
@@ -1507,14 +1836,20 @@ function runFlintEcsScheduler(
 ): FlintEcsScheduleResult<TValue> | Extract<FlintEcsResult<TValue>, { readonly ok: false }>;
 ```
 
-Keine Beschreibung angegeben.
+Führt eine ECS-Scheduler-Pipeline über alle registrierten Systeme und Phasen hinweg aus.
 
 #### Parameter
 
-| Name   | Geben Sie                 | ein Beschreibung |
-| ------ | ------------------------- | ---------------- |
-| Welt   | FlintEcsWorld<TValue>     |                  |
-| Planer | FlintEcsScheduler<TValue> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------------------- | -------------------------------- |
+| Welt | FlintEcsWorld<TValue> | - Erster Weltschnappschuss.        |
+| Planer | FlintEcsScheduler<TValue> | - Konfigurierte Scheduler-Pipeline. |
+
+#### Vertrag
+
+- **@param:** – Erster Welt-Schnappschuss.
+- **@param:** – Konfigurierte Scheduler-Pipeline.
+- **@returns:** Ausführungsbericht planen.
 
 ### setFlintEcsComponent
 
@@ -1529,16 +1864,24 @@ function setFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Legt einen Komponentenwert für eine Entität fest oder überschreibt ihn.
 
 #### Parameter
 
-| Name       | Geben Sie             | ein Beschreibung |
-| ---------- | --------------------- | ---------------- |
-| Welt       | FlintEcsWorld<TValue> |                  |
-| Entität    | FlintEcsEntity        |                  |
-| Komponente | Zeichenfolge          |                  |
-| Wert       | TValue                |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | --------------------- | ------------------------- |
+| Welt | FlintEcsWorld<TValue> | - Aktueller Weltschnappschuss. |
+| Entität | FlintEcsEntity | - Zielentität.          |
+| Komponente | Zeichenfolge |                           |
+| Wert | TValue | - Komponentenwertdaten.   |
+
+#### Vertrag
+
+- **@param:** - Aktueller Welt-Schnappschuss.
+- **@param:** – Zielentität.
+- **@param:** – Komponentenname.
+- **@param:** – Komponentenwertdaten.
+- **@returns:** Ergebnis des Übergangs.
 
 ### spawnFlintEcsEntity
 
@@ -1548,13 +1891,18 @@ Keine Beschreibung angegeben.
 function spawnFlintEcsEntity(world: FlintEcsWorld<TValue>): FlintEcsEntityResult<TValue>;
 ```
 
-Keine Beschreibung angegeben.
+Weist ein neues Entitätshandle zu und fügt es der Welt hinzu.
 
 #### Parameter
 
-| Name | Geben Sie             | ein Beschreibung |
-| ---- | --------------------- | ---------------- |
-| Welt | FlintEcsWorld<TValue> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | --------------------- | ------------------------- |
+| Welt | FlintEcsWorld<TValue> | - Aktueller Weltschnappschuss. |
+
+#### Vertrag
+
+- **@param:** - Aktueller Welt-Schnappschuss.
+- **@returns:** Entitätsergebnis, das eine aktualisierte Welt und eine neue Entität enthält.
 
 ### validierenFlintEcsSignals
 
@@ -1566,15 +1914,31 @@ function validateFlintEcsSignals(
 ): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
-Keine Beschreibung angegeben.
+Validiert eine Signalfolge anhand deklarierter Signaldefinitionen.
 
 #### Parameter
 
-| Name    | Geben Sie                         | ein Beschreibung |
-| ------- | --------------------------------- | ---------------- |
-| Signale | schreibgeschützt FlintEcsSignal[] |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------- | ------------------------------- |
+| Signale | schreibgeschützt FlintEcsSignal[] | - Array von zu validierenden Signalen. |
+
+#### Vertrag
+
+- **@param:** – Array von zu validierenden Signalen.
+- **@returns:** Objekt mit gültigen Status- und Fehlermeldungen.
 
 ## `src/host`
+
+### AtomicRingBufferChannel
+
+**Art:** Klasse
+
+```typescript
+export class AtomicRingBufferChannel
+```
+
+Synchronisiert atomare Head-/Tail-Zeigeraktualisierungen im gemeinsam genutzten Host-Interop-Ring-Pufferspeicher.
+Verwendet WebAssembly-kompatible atomare Speicher-/Ladevorgänge mit Garantien für die Speicherreihenfolge, um Race Conditions zu verhindern.
 
 ### createDefaultFlintCapabilities
 
@@ -1584,13 +1948,18 @@ Keine Beschreibung angegeben.
 function createDefaultFlintCapabilities(options: FlintDefaultHostOptions = {}): FlintCapabilityRegistry;
 ```
 
-Keine Beschreibung angegeben.
+Erstellt standardmäßig integrierte Funktionsanbieter (z. B. env.now).
 
 #### Parameter
 
-| Name     | Geben Sie               | ein Beschreibung |
-| -------- | ----------------------- | ---------------- |
-| Optionen | FlintDefaultHostOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ----------------------- | ------------------------------------------------- |
+| Optionen | FlintDefaultHostOptions | - Konfigurationsoptionen für Standardfunktionen. |
+
+#### Vertrag
+
+- **@param:** – Konfigurationsoptionen für Standardfunktionen.
+- **@returns:** Registry mit Standardfähigkeitsimplementierungen.
 
 ### createFlintHost
 
@@ -1604,15 +1973,22 @@ function createFlintHost(
 ): FlintHost;
 ```
 
-Keine Beschreibung angegeben.
+Erstellt eine Laufzeit-Hostumgebung, die Gastimporte an autorisierte Funktionen bindet.
 
 #### Parameter
 
-| Name          | Geben Sie               | ein Beschreibung |
-| ------------- | ----------------------- | ---------------- |
-| manifestieren | FlintAbiManifest        |                  |
-| Registrierung | FlintCapabilityRegistry |                  |
-| Optionen      | FlintHostOptions        |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ----------------------- | ------------------------------------------------------------ |
+| manifestieren | FlintAbiManifest | - ABI-Manifest, das die erforderlichen Funktionen und Importe beschreibt. |
+| Registrierung | FlintCapabilityRegistry | - Registrierung verfügbarer Funktionsimplementierungen.          |
+| Optionen | FlintHostOptions | - Konfigurationsoptionen für die Host-Initialisierung.             |
+
+#### Vertrag
+
+- **@param:** – ABI-Manifest, das die erforderlichen Funktionen und Importe beschreibt.
+- **@param:** – Registrierung verfügbarer Funktionsimplementierungen.
+- **@param:** – Konfigurationsoptionen für die Host-Initialisierung.
+- **@returns:** Konfigurierte FlintHost-Instanz.
 
 ### FlintCapabilityImplementation
 
@@ -1622,7 +1998,7 @@ Keine Beschreibung angegeben.
 export interface FlintCapabilityImplementation
 ```
 
-Keine Beschreibung angegeben.
+Host-Fähigkeitsimplementierung, die einen Aufruf-Handler und eine ABI-Signatur registriert.
 
 ### FlintCapabilityRegistry
 
@@ -1632,7 +2008,7 @@ Keine Beschreibung angegeben.
 export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImplementation>>;
 ```
 
-Keine Beschreibung angegeben.
+Zuordnung von Funktionsnamen zu ihren Host-Implementierungsanbietern.
 
 ### FlintDefaultHostOptions
 
@@ -1642,7 +2018,37 @@ Keine Beschreibung angegeben.
 export interface FlintDefaultHostOptions
 ```
 
-Keine Beschreibung angegeben.
+Konfigurationsoptionen für standardmäßig integrierte Funktionsanbieter.
+
+### FlintForeignCall
+
+**Art:** Typ
+
+```typescript
+export type FlintForeignCall = (symbol: string, arguments_: readonly unknown[]) => unknown | Promise<unknown>;
+```
+
+Host-Handler für den Aufruf fremder Funktionen.
+
+### FlintForeignCapabilityImplementation
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintForeignCapabilityImplementation
+```
+
+Implementierungsdeskriptor für die Host-Fremdfähigkeit.
+
+### FlintForeignCapabilityRegistry
+
+**Art:** Typ
+
+```typescript
+export type FlintForeignCapabilityRegistry = Readonly<Record<string, FlintForeignCapabilityImplementation>>;
+```
+
+Verzeichnis der verfügbaren Implementierungen ausländischer Fähigkeiten.
 
 ### FlintHost
 
@@ -1652,7 +2058,7 @@ Keine Beschreibung angegeben.
 export interface FlintHost
 ```
 
-Keine Beschreibung angegeben.
+Ausführungshost, der den Funktionsaufruf und die Lebensdauerverwaltung für Gastmodule bereitstellt.
 
 ### FlintHostCall
 
@@ -1662,7 +2068,7 @@ Keine Beschreibung angegeben.
 export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promise<unknown>;
 ```
 
-Keine Beschreibung angegeben.
+Aufrufbare Hostfunktion, die durch die Ausführung der Gastlaufzeit aufgerufen wird.
 
 ### FlintHostOptions
 
@@ -1672,7 +2078,52 @@ Keine Beschreibung angegeben.
 export interface FlintHostOptions
 ```
 
+Konfigurationsoptionen zum Initialisieren einer FlintHost-Instanz.
+
+### MAX_FFI_CALL_DEPTH
+
+**Art:** konstant
+
+```typescript
+export const MAX_FFI_CALL_DEPTH;
+```
+
 Keine Beschreibung angegeben.
+
+### TimingSafeEqualString
+
+**Art:** Funktion
+
+```typescript
+function timingSafeEqualString(stringA: string, stringB: string): boolean;
+```
+
+Führt einen zeitkonstanten Vergleich zweier Zeichenfolgen durch, um zeitgesteuerte Seitenkanalangriffe auf sicherheitskritische Kennungen zu verhindern.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------ | ----------- |
+| stringA | Zeichenfolge |             |
+| stringB | Zeichenfolge |             |
+
+### validierenHostPointerBounds
+
+**Art:** Funktion
+
+```typescript
+function validateHostPointerBounds(pointer: number, length: number, memoryLimit = 0xff_ff_ff_ff): boolean;
+```
+
+Überprüft, ob der Offset und die Länge eines Hostzeigers die Invarianten räumlicher Grenzen erfüllen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ------ | ----------- |
+| Zeiger | Nummer |             |
+| Länge | Nummer |             |
+| Speicherlimit |        |             |
 
 ## `src/iterator`
 
@@ -1692,11 +2143,11 @@ Passt das Backend-eigene i32-Handle und das gepackte i64-Next-Protokoll an die J
 
 #### Parameter
 
-| Name     | Geben Sie                                   | ein Beschreibung |
-| -------- | ------------------------------------------- | ---------------- |
-| Griff    | Zahl                                        |                  |
-| weiter   | (Handle: Zahl) => FlintPackedIteratorResult |                  |
-| Optionen | FlintWasmIteratorOptions<TValue>            |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------------------------------- | ----------- |
+| Griff | Nummer |             |
+| weiter | (Handle: Zahl) => FlintPackedIteratorResult |             |
+| Optionen | FlintWasmIteratorOptions<TValue> |             |
 
 ### createFlintWasmIteratorFactory
 
@@ -1714,11 +2165,11 @@ Erstellt eine JS-orientierte Iteratorfabrik aus einer Backend-Fabrik und ihrem `
 
 #### Parameter
 
-| Name     | Geben Sie                                   | ein Beschreibung |
-| -------- | ------------------------------------------- | ---------------- |
-| Fabrik   | (...arguments_: TArguments) => Zahl         |                  |
-| weiter   | (Handle: Zahl) => FlintPackedIteratorResult |                  |
-| Optionen | FlintWasmIteratorOptions<TValue>            |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------------------------------- | ----------- |
+| Fabrik | (...arguments_: TArguments) => Zahl |             |
+| weiter | (Handle: Zahl) => FlintPackedIteratorResult |             |
+| Optionen | FlintWasmIteratorOptions<TValue> |             |
 
 ### FlintPackedIteratorResult
 
@@ -1728,7 +2179,7 @@ Erstellt eine JS-orientierte Iteratorfabrik aus einer Backend-Fabrik und ihrem `
 export type FlintPackedIteratorResult = number | bigint;
 ```
 
-Keine Beschreibung angegeben.
+Gepackte numerische Darstellung eines nächsten Iteratoraufrufs, der von WebAssembly zurückgegeben wird.
 
 ### FlintWasmIterator
 
@@ -1738,7 +2189,7 @@ Keine Beschreibung angegeben.
 export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TValue>
 ```
 
-Keine Beschreibung angegeben.
+JavaScript-Iterator und iterierbare Brücke, die ein WebAssembly-Iterator-Statushandle umschließt.
 
 ### FlintWasmIteratorOptions
 
@@ -1748,7 +2199,7 @@ Keine Beschreibung angegeben.
 export interface FlintWasmIteratorOptions<TValue>
 ```
 
-Keine Beschreibung angegeben.
+Konfigurationsoptionen zum Erstellen eines WebAssembly-Iterator-Wrappers.
 
 ## `src/logging`
 
@@ -1760,13 +2211,18 @@ Keine Beschreibung angegeben.
 function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 ```
 
-Keine Beschreibung angegeben.
+Erstellt eine bereichsbezogene FlintLogger-Instanz mit benutzerdefinierter Schweregradfilterung und Senken.
 
 #### Parameter
 
-| Name     | Geben Sie          | ein Beschreibung |
-| -------- | ------------------ | ---------------- |
-| Optionen | FlintLoggerOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------ | -------------------------------------------------- |
+| Optionen | FlintLoggerOptions | - Konfigurationsoptionen für die Logger-Initialisierung. |
+
+#### Vertrag
+
+- **@param:** – Konfigurationsoptionen für die Logger-Initialisierung.
+- **@returns:** Konfigurierte FlintLogger-Instanz.
 
 ### FlintLogEvent
 
@@ -1776,7 +2232,7 @@ Keine Beschreibung angegeben.
 export interface FlintLogEvent
 ```
 
-Keine Beschreibung angegeben.
+Vom Logger ausgegebenes strukturiertes Laufzeitprotokollereignis.
 
 ### FlintLogger
 
@@ -1786,7 +2242,7 @@ Keine Beschreibung angegeben.
 export interface FlintLogger
 ```
 
-Keine Beschreibung angegeben.
+Bereichsspezifische Diagnoseprotokollierungsschnittstelle für die Ablaufverfolgung von Laufzeitereignissen.
 
 ### FlintLoggerOptions
 
@@ -1796,7 +2252,7 @@ Keine Beschreibung angegeben.
 export interface FlintLoggerOptions
 ```
 
-Keine Beschreibung angegeben.
+Konfigurationsoptionen zum Initialisieren einer Laufzeit-Logger-Instanz.
 
 ### FlintLogLevel
 
@@ -1806,7 +2262,7 @@ Keine Beschreibung angegeben.
 export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 ```
 
-Keine Beschreibung angegeben.
+Unterstützte Protokollierungsschweregrade für die Aufzeichnung von Laufzeitereignissen.
 
 ### FlintLogSink
 
@@ -1816,7 +2272,4133 @@ Keine Beschreibung angegeben.
 export type FlintLogSink = (event: FlintLogEvent) => void;
 ```
 
-Keine Beschreibung angegeben.
+Verbraucherrückruffunktion, die strukturierte Laufzeitprotokollereignisse empfängt.
+
+## `src/math/bignum`
+
+### createFlintDMatrix
+
+**Art:** Funktion
+
+```typescript
+function createFlintDMatrix(rows: number, cols: number, data?: readonly number[]): FlintDMatrix;
+```
+
+Führen Sie die Operation „Flint-D-Matrix erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ----------------- | ----------- |
+| Reihen | Zahl |             |
+| Spalten | Zahl |             |
+| Daten | schreibgeschützte Zahl[] |             |
+
+### createFlintTensor
+
+**Art:** Funktion
+
+```typescript
+function createFlintTensor(shape: FlintTensorShape, data: readonly TValue[]): FlintTensor<TValue>;
+```
+
+Führen Sie die Operation „Flint-Tensor erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ----------------- | ----------- |
+| Form | FlintTensorShape |             |
+| Daten | schreibgeschützter TValue[] |             |
+
+### createFlintTensorShape
+
+**Art:** Funktion
+
+```typescript
+function createFlintTensorShape(dimensions: readonly number[]): FlintTensorShape;
+```
+
+Führen Sie den Vorgang „Flint-Tensor-Form erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------- | ----------- |
+| Abmessungen | schreibgeschützte Zahl[] |             |
+
+### createFlintTensorView
+
+**Art:** Funktion
+
+```typescript
+function createFlintTensorView(shape: FlintTensorShape, data: readonly TValue[], offset = 0): FlintTensorView<TValue>;
+```
+
+Führen Sie den Vorgang zum Erstellen einer Flint-Tensor-Ansicht durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ----------------- | ----------- |
+| Form | FlintTensorShape |             |
+| Daten | schreibgeschützter TValue[] |             |
+| Versatz |                   |             |
+
+### FlintCholeskyDecomposition
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintCholeskyDecomposition
+```
+
+Darstellung der Cholesky-Zerlegung.
+
+### FlintDMatrix
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintDMatrix
+```
+
+D-Matrix-Darstellung.
+
+### flintDMatrixAddInplace
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixAddInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+Führen Sie den D-Matrix-Add-in-Place-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------ | ----------- |
+| MatrixA | FlintDMatrix |             |
+| MatrixB | FlintDMatrix |             |
+
+### flintDMatrixCholesky
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixCholesky(matrix: FlintDMatrix): FlintOption<FlintCholeskyDecomposition>;
+```
+
+Führen Sie eine D-Matrix-Cholesky-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------ | ----------- |
+| Matrix | FlintDMatrix |             |
+
+### flintDMatrixCholeskySolve
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixCholeskySolve(
+  chol: FlintCholeskyDecomposition,
+  rhsVector: FlintDMatrix,
+): FlintOption<FlintDMatrix>;
+```
+
+Führen Sie eine D-Matrix-Cholesky-Lösungsoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| --------- | -------------------------- | ----------- |
+| chol | FlintCholeskyDecomposition |             |
+| rhsVector | FlintDMatrix |             |
+
+### flintDMatrixDeterminant
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixDeterminant(matrix: FlintDMatrix): FlintOption<number>;
+```
+
+Führen Sie eine d-Matrix-Determinantenoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------ | ----------- |
+| Matrix | FlintDMatrix |             |
+
+### flintDMatrixEigenSymmetric
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixEigenSymmetric(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintEigenDecomposition>;
+```
+
+Führen Sie eine d-Matrix-eigensymmetrische Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------------- | ------------ | ----------- |
+| Matrix | FlintDMatrix |             |
+| maxIterations |              |             |
+| Epsilon |              |             |
+
+### flintDMatrixGet
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixGet(matrix: FlintDMatrix, row: number, col: number): FlintOption<number>;
+```
+
+Führen Sie die D-Matrix-Get-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------ | ----------- |
+| Matrix | FlintDMatrix |             |
+| Reihe | Nummer |             |
+| col | Nummer |             |
+
+### flintDMatrixIdentity
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixIdentity(size: number): FlintDMatrix;
+```
+
+Führen Sie eine D-Matrix-Identitätsoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Größe | Nummer |             |
+
+### flintDMatrixInverse
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixInverse(matrix: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+Führen Sie eine d-Matrix-Umkehroperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------ | ----------- |
+| Matrix | FlintDMatrix |             |
+
+### flintDMatrixLU
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixLU(matrix: FlintDMatrix): FlintOption<FlintLUDecomposition>;
+```
+
+Führen Sie eine d-Matrix-lu-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------ | ----------- |
+| Matrix | FlintDMatrix |             |
+
+### flintDMatrixMul
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixMul(matrixA: FlintDMatrix, matrixB: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+Führen Sie eine D-Matrix-Mul-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------ | ----------- |
+| MatrixA | FlintDMatrix |             |
+| MatrixB | FlintDMatrix |             |
+
+### flintDMatrixMulAccumulate
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixMulAccumulate(
+  outMatrix: FlintDMatrix,
+  matrixA: FlintDMatrix,
+  matrixB: FlintDMatrix,
+  alpha = 1,
+): boolean;
+```
+
+Führen Sie eine D-Matrix-Multiakkumulationsoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------ | ----------- |
+| outMatrix | FlintDMatrix |             |
+| MatrixA | FlintDMatrix |             |
+| MatrixB | FlintDMatrix |             |
+| Alpha |              |             |
+
+### flintDMatrixPseudoinverse
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixPseudoinverse(matrix: FlintDMatrix, epsilon = FLINT_MATH_EPSILON): FlintOption<FlintDMatrix>;
+```
+
+Führen Sie eine pseudoinverse D-Matrix-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------ | ----------- |
+| Matrix | FlintDMatrix |             |
+| Epsilon |              |             |
+
+### flintDMatrixQR
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixQR(matrix: FlintDMatrix): FlintOption<FlintQRDecomposition>;
+```
+
+Führen Sie eine d-Matrix-q-r-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------ | ----------- |
+| Matrix | FlintDMatrix |             |
+
+### flintDMatrixScaleInplace
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixScaleInplace(matrix: FlintDMatrix, factor: number): void;
+```
+
+Führen Sie den In-Place-Vorgang mit der d-Matrix-Skala durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------ | ----------- |
+| Matrix | FlintDMatrix |             |
+| Faktor | Nummer |             |
+
+### flintDMatrixSet
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixSet(matrix: FlintDMatrix, row: number, col: number, value: number): boolean;
+```
+
+Führen Sie eine D-Matrix-Set-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------ | ----------- |
+| Matrix | FlintDMatrix |             |
+| Reihe | Nummer |             |
+| col | Nummer |             |
+| Wert | Nummer |             |
+
+### flintDMatrixSolve
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixSolve(matrixA: FlintDMatrix, rhsVector: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+Führen Sie eine D-Matrix-Lösungsoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------ | ----------- |
+| MatrixA | FlintDMatrix |             |
+| rhsVector | FlintDMatrix |             |
+
+### flintDMatrixSubInplace
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixSubInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+Führen Sie eine D-Matrix-Sub-Inplace-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------ | ----------- |
+| MatrixA | FlintDMatrix |             |
+| MatrixB | FlintDMatrix |             |
+
+### flintDMatrixSVD
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixSVD(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintSVDDecomposition>;
+```
+
+Führen Sie eine d-Matrix-s-v-d-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------------- | ------------ | ----------- |
+| Matrix | FlintDMatrix |             |
+| maxIterations |              |             |
+| Epsilon |              |             |
+
+### flintDMatrixTranspose
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixTranspose(matrix: FlintDMatrix): FlintDMatrix;
+```
+
+Führen Sie eine D-Matrix-Transponierungsoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------ | ----------- |
+| Matrix | FlintDMatrix |             |
+
+### flintDMatrixZeros
+
+**Art:** Funktion
+
+```typescript
+function flintDMatrixZeros(rows: number, cols: number): FlintDMatrix;
+```
+
+Führen Sie eine d-Matrix-Nulloperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------ | ----------- |
+| Reihen | Nummer |             |
+| Spalten | Nummer |             |
+
+### FlintEigenDecomposition
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintEigenDecomposition
+```
+
+Eigenzerlegungsdarstellung.
+
+### FlintLUDecomposition
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintLUDecomposition
+```
+
+L U Zerlegungsdarstellung.
+
+### FlintQRDecomposition
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintQRDecomposition
+```
+
+Q R-Zerlegungsdarstellung.
+
+### FlintSVDDecomposition
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintSVDDecomposition
+```
+
+S V D Zerlegungsdarstellung.
+
+### FlintTensor
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintTensor<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+Tensordarstellung.
+
+### flintTensorFill
+
+**Art:** Funktion
+
+```typescript
+function flintTensorFill(shape: FlintTensorShape, value: TValue): FlintTensor<TValue>;
+```
+
+Führen Sie eine Tensorfülloperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------------- | ----------- |
+| Form | FlintTensorShape |             |
+| Wert | TValue |             |
+
+### flintTensorMatmul
+
+**Art:** Funktion
+
+```typescript
+function flintTensorMatmul(
+  tensorA: FlintTensor<number>,
+  tensorB: FlintTensor<number>,
+): FlintOption<FlintTensor<number>>;
+```
+
+Führen Sie eine Tensor-Matmul-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------- | ----------- |
+| tensorA | FlintTensor<number> |             |
+| tensorB | FlintTensor<number> |             |
+
+### flintTensorReshape
+
+**Art:** Funktion
+
+```typescript
+function flintTensorReshape(tensor: FlintTensor<TValue>, newShape: FlintTensorShape): FlintOption<FlintTensor<TValue>>;
+```
+
+Führen Sie eine Tensor-Umformoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------------------- | ----------- |
+| Tensor | FlintTensor<TValue> |             |
+| newShape | FlintTensorShape |             |
+
+### FlintTensorShape
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintTensorShape
+```
+
+Darstellung der Tensorform.
+
+### flintTensorShapeSize
+
+**Art:** Funktion
+
+```typescript
+function flintTensorShapeSize(shape: FlintTensorShape): number;
+```
+
+Führen Sie eine Tensorformgrößenoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------------- | ----------- |
+| Form | FlintTensorShape |             |
+
+### flintTensorSlice
+
+**Art:** Funktion
+
+```typescript
+function flintTensorSlice(
+  view: FlintTensorView<TValue>,
+  axis: number,
+  start: number,
+  length: number,
+): FlintOption<FlintTensorView<TValue>>;
+```
+
+Führen Sie eine Tensor-Slice-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ----------------------- | ----------- |
+| ansehen | FlintTensorView<TValue> |             |
+| Achse | Nummer |             |
+| Start | Nummer |             |
+| Länge | Nummer |             |
+
+### flintTensorView
+
+**Art:** Funktion
+
+```typescript
+function flintTensorView(tensor: FlintTensor<TValue>): FlintTensorView<TValue>;
+```
+
+Führen Sie eine Tensoransichtsoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------- | ----------- |
+| Tensor | FlintTensor<TValue> |             |
+
+### FlintTensorView
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintTensorView<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+Darstellung der Tensoransicht.
+
+### flintTensorViewGet
+
+**Art:** Funktion
+
+```typescript
+function flintTensorViewGet(view: FlintTensorView<TValue>, indices: readonly number[]): FlintOption<TValue>;
+```
+
+Führen Sie den Tensor-View-Get-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ----------------------- | ----------- |
+| ansehen | FlintTensorView<TValue> |             |
+| Indizes | schreibgeschützte Zahl[] |             |
+
+### flintTensorViewSet
+
+**Art:** Funktion
+
+```typescript
+function flintTensorViewSet(view: FlintTensorView<TValue>, indices: readonly number[], value: TValue): boolean;
+```
+
+Führen Sie eine Tensor-View-Set-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ----------------------- | ----------- |
+| ansehen | FlintTensorView<TValue> |             |
+| Indizes | schreibgeschützte Zahl[] |             |
+| Wert | TValue |             |
+
+## `src/math/ieee754`
+
+### createFlintColorRgba
+
+**Art:** Funktion
+
+```typescript
+function createFlintColorRgba(red = 0, green = 0, blue = 0, alpha = 1): FlintColorRgba;
+```
+
+Führen Sie den Vorgang „Flint Color RGBA erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---- | ----------- |
+| rot |      |             |
+| grün |      |             |
+| blau |      |             |
+| Alpha |      |             |
+
+### FLINT_MATH_DEG_TO_RAD
+
+**Art:** konstant
+
+```typescript
+export const FLINT_MATH_DEG_TO_RAD;
+```
+
+Umrechnungsfaktor von Grad in Bogenmaß.
+
+### FLINT_MATH_E
+
+**Art:** konstant
+
+```typescript
+export const FLINT_MATH_E;
+```
+
+Euler-Konstante (e).
+
+### FLINT_MATH_EPSILON
+
+**Art:** konstant
+
+```typescript
+export const FLINT_MATH_EPSILON;
+```
+
+Euler-Konstante (e).
+
+### FLINT_MATH_F32_EPSILON
+
+**Art:** konstant
+
+```typescript
+export const FLINT_MATH_F32_EPSILON;
+```
+
+Maschinen-Epsilon für 32-Bit-Gleitkommaoperationen.
+
+### FLINT_MATH_PI
+
+**Art:** konstant
+
+```typescript
+export const FLINT_MATH_PI;
+```
+
+Standardmathematische Konstanten für die Flint-Laufzeit.
+
+### FLINT_MATH_RAD_TO_DEG
+
+**Art:** konstant
+
+```typescript
+export const FLINT_MATH_RAD_TO_DEG;
+```
+
+Umrechnungsfaktor von Bogenmaß in Grad.
+
+### FLINT_MATH_SQRT2
+
+**Art:** konstant
+
+```typescript
+export const FLINT_MATH_SQRT2;
+```
+
+Quadratwurzel aus 2 Konstante.
+
+### FLINT_MATH_TAU
+
+**Art:** konstant
+
+```typescript
+export const FLINT_MATH_TAU;
+```
+
+2 * PI (Tau) Kreiskonstante.
+
+### flintCa.Gleich
+
+**Art:** Funktion
+
+```typescript
+function flintApproxEqual(first: number, second: number, epsilon = FLINT_MATH_EPSILON): boolean;
+```
+
+Testen Sie die ungefähre Gleichheit innerhalb des angegebenen Epsilons.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------ | ----------- |
+| zuerst | Nummer |             |
+| zweite | Nummer |             |
+| Epsilon |        |             |
+
+### FeuersteinDecke
+
+**Art:** Funktion
+
+```typescript
+function flintCeil(value: number): number;
+```
+
+Berechnen Sie die kleinste ganze Zahl, die größer oder gleich x ist.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Nummer |             |
+
+### flintClamp
+
+**Art:** Funktion
+
+```typescript
+function flintClamp(value: number, minimum: number, maximum: number): number;
+```
+
+Klemmen Sie einen numerischen Wert zwischen die Mindest- und Höchstgrenzen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------ | ----------- |
+| Wert | Nummer |             |
+| Minimum | Nummer |             |
+| maximal | Nummer |             |
+
+### FlintColorHsv
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintColorHsv
+```
+
+Farbige Hsv-Darstellung.
+
+### flintColorHsvToRgb
+
+**Art:** Funktion
+
+```typescript
+function flintColorHsvToRgb(hsv: FlintColorHsv): FlintColorRgba;
+```
+
+Führen Sie einen Farb-HSV-zu-RGB-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------- | ----------- |
+| hsv | FlintColorHsv |             |
+
+### flintColorLerpOklab
+
+**Art:** Funktion
+
+```typescript
+function flintColorLerpOklab(first: FlintColorRgba, second: FlintColorRgba, factor: number): FlintColorRgba;
+```
+
+Führen Sie den Farb-Lerp-Oklab-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | -------------- | ----------- |
+| zuerst | FlintColorRgba |             |
+| zweite | FlintColorRgba |             |
+| Faktor | Nummer |             |
+
+### flintColorLinearToSrgb
+
+**Art:** Funktion
+
+```typescript
+function flintColorLinearToSrgb(color: FlintColorRgba): FlintColorRgba;
+```
+
+Führen Sie einen Farblinear-zu-SRGB-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | -------------- | ----------- |
+| Farbe | FlintColorRgba |             |
+
+### FlintColorOklab
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintColorOklab
+```
+
+Farbige Oklab-Darstellung.
+
+### flintColorOklabToSrgb
+
+**Art:** Funktion
+
+```typescript
+function flintColorOklabToSrgb(lab: FlintColorOklab): FlintColorRgba;
+```
+
+Führen Sie den Farb-Oklab-zu-SRGB-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | --------------- | ----------- |
+| Labor | FlintColorOklab |             |
+
+### FlintColorRgba
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintColorRgba
+```
+
+Farb-RGBA-Darstellung.
+
+### flintColorRgbToHsv
+
+**Art:** Funktion
+
+```typescript
+function flintColorRgbToHsv(color: FlintColorRgba): FlintColorHsv;
+```
+
+Führen Sie den Farb-RGB-zu-HSV-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | -------------- | ----------- |
+| Farbe | FlintColorRgba |             |
+
+### flintColorSrgbToLinear
+
+**Art:** Funktion
+
+```typescript
+function flintColorSrgbToLinear(color: FlintColorRgba): FlintColorRgba;
+```
+
+Führen Sie einen Farb-SRGB-zu-Linear-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | -------------- | ----------- |
+| Farbe | FlintColorRgba |             |
+
+### flintColorSrgbToOklab
+
+**Art:** Funktion
+
+```typescript
+function flintColorSrgbToOklab(color: FlintColorRgba): FlintColorOklab;
+```
+
+Führen Sie den Farb-SRGB-zu-OKLab-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | -------------- | ----------- |
+| Farbe | FlintColorRgba |             |
+
+### flintDegrees
+
+**Art:** Funktion
+
+```typescript
+function flintDegrees(radians: number): number;
+```
+
+Konvertieren Sie Bogenmaß in Grad.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------ | ----------- |
+| Bogenmaß | Nummer |             |
+
+### FeuersteinBoden
+
+**Art:** Funktion
+
+```typescript
+function flintFloor(value: number): number;
+```
+
+Berechnen Sie die größte ganze Zahl, die kleiner oder gleich x ist.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Nummer |             |
+
+### flintFract
+
+**Art:** Funktion
+
+```typescript
+function flintFract(value: number): number;
+```
+
+Berechnen Sie den Bruchteil: x - floor(x).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Nummer |             |
+
+### flintLerp
+
+**Art:** Funktion
+
+```typescript
+function flintLerp(start: number, end: number, factor: number): number;
+```
+
+Lineare Interpolation zwischen Start und Ende mit Faktor.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------ | ----------- |
+| Start | Nummer |             |
+| Ende | Nummer |             |
+| Faktor | Nummer |             |
+
+### flintRadians
+
+**Art:** Funktion
+
+```typescript
+function flintRadians(degrees: number): number;
+```
+
+Konvertieren Sie Grad in Bogenmaß.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------ | ----------- |
+| Grad | Nummer |             |
+
+### FeuersteinSign
+
+**Art:** Funktion
+
+```typescript
+function flintSign(value: number): number;
+```
+
+Rückgabezeichen von x (1, -1, 0 oder NaN).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Nummer |             |
+
+### FeuersteinSmoothstep
+
+**Art:** Funktion
+
+```typescript
+function flintSmoothstep(edge0: number, edge1: number, value: number): number;
+```
+
+Glatte Hermite-Interpolation zwischen Kante0 und Kante1.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Kante0 | Nummer |             |
+| Kante1 | Nummer |             |
+| Wert | Nummer |             |
+
+### flintStep
+
+**Art:** Funktion
+
+```typescript
+function flintStep(edge: number, value: number): number;
+```
+
+Schrittfunktion gibt 0 zurück, wenn x < Kante, andernfalls 1.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Kante | Nummer |             |
+| Wert | Nummer |             |
+
+## `src/math/transcendental`
+
+### createFlintAABB2
+
+**Art:** Funktion
+
+```typescript
+function createFlintAABB2(minPoint: FlintVec2, maxPoint: FlintVec2): FlintAABB2;
+```
+
+Führen Sie den Vorgang „Flint a a b b 2 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------- | ----------- |
+| minPoint | FlintVec2 |             |
+| maxPoint | FlintVec2 |             |
+
+### createFlintAABB3
+
+**Art:** Funktion
+
+```typescript
+function createFlintAABB3(minPoint: FlintVec3, maxPoint: FlintVec3): FlintAABB3;
+```
+
+Führen Sie den Vorgang „Flint a a b b 3 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------- | ----------- |
+| minPoint | FlintVec3 |             |
+| maxPoint | FlintVec3 |             |
+
+### createFlintBVHNode3
+
+**Art:** Funktion
+
+```typescript
+function createFlintBVHNode3(
+  bounds: FlintAABB3,
+  leftChild: number,
+  rightChild: number,
+  primitiveIndex: number,
+): FlintBVHNode3;
+```
+
+Führen Sie den Vorgang „create flint b v h node 3“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------------- | ---------- | ----------- |
+| Grenzen | FlintAABB3 |             |
+| leftChild | Nummer |             |
+| rightChild | Nummer |             |
+| primitiveIndex | Nummer |             |
+
+### createFlintBVHTree3
+
+**Art:** Funktion
+
+```typescript
+function createFlintBVHTree3(nodes: readonly FlintBVHNode3[], rootIndex = 0): FlintBVHTree3;
+```
+
+Führen Sie den Vorgang „Flint B V H Tree 3 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ------------------------ | ----------- |
+| Knoten | schreibgeschützt FlintBVHNode3[] |             |
+| rootIndex |                          |             |
+
+### createFlintCircle
+
+**Art:** Funktion
+
+```typescript
+function createFlintCircle(center: FlintVec2, radius: number): FlintCircle;
+```
+
+Führen Sie den Vorgang zum Erstellen eines Feuersteinkreises durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Mitte | FlintVec2 |             |
+| Radius | Nummer |             |
+
+### createFlintOBB2
+
+**Art:** Funktion
+
+```typescript
+function createFlintOBB2(center: FlintVec2, halfExtents: FlintVec2, angleRad = 0): FlintOBB2;
+```
+
+Führen Sie den Vorgang „Flint o b b 2 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | --------- | ----------- |
+| Mitte | FlintVec2 |             |
+| halfExtents | FlintVec2 |             |
+| angleRad |           |             |
+
+### createFlintOBB3
+
+**Art:** Funktion
+
+```typescript
+function createFlintOBB3(
+  center: FlintVec3,
+  halfExtents: FlintVec3,
+  orientation: FlintQuat = flintQuatIdentity(),
+): FlintOBB3;
+```
+
+Führen Sie den Vorgang „Flint o b b 3 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | --------- | ----------- |
+| Mitte | FlintVec3 |             |
+| halfExtents | FlintVec3 |             |
+| Orientierung | FlintQuat |             |
+
+### createFlintPlane3
+
+**Art:** Funktion
+
+```typescript
+function createFlintPlane3(normal: FlintVec3, distance: number): FlintPlane3;
+```
+
+Führen Sie den Vorgang „Flinthobel 3 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------- | ----------- |
+| normal | FlintVec3 |             |
+| Abstand | Nummer |             |
+
+### createFlintRay2
+
+**Art:** Funktion
+
+```typescript
+function createFlintRay2(origin: FlintVec2, direction: FlintVec2): FlintRay2;
+```
+
+Führen Sie den Vorgang „Flint Ray 2 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| --------- | --------- | ----------- |
+| Herkunft | FlintVec2 |             |
+| Richtung | FlintVec2 |             |
+
+### createFlintRay3
+
+**Art:** Funktion
+
+```typescript
+function createFlintRay3(origin: FlintVec3, direction: FlintVec3): FlintRay3;
+```
+
+Führen Sie den Vorgang „Flint Ray 3 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| --------- | --------- | ----------- |
+| Herkunft | FlintVec3 |             |
+| Richtung | FlintVec3 |             |
+
+### createFlintRayHit3
+
+**Art:** Funktion
+
+```typescript
+function createFlintRayHit3(
+  hit: boolean,
+  t: number,
+  point: FlintVec3,
+  normal: FlintVec3,
+  primitiveId: number,
+): FlintRayHit3;
+```
+
+Führen Sie den Vorgang „Flint Ray Hit 3 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | --------- | ----------- |
+| schlagen | boolescher Wert |             |
+| t | Nummer |             |
+| Punkt | FlintVec3 |             |
+| normal | FlintVec3 |             |
+| primitiveId | Nummer |             |
+
+### createFlintSegment2
+
+**Art:** Funktion
+
+```typescript
+function createFlintSegment2(startPoint: FlintVec2, endPoint: FlintVec2): FlintSegment2;
+```
+
+Führen Sie den Vorgang „Flintsegment 2 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------- | ----------- |
+| startPoint | FlintVec2 |             |
+| Endpunkt | FlintVec2 |             |
+
+### createFlintSegment3
+
+**Art:** Funktion
+
+```typescript
+function createFlintSegment3(startPoint: FlintVec3, endPoint: FlintVec3): FlintSegment3;
+```
+
+Führen Sie den Vorgang „Flintsegment 3 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------- | ----------- |
+| startPoint | FlintVec3 |             |
+| Endpunkt | FlintVec3 |             |
+
+### Erstelle FlintSphere
+
+**Art:** Funktion
+
+```typescript
+function createFlintSphere(center: FlintVec3, radius: number): FlintSphere;
+```
+
+Führen Sie den Vorgang „Flintkugel erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Mitte | FlintVec3 |             |
+| Radius | Nummer |             |
+
+### createFlintTriangle2
+
+**Art:** Funktion
+
+```typescript
+function createFlintTriangle2(pointA: FlintVec2, pointB: FlintVec2, pointC: FlintVec2): FlintTriangle2;
+```
+
+Führen Sie den Vorgang „Flint-Dreieck 2 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| PunktA | FlintVec2 |             |
+| PunktB | FlintVec2 |             |
+| PunktC | FlintVec2 |             |
+
+### createFlintTriangle3
+
+**Art:** Funktion
+
+```typescript
+function createFlintTriangle3(pointA: FlintVec3, pointB: FlintVec3, pointC: FlintVec3): FlintTriangle3;
+```
+
+Führen Sie den Vorgang „Flint-Dreieck 3 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| PunktA | FlintVec3 |             |
+| PunktB | FlintVec3 |             |
+| PunktC | FlintVec3 |             |
+
+### FlintAABB2
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintAABB2
+```
+
+A A B B 2 Darstellung.
+
+### flintAABB2Area
+
+**Art:** Funktion
+
+```typescript
+function flintAABB2Area(box: FlintAABB2): number;
+```
+
+Führen Sie eine a a b b 2-Bereichsoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ---------- | ----------- |
+| Kiste | FlintAABB2 |             |
+
+### flintAABB2ContainsPoint
+
+**Art:** Funktion
+
+```typescript
+function flintAABB2ContainsPoint(box: FlintAABB2, point: FlintVec2): boolean;
+```
+
+Führen Sie eine a a b b 2 enthält Punktoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------- | ----------- |
+| Kiste | FlintAABB2 |             |
+| Punkt | FlintVec2 |             |
+
+### flintAABB2IntersectsAABB2
+
+**Art:** Funktion
+
+```typescript
+function flintAABB2IntersectsAABB2(first: FlintAABB2, second: FlintAABB2): boolean;
+```
+
+Führen Sie die Operation „a a b b 2 schneidet a a b b 2“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---------- | ----------- |
+| zuerst | FlintAABB2 |             |
+| zweite | FlintAABB2 |             |
+
+### flintAABB2Union
+
+**Art:** Funktion
+
+```typescript
+function flintAABB2Union(first: FlintAABB2, second: FlintAABB2): FlintAABB2;
+```
+
+Führen Sie eine a a b b 2-Vereinigungsoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---------- | ----------- |
+| zuerst | FlintAABB2 |             |
+| zweite | FlintAABB2 |             |
+
+### FlintAABB3
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintAABB3
+```
+
+A A B B 3 Darstellung.
+
+### flintAABB3ContainsPoint
+
+**Art:** Funktion
+
+```typescript
+function flintAABB3ContainsPoint(box: FlintAABB3, point: FlintVec3): boolean;
+```
+
+Führen Sie eine a a b b 3 enthält Punktoperation aus.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------- | ----------- |
+| Kiste | FlintAABB3 |             |
+| Punkt | FlintVec3 |             |
+
+### flintAABB3IntersectsAABB3
+
+**Art:** Funktion
+
+```typescript
+function flintAABB3IntersectsAABB3(first: FlintAABB3, second: FlintAABB3): boolean;
+```
+
+Führen Sie die Operation „a a b b 3 schneidet a a b b 3“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---------- | ----------- |
+| zuerst | FlintAABB3 |             |
+| zweite | FlintAABB3 |             |
+
+### flintAABB3Volume
+
+**Art:** Funktion
+
+```typescript
+function flintAABB3Volume(box: FlintAABB3): number;
+```
+
+Führen Sie einen a a b b 3-Lautstärke-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ---------- | ----------- |
+| Kiste | FlintAABB3 |             |
+
+### flintBezier2Cubic
+
+**Art:** Funktion
+
+```typescript
+function flintBezier2Cubic(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+Führen Sie eine Bezier-2-Kubik-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Punkt0 | FlintVec2 |             |
+| Punkt1 | FlintVec2 |             |
+| Punkt2 | FlintVec2 |             |
+| Punkt3 | FlintVec2 |             |
+| Faktor | Nummer |             |
+
+### flintBezier2Quadratic
+
+**Art:** Funktion
+
+```typescript
+function flintBezier2Quadratic(point0: FlintVec2, point1: FlintVec2, point2: FlintVec2, factor: number): FlintVec2;
+```
+
+Führen Sie eine quadratische Bezier-2-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Punkt0 | FlintVec2 |             |
+| Punkt1 | FlintVec2 |             |
+| Punkt2 | FlintVec2 |             |
+| Faktor | Nummer |             |
+
+### flintBezier3Cubic
+
+**Art:** Funktion
+
+```typescript
+function flintBezier3Cubic(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+Führen Sie eine Bezier-3-Kubik-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Punkt0 | FlintVec3 |             |
+| Punkt1 | FlintVec3 |             |
+| Punkt2 | FlintVec3 |             |
+| Punkt3 | FlintVec3 |             |
+| Faktor | Nummer |             |
+
+### flintBVHBuildFromAABBs
+
+**Art:** Funktion
+
+```typescript
+function flintBVHBuildFromAABBs(boxes: readonly FlintAABB3[]): FlintBVHTree3;
+```
+
+Führen Sie die Operation „b v h build from a a b bs“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | --------------------- | ----------- |
+| Kisten | schreibgeschützt FlintAABB3[] |             |
+
+### FlintBVHNode3
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintBVHNode3
+```
+
+B V H Node 3 Darstellung.
+
+### flintBVHRayIntersect
+
+**Art:** Funktion
+
+```typescript
+function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): FlintOption<FlintRayHit3>;
+```
+
+Führen Sie eine bvh-Strahlenschnittoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ------------- | ----------- |
+| Baum | FlintBVHTree3 |             |
+| Strahl | FlintRay3 |             |
+
+### FlintBVHTree3
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintBVHTree3
+```
+
+B V H Baum 3 Darstellung.
+
+### flintCatmullRom2
+
+**Art:** Funktion
+
+```typescript
+function flintCatmullRom2(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+Führen Sie den Catmull-Rom-2-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Punkt0 | FlintVec2 |             |
+| Punkt1 | FlintVec2 |             |
+| Punkt2 | FlintVec2 |             |
+| Punkt3 | FlintVec2 |             |
+| Faktor | Nummer |             |
+
+### flintCatmullRom3
+
+**Art:** Funktion
+
+```typescript
+function flintCatmullRom3(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+Führen Sie den Catmull-Rom-3-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Punkt0 | FlintVec3 |             |
+| Punkt1 | FlintVec3 |             |
+| Punkt2 | FlintVec3 |             |
+| Punkt3 | FlintVec3 |             |
+| Faktor | Nummer |             |
+
+### FlintCircle
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintCircle
+```
+
+Kreisdarstellung.
+
+### flintCircleContainsPoint
+
+**Art:** Funktion
+
+```typescript
+function flintCircleContainsPoint(circle: FlintCircle, point: FlintVec2): boolean;
+```
+
+Führen Sie die Operation „Kreis enthält Punkt“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ----------- | ----------- |
+| Kreis | FlintCircle |             |
+| Punkt | FlintVec2 |             |
+
+### flintCircleIntersectsCircle
+
+**Art:** Funktion
+
+```typescript
+function flintCircleIntersectsCircle(first: FlintCircle, second: FlintCircle): boolean;
+```
+
+Führen Sie die Operation „Kreis schneidet Kreis“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ----------- | ----------- |
+| zuerst | FlintCircle |             |
+| zweite | FlintCircle |             |
+
+### FlintFrustum
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintFrustum
+```
+
+Kegelstumpfdarstellung.
+
+### flintFrustumFromViewProj
+
+**Art:** Funktion
+
+```typescript
+function flintFrustumFromViewProj(viewProj: FlintMat4): FlintFrustum;
+```
+
+Führen Sie den Vorgang „Frustum from View Project“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------- | ----------- |
+| viewProj | FlintMat4 |             |
+
+### FeuersteinFrustumIntersectsSphere
+
+**Art:** Funktion
+
+```typescript
+function flintFrustumIntersectsSphere(frustum: FlintFrustum, sphere: FlintSphere): boolean;
+```
+
+Führen Sie die Operation „Kegelstumpf schneidet Kugel“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------ | ----------- |
+| Kegelstumpf | FlintFrustum |             |
+| Kugel | FlintSphere |             |
+
+### FlintOBB2
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintOBB2
+```
+
+O B B 2 Darstellung.
+
+### FlintOBB3
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintOBB3
+```
+
+O B B 3 Darstellung.
+
+### FlintPlane3
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintPlane3
+```
+
+Darstellung der Ebene 3.
+
+### flintPlane3DistanceToPoint
+
+**Art:** Funktion
+
+```typescript
+function flintPlane3DistanceToPoint(plane: FlintPlane3, point: FlintVec3): number;
+```
+
+Führen Sie den Abstand-zu-Punkt-Vorgang der Ebene 3 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ----------- | ----------- |
+| Flugzeug | FlintPlane3 |             |
+| Punkt | FlintVec3 |             |
+
+### FlintRay2
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintRay2
+```
+
+Darstellung von Strahl 2.
+
+### FlintRay3
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintRay3
+```
+
+Darstellung von Strahl 3.
+
+### flintRay3IntersectOBB
+
+**Art:** Funktion
+
+```typescript
+function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOption<number>;
+```
+
+Führen Sie die Operation „Strahl 3 schneiden o b b“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | --------- | ----------- |
+| Strahl | FlintRay3 |             |
+| obb | FlintOBB3 |             |
+
+### flintRay3IntersectsAABB3
+
+**Art:** Funktion
+
+```typescript
+function flintRay3IntersectsAABB3(ray: FlintRay3, box: FlintAABB3): FlintOption<number>;
+```
+
+Führen Sie die Operation „Strahl 3 schneidet a a b b 3“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---- | ---------- | ----------- |
+| Strahl | FlintRay3 |             |
+| Kiste | FlintAABB3 |             |
+
+### flintRay3IntersectsPlane3
+
+**Art:** Funktion
+
+```typescript
+function flintRay3IntersectsPlane3(ray: FlintRay3, plane: FlintPlane3): FlintOption<number>;
+```
+
+Führen Sie die Operation „Strahl 3 schneidet Ebene 3“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ----------- | ----------- |
+| Strahl | FlintRay3 |             |
+| Flugzeug | FlintPlane3 |             |
+
+### flintRay3IntersectsSphere
+
+**Art:** Funktion
+
+```typescript
+function flintRay3IntersectsSphere(ray: FlintRay3, sphere: FlintSphere): FlintOption<number>;
+```
+
+Führen Sie die Operation „Strahl 3 schneidet Kugel“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ----------- | ----------- |
+| Strahl | FlintRay3 |             |
+| Kugel | FlintSphere |             |
+
+### flintRay3IntersectsTriangle3
+
+**Art:** Funktion
+
+```typescript
+function flintRay3IntersectsTriangle3(ray: FlintRay3, triangle: FlintTriangle3): FlintOption<number>;
+```
+
+Führen Sie die Operation „Strahl 3 schneidet Dreieck 3“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | -------------- | ----------- |
+| Strahl | FlintRay3 |             |
+| Dreieck | FlintTriangle3 |             |
+
+### FlintRayHit3
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintRayHit3
+```
+
+Darstellung von Ray Hit 3.
+
+### FlintSegment2
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintSegment2
+```
+
+Darstellung von Segment 2.
+
+### FlintSegment3
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintSegment3
+```
+
+Darstellung von Segment 3.
+
+### FlintSphere
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintSphere
+```
+
+Kugeldarstellung.
+
+### flintSphereContainsPoint
+
+**Art:** Funktion
+
+```typescript
+function flintSphereContainsPoint(sphere: FlintSphere, point: FlintVec3): boolean;
+```
+
+Kugel ausführen enthält Punktoperation.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ----------- | ----------- |
+| Kugel | FlintSphere |             |
+| Punkt | FlintVec3 |             |
+
+### flintSphereIntersectsSphere
+
+**Art:** Funktion
+
+```typescript
+function flintSphereIntersectsSphere(first: FlintSphere, second: FlintSphere): boolean;
+```
+
+Führen Sie die Operation „Kugel schneidet Kugel“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ----------- | ----------- |
+| zuerst | FlintSphere |             |
+| zweite | FlintSphere |             |
+
+### FlintTriangle2
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintTriangle2
+```
+
+Darstellung des Dreiecks 2.
+
+### flintTriangle2Area
+
+**Art:** Funktion
+
+```typescript
+function flintTriangle2Area(triangle: FlintTriangle2): number;
+```
+
+Führen Sie eine Dreieck-2-Bereichsoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | -------------- | ----------- |
+| Dreieck | FlintTriangle2 |             |
+
+### FlintTriangle3
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintTriangle3
+```
+
+Darstellung des Dreiecks 3.
+
+### flintTriangle3Normal
+
+**Art:** Funktion
+
+```typescript
+function flintTriangle3Normal(triangle: FlintTriangle3): FlintVec3;
+```
+
+Führen Sie den normalen Betrieb von Dreieck 3 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | -------------- | ----------- |
+| Dreieck | FlintTriangle3 |             |
+
+## `src/math/vector`
+
+### createFlintIVec2
+
+**Art:** Funktion
+
+```typescript
+function createFlintIVec2(coordX = 0, coordY = 0): FlintIVec2;
+```
+
+Führen Sie den Vorgang „Flint i vec 2 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---- | ----------- |
+| koordX |      |             |
+| koordY |      |             |
+
+### createFlintIVec3
+
+**Art:** Funktion
+
+```typescript
+function createFlintIVec3(coordX = 0, coordY = 0, coordZ = 0): FlintIVec3;
+```
+
+Führen Sie den Vorgang „Flint i vec 3 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---- | ----------- |
+| koordX |      |             |
+| koordY |      |             |
+| coordZ |      |             |
+
+### createFlintMat2
+
+**Art:** Funktion
+
+```typescript
+function createFlintMat2(column0OrElements?: FlintVec2 | readonly number[], column1?: FlintVec2): FlintMat2;
+```
+
+Führen Sie den Vorgang „Flintmatte 2 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------------- | ------------------------------ | ----------- |
+| Column0OrElements | FlintVec2 \| schreibgeschützte Zahl[] |             |
+| Spalte1 | FlintVec2 |             |
+
+### createFlintMat3
+
+**Art:** Funktion
+
+```typescript
+function createFlintMat3(
+  column0OrElements?: FlintVec3 | readonly number[],
+  column1?: FlintVec3,
+  column2?: FlintVec3,
+): FlintMat3;
+```
+
+Führen Sie den Vorgang „Flintmatte 3 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------------- | ------------------------------ | ----------- |
+| Column0OrElements | FlintVec3 \| schreibgeschützte Zahl[] |             |
+| Spalte1 | FlintVec3 |             |
+| Spalte2 | FlintVec3 |             |
+
+### createFlintMat4
+
+**Art:** Funktion
+
+```typescript
+function createFlintMat4(
+  column0OrElements?: FlintVec4 | readonly number[],
+  column1?: FlintVec4,
+  column2?: FlintVec4,
+  column3?: FlintVec4,
+): FlintMat4;
+```
+
+Führen Sie den Vorgang „Flintmatte 4 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------------- | ------------------------------ | ----------- |
+| Column0OrElements | FlintVec4 \| schreibgeschützte Zahl[] |             |
+| Spalte1 | FlintVec4 |             |
+| Spalte2 | FlintVec4 |             |
+| Spalte3 | FlintVec4 |             |
+
+### createFlintQuat
+
+**Art:** Funktion
+
+```typescript
+function createFlintQuat(coordX = 0, coordY = 0, coordZ = 0, coordW = 1): FlintQuat;
+```
+
+Führen Sie den Vorgang „Flint-Quat erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---- | ----------- |
+| koordX |      |             |
+| koordY |      |             |
+| coordZ |      |             |
+| koordW |      |             |
+
+### createFlintVec2
+
+**Art:** Funktion
+
+```typescript
+function createFlintVec2(coordX = 0, coordY = 0): FlintVec2;
+```
+
+Führen Sie den Vorgang „Flint VEC 2 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---- | ----------- |
+| koordX |      |             |
+| koordY |      |             |
+
+### createFlintVec3
+
+**Art:** Funktion
+
+```typescript
+function createFlintVec3(coordX = 0, coordY = 0, coordZ = 0): FlintVec3;
+```
+
+Führen Sie den Vorgang „Flint VEC 3 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---- | ----------- |
+| koordX |      |             |
+| koordY |      |             |
+| coordZ |      |             |
+
+### createFlintVec4
+
+**Art:** Funktion
+
+```typescript
+function createFlintVec4(coordX = 0, coordY = 0, coordZ = 0, coordW = 0): FlintVec4;
+```
+
+Führen Sie den Vorgang „Flint VEC 4 erstellen“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ---- | ----------- |
+| koordX |      |             |
+| koordY |      |             |
+| coordZ |      |             |
+| koordW |      |             |
+
+### FlintIVec2
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintIVec2
+```
+
+2D-Ganzzahlvektor.
+
+### FlintIVec3
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintIVec3
+```
+
+3D-Ganzzahlvektor.
+
+### FlintMat2
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintMat2
+```
+
+Mat 2-Darstellung.
+
+### flintMat2Add
+
+**Art:** Funktion
+
+```typescript
+function flintMat2Add(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+Führen Sie den Vorgang zum Hinzufügen von Matte 2 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintMat2 |             |
+| zweite | FlintMat2 |             |
+
+### flintMat2Determinant
+
+**Art:** Funktion
+
+```typescript
+function flintMat2Determinant(matrix: FlintMat2): number;
+```
+
+Führen Sie die Mat-2-Determinantenoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat2 |             |
+
+### flintMat2FromCols
+
+**Art:** Funktion
+
+```typescript
+function flintMat2FromCols(column0: FlintVec2, column1: FlintVec2): FlintMat2;
+```
+
+Führen Sie den Vorgang „Matte 2 aus Spalten“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------- | ----------- |
+| Spalte0 | FlintVec2 |             |
+| Spalte1 | FlintVec2 |             |
+
+### flintMat2Identity
+
+**Art:** Funktion
+
+```typescript
+function flintMat2Identity(): FlintMat2;
+```
+
+Führen Sie die Mat-2-Identitätsoperation durch.
+
+### flintMat2Inverse
+
+**Art:** Funktion
+
+```typescript
+function flintMat2Inverse(matrix: FlintMat2): FlintOption<FlintMat2>;
+```
+
+Führen Sie den umgekehrten Betrieb von Matte 2 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat2 |             |
+
+### flintMat2Mul
+
+**Art:** Funktion
+
+```typescript
+function flintMat2Mul(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+Führen Sie den Matten-2-Mul-Betrieb durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintMat2 |             |
+| zweite | FlintMat2 |             |
+
+### flintMat2Rotation
+
+**Art:** Funktion
+
+```typescript
+function flintMat2Rotation(angleRad: number): FlintMat2;
+```
+
+Führen Sie den Rotationsvorgang für Matte 2 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------ | ----------- |
+| angleRad | Nummer |             |
+
+### flintMat2Scale
+
+**Art:** Funktion
+
+```typescript
+function flintMat2Scale(matrix: FlintMat2, scalar: number): FlintMat2;
+```
+
+Führen Sie den Waagenbetrieb Matte 2 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat2 |             |
+| Skalar | Nummer |             |
+
+### flintMat2Scaling
+
+**Art:** Funktion
+
+```typescript
+function flintMat2Scaling(scaleVector: FlintVec2): FlintMat2;
+```
+
+Führen Sie den Skalierungsvorgang für Matte 2 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | --------- | ----------- |
+| ScaleVector | FlintVec2 |             |
+
+### flintMat2Sub
+
+**Art:** Funktion
+
+```typescript
+function flintMat2Sub(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+Führen Sie den Untervorgang „Matte 2“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintMat2 |             |
+| zweite | FlintMat2 |             |
+
+### flintMat2TransformVec2
+
+**Art:** Funktion
+
+```typescript
+function flintMat2TransformVec2(matrix: FlintMat2, vector: FlintVec2): FlintVec2;
+```
+
+Führen Sie die Operation mat 2 transform vec 2 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat2 |             |
+| Vektor | FlintVec2 |             |
+
+### flintMat2Transpose
+
+**Art:** Funktion
+
+```typescript
+function flintMat2Transpose(matrix: FlintMat2): FlintMat2;
+```
+
+Führen Sie den Transpositionsvorgang für Matte 2 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat2 |             |
+
+### FlintMat3
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintMat3
+```
+
+Mat 3-Darstellung.
+
+### flintMat3Add
+
+**Art:** Funktion
+
+```typescript
+function flintMat3Add(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+Führen Sie den Vorgang zum Hinzufügen von Matte 3 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintMat3 |             |
+| zweite | FlintMat3 |             |
+
+### flintMat3Determinant
+
+**Art:** Funktion
+
+```typescript
+function flintMat3Determinant(matrix: FlintMat3): number;
+```
+
+Führen Sie die Mat-3-Determinantenoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat3 |             |
+
+### flintMat3FromCols
+
+**Art:** Funktion
+
+```typescript
+function flintMat3FromCols(column0: FlintVec3, column1: FlintVec3, column2: FlintVec3): FlintMat3;
+```
+
+Führen Sie Matte 3 von Cols aus durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------- | ----------- |
+| Spalte0 | FlintVec3 |             |
+| Spalte1 | FlintVec3 |             |
+| Spalte2 | FlintVec3 |             |
+
+### flintMat3Identity
+
+**Art:** Funktion
+
+```typescript
+function flintMat3Identity(): FlintMat3;
+```
+
+Führen Sie die Mat-3-Identitätsoperation durch.
+
+### flintMat3Inverse
+
+**Art:** Funktion
+
+```typescript
+function flintMat3Inverse(matrix: FlintMat3): FlintOption<FlintMat3>;
+```
+
+Führen Sie den umgekehrten Betrieb von Matte 3 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat3 |             |
+
+### flintMat3Mul
+
+**Art:** Funktion
+
+```typescript
+function flintMat3Mul(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+Führen Sie den Matten-3-Mul-Betrieb durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintMat3 |             |
+| zweite | FlintMat3 |             |
+
+### flintMat3Rotate2D
+
+**Art:** Funktion
+
+```typescript
+function flintMat3Rotate2D(angleRad: number): FlintMat3;
+```
+
+Führen Sie den Vorgang „Matte 3 rotieren 2 d“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------ | ----------- |
+| angleRad | Nummer |             |
+
+### flintMat3Scale
+
+**Art:** Funktion
+
+```typescript
+function flintMat3Scale(matrix: FlintMat3, scalar: number): FlintMat3;
+```
+
+Führen Sie den Waagenbetrieb für Matte 3 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat3 |             |
+| Skalar | Nummer |             |
+
+### flintMat3Scale2D
+
+**Art:** Funktion
+
+```typescript
+function flintMat3Scale2D(scale: FlintVec2): FlintMat3;
+```
+
+Führen Sie den 2-Tage-Betrieb im Maßstab 3 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | --------- | ----------- |
+| Maßstab | FlintVec2 |             |
+
+### flintMat3Sub
+
+**Art:** Funktion
+
+```typescript
+function flintMat3Sub(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+Führen Sie den Untervorgang für Matte 3 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintMat3 |             |
+| zweite | FlintMat3 |             |
+
+### flintMat3TransformVec2
+
+**Art:** Funktion
+
+```typescript
+function flintMat3TransformVec2(matrix: FlintMat3, vector: FlintVec2): FlintVec2;
+```
+
+Führen Sie die Operation „Mat 3 Transformation Vec 2“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat3 |             |
+| Vektor | FlintVec2 |             |
+
+### flintMat3TransformVec3
+
+**Art:** Funktion
+
+```typescript
+function flintMat3TransformVec3(matrix: FlintMat3, vector: FlintVec3): FlintVec3;
+```
+
+Führen Sie den Mat-3-Transformation-Vec-3-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat3 |             |
+| Vektor | FlintVec3 |             |
+
+### flintMat3Translate2D
+
+**Art:** Funktion
+
+```typescript
+function flintMat3Translate2D(translation: FlintVec2): FlintMat3;
+```
+
+Führen Sie den Vorgang „Mat 3 Translate 2 D“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | --------- | ----------- |
+| Übersetzung | FlintVec2 |             |
+
+### flintMat3Transpose
+
+**Art:** Funktion
+
+```typescript
+function flintMat3Transpose(matrix: FlintMat3): FlintMat3;
+```
+
+Führen Sie den Transpositionsvorgang für Matte 3 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat3 |             |
+
+### FlintMat4
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintMat4
+```
+
+Mat 4-Darstellung.
+
+### flintMat4Add
+
+**Art:** Funktion
+
+```typescript
+function flintMat4Add(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+Führen Sie den Vorgang zum Hinzufügen von Matte 4 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintMat4 |             |
+| zweite | FlintMat4 |             |
+
+### flintMat4Determinant
+
+**Art:** Funktion
+
+```typescript
+function flintMat4Determinant(matrix: FlintMat4): number;
+```
+
+Führen Sie die Mat-4-Determinantenoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat4 |             |
+
+### flintMat4FromCols
+
+**Art:** Funktion
+
+```typescript
+function flintMat4FromCols(column0: FlintVec4, column1: FlintVec4, column2: FlintVec4, column3: FlintVec4): FlintMat4;
+```
+
+Führen Sie den Vorgang „Mat 4 von Cols aus“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------- | ----------- |
+| Spalte0 | FlintVec4 |             |
+| Spalte1 | FlintVec4 |             |
+| Spalte2 | FlintVec4 |             |
+| Spalte3 | FlintVec4 |             |
+
+### flintMat4Identity
+
+**Art:** Funktion
+
+```typescript
+function flintMat4Identity(): FlintMat4;
+```
+
+Führen Sie eine Mat-4-Identitätsoperation durch.
+
+### flintMat4Inverse
+
+**Art:** Funktion
+
+```typescript
+function flintMat4Inverse(matrix: FlintMat4): FlintOption<FlintMat4>;
+```
+
+Führen Sie den umgekehrten Betrieb von Matte 4 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat4 |             |
+
+### flintMat4LookAt
+
+**Art:** Funktion
+
+```typescript
+function flintMat4LookAt(eye: FlintVec3, target: FlintVec3, up: FlintVec3): FlintMat4;
+```
+
+Führen Sie den Vorgang gemäß Matte 4 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Auge | FlintVec3 |             |
+| Ziel | FlintVec3 |             |
+| oben | FlintVec3 |             |
+
+### flintMat4Mul
+
+**Art:** Funktion
+
+```typescript
+function flintMat4Mul(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+Führen Sie den Matten-4-Mul-Betrieb durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintMat4 |             |
+| zweite | FlintMat4 |             |
+
+### flintMat4Orthographic
+
+**Art:** Funktion
+
+```typescript
+function flintMat4Orthographic(
+  left: number,
+  right: number,
+  bottom: number,
+  top: number,
+  zNear: number,
+  zFar: number,
+): FlintMat4;
+```
+
+Führen Sie die orthogonale Operation Matte 4 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------ | ----------- |
+| links | Nummer |             |
+| richtig | Nummer |             |
+| unten | Nummer |             |
+| oben | Nummer |             |
+| zNear | Nummer |             |
+| zFar | Nummer |             |
+
+### flintMat4Perspective
+
+**Art:** Funktion
+
+```typescript
+function flintMat4Perspective(fovYRad: number, aspect: number, zNear: number, zFar: number): FlintMat4;
+```
+
+Führen Sie eine perspektivische Operation für Matte 4 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------ | ----------- |
+| fovYRad | Nummer |             |
+| Aspekt | Nummer |             |
+| zNear | Nummer |             |
+| zFar | Nummer |             |
+
+### flintMat4RotationAxisAngle
+
+**Art:** Funktion
+
+```typescript
+function flintMat4RotationAxisAngle(axis: FlintVec3, angleRad: number): FlintMat4;
+```
+
+Führen Sie den Drehachsenwinkelvorgang der Matte 4 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------- | ----------- |
+| Achse | FlintVec3 |             |
+| angleRad | Nummer |             |
+
+### flintMat4RotationX
+
+**Art:** Funktion
+
+```typescript
+function flintMat4RotationX(angleRad: number): FlintMat4;
+```
+
+Führen Sie den Vorgang „Matte 4 Drehung x“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------ | ----------- |
+| angleRad | Nummer |             |
+
+### flintMat4RotationY
+
+**Art:** Funktion
+
+```typescript
+function flintMat4RotationY(angleRad: number): FlintMat4;
+```
+
+Führen Sie den Rotations-Y-Vorgang der Matte 4 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------ | ----------- |
+| angleRad | Nummer |             |
+
+### flintMat4RotationZ
+
+**Art:** Funktion
+
+```typescript
+function flintMat4RotationZ(angleRad: number): FlintMat4;
+```
+
+Führen Sie den Z-Vorgang der Matte 4-Rotation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------ | ----------- |
+| angleRad | Nummer |             |
+
+### flintMat4Scale
+
+**Art:** Funktion
+
+```typescript
+function flintMat4Scale(matrix: FlintMat4, scalar: number): FlintMat4;
+```
+
+Führen Sie den Waagenbetrieb für Matte 4 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat4 |             |
+| Skalar | Nummer |             |
+
+### flintMat4Scaling
+
+**Art:** Funktion
+
+```typescript
+function flintMat4Scaling(scale: FlintVec3): FlintMat4;
+```
+
+Führen Sie den Skalierungsvorgang für Matte 4 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | --------- | ----------- |
+| Maßstab | FlintVec3 |             |
+
+### flintMat4Sub
+
+**Art:** Funktion
+
+```typescript
+function flintMat4Sub(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+Führen Sie den Untervorgang für Matte 4 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintMat4 |             |
+| zweite | FlintMat4 |             |
+
+### flintMat4TransformPoint3
+
+**Art:** Funktion
+
+```typescript
+function flintMat4TransformPoint3(matrix: FlintMat4, point: FlintVec3): FlintVec3;
+```
+
+Führen Sie die Operation Matte 4 Transformationspunkt 3 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat4 |             |
+| Punkt | FlintVec3 |             |
+
+### flintMat4TransformVec4
+
+**Art:** Funktion
+
+```typescript
+function flintMat4TransformVec4(matrix: FlintMat4, vector: FlintVec4): FlintVec4;
+```
+
+Führen Sie den Mat-4-Transformation-Vec-4-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat4 |             |
+| Vektor | FlintVec4 |             |
+
+### flintMat4TransformVector3
+
+**Art:** Funktion
+
+```typescript
+function flintMat4TransformVector3(matrix: FlintMat4, vector: FlintVec3): FlintVec3;
+```
+
+Führen Sie die Operation „Matte 4-Transformationsvektor 3“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat4 |             |
+| Vektor | FlintVec3 |             |
+
+### flintMat4Translation
+
+**Art:** Funktion
+
+```typescript
+function flintMat4Translation(offset: FlintVec3): FlintMat4;
+```
+
+Führen Sie den Mat 4-Übersetzungsvorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Versatz | FlintVec3 |             |
+
+### flintMat4Transpose
+
+**Art:** Funktion
+
+```typescript
+function flintMat4Transpose(matrix: FlintMat4): FlintMat4;
+```
+
+Führen Sie den Transpositionsvorgang für Matte 4 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Matrix | FlintMat4 |             |
+
+### FlintQuat
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintQuat
+```
+
+Quat-Darstellung.
+
+### flintQuatConjugate
+
+**Art:** Funktion
+
+```typescript
+function flintQuatConjugate(quaternion: FlintQuat): FlintQuat;
+```
+
+Führen Sie eine Quat-Konjugat-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------- | ----------- |
+| Quaternion | FlintQuat |             |
+
+### flintQuatDot
+
+**Art:** Funktion
+
+```typescript
+function flintQuatDot(first: FlintQuat, second: FlintQuat): number;
+```
+
+Führen Sie eine Quat-Dot-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintQuat |             |
+| zweite | FlintQuat |             |
+
+### flintQuatFromAxisAngle
+
+**Art:** Funktion
+
+```typescript
+function flintQuatFromAxisAngle(axis: FlintVec3, angleRad: number): FlintQuat;
+```
+
+Führen Sie eine Quat-Aus-Achsenwinkel-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------- | ----------- |
+| Achse | FlintVec3 |             |
+| angleRad | Nummer |             |
+
+### flintQuatFromEuler
+
+**Art:** Funktion
+
+```typescript
+function flintQuatFromEuler(pitchX: number, yawY: number, rollZ: number): FlintQuat;
+```
+
+Führen Sie eine Quat-aus-Euler-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------ | ----------- |
+| pitchX | Nummer |             |
+| gierY | Nummer |             |
+| rollZ | Nummer |             |
+
+### flintQuatIdentity
+
+**Art:** Funktion
+
+```typescript
+function flintQuatIdentity(): FlintQuat;
+```
+
+Führen Sie eine Quat-Identitätsoperation durch.
+
+### flintQuatInverse
+
+**Art:** Funktion
+
+```typescript
+function flintQuatInverse(quaternion: FlintQuat): FlintOption<FlintQuat>;
+```
+
+Führen Sie eine quat-inverse Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------- | ----------- |
+| Quaternion | FlintQuat |             |
+
+### flintQuatMul
+
+**Art:** Funktion
+
+```typescript
+function flintQuatMul(first: FlintQuat, second: FlintQuat): FlintQuat;
+```
+
+Führen Sie eine Quat-Mul-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintQuat |             |
+| zweite | FlintQuat |             |
+
+### flintQuatNorm
+
+**Art:** Funktion
+
+```typescript
+function flintQuatNorm(quaternion: FlintQuat): number;
+```
+
+Führen Sie eine Quat-Norm-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------- | ----------- |
+| Quaternion | FlintQuat |             |
+
+### flintQuatNormalize
+
+**Art:** Funktion
+
+```typescript
+function flintQuatNormalize(quaternion: FlintQuat): FlintQuat;
+```
+
+Führen Sie den Quat-Normalisierungsvorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------- | ----------- |
+| Quaternion | FlintQuat |             |
+
+### flintQuatNormSq
+
+**Art:** Funktion
+
+```typescript
+function flintQuatNormSq(quaternion: FlintQuat): number;
+```
+
+Führen Sie eine Quat-Norm-Sq-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------- | ----------- |
+| Quaternion | FlintQuat |             |
+
+### flintQuatRotateVec3
+
+**Art:** Funktion
+
+```typescript
+function flintQuatRotateVec3(quaternion: FlintQuat, vector: FlintVec3): FlintVec3;
+```
+
+Führen Sie den Quat-Rotate-VEC-3-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------- | ----------- |
+| Quaternion | FlintQuat |             |
+| Vektor | FlintVec3 |             |
+
+### flintQuatSlerp
+
+**Art:** Funktion
+
+```typescript
+function flintQuatSlerp(first: FlintQuat, second: FlintQuat, factor: number): FlintQuat;
+```
+
+Führen Sie den Quat-Slerp-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintQuat |             |
+| zweite | FlintQuat |             |
+| Faktor | Nummer |             |
+
+### flintQuatToMat3
+
+**Art:** Funktion
+
+```typescript
+function flintQuatToMat3(quaternion: FlintQuat): FlintMat3;
+```
+
+Führen Sie den Vorgang „Quat to Mat 3“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------- | ----------- |
+| Quaternion | FlintQuat |             |
+
+### flintQuatToMat4
+
+**Art:** Funktion
+
+```typescript
+function flintQuatToMat4(quaternion: FlintQuat): FlintMat4;
+```
+
+Führen Sie den Vorgang „Quat to Mat 4“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------- | ----------- |
+| Quaternion | FlintQuat |             |
+
+### FlintVec2
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintVec2
+```
+
+2D-Gleitkommavektor.
+
+### flintVec2Add
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Add(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+Führen Sie den Vec 2-Add-Vorgang aus.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec2 |             |
+| zweite | FlintVec2 |             |
+
+### flintVec2Angle
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Angle(first: FlintVec2, second: FlintVec2): number;
+```
+
+Führen Sie einen VEC-2-Winkel-Betrieb durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec2 |             |
+| zweite | FlintVec2 |             |
+
+### flintVec2Distance
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Distance(first: FlintVec2, second: FlintVec2): number;
+```
+
+Führen Sie eine VEC-2-Distanzoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec2 |             |
+| zweite | FlintVec2 |             |
+
+### flintVec2DistanceSquared
+
+**Art:** Funktion
+
+```typescript
+function flintVec2DistanceSquared(first: FlintVec2, second: FlintVec2): number;
+```
+
+Führen Sie eine Vec-2-Distanz-Quadrat-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec2 |             |
+| zweite | FlintVec2 |             |
+
+### flintVec2Div
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Div(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+Führen Sie den VEC-2-Div-Vorgang aus.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec2 |             |
+| Skalar | Nummer |             |
+
+### flintVec2Dot
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Dot(first: FlintVec2, second: FlintVec2): number;
+```
+
+Führen Sie eine VEC-2-Punkt-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec2 |             |
+| zweite | FlintVec2 |             |
+
+### flintVec2Length
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Length(vector: FlintVec2): number;
+```
+
+Führen Sie eine VEC-2-Längenoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec2 |             |
+
+### flintVec2LengthSq
+
+**Art:** Funktion
+
+```typescript
+function flintVec2LengthSq(vector: FlintVec2): number;
+```
+
+Führen Sie eine Sq-Operation mit einer Länge von vec 2 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec2 |             |
+
+### flintVec2Lerp
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Lerp(first: FlintVec2, second: FlintVec2, factor: number): FlintVec2;
+```
+
+Führen Sie den VEC 2-Lerp-Vorgang aus.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec2 |             |
+| zweite | FlintVec2 |             |
+| Faktor | Nummer |             |
+
+### flintVec2Mul
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Mul(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+Führen Sie den VEC-2-MUL-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec2 |             |
+| zweite | FlintVec2 |             |
+
+### flintVec2Neg
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Neg(vector: FlintVec2): FlintVec2;
+```
+
+Führen Sie die Vec 2 Neg-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec2 |             |
+
+### flintVec2Normalize
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Normalize(vector: FlintVec2): FlintVec2;
+```
+
+Führen Sie den VEC 2-Normalisierungsvorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec2 |             |
+
+### flintVec2PerpDot
+
+**Art:** Funktion
+
+```typescript
+function flintVec2PerpDot(first: FlintVec2, second: FlintVec2): number;
+```
+
+Führen Sie eine VEC-2-Perp-Dot-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec2 |             |
+| zweite | FlintVec2 |             |
+
+### flintVec2Projekt
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Project(vector: FlintVec2, target: FlintVec2): FlintVec2;
+```
+
+Führen Sie den VEC 2-Projektvorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec2 |             |
+| Ziel | FlintVec2 |             |
+
+### flintVec2Reflect
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Reflect(vector: FlintVec2, normal: FlintVec2): FlintVec2;
+```
+
+Führen Sie den VEC 2 Reflect-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec2 |             |
+| normal | FlintVec2 |             |
+
+### flintVec2Rotate
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Rotate(vector: FlintVec2, angleRad: number): FlintVec2;
+```
+
+Führen Sie den VEC 2-Rotationsvorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------- | --------- | ----------- |
+| Vektor | FlintVec2 |             |
+| angleRad | Nummer |             |
+
+### flintVec2Scale
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Scale(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+Führen Sie den Vec 2-Waagenbetrieb durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec2 |             |
+| Skalar | Nummer |             |
+
+### flintVec2Sub
+
+**Art:** Funktion
+
+```typescript
+function flintVec2Sub(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+Führen Sie den Untervorgang „Vec 2“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec2 |             |
+| zweite | FlintVec2 |             |
+
+### FlintVec3
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintVec3
+```
+
+3D-Gleitkomma-Vektor.
+
+### flintVec3Add
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Add(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+Führen Sie den VEC 3-Add-Vorgang aus.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec3 |             |
+| zweite | FlintVec3 |             |
+
+### flintVec3Angle
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Angle(first: FlintVec3, second: FlintVec3): number;
+```
+
+Führen Sie einen VEC-3-Winkel-Betrieb durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec3 |             |
+| zweite | FlintVec3 |             |
+
+### flintVec3Cross
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Cross(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+Führen Sie eine VEC-3-Kreuzoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec3 |             |
+| zweite | FlintVec3 |             |
+
+### flintVec3Distance
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Distance(first: FlintVec3, second: FlintVec3): number;
+```
+
+Führen Sie eine Vec-3-Distanzoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec3 |             |
+| zweite | FlintVec3 |             |
+
+### flintVec3DistanceSquared
+
+**Art:** Funktion
+
+```typescript
+function flintVec3DistanceSquared(first: FlintVec3, second: FlintVec3): number;
+```
+
+Führen Sie eine Vec-3-Distanz-Quadrat-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec3 |             |
+| zweite | FlintVec3 |             |
+
+### flintVec3Div
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Div(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+Führen Sie den VEC-3-Div-Vorgang aus.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec3 |             |
+| Skalar | Nummer |             |
+
+### flintVec3Dot
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Dot(first: FlintVec3, second: FlintVec3): number;
+```
+
+Führen Sie eine VEC-3-Punkt-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec3 |             |
+| zweite | FlintVec3 |             |
+
+### flintVec3Length
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Length(vector: FlintVec3): number;
+```
+
+Führen Sie eine VEC-3-Längenoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec3 |             |
+
+### flintVec3LengthSq
+
+**Art:** Funktion
+
+```typescript
+function flintVec3LengthSq(vector: FlintVec3): number;
+```
+
+Führen Sie eine Vec-3-Länge-Quadrat-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec3 |             |
+
+### flintVec3Lerp
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Lerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+Führen Sie den VEC-3-Lerp-Vorgang aus.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec3 |             |
+| zweite | FlintVec3 |             |
+| Faktor | Nummer |             |
+
+### flintVec3Mul
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Mul(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+Führen Sie den VEC-3-MUL-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec3 |             |
+| zweite | FlintVec3 |             |
+
+### flintVec3Neg
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Neg(vector: FlintVec3): FlintVec3;
+```
+
+Führen Sie die Vec 3 Neg-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec3 |             |
+
+### flintVec3Normalisieren
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Normalize(vector: FlintVec3): FlintVec3;
+```
+
+Führen Sie den VEC 3-Normalisierungsvorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec3 |             |
+
+### flintVec3Projekt
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Project(vector: FlintVec3, target: FlintVec3): FlintVec3;
+```
+
+Führen Sie den VEC 3-Projektvorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec3 |             |
+| Ziel | FlintVec3 |             |
+
+### flintVec3Reflect
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Reflect(vector: FlintVec3, normal: FlintVec3): FlintVec3;
+```
+
+Führen Sie den VEC-3-Reflect-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec3 |             |
+| normal | FlintVec3 |             |
+
+### flintVec3Refract
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Refract(vector: FlintVec3, normal: FlintVec3, eta: number): FlintVec3;
+```
+
+Führen Sie eine Vec-3-Refraktionsoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec3 |             |
+| normal | FlintVec3 |             |
+| eta | Nummer |             |
+
+### flintVec3Reject
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Reject(vector: FlintVec3, from: FlintVec3): FlintVec3;
+```
+
+Führen Sie den Vec-3-Ablehnungsvorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec3 |             |
+| von | FlintVec3 |             |
+
+### flintVec3Scale
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Scale(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+Führen Sie den Vec 3-Waagenbetrieb durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec3 |             |
+| Skalar | Nummer |             |
+
+### flintVec3Slerp
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Slerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+Führen Sie den VEC-3-Slerp-Vorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec3 |             |
+| zweite | FlintVec3 |             |
+| Faktor | Nummer |             |
+
+### flintVec3Sub
+
+**Art:** Funktion
+
+```typescript
+function flintVec3Sub(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+Führen Sie den Untervorgang „Vec 3“ durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec3 |             |
+| zweite | FlintVec3 |             |
+
+### FlintVec4
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintVec4
+```
+
+4D-Gleitkomma-Vektor.
+
+### flintVec4Add
+
+**Art:** Funktion
+
+```typescript
+function flintVec4Add(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+Führen Sie den VEC 4-Add-Vorgang aus.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec4 |             |
+| zweite | FlintVec4 |             |
+
+### flintVec4Div
+
+**Art:** Funktion
+
+```typescript
+function flintVec4Div(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+Führen Sie den VEC-4-Div-Vorgang aus.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec4 |             |
+| Skalar | Nummer |             |
+
+### flintVec4Dot
+
+**Art:** Funktion
+
+```typescript
+function flintVec4Dot(first: FlintVec4, second: FlintVec4): number;
+```
+
+Führen Sie eine VEC-4-Punkt-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec4 |             |
+| zweite | FlintVec4 |             |
+
+### flintVec4Length
+
+**Art:** Funktion
+
+```typescript
+function flintVec4Length(vector: FlintVec4): number;
+```
+
+Führen Sie eine VEC-4-Längenoperation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec4 |             |
+
+### flintVec4Lerp
+
+**Art:** Funktion
+
+```typescript
+function flintVec4Lerp(first: FlintVec4, second: FlintVec4, factor: number): FlintVec4;
+```
+
+Führen Sie den VEC 4-Lerp-Vorgang aus.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec4 |             |
+| zweite | FlintVec4 |             |
+| Faktor | Nummer |             |
+
+### flintVec4Neg
+
+**Art:** Funktion
+
+```typescript
+function flintVec4Neg(vector: FlintVec4): FlintVec4;
+```
+
+Führen Sie eine Vec-4-Neg-Operation durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec4 |             |
+
+### flintVec4Normalize
+
+**Art:** Funktion
+
+```typescript
+function flintVec4Normalize(vector: FlintVec4): FlintVec4;
+```
+
+Führen Sie den VEC 4-Normalisierungsvorgang durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec4 |             |
+
+### flintVec4Scale
+
+**Art:** Funktion
+
+```typescript
+function flintVec4Scale(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+Führen Sie den Vec 4-Waagenbetrieb durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| Vektor | FlintVec4 |             |
+| Skalar | Nummer |             |
+
+### flintVec4Sub
+
+**Art:** Funktion
+
+```typescript
+function flintVec4Sub(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+Führen Sie den Untervorgang VEC 4 durch.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | --------- | ----------- |
+| zuerst | FlintVec4 |             |
+| zweite | FlintVec4 |             |
 
 ## `src/memory`
 
@@ -1825,23 +6407,59 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createFlintMemory(options?: FlintMemoryOptions): FlintMemory;
+function createFlintMemory(
+  memoryOrOptions?: WebAssembly.Memory | FlintMemoryOptions,
+  options?: FlintMemoryOptions,
+): FlintMemory;
 ```
 
-Keine Beschreibung angegeben.
+Erstellt eine konfigurierte FlintMemory-Instanz.
 
 #### Parameter
 
-| Name     | Geben Sie          | ein Beschreibung |
-| -------- | ------------------ | ---------------- |
-| Optionen | FlintMemoryOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------------- | ---------------------------------------- | ----------------------------------------------------------------- |
+| MemoryOrOptions | WebAssembly.Memory \| FlintMemoryOptions | – Vorhandene WebAssembly.Memory- oder Speichererstellungsoptionen.         |
+| Optionen | FlintMemoryOptions | - Speichererstellungs- und -größenoptionen, sofern eine Speicherinstanz bereitgestellt wird. |
 
-### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+#### Vertrag
+
+- **@param:** – Vorhandene WebAssembly.Memory- oder Speichererstellungsoptionen.
+- **@param:** – Speichererstellungs- und -größenoptionen, wenn eine Speicherinstanz bereitgestellt wird.
+- **@returns:** Initialisierte FlintMemory-Instanz.
+
+### createFlintMultiMemory
+
+**Art:** Funktion
+
+```typescript
+function createFlintMultiMemory(options?: FlintMultiMemoryOptions): FlintMultiMemory;
+```
+
+Erstellt eine isolierte Multi-Memory-Instanz mit dediziertem Gast-Heap, Host-Interop und statischen Partitionen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ----------------------- | ----------- |
+| Optionen | FlintMultiMemoryOptions |             |
+
+### FALLBACK_GUARD_PAGE_SIZE
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
+export const FALLBACK_GUARD_PAGE_SIZE;
+```
+
+Keine Beschreibung angegeben.
+
+### FLINT_MEMORY_CAPABILITIES
+
+**Art:** konstant
+
+```typescript
+export const FLINT_MEMORY_CAPABILITIES;
 ```
 
 Keine Beschreibung angegeben.
@@ -1854,7 +6472,7 @@ Keine Beschreibung angegeben.
 export class FlintMemory
 ```
 
-Keine Beschreibung angegeben.
+Verwaltet die linearen Speicherzuweisungen von WebAssembly, die Grenzüberprüfung und die binäre E/A.
 
 ### FlintMemoryAddress
 
@@ -1864,7 +6482,7 @@ Keine Beschreibung angegeben.
 export type FlintMemoryAddress = number | bigint;
 ```
 
-Keine Beschreibung angegeben.
+Speicheradresszeigerdarstellung, die sowohl 32-Bit-Adressen (Zahl) als auch 64-Bit-Adressen (Bigint) unterstützt.
 
 ### FlintMemoryOptions
 
@@ -1874,26 +6492,83 @@ Keine Beschreibung angegeben.
 export interface FlintMemoryOptions
 ```
 
-Keine Beschreibung angegeben.
+Konfigurationsoptionen zum Erstellen und Dimensionieren einer linearen Flint-Speicherinstanz.
+
+### FlintMemoryPartitionName
+
+**Art:** Typ
+
+```typescript
+export type FlintMemoryPartitionName = 'guestHeap' | 'foreignHeap' | 'hostInterop' | 'staticData';
+```
+
+Namen dedizierter linearer Speicherpartitionen für Multispeichermodule.
+
+### FlintMultiMemory
+
+**Art:** Klasse
+
+```typescript
+export class FlintMultiMemory
+```
+
+WebAssembly-Multi-Memory-Segregation-Koordinator.
+Isoliert den Speicher in dedizierten Bereichen für die Gastausführung (Speicher 0).
+Fremder, nicht vertrauenswürdiger C/Rust-Heap (Speicher 1), Host-Interop-Puffer (Speicher 2),
+und statische Konstanten/Tabellen (Speicher 3).
+
+Unterstützt native Multi-Memory-Hardwareisolation sowie Nullzuweisung
+Partitionierte Single-Memory-Fallback-Emulation für Laufzeiten ohne Multi-Memory (z. B. Safari / WebKit).
+
+### FlintMultiMemoryOptions
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintMultiMemoryOptions
+```
+
+Optionen zum Konfigurieren mehrerer unabhängiger linearer Speicherpartitionen.
+
+### FlintRegionalArena
+
+**Art:** Klasse
+
+```typescript
+export class FlintRegionalArena
+```
+
+Bereichsbezogener regionaler Bump-Zuweisungspool (Tier 1), der O(1)-Zuweisung bereitstellt
+und deterministische Massenfreigabe beim Verlassen des Bereichs.
+
+### isMultiMemorySupported
+
+**Art:** Funktion
+
+```typescript
+function isMultiMemorySupported(): boolean;
+```
+
+Erkennt, ob die Host-JavaScript-Umgebung WebAssembly-Multispeicher nativ unterstützt.
 
 ## `src/parallel`
 
-### FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+### FLINT_PARALLEL_CAPABILITIES
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
+export const FLINT_PARALLEL_CAPABILITIES;
 ```
 
-Fähigkeitsnamen, die zur Autorisierung der Worker-, Thread-, Atomic- und Shared-Memory-Ausführung verwendet werden.
+Funktionsnamen, die zum Autorisieren der Worker-, Thread-, Atomic- und Shared-Memory-Ausführung verwendet werden.
 
-### FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS
+### FLINT_PARALLEL_OPERATION_DESCRIPTORS
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
+export const FLINT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<FlintParallelOperation, FlintParallelOperationDescriptor>
 >;
 ```
@@ -1916,11 +6591,11 @@ Gibt das auf Null basierende geordnete Ergebnis zurück oder Option.none, wenn d
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Quelle   | FlintIterable<TValue> |                  |
-| Index    | Zahl                  |                  |
-| Optionen | FlintParallelOptions  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------- | ----------- |
+| Quelle | FlintIterable<TValue> |             |
+| Index | Nummer |             |
+| Optionen | FlintParallelOptions |             |
 
 ### flintIteratorParCollect
 
@@ -1937,10 +6612,10 @@ Materialisieren Sie geordnete parallele Ergebnisse in einem eigenen Vektor.
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Quelle   | FlintIterable<TValue> |                  |
-| Optionen | FlintParallelOptions  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------- | ----------- |
+| Quelle | FlintIterable<TValue> |             |
+| Optionen | FlintParallelOptions |             |
 
 ### flintIteratorParFilter
 
@@ -1959,11 +6634,11 @@ Dies ist die kanonische `par_filter`-API.
 
 #### Parameter
 
-| Name     | Geben Sie                                                      | ein Beschreibung |
-| -------- | -------------------------------------------------------------- | ---------------- |
-| Quelle   | FlintIterable<TValue>                                          |                  |
-| Prädikat | (Wert: TValue, Index: Zahl) => boolean \| PromiseLike<boolean> |                  |
-| Optionen | FlintParallelOptions                                           |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ----------------------------------------------------------------- | ----------- |
+| Quelle | FlintIterable<TValue> |             |
+| Prädikat | (Wert: TValue, Index: Zahl) => boolean \| PromiseLike<boolean> |             |
+| Optionen | FlintParallelOptions |             |
 
 ### flintIteratorParFirst
 
@@ -1980,10 +6655,10 @@ Gibt das erste geordnete Ergebnis oder einen Option.none-Wert für eine leere Qu
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Quelle   | FlintIterable<TValue> |                  |
-| Optionen | FlintParallelOptions  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------- | ----------- |
+| Quelle | FlintIterable<TValue> |             |
+| Optionen | FlintParallelOptions |             |
 
 ### flintIteratorParFlatten
 
@@ -2000,10 +6675,10 @@ Glätten Sie verschachtelte Quellen parallel und bewahren Sie dabei die äußere
 
 #### Parameter
 
-| Name     | Geben Sie                            | ein Beschreibung |
-| -------- | ------------------------------------ | ---------------- |
-| Quelle   | FlintIterable<FlintIterable<TValue>> |                  |
-| Optionen | FlintParallelOptions                 |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------------------ | ----------- |
+| Quelle | FlintIterable<FlintIterable<TValue>> |             |
+| Optionen | FlintParallelOptions |             |
 
 ### flintIteratorParFold
 
@@ -2022,12 +6697,12 @@ Falten Sie die geordneten Ergebnisse von links nach rechts, einschließlich des 
 
 #### Parameter
 
-| Name       | Geben Sie                                                    | ein Beschreibung |
-| ---------- | ------------------------------------------------------------ | ---------------- |
-| Quelle     | FlintIterable<TValue>                                        |                  |
-| Initiale   | TResult                                                      |                  |
-| Reduzierer | (Akkumulator: TResult, Wert: TValue, Index: Zahl) => TResult |                  |
-| Optionen   | FlintParallelOptions                                         |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------------------------------------------------- | ----------- |
+| Quelle | FlintIterable<TValue> |             |
+| Initiale | TResult |             |
+| Reduzierer | (Akkumulator: TResult, Wert: TValue, Index: Zahl) => TResult |             |
+| Optionen | FlintParallelOptions |             |
 
 ### flintIteratorParLast
 
@@ -2044,10 +6719,10 @@ Gibt das zuletzt geordnete Ergebnis oder einen Option.none-Wert für eine leere 
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Quelle   | FlintIterable<TValue> |                  |
-| Optionen | FlintParallelOptions  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------- | ----------- |
+| Quelle | FlintIterable<TValue> |             |
+| Optionen | FlintParallelOptions |             |
 
 ### flintIteratorParMap
 
@@ -2066,11 +6741,11 @@ Rückruffehler lehnen den Vorgang ab und werden durch serielles Fallback nicht a
 
 #### Parameter
 
-| Name     | Geben Sie                                                      | ein Beschreibung |
-| -------- | -------------------------------------------------------------- | ---------------- |
-| Quelle   | FlintIterable<TValue>                                          |                  |
-| Karte    | (Wert: TValue, Index: Zahl) => TResult \| PromiseLike<TResult> |                  |
-| Optionen | FlintParallelOptions                                           |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ----------------------------------------------------------------- | ----------- |
+| Quelle | FlintIterable<TValue> |             |
+| Karte | (Wert: TValue, Index: Zahl) => TResult \| PromiseLike<TResult> |             |
+| Optionen | FlintParallelOptions |             |
 
 ### flintIteratorParToArray
 
@@ -2087,10 +6762,10 @@ Materialisieren Sie geordnete parallele Ergebnisse in einem eigenen festen Array
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Quelle   | FlintIterable<TValue> |                  |
-| Optionen | FlintParallelOptions  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------- | ----------- |
+| Quelle | FlintIterable<TValue> |             |
+| Optionen | FlintParallelOptions |             |
 
 ### flintParallelDescriptor
 
@@ -2107,10 +6782,10 @@ Beschreiben Sie einen Vorgang und fügen Sie die aus den bereitgestellten Option
 
 #### Parameter
 
-| Name     | Geben Sie              | ein Beschreibung |
-| -------- | ---------------------- | ---------------- |
-| Betrieb  | FlintParallelOperation |                  |
-| Optionen | FlintParallelOptions   |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------- | ---------------------- | ----------- |
+| Betrieb | FlintParallelOperation |             |
+| Optionen | FlintParallelOptions |             |
 
 ### FlintParallelExecutor
 
@@ -2195,9 +6870,138 @@ Wählen Sie eine zulässige Strategie aus, ohne den Ergebnisvertrag des Vorgangs
 
 #### Parameter
 
-| Name     | Geben Sie            | ein Beschreibung |
-| -------- | -------------------- | ---------------- |
-| Optionen | FlintParallelOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | -------------------- | ----------- |
+| Optionen | FlintParallelOptions |             |
+
+## `src/safe-heap`
+
+### Erstellen SieFlintSafeHeap
+
+**Art:** Funktion
+
+```typescript
+function createFlintSafeHeap(memory: FlintMemory): FlintSafeHeap;
+```
+
+Factory-Funktion zum Erstellen eines neuen FlintSafeHeap-Managers.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ----------- | ------------------------- |
+| Erinnerung | FlintMemory | - Lineare Speicherinstanz. |
+
+#### Vertrag
+
+- **@param:** – Lineare Speicherinstanz.
+- **@returns:** Initialisierte FlintSafeHeap-Instanz.
+
+### FLINT_MEMORY_MODEL
+
+**Art:** konstant
+
+```typescript
+export const FLINT_MEMORY_MODEL;
+```
+
+Keine Beschreibung angegeben.
+
+### FlintDynamicTableManager
+
+**Art:** Klasse
+
+```typescript
+export class FlintDynamicTableManager
+```
+
+Dynamischer WebAssembly-Funktionstabellenmanager mit Slot-Zuweisung, Generationsverfolgung,
+und sofortige Annullierung bei Schließungsfreigabe, um den Versand veralteter Funktionen zu verhindern.
+
+### FlintRegion
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintRegion
+```
+
+Lebenszeit-Token, der einen aktiven Speicherbereich identifiziert.
+
+### FlintRegionAllocation
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintRegionAllocation
+```
+
+Deskriptor, der eine Speicherzuordnung verfolgt, die an eine Lebenszeitregion gebunden ist.
+
+### FlintRegionArena
+
+**Art:** Klasse
+
+```typescript
+export class FlintRegionArena
+```
+
+Hochleistungsfähiger Arena-Bump-Zuordner für vorübergehende Aufgaben.
+Stellt den gesamten zugewiesenen Speicher in einem sofortigen O(1)-Zeiger-Reset wieder her.
+
+### FlintSafeHeap
+
+**Art:** Klasse
+
+```typescript
+export class FlintSafeHeap
+```
+
+Deterministischer Heap mit Gültigkeitsbereich für vom Compiler verwaltete Werte. Rohe fws_alloc-Aufrufe
+verbleiben auf FlintMemory und werden hier niemals implizit beibehalten.
+
+### FlintSharedHandle
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintSharedHandle
+```
+
+Handle-Referenz, die eine referenzgezählte Shared-Memory-Zuweisung identifiziert.
+
+### FlintTableSlotHandle
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintTableSlotHandle
+```
+
+Dynamischer Funktionstabellen-Slot-Handle, Tracking-Tabellenindex und Generations-Token.
+
+### FlintTlsfAllocator
+
+**Art:** Klasse
+
+```typescript
+export class FlintTlsfAllocator
+```
+
+Two-Level Segregated Fit (TLSF)-Speicherzuweiser.
+Garantiert O(1)-Zuweisungs- und -Freigabezeit mit sofortiger physischer Zusammenführung
+und minimale Fragmentierung für eingebettete/Echtzeit-Wasm-Workloads.
+
+### FlintWeakHandle
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintWeakHandle
+```
+
+Schwaches Referenzhandle, das auf eine gemeinsam genutzte Speicherzuordnung verweist, ohne die Anzahl starker Referenzen zu erhöhen.
+Verringert monotone Speicherverluste, die durch zyklische Datenstrukturen verursacht werden.
 
 ## `src/self-hosted`
 
@@ -2209,7 +7013,7 @@ Wählen Sie eine zulässige Strategie aus, ohne den Ergebnisvertrag des Vorgangs
 export interface FlintSelfHostedRunOptions
 ```
 
-Keine Beschreibung angegeben.
+Konfigurationsoptionen zum Ausführen selbstgehosteter Compilerphasen im VM- oder AOT-Modus.
 
 ### FlintSelfHostedVmRun
 
@@ -2219,7 +7023,7 @@ Keine Beschreibung angegeben.
 export interface FlintSelfHostedVmRun
 ```
 
-Keine Beschreibung angegeben.
+Vollständiger Ausführungsbericht eines selbstgehosteten Compilers über die Lexing- und Parsing-Phasen hinweg.
 
 ### runFlintSelfHostedCompiler
 
@@ -2233,20 +7037,20 @@ function runFlintSelfHostedCompiler(
 ): FlintSelfHostedVmRun;
 ```
 
-Führen Sie den begrenzten selbstgehosteten Compiler-Bootstrap aus.
+Führen Sie den begrenzten, selbstgehosteten Compiler-Bootstrap aus.
 
-Führt die FLINT-Lex- und Parser-Stufen im angeforderten VM-Modus aus und
+Führt die FWS-Lex- und Parser-Stufen im angeforderten VM-Modus aus und
 vergleicht jeden von der VM abgeleiteten Fingerabdruck mit der unabhängigen Seed-Referenz.
 Die vollständige Wasm-Emission bleibt durch Samen gesichert und wird nur dann über `artifact` freigelegt, wenn
 Jede Stufe meldet Parität.
 
 #### Parameter
 
-| Name     | Geben Sie                 | ein Beschreibung |
-| -------- | ------------------------- | ---------------- |
-| Eingabe  | FlintCompileInput         |                  |
-| Modus    | FlintVmExecutionMode      |                  |
-| Optionen | FlintSelfHostedRunOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------- | ----------- |
+| Eingabe | FlintCompileInput |             |
+| Modus | FlintVmExecutionMode |             |
+| Optionen | FlintSelfHostedRunOptions |             |
 
 ### runFlintSelfHostedLexStage
 
@@ -2264,13 +7068,47 @@ Führen Sie nur die begrenzte, von FWS erstellte Lex-Stufe für Compiler-Konsume
 
 #### Parameter
 
-| Name     | Geben Sie                                                                                       | ein Beschreibung |
-| -------- | ----------------------------------------------------------------------------------------------- | ---------------- |
-| Eingabe  | Pick<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |                  |
-| Modus    | FlintVmExecutionMode                                                                            |                  |
-| Optionen | FlintSelfHostedRunOptions                                                                       |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+| Eingabe | Pick<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+| Modus | FlintVmExecutionMode |             |
+| Optionen | FlintSelfHostedRunOptions |             |
 
 ## `src/threading`
+
+### behauptenFlintSend
+
+**Art:** Funktion
+
+```typescript
+function assertFlintSend(value: T, context = 'value'): T;
+```
+
+Bestätigt, dass ein Wert den „Send“-Vertrag erfüllt, und löst bei Verstoß eine Falle aus.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---- | ----------- |
+| Wert | T |             |
+| Kontext |      |             |
+
+### behauptenFlintSync
+
+**Art:** Funktion
+
+```typescript
+function assertFlintSync(value: T, context = 'value'): T;
+```
+
+Bestätigt, dass ein Wert den „Sync“-Vertrag erfüllt, und löst bei Verstoß eine Falle aus.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---- | ----------- |
+| Wert | T |             |
+| Kontext |      |             |
 
 ### canUseFlintWasmThreads
 
@@ -2283,15 +7121,15 @@ function canUseFlintWasmThreads(
 ): boolean;
 ```
 
-Die Thread-Ausführung ist sowohl an Kompilierungs- als auch an Laufzeitgrenzen möglich. In
+Die Thread-Ausführung ist sowohl an der Kompilierungs- als auch an der Laufzeitgrenze optional. In
 Insbesondere wird dieser Pfad niemals durch eine nicht deklarierte Fähigkeitsliste aktiviert.
 
 #### Parameter
 
-| Name           | Geben Sie                                    | ein Beschreibung |
-| -------------- | -------------------------------------------- | ---------------- |
-| targetFeatures | FlintWasmThreadTargetFeatures \| undefiniert |                  |
-| Fähigkeiten    | schreibgeschützter String[] \| undefiniert   |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------------- | ------------------------------------------ | ----------- |
+| targetFeatures | FlintWasmThreadTargetFeatures \| undefiniert |             |
+| Fähigkeiten | schreibgeschützter String[] \| undefiniert |             |
 
 ### createFlintAtomicI32
 
@@ -2301,14 +7139,20 @@ Insbesondere wird dieser Pfad niemals durch eine nicht deklarierte Fähigkeitsli
 function createFlintAtomicI32(length = 1, options: FlintAtomicI32Options = {}): FlintAtomicI32;
 ```
 
-Keine Beschreibung angegeben.
+Weist ein gemeinsam genutztes atomares 32-Bit-Integer-Array zu und umschließt es mit atomaren Operationen.
 
 #### Parameter
 
-| Name     | Geben Sie             | ein Beschreibung |
-| -------- | --------------------- | ---------------- |
-| Länge    |                       |                  |
-| Optionen | FlintAtomicI32Options |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------- | ---------------------------------------------------------- |
+| Länge |                       | – Anzahl der zuzuordnenden 32-Bit-Integer-Slots.              |
+| Optionen | FlintAtomicI32Options | – Zuweisungsoptionen einschließlich vorhandenem SharedArrayBuffer. |
+
+#### Vertrag
+
+- **@param:** – Anzahl der zuzuordnenden 32-Bit-Integer-Slots.
+- **@param:** – Zuweisungsoptionen einschließlich vorhandenem SharedArrayBuffer.
+- **@returns:** Konfigurierte FlintAtomicI32-Instanz.
 
 ### createFlintWasmThreadScheduler
 
@@ -2324,9 +7168,9 @@ muss den im Parallelvertrag ausgewählten seriellen Fallback verwenden.
 
 #### Parameter
 
-| Name     | Geben Sie                       | ein Beschreibung |
-| -------- | ------------------------------- | ---------------- |
-| Optionen | FlintWasmThreadSchedulerOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------------- | ----------- |
+| Optionen | FlintWasmThreadSchedulerOptions |             |
 
 ### createFlintWorkerRuntime
 
@@ -2336,21 +7180,31 @@ muss den im Parallelvertrag ausgewählten seriellen Fallback verwenden.
 function createFlintWorkerRuntime(
   createWorker: () => FlintWorkerPort,
   onMessage: (message: unknown) => void,
-  onError: (error: unknown) => void = () => {},
+  onError: (error: unknown) => void = (_error: unknown) => {
+    // Default no-op error handler.
+  },
   options: FlintWorkerRuntimeOptions = {},
 ): FlintWorkerRuntime;
 ```
 
-Keine Beschreibung angegeben.
+Instanziiert eine Worker-Laufzeit mit den bereitgestellten Port-Factory- und Lebenszyklus-Hooks.
 
 #### Parameter
 
-| Name         | Geben Sie                      | ein Beschreibung |
-| ------------ | ------------------------------ | ---------------- |
-| createWorker | () => FlintWorkerPort          |                  |
-| onMessage    | (Nachricht: unbekannt) => void |                  |
-| onError      | (Fehler: unbekannt) => void    |                  |
-| Optionen     | FlintWorkerRuntimeOptions      |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | -------------------------- | ---------------------------------------- |
+| createWorker | () => FlintWorkerPort | - Rückruf der Hafenfabrik.                 |
+| onMessage | (Nachricht: unbekannt) => void | - Rückruf des Nachrichtenhandlers.              |
+| onError | (Fehler: unbekannt) => void | - Optionaler Fehlerhandler-Rückruf.       |
+| Optionen | FlintWorkerRuntimeOptions | - Konfigurationsmöglichkeiten für die Laufzeit. |
+
+#### Vertrag
+
+- **@param:** – Port-Factory-Rückruf.
+- **@param:** – Rückruf des Nachrichtenhandlers.
+- **@param:** – Optionaler Fehlerhandler-Rückruf.
+- **@param:** – Konfigurationsoptionen für die Laufzeit.
+- **@returns:** FlintWorkerRuntime initialisiert.
 
 ### createFlintWorkerScheduler
 
@@ -2369,16 +7223,16 @@ Bietet den gleichen begrenzten asynchronen Vertrag für Hosts ohne Worker-Unters
 
 #### Parameter
 
-| Name     | Geben Sie                   | ein Beschreibung |
-| -------- | --------------------------- | ---------------- |
-| Optionen | FlintWorkerSchedulerOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | --------------------------- | ----------- |
+| Optionen | FlintWorkerSchedulerOptions |             |
 
-### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+### FLINT_THREADING_CAPABILITIES
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
+export const FLINT_THREADING_CAPABILITIES;
 ```
 
 Keine Beschreibung angegeben.
@@ -2391,7 +7245,7 @@ Keine Beschreibung angegeben.
 export interface FlintAtomicI32
 ```
 
-Keine Beschreibung angegeben.
+Wrapper, der atomare Lese-, Änderungs- und Schreibvorgänge für einen gemeinsam genutzten 32-Bit-Ganzzahlpuffer bereitstellt.
 
 ### FlintAtomicI32Options
 
@@ -2401,7 +7255,17 @@ Keine Beschreibung angegeben.
 export interface FlintAtomicI32Options
 ```
 
-Keine Beschreibung angegeben.
+Optionen zum Konfigurieren der Zuweisung oder gemeinsamen Nutzung eines atomaren 32-Bit-Integer-Arrays.
+
+### FlintThreadSafetyMarker
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FlintThreadSafetyMarker
+```
+
+Thread-Sicherheits-Metadatenmarkierung, die die Parallelitätsgarantien für gemeinsam genutzten Speicher überprüft.
 
 ### FlintWasmThreadSchedulerOptions
 
@@ -2411,7 +7275,7 @@ Keine Beschreibung angegeben.
 export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFeatures
 ```
 
-Keine Beschreibung angegeben.
+Optionen zum Konfigurieren eines WebAssembly-Thread-Schedulers, der durch gemeinsam genutzten Speicher und Worker unterstützt wird.
 
 ### FlintWasmThreadTargetFeatures
 
@@ -2421,7 +7285,7 @@ Keine Beschreibung angegeben.
 export interface FlintWasmThreadTargetFeatures
 ```
 
-Keine Beschreibung angegeben.
+WebAssembly-Zielfunktionen, die für Multithreading und Shared Memory relevant sind.
 
 ### FlintWorkerPort
 
@@ -2431,7 +7295,7 @@ Keine Beschreibung angegeben.
 export interface FlintWorkerPort
 ```
 
-Keine Beschreibung angegeben.
+Allgemeiner postMessage-Nachrichtenportvertrag für die Mitarbeiterkommunikation.
 
 ### FlintWorkerRuntime
 
@@ -2441,7 +7305,7 @@ Keine Beschreibung angegeben.
 export interface FlintWorkerRuntime
 ```
 
-Keine Beschreibung angegeben.
+Laufzeithandle zur Verwaltung eines Worker-Kommunikationsports und seines Lebenszyklus-Teardowns.
 
 ### FlintWorkerRuntimeOptions
 
@@ -2451,7 +7315,7 @@ Keine Beschreibung angegeben.
 export interface FlintWorkerRuntimeOptions
 ```
 
-Keine Beschreibung angegeben.
+Optionen zum Konfigurieren der Worker-Laufzeiterstellung.
 
 ### FlintWorkerScheduler
 
@@ -2461,7 +7325,7 @@ Keine Beschreibung angegeben.
 export interface FlintWorkerScheduler
 ```
 
-Ein begrenzter asynchroner Scheduler, der von laufzeitbezogenen Host-Worker-Vorgängen verwendet wird.
+Ein begrenzter asynchroner Planer, der von laufzeitbezogenen Host-Worker-Vorgängen verwendet wird.
 
 ### FlintWorkerSchedulerOptions
 
@@ -2471,7 +7335,41 @@ Ein begrenzter asynchroner Scheduler, der von laufzeitbezogenen Host-Worker-Vorg
 export interface FlintWorkerSchedulerOptions
 ```
 
-Keine Beschreibung angegeben.
+Konfigurationsoptionen zum Erstellen eines Host-Worker-Aufgabenplaners.
+
+### isFlintSend
+
+**Art:** Funktion
+
+```typescript
+function isFlintSend(value: unknown, visited = new Set<unknown>()): boolean;
+```
+
+Überprüft, ob ein Wert den „Send“-Vertrag erfüllt (sichere Übertragung über Thread-Grenzen hinweg).
+Überprüft rekursiv einfache Objekte, Arrays, Grundelemente und typisierte Puffer.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------- | ----------- |
+| Wert | unbekannt |             |
+| besucht |         |             |
+
+### isFlintSync
+
+**Art:** Funktion
+
+```typescript
+function isFlintSync(value: unknown): boolean;
+```
+
+Überprüft, ob ein Wert den „Sync“-Vertrag erfüllt (sichere gleichzeitige Freigabe über Threads hinweg).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------- | ----------- |
+| Wert | unbekannt |             |
 
 ## `src/trace`
 
@@ -2483,14 +7381,20 @@ Keine Beschreibung angegeben.
 function createFlintTraceRecorder(options: FlintTraceOptions, functionName: string): FlintTraceRecorder;
 ```
 
-Keine Beschreibung angegeben.
+Erstellt einen Ausführungs-Trace-Recorder, der Größenbudgets und Telemetrieerfassungen durchsetzt.
 
 #### Parameter
 
-| Name          | Geben Sie         | ein Beschreibung |
-| ------------- | ----------------- | ---------------- |
-| Optionen      | FlintTraceOptions |                  |
-| Funktionsname | Zeichenfolge      |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | ----------------- | ------------------------------------ |
+| Optionen | FlintTraceOptions | - Konfigurationsmöglichkeiten für das Tracing. |
+| Funktionsname | Zeichenfolge | – Name der Funktion des primären Einstiegspunkts. |
+
+#### Vertrag
+
+- **@param:** – Konfigurationsoptionen für die Ablaufverfolgung.
+- **@param:** – Funktionsname des primären Einstiegspunkts.
+- **@returns:** Konfigurierte FlintTraceRecorder-Instanz.
 
 ### FlintTraceCaptureMode
 
@@ -2500,7 +7404,7 @@ Keine Beschreibung angegeben.
 export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 ```
 
-Keine Beschreibung angegeben.
+Erfassen Sie den Ausführlichkeitsmodus für die Aufzeichnung der Ausführungsablaufverfolgung.
 
 ### FlintTraceCounters
 
@@ -2510,7 +7414,7 @@ Keine Beschreibung angegeben.
 export interface FlintTraceCounters
 ```
 
-Keine Beschreibung angegeben.
+Aggregierte Ausführungsmetriken und Vorgangszähler, die während der Ablaufverfolgung aufgezeichnet wurden.
 
 ### FlintTraceEvent
 
@@ -2520,7 +7424,7 @@ Keine Beschreibung angegeben.
 export interface FlintTraceEvent
 ```
 
-Keine Beschreibung angegeben.
+Detailliertes Ausführungs-Trace-Ereignis, das während der Laufzeit oder VM-Interpretation erfasst wurde.
 
 ### FlintTraceEventType
 
@@ -2531,7 +7435,7 @@ export type FlintTraceEventType =
   'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
-Keine Beschreibung angegeben.
+Kategorie des aufgezeichneten Laufzeit-Trace-Ereignisses.
 
 ### FlintTraceLimits
 
@@ -2541,7 +7445,7 @@ Keine Beschreibung angegeben.
 export interface FlintTraceLimits
 ```
 
-Keine Beschreibung angegeben.
+Ressourcenbeschränkungen beschränken das Trace-Ereignisvolumen und die Bytegröße.
 
 ### FlintTraceOptions
 
@@ -2551,7 +7455,7 @@ Keine Beschreibung angegeben.
 export interface FlintTraceOptions extends FlintTraceLimits
 ```
 
-Keine Beschreibung angegeben.
+Konfigurationsoptionen zum Initialisieren der Ausführungs-Trace-Aufzeichnung.
 
 ### FlintTraceRecorder
 
@@ -2561,7 +7465,7 @@ Keine Beschreibung angegeben.
 export interface FlintTraceRecorder
 ```
 
-Keine Beschreibung angegeben.
+Aktive Rekorderschnittstelle, die Laufzeitausführungsereignisse verbraucht und Ablaufverfolgungsberichte erstellt.
 
 ### FlintTraceReport
 
@@ -2571,19 +7475,19 @@ Keine Beschreibung angegeben.
 export interface FlintTraceReport
 ```
 
-Keine Beschreibung angegeben.
+Vollständiger strukturierter Ausführungs-Trace-Bericht, zusammengefasst nach Abschluss der Ausführung.
 
 ### FlintTraceSourceLocation
 
-**Art:** Schnittstelle
+**Art:** Typ
 
 ```typescript
-export interface FlintTraceSourceLocation extends FlintVmDebugSpan
+export type FlintTraceSourceLocation = FlintVmDebugSpan;
 ```
 
-Keine Beschreibung angegeben.
+Quellzuordnungsposition für aufgezeichnete Ausführungs-Trace-Ereignisse.
 
-### summaryFlintVmValue
+### fassenFlintVmValue zusammen
 
 **Art:** Funktion
 
@@ -2591,14 +7495,20 @@ Keine Beschreibung angegeben.
 function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValue) => string): string;
 ```
 
-Keine Beschreibung angegeben.
+Fasst einen VM-Wert für die Diagnoseverfolgung zusammen und wendet optional Schwärzungen an.
 
 #### Parameter
 
-| Name       | Geben Sie                      | ein Beschreibung |
-| ---------- | ------------------------------ | ---------------- |
-| Wert       | FlintVmValue                   |                  |
-| redigieren | (Wert: FlintVmValue) => string |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------------------------- | ------------------------------ |
+| Wert | FlintVmValue | - Zu formatierender VM-Wert.          |
+| redigieren | (Wert: FlintVmValue) => string | - Optionaler Schwärzungsrückruf. |
+
+#### Vertrag
+
+- **@param:** – Zu formatierender VM-Wert.
+- **@param:** – Optionaler Schwärzungsrückruf.
+- **@returns:** Menschenlesbare Zusammenfassungszeichenfolge.
 
 ## `src/traps`
 
@@ -2610,16 +7520,21 @@ Keine Beschreibung angegeben.
 function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 ```
 
-Keine Beschreibung angegeben.
+Verknüpft ggf. einen Ausführungs-Trace-Bericht mit einem Flint-Trap-Fehler.
 
 #### Parameter
 
-| Name   | Geben Sie        | ein Beschreibung |
-| ------ | ---------------- | ---------------- |
-| Fehler | unbekannt        |                  |
-| Spur   | FlintTraceReport |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------------- | ----------------------------------- |
+| Fehler | unbekannt | - Kandidatenfehlerobjekt.           |
+| Spur | FlintTraceReport | - Ausführungs-Trace-Bericht zum Anhängen. |
 
-### FlintTrap
+#### Vertrag
+
+- **@param:** – Kandidatenfehlerobjekt.
+- **@param:** – Ausführungs-Trace-Bericht zum Anhängen.
+
+### Feuersteinfalle
 
 **Art:** Klasse
 
@@ -2627,7 +7542,7 @@ Keine Beschreibung angegeben.
 export class FlintTrap extends Error
 ```
 
-Keine Beschreibung angegeben.
+Stellt eine schwerwiegende Laufzeit- oder Gastausführungsfalle in Flint dar.
 
 ### FlintTrapCode
 
@@ -2641,10 +7556,16 @@ export type FlintTrapCode =
   | 'InvalidOwnership'
   | 'MemoryExhausted'
   | 'MemoryOutOfBounds'
-  | 'GuestTrap';
+  | 'GuestTrap'
+  | 'BorrowViolation'
+  | 'RegionExpired'
+  | 'UseAfterRelease'
+  | 'DoubleRelease'
+  | 'StackOverflow'
+  | 'CallDepthExhausted';
 ```
 
-Keine Beschreibung angegeben.
+Codes der kanonischen Laufzeit-Trap-Fehlerkategorie.
 
 ### FlintTrapOptions
 
@@ -2654,7 +7575,7 @@ Keine Beschreibung angegeben.
 export interface FlintTrapOptions extends ErrorOptions
 ```
 
-Keine Beschreibung angegeben.
+Optionen zum Konfigurieren der Laufzeit-Trap-Fehlerberichterstattung und -Protokollierung.
 
 ### toFlintHostError
 
@@ -2664,15 +7585,22 @@ Keine Beschreibung angegeben.
 function toFlintHostError(error: unknown, capability: string, logger?: FlintLogger): FlintTrap;
 ```
 
-Keine Beschreibung angegeben.
+Konvertiert einen unbekannten Hostfehler in eine normalisierte FlintTrap-Instanz.
 
 #### Parameter
 
-| Name       | Geben Sie    | ein Beschreibung |
-| ---------- | ------------ | ---------------- |
-| Fehler     | unbekannt    |                  |
-| Fähigkeit  | Zeichenfolge |                  |
-| Holzfäller | FlintLogger  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------- | --------------------------------------------------- |
+| Fehler | unbekannt | - Raw hat einen Fehler abgefangen.                                 |
+| Fähigkeit | Zeichenfolge | – Funktionskennung des Zielhosts.                |
+| Holzfäller | FlintLogger | - Optionaler Laufzeitlogger für Diagnosetelemetrie. |
+
+#### Vertrag
+
+- **@param:** - Raw hat einen Fehler abgefangen.
+- **@param:** – Funktionskennung des Zielhosts.
+- **@param:** – Optionaler Laufzeitlogger für Diagnosetelemetrie.
+- **@returns:** Normalisierte FlintTrap-Instanz.
 
 ## `src/vm-executor`
 
@@ -2684,14 +7612,20 @@ Keine Beschreibung angegeben.
 function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string): FlintVmAotArtifact;
 ```
 
-Keine Beschreibung angegeben.
+Kompiliert ein VM-Modul in ein AOT-JavaScript-Artefakt (Ahead-of-Time).
 
 #### Parameter
 
-| Name            | Geben Sie     | ein Beschreibung |
-| --------------- | ------------- | ---------------- |
-| Modul           | FlintVmModule |                  |
-| CompilerVersion | Zeichenfolge  |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------------- | ------------- | -------------------------- |
+| Modul | FlintVmModule | - VM-Modul zum Kompilieren.    |
+| CompilerVersion | Zeichenfolge | – Compiler-Versionszeichenfolge. |
+
+#### Vertrag
+
+- **@param:** – VM-Modul zum Kompilieren.
+- **@param:** – Compiler-Versionszeichenfolge.
+- **@returns:** Ausgegebenes AOT-Artefakt.
 
 ### createFlintVmExecutor
 
@@ -2701,13 +7635,18 @@ Keine Beschreibung angegeben.
 function createFlintVmExecutor(executorOptions: FlintVmExecutorOptions = {}): FlintVmExecutor;
 ```
 
-Keine Beschreibung angegeben.
+Erstellt einen Bytecode-VM-Executor mit JIT-Kompilierungsunterstützung.
 
 #### Parameter
 
-| Name            | Geben Sie              | ein Beschreibung |
-| --------------- | ---------------------- | ---------------- |
-| executorOptions | FlintVmExecutorOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| --------------- | ---------------------- | ----------------------------------------- |
+| executorOptions | FlintVmExecutorOptions | - Konfigurationsoptionen für den Executor. |
+
+#### Vertrag
+
+- **@param:** – Konfigurationsoptionen für den Executor.
+- **@returns:** Konfigurierte FlintVmExecutor-Instanz.
 
 ### ausführenFlintVm
 
@@ -2722,16 +7661,24 @@ function executeFlintVm(
 ): FlintVmExecutionResult;
 ```
 
-Keine Beschreibung angegeben.
+Convenience Runner führt eine Funktion in einem VM-Modul aus.
 
 #### Parameter
 
-| Name          | Geben Sie                       | ein Beschreibung |
-| ------------- | ------------------------------- | ---------------- |
-| Modul         | FlintVmModule                   |                  |
-| Funktionsname | Zeichenfolge                    |                  |
-| Argumente_    | schreibgeschützt FlintVmValue[] |                  |
-| Optionen      | FlintVmExecutionOptions         |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | ----------------------- | ---------------------- |
+| Modul | FlintVmModule | - VM-Modul.           |
+| Funktionsname | Zeichenfolge | - Funktionsname eingeben. |
+| Argumente_ | schreibgeschützt FlintVmValue[] | - Argumentarray.     |
+| Optionen | FlintVmExecutionOptions | - Ausführungsoptionen.   |
+
+#### Vertrag
+
+- **@param:** – VM-Modul.
+- **@param:** – Funktionsname eingeben.
+- **@param:** – Argumentarray.
+- **@param:** – Ausführungsoptionen.
+- **@returns:** Ausführungsergebnis.
 
 ### ausführenFlintVmAotArtifact
 
@@ -2746,16 +7693,24 @@ function executeFlintVmAotArtifact(
 ): FlintVmExecutionResult;
 ```
 
-Keine Beschreibung angegeben.
+Führt ein kompiliertes AOT-Artefakt aus.
 
 #### Parameter
 
-| Name          | Geben Sie                                   | ein Beschreibung |
-| ------------- | ------------------------------------------- | ---------------- |
-| Artefakt      | FlintVmAotArtifact                          |                  |
-| Funktionsname | Zeichenfolge                                |                  |
-| Argumente_    | schreibgeschützt FlintVmValue[]             |                  |
-| Optionen      | <FlintVmExecutionOptions, 'mode'> weglassen |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | ------------------------------------- | ------------------------ |
+| Artefakt | FlintVmAotArtifact | - Kompiliertes AOT-Artefakt. |
+| Funktionsname | Zeichenfolge | - Funktionsname eingeben.   |
+| Argumente_ | schreibgeschützt FlintVmValue[] | - Argumentarray.       |
+| Optionen | <FlintVmExecutionOptions, 'mode'> weglassen | - Ausführungsoptionen.     |
+
+#### Vertrag
+
+- **@param:** – Kompiliertes AOT-Artefakt.
+- **@param:** – Funktionsname eingeben.
+- **@param:** – Argumentarray.
+- **@param:** – Ausführungsoptionen.
+- **@returns:** Ausführungsergebnis.
 
 ### FlintVmExecutorOptions
 
@@ -2765,7 +7720,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmExecutorOptions
 ```
 
-Keine Beschreibung angegeben.
+Konfigurationsoptionen für den Flint Virtual Machine Executor.
 
 ### runFlintVmBootstrap
 
@@ -2781,17 +7736,26 @@ function runFlintVmBootstrap(
 ): FlintVmExecutionResult;
 ```
 
-Keine Beschreibung angegeben.
+Führt ein Bootstrap-Modul in der virtuellen Maschine aus.
 
 #### Parameter
 
-| Name          | Geben Sie                                   | ein Beschreibung |
-| ------------- | ------------------------------------------- | ---------------- |
-| Modul         | FlintVmModule                               |                  |
-| Funktionsname | Zeichenfolge                                |                  |
-| Argumente_    | schreibgeschützt FlintVmValue[]             |                  |
-| Modus         | FlintVmExecutionMode                        |                  |
-| Optionen      | <FlintVmExecutionOptions, 'mode'> weglassen |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------------ | ------------------------------------- | ---------------------- |
+| Modul | FlintVmModule | - Bootstrap-VM-Modul. |
+| Funktionsname | Zeichenfolge | - Funktionsname eingeben. |
+| Argumente_ | schreibgeschützt FlintVmValue[] | - Argumentarray.     |
+| Modus | FlintVmExecutionMode | - Ausführungsmodus.      |
+| Optionen | <FlintVmExecutionOptions, 'mode'> weglassen | - Ausführungsoptionen.   |
+
+#### Vertrag
+
+- **@param:** – Bootstrap-VM-Modul.
+- **@param:** – Funktionsname eingeben.
+- **@param:** – Argumentarray.
+- **@param:** – Ausführungsmodus.
+- **@param:** – Ausführungsoptionen.
+- **@returns:** Ausführungsergebnis.
 
 ### validierenFlintVmModule
 
@@ -2801,13 +7765,17 @@ Keine Beschreibung angegeben.
 function validateFlintVmModule(module: FlintVmModule): void;
 ```
 
-Keine Beschreibung angegeben.
+Validiert eine Flint VM-Modulstruktur anhand von Bytecode-Regeln.
 
 #### Parameter
 
-| Name  | Geben Sie     | ein Beschreibung |
-| ----- | ------------- | ---------------- |
-| Modul | FlintVmModule |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------------- | ------------------------ |
+| Modul | FlintVmModule | - VM-Modul zur Validierung. |
+
+#### Vertrag
+
+- **@param:** – VM-Modul zur Validierung.
 
 ## `src/vm-wasm`
 
@@ -2819,14 +7787,14 @@ Keine Beschreibung angegeben.
 function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOptions = {}): FlintVmWasmArtifact;
 ```
 
-Keine Beschreibung angegeben.
+Kompiliert ein Flint-VM-Modul in ein validiertes WebAssembly-Bytecode-Artefakt.
 
 #### Parameter
 
-| Name     | Geben Sie                 | ein Beschreibung |
-| -------- | ------------------------- | ---------------- |
-| Modul    | FlintVmModule             |                  |
-| Optionen | FlintVmWasmCompileOptions |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ------------------------- | ----------- |
+| Modul | FlintVmModule |             |
+| Optionen | FlintVmWasmCompileOptions |             |
 
 ### FlintVmWasmCompileOptions
 
@@ -2836,7 +7804,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmWasmCompileOptions
 ```
 
-Keine Beschreibung angegeben.
+Optionen zum Konfigurieren der Kompilierung eines Flint-VM-Moduls in WebAssembly.
 
 ### PrepareFlintVm
 
@@ -2859,33 +7827,43 @@ function prepareFlintVmWasm(
 ): FlintVmPreparedExecutor;
 ```
 
-Keine Beschreibung angegeben.
+Bereitet einen WebAssembly-Executor aus einem Modul oder Artefakt für einen schnellen Aufruf vor.
 
 #### Parameter
 
-| Name             | Geben Sie                            | ein Beschreibung |
-| ---------------- | ------------------------------------ | ---------------- |
-| moduleOrArtifact | FlintVmModule \| FlintVmWasmArtifact |                  |
-| Optionen         | FlintVmPreparedExecutorOptions       |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------------- | ------------------------------------ | ----------- |
+| moduleOrArtifact | FlintVmModule \| FlintVmWasmArtifact |             |
+| Optionen | FlintVmPreparedExecutorOptions |             |
 
 ## `src/vm`
 
-### FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+### FLINT_VM_DEFAULT_MAX_MEMORY_PAGES
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
+export const FLINT_VM_DEFAULT_MAX_MEMORY_PAGES;
 ```
 
 Keine Beschreibung angegeben.
 
-### FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+### FLINT_VM_WASM_ABI_VERSION
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
+export const FLINT_VM_WASM_ABI_VERSION;
+```
+
+Keine Beschreibung angegeben.
+
+### FLINT_VM_WASM_LOWERING_VERSION
+
+**Art:** konstant
+
+```typescript
+export const FLINT_VM_WASM_LOWERING_VERSION;
 ```
 
 Keine Beschreibung angegeben.
@@ -2898,7 +7876,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmAotArtifact
 ```
 
-Keine Beschreibung angegeben.
+Vorab kompiliertes JavaScript-Artefakt, das von einem VM-Modul ausgegeben wird.
 
 ### FlintVmCapabilityImport
 
@@ -2908,7 +7886,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmCapabilityImport
 ```
 
-Keine Beschreibung angegeben.
+Von einem VM-Modul angeforderter Host-Fähigkeitsimportdeskriptor.
 
 ### FlintVmDebugSpan
 
@@ -2918,7 +7896,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmDebugSpan
 ```
 
-Keine Beschreibung angegeben.
+Debug-Quellspanne, die einen Bytecode-Anweisungsoffset den Quellcodekoordinaten zuordnet.
 
 ### FlintVmExecutionMode
 
@@ -2928,7 +7906,7 @@ Keine Beschreibung angegeben.
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-Keine Beschreibung angegeben.
+Unterstützte VM-Bytecode-Ausführungsmodi („interpret“, „jit“, „aot“).
 
 ### FlintVmExecutionOptions
 
@@ -2938,7 +7916,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmExecutionOptions
 ```
 
-Keine Beschreibung angegeben.
+Optionen zum Konfigurieren von VM-Ausführungslimits, Speicherpuffern und Telemetrie.
 
 ### FlintVmExecutionResult
 
@@ -2948,7 +7926,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmExecutionResult
 ```
 
-Keine Beschreibung angegeben.
+Von einem VM-Ausführungslauf zurückgegebenes Ergebnis, einschließlich Wert und Schrittmetriken.
 
 ### FlintVmExecutor
 
@@ -2958,7 +7936,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmExecutor
 ```
 
-Keine Beschreibung angegeben.
+Primäre Ausführungsschnittstelle zum Ausführen kompilierter Flint VM-Module.
 
 ### FlintVmFunction
 
@@ -2968,9 +7946,9 @@ Keine Beschreibung angegeben.
 export interface FlintVmFunction
 ```
 
-Keine Beschreibung angegeben.
+Kompilierte VM-Funktionsdefinition mit Anweisungen, Registern und Metadaten.
 
-### FlintVmInstruction
+### FlintVmAnweisung
 
 **Art:** Typ
 
@@ -2978,7 +7956,7 @@ Keine Beschreibung angegeben.
 export type FlintVmInstruction = |
 ```
 
-Keine Beschreibung angegeben.
+Bytecode-Anweisungsoperationen, die von der virtuellen Flint-Maschine unterstützt werden.
 
 ### FlintVmJitCache
 
@@ -2988,7 +7966,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmJitCache
 ```
 
-Keine Beschreibung angegeben.
+Cache der mit JIT kompilierten Tier-1-Funktionen und der Anzahl der Hot-Funktionsaufrufe.
 
 ### FlintVmJitEntry
 
@@ -2998,7 +7976,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmJitEntry
 ```
 
-Keine Beschreibung angegeben.
+JIT-Kompilierungs-Cache-Eintrag, der die kompilierte Funktion und die Aufrufanzahl speichert.
 
 ### FlintVmModule
 
@@ -3008,7 +7986,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmModule
 ```
 
-Keine Beschreibung angegeben.
+Ausführbarer Bytecode-Modulcontainer, der von VM- und AOT-Ausführern genutzt wird.
 
 ### FlintVmPreparedExecutor
 
@@ -3018,7 +7996,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmPreparedExecutor
 ```
 
-Keine Beschreibung angegeben.
+Wiederverwendbare, vorab zugewiesene Executor-Instanz, die an ein bestimmtes Modul gebunden ist.
 
 ### FlintVmPreparedExecutorOptions
 
@@ -3028,7 +8006,7 @@ Keine Beschreibung angegeben.
 export interface FlintVmPreparedExecutorOptions
 ```
 
-Keine Beschreibung angegeben.
+Optionen zum Konfigurieren einer vorbereiteten, wiederverwendbaren VM-Ausführungsinstanz.
 
 ### FlintVmValue
 
@@ -3038,9 +8016,9 @@ Keine Beschreibung angegeben.
 export type FlintVmValue = |
 ```
 
-Keine Beschreibung angegeben.
+Mit Tags versehene Union, die Laufzeitwerte darstellt, die von der Bytecode-VM manipuliert werden.
 
-### FlintVmWasmArtifact
+### FlintVmWasmArtefakt
 
 **Art:** Schnittstelle
 
@@ -3048,4 +8026,4 @@ Keine Beschreibung angegeben.
 export interface FlintVmWasmArtifact
 ```
 
-Keine Beschreibung angegeben.
+WebAssembly-Binär- und Importmetadatenartefakt, das von einem VM-Modul ausgegeben wird.

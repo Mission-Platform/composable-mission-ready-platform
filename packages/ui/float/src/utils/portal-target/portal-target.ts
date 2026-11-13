@@ -34,7 +34,7 @@ export function resolvePortalTarget(triggerId: string): Element | string {
   // `:r0:`), and `getElementById` matches the id literally with no escaping —
   // it also does not depend on the `CSS` global, which is absent in some SSR /
   // test (jsdom) environments where `document` is nonetheless defined.
-  // eslint-disable-next-line unicorn/prefer-query-selector
+
   const trigger = document.getElementById(triggerId);
   return trigger?.closest('dialog') ?? document.body;
 }

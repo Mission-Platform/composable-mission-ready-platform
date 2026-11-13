@@ -1,6 +1,6 @@
-import { ForgeShortcutHint } from './forge-shortcut-hint';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeShortcutHint } from './forge-shortcut-hint';
 
 const meta = {
   title: 'Molecules/Navigation/ForgeShortcutHint',

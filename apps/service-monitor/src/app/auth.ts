@@ -14,6 +14,133 @@ export const MONITOR_SESSION_COOKIE = 'monitor_session';
 const MONITOR_SESSION_MAX_AGE_SECONDS = 60 * 60 * 8;
 const MAX_AUTH_REQUEST_BYTES = 8 * 1024;
 
+export class RequestBodyTooLargeError extends Error {
+  public constructor() {
+    super('Request body is too large.');
+    this.name = 'RequestBodyTooLargeError';
+  }
+}
+
+export async function readRequestTextWithLimit(request: Request, maxBytes: number): Promise<string> {
+  if (!request.body) return '';
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      totalBytes += value.byteLength;
+      if (totalBytes > maxBytes) {
+        await reader.cancel();
+        throw new RequestBodyTooLargeError();
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  const body = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder().decode(body);
+}
+
+interface SessionPayload {
+  exp: number;
+  nonce: string;
+}
+
+function base64UrlEncode(bytes: Uint8Array): string {
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function base64UrlDecode(str: string): Uint8Array | null {
+  try {
+    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (base64.length % 4 !== 0) {
+      base64 += '=';
+    }
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+  } catch {
+    return null;
+  }
+}
+
+async function getHmacKey(secret: string): Promise<CryptoKey> {
+  const encoder = new TextEncoder();
+  return globalThis.crypto.subtle.importKey('raw', encoder.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, [
+    'sign',
+    'verify',
+  ]);
+}
+
+/**
+ * Generate a stateless HMAC-SHA256 signed session token.
+ */
+export async function createSignedSessionToken(
+  secret: string,
+  maxAgeSeconds: number = MONITOR_SESSION_MAX_AGE_SECONDS,
+): Promise<string> {
+  const nonceBytes = new Uint8Array(16);
+  globalThis.crypto.getRandomValues(nonceBytes);
+  const nonce = Array.from(nonceBytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+  const exp = Math.floor(Date.now() / 1000) + maxAgeSeconds;
+
+  const payload: SessionPayload = { exp, nonce };
+  const payloadB64 = base64UrlEncode(new TextEncoder().encode(JSON.stringify(payload)));
+
+  const key = await getHmacKey(secret);
+  const signatureBuffer = await globalThis.crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payloadB64));
+  const signatureB64 = base64UrlEncode(new Uint8Array(signatureBuffer));
+
+  return `${payloadB64}.${signatureB64}`;
+}
+
+/**
+ * Verify a stateless HMAC-SHA256 signed session token against the secret and expiration.
+ */
+export async function verifySignedSessionToken(secret: string, token: string): Promise<boolean> {
+  const dotIndex = token.indexOf('.');
+  if (dotIndex === -1) return false;
+
+  const payloadB64 = token.slice(0, dotIndex);
+  const signatureB64 = token.slice(dotIndex + 1);
+  if (!payloadB64 || !signatureB64) return false;
+
+  const payloadBytes = base64UrlDecode(payloadB64);
+  const signatureBytes = base64UrlDecode(signatureB64);
+  if (!payloadBytes || !signatureBytes) return false;
+
+  try {
+    const payloadText = new TextDecoder().decode(payloadBytes);
+    const payload = JSON.parse(payloadText) as Partial<SessionPayload>;
+    if (typeof payload !== 'object' || payload === null) return false;
+    if (typeof payload.exp !== 'number' || typeof payload.nonce !== 'string') return false;
+
+    if (payload.exp < Math.floor(Date.now() / 1000)) {
+      return false;
+    }
+
+    const key = await getHmacKey(secret);
+    return await globalThis.crypto.subtle.verify('HMAC', key, signatureBytes, new TextEncoder().encode(payloadB64));
+  } catch {
+    return false;
+  }
+}
+
 function constantTimeEqual(left: Uint8Array, right: Uint8Array): boolean {
   let difference = 0;
   for (const [index, value] of left.entries()) {
@@ -87,18 +214,26 @@ function unauthorized(): Response {
  * expose administrative routes when its secret has not been provisioned.
  * Returns `null` when access is allowed, otherwise the response to return.
  */
-export function authorizeMonitorRequest(request: Request, configuredToken?: string): Response | null {
+export async function authorizeMonitorRequest(request: Request, configuredToken?: string): Promise<Response | null> {
   const expectedToken = configuredToken?.trim();
-  const providedToken = bearerValue(request) ?? cookieValue(request, MONITOR_SESSION_COOKIE);
-  if (!expectedToken || !providedToken) {
+  if (!expectedToken) {
     return unauthorized();
   }
 
-  if (!tokensMatch(expectedToken, providedToken)) {
-    return unauthorized();
+  const bearer = bearerValue(request);
+  if (bearer && tokensMatch(expectedToken, bearer)) {
+    return null;
   }
 
-  return null;
+  const cookie = cookieValue(request, MONITOR_SESSION_COOKIE);
+  if (cookie) {
+    const valid = await verifySignedSessionToken(expectedToken, cookie);
+    if (valid) {
+      return null;
+    }
+  }
+
+  return unauthorized();
 }
 
 /**
@@ -108,12 +243,12 @@ export function authorizeMonitorRequest(request: Request, configuredToken?: stri
  */
 export async function handleMonitorSession(request: Request, configuredToken?: string): Promise<Response> {
   if (request.method === 'GET') {
-    const authenticated = authorizeMonitorRequest(request, configuredToken) === null;
+    const authenticated = (await authorizeMonitorRequest(request, configuredToken)) === null;
     return Response.json({ authenticated }, { headers: { 'cache-control': 'no-store' } });
   }
 
   if (request.method === 'DELETE') {
-    const authenticationFailure = authorizeMonitorRequest(request, configuredToken);
+    const authenticationFailure = await authorizeMonitorRequest(request, configuredToken);
     if (authenticationFailure) return authenticationFailure;
     return Response.json(
       { ok: true },
@@ -139,12 +274,12 @@ export async function handleMonitorSession(request: Request, configuredToken?: s
   }
   let body: unknown;
   try {
-    const text = await request.text();
-    if (new TextEncoder().encode(text).byteLength > MAX_AUTH_REQUEST_BYTES) {
-      return Response.json({ error: 'Request body is too large.' }, { status: 413 });
-    }
+    const text = await readRequestTextWithLimit(request, MAX_AUTH_REQUEST_BYTES);
     body = JSON.parse(text) as unknown;
-  } catch {
+  } catch (error) {
+    if (error instanceof RequestBodyTooLargeError) {
+      return Response.json({ error: error.message }, { status: 413 });
+    }
     return Response.json({ error: 'Request body must be valid JSON.' }, { status: 400 });
   }
 
@@ -157,12 +292,14 @@ export async function handleMonitorSession(request: Request, configuredToken?: s
     return unauthorized();
   }
 
+  const sessionToken = await createSignedSessionToken(expectedToken, MONITOR_SESSION_MAX_AGE_SECONDS);
+
   return Response.json(
     { ok: true },
     {
       headers: {
         'cache-control': 'no-store',
-        'set-cookie': sessionCookie(token, request, MONITOR_SESSION_MAX_AGE_SECONDS),
+        'set-cookie': sessionCookie(sessionToken, request, MONITOR_SESSION_MAX_AGE_SECONDS),
       },
     },
   );

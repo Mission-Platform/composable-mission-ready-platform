@@ -1,16 +1,22 @@
 /// <reference types="vitest/config" />
 import path from 'node:path';
 
-import { resolveStorybookFramework } from '@mission-platform/storybook-framework';
-import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
-import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
-import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { playwright } from '@vitest/browser-playwright';
 import svgLoader from 'vite-svg-loader';
 
+import { resolveStorybookFramework } from '@mission-platform/storybook-framework';
+import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
+import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
+
 const dirname = import.meta.dirname;
 const framework = resolveStorybookFramework();
+
+const storybookTestPlugin = process.env.VITEST
+  ? (await import('@storybook/addon-vitest/vitest-plugin')).storybookTest({
+      configDir: path.join(dirname, '.storybook'),
+    })
+  : undefined;
 
 export default defineFrameworkAppConfig({
   // Resolve the same framework as the Storybook renderer so plain Vite/Vitest
@@ -35,11 +41,7 @@ export default defineFrameworkAppConfig({
       projects: [
         {
           extends: true,
-          plugins: [
-            storybookTest({
-              configDir: path.join(dirname, '.storybook'),
-            }),
-          ],
+          plugins: storybookTestPlugin ? [storybookTestPlugin] : [],
           test: {
             name: 'storybook',
             browser: {

@@ -14,10 +14,10 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { buildRobotsTxt } from '@mission-platform/seo/robots';
-import { buildSitemapXml } from '@mission-platform/seo/sitemap';
-
 import type { RobotsTxtInput } from '@mission-platform/seo/robots';
+import { buildSitemapXml } from '@mission-platform/seo/sitemap';
 import type { SitemapXmlInput } from '@mission-platform/seo/sitemap';
+
 import type { Plugin } from 'vite';
 
 /** Options for {@link seoPlugin}. */

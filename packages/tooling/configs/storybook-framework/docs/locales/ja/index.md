@@ -10,12 +10,12 @@ Mission Platform 用に環境で選択された Storybook フレームワーク 
 ## インストールして使用する
 
 パッケージを Storybook ワークスペースに追加し、から参照します。
-`.storybook/main.ts` または対応する Storybook 設定。を選択します。
+`.storybook/main.ts` または対応する Storybook 構成。を選択します。
 ワークスペースのサポートされている条件によるフレームワーク。をハードコーディングしないでください
 共有コンポーネント パッケージ内のフレームワーク アダプター。
 
 ## 貢献する
 
-走る `pnpm --filter @mission-platform/storybook-framework lint` そして
+`pnpm --filter @mission-platform/storybook-framework lint` を実行し、
 ストーリーブックのビルド チェック。このパッケージはフレームワークの選択に重点を置き、
-Storybook のデフォルトを共有。コンポーネントストーリーが属するのは `apps/storybook`.
+Storybook のデフォルトを共有。コンポーネント ストーリーは `apps/storybook` に属します。

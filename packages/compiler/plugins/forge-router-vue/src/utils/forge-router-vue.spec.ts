@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
+
 import { createVueRouterCapabilities, toMpLocation, toVueLocation } from '../runtime';
 
 import { forgeRouterVue } from './forge-router-vue';
-
-import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
 
 function moduleWith(source: string, names: readonly string[]): RouterCapabilityModule {
   return {

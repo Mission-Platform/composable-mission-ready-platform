@@ -14,7 +14,7 @@ Mission Platform utilise une pile de tests moderne et unifiée basée sur Vitest
 
 - **Vitest** : le principal programme d'exécution de tests pour les tests unitaires, de composants et basés sur un navigateur.
 - **@vue/test-utils** : Bibliothèque standard pour tester les composants Vue.
-- **Vitest Mode navigateur (Playwright)** : exécution dans un navigateur réel pour l'interaction et les tests visuels si configurés.
+- **Vitest Mode navigateur (Playwright)** : exécution dans un navigateur réel pour l'interaction et les tests visuels, le cas échéant.
 - **Storybook Test Runner** : intégration entre les histoires Storybook et Vitest pour des tests d'interaction automatisés.
 
 ## Comment : exécuter des tests
@@ -31,11 +31,31 @@ pnpm test
 
 ### Exécuter des tests pour un espace de travail spécifique
 
-Pour exécuter des tests pour un seul package ou une seule application :
+Pour exécuter des tests pour un seul package ou une seule application tout en amorçant automatiquement les dépendances en amont :
+
+```bash
+pnpm test:package @mission-platform/<name>
+```
+
+Vous pouvez également appeler directement Turborepo :
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
+
+### Amorçage des dépendances en amont
+
+Les packages du monorepo consomment souvent des artefacts compilés (`dist/`) provenant des dépendances de l'espace de travail en amont. Dans les arbres de travail fraîchement provisionnés ou dans les environnements propres, ces artefacts peuvent ne pas encore exister.
+
+Pour résoudre ce problème de manière transparente :
+
+- **Résolution automatique du Turborepo :** Les graphiques de tâches `test` et `build:check` dans `turbo.json` appliquent `"dependsOn": ["^build"]`. Turborepo crée automatiquement toutes les dépendances en amont avant d'exécuter des tests dans le package cible.
+- **Aide aux packages dédiés :** L'exécution de `pnpm test:package <package-name>` amorce explicitement les versions en amont (`build --filter <package-name>^...`) avant d'exécuter les tests du package. Cet échauffement est intentionnel même si la tâche `test` déclare également `^build` : elle maintient le comportement d'amorçage de l'assistant explicite et cohérent, et constitue une non-opération mise en cache lorsque Turbo a déjà résolu ces dépendances.
+- **Package Build Helper :** L'exécution de `pnpm build:package <package-name>` utilise le même échauffement explicite en amont avant de créer le package cible.
+- **Construction manuelle en amont :** Si vous exécutez un exécuteur de test directement (par exemple, `vitest` dans un seul répertoire de package), amorcez d'abord ses dépendances :
+  ```bash
+  pnpm exec turbo run build --filter @mission-platform/<name>^...
+  ```
 
 ### Exécuter les tests concernés (style CI)
 
@@ -107,13 +127,13 @@ vérification.
 2. Assurez-vous que le package `vitest.config.ts` active le mode navigateur (voir référence ci-dessous).
 3. Exécutez avec `pnpm test`.
 
-### Forger les tests de scripts Web
+### Tests de silex
 
 Utilisez `@mission-platform/flint-vitest` pour le compilateur déterministe, l'artefact, Wasm et la parité auto-hébergée
-chèques. Il délègue la compilation au même service de compilateur et au même plugin Vite utilisé par la production ; cela ne crée pas de
+chèques. Il délègue la compilation au même service de compilation et au même plugin Vite utilisés par la production ; cela ne crée pas de
 système de deuxième module.
 
-Installez le package dans un espace de travail qui teste les modules `.fws`, puis composez son adaptateur avec la configuration Vitest standard :
+Installez le package dans un espace de travail qui teste les modules `.flint`, puis composez son adaptateur avec la configuration standard Vitest :
 
 ```typescript
 // vitest.config.ts
@@ -143,7 +163,7 @@ import {
   createFlintTestHarness,
 } from "@mission-platform/flint-vitest";
 
-describe("FWS fixture", () => {
+describe("Flint fixture", () => {
   const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
@@ -201,7 +221,7 @@ expect((await load<{ answer: () => number }>()).answer()).toBe(42);
 expect(loadSync<{ answer: () => number }>().answer()).toBe(42);
 ```
 
-Pour les valeurs FWS, testez explicitement les deux couches. Les tests WASM bruts devraient affirmer le
+Pour les valeurs Flint, testez explicitement les deux couches. Les tests WASM bruts devraient affirmer le
 Appels ABI et propriété de longueur de pointeur ; Les tests ESM générés doivent affirmer le
 Projection JavaScript :
 
@@ -233,17 +253,17 @@ Le travail de marshalling de chaînes est généré pour les fonctions uniquemen
 doit continuer à transmettre un tuple `[pointer, length]` plutôt que d'attendre un
 conversion automatique `Uint8Array`.
 
-L'espace de travail de référence compare l'adaptateur de longueur de pointeur brut avec le
-Adaptateur ESM généré en tant que modes FWS distincts :
+L'espace de travail de référence compare l'adaptateur brut de longueur de pointeur avec le
+Adaptateur ESM généré en tant que modes Flint distincts :
 
 ```bash
 pnpm --filter @mission-platform/benchmark run bench -- \
   --node-only --warmup 3 --samples 10 \
-  --output benchmark/results/fws-generated-boundary
+  --output benchmark/results/flint-generated-boundary
 ```
 
 Les rapports incluent les phases de génération, d'initialisation et d'exécution en régime permanent. Le
-La ligne brute `wasm` de FWS utilise de nouvelles instances et trois allocations d'entrée de chaîne pour
+La ligne `wasm` brute de Flint utilise de nouvelles instances et trois allocations d'entrée de chaîne pour
 le noyau de référence ; `wasm-generated` utilise le contrat `loadSync` généré
 et une allocation d'entrée de chaîne compressée. Parce que le désallocateur d'invités actuel
 valide les plages sans recycler l'espace de l'allocation de déplacement, chaîne/octets générés
@@ -255,7 +275,7 @@ et les comptes d'allocation statique utilisés par la comparaison. Comparer uniq
 lorsque le hachage du corpus, le moteur d'exécution de l'hôte et le schéma de référence correspondent.
 
 Par exemple, l'exécution Node ci-dessus uniquement a produit 336 résultats de phase mesurés avec
-zéro échec et hachage de corpus `ad092f7c552cc914`. Les deux lignes FWS contenaient du Wasm brut
+zéro échec et hachage de corpus `ad092f7c552cc914`. Les deux rangées de Flint avaient du Wasm brut
 hachage `0ac58f11`, taille Wasm brute 1 625 octets et taille source ESM générée 18 490
 octets ; les comptes d'allocation d'entrée de chaîne brute et générée étaient de 3 et 1. Sur le
 Cas de petite chaîne Unicode, l'initialisation moyenne était de 0,00024 ms brute par rapport à
@@ -289,9 +309,9 @@ Cas d’unités VM. Cela permet de conserver les noms des appareils et le nettoy
 
 `checkVmParity(file, mode)` prend en charge `interpret`, `jit` et `aot`, mais son rapport est le rapport auto-hébergé limité existant.
 contrat de parité lex-stage. Affirmer `parity`, les empreintes digitales, les étapes et les métadonnées de reproductibilité AOT ; ne pas traiter le rapport
-en tant qu'exécution arbitraire de VM FWS compilée ou en remplacement des tests de comportement Wasm.
+en tant qu'exécution arbitraire de VM Flint compilée ou en remplacement des tests de comportement Wasm.
 
-Exécutez la matrice FWS ciblée avec les tâches normales de l'espace de travail :
+Exécutez la matrice Flint ciblée avec les tâches normales de l'espace de travail :
 
 ```bash
 pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
@@ -307,7 +327,7 @@ pnpm exec turbo run test build:check --filter @mission-platform/vite-plugin-flin
 La plupart des espaces de travail utilisent l'utilitaire `defineVitestConfig` de `@mission-platform/vite-config`. Cela fournit une norme
 environnement :
 
-- **Environnement** : `jsdom` par défaut.
+- **Environnement** : `jsdom` par défaut.
 - **Globals** : activé (pas besoin d'importer `describe`, `it`, `expect` sauf si vous le souhaitez).
 - **Plugins** : inclut l'ignorance des blocs `@vitejs/plugin-vue` et i18n.
 - **Couverture** : fournisseur `v8` préconfiguré.
@@ -332,12 +352,12 @@ export default defineVitestConfig({
 
 ### Résumé des scripts
 
-| Scénario        | Commande                                                   | Objectif                                                   |
-| :-------------- | :--------------------------------------------------------- | :--------------------------------------------------------- |
-| `test`          | `pnpm exec turbo run test`                                 | Exécutez toutes les tâches de test de l’espace de travail. |
-| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | Exécutez des tests de composants en mode surveillance.     |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Générez un rapport de couverture des composants.           |
-| Rouille/WASM    | `cargo test --workspace`                                   | Exécutez des tests de caisse Rust natifs.                  |
+| Scénario | Commande | Objectif |
+| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
+| `test` | `pnpm exec turbo run test` | Exécutez toutes les tâches de test de l’espace de travail.          |
+| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | Exécutez des tests de composants en mode surveillance.    |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Générez un rapport de couverture des composants. |
+| Rouille/WASM | `cargo test --workspace` | Exécutez des tests de caisse Rust natifs.           |
 
 Les packages wrapper Wasm sont testés via leurs propres tâches de package. Par exemple, exécutez le package du scanner et son
 wrapper ensemble lors de la modification du comportement du scanner :

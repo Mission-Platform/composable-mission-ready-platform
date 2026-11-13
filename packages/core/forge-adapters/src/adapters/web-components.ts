@@ -1034,7 +1034,6 @@ export class ForgeElement extends ForgeHTMLElement {
     this.mpChildrenObserver = undefined;
     this.detachFormResetListener();
     if (this.isFormAssociated()) {
-      // eslint-disable-next-line unicorn/no-null -- Web Components spec specifies passing null to formAssociatedCallback when detached.
       this.formAssociatedCallback(null);
     }
   }
@@ -1235,13 +1234,11 @@ export class ForgeElement extends ForgeHTMLElement {
 
   /** Associated native form element, if any. */
   get form(): HTMLFormElement | null {
-    // eslint-disable-next-line unicorn/no-null -- Element.form returns HTMLFormElement | null per DOM standard.
     return this.mpInternals?.form ?? (this.closest?.('form') as HTMLFormElement | null) ?? null;
   }
 
   /** Labels associated with this control via ElementInternals. */
   get labels(): NodeList | null {
-    // eslint-disable-next-line unicorn/no-null -- Element.labels returns NodeList | null per DOM standard.
     return this.mpInternals?.labels ?? null;
   }
 
@@ -1440,7 +1437,6 @@ export class ForgeElement extends ForgeHTMLElement {
 
   private forwardFormValue(value: unknown): void {
     if (value === undefined) {
-      // eslint-disable-next-line unicorn/no-null -- ElementInternals.setFormValue accepts null to clear value.
       this.setFormValue(null);
     } else if (
       typeof value === 'string' ||

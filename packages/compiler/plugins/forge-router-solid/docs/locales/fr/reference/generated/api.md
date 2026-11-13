@@ -28,32 +28,32 @@ Créez des fonctionnalités neutres à partir des primitives du routeur Solid (s
 
 #### Paramètres
 
-| Nom    | Tapez                                                                                                                                                                                        | Descriptif |
-| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| entrée | { emplacement : { chemin : chaîne ; recherche : chaîne ; hachage : chaîne } ; paramètres ? : Record<string, string \| undefined> ; naviguer : SolidNavigate ; point de vente ? : inconnu ; } |            |
+| Nom | Tapez | Descriptif |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| entrée | { emplacement : { chemin : chaîne ; recherche : chaîne ; hachage : chaîne } ; paramètres ? : Record<string, string \| undefined> ; naviguer : SolidNavigate ; point de vente ? : inconnu ; } |             |
 
 ### MpLink
 
 **Genre :** composant
 
 ```typescript
-function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
+export function MpLink(properties:
 ```
 
 Proxy du composant d'ancrage Solid lié via {@link setForgeSolidRouter}.
 
 #### Paramètres
 
-| Nom        | Tapez                                                                                            | Descriptif |
-| ---------- | ------------------------------------------------------------------------------------------------ | ---------- |
-| propriétés | { href? : chaîne ; vers ? : MpRouteLocationRaw ; enfants ? : inconnu ; remplacer ? : booléen ; } |            |
+| Nom | Tapez | Descriptif |
+| ---------- | ---------------------------------------------------------------------------------- | ----------- |
+| propriétés | { href? : chaîne ; vers ? : MpRouteLocationRaw ; enfants ? : inconnu ; remplacer ? : booléen ; } |             |
 
 ### MpRouterView
 
 **Genre :** composant
 
 ```typescript
-function MpRouterView(): unknown;
+export function MpRouterView(): unknown;
 ```
 
 Proxy de sortie Solid lié via {@link setForgeSolidRouter}.
@@ -70,9 +70,9 @@ Résolvez une cible neutre en une chaîne href.
 
 #### Paramètres
 
-| Nom | Tapez              | Descriptif |
-| --- | ------------------ | ---------- |
-| à   | MpRouteLocationRaw |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
 
 ### setForgeSolidRouter
 
@@ -87,9 +87,9 @@ formes de crochet/appel (`useMpRouter().navigate`, `useMpRoute().query`, …).
 
 #### Paramètres
 
-| Nom      | Tapez              | Descriptif |
-| -------- | ------------------ | ---------- |
-| surfaces | SolidRouterSurface |            |
+| Nom | Tapez | Descriptif |
+| ------- | ------------------ | ----------- |
+| surfaces | SolidRouterSurface |             |
 
 ### SolidRouterSurface
 
@@ -108,7 +108,7 @@ Surface minimale du routeur Solid utilisée par la cale d'exécution.
 ```typescript
 function toMpLocationFromSolid(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
@@ -116,10 +116,10 @@ Créez un emplacement neutre à partir des instantanés d'emplacement/paramètre
 
 #### Paramètres
 
-| Nom         | Tapez                                                       | Descriptif |
-| ----------- | ----------------------------------------------------------- | ---------- |
-| emplacement | { chemin : chaîne ; recherche : chaîne ; hachage : chaîne } |            |
-| paramètres  | Enregistrement<string, string \| undefined>                 |            |
+| Nom | Tapez | Descriptif |
+| ---------- | -------------------------------------------------- | ----------- |
+| emplacement | { chemin : chaîne ; recherche : chaîne ; hachage : chaîne } |             |
+| paramètres | Enregistrement<string, string \| undefined> |             |
 
 ### versSolideHref
 
@@ -133,9 +133,9 @@ Sérialisez une cible neutre pour la navigation du routeur Solid.
 
 #### Paramètres
 
-| Nom | Tapez              | Descriptif |
-| --- | ------------------ | ---------- |
-| à   | MpRouteLocationRaw |            |
+| Nom | Tapez | Descriptif |
+| ---- | ------------------ | ----------- |
+| à | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 

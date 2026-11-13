@@ -549,8 +549,10 @@ export async function handleRequest(
   return dispatchEmailDelivery(environment, resolution.input, delivery);
 }
 
-export default withSecurityHeaders({
+const handler: ExportedHandler<WorkerEnvironment> = withSecurityHeaders({
   fetch(request: Request, environment: WorkerEnvironment): Promise<Response> {
     return handleRequest(request, environment);
   },
-}) satisfies ExportedHandler<WorkerEnvironment>;
+});
+
+export default handler;

@@ -20,9 +20,9 @@ Das Paket verwendet eine AssemblyScript → WebAssembly-Build-Pipeline, die voll
    führt den AssemblyScript-Compiler im Vite `buildStart`-Hook aus und erzeugt
    `build/phone-number.wasm` plus ESM-Bindungen.
 3. **Einzeldatei-Artefakt**: Das Plugin integriert die Wasm-Binärdatei als Base64 in eine
-   `@generated`-Modul (`src/generated/phone-number.js`), das eine asynchrone, gespeicherte `loadModule()`-Fabrik offenlegt –
-   Eliminierung des separaten `.wasm`-Dateiladens und der URL-Auflösung.
-4. **Typisierte Fassade**: `src/index.ts` macht die `PhoneNumberUtil`-Klasse über die rohen WASM-Exporte verfügbar.
+   `@generated`-Modul (`src/generated/phone-number.js`), das eine asynchrone, gespeicherte `loadModule()`-Factory offenlegt –
+   Dadurch entfällt das separate Laden von `.wasm`-Dateien und die URL-Auflösung.
+4. **Typisierte Fassade**: `src/index.ts` macht die `PhoneNumberUtil`-Klasse über die rohen Wasm-Exporte verfügbar.
 
 ### Wiederherstellung des WASM-Artefakts
 
@@ -83,4 +83,4 @@ Die vorgelagerte libphonenumber liefert umfassende, maschinell generierte Metada
 handverifizierte Teilmenge – **US, CA, GB, FR, DE, AU, IN, JP, BR, CN, RU** – und implementiert die Validierung ohne reguläre
 Ausdrücke (in AssemblyScript nicht verfügbar) unter Verwendung von Längen- und führenden Ziffernregeln. Die Formatierung erfolgt pro Region
 Zifferngruppierung und ist eher eine plausible Näherung als eine Byte-für-Byte-Parität mit dem Upstream. Neue Regionen können hinzugefügt werden
-durch Erweitern von `assembly/metadata.ts` und Neuerstellung des WASM.
+durch Erweitern von `assembly/metadata.ts` und Neuerstellen des WASM.

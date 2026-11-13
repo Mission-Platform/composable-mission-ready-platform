@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> packages/email-components/docs/index.md: [packages/email-components/docs/index.md](../../index.md)
+> packages/content/email-components/docs/index.md: [packages/content/email-components/docs/index.md](../../index.md)
 > Lingua: Italiano (it)
 
 `@mission-platform/email-components` contiene componenti Forge JSX tipizzati e indipendenti dal framework per la generazione di alberi sicuri per la posta elettronica. Utilizzare `@mission-platform/email-renderer` per serializzare tali alberi sul server; no Vue, React, Svelte, Solid, runtime Web Components, DOM del browser o JavaScript sono richiesti dal percorso dell'e-mail.
@@ -60,6 +60,6 @@ Tutto il layout è basato su `table`, `tbody`, `tr` e `td`. I pulsanti sono coll
 
 ## Politica di compatibilità
 
-La linea di base segue il [Posso inviare tramite e-mail il catalogo delle funzionalità](https://www.caniemail.com/features), revisionato su `2026-08-08`. L'implementazione si basa su [Tabelle HTML](https://www.caniemail.com/features/html-tables), [stili in linea](https://www.caniemail.com/features/css-inline-styles), [larghezza massima](https://www.caniemail.com/features/css-max-width) e facoltativo [query multimediali](https://www.caniemail.com/features/css-at-media). L'output statico non si basa su flexbox, griglia, proprietà personalizzate CSS, proprietà logiche, script, gestori di eventi o indicatori di idratazione del framework.
+La linea di base segue il [catalogo delle funzionalità Can I Email](https://www.caniemail.com/features), rivisto su `2026-08-08`. L'implementazione si basa su [tabelle HTML](https://www.caniemail.com/features/html-tables), [stili in linea](https://www.caniemail.com/features/css-inline-styles), [larghezza massima](https://www.caniemail.com/features/css-max-width) e [query multimediali] facoltative(https://www.caniemail.com/features/css-at-media). L'output statico non si basa su flexbox, griglia, proprietà personalizzate CSS, proprietà logiche, script, gestori di eventi o indicatori di idratazione del framework.
 
 Il CSS reattivo è solo un miglioramento progressivo: il layout della tabella in linea rimane utilizzabile quando il blocco `<style>` viene rimosso o ignorato. Utilizzare `assertCompatibleEmailHtml` nei test dell'applicazione quando si aggiungono nodi personalizzati.

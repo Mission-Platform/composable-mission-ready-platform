@@ -5,30 +5,28 @@ Traducción asistida por máquina a partir de la fuente canónica en inglés. Re
 > packages/core/forge-jsx/docs/index.md: [packages/core/forge-jsx/docs/index.md](../../index.md)
 > Idioma: Español (es)
 
-Una capa pequeña y libre de dependencias "escribir una vez, ejecutar en Vue 3 y React" para Mission Platform. Los componentes se crean una vez al
-JSX y renderizado en cualquiera de los marcos a través de pequeños adaptadores: sin generación de código en tiempo de compilación, sin compilador externo (este es un
-alternativa enrollada a mano a herramientas como Mitosis).
+Un tiempo de ejecución JSX pequeño, libre de dependencias y con marco neutral para Mission Platform.
+Los componentes se crean una vez en JSX y se representan a través de un archivo separado.
+Paquete `@mission-platform/forge-adapters`.
 
 ## como funciona
 
 ```
-author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ toReactComponent ──▶ React
-                                                          └──▶ toVueComponent  ──▶ Vue 3
+author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ framework adapter ──▶ target framework
 ```
 
 1. Los componentes están escritos en JSX compilado mediante la transformación JSX **clásica** (`jsxFactory: 'h'`,
    `jsxFragmentFactory: 'Fragment'`).
 2. `h(...)` construye un árbol `MpElement` serializable y neutral en el marco de trabajo en lugar de un elemento React/Vue.
-3. Los adaptadores por marco recorren ese árbol y asignan cada node a `React.createElement` o `h` de Vue en el momento del renderizado.
+3. Un adaptador de marco recorre ese árbol y asigna cada node al objetivo.
+   primitivas de renderizado nativas del marco.
 
 ## Características
 
 - **Framework-Neutral JSX Runtime**: un pequeño entorno de ejecución sin dependencias que crea árboles `MpElement` serializables
-- **Adaptador Vue 3**: Convierte componentes neutros en Vue 3 SFC nativos con reactividad adecuada
-- **Adaptador React**: Convierte componentes neutros en componentes nativos React
 - **Soporte de ganchos**: ganchos estilo React neutrales en el marco (`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`)
   que se compilan en sus equivalentes de marco
-- **Sin Codegen en tiempo de compilación**: a diferencia de Mitosis o herramientas similares, este enfoque utiliza adaptadores de tiempo de ejecución en lugar de tiempo de compilación
+- **Sin Codegen en tiempo de compilación**: a diferencia de Mitosis o herramientas similares, este enfoque utiliza adaptadores de tiempo de ejecución en lugar de tiempo de compilación.
   transformación
 - **TypeScript Primero**: compatibilidad total con TypeScript con inferencia de tipos adecuada
 
@@ -165,28 +163,6 @@ Memoriza una función.
 
 **Devoluciones:** Función memorizada
 
-### Adaptadores
-
-#### `toVueComponent(component)`
-
-Convierte un componente neutral del marco en un componente Vue 3.
-
-**Parámetros:**
-
-- `component`: Función de componente neutral en el marco
-
-**Devoluciones:** Definición del componente Vue
-
-#### `toReactComponent(component)`
-
-Convierte un componente neutral del marco en un componente React.
-
-**Parámetros:**
-
-- `component`: Función de componente neutral en el marco
-
-**Devoluciones:** Función del componente React
-
 ## TypeScript Soporte
 
 El paquete incluye declaraciones TypeScript completas. Puede utilizar JSX con la verificación de tipos adecuada:
@@ -208,7 +184,7 @@ function MyComponent({ title, count = 0 }: Props) {
 }
 ```
 
-## Uso avanzado
+## Advanced Usage
 
 ### Usando con Vite
 

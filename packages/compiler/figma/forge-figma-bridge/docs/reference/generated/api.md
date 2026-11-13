@@ -37,7 +37,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_ALLOWED_ORIGIN;
+export const DEFAULT_ALLOWED_ORIGIN: string;
 ```
 
 No description provided.
@@ -47,7 +47,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_EXPORT_PATH;
+export const DEFAULT_EXPORT_PATH: string;
 ```
 
 No description provided.
@@ -57,7 +57,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_MAX_FILE_BYTES;
+export const DEFAULT_MAX_FILE_BYTES: number;
 ```
 
 No description provided.
@@ -67,7 +67,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_MAX_REQUEST_BYTES;
+export const DEFAULT_MAX_REQUEST_BYTES: number;
 ```
 
 No description provided.
@@ -94,7 +94,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const FORGE_BRIDGE_AUTH_HEADER;
+export const FORGE_BRIDGE_AUTH_HEADER: string;
 ```
 
 No description provided.
@@ -104,7 +104,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const FORGE_BRIDGE_TOKEN_HEADER;
+export const FORGE_BRIDGE_TOKEN_HEADER: string;
 ```
 
 No description provided.

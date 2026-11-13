@@ -28,32 +28,32 @@ function createSolidRouterCapabilities(input: {
 
 #### פרמטרים
 
-| שם  | הקלד                                                                                                                                               | תיאור |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| קלט | { מיקום: { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash: מחרוזת }; params?: Record<string, string \| undefined>; לנווט: SolidNavigate; outlet?: לא ידוע; } |       |
+| שם | הקלד | תיאור |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| קלט | { מיקום: { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash: מחרוזת }; params?: Record<string, string \| undefined>; לנווט: SolidNavigate; outlet?: לא ידוע; } |             |
 
 ### MpLink
 
 **סוג:** רכיב
 
 ```typescript
-function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
+export function MpLink(properties:
 ```
 
-Solid פרוקסי של רכיב עוגן מאוגד דרך {@link setForgeSolidRouter}.
+Solid פרוקסי רכיב עוגן מאוגד דרך {@link setForgeSolidRouter}.
 
 #### פרמטרים
 
-| שם    | הקלד                                                                         | תיאור |
-| ----- | ---------------------------------------------------------------------------- | ----- |
-| נכסים | { href?: מחרוזת; ל?: MpRouteLocationRaw; ילדים?: לא ידוע; להחליף?: בוליאן; } |       |
+| שם | הקלד | תיאור |
+| ---------- | ---------------------------------------------------------------------------------- | ----------- |
+| נכסים | { href?: מחרוזת; ל?: MpRouteLocationRaw; ילדים?: לא ידוע; להחליף?: בוליאן; } |             |
 
 ### MpRouterView
 
 **סוג:** רכיב
 
 ```typescript
-function MpRouterView(): unknown;
+export function MpRouterView(): unknown;
 ```
 
 שרת proxy Solid מאוגד דרך {@link setForgeSolidRouter}.
@@ -70,9 +70,9 @@ function resolveMpLink(to: MpRouteLocationRaw): string;
 
 #### פרמטרים
 
-| שם  | הקלד               | תיאור |
-| --- | ------------------ | ----- |
-| ל   | MpRouteLocationRaw |       |
+| שם | הקלד | תיאור |
+| ---- | ------------------ | ----------- |
+| ל | MpRouteLocationRaw |             |
 
 ### setForgeSolidRouter
 
@@ -87,9 +87,9 @@ function setForgeSolidRouter(surface: SolidRouterSurface): void;
 
 #### פרמטרים
 
-| שם   | הקלד               | תיאור |
-| ---- | ------------------ | ----- |
-| משטח | SolidRouterSurface |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------ | ----------- |
+| משטח | SolidRouterSurface |             |
 
 ### SolidRouterSurface
 
@@ -108,18 +108,18 @@ export interface SolidRouterSurface
 ```typescript
 function toMpLocationFromSolid(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation;
 ```
 
-בנה מיקום ניטרלי מ-Solid תמונות מצב של מיקום/פראמים של נתב.
+בנה מיקום ניטרלי מתמונות מצב של מיקום/פראמים של הנתב Solid.
 
 #### פרמטרים
 
-| שם    | הקלד                                             | תיאור |
-| ----- | ------------------------------------------------ | ----- |
-| מיקום | { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash: מחרוזת } |       |
-| פרמס  | שיא<string, string \| undefined>                 |       |
+| שם | הקלד | תיאור |
+| ---------- | -------------------------------------------------- | ----------- |
+| מיקום | { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash: מחרוזת } |             |
+| פרמטרים | שיא<string, string \| undefined> |             |
 
 ### לSolidHref
 
@@ -133,9 +133,9 @@ function toSolidHref(to: MpRouteLocationRaw): string;
 
 #### פרמטרים
 
-| שם  | הקלד               | תיאור |
-| --- | ------------------ | ----- |
-| ל   | MpRouteLocationRaw |       |
+| שם | הקלד | תיאור |
+| ---- | ------------------ | ----------- |
+| ל | MpRouteLocationRaw |             |
 
 ### השתמש ב-MpNavigation
 

@@ -2,10 +2,11 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
+import type { JsxFramework } from '@mission-platform/forge-plugin-api';
+
 import { parseOxcModule, type OxcParsedModule } from './oxc.js';
 
 import type { ForgeExportFact, ForgeImportFact, ForgeModuleFacts, ForgeSourceSpan } from './facts.js';
-import type { JsxFramework } from '@mission-platform/forge-plugin-api';
 
 export type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan } from './facts.js';
 

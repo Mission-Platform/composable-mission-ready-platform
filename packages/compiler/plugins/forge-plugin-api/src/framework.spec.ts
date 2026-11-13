@@ -335,7 +335,6 @@ describe("Forge output-plugin API", () => {
     });
 
     it("rejects non-object intentions", () => {
-      // eslint-disable-next-line unicorn/no-null
       expect(() => assertTargetIntentionsLowered(null)).toThrow(
         "Target intentions must be an object",
       );
@@ -343,7 +342,6 @@ describe("Forge output-plugin API", () => {
         "Target intentions must be an object",
       );
 
-      // eslint-disable-next-line unicorn/no-null
       const result = validateTargetIntentions(null);
       expect(result.valid).toBe(false);
       expect(result.errors).toContain("Target intentions must be an object.");
@@ -686,6 +684,97 @@ describe("Forge output-plugin API", () => {
 
       const span = findActionableSpan(intentionsWithoutModuleSpan);
       expect(span).toEqual(fallbackSpan);
+    });
+  });
+
+  describe("shared IR testing helpers", () => {
+    it("builds consistent semantic modules across all intention types", () => {
+      const {
+        booleanAttribute,
+        component,
+        dynamicNode,
+        effect,
+        element,
+        expressionAttribute,
+        expressionChild,
+        fragment,
+        listKey,
+        memo,
+        moduleImport,
+        neutralImport,
+        prop,
+        reference,
+        semanticModule,
+        slot,
+        spreadAttribute,
+        state,
+        statement,
+        stringAttribute,
+        textChild,
+      } = require("../dist/testing.js");
+
+      const node = element("button", {
+        attributes: [
+          stringAttribute("class", "btn"),
+          booleanAttribute("disabled"),
+          expressionAttribute("onClick", "handleClick"),
+          spreadAttribute("...restProps"),
+        ],
+        children: [
+          textChild("Click"),
+          expressionChild("label"),
+          fragment([textChild("inner")]),
+        ],
+      });
+
+      const mod = semanticModule({
+        fileName: "Button.tsx",
+        imports: [
+          neutralImport(["h", "Fragment"]),
+          moduleImport("import axios from 'axios';", "axios", {
+            defaultName: "axios",
+          }),
+        ],
+        declarations: [statement("const HELPER = 1;")],
+        component: component({
+          name: "Button",
+          parameter: "properties",
+          parameterType: "ButtonProperties",
+          returnNode: node,
+        }),
+        props: [
+          prop("label", "string", true),
+          prop("count", { type: "number", optional: false }),
+        ],
+        state: [
+          state("open", "setOpen", { type: "boolean", initializer: "false" }),
+        ],
+        memos: [memo("computedVal", "count * 2", ["count"])],
+        effects: [
+          effect("subscribe()", {
+            cleanup: "unsubscribe()",
+            dependencies: ["open"],
+          }),
+        ],
+        refs: [reference("btnRef", "HTMLButtonElement")],
+        slots: [slot("icon", "<span />")],
+        dynamicNodes: [dynamicNode("DynamicTag")],
+        listKeys: [listKey("items", "item.id", true)],
+      });
+
+      expect(mod.kind).toBe("semantic-module");
+      expect(mod.fileName).toBe("Button.tsx");
+      expect(mod.componentName).toBe("Button");
+      expect(mod.intentions.props).toHaveLength(2);
+      expect(mod.intentions.state).toHaveLength(1);
+      expect(mod.intentions.memos).toHaveLength(1);
+      expect(mod.intentions.effects).toHaveLength(1);
+      expect(mod.intentions.refs).toHaveLength(1);
+      expect(mod.intentions.slots).toHaveLength(1);
+      expect(mod.intentions.dynamicNodes).toHaveLength(1);
+      expect(mod.intentions.listKeys).toHaveLength(1);
+      expect(mod.intentions.renderTree).toHaveLength(1);
+      expect(mod.ast.nodes.length).toBeGreaterThan(0);
     });
   });
 });

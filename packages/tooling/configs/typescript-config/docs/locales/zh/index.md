@@ -5,7 +5,7 @@
 > packages/tooling/configs/typescript-config/docs/index.md: [packages/tooling/configs/typescript-config/docs/index.md](../../index.md)
 > 语言: 简体中文 (zh)
 
-共享 TypeScript 每个任务平台工作区的预设。
+为每个任务平台工作区共享 TypeScript 预设。
 
 ## 安装与使用
 
@@ -13,14 +13,14 @@
 pnpm add --save-dev @mission-platform/typescript-config
 ```
 
-扩展匹配预设 `tsconfig.json`： 使用 `app` 为了 Vue 应用程序，
-`react` 为了 React 应用程序， `library` 对于包裹声明， `node` 对于工具，
-和 `test` 为了 Vitest 规格。框架消费者还应该使用匹配的
+从 `tsconfig.json` 扩展匹配预设：将 `app` 用于 Vue 应用程序，
+`react` 用于 React 应用程序，`library` 用于包声明，`node` 用于工具，
+Vitest 规格的 `test`。框架消费者还应该使用匹配的
 `framework-<name>` 自定义条件预设。请参阅包 README 以了解
 完整的预设表和示例。
 
 ## 贡献
 
-将共享编译器标志保留在预设中。跑步
+将共享编译器标志保留在预设中。运行
 `pnpm --filter @mission-platform/typescript-config build:check` 和格式
 更换后检查。

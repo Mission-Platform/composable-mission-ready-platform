@@ -110,7 +110,11 @@ export const routerCompatibilityFixtures: readonly ForgeCompatibilityCase[] = [
   },
 ];
 
-export const applicationCompatibilityFixtures = {
+export const applicationCompatibilityFixtures: {
+  readonly website: ForgeCompatibilityFixture;
+  readonly myCareNotes: ForgeCompatibilityFixture;
+  readonly guardsAndLazy: ForgeCompatibilityFixture;
+} = {
   website: websiteCompatibilityFixture,
   myCareNotes: myCareNotesCompatibilityFixture,
   guardsAndLazy: { id: 'guards-and-lazy', routes: compatibilityRoutes, cases: routerCompatibilityFixtures },

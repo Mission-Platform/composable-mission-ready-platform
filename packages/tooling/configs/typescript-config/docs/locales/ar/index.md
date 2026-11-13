@@ -5,7 +5,7 @@
 > packages/tooling/configs/typescript-config/docs/index.md: [packages/tooling/configs/typescript-config/docs/index.md](../../index.md)
 > اللغة: العربية (ar)
 
-مشترك TypeScript الإعدادات المسبقة لكل مساحة عمل Mission Platform.
+الإعدادات المسبقة TypeScript المشتركة لكل مساحة عمل Mission Platform.
 
 ## التثبيت والاستخدام
 
@@ -13,14 +13,14 @@
 pnpm add --save-dev @mission-platform/typescript-config
 ```
 
-قم بتوسيع الإعداد المسبق المطابق من `tsconfig.json`: يستخدم `app` ل Vue تطبيقات,
-`react` ل React تطبيقات, `library` لإعلانات الحزمة، `node` للأدوات،
-و `test` ل Vitest المواصفات. يجب على مستهلكي الإطار أيضًا استخدام المطابقة
-`framework-<name>` حالة مخصصة مسبقا. راجع الحزمة README للتعرف على
+قم بتوسيع الإعداد المسبق المطابق من `tsconfig.json`: استخدم `app` لتطبيقات Vue،
+`react` لتطبيقات React، `library` لإعلانات الحزمة، `node` للأدوات،
+و`test` لمواصفات Vitest. يجب على مستهلكي الإطار أيضًا استخدام المطابقة
+`framework-<name>` الإعداد المسبق للحالة المخصصة. راجع الحزمة README للتعرف على
 استكمال الجدول المحدد مسبقا والأمثلة.
 
 ## يساهم
 
-احتفظ بإشارات المترجم المشتركة في الإعدادات المسبقة. يجري
-`pnpm --filter @mission-platform/typescript-config build:check` والشكل
+احتفظ بإشارات المترجم المشتركة في الإعدادات المسبقة. تشغيل
+`pnpm --filter @mission-platform/typescript-config build:check` والتنسيق
 الشيكات بعد تغيير واحد.

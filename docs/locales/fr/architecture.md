@@ -32,41 +32,46 @@ graph TD
     Workers --> Configs
 ```
 
-1. **Demandes (`apps/`)** : Consommer des forfaits, Vite plugins et travailleurs. Ils n'exportent jamais de code vers d'autres parties du
+1. **Applications (`apps/`)** : consommez des packages, des plugins Vite et des travailleurs. Ils n'exportent jamais de code vers d'autres parties du
    monorepo.
-2. **Forfaits (`packages/`)** : Fournissez une logique et des composants réutilisables. Ils peuvent dépendre les uns des autres mais jamais de
+2. **Packages (`packages/`)** : fournissent une logique et des composants réutilisables. Ils peuvent dépendre les uns des autres mais jamais de
    candidatures.
 3. **Plugins Forge (`packages/compiler/plugins/`)** : cibles de sortie du compilateur – plugins de framework et cibles CMS. Ils peuvent dépendre de
    `packages/tooling/vite/` et `packages/tooling/configs/`, et jamais sur `apps/` ou sur les frères et sœurs de chacun ; un adaptateur CMS dépend uniquement de
    `forge-cms-plugin-api`.
-4. **Configurations (`packages/tooling/configs/`)** : Paramètres d'outillage partagés (ESLint, TypeScript, etc.). Ils constituent le fondement et dépendent de
+4. **Configs (`packages/tooling/configs/`)** : paramètres d'outils partagés (ESLint, TypeScript, etc.). Ils constituent le fondement et dépendent de
    rien dans le monorepo.
 
 ## Moteur indépendant du framework : Forge
 
 Le cœur de Mission Platform est `@mission-platform/forge-jsx`, un modèle de création indépendant du framework pour les composants et
-composables. `@mission-platform/vite-plugin-forge` est le pilote neutre du compilateur : il analyse et normalise la source,
-crée une IR sémantique, exécute une analyse et une optimisation partagées et distribue à un destinataire explicitement fourni
+composables. `@mission-platform/vite-plugin-forge` est le pilote neutre du compilateur : il analyse et normalise la source avec
+Oxc, construit des IR sémantiques, exécute une analyse et une optimisation partagées et les envoie à un serveur explicitement fourni.
 `FrameworkOutputPlugin`.
 
-Des packages-cadres tels que `@mission-platform/forge-plugin-react` et `@mission-platform/forge-plugin-vue` propre cible
-abaissement, optimisation de la cible, génération de sources natives, diagnostics, métadonnées d'exécution et Vite/tsdown adaptateurs. Là
-il n'y a pas d'émetteur de framework central ni de registre chaîne à framework dans le pilote. Les configurations de build de package sélectionnent le
-instances de plugin qu'ils publient, de sorte que les dépendances d'implémentation cibles restent à la limite du framework.
+Packages framework tels que `@mission-platform/forge-plugin-react`, `@mission-platform/forge-plugin-vue`,
+`@mission-platform/forge-plugin-solid`, `@mission-platform/forge-plugin-svelte` et
+`@mission-platform/forge-plugin-web-components` propre abaissement de cible, optimisation de cible, génération de source native,
+diagnostics, métadonnées d'exécution et adaptateurs Vite/tsdown. Il n'y a pas d'émetteur de framework central ni de chaîne vers framework
+registre dans le pilote. Les cibles personnalisées sont enregistrées en implémentant un `FrameworkOutputPlugin` avec un fichier ouvert
+`FrameworkId` (`JsxFramework | (string & {})`), tandis que `JsxFramework` reste une union fermée pour les commodités intégrées.
+Les configurations de build de package sélectionnent les instances de plug-in qu'elles publient, de sorte que les dépendances d'implémentation cible restent à
+la limite du cadre.
 
-Le flux résultant est **analyser/normaliser → optimiser neutre → IR sémantique → cible inférieure → optimiser la cible → générer →
-version native**. La construction native est effectuée par le plugin sélectionné Vite ou un adaptateur tsdown, qui fournit également le
-les déclarations de la cible, les éléments externes et les conventions de sortie.
+Le flux résultant est **analyser/normaliser (Oxc) → optimisation neutre → IR sémantique → cible inférieure → optimisation cible → générer →
+version native**. L'abaissement et l'optimisation de la cible sont strictement requis avant la génération ; les générateurs cibles acceptent uniquement
+intentions abaissées validées par `assertTargetIntentionsLowered`. La construction native est effectuée par le plugin sélectionné
+Adaptateur Vite ou tsdown, qui fournit également les déclarations, les externes et les conventions de sortie de la cible.
 
 Un deuxième axe orthogonal projette les mêmes composants neutres sur des **plates-formes de contenu**.
-`@mission-platform/forge-cms-plugin-api` possède un modèle de contenu neutre en termes de plate-forme, le `CmsOutputPlugin` contrat, et un
+`@mission-platform/forge-cms-plugin-api` possède un modèle de contenu neutre en termes de plate-forme, le contrat `CmsOutputPlugin` et un
 pilote générique ; les packages d'adaptateurs `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
-et `forge-cms-webflow` chacun possède une plateforme. Une cible CMS _compose_ un plugin de framework plutôt que d'en remplacer un, donc
-n'importe quelle plate-forme s'associe à n'importe quel framework et le résultat arrive dans `dist/cms/<cms>/<framework>/**`.
+et `forge-cms-webflow` possèdent chacun une plateforme. Une cible CMS _compose_ un plugin de framework plutôt que d'en remplacer un, donc
+n'importe quelle plate-forme s'associe à n'importe quel framework et la sortie arrive dans `dist/cms/<cms>/<framework>/**`.
 
 Pour obtenir le pipeline complet, les consommateurs de composants et de hooks, la projection CMS et les conseils d'extension, voir
 [Pipeline du compilateur Forge](../../../packages/tooling/vite/forge/docs/locales/fr/reference/compiler.md). Pour la vue d'orchestration de build, voir
-[Construire un système](build-system.md).
+[Construire le système](build-system.md).
 
 ## Système de jetons de conception
 
@@ -75,21 +80,21 @@ La cohérence visuelle est maintenue grâce à un système de jetons de concepti
 - **Standard DTCG** : les jetons sont créés au format W3C Design Tokens Community Group (v2025.10).
 - **Espace colorimétrique OKLab** : les primitives utilisent l'espace colorimétrique OKLab pour des dégradés et des thèmes perceptuellement uniformes.
 - **Artefacts automatisés** : `@mission-platform/vite-plugin-tokens` génère automatiquement des variables SCSS, CSS personnalisé
-  propriétés, et TypeScript constantes à partir d’une source unique de vérité.
+  propriétés et constantes TypeScript à partir d’une source unique de vérité.
 
 ## Routage indépendant du framework et I18n
 
 Les services d'application de base tels que le routage et l'internationalisation sont conçus pour être indépendants du framework.
 
-- **`@mission-platform/router`** : Fournit des cibles d'itinéraire structurées, des aides d'URL/emplacement pures et des marqueurs de compilateur tels que
-  comme `MpLink`, `useMpRoute`, `useMpRouter`, et `MpRouterView`. Il n'a pas de framework d'interface utilisateur ni de runtime de bibliothèque de routeur
+- **`@mission-platform/router`** : fournit des cibles de routage structurées, des aides d'URL/emplacement pures et des marqueurs de compilateur tels que
+  comme `MpLink`, `useMpRoute`, `useMpRouter` et `MpRouterView`. Il n'a pas de framework d'interface utilisateur ni de runtime de bibliothèque de routeur
   dépendances et ne possède jamais la table de routage d’une application.
-- **Cibles du routeur Forge** : `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`, et
-  `-web-components` abaissez ces marqueurs vers le routeur natif sélectionné par l’application consommatrice. Les candidatures sont conservées
+- **Cibles du routeur Forge** : `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood` et
+  `-web-components` abaisse ces marqueurs au routeur natif sélectionné par l'application consommatrice. Les candidatures sont conservées
   propriété des définitions de routes natives, des fournisseurs, des gardes, des chargeurs et des instances de routeur ; la cible fournit uniquement
   capacités de consommation.
-  \-**`@mission-platform/i18n`** : Un emballage autour `i18next` qui fournit un universel `createForgeI18N` usine.
-  Les adaptateurs spécifiques au framework fournissent `useI18n` crochets et composants pour Vue et React.
+- **`@mission-platform/i18n`** : Un wrapper autour de `i18next` qui fournit une usine `createForgeI18N` universelle.
+  Les adaptateurs spécifiques au framework fournissent des hooks et des composants `useI18n` pour Vue et React.
 
 ## Stratégie de construction et de déploiement
 
@@ -100,16 +105,16 @@ assurez-vous que les tâches ne sont exécutées que lorsque leurs entrées ont 
 
 ### Vite-Constructions alimentées
 
-Chaque package et application utilise Vite pour les versions de développement et de production, en tirant parti d'une configuration de base partagée à partir de
+Chaque package et application utilise Vite pour les builds de développement et de production, en tirant parti d'une configuration de base partagée à partir de
 `@mission-platform/vite-config`.
 
 ### Déploiement Cloudflare
 
-Les applications sont principalement déployées sur **Cloudflare Pages**, avec **Cloudflare Workers** (sous `packages/edge/workers/`) fournir
+Les applications sont principalement déployées sur **Cloudflare Pages**, **Cloudflare Workers** (sous `packages/edge/workers/`) fournissant
 logique spécialisée pour le proxy API et le service d'actifs SPA.
 
 ## Résumé
 
 L'architecture de la plateforme de mission donne la priorité à l'isolement, à la sécurité des types et à la flexibilité du cadre. En découplant le noyau
-logique du cadre d'interface utilisateur et appliquant une direction de dépendance stricte, la plate-forme garantit une maintenabilité à long terme
+logique du cadre de l'interface utilisateur et appliquant une direction de dépendance stricte, la plate-forme garantit une maintenabilité à long terme
 et l'évolutivité pour les écosystèmes d'applications complexes.

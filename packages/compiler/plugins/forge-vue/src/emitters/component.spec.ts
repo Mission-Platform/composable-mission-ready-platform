@@ -4,6 +4,12 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import type {
+  GenericJsxAttribute,
+  SemanticModule,
+  TargetContext,
+} from "@mission-platform/forge-plugin-api";
+
 import {
   component,
   effect,
@@ -28,11 +34,6 @@ import { optimizeVueModule } from "../optimize.js";
 import { emitVueModule } from "./component.js";
 
 import type { VueLoweredModule } from "../lower.js";
-import type {
-  GenericJsxAttribute,
-  SemanticModule,
-  TargetContext,
-} from "@mission-platform/forge-plugin-api";
 
 const CONTEXT: TargetContext = {
   framework: "vue",
@@ -162,6 +163,22 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
     expect(code).toContain("interface FixtureProperties {");
     expect(code).not.toContain("extends MpProperties");
     expect(code).not.toContain("[key: string]:");
+  });
+
+  it("preserves omitted optional Boolean props for uncontrolled components", () => {
+    const module = semanticModule({
+      component: component({
+        name: "Uncontrolled",
+        parameter: "properties",
+        returnNode: element("button", { children: [textChild("Open")] }),
+      }),
+      props: [prop("open", "boolean", { optional: true })],
+    });
+
+    const code = emitVueModule(module, "Uncontrolled").code;
+
+    expect(code).toContain("withDefaults(defineProps<{");
+    expect(code).toContain("open: undefined");
   });
 
   it("lowers state to a `ref` and reads it as `.value`", () => {
@@ -600,6 +617,110 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
     expect(code).not.toContain("panel");
   });
 
+  it("inlines derived values returned by render helpers", () => {
+    const trigger = element("button", {
+      attributes: [expressionAttribute("onClick", "config.onClick")],
+      children: [textChild("Open")],
+      source: "<button onClick={config.onClick}>Open</button>",
+    });
+    const module = semanticModule({
+      declarations: [
+        statement(
+          "function renderTrigger(config: { onClick: () => void }): MpElement { return <button onClick={config.onClick}>Open</button>; }",
+          "function",
+          { name: "renderTrigger", renderNodes: [trigger] },
+        ),
+      ],
+      component: component({
+        name: "DerivedTrigger",
+        parameter: "properties",
+        body: [
+          statement(
+            "const triggerControl = renderTrigger({ onClick: properties.onOpen });",
+            "variable",
+            { name: "triggerControl" },
+          ),
+        ],
+        returnNode: element("div", {
+          children: [expressionChild("triggerControl")],
+        }),
+      }),
+      props: [prop("onOpen", "() => void")],
+    });
+
+    const code = emitVueModule(module, "DerivedTrigger").code;
+
+    expect(code).toContain("<button");
+    expect(code).toContain('@click="');
+    expect(code).toContain("emit('open')");
+    expect(code).not.toContain("toDisplayString(triggerControl");
+  });
+
+  it("renders derived VNodes inside component slots instead of stringifying them", () => {
+    const trigger = element("button", {
+      attributes: [expressionAttribute("onClick", "config.onClick")],
+      children: [textChild("Open")],
+      source: "<button onClick={config.onClick}>Open</button>",
+    });
+    const option = element("li", {
+      attributes: [stringAttribute("role", "option")],
+      children: [textChild("English")],
+      source: '<li role="option">English</li>',
+    });
+    const module = semanticModule({
+      declarations: [
+        statement(
+          "function renderTrigger(config: { onClick: () => void }): MpElement { return <button onClick={config.onClick}>Open</button>; }",
+          "function",
+          { name: "renderTrigger", renderNodes: [trigger] },
+        ),
+        statement(
+          'function renderOption(): MpElement { return <li role="option">English</li>; }',
+          "function",
+          { name: "renderOption", renderNodes: [option] },
+        ),
+      ],
+      component: component({
+        name: "SlottedSelect",
+        parameter: "properties",
+        body: [
+          statement(
+            "const triggerControl = renderTrigger({ onClick: properties.onOpen });",
+            "variable",
+            { name: "triggerControl" },
+          ),
+          statement(
+            "const listItems = properties.options.map(renderOption);",
+            "variable",
+            { name: "listItems", renderNodes: [option] },
+          ),
+        ],
+        returnNode: element("ForgeDropdown", {
+          children: [
+            element("div", {
+              attributes: [stringAttribute("slot", "trigger")],
+              children: [expressionChild("triggerControl")],
+            }),
+            element("ul", {
+              children: [expressionChild("listItems")],
+            }),
+          ],
+        }),
+      }),
+      props: [
+        prop("onOpen", "() => void"),
+        prop("options", "readonly string[]"),
+      ],
+    });
+
+    const code = emitVueModule(module, "SlottedSelect").code;
+
+    expect(code).toContain("<button");
+    expect(code).toContain('<li role="option">English</li>');
+    expect(code).not.toContain("toDisplayString(triggerControl");
+    expect(code).not.toContain("toDisplayString(listItems");
+  });
+
   it("follows render nodes through a hyperscript intermediate const", () => {
     const eyebrow = element("p", {
       attributes: [stringAttribute("className", "hero__eyebrow")],
@@ -823,5 +944,107 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
+  });
+
+  it("retains helpers called by derived values in the render closure", () => {
+    const inputTrigger = element("input", {
+      attributes: [expressionAttribute("onFocus", "config.onFocus")],
+      selfClosing: true,
+      source: "<input onFocus={config.onFocus} />",
+    });
+    const buttonTrigger = element("button", {
+      attributes: [expressionAttribute("onClick", "config.onClick")],
+      children: [textChild("Open")],
+      source: "<button onClick={config.onClick}>Open</button>",
+    });
+    const module = semanticModule({
+      declarations: [
+        statement(
+          "function renderTrigger(config: { searchable: boolean; onClick: () => void; onFocus: () => void }): MpChild { if (config.searchable) { return <input onFocus={config.onFocus} />; } return <button onClick={config.onClick}>Open</button>; }",
+          "function",
+          { name: "renderTrigger", renderNodes: [inputTrigger, buttonTrigger] },
+        ),
+      ],
+      component: component({
+        name: "ClosureHelperHost",
+        parameter: "properties",
+        body: [
+          statement(
+            "const triggerControl = renderTrigger({ searchable: properties.searchable, onClick: properties.onOpen, onFocus: properties.onFocus });",
+            "variable",
+            { name: "triggerControl" },
+          ),
+          statement("observe();", "expression"),
+        ],
+        returnNode: element("div", {
+          children: [expressionChild("triggerControl")],
+        }),
+      }),
+      props: [
+        prop("searchable", "boolean"),
+        prop("onOpen", "() => void"),
+        prop("onFocus", "() => void"),
+      ],
+    });
+
+    const code = emitVueModule(module, "ClosureHelperHost").code;
+
+    expect(code).toContain("function renderTrigger");
+    expect(code).toContain("const triggerControl = renderTrigger");
+  });
+
+  it("rewrites neutral attributes in carried-over JSX helpers", () => {
+    const module = semanticModule({
+      declarations: [
+        statement(
+          'function renderTrigger() { return <button className="trigger" onUpdateOpen={() => undefined}>Open</button>; }',
+          "function",
+          { name: "renderTrigger" },
+        ),
+      ],
+      component: component({
+        name: "HelperHost",
+        parameter: "properties",
+        returnExpression: "renderTrigger()",
+      }),
+    });
+
+    const code = emitVueModule(module, "HelperHost").code;
+
+    expect(code).toContain(
+      '<button class="trigger" onUpdate:open={() => undefined}>Open</button>',
+    );
+    expect(code).not.toContain('className="trigger"');
+  });
+
+  it("converts model listeners in render closures to Vue event keys", () => {
+    const module = semanticModule({
+      declarations: [
+        statement(
+          "interface ModelHostProperties {\n  /** @model onUpdateOpen */\n  open?: boolean;\n  onOpen?: (open: boolean) => void;\n}",
+          "interface",
+          { name: "ModelHostProperties" },
+        ),
+      ],
+      component: component({
+        name: "ModelHost",
+        parameter: "properties",
+        parameterType: "Readonly<ModelHostProperties>",
+        returnExpression:
+          "<ForgeDropdown open={properties.open} onUpdateOpen={(nextOpen) => properties.onOpen?.(nextOpen)} />",
+      }),
+      props: [
+        prop("open", "boolean", { optional: true }),
+        prop("onOpen", "(open: boolean) => void", { optional: true }),
+      ],
+    });
+
+    const code = emitVueModule(module, "ModelHost").code;
+
+    expect(code).toContain("onUpdate:open");
+    expect(code).toContain(
+      "defineModel<boolean>('open', { default: undefined })",
+    );
+    expect(code).not.toContain("onUpdateOpen");
   });
 });

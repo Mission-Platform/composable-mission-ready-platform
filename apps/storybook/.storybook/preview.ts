@@ -5,17 +5,18 @@ import '../design-tokens/overrides.generated.scss';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './preview.scss';
 
+import { resources } from 'virtual:i18n-resources';
+
 import { createForgeI18N, forgeNamespace } from '@mission-platform/i18n';
+import type { ForgeI18nInstance } from '@mission-platform/i18n';
 import {
   resolveStorybookFramework,
   sharedPreviewDecorators,
   sharedPreviewParametersFor,
 } from '@mission-platform/storybook-framework';
-import { resources } from 'virtual:i18n-resources';
 
 import { ensureMonacoEnvironment } from './monaco-environment';
 
-import type { ForgeI18nInstance } from '@mission-platform/i18n';
 import type { Decorator, Preview } from '@storybook/vue3-vite';
 import type { ComponentType, ReactNode } from 'react';
 

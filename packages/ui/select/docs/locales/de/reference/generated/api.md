@@ -34,9 +34,9 @@ callback-prop `onRemove` (der Ersatz für Vue `remove`).
 
 #### Parameter
 
-| Name          | Geben Sie                       | ein Beschreibung |
-| ------------- | ------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<TagProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<TagProperties> |             |
 
 ### TagProperties
 
@@ -83,9 +83,9 @@ Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name          | Geben Sie                                         | ein Beschreibung |
-| ------------- | ------------------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ForgeLanguageSwitcherProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ForgeLanguageSwitcherProperties> |             |
 
 ### ForgeLanguageSwitcherOption
 
@@ -146,9 +146,9 @@ werden zu Callback-Requisiten.
 
 #### Parameter
 
-| Name          | Geben Sie                               | ein Beschreibung |
-| ------------- | --------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<MultiselectProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<MultiselectProperties> |             |
 
 ### MultiselectOption
 
@@ -182,6 +182,26 @@ Kanonische Kontrollgrößenskala.
 
 ## `src/components/molecules/forge-select/forge-select`
 
+### ForgeCombobox
+
+**Art:** konstant
+
+```typescript
+export const ForgeCombobox: typeof ForgeSelect;
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeComboboxProps
+
+**Art:** Typ
+
+```typescript
+export type ForgeComboboxProps = SelectProperties;
+```
+
+Keine Beschreibung angegeben.
+
 ### ForgeSelect
 
 **Art:** Funktion
@@ -190,40 +210,24 @@ Kanonische Kontrollgrößenskala.
 function ForgeSelect(properties: Readonly<SelectProperties>): MpElement;
 ```
 
-`ForgeSelect` – eine benutzerdefinierte Combobox/Auswahl, die einmal im neutralen JSX erstellt wurde
-Dialekt und direkt zu React oder Vue kompiliert
-`@mission-platform/vite-plugin-forge`.
-
-Standardmäßig (`searchable`, die Standardeinstellung) ist der Auslöser ein Textfeld, das filtert
-die Optionen, während der Benutzer sie eingibt – Spiegelung von {@link ForgeMultiselect} – also einen Wert
-kann durch Suchen statt durch Scrollen gefunden werden; Setzen Sie `searchable={false}` für a
-einfacher Knopfauslöser. In beiden Fällen wird die Listbox durch ein visuell ausgeblendetes Element unterstützt
-natives `<select>`, sodass das automatische Ausfüllen des Browsers und die native Formularübermittlung weiterhin funktionieren.
-Die Auswahl wird mit dem etablierten `modelValue`+ gesteuert
-`onUpdateModelValue`/`onChange` Callback-Prop-Konvention. Es besitzt sein Styling
-über das am selben Ort befindliche CSS-Modul `forge-select.module.scss`.
-
-Das schwebende Listenfeld wird durch das einmal beschreibbare **`ForgeDropdown`** gerendert.
-(selbst kompiliert zu React/Vue), zusammengesetzt über den neutralen benannten Slot **Passing**
-Syntax: Der Combobox-Wrapper wird an den `trigger`-Slot des Dropdowns übergeben
-(`slot="trigger"`) und `<ul role="listbox">` wird zu seinem Standardsteckplatz
-Das Panel wird über `<Teleport>` portaliert und mit CSS-Anker verankert
-Positionierung anstelle einer absolut positionierten In-Place-Liste. Das Innere
-Das offene Flag `useState` wird über seine Funktion mit dem Dropdown synchronisiert
-`onUpdateOpen` Rückruf.
-
-Weitere Ersetzungen des ursprünglichen Vue SFC: die zusammensetzbaren `useId`-Zuordnungen zu
-der Framework-native `useId`-Hook; Der Chevron ist der Einmalschreiber
-`@mission-platform/icons` `ForgeIconChevron` (gedreht über seine `direction`-Requisite,
-selbst kompiliert zu React/Vue); die `useI18n`-Strings werden zu reinem Text; und
-Die `v-model` + -Aussendungen werden zu Callback-Requisiten. Die benannten Slots `start`/`end` sind
-als neutral benannte Slots erhalten.
+Die ForgeSelect-Komponente bietet eine zugängliche, Framework-neutrale Auswahlsteuerung mit
+Unterstützung für Live-Filterung, asynchrone Suche, Tastaturnavigation und benutzerdefinierte Slots.
 
 #### Parameter
 
-| Name          | Geben Sie                          | ein Beschreibung |
-| ------------- | ---------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<SelectProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<SelectProperties> |             |
+
+### ForgeSelectProps
+
+**Art:** Typ
+
+```typescript
+export type ForgeSelectProps = SelectProperties;
+```
+
+Keine Beschreibung angegeben.
 
 ### SelectOption
 

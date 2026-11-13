@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
 
+import type {
+  SemanticModule,
+  TargetContext,
+} from "@mission-platform/forge-plugin-api";
+
 import {
   component,
   effect,
@@ -24,10 +29,6 @@ import {
 } from "./lower.ts";
 
 import type { WebComponentsLoweredModule } from "./lower.ts";
-import type {
-  SemanticModule,
-  TargetContext,
-} from "@mission-platform/forge-plugin-api";
 
 const CONTEXT: TargetContext = {
   framework: "web-components",

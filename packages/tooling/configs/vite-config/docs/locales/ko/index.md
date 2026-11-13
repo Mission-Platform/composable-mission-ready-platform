@@ -5,7 +5,7 @@
 > packages/tooling/configs/vite-config/docs/index.md: [packages/tooling/configs/vite-config/docs/index.md](../../index.md)
 > 언어: 한국어 (ko)
 
-공유됨 Vite 그리고 Vitest Mission Platform 패키지를 위한 구성 도우미 및
+Mission Platform 패키지를 위한 공유 Vite 및 Vitest 구성 도우미
 응용 프로그램.
 
 ## 설치 및 사용
@@ -14,13 +14,13 @@
 pnpm add --save-dev @mission-platform/vite-config
 ```
 
-사용 `defineLibraryConfig` 패키지의 경우, `defineAppConfig` 응용 프로그램에 대한
-`defineVitestConfig` 에서 `/vitest` 하위 경로. 프레임워크 애플리케이션은 다음과 같아야 합니다.
-하나를 선택하세요 `defineFrameworkAppConfig` 조건을 지정한 다음 공유 패키지를 가져옵니다.
+패키지에는 `defineLibraryConfig`을 사용하고 애플리케이션에는 `defineAppConfig`을 사용합니다.
+`/vitest` 하위 경로의 `defineVitestConfig`. 프레임워크 애플리케이션은 다음과 같아야 합니다.
+하나의 `defineFrameworkAppConfig` 조건을 선택한 다음 공유 패키지를 가져옵니다.
 베어 패키지 지정자를 통해.
 
 ## 기여하다
 
-달리다 `pnpm --filter @mission-platform/vite-config lint` 및 형식 확인. 유지하다
-도우미의 기본값은 재사용 가능하고 공유된 내용은 유지됩니다. Vite, PostCSS 및
+`pnpm --filter @mission-platform/vite-config lint`을 실행하고 형식을 확인합니다. 유지하다
+도우미의 기본값은 재사용 가능하며 공유 Vite, PostCSS 및
 README 패키지에 설명된 외부화 동작입니다.

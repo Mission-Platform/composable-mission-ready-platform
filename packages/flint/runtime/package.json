@@ -40,7 +40,7 @@
     "@mission-platform/prettier-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
-    "@sqlite.org/sqlite-wasm": "3.53.4-build1",
+    "@sqlite.org/sqlite-wasm": "catalog:sqlite",
     "@types/node": "catalog:typescript",
     "@vitest/coverage-v8": "catalog:testing",
     "eslint": "catalog:eslint",

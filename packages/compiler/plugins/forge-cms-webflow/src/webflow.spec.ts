@@ -1,9 +1,18 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
+import { describe, expect, it } from "vitest";
+
 import {
   analyzeContentComponent,
   generateCmsArtifacts,
+} from "@mission-platform/forge-cms-plugin-api";
+import type {
+  CmsArtifact,
+  CmsOutputPlugin,
+  CmsTargetContext,
+  ContentComponent,
+  ContentComponentNamesInput,
 } from "@mission-platform/forge-cms-plugin-api";
 import {
   BADGE,
@@ -21,25 +30,17 @@ import {
   layoutNames,
   stubFramework,
 } from "@mission-platform/forge-cms-plugin-api/fixtures";
+import type {
+  CompilerDiagnostic,
+  SemanticModule,
+} from "@mission-platform/forge-plugin-api";
 import { analyzeForgeModule } from "@mission-platform/vite-plugin-forge";
 import { parseOxcModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
-import { describe, expect, it } from "vitest";
 
 import { emitWebflowEntry } from "./entry.js";
 import { forgeWebflowCms } from "./webflow.js";
 
 import type { WebflowManifest } from "./manifest.js";
-import type {
-  CmsArtifact,
-  CmsOutputPlugin,
-  CmsTargetContext,
-  ContentComponent,
-  ContentComponentNamesInput,
-} from "@mission-platform/forge-cms-plugin-api";
-import type {
-  CompilerDiagnostic,
-  SemanticModule,
-} from "@mission-platform/forge-plugin-api";
 
 /** Every neutral kind in one component, including the three marker types. */
 const KINDS = [

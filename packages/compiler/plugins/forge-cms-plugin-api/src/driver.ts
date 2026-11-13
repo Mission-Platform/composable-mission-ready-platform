@@ -14,6 +14,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
+import type { CompilerDiagnostic } from "@mission-platform/forge-plugin-api";
 import {
   analyzeForgeModule,
   buildForgeFileGraph,
@@ -39,7 +40,6 @@ import type {
   CmsTargetContext,
 } from "./cms.js";
 import type { ContentComponent } from "./content-model.js";
-import type { CompilerDiagnostic } from "@mission-platform/forge-plugin-api";
 
 /** Map CMS artifact kind to the closest Forge artifact kind for the writer. */
 function toForgeArtifactKind(kind: CmsArtifactKind): ForgeArtifactKind {

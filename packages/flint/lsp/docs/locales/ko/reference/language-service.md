@@ -1,11 +1,11 @@
-# Forge 웹 스크립트 언어 도구
+# 플린트 언어 도구
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> packages/flint-lsp/docs/reference/language-service.md: [packages/flint-lsp/docs/reference/language-service.md](../../../reference/language-service.md)
+> packages/flint/lsp/docs/reference/language-service.md: [packages/flint/lsp/docs/reference/language-service.md](../../../reference/language-service.md)
 > 언어: 한국어 (ko)
 
-Forge 웹 스크립트(`.flint`)에는 편집자 중립 언어 서비스인 stdio가 있습니다.
+Flint(`.flint`)에는 편집자 중립 언어 서비스인 stdio가 있습니다.
 LSP(Language Server Protocol) 서버 및 브라우저 연결 Monaco 어댑터.
 세 가지 모두에서 실행 가능한 Flint v1 계약을 사용합니다.
 `@mission-platform/flint`, 따라서 진단, 소스 범위, 기호,
@@ -15,7 +15,7 @@ LSP(Language Server Protocol) 서버 및 브라우저 연결 Monaco 어댑터.
 지원되는 언어 계약은 **버전 1.0**이고 ABI 계약은
 **버전 1.2**. 툴링은
 문법, 컴파일러 출력, ABI 또는 기존 Rust 및
-AssemblyScript 통합. 보다 [포지 웹 스크립트 v1](../../../../../flint/docs/locales/ko/reference/language.md)
+AssemblyScript 통합. [플린트 v1](../../../../../flint/docs/reference/language.md) 참조
 언어 및 ABI 참조용입니다.
 
 ## 특징과 경계
@@ -24,7 +24,7 @@ AssemblyScript 통합. 보다 [포지 웹 스크립트 v1](../../../../../flint/
 
 - 어휘 분석, 구문 분석, 유형 검사 및 ABI 검증을 통한 진단
 - LSP 및 Monaco에 적합한 UTF-16 인식 범위
-- 모듈, 기능, 매개변수, 로컬, 기능에 대한 문서 기호
+- 모듈, 함수, 매개변수, 로컬, 기능에 대한 문서 기호
   별칭, 집계 유형, 필드, 열거형 변형, 인터페이스 메서드, 일반
   매개변수, 반복자 바인딩, 일치 바인딩 및 기본 유형
 - Forge 키워드, 기본 유형, 선언, 지역에 대한 완성
@@ -41,7 +41,7 @@ LSP 서버는 진단, 완료, 호버 및 전체 의미 체계를 노출합니다
 토큰. 정의로 이동, 참조, 이름 바꾸기, 서식 지정, 코드 작업,
 소스 레벨 교차 파일 언어 가져오기 및 브라우저 호스팅 LSP 전송
 구현되지 않습니다. 모나코는 대신 현지 언어 서비스 어댑터를 사용합니다.
-Node 서버에 연결하는 중입니다.
+Node 서버에 연결합니다.
 
 의미 체계 토큰은 언어 서비스의 어휘 분류를 사용합니다. 는
 초기화 응답은 `comment`, `declaration`,
@@ -110,7 +110,7 @@ Adds one to a value.
 세부사항/서명. 설명 단락과 태그는 빈 줄로 구분됩니다.
 태그 순서, 중복 태그, 알 수 없는 태그는 보존됩니다. 핵심 구문과
 함수 연관 및 지원되는 주제를 포함한 정규화 규칙
-양식은 다음에 지정되어 있습니다. [FWS 언어 참조](../../../../../flint/docs/locales/ko/reference/language.md).
+양식은 [FWS 언어 참조](../../../../../flint/docs/reference/language.md)에 지정되어 있습니다.
 
 문서는 정보용 메타데이터일 뿐입니다. 진단 내용은 변경되지 않습니다.
 유형 검사, 함수 분석, 생성된 선언, ABI 서명,
@@ -256,7 +256,7 @@ VS Code 설정(또는 `settings.json`)에서 확장을 구성합니다.
 절대 경로 또는 첫 번째 작업 공간 폴더에 대한 상대 경로로 설정하십시오.
 로컬로 구축되었거나 프로젝트에서 제공한 `dist/main.js`을 테스트합니다. 추가
 인수는 서버 진입점 이후에 전달됩니다. `messages` 또는 `verbose` 사용
-LSP 추적용; 시작 실패는 **Forge 웹 스크립트에 기록됩니다.
+LSP 추적용; 시작 실패는 **Flint에 기록됩니다.
 Language Server** 출력 채널이며 편집기 오류로 표시됩니다.
 
 이 저장소의 로컬 개발의 경우:
@@ -296,10 +296,10 @@ LSP4IJ 통합. 플러그인은 IntelliJ IDEA 커뮤니티에 대해 컴파일됩
 
 플러그인은 `*.flint`을 언어 ID `fws`에 매핑하고 하나의 공유 stdio를 시작합니다.
 프로젝트용 서버입니다. IntelliJ 구성은 다음에서 독점적으로 제공됩니다.
-**설정 | 도구 | Forge 웹 스크립트**; 프로젝트 스크립트나 Flora가 없습니다.
+**설정 | 도구 | 부싯돌**; 프로젝트 스크립트나 Flora가 없습니다.
 구성 경로. 구성:
 
-- **Node.js 실행 파일** — Node 24 이상; 기본값은 `node`입니다.
+- **Node.js 실행 가능** — Node 24 이상; 기본값은 `node`입니다.
 - **언어 서버 명령/경로** — 기본값은 `flint-lsp`이며
   프로젝트 `node_modules/.bin` 설치를 해결합니다(상위 항목 포함).
   작업공간 루트) 또는 `PATH`. 다음과 같은 명시적인 JavaScript 진입점
@@ -344,7 +344,7 @@ JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-23.jdk/Contents/Home \
   ./extensions/flint-ij/gradlew -p extensions/flint-ij test verifyPlugin buildPlugin --no-daemon --offline
 ```
 
-단계적 서버와 IntelliJ 스모크 테스트는 동일한 초기화를 수행합니다.
+단계적 서버와 IntelliJ 스모크 테스트는 동일한 초기화를 실행합니다.
 진단, 완료, 호버, 의미 토큰, 종료 및 프로젝트 루트
 계약을 시작합니다. 공유 LSP 테스트는 추가로 작업 공간 폴더를 포함합니다.
 전달, `file:` URI 처리, 루트 포함 감시 파일 무효화,
@@ -378,7 +378,7 @@ JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-23.jdk/Contents/Home \
   편집기별 동작을 추가합니다.
 
 클라이언트는 지원되는 경우 작업공간 폴더를 `file:` URI로 보내야 합니다. 는
-서버는 먼저 작업공간 폴더를 사용하고 `rootUri`로 대체됩니다. 둘 다 아니라면
+서버는 작업공간 폴더를 먼저 사용하고 `rootUri`으로 대체합니다. 둘 다 아니라면
 제공된 파일 시스템 호스트에는 루트가 없으며 이미 열려 있는 서비스만 제공할 수 있습니다.
 문서.
 
@@ -429,22 +429,22 @@ interface FlintWorkspaceOptions {
 ### 에디터 수출 정책
 
 편집기 분석은 기본적으로 모듈 전용 기능에 대해 허용됩니다. 언제
-삽입된 작업공간인 표준 LSP 호스트에서는 `requireExports`이 생략되었습니다.
+삽입된 작업 공간인 표준 LSP 호스트에서는 `requireExports`이 생략되었습니다.
 호스트 또는 Monaco 작업공간 호스트인 경우 `false`로 처리되므로 개인 도우미
 생성하지 않고 동일한 모듈의 다른 함수에 의해 호출될 수 있습니다.
-`FLINT-ABI-003`. 동일한 모듈 기호에는 전용 기능을 계속 사용할 수 있습니다.
+`FLINT-ABI-003`. 전용 기능은 동일한 모듈 기호에 계속 사용할 수 있습니다.
 완료, 호버 및 호출/유형 해결은 Wasm ABI 내보내기가 아닙니다.
 
 ABI 전용 진단을 원하는 호스트는 전역적으로 `requireExports: true`을 설정할 수 있습니다.
-`optionsForUri`을 통한 문서의 경우; 해당 정책을 변경하고 새로 고침
+`optionsForUri`를 통한 문서의 경우; 해당 정책을 변경하고 새로 고침
 작업 공간이 캐시된 분석을 무효화합니다. `requireExports: false` 설정은
 명시적인 허용 정책. 이 편집기 기본값은 컴파일을 변경하지 않습니다.
-`@mission-platform/flint`에는 계속해서 `export fn`가 필요합니다.
+`@mission-platform/flint`에는 계속해서 `export fn`이 필요합니다.
 `requireExports` 옵션이 생략된 경우 컴파일러 ABI 함수입니다.
 
 코어 또는 프로그래밍 방식으로 생성된 LSP 서버를 사용하는 경우 다음을 호출하세요.
 `refreshWorkspace(uri)` 문서를 연 후 및 의존하기 전
-작업 영역에서 파생된 진단, 완료 또는 마우스 오버. LSP 어댑터는 다음을 수행합니다.
+작업 영역에서 파생된 진단, 완료 또는 마우스오버. LSP 어댑터는 다음을 수행합니다.
 진단을 게시하기 전과 완료를 제공하기 전에 이 새로 고침 또는
 호버 요청.
 
@@ -459,12 +459,12 @@ LSP 서버는 `source: "flint"`을 게시합니다. 단계와 힌트는 다음�
 진단 `data` 개체에도 포함됩니다. 일반적인 안정 코드 계열
 다음과 같습니다:
 
-| 코드 계열       | 단계         | 의미                                                                              |
-| --------------- | ------------ | --------------------------------------------------------------------------------- |
-| `FLINT-LEX-*`   | `lex`        | 잘못된 문자/이스케이프, 원시 문자열 줄 종결자 또는 종료되지 않은 문자열/블록 주석 |
-| `FLINT-PARSE-*` | `parse`      | 잘못된 모듈, 선언, 문 또는 식 구문                                                |
-| `FLINT-TYPE-*`  | `type-check` | 잘못된 유형, 이름, 연산자, 인수 또는 반환                                         |
-| `FLINT-ABI-*`   | `abi`        | 중복된 이름, 거부된 기능, 내보내기 또는 가져오기                                  |
+| 코드 계열 | 단계 | 의미 |
+| --------------- | ------------ | ----------------------------------------------------------------------------------------------- |
+| `FLINT-LEX-*` | `lex` | 잘못된 문자/이스케이프, 원시 문자열 줄 종결자 또는 종료되지 않은 문자열/블록 주석 |
+| `FLINT-PARSE-*` | `parse` | 잘못된 모듈, 선언, 문 또는 식 구문 |
+| `FLINT-TYPE-*` | `type-check` | 잘못된 유형, 이름, 연산자, 인수 또는 반환 |
+| `FLINT-ABI-*` | `abi` | 중복된 이름, 거부된 기능, 내보내기 또는 가져오기 |
 
 파서 복구가 허용되는 경우 잘못된 입력은 여전히 토큰화 및 분석됩니다.
 그것. 예를 들어 잘못된 소스는 `FLINT-PARSE-017`을 생성할 수 있지만
@@ -557,15 +557,15 @@ handle.dispose();
 
 ## LSP와 브라우저 작업 공간
 
-| 소비자              | 업무공간 구현                          | 루트/보안 경계                                                    | 교통               |
-| ------------------- | -------------------------------------- | ----------------------------------------------------------------- | ------------------ |
-| Node LSP 클라이언트 | `RootBoundedFlintWorkspaceHost`        | 정규화된 구성된 파일 시스템 루트 외부 읽기가 거부됩니다           | 스튜디오 LSP       |
-| 모나코/브라우저     | 애플리케이션 제공 `FlintWorkspaceHost` | 호스트는 노출할 URI/파일/옵션을 결정합니다. 파일 시스템 가정 없음 | 프로세스 내 어댑터 |
+| 소비자 | 업무공간 구현 | 루트/보안 경계 | 교통 |
+| --------------- | ----------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
+| Node LSP 클라이언트 | `RootBoundedFlintWorkspaceHost` | 정규화된 구성된 파일 시스템 루트 외부 읽기가 거부됩니다 | 스튜디오 LSP |
+| 모나코/브라우저 | 애플리케이션 제공 `FlintWorkspaceHost` | 호스트는 노출할 URI/파일/옵션을 결정합니다. 파일 시스템 가정 없음 | 프로세스 내 어댑터 |
 
-Both adapters use the same language-service contracts and analysis semantics,
-but they do not share a document store or transport. 브라우저 호스트는 다음을 수행해서는 안 됩니다.
-pass Node filesystem functions into a browser bundle. 반대로 Node LSP는
-server should be used for external clients rather than attempting to run its
+두 어댑터 모두 동일한 언어 서비스 계약 및 분석 의미 체계를 사용합니다.
+그러나 그들은 문서 저장소나 운송 수단을 공유하지 않습니다. 브라우저 호스트는 다음을 수행해서는 안 됩니다.
+Node 파일 시스템 기능을 브라우저 번들에 전달합니다. 반대로 Node LSP는
+서버를 실행하려고 시도하기보다는 외부 클라이언트에 사용해야 합니다.
 모나코의 파일 시스템 호스트.
 
 ## 검증 및 적합성
@@ -596,7 +596,7 @@ pnpm --filter @mission-platform/content build:check
 ```
 
 패키지 전체 콘텐츠 린트 및 형식 명령은 관련 없는 CSS/SCSS도 검사합니다.
-파일; 기존 파일에 국한된 오류는 Forge 웹 스크립트가 아닙니다.
+파일; 기존 파일에 국한된 오류는 플린트가 아닙니다.
 언어 도구 회귀. 권위 있는 언어 정착 기대
 `../../../flint/src/fixtures/bootstrap.ts`에 남아 있고
-[언어 참조](../../../../../flint/docs/locales/ko/reference/language.md).
+[언어 참조](../../../../../flint/docs/reference/language.md).

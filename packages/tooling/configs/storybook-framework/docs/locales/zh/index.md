@@ -16,6 +16,6 @@
 
 ## 贡献
 
-跑步 `pnpm --filter @mission-platform/storybook-framework lint` 和
+运行 `pnpm --filter @mission-platform/storybook-framework lint` 并
 故事书构建检查。让这个包专注于框架选择和
-共享故事书默认值；组件故事属于 `apps/storybook`.
+共享故事书默认值；组件故事属于 `apps/storybook`。

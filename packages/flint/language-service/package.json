@@ -32,8 +32,13 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@mission-platform/flint": "workspace:*",
-    "@mission-platform/flint-runtime": "workspace:*"
+    "@mission-platform/flint-analysis": "workspace:*",
+    "@mission-platform/flint-ast": "workspace:*",
+    "@mission-platform/flint-linker": "workspace:*",
+    "@mission-platform/flint-parser": "workspace:*",
+    "@mission-platform/flint-regex": "workspace:*",
+    "@mission-platform/flint-runtime": "workspace:*",
+    "@mission-platform/flint-types": "workspace:*"
   },
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",

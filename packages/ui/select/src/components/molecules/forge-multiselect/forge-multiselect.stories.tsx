@@ -1,9 +1,9 @@
 import { useArgs } from 'storybook/preview-api';
 import { expect, userEvent, within } from 'storybook/test';
 
-import { ForgeMultiselect } from './forge-multiselect';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeMultiselect } from './forge-multiselect';
 
 /**
  * `ForgeMultiselect` is the write-once `ForgeMultiselect` component of `@mission-platform/select`. Selected values render as removable `Tag` chips

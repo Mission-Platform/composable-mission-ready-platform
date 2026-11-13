@@ -1,6 +1,9 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
+import { load } from "js-yaml";
+import { describe, expect, it } from "vitest";
+
 import {
   analyzeContentComponent,
   generateCmsArtifacts,
@@ -29,17 +32,14 @@ import {
   siteHeaderNames,
   stubFramework,
 } from "@mission-platform/forge-cms-plugin-api/fixtures";
-import { analyzeForgeModule } from "@mission-platform/vite-plugin-forge";
-import { parseOxcModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
-import { load } from "js-yaml";
-import { describe, expect, it } from "vitest";
-
-import { forgeJekyllCms } from "./jekyll.js";
-
 import type {
   CompilerDiagnostic,
   SemanticModule,
 } from "@mission-platform/forge-plugin-api";
+import { analyzeForgeModule } from "@mission-platform/vite-plugin-forge";
+import { parseOxcModule } from "@mission-platform/vite-plugin-forge/compiler/oxc.js";
+
+import { forgeJekyllCms } from "./jekyll.js";
 
 /** The YAML shape `_data/forge-components.yml` is asserted against. */
 interface ManifestField {

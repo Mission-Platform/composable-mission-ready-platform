@@ -13,12 +13,12 @@
 pnpm add --save-dev @mission-platform/tsdown-config
 ```
 
-작업 영역에서 패키지 사용 `tsdown.config.ts` 진입점을 유지하고
-외부 종속성 및 빌드 중인 패키지에 대한 로컬 출력 제약 조건입니다.
-생성된 선언과 번들은 해당 패키지의 `dist/` 예배 규칙서.
+작업공간 `tsdown.config.ts`의 패키지를 사용하고 진입점을 유지합니다.
+외부 종속성 및 빌드 중인 패키지에 대한 로컬 출력 제약 조건이 있습니다.
+생성된 선언과 번들은 해당 패키지의 `dist/` 디렉터리에 속합니다.
 
 ## 기여하다
 
-달리다 `pnpm --filter @mission-platform/tsdown-config lint` 그리고 그 형식을 확인합니다.
+`pnpm --filter @mission-platform/tsdown-config lint` 및 해당 형식 확인을 실행합니다.
 결정적 출력을 유지하고 프레임워크별 대상 분기를 추가하지 않습니다.
 중립 빌드 도우미에게.

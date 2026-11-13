@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import type { MatrixCode } from '../index';
-import { load, loadSync, manifest } from './matrix-encoder.flint';
 import { loadSync as loadAztecSync } from './matrix-encoder-aztec.flint';
+import { load, loadSync, manifest } from './matrix-encoder.flint';
+
+import type { MatrixCode } from '..';
 
 function parsePacked(symbology: MatrixCode['symbology'], packed: string): MatrixCode {
   const [widthRaw, heightRaw, modulesRaw = ''] = packed.split(',');

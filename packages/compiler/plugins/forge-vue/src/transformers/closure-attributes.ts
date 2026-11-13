@@ -12,6 +12,8 @@
  *   string), while `className` is set straight onto the element as a DOM
  *   property, so `className={['a', { b: on }]}` renders the literal
  *   `class="a,[object Object]"` and the component loses its styling entirely;
+ * - model listeners use a colon-delimited event key in Vue (`onUpdate:open`),
+ *   rather than the neutral callback-prop spelling (`onUpdateOpen`);
  * - Vue's JSX intrinsic elements type native attributes by their HTML
  *   (lowercase) name, so `colSpan` also fails to type-check against them.
  *
@@ -31,6 +33,11 @@ import { scanJsx } from "./jsx-scan.js";
 function vueAttributeName(name: string): string | undefined {
   if (name === CLASS_NAME_ATTRIBUTE) {
     return "class";
+  }
+  const modelUpdate = /^onUpdate([A-Z].*)$/.exec(name);
+  if (modelUpdate?.[1] !== undefined) {
+    const eventName = modelUpdate[1];
+    return `onUpdate:${eventName.charAt(0).toLowerCase()}${eventName.slice(1)}`;
   }
   return JSX_ATTRIBUTE_RENAMES.get(name);
 }

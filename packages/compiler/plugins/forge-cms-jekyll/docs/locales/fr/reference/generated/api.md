@@ -43,9 +43,9 @@ Liez la projection Jekyll (Liquid) à un plugin de sortie de framework appartena
 
 #### Paramètres
 
-| Nom     | Tapez                 | Descriptif |
-| ------- | --------------------- | ---------- |
-| options | ForgeJekyllCmsOptions |            |
+| Nom | Tapez | Descriptif |
+| ------- | --------------------- | ----------- |
+| options | ForgeJekyllCmsOptions |             |
 
 ### ForgeJekyllCmsOptions
 
@@ -78,10 +78,10 @@ la page de documentation générée devrait les répertorier.
 
 #### Paramètres
 
-| Nom            | Tapez                            | Descriptif |
-| -------------- | -------------------------------- | ---------- |
-| composants     | lecture seule ContentComponent[] |            |
-| espace de noms | chaîne                           |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------- | ----------- |
+| composants | lecture seule ContentComponent[] |             |
+| espace de noms | chaîne |             |
 
 ### émettreJekyllConfig
 
@@ -105,10 +105,10 @@ filtres, et verrait autrement des valeurs vides.
 
 #### Paramètres
 
-| Nom            | Tapez                            | Descriptif |
-| -------------- | -------------------------------- | ---------- |
-| composants     | lecture seule ContentComponent[] |            |
-| espace de noms | chaîne                           |            |
+| Nom | Tapez | Descriptif |
+| ---------- | --------------------------- | ----------- |
+| composants | lecture seule ContentComponent[] |             |
+| espace de noms | chaîne |             |
 
 ### champVersJekyllType
 
@@ -122,9 +122,9 @@ Le type de données Jekyll sous lequel un champ neutre est publié.
 
 #### Paramètres
 
-| Nom   | Tapez            | Descriptif |
-| ----- | ---------------- | ---------- |
-| champ | Champ de contenu |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------------ | ----------- |
+| champ | Champ de contenu |             |
 
 ### JekyllFieldType
 
@@ -148,9 +148,9 @@ Un scalaire YAML pour une valeur par défaut neutre.
 
 #### Paramètres
 
-| Nom    | Tapez               | Descriptif |
-| ------ | ------------------- | ---------- |
-| valeur | ContentDefaultValue |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------------------- | ----------- |
+| valeur | ContentDefaultValue |             |
 
 ## `src/template`
 
@@ -164,7 +164,7 @@ export const DEFAULT_INCLUDE_NAMESPACE;
 
 L'espace de noms utilisé lorsque l'appelant n'en choisit pas.
 
-### émettreLiquidInclude
+### émettreLiquideInclure
 
 **Genre :** fonction
 
@@ -179,10 +179,10 @@ function emitLiquidInclude(
 
 #### Paramètres
 
-| Nom            | Tapez                | Descriptif |
-| -------------- | -------------------- | ---------- |
-| composant      | Composant de contenu |            |
-| espace de noms | chaîne               |            |
+| Nom | Tapez | Descriptif |
+| --------- | ---------------- | ----------- |
+| composant | Composant de contenu |             |
+| espace de noms | chaîne |             |
 
 ### includeFileName
 
@@ -199,10 +199,10 @@ Le nom du fichier d'artefact de l'inclusion d'un composant.
 
 #### Paramètres
 
-| Nom            | Tapez                | Descriptif |
-| -------------- | -------------------- | ---------- |
-| composant      | Composant de contenu |            |
-| espace de noms | chaîne               |            |
+| Nom | Tapez | Descriptif |
+| --------- | ---------------- | ----------- |
+| composant | Composant de contenu |             |
+| espace de noms | chaîne |             |
 
 ### includePath
 
@@ -219,10 +219,10 @@ Le chemin d'inclusion par lequel un composant est adressé, par rapport à `_inc
 
 #### Paramètres
 
-| Nom            | Tapez                | Descriptif |
-| -------------- | -------------------- | ---------- |
-| composant      | Composant de contenu |            |
-| espace de noms | chaîne               |            |
+| Nom | Tapez | Descriptif |
+| --------- | ---------------- | ----------- |
+| composant | Composant de contenu |             |
+| espace de noms | chaîne |             |
 
 ### jekyllDiagnostics
 
@@ -245,10 +245,10 @@ rendu là où son balisage était attendu.
 
 #### Paramètres
 
-| Nom       | Tapez                | Descriptif |
-| --------- | -------------------- | ---------- |
-| ir        | Module Sémantique    |            |
-| composant | Composant de contenu |            |
+| Nom | Tapez | Descriptif |
+| --------- | ---------------- | ----------- |
+| ir | Module Sémantique |             |
+| composant | Composant de contenu |             |
 
 ### liquideLittéral
 
@@ -266,6 +266,6 @@ que de forcer la valeur par défaut à une chaîne.
 
 #### Paramètres
 
-| Nom    | Tapez               | Descriptif |
-| ------ | ------------------- | ---------- |
-| valeur | ContentDefaultValue |            |
+| Nom | Tapez | Descriptif |
+| ----- | ------------------- | ----------- |
+| valeur | ContentDefaultValue |             |

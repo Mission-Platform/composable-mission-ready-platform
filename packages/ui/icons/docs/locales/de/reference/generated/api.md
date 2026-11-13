@@ -3524,7 +3524,7 @@ Ländercodes mit kanonischen Flaggensymbolen im veröffentlichten Sprite.
 **Art:** konstant
 
 ```typescript
-export const COUNTRY_FLAG_SYMBOL_IDS;
+export const COUNTRY_FLAG_SYMBOL_IDS: string[];
 ```
 
 Keine Beschreibung angegeben.
@@ -3574,7 +3574,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const IconSpriteContext;
+export const IconSpriteContext: MpContext<IconSpriteContextValue>;
 ```
 
 Keine Beschreibung angegeben.

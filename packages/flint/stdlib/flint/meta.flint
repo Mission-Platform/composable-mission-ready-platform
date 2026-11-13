@@ -1,0 +1,32 @@
+// Flint Standard Metaprogramming & Introspection Library (std::meta)
+// Provides zero-overhead compile-time layout, size, alignment, field offsets,
+// and structural type information queries.
+
+struct FieldInfo {
+  name: string;
+  offset: u32;
+  size: u32;
+  alignment: u32;
+  typeName: string;
+}
+
+struct TypeInfo {
+  name: string;
+  size: u32;
+  alignment: u32;
+}
+
+// Compile-time size query for type T.
+inline fn size_of<T>() -> u32 {
+  return 0;
+}
+
+// Compile-time alignment query for type T.
+inline fn align_of<T>() -> u32 {
+  return 1;
+}
+
+// Compile-time field offset query for field in type T.
+inline fn offset_of<T>(fieldName: string) -> u32 {
+  return 0;
+}

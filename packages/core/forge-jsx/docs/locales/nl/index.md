@@ -5,27 +5,25 @@ Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen i
 > packages/core/forge-jsx/docs/index.md: [packages/core/forge-jsx/docs/index.md](../../index.md)
 > Taal: Nederlands (nl)
 
-Een kleine, afhankelijkheidsvrije laag "eenmalig schrijven, uitvoeren op Vue 3 en React" voor Mission Platform. Componenten worden eenmaal in geschreven
-JSX en weergegeven op beide frameworks via kleine adapters - geen build-time codegen, geen externe compiler (dit is een
-handgewalst alternatief voor gereedschappen zoals Mitosis).
+Een kleine, afhankelijkheidsvrije, raamwerkneutrale JSX-runtime voor Mission Platform.
+Componenten worden één keer in JSX geschreven en via het afzonderlijke bestand weergegeven
+`@mission-platform/forge-adapters`-pakket.
 
 ## Hoe het werkt
 
 ```
-author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ toReactComponent ──▶ React
-                                                          └──▶ toVueComponent  ──▶ Vue 3
+author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ framework adapter ──▶ target framework
 ```
 
 1. Componenten zijn geschreven in JSX, gecompileerd door de **klassieke** JSX-transformatie (`jsxFactory: 'h'`,
    `jsxFragmentFactory: 'Fragment'`).
-2. `h(...)` bouwt een raamwerkneutrale, serialiseerbare `MpElement`-structuur in plaats van een React/Vue-element.
-3. De per-framework-adapters lopen door die boom en wijzen elke node toe aan `React.createElement` of Vue's `h` tijdens het renderen.
+2. `h(...)` bouwt een raamwerkneutrale, serialiseerbare `MpElement`-boom in plaats van een React/Vue-element.
+3. Een raamwerkadapter loopt door die boom en wijst elke node toe aan het doel
+   de eigen rendering-primitieven van het framework.
 
 ## Functies
 
 - **Framework-neutrale JSX Runtime**: een kleine, afhankelijkheidsvrije runtime die serialiseerbare `MpElement`-bomen bouwt
-- **Vue 3-adapter**: converteert neutrale componenten naar native Vue 3 SFC's met de juiste reactiviteit
-- **React-adapter**: converteert neutrale componenten naar oorspronkelijke React-componenten
 - **Haakondersteuning**: raamwerkneutrale haken in React-stijl (`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`)
   die compileren naar hun raamwerkequivalenten
 - **Geen Build-Time Codegen**: in tegenstelling tot Mitosis of soortgelijke tools gebruikt deze aanpak runtime-adapters in plaats van build-time
@@ -64,7 +62,7 @@ export function MyComponent({ name }: { name: string }) {
 }
 ```
 
-### 2. Gebruik het Vue 3
+### 2. Gebruik het in Vue 3
 
 ```vue
 <script setup lang="ts">
@@ -165,28 +163,6 @@ Onthoudt een functie.
 
 **Retourneert:** Geheugenfunctie
 
-### Adapters
-
-#### `toVueComponent(component)`
-
-Converteert een raamwerkneutrale component naar een Vue 3-component.
-
-**Parameters:**
-
-- `component`: raamwerkneutrale componentfunctie
-
-**Retourneert:** Vue componentdefinitie
-
-#### `toReactComponent(component)`
-
-Converteert een raamwerkneutrale component naar een React-component.
-
-**Parameters:**
-
-- `component`: raamwerkneutrale componentfunctie
-
-**Retourneert:** React componentfunctie
-
 ## TypeScript Ondersteuning
 
 Het pakket bevat volledige TypeScript-declaraties. U kunt JSX gebruiken met de juiste typecontrole:
@@ -282,7 +258,7 @@ export function Button({ children }) {
 
 ## Prestatieoverwegingen
 
-- De raamwerk-neutrale laag voegt minimale overhead toe (slechts een boomwandeling tijdens het renderen)
+- De raamwerkneutrale laag voegt minimale overhead toe (slechts een boomwandeling tijdens het renderen)
 - Hooks zijn gecompileerd naar native framework-equivalenten voor optimale prestaties
 - Er wordt geen runtime-parsing of codegeneratie uitgevoerd
 - Geheugenvoetafdruk is vergelijkbaar met het schrijven van afzonderlijke React- en Vue-componenten

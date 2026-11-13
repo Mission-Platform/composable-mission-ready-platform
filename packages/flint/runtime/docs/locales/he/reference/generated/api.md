@@ -19,13 +19,18 @@
 function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 ```
 
-לא סופק תיאור.
+טוען שמניפסט Flint ABI תקף בהתאם לכללי מפרט זמן הריצה.
 
 #### פרמטרים
 
-| שם     | הקלד             | תיאור |
-| ------ | ---------------- | ----- |
-| מניפסט | FlintAbiManifest |       |
+| שם | הקלד | תיאור |
+| -------- | ---------------- | --------------------------- |
+| מניפסט | FlintAbiManifest | - מניפסט ABI לאימות. |
+
+#### חוֹזֶה
+
+- **@param:** - מניפסט ABI לאימות.
+- **@throws:** אם אימות המניפסט נכשל.
 
 ### equalFunction
 
@@ -35,16 +40,22 @@ function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean;
 ```
 
-לא סופק תיאור.
+משווה שתי הצהרות פונקציות ABI עבור שקילות מבנית.
 
 #### פרמטרים
 
-| שם   | הקלד             | תיאור |
-| ---- | ---------------- | ----- |
-| שמאל | FlintAbiFunction |       |
-| נכון | FlintAbiFunction |       |
+| שם | הקלד | תיאור |
+| ----- | ---------------- | ------------------------------ |
+| שמאל | FlintAbiFunction | - הצהרת פונקציה ראשונה.  |
+| נכון | FlintAbiFunction | - הצהרת תפקיד שני. |
 
-### FlintAbiValidationResult
+#### חוֹזֶה
+
+- **@param:** - הצהרת פונקציה ראשונה.
+- **@param:** - הצהרת פונקציה שנייה.
+- **@returns:** נכון אם לשתי ההצהרות יש חתימות, פרמטרים וסוגי החזר זהים.
+
+### FlintAbi ValidationResult
 
 **סוג:** ממשק
 
@@ -52,7 +63,7 @@ function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean
 export interface FlintAbiValidationResult
 ```
 
-לא סופק תיאור.
+תוצאת אימות עבור מניפסט Flint ABI המכיל סטטוס אימות והודעות שגיאה.
 
 ### validateFlintAbiManifest
 
@@ -62,13 +73,100 @@ export interface FlintAbiValidationResult
 function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidationResult;
 ```
 
-לא סופק תיאור.
+מאמת מניפסט Flint ABI מול דרישות מפרט, פריסות ומגבלות יכולות.
 
 #### פרמטרים
 
-| שם     | הקלד             | תיאור |
-| ------ | ---------------- | ----- |
-| מניפסט | FlintAbiManifest |       |
+| שם | הקלד | תיאור |
+| -------- | ---------------- | --------------------------- |
+| מניפסט | FlintAbiManifest | - מניפסט ABI לאימות. |
+
+#### חוֹזֶה
+
+- **@param:** - מניפסט ABI לאימות.
+- **@returns:** תוצאת אימות המכילה סטטוס בוליאני ושגיאות אבחון שנאספו.
+
+## `src/allocator/slab`
+
+### FlintAtomicSpinLock
+
+**סוג:** כיתה
+
+```typescript
+export class FlintAtomicSpinLock
+```
+
+Spinlock Atomic מספק גישה בלעדית הדדית למבני זיכרון WebAssembly משותפים.
+
+### RegionalBumpArena
+
+**סוג:** כיתה
+
+```typescript
+export class RegionalBumpArena
+```
+
+זירת מקצי בליטות אזורית מספקת הקצאת $O(1)$ ואיפוס מיידי בכמות גדולה.
+
+### SegregatedSlabAllocator
+
+**סוג:** כיתה
+
+```typescript
+export class SegregatedSlabAllocator
+```
+
+מקצה לוחות מופרדים בדרגת גודל של $O(1)$.
+
+### SegregatedSlabAllocatorOptions
+
+**סוג:** ממשק
+
+```typescript
+export interface SegregatedSlabAllocatorOptions
+```
+
+אפשרויות תצורה עבור מקצה הלוחות המופרדים.
+
+### SLAB_CANARY_TAG
+
+**סוג:** קבוע
+
+```typescript
+export const SLAB_CANARY_TAG;
+```
+
+לא סופק תיאור.
+
+### SLAB_SIZE_CLASSES
+
+**סוג:** קבוע
+
+```typescript
+export const SLAB_SIZE_CLASSES;
+```
+
+כוח סטנדרטי של שני מחלקות גודל להקצאת לוחות אובייקטים קטנים ובינוניים מופרדים.
+
+### SlabBlock
+
+**סוג:** ממשק
+
+```typescript
+export interface SlabBlock
+```
+
+לוח הקצאה המנהל חריצים בגודל קבוע עבור דרגת גודל ספציפית.
+
+### SlabSizeClass
+
+**סוג:** סוג
+
+```typescript
+export type SlabSizeClass = (typeof SLAB_SIZE_CLASSES)[number];
+```
+
+לא סופק תיאור.
 
 ## `src/async`
 
@@ -80,20 +178,41 @@ function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidatio
 function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}): FlintAsyncRuntime;
 ```
 
-לא סופק תיאור.
+יוצר מופע חדש של FlintAsyncRuntime המנהל תורי משימות אסינכרוניים.
 
 #### פרמטרים
 
-| שם       | הקלד                     | תיאור |
-| -------- | ------------------------ | ----- |
-| אפשרויות | FlintAsyncRuntimeOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------------ | -------------------------------- |
+| אפשרויות | FlintAsyncRuntimeOptions | - אפשרויות תצורת זמן ריצה. |
 
-### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+#### חוֹזֶה
+
+- **@param:** - אפשרויות תצורה של זמן ריצה.
+- **@returns:** מופע FlintAsyncRuntime מוגדר.
+
+### createFlintJspiSuspender
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintJspiSuspender(options?: FlintJspiOptions): FlintJspiSuspender;
+```
+
+יוצר מופע של כתפיית ערימת פלינט JSPI.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ---------------- | ----------- |
+| אפשרויות | FlintJspiOptions |             |
+
+### FLINT_ASYNC_CAPABILITIES
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
+export const FLINT_ASYNC_CAPABILITIES;
 ```
 
 לא סופק תיאור.
@@ -103,11 +222,10 @@ export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
 **סוג:** סוג
 
 ```typescript
-export type FlintAsyncCapability =
-  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type FlintAsyncCapability = (typeof FLINT_ASYNC_CAPABILITIES)[keyof typeof FLINT_ASYNC_CAPABILITIES];
 ```
 
-לא סופק תיאור.
+מחרוזת מזהה של יכולת זמן ריצה אסינכרונית מורשית.
 
 ### FlintAsyncExecution
 
@@ -117,7 +235,7 @@ export type FlintAsyncCapability =
 export interface FlintAsyncExecution
 ```
 
-לא סופק תיאור.
+תוצאת ביצוע מוצלחת המכילה עומס פלט משימות.
 
 ### FlintAsyncExecutionResult
 
@@ -127,7 +245,7 @@ export interface FlintAsyncExecution
 export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 ```
 
-לא סופק תיאור.
+תוצאה של ביצוע משימה אסינכרונית (הצלחה או כישלון).
 
 ### FlintAsyncFailure
 
@@ -137,7 +255,7 @@ export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 export interface FlintAsyncFailure
 ```
 
-לא סופק תיאור.
+דוח כשל שהוחזר על ידי פעולת תזמון או ביצוע אסינכרוני.
 
 ### FlintAsyncFailureCode
 
@@ -148,7 +266,7 @@ export type FlintAsyncFailureCode =
   'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
-לא סופק תיאור.
+קודי קטגוריית שגיאה עבור כשלים בביצוע אסינכרוני.
 
 ### FlintAsyncHostAdapter
 
@@ -158,7 +276,7 @@ export type FlintAsyncFailureCode =
 export interface FlintAsyncHostAdapter
 ```
 
-לא סופק תיאור.
+ווי אינטגרציה מארח לתזמון מיקרו משימות והעברת הודעות עובדים.
 
 ### FlintAsyncRuntime
 
@@ -168,7 +286,7 @@ export interface FlintAsyncHostAdapter
 export interface FlintAsyncRuntime
 ```
 
-לא סופק תיאור.
+מתאם זמן ריצה אסינכרוני המנהל משימות מיקרו, תורי עובדים וניקוז לולאות אירועים.
 
 ### FlintAsyncRuntimeOptions
 
@@ -178,7 +296,7 @@ export interface FlintAsyncRuntime
 export interface FlintAsyncRuntimeOptions
 ```
 
-לא סופק תיאור.
+אפשרויות תצורה עבור מנוע זמן הריצה האסינכרוני.
 
 ### FlintAsyncScheduledTask
 
@@ -188,7 +306,7 @@ export interface FlintAsyncRuntimeOptions
 export interface FlintAsyncScheduledTask
 ```
 
-לא סופק תיאור.
+תוצאת תזמון מוצלחת עבור משימה אסינכרונית.
 
 ### FlintAsyncScheduleResult
 
@@ -198,7 +316,7 @@ export interface FlintAsyncScheduledTask
 export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailure;
 ```
 
-לא סופק תיאור.
+תוצאה של תזמון משימה אסינכרונית (מתוזמנת או נכשלה).
 
 ### FlintAsyncTask
 
@@ -208,7 +326,7 @@ export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailu
 export interface FlintAsyncTask
 ```
 
-לא סופק תיאור.
+מתאר של משימה אסינכרונית בתור בזמן הריצה.
 
 ### FlintAsyncTaskHandler
 
@@ -218,7 +336,7 @@ export interface FlintAsyncTask
 export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 ```
 
-לא סופק תיאור.
+קריאה חוזרת לביצוע משימה לוקחת מטען בתים קלט והחזרת מטען בתים פלט.
 
 ### FlintAsyncTaskKind
 
@@ -228,7 +346,7 @@ export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 export type FlintAsyncTaskKind = 'microtask' | 'worker';
 ```
 
-לא סופק תיאור.
+סיווג תזמון משימות ('microtask' או 'עובד').
 
 ### FlintAsyncWorkerMessage
 
@@ -238,7 +356,72 @@ export type FlintAsyncTaskKind = 'microtask' | 'worker';
 export interface FlintAsyncWorkerMessage
 ```
 
-לא סופק תיאור.
+חבילת הודעות הועברה אל או ממנו שרשור עובד.
+
+### FlintJspiOptions
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintJspiOptions
+```
+
+אפשרויות קביעת התצורה של WebAssembly JavaScript Promise Integration (JSPI) suspender.
+
+### FlintJspiSuspender
+
+**סוג:** כיתה
+
+```typescript
+export class FlintJspiSuspender
+```
+
+מיתוג מחסנית של WebAssembly JavaScript Promise Integration (JSPI).
+משעה ומחדש ערימות WebAssembly על פני הבטחות מארח אסינכרוני
+באופן מקורי מבלי לדרוש טרנספורמציות קוד Asyncify מונעות מהדר.
+
+## `src/async/fiber`
+
+### FlintFiber
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintFiber<T = unknown>
+```
+
+טיפול להמשך סיב שיתופי פעיל או תלוי.
+
+### FlintFiberScheduler
+
+**סוג:** כיתה
+
+```typescript
+export class FlintFiberScheduler
+```
+
+מתזמן סיבים שיתופי התומך בהשעיית מחסנית אסינכרית בסגנון JSPI,
+בידוד מסגרת, הצהרת גבול מחסנית והגנה על כניסה חוזרת.
+
+### FlintFiberSchedulerOptions
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintFiberSchedulerOptions
+```
+
+אפשרויות תצורה עבור מתזמן הסיבים השיתופי.
+
+### FlintFiberState
+
+**סוג:** סוג
+
+```typescript
+export type FlintFiberState = 'ready' | 'running' | 'suspended' | 'completed' | 'failed' | 'cancelled';
+```
+
+מצב ביצוע של סיב שיתופי.
 
 ## `src/collections`
 
@@ -257,10 +440,10 @@ function createFlintArray(
 
 #### פרמטרים
 
-| שם    | הקלד                     | תיאור |
-| ----- | ------------------------ | ----- |
-| ערכים | קריאה בלבד TValue[]      |       |
-| בעלות | FlintCollectionOwnership |       |
+| שם | הקלד | תיאור |
+| --------- | ------------------------ | ----------- |
+| ערכים | קריאה בלבד TValue[] |             |
+| בעלות | FlintCollectionOwnership |             |
 
 ### createFlintIterator
 
@@ -274,10 +457,10 @@ function createFlintIterator(values: Iterable<TValue>, descriptor: FlintIterator
 
 #### פרמטרים
 
-| שם    | הקלד                    | תיאור |
-| ----- | ----------------------- | ----- |
-| ערכים | Iterable<TValue>        |       |
-| מתאר  | FlintIteratorDescriptor |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------- | ----------- |
+| ערכים | Iterable<TValue> |             |
+| מתאר | FlintIteratorDescriptor |             |
 
 ### createFlintIteratorDescriptor
 
@@ -296,14 +479,14 @@ function createFlintIteratorDescriptor(
 
 #### פרמטרים
 
-| שם          | הקלד                     | תיאור |
-| ----------- | ------------------------ | ----- |
-| מזהה        | מחרוזת                   |       |
-| elementType |                          |       |
-| יכולת       | FlintIteratorCapability  |       |
-| בעלות       | FlintCollectionOwnership |       |
+| שם | הקלד | תיאור |
+| ----------- | ------------------------ | ----------- |
+| id | מחרוזת |             |
+| elementType |                          |             |
+| יכולת | FlintIteratorCapability |             |
+| בעלות | FlintCollectionOwnership |             |
 
-### createFlintMap
+### ליצור FlintMap
 
 פונקציה **סוג:**
 
@@ -314,14 +497,20 @@ function createFlintMap(
 ): FlintMap<TKey, TValue>;
 ```
 
-לא סופק תיאור.
+יוצר FlintMap מתמשך המאוחל עם ערכי מפתח-ערך.
 
 #### פרמטרים
 
-| שם       | הקלד                                      | תיאור |
-| -------- | ----------------------------------------- | ----- |
-| ערכים    | לקריאה בלבד FlintMapEntry<TKey, TValue>[] |       |
-| אסטרטגיה | FlintHashStrategy<TKey>                   |       |
+| שם | הקלד | תיאור |
+| -------- | -------------------------------------- | --------------------------- |
+| ערכים | לקריאה בלבד FlintMapEntry<TKey, TValue>[] | - טפולים ראשוניים של ערך מפתח. |
+| אסטרטגיה | FlintHashStrategy<TKey> |                             |
+
+#### חוֹזֶה
+
+- **@param:** - טפולים ראשוניים של ערך מפתח.
+- **@param:** - שוויון מפתח מותאם אישית ואסטרטגיית גיבוב.
+- **@returns:** מופע FlintMap אתחול.
 
 ### createFlintSet
 
@@ -334,16 +523,22 @@ function createFlintSet(
 ): FlintSet<TValue>;
 ```
 
-לא סופק תיאור.
+יוצר FlintSet מתמשך מאותחל עם ערכים.
 
 #### פרמטרים
 
-| שם       | הקלד                      | תיאור |
-| -------- | ------------------------- | ----- |
-| ערכים    | קריאה בלבד TValue[]       |       |
-| אסטרטגיה | FlintHashStrategy<TValue> |       |
+| שם | הקלד | תיאור |
+| -------- | ------------------------- | ----------------------------- |
+| ערכים | קריאה בלבד TValue[] | - חזרה ראשונית של ערכים. |
+| אסטרטגיה | FlintHashStrategy<TValue> |                               |
 
-### createFlintVector
+#### חוֹזֶה
+
+- **@param:** - ערכים חוזרים ראשוניים.
+- **@param:** - אסטרטגיית שוויון ואסטרטגיית גיבוב מותאמת אישית.
+- **@returns:** מופע FlintSet אתחול.
+
+### ליצור FlintVector
 
 פונקציה **סוג:**
 
@@ -358,10 +553,10 @@ function createFlintVector(
 
 #### פרמטרים
 
-| שם    | הקלד                     | תיאור |
-| ----- | ------------------------ | ----- |
-| ערכים | קריאה בלבד TValue[]      |       |
-| בעלות | FlintCollectionOwnership |       |
+| שם | הקלד | תיאור |
+| --------- | ------------------------ | ----------- |
+| ערכים | קריאה בלבד TValue[] |             |
+| בעלות | FlintCollectionOwnership |             |
 
 ### FlintArray
 
@@ -385,10 +580,10 @@ function flintArrayGet(array: FlintArray<TValue>, index: number): FlintOption<TV
 
 #### פרמטרים
 
-| שם     | הקלד               | תיאור |
-| ------ | ------------------ | ----- |
-| מערך   | FlintArray<TValue> |       |
-| אינדקס | מספר               |       |
+| שם | הקלד | תיאור |
+| ----- | ------------------ | ----------- |
+| מערך | FlintArray<TValue> |             |
+| אינדקס | מספר |             |
 
 ### flintArrayLength
 
@@ -402,9 +597,9 @@ function flintArrayLength(array: FlintArray<TValue>): number;
 
 #### פרמטרים
 
-| שם   | הקלד               | תיאור |
-| ---- | ------------------ | ----- |
-| מערך | FlintArray<TValue> |       |
+| שם | הקלד | תיאור |
+| ----- | ------------------ | ----------- |
+| מערך | FlintArray<TValue> |             |
 
 ### flintArraySet
 
@@ -418,11 +613,11 @@ function flintArraySet(array: FlintArray<TValue>, index: number, value: TValue):
 
 #### פרמטרים
 
-| שם     | הקלד               | תיאור |
-| ------ | ------------------ | ----- |
-| מערך   | FlintArray<TValue> |       |
-| אינדקס | מספר               |       |
-| ערך    | TValue             |       |
+| שם | הקלד | תיאור |
+| ----- | ------------------ | ----------- |
+| מערך | FlintArray<TValue> |             |
+| אינדקס | מספר |             |
+| ערך | TValue |             |
 
 ### flintArrayTrySet
 
@@ -440,11 +635,11 @@ function flintArrayTrySet(
 
 #### פרמטרים
 
-| שם     | הקלד               | תיאור |
-| ------ | ------------------ | ----- |
-| מערך   | FlintArray<TValue> |       |
-| אינדקס | מספר               |       |
-| ערך    | TValue             |       |
+| שם | הקלד | תיאור |
+| ----- | ------------------ | ----------- |
+| מערך | FlintArray<TValue> |             |
+| אינדקס | מספר |             |
+| ערך | TValue |             |
 
 ### FlintCollectionOwnership
 
@@ -454,7 +649,7 @@ function flintArrayTrySet(
 export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 ```
 
-לא סופק תיאור.
+סמנטיקה של בעלות על זיכרון עבור רכיבי אוסף ('בעלות', 'מושאל', 'משותף').
 
 ### flintDefaultHashStrategy
 
@@ -464,9 +659,13 @@ export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 function flintDefaultHashStrategy(): FlintHashStrategy<TValue>;
 ```
 
-לא סופק תיאור.
+מחזירה את אסטרטגיית הגיבוב המוגדרת כברירת מחדל באמצעות סדרה דטרמיניסטית.
 
-### flintError
+#### חוֹזֶה
+
+- **@returns:** מופע ברירת מחדל של FlintHashStrategy.
+
+### פלינטשגיאה
 
 **סוג:** קבוע
 
@@ -476,7 +675,7 @@ export const flintError;
 
 בנה שגיאה ערך תוצאה ללא זריקה.
 
-### FlintHashStrategy
+### FlintHash Strategy
 
 **סוג:** ממשק
 
@@ -484,7 +683,7 @@ export const flintError;
 export interface FlintHashStrategy<TValue>
 ```
 
-לא סופק תיאור.
+ממשק אסטרטגיית שוויון וגיבוב עבור סוגי מפתחות מותאמים אישית ב-Sets ובמפות.
 
 ### FlintIterable
 
@@ -518,10 +717,10 @@ function flintIteratorAdd(source: FlintIterator<TValue>, value: TValue): FlintIt
 
 #### פרמטרים
 
-| שם   | הקלד                  | תיאור |
-| ---- | --------------------- | ----- |
-| מקור | FlintIterator<TValue> |       |
-| ערך  | TValue                |       |
+| שם | הקלד | תיאור |
+| ------ | --------------------- | ----------- |
+| מקור | FlintIterator<TValue> |             |
+| ערך | TValue |             |
 
 ### flintIteratorAt
 
@@ -531,14 +730,20 @@ function flintIteratorAdd(source: FlintIterator<TValue>, value: TValue): FlintIt
 function flintIteratorAt(iterator: FlintIterator<TValue>, index: number): FlintOption<TValue>;
 ```
 
-לא סופק תיאור.
+מחזירה את הרכיב באינדקס שצוין עטוף באופציה.
 
 #### פרמטרים
 
-| שם      | הקלד                  | תיאור |
-| ------- | --------------------- | ----- |
-| איטרטור | FlintIterator<TValue> |       |
-| אינדקס  | מספר                  |       |
+| שם | הקלד | תיאור |
+| -------- | --------------------- | --------------------------- |
+| איטרטור | FlintIterator<TValue> | - איטרטור מקור.          |
+| אינדקס | מספר | - אינדקס אלמנטים מבוסס אפס. |
+
+#### חוֹזֶה
+
+- **@param:** - איטרטור מקור.
+- **@param:** - אינדקס אלמנטים מבוסס אפס.
+- **@returns:** אפשרות המכילה רכיב באינדקס או ללא.
 
 ### FlintIteratorCapability
 
@@ -548,7 +753,7 @@ function flintIteratorAt(iterator: FlintIterator<TValue>, index: number): FlintO
 export type FlintIteratorCapability = 'linear' | 'random-access';
 ```
 
-צריכה ליניארית או גישה אקראית לא צורכת הנתמכת על ידי איטרטור.
+צריכה ליניארית או גישה אקראית לא צורכת נתמכת על ידי איטרטור.
 
 ### flintIteratorCollect
 
@@ -558,13 +763,18 @@ export type FlintIteratorCapability = 'linear' | 'random-access';
 function flintIteratorCollect(iterator: FlintIterator<TValue>): FlintVector<TValue>;
 ```
 
-לא סופק תיאור.
+מממש איטרטור לוקטור בבעלות של ערכים שנאספו.
 
 #### פרמטרים
 
-| שם      | הקלד                  | תיאור |
-| ------- | --------------------- | ----- |
-| איטרטור | FlintIterator<TValue> |       |
+| שם | הקלד | תיאור |
+| -------- | --------------------- | --------------------------- |
+| איטרטור | FlintIterator<TValue> | - איטרטור מקור לניקוז. |
+
+#### חוֹזֶה
+
+- **@param:** - איטרטור מקור לניקוז.
+- **@returns:** FlintVector המכיל ערכים שנאספו.
 
 ### flintIteratorConcat
 
@@ -578,10 +788,10 @@ function flintIteratorConcat(first: FlintIterator<TValue>, second: FlintIterable
 
 #### פרמטרים
 
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| ראשון | FlintIterator<TValue> |       |
-| שני   | FlintIterable<TValue> |       |
+| שם | הקלד | תיאור |
+| ------ | --------------------- | ----------- |
+| ראשון | FlintIterator<TValue> |             |
+| שני | FlintIterable<TValue> |             |
 
 ### FlintIteratorDescriptor
 
@@ -591,7 +801,7 @@ function flintIteratorConcat(first: FlintIterator<TValue>, second: FlintIterable
 export interface FlintIteratorDescriptor
 ```
 
-מטא נתונים של ABI המתארים ייצוג של אלמנטים, בעלות ויכולת גישה.
+מטא נתונים של ABI המתארים ייצוג אלמנטים, בעלות ויכולת גישה.
 
 ### flintIteratorFilter
 
@@ -604,14 +814,14 @@ function flintIteratorFilter(
 ): FlintIterator<TValue>;
 ```
 
-סינון ערכים בעצלתיים; סינון תמיד משדרג את היכולת לגישה ליניארית.
+סינון ערכים בעצלתיים; סינון תמיד משדרג לאחור את היכולת לגישה ליניארית.
 
 #### פרמטרים
 
-| שם      | הקלד                     | תיאור |
-| ------- | ------------------------ | ----- |
-| מקור    | FlintIterator<TValue>    |       |
-| פרידיקט | (ערך: TValue) => בוליאני |       |
+| שם | הקלד | תיאור |
+| --------- | -------------------------- | ----------- |
+| מקור | FlintIterator<TValue> |             |
+| פרידיקט | (ערך: TValue) => בוליאני |             |
 
 ### flintIteratorFirst
 
@@ -621,13 +831,18 @@ function flintIteratorFilter(
 function flintIteratorFirst(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-לא סופק תיאור.
+מחזירה את הרכיב הראשון של איטרטור עטוף באופציה.
 
 #### פרמטרים
 
-| שם      | הקלד                  | תיאור |
-| ------- | --------------------- | ----- |
-| איטרטור | FlintIterator<TValue> |       |
+| שם | הקלד | תיאור |
+| -------- | --------------------- | ------------------ |
+| איטרטור | FlintIterator<TValue> | - איטרטור מקור. |
+
+#### חוֹזֶה
+
+- **@param:** - איטרטור מקור.
+- **@returns:** אפשרות המכילה רכיב ראשון או אף אחד.
 
 ### flintIteratorFlatten
 
@@ -641,9 +856,9 @@ function flintIteratorFlatten(source: FlintIterator<FlintIterable<TValue>>): Fli
 
 #### פרמטרים
 
-| שם   | הקלד                                 | תיאור |
-| ---- | ------------------------------------ | ----- |
-| מקור | FlintIterator<FlintIterable<TValue>> |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------------------------ | ----------- |
+| מקור | FlintIterator<FlintIterable<TValue>> |             |
 
 ### flintIteratorFold
 
@@ -657,15 +872,22 @@ function flintIteratorFold(
 ): TResult;
 ```
 
-לא סופק תיאור.
+מפחית איטרטור משמאל לימין באמצעות התקשרות חוזרת של מצבר.
 
 #### פרמטרים
 
-| שם      | הקלד                                                   | תיאור |
-| ------- | ------------------------------------------------------ | ----- |
-| איטרטור | FlintIterator<TValue>                                  |       |
-| ראשי    | TResult                                                |       |
-| מפחית   | (מצבר: TResult, ערך: TValue, index: number) => TResult |       |
+| שם | הקלד | תיאור |
+| -------- | --------------------------------------------------------------- | ----------------------------- |
+| איטרטור | FlintIterator<TValue> | - איטרטור מקור.            |
+| ראשי | TResult | - ערך מצבר ראשוני.  |
+| מפחית | (מצבר: TResult, ערך: TValue, אינדקס: מספר) => TResult | - הפחתת פונקציית התקשרות חזרה. |
+
+#### חוֹזֶה
+
+- **@param:** - איטרטור מקור.
+- **@param:** - ערך מצבר ראשוני.
+- **@param:** - הפחתת פונקציית התקשרות חזרה.
+- **@returns:** תוצאת מצבר מופחתת סופית.
 
 ### flintIteratorFromArray
 
@@ -678,14 +900,14 @@ function flintIteratorFromArray(
 ): FlintIterator<TValue>;
 ```
 
-צור איטרטור בגישה אקראית על מערך קבוע מבלי לשנות את הבעלות שלו.
+צור איטרטור עם גישה אקראית על מערך קבוע מבלי לשנות את הבעלות שלו.
 
 #### פרמטרים
 
-| שם   | הקלד                    | תיאור |
-| ---- | ----------------------- | ----- |
-| מערך | FlintArray<TValue>      |       |
-| מתאר | FlintIteratorDescriptor |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------- | ----------- |
+| מערך | FlintArray<TValue> |             |
+| מתאר | FlintIteratorDescriptor |             |
 
 ### flintIteratorFromIterable
 
@@ -699,15 +921,15 @@ function flintIteratorFromIterable(
 ): FlintIterator<TValue>;
 ```
 
-התאם איטרציה שרירותית לאיטרטור ליניארי של Forge Web Script.
+התאם איטרטור שרירותי לאיטרטור ליניארי של פלינט עצלן.
 
 #### פרמטרים
 
-| שם          | הקלד             | תיאור |
-| ----------- | ---------------- | ----- |
-| ערכים       | Iterable<TValue> |       |
-| elementType |                  |       |
-| מזהה        |                  |       |
+| שם | הקלד | תיאור |
+| ----------- | ---------------- | ----------- |
+| ערכים | Iterable<TValue> |             |
+| elementType |                  |             |
+| id |                  |             |
 
 ### flintIteratorFromVector
 
@@ -724,10 +946,10 @@ function flintIteratorFromVector(
 
 #### פרמטרים
 
-| שם    | הקלד                    | תיאור |
-| ----- | ----------------------- | ----- |
-| וקטור | FlintVector<TValue>     |       |
-| מתאר  | FlintIteratorDescriptor |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------------------- | ----------- |
+| וקטור | FlintVector<TValue> |             |
+| מתאר | FlintIteratorDescriptor |             |
 
 ### flintIteratorLast
 
@@ -737,13 +959,18 @@ function flintIteratorFromVector(
 function flintIteratorLast(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-לא סופק תיאור.
+מחזירה את הרכיב האחרון של איטרטור עטוף באופציה.
 
 #### פרמטרים
 
-| שם      | הקלד                  | תיאור |
-| ------- | --------------------- | ----- |
-| איטרטור | FlintIterator<TValue> |       |
+| שם | הקלד | תיאור |
+| -------- | --------------------- | ------------------ |
+| איטרטור | FlintIterator<TValue> | - איטרטור מקור. |
+
+#### חוֹזֶה
+
+- **@param:** - איטרטור מקור.
+- **@returns:** אפשרות המכילה רכיב אחרון או אף אחד.
 
 ### flintIteratorMap
 
@@ -761,11 +988,11 @@ function flintIteratorMap(
 
 #### פרמטרים
 
-| שם          | הקלד                     | תיאור |
-| ----------- | ------------------------ | ----- |
-| מקור        | FlintIterator<TValue>    |       |
-| מפה         | (ערך: TValue) => TResult |       |
-| elementType |                          |       |
+| שם | הקלד | תיאור |
+| ----------- | -------------------------- | ----------- |
+| מקור | FlintIterator<TValue> |             |
+| מפה | (ערך: TValue) => TResult |             |
+| elementType |                            |             |
 
 ### FlintIteratorResult
 
@@ -785,14 +1012,14 @@ export interface FlintIteratorResult<TValue>
 function flintIteratorTake(source: FlintIterator<TValue>, count: number): FlintIterator<TValue>;
 ```
 
-הגבל בעצלתיים מקור לערכי ספירה לכל היותר.
+הגבילו בעצלתיים מקור לערכי ספירה לכל היותר.
 
 #### פרמטרים
 
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| מקור  | FlintIterator<TValue> |       |
-| לספור | מספר                  |       |
+| שם | הקלד | תיאור |
+| ------ | --------------------- | ----------- |
+| מקור | FlintIterator<TValue> |             |
+| לספור | מספר |             |
 
 ### flintIteratorToArray
 
@@ -805,14 +1032,20 @@ function flintIteratorToArray(
 ): FlintArray<TValue>;
 ```
 
-לא סופק תיאור.
+ממיר איטרטור ל- FlintArray בבעלות.
 
 #### פרמטרים
 
-| שם      | הקלד                     | תיאור |
-| ------- | ------------------------ | ----- |
-| איטרטור | FlintIterator<TValue>    |       |
-| בעלות   | FlintCollectionOwnership |       |
+| שם | הקלד | תיאור |
+| --------- | ------------------------ | ----------------------------- |
+| איטרטור | FlintIterator<TValue> | - איטרטור מקור.            |
+| בעלות | FlintCollectionOwnership | - מודל בעלות על אוסף. |
+
+#### חוֹזֶה
+
+- **@param:** - איטרטור מקור.
+- **@param:** - מודל בעלות על אוסף.
+- **@returns:** אתחול FlintArray.
 
 ### FlintMap
 
@@ -822,7 +1055,7 @@ function flintIteratorToArray(
 export interface FlintMap<TKey, TValue>
 ```
 
-לא סופק תיאור.
+מבנה נתוני איסוף מפות גיבוב מתמשך.
 
 ### flintMapDelete
 
@@ -832,14 +1065,20 @@ export interface FlintMap<TKey, TValue>
 function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, TValue>;
 ```
 
-לא סופק תיאור.
+מוחק מיפוי מפתח-ערך מהמפה, מחזיר מפה קבועה חדשה.
 
 #### פרמטרים
 
-| שם   | הקלד                   | תיאור |
-| ---- | ---------------------- | ----- |
-| מפה  | FlintMap<TKey, TValue> |       |
-| מפתח | TKey                   |       |
+| שם | הקלד | תיאור |
+| ---- | ---------------------- | ---------------- |
+| מפה | FlintMap<TKey, TValue> | - מפת יעד.    |
+| מפתח | TKey | - מפתח למחיקה. |
+
+#### חוֹזֶה
+
+- **@param:** - מפת יעד.
+- **@param:** - מפתח למחיקה.
+- **@returns:** מפה מתמשכת מעודכנת.
 
 ### flintMapEntries
 
@@ -849,13 +1088,18 @@ function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, 
 function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry<TKey, TValue>>;
 ```
 
-לא סופק תיאור.
+מחזירה את כל ערכי המפתח-ערך הכלולים במפה בתור וקטור בבעלות.
 
 #### פרמטרים
 
-| שם  | הקלד                   | תיאור |
-| --- | ---------------------- | ----- |
-| מפה | FlintMap<TKey, TValue> |       |
+| שם | הקלד | תיאור |
+| ---- | ---------------------- | ------------- |
+| מפה | FlintMap<TKey, TValue> | - מפת יעד. |
+
+#### חוֹזֶה
+
+- **@param:** - מפת יעד.
+- **@returns:** וקטור של ערכים במפה.
 
 ### FlintMapEntry
 
@@ -865,7 +1109,7 @@ function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry
 export interface FlintMapEntry<TKey, TValue>
 ```
 
-לא סופק תיאור.
+רשומת הזנת ערך מפתח במפת hash מתמשכת.
 
 ### flintMapGet
 
@@ -875,14 +1119,20 @@ export interface FlintMapEntry<TKey, TValue>
 function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue>;
 ```
 
-לא סופק תיאור.
+מאחזר את הערך המשויך למפתח מהמפה.
 
 #### פרמטרים
 
-| שם   | הקלד                   | תיאור |
-| ---- | ---------------------- | ----- |
-| מפה  | FlintMap<TKey, TValue> |       |
-| מפתח | TKey                   |       |
+| שם | הקלד | תיאור |
+| ---- | ---------------------- | ------------- |
+| מפה | FlintMap<TKey, TValue> | - מפת יעד. |
+| מפתח | TKey | - מפתח חיפוש. |
+
+#### חוֹזֶה
+
+- **@param:** - מפת יעד.
+- **@param:** - מפתח חיפוש.
+- **@returns:** אפשרות המכילה ערך או אין.
 
 ### flintMapSet
 
@@ -892,17 +1142,24 @@ function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue
 function flintMapSet(map: FlintMap<TKey, TValue>, key: TKey, value: TValue): FlintMap<TKey, TValue>;
 ```
 
-לא סופק תיאור.
+מוסיף או מעדכן מיפוי מפתח-ערך, מחזיר מפה מתמשכת חדשה.
 
 #### פרמטרים
 
-| שם   | הקלד                   | תיאור |
-| ---- | ---------------------- | ----- |
-| מפה  | FlintMap<TKey, TValue> |       |
-| מפתח | TKey                   |       |
-| ערך  | TValue                 |       |
+| שם | הקלד | תיאור |
+| ----- | ---------------------- | ---------------- |
+| מפה | FlintMap<TKey, TValue> | - מפת יעד.    |
+| מפתח | TKey | - מפתח מיפוי.   |
+| ערך | TValue | - ערך מיפוי. |
 
-### flintNone
+#### חוֹזֶה
+
+- **@param:** - מפת יעד.
+- **@param:** - מפתח מיפוי.
+- **@param:** - ערך מיפוי.
+- **@returns:** מפה מתמשכת מעודכנת.
+
+### צור אין
 
 **סוג:** קבוע
 
@@ -950,7 +1207,7 @@ export interface FlintResultValue<TValue, TError = string>
 export interface FlintSet<TValue>
 ```
 
-לא סופק תיאור.
+מבנה נתוני איסוף ערכת גיבוב מתמשך.
 
 ### flintSetAdd
 
@@ -960,14 +1217,20 @@ export interface FlintSet<TValue>
 function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-לא סופק תיאור.
+מוסיף רכיב לסט, מחזיר קבוצה קבועה חדשה אם משתנה.
 
 #### פרמטרים
 
-| שם     | הקלד             | תיאור |
-| ------ | ---------------- | ----- |
-| להגדיר | FlintSet<TValue> |       |
-| ערך    | TValue           |       |
+| שם | הקלד | תיאור |
+| ----- | ---------------- | ------------------ |
+| להגדיר | FlintSet<TValue> | - הגדר יעד.      |
+| ערך | TValue | - ערך להוספה. |
+
+#### חוֹזֶה
+
+- **@param:** - יעד מוגדר.
+- **@param:** - ערך להוספת.
+- **@returns:** סט מתמיד מעודכן.
 
 ### flintSetDelete
 
@@ -977,14 +1240,20 @@ function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-לא סופק תיאור.
+מוחק רכיב מהקבוצה, מחזיר קבוצה קבועה חדשה אם ישונה.
 
 #### פרמטרים
 
-| שם     | הקלד             | תיאור |
-| ------ | ---------------- | ----- |
-| להגדיר | FlintSet<TValue> |       |
-| ערך    | TValue           |       |
+| שם | הקלד | תיאור |
+| ----- | ---------------- | ------------------ |
+| להגדיר | FlintSet<TValue> | - הגדר יעד.      |
+| ערך | TValue | - ערך להסרה. |
+
+#### חוֹזֶה
+
+- **@param:** - יעד מוגדר.
+- **@param:** - ערך להסרה.
+- **@returns:** סט מתמיד מעודכן.
 
 ### flintSetHas
 
@@ -994,14 +1263,20 @@ function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 ```
 
-לא סופק תיאור.
+בודק אם קיים ערך בקבוצה.
 
 #### פרמטרים
 
-| שם     | הקלד             | תיאור |
-| ------ | ---------------- | ----- |
-| להגדיר | FlintSet<TValue> |       |
-| ערך    | TValue           |       |
+| שם | הקלד | תיאור |
+| ----- | ---------------- | ----------------- |
+| להגדיר | FlintSet<TValue> | - הגדר יעד.     |
+| ערך | TValue | - ערך לבדיקה. |
+
+#### חוֹזֶה
+
+- **@param:** - יעד מוגדר.
+- **@param:** - ערך לבדיקה.
+- **@returns:** נכון אם קיים ערך.
 
 ### flintSetValues
 
@@ -1011,15 +1286,20 @@ function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 function flintSetValues(set: FlintSet<TValue>): FlintVector<TValue>;
 ```
 
-לא סופק תיאור.
+מחזירה את כל הערכים הכלולים בקבוצה בתור וקטור בבעלות.
 
 #### פרמטרים
 
-| שם     | הקלד             | תיאור |
-| ------ | ---------------- | ----- |
-| להגדיר | FlintSet<TValue> |       |
+| שם | הקלד | תיאור |
+| ---- | ---------------- | ------------- |
+| להגדיר | FlintSet<TValue> | - הגדר יעד. |
 
-### flintSome
+#### חוֹזֶה
+
+- **@param:** - יעד מוגדר.
+- **@returns:** וקטור של ערכים בסט.
+
+### צור
 
 **סוג:** קבוע
 
@@ -1065,10 +1345,10 @@ function flintVectorFilter(
 
 #### פרמטרים
 
-| שם      | הקלד                                   | תיאור |
-| ------- | -------------------------------------- | ----- |
-| וקטור   | FlintVector<TValue>                    |       |
-| פרידיקט | (ערך: TValue, אינדקס: מספר) => בוליאני |       |
+| שם | הקלד | תיאור |
+| --------- | ----------------------------------------- | ----------- |
+| וקטור | FlintVector<TValue> |             |
+| פרידיקט | (ערך: TValue, אינדקס: מספר) => בוליאני |             |
 
 ### flintVectorFold
 
@@ -1086,11 +1366,11 @@ function flintVectorFold(
 
 #### פרמטרים
 
-| שם    | הקלד                                                   | תיאור |
-| ----- | ------------------------------------------------------ | ----- |
-| וקטור | FlintVector<TValue>                                    |       |
-| ראשי  | TResult                                                |       |
-| מפחית | (מצבר: TResult, ערך: TValue, index: number) => TResult |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------------------------------------------- | ----------- |
+| וקטור | FlintVector<TValue> |             |
+| ראשי | TResult |             |
+| מפחית | (מצבר: TResult, ערך: TValue, אינדקס: מספר) => TResult |             |
 
 ### flintVectorGet
 
@@ -1104,10 +1384,10 @@ function flintVectorGet(vector: FlintVector<TValue>, index: number): FlintOption
 
 #### פרמטרים
 
-| שם     | הקלד                | תיאור |
-| ------ | ------------------- | ----- |
-| וקטור  | FlintVector<TValue> |       |
-| אינדקס | מספר                |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------- | ----------- |
+| וקטור | FlintVector<TValue> |             |
+| אינדקס | מספר |             |
 
 ### flintVectorLength
 
@@ -1121,9 +1401,9 @@ function flintVectorLength(vector: FlintVector<TValue>): number;
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| וקטור | FlintVector<TValue> |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------- | ----------- |
+| וקטור | FlintVector<TValue> |             |
 
 ### flintVectorMap
 
@@ -1140,10 +1420,10 @@ function flintVectorMap(
 
 #### פרמטרים
 
-| שם    | הקלד                                   | תיאור |
-| ----- | -------------------------------------- | ----- |
-| וקטור | FlintVector<TValue>                    |       |
-| להפוך | (ערך: TValue, אינדקס: מספר) => TResult |       |
+| שם | הקלד | תיאור |
+| --------- | ----------------------------------------- | ----------- |
+| וקטור | FlintVector<TValue> |             |
+| להפוך | (ערך: TValue, אינדקס: מספר) => TResult |             |
 
 ### flintVectorPop
 
@@ -1160,9 +1440,9 @@ function flintVectorPop(vector: FlintVector<TValue>): {
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| וקטור | FlintVector<TValue> |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------- | ----------- |
+| וקטור | FlintVector<TValue> |             |
 
 ### flintVectorPush
 
@@ -1172,14 +1452,14 @@ function flintVectorPop(vector: FlintVector<TValue>): {
 function flintVectorPush(vector: FlintVector<TValue>, value: TValue): FlintVector<TValue>;
 ```
 
-הוסף ערך והגדל את היכולת לפי הצורך, תוך שמירה על בעלות.
+הוסף ערך והגדל יכולת לפי הצורך, תוך שמירה על בעלות.
 
 #### פרמטרים
 
-| שם    | הקלד                | תיאור |
-| ----- | ------------------- | ----- |
-| וקטור | FlintVector<TValue> |       |
-| ערך   | TValue              |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------- | ----------- |
+| וקטור | FlintVector<TValue> |             |
+| ערך | TValue |             |
 
 ### flintVectorSet
 
@@ -1193,11 +1473,11 @@ function flintVectorSet(vector: FlintVector<TValue>, index: number, value: TValu
 
 #### פרמטרים
 
-| שם     | הקלד                | תיאור |
-| ------ | ------------------- | ----- |
-| וקטור  | FlintVector<TValue> |       |
-| אינדקס | מספר                |       |
-| ערך    | TValue              |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------- | ----------- |
+| וקטור | FlintVector<TValue> |             |
+| אינדקס | מספר |             |
+| ערך | TValue |             |
 
 ### flintVectorTrySet
 
@@ -1215,11 +1495,11 @@ function flintVectorTrySet(
 
 #### פרמטרים
 
-| שם     | הקלד                | תיאור |
-| ------ | ------------------- | ----- |
-| וקטור  | FlintVector<TValue> |       |
-| אינדקס | מספר                |       |
-| ערך    | TValue              |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------- | ----------- |
+| וקטור | FlintVector<TValue> |             |
+| אינדקס | מספר |             |
+| ערך | TValue |             |
 
 ## `src/ecs`
 
@@ -1236,16 +1516,24 @@ function addFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-לא סופק תיאור.
+מצרף רכיב לישות אם עדיין לא קיים.
 
 #### פרמטרים
 
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| העולם | FlintEcsWorld<TValue> |       |
-| ישות  | FlintEcsEntity        |       |
-| רכיב  | מחרוזת                |       |
-| ערך   | TValue                |       |
+| שם | הקלד | תיאור |
+| --------- | --------------------- | ------------------------- |
+| העולם | FlintEcsWorld<TValue> | - תמונת מצב נוכחית בעולם. |
+| ישות | FlintEcsEntity | - ישות יעד.          |
+| רכיב | מחרוזת |                           |
+| ערך | TValue | - נתוני ערך רכיבים.   |
+
+#### חוֹזֶה
+
+- **@param:** - תמונת מצב נוכחית של העולם.
+- **@param:** - ישות יעד.
+- **@param:** - שם הרכיב.
+- **@param:** - נתוני ערך רכיב.
+- **@returns:** תוצאת תוצאת מעבר.
 
 ### createFlintEcsScheduler
 
@@ -1260,16 +1548,21 @@ function createFlintEcsScheduler(
 ): FlintEcsScheduler<TValue>;
 ```
 
-לא סופק תיאור.
+יוצר מתזמן צינור ביצוע ECS.
 
 #### פרמטרים
 
-| שם       | הקלד                                 | תיאור |
-| -------- | ------------------------------------ | ----- |
-| מערכות   | לקריאה בלבד FlintEcsSystem<TValue>[] |       |
-| אותות    | לקריאה בלבד FlintEcsSignal[]         |       |
-| מנויים   | לקריאה בלבד FlintEcsSubscription[]   |       |
-| maxSteps |                                      |       |
+| שם | הקלד | תיאור |
+| ------------- | --------------------------------- | -------------------------------------------------- |
+| מערכות | לקריאה בלבד FlintEcsSystem<TValue>[] | - רצף מערכות לרישום בצנרת. |
+| אותות | קריאה בלבד FlintEcsSignal[] |                                                    |
+| מנויים | קריאה בלבד FlintEcsSubscription[] |                                                    |
+| maxSteps |                                   |                                                    |
+
+#### חוֹזֶה
+
+- **@param:** - רצף מערכות לרישום בצנרת.
+- **@returns:** מופע של FlintEcsScheduler מוגדר.
 
 ### createFlintEcsWorld
 
@@ -1279,7 +1572,11 @@ function createFlintEcsScheduler(
 function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 ```
 
-לא סופק תיאור.
+מאתחל עולם ריק של רכיבי ישות.
+
+#### חוֹזֶה
+
+- **@returns:** מופע FlintEcsWorld שעבר אתחול טרי.
 
 ### despawnFlintEcsEntity
 
@@ -1289,14 +1586,20 @@ function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): FlintEcsResult<TValue>;
 ```
 
-לא סופק תיאור.
+מייצר ישות, מגדיל את היצירה שלה ומנקה את כל הרכיבים המצורפים.
 
 #### פרמטרים
 
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| העולם | FlintEcsWorld<TValue> |       |
-| ישות  | FlintEcsEntity        |       |
+| שם | הקלד | תיאור |
+| ------ | --------------------- | ------------------------- |
+| העולם | FlintEcsWorld<TValue> | - תמונת מצב נוכחית בעולם. |
+| ישות | FlintEcsEntity | - ישות להוליד.      |
+
+#### חוֹזֶה
+
+- **@param:** - תמונת מצב נוכחית של העולם.
+- **@param:** - ישות ל-despawn.
+- **@returns:** תוצאת תוצאת מעבר.
 
 ### FlintEcsComponentStore
 
@@ -1306,7 +1609,7 @@ function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEnt
 export interface FlintEcsComponentStore<TValue = Uint8Array>
 ```
 
-לא סופק תיאור.
+מיפוי רכיבי אחסון מספרי אינדקס של ישויות למופעי רכיבים.
 
 ### FlintEcsEntity
 
@@ -1316,7 +1619,7 @@ export interface FlintEcsComponentStore<TValue = Uint8Array>
 export interface FlintEcsEntity
 ```
 
-לא סופק תיאור.
+ידית ישות דורית קלת משקל המשלבת אינדקס ומונה דורות.
 
 ### FlintEcsEntityResult
 
@@ -1326,7 +1629,7 @@ export interface FlintEcsEntity
 export interface FlintEcsEntityResult<TValue = Uint8Array>
 ```
 
-לא סופק תיאור.
+תוצאה של מוטציה של ישות המחזירה את העולם והידית שהשתנו.
 
 ### FlintEcsQuery
 
@@ -1336,7 +1639,7 @@ export interface FlintEcsEntityResult<TValue = Uint8Array>
 export interface FlintEcsQuery
 ```
 
-לא סופק תיאור.
+מפרט שאילתת ישות המגדיר מפתחות רכיבים נדרשים ושלא נכללים.
 
 ### FlintEcsResult
 
@@ -1346,7 +1649,7 @@ export interface FlintEcsQuery
 export type FlintEcsResult<TValue = Uint8Array> = |
 ```
 
-לא סופק תיאור.
+תוצאה של מעבר ECS, מוצלח או נכשל.
 
 ### FlintEcsScheduler
 
@@ -1356,7 +1659,7 @@ export type FlintEcsResult<TValue = Uint8Array> = |
 export interface FlintEcsScheduler<TValue = Uint8Array>
 ```
 
-לא סופק תיאור.
+מתזמן צינור מתאם שלבי מערכת ואספקת אותות.
 
 ### FlintEcsScheduleResult
 
@@ -1366,7 +1669,7 @@ export interface FlintEcsScheduler<TValue = Uint8Array>
 export interface FlintEcsScheduleResult<TValue = Uint8Array>
 ```
 
-לא סופק תיאור.
+תוצאה של ביצוע לוח זמנים של ECS על פני מספר שלבי מערכת.
 
 ### FlintEcsSignal
 
@@ -1376,9 +1679,9 @@ export interface FlintEcsScheduleResult<TValue = Uint8Array>
 export interface FlintEcsSignal
 ```
 
-לא סופק תיאור.
+אות שינוי אירוע או מצב הנפלט במהלך הפעלת מערכת ECS.
 
-### FlintEcs Subscription
+### מנוי FlintEcs
 
 **סוג:** ממשק
 
@@ -1386,7 +1689,7 @@ export interface FlintEcsSignal
 export interface FlintEcsSubscription
 ```
 
-לא סופק תיאור.
+מנוי מחייב אות להתקשרות חוזרת של מטפל באירוע.
 
 ### FlintEcsSystem
 
@@ -1396,7 +1699,7 @@ export interface FlintEcsSubscription
 export interface FlintEcsSystem<TValue = Uint8Array>
 ```
 
-לא סופק תיאור.
+יחידת ביצוע מערכת משנה עולם ECS על בסיס שאילתות ועדכונים.
 
 ### FlintEcsTransition
 
@@ -1406,7 +1709,7 @@ export interface FlintEcsSystem<TValue = Uint8Array>
 export interface FlintEcsTransition<TValue = Uint8Array>
 ```
 
-לא סופק תיאור.
+מעבר עולמי מתועד המפרט את העולם הקודם, העולם הבא והאותות הנפלטים.
 
 ### FlintEcsWorld
 
@@ -1416,7 +1719,7 @@ export interface FlintEcsTransition<TValue = Uint8Array>
 export interface FlintEcsWorld<TValue = Uint8Array>
 ```
 
-לא סופק תיאור.
+תמונת מצב בלתי ניתנת לשינוי של עולם רכיבי ישות.
 
 ### getFlintEcsComponent
 
@@ -1430,15 +1733,22 @@ function getFlintEcsComponent(
 ): TValue | undefined;
 ```
 
-לא סופק תיאור.
+מאחזר את מופע הרכיב המצורף לישות.
 
 #### פרמטרים
 
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| העולם | FlintEcsWorld<TValue> |       |
-| ישות  | FlintEcsEntity        |       |
-| רכיב  | מחרוזת                |       |
+| שם | הקלד | תיאור |
+| --------- | --------------------- | ------------------------- |
+| העולם | FlintEcsWorld<TValue> | - תמונת מצב נוכחית בעולם. |
+| ישות | FlintEcsEntity | - ישות יעד.          |
+| רכיב | מחרוזת |                           |
+
+#### חוֹזֶה
+
+- **@param:** - תמונת מצב נוכחית של העולם.
+- **@param:** - ישות יעד.
+- **@param:** - שם הרכיב.
+- **@returns:** ערך רכיב או לא מוגדר אם חסר.
 
 ### isFlintEcsEntityAlive
 
@@ -1448,14 +1758,20 @@ function getFlintEcsComponent(
 function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): boolean;
 ```
 
-לא סופק תיאור.
+קובע אם טיפול של ישות תואם לדור הפעיל בעולם.
 
 #### פרמטרים
 
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| העולם | FlintEcsWorld<TValue> |       |
-| ישות  | FlintEcsEntity        |       |
+| שם | הקלד | תיאור |
+| ------ | --------------------- | ------------------------- |
+| העולם | FlintEcsWorld<TValue> | - תמונת מצב נוכחית בעולם. |
+| ישות | FlintEcsEntity | - ידית ישות לבדיקה. |
+
+#### חוֹזֶה
+
+- **@param:** - תמונת מצב נוכחית של העולם.
+- **@param:** - נקודת אחיזה של ישות לבדיקה.
+- **@returns:** נכון אם בחיים.
 
 ### queryFlintEcsEntities
 
@@ -1465,16 +1781,22 @@ function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEnt
 function queryFlintEcsEntities(world: FlintEcsWorld<TValue>, query: FlintEcsQuery): readonly FlintEcsEntity[];
 ```
 
-לא סופק תיאור.
+שאילתות על ישויות פעילות התואמות לקריטריונים של סינון הרכיבים.
 
 #### פרמטרים
 
-| שם     | הקלד                  | תיאור |
-| ------ | --------------------- | ----- |
-| העולם  | FlintEcsWorld<TValue> |       |
-| שאילתה | FlintEcsQuery         |       |
+| שם | הקלד | תיאור |
+| ----- | --------------------- | ----------------------------- |
+| העולם | FlintEcsWorld<TValue> | - תמונת מצב נוכחית בעולם.     |
+| שאילתה | FlintEcsQuery | - מפרט מסנן שאילתות. |
 
-### removeFlintEcsComponent
+#### חוֹזֶה
+
+- **@param:** - תמונת מצב נוכחית של העולם.
+- **@param:** - מפרט מסנן שאילתות.
+- **@returns:** מערך של נקודות אחיזה תואמות של ישויות.
+
+### הסר FlintEcsComponent
 
 פונקציה **סוג:**
 
@@ -1486,15 +1808,22 @@ function removeFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-לא סופק תיאור.
+מסיר רכיב מישות.
 
 #### פרמטרים
 
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| העולם | FlintEcsWorld<TValue> |       |
-| ישות  | FlintEcsEntity        |       |
-| רכיב  | מחרוזת                |       |
+| שם | הקלד | תיאור |
+| --------- | --------------------- | ------------------------- |
+| העולם | FlintEcsWorld<TValue> | - תמונת מצב נוכחית בעולם. |
+| ישות | FlintEcsEntity | - ישות יעד.          |
+| רכיב | מחרוזת |                           |
+
+#### חוֹזֶה
+
+- **@param:** - תמונת מצב נוכחית של העולם.
+- **@param:** - ישות יעד.
+- **@param:** - שם הרכיב להסרה.
+- **@returns:** תוצאת תוצאת מעבר.
 
 ### runFlintEcsScheduler
 
@@ -1507,14 +1836,20 @@ function runFlintEcsScheduler(
 ): FlintEcsScheduleResult<TValue> | Extract<FlintEcsResult<TValue>, { readonly ok: false }>;
 ```
 
-לא סופק תיאור.
+מפעיל צינור מתזמן ECS על פני כל המערכות והשלבים הרשומים.
 
 #### פרמטרים
 
-| שם    | הקלד                      | תיאור |
-| ----- | ------------------------- | ----- |
-| העולם | FlintEcsWorld<TValue>     |       |
-| מתזמן | FlintEcsScheduler<TValue> |       |
+| שם | הקלד | תיאור |
+| --------- | ------------------------- | -------------------------------- |
+| העולם | FlintEcsWorld<TValue> | - תמונת מצב ראשונית של העולם.        |
+| מתזמן | FlintEcsScheduler<TValue> | - צינור מתזמן מוגדר. |
+
+#### חוֹזֶה
+
+- **@param:** - תמונת מצב ראשונית של העולם.
+- **@param:** - צינור מתזמן מוגדר.
+- **@returns:** תזמון דוח ביצוע.
 
 ### setFlintEcsComponent
 
@@ -1529,16 +1864,24 @@ function setFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-לא סופק תיאור.
+מגדיר או מחליף ערך רכיב על ישות.
 
 #### פרמטרים
 
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| העולם | FlintEcsWorld<TValue> |       |
-| ישות  | FlintEcsEntity        |       |
-| רכיב  | מחרוזת                |       |
-| ערך   | TValue                |       |
+| שם | הקלד | תיאור |
+| --------- | --------------------- | ------------------------- |
+| העולם | FlintEcsWorld<TValue> | - תמונת מצב נוכחית בעולם. |
+| ישות | FlintEcsEntity | - ישות יעד.          |
+| רכיב | מחרוזת |                           |
+| ערך | TValue | - נתוני ערך רכיבים.   |
+
+#### חוֹזֶה
+
+- **@param:** - תמונת מצב נוכחית של העולם.
+- **@param:** - ישות יעד.
+- **@param:** - שם הרכיב.
+- **@param:** - נתוני ערך רכיב.
+- **@returns:** תוצאת תוצאת מעבר.
 
 ### spawnFlintEcsEntity
 
@@ -1548,13 +1891,18 @@ function setFlintEcsComponent(
 function spawnFlintEcsEntity(world: FlintEcsWorld<TValue>): FlintEcsEntityResult<TValue>;
 ```
 
-לא סופק תיאור.
+מקצה נקודת אחיזה חדשה לישות ומוסיף אותה לעולם.
 
 #### פרמטרים
 
-| שם    | הקלד                  | תיאור |
-| ----- | --------------------- | ----- |
-| העולם | FlintEcsWorld<TValue> |       |
+| שם | הקלד | תיאור |
+| ----- | --------------------- | ------------------------- |
+| העולם | FlintEcsWorld<TValue> | - תמונת מצב נוכחית בעולם. |
+
+#### חוֹזֶה
+
+- **@param:** - תמונת מצב נוכחית של העולם.
+- **@returns:** תוצאת ישות המכילה עולם מעודכן ויישות חדשה.
 
 ### validateFlintEcsSignals
 
@@ -1566,15 +1914,31 @@ function validateFlintEcsSignals(
 ): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
-לא סופק תיאור.
+מאמת רצף של אותות מול הגדרות אות מוצהרות.
 
 #### פרמטרים
 
-| שם    | הקלד                         | תיאור |
-| ----- | ---------------------------- | ----- |
-| אותות | לקריאה בלבד FlintEcsSignal[] |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------------- | ------------------------------- |
+| אותות | קריאה בלבד FlintEcsSignal[] | - מערך אותות לאימות. |
+
+#### חוֹזֶה
+
+- **@param:** - מערך אותות לאימות.
+- **@returns:** אובייקט עם סטטוס חוקי והודעות שגיאה.
 
 ## `src/host`
+
+### AtomicRingBufferChannel
+
+**סוג:** כיתה
+
+```typescript
+export class AtomicRingBufferChannel
+```
+
+מסנכרן עדכוני מצביע ראש/זנב אטומי בזיכרון חיץ טבעות אינטררופ מארח משותף.
+משתמש בפעולות אחסון/טעינה אטומיות תואמות WebAssembly עם ערובות הזמנת זיכרון למניעת תנאי מירוץ.
 
 ### createDefaultFlintCapabilities
 
@@ -1584,13 +1948,18 @@ function validateFlintEcsSignals(
 function createDefaultFlintCapabilities(options: FlintDefaultHostOptions = {}): FlintCapabilityRegistry;
 ```
 
-לא סופק תיאור.
+יוצר ברירת מחדל של ספקי יכולת מובנים (למשל env.now).
 
 #### פרמטרים
 
-| שם       | הקלד                    | תיאור |
-| -------- | ----------------------- | ----- |
-| אפשרויות | FlintDefaultHostOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ----------------------- | ------------------------------------------------- |
+| אפשרויות | FlintDefaultHostOptions | - אפשרויות תצורה ליכולות ברירת המחדל. |
+
+#### חוֹזֶה
+
+- **@param:** - אפשרויות תצורה ליכולות ברירת המחדל.
+- **@returns:** רישום עם יישומי יכולת ברירת מחדל.
 
 ### createFlintHost
 
@@ -1604,17 +1973,24 @@ function createFlintHost(
 ): FlintHost;
 ```
 
-לא סופק תיאור.
+יוצר סביבת מארח בזמן ריצה המחייבת יבוא אורחים ליכולות מורשות.
 
 #### פרמטרים
 
-| שם       | הקלד                    | תיאור |
-| -------- | ----------------------- | ----- |
-| מניפסט   | FlintAbiManifest        |       |
-| רישום    | FlintCapabilityRegistry |       |
-| אפשרויות | FlintHostOptions        |       |
+| שם | הקלד | תיאור |
+| -------- | ----------------------- | ------------------------------------------------------------ |
+| מניפסט | FlintAbiManifest | - מניפסט ABI המתאר את היכולות והיבוא הנדרשים. |
+| רישום | FlintCapabilityRegistry | - רישום יישומי יכולות זמינות.          |
+| אפשרויות | FlintHostOptions | - אפשרויות תצורה לאתחול המארח.             |
 
-### FlintCapabilityImplementation
+#### חוֹזֶה
+
+- **@param:** - מניפסט ABI המתאר את היכולות והייבוא ​​הנדרשים.
+- **@param:** - רישום של יישומי יכולות זמינות.
+- **@param:** - אפשרויות תצורה לאתחול מארח.
+- **@returns:** מופע FlintHost מוגדר.
+
+### יישום FlintCapability
 
 **סוג:** ממשק
 
@@ -1622,7 +1998,7 @@ function createFlintHost(
 export interface FlintCapabilityImplementation
 ```
 
-לא סופק תיאור.
+הטמעת יכולת מארח רישום מטפל בהתקשרות וחתימת ABI.
 
 ### FlintCapabilityRegistry
 
@@ -1632,7 +2008,7 @@ export interface FlintCapabilityImplementation
 export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImplementation>>;
 ```
 
-לא סופק תיאור.
+מיפוי של שמות יכולות לספקי היישום המארח שלהם.
 
 ### FlintDefaultHostOptions
 
@@ -1642,7 +2018,37 @@ export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImp
 export interface FlintDefaultHostOptions
 ```
 
-לא סופק תיאור.
+אפשרויות תצורה עבור ספקי יכולת מובנים כברירת מחדל.
+
+### FlintForeignCall
+
+**סוג:** סוג
+
+```typescript
+export type FlintForeignCall = (symbol: string, arguments_: readonly unknown[]) => unknown | Promise<unknown>;
+```
+
+מארח מטפל בהפעלת יכולת זרה.
+
+### יישום FlintForeignCapability
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintForeignCapabilityImplementation
+```
+
+מתאר יישום יכולת זרה מארח.
+
+### FlintForeignCapabilityRegistry
+
+**סוג:** סוג
+
+```typescript
+export type FlintForeignCapabilityRegistry = Readonly<Record<string, FlintForeignCapabilityImplementation>>;
+```
+
+רישום של יישומי יכולות זרות זמינות.
 
 ### FlintHost
 
@@ -1652,7 +2058,7 @@ export interface FlintDefaultHostOptions
 export interface FlintHost
 ```
 
-לא סופק תיאור.
+מארח ביצוע המספק הפעלת יכולת וניהול לכל החיים עבור מודולי אורחים.
 
 ### FlintHostCall
 
@@ -1662,7 +2068,7 @@ export interface FlintHost
 export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promise<unknown>;
 ```
 
-לא סופק תיאור.
+פונקציית מארח הניתנת להתקשרות שהופעלה על ידי הפעלת זמן ריצה של אורח.
 
 ### FlintHostOptions
 
@@ -1672,7 +2078,52 @@ export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promis
 export interface FlintHostOptions
 ```
 
+אפשרויות תצורה לאתחול מופע FlintHost.
+
+### MAX_FFI_CALL_DEPTH
+
+**סוג:** קבוע
+
+```typescript
+export const MAX_FFI_CALL_DEPTH;
+```
+
 לא סופק תיאור.
+
+### timingSafeEqualString
+
+פונקציה **סוג:**
+
+```typescript
+function timingSafeEqualString(stringA: string, stringB: string): boolean;
+```
+
+מבצע השוואה בזמן קבוע של שתי מחרוזות כדי למנוע תזמון התקפות של ערוץ צד על מזהים קריטיים לאבטחה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| מחרוזתA | מחרוזת |             |
+| מחרוזתB | מחרוזת |             |
+
+### validateHostPointerBounds
+
+פונקציה **סוג:**
+
+```typescript
+function validateHostPointerBounds(pointer: number, length: number, memoryLimit = 0xff_ff_ff_ff): boolean;
+```
+
+מאמת שהיסט ואורך מצביע מארח עומדים באינוריאנטי גבולות מרחביים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | ------ | ----------- |
+| מצביע | מספר |             |
+| אורך | מספר |             |
+| memoryLimit |        |             |
 
 ## `src/iterator`
 
@@ -1692,11 +2143,11 @@ function createFlintWasmIterator(
 
 #### פרמטרים
 
-| שם       | הקלד                                          | תיאור |
-| -------- | --------------------------------------------- | ----- |
-| ידית     | מספר                                          |       |
-| הבא      | (handle: number) => FlintPackedIteratorResult |       |
-| אפשרויות | FlintWasmIteratorOptions<TValue>              |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------------------------- | ----------- |
+| ידית | מספר |             |
+| הבא | (ידית: מספר) => FlintPackedIteratorResult |             |
+| אפשרויות | FlintWasmIteratorOptions<TValue> |             |
 
 ### createFlintWasmIteratorFactory
 
@@ -1714,11 +2165,11 @@ function createFlintWasmIteratorFactory(
 
 #### פרמטרים
 
-| שם       | הקלד                                          | תיאור |
-| -------- | --------------------------------------------- | ----- |
-| מפעל     | (... arguments_: TArguments) => מספר          |       |
-| הבא      | (handle: number) => FlintPackedIteratorResult |       |
-| אפשרויות | FlintWasmIteratorOptions<TValue>              |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------------------------- | ----------- |
+| מפעל | (... arguments_: TArguments) => מספר |             |
+| הבא | (ידית: מספר) => FlintPackedIteratorResult |             |
+| אפשרויות | FlintWasmIteratorOptions<TValue> |             |
 
 ### FlintPackedIteratorResult
 
@@ -1728,7 +2179,7 @@ function createFlintWasmIteratorFactory(
 export type FlintPackedIteratorResult = number | bigint;
 ```
 
-לא סופק תיאור.
+ייצוג מספרי ארוז של איטרטור הקריאה הבאה שהוחזרה מ-WebAssembly.
 
 ### FlintWasmIterator
 
@@ -1738,7 +2189,7 @@ export type FlintPackedIteratorResult = number | bigint;
 export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TValue>
 ```
 
-לא סופק תיאור.
+איטרטור ג'אווהסקריפט וגשר ניתן לחזרה העוטפים ידית מצב איטרטור של WebAssembly.
 
 ### FlintWasmIteratorOptions
 
@@ -1748,7 +2199,7 @@ export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TV
 export interface FlintWasmIteratorOptions<TValue>
 ```
 
-לא סופק תיאור.
+אפשרויות תצורה לבניית מעטפת איטרטור של WebAssembly.
 
 ## `src/logging`
 
@@ -1760,13 +2211,18 @@ export interface FlintWasmIteratorOptions<TValue>
 function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 ```
 
-לא סופק תיאור.
+יוצר מופע של FlintLogger בהיקף עם סינון חומרה מותאמים אישית ושקעים.
 
 #### פרמטרים
 
-| שם       | הקלד               | תיאור |
-| -------- | ------------------ | ----- |
-| אפשרויות | FlintLoggerOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------ | -------------------------------------------------- |
+| אפשרויות | FlintLoggerOptions | - אפשרויות תצורה לאתחול לוגר. |
+
+#### חוֹזֶה
+
+- **@param:** - אפשרויות תצורה לאתחול לוגר.
+- **@returns:** מופע FlintLogger מוגדר.
 
 ### FlintLogEvent
 
@@ -1776,7 +2232,7 @@ function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 export interface FlintLogEvent
 ```
 
-לא סופק תיאור.
+אירוע יומן זמן ריצה מובנה הנפלט על ידי לוגר.
 
 ### FlintLogger
 
@@ -1786,7 +2242,7 @@ export interface FlintLogEvent
 export interface FlintLogger
 ```
 
-לא סופק תיאור.
+ממשק רישום אבחון בהיקף עבור מעקב אחר אירועים בזמן ריצה.
 
 ### FlintLoggerOptions
 
@@ -1796,7 +2252,7 @@ export interface FlintLogger
 export interface FlintLoggerOptions
 ```
 
-לא סופק תיאור.
+אפשרויות תצורה לאתחול מופע לוגר זמן ריצה.
 
 ### FlintLogLevel
 
@@ -1806,7 +2262,7 @@ export interface FlintLoggerOptions
 export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 ```
 
-לא סופק תיאור.
+רמות חומרת רישום נתמכות עבור הקלטת אירועים בזמן ריצה.
 
 ### FlintLogSink
 
@@ -1816,32 +2272,4194 @@ export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 export type FlintLogSink = (event: FlintLogEvent) => void;
 ```
 
-לא סופק תיאור.
+פונקציית התקשרות חוזרת לצרכן המקבלת אירועי יומן זמן ריצה מובנים.
 
-## `src/memory`
+## `src/math/bignum`
 
-### createFlintMemory
+### ליצור FlintDMatrix
 
 פונקציה **סוג:**
 
 ```typescript
-function createFlintMemory(options?: FlintMemoryOptions): FlintMemory;
+function createFlintDMatrix(rows: number, cols: number, data?: readonly number[]): FlintDMatrix;
 ```
 
-לא סופק תיאור.
+בצע את פעולת המטריצה ​​ליצור צור ד.
 
 #### פרמטרים
 
-| שם       | הקלד               | תיאור |
-| -------- | ------------------ | ----- |
-| אפשרויות | FlintMemoryOptions |       |
+| שם | הקלד | תיאור |
+| ---- | ----------------- | ----------- |
+| שורות | מספר |             |
+| קולס | מספר |             |
+| נתונים | מספר לקריאה בלבד[] |             |
 
-### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+### ליצור FlintTensor
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintTensor(shape: FlintTensorShape, data: readonly TValue[]): FlintTensor<TValue>;
+```
+
+בצע פעולת צור צור צור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ----------------- | ----------- |
+| צורה | FlintTensorShape |             |
+| נתונים | קריאה בלבד TValue[] |             |
+
+### createFlintTensorShape
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintTensorShape(dimensions: readonly number[]): FlintTensorShape;
+```
+
+בצע פעולת יצירת צורת טנזור צור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | ----------------- | ----------- |
+| מידות | מספר לקריאה בלבד[] |             |
+
+### ליצור FlintTensorView
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintTensorView(shape: FlintTensorShape, data: readonly TValue[], offset = 0): FlintTensorView<TValue>;
+```
+
+בצע פעולת תצוגת צור צור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ----------------- | ----------- |
+| צורה | FlintTensorShape |             |
+| נתונים | קריאה בלבד TValue[] |             |
+| קיזוז |                   |             |
+
+### Flint Cholesky פירוק
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintCholeskyDecomposition
+```
+
+ייצוג פירוק כולסקי.
+
+### FlintDMatrix
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintDMatrix
+```
+
+D ייצוג מטריקס.
+
+### flintDMatrixAddInplace
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixAddInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+בצע את פעולת הוספת המטריצה ​​D.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------------ | ----------- |
+| matrixA | FlintDMatrix |             |
+| מטריקס ב | FlintDMatrix |             |
+
+### פלינטDMatrix Cholesky
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixCholesky(matrix: FlintDMatrix): FlintOption<FlintCholeskyDecomposition>;
+```
+
+בצע פעולת d matrix cholesky.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------------ | ----------- |
+| מטריצה ​​| FlintDMatrix |             |
+
+### flintDMatrixCholeskySolve
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixCholeskySolve(
+  chol: FlintCholeskyDecomposition,
+  rhsVector: FlintDMatrix,
+): FlintOption<FlintDMatrix>;
+```
+
+בצע את פעולת פתרון המטריצה ​​המטריצה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | -------------------------- | ----------- |
+| צ'ול | פלינט כולסקי פירוק |             |
+| rhsVector | FlintDMatrix |             |
+
+### flintDMatrixDeterminant
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixDeterminant(matrix: FlintDMatrix): FlintOption<number>;
+```
+
+בצע פעולת דטרמיננטית מטריצה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------------ | ----------- |
+| מטריצה ​​| FlintDMatrix |             |
+
+### flintDMatrixEigenSymmetric
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixEigenSymmetric(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintEigenDecomposition>;
+```
+
+בצע פעולה סימטרית עצמית של מטריצה ​​d.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------- | ------------ | ----------- |
+| מטריצה ​​| FlintDMatrix |             |
+| maxIterations |              |             |
+| אפסילון |              |             |
+
+### flintDMatrixGet
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixGet(matrix: FlintDMatrix, row: number, col: number): FlintOption<number>;
+```
+
+בצע את פעולת קבל של ד מטריצה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------------ | ----------- |
+| מטריצה ​​| FlintDMatrix |             |
+| שורה | מספר |             |
+| קול | מספר |             |
+
+### flintDMatrixIdentity
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixIdentity(size: number): FlintDMatrix;
+```
+
+בצע פעולת זהות מטריצת d.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| גודל | מספר |             |
+
+### flintDMatrixInverse
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixInverse(matrix: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+בצע פעולה הפוכה מטריצת d.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------------ | ----------- |
+| מטריצה ​​| FlintDMatrix |             |
+
+### flintDMatrixLU
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixLU(matrix: FlintDMatrix): FlintOption<FlintLUDecomposition>;
+```
+
+בצע פעולת d מטריצה ​​l u.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------------ | ----------- |
+| מטריצה ​​| FlintDMatrix |             |
+
+### flintDMatrixMul
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixMul(matrixA: FlintDMatrix, matrixB: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+בצע פעולת d matrix mul.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------------ | ----------- |
+| matrixA | FlintDMatrix |             |
+| מטריקס ב | FlintDMatrix |             |
+
+### flintDMatrixMulAccumulate
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixMulAccumulate(
+  outMatrix: FlintDMatrix,
+  matrixA: FlintDMatrix,
+  matrixB: FlintDMatrix,
+  alpha = 1,
+): boolean;
+```
+
+בצע פעולת צבירת ד מטריצה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | ------------ | ----------- |
+| outMatrix | FlintDMatrix |             |
+| matrixA | FlintDMatrix |             |
+| מטריקס ב | FlintDMatrix |             |
+| אלפא |              |             |
+
+### flintDMatrixPseudoinverse
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixPseudoinverse(matrix: FlintDMatrix, epsilon = FLINT_MATH_EPSILON): FlintOption<FlintDMatrix>;
+```
+
+בצע פעולת ד מטריצת פסאודו-הפוכה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------------ | ----------- |
+| מטריצה ​​| FlintDMatrix |             |
+| אפסילון |              |             |
+
+### flintDMatrixQR
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixQR(matrix: FlintDMatrix): FlintOption<FlintQRDecomposition>;
+```
+
+בצע פעולת d matrix q r.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------------ | ----------- |
+| מטריצה ​​| FlintDMatrix |             |
+
+### flintDMatrixScaleInplace
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixScaleInplace(matrix: FlintDMatrix, factor: number): void;
+```
+
+בצע פעולה בקנה מידה מטריצת D במקום.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------------ | ----------- |
+| מטריצה ​​| FlintDMatrix |             |
+| גורם | מספר |             |
+
+### flintDMatrixSet
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixSet(matrix: FlintDMatrix, row: number, col: number, value: number): boolean;
+```
+
+בצע פעולת סט מטריצה ​​D.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------------ | ----------- |
+| מטריצה ​​| FlintDMatrix |             |
+| שורה | מספר |             |
+| קול | מספר |             |
+| ערך | מספר |             |
+
+### flintDMatrixSolve
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixSolve(matrixA: FlintDMatrix, rhsVector: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+בצע את פעולת פתרון המטריצה ​​d.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | ------------ | ----------- |
+| matrixA | FlintDMatrix |             |
+| rhsVector | FlintDMatrix |             |
+
+### flintDMatrixSubInplace
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixSubInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+בצע את פעולת המשנה במטריצה ​​D.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------------ | ----------- |
+| matrixA | FlintDMatrix |             |
+| מטריקס ב | FlintDMatrix |             |
+
+### flintDMatrixSVD
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixSVD(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintSVDDecomposition>;
+```
+
+בצע פעולת d matrix s v d.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------------- | ------------ | ----------- |
+| מטריצה ​​| FlintDMatrix |             |
+| maxIterations |              |             |
+| אפסילון |              |             |
+
+### flintDMatrixTranspose
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixTranspose(matrix: FlintDMatrix): FlintDMatrix;
+```
+
+בצע פעולת טרנספוזי D מטריצה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------------ | ----------- |
+| מטריצה ​​| FlintDMatrix |             |
+
+### flintDMatrixZeros
+
+פונקציה **סוג:**
+
+```typescript
+function flintDMatrixZeros(rows: number, cols: number): FlintDMatrix;
+```
+
+בצע פעולת אפסים מטריצת ד.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------ | ----------- |
+| שורות | מספר |             |
+| קולס | מספר |             |
+
+### פירוק פלינט
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintEigenDecomposition
+```
+
+ייצוג פירוק עצמי.
+
+### FlintLUDecomposition
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintLUDecomposition
+```
+
+L U ייצוג פירוק.
+
+### FlintQRDicomposition
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintQRDecomposition
+```
+
+Q R ייצוג פירוק.
+
+### FlintSVDDcomposition
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintSVDDecomposition
+```
+
+S V D ייצוג פירוק.
+
+### FlintTensor
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintTensor<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+ייצוג טנזור.
+
+### flintTensorFill
+
+פונקציה **סוג:**
+
+```typescript
+function flintTensorFill(shape: FlintTensorShape, value: TValue): FlintTensor<TValue>;
+```
+
+בצע פעולת מילוי טנזור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---------------- | ----------- |
+| צורה | FlintTensorShape |             |
+| ערך | TValue |             |
+
+### flintTensorMatmul
+
+פונקציה **סוג:**
+
+```typescript
+function flintTensorMatmul(
+  tensorA: FlintTensor<number>,
+  tensorB: FlintTensor<number>,
+): FlintOption<FlintTensor<number>>;
+```
+
+בצע פעולת tensor matmul.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------------------- | ----------- |
+| tensorA | FlintTensor<number> |             |
+| tensorB | FlintTensor<number> |             |
+
+### flintTensorReshape
+
+פונקציה **סוג:**
+
+```typescript
+function flintTensorReshape(tensor: FlintTensor<TValue>, newShape: FlintTensorShape): FlintOption<FlintTensor<TValue>>;
+```
+
+בצע פעולת צורה מחדש של טנזור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------------------- | ----------- |
+| טנסור | FlintTensor<TValue> |             |
+| newShape | FlintTensorShape |             |
+
+### FlintTensorShape
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintTensorShape
+```
+
+ייצוג צורת Tensor.
+
+### flintTensorShapeSize
+
+פונקציה **סוג:**
+
+```typescript
+function flintTensorShapeSize(shape: FlintTensorShape): number;
+```
+
+בצע פעולת גודל צורת טנזור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---------------- | ----------- |
+| צורה | FlintTensorShape |             |
+
+### flintTensorSlice
+
+פונקציה **סוג:**
+
+```typescript
+function flintTensorSlice(
+  view: FlintTensorView<TValue>,
+  axis: number,
+  start: number,
+  length: number,
+): FlintOption<FlintTensorView<TValue>>;
+```
+
+בצע פעולת פרוסת טנזור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ----------------------- | ----------- |
+| צפה | FlintTensorView<TValue> |             |
+| ציר | מספר |             |
+| להתחיל | מספר |             |
+| אורך | מספר |             |
+
+### flintTensorView
+
+פונקציה **סוג:**
+
+```typescript
+function flintTensorView(tensor: FlintTensor<TValue>): FlintTensorView<TValue>;
+```
+
+בצע פעולת תצוגת טנזור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------------------- | ----------- |
+| טנסור | FlintTensor<TValue> |             |
+
+### FlintTensorView
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintTensorView<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+ייצוג Tensor View.
+
+### flintTensorViewGet
+
+פונקציה **סוג:**
+
+```typescript
+function flintTensorViewGet(view: FlintTensorView<TValue>, indices: readonly number[]): FlintOption<TValue>;
+```
+
+בצע תצוגת טנזור קבל פעולה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ----------------------- | ----------- |
+| צפה | FlintTensorView<TValue> |             |
+| מדדים | מספר לקריאה בלבד[] |             |
+
+### flintTensorViewSet
+
+פונקציה **סוג:**
+
+```typescript
+function flintTensorViewSet(view: FlintTensorView<TValue>, indices: readonly number[], value: TValue): boolean;
+```
+
+בצע פעולת סט תצוגת טנזור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ----------------------- | ----------- |
+| צפה | FlintTensorView<TValue> |             |
+| מדדים | מספר לקריאה בלבד[] |             |
+| ערך | TValue |             |
+
+## `src/math/ieee754`
+
+### ליצור FlintColorRgba
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintColorRgba(red = 0, green = 0, blue = 0, alpha = 1): FlintColorRgba;
+```
+
+בצע פעולת rgba create flint color.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---- | ----------- |
+| אדום |      |             |
+| ירוק |      |             |
+| כחול |      |             |
+| אלפא |      |             |
+
+### FLINT_MATH_DEG_TO_RAD
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
+export const FLINT_MATH_DEG_TO_RAD;
+```
+
+מקדם המרה ממעלות לרדיאנים.
+
+### FLINT_MATH_E
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_MATH_E;
+```
+
+קבוע אוילר (ה).
+
+### FLINT_MATH_EPSILON
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_MATH_EPSILON;
+```
+
+קבוע אוילר (ה).
+
+### FLINT_MATH_F32_EPSILON
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_MATH_F32_EPSILON;
+```
+
+מכונה אפסילון עבור פעולות נקודה צפה של 32 סיביות.
+
+### FLINT_MATH_PI
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_MATH_PI;
+```
+
+קבועים מתמטיים סטנדרטיים עבור זמן ריצה של פלינט.
+
+### FLINT_MATH_RAD_TO_DEG
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_MATH_RAD_TO_DEG;
+```
+
+מקדם המרה מרדיאנים למעלות.
+
+### FLINT_MATH_SQRT2
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_MATH_SQRT2;
+```
+
+שורש ריבועי של 2 קבוע.
+
+### FLINT_MATH_TAU
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_MATH_TAU;
+```
+
+2 * PI (tau) קבוע מעגל.
+
+### flintApproxEqual
+
+פונקציה **סוג:**
+
+```typescript
+function flintApproxEqual(first: number, second: number, epsilon = FLINT_MATH_EPSILON): boolean;
+```
+
+בדוק שוויון משוער בתוך אפסילון שצוין.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| ראשון | מספר |             |
+| שני | מספר |             |
+| אפסילון |        |             |
+
+### flintCeil
+
+פונקציה **סוג:**
+
+```typescript
+function flintCeil(value: number): number;
+```
+
+חשב את המספר השלם הקטן ביותר הגדול מ- x או שווה לו.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מספר |             |
+
+### צור מהדק
+
+פונקציה **סוג:**
+
+```typescript
+function flintClamp(value: number, minimum: number, maximum: number): number;
+```
+
+הצמד ערך מספרי בין גבולות מינימום למקסימום.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| ערך | מספר |             |
+| מינימום | מספר |             |
+| מקסימום | מספר |             |
+
+### FlintColorHsv
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintColorHsv
+```
+
+ייצוג Hsv בצבע.
+
+### flintColorHsvToRgb
+
+פונקציה **סוג:**
+
+```typescript
+function flintColorHsvToRgb(hsv: FlintColorHsv): FlintColorRgba;
+```
+
+בצע פעולת צבע hsv ל-rgb.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------------- | ----------- |
+| hsv | FlintColorHsv |             |
+
+### flintColorLerpOklab
+
+פונקציה **סוג:**
+
+```typescript
+function flintColorLerpOklab(first: FlintColorRgba, second: FlintColorRgba, factor: number): FlintColorRgba;
+```
+
+בצע פעולת צבע lerp oklab.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | -------------- | ----------- |
+| ראשון | FlintColorRgba |             |
+| שני | FlintColorRgba |             |
+| גורם | מספר |             |
+
+### flintColorLinearToSrgb
+
+פונקציה **סוג:**
+
+```typescript
+function flintColorLinearToSrgb(color: FlintColorRgba): FlintColorRgba;
+```
+
+בצע פעולת צבע ליניארית ל-srgb.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | -------------- | ----------- |
+| צבע | FlintColorRgba |             |
+
+### FlintColorOklab
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintColorOklab
+```
+
+ייצוג Oklab בצבע.
+
+### flintColorOklabToSrgb
+
+פונקציה **סוג:**
+
+```typescript
+function flintColorOklabToSrgb(lab: FlintColorOklab): FlintColorRgba;
+```
+
+בצע פעולת OKlab בצבע ל-srgb.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | --------------- | ----------- |
+| מעבדה | FlintColorOklab |             |
+
+### FlintColorRgba
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintColorRgba
+```
+
+ייצוג Rgba בצבע.
+
+### flintColorRgbToHsv
+
+פונקציה **סוג:**
+
+```typescript
+function flintColorRgbToHsv(color: FlintColorRgba): FlintColorHsv;
+```
+
+בצע פעולת צבע rgb ל-hsv.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | -------------- | ----------- |
+| צבע | FlintColorRgba |             |
+
+### flintColorSrgbToLinear
+
+פונקציה **סוג:**
+
+```typescript
+function flintColorSrgbToLinear(color: FlintColorRgba): FlintColorRgba;
+```
+
+בצע צבע srgb לפעולה ליניארית.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | -------------- | ----------- |
+| צבע | FlintColorRgba |             |
+
+### flintColorSrgbToOklab
+
+פונקציה **סוג:**
+
+```typescript
+function flintColorSrgbToOklab(color: FlintColorRgba): FlintColorOklab;
+```
+
+בצע פעולת צבע srgb ל- oklab.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | -------------- | ----------- |
+| צבע | FlintColorRgba |             |
+
+### צור מעלות
+
+פונקציה **סוג:**
+
+```typescript
+function flintDegrees(radians: number): number;
+```
+
+המרת רדיאנים למעלות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| רדיאנים | מספר |             |
+
+### flintFloor
+
+פונקציה **סוג:**
+
+```typescript
+function flintFloor(value: number): number;
+```
+
+חשב את המספר השלם הגדול ביותר הקטן או שווה ל-x.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מספר |             |
+
+### flintFract
+
+פונקציה **סוג:**
+
+```typescript
+function flintFract(value: number): number;
+```
+
+חישוב חלק חלקי: x - קומה(x).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מספר |             |
+
+### פלינטלרפ
+
+פונקציה **סוג:**
+
+```typescript
+function flintLerp(start: number, end: number, factor: number): number;
+```
+
+אינטרפולציה ליניארית בין התחלה לסוף לפי גורם.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------ | ----------- |
+| להתחיל | מספר |             |
+| סוף | מספר |             |
+| גורם | מספר |             |
+
+### flintRadians
+
+פונקציה **סוג:**
+
+```typescript
+function flintRadians(degrees: number): number;
+```
+
+המרת מעלות לרדיאנים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| מעלות | מספר |             |
+
+### צור סימן
+
+פונקציה **סוג:**
+
+```typescript
+function flintSign(value: number): number;
+```
+
+החזרת סימן של x (1, -1, 0 או NaN).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| ערך | מספר |             |
+
+### flintSmoothstep
+
+פונקציה **סוג:**
+
+```typescript
+function flintSmoothstep(edge0: number, edge1: number, value: number): number;
+```
+
+אינטרפולציה חלקה של הרמיט בין edge0 ל- edge1.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| edge0 | מספר |             |
+| edge1 | מספר |             |
+| ערך | מספר |             |
+
+### פלינטסטפ
+
+פונקציה **סוג:**
+
+```typescript
+function flintStep(edge: number, value: number): number;
+```
+
+פונקציית צעד מחזירה 0 אם x < קצה, 1 אחרת.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------ | ----------- |
+| קצה | מספר |             |
+| ערך | מספר |             |
+
+## `src/math/transcendental`
+
+### ליצור FlintAABB2
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintAABB2(minPoint: FlintVec2, maxPoint: FlintVec2): FlintAABB2;
+```
+
+בצע פעולת צור צור a a b b 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | --------- | ----------- |
+| minPoint | FlintVec2 |             |
+| maxPoint | FlintVec2 |             |
+
+### ליצור FlintAABB3
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintAABB3(minPoint: FlintVec3, maxPoint: FlintVec3): FlintAABB3;
+```
+
+בצע פעולת צור צור a a b b 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | --------- | ----------- |
+| minPoint | FlintVec3 |             |
+| maxPoint | FlintVec3 |             |
+
+### createFlintBVHNode3
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintBVHNode3(
+  bounds: FlintAABB3,
+  leftChild: number,
+  rightChild: number,
+  primitiveIndex: number,
+): FlintBVHNode3;
+```
+
+בצע פעולת create flint b v h node 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------------- | ---------- | ----------- |
+| גבולות | פלינטAABB3 |             |
+| leftChild | מספר |             |
+| rightChild | מספר |             |
+| פרימיטיבי אינדקס | מספר |             |
+
+### createFlintBVHTree3
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintBVHTree3(nodes: readonly FlintBVHNode3[], rootIndex = 0): FlintBVHTree3;
+```
+
+בצע פעולת create flint b v h tree 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | ------------------------ | ----------- |
+| צמתים | לקריאה בלבד FlintBVHNode3[] |             |
+| rootIndex |                          |             |
+
+### ליצורFlintCircle
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintCircle(center: FlintVec2, radius: number): FlintCircle;
+```
+
+בצע פעולת יצירת עיגול צור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מרכז | FlintVec2 |             |
+| רדיוס | מספר |             |
+
+### ליצור FlintOBB2
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintOBB2(center: FlintVec2, halfExtents: FlintVec2, angleRad = 0): FlintOBB2;
+```
+
+בצע פעולת create flint o b b 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | --------- | ----------- |
+| מרכז | FlintVec2 |             |
+| halfExtents | FlintVec2 |             |
+| angleRad |           |             |
+
+### ליצור FlintOBB3
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintOBB3(
+  center: FlintVec3,
+  halfExtents: FlintVec3,
+  orientation: FlintQuat = flintQuatIdentity(),
+): FlintOBB3;
+```
+
+בצע פעולת create flint o b b 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | --------- | ----------- |
+| מרכז | FlintVec3 |             |
+| halfExtents | FlintVec3 |             |
+| התמצאות | FlintQuat |             |
+
+### createFlintPlane3
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintPlane3(normal: FlintVec3, distance: number): FlintPlane3;
+```
+
+בצע פעולת יצירת מטוס צור 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | --------- | ----------- |
+| רגיל | FlintVec3 |             |
+| מרחק | מספר |             |
+
+### createFlintRay2
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintRay2(origin: FlintVec2, direction: FlintVec2): FlintRay2;
+```
+
+בצע פעולת Create flint ray 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | --------- | ----------- |
+| מקור | FlintVec2 |             |
+| כיוון | FlintVec2 |             |
+
+### createFlintRay3
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintRay3(origin: FlintVec3, direction: FlintVec3): FlintRay3;
+```
+
+בצע פעולת Create flint ray 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------- | --------- | ----------- |
+| מקור | FlintVec3 |             |
+| כיוון | FlintVec3 |             |
+
+### createFlintRayHit3
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintRayHit3(
+  hit: boolean,
+  t: number,
+  point: FlintVec3,
+  normal: FlintVec3,
+  primitiveId: number,
+): FlintRayHit3;
+```
+
+בצע פעולת Create flint ray hit 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | --------- | ----------- |
+| פגע | בוליאני |             |
+| לא | מספר |             |
+| נקודה | FlintVec3 |             |
+| רגיל | FlintVec3 |             |
+| primitiveId | מספר |             |
+
+### createFlintSegment2
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintSegment2(startPoint: FlintVec2, endPoint: FlintVec2): FlintSegment2;
+```
+
+בצע פעולת יצירת קטע צור 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------- | ----------- |
+| startPoint | FlintVec2 |             |
+| נקודת קצה | FlintVec2 |             |
+
+### createFlintSegment3
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintSegment3(startPoint: FlintVec3, endPoint: FlintVec3): FlintSegment3;
+```
+
+בצע פעולת יצירת קטע צור 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------- | ----------- |
+| startPoint | FlintVec3 |             |
+| נקודת קצה | FlintVec3 |             |
+
+### ליצור FlintSphere
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintSphere(center: FlintVec3, radius: number): FlintSphere;
+```
+
+בצע פעולת יצירת כדור צור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מרכז | FlintVec3 |             |
+| רדיוס | מספר |             |
+
+### createFlintTriangle2
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintTriangle2(pointA: FlintVec2, pointB: FlintVec2, pointC: FlintVec2): FlintTriangle2;
+```
+
+בצע פעולת יצירת משולש צור 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| נקודהA | FlintVec2 |             |
+| נקודה ב' | FlintVec2 |             |
+| pointC | FlintVec2 |             |
+
+### createFlintTriangle3
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintTriangle3(pointA: FlintVec3, pointB: FlintVec3, pointC: FlintVec3): FlintTriangle3;
+```
+
+בצע פעולת יצירת משולש צור 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| נקודהA | FlintVec3 |             |
+| נקודה ב' | FlintVec3 |             |
+| pointC | FlintVec3 |             |
+
+### FlintAABB2
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintAABB2
+```
+
+ייצוג A A B B 2.
+
+### flintAABB2Area
+
+פונקציה **סוג:**
+
+```typescript
+function flintAABB2Area(box: FlintAABB2): number;
+```
+
+בצע פעולת אזור a a b b 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ---------- | ----------- |
+| קופסה | פלינטAABB2 |             |
+
+### flintAABB2ContainsPoint
+
+פונקציה **סוג:**
+
+```typescript
+function flintAABB2ContainsPoint(box: FlintAABB2, point: FlintVec2): boolean;
+```
+
+בצע a a b b 2 מכיל פעולת נקודה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---------- | ----------- |
+| קופסה | פלינטAABB2 |             |
+| נקודה | FlintVec2 |             |
+
+### פלינטAABB2מצטלביםAABB2
+
+פונקציה **סוג:**
+
+```typescript
+function flintAABB2IntersectsAABB2(first: FlintAABB2, second: FlintAABB2): boolean;
+```
+
+בצע פעולת a a b b 2 חוצה a a b b 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---------- | ----------- |
+| ראשון | פלינטAABB2 |             |
+| שני | פלינטAABB2 |             |
+
+### flintAABB2Union
+
+פונקציה **סוג:**
+
+```typescript
+function flintAABB2Union(first: FlintAABB2, second: FlintAABB2): FlintAABB2;
+```
+
+בצע פעולת איחוד a a b b 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---------- | ----------- |
+| ראשון | פלינטAABB2 |             |
+| שני | פלינטAABB2 |             |
+
+### פלינטAABB3
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintAABB3
+```
+
+ייצוג A A B B 3.
+
+### flintAABB3ContainsPoint
+
+פונקציה **סוג:**
+
+```typescript
+function flintAABB3ContainsPoint(box: FlintAABB3, point: FlintVec3): boolean;
+```
+
+בצע a a b b 3 מכיל פעולת נקודה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ---------- | ----------- |
+| קופסה | פלינטAABB3 |             |
+| נקודה | FlintVec3 |             |
+
+### פלינטAABB3מצטלביםAABB3
+
+פונקציה **סוג:**
+
+```typescript
+function flintAABB3IntersectsAABB3(first: FlintAABB3, second: FlintAABB3): boolean;
+```
+
+בצע פעולת a a b b 3 חוצה a a b b 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---------- | ----------- |
+| ראשון | פלינטAABB3 |             |
+| שני | פלינטAABB3 |             |
+
+### פלינטAABB3Volume
+
+פונקציה **סוג:**
+
+```typescript
+function flintAABB3Volume(box: FlintAABB3): number;
+```
+
+בצע פעולת נפח a a b b 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ---------- | ----------- |
+| קופסה | פלינטAABB3 |             |
+
+### flintBezier2Cubic
+
+פונקציה **סוג:**
+
+```typescript
+function flintBezier2Cubic(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+בצע פעולת bezier 2 מעוקב.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| נקודה0 | FlintVec2 |             |
+| נקודה1 | FlintVec2 |             |
+| נקודה2 | FlintVec2 |             |
+| נקודה 3 | FlintVec2 |             |
+| גורם | מספר |             |
+
+### flintBezier2Quadratic
+
+פונקציה **סוג:**
+
+```typescript
+function flintBezier2Quadratic(point0: FlintVec2, point1: FlintVec2, point2: FlintVec2, factor: number): FlintVec2;
+```
+
+בצע פעולה ריבועית של bezier 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| נקודה0 | FlintVec2 |             |
+| נקודה1 | FlintVec2 |             |
+| נקודה2 | FlintVec2 |             |
+| גורם | מספר |             |
+
+### flintBezier3Cubic
+
+פונקציה **סוג:**
+
+```typescript
+function flintBezier3Cubic(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+בצע פעולת bezier 3 מעוקב.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| נקודה0 | FlintVec3 |             |
+| נקודה1 | FlintVec3 |             |
+| נקודה2 | FlintVec3 |             |
+| נקודה 3 | FlintVec3 |             |
+| גורם | מספר |             |
+
+### flintBVHBuildFromAABBs
+
+פונקציה **סוג:**
+
+```typescript
+function flintBVHBuildFromAABBs(boxes: readonly FlintAABB3[]): FlintBVHTree3;
+```
+
+בצע b v h build מפעולת a a b bs.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | --------------------- | ----------- |
+| קופסאות | לקריאה בלבד FlintAABB3[] |             |
+
+### FlintBVHNode3
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintBVHNode3
+```
+
+B V H Node 3 ייצוג.
+
+### flintBVHRayIntersect
+
+פונקציה **סוג:**
+
+```typescript
+function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): FlintOption<FlintRayHit3>;
+```
+
+בצע פעולת חיתוך קרני b v h.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ------------- | ----------- |
+| עץ | FlintBVHTree3 |             |
+| ray | FlintRay3 |             |
+
+### FlintBVHTree3
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintBVHTree3
+```
+
+ייצוג B V H Tree 3.
+
+### flintCatmullRom2
+
+פונקציה **סוג:**
+
+```typescript
+function flintCatmullRom2(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+בצע פעולת catmull rom 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| נקודה0 | FlintVec2 |             |
+| נקודה1 | FlintVec2 |             |
+| נקודה2 | FlintVec2 |             |
+| נקודה 3 | FlintVec2 |             |
+| גורם | מספר |             |
+
+### flintCatmullRom3
+
+פונקציה **סוג:**
+
+```typescript
+function flintCatmullRom3(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+בצע פעולת catmull rom 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| נקודה0 | FlintVec3 |             |
+| נקודה1 | FlintVec3 |             |
+| נקודה2 | FlintVec3 |             |
+| נקודה 3 | FlintVec3 |             |
+| גורם | מספר |             |
+
+### FlintCircle
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintCircle
+```
+
+ייצוג מעגל.
+
+### flintCircleContainsPoint
+
+פונקציה **סוג:**
+
+```typescript
+function flintCircleContainsPoint(circle: FlintCircle, point: FlintVec2): boolean;
+```
+
+בצע מעגל מכיל פעולת נקודה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ----------- | ----------- |
+| מעגל | FlintCircle |             |
+| נקודה | FlintVec2 |             |
+
+### FlintCircleIntersectsCircle
+
+פונקציה **סוג:**
+
+```typescript
+function flintCircleIntersectsCircle(first: FlintCircle, second: FlintCircle): boolean;
+```
+
+בצע פעולת מעגל חוצה מעגל.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ----------- | ----------- |
+| ראשון | FlintCircle |             |
+| שני | FlintCircle |             |
+
+### FlintFrustum
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintFrustum
+```
+
+ייצוג פרוסטום.
+
+### flintFrustumFromViewProj
+
+פונקציה **סוג:**
+
+```typescript
+function flintFrustumFromViewProj(viewProj: FlintMat4): FlintFrustum;
+```
+
+בצע פעולת פרוסטום מהתצוגה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | --------- | ----------- |
+| viewProj | FlintMat4 |             |
+
+### flintFrustumIntersectsSphere
+
+פונקציה **סוג:**
+
+```typescript
+function flintFrustumIntersectsSphere(frustum: FlintFrustum, sphere: FlintSphere): boolean;
+```
+
+בצע פעולת פרוסטום חוצה כדור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------------ | ----------- |
+| פרוסטום | FlintFrustum |             |
+| כדור | FlintSphere |             |
+
+### FlintOBB2
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintOBB2
+```
+
+ייצוג O B B 2.
+
+### פלינטOBB3
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintOBB3
+```
+
+O B B 3 ייצוג.
+
+### FlintPlane3
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintPlane3
+```
+
+ייצוג מישור 3.
+
+### flintPlane3DistanceToPoint
+
+פונקציה **סוג:**
+
+```typescript
+function flintPlane3DistanceToPoint(plane: FlintPlane3, point: FlintVec3): number;
+```
+
+בצע פעולה ממטוס 3 ממרחק לנקודה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ----------- | ----------- |
+| מטוס | FlintPlane3 |             |
+| נקודה | FlintVec3 |             |
+
+### FlintRay2
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintRay2
+```
+
+ייצוג ריי 2.
+
+### FlintRay3
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintRay3
+```
+
+ייצוג ריי 3.
+
+### flintRay3IntersectOBB
+
+פונקציה **סוג:**
+
+```typescript
+function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOption<number>;
+```
+
+בצע פעולת ray 3 intersect o b b.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | --------- | ----------- |
+| ray | FlintRay3 |             |
+| obb | פלינטOBB3 |             |
+
+### flintRay3מצטלביםAABB3
+
+פונקציה **סוג:**
+
+```typescript
+function flintRay3IntersectsAABB3(ray: FlintRay3, box: FlintAABB3): FlintOption<number>;
+```
+
+בצע פעולת קרן 3 חוצה a a b b 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---- | ---------- | ----------- |
+| ray | FlintRay3 |             |
+| קופסה | פלינטAABB3 |             |
+
+### flintRay3IntersectsPlane3
+
+פונקציה **סוג:**
+
+```typescript
+function flintRay3IntersectsPlane3(ray: FlintRay3, plane: FlintPlane3): FlintOption<number>;
+```
+
+בצע פעולת קרן 3 חוצה מישור 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ----------- | ----------- |
+| ray | FlintRay3 |             |
+| מטוס | FlintPlane3 |             |
+
+### flintRay3IntersectsSphere
+
+פונקציה **סוג:**
+
+```typescript
+function flintRay3IntersectsSphere(ray: FlintRay3, sphere: FlintSphere): FlintOption<number>;
+```
+
+בצע פעולת קרן 3 חוצה כדור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ----------- | ----------- |
+| ray | FlintRay3 |             |
+| כדור | FlintSphere |             |
+
+### flintRay3מצטלבמשולש3
+
+פונקציה **סוג:**
+
+```typescript
+function flintRay3IntersectsTriangle3(ray: FlintRay3, triangle: FlintTriangle3): FlintOption<number>;
+```
+
+בצע פעולת קרן 3 חוצה משולש 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | -------------- | ----------- |
+| ray | FlintRay3 |             |
+| משולש | משולש צור3 |             |
+
+### FlintRayHit3
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintRayHit3
+```
+
+ייצוג Ray Hit 3.
+
+### FlintSegment2
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintSegment2
+```
+
+ייצוג פלח 2.
+
+### FlintSegment3
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintSegment3
+```
+
+ייצוג פלח 3.
+
+### FlintSphere
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintSphere
+```
+
+ייצוג כדור.
+
+### flintSphereContainsPoint
+
+פונקציה **סוג:**
+
+```typescript
+function flintSphereContainsPoint(sphere: FlintSphere, point: FlintVec3): boolean;
+```
+
+ביצוע כדור מכיל פעולת נקודה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ----------- | ----------- |
+| כדור | FlintSphere |             |
+| נקודה | FlintVec3 |             |
+
+### flintSphereIntersectsSphere
+
+פונקציה **סוג:**
+
+```typescript
+function flintSphereIntersectsSphere(first: FlintSphere, second: FlintSphere): boolean;
+```
+
+בצע פעולת כדור חוצה כדור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ----------- | ----------- |
+| ראשון | FlintSphere |             |
+| שני | FlintSphere |             |
+
+### משולש צור2
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintTriangle2
+```
+
+ייצוג משולש 2.
+
+### flintTriangle2Area
+
+פונקציה **סוג:**
+
+```typescript
+function flintTriangle2Area(triangle: FlintTriangle2): number;
+```
+
+בצע פעולת משולש 2 אזור.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | -------------- | ----------- |
+| משולש | FlintTriangle2 |             |
+
+### משולש צור 3
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintTriangle3
+```
+
+ייצוג משולש 3.
+
+### flintTriangle3Normal
+
+פונקציה **סוג:**
+
+```typescript
+function flintTriangle3Normal(triangle: FlintTriangle3): FlintVec3;
+```
+
+בצע משולש 3 פעולה רגילה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | -------------- | ----------- |
+| משולש | משולש צור3 |             |
+
+## `src/math/vector`
+
+### createFlintIVec2
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintIVec2(coordX = 0, coordY = 0): FlintIVec2;
+```
+
+בצע פעולת create flint i vec 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---- | ----------- |
+| coordX |      |             |
+| coordY |      |             |
+
+### createFlintIVec3
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintIVec3(coordX = 0, coordY = 0, coordZ = 0): FlintIVec3;
+```
+
+בצע פעולת create flint i vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---- | ----------- |
+| coordX |      |             |
+| coordY |      |             |
+| coordZ |      |             |
+
+### ליצור FlintMat2
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintMat2(column0OrElements?: FlintVec2 | readonly number[], column1?: FlintVec2): FlintMat2;
+```
+
+בצע פעולת יצירת מחצלת צור 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------------- | ------------------------------ | ----------- |
+| column0OrElements | FlintVec2 \| מספר לקריאה בלבד[] |             |
+| עמודה1 | FlintVec2 |             |
+
+### ליצור FlintMat3
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintMat3(
+  column0OrElements?: FlintVec3 | readonly number[],
+  column1?: FlintVec3,
+  column2?: FlintVec3,
+): FlintMat3;
+```
+
+בצע פעולת צור מחצלת צור 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------------- | ------------------------------ | ----------- |
+| column0OrElements | FlintVec3 \| מספר לקריאה בלבד[] |             |
+| עמודה1 | FlintVec3 |             |
+| עמודה2 | FlintVec3 |             |
+
+### ליצור FlintMat4
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintMat4(
+  column0OrElements?: FlintVec4 | readonly number[],
+  column1?: FlintVec4,
+  column2?: FlintVec4,
+  column3?: FlintVec4,
+): FlintMat4;
+```
+
+בצע פעולת צור מחצלת צור 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------------- | ------------------------------ | ----------- |
+| column0OrElements | FlintVec4 \| מספר לקריאה בלבד[] |             |
+| עמודה1 | FlintVec4 |             |
+| עמודה2 | FlintVec4 |             |
+| עמודה3 | FlintVec4 |             |
+
+### createFlintQuat
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintQuat(coordX = 0, coordY = 0, coordZ = 0, coordW = 1): FlintQuat;
+```
+
+בצע פעולת Create flint quat.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---- | ----------- |
+| coordX |      |             |
+| coordY |      |             |
+| coordZ |      |             |
+| coordW |      |             |
+
+### createFlintVec2
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintVec2(coordX = 0, coordY = 0): FlintVec2;
+```
+
+בצע פעולת create flint vec 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---- | ----------- |
+| coordX |      |             |
+| coordY |      |             |
+
+### ליצור FlintVec3
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintVec3(coordX = 0, coordY = 0, coordZ = 0): FlintVec3;
+```
+
+בצע פעולת create flint vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---- | ----------- |
+| coordX |      |             |
+| coordY |      |             |
+| coordZ |      |             |
+
+### ליצור FlintVec4
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintVec4(coordX = 0, coordY = 0, coordZ = 0, coordW = 0): FlintVec4;
+```
+
+בצע את פעולת create flint vec 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ---- | ----------- |
+| coordX |      |             |
+| coordY |      |             |
+| coordZ |      |             |
+| coordW |      |             |
+
+### FlintIVec2
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintIVec2
+```
+
+וקטור מספר שלם דו מימדי.
+
+### FlintIVec3
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintIVec3
+```
+
+וקטור של מספר שלם בתלת מימד.
+
+### FlintMat2
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintMat2
+```
+
+ייצוג מחצלת 2.
+
+### flintMat2Add
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat2Add(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+בצע פעולת הוספה של מחצלת 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintMat2 |             |
+| שני | FlintMat2 |             |
+
+### flintMat2Determinant
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat2Determinant(matrix: FlintMat2): number;
+```
+
+בצע פעולת הקובע מחצלת 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat2 |             |
+
+### flintMat2FromCols
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat2FromCols(column0: FlintVec2, column1: FlintVec2): FlintMat2;
+```
+
+בצע מחצלת 2 מפעולת קולס.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | --------- | ----------- |
+| עמודה0 | FlintVec2 |             |
+| עמודה1 | FlintVec2 |             |
+
+### flintMat2Identity
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat2Identity(): FlintMat2;
+```
+
+בצע פעולת זהות מחצלת 2.
+
+### flintMat2Inverse
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat2Inverse(matrix: FlintMat2): FlintOption<FlintMat2>;
+```
+
+בצע פעולת מחצלת 2 הפוכה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat2 |             |
+
+### flintMat2Mul
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat2Mul(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+בצע פעולת mat 2 מול.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintMat2 |             |
+| שני | FlintMat2 |             |
+
+### flintMat2Rotation
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat2Rotation(angleRad: number): FlintMat2;
+```
+
+בצע פעולת סיבוב מחצלת 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| angleRad | מספר |             |
+
+### flintMat2Scale
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat2Scale(matrix: FlintMat2, scalar: number): FlintMat2;
+```
+
+בצע פעולת מחצלת בקנה מידה 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat2 |             |
+| סקלרי | מספר |             |
+
+### flintMat2Scaling
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat2Scaling(scaleVector: FlintVec2): FlintMat2;
+```
+
+בצע פעולת קנה מידה של mat 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | --------- | ----------- |
+| scaleVector | FlintVec2 |             |
+
+### flintMat2Sub
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat2Sub(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+בצע פעולת משנה של מחצלת 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintMat2 |             |
+| שני | FlintMat2 |             |
+
+### flintMat2TransformVec2
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat2TransformVec2(matrix: FlintMat2, vector: FlintVec2): FlintVec2;
+```
+
+בצע פעולת mat 2 transform vec 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat2 |             |
+| וקטור | FlintVec2 |             |
+
+### flintMat2Transpose
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat2Transpose(matrix: FlintMat2): FlintMat2;
+```
+
+בצע פעולת טרנספוזי מחצלת 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat2 |             |
+
+### FlintMat3
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintMat3
+```
+
+ייצוג מחצלת 3.
+
+### flintMat3Add
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3Add(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+בצע פעולת הוספה של מחצלת 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintMat3 |             |
+| שני | FlintMat3 |             |
+
+### flintMat3Determinant
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3Determinant(matrix: FlintMat3): number;
+```
+
+בצע פעולת הקובע מחצלת 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat3 |             |
+
+### flintMat3FromCols
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3FromCols(column0: FlintVec3, column1: FlintVec3, column2: FlintVec3): FlintMat3;
+```
+
+בצע מחצלת 3 מפעולת cols.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | --------- | ----------- |
+| עמודה0 | FlintVec3 |             |
+| עמודה1 | FlintVec3 |             |
+| עמודה2 | FlintVec3 |             |
+
+### flintMat3Identity
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3Identity(): FlintMat3;
+```
+
+בצע פעולת זהות מחצלת 3.
+
+### flintMat3Inverse
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3Inverse(matrix: FlintMat3): FlintOption<FlintMat3>;
+```
+
+בצע פעולת מחצלת 3 הפוכה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat3 |             |
+
+### flintMat3Mul
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3Mul(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+בצע פעולת mat 3 מול.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintMat3 |             |
+| שני | FlintMat3 |             |
+
+### flintMat3Rotate2D
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3Rotate2D(angleRad: number): FlintMat3;
+```
+
+בצע פעולת מחצלת 3 סובב 2 ד'.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| angleRad | מספר |             |
+
+### flintMat3Scale
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3Scale(matrix: FlintMat3, scalar: number): FlintMat3;
+```
+
+בצע פעולת מחצלת בקנה מידה 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat3 |             |
+| סקלרי | מספר |             |
+
+### flintMat3Scale2D
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3Scale2D(scale: FlintVec2): FlintMat3;
+```
+
+בצע פעולת מחצלת 3 בקנה מידה 2 ד.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | --------- | ----------- |
+| סולם | FlintVec2 |             |
+
+### flintMat3Sub
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3Sub(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+בצע פעולת משנה של מחצלת 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintMat3 |             |
+| שני | FlintMat3 |             |
+
+### flintMat3TransformVec2
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3TransformVec2(matrix: FlintMat3, vector: FlintVec2): FlintVec2;
+```
+
+בצע פעולת mat 3 transform vec 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat3 |             |
+| וקטור | FlintVec2 |             |
+
+### flintMat3TransformVec3
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3TransformVec3(matrix: FlintMat3, vector: FlintVec3): FlintVec3;
+```
+
+בצע פעולת mat 3 transform vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat3 |             |
+| וקטור | FlintVec3 |             |
+
+### flintMat3Translate2D
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3Translate2D(translation: FlintVec2): FlintMat3;
+```
+
+בצע פעולת מחצלת 3 לתרגם 2 ד.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----------- | --------- | ----------- |
+| תרגום | FlintVec2 |             |
+
+### flintMat3Transpose
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat3Transpose(matrix: FlintMat3): FlintMat3;
+```
+
+בצע פעולת טרנספוזי מחצלת 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat3 |             |
+
+### FlintMat4
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintMat4
+```
+
+ייצוג מחצלת 4.
+
+### flintMat4Add
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4Add(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+בצע פעולת הוספה של מחצלת 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintMat4 |             |
+| שני | FlintMat4 |             |
+
+### flintMat4Determinant
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4Determinant(matrix: FlintMat4): number;
+```
+
+בצע פעולת הקובע מחצלת 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat4 |             |
+
+### flintMat4FromCols
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4FromCols(column0: FlintVec4, column1: FlintVec4, column2: FlintVec4, column3: FlintVec4): FlintMat4;
+```
+
+בצע מחצלת 4 מפעולת קולס.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | --------- | ----------- |
+| עמודה0 | FlintVec4 |             |
+| עמודה1 | FlintVec4 |             |
+| עמודה2 | FlintVec4 |             |
+| עמודה3 | FlintVec4 |             |
+
+### flintMat4Identity
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4Identity(): FlintMat4;
+```
+
+בצע פעולת זהות מחצלת 4.
+
+### flintMat4Inverse
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4Inverse(matrix: FlintMat4): FlintOption<FlintMat4>;
+```
+
+בצע פעולת מחצלת 4 הפוכה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat4 |             |
+
+### flintMat4LookAt
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4LookAt(eye: FlintVec3, target: FlintVec3, up: FlintVec3): FlintMat4;
+```
+
+בצע מבט מחצלת 4 בפעולה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| עין | FlintVec3 |             |
+| יעד | FlintVec3 |             |
+| למעלה | FlintVec3 |             |
+
+### flintMat4Mul
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4Mul(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+בצע פעולת mat 4 מול.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintMat4 |             |
+| שני | FlintMat4 |             |
+
+### flintMat4Orthography
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4Orthographic(
+  left: number,
+  right: number,
+  bottom: number,
+  top: number,
+  zNear: number,
+  zFar: number,
+): FlintMat4;
+```
+
+בצע פעולה אורתוגרפית מחצלת 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------ | ----------- |
+| שמאל | מספר |             |
+| נכון | מספר |             |
+| תחתון | מספר |             |
+| למעלה | מספר |             |
+| zNear | מספר |             |
+| zFar | מספר |             |
+
+### flintMat4Perspective
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4Perspective(fovYRad: number, aspect: number, zNear: number, zFar: number): FlintMat4;
+```
+
+בצע פעולת פרספקטיבה מחצלת 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------ | ----------- |
+| fovYRad | מספר |             |
+| היבט | מספר |             |
+| zNear | מספר |             |
+| zFar | מספר |             |
+
+### flintMat4RotationAxisAngle
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4RotationAxisAngle(axis: FlintVec3, angleRad: number): FlintMat4;
+```
+
+בצע פעולת זווית ציר סיבוב מחצלת 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | --------- | ----------- |
+| ציר | FlintVec3 |             |
+| angleRad | מספר |             |
+
+### flintMat4RotationX
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4RotationX(angleRad: number): FlintMat4;
+```
+
+בצע מחצלת 4 סיבוב x פעולה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| angleRad | מספר |             |
+
+### flintMat4RotationY
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4RotationY(angleRad: number): FlintMat4;
+```
+
+בצע פעולת שטיח 4 סיבוב y.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| angleRad | מספר |             |
+
+### flintMat4RotationZ
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4RotationZ(angleRad: number): FlintMat4;
+```
+
+בצע פעולת מחצלת 4 סיבוב z.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | ------ | ----------- |
+| angleRad | מספר |             |
+
+### flintMat4Scale
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4Scale(matrix: FlintMat4, scalar: number): FlintMat4;
+```
+
+בצע פעולת מחצלת בקנה מידה 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat4 |             |
+| סקלרי | מספר |             |
+
+### flintMat4Scaling
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4Scaling(scale: FlintVec3): FlintMat4;
+```
+
+בצע פעולת קנה מידה של mat 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | --------- | ----------- |
+| סולם | FlintVec3 |             |
+
+### flintMat4Sub
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4Sub(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+בצע תת פעולת מחצלת 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintMat4 |             |
+| שני | FlintMat4 |             |
+
+### flintMat4TransformPoint3
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4TransformPoint3(matrix: FlintMat4, point: FlintVec3): FlintVec3;
+```
+
+בצע פעולת טרנספורמציה 3 של מחצלת 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat4 |             |
+| נקודה | FlintVec3 |             |
+
+### flintMat4TransformVec4
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4TransformVec4(matrix: FlintMat4, vector: FlintVec4): FlintVec4;
+```
+
+בצע פעולת mat 4 transform vec 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat4 |             |
+| וקטור | FlintVec4 |             |
+
+### flintMat4TransformVector3
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4TransformVector3(matrix: FlintMat4, vector: FlintVec3): FlintVec3;
+```
+
+בצע פעולת טרנספורמציה של mat 4 וקטור 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat4 |             |
+| וקטור | FlintVec3 |             |
+
+### flintMat4Translation
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4Translation(offset: FlintVec3): FlintMat4;
+```
+
+בצע פעולת תרגום mat 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| קיזוז | FlintVec3 |             |
+
+### flintMat4Transpose
+
+פונקציה **סוג:**
+
+```typescript
+function flintMat4Transpose(matrix: FlintMat4): FlintMat4;
+```
+
+בצע פעולת טרנספוזי מחצלת 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| מטריצה ​​| FlintMat4 |             |
+
+### FlintQuat
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintQuat
+```
+
+ייצוג קוואט.
+
+### flintQuatConjugate
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatConjugate(quaternion: FlintQuat): FlintQuat;
+```
+
+בצע פעולת quat conjugate.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------- | ----------- |
+| קווטרניון | FlintQuat |             |
+
+### flintQuatDot
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatDot(first: FlintQuat, second: FlintQuat): number;
+```
+
+בצע פעולת קוואט נקודה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintQuat |             |
+| שני | FlintQuat |             |
+
+### flintQuatFromAxisAngle
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatFromAxisAngle(axis: FlintVec3, angleRad: number): FlintQuat;
+```
+
+בצע פעולה quat מזווית ציר.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | --------- | ----------- |
+| ציר | FlintVec3 |             |
+| angleRad | מספר |             |
+
+### flintQuatFromEuler
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatFromEuler(pitchX: number, yawY: number, rollZ: number): FlintQuat;
+```
+
+בצע קוואט מפעולת אוילר.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ------ | ----------- |
+| pitchX | מספר |             |
+| יאוי | מספר |             |
+| rollZ | מספר |             |
+
+### flintQuatIdentity
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatIdentity(): FlintQuat;
+```
+
+בצע פעולת קוואט זהות.
+
+### flintQuatInverse
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatInverse(quaternion: FlintQuat): FlintOption<FlintQuat>;
+```
+
+בצע פעולה קוואט הפוכה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------- | ----------- |
+| קווטרניון | FlintQuat |             |
+
+### flintQuatMul
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatMul(first: FlintQuat, second: FlintQuat): FlintQuat;
+```
+
+בצע פעולת quat mul.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintQuat |             |
+| שני | FlintQuat |             |
+
+### flintQuatNorm
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatNorm(quaternion: FlintQuat): number;
+```
+
+בצע פעולת קוואט נורמה.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------- | ----------- |
+| קווטרניון | FlintQuat |             |
+
+### flintQuatNormalize
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatNormalize(quaternion: FlintQuat): FlintQuat;
+```
+
+בצע פעולת quat normalize.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------- | ----------- |
+| קווטרניון | FlintQuat |             |
+
+### flintQuatNormSq
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatNormSq(quaternion: FlintQuat): number;
+```
+
+בצע פעולת quat norm sq.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------- | ----------- |
+| קווטרניון | FlintQuat |             |
+
+### flintQuatRotateVec3
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatRotateVec3(quaternion: FlintQuat, vector: FlintVec3): FlintVec3;
+```
+
+בצע פעולת quat rotate vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------- | ----------- |
+| קווטרניון | FlintQuat |             |
+| וקטור | FlintVec3 |             |
+
+### flintQuatSlerp
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatSlerp(first: FlintQuat, second: FlintQuat, factor: number): FlintQuat;
+```
+
+בצע פעולת quat slerp.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintQuat |             |
+| שני | FlintQuat |             |
+| גורם | מספר |             |
+
+### flintQuatToMat3
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatToMat3(quaternion: FlintQuat): FlintMat3;
+```
+
+בצע פעולת quat to mat 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------- | ----------- |
+| קווטרניון | FlintQuat |             |
+
+### flintQuatToMat4
+
+פונקציה **סוג:**
+
+```typescript
+function flintQuatToMat4(quaternion: FlintQuat): FlintMat4;
+```
+
+בצע פעולת quat to mat 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ---------- | --------- | ----------- |
+| קווטרניון | FlintQuat |             |
+
+### FlintVec2
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintVec2
+```
+
+וקטור נקודה צפה דו מימדית.
+
+### flintVec2Add
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Add(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+בצע פעולת הוספה vec 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec2 |             |
+| שני | FlintVec2 |             |
+
+### flintVec2Angle
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Angle(first: FlintVec2, second: FlintVec2): number;
+```
+
+בצע פעולת זווית vec 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec2 |             |
+| שני | FlintVec2 |             |
+
+### flintVec2Distance
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Distance(first: FlintVec2, second: FlintVec2): number;
+```
+
+בצע פעולת מרחק vec 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec2 |             |
+| שני | FlintVec2 |             |
+
+### flintVec2DistanceSquared
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2DistanceSquared(first: FlintVec2, second: FlintVec2): number;
+```
+
+בצע פעולת vec 2 מרחק בריבוע.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec2 |             |
+| שני | FlintVec2 |             |
+
+### flintVec2Div
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Div(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+בצע פעולת vec 2 div.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec2 |             |
+| סקלרי | מספר |             |
+
+### flintVec2Dot
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Dot(first: FlintVec2, second: FlintVec2): number;
+```
+
+בצע פעולת vec 2 dot.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec2 |             |
+| שני | FlintVec2 |             |
+
+### flintVec2Length
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Length(vector: FlintVec2): number;
+```
+
+בצע פעולה באורך vec 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec2 |             |
+
+### flintVec2LengthSq
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2LengthSq(vector: FlintVec2): number;
+```
+
+בצע פעולת vec 2 באורך מ"ר.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec2 |             |
+
+### flintVec2Lerp
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Lerp(first: FlintVec2, second: FlintVec2, factor: number): FlintVec2;
+```
+
+בצע פעולת vec 2 lerp.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec2 |             |
+| שני | FlintVec2 |             |
+| גורם | מספר |             |
+
+### flintVec2Mul
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Mul(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+בצע פעולת vec 2 mul.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec2 |             |
+| שני | FlintVec2 |             |
+
+### flintVec2Neg
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Neg(vector: FlintVec2): FlintVec2;
+```
+
+בצע פעולת vec 2 neg.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec2 |             |
+
+### flintVec2Normalize
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Normalize(vector: FlintVec2): FlintVec2;
+```
+
+בצע פעולת vec 2 לנרמל.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec2 |             |
+
+### flintVec2PerpDot
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2PerpDot(first: FlintVec2, second: FlintVec2): number;
+```
+
+בצע פעולת vec 2 perp dot.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec2 |             |
+| שני | FlintVec2 |             |
+
+### flintVec2Project
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Project(vector: FlintVec2, target: FlintVec2): FlintVec2;
+```
+
+בצע פעולת פרויקט vec 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec2 |             |
+| יעד | FlintVec2 |             |
+
+### flintVec2Reflect
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Reflect(vector: FlintVec2, normal: FlintVec2): FlintVec2;
+```
+
+בצע פעולת vec 2 reflect.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec2 |             |
+| רגיל | FlintVec2 |             |
+
+### flintVec2Rotate
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Rotate(vector: FlintVec2, angleRad: number): FlintVec2;
+```
+
+בצע פעולת סיבוב vec 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| -------- | --------- | ----------- |
+| וקטור | FlintVec2 |             |
+| angleRad | מספר |             |
+
+### flintVec2Scale
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Scale(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+בצע פעולה בקנה מידה vec 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec2 |             |
+| סקלרי | מספר |             |
+
+### flintVec2Sub
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec2Sub(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+בצע תת פעולת vec 2.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec2 |             |
+| שני | FlintVec2 |             |
+
+### FlintVec3
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintVec3
+```
+
+וקטור נקודה צפה תלת מימדית.
+
+### flintVec3Add
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Add(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+בצע פעולת הוספה vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec3 |             |
+| שני | FlintVec3 |             |
+
+### flintVec3Angle
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Angle(first: FlintVec3, second: FlintVec3): number;
+```
+
+בצע פעולת vec 3 זווית.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec3 |             |
+| שני | FlintVec3 |             |
+
+### flintVec3Cross
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Cross(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+בצע פעולת צולב vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec3 |             |
+| שני | FlintVec3 |             |
+
+### flintVec3Distance
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Distance(first: FlintVec3, second: FlintVec3): number;
+```
+
+בצע פעולת מרחק vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec3 |             |
+| שני | FlintVec3 |             |
+
+### flintVec3DistanceSquared
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3DistanceSquared(first: FlintVec3, second: FlintVec3): number;
+```
+
+בצע פעולת vec 3 מרחק בריבוע.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec3 |             |
+| שני | FlintVec3 |             |
+
+### flintVec3Div
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Div(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+בצע פעולת vec 3 div.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec3 |             |
+| סקלרי | מספר |             |
+
+### flintVec3Dot
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Dot(first: FlintVec3, second: FlintVec3): number;
+```
+
+בצע פעולת vec 3 נקודות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec3 |             |
+| שני | FlintVec3 |             |
+
+### flintVec3Length
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Length(vector: FlintVec3): number;
+```
+
+בצע פעולה באורך vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec3 |             |
+
+### flintVec3LengthSq
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3LengthSq(vector: FlintVec3): number;
+```
+
+בצע פעולת vec 3 באורך מ"ר.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec3 |             |
+
+### flintVec3Lerp
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Lerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+בצע פעולת vec 3 lerp.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec3 |             |
+| שני | FlintVec3 |             |
+| גורם | מספר |             |
+
+### flintVec3Mul
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Mul(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+בצע פעולת vec 3 mul.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec3 |             |
+| שני | FlintVec3 |             |
+
+### flintVec3Neg
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Neg(vector: FlintVec3): FlintVec3;
+```
+
+בצע פעולת vec 3 neg.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec3 |             |
+
+### flintVec3Normalize
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Normalize(vector: FlintVec3): FlintVec3;
+```
+
+בצע פעולת vec 3 לנרמל.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec3 |             |
+
+### flintVec3Project
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Project(vector: FlintVec3, target: FlintVec3): FlintVec3;
+```
+
+בצע פעולת פרויקט vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec3 |             |
+| יעד | FlintVec3 |             |
+
+### flintVec3Reflect
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Reflect(vector: FlintVec3, normal: FlintVec3): FlintVec3;
+```
+
+בצע פעולת vec 3 reflect.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec3 |             |
+| רגיל | FlintVec3 |             |
+
+### flintVec3Refract
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Refract(vector: FlintVec3, normal: FlintVec3, eta: number): FlintVec3;
+```
+
+בצע פעולת השבירה של vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec3 |             |
+| רגיל | FlintVec3 |             |
+| eta | מספר |             |
+
+### flintVec3Reject
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Reject(vector: FlintVec3, from: FlintVec3): FlintVec3;
+```
+
+בצע פעולת דחיית vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec3 |             |
+| מ | FlintVec3 |             |
+
+### flintVec3Scale
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Scale(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+בצע פעולה בקנה מידה vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec3 |             |
+| סקלרי | מספר |             |
+
+### flintVec3Slerp
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Slerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+בצע פעולת vec 3 slerp.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec3 |             |
+| שני | FlintVec3 |             |
+| גורם | מספר |             |
+
+### flintVec3Sub
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec3Sub(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+בצע פעולת משנה vec 3.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec3 |             |
+| שני | FlintVec3 |             |
+
+### FlintVec4
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintVec4
+```
+
+וקטור נקודה צפה 4D.
+
+### flintVec4Add
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec4Add(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+בצע פעולת הוספה vec 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec4 |             |
+| שני | FlintVec4 |             |
+
+### flintVec4Div
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec4Div(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+בצע פעולת vec 4 div.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec4 |             |
+| סקלרי | מספר |             |
+
+### flintVec4Dot
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec4Dot(first: FlintVec4, second: FlintVec4): number;
+```
+
+בצע פעולת vec 4 נקודות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec4 |             |
+| שני | FlintVec4 |             |
+
+### flintVec4Length
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec4Length(vector: FlintVec4): number;
+```
+
+בצע פעולה באורך vec 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec4 |             |
+
+### flintVec4Lerp
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec4Lerp(first: FlintVec4, second: FlintVec4, factor: number): FlintVec4;
+```
+
+בצע פעולת vec 4 lerp.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec4 |             |
+| שני | FlintVec4 |             |
+| גורם | מספר |             |
+
+### flintVec4Neg
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec4Neg(vector: FlintVec4): FlintVec4;
+```
+
+בצע פעולת vec 4 neg.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec4 |             |
+
+### flintVec4Normalize
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec4Normalize(vector: FlintVec4): FlintVec4;
+```
+
+בצע פעולת vec 4 לנרמל.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec4 |             |
+
+### flintVec4Scale
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec4Scale(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+בצע פעולה בקנה מידה vec 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| וקטור | FlintVec4 |             |
+| סקלרי | מספר |             |
+
+### flintVec4Sub
+
+פונקציה **סוג:**
+
+```typescript
+function flintVec4Sub(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+בצע תת פעולת vec 4.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | --------- | ----------- |
+| ראשון | FlintVec4 |             |
+| שני | FlintVec4 |             |
+
+## `src/memory`
+
+### ליצור FlintMemory
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintMemory(
+  memoryOrOptions?: WebAssembly.Memory | FlintMemoryOptions,
+  options?: FlintMemoryOptions,
+): FlintMemory;
+```
+
+יוצר מופע של FlintMemory מוגדר.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| --------------- | ---------------------------------------- | ----------------------------------------------------------------- |
+| memoryOrOptions | WebAssembly.Memory \| FlintMemoryOptions | - אפשרויות WebAssembly.Memory או זיכרון קיימות.         |
+| אפשרויות | FlintMemoryOptions | - אפשרויות יצירת זיכרון ושינוי גודל אם מסופק מופע זיכרון. |
+
+#### חוֹזֶה
+
+- **@param:** - WebAssembly קיימות. אפשרויות יצירת זיכרון או זיכרון.
+- **@param:** - אפשרויות יצירת זיכרון ושינוי גודל אם מסופק מופע זיכרון.
+- **@returns:** מופע FlintMemory אתחול.
+
+### ליצור FlintMultiMemory
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintMultiMemory(options?: FlintMultiMemoryOptions): FlintMultiMemory;
+```
+
+יוצר מופע ריבוי זיכרון מבודד עם ערימת אורח ייעודית, אינטראפ מארח ומחיצות סטטיות.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ----------------------- | ----------- |
+| אפשרויות | FlintMultiMemoryOptions |             |
+
+### FALLBACK_GUARD_PAGE_SIZE
+
+**סוג:** קבוע
+
+```typescript
+export const FALLBACK_GUARD_PAGE_SIZE;
+```
+
+לא סופק תיאור.
+
+### FLINT_MEMORY_CAPABILITIES
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_MEMORY_CAPABILITIES;
 ```
 
 לא סופק תיאור.
@@ -1854,7 +6472,7 @@ export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
 export class FlintMemory
 ```
 
-לא סופק תיאור.
+מנהל הקצאות זיכרון ליניאריות של WebAssembly, בדיקת גבולות וקלט/פלט בינארי.
 
 ### FlintMemoryAddress
 
@@ -1864,7 +6482,7 @@ export class FlintMemory
 export type FlintMemoryAddress = number | bigint;
 ```
 
-לא סופק תיאור.
+ייצוג מצביע של כתובת זיכרון התומך בכתובות של 32 סיביות (מספר) ו-64 סיביות (ביגינט).
 
 ### FlintMemoryOptions
 
@@ -1874,26 +6492,83 @@ export type FlintMemoryAddress = number | bigint;
 export interface FlintMemoryOptions
 ```
 
-לא סופק תיאור.
+אפשרויות תצורה ליצירה ושינוי גודל של מופע זיכרון ליניארי של פלינט.
+
+### FlintMemoryPartitionName
+
+**סוג:** סוג
+
+```typescript
+export type FlintMemoryPartitionName = 'guestHeap' | 'foreignHeap' | 'hostInterop' | 'staticData';
+```
+
+שמות של מחיצות זיכרון ליניאריות ייעודיות עבור מודולים מרובי זיכרון.
+
+### FlintMultiMemory
+
+**סוג:** כיתה
+
+```typescript
+export class FlintMultiMemory
+```
+
+רכז הפרדה מרובת זכרונות WebAssembly.
+מבודד זיכרון למרחבים ייעודיים לביצוע אורח (זיכרון 0),
+ערימת C/Rust זרה שאינה מהימנה (זיכרון 1), חיץ אינטראפ מארח (זיכרון 2),
+וקבועים/טבלאות סטטיות (זיכרון 3).
+
+תומך בבידוד חומרה רב-זיכרון מקורי וכן בהקצאה אפסית
+אמולציית ניצול של זיכרון יחיד מחולקת עבור זמני ריצה ללא ריבוי זיכרון (למשל Safari / WebKit).
+
+### FlintMultiMemoryOptions
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintMultiMemoryOptions
+```
+
+אפשרויות הגדרת מספר מחיצות זיכרון ליניאריות עצמאיות.
+
+### FlintRegionalArena
+
+**סוג:** כיתה
+
+```typescript
+export class FlintRegionalArena
+```
+
+מאגר מקצי בליטות אזורי בהיקף (Tier 1) המספק הקצאת O(1).
+והקצאת כמות גדולה דטרמיניסטית עם יציאת ההיקף.
+
+### isMultiMemorySupported
+
+פונקציה **סוג:**
+
+```typescript
+function isMultiMemorySupported(): boolean;
+```
+
+מזהה אם סביבת ה-JavaScript המארחת תומכת באופן מקורי ב-WebAssembly ריבוי זיכרון.
 
 ## `src/parallel`
 
-### FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+### FLINT_PARALLEL_CAPABILITIES
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
+export const FLINT_PARALLEL_CAPABILITIES;
 ```
 
 שמות יכולות המשמשים לאשר ביצוע של עובד, חוט, אטומי וזיכרון משותף.
 
-### FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS
+### FLINT_PARALLEL_OPERATION_DESCRIPTORS
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
+export const FLINT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<FlintParallelOperation, FlintParallelOperationDescriptor>
 >;
 ```
@@ -1916,11 +6591,11 @@ function flintIteratorParAt(
 
 #### פרמטרים
 
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| מקור     | FlintIterable<TValue> |       |
-| אינדקס   | מספר                  |       |
-| אפשרויות | FlintParallelOptions  |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------- | ----------- |
+| מקור | FlintIterable<TValue> |             |
+| אינדקס | מספר |             |
+| אפשרויות | FlintParallelOptions |             |
 
 ### flintIteratorParCollect
 
@@ -1937,10 +6612,10 @@ function flintIteratorParCollect(
 
 #### פרמטרים
 
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| מקור     | FlintIterable<TValue> |       |
-| אפשרויות | FlintParallelOptions  |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------- | ----------- |
+| מקור | FlintIterable<TValue> |             |
+| אפשרויות | FlintParallelOptions |             |
 
 ### flintIteratorParFilter
 
@@ -1959,11 +6634,11 @@ function flintIteratorParFilter(
 
 #### פרמטרים
 
-| שם       | הקלד                                                         | תיאור |
-| -------- | ------------------------------------------------------------ | ----- |
-| מקור     | FlintIterable<TValue>                                        |       |
-| פרידיקט  | (ערך: TValue, אינדקס: מספר) => בווליאני \| הבטחהכמו<boolean> |       |
-| אפשרויות | FlintParallelOptions                                         |       |
+| שם | הקלד | תיאור |
+| --------- | ----------------------------------------------------------------- | ----------- |
+| מקור | FlintIterable<TValue> |             |
+| פרידיקט | (ערך: TValue, אינדקס: מספר) => בווליאני \| הבטחהכמו<boolean> |             |
+| אפשרויות | FlintParallelOptions |             |
 
 ### flintIteratorParFirst
 
@@ -1980,10 +6655,10 @@ function flintIteratorParFirst(
 
 #### פרמטרים
 
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| מקור     | FlintIterable<TValue> |       |
-| אפשרויות | FlintParallelOptions  |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------- | ----------- |
+| מקור | FlintIterable<TValue> |             |
+| אפשרויות | FlintParallelOptions |             |
 
 ### flintIteratorParFlatten
 
@@ -2000,10 +6675,10 @@ function flintIteratorParFlatten(
 
 #### פרמטרים
 
-| שם       | הקלד                                 | תיאור |
-| -------- | ------------------------------------ | ----- |
-| מקור     | FlintIterable<FlintIterable<TValue>> |       |
-| אפשרויות | FlintParallelOptions                 |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------------------------ | ----------- |
+| מקור | FlintIterable<FlintIterable<TValue>> |             |
+| אפשרויות | FlintParallelOptions |             |
 
 ### flintIteratorParFold
 
@@ -2022,12 +6697,12 @@ function flintIteratorParFold(
 
 #### פרמטרים
 
-| שם       | הקלד                                                   | תיאור |
-| -------- | ------------------------------------------------------ | ----- |
-| מקור     | FlintIterable<TValue>                                  |       |
-| ראשי     | TResult                                                |       |
-| מפחית    | (מצבר: TResult, ערך: TValue, index: number) => TResult |       |
-| אפשרויות | FlintParallelOptions                                   |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------------------------------------------- | ----------- |
+| מקור | FlintIterable<TValue> |             |
+| ראשי | TResult |             |
+| מפחית | (מצבר: TResult, ערך: TValue, אינדקס: מספר) => TResult |             |
+| אפשרויות | FlintParallelOptions |             |
 
 ### flintIteratorParLast
 
@@ -2040,14 +6715,14 @@ function flintIteratorParLast(
 ): Promise<FlintOption<TValue>>;
 ```
 
-החזר את התוצאה שהוזמנה האחרונה, או ערך Option.none עבור מקור ריק.
+החזר את התוצאה האחרונה שהוזמנה, או ערך Option.none עבור מקור ריק.
 
 #### פרמטרים
 
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| מקור     | FlintIterable<TValue> |       |
-| אפשרויות | FlintParallelOptions  |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------- | ----------- |
+| מקור | FlintIterable<TValue> |             |
+| אפשרויות | FlintParallelOptions |             |
 
 ### flintIteratorParMap
 
@@ -2066,11 +6741,11 @@ function flintIteratorParMap(
 
 #### פרמטרים
 
-| שם       | הקלד                                                        | תיאור |
-| -------- | ----------------------------------------------------------- | ----- |
-| מקור     | FlintIterable<TValue>                                       |       |
-| מפה      | (ערך: TValue, אינדקס: מספר) => TResult \| הבטחהכמו<TResult> |       |
-| אפשרויות | FlintParallelOptions                                        |       |
+| שם | הקלד | תיאור |
+| ------- | ----------------------------------------------------------------- | ----------- |
+| מקור | FlintIterable<TValue> |             |
+| מפה | (ערך: TValue, אינדקס: מספר) => TResult \| הבטחהכמו<TResult> |             |
+| אפשרויות | FlintParallelOptions |             |
 
 ### flintIteratorParToArray
 
@@ -2087,10 +6762,10 @@ function flintIteratorParToArray(
 
 #### פרמטרים
 
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| מקור     | FlintIterable<TValue> |       |
-| אפשרויות | FlintParallelOptions  |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------- | ----------- |
+| מקור | FlintIterable<TValue> |             |
+| אפשרויות | FlintParallelOptions |             |
 
 ### flintParallelDescriptor
 
@@ -2107,10 +6782,10 @@ function flintParallelDescriptor(
 
 #### פרמטרים
 
-| שם       | הקלד                   | תיאור |
-| -------- | ---------------------- | ----- |
-| מבצע     | FlintParallelOperation |       |
-| אפשרויות | FlintParallelOptions   |       |
+| שם | הקלד | תיאור |
+| --------- | ---------------------- | ----------- |
+| מבצע | FlintParallelOperation |             |
+| אפשרויות | FlintParallelOptions |             |
 
 ### FlintParallelExecutor
 
@@ -2173,7 +6848,7 @@ export interface FlintParallelPlan
 
 האסטרטגיה שנבחרה והסיבה המפורשת שנבחרה.
 
-### FlintParallel Strategy
+### אסטרטגיית פלינט במקביל
 
 **סוג:** סוג
 
@@ -2195,9 +6870,138 @@ function selectFlintParallelStrategy(options: FlintParallelOptions = {}): FlintP
 
 #### פרמטרים
 
-| שם       | הקלד                 | תיאור |
-| -------- | -------------------- | ----- |
-| אפשרויות | FlintParallelOptions |       |
+| שם | הקלד | תיאור |
+| ------- | -------------------- | ----------- |
+| אפשרויות | FlintParallelOptions |             |
+
+## `src/safe-heap`
+
+### createFlintSafeHeap
+
+פונקציה **סוג:**
+
+```typescript
+function createFlintSafeHeap(memory: FlintMemory): FlintSafeHeap;
+```
+
+פונקציית מפעל יוצרת מנהל FlintSafeHeap חדש.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------ | ----------- | ------------------------- |
+| זיכרון | FlintMemory | - מופע זיכרון ליניארי. |
+
+#### חוֹזֶה
+
+- **@param:** - מופע זיכרון ליניארי.
+- **@returns:** מופע FlintSafeHeap אתחול.
+
+### FLINT_MEMORY_MODEL
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_MEMORY_MODEL;
+```
+
+לא סופק תיאור.
+
+### FlintDynamicTableManager
+
+**סוג:** כיתה
+
+```typescript
+export class FlintDynamicTableManager
+```
+
+מנהל טבלת פונקציות WebAssembly דינמי המספק הקצאת משבצות, מעקב אחר דורות,
+וביטול מיידי עם שחרור הסגירה כדי למנוע שיגור פונקציה מעופש.
+
+### FlintRegion
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintRegion
+```
+
+אסימון לכל החיים המזהה אזור זיכרון פעיל.
+
+### FlintRegion Allocation
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintRegionAllocation
+```
+
+מתאר עוקב אחר הקצאת זיכרון הקשורה לאזור לכל החיים.
+
+### FlintRegionArena
+
+**סוג:** כיתה
+
+```typescript
+export class FlintRegionArena
+```
+
+מקצין בליטות זירה בעל ביצועים גבוהים למשימות חולפות.
+תובע מחדש את כל הזיכרון שהוקצה באיפוס מיידי של מצביע O(1).
+
+### FlintSafeHeap
+
+**סוג:** כיתה
+
+```typescript
+export class FlintSafeHeap
+```
+
+ערימה בהיקף דטרמיניסטי עבור ערכים מנוהלים מהדר. קריאות fws_alloc גולמיות
+נשארים ב- FlintMemory ולעולם לא נשמרים כאן באופן מרומז.
+
+### FlintSharedHandle
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintSharedHandle
+```
+
+טיפול בהפניה המזהה הקצאת זיכרון משותף שנספר בהפניה.
+
+### FlintTableSlotHandle
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintTableSlotHandle
+```
+
+ידית חריץ שולחן פונקציה דינמית למעקב אחר אינדקס טבלת ואסימון דורי.
+
+### FlintTlsfAllocator
+
+**סוג:** כיתה
+
+```typescript
+export class FlintTlsfAllocator
+```
+
+מקצה זיכרון בהתאמה לשני רמות (TLSF).
+מבטיח הקצאת O(1) וזמן ההקצאה עם התאחדות פיזית מיידית
+ופיצול מינימלי לעומסי עבודה משובצים/זמן אמת של Wasm.
+
+### FlintWeakHandle
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintWeakHandle
+```
+
+ידית התייחסות חלשה המפנה להקצאת זיכרון משותף מבלי להגדיל את ספירת הפניות חזקות.
+מפחית דליפות זיכרון מונוטוניות הנגרמות על ידי מבני נתונים מחזוריים.
 
 ## `src/self-hosted`
 
@@ -2209,7 +7013,7 @@ function selectFlintParallelStrategy(options: FlintParallelOptions = {}): FlintP
 export interface FlintSelfHostedRunOptions
 ```
 
-לא סופק תיאור.
+אפשרויות תצורה לביצוע שלבי מהדר באירוח עצמי במצבי VM או AOT.
 
 ### FlintSelfHostedVmRun
 
@@ -2219,7 +7023,7 @@ export interface FlintSelfHostedRunOptions
 export interface FlintSelfHostedVmRun
 ```
 
-לא סופק תיאור.
+דוח ביצוע מלא של מהדר מתארח בעצמו המופעל על פני שלבי lexing וניתוח.
 
 ### הרץ FlintSelfHostedCompiler
 
@@ -2242,11 +7046,11 @@ function runFlintSelfHostedCompiler(
 
 #### פרמטרים
 
-| שם       | הקלד                      | תיאור |
-| -------- | ------------------------- | ----- |
-| קלט      | FlintCompileInput         |       |
-| מצב      | FlintVmExecutionMode      |       |
-| אפשרויות | FlintSelfHostedRunOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------------- | ----------- |
+| קלט | FlintCompileInput |             |
+| מצב | FlintVmExecutionMode |             |
+| אפשרויות | FlintSelfHostedRunOptions |             |
 
 ### runFlintSelfHostedLexStage
 
@@ -2264,13 +7068,47 @@ function runFlintSelfHostedLexStage(
 
 #### פרמטרים
 
-| שם       | הקלד                                                                                            | תיאור |
-| -------- | ----------------------------------------------------------------------------------------------- | ----- |
-| קלט      | Pick<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |       |
-| מצב      | FlintVmExecutionMode                                                                            |       |
-| אפשרויות | FlintSelfHostedRunOptions                                                                       |       |
+| שם | הקלד | תיאור |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+| קלט | Pick<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+| מצב | FlintVmExecutionMode |             |
+| אפשרויות | FlintSelfHostedRunOptions |             |
 
 ## `src/threading`
+
+### assertFlintSend
+
+פונקציה **סוג:**
+
+```typescript
+function assertFlintSend(value: T, context = 'value'): T;
+```
+
+טוען כי ערך עומד בחוזה 'שלח', וזורק מלכודת אם הוא מופר.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ---- | ----------- |
+| ערך | T |             |
+| הקשר |      |             |
+
+### assertFlintSync
+
+פונקציה **סוג:**
+
+```typescript
+function assertFlintSync(value: T, context = 'value'): T;
+```
+
+טוען שערך עומד בחוזה 'סינכרון', וזורק מלכודת אם הוא מופר.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ---- | ----------- |
+| ערך | T |             |
+| הקשר |      |             |
 
 ### canUseFlintWasmThreads
 
@@ -2288,10 +7126,10 @@ function canUseFlintWasmThreads(
 
 #### פרמטרים
 
-| שם             | הקלד                                      | תיאור |
-| -------------- | ----------------------------------------- | ----- |
-| targetFeatures | FlintWasmThreadTargetFeatures \| לא מוגדר |       |
-| יכולות         | מחרוזת לקריאה בלבד[] \| לא מוגדר          |       |
+| שם | הקלד | תיאור |
+| -------------- | ------------------------------------------ | ----------- |
+| targetFeatures | FlintWasmThreadTargetFeatures \| לא מוגדר |             |
+| יכולות | מחרוזת לקריאה בלבד[] \| לא מוגדר |             |
 
 ### createFlintAtomicI32
 
@@ -2301,14 +7139,20 @@ function canUseFlintWasmThreads(
 function createFlintAtomicI32(length = 1, options: FlintAtomicI32Options = {}): FlintAtomicI32;
 ```
 
-לא סופק תיאור.
+מקצה מערך שלמים אטומי משותף של 32 סיביות ועוטף אותו בפעולות אטומיות.
 
 #### פרמטרים
 
-| שם       | הקלד                  | תיאור |
-| -------- | --------------------- | ----- |
-| אורך     |                       |       |
-| אפשרויות | FlintAtomicI32Options |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------- | ---------------------------------------------------------- |
+| אורך |                       | - מספר חריצי מספר שלם של 32 סיביות להקצאה.              |
+| אפשרויות | FlintAtomicI32Options | - אפשרויות הקצאה כולל SharedArrayBuffer קיים. |
+
+#### חוֹזֶה
+
+- **@param:** - מספר חריצי מספרים שלמים של 32 סיביות להקצאה.
+- **@param:** - אפשרויות הקצאה כולל SharedArrayBuffer קיים.
+- **@returns:** מופע FlintAtomicI32 מוגדר.
 
 ### createFlintWasmThreadScheduler
 
@@ -2324,9 +7168,9 @@ function createFlintWasmThreadScheduler(options: FlintWasmThreadSchedulerOptions
 
 #### פרמטרים
 
-| שם       | הקלד                            | תיאור |
-| -------- | ------------------------------- | ----- |
-| אפשרויות | FlintWasmThreadSchedulerOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------------------- | ----------- |
+| אפשרויות | FlintWasmThreadSchedulerOptions |             |
 
 ### createFlintWorkerRuntime
 
@@ -2336,21 +7180,31 @@ function createFlintWasmThreadScheduler(options: FlintWasmThreadSchedulerOptions
 function createFlintWorkerRuntime(
   createWorker: () => FlintWorkerPort,
   onMessage: (message: unknown) => void,
-  onError: (error: unknown) => void = () => {},
+  onError: (error: unknown) => void = (_error: unknown) => {
+    // Default no-op error handler.
+  },
   options: FlintWorkerRuntimeOptions = {},
 ): FlintWorkerRuntime;
 ```
 
-לא סופק תיאור.
+יוצר זמן ריצה של עובד עם מפעל הנמל שסופק וווים למחזור החיים.
 
 #### פרמטרים
 
-| שם           | הקלד                      | תיאור |
-| ------------ | ------------------------- | ----- |
-| createWorker | () => FlintWorkerPort     |       |
-| onMessage    | (הודעה: לא ידוע) => ריק   |       |
-| onError      | (שגיאה: לא ידוע) => ריק   |       |
-| אפשרויות     | FlintWorkerRuntimeOptions |       |
+| שם | הקלד | תיאור |
+| ------------ | -------------------------- | ---------------------------------------- |
+| createWorker | () => FlintWorkerPort | - התקשרות חזרה למפעל הנמל.                 |
+| onMessage | (הודעה: לא ידוע) => ריק | - התקשרות חוזרת של מטפל בהודעות.              |
+| onError | (שגיאה: לא ידוע) => ריק | - התקשרות חוזרת למטפל שגיאות אופציונלית.       |
+| אפשרויות | FlintWorkerRuntimeOptions | - אפשרויות תצורה עבור זמן הריצה. |
+
+#### חוֹזֶה
+
+- **@param:** - התקשרות חוזרת מהמפעל לנמל.
+- **@param:** - התקשרות חוזרת של מטפל בהודעות.
+- **@param:** - התקשרות חוזרת למטפל שגיאה אופציונלית.
+- **@param:** - אפשרויות תצורה עבור זמן הריצה.
+- **@returns:** FlintWorkerRuntime אתחול.
 
 ### createFlintWorkerScheduler
 
@@ -2369,16 +7223,16 @@ function createFlintWorkerScheduler(options: FlintWorkerSchedulerOptions = {}): 
 
 #### פרמטרים
 
-| שם       | הקלד                        | תיאור |
-| -------- | --------------------------- | ----- |
-| אפשרויות | FlintWorkerSchedulerOptions |       |
+| שם | הקלד | תיאור |
+| ------- | --------------------------- | ----------- |
+| אפשרויות | FlintWorkerSchedulerOptions |             |
 
-### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+### FLINT_THREADING_CAPABILITIES
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
+export const FLINT_THREADING_CAPABILITIES;
 ```
 
 לא סופק תיאור.
@@ -2391,7 +7245,7 @@ export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
 export interface FlintAtomicI32
 ```
 
-לא סופק תיאור.
+עטיפה המספקת פעולות קריאה-שינוי-כתיבה אטומיות על מאגר מספרים שלמים משותף של 32 סיביות.
 
 ### FlintAtomicI32Options
 
@@ -2401,7 +7255,17 @@ export interface FlintAtomicI32
 export interface FlintAtomicI32Options
 ```
 
-לא סופק תיאור.
+אפשרויות התצורה של הקצאה או שיתוף של מערך 32 סיביות שלמים אטומי.
+
+### FlintThreadSafetyMarker
+
+**סוג:** ממשק
+
+```typescript
+export interface FlintThreadSafetyMarker
+```
+
+סמן מטא נתונים של בטיחות חוטים המאמת ערבויות במקביל לזיכרון משותף.
 
 ### FlintWasmThreadSchedulerOptions
 
@@ -2411,7 +7275,7 @@ export interface FlintAtomicI32Options
 export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFeatures
 ```
 
-לא סופק תיאור.
+אפשרויות קביעת תצורה של מתזמן שרשורים של WebAssembly מגובה על ידי זיכרון משותף ועובדים.
 
 ### FlintWasmThreadTargetFeatures
 
@@ -2421,7 +7285,7 @@ export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFe
 export interface FlintWasmThreadTargetFeatures
 ```
 
-לא סופק תיאור.
+WebAssembly יעד תכונות הרלוונטיות לריבוי הליכי שרשור וזיכרון משותף.
 
 ### FlintWorkerPort
 
@@ -2431,7 +7295,7 @@ export interface FlintWasmThreadTargetFeatures
 export interface FlintWorkerPort
 ```
 
-לא סופק תיאור.
+חוזה יציאת הודעות גנרי לפוסט הודעה לתקשורת עובדים.
 
 ### FlintWorkerRuntime
 
@@ -2441,7 +7305,7 @@ export interface FlintWorkerPort
 export interface FlintWorkerRuntime
 ```
 
-לא סופק תיאור.
+טיפול בזמן ריצה בניהול יציאת תקשורת לעובד והפסקת מחזור החיים שלו.
 
 ### FlintWorkerRuntimeOptions
 
@@ -2451,7 +7315,7 @@ export interface FlintWorkerRuntime
 export interface FlintWorkerRuntimeOptions
 ```
 
-לא סופק תיאור.
+אפשרויות התצורה של יצירת זמן ריצה של עובד.
 
 ### FlintWorkerScheduler
 
@@ -2471,7 +7335,41 @@ export interface FlintWorkerScheduler
 export interface FlintWorkerSchedulerOptions
 ```
 
-לא סופק תיאור.
+אפשרויות תצורה ליצירת מתזמן משימות של עובד מארח.
+
+### isFlintSend
+
+פונקציה **סוג:**
+
+```typescript
+function isFlintSend(value: unknown, visited = new Set<unknown>()): boolean;
+```
+
+מאמת האם ערך עומד בחוזה 'שלח' (בטוח להעברה על פני גבולות שרשור).
+מאמת באופן רקורסיבי אובייקטים פשוטים, מערכים, פרימיטיבים ומאגרים מוקלדים.
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ------- | ------- | ----------- |
+| ערך | לא ידוע |             |
+| ביקר |         |             |
+
+### isFlintSync
+
+פונקציה **סוג:**
+
+```typescript
+function isFlintSync(value: unknown): boolean;
+```
+
+מאמת האם ערך עומד בחוזה 'סנכרון' (בטוח לשיתוף בו-זמנית בין שרשורים).
+
+#### פרמטרים
+
+| שם | הקלד | תיאור |
+| ----- | ------- | ----------- |
+| ערך | לא ידוע |             |
 
 ## `src/trace`
 
@@ -2483,14 +7381,20 @@ export interface FlintWorkerSchedulerOptions
 function createFlintTraceRecorder(options: FlintTraceOptions, functionName: string): FlintTraceRecorder;
 ```
 
-לא סופק תיאור.
+יוצר מקליט מעקב ביצוע האוכף תקציבי גודל ולכידות טלמטריה.
 
 #### פרמטרים
 
-| שם         | הקלד              | תיאור |
-| ---------- | ----------------- | ----- |
-| אפשרויות   | FlintTraceOptions |       |
-| שם פונקציה | מחרוזת            |       |
+| שם | הקלד | תיאור |
+| ------------ | ----------------- | ------------------------------------ |
+| אפשרויות | FlintTraceOptions | - אפשרויות תצורה למעקב. |
+| שם פונקציה | מחרוזת | - שם הפונקציה של נקודת הכניסה הראשית. |
+
+#### חוֹזֶה
+
+- **@param:** - אפשרויות תצורה למעקב.
+- **@param:** - שם הפונקציה של נקודת הכניסה הראשית.
+- **@returns:** מופע של FlintTraceRecorder מוגדר.
 
 ### FlintTraceCaptureMode
 
@@ -2500,7 +7404,7 @@ function createFlintTraceRecorder(options: FlintTraceOptions, functionName: stri
 export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 ```
 
-לא סופק תיאור.
+מצב לכידת מילוליות להקלטת עקבות ביצוע.
 
 ### FlintTraceCounters
 
@@ -2510,7 +7414,7 @@ export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 export interface FlintTraceCounters
 ```
 
-לא סופק תיאור.
+מדדי ביצוע מצטברים ומדדי פעולה שנרשמו במהלך המעקב.
 
 ### FlintTraceEvent
 
@@ -2520,7 +7424,7 @@ export interface FlintTraceCounters
 export interface FlintTraceEvent
 ```
 
-לא סופק תיאור.
+אירוע מעקב ביצוע מפורט שנלכד במהלך זמן ריצה או פרשנות VM.
 
 ### FlintTraceEventType
 
@@ -2531,7 +7435,7 @@ export type FlintTraceEventType =
   'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
-לא סופק תיאור.
+קטגוריית אירוע מעקב בזמן ריצה מוקלט.
 
 ### FlintTraceLimits
 
@@ -2541,7 +7445,7 @@ export type FlintTraceEventType =
 export interface FlintTraceLimits
 ```
 
-לא סופק תיאור.
+מגבלות משאבים מגבילות את נפח אירועי המעקב ואת גודל הבתים.
 
 ### FlintTraceOptions
 
@@ -2551,7 +7455,7 @@ export interface FlintTraceLimits
 export interface FlintTraceOptions extends FlintTraceLimits
 ```
 
-לא סופק תיאור.
+אפשרויות תצורה לאתחול הקלטת מעקב ביצוע.
 
 ### FlintTraceRecorder
 
@@ -2561,7 +7465,7 @@ export interface FlintTraceOptions extends FlintTraceLimits
 export interface FlintTraceRecorder
 ```
 
-לא סופק תיאור.
+ממשק מקליט פעיל שצורך אירועי ביצוע בזמן ריצה ובניית דוחות מעקב.
 
 ### FlintTraceReport
 
@@ -2571,17 +7475,17 @@ export interface FlintTraceRecorder
 export interface FlintTraceReport
 ```
 
-לא סופק תיאור.
+דוח מעקב ביצוע מובנה מלא המסוכם לאחר השלמת הביצוע.
 
 ### FlintTraceSourceLocation
 
-**סוג:** ממשק
+**סוג:** סוג
 
 ```typescript
-export interface FlintTraceSourceLocation extends FlintVmDebugSpan
+export type FlintTraceSourceLocation = FlintVmDebugSpan;
 ```
 
-לא סופק תיאור.
+מיקום מיפוי מקור עבור אירועי מעקב ביצוע מתועדים.
 
 ### summarizeFlintVmValue
 
@@ -2591,18 +7495,24 @@ export interface FlintTraceSourceLocation extends FlintVmDebugSpan
 function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValue) => string): string;
 ```
 
-לא סופק תיאור.
+מסכם ערך VM עבור מעקב אבחון, אופציונלי החלת עריכות.
 
 #### פרמטרים
 
-| שם    | הקלד                          | תיאור |
-| ----- | ----------------------------- | ----- |
-| ערך   | FlintVmValue                  |       |
-| לערוך | (ערך: FlintVmValue) => מחרוזת |       |
+| שם | הקלד | תיאור |
+| ------ | ------------------------------- | ------------------------------ |
+| ערך | FlintVmValue | - ערך VM לפורמט.          |
+| לערוך | (ערך: FlintVmValue) => מחרוזת | - אופציונלי להתקשר חזרה. |
+
+#### חוֹזֶה
+
+- **@param:** - ערך VM לפורמט.
+- **@param:** - התקשרות חזרה אופציונלית לתיקון.
+- **@returns:** מחרוזת סיכום הניתנת לקריאה על ידי אדם.
 
 ## `src/traps`
 
-### attachFlintTrace
+### לצרף FlintTrace
 
 פונקציה **סוג:**
 
@@ -2610,14 +7520,19 @@ function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValu
 function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 ```
 
-לא סופק תיאור.
+משייך דוח מעקב ביצוע לשגיאת מלכודת פלינט אם רלוונטי.
 
 #### פרמטרים
 
-| שם    | הקלד             | תיאור |
-| ----- | ---------------- | ----- |
-| שגיאה | לא ידוע          |       |
-| עקבות | FlintTraceReport |       |
+| שם | הקלד | תיאור |
+| ----- | ---------------- | ----------------------------------- |
+| שגיאה | לא ידוע | - אובייקט שגיאה מועמד.           |
+| עקבות | FlintTraceReport | - דוח מעקב ביצוע לצרף. |
+
+#### חוֹזֶה
+
+- **@param:** - אובייקט שגיאה מועמד.
+- **@param:** - דוח מעקב ביצוע לצרף.
 
 ### FlintTrap
 
@@ -2627,7 +7542,7 @@ function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 export class FlintTrap extends Error
 ```
 
-לא סופק תיאור.
+מייצג מלכודת זמן ריצה קטלנית או הוצאת אורחים להורג בפלינט.
 
 ### FlintTrapCode
 
@@ -2641,10 +7556,16 @@ export type FlintTrapCode =
   | 'InvalidOwnership'
   | 'MemoryExhausted'
   | 'MemoryOutOfBounds'
-  | 'GuestTrap';
+  | 'GuestTrap'
+  | 'BorrowViolation'
+  | 'RegionExpired'
+  | 'UseAfterRelease'
+  | 'DoubleRelease'
+  | 'StackOverflow'
+  | 'CallDepthExhausted';
 ```
 
-לא סופק תיאור.
+קודי קטגוריית שגיאה של מלכודת זמן ריצה קנונית.
 
 ### FlintTrapOptions
 
@@ -2654,7 +7575,7 @@ export type FlintTrapCode =
 export interface FlintTrapOptions extends ErrorOptions
 ```
 
-לא סופק תיאור.
+אפשרויות הגדרת דיווח על שגיאות מלכודת זמן ריצה ורישום.
 
 ### toFlintHostError
 
@@ -2664,15 +7585,22 @@ export interface FlintTrapOptions extends ErrorOptions
 function toFlintHostError(error: unknown, capability: string, logger?: FlintLogger): FlintTrap;
 ```
 
-לא סופק תיאור.
+ממירה שגיאת מארח לא ידועה למופע מנורמל של FlintTrap.
 
 #### פרמטרים
 
-| שם    | הקלד        | תיאור |
-| ----- | ----------- | ----- |
-| שגיאה | לא ידוע     |       |
-| יכולת | מחרוזת      |       |
-| לוגר  | FlintLogger |       |
+| שם | הקלד | תיאור |
+| ---------- | ----------- | --------------------------------------------------- |
+| שגיאה | לא ידוע | - שגיאה שנתפסה גולמית.                                 |
+| יכולת | מחרוזת | - מזהה יכולת מארח יעד.                |
+| לוגר | FlintLogger | - לוגר זמן ריצה אופציונלי לטלמטריה אבחנתית. |
+
+#### חוֹזֶה
+
+- **@param:** - שגיאה נתפסה גולמית.
+- **@param:** - מזהה יכולת מארח יעד.
+- **@param:** - לוגר זמן ריצה אופציונלי לטלמטריה אבחנתית.
+- **@returns:** מופע FlintTrap מנורמל.
 
 ## `src/vm-executor`
 
@@ -2684,14 +7612,20 @@ function toFlintHostError(error: unknown, capability: string, logger?: FlintLogg
 function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string): FlintVmAotArtifact;
 ```
 
-לא סופק תיאור.
+מרכיב מודול VM לתוך חפץ JavaScript מראש (AOT).
 
 #### פרמטרים
 
-| שם         | הקלד          | תיאור |
-| ---------- | ------------- | ----- |
-| מודול      | FlintVmModule |       |
-| גירסת מהדר | מחרוזת        |       |
+| שם | הקלד | תיאור |
+| --------------- | ------------- | -------------------------- |
+| מודול | FlintVmModule | - מודול VM להידור.    |
+| גירסת מהדר | מחרוזת | - מחרוזת גרסת מהדר. |
+
+#### חוֹזֶה
+
+- **@param:** - מודול VM להידור.
+- **@param:** - מחרוזת גרסת מהדר.
+- **@returns:** חפץ AOT שנפלט.
 
 ### createFlintVmExecutor
 
@@ -2701,13 +7635,18 @@ function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string
 function createFlintVmExecutor(executorOptions: FlintVmExecutorOptions = {}): FlintVmExecutor;
 ```
 
-לא סופק תיאור.
+יוצר מפעל VM של קוד byte עם תמיכה בהידור של JIT.
 
 #### פרמטרים
 
-| שם              | הקלד                   | תיאור |
-| --------------- | ---------------------- | ----- |
-| executorOptions | FlintVmExecutorOptions |       |
+| שם | הקלד | תיאור |
+| --------------- | ---------------------- | ----------------------------------------- |
+| executorOptions | FlintVmExecutorOptions | - אפשרויות תצורה עבור המבצע. |
+
+#### חוֹזֶה
+
+- **@param:** - אפשרויות תצורה עבור המבצע.
+- **@returns:** מופע של FlintVmExecutor מוגדר.
 
 ### executeFlintVm
 
@@ -2722,16 +7661,24 @@ function executeFlintVm(
 ): FlintVmExecutionResult;
 ```
 
-לא סופק תיאור.
+רץ נוחות המבצע פונקציה במודול VM.
 
 #### פרמטרים
 
-| שם         | הקלד                       | תיאור |
-| ---------- | -------------------------- | ----- |
-| מודול      | FlintVmModule              |       |
-| שם פונקציה | מחרוזת                     |       |
-| טיעונים_   | לקריאה בלבד FlintVmValue[] |       |
-| אפשרויות   | FlintVmExecutionOptions    |       |
+| שם | הקלד | תיאור |
+| ------------ | ----------------------- | ---------------------- |
+| מודול | FlintVmModule | - מודול VM.           |
+| שם פונקציה | מחרוזת | - שם פונקציית כניסה. |
+| טיעונים_ | לקריאה בלבד FlintVmValue[] | - מערך טיעונים.     |
+| אפשרויות | FlintVmExecutionOptions | - אפשרויות ביצוע.   |
+
+#### חוֹזֶה
+
+- **@param:** - מודול VM.
+- **@param:** - שם פונקציית ערך.
+- **@param:** - מערך ארגומנטים.
+- **@param:** - אפשרויות ביצוע.
+- **@returns:** תוצאת ביצוע.
 
 ### executeFlintVmAotArtifact
 
@@ -2746,16 +7693,24 @@ function executeFlintVmAotArtifact(
 ): FlintVmExecutionResult;
 ```
 
-לא סופק תיאור.
+מבצע חפץ AOT מהול.
 
 #### פרמטרים
 
-| שם         | הקלד                                  | תיאור |
-| ---------- | ------------------------------------- | ----- |
-| חפץ        | FlintVmAotArtifact                    |       |
-| שם פונקציה | מחרוזת                                |       |
-| טיעונים_   | לקריאה בלבד FlintVmValue[]            |       |
-| אפשרויות   | השמט<FlintVmExecutionOptions, 'mode'> |       |
+| שם | הקלד | תיאור |
+| ------------ | ------------------------------------- | ------------------------ |
+| חפץ | FlintVmAotArtifact | - חפץ AOT הידור. |
+| שם פונקציה | מחרוזת | - שם פונקציית כניסה.   |
+| טיעונים_ | לקריאה בלבד FlintVmValue[] | - מערך טיעונים.       |
+| אפשרויות | השמט<FlintVmExecutionOptions, 'mode'> | - אפשרויות ביצוע.     |
+
+#### חוֹזֶה
+
+- **@param:** - חפץ AOT הידור.
+- **@param:** - שם פונקציית ערך.
+- **@param:** - מערך ארגומנטים.
+- **@param:** - אפשרויות ביצוע.
+- **@returns:** תוצאת ביצוע.
 
 ### FlintVmExecutorOptions
 
@@ -2765,7 +7720,7 @@ function executeFlintVmAotArtifact(
 export interface FlintVmExecutorOptions
 ```
 
-לא סופק תיאור.
+אפשרויות תצורה עבור מפעל המכונה הווירטואלית Flint.
 
 ### runFlintVmBootstrap
 
@@ -2781,17 +7736,26 @@ function runFlintVmBootstrap(
 ): FlintVmExecutionResult;
 ```
 
-לא סופק תיאור.
+מבצע מודול אתחול במכונה הוירטואלית.
 
 #### פרמטרים
 
-| שם         | הקלד                                  | תיאור |
-| ---------- | ------------------------------------- | ----- |
-| מודול      | FlintVmModule                         |       |
-| שם פונקציה | מחרוזת                                |       |
-| טיעונים_   | לקריאה בלבד FlintVmValue[]            |       |
-| מצב        | FlintVmExecutionMode                  |       |
-| אפשרויות   | השמט<FlintVmExecutionOptions, 'mode'> |       |
+| שם | הקלד | תיאור |
+| ------------ | ------------------------------------- | ---------------------- |
+| מודול | FlintVmModule | - מודול Bootstrap VM. |
+| שם פונקציה | מחרוזת | - שם פונקציית כניסה. |
+| טיעונים_ | לקריאה בלבד FlintVmValue[] | - מערך טיעונים.     |
+| מצב | FlintVmExecutionMode | - מצב ביצוע.      |
+| אפשרויות | השמט<FlintVmExecutionOptions, 'mode'> | - אפשרויות ביצוע.   |
+
+#### חוֹזֶה
+
+- **@param:** - מודול Bootstrap VM.
+- **@param:** - שם פונקציית ערך.
+- **@param:** - מערך ארגומנטים.
+- **@param:** - מצב ביצוע.
+- **@param:** - אפשרויות ביצוע.
+- **@returns:** תוצאת ביצוע.
 
 ### validateFlintVmModule
 
@@ -2801,13 +7765,17 @@ function runFlintVmBootstrap(
 function validateFlintVmModule(module: FlintVmModule): void;
 ```
 
-לא סופק תיאור.
+מאמת מבנה מודול Flint VM מול כללי קוד בתים.
 
 #### פרמטרים
 
-| שם    | הקלד          | תיאור |
-| ----- | ------------- | ----- |
-| מודול | FlintVmModule |       |
+| שם | הקלד | תיאור |
+| ------ | ------------- | ------------------------ |
+| מודול | FlintVmModule | - מודול VM לאימות. |
+
+#### חוֹזֶה
+
+- **@param:** - מודול VM לאימות.
 
 ## `src/vm-wasm`
 
@@ -2819,14 +7787,14 @@ function validateFlintVmModule(module: FlintVmModule): void;
 function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOptions = {}): FlintVmWasmArtifact;
 ```
 
-לא סופק תיאור.
+קומפילציה של מודול Flint VM לתוך פריט קוד בתים מאומת של WebAssembly.
 
 #### פרמטרים
 
-| שם       | הקלד                      | תיאור |
-| -------- | ------------------------- | ----- |
-| מודול    | FlintVmModule             |       |
-| אפשרויות | FlintVmWasmCompileOptions |       |
+| שם | הקלד | תיאור |
+| ------- | ------------------------- | ----------- |
+| מודול | FlintVmModule |             |
+| אפשרויות | FlintVmWasmCompileOptions |             |
 
 ### FlintVmWasmCompileOptions
 
@@ -2836,7 +7804,7 @@ function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOp
 export interface FlintVmWasmCompileOptions
 ```
 
-לא סופק תיאור.
+אפשרויות התצורה של קומפילציה של מודול Flint VM ל-WebAssembly.
 
 ### prepareFlintVm
 
@@ -2859,33 +7827,43 @@ function prepareFlintVmWasm(
 ): FlintVmPreparedExecutor;
 ```
 
-לא סופק תיאור.
+מכין מבצע WebAssembly ממודול או חפץ להפעלה מהירה.
 
 #### פרמטרים
 
-| שם               | הקלד                                 | תיאור |
-| ---------------- | ------------------------------------ | ----- |
-| moduleOrArtifact | FlintVmModule \| FlintVmWasmArtifact |       |
-| אפשרויות         | FlintVmPreparedExecutorOptions       |       |
+| שם | הקלד | תיאור |
+| ---------------- | ------------------------------------ | ----------- |
+| moduleOrArtifact | FlintVmModule \| FlintVmWasmArtifact |             |
+| אפשרויות | FlintVmPreparedExecutorOptions |             |
 
 ## `src/vm`
 
-### FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+### FLINT_VM_DEFAULT_MAX_MEMORY_PAGES
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
+export const FLINT_VM_DEFAULT_MAX_MEMORY_PAGES;
 ```
 
 לא סופק תיאור.
 
-### FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+### FLINT_VM_WASM_ABI_VERSION
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
+export const FLINT_VM_WASM_ABI_VERSION;
+```
+
+לא סופק תיאור.
+
+### FLINT_VM_WASM_LOWERING_VERSION
+
+**סוג:** קבוע
+
+```typescript
+export const FLINT_VM_WASM_LOWERING_VERSION;
 ```
 
 לא סופק תיאור.
@@ -2898,7 +7876,7 @@ export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
 export interface FlintVmAotArtifact
 ```
 
-לא סופק תיאור.
+חפץ JavaScript הידור מבעוד מועד שנפלט ממודול VM.
 
 ### FlintVmCapabilityImport
 
@@ -2908,7 +7886,7 @@ export interface FlintVmAotArtifact
 export interface FlintVmCapabilityImport
 ```
 
-לא סופק תיאור.
+מתאר ייבוא ​​יכולת מארח מבוקש על ידי מודול VM.
 
 ### FlintVmDebugSpan
 
@@ -2918,7 +7896,7 @@ export interface FlintVmCapabilityImport
 export interface FlintVmDebugSpan
 ```
 
-לא סופק תיאור.
+ניפוי טווח מקור מיפוי היסט הוראת קוד בייט לקואורדינטות של קוד המקור.
 
 ### FlintVmExecutionMode
 
@@ -2928,7 +7906,7 @@ export interface FlintVmDebugSpan
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-לא סופק תיאור.
+מצבי ביצוע VM bytecode נתמכים ('לפרש', 'jit', 'aot').
 
 ### FlintVmExecutionOptions
 
@@ -2938,7 +7916,7 @@ export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 export interface FlintVmExecutionOptions
 ```
 
-לא סופק תיאור.
+אפשרויות לקביעת מגבלות ביצוע VM, מאגרי זיכרון וטלמטריה.
 
 ### FlintVmExecutionResult
 
@@ -2948,7 +7926,7 @@ export interface FlintVmExecutionOptions
 export interface FlintVmExecutionResult
 ```
 
-לא סופק תיאור.
+תוצאה שהוחזרה על ידי ריצת הפעלה VM כולל מדדי ערך ושלב.
 
 ### FlintVmExecutor
 
@@ -2958,7 +7936,7 @@ export interface FlintVmExecutionResult
 export interface FlintVmExecutor
 ```
 
-לא סופק תיאור.
+ממשק ביצוע ראשי להרצת מודולי Flint VM מהודרים.
 
 ### FlintVmFunction
 
@@ -2968,7 +7946,7 @@ export interface FlintVmExecutor
 export interface FlintVmFunction
 ```
 
-לא סופק תיאור.
+הגדרת פונקציית VM מורכבת המכילה הוראות, אוגרים ומטא נתונים.
 
 ### FlintVmInstruction
 
@@ -2978,7 +7956,7 @@ export interface FlintVmFunction
 export type FlintVmInstruction = |
 ```
 
-לא סופק תיאור.
+פעולות הוראות קוד בייט הנתמכות על ידי המכונה הווירטואלית Flint.
 
 ### FlintVmJitCache
 
@@ -2988,7 +7966,7 @@ export type FlintVmInstruction = |
 export interface FlintVmJitCache
 ```
 
-לא סופק תיאור.
+מטמון של פונקציות קומפילציה של tier-1 JIT וספירות הפעלת פונקציות חמות.
 
 ### FlintVmJitEntry
 
@@ -2998,7 +7976,7 @@ export interface FlintVmJitCache
 export interface FlintVmJitEntry
 ```
 
-לא סופק תיאור.
+הזנת מטמון הידור של JIT המאחסנת את הפונקציה הקומפילית וספירת השיחות.
 
 ### FlintVmModule
 
@@ -3008,7 +7986,7 @@ export interface FlintVmJitEntry
 export interface FlintVmModule
 ```
 
-לא סופק תיאור.
+מיכל מודול bytecode הניתן להפעלה הנצרך על ידי מבצעי VM ו-AOT.
 
 ### FlintVmPreparedExecutor
 
@@ -3018,7 +7996,7 @@ export interface FlintVmModule
 export interface FlintVmPreparedExecutor
 ```
 
-לא סופק תיאור.
+מופע מבצע שניתן לשימוש חוזר ומוקצה מראש הקשור למודול ספציפי.
 
 ### FlintVmPreparedExecutorOptions
 
@@ -3028,7 +8006,7 @@ export interface FlintVmPreparedExecutor
 export interface FlintVmPreparedExecutorOptions
 ```
 
-לא סופק תיאור.
+אפשרויות להגדיר מופע הפעלה מוכן לשימוש חוזר של VM.
 
 ### FlintVmValue
 
@@ -3038,7 +8016,7 @@ export interface FlintVmPreparedExecutorOptions
 export type FlintVmValue = |
 ```
 
-לא סופק תיאור.
+איחוד מתויג המייצג ערכי זמן ריצה שנעשו על ידי קוד הבתים VM.
 
 ### FlintVmWasmArtifact
 
@@ -3048,4 +8026,4 @@ export type FlintVmValue = |
 export interface FlintVmWasmArtifact
 ```
 
-לא סופק תיאור.
+חפץ בינארי של WebAssembly וייבוא ​​של מטא נתונים הנפלטים ממודול VM.

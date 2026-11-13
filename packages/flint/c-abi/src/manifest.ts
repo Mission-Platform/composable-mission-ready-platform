@@ -1,14 +1,332 @@
-/** Structural representation of a Flint ABI Manifest. */
-export interface FlintCAbiManifest {
-  readonly format?: string;
-  readonly languageVersion?: string;
-  readonly abiVersion?: string;
-  readonly entryModule?: string;
-  readonly exports?: readonly unknown[];
-  readonly imports?: readonly unknown[];
-  readonly memory?: unknown;
-  readonly [key: string]: unknown;
+import type {
+  FlintOwnership,
+  FlintPrimitiveType,
+  FlintTypeInfo,
+  FlintTypeName,
+} from "@mission-platform/flint-ast";
+
+/**
+ * Current language specification version supported by the Flint compiler.
+ */
+export const FLINT_LANGUAGE_VERSION = "1.0" as const;
+
+/**
+ * Binary ABI manifest format version emitted by the compiler.
+ */
+export const FLINT_ABI_VERSION = "1.2" as const;
+
+/**
+ * Type representation of the current language version string.
+ */
+export type FlintLanguageVersion = typeof FLINT_LANGUAGE_VERSION;
+
+/**
+ * Type representation of the current ABI version string.
+ */
+export type FlintAbiVersion = typeof FLINT_ABI_VERSION;
+
+/**
+ * Describes a single parameter in an exported or imported ABI function signature.
+ */
+export interface FlintAbiParameter {
+  readonly name: string;
+  readonly type: FlintPrimitiveType;
+  readonly reference?: string;
+  readonly arguments?: readonly FlintTypeName[];
+  readonly length?: number;
+  readonly ownership?: FlintOwnership;
+  readonly passing?: "value" | "immutable-reference" | "mutable-reference";
+  readonly mutable?: true;
+  readonly referenceMode?: "ref" | "mut-ref";
 }
+
+/**
+ * ABI specification for an exported or imported function within a WebAssembly module.
+ */
+export interface FlintAbiFunction {
+  readonly name: string;
+  readonly parameters: readonly FlintAbiParameter[];
+  readonly result: FlintPrimitiveType;
+  readonly resultReference?: string;
+  readonly resultArguments?: readonly FlintTypeName[];
+  readonly resultLength?: number;
+  readonly resultOwnership?: FlintOwnership;
+  readonly resultPassing?:
+    "value" | "immutable-reference" | "mutable-reference";
+  readonly resultReferenceMode?: "ref" | "mut-ref";
+}
+
+/**
+ * Specification for a host capability imported into a Flint module.
+ */
+export interface FlintHostImport {
+  readonly capability: string;
+  readonly alias: string;
+  readonly function: FlintAbiFunction;
+}
+
+/**
+ * Linear memory configuration and memory allocator contract emitted in the ABI manifest.
+ */
+export interface FlintMemoryLayout {
+  readonly pageSize: 65_536;
+  readonly addressType: "u32" | "u64";
+  readonly ownership: "caller-owned";
+  readonly stringEncoding: "utf8";
+  readonly byteArrayRepresentation: "pointer-length";
+  readonly allocatorExport: "fws_alloc";
+  readonly deallocatorExport: "fws_dealloc";
+  readonly reallocatorExport: "fws_realloc";
+  readonly safetyModel?: "region-arc-checked-linear";
+}
+
+/**
+ * Binary encoding representation formats for primitive and compound values.
+ */
+export type FlintValueRepresentation =
+  | "bool-i32"
+  | "f32"
+  | "f64"
+  | "i32"
+  | "i64"
+  | "pointer-length-u32"
+  | "pointer-length-u64"
+  | "u32"
+  | "u64"
+  | "unit";
+
+/** Individual foreign function descriptor within an ABI manifest foreign capability. */
+export interface FlintForeignFunction {
+  readonly symbol: string;
+  readonly parameters: readonly {
+    readonly name: string;
+    readonly cType: string;
+    readonly wasmType: string;
+  }[];
+  readonly result: { readonly cType: string; readonly wasmType: string };
+}
+
+/** Foreign capability descriptor recorded in the ABI manifest. */
+export interface FlintForeignCapability {
+  readonly library: string;
+  readonly callingConvention: "wasm-c-abi";
+  readonly memoryModel: "shared" | "multi-memory-segregated";
+  readonly functions: readonly FlintForeignFunction[];
+}
+
+export type FlintLinkMode = "static" | "dynamic";
+export type FlintLinkProfile =
+  | "standard"
+  | "minimal"
+  | "full"
+  | "dynamic"
+  | "static"
+  | "monolithic"
+  | "cross-package";
+export type FlintLinkOptimizationProfile =
+  | "standard"
+  | "size"
+  | "speed"
+  | "debug"
+  | "dynamic-conservative"
+  | "static-thinlto"
+  | "static-aggressive";
+export type FlintSoNBoundsChecks =
+  "runtime" | "proven-safe" | "excluded-by-profile";
+export type FlintAsyncCapability = "scheduler.microtask" | "scheduler.worker";
+
+export interface FlintTargetFeatures {
+  readonly atomics?: boolean;
+  readonly memory64?: boolean;
+  readonly simd?: boolean;
+  readonly tailCall?: boolean;
+  readonly threads?: boolean;
+}
+
+export interface FlintAsyncCompilationContract {
+  readonly capabilities: readonly string[];
+  readonly deterministic: boolean;
+  readonly taskIdRepresentation: "u32" | "u64";
+  readonly messageRepresentation: "owned-bytes";
+  readonly ordering: "sequence";
+}
+
+/**
+ * Opt-in Runtime Type Information (RTTI) metadata table in the ABI manifest.
+ */
+export interface FlintRttiMetadata {
+  readonly enabled: boolean;
+  readonly types: readonly FlintTypeInfo[];
+}
+
+/**
+ * Memory layout descriptor for a single field within a struct or enum variant.
+ */
+export interface FlintAggregateFieldLayout {
+  readonly name: string;
+  readonly type: string;
+  readonly offset: number;
+  readonly size: number;
+  readonly alignment: number;
+  readonly ownership: FlintOwnership;
+}
+
+/**
+ * Binary layout and alignment descriptor for an aggregate struct or enum type.
+ */
+export interface FlintAggregateLayout {
+  readonly name: string;
+  readonly kind: "struct" | "enum";
+  readonly record?: true;
+  readonly size: number;
+  readonly alignment: number;
+  readonly discriminantSize?: 1 | 2 | 4;
+  readonly fields: readonly FlintAggregateFieldLayout[];
+  readonly immutable: true;
+}
+
+/**
+ * Exported enum metadata describing variant names and integer tags.
+ */
+export interface FlintEnumMetadata {
+  readonly name: string;
+  readonly exported: boolean;
+  readonly representation: "i32";
+  readonly variants: readonly {
+    readonly name: string;
+    readonly value: number;
+  }[];
+}
+
+/**
+ * Layout and representation specification for arrays and vectors.
+ */
+export interface FlintCollectionLayout {
+  readonly type: string;
+  readonly kind: "array" | "vector";
+  readonly elementType: string;
+  readonly length?: number;
+  readonly representation: "contiguous" | "owned-handle";
+  readonly ownership: FlintOwnership;
+}
+
+/**
+ * Monomorphized specialization mapping for generic types.
+ */
+export interface FlintSpecialization {
+  readonly id: string;
+  readonly generic?: string;
+  readonly arguments: readonly (string | FlintTypeName)[];
+  readonly representation?: "monomorphized" | "descriptor-boundary";
+}
+
+/**
+ * Boundary descriptor for iterators crossing module or generic boundaries.
+ */
+export interface FlintIteratorBoundaryDescriptor {
+  readonly id: string;
+  readonly generic: string;
+  readonly elementType: string;
+  readonly nextFunction: string;
+  readonly representation: "descriptor-boundary";
+  readonly ownership: FlintOwnership;
+}
+
+/**
+ * Source import declaration representing a dependency on another Flint module.
+ */
+export interface FlintSourceImport {
+  readonly source: string;
+  readonly alias: string;
+  readonly resolvedModuleId?: string;
+  readonly linkMode?: FlintLinkMode;
+  readonly exports?: readonly FlintAbiFunction[];
+}
+
+/** Manifest-visible binding information for an explicitly dynamic module. */
+export interface FlintDynamicModuleBinding {
+  readonly moduleId: string;
+  readonly alias: string;
+  readonly exports: readonly FlintAbiFunction[];
+}
+
+/** Stable metadata consumed by dynamic loaders and their dispatch caches. */
+export interface FlintDynamicLinkMetadata {
+  readonly artifactId: string;
+  readonly manifestHash: string;
+  readonly modules: readonly FlintDynamicModuleBinding[];
+}
+
+/**
+ * Export specification for a function linked across multi-module boundaries.
+ */
+export interface FlintLinkedExport {
+  readonly name: string;
+  readonly moduleId: string;
+  readonly parameters: readonly FlintAbiParameter[];
+  readonly result: FlintPrimitiveType;
+  readonly resultReference?: string;
+  readonly resultArguments?: readonly FlintTypeName[];
+  readonly resultLength?: number;
+  readonly resultOwnership?: FlintOwnership;
+}
+
+export interface FlintStandardLibraryDescriptor {
+  readonly version: string;
+  readonly hash: string;
+}
+
+/**
+ * Canonical ABI manifest describing module interface, memory, layouts, and capabilities.
+ */
+export interface FlintAbiManifest {
+  readonly format: "forge-web-script-module";
+  readonly languageVersion: FlintLanguageVersion;
+  readonly abiVersion: FlintAbiVersion;
+  readonly moduleName: string;
+  readonly exports: readonly FlintAbiFunction[];
+  readonly imports: readonly FlintHostImport[];
+  readonly sourceImports: readonly FlintSourceImport[];
+  readonly foreignCapabilities?: readonly FlintForeignCapability[];
+  readonly multiMemory?: boolean;
+  readonly graphHash?: string;
+  readonly projectRoot?: string;
+  readonly linkMode?: FlintLinkMode;
+  readonly linkProfile?: FlintLinkProfile;
+  readonly optimizationProfile?: FlintLinkOptimizationProfile;
+  readonly linkedExports?: readonly FlintLinkedExport[];
+  readonly dynamicLinkMetadata?: FlintDynamicLinkMetadata;
+  readonly requiredCapabilities: readonly string[];
+  readonly memory: FlintMemoryLayout;
+  readonly valueRepresentations: Readonly<
+    Record<FlintPrimitiveType, FlintValueRepresentation>
+  >;
+  readonly trapModel: "explicit-trap";
+  readonly standardLibrary: FlintStandardLibraryDescriptor;
+  readonly aggregateLayouts: readonly FlintAggregateLayout[];
+  readonly enumDeclarations: readonly FlintEnumMetadata[];
+  readonly collectionLayouts: readonly FlintCollectionLayout[];
+  readonly specializations: readonly FlintSpecialization[];
+  readonly iteratorDescriptors: readonly FlintIteratorBoundaryDescriptor[];
+  readonly async?: FlintAsyncCompilationContract;
+  readonly targetFeatures?: FlintTargetFeatures;
+  readonly boundsChecks: FlintSoNBoundsChecks;
+  readonly reflection?: FlintRttiMetadata;
+}
+
+/** Structural representation of a Flint ABI Manifest alias. */
+export type FlintCAbiManifest =
+  | FlintAbiManifest
+  | {
+      readonly format?: string;
+      readonly languageVersion?: string;
+      readonly abiVersion?: string;
+      readonly entryModule?: string;
+      readonly exports?: readonly unknown[];
+      readonly imports?: readonly unknown[];
+      readonly memory?: unknown;
+      readonly [key: string]: unknown;
+    };
 
 /**
  * Encodes arbitrary JavaScript primitive, array, and object data structures into canonical binary CBOR.
@@ -16,11 +334,9 @@ export interface FlintCAbiManifest {
 export function encodeCbor(value: unknown): Uint8Array {
   const chunks: number[] = [];
 
-  // skipcq: JS-R1005
-  /** Recursively encodes a single CBOR data item. */
   function encodeItem(item: unknown): void {
     if (item === null || item === undefined) {
-      chunks.push(0xf6); // null
+      chunks.push(0xf6);
       return;
     }
 
@@ -37,7 +353,6 @@ export function encodeCbor(value: unknown): Uint8Array {
           encodeUnsigned(1, -1 - item);
         }
       } else {
-        // Encode 64-bit float (0xfb)
         const buffer = new ArrayBuffer(8);
         new DataView(buffer).setFloat64(0, item, false);
         chunks.push(0xfb, ...new Uint8Array(buffer));
@@ -79,7 +394,6 @@ export function encodeCbor(value: unknown): Uint8Array {
       const entries = Object.entries(item as Record<string, unknown>).filter(
         ([, value_]) => value_ !== undefined,
       );
-      // Sort keys canonically by UTF-8 byte representation
       entries.sort(([leftKey], [rightKey]) =>
         leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0,
       );
@@ -95,7 +409,6 @@ export function encodeCbor(value: unknown): Uint8Array {
     throw new TypeError(`Unsupported CBOR type: ${typeof item}`);
   }
 
-  /** Encodes a CBOR major type with an unsigned integer argument. */
   function encodeUnsigned(major: number, value: number): void {
     const majorBits = major << 5;
     if (value < 24) {
@@ -117,235 +430,245 @@ export function encodeCbor(value: unknown): Uint8Array {
     }
   }
 
-  /** Encodes a CBOR major type with an unsigned 64-bit integer argument. */
   function encodeUnsignedBigInt(major: number, value: bigint): void {
     const majorBits = major << 5;
-    chunks.push(
-      majorBits | 27,
-      Number((value >> 56n) & 0xffn),
-      Number((value >> 48n) & 0xffn),
-      Number((value >> 40n) & 0xffn),
-      Number((value >> 32n) & 0xffn),
-      Number((value >> 24n) & 0xffn),
-      Number((value >> 16n) & 0xffn),
-      Number((value >> 8n) & 0xffn),
-      Number(value & 0xffn),
-    );
+    const view = new DataView(new ArrayBuffer(8));
+    view.setBigUint64(0, value, false);
+    chunks.push(majorBits | 27, ...new Uint8Array(view.buffer));
   }
 
   encodeItem(value);
   return new Uint8Array(chunks);
 }
 
-const FORBIDDEN_OBJECT_KEYS = new Set([
-  "__proto__",
-  "constructor",
-  "prototype",
-]);
-const MAX_CBOR_DEPTH = 64;
-
-/**
- * Options configuring CBOR decoding behavior and validation checks.
- */
 export interface CborDecodeOptions {
   readonly strictCanonical?: boolean;
 }
 
-/**
- * Decodes canonical binary CBOR bytes into a JavaScript object structure.
- */
-// eslint-disable-next-line @typescript-eslint/no-unconstrained-generics
 export function decodeCbor<T = unknown>(
   bytes: Uint8Array,
   options: CborDecodeOptions = {},
 ): T {
   let offset = 0;
-  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
 
-  // skipcq: JS-R1005
-  /** Recursively decodes a single CBOR data item. */
   function decodeItem(depth = 0): unknown {
-    if (depth > MAX_CBOR_DEPTH) {
-      throw new RangeError(
-        `CBOR structure exceeds maximum nesting depth of ${MAX_CBOR_DEPTH}.`,
-      );
+    if (depth > 64) {
+      throw new RangeError("Exceeded maximum CBOR nesting depth of 64");
     }
-
     if (offset >= bytes.length) {
-      throw new RangeError("Unexpected end of CBOR payload.");
+      throw new RangeError("Unexpected end of CBOR input buffer");
     }
 
     const initialByte = bytes[offset++];
     if (initialByte === undefined)
-      throw new RangeError("Unexpected end of CBOR payload.");
+      throw new RangeError("Unexpected EOF reading CBOR byte");
+    const majorType = initialByte >> 5;
+    const additionalInfo = initialByte & 0x1f;
 
-    const major = initialByte >> 5;
-    const additional = initialByte & 0x1f;
-
-    let lengthOrValue: number | bigint = additional;
-    switch (additional) {
-      case 24: {
+    function readArgument(): number | bigint {
+      if (additionalInfo < 24) {
+        return additionalInfo;
+      }
+      if (additionalInfo === 24) {
         if (offset >= bytes.length)
-          throw new RangeError("Unexpected end of CBOR payload.");
-        lengthOrValue = bytes[offset++] ?? 0;
-        break;
+          throw new RangeError("CBOR payload truncated");
+        const val = bytes[offset++];
+        if (val === undefined) throw new RangeError("CBOR truncated");
+        return val;
       }
-      case 25: {
+      if (additionalInfo === 25) {
         if (offset + 2 > bytes.length)
-          throw new RangeError("Unexpected end of CBOR payload.");
-        lengthOrValue = view.getUint16(offset, false);
+          throw new RangeError("CBOR payload truncated");
+        const view = new DataView(bytes.buffer, bytes.byteOffset + offset, 2);
         offset += 2;
-        break;
+        return view.getUint16(0, false);
       }
-      case 26: {
+      if (additionalInfo === 26) {
         if (offset + 4 > bytes.length)
-          throw new RangeError("Unexpected end of CBOR payload.");
-        lengthOrValue = view.getUint32(offset, false);
+          throw new RangeError("CBOR payload truncated");
+        const view = new DataView(bytes.buffer, bytes.byteOffset + offset, 4);
         offset += 4;
-        break;
+        return view.getUint32(0, false);
       }
-      case 27: {
+      if (additionalInfo === 27) {
         if (offset + 8 > bytes.length)
-          throw new RangeError("Unexpected end of CBOR payload.");
-        lengthOrValue = view.getBigUint64(offset, false);
+          throw new RangeError("CBOR payload truncated");
+        const view = new DataView(bytes.buffer, bytes.byteOffset + offset, 8);
         offset += 8;
-        break;
+        return view.getBigUint64(0, false);
       }
-      default: {
-        break;
-      }
+      throw new Error(`Unsupported CBOR additional info: ${additionalInfo}`);
     }
 
-    switch (major) {
+    switch (majorType) {
       case 0: {
-        return typeof lengthOrValue === "bigint"
-          ? lengthOrValue
-          : Number(lengthOrValue);
+        return readArgument();
       }
       case 1: {
-        return typeof lengthOrValue === "bigint"
-          ? -1n - lengthOrValue
-          : -1 - Number(lengthOrValue);
+        const rawArg = readArgument();
+        if (typeof rawArg === "bigint") {
+          return -1n - rawArg;
+        }
+        return -1 - rawArg;
       }
       case 2: {
-        const length = Number(lengthOrValue);
-        if (
-          !Number.isSafeInteger(length) ||
-          length < 0 ||
-          length > bytes.length - offset
-        ) {
-          throw new RangeError(`Invalid CBOR byte string length: ${length}.`);
-        }
+        const length = Number(readArgument());
+        if (offset + length > bytes.length)
+          throw new RangeError("CBOR byte string truncated");
         const slice = bytes.subarray(offset, offset + length);
         offset += length;
         return slice;
       }
       case 3: {
-        const length = Number(lengthOrValue);
-        if (
-          !Number.isSafeInteger(length) ||
-          length < 0 ||
-          length > bytes.length - offset
-        ) {
-          throw new RangeError(`Invalid CBOR text string length: ${length}.`);
-        }
+        const length = Number(readArgument());
+        if (offset + length > bytes.length)
+          throw new RangeError("CBOR text string truncated");
         const slice = bytes.subarray(offset, offset + length);
         offset += length;
         return new TextDecoder().decode(slice);
       }
       case 4: {
-        const count = Number(lengthOrValue);
-        if (
-          !Number.isSafeInteger(count) ||
-          count < 0 ||
-          count > bytes.length - offset
-        ) {
-          throw new RangeError(`Invalid CBOR array length: ${count}.`);
-        }
+        const length = Number(readArgument());
         const array: unknown[] = [];
-        for (let index = 0; index < count; index += 1) {
+        for (let i = 0; i < length; i++) {
           array.push(decodeItem(depth + 1));
         }
         return array;
       }
       case 5: {
-        const count = Number(lengthOrValue);
-        if (
-          !Number.isSafeInteger(count) ||
-          count < 0 ||
-          count > (bytes.length - offset) / 2
-        ) {
-          throw new RangeError(`Invalid CBOR map length: ${count}.`);
-        }
-        const record = Object.create(null) as Record<string, unknown>;
-        let lastKey: string | undefined;
-        for (let index = 0; index < count; index += 1) {
-          const rawKey = decodeItem(depth + 1);
-          const key = String(rawKey);
-          if (FORBIDDEN_OBJECT_KEYS.has(key)) {
-            throw new TypeError(`Forbidden CBOR object key: ${key}`);
+        const length = Number(readArgument());
+        const object: Record<string, unknown> = {};
+        let previousKey: string | undefined;
+
+        for (let i = 0; i < length; i++) {
+          const keyItem = decodeItem(depth + 1);
+          if (typeof keyItem !== "string") {
+            throw new TypeError("CBOR map keys must decode as text strings");
           }
-          if (options.strictCanonical) {
-            if (lastKey !== undefined) {
-              if (key === lastKey) {
-                throw new TypeError(`Duplicate CBOR map key: ${key}`);
-              }
-              if (key < lastKey) {
-                throw new TypeError(
-                  `Non-canonical CBOR key ordering: ${key} appeared after ${lastKey}`,
-                );
-              }
-            }
-            lastKey = key;
+          if (
+            keyItem === "__proto__" ||
+            keyItem === "constructor" ||
+            keyItem === "prototype"
+          ) {
+            throw new TypeError(
+              `Malicious prototype pollution key detected: ${keyItem}`,
+            );
           }
-          const itemValue = decodeItem(depth + 1);
-          record[key] = itemValue;
+          if (
+            options.strictCanonical &&
+            previousKey !== undefined &&
+            previousKey >= keyItem
+          ) {
+            throw new TypeError("Non-canonical CBOR map key ordering detected");
+          }
+          previousKey = keyItem;
+          object[keyItem] = decodeItem(depth + 1);
         }
-        return record;
+        return object;
       }
       case 7: {
-        switch (additional) {
-          case 20: {
-            return false;
-          }
-          case 21: {
-            return true;
-          }
-          case 27: {
-            offset -= 8;
-            const float = view.getFloat64(offset, false);
-            offset += 8;
-            return float;
-          }
-          default: {
-            return undefined;
-          }
+        if (additionalInfo === 20) return false;
+        if (additionalInfo === 21) return true;
+        if (additionalInfo === 22) return null;
+        if (additionalInfo === 23) return undefined;
+        if (additionalInfo === 27) {
+          if (offset + 8 > bytes.length)
+            throw new RangeError("CBOR payload truncated");
+          const view = new DataView(bytes.buffer, bytes.byteOffset + offset, 8);
+          offset += 8;
+          return view.getFloat64(0, false);
         }
+        throw new Error(
+          `Unsupported CBOR simple/float value: ${additionalInfo}`,
+        );
       }
       default: {
-        throw new Error(`Unsupported major CBOR type: ${major}`);
+        throw new Error(`Unsupported CBOR major type: ${majorType}`);
       }
     }
   }
 
-  return decodeItem() as T;
+  const result = decodeItem(0) as T;
+  if (offset !== bytes.length) {
+    throw new Error(
+      `Unconsumed trailing bytes in CBOR payload: ${bytes.length - offset} bytes remain`,
+    );
+  }
+  return result;
 }
 
-/**
- * Encodes a Flint ABI Manifest directly to binary CBOR byte array.
- */
 export function encodeCborAbiManifest<T extends object = FlintCAbiManifest>(
   manifest: T,
 ): Uint8Array {
   return encodeCbor(manifest);
 }
 
-/**
- * Decodes a binary CBOR byte array into a Flint ABI Manifest.
- */
 export function decodeCborAbiManifest<T extends object = FlintCAbiManifest>(
   bytes: Uint8Array,
   options?: CborDecodeOptions,
 ): T {
   return decodeCbor<T>(bytes, options);
+}
+
+/**
+ * Normalizes an arbitrary ABI manifest object into a canonical key-sorted data structure.
+ */
+export function canonicalizeAbiManifest<T extends object>(manifest: T): T {
+  function canonicalizeValue(val: unknown): unknown {
+    if (val === null || val === undefined || typeof val !== "object") {
+      return val;
+    }
+    if (Array.isArray(val)) {
+      return val.map(canonicalizeValue);
+    }
+    const entries = Object.entries(val as Record<string, unknown>)
+      .filter(([, v]) => v !== undefined)
+      .sort(([leftKey], [rightKey]) =>
+        leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0,
+      );
+
+    const result: Record<string, unknown> = {};
+    for (const [k, v] of entries) {
+      result[k] = canonicalizeValue(v);
+    }
+    return result;
+  }
+
+  return canonicalizeValue(manifest) as T;
+}
+
+/**
+ * Validates structural invariants of a Flint ABI manifest.
+ */
+export function validateAbiManifest(manifest: FlintCAbiManifest): {
+  readonly valid: boolean;
+  readonly errors: readonly string[];
+} {
+  const errors: string[] = [];
+
+  if (manifest.format !== "forge-web-script-module") {
+    errors.push(
+      `Invalid manifest format: expected 'forge-web-script-module', received '${String(manifest.format)}'`,
+    );
+  }
+
+  if (
+    typeof manifest.languageVersion !== "string" ||
+    !manifest.languageVersion
+  ) {
+    errors.push("Missing or invalid languageVersion string in ABI manifest");
+  }
+
+  if (typeof manifest.abiVersion !== "string" || !manifest.abiVersion) {
+    errors.push("Missing or invalid abiVersion string in ABI manifest");
+  }
+
+  if (manifest.memory !== undefined && typeof manifest.memory !== "object") {
+    errors.push("Invalid memory layout section in ABI manifest");
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
 }

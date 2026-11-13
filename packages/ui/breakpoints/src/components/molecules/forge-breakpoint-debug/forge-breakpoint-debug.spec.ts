@@ -1,11 +1,12 @@
-import { toReactComponent } from '@mission-platform/forge-adapters/react';
-import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 import i18next from 'i18next';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+
+import { toReactComponent } from '@mission-platform/forge-adapters/react';
+import { toVueComponent } from '@mission-platform/forge-adapters/vue';
 
 import { ForgeBreakpointDebug } from './forge-breakpoint-debug';
 

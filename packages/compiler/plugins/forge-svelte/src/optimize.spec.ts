@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
 
+import type {
+  SemanticModule,
+  TargetContext,
+  TargetIntentions,
+  TargetOptimizeOptions,
+} from "@mission-platform/forge-plugin-api";
+
 import { emitSvelteModule } from "./emitters/component.js";
 import {
   component,
@@ -25,12 +32,6 @@ import {
 } from "./optimize.js";
 
 import type { SvelteLoweredModule } from "./lower.js";
-import type {
-  SemanticModule,
-  TargetContext,
-  TargetIntentions,
-  TargetOptimizeOptions,
-} from "@mission-platform/forge-plugin-api";
 
 const CONTEXT: TargetContext = {
   framework: "svelte",

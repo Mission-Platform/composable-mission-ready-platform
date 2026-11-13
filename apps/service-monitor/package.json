@@ -64,7 +64,7 @@
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "eslint": "catalog:eslint",
-    "i18next-cli": "1.73.3",
+    "i18next-cli": "catalog:i18next",
     "postcss-html": "catalog:stylelint",
     "postcss-scss": "catalog:stylelint",
     "prettier": "catalog:prettier",

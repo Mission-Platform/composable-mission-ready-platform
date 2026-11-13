@@ -1,7 +1,7 @@
 import { ForgeIcon } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { IconProperties } from './forge-icon';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const meta = {
   title: 'Atoms/Display/ForgeIcon',

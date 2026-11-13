@@ -1,10 +1,11 @@
 /// <reference types="vitest/config" />
 import { fileURLToPath } from 'node:url';
 
+import { VitePWA } from 'vite-plugin-pwa';
+
 import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
 import i18nPlugin, { readSupportedLocales } from '@mission-platform/vite-plugin-i18n';
 import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-import { VitePWA } from 'vite-plugin-pwa';
 
 import { APP_LOCALE_BCP47, APP_ORIGIN } from './src/seo-app';
 

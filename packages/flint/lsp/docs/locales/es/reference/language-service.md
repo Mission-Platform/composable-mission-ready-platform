@@ -1,8 +1,8 @@
-# Herramientas del lenguaje Flint
+# Herramientas de lenguaje Flint
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> packages/flint-lsp/docs/reference/language-service.md: [packages/flint-lsp/docs/reference/language-service.md](../../../reference/language-service.md)
+> packages/flint/lsp/docs/reference/language-service.md: [packages/flint/lsp/docs/reference/language-service.md](../../../reference/language-service.md)
 > Idioma: Español (es)
 
 Flint (`.flint`) tiene un servicio de lenguaje neutral para el editor, un stdio
@@ -15,7 +15,7 @@ validador.
 El contrato de idioma admitido es **versión 1.0** y el contrato ABI es
 **versión 1.2**. Las herramientas lo hacen
 No cambiar la gramática, la salida del compilador, ABI o las versiones existentes de Rust y
-Integraciones de AssemblyScript. Ver [Forjar script web v1](../../../../../flint/docs/locales/es/reference/language.md)
+Integraciones de AssemblyScript. Ver [Flint v1](../../../../../flint/docs/reference/language.md)
 para el idioma y la referencia ABI.
 
 ## Características y límites
@@ -40,7 +40,7 @@ El servicio lingüístico actualmente ofrece:
 El servidor LSP expone diagnóstico, finalización, desplazamiento y semántica completa.
 fichas. Ir a definición, referencias, cambio de nombre, formato, acciones de código,
 importaciones de idiomas entre archivos a nivel de fuente y transporte LSP alojado en el navegador
-no están implementados. En su lugar, Mónaco utiliza el adaptador de servicios de idioma local
+no están implementados. Mónaco utiliza en su lugar el adaptador de servicios de idioma local
 de conectarse al servidor Node.
 
 Los tokens semánticos utilizan las clasificaciones léxicas del servicio lingüístico. el
@@ -110,7 +110,7 @@ La finalización de `add` lleva la misma cadena de documentación junto con su
 detalle/firma. Los párrafos de descripción y las etiquetas están separados por líneas en blanco;
 Se conservan el orden de las etiquetas, las etiquetas duplicadas y las etiquetas desconocidas. La sintaxis central y
 reglas de normalización, incluida la asociación de funciones y el tema admitido
-formularios, se especifican en [la referencia del lenguaje FWS](../../../../../flint/docs/locales/es/reference/language.md).
+formularios, se especifican en [la referencia del lenguaje FWS](../../../../../flint/docs/reference/language.md).
 
 La documentación son metadatos informativos únicamente. No cambia el diagnóstico,
 verificación de tipos, resolución de funciones, declaraciones generadas, firmas ABI,
@@ -171,7 +171,7 @@ flint-lsp
 
 El servidor requiere Node.js 24 o posterior. No requiere una bandera `--stdio`;
 stdio es siempre el transporte. Un cliente debe enviar `initialize`, utilizar el
-capacidades devueltas y luego enviar la notificación `initialized` normal.
+capacidades devueltas y luego envíe la notificación `initialized` normal.
 El servidor admite sincronización de texto completo, carpetas del espacio de trabajo, visualización
 cambios de archivos, finalización, desplazamiento y apagado/salida.
 
@@ -276,7 +276,7 @@ y los archivos de prueba están excluidos por `.vscodeignore`. El cheque de humo
 inicializa el servidor preparado y verifica la finalización anunciada, el desplazamiento,
 token semántico y comportamiento de diagnóstico estable.
 
-### IDEA IntelliJ/LSP4IJ
+### IDEA IntelliJ / LSP4IJ
 
 Cree el complemento ZIP e instálelo a través de **Configuración | Complementos | Engranaje |
 Instalar complemento desde disco**:
@@ -296,7 +296,7 @@ reconocer archivos `.flint`.
 
 El complemento asigna `*.flint` al ID de idioma `fws` e inicia un stdio compartido
 servidor para el proyecto. La configuración de IntelliJ es proporcionada exclusivamente por
-**Configuración | Herramientas | Forjar secuencias de comandos web**; no hay guión de proyecto ni Flora
+**Configuración | Herramientas | Pedernal**; no hay guión de proyecto ni Flora
 ruta de configuración. Configurar:
 
 - **Node.js ejecutable** — Node 24 o más reciente; El valor predeterminado es `node`.
@@ -325,7 +325,7 @@ utilizado tanto por el iniciador LSP como por el adaptador stdio DAP genérico.
 
 Ejecute las comprobaciones del servicio de lenguaje compartido/LSP y ambas canalizaciones de cliente desde el
 raíz del repositorio. Los comandos de IntelliJ requieren un JDK compatible con el anclado
-Cadena de herramientas Gradle/IntelliJ; El siguiente es un ejemplo para macOS:
+Cadena de herramientas Gradle/IntelliJ; el siguiente es un ejemplo para macOS:
 
 ```sh
 pnpm --filter @mission-platform/flint-language-service test
@@ -344,7 +344,7 @@ JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-23.jdk/Contents/Home \
   ./extensions/flint-ij/gradlew -p extensions/flint-ij test verifyPlugin buildPlugin --no-daemon --offline
 ```
 
-Las pruebas de humo de servidor preparado y de IntelliJ realizan la misma inicialización,
+Las pruebas de humo de servidor preparado e IntelliJ realizan la misma inicialización,
 diagnóstico, finalización, desplazamiento, token semántico, apagado y raíz del proyecto
 contrato de lanzamiento. Las pruebas de LSP compartidas también cubren la carpeta del espacio de trabajo.
 reenvío, manejo de URI `file:`, invalidación de archivos supervisados contenidos en la raíz,
@@ -356,7 +356,7 @@ sin soporte.
 ### Solución de problemas
 
 - **Tiempo de ejecución Node rechazado:** ejecute `<configured-node> --version` y seleccione un
-  Node 24+ ejecutable en la configuración de VS Code o IntelliJ correspondiente. el cliente
+  Node 24+ ejecutable en la configuración VS Code o IntelliJ correspondiente. el cliente
   informa la versión detectada y no recurre silenciosamente a una versión anterior
   tiempo de ejecución.
 - **Falta el servidor empaquetado VS Code:** reconstruir con
@@ -392,7 +392,7 @@ se rechaza un acceso fuera de cada raíz configurada. Esquemas de URI no admitid
 no se tratan como rutas del sistema de archivos.
 
 La identidad del espacio de trabajo está basada en URI. Dos documentos con el mismo nombre base pero
-diferentes URI siguen siendo documentos separados y entradas de caché. Cerrando un
+diferentes URI siguen siendo documentos y entradas de caché separados. Cerrando un
 El documento elimina sus diagnósticos del cliente. Crear, cambiar o
 eliminar un archivo supervisado invalida el análisis dependiente del espacio de trabajo y se vuelve a publicar
 Diagnóstico de documentos abiertos.
@@ -448,7 +448,7 @@ diagnóstico, finalización o desplazamiento derivados del espacio de trabajo. E
 esta actualización antes de publicar diagnósticos y antes de completar o completar el servicio.
 solicitudes de desplazamiento.
 
-## Diagnósticos y rangos
+## Diagnostics and ranges
 
 Los diagnósticos conservan el `code` estable del validador, gravedad, fase, mensaje,
 nombre de archivo, intervalo de origen y sugerencia opcional. La representación LSP utiliza el
@@ -459,17 +459,17 @@ El servidor LSP publica `source: "flint"`. La fase y la pista son
 también incluido en el objeto de diagnóstico `data`. Familias típicas de códigos estables
 son:
 
-| Familia de códigos | Fase         | Significado                                                                                                              |
-| ------------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `FLINT-LEX-*`      | `lex`        | Caracteres/escapes no válidos, terminadores de línea de cadena sin terminar o cadenas/comentarios de bloque sin terminar |
-| `FLINT-PARSE-*`    | `parse`      | Sintaxis de módulo, declaración, sentencia o expresión no válida                                                         |
-| `FLINT-TYPE-*`     | `type-check` | Tipos, nombres, operadores, argumentos o devoluciones no válidos                                                         |
-| `FLINT-ABI-*`      | `abi`        | Nombres duplicados, capacidades denegadas, exportaciones o importaciones                                                 |
+| Familia de códigos | Fase | Significado |
+| --------------- | ------------ | ----------------------------------------------------------------------------------------------- |
+| `FLINT-LEX-*` | `lex` | Caracteres/escapes no válidos, terminadores de línea de cadena sin terminar o cadenas/comentarios de bloque sin terminar |
+| `FLINT-PARSE-*` | `parse` | Sintaxis de módulo, declaración, sentencia o expresión no válida |
+| `FLINT-TYPE-*` | `type-check` | Tipos, nombres, operadores, argumentos o devoluciones no válidos |
+| `FLINT-ABI-*` | `abi` | Nombres duplicados, capacidades denegadas, exportaciones o importaciones |
 
 La entrada con formato incorrecto todavía se tokeniza y analiza cuando la recuperación del analizador lo permite
 eso. Por ejemplo, una fuente con formato incorrecto puede producir `FLINT-PARSE-017` manteniendo
-fichas léxicas utilizables e información parcial de símbolos. Los clientes deben mostrar
-el rango y el código suministrados en lugar de hacer coincidir el texto de diagnóstico.
+fichas léxicas utilizables e información de símbolos parcial. Los clientes deben mostrar
+el rango y el código suministrados en lugar de coincidir con el texto de diagnóstico.
 
 La lexación de cadenas solo acepta escapes compatibles con JSON (`\\`, `\"`, `\/`, `\b`,
 `\f`, `\n`, `\r`, `\t` y `\uXXXX`). Terminadores de línea sin formato, escapes no válidos,
@@ -495,7 +495,7 @@ El uso de componentes más simple es:
 ```
 
 Configure `flint={false}` para deshabilitar la integración automática. De lo contrario,
-el componente registra el idioma `fws` y la extensión `.flint`, utiliza el idioma de Mónaco
+el componente registra el idioma `fws` y la extensión `.flint`, utiliza el lenguaje de Mónaco
 categorías de tokens integradas para temas (`keyword`, `type`, `string`, `comment`,
 `number`, `operator`, `delimiter` y `invalid`), sincroniza el activo
 modela, publica marcadores y registra proveedores de finalización y desplazamiento.
@@ -557,9 +557,9 @@ marcadores y su propia instancia de servicio de lenguaje.
 
 ## LSP versus espacios de trabajo del navegador
 
-| Consumidor       | Workspace implementation                             | Root/security boundary                                                                          | Transporte           |
-| ---------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------- |
-| Node Cliente LSP | `RootBoundedFlintWorkspaceHost`                      | Raíces del sistema de archivos configurado canonicalizado; se rechazan las lecturas externas    | estándar LSP         |
+| Consumidor | Implementación del espacio de trabajo | Límite raíz/seguridad | Transporte |
+| --------------- | ----------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
+| Node Cliente LSP | `RootBoundedFlintWorkspaceHost` | Raíces del sistema de archivos configurado canonicalizado; se rechazan las lecturas externas | estándar LSP |
 | Mónaco/navegador | `FlintWorkspaceHost` proporcionado por la aplicación | El host decide qué URI/archivos/opciones exponer; sin suposiciones sobre el sistema de archivos | Adaptador en proceso |
 
 Ambos adaptadores utilizan los mismos contratos de servicios de lenguaje y semántica de análisis,
@@ -596,7 +596,7 @@ pnpm --filter @mission-platform/content build:check
 ```
 
 Los comandos de formato y pelusa de contenido de todo el paquete también inspeccionan CSS/SCSS no relacionados
-archivos; un error limitado a esos archivos existentes no es un script web de Forge
+archivos; una falla limitada a esos archivos existentes no es un Flint
 regresión de herramientas del lenguaje. Las expectativas del lenguaje autorizado
 permanecen en `../../../flint/src/fixtures/bootstrap.ts` y el
-[referencia del idioma](../../../../../flint/docs/locales/es/reference/language.md).
+[referencia de idioma](../../../../../flint/docs/reference/language.md).

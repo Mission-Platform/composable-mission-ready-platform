@@ -33,23 +33,23 @@ function getPhoneNumberUtilSync(): PhoneNumberUtil;
 
 ### تنسيق رقم الهاتف
 
-**النوع:** ثابت
+**النوع:** النوع
 
 ```typescript
-export const PhoneNumberFormat;
+export type PhoneNumberFormat = (typeof PhoneNumberFormat)[keyof typeof PhoneNumberFormat];
 ```
 
-تنسيق الإخراج، يعكس `PhoneNumberFormat` الخاص بـ libphonenumber.
+لم يتم تقديم أي وصف.
 
 ### نوع رقم الهاتف
 
-**النوع:** ثابت
+**النوع:** النوع
 
 ```typescript
-export const PhoneNumberType;
+export type PhoneNumberType = (typeof PhoneNumberType)[keyof typeof PhoneNumberType];
 ```
 
-نوع سطر رقم الهاتف، يعكس `PhoneNumberType` الخاص بـ libphonenumber.
+لم يتم تقديم أي وصف.
 
 ### رقم الهاتفUtil
 
@@ -76,7 +76,7 @@ export type RegionCode = string;
 
 ### رمز_البلد_for_region
 
-**النوع:** fws-export
+**النوع:** الصوان للتصدير
 
 ```typescript
 export fn country_code_for_region(region: string) -> i32
@@ -86,8 +86,8 @@ export fn country_code_for_region(region: string) -> i32
 
 #### حدود
 
-| الاسم   | اكتب  | الوصف                           |
-| ------- | ----- | ------------------------------- |
+| الاسم | اكتب | الوصف |
+| ------ | ------ | ------------------------------------- |
 | المنطقة | سلسلة | رمز منطقة ISO مثل "US" أو "GB". |
 
 #### عقد
@@ -97,7 +97,7 @@ export fn country_code_for_region(region: string) -> i32
 
 ### national_prefix
 
-**النوع:** fws-export
+**النوع:** الصوان للتصدير
 
 ```typescript
 export fn national_prefix(region: string) -> string
@@ -107,8 +107,8 @@ export fn national_prefix(region: string) -> string
 
 #### حدود
 
-| الاسم   | اكتب  | الوصف            |
-| ------- | ----- | ---------------- |
+| الاسم | اكتب | الوصف |
+| ------ | ------ | ---------------- |
 | المنطقة | سلسلة | رمز المنطقة ISO. |
 
 #### عقد
@@ -118,7 +118,7 @@ export fn national_prefix(region: string) -> string
 
 ### Region_for_country_code
 
-**النوع:** fws-export
+**النوع:** الصوان للتصدير
 
 ```typescript
 export fn region_for_country_code(code: i32) -> string
@@ -128,9 +128,9 @@ export fn region_for_country_code(code: i32) -> string
 
 #### حدود
 
-| الاسم | اكتب | الوصف                     |
-| ----- | ---- | ------------------------- |
-| كود   | i32  | رمز البلد للاتصال الدولي. |
+| الاسم | اكتب | الوصف |
+| ---- | ---- | ----------------------------------- |
+| كود | i32 | رمز البلد للاتصال الدولي. |
 
 #### عقد
 
@@ -139,7 +139,7 @@ export fn region_for_country_code(code: i32) -> string
 
 ### Region_is
 
-**النوع:** fws-export
+**النوع:** الصوان للتصدير
 
 ```typescript
 export fn region_is(region: string, expected: string) -> bool
@@ -149,8 +149,8 @@ export fn region_is(region: string, expected: string) -> bool
 
 #### حدود
 
-| الاسم   | اكتب  | الوصف                   |
-| ------- | ----- | ----------------------- |
+| الاسم | اكتب | الوصف |
+| -------- | ------ | -------------------------- |
 | المنطقة | سلسلة | رمز المنطقة ISO المرشح. |
 | المتوقع | سلسلة | رمز منطقة ISO المتوقع.  |
 

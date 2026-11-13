@@ -14,14 +14,14 @@ construire des adaptateurs.
 
 La compilation Forge traverse plusieurs packages, chacun avec une responsabilité volontairement étroite :
 
-| Couche                                               | Possède                                                                                                                                                       | Ne possède pas                                                                       |
-| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------- |
-| `@mission-platform/vite-plugin-forge`                | Analyse syntaxique, normalisation, analyse neutre, IR sémantique, optimisation partagée, cache/découverte, répartition et orchestration générique Vite/tsdown | React, Vue, Solid, Svelte, composants Web ou émetteurs de source CMS                 |
-| `@mission-platform/forge-plugin-api`                 | `FrameworkOutputPlugin`, contrats cibles sémantiques, types de modules générés, métadonnées cibles et types d'adaptateurs Vite/tsdown                         | Un registre de mise en œuvre d'un cadre ou de sélection de cibles                    |
-| Packages `@mission-platform/forge-plugin-*` intégrés | Abaissement de la cible, optimisation de la cible, génération de source, diagnostics de cible, métadonnées d'exécution et adaptateurs de build natifs         | Analyse neutre et orchestration multi-cibles                                         |
-| `@mission-platform/forge-cms-plugin-api`             | `CmsOutputPlugin`, le modèle de contenu neutre, le pilote discover→analyse→emit→write, la cogénération d'îlot et les assistants de construction CMS           | Tout schéma, modèle ou forme de manifeste spécifique à la plate-forme                |
-| Paquets `@mission-platform/forge-cms-*`              | Une plate-forme de contenu chacune : son mappage de champs, son dialecte de modèle, sa forme de manifeste et ses diagnostics de plate-forme                   | Classification d'accessoires neutres ou orchestration multi-cibles                   |
-| Fichiers du package `tsdown.config.ts`               | Sélection des instances de plug-in cibles et des remplacements spécifiques au package                                                                         | Réimplémentation des étapes du compilateur ou des tables de commutation du framework |
+| Couche | Possède | Ne possède pas |
+| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------- |
+| `@mission-platform/vite-plugin-forge` | Analyse syntaxique, normalisation, analyse neutre, IR sémantique, optimisation partagée, cache/découverte, répartition et orchestration générique Vite/tsdown | React, Vue, Solid, Svelte, composants Web ou émetteurs de source CMS |
+| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin`, contrats cibles sémantiques, types de modules générés, métadonnées cibles et types d'adaptateurs Vite/tsdown | Un registre de mise en œuvre d'un cadre ou de sélection de cibles |
+| Packages `@mission-platform/forge-plugin-*` intégrés | Abaissement de la cible, optimisation de la cible, génération de source, diagnostics de cible, métadonnées d'exécution et adaptateurs de build natifs | Analyse neutre et orchestration multi-cibles |
+| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin`, le modèle de contenu neutre, le pilote discover→analyse→emit→write, la cogénération d'îlot et les assistants de construction CMS | Tout schéma, modèle ou forme de manifeste spécifique à la plate-forme |
+| Paquets `@mission-platform/forge-cms-*` | Une plate-forme de contenu chacune : son mappage de champs, son dialecte de modèle, sa forme de manifeste et ses diagnostics de plate-forme | Classification d'accessoires neutres ou orchestration multi-cibles |
+| Fichiers du package `tsdown.config.ts` | Sélection des instances de plug-in cibles et des remplacements spécifiques au package | Réimplémentation des étapes du compilateur ou des tables de commutation du framework |
 
 La direction des dépendances est explicite : un package importe le plugin cible qu'il souhaite, transmet cette instance au neutre.
 pilote et reçoit une configuration de build spécifique à la cible. Le pilote ne construit jamais de cible à partir d'une chaîne ou importe
@@ -57,27 +57,33 @@ Les passes neutres fonctionnent avant qu'un cadre ne soit impliqué. Ils peuvent
 directives du compilateur, déduire des clés stables, élaguer les branches mortes neutres et mettre en cache une analyse réutilisable. Le résultat est un
 `SemanticModule` : une représentation explicite du composant ou du comportement composable du module et de ses faits neutres.
 
-L'IR sémantique est le contrat entre le compilateur générique et un plugin cible. Le frontend conserve également l'original
-analysé TypeScript `SourceFile` en tant que détail d'exécution non énumérable sur le module sémantique. Les émetteurs cibles peuvent consommer
-cet arbre analysé partagé pour les feuilles sauvegardées par la source, mais ils ne doivent plus jamais appeler `parseTsx` sur la source du module. Ceci
-maintient le cache sérialisable tout en garantissant que la source n'est analysée qu'une seule fois.
+L'IR sémantique est le contrat entre le compilateur générique et un plugin cible. Le frontend analyse la source neutre
+utiliser Oxc dans des structures AST génériques et des expressions/spans basés sur la source sans produire ni transformer TypeScript
+Nœuds AST. Les abaisseurs de cible et les émetteurs consomment les enregistrements `SemanticModule`, les diagnostics et les modifications de source sans autorisation directe.
+couplage aux nœuds AST de l'analyseur, gardant le cache sérialisable tout en garantissant que la source n'est analysée qu'une seule fois.
 
 ### Abaissement et optimisation de la cible
 
 L'appelant fournit une instance `FrameworkOutputPlugin`. Le driver appelle sa fonction `lower` avec le module sémantique
-et un `TargetContext`, produisant `TargetIntentions`. L'abaissement mappe les concepts neutres aux concepts cibles : par exemple,
-les hooks et les slots neutres deviennent l'état/cycle de vie et la représentation des slots de la cible, tandis que les éléments neutres deviennent le
-modèle d’élément ou de composant de la cible.
+et un `TargetContext`, produisant `TargetIntentions` avec un plan `lowered` requis. L'abaissement mappe les concepts neutres à
+concepts de cible : par exemple, les hooks et les slots neutres deviennent l'état/cycle de vie et la représentation des slots de la cible, tandis que
+les éléments neutres deviennent le modèle d’élément ou de composant de la cible.
 
-La fonction `optimize` du plugin effectue ensuite une simplification spécifique à la cible. Il reçoit les options neutres partagées
-à côté d’un point d’extension pour les options de cible. Cela maintient les règles-cadres hors de l'optimiseur neutre tout en permettant une
-target pour optimiser sa propre représentation générée avant la génération de la source.
+La fonction `optimize` du plugin effectue alors une simplification spécifique à la cible sur le plan abaissé. Il reçoit le partage
+options neutres ainsi qu’un point d’extension pour les options cibles. Cela maintient les règles du cadre hors de l'optimiseur neutre
+tout en permettant à une cible d'optimiser sa propre représentation générée avant la génération de la source.
+
+Le compilateur nécessite strictement une réduction avant la génération : `service.ts` et le pipeline du compilateur affirment que
+`intentions.lowered` existe et que son discriminateur de structure correspond à l'ID cible via
+`assertTargetIntentionsLowered`. La génération directe sans abaissement est rejetée ; les plugins cibles ne baissent plus silencieusement
+sur demande.
 
 ### Génération de sources et compilation native
 
-La fonction `generate` du plugin renvoie un `GeneratedModule`. Il peut inclure la source primaire, les modules auxiliaires et
-diagnostic cible. La source générée est délibérément un artefact intermédiaire appartenant au package cible : React,
-Vue, Solid, Svelte et les composants Web peuvent chacun choisir la forme source attendue par leur chaîne d'outils native.
+La fonction `generate` du plugin reçoit le `TargetIntentions` réduit et optimisé et renvoie un `GeneratedModule`.
+Il peut inclure la source principale, les modules auxiliaires et les diagnostics cibles. La source générée est délibérément un
+artefact intermédiaire appartenant au package cible : React, Vue, Solid, Svelte et les composants Web peuvent chacun choisir le
+la forme source attendue par leur chaîne d’outils native.
 
 L'étape finale n'est pas un autre émetteur Forge. L'adaptateur `build.vite` ou `build.tsdown` du plugin fournit le natif
 plugins de framework et paramètres de construction pour l'arborescence générée. Compilation native Vite/Rolldown, génération de déclarations,
@@ -104,13 +110,13 @@ dépendants, y compris les composants transitifs et les entrées de hook, au lie
 `baseUrl` et `paths` sont inclus dans la préparation du graphique, de sorte que les alias sont résolus de manière cohérente dans les versions Vite et tsdown.
 Appelez `invalidate(changedFiles)` à partir des intégrations de surveillance personnalisées et appelez `dispose()` lorsqu'un service n'est plus nécessaire.
 
-Le rapport de service expose les timings de phase, les succès/échecs du cache, les fichiers invalidés, les avertissements, les erreurs et les artefacts émis.
+Le rapport de service expose les timings des phases, les succès/échecs du cache, les fichiers invalidés, les avertissements, les erreurs et les artefacts émis.
 compte. Les fichiers manquants, les extensions non prises en charge, les alias non résolus, les exportations mal formées et les erreurs de configuration cible sont
 diagnostic structuré. Les avertissements parviennent au rapporteur de build ; les erreurs empêchent la génération et la promotion.
 
 Chaque instantané cible possède un manifeste d'artefact répertoriant les modules générés, les modules supplémentaires, les déclarations, les cartes sources, les actifs,
 entrées et sommes de contrôle. La promotion native valide que le manifeste est complet et ciblé avant de remplacer le
-dernière sortie réussie. Une build ayant échoué, annulée ou expirée supprime uniquement son étape et préserve les cibles sœurs et
+dernière sortie réussie. Une build échouée, annulée ou expirée supprime uniquement son étape et préserve les cibles sœurs et
 l'arborescence `dist` précédente.
 
 La première implémentation est délibérément en cours car les plugins cibles contiennent des fonctions appartenant à l'appelant et des fonctionnalités natives.
@@ -121,9 +127,14 @@ framework et n’est pas requis pour le flux de travail Vite/tsdown actuel.
 
 Les contrats centraux résident dans `packages/compiler/plugins/forge-plugin-api/src/framework.ts` :
 
-- `FrameworkOutputPlugin` identifie une cible et possède `lower`, `optimize`, `generate` et `build`.
+- `FrameworkOutputPlugin` identifie une cible via `id: FrameworkId` et possède `lower`, `optimize`, `generate` et `build`.
+- `FrameworkId` (`JsxFramework | (string & {})`) fournit un alias d'identifiant de framework ouvert pour les plugins cibles, permettant
+  n'importe quelle cible personnalisée pour définir un ID de chaîne unique tout en conservant la complétion automatique de l'IDE pour les cibles intégrées connues.
+- `JsxFramework` représente l'union fermée des frameworks intégrés (`react`, `vue`, `solid`, `svelte`, `web-components`),
+  utilisé lorsque les commodités et directives intégrées (`use react`, `use vue`, etc.) sont explicitement prévues.
 - `TargetContext` contient un contexte de construction générique tel que le type de module, le nom du composant et les dossiers de composants découverts.
-- `TargetIntentions` encapsule le module sémantique après l'abaissement de la cible tout en conservant les diagnostics.
+- `TargetLoweredModule` représente le plan abaissé appartenant à la cible, discriminé sur `framework: FrameworkId`.
+- `TargetIntentions<TLowered>` enveloppe le module sémantique avec un plan `lowered: TLowered` requis, en conservant les diagnostics.
 - `GeneratedModule` décrit la source générée, son langage de sortie, ses modules auxiliaires et ses diagnostics.
 - `ForgeBuildAdapters` fournit des adaptateurs Vite et tsdown typés indépendamment.
 - `FrameworkSourceMetadata`, les éléments externes d'exécution et les métadonnées de nom d'affichage permettent à l'orchestration générique de dériver les détails de sortie
@@ -131,27 +142,32 @@ Les contrats centraux résident dans `packages/compiler/plugins/forge-plugin-api
 
 Les cibles intégrées sont construites par leurs propres packages, par exemple `forgeReactFramework()`, `forgeVueFramework()`,
 `forgeSolidFramework()`, `forgeSvelteFramework()` et `forgeWebComponentsFramework()`. Un package sélectionne uniquement le
-cibles qu'il publie :
+les cibles qu'il publie :
 
 ```ts
-import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { tsdownForgeComponentPlugins } from '@mission-platform/vite-plugin-forge';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
 import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
-export default defineTsdownForgeComponents({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  frameworks: [
-    forgeVueFramework(),
-    forgeReactFramework(),
-    forgeSvelteFramework(),
-    forgeSolidFramework(),
-    forgeWebComponentsFramework(),
-  ],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: 'MissionPlatformComponents',
+  entry: 'src/index.ts',
+  plugins: tsdownForgeComponentPlugins({
+    rootDir: import.meta.dirname,
+    frameworks: [
+      forgeVueFramework(),
+      forgeReactFramework(),
+      forgeSvelteFramework(),
+      forgeSolidFramework(),
+      forgeWebComponentsFramework(),
+    ],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+    name: 'MissionPlatformComponents',
+  }),
 });
 ```
 
@@ -177,7 +193,7 @@ doit fournir un historique de la mémoire et enregistrer les éléments pendant 
 les routes complexes ciblent en tant que propriétés et sont indépendantes du modèle de création de composants du compilateur Forge.
 
 Les instances appartiennent à l'appelant. Les nouvelles instances peuvent contenir des options et des métadonnées spécifiques à la cible, ainsi qu'une liste de plugins vide.
-est une erreur de configuration plutôt qu'une demande d'utilisation d'un registre par défaut masqué. Cela fait de l'ajout d'une nouvelle cible un
+est une erreur de configuration plutôt qu'une demande d'utilisation d'un registre par défaut masqué. Cela rend l'ajout d'une nouvelle cible un
 changement de package additif : implémentez le contrat du plugin de sortie, publiez ses adaptateurs de construction et sélectionnez-le dans les consommateurs.
 
 ```mermaid
@@ -199,13 +215,14 @@ le pilote possède une orchestration générique ; et chaque package cible poss
 ## Constructions de composants
 
 Les packages de composants créent des modules neutres par rapport à `@mission-platform/forge-jsx`, généralement via un baril de composants neutres.
-`defineTsdownForgeComponents` crée une version cible pour chaque plugin fourni. Pour chaque cible, il :
+`tsdownForgeComponentPlugins` renvoie les plugins tsdown natifs pour chaque cible fournie. Les consommateurs ajoutent ces plugins à un
+Appel `defineTsdownLibrary` ; la génération reste paresseuse jusqu'à ce que tsdown invoque ses hooks de cycle de vie. Pour chaque cible, il :
 
 1. analyse, normalise et analyse les modules de composants neutres ;
 2. exécute des passes neutres et crée des modules sémantiques ;
 3. invoque les étapes de réduction, d'optimisation et de génération du plugin sélectionné ;
 4. écrit la source cible et les modules auxiliaires dans un cache spécifique à la cible ;
-5. appelle les adaptateurs tsdown/Vite du plugin ;
+5. invoque les adaptateurs tsdown/Vite du plugin ;
 6. émet le répertoire cible, les déclarations, les éléments externes d'exécution et les artefacts d'entrée de package.
 
 La source neutre est partagée, mais les arbres et déclarations générés sont spécifiques à la cible. Un build Vue peut donc utiliser Vue
@@ -216,12 +233,13 @@ problèmes dans le compilateur générique.
 ## Constructions hook et composables
 
 Les hooks sont des composables neutres plutôt que des composants d'interface utilisateur, mais utilisent la même limite de propriété cible explicite. Un crochet
-le consommateur transmet un `FrameworkOutputPlugin` à `defineTsdownForgeHooks`. Le pilote générique analyse l'entrée neutre,
+Le consommateur transmet un `FrameworkOutputPlugin` à `tsdownForgeHookPlugins` et ajoute le plugin renvoyé à
+`defineTsdownLibrary`. Le pilote générique analyse l'entrée neutre,
 préserve les modules indépendants du framework lorsque cela est possible et envoie les modules dépendants de la cible via le protocole strict du plugin.
 abaisser/optimiser/générer le chemin.
 
 Le plugin sélectionné contrôle le langage de sortie du hook et l'adaptateur natif. Cela permet, par exemple, à une construction de hook React de
-utilisez des importations compatibles React et une construction de hook Vue pour exposer le comportement basé sur Vue `Ref`, tandis que les modules utilitaires neutres restent
+utilisez les importations compatibles React et une construction de hook Vue pour exposer le comportement basé sur Vue `Ref`, tandis que les modules utilitaires neutres restent
 inchangé. Chaque cible reçoit ses propres déclarations de l'arborescence cible générée ; aucune déclaration partagée ne prétend que
 tous les consommateurs de framework ont les mêmes types de hook.
 
@@ -245,33 +263,38 @@ Jekyll include, ou un composant de code Webflow - et chacun d'entre eux peut êt
    temps de configuration, y compris la restriction `supportedFrameworks` d'une cible.
 3. **Un pilote générique et des aides à la construction.** `generateCmsArtifacts` découvre le canon neutre, obtient le numéro de chaque composant
    IR via `analyzeForgeModule`, analyse le modèle de contenu, appelle les émetteurs de la cible et écrit chaque retour.
-   `CmsArtifact`. `defineTsdownForgeCms(All)` l'exécute dans un cache par cible et émet
-   `dist/cms/<cms>/<framework>/**`, mettant en miroir les artefacts `asset: true` dans `dist/cms/<cms>/`.
+   `CmsArtifact`. `tsdownForgeCmsPlugins` l'injecte dans une configuration tsdown appartenant à l'appelant et émet
+   `dist/cms/<cms>/<framework>/**`, reflétant les artefacts `asset: true` dans `dist/cms/<cms>/`.
 
 Le pilote ne mappe jamais un identifiant de chaîne sur une cible : les consommateurs construisent et transmettent des instances, exactement comme ils le font pour
 plugins de framework :
 
 ```ts
-import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { tsdownForgeCmsPlugins } from '@mission-platform/forge-cms-plugin-api';
+import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
 import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
 import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
-export default defineTsdownForgeCmsAll({
+export default defineTsdownLibrary({
   rootDir: import.meta.dirname,
-  targets: [
-    forgeStoryblokCms({
-      packageName: '@mission-platform/components',
-      plugin: forgeReactFramework(),
-      storyblokRuntime: '@storyblok/react',
-    }),
-    forgeStoryblokCms({
-      packageName: '@mission-platform/components',
-      plugin: forgeVueFramework(),
-      storyblokRuntime: '@storyblok/vue',
-    }),
-  ],
-  componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  entry: 'src/index.ts',
+  plugins: tsdownForgeCmsPlugins({
+    rootDir: import.meta.dirname,
+    targets: [
+      forgeStoryblokCms({
+        packageName: '@mission-platform/components',
+        plugin: forgeReactFramework(),
+        storyblokRuntime: '@storyblok/react',
+      }),
+      forgeStoryblokCms({
+        packageName: '@mission-platform/components',
+        plugin: forgeVueFramework(),
+        storyblokRuntime: '@storyblok/vue',
+      }),
+    ],
+    componentsModule: `${import.meta.dirname}/src/components/index.ts`,
+  }),
 });
 ```
 
@@ -290,13 +313,13 @@ flowchart TD
 
 ### Les cibles
 
-| Forfait                                 | Usine               | Émet                                                                                                  |
-| :-------------------------------------- | :------------------ | :---------------------------------------------------------------------------------------------------- |
-| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | un objet composant par composant, un wrapper framework blok, `components.json`, une entrée typée      |
-| `@mission-platform/forge-cms-astro`     | `forgeAstroCms`     | `.astro` statique ou un îlot `client:load`, plus un zod `content.config.ts`                           |
-| `@mission-platform/forge-cms-ghost`     | `forgeGhostCms`     | Partiels de guidon plus un fragment de thème `config.custom`                                          |
-| `@mission-platform/forge-cms-jekyll`    | `forgeJekyllCms`    | Le liquide comprend plus `_data/forge-components.yml` et un fragment `_config.yml`                    |
-| `@mission-platform/forge-cms-webflow`   | `forgeWebflowCms`   | Déclarations de composants de code `declareComponent` plus un fragment de bibliothèque `webflow.json` |
+| Forfait | Usine | Émet |
+| :-------------------------------------- | :------------------ | :------------------------------------------------------------------------------------------- |
+| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | un objet composant par composant, un wrapper framework blok, `components.json`, une entrée typée |
+| `@mission-platform/forge-cms-astro` | `forgeAstroCms` | `.astro` statique ou un îlot `client:load`, plus un zod `content.config.ts` |
+| `@mission-platform/forge-cms-ghost` | `forgeGhostCms` | Partiels de guidon plus un fragment de thème `config.custom` |
+| `@mission-platform/forge-cms-jekyll` | `forgeJekyllCms` | Le liquide comprend plus `_data/forge-components.yml` et un fragment `_config.yml` |
+| `@mission-platform/forge-cms-webflow` | `forgeWebflowCms` | Déclarations de composants de code `declareComponent` plus un fragment de bibliothèque `webflow.json` |
 
 Chaque mappage non pris en charge produit un `CompilerDiagnostic` avec une phase, un code et une raison exploitable plutôt qu'un
 omission silencieuse - Ghost avertit sur les champs numériques et en cas de dépassement de son plafond de ~20, Webflow avertit lorsqu'un nombre
@@ -324,7 +347,7 @@ Tracez d'abord une build par responsabilité plutôt que par fichier généré 
 2. **Comportement cible :** inspectez le package `forge-plugin-*` sélectionné et ses `lower`, `optimize`, `generate` et compilez
    implémentations d'adaptateur.
 3. **Forme de construction générique :** inspectez `packages/tooling/vite/forge/src/generate.ts`, `generate-hooks.ts` et `tsdown.ts` pour le cache,
-   comportement de sortie, de déclaration et de remplacement de l'appelant.
+   sortie, déclaration et comportement de remplacement de l'appelant.
 4. **Sortie CMS :** inspectez `packages/compiler/plugins/forge-cms-plugin-api/` pour le modèle de contenu, le pilote et la version
    helpers, puis la cible spécifique `packages/compiler/plugins/forge-cms-*` pour ses émetteurs et le mappage de la plateforme.
 5. **Sélection du package :** inspectez le `tsdown.config.ts` du package consommateur et les dépendances directes `forge-plugin-*`.
@@ -361,7 +384,7 @@ L'ajout d'une plate-forme de contenu suit la même forme additive, une couche au
 2. exporter une usine qui renvoie `defineForgeCmsPlugin({ id, framework, packageName, … })`, en prenant le plugin framework
    de l'appelant plutôt que d'en choisir un ;
 3. implémentez `emitTemplate` et celui de `emitSchema`, `emitManifest` et `emitEntry` dont la plate-forme a besoin - un
-   une plate-forme composée uniquement de modèles, telle que Ghost ou Jekyll, n'implémente que les deux premiers et le pilote écrit un espace réservé
+   une plate-forme composée uniquement de modèles telle que Ghost ou Jekyll n'implémente que les deux premiers et le pilote écrit un espace réservé
    entrée;
 4. mapper les `ContentFieldKind` neutres sur le vocabulaire de terrain de la plateforme en un seul endroit et pousser un
    `CompilerDiagnostic` pour chaque mappage que la plateforme ne peut pas représenter fidèlement ;
@@ -370,10 +393,38 @@ L'ajout d'une plate-forme de contenu suit la même forme additive, une couche au
 6. ajoutez une spécification sur les appareils partagés exportés depuis `@mission-platform/forge-cms-plugin-api/fixtures`, afin que le nouveau
    la cible est exercée contre exactement les mêmes entrées que toutes les autres ;
 7. ajoutez le package en tant que dépendance directe de chaque consommateur qui publie la cible et transmettez une nouvelle instance à
-   `defineTsdownForgeCms`.
+   `tsdownForgeCmsPlugins`.
 
 N'ajoutez pas de logique de classification d'accessoires à la cible : un correctif pour la gestion des unions, JSDoc, par défaut ou des emplacements appartient au
 modèle de contenu partagé afin que chaque plate-forme en profite en même temps.
 
-Pour la présentation du système de construction et l'orientation des dépendances à l'échelle de la plate-forme, voir [Construire un système](../../../../../../docs/locales/fr/build-system.md) et
-[Architecture de la plateforme de mission](../../../../../../docs/locales/fr/architecture.md).
+## Conseils en matière de migration
+
+### Migration à partir des anciennes exportations TypeScript AST
+
+L'ancienne couche de compatibilité TypeScript AST dans `packages/tooling/vite/forge/src/compiler/ast.ts` a été supprimée.
+Oxc est désormais le seul chemin AST du compilateur à travers le pilote Forge :
+
+- Les anciennes usines AST, les visiteurs, les transformateurs et les cales de compatibilité `@ts-nocheck` ne sont plus fournis.
+- Si votre code a consommé des assistants de `compiler/ast.ts`, migrez vers les modules frères ciblés :
+  - `compiler/components.js` : Limite du composant et faits de déclaration.
+  - `compiler/constants.js` : Module neutre et constantes du marqueur d'exécution.
+  - `compiler/directives.js` : Inspection directive et résolution cadre.
+  - `compiler/facts.js` : faits AST, étendues et utilitaires d'inspection.
+  - `compiler/imports.js` : Déclaration d'importation et contrôle du prescripteur.
+
+### Migration pour les appelants de génération de cible directe
+
+Tous les plugins intégrés (`forge-vue`, `forge-web-components`, `forge-react`, `forge-solid`, `forge-svelte`) ont été supprimés
+abaissement de repli par génération directe :
+
+- L'appel de `plugin.generate(intentions)` avec des intentions non réduites (ou des intentions dépourvues de `lowered`) génère désormais un
+  `TypeError`.
+- Les appelants directs et les suites de tests doivent appeler `plugin.lower(module, context)` et `plugin.optimize(loweredIntentions, options)`
+  avant d'appeler `generate()`, ou exécutez la compilation via le service de compilation standard :
+  `createForgeCompilerService().compile(request, plugin)`.
+- Les auteurs de plugins personnalisés doivent s'assurer que `lower()` définit un plan `lowered` non vide avec un `framework` correspondant.
+  discriminateur sur le `TargetIntentions` renvoyé.
+
+Pour obtenir une présentation du système de build et l'orientation des dépendances à l'échelle de la plateforme, voir [Build System](../../../../../../docs/build-system.md) et
+[Architecture de plateforme de mission](../../../../../../docs/architecture.md).

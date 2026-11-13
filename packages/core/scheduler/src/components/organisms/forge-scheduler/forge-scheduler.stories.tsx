@@ -1,9 +1,9 @@
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeScheduler } from '@mission-platform/scheduler';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { VEvent } from './forge-scheduler';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * `ForgeScheduler` is the write-once `ForgeScheduler` component of `@mission-platform/components`. A toolbar sits above a time grid (day / 3-day /

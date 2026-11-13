@@ -13,7 +13,7 @@
 
 - `@mission-platform/breakpoints` - נקודת הכניסה היחידה. איזה מבנה אתה מקבל נקבע על ידי הפעיל
   מצב ייצוא `mp:<framework>` (`mp:vue`, `mp:react`, `mp:solid`,
-  `mp:web-component`); ללא הגדרה של תנאי, הוא פותר לחבית המקור הנייטרלית של JSX (עבור רכיבי כתיבה חד פעמית
+  `mp:web-component`); ללא תנאי מוגדר, הוא פותר לחבית המקור הנייטרלית של JSX (עבור רכיבי כתיבה חד פעמית
   מלוקט על ידי `@mission-platform/vite-plugin-forge`).
 - `@mission-platform/breakpoints/core` - כלי עזר וסוגים אגנוסטיים למסגרת.
 
@@ -25,15 +25,15 @@
 
 הפלטפורמה משתמשת בקנה מידה תגובה בן שבעה שלבים המבוסס על ספי רוחב יציאת התצוגה:
 
-| מפתח  | תווית              | סף            | מכשיר נפוץ / מקרה שימוש   |
-| :---- | :----------------- | :------------ | :------------------------ |
-| `2xs` | אקסטרה-אקסטרה-קטן  | $\ge 0$ px    | כל המכשירים               |
-| `xs`  | אקסטרה-קטן         | $\ge 480$ px  | טלפונים גדולים            |
-| `sm`  | קטן                | $\ge 768$ px  | דיוקן טאבלט               |
-| `md`  | בינוני             | $\ge 1024$ px | טאבלט נוף / מחשב נייד קטן |
-| `lg`  | גדול               | $\ge 1920$ px | Full HD / 1080p           |
-| `xl`  | גדול במיוחד        | $\ge 2560$ px | QHD                       |
-| `2xl` | אקסטרה-אקסטרה-גדול | $\ge 3840$ px | 4K UHD                    |
+| מפתח | תווית | סף | מכשיר נפוץ / מקרה שימוש |
+| :---- | :---------------- | :------------ | :------------------------------ |
+| `2xs` | אקסטרה-אקסטרה-קטן | $\ge 0$ px | כל המכשירים |
+| `xs` | אקסטרה-קטן | $\ge 480$ px | טלפונים גדולים |
+| `sm` | קטן | $\ge 768$ px | דיוקן טאבלט |
+| `md` | בינוני | $\ge 1024$ px | טאבלט נוף / מחשב נייד קטן |
+| `lg` | גדול | $\ge 1920$ px | Full HD / 1080p |
+| `xl` | גדול במיוחד | $\ge 2560$ px | QHD |
+| `2xl` | אקסטרה-אקסטרה-גדול | $\ge 3840$ px | 4K UHD |
 
 ## כלי עזר ליבה (`/core`)
 
@@ -42,9 +42,9 @@
 - `breakpointKeys` - המערך המסודר של מפתחות נקודת הפסקה.
 - `breakpoints` - מפה של מפתחות לספי הפיקסלים ברוחב המינימלי שלהם.
 - `getBreakpointValue(key)` — סף הפיקסלים לנקודת שבירה.
-- `mediaQuery(key)` — מחרוזת שאילתת מדיה `min-width` (`'(min-width: 1920px)'`), או `'all'` עבור `2xs`.
+- `mediaQuery(key)` - מחרוזת שאילתת מדיה `min-width` (`'(min-width: 1920px)'`), או `'all'` עבור `2xs`.
 - `maxMediaQuery(key)` — מחרוזת שאילתת מדיה בכריכה עליונה `max-width`, או `'not all'` עבור `2xs`.
-- `resolveBreakpoint(width)` - בהינתן רוחב פיקסל, מפתח נקודת השבירה הפעילה.
+- `resolveBreakpoint(width)` - בהינתן רוחב פיקסל, מפתח נקודת הפריצה הפעילה.
 
 ```ts
 import { mediaQuery, resolveBreakpoint } from '@mission-platform/breakpoints/core';
@@ -53,8 +53,8 @@ resolveBreakpoint(1024); // → 'md'
 mediaQuery('lg'); // → '(min-width: 1920px)'
 ```
 
-הרכיב Vue בלבד `useBreakpoints` הוסר. ללוגיקה מותאמת אישית של נקודת מבט תגובתית, בנו על `/core` אלה
-עוזרים עם הווים של המסגרת שלך (ראה, למשל, ה-`apps/service-monitor` של React `useCompactViewport`
+ה Vue-רַק `useBreakpoints` composable הוסר. ללוגיקה מותאמת אישית של נקודת מבט תגובתית, בנו על אלה `/core`
+עוזרים עם הווים של המסגרת שלך (ראה, למשל, `apps/service-monitor`'s React `useCompactViewport` וו
 בנוי על `maxMediaQuery`).
 
 ## רכיבים
@@ -129,7 +129,7 @@ import { ForgeBreakpointDebug } from '@mission-platform/breakpoints';
 
 ## כלי עזר SCSS
 
-שכבת נקודת השבירה SCSS חיה ב-`@mission-platform/tokens`.
+שכבת ה-breakpoint SCSS חיה ב-`@mission-platform/tokens`.
 
 ### מיקסינס
 

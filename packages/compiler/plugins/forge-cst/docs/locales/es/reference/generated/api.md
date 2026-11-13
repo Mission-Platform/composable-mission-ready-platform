@@ -23,8 +23,8 @@ Extraiga todas las declaraciones de importación de nivel superior de un program
 
 #### Parámetros
 
-| Nombre   | Tipo     | Descripción |
-| -------- | -------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ------- | ----------- |
 | programa | Programa |             |
 
 ### parseCst
@@ -43,9 +43,9 @@ con posiciones de tokens, comentarios y metadatos AST completos.
 
 #### Parámetros
 
-| Nombre   | Tipo                      | Descripción                                     |
-| -------- | ------------------------- | ----------------------------------------------- |
-| fuente   | cadena                    | - Código fuente para analizar.                  |
+| Nombre | Tipo | Descripción |
+| ------- | ------------------------- | ----------------------------------- |
+| fuente | cadena | - Código fuente para analizar.             |
 | opciones | ParseCstOptions \| cadena | - Opciones de análisis CST o nombre de archivo. |
 
 #### Contrato
@@ -103,9 +103,9 @@ Conserva los comentarios, el formato multilínea y la integridad de AST sin un f
 
 #### Parámetros
 
-| Nombre   | Tipo                               | Descripción |
-| -------- | ---------------------------------- | ----------- |
-| fuente   | cadena                             |             |
+| Nombre | Tipo | Descripción |
+| ------- | --------------------- | ----------- |
+| fuente | cadena |             |
 | opciones | Reescribir opciones de importación |             |
 
 ### Reescribir resultado
@@ -117,3 +117,426 @@ export interface RewriteResult
 ```
 
 Resultado de una transformación de reescritura de importación CST.
+
+## `src/text`
+
+### regiones en blanco
+
+**Tipo:** función
+
+```typescript
+function blankRegions(text: string, regions: readonly string[]): string;
+```
+
+Borra cada aparición de cada región, preservando los índices de caracteres.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ----------------- | ----------- |
+| texto | cadena |             |
+| regiones | cadena de solo lectura[] |             |
+
+### colapsarespacios en blanco
+
+**Tipo:** función
+
+```typescript
+function collapseWhitespace(text: string): string;
+```
+
+Contraiga todos los espacios en blanco en espacios simples y recorte el resultado.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| texto | cadena |             |
+
+### endOfTypeArgumentos
+
+**Tipo:** función
+
+```typescript
+function endOfTypeArguments(text: string, start: number): number;
+```
+
+El índice justo después de `>` cierra la lista de argumentos de tipo abierta en `start`,
+o `-1` cuando la lista nunca se cierra.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| texto | cadena |             |
+| inicio | número |             |
+
+### atributo de escape
+
+**Tipo:** función
+
+```typescript
+function escapeAttribute(value: string): string;
+```
+
+Escapar de un valor de atributo HTML entre comillas dobles.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| valor | cadena |             |
+
+### escaparEncuadernación
+
+**Tipo:** función
+
+```typescript
+function escapeBinding(expression: string): string;
+```
+
+Escapar de una expresión para usarla dentro de un enlace Vue entre comillas dobles.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---------- | ------ | ----------- |
+| expresión | cadena |             |
+
+### índice de nivel superior
+
+**Tipo:** función
+
+```typescript
+function indexOfTopLevel(text: string, token: string, from = 0): number;
+```
+
+Índice de la primera aparición de nivel superior de `token` en `text` (fuera
+corchetes, cadenas y comentarios), o `-1`.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| texto | cadena |             |
+| ficha | cadena |             |
+| de |        |             |
+
+### esNombreIdentificador
+
+**Tipo:** función
+
+```typescript
+function isIdentifierName(name: string): boolean;
+```
+
+Alias ​​de isPlainIdentifier.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| nombre | cadena |             |
+
+### esIdentificadorParte
+
+**Tipo:** función
+
+```typescript
+function isIdentifierPart(character: string | undefined): boolean;
+```
+
+Si el personaje puede continuar con un identificador de JavaScript.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| --------- | ------------------- | ----------- |
+| personaje | cadena \| indefinido |             |
+
+### esIdentificadorInicio
+
+**Tipo:** función
+
+```typescript
+function isIdentifierStart(character: string | undefined): boolean;
+```
+
+Si el personaje puede iniciar un identificador de JavaScript.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| --------- | ------------------- | ----------- |
+| personaje | cadena \| indefinido |             |
+
+### esPlainIdentifier
+
+**Tipo:** función
+
+```typescript
+function isPlainIdentifier(name: string): boolean;
+```
+
+Si una cadena es un nombre de identificador de JavaScript simple y válido.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| nombre | cadena |             |
+
+### máscaraLiterales
+
+**Tipo:** función
+
+```typescript
+function maskLiterals(text: string): boolean[];
+```
+
+Calcule una máscara booleana que marque cada índice en `text` que se encuentra dentro de una cadena literal,
+plantilla literal o comentario. Las posiciones marcadas `true` son contenido literal y nunca deben
+ser reescrito estructuralmente.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| texto | cadena |             |
+
+### partidoSoporte
+
+**Tipo:** función
+
+```typescript
+function matchBracket(text: string, start: number): number;
+```
+
+Índice del corchete que coincide con el corchete de apertura en `start`, o `-1` cuando el
+El texto está desequilibrado. Se omiten las regiones literales y de comentarios.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| texto | cadena |             |
+| inicio | número |             |
+
+### accesomiembro
+
+**Tipo:** función
+
+```typescript
+function memberAccess(object: string, key: string): string;
+```
+
+Devuelve `<object>.<key>` para identificadores simples, o `<object>["<key>"]` (notación entre corchetes) en caso contrario.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------ | ------ | ----------- |
+| objeto | cadena |             |
+| clave | cadena |             |
+
+### almohadilla
+
+**Tipo:** función
+
+```typescript
+function pad(depth: number): string;
+```
+
+Sangría para la profundidad de una plantilla (dos espacios por nivel).
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| profundidad | número |             |
+
+### cita
+
+**Tipo:** función
+
+```typescript
+function quote(value: string): string;
+```
+
+Alias ​​de quoteString.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| valor | cadena |             |
+
+### cotizaciónAtributoValor
+
+**Tipo:** función
+
+```typescript
+function quoteAttributeValue(value: string): string;
+```
+
+Cite una cadena como valor de atributo JSX.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| valor | cadena |             |
+
+### citaCadena
+
+**Tipo:** función
+
+```typescript
+function quoteString(value: string): string;
+```
+
+Literal de cadena entre comillas dobles para el código emitido (codificado en JSON).
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| valor | cadena |             |
+
+### reemplazarPrimero
+
+**Tipo:** función
+
+```typescript
+function replaceFirst(
+  text: string,
+  search: string,
+  replacement: string,
+): string;
+```
+
+Reemplace la primera aparición de `search` en `text` por `replacement`.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----------- | ------ | ----------- |
+| texto | cadena |             |
+| buscar | cadena |             |
+| reemplazo | cadena |             |
+
+### saltarAtomicToken
+
+**Tipo:** función
+
+```typescript
+function skipAtomicToken(text: string, index: number): number;
+```
+
+Avance más allá del token que comienza en `index` cuando abre una cadena, plantilla o comentario.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| texto | cadena |             |
+| índice | número |             |
+
+### omitirTrivia
+
+**Tipo:** función
+
+```typescript
+function skipTrivia(text: string, index: number): number;
+```
+
+Omita los espacios en blanco y los comentarios y devuelva el desplazamiento del siguiente carácter significativo.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| texto | cadena |             |
+| índice | número |             |
+
+### dividirNivelsuperior
+
+**Tipo:** función
+
+```typescript
+function splitTopLevel(text: string, separator: string): string[];
+```
+
+Divida `text` en cada aparición de nivel superior de `separator` (una única
+carácter), ignorando los separadores anidados entre corchetes, cadenas o comentarios.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| --------- | ------ | ----------- |
+| texto | cadena |             |
+| separador | cadena |             |
+
+### stripOuterParentheses
+
+**Tipo:** función
+
+```typescript
+function stripOuterParentheses(text: string): string;
+```
+
+Alias ​​para desenvolverParéntesis.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| texto | cadena |             |
+
+### tiraTipoAserción
+
+**Tipo:** función
+
+```typescript
+function stripTypeAssertion(text: string): string;
+```
+
+Elimina una aserción `as T`/`satisfies T` final.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| texto | cadena |             |
+
+### entre comillas
+
+**Tipo:** función
+
+```typescript
+function unquote(text: string): string | undefined;
+```
+
+Elimina las comillas de un literal de cadena si está entre comillas simples, dobles o invertidas, o no está definido en caso contrario.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| texto | cadena |             |
+
+### desenvolverParéntesis
+
+**Tipo:** función
+
+```typescript
+function unwrapParentheses(text: string): string;
+```
+
+Quite una capa de paréntesis de envoltura redundantes (`(x)` -> `x`), repetidamente.
+
+#### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ------ | ----------- |
+| texto | cadena |             |

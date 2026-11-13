@@ -10,12 +10,12 @@ sistema.
 
 ## Arquitectura
 
-Este paquete une la representación imperativa basada en selección D3 con árboles de UI declarativos reactivos:
+Este paquete une la representación imperativa basada en selección D3 con árboles de interfaz de usuario reactivos declarativos:
 
 - **Implementación neutral**: Construido sobre ganchos `@mission-platform/forge-jsx` (`useRef`, `useEffect`).
 - **Objetivo de marco dual**: Transpilado por `@mission-platform/vite-plugin-forge` a React nativo (`./react`) y Vue 3
   (`./vue`) componibles.
-- **Dependencia selectiva**: Importa `d3-selection` directamente para mantener mínimos los tamaños de los paquetes de clientes.
+- **Dependencia selectiva**: importa `d3-selection` directamente para mantener mínimos los tamaños de los paquetes de clientes.
 
 ## API clave
 
@@ -26,7 +26,7 @@ function useD3<E extends Element>(draw: D3Draw<E>, dependencies?: MpDependencyLi
 ```
 
 Se adjunta a una referencia de elemento DOM/SVG y ejecuta la función `draw` pasando una selección D3 (`D3Selection<E>`) cuando
-montado y cuando las dependencias cambian. `draw` puede devolver opcionalmente una función de limpieza de desmontaje.
+montado y cuando las dependencias cambian. `draw` opcionalmente puede devolver una función de limpieza de desmontaje.
 
 ### Utilidades de margen
 

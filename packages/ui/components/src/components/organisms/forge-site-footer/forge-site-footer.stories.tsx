@@ -1,6 +1,6 @@
-import { ForgeSiteFooter } from './forge-site-footer';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeSiteFooter } from './forge-site-footer';
 
 const meta = {
   title: 'Organisms/Navigation/ForgeSiteFooter',

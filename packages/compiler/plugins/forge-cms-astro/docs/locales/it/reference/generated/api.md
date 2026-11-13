@@ -1,4 +1,4 @@
-# @mission-platform/forge-cms-astro Riferimento API
+# Riferimento API @mission-platform/forge-cms-astro
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
@@ -23,7 +23,7 @@ Associa la proiezione Astro a un plug-in di output del framework di proprietà d
 
 #### Parametri
 
-| Nome    | Digitare             | Descrizione |
+| Nome | Digitare | Descrizione |
 | ------- | -------------------- | ----------- |
 | opzioni | ForgeAstroCmsOptions |             |
 
@@ -51,8 +51,8 @@ Emetti un Astro `content.config.ts` con una raccolta per componente.
 
 #### Parametri
 
-| Nome       | Digitare                        | Descrizione |
-| ---------- | ------------------------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ---------- | --------------------------- | ----------- |
 | componenti | sola lettura ContentComponent[] |             |
 
 ### campoToZod
@@ -63,12 +63,12 @@ Emetti un Astro `content.config.ts` con una raccolta per componente.
 function fieldToZod(field: ContentField): string;
 ```
 
-Lo zod (o `image()`) validatore su cui viene mappato un tipo di campo neutro.
+Il validatore zod (o `image()`) su cui si mappa un tipo di campo neutro.
 
 #### Parametri
 
-| Nome  | Digitare        | Descrizione |
-| ----- | --------------- | ----------- |
+| Nome | Digitare | Descrizione |
+| ----- | ------------ | ----------- |
 | campo | Campo contenuto |             |
 
 ## `src/template`
@@ -88,9 +88,9 @@ Raccogliere la diagnostica riportata dall'abbassamento Astro per un modulo.
 
 #### Parametri
 
-| Nome       | Digitare                | Descrizione |
-| ---------- | ----------------------- | ----------- |
-| io         | Modulo Semantico        |             |
+| Nome | Digitare | Descrizione |
+| --------- | ---------------- | ----------- |
+| io | Modulo Semantico |             |
 | componente | Componente di contenuto |             |
 
 ### astroMarkup
@@ -105,9 +105,9 @@ Riscrivi i nomi degli attributi solo JSX ed elimina il frammento esterno.
 
 #### Parametri
 
-| Nome        | Digitare | Descrizione |
-| ----------- | -------- | ----------- |
-| espressione | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ---------- | ------ | ----------- |
+| espressione | stringa |             |
 
 ### emitIslandAstroTemplate
 
@@ -120,7 +120,7 @@ function emitIslandAstroTemplate(
 ): string;
 ```
 
-Emetti l'isola-backed `.astro` modello per un componente interattivo.
+Emettere il modello `.astro` supportato dall'isola per un componente interattivo.
 
 Il componente viene importato dall'albero dell'isola cogenerato: lo stesso
 IR neutro compilato dal plugin del framework associato e idratato con
@@ -128,10 +128,10 @@ IR neutro compilato dal plugin del framework associato e idratato con
 
 #### Parametri
 
-| Nome          | Digitare                | Descrizione |
-| ------------- | ----------------------- | ----------- |
-| componente    | Componente di contenuto |             |
-| isolaIngresso | stringa                 |             |
+| Nome | Digitare | Descrizione |
+| ----------- | ---------------- | ----------- |
+| componente | Componente di contenuto |             |
+| isolaIngresso | stringa |             |
 
 ### emitStaticAstroTemplate
 
@@ -141,10 +141,10 @@ IR neutro compilato dal plugin del framework associato e idratato con
 function emitStaticAstroTemplate(ir: SemanticModule): string;
 ```
 
-Emetti l'elettricità statica `.astro` modello per un componente di presentazione.
+Genera il modello statico `.astro` per un componente di presentazione.
 
 #### Parametri
 
-| Nome | Digitare         | Descrizione |
-| ---- | ---------------- | ----------- |
-| io   | Modulo Semantico |             |
+| Nome | Digitare | Descrizione |
+| ---- | -------------- | ----------- |
+| io | Modulo Semantico |             |

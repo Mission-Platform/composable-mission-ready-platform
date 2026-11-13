@@ -1,7 +1,7 @@
 import { ForgeVirtualLogViewer } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import type { LogEntry, LogLevel } from './forge-virtual-log-viewer';
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 const LEVELS: LogLevel[] = ['debug', 'info', 'info', 'warn', 'error', 'fatal'];
 

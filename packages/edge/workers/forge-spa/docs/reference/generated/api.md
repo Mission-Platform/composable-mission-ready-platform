@@ -6,6 +6,16 @@ Generated from public source declarations in `@mission-platform/forge-spa`.
 
 ## `src/index`
 
+### default
+
+**Kind:** constant
+
+```typescript
+export const handler: ExportedHandler<Env>;
+```
+
+No description provided.
+
 ### Env
 
 **Kind:** interface

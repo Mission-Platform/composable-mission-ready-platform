@@ -1,10 +1,9 @@
 import { ForgeButton } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import { useToast, type ToastPosition } from '../../../stores/toast-store/toast-store';
 
 import { ForgeToastContainer } from './forge-toast-container';
-
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * `ForgeToastContainer` is the write-once `ForgeToastContainer` component of `@mission-platform/float`.

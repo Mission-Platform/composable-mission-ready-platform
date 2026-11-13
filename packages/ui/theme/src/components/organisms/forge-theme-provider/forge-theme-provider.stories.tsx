@@ -1,6 +1,5 @@
-import { ForgeThemeProvider, ForgeThemeToggle } from '@mission-platform/theme';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+import { ForgeThemeProvider, ForgeThemeToggle } from '@mission-platform/theme';
 
 /**
  * `ForgeThemeProvider` is the write-once `ForgeThemeProvider` component of `@mission-platform/theme`. It configures the shared observable theme store

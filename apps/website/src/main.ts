@@ -5,11 +5,12 @@
 // bundle runs.
 import '@mission-platform/tokens/scss/tokens';
 
-import { createForgeI18N, createForgeI18NVue, forgeNamespace } from '@mission-platform/i18n';
-import { organization, useSeo, webSite } from '@mission-platform/seo';
 import { resources as defaultLocaleResources } from 'virtual:i18n-resources';
 import { ViteSSG } from 'vite-ssg';
 import { computed, effectScope } from 'vue';
+
+import { createForgeI18N, createForgeI18NVue, forgeNamespace } from '@mission-platform/i18n';
+import { organization, useSeo, webSite } from '@mission-platform/seo';
 
 import { renderRoot } from './app-root';
 import { DEFAULT_LOCALE, routerOptions, SUPPORTED_LOCALES, type SupportedLocale } from './router';

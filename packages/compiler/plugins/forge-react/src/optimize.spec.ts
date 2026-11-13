@@ -1,5 +1,11 @@
-import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
 import { describe, expect, it } from "vitest";
+
+import type {
+  SemanticModule,
+  TargetIntentions,
+  TargetOptimizeOptions,
+} from "@mission-platform/forge-plugin-api";
+import { MP_STATIC_ATTR } from "@mission-platform/forge-plugin-api/compiler/optimize.js";
 
 import { emitReactModule } from "./emitters/index.ts";
 import {
@@ -22,12 +28,6 @@ import {
   type ReactModulePlan,
 } from "./lower.ts";
 import { optimizeReactModule, REACT_OPTIMIZATIONS } from "./optimize.ts";
-
-import type {
-  SemanticModule,
-  TargetIntentions,
-  TargetOptimizeOptions,
-} from "@mission-platform/forge-plugin-api";
 
 const CONTEXT = {
   framework: "react",

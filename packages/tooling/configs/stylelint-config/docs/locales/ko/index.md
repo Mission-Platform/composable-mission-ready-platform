@@ -5,7 +5,7 @@
 > packages/tooling/configs/stylelint-config/docs/index.md: [packages/tooling/configs/stylelint-config/docs/index.md](../../index.md)
 > 언어: 한국어 (ko)
 
-공유됨 Stylelint Mission Platform의 CSS 및 SCSS 규칙.
+Mission Platform의 CSS 및 SCSS에 대한 Stylelint 규칙을 공유했습니다.
 
 ## 설치 및 사용
 
@@ -14,7 +14,9 @@ pnpm add --save-dev @mission-platform/stylelint-config postcss-html postcss-scss
   stylelint stylelint-config-recommended-vue stylelint-config-standard-scss
 ```
 
-스타일이 있는 작업 공간은 ESM 형식의 로컬 `stylelint.config.mjs` 파일을 사용합니다. `extends` 항목을 복제하지 말고 공유 구성을 가져와 spread합니다.
+스타일 보유 작업공간은 ESM에서 작업공간-로컬 `stylelint.config.mjs`을 사용합니다.
+형식. 공유 구성을 복제하는 대신 가져오고 확산시키세요.
+`extends` 항목:
 
 ```js
 // stylelint.config.mjs
@@ -23,7 +25,16 @@ import baseConfig from '@mission-platform/stylelint-config';
 export default { ...baseConfig };
 ```
 
-공유 구성은 `stylelint-config-standard-scss`와 `stylelint-config-recommended-vue`를 확장합니다. 기본적으로 `postcss-html`, `**/*.scss`에는 `postcss-scss`, Vue 스타일 블록에는 `postcss-html`을 사용합니다. `catalog:stylelint` 버전의 직접 지원 종속성과 `workspace:*` 공유 구성 패키지를 `devDependencies`에 추가합니다.
+공유 구성은 `stylelint-config-standard-scss`을 확장하고
+`stylelint-config-recommended-vue`. 기본적으로 `postcss-html`를 사용합니다.
+`**/*.scss`에는 `postcss-scss`, Vue SFC 스타일에는 `postcss-html`를 사용합니다.
+블록. 이는 특정 작업공간 없이 CSS, SCSS 및 Vue 스타일을 지원합니다.
+구문 구성.
+
+위의 직접 지원 종속성을 작업공간에 추가하세요.
+`catalog:stylelint` 버전을 사용하는 `devDependencies` 및
+`workspace:*`을 사용하는 공유 구성 패키지. 다음을 다루는 스크립트를 추가하세요.
+작업공간의 스타일 소스. 예:
 
 ```json
 {
@@ -34,12 +45,11 @@ export default { ...baseConfig };
 }
 ```
 
-작업공간에서 패키지 확장 `stylelint.config.mjs`. 구성요소 유지
-해당 구성 요소에 가까운 스타일을 사용하고 문서화된 경우에만 로컬 재정의를 사용합니다.
-작업 공간 제약.
+구성 요소 스타일을 해당 구성 요소와 가깝게 유지하고 로컬 재정의를 해당 구성 요소에만 사용하십시오.
+문서화된 작업 공간 제약.
 
 ## 기여하다
 
-달리다 `pnpm --filter @mission-platform/stylelint-config lint` 그리고
+`pnpm --filter @mission-platform/stylelint-config lint`을 실행하고
 `pnpm --filter @mission-platform/stylelint-config format`. 테스트 규칙 변경
 패키지 SCSS와 애플리케이션 스타일 모두에 대해.

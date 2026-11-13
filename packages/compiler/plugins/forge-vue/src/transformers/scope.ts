@@ -19,6 +19,14 @@
  * factory and dependency list as source-backed text — so this module only has to
  * classify each statement and pick the matching intention record.
  */
+import type {
+  EffectIntention,
+  GenericComponent,
+  GenericRenderNode,
+  GenericStatement,
+  SemanticIntentions,
+} from "@mission-platform/forge-plugin-api";
+
 import {
   rewriteExpression,
   type VueEvent,
@@ -38,13 +46,6 @@ import type {
   VueEventSignature,
   VueModelSignature,
 } from "./props-interface.js";
-import type {
-  EffectIntention,
-  GenericComponent,
-  GenericRenderNode,
-  GenericStatement,
-  SemanticIntentions,
-} from "@mission-platform/forge-plugin-api";
 
 /** A derived (non-hook) declaration the template path lifts to a `computed`. */
 export interface DerivedConst {

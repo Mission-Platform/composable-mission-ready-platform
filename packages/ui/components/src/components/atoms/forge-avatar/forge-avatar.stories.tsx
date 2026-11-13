@@ -1,8 +1,7 @@
 import { ForgeAvatar } from '@mission-platform/components';
+import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 import styles from './forge-avatar.module.scss';
-
-import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
  * `ForgeAvatar` is the write-once component of `@mission-platform/components`.

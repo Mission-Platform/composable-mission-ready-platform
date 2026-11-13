@@ -15,5 +15,5 @@ pnpm --filter @mission-platform/email-sender build
 
 Voer `pnpm --filter @mission-platform/email-sender types` uit na het wijzigen
 bindingen. Voeg eindpuntvalidatie, SMTP-fout en stabiele responstests toe voor
-contractwijzigingen. Houd de Worker-handler Cloudflare-compatibel en bewaar deze
+contractwijzigingen. Houd de Worker-handler Cloudflare-compatibel en houd deze
 Alleen MailPit-gedrag achter de lokale ontwikkelingsconfiguratie.

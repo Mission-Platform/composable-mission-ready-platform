@@ -172,7 +172,7 @@
     "@types/react-dom": "catalog:react",
     "@vitest/coverage-v8": "catalog:testing",
     "eslint": "catalog:eslint",
-    "i18next-cli": "1.73.3",
+    "i18next-cli": "catalog:i18next",
     "jsdom": "catalog:testing",
     "lit": "catalog:webcomponents",
     "postcss-html": "catalog:stylelint",

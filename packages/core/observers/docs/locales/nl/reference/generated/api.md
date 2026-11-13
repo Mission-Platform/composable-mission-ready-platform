@@ -32,11 +32,11 @@ Automatisch opschonen: verbreekt de verbinding met de waarnemer bij het ontkoppe
 
 #### Parameters
 
-| Naam        | Typ                          | Beschrijving |
-| ----------- | ---------------------------- | ------------ |
-| doel        | MpRef<Element \| null>       |              |
-| terugbellen | IntersectionObserverCallback |              |
-| opties      | IntersectionObserverInit     |              |
+| Naam | Typ | Beschrijving |
+| -------- | ---------------------------- | ----------- |
+| doel | MpRef<Element \| null> |             |
+| terugbellen | IntersectionObserverCallback |             |
+| opties | IntersectionObserverInit |             |
 
 ## `src/composables/use-mutation-observer/use-mutation-observer`
 
@@ -60,11 +60,11 @@ Automatisch opschonen: verbreekt de verbinding met de waarnemer bij het ontkoppe
 
 #### Parameters
 
-| Naam        | Typ                 | Beschrijving |
-| ----------- | ------------------- | ------------ |
-| doel        | MpRef<Node \| null> |              |
-| terugbellen | MutatieCallback     |              |
-| opties      | MutatieObserverInit |              |
+| Naam | Typ | Beschrijving |
+| -------- | -------------------- | ----------- |
+| doel | MpRef<Node \| null> |             |
+| terugbellen | MutatieCallback |             |
+| opties | MutatieObserverInit |             |
 
 ## `src/composables/use-performance-observer/use-performance-observer`
 
@@ -85,7 +85,7 @@ Automatisch opschonen: verbreekt de verbinding met de waarnemer bij het ontkoppe
 
 #### Parameters
 
-| Naam        | Typ                         | Beschrijving |
-| ----------- | --------------------------- | ------------ |
-| terugbellen | PerformanceObserverCallback |              |
-| opties      | PerformanceObserverInit     |              |
+| Naam | Typ | Beschrijving |
+| -------- | --------------------------- | ----------- |
+| terugbellen | PerformanceObserverCallback |             |
+| opties | PerformanceObserverInit |             |

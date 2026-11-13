@@ -1,12 +1,11 @@
+import type { FlintPrimitiveType } from '@mission-platform/flint-ast';
 import {
   FLINT_ABI_VERSION,
   FLINT_LANGUAGE_VERSION,
   type FlintAbiFunction,
   type FlintAbiManifest,
   type FlintAbiParameter,
-} from '../manifest.js';
-
-import type { FlintPrimitiveType } from '../ast.js';
+} from '@mission-platform/flint-c-abi';
 
 const PRIMITIVE_TYPE_MAP: Readonly<Record<string, string>> = Object.freeze({
   unit: 'void',

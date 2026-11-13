@@ -5,27 +5,25 @@
 > packages/core/forge-jsx/docs/index.md: [packages/core/forge-jsx/docs/index.md](../../index.md)
 > 언어: 한국어 (ko)
 
-Mission Platform을 위한 작고 종속성이 없는 "한 번 작성하면 Vue 3 및 React에서 실행" 계층입니다. 구성 요소는 한 번만 작성됩니다.
-JSX이며 작은 어댑터를 통해 두 프레임워크 중 하나에서 렌더링됩니다. 빌드 시 코드 생성도 없고 외부 컴파일러도 없습니다(이것은
-Mitosis와 같은 도구에 대한 손으로 굴린 대안).
+Mission Platform을 위한 작고 종속성이 없는 프레임워크 중립적인 JSX 런타임입니다.
+구성 요소는 JSX에서 한 번 작성되고 별도의 도구를 통해 렌더링됩니다.
+`@mission-platform/forge-adapters` 패키지.
 
-## 작동 방식
+## 작동 원리
 
 ```
-author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ toReactComponent ──▶ React
-                                                          └──▶ toVueComponent  ──▶ Vue 3
+author .tsx ──(classic jsx factory `h`)──▶ MpElement tree ──▶ framework adapter ──▶ target framework
 ```
 
 1. 구성 요소는 **클래식** JSX 변환(`jsxFactory: 'h'`,
    `jsxFragmentFactory: 'Fragment'`).
 2. `h(...)`는 React/Vue 요소 대신 프레임워크 중립적이고 직렬화 가능한 `MpElement` 트리를 구축합니다.
-3. 프레임워크별 어댑터는 해당 트리를 탐색하고 렌더링 시 모든 node을 `React.createElement` 또는 Vue의 `h`에 매핑합니다.
+3. 프레임워크 어댑터는 해당 트리를 탐색하고 모든 node을 대상에 매핑합니다.
+   프레임워크의 기본 렌더링 기본 요소입니다.
 
 ## 특징
 
 - **프레임워크 중립적 JSX 런타임**: 직렬화 가능한 `MpElement` 트리를 구축하는 작고 종속성이 없는 런타임
-- **Vue 3 어댑터**: 중성 구성 요소를 적절한 반응성을 갖춘 기본 Vue 3 SFC로 변환합니다.
-- **React 어댑터**: 중립 구성 요소를 기본 React 구성 요소로 변환합니다.
 - **후크 지원**: 프레임워크 중립 React 스타일 후크(`useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`)
   해당 프레임워크로 컴파일되는
 - **빌드 타임 코드 생성 없음**: Mitosis 또는 유사한 도구와 달리 이 접근 방식은 빌드 타임 대신 런타임 어댑터를 사용합니다.
@@ -103,7 +101,7 @@ function App() {
 **매개변수:**
 
 - `type`: React 요소 유형 또는 문자열 태그 이름
-- `props`: 소품/속성의 객체
+- `props`: 소품/속성의 개체
 - `children`: 하위 요소
 
 **반환:** `MpElement` - 프레임워크 중립 요소 트리
@@ -164,28 +162,6 @@ function App() {
 - `dependencies`: 종속성 배열
 
 **반환:** 메모 기능
-
-### 어댑터
-
-#### `toVueComponent(component)`
-
-프레임워크 중립 구성 요소를 Vue 3 구성 요소로 변환합니다.
-
-**매개변수:**
-
-- `component`: 프레임워크 중립적인 구성 요소 기능
-
-**반환:** Vue 구성요소 정의
-
-#### `toReactComponent(component)`
-
-프레임워크 중립 구성 요소를 React 구성 요소로 변환합니다.
-
-**매개변수:**
-
-- `component`: 프레임워크 중립적인 구성 요소 기능
-
-**반환:** React 구성요소 기능
 
 ## TypeScript 지원
 

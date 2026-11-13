@@ -94,7 +94,7 @@ function storyGlobs(_framework: StorybookFramework, packages: readonly string[],
 **種類:** 関数
 
 ```typescript
-function sharedPreviewDecorators();
+function sharedPreviewDecorators(): Array<ReturnType<typeof withThemeByDataAttribute<TRenderer>>>;
 ```
 
 すべてのフレームワークの共有 Storybook デコレータ。
@@ -104,7 +104,17 @@ function sharedPreviewDecorators();
 **種類:** 定数
 
 ```typescript
-export const sharedPreviewParameters;
+export const sharedPreviewParameters: {
+  readonly controls: {
+    readonly matchers: {
+      readonly color: RegExp;
+      readonly date: RegExp;
+    };
+  };
+  readonly a11y: {
+    readonly test: 'error';
+  };
+};
 ```
 
 すべてのフレームワークで共有される Storybook パラメータ。
@@ -114,7 +124,15 @@ export const sharedPreviewParameters;
 **種類:** 関数
 
 ```typescript
-function sharedPreviewParametersFor(framework?: PreviewFramework);
+function sharedPreviewParametersFor(framework?: PreviewFramework):
+  | typeof sharedPreviewParameters
+  | (typeof sharedPreviewParameters & {
+      readonly docs: {
+        readonly source: {
+          readonly type: 'code';
+        };
+      };
+    });
 ```
 
 フレームワーク対応の Storybook パラメータ。

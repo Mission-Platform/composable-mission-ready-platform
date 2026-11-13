@@ -31,11 +31,31 @@ pnpm test
 
 ### Führen Sie Tests für einen bestimmten Arbeitsbereich durch
 
-So führen Sie Tests für ein einzelnes Paket oder eine einzelne Anwendung aus:
+So führen Sie Tests für ein einzelnes Paket oder eine einzelne Anwendung durch, während Upstream-Abhängigkeiten automatisch vorbereitet werden:
+
+```bash
+pnpm test:package @mission-platform/<name>
+```
+
+Alternativ können Sie Turborepo direkt aufrufen:
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
+
+### Upstream-Abhängigkeitspriming
+
+Pakete im gesamten Monorepo verbrauchen häufig kompilierte Artefakte (`dist/`) aus Upstream-Workspace-Abhängigkeiten. In freshly provisioned worktrees or clean environments, these artifacts may not yet exist.
+
+Um dieses Problem nahtlos zu lösen:
+
+- **Automatic Turborepo Resolution:** The `test` and `build:check` task graphs in `turbo.json` enforce `"dependsOn": ["^build"]`. Turborepo automatically builds all upstream dependencies before running tests in the target package.
+- **Spezieller Pakethelfer:** Durch die Ausführung von `pnpm test:package <package-name>` werden Upstream-Builds (`build --filter <package-name>^...`) explizit vorbereitet, bevor Pakettests ausgeführt werden. Diese Aufwärmphase ist beabsichtigt, obwohl die `test`-Aufgabe auch `^build` deklariert: Sie hält das Priming-Verhalten des Helfers explizit und konsistent und ist ein zwischengespeicherter No-Op, wenn Turbo diese Abhängigkeiten bereits aufgelöst hat.
+- **Package Build Helper:** Beim Ausführen von `pnpm build:package <package-name>` wird vor dem Erstellen des Zielpakets die gleiche explizite Upstream-Aufwärmphase verwendet.
+- **Manueller Upstream-Build:** Wenn Sie einen Testläufer direkt ausführen (z. B. `vitest` in einem einzelnen Paketverzeichnis), bereiten Sie zuerst seine Abhängigkeiten vor:
+  ```bash
+  pnpm exec turbo run build --filter @mission-platform/<name>^...
+  ```
 
 ### Betroffene Tests ausführen (CI-Stil)
 
@@ -107,13 +127,13 @@ Mission Platform nutzt den Browsermodus von Vitest für Tests, die eine echte DO
 2. Stellen Sie sicher, dass das Paket `vitest.config.ts` den Browsermodus aktiviert (siehe Referenz unten).
 3. Führen Sie mit `pnpm test` aus.
 
-### Forge-Webskripttests
+### Feuersteintests
 
 Verwenden Sie `@mission-platform/flint-vitest` für deterministischen Compiler, Artefakt, Wasm und selbstgehostete Parität
 Schecks. Es delegiert die Kompilierung an denselben Compilerdienst und dasselbe Vite-Plugin, das von der Produktion verwendet wird. es entsteht kein
 zweites Modulsystem.
 
-Installieren Sie das Paket in einem Arbeitsbereich, der `.fws`-Module testet, und erstellen Sie dann seinen Adapter mit der Standardkonfiguration Vitest:
+Installieren Sie das Paket in einem Arbeitsbereich, der `.flint`-Module testet, und erstellen Sie dann seinen Adapter mit der Standard-Vitest-Konfiguration:
 
 ```typescript
 // vitest.config.ts
@@ -143,7 +163,7 @@ import {
   createFlintTestHarness,
 } from "@mission-platform/flint-vitest";
 
-describe("FWS fixture", () => {
+describe("Flint fixture", () => {
   const harness = createFlintTestHarness({
     requestedCapabilities: ["clock.now"],
   });
@@ -201,7 +221,7 @@ expect((await load<{ answer: () => number }>()).answer()).toBe(42);
 expect(loadSync<{ answer: () => number }>().answer()).toBe(42);
 ```
 
-Testen Sie für FWS-Werte beide Ebenen explizit. Rohe WASM-Tests sollten dies bestätigen
+Testen Sie für Flint-Werte beide Ebenen explizit. Rohe WASM-Tests sollten dies bestätigen
 ABI- und Besitzaufrufe mit Zeigerlänge; Generierte ESM-Tests sollten das bestätigen
 JavaScript-Projektion:
 
@@ -218,7 +238,7 @@ expect(generated.loadSync().echo("Δοκιμή 🚀")).toBe("Δοκιμή 🚀")
 expect((await generated.load()).echo("")).toBe("");
 ```
 
-Generierte Loader-Grenztests sollten ASCII, leer, Multibyte-UTF-8 abdecken.
+Generierte Loader-Grenztests sollten ASCII, leer, Multibyte UTF-8 abdecken.
 zurückgegebene Verkettungen, String-Fähigkeitsimporte, rohe `bytes`-Tupel und
 das exponierte `memory`. Verwenden Sie fatale UTF-8-Fixtures und stellen Sie sicher, dass diese temporär sind
 `fws_dealloc`-Aufrufe treten bei erfolgreichen Rückgaben, Gast-Traps, Host-Ausnahmen usw. auf.
@@ -227,25 +247,25 @@ es importieren; Das Patchen von Exporten nach dem Laden beachtet die Wrapper nic
 Schließen Sie den ursprünglichen Allokator und den Deallokator.
 
 Der generierte Adapter packt alle String-Argumente für einen Aufruf in eins
-Gästezuteilung. Behalten Sie eine Zuordnungsanzahlzusicherung für Funktionen bei
-mehrere Zeichenfolgenparameter und führen Sie einen reinen Skalartest durch, um zu überprüfen, ob nein
+Gästezuteilung. Behalten Sie eine Zuweisungsanzahlzusicherung für Funktionen bei
+mehrere Zeichenfolgenparameter und führen Sie einen reinen Skalartest durch, um zu überprüfen, ob dies der Fall ist
 String-Marshalling-Arbeit wird für rein numerische Funktionen generiert. Ein Bytetest
 muss weiterhin ein `[pointer, length]`-Tupel übergeben, anstatt ein zu erwarten
 automatische `Uint8Array`-Konvertierung.
 
 Der Benchmark-Arbeitsbereich vergleicht den Rohzeigerlängenadapter mit dem
-generierter ESM-Adapter als separate FWS-Modi:
+Generierter ESM-Adapter als separate Flint-Modi:
 
 ```bash
 pnpm --filter @mission-platform/benchmark run bench -- \
   --node-only --warmup 3 --samples 10 \
-  --output benchmark/results/fws-generated-boundary
+  --output benchmark/results/flint-generated-boundary
 ```
 
 Berichte umfassen Build-, Initialisierungs- und Steady-State-Ausführungsphasen. Die
-Die FWS-Rohzeile `wasm` verwendet neue Instanzen und drei Zeichenfolgeneingabezuordnungen für
+Die Flint Raw-Zeile `wasm` verwendet neue Instanzen und drei String-Eingabezuweisungen für
 der Benchmark-Kernel; `wasm-generated` verwendet den generierten `loadSync`-Vertrag
-und eine gepackte String-Eingabezuordnung. Denn der aktuelle Gast-Deallocator
+und eine Eingabezuweisung für gepackte Zeichenfolgen. Denn der aktuelle Gast-Deallocator
 validiert Bereiche, ohne Bump-Allocator-Speicherplatz und generierte Zeichenfolgen/Bytes zu recyceln
 Beispiele verwenden pro Aufruf eine neue Loader-Instanz; Skalare Proben verwenden das geladene wieder
 Instanz. Dies isoliert jede zuordnungsintensive Stichprobe und ist beabsichtigt
@@ -255,11 +275,11 @@ und die vom Vergleich verwendeten statischen Zuordnungszahlen. Nur Zeilen vergle
 wenn der Korpus-Hash, die Host-Laufzeit und das Benchmark-Schema übereinstimmen.
 
 Beispielsweise lieferte der obige Nur-Node-Lauf 336 gemessene Phasenergebnisse mit
-Null Fehler und Korpus-Hash `ad092f7c552cc914`. Beide FWS-Reihen hatten rohes Wasm
+Null Fehler und Korpus-Hash `ad092f7c552cc914`. Beide Flint-Reihen hatten rohes Wasm
 Hash `0ac58f11`, rohe Wasm-Größe 1.625 Bytes und generierte ESM-Quellengröße 18.490
 Bytes; Die Anzahl der rohen und generierten String-Eingabezuweisungen betrug 3 und 1. Auf der
-Bei Unicode-kleinen Zeichenfolgen betrug die mittlere Initialisierung 0,00024 ms roh im Vergleich zu
-Die generierte Zeit betrug 0,00188 ms und die durchschnittliche Ausführungszeit betrug 0,0236 ms im Rohzustand gegenüber 0,1070 ms
+Unicode-kleiner String-Fall, mittlere Initialisierung betrug 0,00024 ms roh im Vergleich zu
+Es wurden 0,00188 ms generiert, und die mittlere Ausführungszeit betrug 0,0236 ms im Rohzustand gegenüber 0,1070 ms
 generiert beim aufgezeichneten Node-Lauf. Diese Zahlen sind repräsentative Beweise,
 keine maschinenübergreifenden Leistungsgarantien; Verwenden Sie die Fallbeispiele des Berichts
 für Vergleiche.
@@ -285,13 +305,13 @@ Geben Sie den im Projekt enthaltenen Einstiegspunkt ein. Der Deklarationsunterpf
 Verwenden Sie gemeinsam genutzte Fixtures in `packages/flint/vitest/fixtures/` für paketübergreifende Sprach- und ABI-Konformität:
 `valid/`, `diagnostics/`, `capabilities/`, `graphs/` und `self-hosted/` sind absichtlich stabil. Halten Sie eine Halterung daneben
 eine Compiler-, Laufzeit- oder Plugin-Spezifikation, wenn sie ein privates Implementierungsdetail abdeckt; Verwenden Sie eine Inline-Quelle für einen kleinen Parser oder
-Fälle von VM-Einheiten. Dadurch bleiben Gerätenamen und Bereinigung deterministisch, ohne dass Tests auf niedriger Ebene durch den Kabelbaum gezwungen werden.
+Gehäuse für VM-Einheiten. Dadurch bleiben Gerätenamen und Bereinigung deterministisch, ohne dass Tests auf niedriger Ebene durch den Kabelbaum gezwungen werden.
 
 `checkVmParity(file, mode)` unterstützt `interpret`, `jit` und `aot`, aber sein Bericht ist der vorhandene begrenzte selbstgehostete Bericht
 Lex-Stage-Paritätsvertrag. Bestätigen Sie `parity`, Fingerabdrücke, Schritte und AOT-Reproduzierbarkeitsmetadaten. Behandeln Sie den Bericht nicht
-als beliebige kompilierte FWS-VM-Ausführung oder als Ersatz für Wasm-Verhaltenstests.
+als beliebige kompilierte Flint-VM-Ausführung oder als Ersatz für Wasm-Verhaltenstests.
 
-Führen Sie die fokussierte FWS-Matrix mit den normalen Arbeitsbereichsaufgaben aus:
+Führen Sie die fokussierte Flint-Matrix mit den normalen Arbeitsbereichsaufgaben aus:
 
 ```bash
 pnpm exec turbo run test build:check --filter @mission-platform/flint-vitest
@@ -308,7 +328,7 @@ Die meisten Arbeitsbereiche verwenden das Dienstprogramm `defineVitestConfig` vo
 Umgebung:
 
 - **Umgebung**: Standardmäßig `jsdom`.
-- **Globals**: Aktiviert (`describe`, `it`, `expect` müssen nicht importiert werden, es sei denn, dies ist gewünscht).
+- **Globals**: Aktiviert (`describe`, `it`, `expect` müssen nicht importiert werden, es sei denn, dies wird gewünscht).
 - **Plugins**: Beinhaltet `@vitejs/plugin-vue` und i18n-Block-Ignorierung.
 - **Abdeckung**: Vorkonfigurierter `v8`-Anbieter.
 
@@ -327,17 +347,17 @@ export default defineVitestConfig({
 ### Verzeichnisstruktur
 
 - `src/**/*.spec.ts`: Unit-Tests und Komponententests.
-- `src/**/*.stories.tsx`: Storybook-Geschichten (wird auch als Interaktionstestdefinitionen verwendet).
+- `src/**/*.stories.tsx`: Bilderbuchgeschichten (auch als Interaktionstestdefinitionen verwendet).
 - `apps/storybook/vitest.config.ts`: Hauptkonfiguration für browserbasierte Interaktionstests.
 
 ### Zusammenfassung der Skripte
 
-| Skript          | Befehl                                                     | Zweck                                                   |
-| :-------------- | :--------------------------------------------------------- | :------------------------------------------------------ |
-| `test`          | `pnpm exec turbo run test`                                 | Führen Sie alle Arbeitsbereichstestaufgaben aus.        |
-| `test:watch`    | `pnpm --filter @mission-platform/components test:watch`    | Führen Sie Komponententests im Überwachungsmodus durch. |
-| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Erstellen Sie einen Bericht zur Komponentenabdeckung.   |
-| Rost/WASM       | `cargo test --workspace`                                   | Führen Sie native Rust-Kistentests durch.               |
+| Skript | Befehl | Zweck |
+| :-------------- | :--------------------------------------------------------- | :------------------------------------- |
+| `test` | `pnpm exec turbo run test` | Führen Sie alle Arbeitsbereichstestaufgaben aus.          |
+| `test:watch` | `pnpm --filter @mission-platform/components test:watch` | Führen Sie Komponententests im Überwachungsmodus durch.    |
+| `test:coverage` | `pnpm --filter @mission-platform/components test:coverage` | Erstellen Sie einen Bericht zur Komponentenabdeckung. |
+| Rost/WASM | `cargo test --workspace` | Führen Sie native Rust-Crate-Tests durch.           |
 
 Wasm-Wrapper-Pakete werden durch ihre eigenen Paketaufgaben getestet. Führen Sie beispielsweise das Scannerpaket und dessen Paket aus
 Wrapper zusammen, wenn das Scannerverhalten geändert wird:
@@ -348,6 +368,6 @@ pnpm exec turbo run test --filter @mission-platform/code-scanner...
 
 ## Verwandte Dokumentation
 
-- [Entwicklungs-Setup](development-setup.md)
+- [Entwicklungssetup](development-setup.md)
 - [Best Practices](best-practices.md)
 - [Paketentwicklung](package-development.md)

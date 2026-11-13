@@ -2,10 +2,10 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> packages/email-renderer/docs/index.md: [packages/email-renderer/docs/index.md](../../index.md)
+> packages/content/email-renderer/docs/index.md: [packages/content/email-renderer/docs/index.md](../../index.md)
 > 言語: 日本語 (ja)
 
-`@mission-platform/email-renderer` は、Mission Platform 電子メール ツリーのフレームワーク中立のレンダリング境界を所有します。そのルート エントリは、サーバー側の電子メール生成に対して安全です。ブラウザ アダプタは明示的なサブパスの背後に分離されます。
+`@mission-platform/email-renderer` は、Mission Platform 電子メール ツリーのフレームワーク中立のレンダリング境界を所有します。そのルート エントリは、サーバー側の電子メール生成にとって安全です。ブラウザ アダプタは明示的なサブパスの背後に分離されます。
 
 ## サーバーレンダリングとマークダウン
 

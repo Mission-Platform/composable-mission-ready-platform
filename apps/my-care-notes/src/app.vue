@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+  import { computed, defineAsyncComponent, ref } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
+
   import {
     ForgeButton,
     ForgeDrawer,
@@ -18,8 +21,6 @@
   import { ForgeLanguageSwitcher, type ForgeLanguageSwitcherOption } from '@mission-platform/select';
   import { organizationId, useSeo, webPage } from '@mission-platform/seo';
   import { ForgeThemeToggle } from '@mission-platform/theme';
-  import { computed, defineAsyncComponent, ref } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
 
   import ClientOnly from './components/client-only.vue';
   import { useSnippets } from './composables/use-snippets';

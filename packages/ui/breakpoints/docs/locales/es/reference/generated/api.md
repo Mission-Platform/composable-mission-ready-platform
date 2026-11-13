@@ -71,9 +71,9 @@ Devuelve el valor de píxel para una clave de punto de interrupción determinada
 
 #### Parámetros
 
-| Nombre | Tipo                           | Descripción |
-| ------ | ------------------------------ | ----------- |
-| clave  | Clave de punto de interrupción |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------- | ----------- |
+| clave | Clave de punto de interrupción |             |
 
 ### maxMediaQuery
 
@@ -88,9 +88,9 @@ punto de interrupción, es decir, "más pequeño que el siguiente paso".
 
 #### Parámetros
 
-| Nombre | Tipo                           | Descripción |
-| ------ | ------------------------------ | ----------- |
-| clave  | Clave de punto de interrupción |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------- | ----------- |
+| clave | Clave de punto de interrupción |             |
 
 #### Contrato
 
@@ -108,9 +108,9 @@ Devuelve una cadena de consulta de medios `min-width` para el punto de interrupc
 
 #### Parámetros
 
-| Nombre | Tipo                           | Descripción |
-| ------ | ------------------------------ | ----------- |
-| clave  | Clave de punto de interrupción |             |
+| Nombre | Tipo | Descripción |
+| ---- | ------------- | ----------- |
+| clave | Clave de punto de interrupción |             |
 
 #### Contrato
 
@@ -129,9 +129,9 @@ Dado un ancho de píxel, devuelve la clave del punto de interrupción actualment
 
 #### Parámetros
 
-| Nombre | Tipo   | Descripción |
-| ------ | ------ | ----------- |
-| ancho  | número |             |
+| Nombre | Tipo | Descripción |
+| ----- | ------ | ----------- |
+| ancho | número |             |
 
 ## `src/components/atoms/forge-hide-at/forge-hide-at`
 
@@ -155,8 +155,8 @@ El ancho de la ventana gráfica reactiva se rastrea a través de los ganchos neu
 
 #### Parámetros
 
-| Nombre      | Tipo                           | Descripción |
-| ----------- | ------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------- | ----------- |
 | propiedades | Sólo lectura<HideAtProperties> |             |
 
 ### Ocultar en propiedades
@@ -192,8 +192,8 @@ alternar sin introducir un cuadro de diseño adicional.
 
 #### Parámetros
 
-| Nombre      | Tipo                           | Descripción |
-| ----------- | ------------------------------ | ----------- |
+| Nombre | Tipo | Descripción |
+| ---------- | -------------------------- | ----------- |
 | propiedades | Sólo lectura<ShowAtProperties> |             |
 
 ### Mostrar en propiedades
@@ -240,8 +240,8 @@ tanto React como Vue.
 
 #### Parámetros
 
-| Nombre       | Tipo                                    | Descripción |
-| ------------ | --------------------------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ----------- | ----------------------------------- | ----------- |
 | _propiedades | Sólo lectura<BreakpointDebugProperties> |             |
 
 ## `src/composables/use-breakpoints/use-breakpoints`

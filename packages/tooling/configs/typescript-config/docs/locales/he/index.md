@@ -5,7 +5,7 @@
 > packages/tooling/configs/typescript-config/docs/index.md: [packages/tooling/configs/typescript-config/docs/index.md](../../index.md)
 > שפה: עברית (he)
 
-מְשׁוּתָף TypeScript הגדרות קבועות מראש לכל סביבת עבודה של Mission Platform.
+הגדרות קבועות מראש של TypeScript משותפות לכל סביבת עבודה של Mission Platform.
 
 ## התקן והשתמש
 
@@ -13,14 +13,14 @@
 pnpm add --save-dev @mission-platform/typescript-config
 ```
 
-הרחיב את הקביעה מראש התואמת מ `tsconfig.json`: להשתמש `app` עֲבוּר Vue אפליקציות,
-`react` עֲבוּר React אפליקציות, `library` עבור הצהרות חבילות, `node` עבור כלי עבודה,
-ו `test` עֲבוּר Vitest מפרט. גם צרכני המסגרת צריכים להשתמש בהתאמה
-`framework-<name>` מצב מותאם אישית מוגדר מראש. ראה את החבילה README עבור
+הרחב את הקביעה מראש התואמת מ-`tsconfig.json`: השתמש ב-`app` עבור אפליקציות Vue,
+`react` עבור יישומי React, `library` עבור הצהרות חבילות, `node` עבור כלי עבודה,
+ו-`test` עבור מפרט Vitest. גם צרכני מסגרת צריכים להשתמש בהתאמה
+`framework-<name>` מוגדר מראש במצב מותאם אישית. ראה את החבילה README עבור
 טבלה מלאה ודוגמאות מוגדרות מראש.
 
 ## לִתְרוֹם
 
-שמור דגלי מהדר משותפים בהגדרות המוגדרות מראש. לָרוּץ
+שמור דגלי מהדר משותפים בהגדרות המוגדרות מראש. רוץ
 `pnpm --filter @mission-platform/typescript-config build:check` ופורמט
 בדיקות לאחר החלפת אחת.

@@ -41,9 +41,9 @@ rekwisieten.
 
 #### Parameters
 
-| Naam          | Typ                               | Beschrijving |
-| ------------- | --------------------------------- | ------------ |
-| eigenschappen | Alleen-lezen<SchedulerProperties> |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------------- | ----------- |
+| eigenschappen | Alleen-lezen<SchedulerProperties> |             |
 
 ### Plannereigenschappen
 
@@ -80,10 +80,10 @@ RFC 5545 revisiesemantiek). `uid` blijft behouden.
 
 #### Parameters
 
-| Naam      | Typ                               | Beschrijving |
-| --------- | --------------------------------- | ------------ |
-| evenement | VEvent                            |              |
-| pleister  | Gedeeltelijk<Omit<VEvent, 'uid'>> |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------------------------- | ----------- |
+| evenement | VEvent |             |
+| pleister | Gedeeltelijk<Omit<VEvent, 'uid'>> |             |
 
 ### maakGebeurtenis
 
@@ -98,9 +98,9 @@ het genereren van een UID en de tijdstempels voor het maken/wijzigen.
 
 #### Parameters
 
-| Naam         | Typ                              | Beschrijving |
-| ------------ | -------------------------------- | ------------ |
-| gedeeltelijk | Laat<VEvent, 'uid' \| 'dtstamp'> | weg          |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------------- | ----------- |
+| gedeeltelijk | Laat<VEvent, 'uid' \| 'dtstamp'> | weg             |
 
 ### evenementenVoorDag
 
@@ -114,10 +114,10 @@ Retourneert gebeurtenissen die op de opgegeven kalenderdag vallen.
 
 #### Parameters
 
-| Naam        | Typ      | Beschrijving |
-| ----------- | -------- | ------------ |
-| evenementen | VEvent[] |              |
-| dag         | Datum    |              |
+| Naam | Typ | Beschrijving |
+| ------ | -------- | ----------- |
+| evenementen | VEvent[] |             |
+| dag | Datum |             |
 
 ### evenementenForRange
 
@@ -134,11 +134,11 @@ vereerd.
 
 #### Parameters
 
-| Naam        | Typ      | Beschrijving |
-| ----------- | -------- | ------------ |
-| evenementen | VEvent[] |              |
-| begin       | Datum    |              |
-| einde       | Datum    |              |
+| Naam | Typ | Beschrijving |
+| ------ | -------- | ----------- |
+| evenementen | VEvent[] |             |
+| begin | Datum |             |
+| einde | Datum |             |
 
 ### formaatDuur
 
@@ -152,9 +152,9 @@ Retourneert een door mensen leesbare duurreeks voor een gebeurtenis, bijvoorbeel
 
 #### Parameters
 
-| Naam      | Typ    | Beschrijving |
-| --------- | ------ | ------------ |
-| evenement | VEvent |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| evenement | VEvent |             |
 
 ### lay-outDag
 
@@ -170,9 +170,9 @@ en elk bezet `column` van `totalColumns` parallelle sporen.
 
 #### Parameters
 
-| Naam        | Typ      | Beschrijving |
-| ----------- | -------- | ------------ |
-| evenementen | VEvent[] |              |
+| Naam | Typ | Beschrijving |
+| ------ | -------- | ----------- |
+| evenementen | VEvent[] |             |
 
 ### moveEventPatch
 
@@ -187,10 +187,10 @@ met behoud van de ISO-weergave voor de hele dag/getimede versie.
 
 #### Parameters
 
-| Naam      | Typ    | Beschrijving |
-| --------- | ------ | ------------ |
-| evenement | VEvent |              |
-| deltaM's  | nummer |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| evenement | VEvent |             |
+| deltaM's | nummer |             |
 
 ### resizeEventPatch
 
@@ -205,10 +205,10 @@ evenement duurt minimaal 15 minuten (of één dag, voor evenementen die de hele 
 
 #### Parameters
 
-| Naam      | Typ    | Beschrijving |
-| --------- | ------ | ------------ |
-| evenement | VEvent |              |
-| deltaM's  | nummer |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| evenement | VEvent |             |
+| deltaM's | nummer |             |
 
 ## `src/core/range`
 
@@ -225,11 +225,11 @@ Dag/drie dagen/week stap in dagen; maand/jaar stap in hun menstruatie.
 
 #### Parameters
 
-| Naam     | Typ           | Beschrijving |
-| -------- | ------------- | ------------ |
-| bekijken | PlannerBekijk |              |
-| anker    | Datum         |              |
-| richting | -1 \| 1       |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------------- | ----------- |
+| bekijken | PlannerBekijk |             |
+| anker | Datum |             |
+| richting | -1 \| 1 |             |
 
 ### zichtbaarRangeFor
 
@@ -244,11 +244,11 @@ Het zichtbare halfopen `[start, end)`-venster voor de gegeven `view` verankerd o
 
 #### Parameters
 
-| Naam         | Typ           | Beschrijving |
-| ------------ | ------------- | ------------ |
-| bekijken     | PlannerBekijk |              |
-| anker        | Datum         |              |
-| weekStartsOn | WeekStart     |              |
+| Naam | Typ | Beschrijving |
+| ------------ | ------------- | ----------- |
+| bekijken | PlannerBekijk |             |
+| anker | Datum |             |
+| weekStartsOn | WeekStart |             |
 
 ## `src/core/recurrence`
 
@@ -271,11 +271,11 @@ voorkom oneindige lussen op onbegrensde regels.
 
 #### Parameters
 
-| Naam        | Typ    | Beschrijving |
-| ----------- | ------ | ------------ |
-| evenement   | VEvent |              |
-| bereikStart | Datum  |              |
-| bereikEinde | Datum  |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ------ | ----------- |
+| evenement | VEvent |             |
+| bereikStart | Datum |             |
+| bereikEinde | Datum |             |
 
 ## `src/core/types`
 

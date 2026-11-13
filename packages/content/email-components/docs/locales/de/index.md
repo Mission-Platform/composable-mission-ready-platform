@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> packages/email-components/docs/index.md: [packages/email-components/docs/index.md](../../index.md)
+> packages/content/email-components/docs/index.md: [packages/content/email-components/docs/index.md](../../index.md)
 > Sprache: Deutsch (de)
 
 `@mission-platform/email-components` enthält typisierte, Framework-neutrale Forge JSX-Komponenten zum Generieren von E-Mail-sicheren Bäumen. Verwenden Sie `@mission-platform/email-renderer`, um diese Bäume auf dem Server zu serialisieren; Für den E-Mail-Pfad ist kein Vue, React, Svelte, Solid, Web Components Runtime, Browser-DOM oder JavaScript erforderlich.
@@ -48,7 +48,7 @@ Fügt den vollständigen E-Mail-Dokument-Wrapper hinzu.
 - Organismen: `EmailPreheader`, `EmailHeader`, `EmailFooter`.
 - Vorlagen: `EmailDocument`, `EmailContainer`, `EmailSection`.
 
-`EmailTypography` ist das einzelne Textatom, das das Web-Vokabular `ForgeTypography` widerspiegelt: `as` wählt das gerenderte Element aus (standardmäßig `p`, `a`, wenn `href` festgelegt ist), `variant` wählt die Typskala aus (die passende Überschriftenskala, wenn `as` festgelegt ist). `h1`–`h6`, andernfalls `body-md`) und `color`, `align`, `target` und `underline` optimieren die Inline-Deklarationen.
+`EmailTypography` ist das einzelne Textatom, das das Web-Vokabular von `ForgeTypography` widerspiegelt: `as` wählt das gerenderte Element aus (standardmäßig `p`, `a`, wenn `href` festgelegt ist), `variant` wählt die Typskala aus (die passende Überschriftenskala, wenn `as` festgelegt ist). `h1`–`h6`, andernfalls `body-md`) und `color`, `align`, `target` und `underline` optimieren die Inline-Deklarationen.
 
 ```ts
 EmailTypography({ as: 'h1', children: 'Welcome' });
@@ -60,6 +60,6 @@ Das gesamte Layout basiert auf `table`, `tbody`, `tr` und `td`. Schaltflächen s
 
 ## Kompatibilitätsrichtlinie
 
-Die Grundlinie folgt dem [Kann ich den Funktionskatalog per E-Mail versenden?](https://www.caniemail.com/features), überprüft auf `2026-08-08`. Die Umsetzung hängt davon ab [HTML-Tabellen](https://www.caniemail.com/features/html-tables), [Inline-Stile](https://www.caniemail.com/features/css-inline-styles), [maximale Breite](https://www.caniemail.com/features/css-max-width) und optional [Medienanfragen](https://www.caniemail.com/features/css-at-media). Die statische Ausgabe basiert nicht auf Flexbox, Raster, benutzerdefinierten CSS-Eigenschaften, logischen Eigenschaften, Skripten, Ereignishandlern oder Framework-Hydratationsmarkierungen.
+Die Grundlinie folgt dem [Kann ich eine E-Mail an den Funktionskatalog senden](https://www.caniemail.com/features), überprüft am `2026-08-08`. Die Implementierung basiert auf [HTML-Tabellen](https://www.caniemail.com/features/html-tables), [Inline-Stilen](https://www.caniemail.com/features/css-inline-styles), [max-width](https://www.caniemail.com/features/css-max-width) und optionalen [Medienabfragen](https://www.caniemail.com/features/css-at-media). Die statische Ausgabe basiert nicht auf Flexbox, Raster, benutzerdefinierten CSS-Eigenschaften, logischen Eigenschaften, Skripten, Ereignishandlern oder Framework-Hydratationsmarkierungen.
 
 Responsive CSS ist nur eine progressive Verbesserung: Das Inline-Tabellenlayout bleibt verwendbar, wenn der `<style>`-Block entfernt oder ignoriert wird. Verwenden Sie `assertCompatibleEmailHtml` in Anwendungstests, wenn Sie benutzerdefinierte Knoten hinzufügen.

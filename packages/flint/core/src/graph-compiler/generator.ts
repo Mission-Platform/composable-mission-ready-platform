@@ -1,9 +1,10 @@
+import type { FlintModule } from '@mission-platform/flint-ast';
+
 import { compileFlint } from '../compiler.js';
 
 import { buildGraphAst } from './ast-builder.js';
 import { emitGraphSource } from './source-emitter.js';
 
-import type { FlintModule } from '../ast.js';
 import type { FlintArtifact, FlintCompileInput } from '../contracts.js';
 import type { FlintNodeGraph, FlintNodeSourceMap } from './types.js';
 

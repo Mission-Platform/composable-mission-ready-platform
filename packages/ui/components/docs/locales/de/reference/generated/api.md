@@ -71,9 +71,9 @@ der Storybook-Demoinhalt.
 
 #### Parameter
 
-| Name          | Geben Sie                          | ein Beschreibung |
-| ------------- | ---------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<AvatarProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<AvatarProperties> |             |
 
 ## `src/components/atoms/forge-background-video/forge-background-video`
 
@@ -133,9 +133,9 @@ die neutralen {@link useState}/{@link useEffect}-Hooks) pausieren die Wiedergabe
 
 #### Parameter
 
-| Name          | Geben Sie                                   | ein Beschreibung |
-| ------------- | ------------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<BackgroundVideoProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<BackgroundVideoProperties> |             |
 
 ## `src/components/atoms/forge-badge/forge-badge`
 
@@ -190,16 +190,16 @@ Varianten, die kanonische `2xs → 2xl`-Größenskala und die Beschriftung werde
 Die Typografie entspricht der Vue-Bibliothek.
 
 Sein Styling erfolgt durch das mitgelagerte CSS-Modul `forge-badge.module.scss`
-(vom zweistufigen Compiler auf jedes Framework übertragen, also die Komponente
+(wird vom zweistufigen Compiler, also der Komponente, auf jedes Framework übertragen
 liefert sein eigenes `@layer mp.components` CSS). Die gehashten Modulklassennamen sind
 zusammengestellt mit dem Framework-neutralen {@link classNames}-Helfer, der akzeptiert
 einfache Zeichenfolgen sowie die Objektform `{ className: boolean }`.
 
 #### Parameter
 
-| Name          | Geben Sie                         | ein Beschreibung |
-| ------------- | --------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<BadgeProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<BadgeProperties> |             |
 
 ## `src/components/atoms/forge-button/forge-button`
 
@@ -244,16 +244,60 @@ Klicken Sie, während Sie aktiv sind. Der ursprüngliche Vue SFC bezog das Etike
 (Bibliothek) setzt `loadingLabel` standardmäßig auf `'Loading…'`.
 
 Sein Styling erfolgt durch das mitgelagerte CSS-Modul `forge-button.module.scss`
-(vom zweistufigen Compiler auf jedes Framework übertragen, also die Komponente
+(wird vom zweistufigen Compiler, also der Komponente, auf jedes Framework übertragen
 liefert sein eigenes `@layer mp.components` CSS). Die gehashten Modulklassennamen sind
 zusammengestellt mit dem Framework-neutralen {@link classNames}-Helfer, einschließlich dessen
 `{ className: boolean }` Objektformular für den bedingten Lademodifikator.
 
 #### Parameter
 
-| Name          | Geben Sie                          | ein Beschreibung |
-| ------------- | ---------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ButtonProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ButtonProperties> |             |
+
+## `src/components/atoms/forge-divider/forge-divider`
+
+### DividerOrientation
+
+**Art:** Typ
+
+```typescript
+export type DividerOrientation = 'horizontal' | 'vertical';
+```
+
+Ausrichtungsrichtung des Teilers.
+
+### DividerProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface DividerProperties
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeDivider
+
+**Art:** Funktion
+
+```typescript
+function ForgeDivider(properties: Readonly<DividerProperties>): MpElement;
+```
+
+`ForgeDivider` – ein dünner Grenzteiler, der einmal im neutralen JSX erstellt wurde
+Dialekt und direkt zu React oder Vue kompiliert
+`@mission-platform/vite-plugin-forge`.
+
+Es füllt die verfügbare Breite oder Höhe gemäß `orientation` und verwendet
+standardmäßig das semantische `<hr>`-Element. Setzen Sie `decorative` auf `false`, um a zu verwenden
+stattdessen das rollentragende `<div>`.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<DividerProperties> |             |
 
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
@@ -278,9 +322,9 @@ Steckplatz. Da es keinen sichtbaren Text enthält, ist ein zugänglicher Name ü
 
 #### Parameter
 
-| Name          | Geben Sie                              | ein Beschreibung |
-| ------------- | -------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<IconButtonProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<IconButtonProperties> |             |
 
 ### IconButtonProperties
 
@@ -313,6 +357,94 @@ export type IconButtonVariant =
 
 Visuelle Behandlung der Symbolschaltfläche – der kanonische Farbsatz plus ein transparentes `ghost`.
 
+## `src/components/atoms/forge-icon/forge-icon`
+
+### ForgeIcon
+
+**Art:** Funktion
+
+```typescript
+function ForgeIcon(properties: Readonly<IconProperties>): MpElement;
+```
+
+Framework-neutrale Symbolfassade, unterstützt durch das überprüfte `@mission-platform/icons`
+Katalog. Die Auflösung erfolgt datengesteuert und unbekannte Namen machen niemals ungültig
+Komponente; Der Wrapper besitzt den zugänglichen Namen, sodass Katalog-SVGs stumm bleiben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<IconProperties> |             |
+
+### Symbolname
+
+**Art:** Typ
+
+```typescript
+export type IconName = string;
+```
+
+Ein Katalogname wie `forge-icon-check`; Unbekannte Namen verwenden das Fallback-Symbol.
+
+### IconProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface IconProperties
+```
+
+Keine Beschreibung angegeben.
+
+### IconSize
+
+**Art:** Typ
+
+```typescript
+export type IconSize = 'sm' | 'md' | 'lg' | 'xl';
+```
+
+Die Symbolgröße wird den Pixelabmessungen des Katalogs zugeordnet.
+
+## `src/components/atoms/forge-kbd/forge-kbd`
+
+### ForgeKbd
+
+**Art:** Funktion
+
+```typescript
+function ForgeKbd(properties: Readonly<KbdProperties>): MpElement;
+```
+
+Eine semantische Tastaturtasten-/Akkordbezeichnung, gerendert im neutralen JSX-Dialekt.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<KbdProperties> |             |
+
+### KbdProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface KbdProperties
+```
+
+Keine Beschreibung angegeben.
+
+### KbdSize
+
+**Art:** Typ
+
+```typescript
+export type KbdSize = 'sm' | 'md' | 'lg';
+```
+
+Tastengröße der Tastatur.
+
 ## `src/components/atoms/forge-progress-bar/forge-progress-bar`
 
 ### ForgeProgressBar
@@ -335,9 +467,9 @@ ein unbestimmter Modus. Der Stil wird durch das dort befindliche CSS-Modul besti
 
 #### Parameter
 
-| Name          | Geben Sie                               | ein Beschreibung |
-| ------------- | --------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ProgressBarProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ProgressBarProperties> |             |
 
 ### ProgressBarProperties
 
@@ -397,9 +529,9 @@ löscht diesen Bereichsslot – die Zuordnung wird durch die `author`/`source`-R
 
 #### Parameter
 
-| Name          | Geben Sie                         | ein Beschreibung |
-| ------------- | --------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<QuoteProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<QuoteProperties> |             |
 
 ### QuoteProperties
 
@@ -459,9 +591,9 @@ Konvention, die in den migrierten Komponenten verwendet wird).
 
 #### Parameter
 
-| Name          | Geben Sie                                   | ein Beschreibung |
-| ------------- | ------------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ResponsiveImageProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ResponsiveImageProperties> |             |
 
 ### ResponsiveImageFit
 
@@ -523,9 +655,9 @@ Komponenten).
 
 #### Parameter
 
-| Name          | Geben Sie                                   | ein Beschreibung |
-| ------------- | ------------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ResponsiveVideoProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ResponsiveVideoProperties> |             |
 
 ### ResponsiveVideoFit
 
@@ -567,7 +699,7 @@ Eine einzelne formatspezifische Videoquelle.
 function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement;
 ```
 
-`ForgeSeparator` – ein visueller Separator/Teiler, der einmal im Neutralen erstellt wurde
+`ForgeSeparator` – ein visueller Separator/Divider, der einmal im Neutralen erstellt wurde
 JSX-Dialekt und direkt zu React oder Vue kompiliert
 `@mission-platform/vite-plugin-forge`.
 
@@ -580,14 +712,14 @@ um es als rein präsentationsbedingt zu kennzeichnen (`role="none"`).
 Der Stil wird durch das dort befindliche CSS-Modul bestimmt
 `forge-separator.module.scss` (übertragen auf jedes Framework durch die zweistufige
 Compiler, sodass die Komponente ihr eigenes `@layer mp.components`-CSS ausliefert. Die
-Gehashte Modulklassennamen werden mit dem Framework-Neutralen zusammengestellt
+Gehashte Modulklassennamen werden mit dem Framework neutral zusammengestellt
 {@link classNames}-Helfer.
 
 #### Parameter
 
-| Name          | Geben Sie                             | ein Beschreibung |
-| ------------- | ------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<SeparatorProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<SeparatorProperties> |             |
 
 ### SeparatorOrientation
 
@@ -651,9 +783,9 @@ Es rendert einen `aria-hidden`-Block in einer von drei Formen (`line`/`circle`/
 
 #### Parameter
 
-| Name          | Geben Sie                            | ein Beschreibung |
-| ------------- | ------------------------------------ | ---------------- |
-| Eigenschaften | Schreibgeschützt<SkeletonProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<SkeletonProperties> |             |
 
 ### SkeletonProperties
 
@@ -699,9 +831,9 @@ Die neutrale Version (i18n ist nicht Teil dieser Bibliothek) verwendet standardm
 
 #### Parameter
 
-| Name          | Geben Sie                           | ein Beschreibung |
-| ------------- | ----------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<SpinnerProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<SpinnerProperties> |             |
 
 ### SpinnerProperties
 
@@ -756,9 +888,9 @@ Styling befindet sich im gleichnamigen Ordner `forge-stack.module.scss` (importi
 
 #### Parameter
 
-| Name          | Geben Sie                         | ein Beschreibung |
-| ------------- | --------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<StackProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<StackProperties> |             |
 
 ### StackAlign
 
@@ -824,9 +956,9 @@ Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name          | Geben Sie                              | ein Beschreibung |
-| ------------- | -------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<StatusIconProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<StatusIconProperties> |             |
 
 ### StatusIconLevel
 
@@ -858,6 +990,102 @@ export type StatusIconSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 ```
 
 Kanonische Größenskala 2xs → 2xl.
+
+## `src/components/atoms/forge-surface/forge-surface`
+
+### ForgeSurface
+
+**Art:** Funktion
+
+```typescript
+function ForgeSurface(properties: Readonly<SurfaceProperties>): MpElement;
+```
+
+Eine thematisch anpassbare semantische Oberfläche mit einem Standard-Slot.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<SurfaceProperties> |             |
+
+### Oberflächenhöhe
+
+**Art:** Typ
+
+```typescript
+export type SurfaceElevation = 0 | 1 | 2 | 3;
+```
+
+Oberflächenhöhenniveau.
+
+### Oberflächenpolsterung
+
+**Art:** Typ
+
+```typescript
+export type SurfacePadding = 'none' | 'sm' | 'md' | 'lg';
+```
+
+Oberflächenpolsterungsskala.
+
+### Oberflächeneigenschaften
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SurfaceProperties
+```
+
+Keine Beschreibung angegeben.
+
+### OberflächeGerundet
+
+**Art:** Typ
+
+```typescript
+export type SurfaceRounded = 'none' | 'sm' | 'md' | 'lg' | 'xl';
+```
+
+Behandlung des Oberflächeneckenradius.
+
+## `src/components/atoms/forge-sync-status-indicator/forge-sync-status-indicator`
+
+### ForgeSyncStatusIndicator
+
+**Art:** Funktion
+
+```typescript
+function ForgeSyncStatusIndicator(properties: Readonly<SyncStatusIndicatorProperties>): MpElement;
+```
+
+Eine kompakte, zugängliche Synchronisationsstatusanzeige.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<SyncStatusIndicatorProperties> |             |
+
+### SyncStatus
+
+**Art:** Typ
+
+```typescript
+export type SyncStatus = 'synced' | 'syncing' | 'pending' | 'error' | 'offline';
+```
+
+Durch den Indikator dargestellter Synchronisierungsstatus.
+
+### SyncStatusIndicatorProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SyncStatusIndicatorProperties
+```
+
+Keine Beschreibung angegeben.
 
 ## `src/components/molecules/forge-accordion/forge-accordion`
 
@@ -919,9 +1147,57 @@ die auf den `title`/`content`-Text des Elements zurückgreifen.
 
 #### Parameter
 
-| Name          | Geben Sie                             | ein Beschreibung |
-| ------------- | ------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<AccordionProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<AccordionProperties> |             |
+
+## `src/components/molecules/forge-alert/forge-alert`
+
+### AlertProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface AlertProperties
+```
+
+Keine Beschreibung angegeben.
+
+### AlertSize
+
+**Art:** Typ
+
+```typescript
+export type AlertSize = 'sm' | 'md' | 'lg';
+```
+
+Keine Beschreibung angegeben.
+
+### AlertVariant
+
+**Art:** Typ
+
+```typescript
+export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeAlert
+
+**Art:** Funktion
+
+```typescript
+function ForgeAlert(properties: Readonly<AlertProperties>): MpElement;
+```
+
+Eine zugängliche, entfernbare Statusmeldung mit einer zusammensetzbaren Nachricht und einem Aktionsslot.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<AlertProperties> |             |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -970,9 +1246,9 @@ Die neutrale Version gibt einen einfachen `<a href>` (den etablierten Router) wi
 
 #### Parameter
 
-| Name          | Geben Sie                              | ein Beschreibung |
-| ------------- | -------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<BreadcrumbProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<BreadcrumbProperties> |             |
 
 ## `src/components/molecules/forge-button-group/forge-button-group`
 
@@ -1030,9 +1306,57 @@ Der Stil wird durch das dort befindliche CSS-Modul bestimmt
 
 #### Parameter
 
-| Name          | Geben Sie                               | ein Beschreibung |
-| ------------- | --------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ButtonGroupProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ButtonGroupProperties> |             |
+
+## `src/components/molecules/forge-callout-block/forge-callout-block`
+
+### CalloutBlockProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CalloutBlockProperties
+```
+
+Keine Beschreibung angegeben.
+
+### CalloutBlockSize
+
+**Art:** Typ
+
+```typescript
+export type CalloutBlockSize = 'sm' | 'md';
+```
+
+Keine Beschreibung angegeben.
+
+### CalloutBlockVariant
+
+**Art:** Typ
+
+```typescript
+export type CalloutBlockVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeCalloutBlock
+
+**Art:** Funktion
+
+```typescript
+function ForgeCalloutBlock(properties: Readonly<CalloutBlockProperties>): MpElement;
+```
+
+Ein prominenter Informationsblock mit Titel, Beschreibung, Inhalt und Aktionsfeldern.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<CalloutBlockProperties> |             |
 
 ## `src/components/molecules/forge-card/forge-card`
 
@@ -1081,9 +1405,57 @@ Rahmen.
 
 #### Parameter
 
-| Name          | Geben Sie                        | ein Beschreibung |
-| ------------- | -------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<CardProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<CardProperties> |             |
+
+## `src/components/molecules/forge-carousel-indicator/forge-carousel-indicator`
+
+### CarouselIndicatorOrientation
+
+**Art:** Typ
+
+```typescript
+export type CarouselIndicatorOrientation = 'horizontal' | 'vertical';
+```
+
+Keine Beschreibung angegeben.
+
+### CarouselIndicatorProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CarouselIndicatorProperties
+```
+
+Keine Beschreibung angegeben.
+
+### CarouselIndicatorSize
+
+**Art:** Typ
+
+```typescript
+export type CarouselIndicatorSize = 'sm' | 'md' | 'lg';
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeCarouselIndicator
+
+**Art:** Funktion
+
+```typescript
+function ForgeCarouselIndicator(properties: Readonly<CarouselIndicatorProperties>): MpElement;
+```
+
+Zugängliche, über die Tastatur bedienbare Paginierungspunkte für ein Karussell.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<CarouselIndicatorProperties> |             |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1139,13 +1511,13 @@ und {@link ForgeTypography}.
 
 Ersetzungen des ursprünglichen Vue SFC: die `avatar`/`footer` SFC-Slots
 werden zu den `avatarContent`/`footer` benannten Slots (`<Slot>`) mit ihren
-Präsenz wird durch den Framework-neutralen {@link hasSlot}-Helfer erkannt.
+Anwesenheit wird durch den Framework-neutralen {@link hasSlot}-Helfer erkannt.
 
 #### Parameter
 
-| Name          | Geben Sie                              | ein Beschreibung |
-| ------------- | -------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ChatBubbleProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<ChatBubbleProperties> |             |
 
 ## `src/components/molecules/forge-collapse/forge-collapse`
 
@@ -1187,9 +1559,9 @@ mit gleichnamigen Requisiten kollidieren).
 
 #### Parameter
 
-| Name          | Geben Sie                            | ein Beschreibung |
-| ------------- | ------------------------------------ | ---------------- |
-| Eigenschaften | Schreibgeschützt<CollapseProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<CollapseProperties> |             |
 
 ## `src/components/molecules/forge-device-mock/forge-device-mock`
 
@@ -1255,9 +1627,125 @@ Der `browser`-Frame rendert eine Titelleiste mit Ampelsteuerungen und einem
 
 #### Parameter
 
-| Name          | Geben Sie                              | ein Beschreibung |
-| ------------- | -------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<DeviceMockProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<DeviceMockProperties> |             |
+
+## `src/components/molecules/forge-drop-zone/forge-drop-zone`
+
+### DropZoneProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface DropZoneProperties
+```
+
+Keine Beschreibung angegeben.
+
+### DropZoneReject
+
+**Art:** Schnittstelle
+
+```typescript
+export interface DropZoneReject
+```
+
+Keine Beschreibung angegeben.
+
+### DropZoneScope
+
+**Art:** Schnittstelle
+
+```typescript
+export interface DropZoneScope
+```
+
+Keine Beschreibung angegeben.
+
+### DropZoneSize
+
+**Art:** Typ
+
+```typescript
+export type DropZoneSize = 'sm' | 'md' | 'lg';
+```
+
+Keine Beschreibung angegeben.
+
+### DropZoneValue
+
+**Art:** Typ
+
+```typescript
+export type DropZoneValue = File | File[];
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeDropZone
+
+**Art:** Funktion
+
+```typescript
+function ForgeDropZone(properties: Readonly<DropZoneProperties>): MpElement;
+```
+
+Ein über die Tastatur zugängliches Drag-and-Drop-Dateiziel mit clientseitiger Validierung.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<DropZoneProperties> |             |
+
+## `src/components/molecules/forge-empty-state/forge-empty-state`
+
+### EmptyStateProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface EmptyStateProperties
+```
+
+Keine Beschreibung angegeben.
+
+### EmptyStateSize
+
+**Art:** Typ
+
+```typescript
+export type EmptyStateSize = 'sm' | 'md' | 'lg';
+```
+
+Keine Beschreibung angegeben.
+
+### EmptyStateVariant
+
+**Art:** Typ
+
+```typescript
+export type EmptyStateVariant = 'neutral' | 'info';
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeEmptyState
+
+**Art:** Funktion
+
+```typescript
+function ForgeEmptyState(properties: Readonly<EmptyStateProperties>): MpElement;
+```
+
+Eine zentrierte Nachricht ohne Inhalt mit optionalem Symbol, unterstützendem Text und Aktion.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<EmptyStateProperties> |             |
 
 ## `src/components/molecules/forge-grid/forge-grid`
 
@@ -1286,9 +1774,9 @@ lebt im gleichgelegenen `forge-grid.module.scss` (importiert von
 
 #### Parameter
 
-| Name          | Geben Sie                        | ein Beschreibung |
-| ------------- | -------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<GridProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<GridProperties> |             |
 
 ### GridAlignment
 
@@ -1342,9 +1830,9 @@ wird ausschließlich durch den animierten Stil des Wrappers vermittelt
 
 #### Parameter
 
-| Name          | Geben Sie                          | ein Beschreibung |
-| ------------- | ---------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<InViewProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<InViewProperties> |             |
 
 ### InViewAnimation
 
@@ -1362,6 +1850,64 @@ Keine Beschreibung angegeben.
 
 ```typescript
 export interface InViewProperties
+```
+
+Keine Beschreibung angegeben.
+
+## `src/components/molecules/forge-inline-edit/forge-inline-edit`
+
+### ForgeInlineEdit
+
+**Art:** Funktion
+
+```typescript
+function ForgeInlineEdit(properties: Readonly<InlineEditProperties>): MpElement;
+```
+
+Ein kompaktes Lese-/Bearbeitungssteuerelement mit Tastatur-Senden, Abbrechen und Validierung.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<InlineEditProperties> |             |
+
+### InlineEditInputType
+
+**Art:** Typ
+
+```typescript
+export type InlineEditInputType = 'text' | 'email' | 'url' | 'number';
+```
+
+Keine Beschreibung angegeben.
+
+### InlineEditProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface InlineEditProperties
+```
+
+Keine Beschreibung angegeben.
+
+### InlineEditSize
+
+**Art:** Typ
+
+```typescript
+export type InlineEditSize = 'sm' | 'md' | 'lg';
+```
+
+Keine Beschreibung angegeben.
+
+### InlineEditValidator
+
+**Art:** Typ
+
+```typescript
+export type InlineEditValidator = (value: string) => string | undefined;
 ```
 
 Keine Beschreibung angegeben.
@@ -1394,9 +1940,9 @@ Bei anderen migrierten Komponenten wurden bereichsbezogene Slots gelöscht.
 
 #### Parameter
 
-| Name          | Geben Sie                        | ein Beschreibung |
-| ------------- | -------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ListProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<ListProperties> |             |
 
 ### ListItem
 
@@ -1457,20 +2003,20 @@ Behält seine natürliche Höhe und lässt sich von oben bis unten dicht zusamme
 Anzahl von `columns`, oder legen Sie `minColumnWidth` so fest, dass so viele Spalten wie möglich passen
 Mindestens die Breite, die passt (`minColumnWidth` gewinnt). Der Container wird freigelegt
 die Lücke als benutzerdefinierte Eigenschaft `--mp-masonry-gap` und, wie das Original Vue,
-Hält jeden untergeordneten Standardsteckplatz automatisch bruchsicher. Im Gegensatz zum Vue
+Hält jedes Kind im Standardsteckplatz automatisch vor Bruch geschützt. Im Gegensatz zum Vue
 Im Original wird der `items` prop/scoped `item`-Slot, der zugeordnet wird, nicht verfügbar gemacht
 auf die bereichsbezogenen Slots von Vue.
 
-Es verfügt über eine Containerbox und eine pro-kindliche Bruchsicherheit durch die zusammen angeordnete Box
+Es besitzt die Containerbox und pro-Kind-Break-Sicherung durch die beigefügte
 CSS-Modul `forge-masonry.module.scss` (wird von der auf jedes Framework übertragen
 Zweistufiger Compiler, sodass die Komponente ihr eigenes `@layer mp.components` ausliefert
 CSS); Die dynamischen Mehrspalteneigenschaften werden inline angewendet.
 
 #### Parameter
 
-| Name          | Geben Sie                           | ein Beschreibung |
-| ------------- | ----------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<MasonryProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<MasonryProperties> |             |
 
 ### Mauerwerkslücke
 
@@ -1488,6 +2034,54 @@ Benannte Lückenskala; Jeder Schritt wird in ein `--mp-spacing-*`-Design-Token a
 
 ```typescript
 export interface MasonryProperties
+```
+
+Keine Beschreibung angegeben.
+
+## `src/components/molecules/forge-mention-input/forge-mention-input`
+
+### ForgeMentionInput
+
+**Art:** Funktion
+
+```typescript
+function ForgeMentionInput(properties: Readonly<MentionInputProperties>): MpElement;
+```
+
+Ein Textbereich mit zugänglichen, über die Tastatur navigierbaren Erwähnungsvorschlägen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<MentionInputProperties> |             |
+
+### MentionInputProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface MentionInputProperties
+```
+
+Keine Beschreibung angegeben.
+
+### MentionItem
+
+**Art:** Schnittstelle
+
+```typescript
+export interface MentionItem
+```
+
+Keine Beschreibung angegeben.
+
+### MentionSuggestionScope
+
+**Art:** Schnittstelle
+
+```typescript
+export interface MentionSuggestionScope
 ```
 
 Keine Beschreibung angegeben.
@@ -1519,9 +2113,9 @@ etablierte Router-Ersetzung) und macht die Callback-Requisite `onClick` verfügb
 
 #### Parameter
 
-| Name          | Geben Sie                            | ein Beschreibung |
-| ------------- | ------------------------------------ | ---------------- |
-| Eigenschaften | Schreibgeschützt<MenuItemProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<MenuItemProperties> |             |
 
 ### MenuItemProperties
 
@@ -1577,9 +2171,9 @@ Ersatz), andernfalls entsprechend den Rollen/ARIA des Vue-Markups.
 
 #### Parameter
 
-| Name          | Geben Sie                        | ein Beschreibung |
-| ------------- | -------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<MenuProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<MenuProperties> |             |
 
 ### MenuNode
 
@@ -1610,6 +2204,76 @@ export interface MenuProperties
 ```
 
 Keine Beschreibung angegeben.
+
+## `src/components/molecules/forge-metric-card/forge-metric-card`
+
+### ForgeMetricCard
+
+**Art:** Funktion
+
+```typescript
+function ForgeMetricCard(properties: Readonly<MetricCardProperties>): MpElement;
+```
+
+`ForgeMetricCard` – eine kompakte Metrikzusammenfassung, die einmal in neutralem JSX erstellt wurde.
+Es behält den Wert, den Trend, den Ladezustand und den unterstützenden Inhalt in einem
+zugänglicher Artikel, während die visuelle Behandlung seinem CSS-Modul überlassen wird.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<MetricCardProperties> |             |
+
+### MetricCardProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface MetricCardProperties
+```
+
+Keine Beschreibung angegeben.
+
+### MetricCardSize
+
+**Art:** Typ
+
+```typescript
+export type MetricCardSize = 'sm' | 'md' | 'lg';
+```
+
+Größentoken zur Steuerung der metrischen Kartenskala.
+
+### MetricCardTrend
+
+**Art:** Schnittstelle
+
+```typescript
+export interface MetricCardTrend
+```
+
+Optionaler Änderungsindikator, der unterhalb des Metrikwerts gerendert wird.
+
+### MetricCardTrendDirection
+
+**Art:** Typ
+
+```typescript
+export type MetricCardTrendDirection = 'up' | 'down' | 'flat';
+```
+
+Richtung der Änderung, dargestellt durch einen metrischen Trend.
+
+### MetricCardVariant
+
+**Art:** Typ
+
+```typescript
+export type MetricCardVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+Oberflächenton der metrischen Karte.
 
 ## `src/components/molecules/forge-navbar-item/forge-navbar-item`
 
@@ -1646,9 +2310,9 @@ eigene `direction`-Requisite) und die `onClick`-Callback-Requisite.
 
 #### Parameter
 
-| Name          | Geben Sie                              | ein Beschreibung |
-| ------------- | -------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<NavbarItemProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<NavbarItemProperties> |             |
 
 ### NavbarItemChild
 
@@ -1708,9 +2372,9 @@ verwendet die etablierte kontrollierte `modelValue` + Callback-Prop-Konvention.
 
 #### Parameter
 
-| Name          | Geben Sie                              | ein Beschreibung |
-| ------------- | -------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<PaginationProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<PaginationProperties> |             |
 
 ### PaginationItem
 
@@ -1783,9 +2447,9 @@ neutrales übergeordnetes Element kompiliert, wobei die Felder leer bleiben. Es 
 
 #### Parameter
 
-| Name          | Geben Sie                        | ein Beschreibung |
-| ------------- | -------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<TabsProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<TabsProperties> |             |
 
 ### TabItem
 
@@ -1805,7 +2469,7 @@ Ein einzelner Tab-Deskriptor.
 export interface TabPanelScope
 ```
 
-Der an die Render-Requisite `panel` übergebene Bereich.
+Der an die Render-Prop `panel` übergebene Bereich.
 
 ### TabsProperties
 
@@ -1826,6 +2490,57 @@ export type TabsVariant = 'line' | 'pill';
 ```
 
 Visuelle Behandlung der Tab-Liste.
+
+## `src/components/molecules/forge-tag-input/forge-tag-input`
+
+### ForgeTagInput
+
+**Art:** Funktion
+
+```typescript
+function ForgeTagInput(properties: Readonly<TagInputProperties>): MpElement;
+```
+
+`ForgeTagInput` – ein kontrollierter, zugänglicher Tag-Editor, der neutral erstellt wurde
+JSX. Durch Eingabe oder Komma wird ein zugeschnittener Entwurf übernommen, die Rücktaste entfernt das letzte Tag
+wenn der Entwurf leer ist und Duplikat-/Max-Tag-Regeln vor dem angewendet werden
+Ein kontrollierter Update-Callback wird ausgelöst.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<TagInputProperties> |             |
+
+### TagInputProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface TagInputProperties
+```
+
+Keine Beschreibung angegeben.
+
+### TagInputSize
+
+**Art:** Typ
+
+```typescript
+export type TagInputSize = 'sm' | 'md' | 'lg';
+```
+
+Größentoken, das die Skalierung der Tag-Eingabe steuert.
+
+### TagInputVariant
+
+**Art:** Typ
+
+```typescript
+export type TagInputVariant = 'neutral' | 'primary' | 'error';
+```
+
+Oberflächenton der Tag-Eingabe.
 
 ## `src/components/molecules/forge-timeline/forge-timeline`
 
@@ -1855,9 +2570,9 @@ Die `marker`/`time`/`title`/default-Slots pro Element werden zu vier bereichsbez
 
 #### Parameter
 
-| Name          | Geben Sie                            | ein Beschreibung |
-| ------------- | ------------------------------------ | ---------------- |
-| Eigenschaften | Schreibgeschützt<TimelineProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<TimelineProperties> |             |
 
 ### TimelineAlign
 
@@ -1952,9 +2667,9 @@ sind schlichte Requisiten.
 
 #### Parameter
 
-| Name          | Geben Sie                                | ein Beschreibung |
-| ------------- | ---------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<WindowPopoutProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<WindowPopoutProperties> |             |
 
 ### WindowPopoutProperties
 
@@ -1965,6 +2680,164 @@ export interface WindowPopoutProperties
 ```
 
 Keine Beschreibung angegeben.
+
+## `src/components/organisms/forge-activity-feed/forge-activity-feed`
+
+### ActivityFeedItem
+
+**Art:** Typ
+
+```typescript
+export type ActivityFeedItem = ActivityItem;
+```
+
+Keine Beschreibung angegeben.
+
+#### Vertrag
+
+- **@deprecated:** Verwenden Sie `ActivityItem`.
+
+### ActivityFeedProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ActivityFeedProperties
+```
+
+Keine Beschreibung angegeben.
+
+### ActivityFeedSize
+
+**Art:** Typ
+
+```typescript
+export type ActivityFeedSize = 'sm' | 'md' | 'lg';
+```
+
+Keine Beschreibung angegeben.
+
+### ActivityFeedVariant
+
+**Art:** Typ
+
+```typescript
+export type ActivityFeedVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeActivityFeed
+
+**Art:** Funktion
+
+```typescript
+function ForgeActivityFeed(properties: Readonly<ActivityFeedProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ActivityFeedProperties> |             |
+
+## `src/components/organisms/forge-announcement-bar/forge-announcement-bar`
+
+### AnnouncementBarProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface AnnouncementBarProperties
+```
+
+Keine Beschreibung angegeben.
+
+### AnnouncementBarVariant
+
+**Art:** Typ
+
+```typescript
+export type AnnouncementBarVariant = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeAnnouncementBar
+
+**Art:** Funktion
+
+```typescript
+function ForgeAnnouncementBar(properties: Readonly<AnnouncementBarProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<AnnouncementBarProperties> |             |
+
+## `src/components/organisms/forge-asset-browser/forge-asset-browser`
+
+### AssetBrowserItem
+
+**Art:** Schnittstelle
+
+```typescript
+export interface AssetBrowserItem
+```
+
+Keine Beschreibung angegeben.
+
+### AssetBrowserProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface AssetBrowserProperties
+```
+
+Keine Beschreibung angegeben.
+
+### AssetBrowserSize
+
+**Art:** Typ
+
+```typescript
+export type AssetBrowserSize = 'sm' | 'md' | 'lg';
+```
+
+Keine Beschreibung angegeben.
+
+### AssetBrowserValue
+
+**Art:** Typ
+
+```typescript
+export type AssetBrowserValue = string | string[];
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeAssetBrowser
+
+**Art:** Funktion
+
+```typescript
+function ForgeAssetBrowser(properties: Readonly<AssetBrowserProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<AssetBrowserProperties> |             |
 
 ## `src/components/organisms/forge-carousel/forge-carousel`
 
@@ -2028,9 +2901,9 @@ Startkoordinaten werden zu `useRef`; `defineExpose` wird gelöscht; und die
 
 #### Parameter
 
-| Name          | Geben Sie                            | ein Beschreibung |
-| ------------- | ------------------------------------ | ---------------- |
-| Eigenschaften | Schreibgeschützt<CarouselProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<CarouselProperties> |             |
 
 ## `src/components/organisms/forge-chat-area/forge-chat-area`
 
@@ -2074,9 +2947,425 @@ Der automatische Bildlauf deckt den häufigsten Fall ab.
 
 #### Parameter
 
-| Name          | Geben Sie                            | ein Beschreibung |
-| ------------- | ------------------------------------ | ---------------- |
-| Eigenschaften | Schreibgeschützt<ChatAreaProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ChatAreaProperties> |             |
+
+## `src/components/organisms/forge-command-palette/forge-command-palette`
+
+### CommandPaletteCommand
+
+**Art:** Typ
+
+```typescript
+export type CommandPaletteCommand = CommandItem;
+```
+
+Keine Beschreibung angegeben.
+
+#### Vertrag
+
+- **@deprecated:** Verwenden Sie `CommandItem`.
+
+### CommandPaletteProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CommandPaletteProperties
+```
+
+Keine Beschreibung angegeben.
+
+### CommandPaletteSize
+
+**Art:** Typ
+
+```typescript
+export type CommandPaletteSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Größentoken, das die Skalierung der Befehlspalette steuert.
+
+### ForgeCommandPalette
+
+**Art:** Funktion
+
+```typescript
+function ForgeCommandPalette(properties: Readonly<CommandPaletteProperties>): MpElement;
+```
+
+Eine durchsuchbare, tastaturgesteuerte Befehlspalette mit modaler Überlagerung. Der Neutrale
+Die Implementierung sorgt dafür, dass die Filterung und Auswahl unabhängig vom Framework bleibt
+Schutz globaler Dokument-Listener für SSR.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<CommandPaletteProperties> |             |
+
+## `src/components/organisms/forge-comment-thread/forge-comment-thread`
+
+### CommentThreadComment
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CommentThreadComment
+```
+
+Keine Beschreibung angegeben.
+
+### CommentThreadProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CommentThreadProperties
+```
+
+Keine Beschreibung angegeben.
+
+### CommentThreadSize
+
+**Art:** Typ
+
+```typescript
+export type CommentThreadSize = 'sm' | 'md' | 'lg';
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeCommentThread
+
+**Art:** Funktion
+
+```typescript
+function ForgeCommentThread(properties: Readonly<CommentThreadProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<CommentThreadProperties> |             |
+
+## `src/components/organisms/forge-comparison-table/forge-comparison-table`
+
+### CompareTableFeature
+
+**Art:** Typ
+
+```typescript
+export type ComparisonTableFeature = FeatureRow;
+```
+
+Keine Beschreibung angegeben.
+
+#### Vertrag
+
+- **@deprecated:** Verwenden Sie `FeatureRow`.
+
+### VergleichstabellePlan
+
+**Art:** Typ
+
+```typescript
+export type ComparisonTablePlan = ComparisonItem;
+```
+
+Keine Beschreibung angegeben.
+
+#### Vertrag
+
+- **@deprecated:** Verwenden Sie `ComparisonItem`.
+
+### Vergleichstabelleneigenschaften
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ComparisonTableProperties
+```
+
+Keine Beschreibung angegeben.
+
+### Vergleichstabellengröße
+
+**Art:** Typ
+
+```typescript
+export type ComparisonTableSize = 'sm' | 'md' | 'lg';
+```
+
+Keine Beschreibung angegeben.
+
+### Vergleichstabellenwert
+
+**Art:** Typ
+
+```typescript
+export type ComparisonTableValue = string | number | boolean;
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeComparisonTable
+
+**Art:** Funktion
+
+```typescript
+function ForgeComparisonTable(properties: Readonly<ComparisonTableProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ComparisonTableProperties> |             |
+
+## `src/components/organisms/forge-cookie-consent/forge-cookie-consent`
+
+### CookieCategory
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CookieCategory
+```
+
+Eine vom Benutzer konfigurierbare Cookie-Kategorie.
+
+### CookieConsentProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CookieConsentProperties
+```
+
+Keine Beschreibung angegeben.
+
+### CookieConsentSize
+
+**Art:** Typ
+
+```typescript
+export type CookieConsentSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Größentoken, das die Skalierung der Zustimmungsoberfläche steuert.
+
+### CookieConsentState
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CookieConsentState
+```
+
+Die Einwilligungsnutzlast wird an die Hostanwendung ausgegeben und bleibt im Speicher erhalten.
+
+### ForgeCookieConsent
+
+**Art:** Funktion
+
+```typescript
+function ForgeCookieConsent(properties: Readonly<CookieConsentProperties>): MpElement;
+```
+
+Ein Einwilligungsbanner und ein barrierefreier Einstellungsdialog mit der erforderlichen Kategorie
+Durchsetzung und geschützte lokale/Sitzungsspeicherpersistenz.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<CookieConsentProperties> |             |
+
+## `src/components/organisms/forge-cta-banner/forge-cta-banner`
+
+### CtaBannerAction
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CtaBannerAction
+```
+
+Keine Beschreibung angegeben.
+
+### CtaBannerProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface CtaBannerProperties
+```
+
+Keine Beschreibung angegeben.
+
+### CtaBannerVariant
+
+**Art:** Typ
+
+```typescript
+export type CtaBannerVariant = 'neutral' | 'primary' | 'secondary' | 'success' | 'warning';
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeCtaBanner
+
+**Art:** Funktion
+
+```typescript
+function ForgeCtaBanner(properties: Readonly<CtaBannerProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<CtaBannerProperties> |             |
+
+## `src/components/organisms/forge-data-card/forge-data-card`
+
+### DataCardData
+
+**Art:** Typ
+
+```typescript
+export type DataCardData = VCardData | ICalendarData;
+```
+
+Eingegebene Kontakt- oder Kalenderdaten werden von `ForgeDataCard` angezeigt.
+
+### DataCardProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface DataCardProperties
+```
+
+Keine Beschreibung angegeben.
+
+### DataCardSize
+
+**Art:** Typ
+
+```typescript
+export type DataCardSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Größentoken, das die Skalierung der Datenkarte steuert.
+
+### DataCardTrend
+
+**Art:** Schnittstelle
+
+```typescript
+export interface DataCardTrend
+```
+
+Keine Beschreibung angegeben.
+
+#### Vertrag
+
+- **@deprecated:** Datenkarten verwenden jetzt `VCardData` oder `ICalendarData`.
+
+### DataCardVariant
+
+**Art:** Typ
+
+```typescript
+export type DataCardVariant =
+  'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+```
+
+Farbton der Kartenoberfläche.
+
+### ForgeDataCard
+
+**Art:** Funktion
+
+```typescript
+function ForgeDataCard(properties: Readonly<DataCardProperties>): MpElement;
+```
+
+Eine semantische Kontakt- oder Kalenderkarte mit standardkonformen Downloads.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<DataCardProperties> |             |
+
+## `src/components/organisms/forge-diff-viewer/forge-diff-viewer`
+
+### DiffLineType
+
+**Art:** Typ
+
+```typescript
+export type DiffLineType = 'context' | 'addition' | 'deletion';
+```
+
+Keine Beschreibung angegeben.
+
+### DiffViewerLine
+
+**Art:** Schnittstelle
+
+```typescript
+export interface DiffViewerLine
+```
+
+Keine Beschreibung angegeben.
+
+### DiffViewerMode
+
+**Art:** Typ
+
+```typescript
+export type DiffViewerMode = 'unified' | 'split';
+```
+
+Keine Beschreibung angegeben.
+
+### DiffViewerProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface DiffViewerProperties
+```
+
+Keine Beschreibung angegeben.
+
+### ForgeDiffViewer
+
+**Art:** Funktion
+
+```typescript
+function ForgeDiffViewer(properties: Readonly<DiffViewerProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<DiffViewerProperties> |             |
 
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
@@ -2101,7 +3390,7 @@ export type DrawerDraggable = boolean | DrawerSize | number;
 Steuert, ob die Größe der Schublade durch Ziehen an der Innenkante geändert werden kann:
 `false` (Standard, feste Größe), `true` (in der Größe veränderbar bis zum vollständigen Ansichtsfenster).
 der relevanten Achse), ein {@link DrawerSize} (in der Größe veränderbar bis zur maximalen Größe dieser Größe) oder
-ein `number` (in der Größe veränderbar bis zu so viele `rem`).
+ein `number` (in der Größe veränderbar bis zu so vielen `rem`).
 
 ### Schubladenplatzierung
 
@@ -2178,9 +3467,199 @@ Helfer) und eine `closeLabel`-Requisite anstelle von i18n.
 
 #### Parameter
 
-| Name          | Geben Sie                          | ein Beschreibung |
-| ------------- | ---------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<DrawerProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<DrawerProperties> |             |
+
+## `src/components/organisms/forge-error-page/forge-error-page`
+
+### ErrorPageAction
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ErrorPageAction
+```
+
+Eine Aktion, die unter der Fehlermeldung angezeigt wird.
+
+### ErrorPageData
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ErrorPageData
+```
+
+Strukturierte Fehlerinformationen, die als ein öffentliches Datenobjekt übergeben werden können.
+
+### ErrorPageProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ErrorPageProperties
+```
+
+Keine Beschreibung angegeben.
+
+### ErrorPageSize
+
+**Art:** Typ
+
+```typescript
+export type ErrorPageSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Größentoken, das die Skalierung der Fehlerseite steuert.
+
+### ForgeErrorPage
+
+**Art:** Funktion
+
+```typescript
+function ForgeErrorPage(properties: Readonly<ErrorPageProperties>): MpElement;
+```
+
+Eine semantische, Slot-freundliche Fehlerstatusseite mit typisierten Aktionsdeskriptoren.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ErrorPageProperties> |             |
+
+## `src/components/organisms/forge-kanban-board/forge-kanban-board`
+
+### ForgeKanbanBoard
+
+**Art:** Funktion
+
+```typescript
+function ForgeKanbanBoard(properties: Readonly<KanbanBoardProperties>): MpElement;
+```
+
+Ein reaktionsfähiges Board zum Verschieben von Elementen zwischen Spalten.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<KanbanBoardProperties> |             |
+
+### KanbanBoardProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface KanbanBoardProperties
+```
+
+Keine Beschreibung angegeben.
+
+### KanbanCard
+
+**Art:** Typ
+
+```typescript
+export type KanbanCard = KanbanItem;
+```
+
+Keine Beschreibung angegeben.
+
+#### Vertrag
+
+- **@deprecated:** Verwenden Sie `KanbanItem`.
+
+### KanbanSpalte
+
+**Art:** Schnittstelle
+
+```typescript
+export interface KanbanColumn
+```
+
+Keine Beschreibung angegeben.
+
+## `src/components/organisms/forge-logo-cloud/forge-logo-cloud`
+
+### ForgeLogoCloud
+
+**Art:** Funktion
+
+```typescript
+function ForgeLogoCloud(properties: Readonly<LogoCloudProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<LogoCloudProperties> |             |
+
+### LogoCloudItem
+
+**Art:** Typ
+
+```typescript
+export type LogoCloudItem = Logo;
+```
+
+Keine Beschreibung angegeben.
+
+#### Vertrag
+
+- **@deprecated:** Verwenden Sie `Logo`.
+
+### LogoCloudProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface LogoCloudProperties
+```
+
+Keine Beschreibung angegeben.
+
+## `src/components/organisms/forge-marketing-header/forge-marketing-header`
+
+### ForgeMarketingHeader
+
+**Art:** Funktion
+
+```typescript
+function ForgeMarketingHeader(properties: Readonly<MarketingHeaderProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<MarketingHeaderProperties> |             |
+
+### MarketingHeaderAction
+
+**Art:** Schnittstelle
+
+```typescript
+export interface MarketingHeaderAction
+```
+
+Keine Beschreibung angegeben.
+
+### MarketingHeaderProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface MarketingHeaderProperties
+```
+
+Keine Beschreibung angegeben.
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2216,9 +3695,9 @@ Ersatz).
 
 #### Parameter
 
-| Name          | Geben Sie                           | ein Beschreibung |
-| ------------- | ----------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<MenubarProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<MenubarProperties> |             |
 
 ### Menüleisteneigenschaften
 
@@ -2258,9 +3737,9 @@ hat keine Multi-Root-Fragmentrückgabe).
 
 #### Parameter
 
-| Name          | Geben Sie                          | ein Beschreibung |
-| ------------- | ---------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<NavbarProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<NavbarProperties> |             |
 
 ### NavbarAlign
 
@@ -2294,6 +3773,306 @@ export interface NavbarProperties
 
 Keine Beschreibung angegeben.
 
+## `src/components/organisms/forge-notification-panel/forge-notification-panel`
+
+### ForgeNotificationPanel
+
+**Art:** Funktion
+
+```typescript
+function ForgeNotificationPanel(properties: Readonly<NotificationPanelProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<NotificationPanelProperties> |             |
+
+### NotificationItem
+
+**Art:** Schnittstelle
+
+```typescript
+export interface NotificationItem
+```
+
+Keine Beschreibung angegeben.
+
+### NotificationPanelProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface NotificationPanelProperties
+```
+
+Keine Beschreibung angegeben.
+
+### Benachrichtigungstyp
+
+**Art:** Typ
+
+```typescript
+export type NotificationType = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+Keine Beschreibung angegeben.
+
+## `src/components/organisms/forge-onboarding-tour/forge-onboarding-tour`
+
+### ForgeOnboardingTour
+
+**Art:** Funktion
+
+```typescript
+function ForgeOnboardingTour(properties: Readonly<OnboardingTourProperties>): MpElement;
+```
+
+Eine barrierefreie Spotlight-Tour mit Tastaturnavigation und optionaler Vervollständigungspersistenz.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<OnboardingTourProperties> |             |
+
+### OnboardingStep
+
+**Art:** Typ
+
+```typescript
+export type OnboardingStep = TourStep;
+```
+
+Keine Beschreibung angegeben.
+
+#### Vertrag
+
+- **@deprecated:** Verwenden Sie `TourStep`.
+
+### OnboardingTourPlacement
+
+**Art:** Typ
+
+```typescript
+export type OnboardingTourPlacement = 'top' | 'right' | 'bottom' | 'left' | 'center';
+```
+
+Platzierungspräferenz für einen an einem Ziel verankerten Tourdialog.
+
+### OnboardingTourProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface OnboardingTourProperties
+```
+
+Keine Beschreibung angegeben.
+
+### OnboardingTourSize
+
+**Art:** Typ
+
+```typescript
+export type OnboardingTourSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Größentoken, das die Skalierung des Tourdialogs steuert.
+
+## `src/components/organisms/forge-pricing-table/forge-pricing-table`
+
+### ForgePricingTable
+
+**Art:** Funktion
+
+```typescript
+function ForgePricingTable(properties: Readonly<PricingTableProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<PricingTableProperties> |             |
+
+### Preisfunktion
+
+**Art:** Schnittstelle
+
+```typescript
+export interface PricingFeature
+```
+
+Keine Beschreibung angegeben.
+
+### Preisplan
+
+**Art:** Schnittstelle
+
+```typescript
+export interface PricingPlan
+```
+
+Keine Beschreibung angegeben.
+
+### PricingTableProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface PricingTableProperties
+```
+
+Keine Beschreibung angegeben.
+
+## `src/components/organisms/forge-profile-card/forge-profile-card`
+
+### ForgeProfileCard
+
+**Art:** Funktion
+
+```typescript
+function ForgeProfileCard(properties: Readonly<ProfileCardProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ProfileCardProperties> |             |
+
+### ProfileCardProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface ProfileCardProperties
+```
+
+Keine Beschreibung angegeben.
+
+## `src/components/organisms/forge-site-footer/forge-site-footer`
+
+### ForgeSiteFooter
+
+**Art:** Funktion
+
+```typescript
+function ForgeSiteFooter(properties: Readonly<SiteFooterProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<SiteFooterProperties> |             |
+
+### SiteFooterColumn
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SiteFooterColumn
+```
+
+Keine Beschreibung angegeben.
+
+### SiteFooterLink
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SiteFooterLink
+```
+
+Keine Beschreibung angegeben.
+
+### SiteFooterProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SiteFooterProperties
+```
+
+Keine Beschreibung angegeben.
+
+## `src/components/organisms/forge-split-pane/forge-split-pane`
+
+### ForgeSplitPane
+
+**Art:** Funktion
+
+```typescript
+function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<SplitPaneProperties> |             |
+
+### SplitPaneProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface SplitPaneProperties
+```
+
+Keine Beschreibung angegeben.
+
+## `src/components/organisms/forge-stats-section/forge-stats-section`
+
+### ForgeStatsSection
+
+**Art:** Funktion
+
+```typescript
+function ForgeStatsSection(properties: Readonly<StatsSectionProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<StatsSectionProperties> |             |
+
+### StatItem
+
+**Art:** Schnittstelle
+
+```typescript
+export interface StatItem
+```
+
+Keine Beschreibung angegeben.
+
+### StatsSectionProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface StatsSectionProperties
+```
+
+Keine Beschreibung angegeben.
+
 ## `src/components/organisms/forge-table/forge-table`
 
 ### ForgeTable
@@ -2304,29 +4083,13 @@ Keine Beschreibung angegeben.
 function ForgeTable(properties: Readonly<TableProperties>): MpElement;
 ```
 
-`ForgeTable` – eine sortierbare Datentabelle, die einmal im neutralen JSX-Dialekt erstellt wurde
-und von `@mission-platform/vite-plugin-forge` direkt zu React oder Vue kompiliert.
-
-Es stellt `columns`/`rows` als semantischen `<table>` mit Click-to-Sort dar
-Header (zyklisch aufsteigend → absteigend → unsortiert), die den `onSort`-Rückruf auslösen, an
-optionale Beschriftung, ein Lade-Overlay und ein leerer Status. Zellentext wird gerendert
-durch die komponierte neutrale {@link ForgeTypography}; Der Sortierstatus wird mit gehalten
-die neutralen {@link useState}/{@link useMemo}-Hooks. Es besitzt sein Styling
-über das am selben Ort befindliche CSS-Modul `forge-table.module.scss`.
-
-Der ursprüngliche Vue SFC war generisch für den Zeilentyp und zusammengesetzt
-`ForgeTableHead`/`ForgeTableBody`-Unterkomponenten, ein `sort`-Emitter verwendet und verfügbar gemacht
-Spaltenspezifische `cell-<key>`-Slots. Die neutrale Version verwendet
-`Record<string, unknown>`-Zeilen, Inline-Kopf/Körper, verwendet `onSort`
-Rückruf und steuert das Rendern pro Zelle über die optionalen Optionen jeder Spalte
-`render`-Formatierer (die bereichsbezogenen Zellenslots werden gelöscht) – im Einklang mit der Vorgehensweise
-Bei den anderen migrierten Komponenten wurden bereichsbezogene Slots entfernt.
+Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name          | Geben Sie                         | ein Beschreibung |
-| ------------- | --------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<TableProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<TableProperties> |             |
 
 ### Sortierrichtung
 
@@ -2357,6 +4120,104 @@ export interface TableProperties
 ```
 
 Keine Beschreibung angegeben.
+
+## `src/components/organisms/forge-testimonials-section/forge-testimonials-section`
+
+### Abschnitt „ForgeTestimonials“.
+
+**Art:** Funktion
+
+```typescript
+function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectionProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<TestimonialsSectionProperties> |             |
+
+### Zeugnis
+
+**Art:** Schnittstelle
+
+```typescript
+export interface Testimonial
+```
+
+Keine Beschreibung angegeben.
+
+### TestimonialsSectionProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface TestimonialsSectionProperties
+```
+
+Keine Beschreibung angegeben.
+
+## `src/components/organisms/forge-transfer-list/forge-transfer-list`
+
+### ForgeTransferList
+
+**Art:** Funktion
+
+```typescript
+function ForgeTransferList(properties: Readonly<TransferListProperties>): MpElement;
+```
+
+Keine Beschreibung angegeben.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<TransferListProperties> |             |
+
+### TransferItem
+
+**Art:** Schnittstelle
+
+```typescript
+export interface TransferItem
+```
+
+Keine Beschreibung angegeben.
+
+### TransferListProperties
+
+**Art:** Schnittstelle
+
+```typescript
+export interface TransferListProperties
+```
+
+Keine Beschreibung angegeben.
+
+## `src/components/organisms/forge-tree-view/forge-tree-view-item`
+
+### TreeViewLabelScope
+
+**Art:** Schnittstelle
+
+```typescript
+export interface TreeViewLabelScope
+```
+
+Der Bereich, der pro node an den Slot `label` (bereichsbezogen) von {@link ForgeTreeView} übergeben wird.
+
+### TreeViewNode
+
+**Art:** Schnittstelle
+
+```typescript
+export interface TreeViewNode
+```
+
+Ein node im von {@link ForgeTreeView} gerenderten Baum.
 
 ## `src/components/organisms/forge-tree-view/forge-tree-view`
 
@@ -2391,29 +4252,9 @@ Rückruf-Requisiten stimmen ansonsten überein.
 
 #### Parameter
 
-| Name          | Geben Sie                            | ein Beschreibung |
-| ------------- | ------------------------------------ | ---------------- |
-| Eigenschaften | Schreibgeschützt<TreeViewProperties> |                  |
-
-### TreeViewLabelScope
-
-**Art:** Schnittstelle
-
-```typescript
-export interface TreeViewLabelScope
-```
-
-Der Bereich, der pro node an den Slot `label` (bereichsbezogen) von {@link ForgeTreeView} übergeben wird.
-
-### TreeViewNode
-
-**Art:** Schnittstelle
-
-```typescript
-export interface TreeViewNode
-```
-
-Ein node im von {@link ForgeTreeView} gerenderten Baum.
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<TreeViewProperties> |             |
 
 ### TreeViewProperties
 
@@ -2453,9 +4294,9 @@ benannte (aber nicht standardmäßige) Slots als bereichsbezogene Funktionen wei
 
 #### Parameter
 
-| Name          | Geben Sie                               | ein Beschreibung |
-| ------------- | --------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<VirtualListProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<VirtualListProperties> |             |
 
 ### VirtualListItemScope
 
@@ -2497,16 +4338,16 @@ der `onSelect`-Rückruf. Besitzt sein Styling durch `forge-virtual-log-viewer.mo
 
 Der ursprüngliche Vue SFC bestand aus `ForgeLogViewerRow`/`ForgeLogViewerToolbar`
 Unterkomponenten, verwendete das Symbolpaket für die Glyphe pro Ebene und ein `select`
-emittieren. Die neutrale Version fügt die Zeile + Symbolleiste ein und ersetzt eine farbcodierte Version
+ausstrahlen. Die neutrale Version fügt die Zeile + Symbolleiste ein und ersetzt eine farbcodierte Version
 `●`-Glyphe für die Symbole (im Einklang mit den anderen migrierten Komponenten) und
 verwendet die Callback-Requisite `onSelect`; das manuelle Scroll-Follow-Tail des Originals
 Die Unterdrückung wird aufgehoben.
 
 #### Parameter
 
-| Name          | Geben Sie                                    | ein Beschreibung |
-| ------------- | -------------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<VirtualLogViewerProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<VirtualLogViewerProperties> |             |
 
 ### LogEntry
 
@@ -2565,7 +4406,7 @@ Layoutfehler, während der Screenreader weiterhin zugänglich bleibt.
 Der ursprüngliche Vue SFC war generisch für den Zeilentyp und zusammengesetzt
 Die Unterkomponenten `ForgeVirtualTableHead`/`Row`/`Footer` verwendeten das Symbolpaket
 Für das Sortierzeichen werden spaltenbezogene `cell-<key>`-Slots verfügbar gemacht und ausgegeben
-`sort`/`rowClick`. Die neutrale Version verwendet `Record<string, unknown>` Zeilen,
+`sort`/`rowClick`. Die neutrale Version verwendet `Record<string, unknown>`-Zeilen,
 Inlines der Kopf-/Zeilen-/Fußzeile, rendert das einmal beschreibbare `@mission-platform/icons`
 `ForgeIconSort` (das den aktiven Richtungs-Chevron ausfüllt) und
 verwendet die Callback-Requisiten `onSort`/`onRowClick`. Der Inhalt pro Zelle wird gesteuert durch
@@ -2575,9 +4416,9 @@ Slots für vollständig benutzerdefinierte (interaktive) Zellinhalte.
 
 #### Parameter
 
-| Name          | Geben Sie                                | ein Beschreibung |
-| ------------- | ---------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<VirtualTableProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<VirtualTableProperties> |             |
 
 ### VirtualTableCellScope
 
@@ -2625,15 +4466,15 @@ von `@mission-platform/vite-plugin-forge` direkt zu React oder Vue kompiliert.
 
 Es verhält sich wie {@link ForgeTabs} (ARIA `tablist`/`tab`/`tabpanel`, roving
 `tabindex`, Pfeil-/Pos1-/Ende-Tastaturnavigation, schließbare/hinzufügbare Angebote,
-ein bereichsbezogenes `panel` **render-prop**), mountet jedoch nie die inaktiven Panels –
+ein bereichsbezogenes `panel` **render-prop**), mountet aber niemals die inaktiven Panels –
 Geeignet für schwere Panelinhalte. Es besitzt sein Styling durch das am selben Ort befindliche CSS
 Modul `forge-virtual-tabs.module.scss`.
 
 Der ursprüngliche Vue SFC hat die gemeinsam genutzte Unterkomponente `ForgeTabList` wiederverwendet
 `@mission-platform/icons`, mit einem pro Tab-ID benannten Panel-Slot und `v-model` +
-emittiert. Die neutrale Version fügt die Tab-Leiste ein und rendert das einmalige Schreiben
+strahlt aus. Die neutrale Version fügt die Tab-Leiste ein und rendert das einmalige Schreiben
 `@mission-platform/icons` `ForgeIconPlus`/`ForgeIconClose` für das Hinzufügen/Schließen
-Angebote, rendert das aktive Panel über ein einzelnes `panel` mit Gültigkeitsbereich
+Affordanzen, rendert das aktive Panel über ein einzelnes `panel` mit Gültigkeitsbereich
 **render-prop** (wird direkt aufgerufen, nicht über ein neutrales `<Slot>`, es bleibt also ein
 Eine echte Requisite auf beiden Frameworks und ein kompilierter neutraler Elternteil kann sie als übergeben
 (einfaches `panel={({ tab }) => …}`-Attribut) und verwendet das etablierte
@@ -2641,9 +4482,9 @@ Eine echte Requisite auf beiden Frameworks und ein kompilierter neutraler Eltern
 
 #### Parameter
 
-| Name          | Geben Sie                               | ein Beschreibung |
-| ------------- | --------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<VirtualTabsProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<VirtualTabsProperties> |             |
 
 ### VirtualTabPanelScope
 
@@ -2653,7 +4494,7 @@ Eine echte Requisite auf beiden Frameworks und ein kompilierter neutraler Eltern
 export interface VirtualTabPanelScope
 ```
 
-Der an die Render-Requisite `panel` übergebene Bereich.
+Der an die Render-Prop `panel` übergebene Bereich.
 
 ### VirtualTabsProperties
 
@@ -2693,9 +4534,9 @@ Rückruf-Requisiten.
 
 #### Parameter
 
-| Name          | Geben Sie                                   | ein Beschreibung |
-| ------------- | ------------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<VirtualTreeViewProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ----------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<VirtualTreeViewProperties> |             |
 
 ### TreeNode
 
@@ -2756,9 +4597,9 @@ Helfer) und `eyebrow`/`title`/`subtitle` sind String-Requisiten.
 
 #### Parameter
 
-| Name          | Geben Sie                        | ein Beschreibung |
-| ------------- | -------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<HeroProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------ | ----------- |
+| Eigenschaften | Schreibgeschützt<HeroProperties> |             |
 
 ### HeroAlign
 
@@ -2790,6 +4631,281 @@ export type HeroSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 Vertikale Füllskala – kanonische 2xs → 2xl-Skala.
 
+## `src/utils/date-time/date-time`
+
+### browserTimezoneLabel
+
+**Art:** Funktion
+
+```typescript
+function browserTimezoneLabel(): string;
+```
+
+Der IANA-Name der Browser-Zeitzone oder `'Local'`, wenn nicht verfügbar.
+
+### Klemme
+
+**Art:** Funktion
+
+```typescript
+function clamp(value: number, min: number, max: number): number;
+```
+
+Klemmen Sie eine Zahl in den umfassenden `[min, max]`-Bereich.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Nummer |             |
+| min | Nummer |             |
+| max | Nummer |             |
+
+### Datumsbereich
+
+**Art:** Schnittstelle
+
+```typescript
+export interface DateRange
+```
+
+Ein `{ start, end }` ISO-Datumsbereich (`YYYY-MM-DD`).
+
+### DateTimeRange
+
+**Art:** Schnittstelle
+
+```typescript
+export interface DateTimeRange
+```
+
+Ein `{ start, end, timezone }` Datums-/Uhrzeitbereich (`YYYY-MM-DD HH:MM[:SS]`).
+
+### displayTime
+
+**Art:** Funktion
+
+```typescript
+function displayTime(value: string, withSeconds: boolean): string;
+```
+
+Normalisieren Sie eine gespeicherte Zeitzeichenfolge auf die konfigurierte Genauigkeit (leer bleibt leer).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ------- | ----------- |
+| Wert | Zeichenfolge |             |
+| withSeconds | boolescher Wert |             |
+
+### formatDateRange
+
+**Art:** Funktion
+
+```typescript
+function formatDateRange(value: DateRange | undefined): string;
+```
+
+Formatieren Sie einen ISO-Datumsbereich in eine `start → end`-Zusammenfassung (leere Teile werden ausgeblendet).
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ---------------------- | ----------- |
+| Wert | DateRange \| undefiniert |             |
+
+### formatDateTime
+
+**Art:** Funktion
+
+```typescript
+function formatDateTime(date: string, parts: TimeParts, withSeconds: boolean): string;
+```
+
+Fügen Sie die Datums- und Uhrzeitteile `YYYY-MM-DD` zu einer Zeichenfolge `YYYY-MM-DD HH:MM[:SS]` zusammen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | --------- | ----------- |
+| Datum | Zeichenfolge |             |
+| Teile | TimeParts |             |
+| withSeconds | boolescher Wert |             |
+
+### formatTime
+
+**Art:** Funktion
+
+```typescript
+function formatTime(parts: TimeParts, withSeconds: boolean): string;
+```
+
+Formatieren Sie die Komponenten Stunde/Minute (/Sekunde) in `HH:MM` oder `HH:MM:SS`.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | --------- | ----------- |
+| Teile | TimeParts |             |
+| withSeconds | boolescher Wert |             |
+
+### formatTimeRange
+
+**Art:** Funktion
+
+```typescript
+function formatTimeRange(value: TimeRange | undefined, withSeconds: boolean): string;
+```
+
+Formatieren Sie einen Zeitbereich mit der konfigurierten Genauigkeit in eine `start → end`-Zusammenfassung.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ---------------------- | ----------- |
+| Wert | Zeitbereich \| undefiniert |             |
+| withSeconds | boolescher Wert |             |
+
+### STD
+
+**Art:** konstant
+
+```typescript
+export const HOURS: readonly number[];
+```
+
+Die auswählbaren Listen für Stunde (0–23), Minute (0–59) und Sekunde (0–59).
+
+### MINUTEN
+
+**Art:** konstant
+
+```typescript
+export const MINUTES: readonly number[];
+```
+
+Keine Beschreibung angegeben.
+
+### Unterlage
+
+**Art:** Funktion
+
+```typescript
+function pad(value: number): string;
+```
+
+Eine Zahl mit Nullen auf zwei Ziffern auffüllen.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Nummer |             |
+
+### parseDate
+
+**Art:** Funktion
+
+```typescript
+function parseDate(value: string): Date | undefined;
+```
+
+Analysieren Sie eine `YYYY-MM-DD`-ISO-Datumszeichenfolge in einen `Date` (lokale Mitternacht) oder `undefined`.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Zeichenfolge |             |
+
+### parseDateTime
+
+**Art:** Funktion
+
+```typescript
+function parseDateTime(value: string): { date: string } & TimeParts;
+```
+
+Teilen Sie eine `YYYY-MM-DD HH:MM[:SS]`-Zeichenfolge (oder ISO `T`/`Z`) in Datums- und Uhrzeitteile auf.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Zeichenfolge |             |
+
+### parseTime
+
+**Art:** Funktion
+
+```typescript
+function parseTime(value: string): TimeParts;
+```
+
+Analysieren Sie eine `HH:MM[:SS]`-Zeichenfolge in ihre Stunden-/Minuten-/Sekundenkomponenten.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----- | ------ | ----------- |
+| Wert | Zeichenfolge |             |
+
+### Reichweite
+
+**Art:** Funktion
+
+```typescript
+function range(length: number): number[];
+```
+
+`[0, 1, …, length - 1]`.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ------ | ------ | ----------- |
+| Länge | Nummer |             |
+
+### SEKUNDEN
+
+**Art:** konstant
+
+```typescript
+export const SECONDS: readonly number[];
+```
+
+Keine Beschreibung angegeben.
+
+### TimeParts
+
+**Art:** Schnittstelle
+
+```typescript
+export interface TimeParts
+```
+
+Die Stunden-/Minuten-/Sekundenkomponenten einer analysierten Zeit.
+
+### Zeitbereich
+
+**Art:** Schnittstelle
+
+```typescript
+export interface TimeRange
+```
+
+Ein `{ start, end }`-Zeitbereich (`HH:MM` oder `HH:MM:SS`).
+
+### Zeitzonenmodus
+
+**Art:** Typ
+
+```typescript
+export type TimezoneMode = 'browser' | 'utc';
+```
+
+Ob ein Datums-/Uhrzeitbereich in der Browserzone oder UTC interpretiert wird.
+
 ## `src/utils/pointer-drag/pointer-drag`
 
 ### beginPointerDrag
@@ -2808,9 +4924,9 @@ der Server (kein `window`).
 
 #### Parameter
 
-| Name    | Geben Sie           | ein Beschreibung |
-| ------- | ------------------- | ---------------- |
-| Handler | PointerDragHandlers |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ------------------- | ----------- |
+| Handler | PointerDragHandlers |             |
 
 ### PointerDragHandlers
 

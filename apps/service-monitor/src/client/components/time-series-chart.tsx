@@ -1,8 +1,9 @@
 'use client';
 
+import { area, bisector, extent, line, pointer, scaleLinear, scaleTime } from 'd3';
+
 import { innerDimensions, resolveMargin, useD3 } from '@mission-platform/d3';
 import { palette } from '@mission-platform/tokens';
-import { area, bisector, extent, line, pointer, scaleLinear, scaleTime } from 'd3';
 
 import { useCompactViewport } from '../hooks/use-breakpoint';
 

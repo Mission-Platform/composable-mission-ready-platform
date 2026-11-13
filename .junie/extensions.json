@@ -1,14 +1,4 @@
 {
-    "github-ChromeDevTools-chrome-devtools-mcp": {
-        "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
-        "extensions": [
-            "chrome-devtools-mcp"
-        ],
-        "source": {
-            "type": "git",
-            "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp"
-        }
-    },
     "github-crowdin-skills": {
         "url": "https://github.com/crowdin/skills",
         "extensions": [

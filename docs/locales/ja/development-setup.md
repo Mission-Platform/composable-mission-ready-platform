@@ -14,13 +14,13 @@
 
 ### システム要件
 
-| ツール       | 必要なバージョン       | 目的                                                       |
-| :----------- | :--------------------- | :--------------------------------------------------------- |
-| **Node.js**  | `24.19.0`              | ランタイム環境 (アクティブ LTS)                            |
-| **pnpm**     | `11.21.0`              | パッケージ マネージャーとワークスペース オーケストレーター |
-| **Git**      | 最新の安定版           | バージョン管理                                             |
-| **錆**       | 安定したツールチェーン | オプションのスタンドアロン Rust ベンチマーク開発           |
-| **ドッカー** | 最新の安定版           | Emscripten Hunspell ビルドにのみ必要                       |
+|ツール |必要なバージョン |目的 |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0` |ランタイム環境 (アクティブ LTS) |
+| **pnpm** | `12.4.2` |パッケージ マネージャーとワークスペース オーケストレーター |
+| **Git** |最新の安定版 |バージョン管理 |
+| **錆** |安定したツールチェーン |オプションのスタンドアロン Rust ベンチマーク開発 |
+| **ドッカー** |最新の安定版 | Emscripten Hunspell ビルドにのみ必要 |
 
 ### バージョン管理 (推奨)
 
@@ -32,14 +32,14 @@ nvm install
 nvm use
 ```
 
-有効にする **pnpm** コアパックを使用:
+Corepack を使用して **pnpm** を有効にします。
 
 ```bash
 corepack enable
-corepack prepare pnpm@11.21.0 --activate
+corepack prepare pnpm@12.4.2 --activate
 ```
 
-## 初期セットアップ
+## 初期設定
 
 次の手順に従って、マシン上のモノリポジトリを初期化します。
 
@@ -58,8 +58,24 @@ cd composable-mission-ready-platform
 pnpm install
 ```
 
-このコマンドは、 `prepare` スクリプト。**Husky** をコミット lint 用に初期化し、すべての内部動作を保証します。
+このコマンドは `prepare` スクリプトをトリガーします。これにより、**Husky** がコミット lint 用に初期化され、すべての内部セキュリティが保証されます。
 パッケージのリンクが正しく確立されています。
+
+### SonarLint 言語サーバー
+
+リポジトリの `agent-lsp.json` には、JavaScript 用の公式 SonarLint 言語サーバーと TypeScript が含まれています。の
+サーバーは npm パッケージではなく Java アーカイブとして配布されるため、Java をインストールし、
+[SonarSource](https://github.com/SonarSource/sonarlint-language-server) の `sonarlint-language-server` アーカイブ。
+
+LSP を開始する前に、サーバー アーカイブと JavaScript アナライザーを設定します。
+
+```bash
+export SONARLINT_LS_JAR=/path/to/sonarlint-language-server.jar
+export SONARLINT_ANALYZERS=/path/to/sonarjs.jar
+```
+
+オプションの `SONARLINT_JAVA` 変数では、Java 実行可能ファイルを選択できます。リポジトリ ランチャーは、設定された内容を検証します。
+グローバルにインストールされたコマンドを必要とせずに、サーバーの標準入出力プロトコルにパスを設定して転送します。
 
 ### 3. インストールの確認
 
@@ -69,9 +85,9 @@ pnpm install
 pnpm exec turbo run build --filter @mission-platform/forge-jsx...
 ```
 
-の `...` また、パッケージに必要な Forge の依存関係も構築します。の
-ニュートラル コード スキャナーは、Flint グラフからコンパイルされます。そうではありません
-Rust が必要か、 `wasm-pack` ビルドステップ。
+`...` フィルターは、パッケージに必要な Forge 依存関係も構築します。の
+ニュートラル コード スキャナーは Flint グラフからコンパイルされます。そうではありません
+Rust または `wasm-pack` ビルド ステップが必要です。
 
 ## 開発ワークフロー
 
@@ -108,9 +124,9 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-Forge-backed パッケージがマッチングを公開 `mp:vue`, `mp:react`, `mp:svelte`,
-`mp:solid`、 そして `mp:web-component` 条件。アクティブな条件は次のとおりです。
-使用するバンドラーによって構成されます。見る [コンパイラリファレンス](../../../packages/tooling/vite/forge/docs/locales/ja/reference/compiler.md)
+Forge-backed パッケージは、一致する `mp:vue`、`mp:react`、`mp:svelte`、
+`mp:solid` および `mp:web-component` 条件。アクティブな条件は次のとおりです。
+使用するバンドラーによって構成されます。 [コンパイラ リファレンス](../../../packages/tooling/vite/forge/docs/locales/ja/reference/compiler.md) を参照してください。
 ターゲットプラグインと宣言パイプライン用。
 
 ### アプリケーション開発
@@ -122,22 +138,22 @@ Forge-backed パッケージがマッチングを公開 `mp:vue`, `mp:react`, `m
 pnpm exec turbo run dev --filter @mission-platform/my-care-notes
 ```
 
-アプリケーションは通常、次の場所で入手できます。 `http://localhost:5173`.
+アプリケーションは通常、`http://localhost:5173` で入手できます。
 
 ### 共通コマンド
 
-| タスク     | コマンド      | 説明                                   |
-| :--------- | :------------ | :------------------------------------- |
-| **ビルド** | `pnpm build`  | すべてのアプリとパッケージをビルドする |
-| **テスト** | `pnpm test`   | すべて実行 Vitest スイート             |
-| **糸くず** | `pnpm lint`   | 走る ESLint モノレポ全体               |
-| **形式**   | `pnpm format` | 書式設定をチェックする Prettier        |
+|タスク |コマンド |説明 |
+| :--------- | :------------ | :----------------------------- |
+| **ビルド** | `pnpm build` |すべてのアプリとパッケージをビルドする |
+| **テスト** | `pnpm test` |すべての Vitest スイートを実行する |
+| **糸くず** | `pnpm lint` |モノリポジトリ全体で ESLint を実行します。
+| **形式** | `pnpm format` | Prettier でフォーマットを確認する |
 
 ## トラブルシューティング
 
 ### キャッシュのクリア
 
-予期しないビルド エラーが発生した場合は、Turborepo をクリアして、 Node キャッシュ:
+予期しないビルド エラーが発生した場合は、Turborepo キャッシュと Node キャッシュをクリアします。
 
 ```bash
 # Remove Turborepo cache
@@ -152,5 +168,5 @@ pnpm install
 
 Flint アーティファクトのビルドに失敗した場合は、コンパイラ診断を検査してください
 選択した静的リンク プロファイルまたは動的リンク プロファイルを確認します。の
-`@mission-platform/hunspell` Emscripten ビルドにはさらに Docker が必要です。
+`@mission-platform/hunspell` Emscripten ビルドには、さらに Docker が必要です。
 走ってください。

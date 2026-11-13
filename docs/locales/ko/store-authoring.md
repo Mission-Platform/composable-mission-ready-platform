@@ -7,11 +7,11 @@
 
 저장소는 패키지 내의 공유된 구성 요소 간 상태를 관리하는 데 사용됩니다. 애플리케이션 수준 저장소(예: Pinia 또는
 Redux), Mission Platform의 패키지 저장소는 **프레임워크 중립적인 관찰 가능한 모듈**로 설계되었습니다. 이를 통해
-호스트 프레임워크에 관계없이 Forge 후크를 통해 이를 소비하는 Write-Once 구성 요소입니다.
+호스트 프레임워크에 관계없이 Forge 후크를 통해 이를 사용하는 Write-Once 구성 요소입니다.
 
 ## 디렉토리 레이아웃
 
-각 상점은 다음의 자체 명명된 하위 디렉터리에 있어야 합니다. `src/stores/`, 함께 배치된 테스트 파일 및
+각 상점은 다음의 자체 이름이 지정된 하위 디렉토리에 있어야 합니다. `src/stores/`, 함께 배치된 테스트 파일 및
 지역 배럴.
 
 ```text
@@ -38,7 +38,7 @@ src/stores/
 1. **프레임워크 불가지론**: 저장소 모듈 내부의 `vue`, `react` 또는 `@mission-platform/forge-jsx` 후크에서 가져오지 마세요.
    그 자체.
 2. **명시적 유형**: 항상 저장소 상태에 대한 인터페이스를 정의하고 내보내십시오.
-3. **SSR 안전성**: 저장소가 Node.js에서 초기화될 수 있도록 브라우저 API(예: `localStorage`)에 대한 액세스를 보호합니다.
+3. **SSR 안전**: 저장소가 Node.js에서 초기화될 수 있도록 브라우저 API(예: `localStorage`)에 대한 액세스를 보호합니다.
    환경.
 4. **필수 테스트**: 모든 매장에는 같은 위치에 `.spec.ts` 파일이 있어야 합니다.
 
@@ -81,9 +81,10 @@ useEffect(() => {
 
 ## 발판
 
-Mission Platform Developer MCP 도구를 사용하여 새 매장 뼈대를 생성합니다.
+연결된 Mission Platform Developer MCP 서버를 통해 `scaffold_store` 도구를 사용하여 새 저장소를 생성합니다.
+해골. 이것은 쉘 명령이 아닌 MCP 도구 호출 예입니다.
 
-```bash
+```text
 # Example: Creating a new 'auth-store' in the 'components' package
 scaffold_store(name="auth-store", package="components", apply=true)
 ```
@@ -91,6 +92,6 @@ scaffold_store(name="auth-store", package="components", apply=true)
 ## 관련 가이드
 
 - [패키지 개발](package-development.md)
-- [원자 구성 요소 설계](atomic-component-design.md)
+- [원자부품설계](atomic-component-design.md)
 - [구성 가능한 저작](composable-authoring.md)
-- [저작 활용](util-authoring.md)
+- [유틸 저작](util-authoring.md)

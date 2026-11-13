@@ -4,6 +4,7 @@ import { relative, resolve, isAbsolute } from 'node:path';
 
 import lint from '@commitlint/lint';
 import load from '@commitlint/load';
+
 import { findRepoRoot, resolveRepoPath } from '@mission-platform/mcp-shared/repo/paths';
 
 import { runGit, type GitCommandInputOptions, type GitCommandResult } from './runner.ts';

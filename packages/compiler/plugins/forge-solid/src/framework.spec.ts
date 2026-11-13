@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
 
+import type {
+  TargetContext,
+  TargetIntentions,
+  TargetOptimizeOptions,
+} from "@mission-platform/forge-plugin-api";
+
 import {
   component,
   element,
@@ -24,11 +30,6 @@ import {
 import { forgeSolidFramework } from ".";
 
 import type { SolidLoweredModule } from "./lower.js";
-import type {
-  TargetContext,
-  TargetIntentions,
-  TargetOptimizeOptions,
-} from "@mission-platform/forge-plugin-api";
 
 const COMPONENT_CONTEXT: TargetContext = {
   framework: SOLID_FRAMEWORK,

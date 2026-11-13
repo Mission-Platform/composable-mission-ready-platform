@@ -47,14 +47,14 @@ Neutraler JSX-Dialekt und direkt nach React oder Vue kompiliert
 Es kommuniziert kontextbezogenes Feedback mit einem optionalen Titel, einem Statussymbol,
 Schaltfläche zum Verwerfen und Aktionen, wodurch `role="alert"` (durchsetzungsfähig) für wird
 Ansonsten `warning`/`error` und `role="status"` (höflich). Es besitzt sein Styling
-durch das am selben Ort befindliche CSS-Modul `forge-alert-banner.module.scss`, zusammengestellt
+durch das zusammengelegte CSS-Modul `forge-alert-banner.module.scss`, zusammengestellt
 mit dem Framework-neutralen {@link classNames}-Helfer.
 
 Der ursprüngliche Vue SFC verwendete `v-model` + ein `dismiss`-Emitter und `icon`/`actions`
 benannte Slots mit `$slots`-Anwesenheitserkennung; die neutrale Version ist a
 **gesteuerte** Komponente (`modelValue` + `onUpdateModelValue`), verwendet die
 Die rahmenübergreifende Callback-Prop `onDismiss` macht `iconContent`/`actions` verfügbar
-benannte Slots (Präsenz erkannt mit dem Framework-neutralen {@link hasSlot}
+Benannte Slots (Anwesenheit erkannt mit dem Framework-neutralen {@link hasSlot}
 Helfer) und zeichnet das Statussymbol mit dem Einmal-Schreiben
 `@mission-platform/icons` eingestellt (`ForgeIconCheck`/`ForgeIconError`/`ForgeIconWarning`/
 `ForgeIconInfo`). Es ist in ein `display: contents` verpackt
@@ -63,9 +63,9 @@ hat keine bedingte Root-Rückgabe).
 
 #### Parameter
 
-| Name          | Geben Sie                               | ein Beschreibung |
-| ------------- | --------------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<AlertBannerProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<AlertBannerProperties> |             |
 
 ## `src/components/molecules/forge-dropdown/forge-dropdown`
 
@@ -102,19 +102,19 @@ einmal im neutralen JSX-Dialekt und direkt nach React oder Vue kompiliert
 `@mission-platform/vite-plugin-forge`.
 
 Das Panel wird über das Framework-neutrale Portal **`<Teleport>`** gerendert
-(kompiliert zu React's `createPortal` / Vue's integriertem `<Teleport>` von
+(kompiliert zu Reacts `createPortal` / Vues integriertem `<Teleport>` von
 `@mission-platform/vite-plugin-forge`), also wird es in `document.body` gerendert und
 entgeht jedem `overflow`/Stacking-Kontext; Das Portal ist nur solange montiert
 `open`. Mit der CSS-Ankerpositionierungs-API bleibt es an seinem Auslöser verankert
 statt `@floating-ui`: Der Trigger deklariert ein eindeutiges Inline-`anchor-name`,
 und das teleportierte Panel verbindet sich mit `position-anchor` + `position-area` damit
-(abgeleitet von `placement`), umgedreht über `position-try-fallbacks`. Wann
-`matchTriggerWidth` stellt die Panelgrößen ein, die sein `min-width` auf den Trigger verwendet
+(abgeleitet von `placement`), Umdrehen über `position-try-fallbacks`. Wann
+Mit `matchTriggerWidth` werden die Panelgrößen eingestellt, die `min-width` auf den Trigger verwendet
 CSS `anchor-size(width)` – keine JS-Messung.
 
 Das teleportierte Panel wird über das auch in die **oberste Ebene** des Browsers befördert
 native Popover-API (`popover="manual"` + `showPopover()`): ein einfaches `z-index`
-kann niemals über ein offenes natives `<dialog>`-Modal/Dialogfeld hinausgehen (das in lebt).
+kann niemals über ein offenes natives `<dialog>` Modal/Dialog hinausgehen (das in
 die oberste Ebene), so dass sich das Panel für die gleiche oberste Ebene entscheidet, um darüber zu bleiben
 `ForgeModal`/`ForgeDialog`. Der statische `z-index` in CSS bleibt der Fallback
 für Browser ohne Popover-API-Unterstützung (dort steht das Attribut `popover`).
@@ -124,7 +124,7 @@ Wenn sich der Auslöser in einem offenen modalen `<dialog>` befindet, wird das P
 **in diesen Dialog** (über {@linksolvePortalTarget}) statt `body`: a
 Der modale Dialog macht alles außerhalb seines Unterbaums `inert`, also ein Panel, das an gesendet wird
 `body` wäre inaktiv (unsichtbar/nicht anklickbar) und falsch gestapelt – umso mehr
-wenn Modale verschachtelt sind. Wenn Sie es im nächsten Dialog belassen, wird das Popover angezeigt
+wenn Modale verschachtelt sind. Wenn Sie es im nächsten Dialog belassen, wird das Popover geöffnet
 Die API stapelt es über diesem (möglicherweise gestapelten) Dialog.
 
 Ersetzungen aus dem ursprünglichen Vue SFC: `@floating-ui/vue` → CSS-Anker
@@ -139,9 +139,9 @@ Requisiten. Der Stil wird durch das dort befindliche CSS-Modul bestimmt
 
 #### Parameter
 
-| Name          | Geben Sie                            | ein Beschreibung |
-| ------------- | ------------------------------------ | ---------------- |
-| Eigenschaften | Schreibgeschützt<DropdownProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<DropdownProperties> |             |
 
 ## `src/components/molecules/forge-popover/forge-popover`
 
@@ -158,7 +158,7 @@ Neutraler JSX-Dialekt und direkt nach React oder Vue kompiliert
 `@mission-platform/vite-plugin-forge`.
 
 Das Panel wird über das Framework-neutrale Portal **`<Teleport>`** gerendert
-(kompiliert zu `createPortal` von React / `<Teleport>` von Vue von
+(kompiliert zu Reacts `createPortal` / Vues integriertem `<Teleport>` von
 `@mission-platform/vite-plugin-forge`), also wird es in `document.body` gerendert und
 entgeht jedem `overflow`/Stacking-Kontext; Das Portal ist nur solange montiert
 `open`. Mit der CSS-Ankerpositionierungs-API bleibt es an seinem Auslöser verankert
@@ -181,7 +181,7 @@ Wenn sich der Auslöser in einem offenen modalen `<dialog>` befindet, wird das P
 **in diesen Dialog** (über {@linksolvePortalTarget}) statt `body`: a
 Der modale Dialog macht alles außerhalb seines Unterbaums `inert`, also an ein Panel gesendet
 `body` wäre inert (unsichtbar/nicht anklickbar) und falsch gestapelt – umso mehr
-wenn Modale verschachtelt sind. Wenn Sie es im nächsten Dialog belassen, wird das Popover angezeigt
+wenn Modale verschachtelt sind. Wenn Sie es im nächsten Dialog belassen, wird das Popover geöffnet
 Die API stapelt es über diesem (möglicherweise gestapelten) Dialog.
 
 Ersetzungen aus dem ursprünglichen Vue SFC: `@floating-ui/vue` → CSS-Anker
@@ -195,9 +195,9 @@ Rückruf-Requisiten. Der Stil wird durch das dort befindliche CSS-Modul bestimmt
 
 #### Parameter
 
-| Name          | Geben Sie                           | ein Beschreibung |
-| ------------- | ----------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<PopoverProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<PopoverProperties> |             |
 
 ### PopoverPlacement
 
@@ -241,28 +241,28 @@ Keine Beschreibung angegeben.
 function ForgeToast(properties: Readonly<ToastProperties>): MpElement;
 ```
 
-`ForgeToast` – eine einzelne Toast-Benachrichtigungskarte, die einmal im Neutralen erstellt wurde
-JSX-Dialekt und direkt zu React oder Vue kompiliert
+`ForgeToast` — a single toast notification card authored once in the neutral
+JSX dialect and compiled straight to React or Vue by
 `@mission-platform/vite-plugin-forge`.
 
-Es zeigt ein Absichtszeichen, einen optionalen Titel und die Nachricht (den Standard-Slot).
-überschreibt die Requisite `message`) und eine optionale Schaltfläche zum Verwerfen, Rendern
-`role="alert"` (durchsetzungsfähig) für `error`/`warning` und `role="status"` (höflich)
+It shows an intent glyph, an optional title, the message (the default slot
+overrides the `message` prop), and an optional dismiss button, rendering
+`role="alert"` (assertive) for `error`/`warning` and `role="status"` (polite)
 sonst. Der Stil wird durch das dort befindliche CSS-Modul bestimmt
-`forge-toast.module.scss`, zusammengebaut mit dem Framework-Neutral
+`forge-toast.module.scss`, assembled with the framework-neutral
 {@link classNames}-Helfer.
 
-Der ursprüngliche Vue-SFC verwendete einen `dismiss`-Emissions- und einen `icon`-benannten Slot und wurde gerendert
-das Absichtssymbol als Inline-SVG; Die neutrale Version verwendet das Cross-Framework
-callback-prop `onDismiss`, der `iconContent` benannte Slot (`<Slot>`, mit dem
-Absichtssymbol als Fallback) und das einmal beschreibbare `@mission-platform/icons`
-festgelegt (`ForgeIconCheck`/`ForgeIconError`/`ForgeIconWarning`/`ForgeIconInfo`).
+The original Vue SFC used a `dismiss` emit and `icon` named slot, and rendered
+the intent icon as an inline SVG; the neutral version uses the cross-framework
+callback-prop `onDismiss`, the `iconContent` named slot (`<Slot>`, with the
+intent icon as its fallback), and the write-once `@mission-platform/icons`
+set (`ForgeIconCheck`/`ForgeIconError`/`ForgeIconWarning`/`ForgeIconInfo`).
 
 #### Parameter
 
-| Name          | Geben Sie                         | ein Beschreibung |
-| ------------- | --------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ToastProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ToastProperties> |             |
 
 ### ToastProperties
 
@@ -312,8 +312,8 @@ im neutralen JSX-Dialekt und direkt zu React oder Vue kompiliert
 Der Hinweis wird über das Framework-neutrale Portal **`<Teleport>`** gerendert
 (kompiliert zu Reacts `createPortal` / Vues integriertem `<Teleport>` von
 `@mission-platform/vite-plugin-forge`), also wird es in `document.body` gerendert und
-entgeht jedem `overflow`/Stacking-Kontext; Das Portal wird nur montiert, während die
-Hinweis ist sichtbar. Die Positionierung hängt nicht mehr von `@floating-ui`: dem Auslöser ab
+entgeht jedem `overflow`/Stacking-Kontext; the portal is mounted only while the
+Hinweis ist sichtbar. Die Positionierung hängt nicht mehr von `@floating-ui`: dem Trigger ab
 deklariert ein eindeutiges CSS `anchor-name` (inline gesetzt, sodass jede Instanz eindeutig ist),
 und das teleportierte Panel verbindet sich mit `position-anchor` + damit
 `position-area` und dreht sich um, um über `position-try-fallbacks` auf dem Bildschirm zu bleiben
@@ -322,17 +322,17 @@ zusammengelegtes Stylesheet).
 
 Das teleportierte Panel wird über das auch in die **oberste Ebene** des Browsers befördert
 native Popover-API (`popover="manual"` + `showPopover()`): ein einfaches `z-index`
-kann niemals über ein offenes natives `<dialog>`-Modal/Dialogfeld hinausgehen (das sich in befindet
-die oberste Ebene), so dass sich der Hinweis dafür entscheidet, in derselben obersten Ebene zu bleiben, um darüber zu bleiben
+kann niemals über ein offenes natives `<dialog>`-Modal/Dialogfeld hinausgehen (das in lebt).
+die oberste Ebene), so dass sich der Hinweis für die gleiche oberste Ebene entscheidet, um darüber zu bleiben
 `ForgeModal`/`ForgeDialog`. Der statische `z-index` in CSS bleibt der Fallback
 für Browser ohne Popover-API-Unterstützung.
 
 Wenn sich der Auslöser in einem offenen modalen `<dialog>` befindet, wird der Hinweis portaliert
 **in diesen Dialog** (über {@linksolvePortalTarget}) statt `body`: a
-Der modale Dialog macht alles außerhalb seines Unterbaums `inert`, daher wird ein Hinweis an gesendet
+Der modale Dialog macht alles außerhalb seines Unterbaums `inert`, also wird ein Hinweis an gesendet
 `body` wäre inert (unsichtbar) und falsch gestapelt – umso mehr, wenn es sich um Modalitäten handelt
 sind verschachtelt. Wenn Sie es im nächstgelegenen Dialog belassen, kann es von der Popover-API gestapelt werden
-über diesem (möglicherweise gestapelten) Dialog.
+above that (possibly stacked) dialog.
 
 Ersetzungen aus dem ursprünglichen Vue SFC: `@floating-ui/vue` → CSS-Anker
 Positionierung; `<Teleport>` → das neutrale Portalprimitiv `<Teleport>`;
@@ -344,9 +344,9 @@ besitzt sein Styling durch das mitgelagerte CSS-Modul `forge-tooltip.module.scss
 
 #### Parameter
 
-| Name          | Geben Sie                           | ein Beschreibung |
-| ------------- | ----------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<TooltipProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | --------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<TooltipProperties> |             |
 
 ### Tooltip-Platzierung
 
@@ -421,7 +421,7 @@ Enter/Exit Fade lebt in CSS (`@starting-style` + `transition-behavior`).
 Die Eigenschaften `display`/`overlay` ersetzen die ursprünglichen Eigenschaften Vue und `<Transition>`.
 
 Ersetzungen aus dem ursprünglichen Vue SFC: `ForgeDialogHeader`/`Body`/`Footer`
-Unterkomponenten sind inline und die Regionen `header`/`footer` sind als verfasst
+Unterkomponenten sind inline und die Regionen `header`/`footer` werden als erstellt
 benannte Slots (`<Slot>`), deren Anwesenheit durch erkannt wird
 Framework-neutraler {@link hasSlot}-Helfer; `useI18n` Etiketten werden zum
 `closeLabel` prop;
@@ -433,9 +433,9 @@ Requisiten. Der Stil wird durch das dort befindliche CSS-Modul bestimmt
 
 #### Parameter
 
-| Name          | Geben Sie                          | ein Beschreibung |
-| ------------- | ---------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<DialogProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | -------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<DialogProperties> |             |
 
 ## `src/components/organisms/forge-modal/forge-modal`
 
@@ -470,9 +470,9 @@ Co-lokalisiertes CSS-Modul `forge-modal.module.scss`.
 
 #### Parameter
 
-| Name          | Geben Sie                         | ein Beschreibung |
-| ------------- | --------------------------------- | ---------------- |
-| Eigenschaften | Schreibgeschützt<ModalProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ModalProperties> |             |
 
 ### Modale Eigenschaften
 
@@ -493,6 +493,16 @@ export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full
 ```
 
 Breitenschritt des Modals auf Tablet/Desktop (`sm`+); Mobile ist immer in voller Breite.
+
+### ModalVariant
+
+**Art:** Typ
+
+```typescript
+export type ModalVariant = 'modal' | 'dialog' | 'alert';
+```
+
+Visuelle und semantische Variante des modalen Overlay-Primitivs.
 
 ## `src/components/organisms/forge-toast-container/forge-toast-container`
 
@@ -541,9 +551,9 @@ composable → die in CSS angewendete statische Z-Index-Ebene `notification`.
 
 #### Parameter
 
-| Name          | Geben Sie                                  | ein Beschreibung |
-| ------------- | ------------------------------------------ | ---------------- |
-| Eigenschaften | Schreibgeschützt<ToastContainerProperties> |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ---------- | ---------------------------------- | ----------- |
+| Eigenschaften | Schreibgeschützt<ToastContainerProperties> |             |
 
 ### ToastContainerProperties
 
@@ -590,15 +600,15 @@ Einen Toast per ID ablehnen.
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| ---- | --------- | ---------------- |
-| id   | Zahl      |                  |
+| ---- | ------ | ----------- |
+| id | Nummer |             |
 
 ### FehlerToast
 
 **Art:** konstant
 
 ```typescript
-export const errorToast;
+export const errorToast: ReturnType<typeof withVariant>;
 ```
 
 Praktisch: Zeigen Sie einen `error`-Toast an.
@@ -618,7 +628,7 @@ Lesen Sie eine unveränderliche Momentaufnahme der aktiven Toasts.
 **Art:** konstant
 
 ```typescript
-export const infoToast;
+export const infoToast: ReturnType<typeof withVariant>;
 ```
 
 Praktisch: Zeigen Sie einen `info`-Toast an.
@@ -635,9 +645,9 @@ Zeigt einen Toast und gibt seine ID zurück.
 
 #### Parameter
 
-| Name     | Geben Sie                    | ein Beschreibung |
-| -------- | ---------------------------- | ---------------- |
-| Optionen | ToastOptions \| Zeichenfolge |                  |
+| Name | Geben Sie | ein Beschreibung |
+| ------- | ---------------------- | ----------- |
+| Optionen | ToastOptions \| Zeichenfolge |             |
 
 ### abonnierenToasts
 
@@ -651,16 +661,16 @@ Abonnieren Sie den Store-Änderungen; gibt eine Abmeldefunktion zurück.
 
 #### Parameter
 
-| Name    | Geben Sie  | ein Beschreibung |
-| ------- | ---------- | ---------------- |
-| Zuhörer | () => void |                  |
+| Name | Geben Sie | ein Beschreibung |
+| -------- | ---------- | ----------- |
+| Zuhörer | () => void |             |
 
 ### ErfolgToast
 
 **Art:** konstant
 
 ```typescript
-export const successToast;
+export const successToast: ReturnType<typeof withVariant>;
 ```
 
 Praktisch: Zeigen Sie einen `success`-Toast an.
@@ -722,7 +732,119 @@ Die von {@link useToast} zurückgegebene öffentliche API.
 **Art:** konstant
 
 ```typescript
-export const warningToast;
+export const warningToast: ReturnType<typeof withVariant>;
 ```
 
 Praktisch: Zeigen Sie einen `warning`-Toast an.
+
+## `src/utils/fallback-position`
+
+### applyFallbackPosition
+
+**Art:** Funktion
+
+```typescript
+function applyFallbackPosition(
+  triggerElement: HTMLElement,
+  panelElement: HTMLElement,
+  placement: FallbackPlacement = 'bottom-start',
+  options?: FallbackPositionOptions | number,
+): void;
+```
+
+Wendet Fallback-Koordinaten und -Stile auf `panelElement` relativ zu `triggerElement` an.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| -------------- | --------------------------------- | ----------- |
+| triggerElement | HTMLElement |             |
+| panelElement | HTMLElement |             |
+| Platzierung | FallbackPlacement |             |
+| Optionen | FallbackPositionOptions \| Nummer |             |
+
+### berechneFallbackPosition
+
+**Art:** Funktion
+
+```typescript
+function calculateFallbackPosition(
+  triggerRect: TriggerBoundingRect,
+  placement: FallbackPlacement = 'bottom-start',
+  offset = 0,
+): FallbackPositionResult;
+```
+
+Berechnet die CSS-Eigenschaften „oben“, „links“ und „transformieren“ für ein schwebendes Element
+basierend auf dem Begrenzungsrechteck des Triggerelements, der gewünschten Platzierung und dem Offset.
+
+#### Parameter
+
+| Name | Geben Sie | ein Beschreibung |
+| ----------- | ------------------- | ----------- |
+| triggerRect | TriggerBoundingRect |             |
+| Platzierung | FallbackPlacement |             |
+| Versatz |                     |             |
+
+### FallbackPlacement
+
+**Art:** Typ
+
+```typescript
+export type FallbackPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end';
+```
+
+Unterstützte Platzierungsoptionen für Ankerpositionierungs-Fallback.
+
+### FallbackPositionOptions
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FallbackPositionOptions
+```
+
+Keine Beschreibung angegeben.
+
+### FallbackPositionResult
+
+**Art:** Schnittstelle
+
+```typescript
+export interface FallbackPositionResult
+```
+
+Keine Beschreibung angegeben.
+
+### isAnchorPositioningSupported
+
+**Art:** Funktion
+
+```typescript
+function isAnchorPositioningSupported(): boolean;
+```
+
+Überprüfen Sie dynamisch, ob die CSS-Ankerpositionierung unterstützt wird.
+Wird als Funktion ausgewertet, sodass Komponententests `CSS.supports` verspotten oder umschalten können.
+
+### unterstütztAnchorPositioning
+
+**Art:** konstant
+
+```typescript
+export const supportsAnchorPositioning: boolean;
+```
+
+Überprüfen Sie, ob die CSS-Ankerpositionierung in der aktuellen Umgebung unterstützt wird.

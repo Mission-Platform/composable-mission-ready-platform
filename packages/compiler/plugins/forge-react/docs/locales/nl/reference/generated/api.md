@@ -27,11 +27,11 @@ Transformeer de hele module naar de doelbron React.
 
 #### Parameters
 
-| Naam          | Typ               | Beschrijving |
-| ------------- | ----------------- | ------------ |
-| module        | SemantischeModule |              |
-| componentnaam | tekenreeks        |              |
-| plannen       | ReactModulePlan   |              |
+| Naam | Typ | Beschrijving |
+| ------------- | --------------- | ----------- |
+| module | SemantischeModule |             |
+| componentnaam | tekenreeks |             |
+| plannen | ReactModulePlan |             |
 
 ## `src/index`
 
@@ -61,9 +61,9 @@ Beperk een plan dat eigendom is van het doelwit tot het React-plan.
 
 #### Parameters
 
-| Naam     | Typ                                   | Beschrijving |
-| -------- | ------------------------------------- | ------------ |
-| verlaagd | TargetLoweredModule \| ongedefinieerd |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------------------- | ----------- |
+| verlaagd | TargetLoweredModule \| ongedefinieerd |             |
 
 ### lagereReactModule
 
@@ -80,10 +80,10 @@ Verlaag de neutrale IR in het React-plan van {@link TargetIntentions.lowered}.
 
 #### Parameters
 
-| Naam    | Typ               | Beschrijving |
-| ------- | ----------------- | ------------ |
-| ir      | SemantischeModule |              |
-| context | DoelContext       |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------- | ----------- |
+| ir | SemantischeModule |             |
+| context | DoelContext |             |
 
 ### planReactModule
 
@@ -100,10 +100,10 @@ Bouw het React-plan voor één module.
 
 #### Parameters
 
-| Naam          | Typ               | Beschrijving |
-| ------------- | ----------------- | ------------ |
-| module        | SemantischeModule |              |
-| componentnaam | tekenreeks        |              |
+| Naam | Typ | Beschrijving |
+| ------------- | -------------- | ----------- |
+| module | SemantischeModule |             |
+| componentnaam | tekenreeks |             |
 
 ### ReactClientDirectivePlan
 
@@ -206,10 +206,10 @@ inline, en als `stableKeyInference` is uitgeschakeld, wordt elke afgeleide sleut
 
 #### Parameters
 
-| Naam        | Typ                   | Beschrijving |
-| ----------- | --------------------- | ------------ |
-| bedoelingen | DoelIntenties         |              |
-| opties      | TargetOptimizeOptions |              |
+| Naam | Typ | Beschrijving |
+| ---------- | --------------------- | ----------- |
+| bedoelingen | DoelIntenties |             |
+| opties | TargetOptimizeOptions |             |
 
 ### REACT_OPTIMALISATIES
 

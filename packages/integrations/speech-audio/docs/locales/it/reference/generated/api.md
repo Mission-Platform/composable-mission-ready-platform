@@ -59,16 +59,16 @@ function useSound(source?: string): SoundControls;
 Gancio di riproduzione del suono neutro dal punto di vista strutturale. Riproduce un clip audio da `source` tramite
 un `HTMLAudioElement` e può sintetizzare toni brevi tramite l'API Web Audio.
 
-Sicuro per SSR: `isSupported` è `false` e ogni controllo è un no-op quando
+Sicuro per SSR: `isSupported` è `false` e ogni controllo è una no-op quando
 l'API o il DOM del browser pertinente non è disponibile.
 Pulizia automatica: la riproduzione viene interrotta e qualsiasi contesto audio viene chiuso
 smontare.
 
 #### Parametri
 
-| Nome  | Digitare | Descrizione |
-| ----- | -------- | ----------- |
-| fonte | stringa  |             |
+| Nome | Digitare | Descrizione |
+| ------ | ------ | ----------- |
+| fonte | stringa |             |
 
 ## `src/composables/use-speech-recognition/use-speech-recognition`
 
@@ -102,7 +102,7 @@ function useSpeechRecognition(): SpeechRecognitionControls;
 
 Hook di sintesi vocale indipendente dal framework basato sul nativo del browser
 API SpeechRecognition (con il prefisso `webkitSpeechRecognition` in alcuni
-browsers).
+browser).
 
 Sicuro per SSR: `isSupported` è `false` e ogni controllo non è operativo quando l'API
 oppure il DOM non è disponibile.
@@ -143,4 +143,4 @@ API di sintesi vocale.
 
 Sicuro per SSR: `isSupported` è `false` e ogni controllo non è operativo quando l'API
 oppure il DOM non è disponibile.
-Pulizia automatica: qualsiasi discorso in corso viene cancellato allo smontaggio.
+Pulizia automatica: qualsiasi intervento in corso viene annullato allo smontaggio.

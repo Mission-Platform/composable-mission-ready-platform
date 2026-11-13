@@ -9,17 +9,18 @@
 
 ## 通过条件选择框架
 
-Mission Platform 组件使用 `@mission-platform/forge-jsx` 编写一次，并在单个包中作为多个特定于框架的捆绑包（Vue 3、React、Solid 和 Web 组件）进行分发。
+Mission Platform 组件使用 `@mission-platform/forge-jsx` 编写一次，并在单个包中作为多个特定于框架的捆绑包（Vue 3、React、Solid、Svelte 和 Web 组件）进行分发。
 
 要选择正确的捆绑包，您必须配置构建工具和 TypeScript 以使用 **自定义导出条件**。
 
 ### 支持的框架条件
 
-| 框架         | 出口情况           |
-| :----------- | :----------------- |
-| **Vue 3**    | `mp:vue`           |
-| **React**    | `mp:react`         |
-| **Solid**    | `mp:solid`         |
+|框架|出口情况 |
+| :----------------- | :----------------- |
+| **Vue 3** | `mp:vue` |
+| **React** | `mp:react` |
+| **Solid** | `mp:solid` |
+| **Svelte** | `mp:svelte` |
 | **网络组件** | `mp:web-component` |
 
 ## 项目配置
@@ -77,7 +78,7 @@ pnpm add @mission-platform/i18n
 
 ## 组件使用
 
-正确配置条件后，您可以从包的根目录导入组件。构建工具将自动选择与您的 `mp:*` 条件匹配的包。
+正确配置条件后，您可以从包的根目录导入组件。 The build tool will automatically select the bundle matching your `mp:*` condition.
 
 ```vue
 <script setup lang="ts">
@@ -155,7 +156,7 @@ document.querySelector("forge-router-outlet")?.setRouter(router);
 ```
 
 插座拥有加载覆盖层，并且不会删除当前安装的
-查看直到目的地解析。它成功清除覆盖，
+查看直到目的地解析。它清除覆盖成功，
 重定向、取消和导航失败。修改点击次数、下载次数、
 外部 URL 以及与另一个目标的链接保留本机浏览器行为。
 

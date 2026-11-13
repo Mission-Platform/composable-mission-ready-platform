@@ -1,4 +1,4 @@
-import { flintTypeNameToString, type FlintPrimitiveType, type FlintTypeName } from '../ast.js';
+import { flintTypeNameToString, type FlintPrimitiveType, type FlintTypeName } from '@mission-platform/flint-ast';
 
 import {
   flattenGraph,

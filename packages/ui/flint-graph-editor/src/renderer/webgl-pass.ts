@@ -1,3 +1,5 @@
+import type { FlintGraphEdge, FlintGraphGroup, FlintGraphNode, FlintGraphPort } from '@mission-platform/flint';
+
 import { evaluateCubicBezier, getNodeBounds } from './camera';
 import { computeGlNodeBorder, getCategoryRgba, getPortTypeRgba, parseColorToRgba } from './color';
 import { NODE_HEADER_HEIGHT, NODE_WIDTH, PORT_ROW_HEIGHT } from './constants';
@@ -9,7 +11,6 @@ import type {
   WebGLUniformLocations,
 } from './types';
 import type { RenderWorkerState } from './worker-state';
-import type { FlintGraphEdge, FlintGraphGroup, FlintGraphNode, FlintGraphPort } from '@mission-platform/flint';
 
 /**
  * Appends line vertex coordinates and colors to the batch line buffer.

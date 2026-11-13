@@ -21,6 +21,16 @@ export interface CompiledRegex
 
 Forge 后端嵌入的确定性表示。
 
+### FLINT_REGEX_BYTECODE_VERSION
+
+**种类：**常数
+
+```typescript
+export const FLINT_REGEX_BYTECODE_VERSION;
+```
+
+共享 Flint 正则表达式字节码合约的稳定版本。
+
 ### FORGE_REGEX_BYTECODE_VERSION
 
 **种类：**常数
@@ -29,7 +39,7 @@ Forge 后端嵌入的确定性表示。
 export const FORGE_REGEX_BYTECODE_VERSION;
 ```
 
-共享 Forge 正则表达式字节码合约的稳定版本。
+没有提供描述。
 
 ### 输入宽度
 
@@ -59,7 +69,7 @@ export const Op;
 export type Opcode = (typeof Op)[keyof typeof Op];
 ```
 
-没有提供描述。
+用于正则表达式字节码执行的二进制指令操作码标识符。
 
 ## `src/compiler`
 
@@ -75,9 +85,29 @@ function compileRegex(pattern: string): CompiledRegex;
 
 #### 参数
 
-| 名称 | 类型   | 描述 |
-| ---- | ------ | ---- |
-| 图案 | 字符串 |      |
+|名称 |类型 |描述 |
+| ------- | ------ | ----------- |
+|图案|字符串|             |
+
+### MAX_REGEX_PATTERN_LENGTH
+
+**种类：**常数
+
+```typescript
+export const MAX_REGEX_PATTERN_LENGTH;
+```
+
+没有提供描述。
+
+### MAX_REGEX_REPEAT_BOUND
+
+**种类：**常数
+
+```typescript
+export const MAX_REGEX_REPEAT_BOUND;
+```
+
+没有提供描述。
 
 ### 正则表达式语法错误
 
@@ -88,6 +118,46 @@ export class RegexSyntaxError extends Error
 ```
 
 编译器拥有的语法错误，带有确定性的源相关消息。
+
+## `src/index`
+
+### DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY
+
+**种类：**常数
+
+```typescript
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: FlintStandardLibraryIdentity;
+```
+
+没有提供描述。
+
+### flint标准库身份
+
+**种类：**功能
+
+```typescript
+function flintStandardLibraryIdentity(
+  identity?: FlintStandardLibraryIdentity,
+): FlintStandardLibraryIdentity;
+```
+
+没有提供描述。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| -------- | ---------------------------- | ----------- |
+|身份| FlintStandardLibraryIdentity | FlintStandardLibraryIdentity |             |
+
+### FlintStandardLibraryIdentity
+
+**种类：**接口
+
+```typescript
+export interface FlintStandardLibraryIdentity
+```
+
+没有提供描述。
 
 ## `src/reference-vm`
 
@@ -103,10 +173,10 @@ function captureEnd(captures: Captures | null, group: number): number;
 
 #### 参数
 
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 捕获 | 捕获\|空 |      |
-| 组   | 数量     |      |
+|名称 |类型 |描述 |
+| -------- | ---------------- | ----------- |
+|捕获 |捕获\|空 |             |
+|组 |数量 |             |
 
 ### 捕获
 
@@ -130,10 +200,10 @@ function captureStart(captures: Captures | null, group: number): number;
 
 #### 参数
 
-| 名称 | 类型     | 描述 |
-| ---- | -------- | ---- |
-| 捕获 | 捕获\|空 |      |
-| 组   | 数量     |      |
+|名称 |类型 |描述 |
+| -------- | ---------------- | ----------- |
+|捕获 |捕获\|空 |             |
+|组 |数量 |             |
 
 ### 完全匹配
 
@@ -143,14 +213,64 @@ function captureStart(captures: Captures | null, group: number): number;
 function fullMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-全字符串匹配，锚定在位置零。
+全字符串匹配，锚定在位置零（默认使用线性时间 PikeVM）。
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 重新 | 编译正则表达式 |      |
-| 输入 | 字符串         |      |
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|重新|编译正则表达式 |             |
+|输入 |字符串|             |
+
+### 全匹配回溯
+
+**种类：**功能
+
+```typescript
+function fullMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+回溯全字符串匹配参考oracle。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|重新|编译正则表达式 |             |
+|输入 |字符串|             |
+
+### 完全匹配线性
+
+**种类：**功能
+
+```typescript
+function fullMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+使用线性时间 PikeVM 引擎进行全字符串匹配。
+保证 O(M * N) 执行并且不受 ReDoS 回溯影响。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|重新|编译正则表达式 |             |
+|输入 |字符串|             |
+
+### 派克跑者
+
+**种类：**类
+
+```typescript
+export class PikeRunner extends BaseRunner
+```
+
+线性时间非回溯 PikeVM 执行引擎。
+保证 O(M * N) 时间复杂度，其中 M 是指令数，N 是输入长度，
+完全不受 ReDoS（正则表达式拒绝服务）的影响。
 
 ### 前缀匹配
 
@@ -160,14 +280,62 @@ function fullMatch(re: CompiledRegex, input: string): Captures | null;
 function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 ```
 
-前缀匹配，锚定在位置零但不在末尾。
+前缀匹配，锚定在位置零但不在末尾（默认使用线性时间 PikeVM）。
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 重新 | 编译正则表达式 |      |
-| 输入 | 字符串         |      |
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|重新|编译正则表达式 |             |
+|输入 |字符串|             |
+
+### 前缀匹配回溯
+
+**种类：**功能
+
+```typescript
+function prefixMatchBacktracking(
+  re: CompiledRegex,
+  input: string,
+): Captures | null;
+```
+
+回溯前缀匹配参考oracle。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|重新|编译正则表达式 |             |
+|输入 |字符串|             |
+
+### 前缀匹配线性
+
+**种类：**功能
+
+```typescript
+function prefixMatchLinear(re: CompiledRegex, input: string): Captures | null;
+```
+
+使用线性时间 PikeVM 引擎进行前缀匹配。
+保证 O(M * N) 执行并且不受 ReDoS 回溯影响。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|重新|编译正则表达式 |             |
+|输入 |字符串|             |
+
+### 跑步者
+
+**种类：**类
+
+```typescript
+export class Runner extends BaseRunner
+```
+
+用于字节码指令验证的回溯参考执行运行器。
 
 ### 搜索
 
@@ -177,15 +345,60 @@ function prefixMatch(re: CompiledRegex, input: string): Captures | null;
 function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 ```
 
-`start` 处或之后的最左边匹配。
+`start` 处或之后的最左边匹配（默认情况下使用线性时间 PikeVM）。
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 重新 | 编译正则表达式 |      |
-| 输入 | 字符串         |      |
-| 开始 |                |      |
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|重新|编译正则表达式 |             |
+|输入 |字符串|             |
+|开始 |               |             |
+
+### 搜索回溯
+
+**种类：**功能
+
+```typescript
+function searchBacktracking(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+回溯搜索参考oracle。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|重新|编译正则表达式 |             |
+|输入 |字符串|             |
+|开始 |               |             |
+
+### 搜索线性
+
+**种类：**功能
+
+```typescript
+function searchLinear(
+  re: CompiledRegex,
+  input: string,
+  start = 0,
+): Captures | null;
+```
+
+使用线性时间 PikeVM 引擎在 `start` 处或之后进行最左侧匹配。
+不受非锚定搜索模式灾难性回溯的影响。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|重新|编译正则表达式 |             |
+|输入 |字符串|             |
+|开始 |               |             |
 
 ### 测试
 
@@ -195,11 +408,46 @@ function search(re: CompiledRegex, input: string, start = 0): Captures | null;
 function test(re: CompiledRegex, input: string): boolean;
 ```
 
-全字符串布尔匹配。
+全字符串布尔匹配（默认使用线性时间 PikeVM）。
 
 #### 参数
 
-| 名称 | 类型           | 描述 |
-| ---- | -------------- | ---- |
-| 重新 | 编译正则表达式 |      |
-| 输入 | 字符串         |      |
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|重新|编译正则表达式 |             |
+|输入 |字符串|             |
+
+### 测试回溯
+
+**种类：**功能
+
+```typescript
+function testBacktracking(re: CompiledRegex, input: string): boolean;
+```
+
+回溯布尔匹配参考oracle。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|重新|编译正则表达式 |             |
+|输入 |字符串|             |
+
+### 测试线性
+
+**种类：**功能
+
+```typescript
+function testLinear(re: CompiledRegex, input: string): boolean;
+```
+
+使用线性时间 PikeVM 引擎进行全字符串布尔匹配。
+免受病态正则表达式灾难性回溯的影响。
+
+#### 参数
+
+|名称 |类型 |描述 |
+| ----- | ------------- | ----------- |
+|重新|编译正则表达式 |             |
+|输入 |字符串|             |

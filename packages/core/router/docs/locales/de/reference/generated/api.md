@@ -58,7 +58,7 @@ Stabile Metadaten, die von Forge-Router-Compiler-Plugins verwendet werden.
 **Art:** Komponente
 
 ```typescript
-function MpLink(properties: MpLinkProps): MpLinkDescriptor;
+export function MpLink(properties: MpLinkProps): MpLinkDescriptor;
 ```
 
 Neutraler Linkmarker. Native Ziele ersetzen diese Funktion während der Kompilierung.
@@ -154,7 +154,7 @@ Eine Teilimplementierung, die für Zieladapter und SSR-/Testkabelbäume nützlic
 **Art:** Komponente
 
 ```typescript
-function MpRouterView(properties: MpRouterViewProps = {}): MpRouterViewDescriptor;
+export function MpRouterView(properties: MpRouterViewProps =
 ```
 
 Neutrale Steckdose/Ansichtsmarkierung. Native Ziele ersetzen diese Funktion während der Kompilierung.
@@ -244,7 +244,11 @@ Lesen Sie das von der App bereitgestellte neutrale Fähigkeitsobjekt.
 **Art:** konstant
 
 ```typescript
-export const applicationCompatibilityFixtures;
+export const applicationCompatibilityFixtures: {
+  readonly website: ForgeCompatibilityFixture;
+  readonly myCareNotes: ForgeCompatibilityFixture;
+  readonly guardsAndLazy: ForgeCompatibilityFixture;
+};
 ```
 
 Keine Beschreibung angegeben.

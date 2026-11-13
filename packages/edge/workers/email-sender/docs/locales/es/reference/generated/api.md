@@ -11,12 +11,22 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/emai
 
 ## `src/index`
 
+### por defecto
+
+**Tipo:** constante
+
+```typescript
+export const handler: ExportedHandler<WorkerEnvironment>;
+```
+
+No se proporciona descripción.
+
 ### Entrega
 
 **Tipo:** tipo
 
 ```typescript
-export type Delivery = (environment: Env, message: SmtpMessage) => Promise<void>;
+export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 ```
 
 No se proporciona descripción.
@@ -36,15 +46,26 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
+function handleRequest(
+  request: Request,
+  environment: WorkerEnvironment,
+  delivery: Delivery = defaultDelivery,
+): Promise<Response>;
 ```
 
-No se proporciona descripción.
+Maneja las solicitudes de entrega de correo electrónico entrantes, valida las entradas y las entrega al servicio SMTP.
 
 #### Parámetros
 
-| Nombre         | Tipo      | Descripción |
-| -------------- | --------- | ----------- |
-| solicitud      | Solicitar |             |
-| medio ambiente | sobre     |             |
-| entrega        | Entrega   |             |
+| Nombre | Tipo | Descripción |
+| ----------- | ----------------- | -------------------------------------------------- |
+| solicitud | Solicitar | - Solicitud HTTP entrante.                           |
+| medio ambiente | Medioambiente del trabajador | - Vinculaciones en materia de entorno laboral.                     |
+| entrega | Entrega | - Función de entrega que maneja la transmisión de mensajes. |
+
+#### Contrato
+
+- **@param:** - Solicitud HTTP entrante.
+- **@param:** - Vinculaciones del entorno laboral.
+- **@param:** - Función de entrega que maneja la transmisión de mensajes.
+- **@returns:** Respuesta HTTP.

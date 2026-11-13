@@ -1,5 +1,6 @@
-import { useEffect, useState, type MpElement } from '@mission-platform/forge-jsx';
 import i18next from 'i18next';
+
+import { useEffect, useState, type MpElement } from '@mission-platform/forge-jsx';
 
 import { breakpointKeys, breakpoints, resolveBreakpoint } from '@/breakpoints';
 

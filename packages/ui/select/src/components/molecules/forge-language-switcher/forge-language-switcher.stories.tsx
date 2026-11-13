@@ -1,8 +1,8 @@
 import { expect, fn, userEvent, within } from 'storybook/test';
 
-import { ForgeLanguageSwitcher } from './forge-language-switcher';
-
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
+
+import { ForgeLanguageSwitcher } from './forge-language-switcher';
 
 const onLocaleChange = fn();
 

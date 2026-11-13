@@ -11,12 +11,22 @@
 
 ## `src/index`
 
+### デフォルト
+
+**種類:** 定数
+
+```typescript
+export const handler: ExportedHandler<WorkerEnvironment>;
+```
+
+説明はありません。
+
 ### 配達
 
 **種類：**タイプ
 
 ```typescript
-export type Delivery = (environment: Env, message: SmtpMessage) => Promise<void>;
+export type Delivery = (environment: WorkerEnvironment, message: SmtpMessage) => Promise<void>;
 ```
 
 説明はありません。
@@ -36,15 +46,26 @@ export interface EmailRequest
 **種類:** 関数
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
+function handleRequest(
+  request: Request,
+  environment: WorkerEnvironment,
+  delivery: Delivery = defaultDelivery,
+): Promise<Response>;
 ```
 
-説明はありません。
+受信した電子メール配信リクエストを処理し、入力を検証して SMTP サービスに配信します。
 
 #### パラメータ
 
-| 名前       | タイプ     | 説明 |
-| ---------- | ---------- | ---- |
-| リクエスト | リクエスト |      |
-| 環境       | 環境       |      |
-| 配送       | 配送       |      |
+|名前 |タイプ |説明 |
+| ----------- | ----------------- | -------------------------------------------------- |
+|リクエスト |リクエスト | - 受信 HTTP リクエスト。                           |
+|環境 |労働者環境 | - ワーカー環境のバインディング。                     |
+|配送 |配送 | - メッセージ送信を処理する配信機能。 |
+
+#### 契約
+
+- **@param:** - 受信 HTTP リクエスト。
+- **@param:** - ワーカー環境のバインディング。
+- **@param:** - メッセージ送信を処理する配信関数。
+- **@returns:** HTTP 応答。

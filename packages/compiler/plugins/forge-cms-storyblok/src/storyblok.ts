@@ -8,7 +8,28 @@
  * the caller bound, so `storyblok × vue` and `storyblok × react` are two
  * configurations of one target rather than two code paths.
  */
-import { defineForgeCmsPlugin } from "@mission-platform/forge-cms-plugin-api";
+import fs from "node:fs";
+import path from "node:path";
+
+import {
+  defineForgeCmsPlugin,
+  defineTsdownForgeCmsTargetConfigs,
+} from "@mission-platform/forge-cms-plugin-api";
+import type {
+  CmsArtifact,
+  CmsOutputPlugin,
+  CmsTargetContext,
+  ContentComponent,
+} from "@mission-platform/forge-cms-plugin-api";
+import type {
+  FrameworkOutputPlugin,
+  JsxFramework,
+} from "@mission-platform/forge-plugin-api";
+import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
+import { forgeSolidFramework } from "@mission-platform/forge-plugin-solid";
+import { forgeSvelteFramework } from "@mission-platform/forge-plugin-svelte";
+import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
+import { forgeWebComponentsFramework } from "@mission-platform/forge-plugin-web-components";
 
 import { toStoryblokComponent } from "./fields.js";
 import { emitBlokDataType, emitStoryblokBlokWrapper } from "./wrappers.js";
@@ -20,16 +41,7 @@ import type {
   StoryblokPluginFieldOptions,
   StoryblokProjectionOptions,
 } from "./types.js";
-import type {
-  CmsArtifact,
-  CmsOutputPlugin,
-  CmsTargetContext,
-  ContentComponent,
-} from "@mission-platform/forge-cms-plugin-api";
-import type {
-  FrameworkOutputPlugin,
-  JsxFramework,
-} from "@mission-platform/forge-plugin-api";
+import type { UserConfig } from "tsdown";
 
 /** The file extension each framework's blok wrapper is written with. */
 const BLOK_WRAPPER_LANG: Readonly<Record<JsxFramework, string>> = {
@@ -348,4 +360,75 @@ export function forgeStoryblokCmsTargets(
       metadata: options.metadata,
     }),
   );
+}
+
+/** Default 5 Forge framework plugins targeting React, Vue, Svelte, Solid, and Web Components. */
+export function defaultStoryblokFrameworks(): FrameworkOutputPlugin[] {
+  return [
+    forgeReactFramework(),
+    forgeVueFramework(),
+    forgeSvelteFramework(),
+    forgeSolidFramework(),
+    forgeWebComponentsFramework(),
+  ];
+}
+
+export interface StoryblokCmsConfigOptions {
+  rootDir: string;
+  packageName?: string;
+  componentsModule?: string;
+  frameworks?: FrameworkOutputPlugin[];
+  external?: string[];
+  outputRoot?: string;
+  metadata?: StoryblokMetadataOptions;
+  pluginField?: StoryblokPluginFieldOptions;
+  storyblokRuntimes?: Partial<Record<JsxFramework, string>>;
+}
+
+/**
+ * Return native tsdown `UserConfig[]` configurations for Storyblok CMS targets.
+ * Automatically resolves `packageName` from package.json if omitted and defaults
+ * `componentsModule` and the 5 standard framework output plugins.
+ */
+export function defineStoryblokCmsConfig(
+  options: StoryblokCmsConfigOptions,
+): UserConfig[] {
+  const rootDir = options.rootDir;
+  let packageName = options.packageName;
+  if (!packageName) {
+    try {
+      const manifestPath = path.resolve(rootDir, "package.json");
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as {
+        name?: string;
+      };
+      packageName = manifest.name;
+    } catch {
+      // ignore
+    }
+  }
+  if (!packageName) {
+    throw new Error(
+      `Could not determine packageName for Storyblok CMS config in ${rootDir}. Please provide packageName explicitly.`,
+    );
+  }
+
+  const componentsModule =
+    options.componentsModule ??
+    path.resolve(rootDir, "src/components/index.ts");
+  const frameworks = options.frameworks ?? defaultStoryblokFrameworks();
+
+  return defineTsdownForgeCmsTargetConfigs({
+    rootDir,
+    componentsModule,
+    targets: forgeStoryblokCmsTargets({
+      packageName,
+      frameworks,
+      external: options.external,
+      metadata: options.metadata,
+      pluginField: options.pluginField,
+      storyblokRuntimes: options.storyblokRuntimes,
+    }),
+    external: options.external,
+    outputRoot: options.outputRoot,
+  });
 }

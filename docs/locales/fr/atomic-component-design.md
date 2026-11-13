@@ -6,20 +6,20 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 > Langue: Français (fr)
 
 Mission Platform utilise un système **Atomic Design** pour organiser les composants en niveaux hiérarchiques de complexité. Chaque
-Le composant est une unité « à écriture unique » créée dans le dialecte neutre Forge JSX (`@mission-platform/forge-jsx`), assurant
+Le composant est une unité « à écriture unique » créée dans le dialecte neutre Forge JSX (`@mission-platform/forge-jsx`), garantissant
 cohérence entre plusieurs cadres.
 
 ## Niveaux de conception
 
 Les composants sont classés en cinq niveaux en fonction de leur portée et de leur responsabilité.
 
-| Niveau         | Dossier                     | Descriptif                                                                                                                                                                                                                           |
-| :------------- | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Atomes**     | `src/components/atoms/`     | Les plus petites primitives de l'interface utilisateur (par exemple, `ForgeButton`, `ForgeInput`, `ForgeBadge`). Il s’agit généralement d’unités fonctionnelles qui ne peuvent être décomposées davantage sans perdre leur objectif. |
-| **Molécules**  | `src/components/molecules/` | Compositions simples d'atomes (par exemple, `ForgeSearchInput`, `ForgeFieldSet`). Ils fonctionnent ensemble comme une unité.                                                                                                         |
-| **Organismes** | `src/components/organisms/` | Sections d'interface utilisateur complexes composées d'atomes, de molécules et d'autres organismes (par exemple, `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                                         |
-| **Modèles**    | `src/components/templates/` | Mises en page au niveau de la page qui définissent la structure du contenu (par exemple, `ForgeHero`, `ForgeAppLayout`). Ils utilisent souvent des emplacements pour définir où le contenu doit être placé.                          |
-| **Pages**      | `src/components/pages/`     | Instances spécifiques de modèles remplis de contenu et de données concrets (par exemple, `AccountSettingsPage`).                                                                                                                     |
+| Niveau | Dossier | Descriptif |
+| :------------ | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Atomes** | `src/components/atoms/` | Les plus petites primitives de l'interface utilisateur (par exemple, `ForgeButton`, `ForgeInput`, `ForgeBadge`). Ce sont généralement des unités fonctionnelles qui ne peuvent pas être décomposées davantage sans perdre leur objectif. |
+| **Molécules** | `src/components/molecules/` | Compositions simples d'atomes (par exemple, `ForgeSearchInput`, `ForgeFieldSet`). Ils fonctionnent ensemble comme une unité.                                                                    |
+| **Organismes** | `src/components/organisms/` | Sections d'interface utilisateur complexes composées d'atomes, de molécules et d'autres organismes (par exemple, `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
+| **Modèles** | `src/components/templates/` | Mises en page au niveau de la page qui définissent la structure du contenu (par exemple, `ForgeHero`, `ForgeAppLayout`). Ils utilisent souvent des emplacements pour définir où le contenu doit être placé.                     |
+| **Pages** | `src/components/pages/` | Instances spécifiques de modèles remplis de contenu et de données concrets (par exemple, `AccountSettingsPage`).                                                                        |
 
 ## Disposition du dossier de composants
 
@@ -49,11 +49,11 @@ structure de la barre latérale.
 
 ### Nom de fichier
 
-Les histoires doivent utiliser le `.stories.tsx` extension.
+Les histoires doivent utiliser l'extension `.stories.tsx`.
 
 ### Convention de titre
 
-Le `title` champ dans le livre d'histoires `meta` l'objet doit suivre ce modèle :
+Le champ `title` dans l'objet Storybook `meta` doit suivre ce modèle :
 
 ```text
 <Level>/<Category>/<Component>
@@ -63,7 +63,7 @@ Le `title` champ dans le livre d'histoires `meta` l'objet doit suivre ce modèle
 - **Catégorie** : Regroupement fonctionnel (par exemple, `Forms`, `Navigation`, `Display`, `Feedback`).
 - **Composant** : nom du composant PascalCase (par exemple, `ForgeButton`).
 
-**Exemple (`forge-button.stories.tsx`):**
+**Exemple (`forge-button.stories.tsx`) :**
 
 ```tsx
 const meta = {
@@ -75,13 +75,14 @@ const meta = {
 
 ## Normes de création
 
-1. **Neutralité du cadre** : ne jamais rédiger séparément Vue et React versions. Utiliser `@mission-platform/forge-jsx`.
-2. **Nom** : les composants doivent utiliser le `Base` préfixe (par exemple, `ForgeCard`) à moins qu'il ne s'agisse d'implémentations spécifiques.
-3. **Type Sécurité** : Exporter un `*Properties` interface pour les accessoires du composant.
-4. **Tests** : Un `.spec.ts` est requis pour chaque composant.
-5. **Échafaudage** : utilisez le `scaffold_component` Outil MCP pour garantir la structure de répertoires et le passe-partout corrects.
+1. **Neutralité du framework** : ne créez jamais de versions Vue et React distinctes. Utilisez `@mission-platform/forge-jsx`.
+2. **Nom** : les composants doivent utiliser le préfixe `Base` (par exemple, `ForgeCard`) à moins qu'il ne s'agisse d'implémentations spécifiques.
+3. **Type Safety** : exportez une interface `*Properties` pour les accessoires du composant.
+4. **Test** : un `.spec.ts` colocalisé est requis pour chaque composant.
+5. **Échafaudage** : utilisez l'outil MCP `scaffold_component` via un serveur MCP Mission Platform Developer connecté pour
+   garantir la structure de répertoires et le passe-partout corrects.
 
-```bash
+```text
 # Example: Creating a new 'forge-chip' atom in the 'components' package
 scaffold_component(name="forge-chip", level="atom", area="Display", package="components", apply=true)
 ```
@@ -91,4 +92,4 @@ scaffold_component(name="forge-chip", level="atom", area="Display", package="com
 - [Développement de packages](package-development.md)
 - [Création composable](composable-authoring.md)
 - [Création de magasin](store-authoring.md)
-- [Création utilitaire](util-authoring.md)
+- [Création util](util-authoring.md)

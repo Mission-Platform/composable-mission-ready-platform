@@ -6,22 +6,24 @@
 > اللغة: العربية (ar)
 
 ** ماسح ضوئي لرموز الصور / الكاميرا ** خالي من التبعية تم تجميعه من رابط ثابت
-صياغة الرسم البياني لنص الويب إلى WebAssembly. يقوم بتحديد موقع وفك رموز QR والبيانات
-Matrix، وAztec، والرموز الشريطية 1D، وPDF417، وGS1 DataBar، وMaxiCode من ملفات الصور
-أو تيارات الكاميرا الحية. يتوفر أيضًا ملف تعريف ديناميكي لوحدة المصدر
-عمليات النشر التي تحتاج إلى وحدات فك تشفير قابلة للتخزين المؤقت بشكل مستقل.
+الرسم البياني فلينت إلى WebAssembly. يقوم العنصر المرتبط حاليًا بفك تشفير البيانات
+Matrix وAztec مدمج وقارئات 1D/RSS وPDF417 وMaxiCode من ملفات الصور أو
+تيارات الكاميرا الحية. ينبعث الرسم البياني QR بشكل مستقل ولكنه يظل خارج النطاق
+قطعة أثرية مدمجة أثناء التحقيق في قيود باعث Forge.
 
 ## نظرة عامة على واجهة برمجة التطبيقات
 
 ### الماسح الضوئي الأساسي (`@mission-platform/code-scanner`)
 
 ```ts
-import { scanFile, scanImageData, scanImageDataAll } from '@mission-platform/code-scanner';
+import { scanFile, scanImageData, scanImageDataAll, type ScanOptions } from '@mission-platform/code-scanner';
 
 // Scan ImageData directly
-const result = scanImageData(imageData);
+const options: ScanOptions = { formats: ['DATA_MATRIX'], tryHarder: true };
+const result = scanImageData(imageData, options);
 
-// Scan all codes in frame
+// Scan the package's all-results entry point. The current linked reduced graph
+// returns at most its first validated result until multi-symbol detection lands.
 const allResults = scanImageDataAll(imageData);
 
 // Scan a File / Blob
@@ -44,7 +46,7 @@ const resultFromFile = await scanFile(file);
 </script>
 
 <template>
-  <ForgeCodeScanner @result="(res) => console.log(res.value)" />
+  <ForgeCodeScanner @result="(res) => console.log(res.text, res.format)" />
 </template>
 ```
 
@@ -54,6 +56,6 @@ const resultFromFile = await scanFile(file);
 import { ForgeCodeScanner } from '@mission-platform/code-scanner';
 
 export function CameraScanner() {
-  return <ForgeCodeScanner onResult={(result) => console.log(result.value)} />;
+  return <ForgeCodeScanner onResult={(result) => console.log(result.text, result.format)} />;
 }
 ```

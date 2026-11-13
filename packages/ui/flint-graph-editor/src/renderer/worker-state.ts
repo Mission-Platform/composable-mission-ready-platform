@@ -1,3 +1,5 @@
+import type { FlintGraphEdge, FlintGraphGroup, FlintGraphNode } from '@mission-platform/flint';
+
 import type {
   FlintPerformanceMetrics,
   FlintRenderWorkerWasmExports,
@@ -15,7 +17,6 @@ import type {
   WebGLTextUniformLocations,
   WebGLUniformLocations,
 } from './types';
-import type { FlintGraphEdge, FlintGraphGroup, FlintGraphNode } from '@mission-platform/flint';
 
 export interface RenderWorkerState {
   wasm: FlintRenderWorkerWasmExports | undefined;

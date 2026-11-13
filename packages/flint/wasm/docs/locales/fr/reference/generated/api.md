@@ -9,6 +9,206 @@ Traduction assistée par machine à partir de la source anglaise canonique. À r
 
 Généré à partir des déclarations de source publique dans `@mission-platform/flint-wasm`.
 
+## `src/codegen/abi`
+
+### AggregateFieldDescriptor
+
+**Genre :** interface
+
+```typescript
+export interface AggregateFieldDescriptor
+```
+
+Descripteur de disposition du champ agrégé.
+
+### AggregateLayoutDescriptor
+
+**Genre :** interface
+
+```typescript
+export interface AggregateLayoutDescriptor
+```
+
+Descripteur de disposition de structure agrégée.
+
+### canonicalizeSliceCallingConvention
+
+**Genre :** fonction
+
+```typescript
+function canonicalizeSliceCallingConvention(type: FlintWasmPrimitiveType): readonly FlintWasmPrimitiveType[];
+```
+
+Réduit un type de tranche ou d'octets en types de registre WebAssembly décompressés.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---- | ---------------------- | ----------- |
+| tapez | FlintWasmPrimitiveType |             |
+
+### calculateArrayAllocationSize
+
+**Genre :** fonction
+
+```typescript
+function computeArrayAllocationSize(
+  count: number,
+  elementSize: number,
+  maxBytes: number = MAX_ARRAY_ALLOCATION_BYTES,
+): number;
+```
+
+Calcule la taille totale en octets requise pour une allocation de tableau de count * elementSize.
+Applique la multiplication vérifiée et renvoie une RangeError en cas de dépassement d'entier ou de violation des limites.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----------- | ------ | ----------- |
+| compter | numéro |             |
+| élémentTaille | numéro |             |
+| maxOctets | numéro |             |
+
+### calculateSliceCapacity
+
+**Genre :** fonction
+
+```typescript
+function computeSliceCapacity(bufferBytes: number, elementSize: number): number;
+```
+
+Calcule la capacité d'un descripteur de tranche en fonction de la taille totale des octets du tampon et de la taille des octets de l'élément.
+Gère en toute sécurité les types de taille nulle (elementSize === 0) en renvoyant une capacité infinie/illimitée sans division par zéro.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----------- | ------ | ----------- |
+| octets tampon | numéro |             |
+| élémentTaille | numéro |             |
+
+### decodeSliceRegisterTriplet
+
+**Genre :** fonction
+
+```typescript
+function decodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+Décode et valide un triplet de registre `(ptr: i32, len: i32, cap: i32)` décompressé reçu à travers la frontière.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | ------ | ----------- |
+| pointeur | numéro |             |
+| longueur | numéro |             |
+| capacité | numéro |             |
+
+### encodeSliceRegisterTriplet
+
+**Genre :** fonction
+
+```typescript
+function encodeSliceRegisterTriplet(pointer: number, length: number, capacity: number = length): SliceRegisterTriplet;
+```
+
+Emballe les métadonnées de tranche dans un triplet de registre `(ptr: i32, len: i32, cap: i32)` décompressé.
+Applique des limites non signées et des invariants de non-débordement pour empêcher les exploits de bouclage.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | ------ | ----------- |
+| pointeur | numéro |             |
+| longueur | numéro |             |
+| capacité | numéro |             |
+
+### MAX_ARRAY_ALLOCATION_BYTES
+
+**Genre :** constante
+
+```typescript
+export const MAX_ARRAY_ALLOCATION_BYTES;
+```
+
+Aucune description fournie.
+
+### MAX_SLICE_ADDRESS
+
+**Genre :** constante
+
+```typescript
+export const MAX_SLICE_ADDRESS;
+```
+
+Aucune description fournie.
+
+### sanitizeAggregatePadding
+
+**Genre :** fonction
+
+```typescript
+function sanitizeAggregatePadding(buffer: Uint8Array, layout: AggregateLayoutDescriptor, baseOffset = 0): Uint8Array;
+```
+
+Initialise à zéro tous les octets de remplissage dans un tampon de structure agrégé avant la transmission ABI.
+Empêche la mémoire non initialisée et les fuites de données confidentielles au-delà des limites de confiance.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ---------- | ------------------------- | ---------------------------------------------------- |
+| tampon | Uint8Array | - Tampon brut contenant un agrégat sérialisé.        |
+| mise en page | AggregateLayoutDescripteur | - Descripteur de disposition globale.                       |
+| baseOffset |                           | - Décalage de départ dans le tampon (par défaut : 0). |
+
+#### Contracter
+
+- **@param:** - Tampon brut contenant un agrégat sérialisé.
+- **@param:** - Descripteur de disposition agrégée.
+- **@param:** - Décalage de départ dans le tampon (par défaut : 0).
+- **@returns :** Tampon nettoyé avec un remplissage mis à zéro.
+
+### SliceRegisterTriplet
+
+**Genre :** interface
+
+```typescript
+export interface SliceRegisterTriplet
+```
+
+Représentation de registre d’une tranche décompressée passée directement à travers les limites de WebAssembly.
+
+### validerSliceBounds
+
+**Genre :** fonction
+
+```typescript
+function validateSliceBounds(pointer: number, length: number, capacity: number): boolean;
+```
+
+Valide que les triplets de registre de tranches satisfont aux limites spatiales et aux invariants arithmétiques non signés sans enveloppe.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | ------ | ----------- |
+| pointeur | numéro |             |
+| longueur | numéro |             |
+| capacité | numéro |             |
+
+### ZERO_SIZED_TYPE_SENTINEL_POINTER
+
+**Genre :** constante
+
+```typescript
+export const ZERO_SIZED_TYPE_SENTINEL_POINTER;
+```
+
+Aucune description fournie.
+
 ## `src/collection-runtime`
 
 ### buildFlintWasmCollectionRuntimeBodies
@@ -19,7 +219,11 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 function buildFlintWasmCollectionRuntimeBodies(): readonly FlintWasmRuntimeBody[];
 ```
 
-Aucune description fournie.
+Renvoie les descripteurs de métadonnées pour les fonctions d'assistance de collecte et d'exécution asynchrone.
+
+#### Contracter
+
+- **@returns :** Tableau de descripteurs de fonctions d'exécution.
 
 ### buildFlintWasmCollectionRuntimeWasmBodies
 
@@ -36,11 +240,11 @@ emballé i64 `(done << 32) | i32 value` ABI.
 
 #### Paramètres
 
-| Nom            | Tapez  | Descriptif |
-| -------------- | ------ | ---------- |
-| allocatorIndex | numéro |            |
+| Nom | Tapez | Descriptif |
+| -------------- | ------ | ----------- |
+| allocatorIndex | numéro |             |
 
-### FlintWasmRuntimeBody
+### FlintWasmRuntimeCorps
 
 **Genre :** interface
 
@@ -48,11 +252,11 @@ emballé i64 `(done << 32) | i32 value` ABI.
 export interface FlintWasmRuntimeBody
 ```
 
-Aucune description fournie.
+Descripteur de contrat pour les fonctions d'assistance d'exécution de bibliothèque standard intégrées dans WebAssembly.
 
 ## `src/contracts`
 
-### FlintTargetFonctionnalités
+### FlintTargetCaractéristiques
 
 **Genre :** interface
 
@@ -60,7 +264,17 @@ Aucune description fournie.
 export interface FlintTargetFeatures
 ```
 
-Aucune description fournie.
+Fonctionnalités de proposition WebAssembly cibles activées lors de l’émission de code.
+
+### FlintWasmAggregateLayout
+
+**Genre :** interface
+
+```typescript
+export interface FlintWasmAggregateLayout
+```
+
+Descripteur de disposition de la mémoire pour les structures agrégées disposées en mémoire linéaire.
 
 ### FlintWasmArtifactMetadata
 
@@ -70,9 +284,9 @@ Aucune description fournie.
 export interface FlintWasmArtifactMetadata
 ```
 
-Aucune description fournie.
+Métadonnées décrivant la disposition de la mémoire, les exigences en matière de fonctionnalités et les signatures de fonction de l'artefact WebAssembly émis.
 
-### FlintWasmAsyncCapability
+### Capacité FlintWasmAsync
 
 **Genre :** type
 
@@ -80,9 +294,9 @@ Aucune description fournie.
 export type FlintWasmAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
 ```
 
-Aucune description fournie.
+Capacités d'exécution asynchrone demandées par les modules WebAssembly.
 
-### FlintWasmAsyncContract
+### FlintWasmAsyncContrat
 
 **Genre :** interface
 
@@ -90,9 +304,9 @@ Aucune description fournie.
 export interface FlintWasmAsyncContract
 ```
 
-Aucune description fournie.
+Spécification de contrat régissant l'exécution asynchrone et la messagerie dans WebAssembly.
 
-### FlintWasmBackendInput
+### FlintWasmBackendEntrée
 
 **Genre :** interface
 
@@ -100,9 +314,9 @@ Aucune description fournie.
 export interface FlintWasmBackendInput
 ```
 
-Aucune description fournie.
+Charge utile d’entrée complète transmise au pipeline de compilation backend WebAssembly.
 
-### FlintWasmBackendResult
+### FlintWasmBackendRésultat
 
 **Genre :** interface
 
@@ -110,9 +324,9 @@ Aucune description fournie.
 export interface FlintWasmBackendResult
 ```
 
-Aucune description fournie.
+Résultat renvoyé par l'émetteur backend WebAssembly contenant des artefacts binaires et des rapports.
 
-### FlintWasmBinaryOperator
+### FlintWasmBinaryOpérateur
 
 **Genre :** type
 
@@ -120,7 +334,7 @@ Aucune description fournie.
 export type FlintWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
-Aucune description fournie.
+Opérateurs binaires arithmétiques, logiques et de comparaison pris en charge dans WebAssembly.
 
 ### FlintWasmCapabilityImport
 
@@ -130,9 +344,9 @@ Aucune description fournie.
 export interface FlintWasmCapabilityImport
 ```
 
-Aucune description fournie.
+Importation de capacité hôte requise par le module WebAssembly.
 
-### FlintWasmCollectionLayout
+### FlintWasmCollectionMise en page
 
 **Genre :** interface
 
@@ -140,7 +354,7 @@ Aucune description fournie.
 export interface FlintWasmCollectionLayout
 ```
 
-Aucune description fournie.
+Configuration de la disposition et de la stratégie pour les types de collections en mémoire linéaire.
 
 ### FlintWasmCompilerConseils
 
@@ -150,7 +364,7 @@ Aucune description fournie.
 export interface FlintWasmCompilerHints
 ```
 
-Aucune description fournie.
+Conseils d'optimisation fournis au backend du compilateur WebAssembly.
 
 ### FlintWasmDiagnostic
 
@@ -160,9 +374,9 @@ Aucune description fournie.
 export interface FlintWasmDiagnostic
 ```
 
-Aucune description fournie.
+Diagnostic du compilateur émis lors de la réduction, de la validation ou de la vérification de WebAssembly.
 
-### FlintWasmEnumDéclaration
+### FlintWasmEnumDeclaration
 
 **Genre :** interface
 
@@ -170,7 +384,7 @@ Aucune description fournie.
 export interface FlintWasmEnumDeclaration
 ```
 
-Aucune description fournie.
+Déclaration d'énumération d'union balisée représentée dans les dispositions de mémoire WebAssembly.
 
 ### FlintWasmExpression
 
@@ -180,9 +394,9 @@ Aucune description fournie.
 export type FlintWasmExpression = |
 ```
 
-Aucune description fournie.
+Expression de représentation intermédiaire réduite aux instructions WebAssembly.
 
-### FlintWasmFeatureExigences
+### FlintWasmFonctionnalitéExigences
 
 **Genre :** interface
 
@@ -190,7 +404,27 @@ Aucune description fournie.
 export interface FlintWasmFeatureRequirements
 ```
 
-Aucune description fournie.
+Exigences des fonctionnalités WebAssembly découvertes lors de la génération de code.
+
+### FlintWasmForeignCapabilité
+
+**Genre :** interface
+
+```typescript
+export interface FlintWasmForeignCapability
+```
+
+Contrat d’importation de modules de capacité C étrangers réduits pour l’émission WebAssembly.
+
+### FlintWasmForeignFunction
+
+**Genre :** interface
+
+```typescript
+export interface FlintWasmForeignFunction
+```
+
+Contrat d’importation de fonctions C étrangères réduit pour l’émission WebAssembly.
 
 ### FlintWasmFonction
 
@@ -200,9 +434,9 @@ Aucune description fournie.
 export interface FlintWasmFunction
 ```
 
-Aucune description fournie.
+Représentation intermédiaire de la fonction réduite à la définition de la fonction WebAssembly.
 
-### FlintWasmGenericSpécialisation
+### FlintWasmGénériqueSpécialisation
 
 **Genre :** interface
 
@@ -210,7 +444,7 @@ Aucune description fournie.
 export interface FlintWasmGenericSpecialization
 ```
 
-Aucune description fournie.
+Spécialisation de fonction générique monomorphisée émise vers WebAssembly.
 
 ### FlintWasmIteratorBoundaryDescriptor
 
@@ -220,9 +454,9 @@ Aucune description fournie.
 export interface FlintWasmIteratorBoundaryDescriptor
 ```
 
-Aucune description fournie.
+Descripteur de limite définissant les transitions et les exportations de la machine à états itérateur.
 
-### FlintWasmIteratorCapabilité
+### Capacité FlintWasmIterator
 
 **Genre :** type
 
@@ -230,7 +464,7 @@ Aucune description fournie.
 export type FlintWasmIteratorCapability = 'linear' | 'random-access';
 ```
 
-Aucune description fournie.
+Catégorie de capacité d’itérateur prise en charge par les itérateurs d’exécution.
 
 ### FlintWasmIteratorCapabilityDescriptor
 
@@ -240,7 +474,7 @@ Aucune description fournie.
 export interface FlintWasmIteratorCapabilityDescriptor
 ```
 
-Aucune description fournie.
+Descripteur définissant la stratégie d’itération de l’itérateur et les limites des éléments.
 
 ### FlintWasmIteratorExport
 
@@ -250,7 +484,7 @@ Aucune description fournie.
 export interface FlintWasmIteratorExport
 ```
 
-Aucune description fournie.
+Symboles de machine d’état d’itérateur exportés accessibles aux environnements d’exécution hôtes.
 
 ### FlintWasmLogger
 
@@ -260,9 +494,9 @@ Aucune description fournie.
 export interface FlintWasmLogger
 ```
 
-Aucune description fournie.
+Interface de journalisation structurée pour les événements de compilation WebAssembly.
 
-### FlintWasmModule
+### Module FlintWasm
 
 **Genre :** interface
 
@@ -270,9 +504,9 @@ Aucune description fournie.
 export interface FlintWasmModule
 ```
 
-Aucune description fournie.
+Représentation intermédiaire du module contenant des fonctions, des mises en page et des importations pour l'émission WebAssembly.
 
-### FlintWasmParameter
+### FlintWasmParamètre
 
 **Genre :** interface
 
@@ -280,7 +514,7 @@ Aucune description fournie.
 export interface FlintWasmParameter
 ```
 
-Aucune description fournie.
+Définition des paramètres de fonction utilisée dans les signatures de fonctions WebAssembly.
 
 ### FlintWasmPrimitiveType
 
@@ -288,10 +522,10 @@ Aucune description fournie.
 
 ```typescript
 export type FlintWasmPrimitiveType =
-  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit' | 'v128';
 ```
 
-Aucune description fournie.
+Types de données primitifs pris en charge par la passe de réduction du backend WebAssembly.
 
 ### FlintWasmSourceImport
 
@@ -301,7 +535,7 @@ Aucune description fournie.
 export interface FlintWasmSourceImport
 ```
 
-Aucune description fournie.
+Dépendance du module source lié importée dans le module WebAssembly.
 
 ### FlintWasmSourceSpan
 
@@ -311,9 +545,9 @@ Aucune description fournie.
 export interface FlintWasmSourceSpan
 ```
 
-Aucune description fournie.
+Étendue d’emplacement source mappée aux instructions WebAssembly pour la génération de symboles de débogage.
 
-### FlintWasmStandardLibraryOperation
+### FlintWasmStandardLibraryOpération
 
 **Genre :** type
 
@@ -344,6 +578,8 @@ export type FlintWasmStandardLibraryOperation =
   | 'memory-realloc'
   | 'memory-load-u32'
   | 'memory-store-u32'
+  | 'memory-load-u8'
+  | 'memory-store-u8'
   | 'memory-load-f64'
   | 'memory-store-f64'
   | 'f64-from-u32'
@@ -366,12 +602,23 @@ export type FlintWasmStandardLibraryOperation =
   | 'signal-schedule'
   | 'async-schedule-microtask'
   | 'async-worker-post'
-  | 'async-worker-receive';
+  | 'async-worker-receive'
+  | 'memory-copy'
+  | 'memory-fill'
+  | 'simd-binarize'
+  | 'simd-i8x16-splat'
+  | 'simd-i8x16-eq'
+  | 'simd-i8x16-lt-u'
+  | 'simd-i8x16-bitmask'
+  | 'simd-i32x4-splat'
+  | 'simd-i32x4-add'
+  | 'simd-v128-load'
+  | 'simd-v128-store';
 ```
 
-Aucune description fournie.
+Opérations intrinsèques de la bibliothèque standard WebAssembly réduites par le compilateur backend.
 
-### FlintWasmStatement
+### FlintWasmDéclaration
 
 **Genre :** type
 
@@ -379,7 +626,7 @@ Aucune description fournie.
 export type FlintWasmStatement = |
 ```
 
-Aucune description fournie.
+Instruction de représentation intermédiaire réduite au flux de contrôle structuré WebAssembly.
 
 ### FlintWasmTypeName
 
@@ -389,7 +636,7 @@ Aucune description fournie.
 export interface FlintWasmTypeName
 ```
 
-Aucune description fournie.
+Représentation abstraite du nom de type utilisée lors de la réduction de WebAssembly.
 
 ## `src/emitter`
 
@@ -401,18 +648,307 @@ Aucune description fournie.
 function compileFlintWasm(input: FlintWasmBackendInput, fileName = '<input>'): FlintWasmBackendResult;
 ```
 
-Aucune description fournie.
+Point d'entrée principal compilant un module Flint IR aux formats binaires et texte WebAssembly.
 
 #### Paramètres
 
-| Nom            | Tapez                 | Descriptif |
-| -------------- | --------------------- | ---------- |
-| entrée         | FlintWasmBackendInput |            |
-| Nom du fichier |                       |            |
+| Nom | Tapez | Descriptif |
+| -------- | --------------------- | ----------- |
+| entrée | FlintWasmBackendEntrée |             |
+| Nom du fichier |                       |             |
+
+## `src/emitter/section-builder`
+
+### SECTION_IDS
+
+**Genre :** constante
+
+```typescript
+export const SECTION_IDS;
+```
+
+Aucune description fournie.
+
+### section
+
+**Genre :** fonction
+
+```typescript
+function section(id: number, contents: readonly number[]): number[];
+```
+
+Regroupe les octets de charge utile dans une section WebAssembly avec l'ID de section et le préfixe de longueur.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | ----------------- | ----------- |
+| identifiant | numéro |             |
+| contenu | numéro en lecture seule[] |             |
+
+### WasmSectionBuilder
+
+**Genre :** classe
+
+```typescript
+export class WasmSectionBuilder
+```
+
+## `src/encoding/bytes`
+
+### appendF32
+
+**Genre :** fonction
+
+```typescript
+function appendF32(value: number): number[];
+```
+
+Ajoute un nombre à virgule flottante de 32 bits au format binaire petit-boutiste, canonisant les NaN.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| valeur | numéro |             |
+
+### appendF64
+
+**Genre :** fonction
+
+```typescript
+function appendF64(value: number): number[];
+```
+
+Ajoute un nombre à virgule flottante de 64 bits au format binaire petit-boutiste, canonisant les NaN.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| valeur | numéro |             |
+
+### CANONICAL_F32_NAN_BYTES
+
+**Genre :** constante
+
+```typescript
+export const CANONICAL_F32_NAN_BYTES;
+```
+
+Modèle de bits NaN silencieux canonique pour les flottants 32 bits (0x7fc00000 en petit-boutiste).
+
+### CANONICAL_F64_NAN_BYTES
+
+**Genre :** constante
+
+```typescript
+export const CANONICAL_F64_NAN_BYTES;
+```
+
+Modèle de bits NaN silencieux canonique pour les flottants 64 bits (0x7ff8000000000000 en petit-boutiste).
+
+### vecteur
+
+**Genre :** fonction
+
+```typescript
+function vector(values: readonly number[]): number[];
+```
+
+Préfixe un tableau d'éléments de bytecode avec son nombre en codage LEB128.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------ | ----------------- | ----------- |
+| valeurs | numéro en lecture seule[] |             |
+
+### wasmString
+
+**Genre :** fonction
+
+```typescript
+function wasmString(value: string): number[];
+```
+
+Encode une chaîne UTF-8 préfixée par sa longueur en octets au format WebAssembly.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| valeur | chaîne |             |
+
+## `src/encoding/leb128`
+
+### signéLeb
+
+**Genre :** fonction
+
+```typescript
+function signedLeb(value: number | bigint): number[];
+```
+
+Encode un entier signé de 32 ou 64 bits dans un tableau d'octets WebAssembly LEB128.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ---------------- | ----------- |
+| valeur | numéro \| grosint |             |
+
+### signéLeb128
+
+**Genre :** fonction
+
+```typescript
+function signedLeb128(value: number | bigint): number[];
+```
+
+Alias ​​pour signéLeb.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ---------------- | ----------- |
+| valeur | numéro \| grosint |             |
+
+### non signéLeb
+
+**Genre :** fonction
+
+```typescript
+function unsignedLeb(value: number): number[];
+```
+
+Encode un entier non signé de 32 bits dans un tableau d'octets WebAssembly LEB128.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| valeur | numéro |             |
+
+### non signéLeb128
+
+**Genre :** fonction
+
+```typescript
+function unsignedLeb128(value: number): number[];
+```
+
+Alias ​​pour Leb non signé.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ----- | ------ | ----------- |
+| valeur | numéro |             |
+
+## `src/optimizer`
+
+### FlintWasmOptimizationDiagnostic
+
+**Genre :** interface
+
+```typescript
+export interface FlintWasmOptimizationDiagnostic
+```
+
+Diagnostic émis par les passes d'optimisation WebAssembly.
+
+### FlintWasmOptimizationPass
+
+**Genre :** interface
+
+```typescript
+export interface FlintWasmOptimizationPass
+```
+
+Métadonnées décrivant une passe d'optimisation individuelle et ses métriques.
+
+### Rapport d'optimisation FlintWasm
+
+**Genre :** interface
+
+```typescript
+export interface FlintWasmOptimizationReport
+```
+
+Rapport récapitulatif suivant toutes les passes d'optimisation et tous les diagnostics appliqués à WebAssembly.
+
+### FlintWasmStageIr
+
+**Genre :** interface
+
+```typescript
+export interface FlintWasmStageIr
+```
+
+Instantané de représentation intermédiaire de l’état du module lors d’une étape d’optimisation.
+
+### FlintWasmSwitchStratégie
+
+**Genre :** type
+
+```typescript
+export type FlintWasmSwitchStrategy = 'br-table' | 'sparse' | 'constant';
+```
+
+Stratégie de génération de code pour réduire les instructions switch.
+
+### optimiserFlintWasmModule
+
+**Genre :** fonction
+
+```typescript
+function optimizeFlintWasmModule(
+  module: FlintWasmModule,
+  optimization: 'debug' | 'release' = 'release',
+): FlintWasmStageIr;
+```
+
+Exécute la suite complète des passes d'optimisation WebAssembly sur un module IR.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| ------------ | -------------------- | ----------- |
+| modules | FlintWasmModule |             |
+| optimisation | 'débogage' \| 'libération' |             |
+
+## `src/sections/custom`
+
+### encodeFlintAbiCustomSection
+
+**Genre :** fonction
+
+```typescript
+function encodeFlintAbiCustomSection(manifest: FlintCAbiManifest | object): number[];
+```
+
+Émet une section personnalisée binaire WebAssembly contenant un manifeste CBOR ABI compact (`flint.abi.v2`).
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | --------------------------- | ----------- |
+| manifeste | FlintCAbiManifest \| objet |             |
+
+### FLINT_ABI_V2_CUSTOM_SECTION
+
+**Genre :** constante
+
+```typescript
+export const FLINT_ABI_V2_CUSTOM_SECTION;
+```
+
+Nom de section personnalisée WebAssembly standard pour les manifestes CBOR ABI binaires intégrés.
 
 ## `src/verifier`
 
-### FlintWasmArtifactManifest
+### FlintWasmArtefactManifeste
 
 **Genre :** interface
 
@@ -422,7 +958,7 @@ export interface FlintWasmArtifactManifest
 
 Le vérificateur consomme intentionnellement un manifeste structurel pour éviter un cycle de package.
 
-### FlintWasmArtifactVerificationDiagnostic
+### FlintWasmArtefactVérificationDiagnostic
 
 **Genre :** interface
 
@@ -430,9 +966,9 @@ Le vérificateur consomme intentionnellement un manifeste structurel pour évite
 export interface FlintWasmArtifactVerificationDiagnostic
 ```
 
-Aucune description fournie.
+Résultat de diagnostic émis lors de la vérification binaire de WebAssembly.
 
-### FlintWasmArtifactVerificationInput
+### FlintWasmArtifactVerificationEntrée
 
 **Genre :** interface
 
@@ -440,7 +976,7 @@ Aucune description fournie.
 export interface FlintWasmArtifactVerificationInput
 ```
 
-Aucune description fournie.
+Paramètres d'entrée et attentes transmises à la vérification des artefacts.
 
 ### FlintWasmArtifactVerificationPolicy
 
@@ -450,9 +986,9 @@ Aucune description fournie.
 export interface FlintWasmArtifactVerificationPolicy
 ```
 
-Aucune description fournie.
+Règles de politique régissant l’application de la vérification des artefacts.
 
-### FlintWasmArtifactVerificationResult
+### FlintWasmArtefactVérificationRésultat
 
 **Genre :** interface
 
@@ -460,9 +996,9 @@ Aucune description fournie.
 export interface FlintWasmArtifactVerificationResult
 ```
 
-Aucune description fournie.
+Rapport complet des résultats de vérification indiquant l’état de validation.
 
-### FlintWasmArtifactVerificationSeverity
+### FlintWasmArtefactVérificationSévérité
 
 **Genre :** type
 
@@ -470,7 +1006,7 @@ Aucune description fournie.
 export type FlintWasmArtifactVerificationSeverity = 'error' | 'warning' | 'info';
 ```
 
-Aucune description fournie.
+Niveaux de gravité du diagnostic émis lors de la vérification des artefacts.
 
 ### FlintWasmManifestFonction
 
@@ -480,7 +1016,7 @@ Aucune description fournie.
 export interface FlintWasmManifestFunction
 ```
 
-Aucune description fournie.
+Métadonnées de fonction extraites du manifeste ABI pour vérification.
 
 ### FlintWasmManifestImport
 
@@ -490,9 +1026,9 @@ Aucune description fournie.
 export interface FlintWasmManifestImport
 ```
 
-Aucune description fournie.
+Importez les métadonnées de déclaration extraites du manifeste ABI.
 
-### FlintWasmManifestParameter
+### FlintWasmManifestParamètre
 
 **Genre :** interface
 
@@ -500,9 +1036,9 @@ Aucune description fournie.
 export interface FlintWasmManifestParameter
 ```
 
-Aucune description fournie.
+Métadonnées de type de paramètre dans la définition de fonction manifeste.
 
-### FlintWasmMemoryLayout
+### FlintWasmMemoryDisposition
 
 **Genre :** interface
 
@@ -510,9 +1046,9 @@ Aucune description fournie.
 export interface FlintWasmMemoryLayout
 ```
 
-Aucune description fournie.
+Attentes en matière de disposition de la mémoire vérifiées par rapport au binaire WebAssembly.
 
-### verifyFlintWasmArtifact
+### vérifierFlintWasmArtifact
 
 **Genre :** fonction
 
@@ -520,13 +1056,13 @@ Aucune description fournie.
 function verifyFlintWasmArtifact(input: FlintWasmArtifactVerificationInput): FlintWasmArtifactVerificationResult;
 ```
 
-Aucune description fournie.
+Point d’entrée de vérification complète validant les artefacts binaires et d’adaptateur WebAssembly.
 
 #### Paramètres
 
-| Nom    | Tapez                              | Descriptif |
-| ------ | ---------------------------------- | ---------- |
-| entrée | FlintWasmArtifactVerificationInput |            |
+| Nom | Tapez | Descriptif |
+| ----- | ---------------------------------- | ----------- |
+| entrée | FlintWasmArtifactVerificationInput |             |
 
 ## `src/wat`
 
@@ -538,9 +1074,9 @@ Aucune description fournie.
 export interface FlintWasmWatMetadata
 ```
 
-Aucune description fournie.
+Métadonnées émises dans les commentaires et les en-têtes au format texte WebAssembly (WAT).
 
-### renderFlintWasmWat
+### renduFlintWasmWat
 
 **Genre :** fonction
 
@@ -548,11 +1084,37 @@ Aucune description fournie.
 function renderFlintWasmWat(module: FlintWasmModule, metadata: FlintWasmWatMetadata = {}): string;
 ```
 
-Aucune description fournie.
+Réduit une représentation intermédiaire complète du module Flint WebAssembly au format textuel WAT.
 
 #### Paramètres
 
-| Nom         | Tapez                   | Descriptif |
-| ----------- | ----------------------- | ---------- |
-| modules     | FlintWasmModule         |            |
-| métadonnées | FlintWasmWatMétadonnées |            |
+| Nom | Tapez | Descriptif |
+| -------- | -------------------- | -------------------------------------------------------- |
+| modules | FlintWasmModule | - Représentation intermédiaire du module compilé.           |
+| métadonnées | FlintWasmWatMétadonnées | - Métadonnées de compilation et configuration des fonctionnalités cibles. |
+
+#### Contracter
+
+- **@param:** - Représentation intermédiaire du module compilé.
+- **@param:** - Métadonnées de compilation et configuration des fonctionnalités cibles.
+- **@returns :** Chaîne de représentation de texte WebAssembly.
+
+### versWatType
+
+**Genre :** fonction
+
+```typescript
+function toWatType(
+  type: string | { readonly name?: string; readonly reference?: string } | undefined,
+  memory64 = false,
+): string;
+```
+
+Mappe une chaîne de représentation de type Flint ou C au type de valeur WebAssembly WAT.
+
+#### Paramètres
+
+| Nom | Tapez | Descriptif |
+| -------- | ------------------------------------------------------------------------------ | ----------- |
+| tapez | chaîne \| { nom en lecture seule ? : chaîne ; référence en lecture seule ? : chaîne } \| indéfini |             |
+| mémoire64 |                                                                                |             |

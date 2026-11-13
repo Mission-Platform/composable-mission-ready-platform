@@ -8,10 +8,11 @@
  * component body statements go through the same path — only the `return`
  * statement is printed separately, from `component.returnNode`.
  */
+import type { GenericStatement } from "@mission-platform/forge-plugin-api";
+
 import { lowerStatementWithRenderNodes } from "./jsx.js";
 
 import type { SolidLoweringContext } from "./context.js";
-import type { GenericStatement } from "@mission-platform/forge-plugin-api";
 
 /** The `useI18n()` binding injected into components that translate. */
 export const I18N_HOOK_STATEMENT = "const { t } = useI18n();";

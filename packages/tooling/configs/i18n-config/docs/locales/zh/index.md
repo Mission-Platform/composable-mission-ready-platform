@@ -17,7 +17,7 @@ pnpm add --save-dev @mission-platform/i18n-config
 ```
 
 将区域设置源保留在拥有它们的工作区旁边。提取写入
-所属工作空间下的命名空间包 `locales/<locale>/` 目录;
+所属工作区的 `locales/<locale>/` 目录下的命名空间包；
 存储库级命令编排所有配置的工作区。
 
 ## 贡献

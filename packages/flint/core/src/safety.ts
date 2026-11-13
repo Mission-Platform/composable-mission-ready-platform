@@ -6,7 +6,8 @@ import {
   type FlintModule,
   type FlintStatement,
   type FlintTypeName,
-} from './ast.js';
+} from '@mission-platform/flint-ast';
+
 import { createDiagnostic, type FlintDiagnostic, type FlintSourceSpan } from './diagnostics.js';
 
 /**

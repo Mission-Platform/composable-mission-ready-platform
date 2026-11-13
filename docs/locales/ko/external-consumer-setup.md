@@ -9,17 +9,18 @@
 
 ## 조건을 통한 프레임워크 선택
 
-Mission Platform 구성 요소는 `@mission-platform/forge-jsx`을 사용하여 한 번 작성되고 단일 패키지 내에서 여러 프레임워크별 번들(Vue 3, React, Solid 및 웹 구성 요소)로 배포됩니다.
+Mission Platform 구성 요소는 `@mission-platform/forge-jsx`을 사용하여 한 번 작성되고 단일 패키지 내에서 여러 프레임워크별 번들(Vue 3, React, Solid, Svelte 및 웹 구성 요소)로 배포됩니다.
 
 올바른 번들을 선택하려면 **사용자 정의 내보내기 조건**을 사용하도록 빌드 도구와 TypeScript를 구성해야 합니다.
 
 ### 지원되는 프레임워크 조건
 
-| 프레임워크      | 수출조건           |
-| :-------------- | :----------------- |
-| **Vue 3**       | `mp:vue`           |
-| **React**       | `mp:react`         |
-| **Solid**       | `mp:solid`         |
+| 프레임워크 | 수출조건 |
+| :----------------- | :----------------- |
+| **Vue 3** | `mp:vue` |
+| **React** | `mp:react` |
+| **Solid** | `mp:solid` |
+| **Svelte** | `mp:svelte` |
 | **웹 구성요소** | `mp:web-component` |
 
 ## 프로젝트 구성

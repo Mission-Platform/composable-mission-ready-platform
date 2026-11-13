@@ -28,9 +28,9 @@ src/utils/
 1. **النقاء**: تفضل الوظائف النقية التي ليس لها آثار جانبية. وبالنظر إلى نفس المدخلات، يجب عليهم دائمًا إرجاع ملف
    نفس الإخراج.
 2. **لا توجد خطافات لواجهة المستخدم**: لا تقم مطلقًا باستيراد خطافات `vue` أو `react` أو `@mission-platform/forge-jsx` في أداة مساعدة. يتطلب المنطق
-   التفاعل ينتمي [المواد المركبة](composable-authoring.md).
+   التفاعلية تنتمي إلى [المركبات](composable-authoring.md).
 3. ** الكتابة الصريحة **: توفير أنواع TypeScript الكاملة لجميع الوسائط وقيم الإرجاع.
-4. **الاختبار الإلزامي**: يجب أن يكون لكل أداة ملف `.spec.ts` في موقع مشترك.
+4. **الاختبار الإلزامي**: يجب أن يكون لكل أداة استخدام ملف `.spec.ts` في موقع مشترك.
 5. **مسؤولية فردية**: يجب أن يركز كل مجلد أدوات على مهمة محددة وضيقة.
 
 ## مثال أساسي
@@ -46,9 +46,10 @@ export function clamp(value: number, min: number, max: number): number {
 
 ## السقالات
 
-استخدم أداة Mission Platform Developer MCP لإنشاء هيكل فائدة جديد:
+استخدم أداة `scaffold_util` من خلال خادم Mission Platform Developer MCP المتصل لإنشاء أداة مساعدة جديدة
+skeleton. هذا مثال لاستدعاء أداة MCP، وليس أمر Shell:
 
-```bash
+```text
 # Example: Creating a new 'string-utils' folder in the 'i18n' package
 scaffold_util(name="string-utils", package="i18n", apply=true)
 ```

@@ -8,7 +8,6 @@
  * optimisation.
  */
 import { contentFields } from "@mission-platform/forge-cms-plugin-api";
-
 import type {
   ContentComponent,
   ContentField,

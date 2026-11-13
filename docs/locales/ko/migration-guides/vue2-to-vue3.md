@@ -12,7 +12,7 @@
 미션 플랫폼은 Composition API 및 `<script setup>` 구문과 함께 Vue 3을 사용합니다. 마이그레이션에는 다른 곳으로 이사하는 것도 포함됩니다
 옵션 API에서 구성 요소 수명 주기 및 반응성 패턴을 업데이트합니다.
 
-## 전제 조건
+## 전제조건
 
 마이그레이션하기 전에 패키지가 플랫폼의 종속성 규칙을 따르는지 확인하세요.
 
@@ -90,15 +90,15 @@ const increment = () => {
 
 수명 주기 후크의 이름이 바뀌었으므로 가져와야 합니다.
 
-| Vue 2                      | Vue 3                                  |
-| :------------------------- | :------------------------------------- |
+| Vue 2 | Vue 3 |
+| :------------------------- | :---------------------------------------- |
 | `beforeCreate` / `created` | `setup()` / `<script setup>` 직접 사용 |
-| `beforeMount`              | `onBeforeMount`                        |
-| `mounted`                  | `onMounted`                            |
-| `beforeUpdate`             | `onBeforeUpdate`                       |
-| `updated`                  | `onUpdated`                            |
-| `beforeDestroy`            | `onBeforeUnmount`                      |
-| `destroyed`                | `onUnmounted`                          |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 예:
 

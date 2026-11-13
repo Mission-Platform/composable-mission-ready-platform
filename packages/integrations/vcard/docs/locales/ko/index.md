@@ -5,7 +5,7 @@
 > packages/integrations/vcard/docs/index.md: [packages/integrations/vcard/docs/index.md](../../index.md)
 > 언어: 한국어 (ko)
 
-Mission Platform용 공유 RFC 6350 vCard 및 RFC 5545 iCalendar 데이터 API입니다.
+Mission Platform용 RFC 6350 vCard 및 RFC 5545 iCalendar 데이터 API를 공유합니다.
 
 패키지는 다음을 통해 무손실 구성 요소/속성 구문 분석 및 쓰기를 제공합니다.
 `readICalendar`/`writeICalendar` 및 `readVCard`/`writeVCard`, Forge

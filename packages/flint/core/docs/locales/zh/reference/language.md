@@ -1,4 +1,4 @@
-# Forge Web 脚本 v1
+# 燧石 v1
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
@@ -6,7 +6,7 @@
 > 语言: 简体中文 (zh)
 
 Flint (`.flint`) 是一种用于 WebAssembly 的小型通用语言
-工作负载。它是网络优先的、基于能力的并且故意独立于
+工作负载。它是网络优先的、基于能力的、并且刻意独立于
 Vue、React、DOM 和 Forge 组件编译器。该文档是
 权威的v1语言和模块合约。 `@mission-platform/flint`
 是浏览器安全的兼容性外观，用于解析、类型检查、图形/链接
@@ -107,12 +107,40 @@ const artifact = compileFlint({
 });
 ```
 
-必须同时启用 `threads` 和 `atomics` 才能实现共享内存原子输出；
+必须为共享内存原子输出启用 `threads` 和 `atomics`；
 不支持的组合会产生诊断。 memory64 清单使用 `u64`
 地址和指针长度 u64 值。在调试模式下，配置的缓存可能
 坚持确定性 `<key>.optimized.wat`、`<key>.unoptimized.wat`、
 `<key>.optimized.wasm` 和 `<key>.unoptimized.wasm` 工件。缓存写入
 是附加的且不可用或失败的缓存不会导致编译失败。
+
+## 安全默认值和边界配置文件
+
+除非使用 `mut` 声明，否则局部变量和参数是不可变的。借用是
+默认情况下不可变；写访问需要显式 `&mut` 形式，并且不能
+与另一个借用重叠。 POD 值（仅由单位、标量和聚合组成）
+POD 字段）默认按值传递。非 POD 值通过
+默认情况下不可变引用； `owned`、`borrowed` 和 `shared` 保留
+明确的 ABI 所有权合同。区域管理的临时对象可能无法逃脱
+他们的范围。跨范围的值使用显式所有权/升级
+边界和确定性 ARC 保留/释放处理。
+
+默认情况下，在运行时检查数组和集合索引。编译器
+仅当间隔和长度事实证明时，才可以将检查注释为 `proven-safe`
+完整的访问权限。 `excluded-by-profile` 是一个明确的仅发布策略；
+它记录在分析报告、ABI 清单、优化器元数据中，并且
+缓存身份。对于不受信任的索引和开发版本，首选 `runtime`。
+
+优化边界是确定性的节点海图，后跟
+Wasm 阶段优化器。配置的缓存包含架构/版本
+`<key>.sonir.json` 工件，具有规范的 node ID、源范围、图形哈希、
+效果、所有权事实、边界政策和有序通过报告。很安全
+删除或忽略此工件：格式错误、过时、过大或不匹配
+缓存数据永远不可信。
+
+密集整数 `switch` 域可能会降低到 Wasm `br_table`；稀疏域
+使用确定性比较降低。重复病例是诊断，并且
+当覆盖范围不是静态完整时，需要默认臂。
 
 ## 跨项目链接配置文件
 
@@ -127,6 +155,42 @@ FWS 支持两个用于跨项目依赖关系管理的主要链接配置文件：
   具有由工件和清单身份键控的缓存函数地址。这个
   使用`dynamic-conservative`优化配置文件，更安全
   模块化发行版。
+
+## 外部 C 和 Rust 互操作性 (C ABI)
+
+Flint 提供零拷贝 C 互操作性和外部类型声明，以与用 C、C++ 或 Rust 编写的本机库（`extern "C"`、`#[repr(C)]`）进行交互。
+
+### C 基本类型和指针抽象
+
+- C 标量类型：`c_char`、`c_uchar`、`c_short`、`c_ushort`、`c_int`、`c_uint`、`c_long`、`c_ulong`、`c_longlong`、`c_ulonglong`、`c_size`、 `c_ssize`、`c_float`、`c_double`、`c_void`、`u8` 和 `i8`。
+- 指针包装器：`CPtr<T>`（不可变指针视图）、`MutCPtr<T>`（可变指针视图）和 `COpaquePtr`（无类型 C 句柄，`void*`）。
+- 可空性建模：可空外部指针用 `Option<CPtr<T>>` 表示，其中 `Option::None` 编码文字 `0`（空指针）。
+
+### 平台相关的对齐和表示属性
+
+Flint 中的结构内存布局跨标准平台 ABI 模型（`wasm32`、`wasm64`、`x86_64-linux`、`x86_64-windows`、`aarch64-darwin`、`i686-linux`）与目标相关。
+
+结构支持的指令：
+
+- `#[repr(C)]`：严格的 C ABI 排序、自然字段对齐和尾部填充。
+- `#[repr(packed(N))]`：将字段对齐限制为紧凑二进制格式的最大 `N` 字节。
+- `#[repr(align(N))]`：将聚合对齐提升至 `N` 字节（例如 64 字节 CPU 缓存行或 SIMD）。
+
+> **元编程路线图注意：** 编译器固有表示属性（`#[repr(C)]`、`#[repr(packed(N))]`、`#[repr(align(N))]`）是用于直接 C ABI 兼容性的实用临时构造。 [GitHub Issue #101](https://github.com/Mission-Platform/composable-mission-ready-platform/issues/101) 中正式跟踪了向具有编译时和运行时内省和反射功能的卫生型沙盒类型宏元编程系统的长期架构迁移。
+
+### 国外能力块
+
+外部 C 函数在显式功能块内声明，而不是在环境 extern 语句内声明：
+
+```flint
+opaque foreign type sqlite3;
+
+foreign "C" capability "sqlite3" {
+  fn sqlite3_libversion() -> CPtr<c_char>;
+  fn sqlite3_open(filename: CPtr<c_char>, ppDb: MutCPtr<COpaquePtr>) -> c_int;
+  fn sqlite3_close(db: MutCPtr<sqlite3>) -> c_int;
+}
+```
 
 ## 词汇参考
 
@@ -224,13 +288,13 @@ interface FlintDocumentationTag {
 
 常用的标签形式有：
 
-| 标签形式                                      | 结构化字段                                              |
-| --------------------------------------------- | ------------------------------------------------------- |
-|                                               | `@param name text`、`@arg`、`@argument` 或 `@parameter` | `name` 是 `subject`；剩下的就是 `text` |
-| `@typeparam name text`                        | `name` 是 `subject`；剩下的就是 `text`                  |
-| `@throws type text` 或 `@exception type text` | `type` 是 `subject`；剩下的就是 `text`                  |
-| `@return text` 或 `@returns text`             | 仅限 `text`                                             |
-| `@deprecated text`                            | 仅限 `text`                                             |
+|标签形式 |结构化字段 |
+| -------------------------------------------------------- | -------------------------------------------- |
+| | `@param name text`、`@arg`、`@argument` 或 `@parameter` | `name` 是 `subject`；剩下的就是 `text` |
+| `@typeparam name text` | `name` 是 `subject`；剩下的就是 `text` |
+| `@throws type text` 或 `@exception type text` | `type` 是 `subject`；剩下的就是 `text` |
+| `@return text` 或 `@returns text` |仅限 `text` |
+| `@deprecated text` |仅限 `text` |
 
 其他 `@name` 表单被接受并保留为有序标签，而不是
 报告为诊断。他们没有推断的主题；他们的剩余文本
@@ -359,7 +423,7 @@ V1 具有原始类型 `bool`、有符号 `i32`/`i64`、无符号 `u32`/`u64`、
 
 ### 编译器拥有的正则表达式
 
-Flint 提供了一个确定性正则表达式标准库。
+Flint 提供了确定性正则表达式标准库。
 调用 `regex_full_match(pattern, value) -> bool`，
 `regex_prefix_match(pattern, value) -> bool`，以及
 `regex_search(pattern, value, start: i32) -> bool` 执行全值，
@@ -380,13 +444,15 @@ Flint 提供了一个确定性正则表达式标准库。
 类别和范围（包括 `^` 否定）、`\d`、`\D`、`\w`、`\W`、`\s`、
 `\S`、转义文字、捕获和非捕获组、交替、
 `*`、`+`、`?`、有界 `{n}`、`{n,}`、`{n,m}` 量词、惰性量词、
-和 `^`/`Flint 提供了一个确定性正则表达式标准库。
-调用`regex_full_match(pattern, value) -> bool`，
+和 `^`/`
+Flint 提供了确定性正则表达式标准库。
+调用 `regex_full_match(pattern, value) -> bool`，
 `regex_prefix_match(pattern, value) -> bool`，以及
-`regex_search(pattern, value, start: i32) -> bool`执行全值，
+`regex_search(pattern, value, start: i32) -> bool` 执行全值，
 分别是位置零前缀和最左边搜索匹配。捕获边界
-可通过相应的`regex___capture_start`和`regex___capture_end`调用；他们采用组索引并返回 UTF-16 字符串
-当没有匹配或组未设置时，偏移量或`-1`。搜索捕获
+可通过相应的 `regex_*_capture_start` 和
+`regex_*_capture_end` 调用；他们采用组索引并返回 UTF-16 字符串
+当没有匹配或组未设置时，偏移量或 `-1`。搜索捕获
 调用还采用组索引之前的起始偏移量。
 
 正则表达式调用是编译器拥有的标准库函数。它们的输入方式为
@@ -405,12 +471,12 @@ Flint 提供了一个确定性正则表达式标准库。
 `FWS-REGEX-001` 诊断；格式错误的模式使用 `FWS-REGEX-002`，并且
 内部编译器不变失败使用 `FWS-REGEX-003`。
 
-共享包 `@mission-platform/flint-regex` 拥有稳定的 `$`
-字节码 (`FORGE_REGEX_BYTECODE_VERSION`) 和构建时编译器。其明确的
+共享包 `@mission-platform/flint-regex` 拥有稳定的
+字节码 (`FORGE_REGEX_BYTECODE_VERSION`) 和构建时编译器。其明确的 `$`
 `/reference` 入口点仅将 TypeScript VM 公开为一致性预言机
 用于本机引擎和后端差异测试；包根目录没有
 公开该虚拟机。特定于电话的元数据保留在电话号码包中。
-生产正则表达式执行属于 Forge Web 脚本后端，
+生产正则表达式执行属于 Flint 后端，
 生成的 WASM 模块，永远不会涉及 TypeScript 运行时层或主机功能。
 
 `string` 和 `bytes` 是 v1 聚合值。字符串是不可变的
@@ -427,18 +493,18 @@ Flint 提供了一个确定性正则表达式标准库。
 不添加任意对象方法。固定数组写入 `[T; N]` 和
 向量为 `Vector<T>`。支持的签名有：
 
-| 接收器      | 方法            | 签名                    |
+|接收器|方法|签名|
 | ----------- | --------------- | ----------------------- |
-| `Array<T>`  | `length`        | `() -> u32`             |
-| `Array<T>`  | `get`           | `(u32) -> Option<T>`    |
-| `Array<T>`  | `set`           | `(u32, T) -> Array<T>`  |
-| `Array<T>`  | `iter`          | `() -> Iterator<T>`     |
-| `Vector<T>` | `length`        | `() -> u32`             |
-| `Vector<T>` | `get`           | `(u32) -> Option<T>`    |
-| `Vector<T>` | `set`           | `(u32, T) -> Vector<T>` |
-| `Vector<T>` | `push` 或 `add` | `(T) -> Vector<T>`      |
-| `Vector<T>` | `pop`           | `() -> Option<T>`       |
-| `Vector<T>` | `iter`          | `() -> Iterator<T>`     |
+| `Array<T>` | `length` | `() -> u32` |
+| `Array<T>` | `get` | `(u32) -> Option<T>` |
+| `Array<T>` | `set` | `(u32, T) -> Array<T>` |
+| `Array<T>` | `iter` | `() -> Iterator<T>` |
+| `Vector<T>` | `length` | `() -> u32` |
+| `Vector<T>` | `get` | `(u32) -> Option<T>` |
+| `Vector<T>` | `set` | `(u32, T) -> Vector<T>` |
+| `Vector<T>` | `push` 或 `add` | `(T) -> Vector<T>` |
+| `Vector<T>` | `pop` | `() -> Option<T>` |
+| `Vector<T>` | `iter` | `() -> Iterator<T>` |
 
 `add` 拼写是有意为向量的兼容性别名
 `push`；它不是一个数组方法。索引为 `u32`，元素参数必须
@@ -450,9 +516,9 @@ Flint 提供了一个确定性正则表达式标准库。
 
 局部变量是函数作用域的，只初始化一次，并且之前无法读取
 他们的宣言。本地声明不影响现有名称：重复
-名称是一个错误。函数和功能别名共享一个模块名称空间
+名称是一个错误。函数和功能别名共享一个模块命名空间
 并且必须是唯一的。调用必须命名已声明的函数或导入的函数
-功能及其数量和参数类型必须完全匹配。
+能力，及其数量和参数类型必须完全匹配。
 
 v1 控制流表面的结构为 `if`/`else`、`while`、C 型 `for`、
 `do while` 和早期的 `return`。 `for` 子句是显式语句并且执行
@@ -520,7 +586,7 @@ export fn current_time() -> i64 {
 
 ## 逻辑能力ABI
 
-Forge Web 脚本使用受 WASI 启发的_逻辑_边界，而不是完全声明
+Flint 使用受 WASI 启发的_逻辑_边界，而不是完全声明
 WASI 兼容性。能力是一种狭窄的、显式的宿主功能，例如
 `clock.now`、`random.bytes` 或 `storage.read`。能力名称的拥有者
 平台，每个名称都有一个单独版本的签名。 DOM 对象，
@@ -547,14 +613,14 @@ WASI 兼容性。能力是一种狭窄的、显式的宿主功能，例如
 该模块使用一个具有 64 KiB 页面和小端字节序的 WebAssembly 线性内存
 标量值。标量值映射如下：
 
-| 伪造网页脚本      | WebAssembly 表示                      |
-| ----------------- | ------------------------------------- |
-| `bool`            | `i32`，其中 `0` 为 false，`1` 为 true |
-| `i32`、`u32`      | `i32`                                 |
-| `i64`、`u64`      | `i64`                                 |
-| `f32`、`f64`      | 匹配 WebAssembly 浮动                 |
-| `unit`            | 无结果值                              |
-| `string`、`bytes` | 两个 `u32` 值：指针然后字节长度       |
+|燧石| WebAssembly 表示 |
+| ----------------- | ------------------------------------------ |
+| `bool` | `i32`，其中 `0` 为 false，`1` 为 true |
+| `i32`、`u32` | `i32` |
+| `i64`、`u64` | `i64` |
+| `f32`、`f64` |匹配 WebAssembly 浮动 |
+| `unit` |无结果值 |
+| `string`、`bytes` |两个 `u32` 值：指针然后字节长度 |
 
 清单在 `valueRepresentations` 中声明了相同的映射。一个
 在读取或读取之前，指针长度对始终被检查为无符号范围
@@ -769,7 +835,7 @@ flint compile <entry.flint> --out-dir <directory>
 `checkVmParity`) 委托给公共编译器/运行时合约；它的
 `defineFlintVitestConfig` 帮助程序安装生产
 `forgeWebScriptPlugin`，同时保留消费者 Vite 插件和设置。
-请参阅[任务平台测试](../../../../../../docs/locales/zh/testing.md#flint-tests)
+请参阅[任务平台测试](../../../../../../docs/testing.md#flint-tests)
 配置和夹具示例。
 
 该线束仅通过键入的显式功能图接受主机功能
@@ -805,13 +871,13 @@ TypeScript `types` 列表或引用的测试类型入口点。
 该阶段是 `lex`、`parse`、`type-check` 或 `abi` 之一。稳定的 v1 代码
 家庭包括：
 
-| 代码家族        | 意义                                                     |
-| --------------- | -------------------------------------------------------- |
-| `FLINT-LEX-*`   | 无效字符/转义符、原始字符串行终止符或未终止的字符串/注释 |
-| `FLINT-PARSE-*` | 无效的模块、声明、语句或表达式语法                       |
-| `FLINT-TYPE-*`  | 无效的基本类型、名称、运算符、参数或返回                 |
-| `FLINT-ABI-*`   | 重复名称、被拒绝的功能、导出或导入                       |
-| `FWS-REGEX-*`   | 不支持或格式错误的编译器拥有的正则表达式模式             |
+|代码家族|意义|
+| --------------- | ----------------------------------------------------------------------------------------- |
+| `FLINT-LEX-*` |无效字符/转义符、原始字符串行终止符或未终止的字符串/注释 |
+| `FLINT-PARSE-*` |无效的模块、声明、语句或表达式语法 |
+| `FLINT-TYPE-*` |无效的基本类型、名称、运算符、参数或返回 |
+| `FLINT-ABI-*` |重复名称、被拒绝的功能、导出或导入 |
+| `FWS-REGEX-*` |不支持或格式错误的编译器拥有的正则表达式模式
 
 错误会阻止工件的生成。警告和信息诊断
 不改变语义。诊断顺序是源顺序，然后是阶段
@@ -865,7 +931,7 @@ v1 编译器目标有意限制为语言和 ABI 表面
 版本加上清单签名。失败的兼容性检查是
 加载时诊断，而不是运行时回退。 Rust 和 AssemblyScript 模块
 在共存期间继续使用现有的包装器和 ABI 合约
-期间； Flint 不会重新解释或替换它们。
+期间；弗林特不会重新解释或取代它们。
 
 正则表达式标准库兼容性有意与主机正则表达式分开
 兼容性。 Forge 字节码合约和编译器定义了可接受的
@@ -878,11 +944,11 @@ v1 编译器目标有意限制为语言和 ABI 表面
 代码或匹配语义需要新的正则表达式字节码版本和新的
 神器身份。直到后端/运行时一致性和电话号码迁移
 证据完整，AssemblyScript 手机实现仍然是一个
-显式遗留回归预言，并且永远不会与 Forge 工件混合。
+显式遗留回归预言并且永远不会与 Forge 工件混合。
 
 ## 共存与迁移
 
-Flint 是中立的生产目标
+火石是中性的生产目标
 `@mission-platform/code-scanner` 工件。它的扫描仪图静态链接
 将 QR、矩阵和条形码解码器源集成到一个独立的 WebAssembly 中
 神器；动态配置文件使这些源模块边界保持明确，并且
@@ -897,7 +963,7 @@ Flint 是中立的生产目标
 `codec.barcode.encode(payload: string) -> bytes`，导出 `encode_payload`，验证
 指针长度 ABI，并使用可注入主机写入调用者拥有的输出。
 它有意保留一个狭窄的 ABI 固定装置：主机可以使用确定性的
-假的一致性测试，而夹具证明了 Forge Web 脚本
+一致性测试是假的，而夹具则证明是 Flint
 边界。生产编解码器奇偶校验仍然需要匹配向量和
 性能测量，而不仅仅是匹配的函数名称。
 
@@ -910,20 +976,20 @@ Flint 是中立的生产目标
 
 ### 选择实施方案
 
-| 工作量或要求                                           | 选择                                                          | 原因                                                                      |
-| ------------------------------------------------------ | ------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| 现有的 QR 或矩阵包行为                                 | `@mission-platform/qr-code` / `@mission-platform/matrix-code` | `@mission-platform/qr-code` / `@mission-platform/matrix-code`             | 特定于包的类型 ESM 包装器仍然可用于这些公共 API。 |
-| 中性图像和相机扫描仪行为                               | `@mission-platform/code-scanner`                              | 默认情况下使用静态链接的 FWS 图，或具有缓存调度的显式动态源模块配置文件。 |
-| 现有的条码行为                                         | `@mission-platform/barcode`                                   | 包本地 Forge Web 脚本图形提供了类型化条形码外观。                         |
-| 具有显式主机效应的新型通用浏览器安全计算               | Forge Web 脚本加上 `@mission-platform/vite-plugin-flint`      | 版本化 `.flint` 源、清单、类型化加载程序和默认拒绝功能。                  |
-| 现有的 AssemblyScript 源或特定于 AssemblyScript 的迁移 | `@mission-platform/vite-plugin-assemblyscript`                | 编译 `.ts` AssemblyScript 条目并保留其生成的原始导出协定。                |
-| 框架中立的 UI/组件编译                                 | Forge 组件编译器                                              | Forge Web 脚本不能替代 `FrameworkOutputPlugin` 或组件目标。               |
+|工作量或要求|选择 |原因 |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+|现有的 QR 或矩阵包行为 | `@mission-platform/qr-code` / `@mission-platform/matrix-code` | `@mission-platform/qr-code` / `@mission-platform/matrix-code` |特定于包的类型 ESM 包装器仍然可用于这些公共 API。                                       |
+|中性图像和相机扫描仪行为 | `@mission-platform/code-scanner` |默认情况下使用静态链接的 FWS 图，或具有缓存调度的显式动态源模块配置文件。 |
+|现有的条码行为 | `@mission-platform/barcode` |本地包 Flint 图提供了键入的条形码外观。                                                      |
+|具有显式主机效应的新型通用浏览器安全计算 |火石加 `@mission-platform/vite-plugin-flint` |版本化 `.flint` 源、清单、类型化加载程序和默认拒绝功能。                              |
+|现有的 AssemblyScript 源或特定于 AssemblyScript 的迁移 | `@mission-platform/vite-plugin-assemblyscript` |编译 `.ts` AssemblyScript 条目并保留其生成的原始导出协定。                            |
+|框架中立的 UI/组件编译 | Forge 组件编译器 | Flint 不能替代 `FrameworkOutputPlugin` 或组件目标。                                      |
 
-仅对 `.flint` 条目使用 Forge Web 脚本 Vite 插件。使用
+仅对 `.flint` 条目使用 Flint Vite 插件。使用
 用于现有 AssemblyScript 条目的 AssemblyScript 插件。在迁移过程中，
 应用程序可以捆绑两种模块：每个加载器拥有自己的
 初始化、内存和 ABI 验证以及功能导入必须是
-明确提供给 Forge Web 脚本模块。
+明确提供给 Flint 模块。
 
 ### 证据和弃用门
 
@@ -958,7 +1024,7 @@ Flint 是中立的生产目标
 `Result::Ok(item) => item` 仅在该臂中结合 `item`。标准
 `Result<T, E>` 合约使用 `Ok(T)` 和 `Error(E)`，而不是 `Err(E)`。
 结构更新是纯粹的值转换；既不是结构体也不是接口
-具有构造函数、标识、继承、接收器或运行时调度。任意
+具有构造函数、标识、继承、接收者或运行时调度。任意
 尝试声明类/面向对象的构造（包括 `class`、
 `constructor`、`extends`、`impl`、`new` 和 `trait`) 被拒绝，且稳定
 诊断 `FLINT-PARSE-052`。

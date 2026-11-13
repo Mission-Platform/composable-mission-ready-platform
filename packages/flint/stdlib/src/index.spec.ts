@@ -8,6 +8,8 @@ import {
   FLINT_STDLIB_IDENTITY,
   FLINT_STDLIB_SOURCE_ROOT,
   FLINT_STDLIB_MATH_SOURCE,
+  FLINT_STDLIB_META_SOURCE,
+  FLINT_STDLIB_REPR_SOURCE,
   flintVectorGet,
   flintVectorPush,
   createFlintVec2,
@@ -131,12 +133,16 @@ const expectedSources = {
     "ray3_intersect_obb",
     "bvh_ray_intersect",
   ],
+  "meta.flint": ["FieldInfo", "TypeInfo", "size_of", "align_of", "offset_of"],
+  "repr.flint": ["repr_c", "repr_packed", "repr_align"],
 } as const;
 
 describe("Forge Web Script standard library", () => {
   it("publishes stable package identity and source-root metadata", () => {
     expect(FLINT_STDLIB_SOURCE_ROOT).toBe("flint");
     expect(FLINT_STDLIB_MATH_SOURCE).toBe("flint/math.flint");
+    expect(FLINT_STDLIB_META_SOURCE).toBe("flint/meta.flint");
+    expect(FLINT_STDLIB_REPR_SOURCE).toBe("flint/repr.flint");
     expect(FLINT_STDLIB_IDENTITY).toEqual({
       name: "@mission-platform/flint-stdlib",
       version: "0.1.0",

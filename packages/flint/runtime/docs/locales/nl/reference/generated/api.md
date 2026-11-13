@@ -11,7 +11,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/flint-r
 
 ## `src/abi`
 
-### assertValidFlintAbiManifest
+### bewerenGeldigFlintAbiManifest
 
 **Soort:** functie
 
@@ -19,13 +19,18 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/flint-r
 function assertValidFlintAbiManifest(manifest: FlintAbiManifest): void;
 ```
 
-Geen beschrijving opgegeven.
+Beweert dat een Flint ABI-manifest geldig is volgens de runtime-specificatieregels.
 
 #### Parameters
 
-| Naam         | Typ              | Beschrijving |
-| ------------ | ---------------- | ------------ |
-| manifesteren | FlintAbiManifest |              |
+| Naam | Typ | Beschrijving |
+| -------- | ---------------- | --------------------------- |
+| manifesteren | FlintAbiManifest | - ABI-manifest om te valideren. |
+
+#### Contract
+
+- **@param:** - ABI-manifest om te valideren.
+- **@throws:** Als manifestvalidatie mislukt.
 
 ### gelijkeFunctie
 
@@ -35,16 +40,22 @@ Geen beschrijving opgegeven.
 function equalFunction(left: FlintAbiFunction, right: FlintAbiFunction): boolean;
 ```
 
-Geen beschrijving opgegeven.
+Vergelijkt twee ABI-functiedeclaraties voor structurele gelijkwaardigheid.
 
 #### Parameters
 
-| Naam  | Typ              | Beschrijving |
-| ----- | ---------------- | ------------ |
-| links | FlintAbiFunction |              |
-| juist | FlintAbiFunction |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------------- | ------------------------------ |
+| links | FlintAbiFunctie | - Eerste functiedeclaratie.  |
+| juist | FlintAbiFunctie | - Tweede functieverklaring. |
 
-### FlintAbiValidationResult
+#### Contract
+
+- **@param:** - Eerste functiedeclaratie.
+- **@param:** - Tweede functiedeclaratie.
+- **@returns:** Waar als beide declaraties identieke handtekeningen, parameters en retourtypen hebben.
+
+### FlintAbiValidatieResultaat
 
 **Soort:** interface
 
@@ -52,9 +63,9 @@ Geen beschrijving opgegeven.
 export interface FlintAbiValidationResult
 ```
 
-Geen beschrijving opgegeven.
+Validatieresultaat voor een Flint ABI-manifest met validatiestatus en foutmeldingen.
 
-### validateFlintAbiManifest
+### valideerFlintAbiManifest
 
 **Soort:** functie
 
@@ -62,13 +73,100 @@ Geen beschrijving opgegeven.
 function validateFlintAbiManifest(manifest: FlintAbiManifest): FlintAbiValidationResult;
 ```
 
-Geen beschrijving opgegeven.
+Valideert een Flint ABI-manifest op basis van specificatievereisten, lay-outs en capaciteitsbeperkingen.
 
 #### Parameters
 
-| Naam         | Typ              | Beschrijving |
-| ------------ | ---------------- | ------------ |
-| manifesteren | FlintAbiManifest |              |
+| Naam | Typ | Beschrijving |
+| -------- | ---------------- | --------------------------- |
+| manifesteren | FlintAbiManifest | - ABI-manifest om te valideren. |
+
+#### Contract
+
+- **@param:** - ABI-manifest om te valideren.
+- **@returns:** Validatieresultaat met de Booleaanse status en verzamelde diagnostische fouten.
+
+## `src/allocator/slab`
+
+### FlintAtomicSpinLock
+
+**Soort:** klasse
+
+```typescript
+export class FlintAtomicSpinLock
+```
+
+Atomaire spinlock die wederzijds exclusieve toegang biedt tot gedeelde WebAssembly-geheugenstructuren.
+
+### RegionaleBumpArena
+
+**Soort:** klasse
+
+```typescript
+export class RegionalBumpArena
+```
+
+Regionale bump-allocator-arena die $O(1)$-toewijzing en onmiddellijke bulkreset biedt.
+
+### SegregatedSlabAllocator
+
+**Soort:** klasse
+
+```typescript
+export class SegregatedSlabAllocator
+```
+
+Gescheiden $O(1)$ plaattoewijzer voor grootteklasse.
+
+### SegregatedSlabAllocatorOptions
+
+**Soort:** interface
+
+```typescript
+export interface SegregatedSlabAllocatorOptions
+```
+
+Configuratieopties voor de gescheiden plaattoewijzer.
+
+### SLAB_CANARY_TAG
+
+**Soort:** constant
+
+```typescript
+export const SLAB_CANARY_TAG;
+```
+
+Geen beschrijving opgegeven.
+
+### SLAB_SIZE_CLASSES
+
+**Soort:** constant
+
+```typescript
+export const SLAB_SIZE_CLASSES;
+```
+
+Standaard power-of-two-grootteklassen voor gescheiden toewijzing van kleine en middelgrote objectplaten.
+
+### Plaatblok
+
+**Soort:** interface
+
+```typescript
+export interface SlabBlock
+```
+
+Toewijzingsplaat die slots met een vaste grootte beheert voor een specifieke grootteklasse.
+
+### PlaatgrootteKlasse
+
+**Soort:** type
+
+```typescript
+export type SlabSizeClass = (typeof SLAB_SIZE_CLASSES)[number];
+```
+
+Geen beschrijving opgegeven.
 
 ## `src/async`
 
@@ -80,20 +178,41 @@ Geen beschrijving opgegeven.
 function createFlintAsyncRuntime(options: FlintAsyncRuntimeOptions = {}): FlintAsyncRuntime;
 ```
 
-Geen beschrijving opgegeven.
+Creëert een nieuwe FlintAsyncRuntime-instantie die asynchrone takenwachtrijen beheert.
 
 #### Parameters
 
-| Naam   | Typ                      | Beschrijving |
-| ------ | ------------------------ | ------------ |
-| opties | FlintAsyncRuntimeOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------ | -------------------------------- |
+| opties | FlintAsyncRuntimeOptions | - Runtime-configuratieopties. |
 
-### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+#### Contract
+
+- **@param:** - Runtime-configuratieopties.
+- **@returns:** FlintAsyncRuntime-instantie geconfigureerd.
+
+### createFlintJspiSuspender
+
+**Soort:** functie
+
+```typescript
+function createFlintJspiSuspender(options?: FlintJspiOptions): FlintJspiSuspender;
+```
+
+Creëert een exemplaar van de Flint JSPI-stack-opschorting.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ---------------- | ----------- |
+| opties | FlintJspiOptions |             |
+
+### FLINT_ASYNC_CAPABILITIES
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
+export const FLINT_ASYNC_CAPABILITIES;
 ```
 
 Geen beschrijving opgegeven.
@@ -103,11 +222,10 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type FlintAsyncCapability =
-  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type FlintAsyncCapability = (typeof FLINT_ASYNC_CAPABILITIES)[keyof typeof FLINT_ASYNC_CAPABILITIES];
 ```
 
-Geen beschrijving opgegeven.
+Geautoriseerde identificatiereeks voor asynchrone runtimemogelijkheden.
 
 ### FlintAsyncExecution
 
@@ -117,9 +235,9 @@ Geen beschrijving opgegeven.
 export interface FlintAsyncExecution
 ```
 
-Geen beschrijving opgegeven.
+Succesvol uitvoeringsresultaat met de payload van de taakuitvoer.
 
-### FlintAsyncExecutionResult
+### FlintAsyncExecutionResultaat
 
 **Soort:** type
 
@@ -127,7 +245,7 @@ Geen beschrijving opgegeven.
 export type FlintAsyncExecutionResult = FlintAsyncExecution | FlintAsyncFailure;
 ```
 
-Geen beschrijving opgegeven.
+Resultaat van het uitvoeren van een asynchrone taak (succes of mislukking).
 
 ### FlintAsyncFailure
 
@@ -137,7 +255,7 @@ Geen beschrijving opgegeven.
 export interface FlintAsyncFailure
 ```
 
-Geen beschrijving opgegeven.
+Foutrapport geretourneerd door een asynchrone plannings- of uitvoeringsbewerking.
 
 ### FlintAsyncFailureCode
 
@@ -148,7 +266,7 @@ export type FlintAsyncFailureCode =
   'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
-Geen beschrijving opgegeven.
+Foutcategoriecodes voor asynchrone uitvoeringsfouten.
 
 ### FlintAsyncHostAdapter
 
@@ -158,7 +276,7 @@ Geen beschrijving opgegeven.
 export interface FlintAsyncHostAdapter
 ```
 
-Geen beschrijving opgegeven.
+Hostintegratiehaken voor het plannen van microtaken en het bezorgen van werknemersberichten.
 
 ### FlintAsyncRuntime
 
@@ -168,7 +286,7 @@ Geen beschrijving opgegeven.
 export interface FlintAsyncRuntime
 ```
 
-Geen beschrijving opgegeven.
+Asynchrone runtime-coördinator die microtaken, werkwachtrijen en het leeglopen van gebeurtenislussen beheert.
 
 ### FlintAsyncRuntimeOptions
 
@@ -178,7 +296,7 @@ Geen beschrijving opgegeven.
 export interface FlintAsyncRuntimeOptions
 ```
 
-Geen beschrijving opgegeven.
+Configuratieopties voor de asynchrone runtime-engine.
 
 ### FlintAsyncScheduledTask
 
@@ -188,7 +306,7 @@ Geen beschrijving opgegeven.
 export interface FlintAsyncScheduledTask
 ```
 
-Geen beschrijving opgegeven.
+Succesvol planningsresultaat voor een asynchrone taak.
 
 ### FlintAsyncScheduleResult
 
@@ -198,7 +316,7 @@ Geen beschrijving opgegeven.
 export type FlintAsyncScheduleResult = FlintAsyncScheduledTask | FlintAsyncFailure;
 ```
 
-Geen beschrijving opgegeven.
+Resultaat van het plannen van een asynchrone taak (gepland of mislukt).
 
 ### FlintAsyncTask
 
@@ -208,7 +326,7 @@ Geen beschrijving opgegeven.
 export interface FlintAsyncTask
 ```
 
-Geen beschrijving opgegeven.
+Descriptor van een asynchrone taak die in de runtime in de wachtrij staat.
 
 ### FlintAsyncTaskHandler
 
@@ -218,7 +336,7 @@ Geen beschrijving opgegeven.
 export type FlintAsyncTaskHandler = (payload: Uint8Array) => Uint8Array;
 ```
 
-Geen beschrijving opgegeven.
+Taakuitvoering callback waarbij een invoerbyte-payload wordt gebruikt en een uitvoerbyte-payload wordt geretourneerd.
 
 ### FlintAsyncTaskKind
 
@@ -228,7 +346,7 @@ Geen beschrijving opgegeven.
 export type FlintAsyncTaskKind = 'microtask' | 'worker';
 ```
 
-Geen beschrijving opgegeven.
+Classificatie van taakplanning ('microtaak' of 'werknemer').
 
 ### FlintAsyncWorkerMessage
 
@@ -238,11 +356,76 @@ Geen beschrijving opgegeven.
 export interface FlintAsyncWorkerMessage
 ```
 
-Geen beschrijving opgegeven.
+Berichtenpakket overgedragen naar of van een werkthread.
+
+### FlintJspiOpties
+
+**Soort:** interface
+
+```typescript
+export interface FlintJspiOptions
+```
+
+Opties voor het configureren van de WebAssembly JavaScript Promise Integration (JSPI)-bretel.
+
+### FlintJspi Jarretelle
+
+**Soort:** klasse
+
+```typescript
+export class FlintJspiSuspender
+```
+
+WebAssembly JavaScript Promise Integration (JSPI) stack-switching.
+Onderbreekt en hervat WebAssembly-stacks over asynchrone hostbeloften
+native zonder dat compilergestuurde Asyncify-codetransformaties nodig zijn.
+
+## `src/async/fiber`
+
+### FlintFiber
+
+**Soort:** interface
+
+```typescript
+export interface FlintFiber<T = unknown>
+```
+
+Ga over op een actieve of geschorste coöperatieve vezelvoortzetting.
+
+### FlintFiberScheduler
+
+**Soort:** klasse
+
+```typescript
+export class FlintFiberScheduler
+```
+
+Coöperatieve glasvezelplanner die asynchrone stapelophanging in JSPI-stijl ondersteunt,
+frame-isolatie, stapelgrensbevestiging en herintredingsbescherming.
+
+### FlintFiberSchedulerOpties
+
+**Soort:** interface
+
+```typescript
+export interface FlintFiberSchedulerOptions
+```
+
+Configuratieopties voor de coöperatieve glasvezelplanner.
+
+### FlintFiberState
+
+**Soort:** type
+
+```typescript
+export type FlintFiberState = 'ready' | 'running' | 'suspended' | 'completed' | 'failed' | 'cancelled';
+```
+
+Uitvoeringsstatus van een coöperatieve vezel.
 
 ## `src/collections`
 
-### createFlintArray
+### maakFlintArray
 
 **Soort:** functie
 
@@ -257,12 +440,12 @@ Maak een vaste array door de opgegeven waarden te kopiëren.
 
 #### Parameters
 
-| Naam     | Typ                      | Beschrijving |
-| -------- | ------------------------ | ------------ |
-| waarden  | alleen-lezen TValue[]    |              |
-| eigendom | FlintCollectionOwnership |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------------------------ | ----------- |
+| waarden | alleen-lezen TValue[] |             |
+| eigendom | FlintCollectionOwnership |             |
 
-### createFlintIterator
+### maakFlintIterator
 
 **Soort:** functie
 
@@ -274,10 +457,10 @@ Pas een iterabele aan tot een luie iterator met de meegeleverde ABI-descriptor.
 
 #### Parameters
 
-| Naam         | Typ                     | Beschrijving |
-| ------------ | ----------------------- | ------------ |
-| waarden      | Itereerbaar<TValue>     |              |
-| omschrijving | FlintIteratorDescriptor |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------- | ----------- |
+| waarden | Itereerbaar<TValue> |             |
+| omschrijving | FlintIteratorDescriptor |             |
 
 ### createFlintIteratorDescriptor
 
@@ -296,14 +479,14 @@ Creëer descriptor-grensmetagegevens; oudere bellers gebruiken standaard lineair
 
 #### Parameters
 
-| Naam        | Typ                      | Beschrijving |
-| ----------- | ------------------------ | ------------ |
-| ID          | tekenreeks               |              |
-| elementType |                          |              |
-| vermogen    | FlintIteratorCapability  |              |
-| eigendom    | FlintCollectionOwnership |              |
+| Naam | Typ | Beschrijving |
+| ----------- | ------------------------ | ----------- |
+| ID | tekenreeks |             |
+| elementType |                          |             |
+| vermogen | FlintIteratorCapability |             |
+| eigendom | FlintCollectionOwnership |             |
 
-### createFlintMap
+### maakFlintMap
 
 **Soort:** functie
 
@@ -314,16 +497,22 @@ function createFlintMap(
 ): FlintMap<TKey, TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Creëert een persistente FlintMap, geïnitialiseerd met sleutelwaarde-invoer.
 
 #### Parameters
 
-| Naam        | Typ                                        | Beschrijving |
-| ----------- | ------------------------------------------ | ------------ |
-| inzendingen | alleen-lezen FlintMapEntry<TKey, TValue>[] |              |
-| strategie   | FlintHashStrategie<TKey>                   |              |
+| Naam | Typ | Beschrijving |
+| -------- | -------------------------------------- | --------------------------- |
+| inzendingen | alleen-lezen FlintMapEntry<TKey, TValue>[] | - Initiële sleutelwaarde-tupels. |
+| strategie | FlintHashStrategie<TKey> |                             |
 
-### createFlintSet
+#### Contract
+
+- **@param:** - Initiële sleutelwaarde-tupels.
+- **@param:** - Aangepaste sleutelgelijkheid en hashstrategie.
+- **@returns:** Geïnitialiseerde FlintMap-instantie.
+
+### maakFlintSet
 
 **Soort:** functie
 
@@ -334,16 +523,22 @@ function createFlintSet(
 ): FlintSet<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Creëert een persistente FlintSet geïnitialiseerd met waarden.
 
 #### Parameters
 
-| Naam      | Typ                        | Beschrijving |
-| --------- | -------------------------- | ------------ |
-| waarden   | alleen-lezen TValue[]      |              |
-| strategie | FlintHashStrategie<TValue> |              |
+| Naam | Typ | Beschrijving |
+| -------- | ------------------------- | ----------------------------- |
+| waarden | alleen-lezen TValue[] | - Initiële iterabele waarden. |
+| strategie | FlintHashStrategie<TValue> |                               |
 
-### createFlintVector
+#### Contract
+
+- **@param:** - Initiële iterabele waarden.
+- **@param:** - Aangepaste gelijkheids- en hashstrategie.
+- **@returns:** Geïnitialiseerde FlintSet-instantie.
+
+### maakFlintVector
 
 **Soort:** functie
 
@@ -358,10 +553,10 @@ Maak een eigen vector door de opgegeven waarden te kopiëren.
 
 #### Parameters
 
-| Naam     | Typ                      | Beschrijving |
-| -------- | ------------------------ | ------------ |
-| waarden  | alleen-lezen TValue[]    |              |
-| eigendom | FlintCollectionOwnership |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------------------------ | ----------- |
+| waarden | alleen-lezen TValue[] |             |
+| eigendom | FlintCollectionOwnership |             |
 
 ### FlintArray
 
@@ -385,12 +580,12 @@ Een array-element lezen; ongeldige indices retourneren Option.none.
 
 #### Parameters
 
-| Naam  | Typ                | Beschrijving |
-| ----- | ------------------ | ------------ |
-| reeks | FlintArray<TValue> |              |
-| index | nummer             |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------------ | ----------- |
+| array | FlintArray<TValue> |             |
+| index | nummer |             |
 
-### flintArrayLength
+### flintArrayLengte
 
 **Soort:** functie
 
@@ -402,9 +597,9 @@ Retourneer een arraylengte zonder de elementen ervan te verbruiken of te kopiër
 
 #### Parameters
 
-| Naam  | Typ                | Beschrijving |
-| ----- | ------------------ | ------------ |
-| reeks | FlintArray<TValue> |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------------ | ----------- |
+| array | FlintArray<TValue> |             |
 
 ### flintArraySet
 
@@ -418,11 +613,11 @@ Vervang een array-element; ongeldige indices genereren RangeError.
 
 #### Parameters
 
-| Naam   | Typ                | Beschrijving |
-| ------ | ------------------ | ------------ |
-| reeks  | FlintArray<TValue> |              |
-| index  | nummer             |              |
-| waarde | TVwaarde           |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------------ | ----------- |
+| array | FlintArray<TValue> |             |
+| index | nummer |             |
+| waarde | TVwaarde |             |
 
 ### flintArrayTrySet
 
@@ -440,11 +635,11 @@ Vervang een array-element zonder te gooien; ongeldige indices retourneren een fo
 
 #### Parameters
 
-| Naam   | Typ                | Beschrijving |
-| ------ | ------------------ | ------------ |
-| reeks  | FlintArray<TValue> |              |
-| index  | nummer             |              |
-| waarde | TVwaarde           |              |
+| Naam | Typ | Beschrijving |
+| ----- | ------------------ | ----------- |
+| array | FlintArray<TValue> |             |
+| index | nummer |             |
+| waarde | TVwaarde |             |
 
 ### FlintCollectionOwnership
 
@@ -454,7 +649,7 @@ Vervang een array-element zonder te gooien; ongeldige indices retourneren een fo
 export type FlintCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 ```
 
-Geen beschrijving opgegeven.
+De semantiek van geheugeneigendom voor collectie-elementen ('eigendom', 'geleend', 'gedeeld').
 
 ### flintDefaultHashStrategy
 
@@ -464,9 +659,13 @@ Geen beschrijving opgegeven.
 function flintDefaultHashStrategy(): FlintHashStrategy<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Retourneert de standaard hashstrategie met behulp van deterministische serialisatie.
 
-### flintError
+#### Contract
+
+- **@returns:** Standaard FlintHashStrategy-instantie.
+
+### flintFout
 
 **Soort:** constant
 
@@ -484,7 +683,7 @@ Construeer een fout Resultaatwaarde zonder te gooien.
 export interface FlintHashStrategy<TValue>
 ```
 
-Geen beschrijving opgegeven.
+Gelijkheids- en hashstrategie-interface voor aangepaste sleuteltypen in sets en kaarten.
 
 ### FlintItereerbaar
 
@@ -506,7 +705,7 @@ export interface FlintIterator<TValue>
 
 Luie iteratorweergave met descriptormogelijkheden en optionele directe indexering.
 
-### flintIteratorAdd
+### flintIteratorToevoegen
 
 **Soort:** functie
 
@@ -518,10 +717,10 @@ Lazily voegt één waarde toe aan een iterator.
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| bron   | FlintIterator<TValue> |              |
-| waarde | TVwaarde              |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------------- | ----------- |
+| bron | FlintIterator<TValue> |             |
+| waarde | TVwaarde |             |
 
 ### flintIteratorAt
 
@@ -531,16 +730,22 @@ Lazily voegt één waarde toe aan een iterator.
 function flintIteratorAt(iterator: FlintIterator<TValue>, index: number): FlintOption<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Retourneert het element bij een opgegeven index, verpakt in een optie.
 
 #### Parameters
 
-| Naam     | Typ                   | Beschrijving |
-| -------- | --------------------- | ------------ |
-| iterator | FlintIterator<TValue> |              |
-| index    | nummer                |              |
+| Naam | Typ | Beschrijving |
+| -------- | --------------------- | --------------------------- |
+| iterator | FlintIterator<TValue> | - Bron-iterator.          |
+| index | nummer | - Op nul gebaseerde elementenindex. |
 
-### FlintIteratorCapability
+#### Contract
+
+- **@param:** - Bron-iterator.
+- **@param:** - Op nul gebaseerde elementindex.
+- **@returns:** Optie met element op index of geen.
+
+### FlintIterator-capaciteit
 
 **Soort:** type
 
@@ -558,13 +763,18 @@ Lineair verbruik of niet-consumerende willekeurige toegang ondersteund door een 
 function flintIteratorCollect(iterator: FlintIterator<TValue>): FlintVector<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Materialiseert een iterator in een eigen vector van verzamelde waarden.
 
 #### Parameters
 
-| Naam     | Typ                   | Beschrijving |
-| -------- | --------------------- | ------------ |
-| iterator | FlintIterator<TValue> |              |
+| Naam | Typ | Beschrijving |
+| -------- | --------------------- | --------------------------- |
+| iterator | FlintIterator<TValue> | - Bron-iterator moet leeglopen. |
+
+#### Contract
+
+- **@param:** - Bron-iterator moet worden leeggemaakt.
+- **@returns:** FlintVector met verzamelde waarden.
 
 ### flintIteratorConcat
 
@@ -578,10 +788,10 @@ Voegt lui twee bronnen samen zonder de volgorde van beide bronnen te veranderen.
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| eerste | FlintIterator<TValue> |              |
-| tweede | FlintIterable<TValue> |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------------- | ----------- |
+| eerste | FlintIterator<TValue> |             |
+| tweede | FlintIterable<TValue> |             |
 
 ### FlintIteratorDescriptor
 
@@ -608,10 +818,10 @@ Lui filterwaarden; filteren verlaagt altijd de mogelijkheid tot lineaire toegang
 
 #### Parameters
 
-| Naam      | Typ                         | Beschrijving |
-| --------- | --------------------------- | ------------ |
-| bron      | FlintIterator<TValue>       |              |
-| predikaat | (waarde: TValue) => boolean |              |
+| Naam | Typ | Beschrijving |
+| --------- | -------------------------- | ----------- |
+| bron | FlintIterator<TValue> |             |
+| predikaat | (waarde: TValue) => boolean |             |
 
 ### flintIteratorFirst
 
@@ -621,13 +831,18 @@ Lui filterwaarden; filteren verlaagt altijd de mogelijkheid tot lineaire toegang
 function flintIteratorFirst(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Retourneert het eerste element van een iterator verpakt in een optie.
 
 #### Parameters
 
-| Naam     | Typ                   | Beschrijving |
-| -------- | --------------------- | ------------ |
-| iterator | FlintIterator<TValue> |              |
+| Naam | Typ | Beschrijving |
+| -------- | --------------------- | ------------------ |
+| iterator | FlintIterator<TValue> | - Bron-iterator. |
+
+#### Contract
+
+- **@param:** - Bron-iterator.
+- **@returns:** Optie met eerste element of geen.
 
 ### flintIteratorFlatten
 
@@ -641,9 +856,9 @@ Maak geneste bronnen lui plat in de volgorde van de buitenste en de binnenste br
 
 #### Parameters
 
-| Naam | Typ                                  | Beschrijving |
-| ---- | ------------------------------------ | ------------ |
-| bron | FlintIterator<FlintIterable<TValue>> |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------------------------ | ----------- |
+| bron | FlintIterator<FlintIterable<TValue>> |             |
 
 ### flintIteratorFold
 
@@ -657,15 +872,22 @@ function flintIteratorFold(
 ): TResult;
 ```
 
-Geen beschrijving opgegeven.
+Reduceert een iterator van links naar rechts met behulp van een accumulator-callback.
 
 #### Parameters
 
-| Naam        | Typ                                                             | Beschrijving |
-| ----------- | --------------------------------------------------------------- | ------------ |
-| iterator    | FlintIterator<TValue>                                           |              |
-| initiële    | TResultaat                                                      |              |
-| verloopstuk | (accumulator: TResult, waarde: TValue, index: getal) => TResult |              |
+| Naam | Typ | Beschrijving |
+| -------- | --------------------------------------------------------------- | ----------------------------- |
+| iterator | FlintIterator<TValue> | - Bron-iterator.            |
+| initiële | TResultaat | - Initiële accumulatorwaarde.  |
+| verloopstuk | (accumulator: TResult, waarde: TValue, index: getal) => TResult | - Terugbelfunctie verminderen. |
+
+#### Contract
+
+- **@param:** - Bron-iterator.
+- **@param:** - Initiële accumulatorwaarde.
+- **@param:** - Terugbelfunctie verminderen.
+- **@returns:** Uiteindelijk verlaagd accumulatorresultaat.
 
 ### flintIteratorFromArray
 
@@ -682,10 +904,10 @@ Creëer een iterator met willekeurige toegang over een vaste array zonder de eig
 
 #### Parameters
 
-| Naam         | Typ                     | Beschrijving |
-| ------------ | ----------------------- | ------------ |
-| reeks        | FlintArray<TValue>      |              |
-| omschrijving | FlintIteratorDescriptor |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------- | ----------- |
+| reeks | FlintArray<TValue> |             |
+| omschrijving | FlintIteratorDescriptor |             |
 
 ### flintIteratorFromIterable
 
@@ -699,15 +921,15 @@ function flintIteratorFromIterable(
 ): FlintIterator<TValue>;
 ```
 
-Pas een willekeurige iterabele aan tot een luie lineaire Forge Web Script-iterator.
+Pas een willekeurige iterabele aan aan een luie lineaire Flint-iterator.
 
 #### Parameters
 
-| Naam        | Typ                 | Beschrijving |
-| ----------- | ------------------- | ------------ |
-| waarden     | Itereerbaar<TValue> |              |
-| elementType |                     |              |
-| ID          |                     |              |
+| Naam | Typ | Beschrijving |
+| ----------- | ---------------- | ----------- |
+| waarden | Itereerbaar<TValue> |             |
+| elementType |                  |             |
+| ID |                  |             |
 
 ### flintIteratorFromVector
 
@@ -724,10 +946,10 @@ Creëer een iterator met willekeurige toegang over een vector zonder het eigendo
 
 #### Parameters
 
-| Naam         | Typ                     | Beschrijving |
-| ------------ | ----------------------- | ------------ |
-| vector       | FlintVector<TValue>     |              |
-| omschrijving | FlintIteratorDescriptor |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------------- | ----------- |
+| vector | FlintVector<TValue> |             |
+| omschrijving | FlintIteratorDescriptor |             |
 
 ### flintIteratorLast
 
@@ -737,13 +959,18 @@ Creëer een iterator met willekeurige toegang over een vector zonder het eigendo
 function flintIteratorLast(iterator: FlintIterator<TValue>): FlintOption<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Retourneert het laatste element van een iterator verpakt in een optie.
 
 #### Parameters
 
-| Naam     | Typ                   | Beschrijving |
-| -------- | --------------------- | ------------ |
-| iterator | FlintIterator<TValue> |              |
+| Naam | Typ | Beschrijving |
+| -------- | --------------------- | ------------------ |
+| iterator | FlintIterator<TValue> | - Bron-iterator. |
+
+#### Contract
+
+- **@param:** - Bron-iterator.
+- **@returns:** Optie met het laatste element of geen.
 
 ### flintIteratorMap
 
@@ -761,11 +988,11 @@ Breng waarden lui in kaart en behoud willekeurige toegang alleen als de bron dit
 
 #### Parameters
 
-| Naam        | Typ                              | Beschrijving |
-| ----------- | -------------------------------- | ------------ |
-| bron        | FlintIterator<TValue>            |              |
-| kaart       | (waarde: TVwaarde) => TResultaat |              |
-| elementType |                                  |              |
+| Naam | Typ | Beschrijving |
+| ----------- | -------------------------- | ----------- |
+| bron | FlintIterator<TValue> |             |
+| kaart | (waarde: TVwaarde) => TResultaat |             |
+| elementType |                            |             |
 
 ### FlintIteratorResultaat
 
@@ -789,10 +1016,10 @@ Beperk een bron lui tot maximaal telwaarden.
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| bron   | FlintIterator<TValue> |              |
-| tellen | nummer                |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------------- | ----------- |
+| bron | FlintIterator<TValue> |             |
+| tellen | nummer |             |
 
 ### flintIteratorToArray
 
@@ -805,14 +1032,20 @@ function flintIteratorToArray(
 ): FlintArray<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Converteert een iterator naar een eigen FlintArray.
 
 #### Parameters
 
-| Naam     | Typ                      | Beschrijving |
-| -------- | ------------------------ | ------------ |
-| iterator | FlintIterator<TValue>    |              |
-| eigendom | FlintCollectionOwnership |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------------------------ | ----------------------------- |
+| iterator | FlintIterator<TValue> | - Bron-iterator.            |
+| eigendom | FlintCollectionOwnership | - Collectie-eigendomsmodel. |
+
+#### Contract
+
+- **@param:** - Bron-iterator.
+- **@param:** - Eigendomsmodel voor collecties.
+- **@returns:** Geïnitialiseerde FlintArray.
 
 ### FlintMap
 
@@ -822,7 +1055,7 @@ Geen beschrijving opgegeven.
 export interface FlintMap<TKey, TValue>
 ```
 
-Geen beschrijving opgegeven.
+Aanhoudende datastructuur voor het verzamelen van hash-kaarten.
 
 ### flintMapDelete
 
@@ -832,14 +1065,20 @@ Geen beschrijving opgegeven.
 function flintMapDelete(map: FlintMap<TKey, TValue>, key: TKey): FlintMap<TKey, TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Verwijdert een sleutel/waarde-toewijzing van de kaart en retourneert een nieuwe permanente kaart.
 
 #### Parameters
 
-| Naam    | Typ                    | Beschrijving |
-| ------- | ---------------------- | ------------ |
-| kaart   | FlintMap<TKey, TValue> |              |
-| sleutel | TKey                   |              |
+| Naam | Typ | Beschrijving |
+| ---- | ---------------------- | ---------------- |
+| kaart | FlintMap<TKey, TValue> | - Doelkaart.    |
+| sleutel | TKey | - Toets om te verwijderen. |
+
+#### Contract
+
+- **@param:** - Doelkaart.
+- **@param:** - Toets om te verwijderen.
+- **@returns:** Permanente kaart bijgewerkt.
 
 ### flintMapEntries
 
@@ -849,13 +1088,18 @@ Geen beschrijving opgegeven.
 function flintMapEntries(map: FlintMap<TKey, TValue>): FlintVector<FlintMapEntry<TKey, TValue>>;
 ```
 
-Geen beschrijving opgegeven.
+Retourneert alle sleutelwaarde-items op de kaart als een eigen vector.
 
 #### Parameters
 
-| Naam  | Typ                    | Beschrijving |
-| ----- | ---------------------- | ------------ |
-| kaart | FlintMap<TKey, TValue> |              |
+| Naam | Typ | Beschrijving |
+| ---- | ---------------------- | ------------- |
+| kaart | FlintMap<TKey, TValue> | - Doelkaart. |
+
+#### Contract
+
+- **@param:** - Doelkaart.
+- **@returns:** Vector van vermeldingen op de kaart.
 
 ### FlintMapEntry
 
@@ -865,7 +1109,7 @@ Geen beschrijving opgegeven.
 export interface FlintMapEntry<TKey, TValue>
 ```
 
-Geen beschrijving opgegeven.
+Sleutel/waarde-invoerrecord in een persistente hashkaart.
 
 ### flintMapGet
 
@@ -875,14 +1119,20 @@ Geen beschrijving opgegeven.
 function flintMapGet(map: FlintMap<TKey, TValue>, key: TKey): FlintOption<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Haalt de waarde op die aan een sleutel is gekoppeld uit de kaart.
 
 #### Parameters
 
-| Naam    | Typ                    | Beschrijving |
-| ------- | ---------------------- | ------------ |
-| kaart   | FlintMap<TKey, TValue> |              |
-| sleutel | TKey                   |              |
+| Naam | Typ | Beschrijving |
+| ---- | ---------------------- | ------------- |
+| kaart | FlintMap<TKey, TValue> | - Doelkaart. |
+| sleutel | TKey | - Opzoeksleutel. |
+
+#### Contract
+
+- **@param:** - Doelkaart.
+- **@param:** - Opzoeksleutel.
+- **@returns:** Optie met waarde of geen.
 
 ### flintMapSet
 
@@ -892,17 +1142,24 @@ Geen beschrijving opgegeven.
 function flintMapSet(map: FlintMap<TKey, TValue>, key: TKey, value: TValue): FlintMap<TKey, TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Voegt een sleutel-waardetoewijzing in of werkt deze bij, waarbij een nieuwe permanente kaart wordt geretourneerd.
 
 #### Parameters
 
-| Naam    | Typ                    | Beschrijving |
-| ------- | ---------------------- | ------------ |
-| kaart   | FlintMap<TKey, TValue> |              |
-| sleutel | TKey                   |              |
-| waarde  | TVwaarde               |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------------------- | ---------------- |
+| kaart | FlintMap<TKey, TValue> | - Doelkaart.    |
+| sleutel | TKey | - Mapping-sleutel.   |
+| waarde | TVwaarde | - Waarde in kaart brengen. |
 
-### flintGeen
+#### Contract
+
+- **@param:** - Doelkaart.
+- **@param:** - Toewijzingssleutel.
+- **@param:** - Waarde in kaart brengen.
+- **@returns:** Permanente kaart bijgewerkt.
+
+### vuursteenGeen
 
 **Soort:** constant
 
@@ -912,7 +1169,7 @@ export const flintNone;
 
 Construeer een lege optiewaarde.
 
-### smedenWebScriptOk
+### vuursteenOk
 
 **Soort:** constant
 
@@ -932,7 +1189,7 @@ export interface FlintOption<TValue>
 
 Optie-achtige waarde die wordt gebruikt door veilige leesbewerkingen en lege iteratorterminals.
 
-### FlintResultValue
+### FlintResultaatwaarde
 
 **Soort:** interface
 
@@ -940,9 +1197,9 @@ Optie-achtige waarde die wordt gebruikt door veilige leesbewerkingen en lege ite
 export interface FlintResultValue<TValue, TError = string>
 ```
 
-Resultaatachtige waarde die wordt gebruikt door niet-vangende verzamelmutatiehelpers.
+Resultaatachtige waarde die wordt gebruikt door niet-trapping-verzamelingsmutatiehelpers.
 
-### FlintSet
+### VuursteenSet
 
 **Soort:** interface
 
@@ -950,9 +1207,9 @@ Resultaatachtige waarde die wordt gebruikt door niet-vangende verzamelmutatiehel
 export interface FlintSet<TValue>
 ```
 
-Geen beschrijving opgegeven.
+Aanhoudende hashset-gegevensstructuur voor verzameling.
 
-### flintSetAdd
+### vuursteenSetToevoegen
 
 **Soort:** functie
 
@@ -960,14 +1217,20 @@ Geen beschrijving opgegeven.
 function flintSetAdd(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Voegt een element toe aan de set en retourneert een nieuwe persistente set als deze wordt gewijzigd.
 
 #### Parameters
 
-| Naam      | Typ              | Beschrijving |
-| --------- | ---------------- | ------------ |
-| instellen | FlintSet<TValue> |              |
-| waarde    | TVwaarde         |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------------- | ------------------ |
+| instellen | FlintSet<TValue> | - Doel ingesteld.      |
+| waarde | TVwaarde | - Waarde om in te voegen. |
+
+#### Contract
+
+- **@param:** - Doel ingesteld.
+- **@param:** - Waarde om in te voegen.
+- **@returns:** Aanhoudende set bijgewerkt.
 
 ### flintSetDelete
 
@@ -977,16 +1240,22 @@ Geen beschrijving opgegeven.
 function flintSetDelete(set: FlintSet<TValue>, value: TValue): FlintSet<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Verwijdert een element uit de set en retourneert een nieuwe persistente set als deze wordt gewijzigd.
 
 #### Parameters
 
-| Naam      | Typ              | Beschrijving |
-| --------- | ---------------- | ------------ |
-| instellen | FlintSet<TValue> |              |
-| waarde    | TVwaarde         |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------------- | ------------------ |
+| instellen | FlintSet<TValue> | - Doel ingesteld.      |
+| waarde | TVwaarde | - Waarde om te verwijderen. |
 
-### flintSetHas
+#### Contract
+
+- **@param:** - Doel ingesteld.
+- **@param:** - Waarde die moet worden verwijderd.
+- **@returns:** Aanhoudende set bijgewerkt.
+
+### vuursteenSetHas
 
 **Soort:** functie
 
@@ -994,14 +1263,20 @@ Geen beschrijving opgegeven.
 function flintSetHas(set: FlintSet<TValue>, value: TValue): boolean;
 ```
 
-Geen beschrijving opgegeven.
+Test of er een waarde in de set bestaat.
 
 #### Parameters
 
-| Naam      | Typ              | Beschrijving |
-| --------- | ---------------- | ------------ |
-| instellen | FlintSet<TValue> |              |
-| waarde    | TVwaarde         |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------------- | ----------------- |
+| instellen | FlintSet<TValue> | - Doel ingesteld.     |
+| waarde | TVwaarde | - Waarde om te controleren. |
+
+#### Contract
+
+- **@param:** - Doel ingesteld.
+- **@param:** - Waarde om te controleren.
+- **@returns:** Waar als waarde aanwezig is.
 
 ### flintSetValues
 
@@ -1011,15 +1286,20 @@ Geen beschrijving opgegeven.
 function flintSetValues(set: FlintSet<TValue>): FlintVector<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Retourneert alle waarden in de set als een eigen vector.
 
 #### Parameters
 
-| Naam      | Typ              | Beschrijving |
-| --------- | ---------------- | ------------ |
-| instellen | FlintSet<TValue> |              |
+| Naam | Typ | Beschrijving |
+| ---- | ---------------- | ------------- |
+| instellen | FlintSet<TValue> | - Doel ingesteld. |
 
-### flintSommige
+#### Contract
+
+- **@param:** - Doel ingesteld.
+- **@returns:** Vector van waarden in de set.
+
+### vuursteenSommige
 
 **Soort:** constant
 
@@ -1040,7 +1320,7 @@ export interface FlintVector<TValue>
 Groeibare aaneengesloten collectie. Door runtime gemaakte vectoren hebben een eigen handle
 contract, terwijl geleend/gedeeld eigendom behouden blijft door afgeleide waarden.
 
-### smedenWebScriptVectorAdd
+### flintVectorToevoegen
 
 **Soort:** constant
 
@@ -1065,10 +1345,10 @@ Filter een vector gretig in een nieuwe vector terwijl de bronvolgorde behouden b
 
 #### Parameters
 
-| Naam      | Typ                                       | Beschrijving |
-| --------- | ----------------------------------------- | ------------ |
-| vector    | FlintVector<TValue>                       |              |
-| predikaat | (waarde: TValue, index: getal) => boolean |              |
+| Naam | Typ | Beschrijving |
+| --------- | ----------------------------------------- | ----------- |
+| vector | FlintVector<TValue> |             |
+| predikaat | (waarde: TValue, index: getal) => boolean |             |
 
 ### flintVectorFold
 
@@ -1086,11 +1366,11 @@ Vouw vectorwaarden van links naar rechts, inclusief de meegeleverde initiële ac
 
 #### Parameters
 
-| Naam        | Typ                                                             | Beschrijving |
-| ----------- | --------------------------------------------------------------- | ------------ |
-| vector      | FlintVector<TValue>                                             |              |
-| initiële    | TResultaat                                                      |              |
-| verloopstuk | (accumulator: TResult, waarde: TValue, index: getal) => TResult |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------------------------------------------- | ----------- |
+| vector | FlintVector<TValue> |             |
+| initiële | TResultaat |             |
+| verloopstuk | (accumulator: TResult, waarde: TValue, index: getal) => TResult |             |
 
 ### flintVectorGet
 
@@ -1104,10 +1384,10 @@ Lees een vectorelement; ongeldige indices retourneren Option.none.
 
 #### Parameters
 
-| Naam   | Typ                 | Beschrijving |
-| ------ | ------------------- | ------------ |
-| vector | FlintVector<TValue> |              |
-| index  | nummer              |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------- | ----------- |
+| vector | FlintVector<TValue> |             |
+| index | nummer |             |
 
 ### flintVectorLengte
 
@@ -1121,9 +1401,9 @@ Retourneert het aantal geïnitialiseerde vectorelementen.
 
 #### Parameters
 
-| Naam   | Typ                 | Beschrijving |
-| ------ | ------------------- | ------------ |
-| vector | FlintVector<TValue> |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------- | ----------- |
+| vector | FlintVector<TValue> |             |
 
 ### flintVectorMap
 
@@ -1140,10 +1420,10 @@ Wijs een vector gretig toe aan een nieuwe vector in de volgorde van de bronindex
 
 #### Parameters
 
-| Naam          | Typ                                       | Beschrijving |
-| ------------- | ----------------------------------------- | ------------ |
-| vector        | FlintVector<TValue>                       |              |
-| transformeren | (waarde: TValue, index: getal) => TResult |              |
+| Naam | Typ | Beschrijving |
+| --------- | ----------------------------------------- | ----------- |
+| vector | FlintVector<TValue> |             |
+| transformeren | (waarde: TValue, index: getal) => TResult |             |
 
 ### flintVectorPop
 
@@ -1156,15 +1436,15 @@ function flintVectorPop(vector: FlintVector<TValue>): {
 };
 ```
 
-Verwijder de uiteindelijke vectorwaarde en retourneer de bijgewerkte vector plus Option-resultaat.
+Verwijder de laatste vectorwaarde en retourneer de bijgewerkte vector plus Option-resultaat.
 
 #### Parameters
 
-| Naam   | Typ                 | Beschrijving |
-| ------ | ------------------- | ------------ |
-| vector | FlintVector<TValue> |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------- | ----------- |
+| vector | FlintVector<TValue> |             |
 
-### flintVectorPush
+### vuursteenVectorPush
 
 **Soort:** functie
 
@@ -1176,12 +1456,12 @@ Voeg waarde toe en vergroot de capaciteit indien nodig, met behoud van eigenaars
 
 #### Parameters
 
-| Naam   | Typ                 | Beschrijving |
-| ------ | ------------------- | ------------ |
-| vector | FlintVector<TValue> |              |
-| waarde | TVwaarde            |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------- | ----------- |
+| vector | FlintVector<TValue> |             |
+| waarde | TVwaarde |             |
 
-### flintVectorSet
+### vuursteenVectorSet
 
 **Soort:** functie
 
@@ -1193,11 +1473,11 @@ Vervang een vectorelement; ongeldige indices genereren RangeError.
 
 #### Parameters
 
-| Naam   | Typ                 | Beschrijving |
-| ------ | ------------------- | ------------ |
-| vector | FlintVector<TValue> |              |
-| index  | nummer              |              |
-| waarde | TVwaarde            |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------- | ----------- |
+| vector | FlintVector<TValue> |             |
+| index | nummer |             |
+| waarde | TVwaarde |             |
 
 ### flintVectorTrySet
 
@@ -1215,11 +1495,11 @@ Vervang een vectorelement zonder te gooien; ongeldige indices retourneren een fo
 
 #### Parameters
 
-| Naam   | Typ                 | Beschrijving |
-| ------ | ------------------- | ------------ |
-| vector | FlintVector<TValue> |              |
-| index  | nummer              |              |
-| waarde | TVwaarde            |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------- | ----------- |
+| vector | FlintVector<TValue> |             |
+| index | nummer |             |
+| waarde | TVwaarde |             |
 
 ## `src/ecs`
 
@@ -1236,16 +1516,24 @@ function addFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Koppelt een component aan een entiteit als deze nog niet aanwezig is.
 
 #### Parameters
 
-| Naam        | Typ                   | Beschrijving |
-| ----------- | --------------------- | ------------ |
-| wereld      | FlintEcsWorld<TValue> |              |
-| entiteit    | FlintEcsEntity        |              |
-| bestanddeel | tekenreeks            |              |
-| waarde      | TVwaarde              |              |
+| Naam | Typ | Beschrijving |
+| --------- | --------------------- | ------------------------- |
+| wereld | FlintEcsWorld<TValue> | - Huidige wereldmomentopname. |
+| entiteit | FlintEcsEntiteit | - Doelentiteit.          |
+| bestanddeel | tekenreeks |                           |
+| waarde | TVwaarde | - Componentwaardegegevens.   |
+
+#### Contract
+
+- **@param:** - Huidige momentopname van de wereld.
+- **@param:** - Doelentiteit.
+- **@param:** - Componentnaam.
+- **@param:** - Componentwaardegegevens.
+- **@returns:** Overgangsresultaat.
 
 ### createFlintEcsScheduler
 
@@ -1260,18 +1548,23 @@ function createFlintEcsScheduler(
 ): FlintEcsScheduler<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Creëert een ECS-uitvoeringspijplijnplanner.
 
 #### Parameters
 
-| Naam         | Typ                                   | Beschrijving |
-| ------------ | ------------------------------------- | ------------ |
-| systemen     | alleen-lezen FlintEcsSystem<TValue>[] |              |
-| signalen     | alleen-lezen FlintEcsSignal[]         |              |
-| abonnementen | alleen-lezen FlintEcsSubscription[]   |              |
-| maxStappen   |                                       |              |
+| Naam | Typ | Beschrijving |
+| ------------- | --------------------------------- | -------------------------------------------------- |
+| systemen | alleen-lezen FlintEcsSystem<TValue>[] | - Volgorde van systemen die in de pijplijn moeten worden geregistreerd. |
+| signalen | alleen-lezen FlintEcsSignal[] |                                                    |
+| abonnementen | alleen-lezen FlintEcsSubscription[] |                                                    |
+| maxStappen |                                   |                                                    |
 
-### createFlintEcsWorld
+#### Contract
+
+- **@param:** - Volgorde van systemen die in de pijplijn moeten worden geregistreerd.
+- **@returns:** FlintEcsScheduler-instantie geconfigureerd.
+
+### creëerFlintEcsWorld
 
 **Soort:** functie
 
@@ -1279,7 +1572,11 @@ Geen beschrijving opgegeven.
 function createFlintEcsWorld(): FlintEcsWorld<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Initialiseert een lege Enty Component System-wereld.
+
+#### Contract
+
+- **@returns:** Vers geïnitialiseerde FlintEcsWorld-instantie.
 
 ### despawnFlintEcsEntity
 
@@ -1289,14 +1586,20 @@ Geen beschrijving opgegeven.
 function despawnFlintEcsEntity(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): FlintEcsResult<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Despawnt een entiteit, verhoogt de generatie ervan en wist alle aangesloten componenten.
 
 #### Parameters
 
-| Naam     | Typ                   | Beschrijving |
-| -------- | --------------------- | ------------ |
-| wereld   | FlintEcsWorld<TValue> |              |
-| entiteit | FlintEcsEntity        |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------------- | ------------------------- |
+| wereld | FlintEcsWorld<TValue> | - Huidige wereldmomentopname. |
+| entiteit | FlintEcsEntiteit | - Entiteit om te despawnen.      |
+
+#### Contract
+
+- **@param:** - Huidige momentopname van de wereld.
+- **@param:** - Entiteit die moet worden gedespawnd.
+- **@returns:** Overgangsresultaat.
 
 ### FlintEcsComponentStore
 
@@ -1306,9 +1609,9 @@ Geen beschrijving opgegeven.
 export interface FlintEcsComponentStore<TValue = Uint8Array>
 ```
 
-Geen beschrijving opgegeven.
+Componentopslag wijst entiteitindexnummers toe aan componentinstanties.
 
-### FlintEcsEntity
+### FlintEcsEntiteit
 
 **Soort:** interface
 
@@ -1316,7 +1619,7 @@ Geen beschrijving opgegeven.
 export interface FlintEcsEntity
 ```
 
-Geen beschrijving opgegeven.
+Lichtgewicht generatie-entiteitshandgreep die index en generatieteller combineert.
 
 ### FlintEcsEntityResult
 
@@ -1326,7 +1629,7 @@ Geen beschrijving opgegeven.
 export interface FlintEcsEntityResult<TValue = Uint8Array>
 ```
 
-Geen beschrijving opgegeven.
+Resultaat van een entiteitsmutatie die de gewijzigde wereld en entiteitshandle retourneert.
 
 ### FlintEcsQuery
 
@@ -1336,9 +1639,9 @@ Geen beschrijving opgegeven.
 export interface FlintEcsQuery
 ```
 
-Geen beschrijving opgegeven.
+Entiteitsqueryspecificatie die de vereiste en uitgesloten componentsleutels definieert.
 
-### FlintEcsResult
+### FlintEcsResultaat
 
 **Soort:** type
 
@@ -1346,7 +1649,7 @@ Geen beschrijving opgegeven.
 export type FlintEcsResult<TValue = Uint8Array> = |
 ```
 
-Geen beschrijving opgegeven.
+Resultaat resultaat van een ECS-transitie, succesvol of mislukt.
 
 ### FlintEcsScheduler
 
@@ -1356,9 +1659,9 @@ Geen beschrijving opgegeven.
 export interface FlintEcsScheduler<TValue = Uint8Array>
 ```
 
-Geen beschrijving opgegeven.
+Pijplijnplanner die systeemfasen en signaalaflevering coördineert.
 
-### FlintEcsScheduleResult
+### FlintEcsScheduleResultaat
 
 **Soort:** interface
 
@@ -1366,7 +1669,7 @@ Geen beschrijving opgegeven.
 export interface FlintEcsScheduleResult<TValue = Uint8Array>
 ```
 
-Geen beschrijving opgegeven.
+Resultaat van het uitvoeren van een ECS-schema over meerdere systeemstappen.
 
 ### FlintEcsSignaal
 
@@ -1376,7 +1679,7 @@ Geen beschrijving opgegeven.
 export interface FlintEcsSignal
 ```
 
-Geen beschrijving opgegeven.
+Gebeurtenis- of statusveranderingssignaal uitgezonden tijdens uitvoering van het ECS-systeem.
 
 ### FlintEcsAbonnement
 
@@ -1386,9 +1689,9 @@ Geen beschrijving opgegeven.
 export interface FlintEcsSubscription
 ```
 
-Geen beschrijving opgegeven.
+Abonnement dat een signaal koppelt aan een callback van een gebeurtenishandler.
 
-### FlintEcsSystem
+### FlintEcsSysteem
 
 **Soort:** interface
 
@@ -1396,9 +1699,9 @@ Geen beschrijving opgegeven.
 export interface FlintEcsSystem<TValue = Uint8Array>
 ```
 
-Geen beschrijving opgegeven.
+Systeemuitvoeringseenheid die een ECS-wereld transformeert op basis van vragen en updates.
 
-### FlintEcsTransition
+### FlintEcsOvergang
 
 **Soort:** interface
 
@@ -1406,7 +1709,7 @@ Geen beschrijving opgegeven.
 export interface FlintEcsTransition<TValue = Uint8Array>
 ```
 
-Geen beschrijving opgegeven.
+Opgenomen wereldtransitie met details over de vorige wereld, de volgende wereld en de uitgezonden signalen.
 
 ### FlintEcsWorld
 
@@ -1416,7 +1719,7 @@ Geen beschrijving opgegeven.
 export interface FlintEcsWorld<TValue = Uint8Array>
 ```
 
-Geen beschrijving opgegeven.
+Onveranderlijke momentopname van een Enty Component System-wereld.
 
 ### getFlintEcsComponent
 
@@ -1430,15 +1733,22 @@ function getFlintEcsComponent(
 ): TValue | undefined;
 ```
 
-Geen beschrijving opgegeven.
+Haalt de componentinstantie op die aan een entiteit is gekoppeld.
 
 #### Parameters
 
-| Naam        | Typ                   | Beschrijving |
-| ----------- | --------------------- | ------------ |
-| wereld      | FlintEcsWorld<TValue> |              |
-| entiteit    | FlintEcsEntity        |              |
-| bestanddeel | tekenreeks            |              |
+| Naam | Typ | Beschrijving |
+| --------- | --------------------- | ------------------------- |
+| wereld | FlintEcsWorld<TValue> | - Huidige wereldmomentopname. |
+| entiteit | FlintEcsEntiteit | - Doelentiteit.          |
+| bestanddeel | tekenreeks |                           |
+
+#### Contract
+
+- **@param:** - Huidige momentopname van de wereld.
+- **@param:** - Doelentiteit.
+- **@param:** - Componentnaam.
+- **@returns:** Componentwaarde of ongedefinieerd indien afwezig.
 
 ### isFlintEcsEntityAlive
 
@@ -1448,16 +1758,22 @@ Geen beschrijving opgegeven.
 function isFlintEcsEntityAlive(world: FlintEcsWorld<TValue>, entity: FlintEcsEntity): boolean;
 ```
 
-Geen beschrijving opgegeven.
+Bepaalt of een entiteitshandle overeenkomt met de actieve generatie in de wereld.
 
 #### Parameters
 
-| Naam     | Typ                   | Beschrijving |
-| -------- | --------------------- | ------------ |
-| wereld   | FlintEcsWorld<TValue> |              |
-| entiteit | FlintEcsEntity        |              |
+| Naam | Typ | Beschrijving |
+| ------ | --------------------- | ------------------------- |
+| wereld | FlintEcsWorld<TValue> | - Huidige wereldmomentopname. |
+| entiteit | FlintEcsEntiteit | - Entiteitshandle om te controleren. |
 
-### queryFlintEcsEntities
+#### Contract
+
+- **@param:** - Huidige momentopname van de wereld.
+- **@param:** - Entiteitshandle om te controleren.
+- **@returns:** Waar indien levend.
+
+### queryFlintEcsEntiteiten
 
 **Soort:** functie
 
@@ -1465,14 +1781,20 @@ Geen beschrijving opgegeven.
 function queryFlintEcsEntities(world: FlintEcsWorld<TValue>, query: FlintEcsQuery): readonly FlintEcsEntity[];
 ```
 
-Geen beschrijving opgegeven.
+Query's uitvoeren op actieve entiteiten die voldoen aan de componentfiltercriteria.
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| wereld | FlintEcsWorld<TValue> |              |
-| vraag  | FlintEcsQuery         |              |
+| Naam | Typ | Beschrijving |
+| ----- | --------------------- | ----------------------------- |
+| wereld | FlintEcsWorld<TValue> | - Huidige wereldmomentopname.     |
+| vraag | FlintEcsQuery | - Queryfilterspecificatie. |
+
+#### Contract
+
+- **@param:** - Huidige momentopname van de wereld.
+- **@param:** - Queryfilterspecificatie.
+- **@returns:** Array van overeenkomende entiteitshandles.
 
 ### verwijderFlintEcsComponent
 
@@ -1486,15 +1808,22 @@ function removeFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Verwijdert een component uit een entiteit.
 
 #### Parameters
 
-| Naam        | Typ                   | Beschrijving |
-| ----------- | --------------------- | ------------ |
-| wereld      | FlintEcsWorld<TValue> |              |
-| entiteit    | FlintEcsEntity        |              |
-| bestanddeel | tekenreeks            |              |
+| Naam | Typ | Beschrijving |
+| --------- | --------------------- | ------------------------- |
+| wereld | FlintEcsWorld<TValue> | - Huidige wereldmomentopname. |
+| entiteit | FlintEcsEntiteit | - Doelentiteit.          |
+| bestanddeel | tekenreeks |                           |
+
+#### Contract
+
+- **@param:** - Huidige momentopname van de wereld.
+- **@param:** - Doelentiteit.
+- **@param:** - Componentnaam die moet worden verwijderd.
+- **@returns:** Overgangsresultaat.
 
 ### runFlintEcsScheduler
 
@@ -1507,14 +1836,20 @@ function runFlintEcsScheduler(
 ): FlintEcsScheduleResult<TValue> | Extract<FlintEcsResult<TValue>, { readonly ok: false }>;
 ```
 
-Geen beschrijving opgegeven.
+Voert een ECS-plannerpijplijn uit voor alle geregistreerde systemen en fasen.
 
 #### Parameters
 
-| Naam    | Typ                       | Beschrijving |
-| ------- | ------------------------- | ------------ |
-| wereld  | FlintEcsWorld<TValue>     |              |
-| planner | FlintEcsScheduler<TValue> |              |
+| Naam | Typ | Beschrijving |
+| --------- | ------------------------- | -------------------------------- |
+| wereld | FlintEcsWorld<TValue> | - Eerste momentopname van de wereld.        |
+| planner | FlintEcsScheduler<TValue> | - Geconfigureerde plannerpijplijn. |
+
+#### Contract
+
+- **@param:** - Eerste momentopname van de wereld.
+- **@param:** - Geconfigureerde plannerpijplijn.
+- **@returns:** Uitvoeringsrapport planning.
 
 ### setFlintEcsComponent
 
@@ -1529,16 +1864,24 @@ function setFlintEcsComponent(
 ): FlintEcsResult<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Stelt een componentwaarde voor een entiteit in of overschrijft deze.
 
 #### Parameters
 
-| Naam        | Typ                   | Beschrijving |
-| ----------- | --------------------- | ------------ |
-| wereld      | FlintEcsWorld<TValue> |              |
-| entiteit    | FlintEcsEntity        |              |
-| bestanddeel | tekenreeks            |              |
-| waarde      | TVwaarde              |              |
+| Naam | Typ | Beschrijving |
+| --------- | --------------------- | ------------------------- |
+| wereld | FlintEcsWorld<TValue> | - Huidige wereldmomentopname. |
+| entiteit | FlintEcsEntiteit | - Doelentiteit.          |
+| bestanddeel | tekenreeks |                           |
+| waarde | TVwaarde | - Componentwaardegegevens.   |
+
+#### Contract
+
+- **@param:** - Huidige momentopname van de wereld.
+- **@param:** - Doelentiteit.
+- **@param:** - Componentnaam.
+- **@param:** - Componentwaardegegevens.
+- **@returns:** Overgangsresultaat.
 
 ### spawnFlintEcsEntity
 
@@ -1548,15 +1891,20 @@ Geen beschrijving opgegeven.
 function spawnFlintEcsEntity(world: FlintEcsWorld<TValue>): FlintEcsEntityResult<TValue>;
 ```
 
-Geen beschrijving opgegeven.
+Wijst een nieuwe entiteitshandle toe en voegt deze toe aan de wereld.
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| wereld | FlintEcsWorld<TValue> |              |
+| Naam | Typ | Beschrijving |
+| ----- | --------------------- | ------------------------- |
+| wereld | FlintEcsWorld<TValue> | - Huidige wereldmomentopname. |
 
-### validateFlintEcsSignals
+#### Contract
+
+- **@param:** - Huidige momentopname van de wereld.
+- **@returns:** Entiteitsresultaat met bijgewerkte wereld en nieuwe entiteit.
+
+### valideerFlintEcsSignals
 
 **Soort:** functie
 
@@ -1566,15 +1914,31 @@ function validateFlintEcsSignals(
 ): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
-Geen beschrijving opgegeven.
+Valideert een reeks signalen tegen gedeclareerde signaaldefinities.
 
 #### Parameters
 
-| Naam     | Typ                           | Beschrijving |
-| -------- | ----------------------------- | ------------ |
-| signalen | alleen-lezen FlintEcsSignal[] |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------- | ------------------------------- |
+| signalen | alleen-lezen FlintEcsSignal[] | - Array van signalen om te valideren. |
+
+#### Contract
+
+- **@param:** - Reeks signalen om te valideren.
+- **@returns:** Object met geldige status- en foutmeldingen.
 
 ## `src/host`
+
+### AtomicRingBufferkanaal
+
+**Soort:** klasse
+
+```typescript
+export class AtomicRingBufferChannel
+```
+
+Synchroniseert atomaire kop-/staartaanwijzerupdates op gedeeld host-interop-ringbuffergeheugen.
+Maakt gebruik van WebAssembly-compatibele atomaire opslag-/laadbewerkingen met garanties voor geheugenbestelling om race-omstandigheden te voorkomen.
 
 ### createDefaultFlintCapabilities
 
@@ -1584,15 +1948,20 @@ Geen beschrijving opgegeven.
 function createDefaultFlintCapabilities(options: FlintDefaultHostOptions = {}): FlintCapabilityRegistry;
 ```
 
-Geen beschrijving opgegeven.
+Creëert standaard ingebouwde capaciteitsproviders (bijv. env.now).
 
 #### Parameters
 
-| Naam   | Typ                     | Beschrijving |
-| ------ | ----------------------- | ------------ |
-| opties | FlintDefaultHostOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------- | ------------------------------------------------- |
+| opties | FlintDefaultHostOptions | - Configuratieopties voor standaardmogelijkheden. |
 
-### createFlintHost
+#### Contract
+
+- **@param:** - Configuratieopties voor standaardmogelijkheden.
+- **@returns:** Register met implementaties van standaardmogelijkheden.
+
+### maakFlintHost
 
 **Soort:** functie
 
@@ -1604,17 +1973,24 @@ function createFlintHost(
 ): FlintHost;
 ```
 
-Geen beschrijving opgegeven.
+Creëert een runtime-hostomgeving die gastimporten koppelt aan geautoriseerde mogelijkheden.
 
 #### Parameters
 
-| Naam         | Typ                     | Beschrijving |
-| ------------ | ----------------------- | ------------ |
-| manifesteren | FlintAbiManifest        |              |
-| register     | FlintCapabilityRegistry |              |
-| opties       | FlintHostOptions        |              |
+| Naam | Typ | Beschrijving |
+| -------- | ----------------------- | ------------------------------------------------------------ |
+| manifesteren | FlintAbiManifest | - ABI-manifest waarin de vereiste capaciteiten en importen worden beschreven. |
+| register | FlintCapabilityRegistry | - Register van beschikbare capaciteitsimplementaties.          |
+| opties | FlintHostOptions | - Configuratieopties voor hostinitialisatie.             |
 
-### FlintCapabilityImplementatie
+#### Contract
+
+- **@param:** - ABI-manifest waarin de vereiste mogelijkheden en invoer worden beschreven.
+- **@param:** - Register van beschikbare capaciteitsimplementaties.
+- **@param:** - Configuratieopties voor hostinitialisatie.
+- **@returns:** FlintHost-instantie geconfigureerd.
+
+### FlintCapability Implementatie
 
 **Soort:** interface
 
@@ -1622,7 +1998,7 @@ Geen beschrijving opgegeven.
 export interface FlintCapabilityImplementation
 ```
 
-Geen beschrijving opgegeven.
+Implementatie van hostmogelijkheden voor het registreren van een aanroephandler en ABI-handtekening.
 
 ### FlintCapabilityRegistry
 
@@ -1632,7 +2008,7 @@ Geen beschrijving opgegeven.
 export type FlintCapabilityRegistry = Readonly<Record<string, FlintCapabilityImplementation>>;
 ```
 
-Geen beschrijving opgegeven.
+Toewijzing van capaciteitsnamen aan hun hostimplementatieproviders.
 
 ### FlintDefaultHostOptions
 
@@ -1642,7 +2018,37 @@ Geen beschrijving opgegeven.
 export interface FlintDefaultHostOptions
 ```
 
-Geen beschrijving opgegeven.
+Configuratieopties voor standaard ingebouwde capaciteitsproviders.
+
+### FlintBuitenlandse oproep
+
+**Soort:** type
+
+```typescript
+export type FlintForeignCall = (symbol: string, arguments_: readonly unknown[]) => unknown | Promise<unknown>;
+```
+
+Host buitenlandse capaciteitsaanroephandler.
+
+### FlintForeignCapabilityImplementatie
+
+**Soort:** interface
+
+```typescript
+export interface FlintForeignCapabilityImplementation
+```
+
+Implementatiedescriptor voor buitenlandse capaciteiten hosten.
+
+### FlintForeignCapabilityRegistry
+
+**Soort:** type
+
+```typescript
+export type FlintForeignCapabilityRegistry = Readonly<Record<string, FlintForeignCapabilityImplementation>>;
+```
+
+Register van beschikbare implementaties van buitenlandse capaciteiten.
 
 ### FlintHost
 
@@ -1652,9 +2058,9 @@ Geen beschrijving opgegeven.
 export interface FlintHost
 ```
 
-Geen beschrijving opgegeven.
+Uitvoeringshost die mogelijkheidsaanroep en levenslange beheer voor gastmodules biedt.
 
-### FlintHostCall
+### FlintHostOproep
 
 **Soort:** type
 
@@ -1662,9 +2068,9 @@ Geen beschrijving opgegeven.
 export type FlintHostCall = (arguments_: readonly unknown[]) => unknown | Promise<unknown>;
 ```
 
-Geen beschrijving opgegeven.
+Oproepbare hostfunctie die wordt aangeroepen door uitvoering van gastruntime.
 
-### FlintHostOptions
+### FlintHostOpties
 
 **Soort:** interface
 
@@ -1672,7 +2078,52 @@ Geen beschrijving opgegeven.
 export interface FlintHostOptions
 ```
 
+Configuratieopties voor het initialiseren van een FlintHost-instantie.
+
+### MAX_FFI_CALL_DEPTH
+
+**Soort:** constant
+
+```typescript
+export const MAX_FFI_CALL_DEPTH;
+```
+
 Geen beschrijving opgegeven.
+
+### timingSafeEqualString
+
+**Soort:** functie
+
+```typescript
+function timingSafeEqualString(stringA: string, stringB: string): boolean;
+```
+
+Voert een constante tijdvergelijking uit van twee strings om getimede zijkanaalaanvallen op beveiligingskritieke identificatiegegevens te voorkomen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| tekenreeksA | tekenreeks |             |
+| tekenreeksB | tekenreeks |             |
+
+### validateHostPointerBounds
+
+**Soort:** functie
+
+```typescript
+function validateHostPointerBounds(pointer: number, length: number, memoryLimit = 0xff_ff_ff_ff): boolean;
+```
+
+Valideert dat de offset en lengte van een hostpointer voldoen aan ruimtelijke grenzeninvarianten.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | ------ | ----------- |
+| wijzer | nummer |             |
+| lengte | nummer |             |
+| geheugenlimiet |        |             |
 
 ## `src/iterator`
 
@@ -1692,13 +2143,13 @@ Past de eigen i32-handle van de backend en het ingepakte i64 next-protocol aan a
 
 #### Parameters
 
-| Naam     | Typ                                           | Beschrijving |
-| -------- | --------------------------------------------- | ------------ |
-| handvat  | nummer                                        |              |
-| volgende | (handle: nummer) => FlintPackedIteratorResult |              |
-| opties   | FlintWasmIteratorOptions<TValue>              |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------------------------- | ----------- |
+| handvat | nummer |             |
+| volgende | (handle: nummer) => FlintPackedIteratorResult |             |
+| opties | FlintWasmIteratorOpties<TValue> |             |
 
-### createFlintWasmIteratorFactory
+### creëerFlintWasmIteratorFactory
 
 **Soort:** functie
 
@@ -1714,13 +2165,13 @@ Bouwt een JS-gerichte iteratorfabriek vanuit een backendfabriek en de bijbehoren
 
 #### Parameters
 
-| Naam     | Typ                                           | Beschrijving |
-| -------- | --------------------------------------------- | ------------ |
-| fabriek  | (...argumenten_: TArgumenten) => getal        |              |
-| volgende | (handle: nummer) => FlintPackedIteratorResult |              |
-| opties   | FlintWasmIteratorOptions<TValue>              |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------------------------- | ----------- |
+| fabriek | (...argumenten_: TArgumenten) => getal |             |
+| volgende | (handle: nummer) => FlintPackedIteratorResult |             |
+| opties | FlintWasmIteratorOpties<TValue> |             |
 
-### FlintPackedIteratorResult
+### FlintPackedIteratorResultaat
 
 **Soort:** type
 
@@ -1728,7 +2179,7 @@ Bouwt een JS-gerichte iteratorfabriek vanuit een backendfabriek en de bijbehoren
 export type FlintPackedIteratorResult = number | bigint;
 ```
 
-Geen beschrijving opgegeven.
+Ingepakte numerieke weergave van een volgende iteratoraanroep die wordt geretourneerd door WebAssembly.
 
 ### FlintWasmIterator
 
@@ -1738,9 +2189,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmIterator<TValue> extends Iterator<TValue>, Iterable<TValue>
 ```
 
-Geen beschrijving opgegeven.
+JavaScript-iterator en iterabele bridge die een WebAssembly-iteratorstatushandvat omsluiten.
 
-### FlintWasmIteratorOptions
+### FlintWasmIteratorOpties
 
 **Soort:** interface
 
@@ -1748,11 +2199,11 @@ Geen beschrijving opgegeven.
 export interface FlintWasmIteratorOptions<TValue>
 ```
 
-Geen beschrijving opgegeven.
+Configuratieopties voor het construeren van een WebAssembly iterator-wrapper.
 
 ## `src/logging`
 
-### createFlintLogger
+### maakFlintLogger
 
 **Soort:** functie
 
@@ -1760,13 +2211,18 @@ Geen beschrijving opgegeven.
 function createFlintLogger(options: FlintLoggerOptions = {}): FlintLogger;
 ```
 
-Geen beschrijving opgegeven.
+Creëert een FlintLogger-instantie met een bereik met aangepaste ernstfilters en sinks.
 
 #### Parameters
 
-| Naam   | Typ                | Beschrijving |
-| ------ | ------------------ | ------------ |
-| opties | FlintLoggerOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------ | -------------------------------------------------- |
+| opties | FlintLoggerOptions | - Configuratieopties voor initialisatie van de logger. |
+
+#### Contract
+
+- **@param:** - Configuratieopties voor initialisatie van de logger.
+- **@returns:** FlintLogger-instantie geconfigureerd.
 
 ### FlintLogEvent
 
@@ -1776,7 +2232,7 @@ Geen beschrijving opgegeven.
 export interface FlintLogEvent
 ```
 
-Geen beschrijving opgegeven.
+Gestructureerde runtime-logboekgebeurtenis uitgezonden door de logger.
 
 ### FlintLogger
 
@@ -1786,9 +2242,9 @@ Geen beschrijving opgegeven.
 export interface FlintLogger
 ```
 
-Geen beschrijving opgegeven.
+Scoped diagnostische loginterface voor het traceren van runtime-gebeurtenissen.
 
-### FlintLoggerOptions
+### FlintLogger Opties
 
 **Soort:** interface
 
@@ -1796,9 +2252,9 @@ Geen beschrijving opgegeven.
 export interface FlintLoggerOptions
 ```
 
-Geen beschrijving opgegeven.
+Configuratieopties voor het initialiseren van een runtime logger-instantie.
 
-### FlintLogLevel
+### FlintLogNiveau
 
 **Soort:** type
 
@@ -1806,7 +2262,7 @@ Geen beschrijving opgegeven.
 export type FlintLogLevel = 'debug' | 'info' | 'warn' | 'error';
 ```
 
-Geen beschrijving opgegeven.
+Ondersteunde ernstniveaus voor logboekregistratie voor opname van runtime-gebeurtenissen.
 
 ### FlintLogSink
 
@@ -1816,37 +2272,4195 @@ Geen beschrijving opgegeven.
 export type FlintLogSink = (event: FlintLogEvent) => void;
 ```
 
-Geen beschrijving opgegeven.
+Terugbelfunctie voor consumenten die gestructureerde runtime-logboekgebeurtenissen ontvangt.
 
-## `src/memory`
+## `src/math/bignum`
 
-### createFlintMemory
+### maakFlintDMatrix
 
 **Soort:** functie
 
 ```typescript
-function createFlintMemory(options?: FlintMemoryOptions): FlintMemory;
+function createFlintDMatrix(rows: number, cols: number, data?: readonly number[]): FlintDMatrix;
 ```
 
-Geen beschrijving opgegeven.
+Voer de bewerking 'Flint D-Matrix' uit.
 
 #### Parameters
 
-| Naam   | Typ                | Beschrijving |
-| ------ | ------------------ | ------------ |
-| opties | FlintMemoryOptions |              |
+| Naam | Typ | Beschrijving |
+| ---- | ----------------- | ----------- |
+| rijen | nummer |             |
+| col | nummer |             |
+| gegevens | alleen-lezen nummer[] |             |
 
-### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+### maakFlintTensor
+
+**Soort:** functie
+
+```typescript
+function createFlintTensor(shape: FlintTensorShape, data: readonly TValue[]): FlintTensor<TValue>;
+```
+
+Voer de bewerking Vuursteentensor uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ----------------- | ----------- |
+| vorm | VuursteenTensorShape |             |
+| gegevens | alleen-lezen TValue[] |             |
+
+### maakFlintTensorShape
+
+**Soort:** functie
+
+```typescript
+function createFlintTensorShape(dimensions: readonly number[]): FlintTensorShape;
+```
+
+Voer de bewerking Vuursteentensorvorm uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | ----------------- | ----------- |
+| afmetingen | alleen-lezen nummer[] |             |
+
+### maakFlintTensorView
+
+**Soort:** functie
+
+```typescript
+function createFlintTensorView(shape: FlintTensorShape, data: readonly TValue[], offset = 0): FlintTensorView<TValue>;
+```
+
+Voer de bewerking 'Flint Tensor View' uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ----------------- | ----------- |
+| vorm | VuursteenTensorShape |             |
+| gegevens | alleen-lezen TValue[] |             |
+| gecompenseerd |                   |             |
+
+### FlintCholeskyDecompositie
+
+**Soort:** interface
+
+```typescript
+export interface FlintCholeskyDecomposition
+```
+
+Cholesky-ontbindingsweergave.
+
+### FlintDMatrix
+
+**Soort:** interface
+
+```typescript
+export interface FlintDMatrix
+```
+
+D Matrixweergave.
+
+### flintDMatrixAddInplace
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixAddInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+Voer de d-matrix-add-inplace-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------ | ----------- |
+| matrixA | FlintDMatrix |             |
+| matrixB | FlintDMatrix |             |
+
+### vuursteenDMatrixCholesky
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixCholesky(matrix: FlintDMatrix): FlintOption<FlintCholeskyDecomposition>;
+```
+
+Voer de d-matrix cholesky-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+
+### vuursteenDMatrixCholeskyOplossen
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixCholeskySolve(
+  chol: FlintCholeskyDecomposition,
+  rhsVector: FlintDMatrix,
+): FlintOption<FlintDMatrix>;
+```
+
+Voer de d-matrix cholesky-oplossingsbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | -------------------------- | ----------- |
+| chol | FlintCholeskyOntbinding |             |
+| rhsVector | FlintDMatrix |             |
+
+### flintDMatrixDeterminant
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixDeterminant(matrix: FlintDMatrix): FlintOption<number>;
+```
+
+Voer de d-matrixdeterminantbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+
+### flintDMatrixEigenSymmetrisch
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixEigenSymmetric(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintEigenDecomposition>;
+```
+
+Voer een d-matrix eigen-symmetrische bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------- | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+| maxIteraties |              |             |
+| epsilon |              |             |
+
+### vuursteenDMatrixGet
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixGet(matrix: FlintDMatrix, row: number, col: number): FlintOption<number>;
+```
+
+Voer de d-matrix-ophaalbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+| rij | nummer |             |
+| col | nummer |             |
+
+### flintDMatrixIdentiteit
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixIdentity(size: number): FlintDMatrix;
+```
+
+Voer de d-matrixidentiteitsbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| maat | nummer |             |
+
+### vuursteenDMatrixInverse
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixInverse(matrix: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+Voer de inverse bewerking van de d-matrix uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+
+### vuursteenDMatrixLU
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixLU(matrix: FlintDMatrix): FlintOption<FlintLUDecomposition>;
+```
+
+Voer de d-matrix lu-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+
+### vuursteenDMatrixMul
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixMul(matrixA: FlintDMatrix, matrixB: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+Voer de d-matrix mul-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------ | ----------- |
+| matrixA | FlintDMatrix |             |
+| matrixB | FlintDMatrix |             |
+
+### flintDMatrixMulAccumuleren
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixMulAccumulate(
+  outMatrix: FlintDMatrix,
+  matrixA: FlintDMatrix,
+  matrixB: FlintDMatrix,
+  alpha = 1,
+): boolean;
+```
+
+Voer de d-matrix mul-accumulatiebewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | ------------ | ----------- |
+| uitMatrix | FlintDMatrix |             |
+| matrixA | FlintDMatrix |             |
+| matrixB | FlintDMatrix |             |
+| alfa |              |             |
+
+### vuursteenDMatrixPseudoinverse
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixPseudoinverse(matrix: FlintDMatrix, epsilon = FLINT_MATH_EPSILON): FlintOption<FlintDMatrix>;
+```
+
+Voer een d-matrix pseudo-inverse bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+| epsilon |              |             |
+
+### vuursteenDMatrixQR
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixQR(matrix: FlintDMatrix): FlintOption<FlintQRDecomposition>;
+```
+
+Voer de d-matrix qr-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+
+### flintDMatrixScaleInplace
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixScaleInplace(matrix: FlintDMatrix, factor: number): void;
+```
+
+Voer de d-matrixschaal-inplace-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+| factor | nummer |             |
+
+### flintDMatrixSet
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixSet(matrix: FlintDMatrix, row: number, col: number, value: number): boolean;
+```
+
+Voer de d-matrixsetbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+| rij | nummer |             |
+| col | nummer |             |
+| waarde | nummer |             |
+
+### vuursteenDMatrixOplossen
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixSolve(matrixA: FlintDMatrix, rhsVector: FlintDMatrix): FlintOption<FlintDMatrix>;
+```
+
+Voer de d-matrixoplosbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | ------------ | ----------- |
+| matrixA | FlintDMatrix |             |
+| rhsVector | FlintDMatrix |             |
+
+### flintDMatrixSubInplace
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixSubInplace(matrixA: FlintDMatrix, matrixB: FlintDMatrix): boolean;
+```
+
+Voer de d-matrix sub-inplace-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------ | ----------- |
+| matrixA | FlintDMatrix |             |
+| matrixB | FlintDMatrix |             |
+
+### vuursteenDMatrixSVD
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixSVD(
+  matrix: FlintDMatrix,
+  maxIterations = 100,
+  epsilon = FLINT_MATH_EPSILON,
+): FlintOption<FlintSVDDecomposition>;
+```
+
+Voer de d matrix svd-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------------- | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+| maxIteraties |              |             |
+| epsilon |              |             |
+
+### flintDMatrixTranspose
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixTranspose(matrix: FlintDMatrix): FlintDMatrix;
+```
+
+Voer een d-matrixtranspositiebewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------------ | ----------- |
+| matrix | FlintDMatrix |             |
+
+### vuursteenDMatrixZeros
+
+**Soort:** functie
+
+```typescript
+function flintDMatrixZeros(rows: number, cols: number): FlintDMatrix;
+```
+
+Voer de bewerking met d-matrixnullen uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------ | ----------- |
+| rijen | nummer |             |
+| col | nummer |             |
+
+### FlintEigenDecompositie
+
+**Soort:** interface
+
+```typescript
+export interface FlintEigenDecomposition
+```
+
+Eigen Decompositie representatie.
+
+### FlintLUDecompositie
+
+**Soort:** interface
+
+```typescript
+export interface FlintLUDecomposition
+```
+
+LU Ontleding representatie.
+
+### FlintQRDecompositie
+
+**Soort:** interface
+
+```typescript
+export interface FlintQRDecomposition
+```
+
+Q R Ontbindingsweergave.
+
+### FlintSVDDecompositie
+
+**Soort:** interface
+
+```typescript
+export interface FlintSVDDecomposition
+```
+
+S V D Ontleding representatie.
+
+### FlintTensor
+
+**Soort:** interface
+
+```typescript
+export interface FlintTensor<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+Tensor-representatie.
+
+### flintTensorFill
+
+**Soort:** functie
+
+```typescript
+function flintTensorFill(shape: FlintTensorShape, value: TValue): FlintTensor<TValue>;
+```
+
+Voer een tensorvulbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ---------------- | ----------- |
+| vorm | VuursteenTensorShape |             |
+| waarde | TVwaarde |             |
+
+### vuursteenTensorMatmul
+
+**Soort:** functie
+
+```typescript
+function flintTensorMatmul(
+  tensorA: FlintTensor<number>,
+  tensorB: FlintTensor<number>,
+): FlintOption<FlintTensor<number>>;
+```
+
+Voer de tensor matmul-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------------- | ----------- |
+| tensorA | FlintTensor<number> |             |
+| tensorB | FlintTensor<number> |             |
+
+### vuursteenTensorReshape
+
+**Soort:** functie
+
+```typescript
+function flintTensorReshape(tensor: FlintTensor<TValue>, newShape: FlintTensorShape): FlintOption<FlintTensor<TValue>>;
+```
+
+Voer een tensorhervormingsoperatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------------------- | ----------- |
+| tensor | FlintTensor<TValue> |             |
+| nieuweVorm | VuursteenTensorShape |             |
+
+### VuursteenTensorShape
+
+**Soort:** interface
+
+```typescript
+export interface FlintTensorShape
+```
+
+Tensorvorm-weergave.
+
+### vuursteenTensorVormgrootte
+
+**Soort:** functie
+
+```typescript
+function flintTensorShapeSize(shape: FlintTensorShape): number;
+```
+
+Voer de bewerking van de tensorvormgrootte uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ---------------- | ----------- |
+| vorm | VuursteenTensorShape |             |
+
+### vuursteenTensorSlice
+
+**Soort:** functie
+
+```typescript
+function flintTensorSlice(
+  view: FlintTensorView<TValue>,
+  axis: number,
+  start: number,
+  length: number,
+): FlintOption<FlintTensorView<TValue>>;
+```
+
+Voer een tensorplakbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ----------------------- | ----------- |
+| bekijken | FlintTensorView<TValue> |             |
+| as | nummer |             |
+| begin | nummer |             |
+| lengte | nummer |             |
+
+### flintTensorView
+
+**Soort:** functie
+
+```typescript
+function flintTensorView(tensor: FlintTensor<TValue>): FlintTensorView<TValue>;
+```
+
+Voer een tensorweergavebewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------------------- | ----------- |
+| tensor | FlintTensor<TValue> |             |
+
+### FlintTensorView
+
+**Soort:** interface
+
+```typescript
+export interface FlintTensorView<TValue extends object | number | string | boolean | symbol | bigint>
+```
+
+Tensor View-weergave.
+
+### flintTensorViewGet
+
+**Soort:** functie
+
+```typescript
+function flintTensorViewGet(view: FlintTensorView<TValue>, indices: readonly number[]): FlintOption<TValue>;
+```
+
+Voer de bewerking voor het ophalen van de tensorweergave uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------- | ----------- |
+| bekijken | FlintTensorView<TValue> |             |
+| indexen | alleen-lezen nummer[] |             |
+
+### flintTensorViewSet
+
+**Soort:** functie
+
+```typescript
+function flintTensorViewSet(view: FlintTensorView<TValue>, indices: readonly number[], value: TValue): boolean;
+```
+
+Voer de tensorweergavesetbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------- | ----------- |
+| bekijken | FlintTensorView<TValue> |             |
+| indexen | alleen-lezen nummer[] |             |
+| waarde | TVwaarde |             |
+
+## `src/math/ieee754`
+
+### maakFlintColorRgba
+
+**Soort:** functie
+
+```typescript
+function createFlintColorRgba(red = 0, green = 0, blue = 0, alpha = 1): FlintColorRgba;
+```
+
+Voer de bewerking Flint Color RGBA uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ---- | ----------- |
+| rood |      |             |
+| groen |      |             |
+| blauw |      |             |
+| alfa |      |             |
+
+### FLINT_MATH_DEG_TO_RAD
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
+export const FLINT_MATH_DEG_TO_RAD;
+```
+
+Conversiefactor van graden naar radialen.
+
+### FLINT_MATH_E
+
+**Soort:** constant
+
+```typescript
+export const FLINT_MATH_E;
+```
+
+Euler-constante (e).
+
+### FLINT_MATH_EPSILON
+
+**Soort:** constant
+
+```typescript
+export const FLINT_MATH_EPSILON;
+```
+
+Euler-constante (e).
+
+### FLINT_MATH_F32_EPSILON
+
+**Soort:** constant
+
+```typescript
+export const FLINT_MATH_F32_EPSILON;
+```
+
+Machine-epsilon voor 32-bit drijvende-kommabewerkingen.
+
+### FLINT_MATH_PI
+
+**Soort:** constant
+
+```typescript
+export const FLINT_MATH_PI;
+```
+
+Standaard wiskundige constanten voor Flint-runtime.
+
+### FLINT_MATH_RAD_TO_DEG
+
+**Soort:** constant
+
+```typescript
+export const FLINT_MATH_RAD_TO_DEG;
+```
+
+Conversiefactor van radialen naar graden.
+
+### FLINT_MATH_SQRT2
+
+**Soort:** constant
+
+```typescript
+export const FLINT_MATH_SQRT2;
+```
+
+Vierkantswortel van 2 constante.
+
+### FLINT_MATH_TAU
+
+**Soort:** constant
+
+```typescript
+export const FLINT_MATH_TAU;
+```
+
+2 * PI (tau) cirkelconstante.
+
+### vuursteenOngeveerGelijk
+
+**Soort:** functie
+
+```typescript
+function flintApproxEqual(first: number, second: number, epsilon = FLINT_MATH_EPSILON): boolean;
+```
+
+Test de geschatte gelijkheid binnen de gespecificeerde epsilon.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| eerste | nummer |             |
+| tweede | nummer |             |
+| epsilon |        |             |
+
+### vuursteenCeil
+
+**Soort:** functie
+
+```typescript
+function flintCeil(value: number): number;
+```
+
+Bereken het kleinste gehele getal groter dan of gelijk aan x.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | nummer |             |
+
+### vuursteenKlem
+
+**Soort:** functie
+
+```typescript
+function flintClamp(value: number, minimum: number, maximum: number): number;
+```
+
+Klem een ​​numerieke waarde tussen de minimum- en maximumgrenzen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| waarde | nummer |             |
+| minimaal | nummer |             |
+| maximaal | nummer |             |
+
+### FlintColorHsv
+
+**Soort:** interface
+
+```typescript
+export interface FlintColorHsv
+```
+
+Kleur Hsv-weergave.
+
+### vuursteenColorHsvToRgb
+
+**Soort:** functie
+
+```typescript
+function flintColorHsvToRgb(hsv: FlintColorHsv): FlintColorRgba;
+```
+
+Voer kleur hsv naar rgb-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------------- | ----------- |
+| hsv | FlintColorHsv |             |
+
+### vuursteenKleurLerpOklab
+
+**Soort:** functie
+
+```typescript
+function flintColorLerpOklab(first: FlintColorRgba, second: FlintColorRgba, factor: number): FlintColorRgba;
+```
+
+Voer de kleurlerp oklab-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | -------------- | ----------- |
+| eerste | FlintColorRgba |             |
+| tweede | FlintColorRgba |             |
+| factor | nummer |             |
+
+### flintColorLinearToSrgb
+
+**Soort:** functie
+
+```typescript
+function flintColorLinearToSrgb(color: FlintColorRgba): FlintColorRgba;
+```
+
+Voer kleurlineair naar srgb-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | -------------- | ----------- |
+| kleur | FlintColorRgba |             |
+
+### VuursteenKleurOklab
+
+**Soort:** interface
+
+```typescript
+export interface FlintColorOklab
+```
+
+Kleur Oklab-weergave.
+
+### vuursteenColorOklabToSrgb
+
+**Soort:** functie
+
+```typescript
+function flintColorOklabToSrgb(lab: FlintColorOklab): FlintColorRgba;
+```
+
+Voer kleur oklab uit naar srgb-bewerking.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | --------------- | ----------- |
+| laboratorium | FlintColorOklab |             |
+
+### FlintColorRgba
+
+**Soort:** interface
+
+```typescript
+export interface FlintColorRgba
+```
+
+Kleur Rgba-weergave.
+
+### vuursteenColorRgbToHsv
+
+**Soort:** functie
+
+```typescript
+function flintColorRgbToHsv(color: FlintColorRgba): FlintColorHsv;
+```
+
+Voer kleur rgb naar hsv-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | -------------- | ----------- |
+| kleur | FlintColorRgba |             |
+
+### flintColorSrgbToLinear
+
+**Soort:** functie
+
+```typescript
+function flintColorSrgbToLinear(color: FlintColorRgba): FlintColorRgba;
+```
+
+Voer kleur srgb uit naar lineaire werking.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | -------------- | ----------- |
+| kleur | FlintColorRgba |             |
+
+### flintColorSrgbToOklab
+
+**Soort:** functie
+
+```typescript
+function flintColorSrgbToOklab(color: FlintColorRgba): FlintColorOklab;
+```
+
+Voer kleur srgb uit naar oklab-bewerking.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | -------------- | ----------- |
+| kleur | FlintColorRgba |             |
+
+### vuursteenGraden
+
+**Soort:** functie
+
+```typescript
+function flintDegrees(radians: number): number;
+```
+
+Converteer radialen naar graden.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| radialen | nummer |             |
+
+### vuursteenVloer
+
+**Soort:** functie
+
+```typescript
+function flintFloor(value: number): number;
+```
+
+Bereken het grootste gehele getal kleiner dan of gelijk aan x.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | nummer |             |
+
+### vuursteenFract
+
+**Soort:** functie
+
+```typescript
+function flintFract(value: number): number;
+```
+
+Bereken het fractionele deel: x - floor(x).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | nummer |             |
+
+### vuursteenLerp
+
+**Soort:** functie
+
+```typescript
+function flintLerp(start: number, end: number, factor: number): number;
+```
+
+Lineair interpoleren tussen begin en einde per factor.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------ | ----------- |
+| begin | nummer |             |
+| einde | nummer |             |
+| factor | nummer |             |
+
+### vuursteenRadians
+
+**Soort:** functie
+
+```typescript
+function flintRadians(degrees: number): number;
+```
+
+Converteer graden naar radialen.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| graden | nummer |             |
+
+### vuursteenTeken
+
+**Soort:** functie
+
+```typescript
+function flintSign(value: number): number;
+```
+
+Retourteken van x (1, -1, 0 of NaN).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| waarde | nummer |             |
+
+### vuursteenSmoothstep
+
+**Soort:** functie
+
+```typescript
+function flintSmoothstep(edge0: number, edge1: number, value: number): number;
+```
+
+Soepele Hermite-interpolatie tussen edge0 en edge1.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| rand0 | nummer |             |
+| rand1 | nummer |             |
+| waarde | nummer |             |
+
+### vuursteenStap
+
+**Soort:** functie
+
+```typescript
+function flintStep(edge: number, value: number): number;
+```
+
+Stapfunctie retourneert 0 als x < rand, anders 1.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------ | ----------- |
+| rand | nummer |             |
+| waarde | nummer |             |
+
+## `src/math/transcendental`
+
+### maakFlintAABB2
+
+**Soort:** functie
+
+```typescript
+function createFlintAABB2(minPoint: FlintVec2, maxPoint: FlintVec2): FlintAABB2;
+```
+
+Voer de bewerking Vuursteen maken a a b b 2 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | --------- | ----------- |
+| minPunt | FlintVec2 |             |
+| maxPunt | FlintVec2 |             |
+
+### maakFlintAABB3
+
+**Soort:** functie
+
+```typescript
+function createFlintAABB3(minPoint: FlintVec3, maxPoint: FlintVec3): FlintAABB3;
+```
+
+Voer de bewerking Vuursteen maken a a b b 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | --------- | ----------- |
+| minPunt | FlintVec3 |             |
+| maxPunt | FlintVec3 |             |
+
+### maakFlintBVHNode3
+
+**Soort:** functie
+
+```typescript
+function createFlintBVHNode3(
+  bounds: FlintAABB3,
+  leftChild: number,
+  rightChild: number,
+  primitiveIndex: number,
+): FlintBVHNode3;
+```
+
+Voer de bewerking Create Flint b v h node 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------------- | ---------- | ----------- |
+| grenzen | VuursteenAABB3 |             |
+| linksKind | nummer |             |
+| rechtsKind | nummer |             |
+| primitieveIndex | nummer |             |
+
+### creëerFlintBVHTree3
+
+**Soort:** functie
+
+```typescript
+function createFlintBVHTree3(nodes: readonly FlintBVHNode3[], rootIndex = 0): FlintBVHTree3;
+```
+
+Voer de bewerking Create Flint B V H Tree 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | ------------------------ | ----------- |
+| knooppunten | alleen-lezen FlintBVHNode3[] |             |
+| rootIndex |                          |             |
+
+### maakFlintCircle
+
+**Soort:** functie
+
+```typescript
+function createFlintCircle(center: FlintVec2, radius: number): FlintCircle;
+```
+
+Voer de bewerking Vuursteencirkel uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| centrum | FlintVec2 |             |
+| straal | nummer |             |
+
+### maakFlintOBB2
+
+**Soort:** functie
+
+```typescript
+function createFlintOBB2(center: FlintVec2, halfExtents: FlintVec2, angleRad = 0): FlintOBB2;
+```
+
+Voer de bewerking Vuursteen o b b 2 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | --------- | ----------- |
+| centrum | FlintVec2 |             |
+| halfExtents | FlintVec2 |             |
+| hoekRad |           |             |
+
+### maakFlintOBB3
+
+**Soort:** functie
+
+```typescript
+function createFlintOBB3(
+  center: FlintVec3,
+  halfExtents: FlintVec3,
+  orientation: FlintQuat = flintQuatIdentity(),
+): FlintOBB3;
+```
+
+Voer de bewerking Vuursteen o b b 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | --------- | ----------- |
+| centrum | FlintVec3 |             |
+| halfExtents | FlintVec3 |             |
+| oriëntatie | FlintQuat |             |
+
+### maakFlintPlane3
+
+**Soort:** functie
+
+```typescript
+function createFlintPlane3(normal: FlintVec3, distance: number): FlintPlane3;
+```
+
+Voer de bewerking Vuursteenvlak 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | --------- | ----------- |
+| normaal | FlintVec3 |             |
+| afstand | nummer |             |
+
+### maakFlintRay2
+
+**Soort:** functie
+
+```typescript
+function createFlintRay2(origin: FlintVec2, direction: FlintVec2): FlintRay2;
+```
+
+Voer de bewerking Vuursteenstraal 2 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | --------- | ----------- |
+| oorsprong | FlintVec2 |             |
+| richting | FlintVec2 |             |
+
+### maakFlintRay3
+
+**Soort:** functie
+
+```typescript
+function createFlintRay3(origin: FlintVec3, direction: FlintVec3): FlintRay3;
+```
+
+Voer de bewerking Vuursteenstraal 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------- | --------- | ----------- |
+| oorsprong | FlintVec3 |             |
+| richting | FlintVec3 |             |
+
+### maakFlintRayHit3
+
+**Soort:** functie
+
+```typescript
+function createFlintRayHit3(
+  hit: boolean,
+  t: number,
+  point: FlintVec3,
+  normal: FlintVec3,
+  primitiveId: number,
+): FlintRayHit3;
+```
+
+Voer de bewerking 'Flint Ray Hit 3' uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | --------- | ----------- |
+| druk | booleaans |             |
+| t | nummer |             |
+| punt | FlintVec3 |             |
+| normaal | FlintVec3 |             |
+| primitiefId | nummer |             |
+
+### creëerFlintSegment2
+
+**Soort:** functie
+
+```typescript
+function createFlintSegment2(startPoint: FlintVec2, endPoint: FlintVec2): FlintSegment2;
+```
+
+Voer de bewerking Vuursteensegment 2 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | --------- | ----------- |
+| startPunt | FlintVec2 |             |
+| eindpunt | FlintVec2 |             |
+
+### creëerFlintSegment3
+
+**Soort:** functie
+
+```typescript
+function createFlintSegment3(startPoint: FlintVec3, endPoint: FlintVec3): FlintSegment3;
+```
+
+Voer de bewerking Vuursteensegment 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | --------- | ----------- |
+| startPunt | FlintVec3 |             |
+| eindpunt | FlintVec3 |             |
+
+### maakFlintSphere
+
+**Soort:** functie
+
+```typescript
+function createFlintSphere(center: FlintVec3, radius: number): FlintSphere;
+```
+
+Voer de bewerking Vuursteenbol maken uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| centrum | FlintVec3 |             |
+| straal | nummer |             |
+
+### maakFlintTriangle2
+
+**Soort:** functie
+
+```typescript
+function createFlintTriangle2(pointA: FlintVec2, pointB: FlintVec2, pointC: FlintVec2): FlintTriangle2;
+```
+
+Voer de bewerking Vuursteendriehoek 2 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| puntA | FlintVec2 |             |
+| puntB | FlintVec2 |             |
+| puntC | FlintVec2 |             |
+
+### maakFlintTriangle3
+
+**Soort:** functie
+
+```typescript
+function createFlintTriangle3(pointA: FlintVec3, pointB: FlintVec3, pointC: FlintVec3): FlintTriangle3;
+```
+
+Voer de bewerking Vuursteendriehoek 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| puntA | FlintVec3 |             |
+| puntB | FlintVec3 |             |
+| puntC | FlintVec3 |             |
+
+### VuursteenAABB2
+
+**Soort:** interface
+
+```typescript
+export interface FlintAABB2
+```
+
+A A B B 2 weergave.
+
+### vuursteenAABB2Area
+
+**Soort:** functie
+
+```typescript
+function flintAABB2Area(box: FlintAABB2): number;
+```
+
+Voer a a b b 2 gebiedsbewerkingen uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ---------- | ----------- |
+| doos | VuursteenAABB2 |             |
+
+### vuursteenAABB2BevatPunt
+
+**Soort:** functie
+
+```typescript
+function flintAABB2ContainsPoint(box: FlintAABB2, point: FlintVec2): boolean;
+```
+
+Voer a a b b 2 bevat puntbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ---------- | ----------- |
+| doos | VuursteenAABB2 |             |
+| punt | FlintVec2 |             |
+
+### vuursteenAABB2Snijdt AABB2
+
+**Soort:** functie
+
+```typescript
+function flintAABB2IntersectsAABB2(first: FlintAABB2, second: FlintAABB2): boolean;
+```
+
+Voer de bewerking a a b b 2 snijpunten a a b b 2 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---------- | ----------- |
+| eerste | VuursteenAABB2 |             |
+| tweede | VuursteenAABB2 |             |
+
+### vuursteenAABB2Union
+
+**Soort:** functie
+
+```typescript
+function flintAABB2Union(first: FlintAABB2, second: FlintAABB2): FlintAABB2;
+```
+
+Voer een a b b 2 verbindingsoperatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---------- | ----------- |
+| eerste | VuursteenAABB2 |             |
+| tweede | VuursteenAABB2 |             |
+
+### VuursteenAABB3
+
+**Soort:** interface
+
+```typescript
+export interface FlintAABB3
+```
+
+A A B B 3 weergave.
+
+### vuursteenAABB3BevatPunt
+
+**Soort:** functie
+
+```typescript
+function flintAABB3ContainsPoint(box: FlintAABB3, point: FlintVec3): boolean;
+```
+
+Voer a a b b 3 bevat puntbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ---------- | ----------- |
+| doos | VuursteenAABB3 |             |
+| punt | FlintVec3 |             |
+
+### vuursteenAABB3doorsnijdtAABB3
+
+**Soort:** functie
+
+```typescript
+function flintAABB3IntersectsAABB3(first: FlintAABB3, second: FlintAABB3): boolean;
+```
+
+Voer de bewerking a a b b 3 snijpunten a a b b 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---------- | ----------- |
+| eerste | VuursteenAABB3 |             |
+| tweede | VuursteenAABB3 |             |
+
+### vuursteenAABB3Volume
+
+**Soort:** functie
+
+```typescript
+function flintAABB3Volume(box: FlintAABB3): number;
+```
+
+Voer a a b b 3 volumebewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ---------- | ----------- |
+| doos | VuursteenAABB3 |             |
+
+### vuursteenBezier2Kubisch
+
+**Soort:** functie
+
+```typescript
+function flintBezier2Cubic(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+Voer Bezier 2 kubieke bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| punt0 | FlintVec2 |             |
+| punt1 | FlintVec2 |             |
+| punt2 | FlintVec2 |             |
+| punt3 | FlintVec2 |             |
+| factor | nummer |             |
+
+### vuursteenBezier2Kwadratisch
+
+**Soort:** functie
+
+```typescript
+function flintBezier2Quadratic(point0: FlintVec2, point1: FlintVec2, point2: FlintVec2, factor: number): FlintVec2;
+```
+
+Voer Bezier 2 kwadratische bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| punt0 | FlintVec2 |             |
+| punt1 | FlintVec2 |             |
+| punt2 | FlintVec2 |             |
+| factor | nummer |             |
+
+### vuursteenBezier3Kubisch
+
+**Soort:** functie
+
+```typescript
+function flintBezier3Cubic(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+Voer Bezier 3 kubieke bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| punt0 | FlintVec3 |             |
+| punt1 | FlintVec3 |             |
+| punt2 | FlintVec3 |             |
+| punt3 | FlintVec3 |             |
+| factor | nummer |             |
+
+### flintBVHBuildFromAABBs
+
+**Soort:** functie
+
+```typescript
+function flintBVHBuildFromAABBs(boxes: readonly FlintAABB3[]): FlintBVHTree3;
+```
+
+Voer b v h build uit vanuit een a b bs-bewerking.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | --------------------- | ----------- |
+| dozen | alleen-lezen FlintAABB3[] |             |
+
+### FlintBVHNode3
+
+**Soort:** interface
+
+```typescript
+export interface FlintBVHNode3
+```
+
+B V H Node 3 weergave.
+
+### vuursteenBVHRayIntersect
+
+**Soort:** functie
+
+```typescript
+function flintBVHRayIntersect(tree: FlintBVHTree3, ray: FlintRay3): FlintOption<FlintRayHit3>;
+```
+
+Voer de bvh-straalsnijdingsbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ------------- | ----------- |
+| boom | FlintBVHTree3 |             |
+| straal | FlintRay3 |             |
+
+### FlintBVHTree3
+
+**Soort:** interface
+
+```typescript
+export interface FlintBVHTree3
+```
+
+B V H Boom 3 weergave.
+
+### vuursteenCatmullRom2
+
+**Soort:** functie
+
+```typescript
+function flintCatmullRom2(
+  point0: FlintVec2,
+  point1: FlintVec2,
+  point2: FlintVec2,
+  point3: FlintVec2,
+  factor: number,
+): FlintVec2;
+```
+
+Voer de catmull rom 2-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| punt0 | FlintVec2 |             |
+| punt1 | FlintVec2 |             |
+| punt2 | FlintVec2 |             |
+| punt3 | FlintVec2 |             |
+| factor | nummer |             |
+
+### vuursteenCatmullRom3
+
+**Soort:** functie
+
+```typescript
+function flintCatmullRom3(
+  point0: FlintVec3,
+  point1: FlintVec3,
+  point2: FlintVec3,
+  point3: FlintVec3,
+  factor: number,
+): FlintVec3;
+```
+
+Voer catmull rom 3-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| punt0 | FlintVec3 |             |
+| punt1 | FlintVec3 |             |
+| punt2 | FlintVec3 |             |
+| punt3 | FlintVec3 |             |
+| factor | nummer |             |
+
+### FlintCirkel
+
+**Soort:** interface
+
+```typescript
+export interface FlintCircle
+```
+
+Cirkel representatie.
+
+### vuursteenCirkelBevatPunt
+
+**Soort:** functie
+
+```typescript
+function flintCircleContainsPoint(circle: FlintCircle, point: FlintVec2): boolean;
+```
+
+Voer cirkel bevat puntbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ----------- | ----------- |
+| cirkel | FlintCirkel |             |
+| punt | FlintVec2 |             |
+
+### vuursteenCirkeldoorsnijdtCirkel
+
+**Soort:** functie
+
+```typescript
+function flintCircleIntersectsCircle(first: FlintCircle, second: FlintCircle): boolean;
+```
+
+Voer de cirkel-snijcirkelbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ----------- | ----------- |
+| eerste | FlintCirkel |             |
+| tweede | FlintCirkel |             |
+
+### FlintFrustum
+
+**Soort:** interface
+
+```typescript
+export interface FlintFrustum
+```
+
+Frustum-vertegenwoordiging.
+
+### vuursteenFrustumFromViewProj
+
+**Soort:** functie
+
+```typescript
+function flintFrustumFromViewProj(viewProj: FlintMat4): FlintFrustum;
+```
+
+Voer frustum uit vanuit weergaveprojectbewerking.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | --------- | ----------- |
+| bekijkProj | FlintMat4 |             |
+
+### vuursteenFrustumSnijdtBol
+
+**Soort:** functie
+
+```typescript
+function flintFrustumIntersectsSphere(frustum: FlintFrustum, sphere: FlintSphere): boolean;
+```
+
+Voer de bewerking Frustum Intersects Sphere uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------------ | ----------- |
+| afgeknotte boom | FlintFrustum |             |
+| bol | FlintSphere |             |
+
+### VuursteenOBB2
+
+**Soort:** interface
+
+```typescript
+export interface FlintOBB2
+```
+
+O B B 2 vertegenwoordiging.
+
+### VuursteenOBB3
+
+**Soort:** interface
+
+```typescript
+export interface FlintOBB3
+```
+
+O B B 3 vertegenwoordiging.
+
+### VuursteenVliegtuig3
+
+**Soort:** interface
+
+```typescript
+export interface FlintPlane3
+```
+
+Vliegtuig 3 weergave.
+
+### flintPlane3DistanceToPoint
+
+**Soort:** functie
+
+```typescript
+function flintPlane3DistanceToPoint(plane: FlintPlane3, point: FlintVec3): number;
+```
+
+Voer de afstand tot punt-bewerking op vlak 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ----------- | ----------- |
+| vliegtuig | FlintPlane3 |             |
+| punt | FlintVec3 |             |
+
+### FlintRay2
+
+**Soort:** interface
+
+```typescript
+export interface FlintRay2
+```
+
+Straal 2 representatie.
+
+### FlintRay3
+
+**Soort:** interface
+
+```typescript
+export interface FlintRay3
+```
+
+Straal 3 representatie.
+
+### flintRay3IntersectOBB
+
+**Soort:** functie
+
+```typescript
+function flintRay3IntersectOBB(ray: FlintRay3, obb: FlintOBB3): FlintOption<number>;
+```
+
+Voer straal 3 snijpunt o b b-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | --------- | ----------- |
+| straal | FlintRay3 |             |
+| ob | FlintOBB3 |             |
+
+### vuursteenRay3doorsnijdtAABB3
+
+**Soort:** functie
+
+```typescript
+function flintRay3IntersectsAABB3(ray: FlintRay3, box: FlintAABB3): FlintOption<number>;
+```
+
+Voer de bewerking van straal 3 snijpunten a a b b 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---- | ---------- | ----------- |
+| straal | FlintRay3 |             |
+| doos | VuursteenAABB3 |             |
+
+### vuursteenStraal3doorsnijdtVliegtuig3
+
+**Soort:** functie
+
+```typescript
+function flintRay3IntersectsPlane3(ray: FlintRay3, plane: FlintPlane3): FlintOption<number>;
+```
+
+Voer de bewerking van straal 3 en snijvlak 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ----------- | ----------- |
+| straal | FlintRay3 |             |
+| vliegtuig | FlintPlane3 |             |
+
+### vuursteenRay3SnijdtBol
+
+**Soort:** functie
+
+```typescript
+function flintRay3IntersectsSphere(ray: FlintRay3, sphere: FlintSphere): FlintOption<number>;
+```
+
+Voer de straal 3-doorsnijdingsboloperatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ----------- | ----------- |
+| straal | FlintRay3 |             |
+| bol | FlintSphere |             |
+
+### vuursteenStraal3doorsnijdtDriehoek3
+
+**Soort:** functie
+
+```typescript
+function flintRay3IntersectsTriangle3(ray: FlintRay3, triangle: FlintTriangle3): FlintOption<number>;
+```
+
+Voer straal 3 snijdt driehoek 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | -------------- | ----------- |
+| straal | FlintRay3 |             |
+| driehoek | FlintTriangle3 |             |
+
+### FlintRayHit3
+
+**Soort:** interface
+
+```typescript
+export interface FlintRayHit3
+```
+
+Ray Hit 3-weergave.
+
+### VuursteenSegment2
+
+**Soort:** interface
+
+```typescript
+export interface FlintSegment2
+```
+
+Segment 2 vertegenwoordiging.
+
+### VuursteenSegment3
+
+**Soort:** interface
+
+```typescript
+export interface FlintSegment3
+```
+
+Segment 3 vertegenwoordiging.
+
+### FlintSphere
+
+**Soort:** interface
+
+```typescript
+export interface FlintSphere
+```
+
+Bol representatie.
+
+### flintSphereBevatPunt
+
+**Soort:** functie
+
+```typescript
+function flintSphereContainsPoint(sphere: FlintSphere, point: FlintVec3): boolean;
+```
+
+Voer bol bevat puntbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ----------- | ----------- |
+| bol | FlintSphere |             |
+| punt | FlintVec3 |             |
+
+### vuursteenBolKruistBol
+
+**Soort:** functie
+
+```typescript
+function flintSphereIntersectsSphere(first: FlintSphere, second: FlintSphere): boolean;
+```
+
+Voer de bol-snijpunt-bolbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ----------- | ----------- |
+| eerste | FlintSphere |             |
+| tweede | FlintSphere |             |
+
+### FlintTriangle2
+
+**Soort:** interface
+
+```typescript
+export interface FlintTriangle2
+```
+
+Driehoek 2 representatie.
+
+### vuursteenTriangle2Area
+
+**Soort:** functie
+
+```typescript
+function flintTriangle2Area(triangle: FlintTriangle2): number;
+```
+
+Voer driehoek 2-gebiedoperatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | -------------- | ----------- |
+| driehoek | FlintTriangle2 |             |
+
+### FlintTriangle3
+
+**Soort:** interface
+
+```typescript
+export interface FlintTriangle3
+```
+
+Driehoek 3 representatie.
+
+### vuursteenTriangle3Normaal
+
+**Soort:** functie
+
+```typescript
+function flintTriangle3Normal(triangle: FlintTriangle3): FlintVec3;
+```
+
+Voer de normale werking van driehoek 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | -------------- | ----------- |
+| driehoek | FlintTriangle3 |             |
+
+## `src/math/vector`
+
+### creëerFlintIVec2
+
+**Soort:** functie
+
+```typescript
+function createFlintIVec2(coordX = 0, coordY = 0): FlintIVec2;
+```
+
+Voer de bewerking Create Flint i vec 2 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---- | ----------- |
+| coördinatieX |      |             |
+| coördinatie |      |             |
+
+### maakFlintIVec3
+
+**Soort:** functie
+
+```typescript
+function createFlintIVec3(coordX = 0, coordY = 0, coordZ = 0): FlintIVec3;
+```
+
+Voer de bewerking Create Flint i vec 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---- | ----------- |
+| coördinatieX |      |             |
+| coördinatie |      |             |
+| coordZ |      |             |
+
+### maakFlintMat2
+
+**Soort:** functie
+
+```typescript
+function createFlintMat2(column0OrElements?: FlintVec2 | readonly number[], column1?: FlintVec2): FlintMat2;
+```
+
+Voer de bewerking Vuursteenmat 2 maken uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------------- | ------------------------------ | ----------- |
+| kolom0OrElementen | FlintVec2 \| alleen-lezen nummer[] |             |
+| kolom1 | FlintVec2 |             |
+
+### maakFlintMat3
+
+**Soort:** functie
+
+```typescript
+function createFlintMat3(
+  column0OrElements?: FlintVec3 | readonly number[],
+  column1?: FlintVec3,
+  column2?: FlintVec3,
+): FlintMat3;
+```
+
+Voer de bewerking Vuursteenmat 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------------- | ------------------------------ | ----------- |
+| kolom0OrElementen | FlintVec3 \| alleen-lezen nummer[] |             |
+| kolom1 | FlintVec3 |             |
+| kolom2 | FlintVec3 |             |
+
+### maakFlintMat4
+
+**Soort:** functie
+
+```typescript
+function createFlintMat4(
+  column0OrElements?: FlintVec4 | readonly number[],
+  column1?: FlintVec4,
+  column2?: FlintVec4,
+  column3?: FlintVec4,
+): FlintMat4;
+```
+
+Voer de bewerking Vuursteenmat 4 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------------- | ------------------------------ | ----------- |
+| kolom0OrElementen | FlintVec4 \| alleen-lezen nummer[] |             |
+| kolom1 | FlintVec4 |             |
+| kolom2 | FlintVec4 |             |
+| kolom3 | FlintVec4 |             |
+
+### maakFlintQuat
+
+**Soort:** functie
+
+```typescript
+function createFlintQuat(coordX = 0, coordY = 0, coordZ = 0, coordW = 1): FlintQuat;
+```
+
+Voer de bewerking Flint Quat uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---- | ----------- |
+| coördinatieX |      |             |
+| coördinatie |      |             |
+| coordZ |      |             |
+| coördinatieW |      |             |
+
+### creëerFlintVec2
+
+**Soort:** functie
+
+```typescript
+function createFlintVec2(coordX = 0, coordY = 0): FlintVec2;
+```
+
+Voer de bewerking Create Flint Vec 2 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---- | ----------- |
+| coördinatieX |      |             |
+| coördinatie |      |             |
+
+### maakFlintVec3
+
+**Soort:** functie
+
+```typescript
+function createFlintVec3(coordX = 0, coordY = 0, coordZ = 0): FlintVec3;
+```
+
+Voer de bewerking Create Flint Vec 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---- | ----------- |
+| coördinatieX |      |             |
+| coördinatie |      |             |
+| coordZ |      |             |
+
+### creëerFlintVec4
+
+**Soort:** functie
+
+```typescript
+function createFlintVec4(coordX = 0, coordY = 0, coordZ = 0, coordW = 0): FlintVec4;
+```
+
+Voer de bewerking Create Flint Vec 4 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ---- | ----------- |
+| coördinatieX |      |             |
+| coördinatie |      |             |
+| coordZ |      |             |
+| coördinatieW |      |             |
+
+### VuursteenIVec2
+
+**Soort:** interface
+
+```typescript
+export interface FlintIVec2
+```
+
+2D geheel getalvector.
+
+### VuursteenIVec3
+
+**Soort:** interface
+
+```typescript
+export interface FlintIVec3
+```
+
+3D geheel getalvector.
+
+### VuursteenMat2
+
+**Soort:** interface
+
+```typescript
+export interface FlintMat2
+```
+
+Mat 2 weergave.
+
+### vuursteenMat2Toevoegen
+
+**Soort:** functie
+
+```typescript
+function flintMat2Add(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+Voer de optelbewerking van mat 2 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintMat2 |             |
+| tweede | FlintMat2 |             |
+
+### flintMat2Determinant
+
+**Soort:** functie
+
+```typescript
+function flintMat2Determinant(matrix: FlintMat2): number;
+```
+
+Voer de determinantbewerking van mat 2 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat2 |             |
+
+### vuursteenMat2VanCols
+
+**Soort:** functie
+
+```typescript
+function flintMat2FromCols(column0: FlintVec2, column1: FlintVec2): FlintMat2;
+```
+
+Voer mat 2 uit vanaf cols-operatie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | --------- | ----------- |
+| kolom0 | FlintVec2 |             |
+| kolom1 | FlintVec2 |             |
+
+### flintMat2Identiteit
+
+**Soort:** functie
+
+```typescript
+function flintMat2Identity(): FlintMat2;
+```
+
+Voer de identiteitsbewerking van mat 2 uit.
+
+### vuursteenMat2Inverse
+
+**Soort:** functie
+
+```typescript
+function flintMat2Inverse(matrix: FlintMat2): FlintOption<FlintMat2>;
+```
+
+Voer mat 2 omgekeerde bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat2 |             |
+
+### vuursteenMat2Mul
+
+**Soort:** functie
+
+```typescript
+function flintMat2Mul(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+Voer mat 2 mul-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintMat2 |             |
+| tweede | FlintMat2 |             |
+
+### flintMat2Rotatie
+
+**Soort:** functie
+
+```typescript
+function flintMat2Rotation(angleRad: number): FlintMat2;
+```
+
+Voer mat 2-rotatiebewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| hoekRad | nummer |             |
+
+### vuursteenMat2Scale
+
+**Soort:** functie
+
+```typescript
+function flintMat2Scale(matrix: FlintMat2, scalar: number): FlintMat2;
+```
+
+Voer mat 2-schaalbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat2 |             |
+| scalair | nummer |             |
+
+### flintMat2Schaal
+
+**Soort:** functie
+
+```typescript
+function flintMat2Scaling(scaleVector: FlintVec2): FlintMat2;
+```
+
+Voer mat 2 schalingsbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | --------- | ----------- |
+| schaalVector | FlintVec2 |             |
+
+### vuursteenMat2Sub
+
+**Soort:** functie
+
+```typescript
+function flintMat2Sub(first: FlintMat2, second: FlintMat2): FlintMat2;
+```
+
+Voer mat 2 suboperatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintMat2 |             |
+| tweede | FlintMat2 |             |
+
+### vuursteenMat2TransformVec2
+
+**Soort:** functie
+
+```typescript
+function flintMat2TransformVec2(matrix: FlintMat2, vector: FlintVec2): FlintVec2;
+```
+
+Voer mat 2 transformatie vec 2 operatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat2 |             |
+| vector | FlintVec2 |             |
+
+### flintMat2Transponeren
+
+**Soort:** functie
+
+```typescript
+function flintMat2Transpose(matrix: FlintMat2): FlintMat2;
+```
+
+Voer mat 2 transponeerbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat2 |             |
+
+### VuursteenMat3
+
+**Soort:** interface
+
+```typescript
+export interface FlintMat3
+```
+
+Mat 3 weergave.
+
+### vuursteenMat3Toevoegen
+
+**Soort:** functie
+
+```typescript
+function flintMat3Add(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+Voer de optelbewerking van mat 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintMat3 |             |
+| tweede | FlintMat3 |             |
+
+### flintMat3Determinant
+
+**Soort:** functie
+
+```typescript
+function flintMat3Determinant(matrix: FlintMat3): number;
+```
+
+Voer de determinantbewerking van mat 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat3 |             |
+
+### vuursteenMat3VanCols
+
+**Soort:** functie
+
+```typescript
+function flintMat3FromCols(column0: FlintVec3, column1: FlintVec3, column2: FlintVec3): FlintMat3;
+```
+
+Voer mat 3 uit vanaf cols-operatie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | --------- | ----------- |
+| kolom0 | FlintVec3 |             |
+| kolom1 | FlintVec3 |             |
+| kolom2 | FlintVec3 |             |
+
+### flintMat3Identiteit
+
+**Soort:** functie
+
+```typescript
+function flintMat3Identity(): FlintMat3;
+```
+
+Voer mat 3-identiteitsbewerking uit.
+
+### vuursteenMat3Inverse
+
+**Soort:** functie
+
+```typescript
+function flintMat3Inverse(matrix: FlintMat3): FlintOption<FlintMat3>;
+```
+
+Voer mat 3 omgekeerde bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat3 |             |
+
+### vuursteenMat3Mul
+
+**Soort:** functie
+
+```typescript
+function flintMat3Mul(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+Voer mat 3 mul-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintMat3 |             |
+| tweede | FlintMat3 |             |
+
+### vuursteenMat3Roteren2D
+
+**Soort:** functie
+
+```typescript
+function flintMat3Rotate2D(angleRad: number): FlintMat3;
+```
+
+Voer mat 3 roteren 2 d bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| hoekRad | nummer |             |
+
+### vuursteenMat3Scale
+
+**Soort:** functie
+
+```typescript
+function flintMat3Scale(matrix: FlintMat3, scalar: number): FlintMat3;
+```
+
+Voer mat 3-schaalbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat3 |             |
+| scalair | nummer |             |
+
+### vuursteenMat3Schaal2D
+
+**Soort:** functie
+
+```typescript
+function flintMat3Scale2D(scale: FlintVec2): FlintMat3;
+```
+
+Voer mat 3 schaal 2 d-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | --------- | ----------- |
+| schaal | FlintVec2 |             |
+
+### vuursteenMat3Sub
+
+**Soort:** functie
+
+```typescript
+function flintMat3Sub(first: FlintMat3, second: FlintMat3): FlintMat3;
+```
+
+Voer mat 3 suboperatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintMat3 |             |
+| tweede | FlintMat3 |             |
+
+### vuursteenMat3TransformVec2
+
+**Soort:** functie
+
+```typescript
+function flintMat3TransformVec2(matrix: FlintMat3, vector: FlintVec2): FlintVec2;
+```
+
+Voer mat 3 transformatie vec 2 operatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat3 |             |
+| vector | FlintVec2 |             |
+
+### vuursteenMat3TransformVec3
+
+**Soort:** functie
+
+```typescript
+function flintMat3TransformVec3(matrix: FlintMat3, vector: FlintVec3): FlintVec3;
+```
+
+Voer mat 3 transformatie vec 3 operatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat3 |             |
+| vector | FlintVec3 |             |
+
+### vuursteenMat3Translate2D
+
+**Soort:** functie
+
+```typescript
+function flintMat3Translate2D(translation: FlintVec2): FlintMat3;
+```
+
+Voer mat 3, vertaal 2 d-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----------- | --------- | ----------- |
+| vertaling | FlintVec2 |             |
+
+### flintMat3Transponeren
+
+**Soort:** functie
+
+```typescript
+function flintMat3Transpose(matrix: FlintMat3): FlintMat3;
+```
+
+Voer mat 3 transponeerbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat3 |             |
+
+### VuursteenMat4
+
+**Soort:** interface
+
+```typescript
+export interface FlintMat4
+```
+
+Mat 4 weergave.
+
+### vuursteenMat4Toevoegen
+
+**Soort:** functie
+
+```typescript
+function flintMat4Add(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+Voer de optelbewerking van mat 4 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintMat4 |             |
+| tweede | FlintMat4 |             |
+
+### flintMat4Determinant
+
+**Soort:** functie
+
+```typescript
+function flintMat4Determinant(matrix: FlintMat4): number;
+```
+
+Voer de determinantbewerking van mat 4 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
+
+### vuursteenMat4FromCols
+
+**Soort:** functie
+
+```typescript
+function flintMat4FromCols(column0: FlintVec4, column1: FlintVec4, column2: FlintVec4, column3: FlintVec4): FlintMat4;
+```
+
+Voer mat 4 uit vanaf cols-operatie.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | --------- | ----------- |
+| kolom0 | FlintVec4 |             |
+| kolom1 | FlintVec4 |             |
+| kolom2 | FlintVec4 |             |
+| kolom3 | FlintVec4 |             |
+
+### flintMat4Identiteit
+
+**Soort:** functie
+
+```typescript
+function flintMat4Identity(): FlintMat4;
+```
+
+Voer mat 4-identiteitsbewerking uit.
+
+### vuursteenMat4Inverse
+
+**Soort:** functie
+
+```typescript
+function flintMat4Inverse(matrix: FlintMat4): FlintOption<FlintMat4>;
+```
+
+Voer mat 4 omgekeerde bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
+
+### vuursteenMat4LookAt
+
+**Soort:** functie
+
+```typescript
+function flintMat4LookAt(eye: FlintVec3, target: FlintVec3, up: FlintVec3): FlintMat4;
+```
+
+Voer mat 4 uit, kijk naar de werking.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| oog | FlintVec3 |             |
+| doel | FlintVec3 |             |
+| op | FlintVec3 |             |
+
+### vuursteenMat4Mul
+
+**Soort:** functie
+
+```typescript
+function flintMat4Mul(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+Voer mat 4 mul-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintMat4 |             |
+| tweede | FlintMat4 |             |
+
+### flintMat4Orthografisch
+
+**Soort:** functie
+
+```typescript
+function flintMat4Orthographic(
+  left: number,
+  right: number,
+  bottom: number,
+  top: number,
+  zNear: number,
+  zFar: number,
+): FlintMat4;
+```
+
+Voer mat 4 orthografische bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------ | ----------- |
+| links | nummer |             |
+| juist | nummer |             |
+| onderkant | nummer |             |
+| bovenaan | nummer |             |
+| zIn de buurt | nummer |             |
+| zFar | nummer |             |
+
+### flintMat4Perspectief
+
+**Soort:** functie
+
+```typescript
+function flintMat4Perspective(fovYRad: number, aspect: number, zNear: number, zFar: number): FlintMat4;
+```
+
+Voer mat 4 perspectiefbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------ | ----------- |
+| fovYRad | nummer |             |
+| aspect | nummer |             |
+| zIn de buurt | nummer |             |
+| zFar | nummer |             |
+
+### flintMat4RotationAxisAngle
+
+**Soort:** functie
+
+```typescript
+function flintMat4RotationAxisAngle(axis: FlintVec3, angleRad: number): FlintMat4;
+```
+
+Voer mat 4 rotatie-as hoekbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | --------- | ----------- |
+| as | FlintVec3 |             |
+| hoekRad | nummer |             |
+
+### flintMat4RotationX
+
+**Soort:** functie
+
+```typescript
+function flintMat4RotationX(angleRad: number): FlintMat4;
+```
+
+Voer mat 4 rotatie x bediening uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| hoekRad | nummer |             |
+
+### vuursteenMat4RotatieY
+
+**Soort:** functie
+
+```typescript
+function flintMat4RotationY(angleRad: number): FlintMat4;
+```
+
+Voer mat 4 rotatie-y-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| hoekRad | nummer |             |
+
+### vuursteenMat4RotationZ
+
+**Soort:** functie
+
+```typescript
+function flintMat4RotationZ(angleRad: number): FlintMat4;
+```
+
+Voer mat 4 rotatie z-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | ------ | ----------- |
+| hoekRad | nummer |             |
+
+### vuursteenMat4Scale
+
+**Soort:** functie
+
+```typescript
+function flintMat4Scale(matrix: FlintMat4, scalar: number): FlintMat4;
+```
+
+Voer mat 4-schaalbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
+| scalair | nummer |             |
+
+### flintMat4Schaal
+
+**Soort:** functie
+
+```typescript
+function flintMat4Scaling(scale: FlintVec3): FlintMat4;
+```
+
+Voer mat 4 schalingsbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | --------- | ----------- |
+| schaal | FlintVec3 |             |
+
+### vuursteenMat4Sub
+
+**Soort:** functie
+
+```typescript
+function flintMat4Sub(first: FlintMat4, second: FlintMat4): FlintMat4;
+```
+
+Voer mat 4 subbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintMat4 |             |
+| tweede | FlintMat4 |             |
+
+### vuursteenMat4TransformPoint3
+
+**Soort:** functie
+
+```typescript
+function flintMat4TransformPoint3(matrix: FlintMat4, point: FlintVec3): FlintVec3;
+```
+
+Voer transformatiepunt 3 van mat 4 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
+| punt | FlintVec3 |             |
+
+### vuursteenMat4TransformVec4
+
+**Soort:** functie
+
+```typescript
+function flintMat4TransformVec4(matrix: FlintMat4, vector: FlintVec4): FlintVec4;
+```
+
+Voer mat 4 transformatie vec 4 operatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
+| vector | FlintVec4 |             |
+
+### vuursteenMat4TransformVector3
+
+**Soort:** functie
+
+```typescript
+function flintMat4TransformVector3(matrix: FlintMat4, vector: FlintVec3): FlintVec3;
+```
+
+Voer mat 4 transformatievector 3 uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
+| vector | FlintVec3 |             |
+
+### flintMat4Translation
+
+**Soort:** functie
+
+```typescript
+function flintMat4Translation(offset: FlintVec3): FlintMat4;
+```
+
+Voer mat 4-vertaalbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| gecompenseerd | FlintVec3 |             |
+
+### flintMat4Transponeren
+
+**Soort:** functie
+
+```typescript
+function flintMat4Transpose(matrix: FlintMat4): FlintMat4;
+```
+
+Voer mat 4 transponeerbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| matrix | FlintMat4 |             |
+
+### FlintQuat
+
+**Soort:** interface
+
+```typescript
+export interface FlintQuat
+```
+
+Quat vertegenwoordiging.
+
+### flintQuatConjugaat
+
+**Soort:** functie
+
+```typescript
+function flintQuatConjugate(quaternion: FlintQuat): FlintQuat;
+```
+
+Voer een quat-conjugaatbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
+
+### vuursteenQuatDot
+
+**Soort:** functie
+
+```typescript
+function flintQuatDot(first: FlintQuat, second: FlintQuat): number;
+```
+
+Voer een quat-dot-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintQuat |             |
+| tweede | FlintQuat |             |
+
+### flintQuatFromAxisAngle
+
+**Soort:** functie
+
+```typescript
+function flintQuatFromAxisAngle(axis: FlintVec3, angleRad: number): FlintQuat;
+```
+
+Voer quat uit vanuit ashoekbewerking.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | --------- | ----------- |
+| as | FlintVec3 |             |
+| hoekRad | nummer |             |
+
+### flintQuatFromEuler
+
+**Soort:** functie
+
+```typescript
+function flintQuatFromEuler(pitchX: number, yawY: number, rollZ: number): FlintQuat;
+```
+
+Voer quat uit vanuit euler-bewerking.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ------ | ----------- |
+| toonhoogteX | nummer |             |
+| jaauw | nummer |             |
+| rolZ | nummer |             |
+
+### flintQuatIdentiteit
+
+**Soort:** functie
+
+```typescript
+function flintQuatIdentity(): FlintQuat;
+```
+
+Voer een quat-identiteitsbewerking uit.
+
+### flintQuatInverse
+
+**Soort:** functie
+
+```typescript
+function flintQuatInverse(quaternion: FlintQuat): FlintOption<FlintQuat>;
+```
+
+Voer een quat-inverse bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
+
+### vuursteenQuatMul
+
+**Soort:** functie
+
+```typescript
+function flintQuatMul(first: FlintQuat, second: FlintQuat): FlintQuat;
+```
+
+Voer een quat mul-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintQuat |             |
+| tweede | FlintQuat |             |
+
+### flintQuatNorm
+
+**Soort:** functie
+
+```typescript
+function flintQuatNorm(quaternion: FlintQuat): number;
+```
+
+Voer een quat-normbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
+
+### flintQuatNormaliseren
+
+**Soort:** functie
+
+```typescript
+function flintQuatNormalize(quaternion: FlintQuat): FlintQuat;
+```
+
+Voer een quat-normalisatiebewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
+
+### vuursteenQuatNormSq
+
+**Soort:** functie
+
+```typescript
+function flintQuatNormSq(quaternion: FlintQuat): number;
+```
+
+Voer de quat norm sq-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
+
+### vuursteenQuatRotateVec3
+
+**Soort:** functie
+
+```typescript
+function flintQuatRotateVec3(quaternion: FlintQuat, vector: FlintVec3): FlintVec3;
+```
+
+Voer de quat rotatie vec 3-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
+| vector | FlintVec3 |             |
+
+### vuursteenQuatSlerp
+
+**Soort:** functie
+
+```typescript
+function flintQuatSlerp(first: FlintQuat, second: FlintQuat, factor: number): FlintQuat;
+```
+
+Voer een quat-slerp-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintQuat |             |
+| tweede | FlintQuat |             |
+| factor | nummer |             |
+
+### flintQuatToMat3
+
+**Soort:** functie
+
+```typescript
+function flintQuatToMat3(quaternion: FlintQuat): FlintMat3;
+```
+
+Voer de quat-to-mat 3-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
+
+### flintQuatToMat4
+
+**Soort:** functie
+
+```typescript
+function flintQuatToMat4(quaternion: FlintQuat): FlintMat4;
+```
+
+Voer de quat-to-mat 4-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ---------- | --------- | ----------- |
+| quaternion | FlintQuat |             |
+
+### FlintVec2
+
+**Soort:** interface
+
+```typescript
+export interface FlintVec2
+```
+
+2D drijvende-kommavector.
+
+### vuursteenVec2Toevoegen
+
+**Soort:** functie
+
+```typescript
+function flintVec2Add(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+Voer vec 2 add-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec2 |             |
+| tweede | FlintVec2 |             |
+
+### vuursteenVec2Angle
+
+**Soort:** functie
+
+```typescript
+function flintVec2Angle(first: FlintVec2, second: FlintVec2): number;
+```
+
+Voer vec 2-hoekbediening uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec2 |             |
+| tweede | FlintVec2 |             |
+
+### vuursteenVec2Afstand
+
+**Soort:** functie
+
+```typescript
+function flintVec2Distance(first: FlintVec2, second: FlintVec2): number;
+```
+
+Voer een vec 2-afstandsoperatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec2 |             |
+| tweede | FlintVec2 |             |
+
+### vuursteenVec2Afstandkwadraat
+
+**Soort:** functie
+
+```typescript
+function flintVec2DistanceSquared(first: FlintVec2, second: FlintVec2): number;
+```
+
+Voer een vec 2-afstandskwadraatbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec2 |             |
+| tweede | FlintVec2 |             |
+
+### vuursteenVec2Div
+
+**Soort:** functie
+
+```typescript
+function flintVec2Div(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+Voer vec 2 div-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
+| scalair | nummer |             |
+
+### vuursteenVec2Dot
+
+**Soort:** functie
+
+```typescript
+function flintVec2Dot(first: FlintVec2, second: FlintVec2): number;
+```
+
+Voer een vec 2-puntsbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec2 |             |
+| tweede | FlintVec2 |             |
+
+### vuursteenVec2Lengte
+
+**Soort:** functie
+
+```typescript
+function flintVec2Length(vector: FlintVec2): number;
+```
+
+Voer een vec 2-lengtebewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
+
+### vuursteenVec2LengteSq
+
+**Soort:** functie
+
+```typescript
+function flintVec2LengthSq(vector: FlintVec2): number;
+```
+
+Voer vec 2 lengte sq-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
+
+### vuursteenVec2Lerp
+
+**Soort:** functie
+
+```typescript
+function flintVec2Lerp(first: FlintVec2, second: FlintVec2, factor: number): FlintVec2;
+```
+
+Voer een vec 2-lerp-operatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec2 |             |
+| tweede | FlintVec2 |             |
+| factor | nummer |             |
+
+### vuursteenVec2Mul
+
+**Soort:** functie
+
+```typescript
+function flintVec2Mul(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+Voer de vec 2 mul-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec2 |             |
+| tweede | FlintVec2 |             |
+
+### vuursteenVec2Neg
+
+**Soort:** functie
+
+```typescript
+function flintVec2Neg(vector: FlintVec2): FlintVec2;
+```
+
+Voer de vec 2 neg-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
+
+### flintVec2Normaliseren
+
+**Soort:** functie
+
+```typescript
+function flintVec2Normalize(vector: FlintVec2): FlintVec2;
+```
+
+Voer vec 2 uit om de werking te normaliseren.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
+
+### vuursteenVec2PerpDot
+
+**Soort:** functie
+
+```typescript
+function flintVec2PerpDot(first: FlintVec2, second: FlintVec2): number;
+```
+
+Voer vec 2 perp dot-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec2 |             |
+| tweede | FlintVec2 |             |
+
+### vuursteenVec2Project
+
+**Soort:** functie
+
+```typescript
+function flintVec2Project(vector: FlintVec2, target: FlintVec2): FlintVec2;
+```
+
+Voer vec 2-projectbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
+| doel | FlintVec2 |             |
+
+### vuursteenVec2Reflect
+
+**Soort:** functie
+
+```typescript
+function flintVec2Reflect(vector: FlintVec2, normal: FlintVec2): FlintVec2;
+```
+
+Voer de vec 2 reflect-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
+| normaal | FlintVec2 |             |
+
+### vuursteenVec2Roteren
+
+**Soort:** functie
+
+```typescript
+function flintVec2Rotate(vector: FlintVec2, angleRad: number): FlintVec2;
+```
+
+Voer de vec 2-rotatiebewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| -------- | --------- | ----------- |
+| vector | FlintVec2 |             |
+| hoekRad | nummer |             |
+
+### vuursteenVec2Scale
+
+**Soort:** functie
+
+```typescript
+function flintVec2Scale(vector: FlintVec2, scalar: number): FlintVec2;
+```
+
+Voer een vec 2-schaalbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec2 |             |
+| scalair | nummer |             |
+
+### vuursteenVec2Sub
+
+**Soort:** functie
+
+```typescript
+function flintVec2Sub(first: FlintVec2, second: FlintVec2): FlintVec2;
+```
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec2 |             |
+| tweede | FlintVec2 |             |
+
+### FlintVec3
+
+**Soort:** interface
+
+```typescript
+export interface FlintVec3
+```
+
+### vuursteenVec3Toevoegen
+
+**Soort:** functie
+
+```typescript
+function flintVec3Add(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+Voer vec 3 add-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec3 |             |
+| tweede | FlintVec3 |             |
+
+### vuursteenVec3Hoek
+
+**Soort:** functie
+
+```typescript
+function flintVec3Angle(first: FlintVec3, second: FlintVec3): number;
+```
+
+Voer vec 3-hoekbediening uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec3 |             |
+| tweede | FlintVec3 |             |
+
+### vuursteenVec3Cross
+
+**Soort:** functie
+
+```typescript
+function flintVec3Cross(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+Voer vec 3 kruisoperatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec3 |             |
+| tweede | FlintVec3 |             |
+
+### vuursteenVec3Afstand
+
+**Soort:** functie
+
+```typescript
+function flintVec3Distance(first: FlintVec3, second: FlintVec3): number;
+```
+
+Voer een vec 3-afstandsoperatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec3 |             |
+| tweede | FlintVec3 |             |
+
+### vuursteenVec3Afstandkwadraat
+
+**Soort:** functie
+
+```typescript
+function flintVec3DistanceSquared(first: FlintVec3, second: FlintVec3): number;
+```
+
+Voer een vec 3-afstandskwadraatbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec3 |             |
+| tweede | FlintVec3 |             |
+
+### vuursteenVec3Div
+
+**Soort:** functie
+
+```typescript
+function flintVec3Div(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+Voer vec 3 div-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
+| scalair | nummer |             |
+
+### vuursteenVec3Dot
+
+**Soort:** functie
+
+```typescript
+function flintVec3Dot(first: FlintVec3, second: FlintVec3): number;
+```
+
+Voer een vec 3-puntsbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec3 |             |
+| tweede | FlintVec3 |             |
+
+### vuursteenVec3Lengte
+
+**Soort:** functie
+
+```typescript
+function flintVec3Length(vector: FlintVec3): number;
+```
+
+Voer een vec 3-lengtebewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
+
+### vuursteenVec3LengteSq
+
+**Soort:** functie
+
+```typescript
+function flintVec3LengthSq(vector: FlintVec3): number;
+```
+
+Voer een vec 3 lengte sq-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
+
+### vuursteenVec3Lerp
+
+**Soort:** functie
+
+```typescript
+function flintVec3Lerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+Voer een vec 3-lerp-operatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec3 |             |
+| tweede | FlintVec3 |             |
+| factor | nummer |             |
+
+### vuursteenVec3Mul
+
+**Soort:** functie
+
+```typescript
+function flintVec3Mul(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+Voer de vec 3 mul-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec3 |             |
+| tweede | FlintVec3 |             |
+
+### vuursteenVec3Neg
+
+**Soort:** functie
+
+```typescript
+function flintVec3Neg(vector: FlintVec3): FlintVec3;
+```
+
+Voer de vec 3 neg-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
+
+### flintVec3Normaliseren
+
+**Soort:** functie
+
+```typescript
+function flintVec3Normalize(vector: FlintVec3): FlintVec3;
+```
+
+Voer vec 3 uit om de werking te normaliseren.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
+
+### vuursteenVec3Project
+
+**Soort:** functie
+
+```typescript
+function flintVec3Project(vector: FlintVec3, target: FlintVec3): FlintVec3;
+```
+
+Voer vec 3-projectbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
+| doel | FlintVec3 |             |
+
+### vuursteenVec3Reflect
+
+**Soort:** functie
+
+```typescript
+function flintVec3Reflect(vector: FlintVec3, normal: FlintVec3): FlintVec3;
+```
+
+Voer de vec 3-reflectiebewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
+| normaal | FlintVec3 |             |
+
+### vuursteenVec3Refract
+
+**Soort:** functie
+
+```typescript
+function flintVec3Refract(vector: FlintVec3, normal: FlintVec3, eta: number): FlintVec3;
+```
+
+Voer een vec 3-refractiebewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
+| normaal | FlintVec3 |             |
+| eta | nummer |             |
+
+### vuursteenVec3Weigeren
+
+**Soort:** functie
+
+```typescript
+function flintVec3Reject(vector: FlintVec3, from: FlintVec3): FlintVec3;
+```
+
+Voer de vec 3-uitwerpoperatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
+| van | FlintVec3 |             |
+
+### vuursteenVec3Scale
+
+**Soort:** functie
+
+```typescript
+function flintVec3Scale(vector: FlintVec3, scalar: number): FlintVec3;
+```
+
+Voer een vec 3-schaalbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec3 |             |
+| scalair | nummer |             |
+
+### vuursteenVec3Slerp
+
+**Soort:** functie
+
+```typescript
+function flintVec3Slerp(first: FlintVec3, second: FlintVec3, factor: number): FlintVec3;
+```
+
+Voer vec 3 slerp-operatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec3 |             |
+| tweede | FlintVec3 |             |
+| factor | nummer |             |
+
+### vuursteenVec3Sub
+
+**Soort:** functie
+
+```typescript
+function flintVec3Sub(first: FlintVec3, second: FlintVec3): FlintVec3;
+```
+
+Voer de vec 3-suboperatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec3 |             |
+| tweede | FlintVec3 |             |
+
+### FlintVec4
+
+**Soort:** interface
+
+```typescript
+export interface FlintVec4
+```
+
+4D drijvende-kommavector.
+
+### vuursteenVec4Toevoegen
+
+**Soort:** functie
+
+```typescript
+function flintVec4Add(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+Voer vec 4 add-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec4 |             |
+| tweede | FlintVec4 |             |
+
+### vuursteenVec4Div
+
+**Soort:** functie
+
+```typescript
+function flintVec4Div(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+Voer vec 4 div-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec4 |             |
+| scalair | nummer |             |
+
+### vuursteenVec4Dot
+
+**Soort:** functie
+
+```typescript
+function flintVec4Dot(first: FlintVec4, second: FlintVec4): number;
+```
+
+Voer een vec 4-puntsbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec4 |             |
+| tweede | FlintVec4 |             |
+
+### vuursteenVec4Lengte
+
+**Soort:** functie
+
+```typescript
+function flintVec4Length(vector: FlintVec4): number;
+```
+
+Voer een vec 4-lengtebewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec4 |             |
+
+### vuursteenVec4Lerp
+
+**Soort:** functie
+
+```typescript
+function flintVec4Lerp(first: FlintVec4, second: FlintVec4, factor: number): FlintVec4;
+```
+
+Voer een vec 4-lerp-operatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec4 |             |
+| tweede | FlintVec4 |             |
+| factor | nummer |             |
+
+### vuursteenVec4Neg
+
+**Soort:** functie
+
+```typescript
+function flintVec4Neg(vector: FlintVec4): FlintVec4;
+```
+
+Voer de vec 4 neg-bewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec4 |             |
+
+### flintVec4Normaliseren
+
+**Soort:** functie
+
+```typescript
+function flintVec4Normalize(vector: FlintVec4): FlintVec4;
+```
+
+Voer vec 4 uit om de werking te normaliseren.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec4 |             |
+
+### vuursteenVec4Scale
+
+**Soort:** functie
+
+```typescript
+function flintVec4Scale(vector: FlintVec4, scalar: number): FlintVec4;
+```
+
+Voer een vec 4-schaalbewerking uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| vector | FlintVec4 |             |
+| scalair | nummer |             |
+
+### vuursteenVec4Sub
+
+**Soort:** functie
+
+```typescript
+function flintVec4Sub(first: FlintVec4, second: FlintVec4): FlintVec4;
+```
+
+Voer de vec 4-suboperatie uit.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | --------- | ----------- |
+| eerste | FlintVec4 |             |
+| tweede | FlintVec4 |             |
+
+## `src/memory`
+
+### maakFlintMemory
+
+**Soort:** functie
+
+```typescript
+function createFlintMemory(
+  memoryOrOptions?: WebAssembly.Memory | FlintMemoryOptions,
+  options?: FlintMemoryOptions,
+): FlintMemory;
+```
+
+Creëert een geconfigureerd FlintMemory-exemplaar.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| --------------- | ---------------------------------------- | ----------------------------------------------------------------- |
+| geheugenOrOpties | WebAssembly.Memory \| FlintMemoryOptions | - Bestaande WebAssembly.Memory- of geheugencreatieopties.         |
+| opties | FlintMemoryOptions | - Opties voor het maken en aanpassen van geheugen als er een geheugeninstantie aanwezig is. |
+
+#### Contract
+
+- **@param:** - Bestaande opties voor WebAssembly.Memory of geheugencreatie.
+- **@param:** - Opties voor het maken en aanpassen van geheugen als er een geheugeninstantie aanwezig is.
+- **@returns:** Geïnitialiseerde FlintMemory-instantie.
+
+### maakFlintMultiMemory
+
+**Soort:** functie
+
+```typescript
+function createFlintMultiMemory(options?: FlintMultiMemoryOptions): FlintMultiMemory;
+```
+
+Creëert een geïsoleerde instantie met meerdere geheugens met speciale gastheap, host-interoperabiliteit en statische partities.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------- | ----------- |
+| opties | FlintMultiMemoryOptions |             |
+
+### FALLBACK_GUARD_PAGE_SIZE
+
+**Soort:** constant
+
+```typescript
+export const FALLBACK_GUARD_PAGE_SIZE;
 ```
 
 Geen beschrijving opgegeven.
 
-### FlintMemory
+### FLINT_MEMORY_CAPABILITIES
+
+**Soort:** constant
+
+```typescript
+export const FLINT_MEMORY_CAPABILITIES;
+```
+
+Geen beschrijving opgegeven.
+
+### FlintGeheugen
 
 **Soort:** klasse
 
@@ -1854,9 +6468,9 @@ Geen beschrijving opgegeven.
 export class FlintMemory
 ```
 
-Geen beschrijving opgegeven.
+Beheert WebAssembly lineaire geheugentoewijzingen, grenscontrole en binaire I/O.
 
-### FlintMemoryAddress
+### FlintMemoryAdres
 
 **Soort:** type
 
@@ -1864,7 +6478,7 @@ Geen beschrijving opgegeven.
 export type FlintMemoryAddress = number | bigint;
 ```
 
-Geen beschrijving opgegeven.
+Geheugenadresaanwijzerrepresentatie die zowel 32-bits (getal) als 64-bits (bigint) adressen ondersteunt.
 
 ### FlintMemoryOptions
 
@@ -1874,26 +6488,78 @@ Geen beschrijving opgegeven.
 export interface FlintMemoryOptions
 ```
 
-Geen beschrijving opgegeven.
+Configuratieopties voor het maken en aanpassen van de grootte van een Flint lineaire geheugeninstantie.
+
+### FlintMemoryPartitienaam
+
+**Soort:** type
+
+```typescript
+export type FlintMemoryPartitionName = 'guestHeap' | 'foreignHeap' | 'hostInterop' | 'staticData';
+```
+
+Namen van speciale lineaire geheugenpartities voor modules met meerdere geheugens.
+
+### FlintMultiMemory
+
+**Soort:** klasse
+
+```typescript
+export class FlintMultiMemory
+```
+
+WebAssembly segregatiecoördinator voor meerdere geheugens.
+Isoleert geheugen in speciale ruimtes voor gastuitvoering (geheugen 0),
+buitenlandse niet-vertrouwde C/Rust-heap (geheugen 1), host-interoperbuffer (geheugen 2),
+en statische constanten/tabellen (geheugen 3).
+
+Ondersteunt native hardware-isolatie voor meerdere geheugens en nul-allocatie
+gepartitioneerde fallback-emulatie met één geheugen voor runtimes zonder multi-geheugen (bijv. Safari / WebKit).
+
+### FlintMultiMemoryOpties
+
+**Soort:** interface
+
+```typescript
+export interface FlintMultiMemoryOptions
+```
+
+Opties voor het configureren van meerdere onafhankelijke lineaire geheugenpartities.
+
+### FlintRegionalArena
+
+**Soort:** klasse
+
+```typescript
+export class FlintRegionalArena
+```
+
+### wordt MultiMemory ondersteund
+
+**Soort:** functie
+
+```typescript
+function isMultiMemorySupported(): boolean;
+```
 
 ## `src/parallel`
 
-### FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+### FLINT_PARALLEL_CAPABILITIES
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
+export const FLINT_PARALLEL_CAPABILITIES;
 ```
 
 Mogelijkheidsnamen die worden gebruikt om de uitvoering van worker, thread, atomic en gedeeld geheugen te autoriseren.
 
-### FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS
+### FLINT_PARALLEL_OPERATION_DESCRIPTORS
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
+export const FLINT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<FlintParallelOperation, FlintParallelOperationDescriptor>
 >;
 ```
@@ -1916,11 +6582,11 @@ Retourneert het op nul gebaseerde geordende resultaat, of Option.none wanneer de
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| bron   | FlintIterable<TValue> |              |
-| index  | nummer                |              |
-| opties | FlintParallelOptions  |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------- | ----------- |
+| bron | FlintIterable<TValue> |             |
+| index | nummer |             |
+| opties | FlintParallelOpties |             |
 
 ### flintIteratorParCollect
 
@@ -1937,10 +6603,10 @@ Materialiseer geordende parallelle resultaten in een eigen vector.
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| bron   | FlintIterable<TValue> |              |
-| opties | FlintParallelOptions  |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------- | ----------- |
+| bron | FlintIterable<TValue> |             |
+| opties | FlintParallelOpties |             |
 
 ### flintIteratorParFilter
 
@@ -1959,11 +6625,11 @@ Dit is de canonieke `par_filter` API.
 
 #### Parameters
 
-| Naam      | Typ                                                               | Beschrijving |
-| --------- | ----------------------------------------------------------------- | ------------ |
-| bron      | FlintIterable<TValue>                                             |              |
-| predikaat | (waarde: TValue, index: getal) => boolean \| BelofteLike<boolean> |              |
-| opties    | FlintParallelOptions                                              |              |
+| Naam | Typ | Beschrijving |
+| --------- | ----------------------------------------------------------------- | ----------- |
+| bron | FlintIterable<TValue> |             |
+| predikaat | (waarde: TValue, index: getal) => boolean \| BelofteLike<boolean> |             |
+| opties | FlintParallelOpties |             |
 
 ### flintIteratorParFirst
 
@@ -1980,10 +6646,10 @@ Retourneert het eerste bestelde resultaat, of een Option.none-waarde voor een le
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| bron   | FlintIterable<TValue> |              |
-| opties | FlintParallelOptions  |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------- | ----------- |
+| bron | FlintIterable<TValue> |             |
+| opties | FlintParallelOpties |             |
 
 ### flintIteratorParFlatten
 
@@ -2000,10 +6666,10 @@ Maak geneste bronnen parallel plat, terwijl de uiterlijke en innerlijke orde beh
 
 #### Parameters
 
-| Naam   | Typ                                  | Beschrijving |
-| ------ | ------------------------------------ | ------------ |
-| bron   | FlintIterable<FlintIterable<TValue>> |              |
-| opties | FlintParallelOptions                 |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------------------ | ----------- |
+| bron | FlintIterable<FlintIterable<TValue>> |             |
+| opties | FlintParallelOpties |             |
 
 ### flintIteratorParFold
 
@@ -2022,12 +6688,12 @@ Vouw de bestelde resultaten van links naar rechts, inclusief de meegeleverde ini
 
 #### Parameters
 
-| Naam        | Typ                                                             | Beschrijving |
-| ----------- | --------------------------------------------------------------- | ------------ |
-| bron        | FlintIterable<TValue>                                           |              |
-| initiële    | TResultaat                                                      |              |
-| verloopstuk | (accumulator: TResult, waarde: TValue, index: getal) => TResult |              |
-| opties      | FlintParallelOptions                                            |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------------------------------------------- | ----------- |
+| bron | FlintIterable<TValue> |             |
+| initiële | TResultaat |             |
+| verloopstuk | (accumulator: TResult, waarde: TValue, index: getal) => TResult |             |
+| opties | FlintParallelOpties |             |
 
 ### flintIteratorParLast
 
@@ -2044,10 +6710,10 @@ Retourneert het laatst bestelde resultaat, of een Option.none-waarde voor een le
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| bron   | FlintIterable<TValue> |              |
-| opties | FlintParallelOptions  |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------- | ----------- |
+| bron | FlintIterable<TValue> |             |
+| opties | FlintParallelOpties |             |
 
 ### flintIteratorParMap
 
@@ -2066,11 +6732,11 @@ Terugbelfouten weigeren de bewerking en worden niet verborgen door seriële fall
 
 #### Parameters
 
-| Naam   | Typ                                                               | Beschrijving |
-| ------ | ----------------------------------------------------------------- | ------------ |
-| bron   | FlintIterable<TValue>                                             |              |
-| kaart  | (waarde: TValue, index: getal) => TResult \| BelofteLike<TResult> |              |
-| opties | FlintParallelOptions                                              |              |
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------------------------------------------------- | ----------- |
+| bron | FlintIterable<TValue> |             |
+| kaart | (waarde: TValue, index: getal) => TResult \| BelofteLike<TResult> |             |
+| opties | FlintParallelOpties |             |
 
 ### flintIteratorParToArray
 
@@ -2087,12 +6753,12 @@ Materialiseer geordende parallelle resultaten in een eigen vaste array.
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| bron   | FlintIterable<TValue> |              |
-| opties | FlintParallelOptions  |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------- | ----------- |
+| bron | FlintIterable<TValue> |             |
+| opties | FlintParallelOpties |             |
 
-### flintParallelDescriptor
+### vuursteenParallelDescriptor
 
 **Soort:** functie
 
@@ -2107,10 +6773,10 @@ Beschrijf een operatie en voeg de gekozen strategie uit de aangeboden opties toe
 
 #### Parameters
 
-| Naam     | Typ                    | Beschrijving |
-| -------- | ---------------------- | ------------ |
-| operatie | FlintParallelOperation |              |
-| opties   | FlintParallelOptions   |              |
+| Naam | Typ | Beschrijving |
+| --------- | ---------------------- | ----------- |
+| operatie | FlintParallelOperatie |             |
+| opties | FlintParallelOpties |             |
 
 ### FlintParallelExecutor
 
@@ -2122,7 +6788,7 @@ export interface FlintParallelExecutor
 
 Minimale plannergrens die wordt gebruikt door hostwerknemers of een gecompileerde Wasm-threadrunner.
 
-### FlintParallelOperation
+### FlintParallelOperatie
 
 **Soort:** type
 
@@ -2152,7 +6818,7 @@ export interface FlintParallelOperationDescriptor
 Runtime-metagegevens voor één parallelle bewerking. `ordered` is altijd waar: de
 De bronindex definieert de uitvoervolgorde, in plaats van de voltooiingstijd van de werknemer.
 
-### FlintParallelOptions
+### FlintParallelOpties
 
 **Soort:** interface
 
@@ -2183,7 +6849,7 @@ export type FlintParallelStrategy = 'serial' | 'host-workers' | 'wasm-threads';
 
 Uitvoeringsstrategie geselecteerd voor een geordende parallelle operatie.
 
-### selecteerFlintParallelStrategy
+### selecteerFlintParallelStrategie
 
 **Soort:** functie
 
@@ -2195,9 +6861,138 @@ Selecteer een toegestane strategie zonder het resultaatcontract van de operatie 
 
 #### Parameters
 
-| Naam   | Typ                  | Beschrijving |
-| ------ | -------------------- | ------------ |
-| opties | FlintParallelOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | -------------------- | ----------- |
+| opties | FlintParallelOpties |             |
+
+## `src/safe-heap`
+
+### maakFlintSafeHeap
+
+**Soort:** functie
+
+```typescript
+function createFlintSafeHeap(memory: FlintMemory): FlintSafeHeap;
+```
+
+Fabrieksfunctie voor het maken van een nieuwe FlintSafeHeap-manager.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------ | ----------- | ------------------------- |
+| geheugen | FlintMemory | - Lineaire geheugeninstantie. |
+
+#### Contract
+
+- **@param:** - Lineaire geheugeninstantie.
+- **@returns:** Geïnitialiseerde FlintSafeHeap-instantie.
+
+### FLINT_MEMORY_MODEL
+
+**Soort:** constant
+
+```typescript
+export const FLINT_MEMORY_MODEL;
+```
+
+Geen beschrijving opgegeven.
+
+### FlintDynamicTableManager
+
+**Soort:** klasse
+
+```typescript
+export class FlintDynamicTableManager
+```
+
+Dynamische WebAssembly-functietabelmanager die slottoewijzing, generatietracking,
+en onmiddellijke vernietiging bij vrijgave van sluiting om verzending van verouderde functies te voorkomen.
+
+### FlintRegio
+
+**Soort:** interface
+
+```typescript
+export interface FlintRegion
+```
+
+Levensduurtoken dat een actief geheugengebied identificeert.
+
+### FlintRegionAllocation
+
+**Soort:** interface
+
+```typescript
+export interface FlintRegionAllocation
+```
+
+Descriptor die een geheugentoewijzing bijhoudt die is gebonden aan een levensduurregio.
+
+### FlintRegioArena
+
+**Soort:** klasse
+
+```typescript
+export class FlintRegionArena
+```
+
+Hoogwaardige arena-bumpallocator met bereik voor tijdelijke taken.
+Haalt al het toegewezen geheugen terug in een onmiddellijke reset van de O(1)-aanwijzer.
+
+### FlintSafeHeap
+
+**Soort:** klasse
+
+```typescript
+export class FlintSafeHeap
+```
+
+Deterministische scoped heap voor door de compiler beheerde waarden. Ruwe fws_alloc-oproepen
+blijven op FlintMemory en worden hier nooit impliciet bewaard.
+
+### FlintSharedHandle
+
+**Soort:** interface
+
+```typescript
+export interface FlintSharedHandle
+```
+
+Verwerk referentie die een door referenties getelde gedeelde geheugentoewijzing identificeert.
+
+### FlintTableSlotHandle
+
+**Soort:** interface
+
+```typescript
+export interface FlintTableSlotHandle
+```
+
+Dynamische functietabel slothandgreep trackingtabelindex en generatietoken.
+
+### FlintTlsfAllocator
+
+**Soort:** klasse
+
+```typescript
+export class FlintTlsfAllocator
+```
+
+Two-Level Segregated Fit (TLSF) geheugenallocator.
+Garandeert O(1)-allocatie- en deallocatietijd met onmiddellijke fysieke coalescentie
+en minimale fragmentatie voor ingebedde/real-time Wasm-workloads.
+
+### FlintZwakHandvat
+
+**Soort:** interface
+
+```typescript
+export interface FlintWeakHandle
+```
+
+Zwakke referentiehandle die verwijst naar een gedeelde geheugentoewijzing zonder het aantal sterke referenties te verhogen.
+Vermindert monotone geheugenlekken veroorzaakt door cyclische datastructuren.
 
 ## `src/self-hosted`
 
@@ -2209,7 +7004,7 @@ Selecteer een toegestane strategie zonder het resultaatcontract van de operatie 
 export interface FlintSelfHostedRunOptions
 ```
 
-Geen beschrijving opgegeven.
+Configuratieopties voor het uitvoeren van zelf-hostende compilerfasen in VM- of AOT-modi.
 
 ### FlintSelfHostedVmRun
 
@@ -2219,7 +7014,7 @@ Geen beschrijving opgegeven.
 export interface FlintSelfHostedVmRun
 ```
 
-Geen beschrijving opgegeven.
+Volledig uitvoeringsrapport van een zelf-gehoste compiler die alle lexing- en parseerfasen doorloopt.
 
 ### runFlintSelfHostedCompiler
 
@@ -2235,18 +7030,18 @@ function runFlintSelfHostedCompiler(
 
 Voer de begrensde, zelf-hostende compiler-bootstrap uit.
 
-Voert de FLINT-lex- en parser-fasen uit onder de gevraagde VM-modus en
+Voert de FWS-lex- en parser-fasen uit onder de gevraagde VM-modus en
 vergelijkt elke VM-afgeleide vingerafdruk met de onafhankelijke zaadreferentie.
 De volledige Wasm-emissie blijft zaad-backed en wordt alleen via `artifact` blootgesteld wanneer
 elke fase rapporteert pariteit.
 
 #### Parameters
 
-| Naam   | Typ                       | Beschrijving |
-| ------ | ------------------------- | ------------ |
-| invoer | FlintCompileInput         |              |
-| modus  | FlintVmExecutionMode      |              |
-| opties | FlintSelfHostedRunOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------- | ----------- |
+| invoer | FlintCompileInvoer |             |
+| modus | FlintVmExecutionMode |             |
+| opties | FlintSelfHostedRunOptions |             |
 
 ### runFlintSelfHostedLexStage
 
@@ -2264,15 +7059,49 @@ Voer alleen de begrensde, door FWS geschreven lex-fase uit voor compilerconsumen
 
 #### Parameters
 
-| Naam   | Typ                                                                                             | Beschrijving |
-| ------ | ----------------------------------------------------------------------------------------------- | ------------ |
-| invoer | Kies<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |              |
-| modus  | FlintVmExecutionMode                                                                            |              |
-| opties | FlintSelfHostedRunOptions                                                                       |              |
+| Naam | Typ | Beschrijving |
+| ------- | ----------------------------------------------------------------------------------------------- | ----------- |
+| invoer | Kies<FlintCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |             |
+| modus | FlintVmExecutionMode |             |
+| opties | FlintSelfHostedRunOptions |             |
 
 ## `src/threading`
 
-### canUseFlintWasmThreads
+### bewerenFlintSend
+
+**Soort:** functie
+
+```typescript
+function assertFlintSend(value: T, context = 'value'): T;
+```
+
+Beweert dat een waarde voldoet aan het 'Verzend'-contract en zet een valstrik als deze wordt geschonden.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ---- | ----------- |
+| waarde | T |             |
+| context |      |             |
+
+### bewerenFlintSync
+
+**Soort:** functie
+
+```typescript
+function assertFlintSync(value: T, context = 'value'): T;
+```
+
+Beweert dat een waarde voldoet aan het 'Sync'-contract en zet een valstrik als deze wordt geschonden.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ---- | ----------- |
+| waarde | T |             |
+| context |      |             |
+
+### kanFlintWasmThreads gebruiken
 
 **Soort:** functie
 
@@ -2288,12 +7117,12 @@ Met name een niet-gedeclareerde mogelijkhedenlijst maakt dit pad nooit mogelijk.
 
 #### Parameters
 
-| Naam          | Typ                                             | Beschrijving |
-| ------------- | ----------------------------------------------- | ------------ |
-| doelKenmerken | FlintWasmThreadTargetFeatures \| ongedefinieerd |              |
-| mogelijkheden | alleen-lezen tekenreeks[] \| ongedefinieerd     |              |
+| Naam | Typ | Beschrijving |
+| -------------- | ------------------------------------------ | ----------- |
+| doelKenmerken | FlintWasmThreadTargetFeatures \| ongedefinieerd |             |
+| mogelijkheden | alleen-lezen tekenreeks[] \| ongedefinieerd |             |
 
-### createFlintAtomicI32
+### creëerFlintAtomicI32
 
 **Soort:** functie
 
@@ -2301,14 +7130,20 @@ Met name een niet-gedeclareerde mogelijkhedenlijst maakt dit pad nooit mogelijk.
 function createFlintAtomicI32(length = 1, options: FlintAtomicI32Options = {}): FlintAtomicI32;
 ```
 
-Geen beschrijving opgegeven.
+Wijst een gedeelde atomaire 32-bits integer-array toe en omhult deze met atomaire bewerkingen.
 
 #### Parameters
 
-| Naam   | Typ                   | Beschrijving |
-| ------ | --------------------- | ------------ |
-| lengte |                       |              |
-| opties | FlintAtomicI32Options |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------- | ---------------------------------------------------------- |
+| lengte |                       | - Aantal 32-bits integer-slots om toe te wijzen.              |
+| opties | FlintAtomicI32Opties | - Toewijzingsopties inclusief bestaande SharedArrayBuffer. |
+
+#### Contract
+
+- **@param:** - Aantal 32-bits integer-slots om toe te wijzen.
+- **@param:** - Toewijzingsopties inclusief bestaande SharedArrayBuffer.
+- **@returns:** FlintAtomicI32-instantie geconfigureerd.
 
 ### createFlintWasmThreadScheduler
 
@@ -2324,9 +7159,9 @@ moet gebruik maken van de seriële fallback die is geselecteerd door het paralle
 
 #### Parameters
 
-| Naam   | Typ                             | Beschrijving |
-| ------ | ------------------------------- | ------------ |
-| opties | FlintWasmThreadSchedulerOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------------- | ----------- |
+| opties | FlintWasmThreadSchedulerOptions |             |
 
 ### createFlintWorkerRuntime
 
@@ -2336,23 +7171,33 @@ moet gebruik maken van de seriële fallback die is geselecteerd door het paralle
 function createFlintWorkerRuntime(
   createWorker: () => FlintWorkerPort,
   onMessage: (message: unknown) => void,
-  onError: (error: unknown) => void = () => {},
+  onError: (error: unknown) => void = (_error: unknown) => {
+    // Default no-op error handler.
+  },
   options: FlintWorkerRuntimeOptions = {},
 ): FlintWorkerRuntime;
 ```
 
-Geen beschrijving opgegeven.
+Instantiseert een worker-runtime met de meegeleverde Port Factory- en Lifecycle-hooks.
 
 #### Parameters
 
-| Naam         | Typ                             | Beschrijving |
-| ------------ | ------------------------------- | ------------ |
-| createWorker | () => FlintWorkerPort           |              |
-| opBericht    | (bericht: onbekend) => ongeldig |              |
-| opFout       | (fout: onbekend) => ongeldig    |              |
-| opties       | FlintWorkerRuntimeOptions       |              |
+| Naam | Typ | Beschrijving |
+| ------------ | -------------------------- | ---------------------------------------- |
+| createWorker | () => FlintWorkerPort | - Terugbellen naar de havenfabriek.                 |
+| opBericht | (bericht: onbekend) => ongeldig | - Terugbellen van berichtbehandelaar.              |
+| opFout | (fout: onbekend) => ongeldig | - Optionele callback van de fouthandler.       |
+| opties | FlintWorkerRuntimeOptions | - Configuratieopties voor de runtime. |
 
-### createFlintWorkerScheduler
+#### Contract
+
+- **@param:** - Terugbellen van de poortfabriek.
+- **@param:** - Terugbellen berichtbehandelaar.
+- **@param:** - Optionele callback van de fouthandler.
+- **@param:** - Configuratieopties voor de runtime.
+- **@returns:** Geïnitialiseerde FlintWorkerRuntime.
+
+### maakFlintWorkerScheduler
 
 **Soort:** functie
 
@@ -2369,16 +7214,16 @@ biedt hetzelfde begrensde asynchrone contract voor hosts zonder werkondersteunin
 
 #### Parameters
 
-| Naam   | Typ                         | Beschrijving |
-| ------ | --------------------------- | ------------ |
-| opties | FlintWorkerSchedulerOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | --------------------------- | ----------- |
+| opties | FlintWorkerSchedulerOptions |             |
 
-### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+### FLINT_THREADING_CAPABILITIES
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
+export const FLINT_THREADING_CAPABILITIES;
 ```
 
 Geen beschrijving opgegeven.
@@ -2391,9 +7236,9 @@ Geen beschrijving opgegeven.
 export interface FlintAtomicI32
 ```
 
-Geen beschrijving opgegeven.
+Wrapper die atomaire lees-wijzig-schrijf-bewerkingen biedt op een gedeelde 32-bit integer-buffer.
 
-### FlintAtomicI32Options
+### FlintAtomicI32Opties
 
 **Soort:** interface
 
@@ -2401,7 +7246,17 @@ Geen beschrijving opgegeven.
 export interface FlintAtomicI32Options
 ```
 
-Geen beschrijving opgegeven.
+Opties voor het configureren van de toewijzing of het delen van een atomaire 32-bits integer-array.
+
+### FlintThreadSafetyMarker
+
+**Soort:** interface
+
+```typescript
+export interface FlintThreadSafetyMarker
+```
+
+Metagegevensmarkering voor draadveiligheid die de gelijktijdigheidsgaranties van gedeeld geheugen verifieert.
 
 ### FlintWasmThreadSchedulerOptions
 
@@ -2411,9 +7266,9 @@ Geen beschrijving opgegeven.
 export interface FlintWasmThreadSchedulerOptions extends FlintWasmThreadTargetFeatures
 ```
 
-Geen beschrijving opgegeven.
+Opties voor het configureren van een WebAssembly-threadplanner, ondersteund door gedeeld geheugen en werkers.
 
-### FlintWasmThreadTargetFeatures
+### FlintWasmThreadTarget-functies
 
 **Soort:** interface
 
@@ -2421,7 +7276,7 @@ Geen beschrijving opgegeven.
 export interface FlintWasmThreadTargetFeatures
 ```
 
-Geen beschrijving opgegeven.
+WebAssembly doelfuncties die relevant zijn voor multithreading en gedeeld geheugen.
 
 ### FlintWorkerPort
 
@@ -2431,7 +7286,7 @@ Geen beschrijving opgegeven.
 export interface FlintWorkerPort
 ```
 
-Geen beschrijving opgegeven.
+Algemeen postMessage-berichtpoortcontract voor werknemerscommunicatie.
 
 ### FlintWorkerRuntime
 
@@ -2441,7 +7296,7 @@ Geen beschrijving opgegeven.
 export interface FlintWorkerRuntime
 ```
 
-Geen beschrijving opgegeven.
+Runtime-handle voor het beheren van een communicatiepoort voor werknemers en het afbreken van de levenscyclus ervan.
 
 ### FlintWorkerRuntimeOptions
 
@@ -2451,7 +7306,7 @@ Geen beschrijving opgegeven.
 export interface FlintWorkerRuntimeOptions
 ```
 
-Geen beschrijving opgegeven.
+Opties voor het configureren van het maken van worker-runtime.
 
 ### FlintWorkerScheduler
 
@@ -2471,11 +7326,45 @@ Een begrensde asynchrone planner die wordt gebruikt door runtimegerichte host-wo
 export interface FlintWorkerSchedulerOptions
 ```
 
-Geen beschrijving opgegeven.
+Configuratieopties voor het maken van een taakplanner voor een hostwerknemer.
+
+### isFlintSend
+
+**Soort:** functie
+
+```typescript
+function isFlintSend(value: unknown, visited = new Set<unknown>()): boolean;
+```
+
+Valideert of een waarde voldoet aan het 'Verzend'-contract (veilig om over threadgrenzen heen te verzenden).
+Verifieert recursief gewone objecten, arrays, primitieven en getypte buffers.
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ------- | ------- | ----------- |
+| waarde | onbekend |             |
+| bezocht |         |             |
+
+### isFlintSync
+
+**Soort:** functie
+
+```typescript
+function isFlintSync(value: unknown): boolean;
+```
+
+Valideert of een waarde voldoet aan het 'Sync'-contract (veilig om gelijktijdig over threads te delen).
+
+#### Parameters
+
+| Naam | Typ | Beschrijving |
+| ----- | ------- | ----------- |
+| waarde | onbekend |             |
 
 ## `src/trace`
 
-### createFlintTraceRecorder
+### maakFlintTraceRecorder
 
 **Soort:** functie
 
@@ -2483,14 +7372,20 @@ Geen beschrijving opgegeven.
 function createFlintTraceRecorder(options: FlintTraceOptions, functionName: string): FlintTraceRecorder;
 ```
 
-Geen beschrijving opgegeven.
+Creëert een traceerrecorder voor uitvoering die omvangsbudgetten en telemetrie-opnames afdwingt.
 
 #### Parameters
 
-| Naam        | Typ               | Beschrijving |
-| ----------- | ----------------- | ------------ |
-| opties      | FlintTraceOptions |              |
-| functieNaam | tekenreeks        |              |
+| Naam | Typ | Beschrijving |
+| ------------ | ----------------- | ------------------------------------ |
+| opties | FlintTraceOptions | - Configuratieopties voor tracering. |
+| functieNaam | tekenreeks | - Functienaam van het primaire toegangspunt. |
+
+#### Contract
+
+- **@param:** - Configuratieopties voor tracering.
+- **@param:** - Functienaam van het primaire toegangspunt.
+- **@returns:** FlintTraceRecorder-instantie geconfigureerd.
 
 ### FlintTraceCaptureMode
 
@@ -2500,9 +7395,9 @@ Geen beschrijving opgegeven.
 export type FlintTraceCaptureMode = 'summary' | 'events' | 'snapshot';
 ```
 
-Geen beschrijving opgegeven.
+Capture-breedsprakigheidsmodus voor het opnemen van uitvoeringstracering.
 
-### FlintTraceCounters
+### FlintTrace-tellers
 
 **Soort:** interface
 
@@ -2510,7 +7405,7 @@ Geen beschrijving opgegeven.
 export interface FlintTraceCounters
 ```
 
-Geen beschrijving opgegeven.
+Geaggregeerde uitvoeringsstatistieken en bewerkingstellers geregistreerd tijdens tracering.
 
 ### FlintTraceEvent
 
@@ -2520,7 +7415,7 @@ Geen beschrijving opgegeven.
 export interface FlintTraceEvent
 ```
 
-Geen beschrijving opgegeven.
+Gedetailleerde uitvoeringstracegebeurtenis vastgelegd tijdens runtime of VM-interpretatie.
 
 ### FlintTraceEventType
 
@@ -2531,7 +7426,7 @@ export type FlintTraceEventType =
   'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
-Geen beschrijving opgegeven.
+Categorie van de opgenomen runtimetrace-gebeurtenis.
 
 ### FlintTraceLimits
 
@@ -2541,9 +7436,9 @@ Geen beschrijving opgegeven.
 export interface FlintTraceLimits
 ```
 
-Geen beschrijving opgegeven.
+Resourcelimieten die het volume en de bytegrootte van traceringsgebeurtenissen beperken.
 
-### FlintTraceOptions
+### FlintTraceOpties
 
 **Soort:** interface
 
@@ -2551,7 +7446,7 @@ Geen beschrijving opgegeven.
 export interface FlintTraceOptions extends FlintTraceLimits
 ```
 
-Geen beschrijving opgegeven.
+Configuratieopties voor het initialiseren van de opname van uitvoeringstracering.
 
 ### FlintTraceRecorder
 
@@ -2561,7 +7456,7 @@ Geen beschrijving opgegeven.
 export interface FlintTraceRecorder
 ```
 
-Geen beschrijving opgegeven.
+Actieve recorderinterface die runtime-uitvoeringsgebeurtenissen gebruikt en traceerrapporten opbouwt.
 
 ### FlintTraceReport
 
@@ -2571,17 +7466,17 @@ Geen beschrijving opgegeven.
 export interface FlintTraceReport
 ```
 
-Geen beschrijving opgegeven.
+Volledig gestructureerd traceringsrapport van de uitvoering, samengevat na voltooiing van de uitvoering.
 
-### FlintTraceSourceLocation
+### FlintTraceSourceLocatie
 
-**Soort:** interface
+**Soort:** type
 
 ```typescript
-export interface FlintTraceSourceLocation extends FlintVmDebugSpan
+export type FlintTraceSourceLocation = FlintVmDebugSpan;
 ```
 
-Geen beschrijving opgegeven.
+Brontoewijzingspositie voor geregistreerde traceringsgebeurtenissen.
 
 ### vatFlintVmValue samen
 
@@ -2591,18 +7486,24 @@ Geen beschrijving opgegeven.
 function summarizeFlintVmValue(value: FlintVmValue, redact?: (value: FlintVmValue) => string): string;
 ```
 
-Geen beschrijving opgegeven.
+Geeft een samenvatting van een VM-waarde voor diagnostische tracering, waarbij eventueel redacties worden toegepast.
 
 #### Parameters
 
-| Naam      | Typ                                  | Beschrijving |
-| --------- | ------------------------------------ | ------------ |
-| waarde    | FlintVmValue                         |              |
-| redigeren | (waarde: FlintVmValue) => tekenreeks |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------------------------- | ------------------------------ |
+| waarde | FlintVmWaarde | - VM-waarde om te formatteren.          |
+| redigeren | (waarde: FlintVmValue) => tekenreeks | - Optionele redactie-callback. |
+
+#### Contract
+
+- **@param:** - VM-waarde die moet worden geformatteerd.
+- **@param:** - Optionele redactie-callback.
+- **@returns:** Voor mensen leesbare samenvattingsreeks.
 
 ## `src/traps`
 
-### AttachFlintTrace
+### hechtenFlintTrace
 
 **Soort:** functie
 
@@ -2610,14 +7511,19 @@ Geen beschrijving opgegeven.
 function attachFlintTrace(error: unknown, trace: FlintTraceReport): void;
 ```
 
-Geen beschrijving opgegeven.
+Koppelt een uitvoeringstracerapport aan een Flint trap-fout, indien van toepassing.
 
 #### Parameters
 
-| Naam  | Typ              | Beschrijving |
-| ----- | ---------------- | ------------ |
-| fout  | onbekend         |              |
-| spoor | FlintTraceReport |              |
+| Naam | Typ | Beschrijving |
+| ----- | ---------------- | ----------------------------------- |
+| fout | onbekend | - Kandidaatfoutobject.           |
+| spoor | FlintTraceReport | - Uitvoeringstraceerrapport om bij te voegen. |
+
+#### Contract
+
+- **@param:** - Kandidaatfoutobject.
+- **@param:** - Traceringsrapport van uitvoering om bij te voegen.
 
 ### FlintTrap
 
@@ -2627,7 +7533,7 @@ Geen beschrijving opgegeven.
 export class FlintTrap extends Error
 ```
 
-Geen beschrijving opgegeven.
+Vertegenwoordigt een fatale runtime- of gastuitvoeringsval in Flint.
 
 ### FlintTrapCode
 
@@ -2641,12 +7547,18 @@ export type FlintTrapCode =
   | 'InvalidOwnership'
   | 'MemoryExhausted'
   | 'MemoryOutOfBounds'
-  | 'GuestTrap';
+  | 'GuestTrap'
+  | 'BorrowViolation'
+  | 'RegionExpired'
+  | 'UseAfterRelease'
+  | 'DoubleRelease'
+  | 'StackOverflow'
+  | 'CallDepthExhausted';
 ```
 
-Geen beschrijving opgegeven.
+Canonieke runtime trap-foutcategoriecodes.
 
-### FlintTrapOptions
+### FlintTrap Opties
 
 **Soort:** interface
 
@@ -2654,9 +7566,9 @@ Geen beschrijving opgegeven.
 export interface FlintTrapOptions extends ErrorOptions
 ```
 
-Geen beschrijving opgegeven.
+Opties voor het configureren van runtime trap-foutrapportage en logboekregistratie.
 
-### toFlintHostError
+### naarFlintHostError
 
 **Soort:** functie
 
@@ -2664,15 +7576,22 @@ Geen beschrijving opgegeven.
 function toFlintHostError(error: unknown, capability: string, logger?: FlintLogger): FlintTrap;
 ```
 
-Geen beschrijving opgegeven.
+Converteert een onbekende hostfout naar een genormaliseerde FlintTrap-instantie.
 
 #### Parameters
 
-| Naam       | Typ         | Beschrijving |
-| ---------- | ----------- | ------------ |
-| fout       | onbekend    |              |
-| vermogen   | tekenreeks  |              |
-| houthakker | FlintLogger |              |
+| Naam | Typ | Beschrijving |
+| ---------- | ----------- | --------------------------------------------------- |
+| fout | onbekend | - Ruw gevangen fout.                                 |
+| vermogen | tekenreeks | - Doelhostcapaciteits-ID.                |
+| houthakker | FlintLogger | - Optionele runtime-logger voor diagnostische telemetrie. |
+
+#### Contract
+
+- **@param:** - Raw-gevangen fout.
+- **@param:** - ID van doelhostcapaciteit.
+- **@param:** - Optionele runtime-logger voor diagnostische telemetrie.
+- **@returns:** Genormaliseerde FlintTrap-instantie.
 
 ## `src/vm-executor`
 
@@ -2684,14 +7603,20 @@ Geen beschrijving opgegeven.
 function createFlintVmAotArtifact(module: FlintVmModule, compilerVersion: string): FlintVmAotArtifact;
 ```
 
-Geen beschrijving opgegeven.
+Compileert een VM-module tot een AOT (ahead-of-time) JavaScript-artefact.
 
 #### Parameters
 
-| Naam           | Typ           | Beschrijving |
-| -------------- | ------------- | ------------ |
-| module         | FlintVmModule |              |
-| compilerversie | tekenreeks    |              |
+| Naam | Typ | Beschrijving |
+| --------------- | ------------- | -------------------------- |
+| module | FlintVmModule | - VM-module om te compileren.    |
+| compilerversie | tekenreeks | - Compilerversiereeks. |
+
+#### Contract
+
+- **@param:** - VM-module om te compileren.
+- **@param:** - Tekenreeks van compilerversie.
+- **@returns:** AOT-artefact uitgezonden.
 
 ### createFlintVmExecutor
 
@@ -2701,15 +7626,20 @@ Geen beschrijving opgegeven.
 function createFlintVmExecutor(executorOptions: FlintVmExecutorOptions = {}): FlintVmExecutor;
 ```
 
-Geen beschrijving opgegeven.
+Creëert een bytecode VM-uitvoerder met JIT-compilatieondersteuning.
 
 #### Parameters
 
-| Naam             | Typ                    | Beschrijving |
-| ---------------- | ---------------------- | ------------ |
-| uitvoerderOpties | FlintVmExecutorOptions |              |
+| Naam | Typ | Beschrijving |
+| --------------- | ---------------------- | ----------------------------------------- |
+| uitvoerderOpties | FlintVmExecutorOpties | - Configuratieopties voor de uitvoerder. |
 
-### executeFlintVm
+#### Contract
+
+- **@param:** - Configuratieopties voor de uitvoerder.
+- **@returns:** FlintVmExecutor-instantie geconfigureerd.
+
+### voerFlintVm uit
 
 **Soort:** functie
 
@@ -2722,18 +7652,26 @@ function executeFlintVm(
 ): FlintVmExecutionResult;
 ```
 
-Geen beschrijving opgegeven.
+Convenience Runner die een functie uitvoert in een VM-module.
 
 #### Parameters
 
-| Naam        | Typ                         | Beschrijving |
-| ----------- | --------------------------- | ------------ |
-| module      | FlintVmModule               |              |
-| functieNaam | tekenreeks                  |              |
-| argumenten_ | alleen-lezen FlintVmValue[] |              |
-| opties      | FlintVmExecutionOptions     |              |
+| Naam | Typ | Beschrijving |
+| ------------ | ----------------------- | ---------------------- |
+| module | FlintVmModule | - VM-module.           |
+| functieNaam | tekenreeks | - Functienaam invoeren. |
+| argumenten_ | alleen-lezen FlintVmValue[] | - Argumentenreeks.     |
+| opties | FlintVmExecutionOptions | - Uitvoeringsmogelijkheden.   |
 
-### executeFlintVmAotArtifact
+#### Contract
+
+- **@param:** - VM-module.
+- **@param:** - Functienaam invoeren.
+- **@param:** - Argumentenmatrix.
+- **@param:** - Uitvoeringsopties.
+- **@returns:** Uitvoeringsresultaat.
+
+### voerFlintVmAotArtefact uit
 
 **Soort:** functie
 
@@ -2746,18 +7684,26 @@ function executeFlintVmAotArtifact(
 ): FlintVmExecutionResult;
 ```
 
-Geen beschrijving opgegeven.
+Voert een gecompileerd AOT-artefact uit.
 
 #### Parameters
 
-| Naam        | Typ                                   | Beschrijving |
-| ----------- | ------------------------------------- | ------------ |
-| artefact    | FlintVmAotArtefact                    |              |
-| functieNaam | tekenreeks                            |              |
-| argumenten_ | alleen-lezen FlintVmValue[]           |              |
-| opties      | Laat<FlintVmExecutionOptions, 'mode'> | weg          |
+| Naam | Typ | Beschrijving |
+| ------------ | ------------------------------------- | ------------------------ |
+| artefact | FlintVmAotArtefact | - Gecompileerd AOT-artefact. |
+| functieNaam | tekenreeks | - Functienaam invoeren.   |
+| argumenten_ | alleen-lezen FlintVmValue[] | - Argumentenreeks.       |
+| opties | Laat<FlintVmExecutionOptions, 'mode'> | weg - Uitvoeringsmogelijkheden.     |
 
-### FlintVmExecutorOptions
+#### Contract
+
+- **@param:** - Gecompileerd AOT-artefact.
+- **@param:** - Functienaam invoeren.
+- **@param:** - Argumentenmatrix.
+- **@param:** - Uitvoeringsopties.
+- **@returns:** Uitvoeringsresultaat.
+
+### FlintVmExecutorOpties
 
 **Soort:** interface
 
@@ -2765,7 +7711,7 @@ Geen beschrijving opgegeven.
 export interface FlintVmExecutorOptions
 ```
 
-Geen beschrijving opgegeven.
+Configuratieopties voor de Flint virtuele machine-uitvoerder.
 
 ### runFlintVmBootstrap
 
@@ -2781,19 +7727,28 @@ function runFlintVmBootstrap(
 ): FlintVmExecutionResult;
 ```
 
-Geen beschrijving opgegeven.
+Voert een bootstrap-module uit op de virtuele machine.
 
 #### Parameters
 
-| Naam        | Typ                                   | Beschrijving |
-| ----------- | ------------------------------------- | ------------ |
-| module      | FlintVmModule                         |              |
-| functieNaam | tekenreeks                            |              |
-| argumenten_ | alleen-lezen FlintVmValue[]           |              |
-| modus       | FlintVmExecutionMode                  |              |
-| opties      | Laat<FlintVmExecutionOptions, 'mode'> | weg          |
+| Naam | Typ | Beschrijving |
+| ------------ | ------------------------------------- | ---------------------- |
+| module | FlintVmModule | - Bootstrap VM-module. |
+| functieNaam | tekenreeks | - Functienaam invoeren. |
+| argumenten_ | alleen-lezen FlintVmValue[] | - Argumentenreeks.     |
+| modus | FlintVmExecutionMode | - Uitvoeringsmodus.      |
+| opties | Laat<FlintVmExecutionOptions, 'mode'> | weg - Uitvoeringsmogelijkheden.   |
 
-### validateFlintVmModule
+#### Contract
+
+- **@param:** - Bootstrap VM-module.
+- **@param:** - Functienaam invoeren.
+- **@param:** - Argumentenmatrix.
+- **@param:** - Uitvoeringsmodus.
+- **@param:** - Uitvoeringsopties.
+- **@returns:** Uitvoeringsresultaat.
+
+### valideerFlintVmModule
 
 **Soort:** functie
 
@@ -2801,17 +7756,21 @@ Geen beschrijving opgegeven.
 function validateFlintVmModule(module: FlintVmModule): void;
 ```
 
-Geen beschrijving opgegeven.
+Valideert een Flint VM-modulestructuur op basis van bytecoderegels.
 
 #### Parameters
 
-| Naam   | Typ           | Beschrijving |
-| ------ | ------------- | ------------ |
-| module | FlintVmModule |              |
+| Naam | Typ | Beschrijving |
+| ------ | ------------- | ------------------------ |
+| module | FlintVmModule | - VM-module om te valideren. |
+
+#### Contract
+
+- **@param:** - VM-module om te valideren.
 
 ## `src/vm-wasm`
 
-### compileFlintVmWasm
+### compileerFlintVmWasm
 
 **Soort:** functie
 
@@ -2819,14 +7778,14 @@ Geen beschrijving opgegeven.
 function compileFlintVmWasm(module: FlintVmModule, options: FlintVmWasmCompileOptions = {}): FlintVmWasmArtifact;
 ```
 
-Geen beschrijving opgegeven.
+Compileert een Flint VM-module in een gevalideerd WebAssembly-bytecode-artefact.
 
 #### Parameters
 
-| Naam   | Typ                       | Beschrijving |
-| ------ | ------------------------- | ------------ |
-| module | FlintVmModule             |              |
-| opties | FlintVmWasmCompileOptions |              |
+| Naam | Typ | Beschrijving |
+| ------- | ------------------------- | ----------- |
+| module | FlintVmModule |             |
+| opties | FlintVmWasmCompileOptions |             |
 
 ### FlintVmWasmCompileOptions
 
@@ -2836,9 +7795,9 @@ Geen beschrijving opgegeven.
 export interface FlintVmWasmCompileOptions
 ```
 
-Geen beschrijving opgegeven.
+Opties voor het configureren van de compilatie van een Flint VM-module naar WebAssembly.
 
-### prepareFlintVm
+### bereidFlintVm voor
 
 **Soort:** constant
 
@@ -2848,7 +7807,7 @@ export const prepareFlintVm;
 
 Geen beschrijving opgegeven.
 
-### prepareFlintVmWasm
+### bereidFlintVmWasm voor
 
 **Soort:** functie
 
@@ -2859,33 +7818,43 @@ function prepareFlintVmWasm(
 ): FlintVmPreparedExecutor;
 ```
 
-Geen beschrijving opgegeven.
+Bereidt een WebAssembly-uitvoerder voor op basis van een module of artefact voor snelle aanroep.
 
 #### Parameters
 
-| Naam             | Typ                                  | Beschrijving |
-| ---------------- | ------------------------------------ | ------------ |
-| moduleOrArtefact | FlintVmModule \| FlintVmWasmArtifact |              |
-| opties           | FlintVmPreparedExecutorOptions       |              |
+| Naam | Typ | Beschrijving |
+| ---------------- | ------------------------------------ | ----------- |
+| moduleOrArtefact | FlintVmModule \| FlintVmWasmArtefact |             |
+| opties | FlintVmPreparedExecutorOptions |             |
 
 ## `src/vm`
 
-### FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+### FLINT_VM_DEFAULT_MAX_MEMORY_PAGES
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
+export const FLINT_VM_DEFAULT_MAX_MEMORY_PAGES;
 ```
 
 Geen beschrijving opgegeven.
 
-### FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+### FLINT_VM_WASM_ABI_VERSION
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
+export const FLINT_VM_WASM_ABI_VERSION;
+```
+
+Geen beschrijving opgegeven.
+
+### FLINT_VM_WASM_LOWERING_VERSION
+
+**Soort:** constant
+
+```typescript
+export const FLINT_VM_WASM_LOWERING_VERSION;
 ```
 
 Geen beschrijving opgegeven.
@@ -2898,7 +7867,7 @@ Geen beschrijving opgegeven.
 export interface FlintVmAotArtifact
 ```
 
-Geen beschrijving opgegeven.
+Vooraf gecompileerd JavaScript-artefact uitgezonden door een VM-module.
 
 ### FlintVmCapabilityImport
 
@@ -2908,7 +7877,7 @@ Geen beschrijving opgegeven.
 export interface FlintVmCapabilityImport
 ```
 
-Geen beschrijving opgegeven.
+Importdescriptor voor hostmogelijkheden aangevraagd door een VM-module.
 
 ### FlintVmDebugSpan
 
@@ -2918,7 +7887,7 @@ Geen beschrijving opgegeven.
 export interface FlintVmDebugSpan
 ```
 
-Geen beschrijving opgegeven.
+Debuggen van de bronreeks door een bytecode-instructie in kaart te brengen die is verschoven naar de coördinaten van de broncode.
 
 ### FlintVmExecutionMode
 
@@ -2928,7 +7897,7 @@ Geen beschrijving opgegeven.
 export type FlintVmExecutionMode = 'interpret' | 'jit' | 'aot';
 ```
 
-Geen beschrijving opgegeven.
+Ondersteunde uitvoeringsmodi voor VM-bytecodes ('interpreteren', 'jit', 'aot').
 
 ### FlintVmExecutionOptions
 
@@ -2938,9 +7907,9 @@ Geen beschrijving opgegeven.
 export interface FlintVmExecutionOptions
 ```
 
-Geen beschrijving opgegeven.
+Opties voor het configureren van VM-uitvoeringslimieten, geheugenbuffers en telemetrie.
 
-### FlintVmExecutionResult
+### FlintVmExecutionResultaat
 
 **Soort:** interface
 
@@ -2948,7 +7917,7 @@ Geen beschrijving opgegeven.
 export interface FlintVmExecutionResult
 ```
 
-Geen beschrijving opgegeven.
+Resultaat dat wordt geretourneerd door een VM-uitvoering, inclusief waarde- en stapstatistieken.
 
 ### FlintVmExecutor
 
@@ -2958,7 +7927,7 @@ Geen beschrijving opgegeven.
 export interface FlintVmExecutor
 ```
 
-Geen beschrijving opgegeven.
+Primaire uitvoeringsinterface voor het uitvoeren van gecompileerde Flint VM-modules.
 
 ### FlintVmFunctie
 
@@ -2968,7 +7937,7 @@ Geen beschrijving opgegeven.
 export interface FlintVmFunction
 ```
 
-Geen beschrijving opgegeven.
+Gecompileerde VM-functiedefinitie met instructies, registers en metadata.
 
 ### FlintVmInstructie
 
@@ -2978,7 +7947,7 @@ Geen beschrijving opgegeven.
 export type FlintVmInstruction = |
 ```
 
-Geen beschrijving opgegeven.
+Bytecode-instructiebewerkingen ondersteund door de virtuele Flint-machine.
 
 ### FlintVmJitCache
 
@@ -2988,7 +7957,7 @@ Geen beschrijving opgegeven.
 export interface FlintVmJitCache
 ```
 
-Geen beschrijving opgegeven.
+Cache van door JIT gecompileerde functies en het aantal actieve functie-aanroepen.
 
 ### FlintVmJitEntry
 
@@ -2998,7 +7967,7 @@ Geen beschrijving opgegeven.
 export interface FlintVmJitEntry
 ```
 
-Geen beschrijving opgegeven.
+JIT-compilatiecache-item waarin de gecompileerde functie en het aantal oproepen worden opgeslagen.
 
 ### FlintVmModule
 
@@ -3008,7 +7977,7 @@ Geen beschrijving opgegeven.
 export interface FlintVmModule
 ```
 
-Geen beschrijving opgegeven.
+Uitvoerbare bytecodemodulecontainer die wordt gebruikt door VM- en AOT-uitvoerders.
 
 ### FlintVmPreparedExecutor
 
@@ -3018,7 +7987,7 @@ Geen beschrijving opgegeven.
 export interface FlintVmPreparedExecutor
 ```
 
-Geen beschrijving opgegeven.
+Herbruikbare, vooraf toegewezen executorinstantie gebonden aan een specifieke module.
 
 ### FlintVmPreparedExecutorOptions
 
@@ -3028,9 +7997,9 @@ Geen beschrijving opgegeven.
 export interface FlintVmPreparedExecutorOptions
 ```
 
-Geen beschrijving opgegeven.
+Opties voor het configureren van een voorbereid, herbruikbaar VM-uitvoeringsexemplaar.
 
-### FlintVmValue
+### FlintVmWaarde
 
 **Soort:** type
 
@@ -3038,7 +8007,7 @@ Geen beschrijving opgegeven.
 export type FlintVmValue = |
 ```
 
-Geen beschrijving opgegeven.
+Getagde unie die runtimewaarden vertegenwoordigt die zijn gemanipuleerd door de bytecode-VM.
 
 ### FlintVmWasmArtefact
 
@@ -3048,4 +8017,4 @@ Geen beschrijving opgegeven.
 export interface FlintVmWasmArtifact
 ```
 
-Geen beschrijving opgegeven.
+WebAssembly binair en import-metagegevensartefact uitgezonden door een VM-module.

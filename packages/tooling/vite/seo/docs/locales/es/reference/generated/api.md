@@ -25,23 +25,22 @@ cada ejecución del servidor de desarrollo y compilación.
 
 #### Parámetros
 
-| Nombre   | Tipo                  | Descripción |
-| -------- | --------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ---------------- | ----------- |
 | opciones | Opciones de SeoPlugin |             |
 
 #### Contrato
 
 - **@ejemplo:** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 
@@ -59,23 +58,22 @@ cada ejecución del servidor de desarrollo y compilación.
 
 #### Parámetros
 
-| Nombre   | Tipo                  | Descripción |
-| -------- | --------------------- | ----------- |
+| Nombre | Tipo | Descripción |
+| ------- | ---------------- | ----------- |
 | opciones | Opciones de SeoPlugin |             |
 
 #### Contrato
 
 - **@ejemplo:** ```ts
   import { seoPlugin } from '@mission-platform/vite-plugin-seo';
-
-export default defineConfig({
-plugins: [
-seoPlugin({
-sitemap: { urls: [{ loc: 'https://example.com/' }] },
-robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-}),
-],
-});
+  export default defineConfig({
+  plugins: [
+  seoPlugin({
+  sitemap: { urls: [{ loc: 'https://example.com/' }] },
+  robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+  }),
+  ],
+  });
 
 ````
 

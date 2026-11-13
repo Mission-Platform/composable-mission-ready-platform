@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
+
 import { createReactRouterCapabilities, resolveMpLink, toMpLocationFromReact, toReactHref } from '../runtime';
 
 import { forgeRouterReact } from './forge-router-react';
-
-import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
 
 function moduleWith(source: string, names: readonly string[]): RouterCapabilityModule {
   return {

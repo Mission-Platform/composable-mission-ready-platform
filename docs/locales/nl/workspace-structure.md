@@ -16,11 +16,13 @@ in functionele lagen:
 ```text
 composable_mission_ready_platform/
 ├── apps/                   # Deployable products, docs, and workbenches
-├── packages/tooling/configs/                # Shared tooling and base configurations
-├── packages/               # Reusable libraries and building blocks
-├── packages/tooling/vite/           # Build-time extensions and compilers
-├── packages/edge/workers/                # Reusable Cloudflare Worker edge functions
-├── crates/                 # Rust crates (including Wasm-compiled ones)
+├── packages/core/          # Framework-neutral runtime, Forge JSX/adapters, routing, i18n, and scheduling
+├── packages/ui/            # Components, forms, layouts, themes, and design tokens
+├── packages/content/       # Content, email, search, and SEO pipelines
+├── packages/integrations/  # Barcode, maps, media, 3D, and interoperability adapters
+├── packages/compiler/      # Figma bridges and Forge compiler plugins
+├── packages/tooling/       # Shared configs and Vite/build-time extensions
+├── packages/edge/          # Reusable Cloudflare Worker edge functions
 ├── mcp/                    # Model Context Protocol servers
 ├── scripts/                # Repo-wide automation scripts
 ├── examples/               # Example implementations and demos
@@ -35,6 +37,7 @@ Applicaties zijn inzetbare eenheden die functionaliteit samenstellen uit de map 
 en nooit gepubliceerd in een register.
 
 - **`docs/`**: de documentatiesite Vite + Vue voor het Markdown-corpus.
+- **`figma-forge-plugin/`**: de Figma-plug-in die door Forge geschreven componenten integreert met Figma-workflows.
 - **`my-care-notes/`**: de vlaggenschiptoepassing voor verzorgingsnotities.
 - **`service-monitor/`**: het RedwoodSDK-servicestatusdashboard ondersteund door een duurzaam object.
 - **`website/`**: de marketing- en productwebsite van het Mission Platform.
@@ -42,7 +45,15 @@ en nooit gepubliceerd in een register.
 
 ### 2. `packages/` (bouwstenen)
 
-Herbruikbare bibliotheken met versiebeheer die door apps worden gebruikt. Deze zijn bedoeld om waar mogelijk raamwerk-agnostisch te zijn.
+Herbruikbare bibliotheken met versiebeheer die door apps worden gebruikt. Domeinmappen maken het eigendom expliciet zonder de pakketnamen of import te wijzigen.
+
+- **`core/`**: Framework-neutrale runtime, Forge JSX/adapters, routing, lokalisatie, observatie, RxJS en plannerservices.
+- **`ui/`**: componenten, breekpunten, formulieren, lay-outs, selectie, thema's, tokens en typografie.
+- **`content/`**: inhoudsmodellen, e-mailcomponenten/weergave, taalhulpmiddelen en SEO.
+- **`integrations/`**: streepjescode, codescannen, D3, kaarten, QR/matrixcodes, spraak, Three.js en vCards.
+- **`compiler/`**: Figma-bruggen en framework/router/CMS-compilerplug-ins.
+- **`tooling/`**: gedeelde configuratiepakketten en Vite-plug-ins.
+- **`edge/`**: werkpakketten die worden gebruikt door toepassingen en lokale voorbeelden.
 
 - **`@mission-platform/forge-jsx`**: de raamwerkneutrale JSX-runtime en adapters.
 - **`@mission-platform/components`**: de componentenbibliotheek met meerdere raamwerken.
@@ -59,11 +70,11 @@ Gedeelde configuraties die consistentie in alle werkruimten garanderen. Pakkette
 `devDependencies`.
 
 - **`eslint-config/`**, **`prettier-config/`** en **`stylelint-config/`**: regels voor linting en opmaak.
-- **`typescript-config/`**: basis `tsconfig.json`-bestanden voor Node-, DOM-, bibliotheek- en framework-consumenten.
+- **`typescript-config/`**: basis-`tsconfig.json`-bestanden voor Node-, DOM-, bibliotheek- en framework-consumenten.
 - **`tsdown-config/`** en **`vite-config/`**: gemeenschappelijke bibliotheek-, app-, Vite- en Vitest-buildpatronen.
 - **`i18n-config/`** en **`storybook-framework/`**: gedeelde locale-extractie en framework-workbench-instellingen.
 
-### 4. `packages/tooling/vite/` (build-uitbreidingen)
+### 4. `packages/tooling/vite/` (builduitbreidingen)
 
 Aangepaste plug-ins die het Vite-buildproces uitbreiden.
 
@@ -82,6 +93,16 @@ Cloudflare Workers voor logica aan de serverzijde en geoptimaliseerde levering v
 Implementeerbare applicatie Werknemers worden geconfigureerd door `apps/website/wrangler.jsonc`,
 `apps/my-care-notes/wrangler.jsonc` en `apps/service-monitor/wrangler.jsonc`. De
 `api-proxy`- en `forge-spa`-pakketten zijn gebundelde afhankelijkheden in plaats van zelfstandige Wrangler-implementaties.
+
+### 6. `packages/compiler/plugins/` (Forge Compiler-plug-ins)
+
+Framework-specifieke uitvoerplug-ins en adapters voor de Forge-compiler.
+
+- **`forge-cms-plugin-api/`**: genereren van CMS-artefacten en integratie van Vite/tsdown-adapters.
+- **`forge-cms-astro/`**, **`forge-cms-ghost/`**, **`forge-cms-jekyll/`**, **`forge-cms-storyblok/`**, **`forge-cms-webflow/`**: CMS-specifieke integratieadapters.
+- **`forge-plugin-api/`**: interfaces voor gedeelde Forge-compilerplug-ins.
+- **`forge-vue/`**, **`forge-react/`**, **`forge-solid/`**, **`forge-svelte/`**, **`forge-web-components/`**: raamwerkspecifieke codegeneratie en runtime-adapters.
+- **`forge-router-plugin-api/`**, **`forge-router-vue/`**, **`forge-router-react/`**, **`forge-router-solid/`**, **`forge-router-svelte/`**, **`forge-router-web-components/`**, **`forge-router-redwood/`**: Routerframework-specifieke integratieadapters.
 
 ## Interne pakketconventies
 
@@ -108,16 +129,16 @@ Elke map binnen `src/` moet een `index.ts` (barrel-bestand) bevatten.
 
 Sleutelbestanden in de root van de repository bepalen het gedrag van de monorepo:
 
-| Bestand                 | Doel                                                                  |
-| :---------------------- | :-------------------------------------------------------------------- |
-| `pnpm-workspace.yaml`   | Definieert werkruimtegrenzen, ledenglobs en afhankelijkheidscatalogi. |
-| `turbo.json`            | Organiseert de build-pijplijn en taakcaching.                         |
-| `package.json`          | Scripts op rootniveau en monorepo-brede devDependencies.              |
-| `commitlint.config.mjs` | Dwingt de Conventionele Commits-specificatie af.                      |
+| Bestand | Doel |
+| :---------------------- | :------------------------------------------------------------------- |
+| `pnpm-workspace.yaml` | Definieert werkruimtegrenzen, ledenglobs en afhankelijkheidscatalogi. |
+| `turbo.json` | Organiseert de build-pijplijn en taakcaching.                    |
+| `package.json` | Scripts op rootniveau en monorepo-brede devDependencies.                |
+| `commitlint.config.mjs` | Dwingt de Conventionele Commits-specificatie af.                     |
 
 ## Afhankelijkheids- en werkruimtebeheer
 
-Mission Platform gebruikt het `workspace:*`-protocol voor interne afhankelijkheden. This ensures that packages always use the
+Mission Platform gebruikt het `workspace:*`-protocol voor interne afhankelijkheden. Dit zorgt ervoor dat pakketten altijd de
 lokale versie van andere leden van de werkruimte tijdens de ontwikkeling.
 
 ### PNPM Catalogi
@@ -130,9 +151,9 @@ de monorepo. Dit voorkomt versiedrift en vereenvoudigt het onderhoud.
 Cross-workspace-taken worden uitgevoerd via de root `package.json` met behulp van Turborepo:
 
 - `pnpm build`: Bouw alle werkruimten in de juiste afhankelijkheidsvolgorde.
-- `pnpm test`: Voer de testsuites uit voor alle werkruimten met een `test`-taak. Gebruik hiervoor `pnpm exec turbo run test --affected`
+- `pnpm test`: voer de testsuites uit voor alle werkruimten met een `test`-taak. Gebruik hiervoor `pnpm exec turbo run test --affected`
   het CI-bereik van de gewijzigde werkruimte.
 - `pnpm lint`: voer ESLint uit in de werkruimten.
-- `pnpm lint:style`: Voer Stylelint uit voor app- en pakketstijlen.
+- `pnpm lint:style`: voer Stylelint uit voor app- en pakketstijlen.
 - `pnpm format`: Controleer de opmaak met Prettier.
 - `pnpm i18n:extract`: vertaalsleutels extraheren voor werkruimten die eigenaar zijn van catalogi.
